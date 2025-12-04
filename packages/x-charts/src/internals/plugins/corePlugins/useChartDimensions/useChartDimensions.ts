@@ -5,7 +5,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
 import { useSelector } from '../../../store/useSelector';
 import { DEFAULT_MARGINS } from '../../../../constants';
-import { type ChartPlugin } from '../../models';
+import { ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDrawingArea } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';

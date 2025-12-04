@@ -1,8 +1,8 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import {
-  type CommonDefaultizedProps,
-  type CommonSeriesType,
-  type CartesianSeriesType,
+  CommonDefaultizedProps,
+  CommonSeriesType,
+  CartesianSeriesType,
 } from '@mui/x-charts/internals';
 
 export type HeatmapValueType = readonly [number, number, number];

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import { useRadarAxis, type UseRadarAxisParams } from './useRadarAxis';
+import { useRadarAxis, UseRadarAxisParams } from './useRadarAxis';
 import { getLabelAttributes } from './RadarAxis.utils';
-import { type RadarAxisClasses, useUtilityClasses } from './radarAxisClasses';
+import { RadarAxisClasses, useUtilityClasses } from './radarAxisClasses';
 
 export interface RadarAxisProps extends UseRadarAxisParams {
   /**

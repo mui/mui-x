@@ -1,8 +1,8 @@
 'use client';
 import { styled } from '@mui/material/styles';
 import {
-  type AxisId,
-  type ComputedAxis,
+  AxisId,
+  ComputedAxis,
   getSVGPoint,
   invertScale,
   selectorChartAxis,
@@ -11,15 +11,15 @@ import {
   useDrawingArea,
   useSelector,
   useStore,
-  type ZoomData,
+  ZoomData,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type ChartDrawingArea } from '@mui/x-charts/hooks';
+import { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
 import {
   selectorChartAxisZoomData,
-  type UseChartProZoomSignature,
+  UseChartProZoomSignature,
 } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';

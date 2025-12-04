@@ -1,13 +1,13 @@
 'use client';
 import type { RadarChartProps } from './RadarChart';
-import { type ChartsOverlayProps } from '../ChartsOverlay';
-import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import { ChartsOverlayProps } from '../ChartsOverlay';
+import { ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { type RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type RadarGridProps } from './RadarGrid';
-import { RADAR_PLUGINS, type RadarChartPluginSignatures } from './RadarChart.plugins';
-import { type RadarSeriesAreaProps, type RadarSeriesMarksProps } from './RadarSeriesPlot';
+import { RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
+import { ChartsSurfaceProps } from '../ChartsSurface';
+import { RadarGridProps } from './RadarGrid';
+import { RADAR_PLUGINS, RadarChartPluginSignatures } from './RadarChart.plugins';
+import { RadarSeriesAreaProps, RadarSeriesMarksProps } from './RadarSeriesPlot';
 
 /**
  * A helper function that extracts RadarChartProps from the input props

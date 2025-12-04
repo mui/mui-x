@@ -1,11 +1,11 @@
-import { type ChartsOverlaySlotProps, type ChartsOverlaySlots } from '@mui/x-charts/ChartsOverlay';
+import { ChartsOverlaySlotProps, ChartsOverlaySlots } from '@mui/x-charts/ChartsOverlay';
 import {
-  type ChartsTooltipProps,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
+  ChartsTooltipProps,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '@mui/x-charts/ChartsTooltip';
-import { type ChartsSlotProps, type ChartsSlots } from '@mui/x-charts/internals';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
+import { ChartsSlotProps, ChartsSlots } from '@mui/x-charts/internals';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
 
 export interface SankeyChartSlots
   extends ChartsTooltipSlots,

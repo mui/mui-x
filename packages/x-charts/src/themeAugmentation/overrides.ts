@@ -1,10 +1,10 @@
-import { type GaugeClassKey } from '../Gauge';
-import { type BarLabelClassKey } from '../BarChart';
-import { type BarElementClassKey } from '../BarChart/barElementClasses';
-import { type ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
-import { type ChartsGridClassKey } from '../ChartsGrid';
-import { type ChartsTooltipClassKey } from '../ChartsTooltip';
-import { type AreaElementClassKey, type LineElementClassKey, type MarkElementClassKey } from '../LineChart';
+import { GaugeClassKey } from '../Gauge';
+import { BarLabelClassKey } from '../BarChart';
+import { BarElementClassKey } from '../BarChart/barElementClasses';
+import { ChartsAxisHighlightClassKey } from '../ChartsAxisHighlight';
+import { ChartsGridClassKey } from '../ChartsGrid';
+import { ChartsTooltipClassKey } from '../ChartsTooltip';
+import { AreaElementClassKey, LineElementClassKey, MarkElementClassKey } from '../LineChart';
 
 export interface ChartsComponentNameToClassKey {
   MuiChartsAxis: 'root'; //  Only the root component of axes is styled. We should probably remove this one in v8

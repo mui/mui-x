@@ -1,4 +1,4 @@
-import { type HeatmapClassKey } from '../Heatmap';
+import { HeatmapClassKey } from '../Heatmap';
 
 export interface ChartsProComponentNameToClassKey {
   // Heatmap components

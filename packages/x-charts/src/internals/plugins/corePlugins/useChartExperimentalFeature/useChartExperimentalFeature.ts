@@ -1,6 +1,6 @@
 'use client';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { type ChartPlugin } from '../../models';
+import { ChartPlugin } from '../../models';
 import type { UseChartExperimentalFeaturesSignature } from './useChartExperimentalFeature.types';
 
 export const useChartExperimentalFeatures: ChartPlugin<UseChartExperimentalFeaturesSignature> = ({

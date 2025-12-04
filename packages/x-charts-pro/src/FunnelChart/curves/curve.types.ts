@@ -1,4 +1,4 @@
-import { type CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
+import { CurveGenerator } from '@mui/x-charts-vendor/d3-shape';
 
 export type CurveOptions = {
   /**

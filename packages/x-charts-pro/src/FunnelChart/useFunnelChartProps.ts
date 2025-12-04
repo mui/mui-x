@@ -1,17 +1,17 @@
 'use client';
 import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import { type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { type ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { defaultizeMargin, type XAxis, type YAxis } from '@mui/x-charts/internals';
-import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
+import { defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
+import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
-import { type FunnelPlotProps } from './FunnelPlot';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginSignatures } from './FunnelChart.plugins';
+import { FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { ChartContainerProProps } from '../ChartContainerPro';
 
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],

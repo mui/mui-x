@@ -1,4 +1,4 @@
-import type * as React from 'react';
+import * as React from 'react';
 
 /**
  * This component is used to assert that a certain component should not be rendered.

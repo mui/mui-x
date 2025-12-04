@@ -2,12 +2,12 @@ import {
   scaleOrdinal,
   scaleThreshold,
   scaleSequential,
-  type ScaleOrdinal,
+  ScaleOrdinal,
 } from '@mui/x-charts-vendor/d3-scale';
 import {
-  type ContinuousColorConfig,
-  type PiecewiseColorConfig,
-  type OrdinalColorConfig,
+  ContinuousColorConfig,
+  PiecewiseColorConfig,
+  OrdinalColorConfig,
 } from '../models/colorMapping';
 
 export function getSequentialColorScale<Value extends number | Date>(

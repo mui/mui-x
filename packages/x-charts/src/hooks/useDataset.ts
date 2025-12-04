@@ -2,8 +2,8 @@
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartDataset } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
-import { type UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
-import { type DatasetType } from '../models/seriesType/config';
+import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
+import { DatasetType } from '../models/seriesType/config';
 
 /**
  * Get access to the dataset used to populate series and axes data.

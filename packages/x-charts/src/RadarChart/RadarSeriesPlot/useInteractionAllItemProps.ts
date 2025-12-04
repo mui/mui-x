@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { type SeriesItemIdentifierWithData } from '../../models/seriesType';
+import { SeriesItemIdentifierWithData } from '../../models/seriesType';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
-import { type UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
-import { type UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
+import { UseChartHighlightSignature } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { UseChartInteractionSignature } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { getInteractionItemProps } from '../../hooks/useInteractionItemProps';
 
 export const useInteractionAllItemProps = (

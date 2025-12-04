@@ -5,9 +5,9 @@ import {
   scaleTime,
   scaleUtc,
   scaleLinear,
-  type NumberValue,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { type ContinuousScaleName, type D3ContinuousScale } from '../models/axis';
+import { ContinuousScaleName, D3ContinuousScale } from '../models/axis';
 import { scaleSymlog } from './scales';
 
 export function getScale<Domain extends NumberValue = any, Range = any>(

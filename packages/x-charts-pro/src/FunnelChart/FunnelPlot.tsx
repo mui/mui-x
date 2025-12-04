@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
-import { type FunnelItemIdentifier } from './funnel.types';
+import { FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
-import { type FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
-import { getFunnelCurve, type Point } from './curves';
+import { getFunnelCurve, Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
 import {
   selectorChartXAxis,

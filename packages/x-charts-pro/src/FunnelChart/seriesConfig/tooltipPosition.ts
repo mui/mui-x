@@ -1,4 +1,4 @@
-import { findMinMax, type TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { findMinMax, TooltipItemPositionGetter } from '@mui/x-charts/internals';
 import { createPositionGetter } from '../coordinateMapper';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'funnel'> = (params) => {

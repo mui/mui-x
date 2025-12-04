@@ -1,14 +1,14 @@
 import {
   useChartPolarAxis,
-  type UseChartPolarAxisSignature,
+  UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import {
   useChartInteraction,
-  type UseChartInteractionSignature,
+  UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
-  type UseChartHighlightSignature,
+  UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
   useChartVisibilityManager,

@@ -1,5 +1,5 @@
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type FocusableSeriesTypes } from './useChartKeyboardNavigation.types';
+import { ChartSeriesType } from '../../../../models/seriesType/config';
+import { FocusableSeriesTypes } from './useChartKeyboardNavigation.types';
 
 const FOCUSABLE_SERIES_TYPES = new Set(['bar', 'line', 'scatter', 'pie']);
 

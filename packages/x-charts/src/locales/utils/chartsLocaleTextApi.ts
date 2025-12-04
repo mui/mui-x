@@ -1,4 +1,4 @@
-import { type ChartImageExportMimeType } from './imageMimeTypes';
+import { ChartImageExportMimeType } from './imageMimeTypes';
 
 export interface ChartsLocaleText {
   /**

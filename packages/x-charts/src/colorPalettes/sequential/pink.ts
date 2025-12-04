@@ -1,5 +1,5 @@
 // Pink sequential gradient palette based on the color scheme
-import { type ChartsColorPaletteCallback } from '../types';
+import { ChartsColorPaletteCallback } from '../types';
 
 export const pinkPaletteLight = [
   '#F7D2E1',

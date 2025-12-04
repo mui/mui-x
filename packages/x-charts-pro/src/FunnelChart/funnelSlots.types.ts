@@ -1,18 +1,18 @@
-import { type ChartsOverlaySlotProps, type ChartsOverlaySlots } from '@mui/x-charts/ChartsOverlay';
+import { ChartsOverlaySlotProps, ChartsOverlaySlots } from '@mui/x-charts/ChartsOverlay';
 import {
-  type ChartsTooltipProps,
-  type ChartsTooltipSlotProps,
-  type ChartsTooltipSlots,
+  ChartsTooltipProps,
+  ChartsTooltipSlotProps,
+  ChartsTooltipSlots,
 } from '@mui/x-charts/ChartsTooltip';
 import {
-  type ChartsAxisSlotProps,
-  type ChartsAxisSlots,
-  type ChartsSlotProps,
-  type ChartsSlots,
+  ChartsAxisSlotProps,
+  ChartsAxisSlots,
+  ChartsSlotProps,
+  ChartsSlots,
 } from '@mui/x-charts/internals';
-import { type ChartsLegendSlotProps, type ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
-import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
-import { type FunnelPlotSlotProps, type FunnelPlotSlots } from './funnelPlotSlots.types';
+import { ChartsLegendSlotProps, ChartsLegendSlots } from '@mui/x-charts/ChartsLegend';
+import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '@mui/x-charts/Toolbar';
+import { FunnelPlotSlotProps, FunnelPlotSlots } from './funnelPlotSlots.types';
 
 export interface FunnelChartSlots
   extends ChartsAxisSlots,

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { type SeriesId } from '../models/seriesType/common';
-import { type BarElementOwnerState } from './barElementClasses';
+import { SeriesId } from '../models/seriesType/common';
+import { BarElementOwnerState } from './barElementClasses';
 import { useAnimateBar } from '../hooks/animation/useAnimateBar';
 
 export interface BarProps

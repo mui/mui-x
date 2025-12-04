@@ -1,6 +1,6 @@
-import { type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { type PieItemId } from '../models';
-import { type SeriesId } from '../models/seriesType/common';
+import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import { PieItemId } from '../models';
+import { SeriesId } from '../models/seriesType/common';
 
 interface LegendItemContextBase {
   /**

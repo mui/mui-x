@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { type RadarSeriesPlotProps } from './RadarSeriesPlot.types';
+import { RadarSeriesPlotProps } from './RadarSeriesPlot.types';
 import { useInteractionAllItemProps } from './useInteractionAllItemProps';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useUtilityClasses } from './radarSeriesPlotClasses';

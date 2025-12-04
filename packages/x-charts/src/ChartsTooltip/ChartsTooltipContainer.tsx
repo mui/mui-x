@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { type PopperProps } from '@mui/material/Popper';
+import Popper, { PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
@@ -18,7 +18,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   selectorChartsInteractionAxisTooltip,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';

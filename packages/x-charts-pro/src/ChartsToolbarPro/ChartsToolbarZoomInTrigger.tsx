@@ -4,15 +4,15 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   useChartContext,
-  type ChartsSlotProps,
+  ChartsSlotProps,
   useSelector,
   useChartsSlots,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
-import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
   selectorChartCanZoomIn,
-  type UseChartProZoomSignature,
+  UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
 
 interface ChartsToolbarZoomInTriggerProps {

@@ -5,10 +5,10 @@ import {
   selectorChartDrawingArea,
   selectorChartRawXAxis,
   selectorChartRawYAxis,
-  type ChartState,
+  ChartState,
 } from '@mui/x-charts/internals';
 import { computeAxisValue } from './computeAxisValue';
-import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
+import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 
 export const selectorFunnel = (state: ChartState<[], [UseChartFunnelAxisSignature]>) =>
   state.funnel;

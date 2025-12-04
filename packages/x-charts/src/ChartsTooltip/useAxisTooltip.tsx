@@ -1,13 +1,13 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
-import { type SeriesId } from '../models/seriesType/common';
+import { SeriesId } from '../models/seriesType/common';
 import {
-  type CartesianChartSeriesType,
-  type ChartsSeriesConfig,
-  type PolarChartSeriesType,
+  CartesianChartSeriesType,
+  ChartsSeriesConfig,
+  PolarChartSeriesType,
 } from '../models/seriesType/config';
-import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
+import { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
@@ -25,9 +25,9 @@ import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsLabelMarkProps } from '../ChartsLabel';
+import { ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 

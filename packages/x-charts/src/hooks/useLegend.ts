@@ -1,15 +1,15 @@
 'use client';
-import { type ChartSeriesType } from '../models/seriesType/config';
+import { ChartSeriesType } from '../models/seriesType/config';
 import {
-  type ProcessedSeries,
-  type UseChartSeriesSignature,
+  ProcessedSeries,
+  UseChartSeriesSignature,
   selectorChartSeriesConfig,
 } from '../internals/plugins/corePlugins/useChartSeries';
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { type ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
+import { ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
 
 function getSeriesToDisplay(
   series: ProcessedSeries,

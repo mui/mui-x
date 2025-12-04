@@ -3,9 +3,9 @@ import {
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   DEFAULT_ZOOM_SLIDER_SIZE,
 } from '../../../constants';
-import { type AxisId } from '../../../../models/axis';
-import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';
-import { type ZoomOptions } from './zoom.types';
+import { AxisId } from '../../../../models/axis';
+import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { ZoomOptions } from './zoom.types';
 
 export const defaultZoomOptions = {
   minStart: 0,

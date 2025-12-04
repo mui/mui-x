@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { type AxisId, type ComputedXAxis, type ComputedYAxis } from '../models/axis';
-import { type SeriesId } from '../models/seriesType/common';
+import { AxisId, ComputedXAxis, ComputedYAxis } from '../models/axis';
+import { SeriesId } from '../models/seriesType/common';
 
 const getAxisMessage = (axisDirection: 'x' | 'y', axisId: AxisId) => {
   const axisName = `${axisDirection}-axis`;

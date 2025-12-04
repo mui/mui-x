@@ -1,11 +1,11 @@
 'use client';
-import type * as React from 'react';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
-import { type ChartDataProviderProps } from '../ChartDataProvider';
+import * as React from 'react';
+import { ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type UseChartContainerPropsReturnValue<
   TSeries extends ChartSeriesType,

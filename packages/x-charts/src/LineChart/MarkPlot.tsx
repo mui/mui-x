@@ -7,19 +7,19 @@ import { useChartId } from '../hooks/useChartId';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import { cleanId } from '../internals/cleanId';
-import { type LineItemIdentifier } from '../models/seriesType/line';
+import { LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
 import getColor from './seriesConfig/getColor';
-import { MarkElement, type MarkElementProps } from './MarkElement';
+import { MarkElement, MarkElementProps } from './MarkElement';
 import { useChartContext } from '../context/ChartProvider';
 import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import {
   selectorChartsHighlightXAxisIndex,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
-import { type AxisId } from '../models/axis';
+import { AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface MarkPlotSlots {

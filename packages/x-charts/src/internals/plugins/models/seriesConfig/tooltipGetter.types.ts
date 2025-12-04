@@ -4,17 +4,17 @@ import type {
   ChartSeriesType,
   ChartsSeriesConfig,
 } from '../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import { SeriesId } from '../../../../models/seriesType/common';
 import {
-  type AxisId,
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type PolarAxisDefaultized,
-  type ComputedXAxis,
-  type ComputedYAxis,
+  AxisId,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  PolarAxisDefaultized,
+  ComputedXAxis,
+  ComputedYAxis,
 } from '../../../../models/axis';
-import { type ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
-import { type ColorGetter } from './colorProcessor.types';
+import { ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
+import { ColorGetter } from './colorProcessor.types';
 
 export interface ItemTooltip<T extends ChartSeriesType> {
   /**

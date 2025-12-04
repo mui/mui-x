@@ -1,6 +1,6 @@
 import { createRenderer } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
-import { RadarChart, type RadarChartProps } from '@mui/x-charts/RadarChart';
+import { RadarChart, RadarChartProps } from '@mui/x-charts/RadarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { CHART_SELECTOR } from '../tests/constants';
 

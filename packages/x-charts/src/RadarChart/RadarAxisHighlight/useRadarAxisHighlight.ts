@@ -6,11 +6,11 @@ import { useStore } from '../../internals/store/useStore';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
+  UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { type AxisId } from '../../models/axis';
-import { type DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
-import { type ChartInstance } from '../../internals/plugins/models';
+import { AxisId } from '../../models/axis';
+import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
+import { ChartInstance } from '../../internals/plugins/models';
 import {
   selectorChartsInteractionRotationAxisIndex,
   selectorChartsInteractionRotationAxisValue,

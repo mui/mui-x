@@ -2,7 +2,7 @@
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartZAxis,
-  type UseChartZAxisSignature,
+  UseChartZAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartZAxis';
 import { useSelector } from '../internals/store/useSelector';
 

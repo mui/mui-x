@@ -1,5 +1,5 @@
 import { isOrdinalScale } from '../../../scaleGuards';
-import { type PolarAxisDefaultized } from '../../../../models/axis';
+import { PolarAxisDefaultized } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
 
 /**

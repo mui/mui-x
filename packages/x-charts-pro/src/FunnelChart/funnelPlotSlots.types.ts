@@ -1,6 +1,6 @@
-import type * as React from 'react';
+import * as React from 'react';
 import type { FunnelSectionProps } from './FunnelSection';
-import { type FunnelSectionLabelProps } from './FunnelSectionLabel';
+import { FunnelSectionLabelProps } from './FunnelSectionLabel';
 
 export interface FunnelPlotSlots {
   /**

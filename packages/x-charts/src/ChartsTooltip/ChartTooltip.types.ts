@@ -1,4 +1,4 @@
-import { type ChartsTooltipProps } from './ChartsTooltip';
+import { ChartsTooltipProps } from './ChartsTooltip';
 
 export interface ChartsTooltipSlots {
   /**

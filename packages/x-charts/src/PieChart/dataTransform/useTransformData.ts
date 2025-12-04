@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import {
-  type ComputedPieRadius,
-  type DefaultizedPieSeriesType,
-  type DefaultizedPieValueType,
+  ComputedPieRadius,
+  DefaultizedPieSeriesType,
+  DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';

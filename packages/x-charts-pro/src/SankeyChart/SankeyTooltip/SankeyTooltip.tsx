@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
 import { SankeyTooltipContent } from './SankeyTooltipContent';
-import { type SankeyTooltipProps } from './SankeyTooltip.types';
+import { SankeyTooltipProps } from './SankeyTooltip.types';
 import { useUtilityClasses } from './SankeyTooltip.classes';
 
 function SankeyTooltip(props: SankeyTooltipProps) {

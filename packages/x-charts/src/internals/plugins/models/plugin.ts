@@ -1,9 +1,9 @@
-import type * as React from 'react';
-import { type Store } from '@mui/x-internals/store';
+import * as React from 'react';
+import { Store } from '@mui/x-internals/store';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
-import { type ChartSeriesConfig } from './seriesConfig';
-import { type ChartState } from './chart';
+import { ChartSeriesConfig } from './seriesConfig';
+import { ChartState } from './chart';
 
 export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> {
   /**

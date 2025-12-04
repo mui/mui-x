@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';
 import { HeatmapTooltipContent } from './HeatmapTooltipContent';
-import { type HeatmapTooltipProps } from './HeatmapTooltip.types';
+import { HeatmapTooltipProps } from './HeatmapTooltip.types';
 import { useUtilityClasses } from './HeatmapTooltip.classes';
 
 function HeatmapTooltip(props: HeatmapTooltipProps) {

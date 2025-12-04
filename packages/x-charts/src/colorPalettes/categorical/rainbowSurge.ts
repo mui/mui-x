@@ -1,4 +1,4 @@
-import { type ChartsColorPaletteCallback } from '../types';
+import { ChartsColorPaletteCallback } from '../types';
 
 export const rainbowSurgePaletteLight = [
   '#4254FB',

@@ -1,21 +1,21 @@
-import { type DefaultizedProps, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import {
-  type ScatterSeriesType,
-  type DefaultizedScatterSeriesType,
-  type ScatterItemIdentifier,
-  type ScatterValueType,
+  ScatterSeriesType,
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+  ScatterValueType,
 } from './scatter';
-import { type LineSeriesType, type DefaultizedLineSeriesType, type LineItemIdentifier } from './line';
-import { type BarItemIdentifier, type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
+import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import {
-  type PieSeriesType,
-  type DefaultizedPieSeriesType,
-  type PieItemIdentifier,
-  type PieValueType,
-  type DefaultizedPieValueType,
+  PieSeriesType,
+  DefaultizedPieSeriesType,
+  PieItemIdentifier,
+  PieValueType,
+  DefaultizedPieValueType,
 } from './pie';
-import { type DefaultizedRadarSeriesType, type RadarItemIdentifier, type RadarSeriesType } from './radar';
-import { type SeriesColor } from './common';
+import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import { SeriesColor } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {

@@ -1,4 +1,4 @@
-import { type DefaultizedZoomOptions, type ZoomData } from '@mui/x-charts/internals';
+import { DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
 
 /**
  * Helper to get the range (in percents of a reference range) corresponding to a given scale.

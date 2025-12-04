@@ -3,14 +3,14 @@ import type {
   ChartSeriesType,
 } from '../../../../models/seriesType/config';
 import {
-  type ChartsRotationAxisProps,
-  type ChartsRadiusAxisProps,
-  type ComputedXAxis,
-  type ComputedYAxis,
+  ChartsRotationAxisProps,
+  ChartsRadiusAxisProps,
+  ComputedXAxis,
+  ComputedYAxis,
 } from '../../../../models/axis';
-import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { type ProcessedSeries, type SeriesLayout } from '../../corePlugins/useChartSeries';
-import { type ComputeResult } from '../../featurePlugins/useChartPolarAxis/computeAxisValue';
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { ProcessedSeries, SeriesLayout } from '../../corePlugins/useChartSeries';
+import { ComputeResult } from '../../featurePlugins/useChartPolarAxis/computeAxisValue';
 
 export interface TooltipPositionGetterAxesConfig {
   x?: ComputedXAxis;

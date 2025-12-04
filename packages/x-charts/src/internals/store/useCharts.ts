@@ -2,19 +2,19 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { Store } from '@mui/x-internals/store';
 import {
-  type ChartAnyPluginSignature,
-  type ChartInstance,
-  type ChartPlugin,
-  type ChartPublicAPI,
-  type ChartState,
-  type ConvertSignaturesIntoPlugins,
+  ChartAnyPluginSignature,
+  ChartInstance,
+  ChartPlugin,
+  ChartPublicAPI,
+  ChartState,
+  ConvertSignaturesIntoPlugins,
 } from '../plugins/models';
-import { CHART_CORE_PLUGINS, type ChartCorePluginSignatures } from '../plugins/corePlugins';
-import { type UseChartBaseProps } from './useCharts.types';
-import { type UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import { CHART_CORE_PLUGINS, ChartCorePluginSignatures } from '../plugins/corePlugins';
+import { UseChartBaseProps } from './useCharts.types';
+import { UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
-import { type ChartSeriesType } from '../../models/seriesType/config';
-import { type ChartSeriesConfig } from '../plugins/models/seriesConfig';
+import { ChartSeriesType } from '../../models/seriesType/config';
+import { ChartSeriesConfig } from '../plugins/models/seriesConfig';
 
 let globalId = 0;
 

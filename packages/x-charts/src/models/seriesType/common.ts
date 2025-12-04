@@ -1,7 +1,7 @@
-import { type HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
+import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
-import { type AxisId } from '../axis';
+import { AxisId } from '../axis';
 
 /**
  * The unique identifier of a series.

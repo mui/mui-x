@@ -1,13 +1,13 @@
-import { type DefaultizedProps } from '@mui/x-internals/types';
+import { DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import {
-  type CartesianSeriesType,
-  type CommonSeriesType,
-  type CommonDefaultizedProps,
-  type StackableSeriesType,
-  type SeriesId,
+  CartesianSeriesType,
+  CommonSeriesType,
+  CommonDefaultizedProps,
+  StackableSeriesType,
+  SeriesId,
 } from './common';
-import { type BarItem, type BarLabelContext } from '../../BarChart';
+import { BarItem, BarLabelContext } from '../../BarChart';
 
 export type BarValueType = number;
 

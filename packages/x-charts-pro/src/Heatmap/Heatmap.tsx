@@ -3,46 +3,46 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
-import { type MakeOptional } from '@mui/x-internals/types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
-import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
-  type ChartsAxisSlots,
-  type ChartsAxisSlotProps,
-  type ChartSeriesConfig,
-  type XAxis,
-  type YAxis,
+  ChartsAxisSlots,
+  ChartsAxisSlotProps,
+  ChartSeriesConfig,
+  XAxis,
+  YAxis,
 } from '@mui/x-charts/internals';
 import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,
-  type ChartsOverlayProps,
-  type ChartsOverlaySlotProps,
-  type ChartsOverlaySlots,
+  ChartsOverlayProps,
+  ChartsOverlaySlotProps,
+  ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import {
   ChartsLegend,
-  type ChartsLegendSlotProps,
-  type ChartsLegendSlots,
+  ChartsLegendSlotProps,
+  ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
-import { type ChartContainerProProps } from '../ChartContainerPro';
-import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
+import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { ChartContainerProProps } from '../ChartContainerPro';
+import { HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
 import { heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, type HeatmapTooltipProps } from './HeatmapTooltip';
-import { type HeatmapItemSlotProps, type HeatmapItemSlots } from './HeatmapItem';
-import { HEATMAP_PLUGINS, type HeatmapPluginSignatures } from './Heatmap.plugins';
+import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
+import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
+import { HEATMAP_PLUGINS, HeatmapPluginSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
-  type ChartsToolbarProSlotProps,
-  type ChartsToolbarProSlots,
+  ChartsToolbarProSlotProps,
+  ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface HeatmapSlots

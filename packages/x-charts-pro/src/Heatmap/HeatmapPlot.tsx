@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
-import { HeatmapItem, type HeatmapItemProps } from './HeatmapItem';
+import { HeatmapItem, HeatmapItemProps } from './HeatmapItem';
 
 export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
 

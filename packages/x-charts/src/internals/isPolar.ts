@@ -1,4 +1,4 @@
-import { type PolarChartSeriesType } from '../models/seriesType/config';
+import { PolarChartSeriesType } from '../models/seriesType/config';
 import { polarSeriesTypes } from './configInit';
 
 export function isPolarSeriesType(seriesType: string): seriesType is PolarChartSeriesType {

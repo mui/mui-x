@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { type ChartPlugin } from '../../models';
-import { type SeriesId } from '../../../../models/seriesType/common';
-import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
+import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { ChartPlugin } from '../../models';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { useSelector } from '../../../store/useSelector';
 import {

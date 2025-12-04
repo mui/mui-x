@@ -1,14 +1,14 @@
 'use client';
 import {
-  type ChartAnyPluginSignature,
-  type ChartSeriesType,
+  ChartAnyPluginSignature,
+  ChartSeriesType,
   useChartContainerProps,
-  type UseChartContainerPropsReturnValue,
+  UseChartContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
-import type * as React from 'react';
-import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import * as React from 'react';
+import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import type { ChartContainerProProps } from './ChartContainerPro';
-import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartContainerProPropsReturnValue<
   TSeries extends ChartSeriesType,

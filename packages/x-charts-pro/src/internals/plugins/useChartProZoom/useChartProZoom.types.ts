@@ -1,15 +1,15 @@
 import {
-  type UseChartSeriesSignature,
-  type ChartPluginSignature,
-  type UseChartCartesianAxisSignature,
-  type UseChartCartesianAxisDefaultizedParameters,
-  type ZoomData,
-  type AxisId,
+  UseChartSeriesSignature,
+  ChartPluginSignature,
+  UseChartCartesianAxisSignature,
+  UseChartCartesianAxisDefaultizedParameters,
+  ZoomData,
+  AxisId,
   type UseChartBrushSignature,
 } from '@mui/x-charts/internals';
 import {
-  type ZoomInteractionConfig,
-  type DefaultizedZoomInteractionConfig,
+  ZoomInteractionConfig,
+  DefaultizedZoomInteractionConfig,
 } from './ZoomInteractionConfig.types';
 
 export interface UseChartProZoomParameters {

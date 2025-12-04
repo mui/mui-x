@@ -1,4 +1,4 @@
-import { type DefaultizedZoomOptions, type ZoomData } from '@mui/x-charts/internals';
+import { DefaultizedZoomOptions, ZoomData } from '@mui/x-charts/internals';
 
 /**
  * Calculates the new zoom range based on the current zoom, step, and constraints.

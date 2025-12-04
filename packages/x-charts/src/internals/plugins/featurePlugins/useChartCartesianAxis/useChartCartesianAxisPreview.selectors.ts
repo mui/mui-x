@@ -17,13 +17,13 @@ import {
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
 import {
-  type AxisId,
-  type ChartsAxisProps,
-  type D3Scale,
-  type DefaultedAxis,
-  type ScaleName,
+  AxisId,
+  ChartsAxisProps,
+  D3Scale,
+  DefaultedAxis,
+  ScaleName,
 } from '../../../../models/axis';
-import { type ZoomData } from './zoom.types';
+import { ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { getRange } from './getAxisScale';

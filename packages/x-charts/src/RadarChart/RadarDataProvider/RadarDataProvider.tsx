@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { type MakeOptional } from '@mui/x-internals/types';
-import { type ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
-import { RADAR_PLUGINS, type RadarChartPluginSignatures } from '../RadarChart.plugins';
-import { type RadarSeriesType } from '../../models/seriesType/radar';
-import { type ChartsRadiusAxisProps, type ChartsRotationAxisProps, type PolarAxisConfig } from '../../models/axis';
-import { ChartDataProvider, type ChartDataProviderProps } from '../../ChartDataProvider';
+import { MakeOptional } from '@mui/x-internals/types';
+import { ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
+import { RADAR_PLUGINS, RadarChartPluginSignatures } from '../RadarChart.plugins';
+import { RadarSeriesType } from '../../models/seriesType/radar';
+import { ChartsRadiusAxisProps, ChartsRotationAxisProps, PolarAxisConfig } from '../../models/axis';
+import { ChartDataProvider, ChartDataProviderProps } from '../../ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
-import { type RadarConfig } from './radar.types';
-import { type ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
+import { RadarConfig } from './radar.types';
+import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
 const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };

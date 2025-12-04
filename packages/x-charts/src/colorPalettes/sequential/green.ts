@@ -1,5 +1,5 @@
 // Green sequential gradient palette based on the color scheme
-import { type ChartsColorPaletteCallback } from '../types';
+import { ChartsColorPaletteCallback } from '../types';
 
 export const greenPaletteLight = [
   '#CDEBDD',

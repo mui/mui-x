@@ -6,7 +6,7 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { markElementClasses, type MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',

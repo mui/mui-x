@@ -2,7 +2,7 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { type ChartPlugin } from '@mui/x-charts/internals';
+import { ChartPlugin } from '@mui/x-charts/internals';
 import type {
   UseSankeyHighlightSignature,
   SankeyHighlightItemData,

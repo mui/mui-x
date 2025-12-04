@@ -3,8 +3,8 @@ import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsis
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { type ChartPlugin } from '../../models';
-import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
+import { ChartPlugin } from '../../models';
+import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
 
 export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
   useAssertModelConsistency({

@@ -1,27 +1,27 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
+  UseChartZAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartZAxis';
 import {
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   useChartInteraction,
-  type UseChartInteractionSignature,
+  UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
-  type UseChartHighlightSignature,
+  UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
+  UseChartKeyboardNavigationSignature,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import { type ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 import {
   useChartBrush,
-  type UseChartBrushSignature,
+  UseChartBrushSignature,
 } from '../internals/plugins/featurePlugins/useChartBrush';
 import {
   useChartVisibilityManager,

@@ -1,4 +1,4 @@
-import { isBandScaleConfig, type TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { isBandScaleConfig, TooltipItemPositionGetter } from '@mui/x-charts/internals';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'heatmap'> = (params) => {
   const { series, identifier, axesConfig, placement } = params;

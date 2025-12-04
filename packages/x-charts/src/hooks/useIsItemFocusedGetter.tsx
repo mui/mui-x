@@ -1,5 +1,5 @@
 'use client';
-import { type FocusedItemData, useFocusedItem } from './useFocusedItem';
+import { FocusedItemData, useFocusedItem } from './useFocusedItem';
 
 /**
  * A hook to check focus state of multiple items.

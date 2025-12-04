@@ -1,4 +1,4 @@
-import { type CartesianExtremumGetter } from '@mui/x-charts/internals';
+import { CartesianExtremumGetter } from '@mui/x-charts/internals';
 
 const getValueExtremum = (
   direction: 'x' | 'y',

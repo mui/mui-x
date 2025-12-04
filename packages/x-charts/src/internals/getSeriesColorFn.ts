@@ -1,4 +1,4 @@
-import { type CommonSeriesType, type ColorCallbackValue } from '../models/seriesType/common';
+import { CommonSeriesType, ColorCallbackValue } from '../models/seriesType/common';
 
 export function getSeriesColorFn<TValue>(series: {
   color: NonNullable<CommonSeriesType<TValue>['color']>;

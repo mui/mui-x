@@ -4,7 +4,7 @@ import {
   type UseChartExperimentalFeaturesSignature,
   useChartExperimentalFeatures,
 } from './useChartExperimentalFeature';
-import { type UseChartIdSignature, useChartId, type UseChartIdParameters } from './useChartId';
+import { type UseChartIdSignature, useChartId, UseChartIdParameters } from './useChartId';
 import { type UseChartSeriesSignature, useChartSeries } from './useChartSeries';
 import {
   type UseChartInteractionListenerSignature,

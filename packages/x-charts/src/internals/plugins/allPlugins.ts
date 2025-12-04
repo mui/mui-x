@@ -1,31 +1,28 @@
 // This file should be removed after creating all plugins in favor of a file per chart type.
-import { type ChartSeriesType } from '../../models/seriesType/config';
+import { ChartSeriesType } from '../../models/seriesType/config';
 import {
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
 } from './featurePlugins/useChartCartesianAxis';
-import {
-  useChartHighlight,
-  type UseChartHighlightSignature,
-} from './featurePlugins/useChartHighlight';
+import { useChartHighlight, UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
 import {
   useChartInteraction,
-  type UseChartInteractionSignature,
+  UseChartInteractionSignature,
 } from './featurePlugins/useChartInteraction';
 import {
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
+  UseChartKeyboardNavigationSignature,
 } from './featurePlugins/useChartKeyboardNavigation';
-import { type UseChartPolarAxisSignature } from './featurePlugins/useChartPolarAxis';
+import { UseChartPolarAxisSignature } from './featurePlugins/useChartPolarAxis';
 import {
   useChartClosestPoint,
-  type UseChartClosestPointSignature,
+  UseChartClosestPointSignature,
 } from './featurePlugins/useChartClosestPoint';
-import { useChartZAxis, type UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
-import { useChartBrush, type UseChartBrushSignature } from './featurePlugins/useChartBrush';
+import { useChartZAxis, UseChartZAxisSignature } from './featurePlugins/useChartZAxis';
+import { useChartBrush, UseChartBrushSignature } from './featurePlugins/useChartBrush';
 import {
-  type UseChartVisibilityManagerSignature,
   useChartVisibilityManager,
+  UseChartVisibilityManagerSignature,
 } from './featurePlugins/useChartVisibilityManager';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [

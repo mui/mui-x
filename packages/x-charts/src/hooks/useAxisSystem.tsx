@@ -2,7 +2,7 @@
 import { selectorChartRawXAxis } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
   selectorChartRawRotationAxis,
-  type UseChartPolarAxisSignature,
+  UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';

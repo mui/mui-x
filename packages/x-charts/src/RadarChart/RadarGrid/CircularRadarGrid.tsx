@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type RadarGridRenderProps } from './RadarGrid.types';
+import { RadarGridRenderProps } from './RadarGrid.types';
 
 /**
  * @ignore - internal component.

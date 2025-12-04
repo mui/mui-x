@@ -5,10 +5,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
-import { type SeriesId } from '../models/seriesType/common';
+import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
+import { SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 
 export interface LineElementClasses {

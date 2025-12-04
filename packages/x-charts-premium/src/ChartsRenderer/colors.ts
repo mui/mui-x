@@ -12,7 +12,7 @@ import {
   yellowPalette,
   cyanPalette,
   pinkPalette,
-  type ChartsColorPaletteCallback,
+  ChartsColorPaletteCallback,
 } from '@mui/x-charts/colorPalettes';
 
 export const colorPaletteLookup: Map<string, ChartsColorPaletteCallback> = new Map([

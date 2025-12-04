@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
 import {
-  type ChartPlugin,
+  ChartPlugin,
   useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
-  type ZoomData,
+  ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
+import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
   getVerticalCenterRatio,

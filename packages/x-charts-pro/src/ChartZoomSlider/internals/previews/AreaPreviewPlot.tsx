@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  type AxisId,
+  AxisId,
   useSelector,
   useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  type SeriesId,
+  SeriesId,
 } from '@mui/x-charts/internals';
-import { type PreviewPlotProps } from './PreviewPlot.types';
+import { PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',

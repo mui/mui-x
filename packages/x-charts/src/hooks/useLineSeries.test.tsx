@@ -1,7 +1,7 @@
-import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useLineSeries, useLineSeriesContext } from './useLineSeries';
-import { type DefaultizedLineSeriesType, type LineSeriesType } from '../models';
+import { DefaultizedLineSeriesType, LineSeriesType } from '../models';
 import { LineChart } from '../LineChart';
 
 const mockSeries: LineSeriesType[] = [

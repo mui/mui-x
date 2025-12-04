@@ -2,9 +2,9 @@
 import {
   useSeriesOfType,
   useAllSeriesOfType,
-  type ProcessedSeries,
-  type SeriesId,
-  type ChartSeriesDefaultized,
+  ProcessedSeries,
+  SeriesId,
+  ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
 
 export type UseHeatmapSeriesReturnValue = ChartSeriesDefaultized<'heatmap'>;

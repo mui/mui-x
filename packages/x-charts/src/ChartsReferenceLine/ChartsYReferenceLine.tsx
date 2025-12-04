@@ -4,14 +4,14 @@ import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
 import {
-  type CommonChartsReferenceLineProps,
+  CommonChartsReferenceLineProps,
   DEFAULT_SPACING,
   DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
   ReferenceLineRoot,
 } from './common';
 import { ChartsText } from '../ChartsText';
 import {
-  type ChartsReferenceLineClasses,
+  ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
 

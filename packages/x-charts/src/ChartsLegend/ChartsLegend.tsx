@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { styled, type SxProps, type Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useLegend } from '../hooks/useLegend';
 import type { Direction } from './direction';
-import { type LegendItemParams, type SeriesLegendItemContext } from './legendContext.types';
+import { SeriesLegendItemContext, type LegendItemParams } from './legendContext.types';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 import { seriesContextBuilder } from './onClickContextBuilder';
 import { legendClasses, useUtilityClasses, type ChartsLegendClasses } from './chartsLegendClasses';

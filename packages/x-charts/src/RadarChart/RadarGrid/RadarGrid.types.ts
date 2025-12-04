@@ -1,4 +1,4 @@
-import { type RadarGridClasses } from './radarGridClasses';
+import { RadarGridClasses } from './radarGridClasses';
 
 export interface RadarGridProps {
   /**

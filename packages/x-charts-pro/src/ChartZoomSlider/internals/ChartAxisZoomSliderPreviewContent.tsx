@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  type AxisId,
+  AxisId,
   selectorChartSeriesProcessed,
   useSelector,
   useStore,

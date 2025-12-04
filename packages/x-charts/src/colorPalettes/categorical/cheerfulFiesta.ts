@@ -1,4 +1,4 @@
-import { type ChartsColorPaletteCallback } from '../types';
+import { ChartsColorPaletteCallback } from '../types';
 
 export const cheerfulFiestaPaletteDark = [
   '#0059B2',

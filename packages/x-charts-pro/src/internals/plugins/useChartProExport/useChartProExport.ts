@@ -1,10 +1,10 @@
-import { type ChartPlugin } from '@mui/x-charts/internals';
+import { ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
 import { exportImage } from './exportImage';
 import {
-  type ChartImageExportOptions,
-  type ChartPrintExportOptions,
-  type UseChartProExportSignature,
+  ChartImageExportOptions,
+  ChartPrintExportOptions,
+  UseChartProExportSignature,
 } from './useChartProExport.types';
 
 function waitForAnimationFrame() {

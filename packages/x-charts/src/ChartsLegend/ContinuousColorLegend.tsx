@@ -1,23 +1,23 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, type SxProps, type Theme } from '@mui/material/styles';
+import { styled, SxProps, Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import { type AppendKeys } from '@mui/x-internals/types';
-import { type ComputedAxis } from '../models/axis';
+import { AppendKeys } from '@mui/x-internals/types';
+import { ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
-import { type ColorLegendSelector } from './colorLegend.types';
+import { ColorLegendSelector } from './colorLegend.types';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
-import { ChartsLabelGradient, type ChartsLabelGradientProps } from '../ChartsLabel/ChartsLabelGradient';
-import { type Direction } from './direction';
+import { ChartsLabelGradient, ChartsLabelGradientProps } from '../ChartsLabel/ChartsLabelGradient';
+import { Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {
   continuousColorLegendClasses,
-  type ContinuousColorLegendClasses,
+  ContinuousColorLegendClasses,
   useUtilityClasses,
 } from './continuousColorLegendClasses';
 import { useChartGradientIdObjectBoundBuilder } from '../hooks/useChartGradientId';
-import { type ZAxisDefaultized } from '../models/z-axis';
+import { ZAxisDefaultized } from '../models/z-axis';
 
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 

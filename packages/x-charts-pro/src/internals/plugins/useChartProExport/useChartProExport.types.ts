@@ -1,4 +1,4 @@
-import { type ChartPluginSignature } from '@mui/x-charts/internals';
+import { ChartPluginSignature } from '@mui/x-charts/internals';
 
 export interface UseChartProExportParameters {}
 

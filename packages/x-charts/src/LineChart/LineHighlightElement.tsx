@@ -6,7 +6,7 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { type SeriesId } from '../models/seriesType/common';
+import { SeriesId } from '../models/seriesType/common';
 import { getSymbol } from '../internals/getSymbol';
 
 export interface LineHighlightElementClasses {

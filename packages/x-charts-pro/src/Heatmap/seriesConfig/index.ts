@@ -1,4 +1,4 @@
-import { type ChartSeriesTypeConfig } from '@mui/x-charts/internals';
+import { ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';

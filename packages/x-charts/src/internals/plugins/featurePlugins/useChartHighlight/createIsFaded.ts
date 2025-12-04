@@ -1,5 +1,5 @@
-import { type HighlightScope } from './highlightConfig.types';
-import { type HighlightItemData } from './useChartHighlight.types';
+import { HighlightScope } from './highlightConfig.types';
+import { HighlightItemData } from './useChartHighlight.types';
 
 function alwaysFalse(): boolean {
   return false;

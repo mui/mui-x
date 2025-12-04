@@ -1,9 +1,9 @@
 'use client';
 import PropTypes from 'prop-types';
-import { type SxProps, type Theme } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import clsx from 'clsx';
-import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import {
   ChartsTooltipCell,
   ChartsTooltipPaper,

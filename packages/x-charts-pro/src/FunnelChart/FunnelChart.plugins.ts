@@ -1,18 +1,18 @@
 import {
-  type ConvertSignaturesIntoPlugins,
+  ConvertSignaturesIntoPlugins,
   useChartHighlight,
-  type UseChartHighlightSignature,
+  UseChartHighlightSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
+  UseChartInteractionSignature,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  type UseChartProExportSignature,
+  UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 import { useChartFunnelAxis } from './funnelAxisPlugin/useChartFunnelAxis';
-import { type UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartFunnelAxis.types';
+import { UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartFunnelAxis.types';
 
 export type FunnelChartPluginSignatures = [
   UseChartFunnelAxisSignature,

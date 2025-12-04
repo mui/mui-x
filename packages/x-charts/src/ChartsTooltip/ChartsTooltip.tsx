@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import { ChartsItemTooltipContent } from './ChartsItemTooltipContent';
 import { ChartsAxisTooltipContent } from './ChartsAxisTooltipContent';
-import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './ChartsTooltipContainer';
+import { ChartsTooltipContainer, ChartsTooltipContainerProps } from './ChartsTooltipContainer';
 import { useUtilityClasses } from './chartsTooltipClasses';
-import { type TriggerOptions } from './utils';
+import { TriggerOptions } from './utils';
 
 export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
   extends Omit<ChartsTooltipContainerProps<T>, 'children'> {}

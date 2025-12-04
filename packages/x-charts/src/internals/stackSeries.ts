@@ -10,10 +10,10 @@ import {
   stackOffsetNone as d3StackOffsetNone,
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
-  type Series,
+  Series,
 } from '@mui/x-charts-vendor/d3-shape';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
-import { type SeriesId, type StackableSeriesType } from '../models/seriesType/common';
+import { SeriesId, StackableSeriesType } from '../models/seriesType/common';
 
 type FormatterParams<T> = {
   series: Record<SeriesId, T>;

@@ -5,11 +5,11 @@ import { styled } from '@mui/material/styles';
 import {
   AreaElement,
   areaElementClasses,
-  type AreaElementProps,
-  type AreaElementSlotProps,
-  type AreaElementSlots,
+  AreaElementProps,
+  AreaElementSlotProps,
+  AreaElementSlots,
 } from './AreaElement';
-import { type LineItemIdentifier } from '../models/seriesType/line';
+import { LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';

@@ -1,4 +1,4 @@
-import { type GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
+import { GetSeriesWithDefaultValues } from '@mui/x-charts/internals';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'heatmap'> = (
   seriesData,

@@ -1,5 +1,5 @@
 import { imageMimeTypes } from './utils/imageMimeTypes';
-import { type ChartsLocaleText } from './utils/chartsLocaleTextApi';
+import { ChartsLocaleText } from './utils/chartsLocaleTextApi';
 import { getChartsLocalization } from './utils/getChartsLocalization';
 
 // This object is not Partial<ChartsLocaleText> because it is the default values

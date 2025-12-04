@@ -1,6 +1,6 @@
 import {
-  type CartesianExtremumFilter,
-  type CartesianExtremumGetter,
+  CartesianExtremumFilter,
+  CartesianExtremumGetter,
 } from '../../internals/plugins/models/seriesConfig';
 import { findMinMax } from '../../internals/findMinMax';
 

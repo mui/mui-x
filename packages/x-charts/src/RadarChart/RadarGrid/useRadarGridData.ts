@@ -2,7 +2,7 @@ import { useRotationScale } from '../../hooks/useScale';
 import { useRadiusAxes } from '../../hooks';
 import {
   selectorChartPolarCenter,
-  type UseChartPolarAxisSignature,
+  UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import { useSelector } from '../../internals/store/useSelector';

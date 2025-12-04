@@ -1,4 +1,4 @@
-import { type ChartsLocaleText } from './chartsLocaleTextApi';
+import { ChartsLocaleText } from './chartsLocaleTextApi';
 
 /**
  * Helper to pass translation to all charts thanks to the MUI theme.

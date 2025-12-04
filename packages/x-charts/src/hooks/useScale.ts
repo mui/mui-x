@@ -1,6 +1,6 @@
 'use client';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { type AxisId, type AxisScaleConfig, type D3Scale, type ScaleName } from '../models/axis';
+import { AxisId, AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
 import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
 
 /**

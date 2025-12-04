@@ -1,4 +1,4 @@
-import { type ColorProcessor } from '../../../internals/plugins/models';
+import { ColorProcessor } from '../../../internals/plugins/models';
 import { getSeriesColorFn } from '../../../internals/getSeriesColorFn';
 
 const getColor: ColorProcessor<'bar'> = (series, xAxis, yAxis) => {

@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
 import {
-  type ChartPlugin,
+  ChartPlugin,
   useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
-  type ZoomData,
+  ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { type PanEvent } from '@mui/x-internal-gestures/core';
-import { type UseChartProZoomSignature } from '../useChartProZoom.types';
+import { PanEvent } from '@mui/x-internal-gestures/core';
+import { UseChartProZoomSignature } from '../useChartProZoom.types';
 import { getHorizontalCenterRatio, getVerticalCenterRatio, isSpanValid } from './useZoom.utils';
 import { selectorZoomInteractionConfig } from '../ZoomInteractionConfig.selectors';
 

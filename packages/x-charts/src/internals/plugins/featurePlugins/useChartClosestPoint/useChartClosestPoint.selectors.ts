@@ -1,6 +1,6 @@
 import { createSelector } from '@mui/x-internals/store';
-import { type ChartRootSelector } from '../../utils/selectors';
-import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
+import { ChartRootSelector } from '../../utils/selectors';
+import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
 
 const selectVoronoi: ChartRootSelector<UseChartClosestPointSignature> = (state) => state.voronoi;
 

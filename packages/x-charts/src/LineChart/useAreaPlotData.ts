@@ -2,12 +2,12 @@ import * as React from 'react';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
-import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
+import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { type SeriesId } from '../models/seriesType/common';
+import { SeriesId } from '../models/seriesType/common';
 
 interface AreaPlotDataPoint {
   d: string;

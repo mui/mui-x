@@ -1,17 +1,17 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
+  UseChartZAxisSignature,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
+  UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
-  type ConvertSignaturesIntoPlugins,
+  UseChartHighlightSignature,
+  ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  type UseChartProExportSignature,
+  UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
 export type HeatmapPluginSignatures = [

@@ -1,7 +1,7 @@
-import { type ChartSeriesType, type ChartsSeriesConfig } from '../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../models/seriesType/common';
-import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
-import { type FocusableSeriesTypes } from './useChartKeyboardNavigation.types';
+import { ChartSeriesType, ChartsSeriesConfig } from '../../../../models/seriesType/config';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { FocusableSeriesTypes } from './useChartKeyboardNavigation.types';
 import { isFocusableSeriesType } from './isFocusableSeriesType';
 
 /**

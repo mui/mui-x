@@ -1,5 +1,5 @@
 import { createSelector } from '@mui/x-internals/store';
-import { type ChartRootSelector } from '../../utils/selectors';
+import { ChartRootSelector } from '../../utils/selectors';
 import type { UseChartAnimationSignature } from './useChartAnimation.types';
 
 const selectorChartAnimationState: ChartRootSelector<UseChartAnimationSignature> = (state) =>

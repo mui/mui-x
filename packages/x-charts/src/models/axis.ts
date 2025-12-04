@@ -11,13 +11,13 @@ import type {
   ScaleSymLog,
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { SxProps } from '@mui/system/styleFunctionSx';
+import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import { type ChartsTextProps } from '../ChartsText';
-import { type ContinuousColorConfig, type OrdinalColorConfig, type PiecewiseColorConfig } from './colorMapping';
+import { ChartsTextProps } from '../ChartsText';
+import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
 
 export type AxisId = string | number;
 

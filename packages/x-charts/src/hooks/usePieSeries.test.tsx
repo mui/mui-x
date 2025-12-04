@@ -1,7 +1,7 @@
-import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { usePieSeries, usePieSeriesContext } from './usePieSeries';
-import { type DefaultizedPieSeriesType, type PieSeriesType } from '../models';
+import { DefaultizedPieSeriesType, PieSeriesType } from '../models';
 import { PieChart } from '../PieChart';
 
 const mockSeries: PieSeriesType[] = [

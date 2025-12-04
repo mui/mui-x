@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
-import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
+import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useItemTooltip } from './useItemTooltip';
 import { useBarSeries } from '../hooks';

@@ -1,9 +1,9 @@
-import { type ScatterItemIdentifier } from '../../../../models/seriesType';
-import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { type ChartPluginSignature } from '../../models';
-import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
-import { type UseChartHighlightSignature } from '../useChartHighlight';
-import { type UseChartInteractionSignature } from '../useChartInteraction';
+import { ScatterItemIdentifier } from '../../../../models/seriesType';
+import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { ChartPluginSignature } from '../../models';
+import { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import { UseChartHighlightSignature } from '../useChartHighlight';
+import { UseChartInteractionSignature } from '../useChartInteraction';
 
 export interface UseChartVoronoiInstance {
   /**

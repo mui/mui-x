@@ -9,7 +9,7 @@ import {
   useItemTooltip,
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLabelMark } from '@mui/x-charts/internals';
-import { type SankeyTooltipProps } from './SankeyTooltip.types';
+import { SankeyTooltipProps } from './SankeyTooltip.types';
 import { useUtilityClasses } from './SankeyTooltip.classes';
 
 export interface SankeyTooltipContentProps extends Pick<SankeyTooltipProps, 'classes'> {}

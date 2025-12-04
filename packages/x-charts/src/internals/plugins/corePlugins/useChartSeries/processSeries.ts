@@ -1,11 +1,11 @@
-import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { type SeriesId } from '../../../../models/seriesType/common';
-import { type AllSeriesType } from '../../../../models/seriesType';
-import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
-import { type ChartSeriesConfig, type SeriesProcessorParams } from '../../models/seriesConfig';
+import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { SeriesId } from '../../../../models/seriesType/common';
+import { AllSeriesType } from '../../../../models/seriesType';
+import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import { ChartSeriesConfig, type SeriesProcessorParams } from '../../models/seriesConfig';
 import {
-  type DefaultizedSeriesGroups,
-  type ProcessedSeries,
+  DefaultizedSeriesGroups,
+  ProcessedSeries,
   type SeriesLayout,
 } from './useChartSeries.types';
 import type { IsIdentifierVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';

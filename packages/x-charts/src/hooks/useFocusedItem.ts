@@ -7,8 +7,8 @@ import {
   selectorChartsFocusedSeriesId,
   selectorChartsFocusedDataIndex,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import { type ChartSeriesType } from '../models/seriesType/config';
-import { type SeriesId } from '../models/seriesType/common';
+import { ChartSeriesType } from '../models/seriesType/config';
+import { SeriesId } from '../models/seriesType/common';
 
 export type FocusedItemData = {
   seriesType: ChartSeriesType;

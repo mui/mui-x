@@ -1,5 +1,5 @@
-import { type AxisConfig, type ScaleName } from '@mui/x-charts/models';
-import { type MakeOptional } from '@mui/x-internals/types';
+import { AxisConfig, ScaleName } from '@mui/x-charts/models';
+import { MakeOptional } from '@mui/x-internals/types';
 
 export type FunnelScaleName = Exclude<ScaleName, 'point'>;
 

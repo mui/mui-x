@@ -1,28 +1,25 @@
 import {
   useChartZAxis,
-  type UseChartZAxisSignature,
+  UseChartZAxisSignature,
   useChartCartesianAxis,
-  type UseChartCartesianAxisSignature,
+  UseChartCartesianAxisSignature,
   useChartInteraction,
-  type UseChartInteractionSignature,
+  UseChartInteractionSignature,
   useChartHighlight,
-  type UseChartHighlightSignature,
+  UseChartHighlightSignature,
   useChartKeyboardNavigation,
-  type UseChartKeyboardNavigationSignature,
+  UseChartKeyboardNavigationSignature,
   useChartBrush,
-  type UseChartBrushSignature,
-  type ConvertSignaturesIntoPlugins,
+  UseChartBrushSignature,
+  ConvertSignaturesIntoPlugins,
   useChartVisibilityManager,
-  type UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  type UseChartProExportSignature,
+  UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
-import {
-  useChartProZoom,
-  type UseChartProZoomSignature,
-} from '../internals/plugins/useChartProZoom';
+import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
 
 export type LineChartProPluginSignatures = [
   UseChartZAxisSignature,

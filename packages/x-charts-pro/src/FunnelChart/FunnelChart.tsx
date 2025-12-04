@@ -2,25 +2,25 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
+import { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { type MakeOptional } from '@mui/x-internals/types';
+import { MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { FunnelPlot, type FunnelPlotProps } from './FunnelPlot';
-import { type FunnelSeriesType } from './funnel.types';
+import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
+import { FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { type ChartContainerProProps } from '../ChartContainerPro';
+import { ChartContainerProProps } from '../ChartContainerPro';
 import { funnelSeriesConfig } from './seriesConfig';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { type FunnelChartSlotExtension } from './funnelSlots.types';
-import { type CategoryAxis } from './categoryAxis.types';
-import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
+import { FunnelChartSlotExtension } from './funnelSlots.types';
+import { CategoryAxis } from './categoryAxis.types';
+import { FUNNEL_CHART_PLUGINS, FunnelChartPluginSignatures } from './FunnelChart.plugins';
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps

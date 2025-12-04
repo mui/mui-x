@@ -1,5 +1,5 @@
 import { useChartApiContext as useChartApiContextCommunity } from '@mui/x-charts/context';
-import { type ChartProApi } from './ChartProApi';
+import { ChartProApi } from './ChartProApi';
 
 /**
  * The `useChartProApiContext` hook provides access to the chart API.
