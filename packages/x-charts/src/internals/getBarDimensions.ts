@@ -3,7 +3,6 @@ import type { ComputedAxis } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { findMinMax } from './findMinMax';
 import { getBandSize } from './getBandSize';
-import type { IsIdentifierVisibleFunction } from './plugins/featurePlugins/useChartVisibilityManager';
 
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
   const isVerticalAndPositive = verticalLayout && baseValue > 0;
@@ -21,7 +20,7 @@ export function getBarDimensions(params: {
   dataIndex: number;
   numberOfGroups: number;
   groupIndex: number;
-  isItemVisible: IsIdentifierVisibleFunction;
+  isSeriesVisible: boolean;
 }) {
   const {
     verticalLayout,
@@ -31,7 +30,7 @@ export function getBarDimensions(params: {
     dataIndex,
     numberOfGroups,
     groupIndex,
-    isItemVisible,
+    isSeriesVisible,
   } = params;
 
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
@@ -61,11 +60,9 @@ export function getBarDimensions(params: {
 
   const [visibleMinValueCoord, visibleMaxValueCoord] = findMinMax(visibleValueCoordinates);
 
-  const isVisible = isItemVisible(`${series.id}`);
-
   let barSize = 0;
   if (seriesValue !== 0) {
-    if (isVisible) {
+    if (isSeriesVisible) {
       barSize = Math.max(series.minBarSize, visibleMaxValueCoord - visibleMinValueCoord);
     }
   }

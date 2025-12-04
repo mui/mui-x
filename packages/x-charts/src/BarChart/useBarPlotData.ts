@@ -7,10 +7,6 @@ import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { getBarDimensions } from '../internals/getBarDimensions';
-import { selectorIsIdentifierVisibleGetter } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
-import type { UseChartVisibilityManagerSignature } from '../plugins';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -25,8 +21,6 @@ export function useBarPlotData(
     ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
-  const store = useStore<[UseChartVisibilityManagerSignature]>();
-  const isItemVisible = useSelector(store, selectorIsIdentifierVisibleGetter).get;
 
   const chartId = useChartId();
 
@@ -81,7 +75,7 @@ export function useBarPlotData(
           dataIndex,
           numberOfGroups: stackingGroups.length,
           groupIndex,
-          isItemVisible,
+          isSeriesVisible: !series[seriesId].hidden,
         });
 
         if (barDimensions == null) {
