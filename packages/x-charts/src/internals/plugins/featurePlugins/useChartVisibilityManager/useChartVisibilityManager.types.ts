@@ -101,6 +101,10 @@ export interface UseChartVisibilityManagerState {
      * Map of identifiers visibility status.
      */
     visibilityMap: VisibilityMap;
+    /**
+     * Internal information to know if the user controls the state or not.
+     */
+    isControlled: boolean;
   };
 }
 

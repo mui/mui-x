@@ -10,7 +10,7 @@ const selectVisibilityManager: ChartOptionalRootSelector<UseChartVisibilityManag
   state,
 ) => state.visibilityManager;
 
-const EMPTY_VISIBILITY_MAP = {};
+export const EMPTY_VISIBILITY_MAP = {};
 
 /**
  * Selector to get the hidden identifiers from the visibility manager.

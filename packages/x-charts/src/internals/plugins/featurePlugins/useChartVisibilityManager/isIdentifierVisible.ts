@@ -6,7 +6,7 @@ export const buildIdentifier = (ids: string | (string | number)[]) => {
   if (typeof ids === 'string') {
     return ids;
   }
-  return ids.filter(Boolean).join(VISIBILITY_SEPARATOR);
+  return ids.filter((v) => v !== undefined && v !== null).join(VISIBILITY_SEPARATOR);
 };
 
 export const isIdentifierVisible = (

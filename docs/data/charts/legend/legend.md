@@ -37,6 +37,20 @@ The `toggleVisibilityOnClick` prop can be combined with the `onItemClick` handle
 When both are provided, the `onItemClick` callback is called first, followed by the visibility toggle.
 :::
 
+### Controlled visibility
+
+You can control the visibility state externally using the `visibilityMap` prop.
+This prop accepts an object where keys are item identifiers and values are booleans indicating visibility status (`false` means hidden).
+
+Different chart types use different strategies to generate these identifiers:
+
+- For series-level visibility: `${seriesId}`
+- For item-level visibility: `${seriesId}-${itemId}`
+
+The demo below shows how to programmatically control which items are visible using buttons.
+
+{{"demo": "ControlledVisibility.js"}}
+
 ## Customization
 
 This section explains how to customize the legend using classes and properties.
