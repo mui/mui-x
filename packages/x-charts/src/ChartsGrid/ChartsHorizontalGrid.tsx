@@ -19,15 +19,13 @@ export function ChartsGridHorizontal(props: ChartsGridHorizontalProps) {
   const { instance } = useChartContext();
   const { axis, start, end, classes } = props;
 
-  // @ts-expect-error timeOrdinalTicks may not be present on all axis types
-  // Should be set to never, but this causes other issues with proptypes generator.
-  const { scale, tickNumber, tickInterval, timeOrdinalTicks } = axis;
+  const { scale, tickNumber, tickInterval, tickSpacing } = axis;
 
   const yTicks = useTicks({
     scale,
     tickNumber,
     tickInterval,
-    timeOrdinalTicks,
+    tickSpacing,
     direction: 'y',
   });
 

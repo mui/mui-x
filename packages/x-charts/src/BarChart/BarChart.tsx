@@ -47,6 +47,7 @@ export interface BarChartSlotProps
     Partial<ChartsSlotProps> {}
 
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
+
 export interface BarChartProps
   extends Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
@@ -59,7 +60,7 @@ export interface BarChartProps
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
-  series: Readonly<BarSeries[]>;
+  series: ReadonlyArray<BarSeries>;
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -429,6 +430,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -516,6 +518,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -589,6 +592,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -653,6 +657,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -716,6 +721,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -779,6 +785,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -852,6 +859,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -925,6 +933,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -988,6 +997,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
     ]).isRequired,
@@ -1074,6 +1084,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -1160,6 +1171,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -1232,6 +1244,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1295,6 +1308,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1357,6 +1371,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1419,6 +1434,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1491,6 +1507,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1563,6 +1580,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1625,6 +1643,7 @@ BarChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),

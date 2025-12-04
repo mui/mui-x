@@ -1,11 +1,11 @@
 import {
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { getRecurringEventOccurrencesForVisibleDays } from './recurring-event-utils';
+import { getRecurringEventOccurrencesForVisibleDays } from './recurring-events';
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.
@@ -92,30 +92,9 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
 
 export interface GetOccurrencesFromEventsParameters {
   adapter: Adapter;
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
   events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
   resourceParentIds: Map<string, string | null>;
-}
-
-export function sortEventOccurrences(
-  occurrences: SchedulerEventOccurrence[],
-  adapter: Adapter,
-): SchedulerEventOccurrence[] {
-  return occurrences
-    .map((occurrence) => {
-      return {
-        occurrence,
-        // TODO: Avoid JS Date conversion
-        start: occurrence.allDay
-          ? adapter.toJsDate(adapter.startOfDay(occurrence.start.value)).getTime()
-          : occurrence.start.timestamp,
-        end: occurrence.allDay
-          ? adapter.toJsDate(adapter.endOfDay(occurrence.end.value)).getTime()
-          : occurrence.end.timestamp,
-      };
-    })
-    .sort((a, b) => a.start - b.start || b.end - a.end)
-    .map((item) => item.occurrence);
 }

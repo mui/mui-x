@@ -5,6 +5,180 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.21.0
+
+_Dec 3, 2025_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add [tick spacing property](https://mui.com/x/react-charts/axis/#tick-spacing) to charts axis to control the distance between ticks.
+
+The following team members contributed to this release:
+@alexfauquette, @bernardobelchior, @ElliottMiller, @Janpot, @JCQuintas, @romgrk, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.21.0`
+
+- [DataGrid] Fix autosizing header width calculation (#20323) @siriwatknp
+- [DataGrid] Virtualizer refactor (#19465) @romgrk
+
+#### `@mui/x-data-grid-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.21.0`.
+
+#### `@mui/x-data-grid-premium@8.21.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.21.0`, plus:
+
+- [DataGridPremium] Prevent pasting to non-editable cells (#20333) @ElliottMiller
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.21.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.21.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.21.0`
+
+- [charts] Fix string measuring types (#20454) @bernardobelchior
+- [charts] Fix typo in performance note for CustomLineMarks demo (#20529) @sai6855
+- [charts] Introduce the notion of series with positions (#20461) @alexfauquette
+- [charts] Migrate from sinon to Vitest mocking utilities for x-charts\* packages (#20444) @Copilot
+- [charts] Move series-level values to series computed data in bar plot (#20467) @bernardobelchior
+- [charts] Refactor bar chart components in preparation for range bar chart (#20521) @bernardobelchior
+- [charts] Remove unnecessary `any` types (#20527) @sai6855
+- [charts] Remove unused `drawingArea` from `findClosestPoints` (#20471) @bernardobelchior
+- [charts] Revert `useIsHydrated` to default=false (#20511) @JCQuintas
+- [charts] Support tooltip anchor position for radar (#20422) @alexfauquette
+- [charts] Add tick spacing property (#20282) @bernardobelchior
+- [charts] Fix Vitest lint error (#20550) @bernardobelchior
+- [charts] Fix infinite loop when highlighting pie slices or scatter points (#20549) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.21.0`, plus:
+
+- [charts-pro] Add support for `anchor="node"` on Sankey tooltip (#20462) @alexfauquette
+
+#### `@mui/x-charts-premium@8.21.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.21.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.21.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.21.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.21.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Migrate to `next/font` for fonts loading (#20407) @Copilot
+
+### Core
+
+- [code-infra] Enable vitest eslint plugin (#20530) @Janpot
+- [code-infra] Fix missing font loading for local fonts (#20480) @Janpot
+- [internal] Performance: use raw `useSyncExternalStore` (#20447) @romgrk
+- [code-infra] Enable `vitest/expect-expect` and `vitest/no-standalone-expect` rules for x-charts packages (#20535) @Copilot
+
+### Miscellaneous
+
+- Bump @types/d3-sankey to ^0.12.5 (#20489) @renovate[bot]
+- Bump @types/react to 19.2.7 (#20490) @renovate[bot]
+- Bump @types/yargs to ^17.0.35 (#20491) @renovate[bot]
+- Bump Vite & Vitest to ^4.0.14 (#20500) @renovate[bot]
+- Bump csstype to ^3.2.3 (#20493) @renovate[bot]
+- Bump es-toolkit to ^1.42.0 (#20494) @renovate[bot]
+- Bump eslint to ^8.48.0 (#20495) @renovate[bot]
+- Bump lerna to ^9.0.3 (#20496) @renovate[bot]
+- Bump lucide-react to ^0.555.0 (#20502) @renovate[bot]
+- Bump playwright monorepo (#20503) @renovate[bot]
+- Bump pnpm to 10.24.0 (#20504) @renovate[bot]
+- Bump react monorepo (#20340) @renovate[bot]
+- Bump react-hook-form to ^7.66.1 (#20497) @renovate[bot]
+- Bump rimraf to ^6.1.2 (#20498) @renovate[bot]
+- Bump webpack-bundle-analyzer to ^5.0.1 (#20508) @renovate[bot]
+- Bump next to ^15.5.6 [SECURITY] (#20555) @renovate[bot]
+
+## 8.20.0
+
+_Nov 26, 2025_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔃 Data Grid tree data now supports row reordering. See the [Drag-and-drop tree data reordering](https://mui.com/x/react-data-grid/tree-data/#drag-and-drop-tree-data-reordering) section for more details.
+- 🐞 Bugfixes
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @siriwatknp, @JCQuintas, @MBilalShafi, @prakhargupta1
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.20.0`
+
+- [DataGrid] Fix RTL virtualization to display columns when viewport width is larger than the grid (#20409) @siriwatknp
+- [DataGrid] Fix row range selection (#20442) @arminmeh
+- [DataGrid] Initialize data grid core packages (#20276) @cherniavskii
+- [DataGrid] Improve accessibility of the sort icon (#20430) @arminmeh
+- [DataGrid] Use `viewport` as a boundary for the `BasePopper` flip (#20311) @arminmeh
+
+#### `@mui/x-data-grid-pro@8.20.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.20.0`, plus:
+
+- [DataGridPro] Avoid automatic scroll back to the focused header filter after it leaves the viewport (#20416) @arminmeh
+- [DataGridPro] Tree data row reordering (#19401) @MBilalShafi
+
+#### `@mui/x-data-grid-premium@8.20.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.20.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.20.0`
+
+- [charts] Fix item tooltip position with node anchor (#20421) @alexfauquette
+- [charts] Fix radar item tooltip closing bug (#20429) @alexfauquette
+- [charts] Move series processing to selector (#20388) @JCQuintas
+- [charts] Prevent pointer out from removing controlled highlight (#20385) @alexfauquette
+
+#### `@mui/x-charts-pro@8.20.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.20.0`, plus:
+
+- [charts-pro] Fix Content-Security-Policy nonce not being correctly set on export (#20395) @bernardobelchior
+- [charts-pro] Improve vertical zoom slider thumb on mobile (#20439) @bernardobelchior
+- [charts-pro] Provide arguments to the `AreaPlotRoot` styled component (#20414) @arminmeh
+- [charts-pro] Remove grid outside the drawing area (#20412) @alexfauquette
+
+#### `@mui/x-charts-premium@8.20.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.20.0`, plus:
+
+- [charts-premium] Add explicit return type to `ChartsRenderer` for better compatibility with React 18 (#20413) @arminmeh
+
+### Docs
+
+- [docs] Add `llms.txt` link to the sidebar (#20312) @siriwatknp
+- [docs] Add a line chart demo for the Overview section (#20239) @prakhargupta1
+
 ## 8.19.0
 
 _Nov 20, 2025_

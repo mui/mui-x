@@ -36,6 +36,8 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/brush/*',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
+    '!docsx/data/data-grid/tree-data/utils/TreeDataSyncRowDataGroupingCell',
+    '!docsx/data/data-grid/tree-data/utils/DataStore',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
     '!docsx/data/charts/axis/SelectTimeFrequency', // sub-component for demo purpose
 

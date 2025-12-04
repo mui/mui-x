@@ -622,6 +622,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       timeOrdinalTicks: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -707,6 +708,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       timeOrdinalTicks: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -778,6 +780,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -840,6 +843,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -901,6 +905,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -962,6 +967,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -1033,6 +1039,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -1104,6 +1111,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -1165,6 +1173,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ]),
@@ -1246,6 +1255,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       timeOrdinalTicks: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -1330,6 +1340,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       timeOrdinalTicks: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -1400,6 +1411,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1461,6 +1473,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1521,6 +1534,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1581,6 +1595,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1651,6 +1666,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1721,6 +1737,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1781,6 +1798,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),

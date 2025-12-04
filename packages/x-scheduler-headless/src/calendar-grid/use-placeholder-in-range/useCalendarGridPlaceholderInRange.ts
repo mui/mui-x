@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
@@ -82,7 +82,7 @@ export function useCalendarGridPlaceholderInRange(
 
 export namespace useCalendarGridPlaceholderInRange {
   export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
 }

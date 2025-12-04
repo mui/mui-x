@@ -4,7 +4,7 @@ import {
   SchedulerProcessedEvent,
   SchedulerEventOccurrence,
   SchedulerResource,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '../models';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter, Adapter } from '../use-adapter';
@@ -53,8 +53,8 @@ export function useEventOccurrencesGroupedByResource(
 
 export namespace useEventOccurrencesGroupedByResource {
   export interface Parameters {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
 
   export type ReturnValue = {
@@ -79,8 +79,8 @@ export function innerGetEventOccurrencesGroupedByResource(
   resources: readonly SchedulerResource[],
   resourcesChildrenMap: Map<string, readonly SchedulerResource[]>,
   resourceParentIds: Map<string, string | null>,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
 ): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
   const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 

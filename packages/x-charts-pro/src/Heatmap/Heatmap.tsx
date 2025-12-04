@@ -493,6 +493,7 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       timeOrdinalTicks: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -585,6 +586,7 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       timeOrdinalTicks: PropTypes.arrayOf(
         PropTypes.oneOfType([
           PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),

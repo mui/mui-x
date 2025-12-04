@@ -1,4 +1,4 @@
-import { createRenderer, screen, waitFor } from '@mui/internal-test-utils';
+import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getCell } from 'test/utils/helperFn';
@@ -36,8 +36,10 @@ describe('<DataGrid /> - Virtualization RTL', () => {
       const virtualScroller = document.querySelector('.MuiDataGrid-virtualScroller');
       expect(virtualScroller).not.to.equal(null);
 
-      // Trigger scroll event to update render context
-      virtualScroller!.dispatchEvent(new Event('scroll'));
+      await act(() => {
+        // Trigger scroll event to update render context
+        virtualScroller!.dispatchEvent(new Event('scroll'));
+      });
 
       await waitFor(() => {
         // All 7 column headers should be visible since viewport is wider than columns

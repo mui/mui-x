@@ -58,8 +58,8 @@ And a value of `-1` will make bars overlap on top of each other.
 
 ## Stacking
 
-Each bar series can get a `stack` property expecting a string value.
-Series with the same `stack` will be stacked on top of each other.
+Bar series accept a string property named `stack`.
+Series with the same `stack` value are stacked on top of each other.
 
 {{"demo": "StackBars.js"}}
 
@@ -144,6 +144,8 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
+
+When using composition, you can set the `borderRadius` prop on the `BarPlot` component.
 
 {{"demo": "BorderRadius.js"}}
 

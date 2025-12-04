@@ -48,6 +48,11 @@ export interface TickParams {
    * @default 'middle'
    */
   tickLabelPlacement?: 'middle' | 'tick';
+  /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing?: number;
 }
 
 const offsetRatio = {
@@ -77,12 +82,32 @@ function getTickPosition<T extends { toString(): string }>(
   );
 }
 
-function getTimeTicks<T extends { toString(): string }>(
-  domain: T[],
-  tickNumber: number,
-  ticksFrequencies: TickFrequencyDefinition[],
-  scale: D3OrdinalScale<T>,
-  isInside: (offset: number) => boolean,
+/**
+ * Returns a new domain where each tick is at least {@link tickSpacing}px from the next one.
+ * Assumes tick spacing is greater than 0.
+ * @param domain Domain of the scale.
+ * @param range Range of the scale.
+ * @param tickSpacing Spacing in pixels.
+ */
+export function applyTickSpacing<T>(domain: T[], range: [number, number], tickSpacing: number) {
+  const rangeSpan = Math.abs(range[1] - range[0]);
+
+  const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
+
+  if (Number.isNaN(every) || every <= 1) {
+    return domain;
+  }
+
+  return domain.filter((_, index) => index % every === 0);
+}
+
+export function getTicks(
+  options: {
+    scale: D3Scale;
+    valueFormatter?: AxisConfig['valueFormatter'];
+    isInside: (offset: number) => boolean;
+  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'> &
+    Required<Pick<TickParams, 'tickNumber'>>,
 ) {
   if (ticksFrequencies.length === 0) {
     return [];
@@ -170,6 +195,7 @@ export function getTicks(options: GetTicksOptions) {
     tickInterval,
     tickPlacement: tickPlacementProp,
     tickLabelPlacement: tickLabelPlacementProp,
+    tickSpacing,
     isInside,
     timeOrdinalTicks,
   } = options;
@@ -213,19 +239,22 @@ export function getTicks(options: GetTicksOptions) {
   // Standard ordinal scale: 1 item =1 tick
   if (isOrdinalScale(scale)) {
     const domain = scale.domain();
-
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
 
-    const filteredDomain =
-      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-      (typeof tickInterval === 'object' && tickInterval) ||
-      domain;
+    let filteredDomain = domain;
+    if (typeof tickInterval === 'object' && tickInterval != null) {
+      filteredDomain = tickInterval;
+    } else {
+      if (typeof tickInterval === 'function') {
+        filteredDomain = filteredDomain.filter(tickInterval);
+      }
 
-    if (filteredDomain.length === 0) {
-      return [];
+      if (tickSpacing !== undefined && tickSpacing > 0) {
+        filteredDomain = applyTickSpacing(filteredDomain, scale.range(), tickSpacing);
+      }
     }
 
-    if (isBandScale(scale)) {
+    if (scale.bandwidth() > 0) {
       // scale type = 'band'
 
       const isReversed = scale.range()[0] > scale.range()[1];
@@ -269,7 +298,6 @@ export function getTicks(options: GetTicksOptions) {
     }
 
     // scale type = 'point'
-
     return filteredDomain.map((value) => {
       const defaultTickLabel = `${value}`;
       return {
@@ -341,7 +369,12 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 }
 
 export function useTicks(
-  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
+  options: {
+    scale: D3Scale;
+    valueFormatter?: AxisConfig['valueFormatter'];
+    direction: 'x' | 'y';
+  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'> &
+    Required<Pick<TickParams, 'tickNumber'>>,
 ): TickItemType[] {
   const {
     scale,
@@ -350,6 +383,7 @@ export function useTicks(
     tickInterval,
     tickPlacement = 'extremities',
     tickLabelPlacement,
+    tickSpacing,
     direction,
     timeOrdinalTicks,
   } = options;
@@ -364,6 +398,7 @@ export function useTicks(
         tickPlacement,
         tickInterval,
         tickLabelPlacement,
+        tickSpacing,
         valueFormatter,
         isInside,
         timeOrdinalTicks,
@@ -374,9 +409,9 @@ export function useTicks(
       tickPlacement,
       tickInterval,
       tickLabelPlacement,
+      tickSpacing,
       valueFormatter,
       isInside,
-      timeOrdinalTicks,
     ],
   );
 }

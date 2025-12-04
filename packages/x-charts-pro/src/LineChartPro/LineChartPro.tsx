@@ -432,6 +432,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -537,6 +538,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -628,6 +630,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -710,6 +713,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -791,6 +795,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -872,6 +877,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -963,6 +969,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1054,6 +1061,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1135,6 +1143,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1239,6 +1248,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -1343,6 +1353,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         timeOrdinalTicks: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
@@ -1433,6 +1444,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1514,6 +1526,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1594,6 +1607,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1674,6 +1688,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1764,6 +1779,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1854,6 +1870,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1934,6 +1951,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([

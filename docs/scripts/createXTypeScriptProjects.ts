@@ -135,6 +135,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'GridRowClassNameParams',
       'GridRowSpacingParams',
       'GridExportStateParams',
+      'GridRowOrderChangeParams',
 
       // Others
       'GridColDef',

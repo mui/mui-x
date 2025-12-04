@@ -147,6 +147,16 @@ In the demo below, the top axis has a `tickMinStep` of half a day, and the botto
 
 {{"demo": "TickNumber.js"}}
 
+### Tick spacing
+
+Use the `tickSpacing` property to define the minimum spacing in pixels between two ticks.
+
+Having a minimum space between ticks improves the readability of the axis and can also improve the chart's performance.
+
+This property defaults to 0 and is only available for ordinal axes, that is, axes with a band or point scale.
+
+{{"demo": "TickSpacing.js"}}
+
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.

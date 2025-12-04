@@ -59,7 +59,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
 
   const getColor =
     (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<T>)?.(
-      itemSeries as any,
+      itemSeries,
       xAxisId !== undefined ? xAxis[xAxisId] : undefined,
       yAxisId !== undefined ? yAxis[yAxisId] : undefined,
       zAxisId !== undefined ? zAxis[zAxisId] : undefined,

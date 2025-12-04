@@ -1,10 +1,8 @@
 'use client';
-import { sankey, type SankeyGraph } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
-import type { Theme } from '@mui/material/styles';
 import { path } from '@mui/x-charts-vendor/d3-path';
+import { sankey, type SankeyGraph } from './d3Sankey';
 import type {
-  SankeySeriesType,
   SankeyLayout,
   SankeyLayoutLink,
   SankeyLayoutNode,
@@ -22,12 +20,10 @@ import { getNodeAlignFunction } from './utils';
  */
 
 export function calculateSankeyLayout(
-  data: DefaultizedSankeySeriesType['data'],
+  series: DefaultizedSankeySeriesType,
   drawingArea: ChartDrawingArea,
-  theme: Theme,
-  series: Pick<SankeySeriesType, 'nodeOptions' | 'linkOptions' | 'iterations'> = {},
 ): SankeyLayout {
-  const { iterations = 6, nodeOptions, linkOptions } = series;
+  const { data, iterations = 6, nodeOptions, linkOptions } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,

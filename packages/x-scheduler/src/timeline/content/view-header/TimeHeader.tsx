@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import { useDayList } from '@mui/x-scheduler-headless/use-day-list';
+import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { HeaderProps } from './Headers.types';
@@ -12,10 +12,9 @@ import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-u
 import './Headers.css';
 
 export function TimeHeader(props: HeaderProps) {
-  const { className, amount, ...other } = props;
+  const { className, amount = TIME_UNITS_COUNT, ...other } = props;
 
   const adapter = useAdapter();
-  const getDayList = useDayList();
   const store = useTimelineStoreContext();
 
   const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
@@ -24,10 +23,11 @@ export function TimeHeader(props: HeaderProps) {
   const days = React.useMemo(
     () =>
       getDayList({
-        date: visibleDate,
-        amount: amount || TIME_UNITS_COUNT,
+        adapter,
+        start: visibleDate,
+        end: adapter.addDays(visibleDate, amount - 1),
       }),
-    [getDayList, visibleDate, amount],
+    [adapter, visibleDate, amount],
   );
 
   return (
