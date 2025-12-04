@@ -12,8 +12,8 @@ export enum RequestStatus {
 }
 
 export interface DateRange {
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
 }
 
 /**
