@@ -1,7 +1,12 @@
 'use client';
 import * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
-import { type AxisConfig, type D3ContinuousScale, type D3OrdinalScale, type D3Scale } from '../models/axis';
+import {
+  type AxisConfig,
+  type D3ContinuousScale,
+  type D3OrdinalScale,
+  type D3Scale,
+} from '../models/axis';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
 

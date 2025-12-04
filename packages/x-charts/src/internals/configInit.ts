@@ -1,4 +1,7 @@
-import { type CartesianChartSeriesType, type PolarChartSeriesType } from '../models/seriesType/config';
+import {
+  type CartesianChartSeriesType,
+  type PolarChartSeriesType,
+} from '../models/seriesType/config';
 
 let cartesianInstance: undefined | Set<CartesianChartSeriesType>;
 let polarInstance: undefined | Set<PolarChartSeriesType>;

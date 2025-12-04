@@ -10,7 +10,10 @@ import {
   type PolarAxisConfig,
   isContinuousScaleConfig,
 } from '../../../../models/axis';
-import { type ChartSeriesType, type PolarChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  type ChartSeriesType,
+  type PolarChartSeriesType,
+} from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getDefaultTickNumber, getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';

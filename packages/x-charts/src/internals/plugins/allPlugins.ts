@@ -4,7 +4,10 @@ import {
   useChartCartesianAxis,
   type UseChartCartesianAxisSignature,
 } from './featurePlugins/useChartCartesianAxis';
-import { useChartHighlight, type UseChartHighlightSignature } from './featurePlugins/useChartHighlight';
+import {
+  useChartHighlight,
+  type UseChartHighlightSignature,
+} from './featurePlugins/useChartHighlight';
 import {
   useChartInteraction,
   type UseChartInteractionSignature,

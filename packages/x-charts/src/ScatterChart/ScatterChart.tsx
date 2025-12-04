@@ -15,7 +15,10 @@ import { type ChartContainerProps } from '../ChartContainer';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
 import { type ScatterSeriesType } from '../models/seriesType/scatter';
 import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
-import { type ChartsTooltipSlots, type ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,

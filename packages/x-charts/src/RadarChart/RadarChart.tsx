@@ -14,11 +14,18 @@ import { useRadarChartProps } from './useRadarChartProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarGrid, type RadarGridProps } from './RadarGrid';
-import { RadarDataProvider, type RadarDataProviderProps } from './RadarDataProvider/RadarDataProvider';
+import {
+  RadarDataProvider,
+  type RadarDataProviderProps,
+} from './RadarDataProvider/RadarDataProvider';
 import { RadarSeriesArea, RadarSeriesMarks, type RadarSeriesPlotProps } from './RadarSeriesPlot';
 import { RadarAxisHighlight, type RadarAxisHighlightProps } from './RadarAxisHighlight';
 import { RadarMetricLabels } from './RadarMetricLabels';
-import { ChartsTooltip, type ChartsTooltipSlotProps, type ChartsTooltipSlots } from '../ChartsTooltip';
+import {
+  ChartsTooltip,
+  type ChartsTooltipSlotProps,
+  type ChartsTooltipSlots,
+} from '../ChartsTooltip';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
 

@@ -11,7 +11,11 @@ import {
 import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro, defaultSlotsMaterial } from '../internals/material';
+import {
+  type ChartsSlotPropsPro,
+  type ChartsSlotsPro,
+  defaultSlotsMaterial,
+} from '../internals/material';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 

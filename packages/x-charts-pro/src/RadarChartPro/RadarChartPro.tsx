@@ -19,7 +19,10 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { RADAR_CHART_PRO_PLUGINS, type RadarChartProPluginSignatures } from './RadarChartPro.plugins';
+import {
+  RADAR_CHART_PRO_PLUGINS,
+  type RadarChartProPluginSignatures,
+} from './RadarChartPro.plugins';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
   type ChartsToolbarProSlotProps,

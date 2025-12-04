@@ -1,4 +1,7 @@
-import { type ChartSeriesType, type ChartsSeriesConfig } from '../../../../models/seriesType/config';
+import {
+  type ChartSeriesType,
+  type ChartsSeriesConfig,
+} from '../../../../models/seriesType/config';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { type FocusableSeriesTypes } from './useChartKeyboardNavigation.types';

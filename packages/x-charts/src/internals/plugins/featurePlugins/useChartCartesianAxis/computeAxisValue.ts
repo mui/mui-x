@@ -15,7 +15,10 @@ import {
   type ComputedAxis,
   type D3Scale,
 } from '../../../../models/axis';
-import { type CartesianChartSeriesType, type ChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  type CartesianChartSeriesType,
+  type ChartSeriesType,
+} from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale, getSequentialColorScale } from '../../../colorScale';
 import { scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';

@@ -1,4 +1,9 @@
-import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis, type ScaleName } from '../models/axis';
+import {
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ComputedAxis,
+  type ScaleName,
+} from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';

@@ -4,14 +4,32 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
-import { AreaPlot, type AreaPlotProps, type AreaPlotSlotProps, type AreaPlotSlots } from './AreaPlot';
-import { LinePlot, type LinePlotProps, type LinePlotSlotProps, type LinePlotSlots } from './LinePlot';
+import {
+  AreaPlot,
+  type AreaPlotProps,
+  type AreaPlotSlotProps,
+  type AreaPlotSlots,
+} from './AreaPlot';
+import {
+  LinePlot,
+  type LinePlotProps,
+  type LinePlotSlotProps,
+  type LinePlotSlots,
+} from './LinePlot';
 import { type ChartContainerProps } from '../ChartContainer';
-import { MarkPlot, type MarkPlotProps, type MarkPlotSlotProps, type MarkPlotSlots } from './MarkPlot';
+import {
+  MarkPlot,
+  type MarkPlotProps,
+  type MarkPlotSlotProps,
+  type MarkPlotSlots,
+} from './MarkPlot';
 import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
 import { type LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { type ChartsTooltipSlots, type ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
 import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
