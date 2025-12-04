@@ -1,13 +1,11 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type DefaultizedProps } from '@mui/x-internals/types';
 import { getStackingGroups } from '../../internals/stackSeries';
 import {
-  type ChartSeries,
+  type ChartSeriesDefaultized,
   type DatasetElementType,
   type DatasetType,
 } from '../../models/seriesType/config';
-import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
 import { type SeriesId } from '../../models/seriesType/common';
 import { type SeriesProcessor } from '../../internals/plugins/models';
 
@@ -64,10 +62,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
     }
   });
 
-  const completedSeries: Record<
-    SeriesId,
-    DefaultizedProps<ChartSeries<'line'>, 'data'> & { stackedData: [number, number][] }
-  > = {};
+  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'line'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
@@ -97,6 +92,9 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
             })
           : series[id].data!,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
+        valueFormatter:
+          series[id]?.valueFormatter ??
+          ((v: number | null) => (v == null ? '' : v.toLocaleString())),
       };
     });
   });
@@ -104,7 +102,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
+    series: completedSeries,
   };
 };
 
