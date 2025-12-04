@@ -18,7 +18,7 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
-import { ChartsAxisData } from '../../../../models';
+import { type ChartsAxisData } from '../../../../models';
 
 const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
 type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;

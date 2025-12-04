@@ -1,18 +1,18 @@
-import { ChartDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { type ChartDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import {
   checkBarChartScaleErrors,
-  ComputedAxis,
-  ComputedAxisConfig,
-  D3Scale,
+  type ComputedAxis,
+  type ComputedAxisConfig,
+  type D3Scale,
   getBandSize,
-  ScaleName,
+  type ScaleName,
   selectorChartSeriesConfig,
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
-import { ChartsXAxisProps, ChartsYAxisProps } from '@mui/x-charts/models';
-import { DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
-import { ProcessedRangeBarData, ProcessedRangeBarSeriesData } from './types';
+import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/models';
+import { type DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
+import { type ProcessedRangeBarData, type ProcessedRangeBarSeriesData } from './types';
 import { useRangeBarSeriesContext } from '../../hooks';
 
 export function useRangeBarPlotData(

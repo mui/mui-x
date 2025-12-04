@@ -1,4 +1,4 @@
-import { cartesianSeriesTypes, ChartSeriesTypeConfig } from '@mui/x-charts/internals';
+import { cartesianSeriesTypes, type ChartSeriesTypeConfig } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extrema';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import seriesProcessor from './seriesProcessor';

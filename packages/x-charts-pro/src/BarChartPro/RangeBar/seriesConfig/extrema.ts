@@ -1,4 +1,4 @@
-import { CartesianExtremumGetter, findMinMax } from '@mui/x-charts/internals';
+import { type CartesianExtremumGetter, findMinMax } from '@mui/x-charts/internals';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
   if (direction === 'x') {

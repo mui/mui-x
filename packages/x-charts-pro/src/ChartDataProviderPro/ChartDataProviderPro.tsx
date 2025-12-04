@@ -7,7 +7,7 @@ import {
   type ChartAnyPluginSignature,
   type ChartProviderProps,
   ChartsSlotsProvider,
-  ChartSeriesConfig,
+  type ChartSeriesConfig,
   defaultSeriesConfig,
 } from '@mui/x-charts/internals';
 import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';

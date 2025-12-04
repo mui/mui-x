@@ -5,13 +5,13 @@ import { styled } from '@mui/material/styles';
 import { useSkipAnimation } from '@mui/x-charts/internals';
 import {
   BarElement,
-  BarElementSlotProps,
-  BarElementSlots,
+  type BarElementSlotProps,
+  type BarElementSlots,
   barElementClasses,
-  BarLabelSlots,
-  BarLabelSlotProps,
+  type BarLabelSlots,
+  type BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
-import { BarItemIdentifier } from '@mui/x-charts/models';
+import { type BarItemIdentifier } from '@mui/x-charts/models';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';

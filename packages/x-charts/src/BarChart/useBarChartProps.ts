@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { RangeBarSeriesType } from '../models/seriesType/rangeBar';
-import { BarChartProps, BarSeries } from './BarChart';
+import { type RangeBarSeriesType } from '../models/seriesType/rangeBar';
+import { type BarChartProps, type BarSeries } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { type ChartContainerProps } from '../ChartContainer';
 import { type BarPlotProps } from './BarPlot';

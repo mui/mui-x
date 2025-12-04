@@ -1,6 +1,6 @@
 import { useBarChartProps } from '@mui/x-charts/internals';
-import { RangeBarPlotProps } from './RangeBar/RangeBarPlot';
-import { BarChartProProps } from './BarChartPro';
+import { type RangeBarPlotProps } from './RangeBar/RangeBarPlot';
+import { type BarChartProProps } from './BarChartPro';
 
 /**
  * A helper function that extracts BarChartProProps from the input props

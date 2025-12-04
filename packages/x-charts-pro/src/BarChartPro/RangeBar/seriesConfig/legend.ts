@@ -1,4 +1,4 @@
-import { getLabel, LegendGetter } from '@mui/x-charts/internals';
+import { getLabel, type LegendGetter } from '@mui/x-charts/internals';
 import type { LegendItemParams } from '@mui/x-charts/ChartsLegend';
 
 const legendGetter: LegendGetter<'rangeBar'> = (params) => {

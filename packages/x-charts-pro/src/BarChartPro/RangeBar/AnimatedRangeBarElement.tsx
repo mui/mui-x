@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { BarProps } from '@mui/x-charts/BarChart';
+import { type BarProps } from '@mui/x-charts/BarChart';
 import { useAnimateRangeBar } from '../../hooks/animation/useAnimateRangeBar';
 
 export interface AnimatedRangeBarElementProps extends BarProps {}

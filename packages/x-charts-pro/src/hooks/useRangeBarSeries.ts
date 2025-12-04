@@ -1,12 +1,12 @@
 'use client';
 
 import {
-  ChartSeriesDefaultized,
-  ProcessedSeries,
+  type ChartSeriesDefaultized,
+  type ProcessedSeries,
   useAllSeriesOfType,
   useSeriesOfType,
 } from '@mui/x-charts/internals';
-import { SeriesId } from '@mui/x-charts/models';
+import { type SeriesId } from '@mui/x-charts/models';
 
 export type UseRangeBarSeriesReturnValue = ChartSeriesDefaultized<'rangeBar'>;
 export type UseRangeBarSeriesContextReturnValue = ProcessedSeries['rangeBar'];

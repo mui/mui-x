@@ -1,4 +1,4 @@
-import { TooltipItemPositionGetter } from '@mui/x-charts/internals';
+import { type TooltipItemPositionGetter } from '@mui/x-charts/internals';
 import { getRangeBarDimensions } from '../useRangeBarPlotData';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'rangeBar'> = (params) => {
