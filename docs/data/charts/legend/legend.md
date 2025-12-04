@@ -30,7 +30,7 @@ This callback receives an array of hidden item identifiers whenever the visibili
 
 The following demo shows a pie chart where you can toggle individual slices and see the count of visible slices update.
 
-{{"demo": "TogglePieSliceVisibility.js"}}
+{{"demo": "VisibilityOnChange.js"}}
 
 :::info
 The `toggleVisibilityOnClick` prop can be combined with the `onItemClick` handler.
