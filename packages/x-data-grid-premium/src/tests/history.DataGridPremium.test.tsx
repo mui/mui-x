@@ -279,6 +279,67 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
 
+    it('should validate the previous queue item after undo', async () => {
+      let firstEventValid = true;
+
+      const firstHandler: GridHistoryEventHandler = {
+        store: () => ({}),
+        undo: async () => {},
+        redo: async () => {},
+        validate: (_, operation) => {
+          if (operation === 'undo') {
+            return firstEventValid;
+          }
+          return true;
+        },
+      };
+
+      const secondHandler: GridHistoryEventHandler = {
+        store: () => ({}),
+        undo: async () => {},
+        redo: async () => {},
+        validate: () => true,
+      };
+
+      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
+      historyEvents.set('cellClick', firstHandler);
+      historyEvents.set('cellDoubleClick', secondHandler);
+
+      const { user } = render(
+        <Test historyEvents={historyEvents} historyValidationEvents={['stateChange']} />,
+      );
+
+      // First event
+      const cell = getCell(0, 2);
+      await user.click(cell);
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      // Second event
+      await user.dblClick(cell);
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      // Invalidate the first event
+      firstEventValid = false;
+
+      // Can still undo
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      // Undo the second event
+      await act(async () => {
+        const result = await apiRef.current!.history.undo();
+        expect(result).to.equal(true);
+      });
+
+      // Since the first event is invalid, undo should be cleared
+      await waitFor(() => {
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+      // Redo is not affected
+      expect(apiRef.current!.history.canRedo()).to.equal(true);
+    });
+
     it('should clear forward history when making a new action after undo', async () => {
       const customHandler: GridHistoryEventHandler = {
         store: () => ({ data: 'test' }),
