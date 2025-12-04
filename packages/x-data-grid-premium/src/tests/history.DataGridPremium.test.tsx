@@ -53,7 +53,7 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canRedo()).to.equal(false);
     });
 
-    it('should return false for undo when there is nothing to undo/redo', async () => {
+    it('should return false when there is nothing to undo/redo', async () => {
       render(<Test />);
 
       const resultUndo = await apiRef.current!.history.undo();
@@ -117,10 +117,11 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      const { user } = render(<Test historyEvents={historyEvents} />);
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
 
       // Trigger the custom event
       const cell = getCell(0, 2);
@@ -164,10 +165,11 @@ describe('<DataGridPremium /> - History', () => {
         },
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      const { user } = render(<Test historyEvents={historyEvents} />);
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
 
       // Trigger the custom event
       const cell = getCell(0, 2);
@@ -208,10 +210,11 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      ({ user } = render(<Test historyEvents={historyEvents} />));
+      ({ user } = render(<Test historyEventHandlers={historyEventHandlers} />));
 
       // Trigger the custom event
       const cell = getCell(0, 2);
@@ -251,10 +254,13 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      const { user } = render(<Test historyQueueSize={2} historyEvents={historyEvents} />);
+      const { user } = render(
+        <Test historyQueueSize={2} historyEventHandlers={historyEventHandlers} />,
+      );
 
       // Make 3 clicks
       await user.click(getCell(0, 2));
@@ -301,12 +307,16 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', firstHandler);
-      historyEvents.set('cellDoubleClick', secondHandler);
+      const historyEventHandlers = {
+        cellClick: firstHandler,
+        cellDoubleClick: secondHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
       const { user } = render(
-        <Test historyEvents={historyEvents} historyValidationEvents={['stateChange']} />,
+        <Test
+          historyEventHandlers={historyEventHandlers}
+          historyValidationEvents={['stateChange']}
+        />,
       );
 
       // First event
@@ -348,11 +358,15 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
       const { user } = render(
-        <Test historyEvents={historyEvents} historyValidationEvents={['stateChange']} />,
+        <Test
+          historyEventHandlers={historyEventHandlers}
+          historyValidationEvents={['stateChange']}
+        />,
       );
 
       const cell = getCell(0, 2);
@@ -386,10 +400,11 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      const { user } = render(<Test onUndo={onUndo} historyEvents={historyEvents} />);
+      const { user } = render(<Test onUndo={onUndo} historyEventHandlers={historyEventHandlers} />);
 
       const cell = getCell(0, 2);
       await user.click(cell);
@@ -417,10 +432,11 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      const { user } = render(<Test onRedo={onRedo} historyEvents={historyEvents} />);
+      const { user } = render(<Test onRedo={onRedo} historyEventHandlers={historyEventHandlers} />);
 
       const cell = getCell(0, 2);
       await user.click(cell);
@@ -453,10 +469,13 @@ describe('<DataGridPremium /> - History', () => {
         validate: () => true,
       };
 
-      const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
-      historyEvents.set('cellClick', customHandler);
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
 
-      const { user } = render(<Test historyQueueSize={0} historyEvents={historyEvents} />);
+      const { user } = render(
+        <Test historyQueueSize={0} historyEventHandlers={historyEventHandlers} />,
+      );
 
       const cell = getCell(0, 2);
       await user.click(cell);

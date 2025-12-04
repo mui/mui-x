@@ -244,19 +244,14 @@ export const createClipboardPasteHistoryHandler = (
 /**
  * Create the default history events map.
  */
-export const createDefaultHistoryHandlers = (
-  apiRef: RefObject<GridPrivateApiPremium>,
-): Map<
-  GridEvents,
-  GridHistoryEventHandler<
-    GridCellEditHistoryData | GridRowEditHistoryData | GridClipboardPasteHistoryData
-  >
-> => {
-  const map = new Map();
-
-  map.set('cellEditStop', createCellEditHistoryHandler(apiRef));
-  map.set('rowEditStop', createRowEditHistoryHandler(apiRef));
-  map.set('clipboardPasteEnd', createClipboardPasteHistoryHandler(apiRef));
-
-  return map;
-};
+export const createDefaultHistoryHandlers = (apiRef: RefObject<GridPrivateApiPremium>) =>
+  ({
+    cellEditStop: createCellEditHistoryHandler(apiRef),
+    rowEditStop: createRowEditHistoryHandler(apiRef),
+    clipboardPasteEnd: createClipboardPasteHistoryHandler(apiRef),
+  }) as Record<
+    GridEvents,
+    GridHistoryEventHandler<
+      GridCellEditHistoryData | GridRowEditHistoryData | GridClipboardPasteHistoryData
+    >
+  >;

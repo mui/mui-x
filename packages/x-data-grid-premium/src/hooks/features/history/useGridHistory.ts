@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import debounce from '@mui/utils/debounce';
 import {
   useGridEvent,
@@ -13,12 +14,7 @@ import {
 import type { GridEvents, GridEventListener } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import {
-  GridHistoryApi,
-  GridHistoryState,
-  GridHistoryItem,
-  GridHistoryEventHandler,
-} from './gridHistoryInterfaces';
+import { GridHistoryApi, GridHistoryState, GridHistoryItem } from './gridHistoryInterfaces';
 import {
   gridHistoryCurrentPositionSelector,
   gridHistoryQueueSelector,
@@ -41,18 +37,18 @@ export const useGridHistory = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'historyQueueSize' | 'historyEvents' | 'historyValidationEvents' | 'onUndo' | 'onRedo'
+    'historyQueueSize' | 'historyEventHandlers' | 'historyValidationEvents' | 'onUndo' | 'onRedo'
   >,
 ) => {
   const { historyQueueSize, onUndo, onRedo, historyValidationEvents } = props;
 
   // Use default history events if none provided
-  const historyEvents = React.useMemo(() => {
-    if (props.historyEvents && props.historyEvents.size > 0) {
-      return props.historyEvents;
+  const historyEventHandlers = React.useMemo(() => {
+    if (props.historyEventHandlers && !isObjectEmpty(props.historyEventHandlers)) {
+      return props.historyEventHandlers;
     }
     return createDefaultHistoryHandlers(apiRef);
-  }, [apiRef, props.historyEvents]);
+  }, [apiRef, props.historyEventHandlers]);
 
   // Internal ref to track undo/redo operation state
   // - 'idle': everything is done
@@ -165,7 +161,7 @@ export const useGridHistory = (
     // Undo check
     if (currentPosition >= 0) {
       const item = newQueue[currentPosition];
-      const handler = historyEvents.get(item.eventName);
+      const handler = historyEventHandlers[item.eventName];
       if (!handler) {
         clearUndoItems();
       } else {
@@ -178,7 +174,7 @@ export const useGridHistory = (
     // Redo check
     if (currentPosition + 1 < newQueue.length) {
       const item = newQueue[currentPosition + 1];
-      const handler = historyEvents.get(item.eventName);
+      const handler = historyEventHandlers[item.eventName];
       if (!handler) {
         clearRedoItems();
       } else {
@@ -188,7 +184,7 @@ export const useGridHistory = (
         }
       }
     }
-  }, [apiRef, historyEvents, historyQueueSize, clear, clearUndoItems, clearRedoItems]);
+  }, [apiRef, historyEventHandlers, historyQueueSize, clear, clearUndoItems, clearRedoItems]);
 
   const debouncedValidateQueueItems = React.useMemo(
     () => debounce(validateQueueItems, 0),
@@ -202,7 +198,7 @@ export const useGridHistory = (
       const clearMethod = operation === 'undo' ? clearUndoItems : clearRedoItems;
 
       const { eventName, data } = item;
-      const handler = historyEvents.get(eventName);
+      const handler = historyEventHandlers[eventName];
 
       if (!handler) {
         // If the handler is not found, it means tha we are updating the handlers map, so we can igore this request
@@ -232,7 +228,14 @@ export const useGridHistory = (
       validateQueueItems();
       return true;
     },
-    [apiRef, historyEvents, clearUndoItems, clearRedoItems, setHistoryState, validateQueueItems],
+    [
+      apiRef,
+      historyEventHandlers,
+      clearUndoItems,
+      clearRedoItems,
+      setHistoryState,
+      validateQueueItems,
+    ],
   );
 
   const undo = React.useCallback(async (): Promise<boolean> => {
@@ -319,8 +322,10 @@ export const useGridHistory = (
       return () => {};
     }
 
+    const events = Object.keys(historyEventHandlers) as GridEvents[];
     // Subscribe to all events in the map
-    historyEvents.forEach((handler: GridHistoryEventHandler, eventName: GridEvents) => {
+    events.forEach((eventName) => {
+      const handler = historyEventHandlers[eventName];
       const unsubscribe = apiRef.current.subscribeEvent(eventName, (...params: any[]) => {
         // Don't store if the event was triggered by undo/redo
         if (operationStateRef.current !== 'idle') {
@@ -338,5 +343,5 @@ export const useGridHistory = (
       eventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       eventUnsubscribersRef.current = [];
     };
-  }, [apiRef, historyEvents, historyQueueSize, addToQueue]);
+  }, [apiRef, historyEventHandlers, historyQueueSize, addToQueue]);
 };

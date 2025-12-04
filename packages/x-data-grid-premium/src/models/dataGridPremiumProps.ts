@@ -165,9 +165,9 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   historyQueueSize: number;
   /**
    * Map of grid events to their undo/redo handlers.
-   * @default Handlers for `cellEditStop` and `rowEditStop` events
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
    */
-  historyEvents: Map<GridEvents, GridHistoryEventHandler<any>>;
+  historyEventHandlers: Record<GridEvents, GridHistoryEventHandler<any>>;
   /**
    * List of grid events after which the history queue items should be re-validated.
    * @default ['columnsChange', 'rowsSet']

@@ -601,22 +601,9 @@ DataGridPremiumRaw.propTypes = {
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
    * Map of grid events to their undo/redo handlers.
-   * @default Handlers for `cellEditStop` and `rowEditStop` events
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
    */
-  historyEvents: PropTypes.shape({
-    '__@iterator@13267': PropTypes.func.isRequired,
-    '__@toStringTag@13648': PropTypes.string.isRequired,
-    clear: PropTypes.func.isRequired,
-    delete: PropTypes.func.isRequired,
-    entries: PropTypes.func.isRequired,
-    forEach: PropTypes.func.isRequired,
-    get: PropTypes.func.isRequired,
-    has: PropTypes.func.isRequired,
-    keys: PropTypes.func.isRequired,
-    set: PropTypes.func.isRequired,
-    size: PropTypes.number.isRequired,
-    values: PropTypes.func.isRequired,
-  }),
+  historyEventHandlers: PropTypes.object,
   /**
    * The maximum size of the history queue.
    * Set to 0 to disable the undo/redo feature.

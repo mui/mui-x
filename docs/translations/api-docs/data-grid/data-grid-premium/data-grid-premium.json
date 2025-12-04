@@ -265,7 +265,7 @@
     "hideFooterSelectedRowCount": {
       "description": "If <code>true</code>, the selected row count in the footer is hidden."
     },
-    "historyEvents": { "description": "Map of grid events to their undo/redo handlers." },
+    "historyEventHandlers": { "description": "Map of grid events to their undo/redo handlers." },
     "historyQueueSize": {
       "description": "The maximum size of the history queue. Set to 0 to disable the undo/redo feature."
     },

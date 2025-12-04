@@ -202,12 +202,9 @@
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterRowCount": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "default": "false" },
-    "historyEvents": {
-      "type": {
-        "name": "shape",
-        "description": "{ __@iterator@13267: func, __@toStringTag@13648: string, clear: func, delete: func, entries: func, forEach: func, get: func, has: func, keys: func, set: func, size: number, values: func }"
-      },
-      "default": "Handlers for `cellEditStop` and `rowEditStop` events"
+    "historyEventHandlers": {
+      "type": { "name": "object" },
+      "default": "Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events"
     },
     "historyQueueSize": { "type": { "name": "number" }, "default": "30" },
     "historyValidationEvents": {
