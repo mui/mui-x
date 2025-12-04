@@ -70,9 +70,9 @@ export interface UseChartVisibilityManagerInstance extends UseChartVisibilityMan
 export interface UseChartVisibilityManagerParameters {
   /**
    * Callback fired when the visible series change.
-   * @param {{ [key: string]: boolean }} hidden The ids of the hidden series.
+   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
    */
-  onVisibilityChange?: <T extends string = string>(hidden: Record<T, boolean>) => void;
+  onVisibilityChange?: <T extends string = string>(visibilityMap: Record<T, boolean>) => void;
   /**
    * Map of the visibility status of series and/or items.
    *
@@ -84,8 +84,8 @@ export interface UseChartVisibilityManagerParameters {
    *
    * @example
    * {
-   *   "series1": true, // series-level hidden
-   *   "series2-itemA": true // item-level hidden
+   *   "series1": false, // series-level hidden
+   *   "series2-itemA": false // item-level hidden
    * }
    */
   visibilityMap?: {
