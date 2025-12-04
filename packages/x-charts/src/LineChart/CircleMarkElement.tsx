@@ -36,7 +36,7 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
 const Circle = styled('circle')({
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'cx, cy',
+    transitionProperty: 'cx, cy, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
