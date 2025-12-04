@@ -9,7 +9,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Dec 3, 2025_
 
-We'd like to extend a big thank you to the 8 contributors who made this release possible.
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add [tick spacing property](https://mui.com/x/react-charts/axis/#tick-spacing) to charts axis to control the distance between ticks.
 
 The following team members contributed to this release:
 @alexfauquette, @bernardobelchior, @ElliottMiller, @Janpot, @JCQuintas, @romgrk, @sai6855, @siriwatknp
@@ -55,6 +57,9 @@ Same changes as in `@mui/x-date-pickers@8.21.0`.
 - [charts] Remove unused `drawingArea` from `findClosestPoints` (#20471) @bernardobelchior
 - [charts] Revert `useIsHydrated` to default=false (#20511) @JCQuintas
 - [charts] Support tooltip anchor position for radar (#20422) @alexfauquette
+- [charts] Add tick spacing property (#20282) @bernardobelchior 
+- [charts] Fix Vitest lint error (#20550) @bernardobelchior
+- [charts] Fix infinite loop when highlighting pie slices or scatter points (#20549) @bernardobelchior
 
 #### `@mui/x-charts-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
