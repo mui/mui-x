@@ -168,6 +168,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    * @default Handlers for `cellEditStop` and `rowEditStop` events
    */
   historyEvents: Map<GridEvents, GridHistoryEventHandler<any>>;
+  /**
+   * List of grid events after which the history queue items should be re-validated.
+   * @default ['columnsChange', 'rowsSet']
+   */
+  historyValidationEvents: GridEvents[];
 }
 
 export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>

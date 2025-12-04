@@ -1,9 +1,9 @@
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import type {
-  GridCellEditStopParams,
-  GridRowEditStopParams,
-  GridEvents,
+import {
+  type GridCellEditStopParams,
+  type GridRowEditStopParams,
+  type GridEvents,
 } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
@@ -43,12 +43,6 @@ export const createCellEditHistoryHandler = (
         return false;
       }
 
-      // Check if row is in the current page (visible)
-      const rowNode = apiRef.current.getRowNode(id);
-      if (!rowNode) {
-        return false;
-      }
-
       // Check if the value hasn't changed externally
       const currentValue = row[field];
       const expectedValue = direction === 'undo' ? newValue : oldValue;
@@ -64,14 +58,26 @@ export const createCellEditHistoryHandler = (
       const { id, field, oldValue } = data;
 
       await apiRef.current.updateRows([{ id, [field]: oldValue }]);
-      apiRef.current.setCellFocus(id, field);
+      setTimeout(() => {
+        apiRef.current.setCellFocus(id, field);
+      }, 0);
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: apiRef.current.getColumnIndex(field),
+      });
     },
 
     redo: async (data: GridCellEditHistoryData) => {
       const { id, field, newValue } = data;
 
       await apiRef.current.updateRows([{ id, [field]: newValue }]);
-      apiRef.current.setCellFocus(id, field);
+      setTimeout(() => {
+        apiRef.current.setCellFocus(id, field);
+      }, 0);
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: apiRef.current.getColumnIndex(field),
+      });
     },
   };
 };
@@ -105,12 +111,6 @@ export const createRowEditHistoryHandler = (
         return false;
       }
 
-      // Check if row is in the current page (visible)
-      const rowNode = apiRef.current.getRowNode(id);
-      if (!rowNode) {
-        return false;
-      }
-
       // Check if modified fields haven't changed externally
       const expectedRow = direction === 'undo' ? newRow : oldRow;
 
@@ -127,14 +127,26 @@ export const createRowEditHistoryHandler = (
       const { id, oldRow } = data;
 
       await apiRef.current.updateRows([{ id, ...oldRow }]);
-      apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
+      setTimeout(() => {
+        apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
+      }, 0);
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: 0,
+      });
     },
 
     redo: async (data: GridRowEditHistoryData) => {
       const { id, newRow } = data;
 
       await apiRef.current.updateRows([{ id, ...newRow }]);
-      apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
+      setTimeout(() => {
+        apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
+      }, 0);
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: 0,
+      });
     },
   };
 };
@@ -191,7 +203,13 @@ export const createClipboardPasteHistoryHandler = (
         const firstRowId = Object.keys(oldRows)[0];
         const firstField = visibleColumns[0].field;
         if (firstField) {
-          apiRef.current.setCellFocus(firstRowId, firstField);
+          setTimeout(() => {
+            apiRef.current.setCellFocus(firstRowId, firstField);
+          }, 0);
+          apiRef.current.scrollToIndexes({
+            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
+            colIndex: apiRef.current.getColumnIndex(firstField),
+          });
         }
       }
     },
@@ -210,7 +228,13 @@ export const createClipboardPasteHistoryHandler = (
         const firstRowId = Object.keys(newRows)[0];
         const firstField = visibleColumns[0].field;
         if (firstField) {
-          apiRef.current.setCellFocus(firstRowId, firstField);
+          setTimeout(() => {
+            apiRef.current.setCellFocus(firstRowId, firstField);
+          }, 0);
+          apiRef.current.scrollToIndexes({
+            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
+            colIndex: apiRef.current.getColumnIndex(firstField),
+          });
         }
       }
     },

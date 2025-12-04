@@ -18,6 +18,7 @@ import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
 import { defaultGetAggregationPosition } from '../hooks/features/aggregation/gridAggregationUtils';
+import { DEFAULT_HISTORY_VALIDATION_EVENTS } from '../hooks/features/history/constants';
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 
@@ -63,6 +64,7 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   chartsIntegration: false,
   historyQueueSize: 30,
   historyEvents: new Map(),
+  historyValidationEvents: DEFAULT_HISTORY_VALIDATION_EVENTS,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;

@@ -46,6 +46,7 @@
   { "name": "COMPACT_DENSITY_FACTOR", "kind": "Variable" },
   { "name": "Conversation", "kind": "TypeAlias" },
   { "name": "createCellEditHistoryHandler", "kind": "Variable" },
+  { "name": "createClipboardPasteHistoryHandler", "kind": "Variable" },
   { "name": "createRowEditHistoryHandler", "kind": "Variable" },
   { "name": "createRowSelectionManager", "kind": "Variable" },
   { "name": "CursorCoordinates", "kind": "Interface" },

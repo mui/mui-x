@@ -41,10 +41,10 @@ export const useGridHistory = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'historyQueueSize' | 'historyEvents' | 'onUndo' | 'onRedo'
+    'historyQueueSize' | 'historyEvents' | 'historyValidationEvents' | 'onUndo' | 'onRedo'
   >,
 ) => {
-  const { historyQueueSize, onUndo, onRedo } = props;
+  const { historyQueueSize, onUndo, onRedo, historyValidationEvents } = props;
 
   // Use default history events if none provided
   const historyEvents = React.useMemo(() => {
@@ -63,6 +63,8 @@ export const useGridHistory = (
 
   // History event unsubscribers
   const eventUnsubscribersRef = React.useRef<(() => void)[]>([]);
+  // Validation event unsubscribers
+  const validationEventUnsubscribersRef = React.useRef<(() => void)[]>([]);
 
   const setHistoryState = React.useCallback(
     (newState: Partial<GridHistoryState>) => {
@@ -130,104 +132,7 @@ export const useGridHistory = (
   const canUndo = React.useCallback(() => gridHistoryCanUndoSelector(apiRef), [apiRef]);
   const canRedo = React.useCallback(() => gridHistoryCanRedoSelector(apiRef), [apiRef]);
 
-  const apply = React.useCallback(
-    async (item: GridHistoryItem, operation: 'undo' | 'redo') => {
-      const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-
-      const clearMethod = operation === 'undo' ? clearUndoItems : clearRedoItems;
-
-      const { eventName, data } = item;
-      const handler = historyEvents.get(eventName);
-
-      if (!handler) {
-        // If the handler is not found, it means tha we are updating the handlers map, so we can igore this request
-        return false;
-      }
-
-      const isValid = handler.validate(data, operation);
-
-      // The data is validated every time state change event happens.
-      // We can get into a situation where the operation is not valid at this point only with the direct state updates.
-      if (!isValid) {
-        // Clear history and return false
-        clearMethod();
-        return false;
-      }
-
-      // Execute the operation
-      operationStateRef.current = 'in-progress';
-      await handler[operation](data);
-      operationStateRef.current = 'waiting-replay';
-
-      setHistoryState({
-        currentPosition: operation === 'undo' ? currentPosition - 1 : currentPosition + 1,
-      });
-
-      apiRef.current.publishEvent(operation, { eventName, data });
-      return true;
-    },
-    [apiRef, historyEvents, clearUndoItems, clearRedoItems, setHistoryState],
-  );
-
-  const undo = React.useCallback(async (): Promise<boolean> => {
-    if (!canUndo()) {
-      return false;
-    }
-
-    const queue = gridHistoryQueueSelector(apiRef);
-    const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-    return apply(queue[currentPosition], 'undo');
-  }, [apiRef, apply, canUndo]);
-
-  const redo = React.useCallback(async (): Promise<boolean> => {
-    if (!canRedo()) {
-      return false;
-    }
-
-    const queue = gridHistoryQueueSelector(apiRef);
-    const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-    return apply(queue[currentPosition + 1], 'redo');
-  }, [apiRef, apply, canRedo]);
-
-  const historyApi: GridHistoryApi['history'] = {
-    undo,
-    redo,
-    clear,
-    canUndo,
-    canRedo,
-  };
-
-  useGridApiMethod(apiRef, { history: historyApi } as GridHistoryApi, 'public');
-
-  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
-    async (_, event: React.KeyboardEvent<HTMLElement>) => {
-      // Only handle shortcuts if history is enabled
-      if (historyQueueSize === 0) {
-        return;
-      }
-
-      // Check for undo shortcut
-      if (isUndoShortcut(event)) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        await apiRef.current.history.undo();
-        return;
-      }
-
-      // Check for redo shortcut
-      if (isRedoShortcut(event)) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        await apiRef.current.history.redo();
-        return;
-      }
-    },
-    [apiRef, historyQueueSize],
-  );
-
-  const validateQueueItems = React.useCallback<GridEventListener<'rowsSet'>>(() => {
+  const validateQueueItems = React.useCallback(() => {
     /**
      * When:
      * - idle: continue with the validation
@@ -290,10 +195,124 @@ export const useGridHistory = (
     [validateQueueItems],
   );
 
+  const apply = React.useCallback(
+    async (item: GridHistoryItem, operation: 'undo' | 'redo') => {
+      const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
+
+      const clearMethod = operation === 'undo' ? clearUndoItems : clearRedoItems;
+
+      const { eventName, data } = item;
+      const handler = historyEvents.get(eventName);
+
+      if (!handler) {
+        // If the handler is not found, it means tha we are updating the handlers map, so we can igore this request
+        return false;
+      }
+
+      const isValid = handler.validate(data, operation);
+
+      // The data is validated every time state change event happens.
+      // We can get into a situation where the operation is not valid at this point only with the direct state updates.
+      if (!isValid) {
+        // Clear history and return false
+        clearMethod();
+        return false;
+      }
+
+      // Execute the operation
+      operationStateRef.current = 'in-progress';
+      await handler[operation](data);
+      operationStateRef.current = 'waiting-replay';
+
+      setHistoryState({
+        currentPosition: operation === 'undo' ? currentPosition - 1 : currentPosition + 1,
+      });
+
+      apiRef.current.publishEvent(operation, { eventName, data });
+      validateQueueItems();
+      return true;
+    },
+    [apiRef, historyEvents, clearUndoItems, clearRedoItems, setHistoryState, validateQueueItems],
+  );
+
+  const undo = React.useCallback(async (): Promise<boolean> => {
+    if (!canUndo()) {
+      return false;
+    }
+
+    const queue = gridHistoryQueueSelector(apiRef);
+    const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
+    return apply(queue[currentPosition], 'undo');
+  }, [apiRef, apply, canUndo]);
+
+  const redo = React.useCallback(async (): Promise<boolean> => {
+    if (!canRedo()) {
+      return false;
+    }
+
+    const queue = gridHistoryQueueSelector(apiRef);
+    const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
+    return apply(queue[currentPosition + 1], 'redo');
+  }, [apiRef, apply, canRedo]);
+
+  const historyApi: GridHistoryApi['history'] = {
+    undo,
+    redo,
+    clear,
+    canUndo,
+    canRedo,
+  };
+
+  useGridApiMethod(apiRef, { history: historyApi } as GridHistoryApi, 'public');
+
+  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
+    async (_, event: React.KeyboardEvent<HTMLElement>) => {
+      // Only handle shortcuts if history is enabled
+      if (historyQueueSize === 0) {
+        return;
+      }
+
+      // Check for undo shortcut
+      if (isUndoShortcut(event)) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        await apiRef.current.history.undo();
+        return;
+      }
+
+      // Check for redo shortcut
+      if (isRedoShortcut(event)) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        await apiRef.current.history.redo();
+        return;
+      }
+    },
+    [apiRef, historyQueueSize],
+  );
+
   useGridEvent(apiRef, 'cellKeyDown', runIf(historyQueueSize > 0, handleCellKeyDown));
-  useGridEvent(apiRef, 'rowsSet', debouncedValidateQueueItems);
   useGridEvent(apiRef, 'undo', onUndo);
   useGridEvent(apiRef, 'redo', onRedo);
+
+  React.useEffect(() => {
+    if (historyQueueSize === 0) {
+      return () => {};
+    }
+
+    historyValidationEvents.forEach((eventName) => {
+      validationEventUnsubscribersRef.current.push(
+        apiRef.current.subscribeEvent(eventName, debouncedValidateQueueItems),
+      );
+    });
+
+    return () => {
+      validationEventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
+      validationEventUnsubscribersRef.current = [];
+    };
+  }, [apiRef, historyQueueSize, historyValidationEvents, debouncedValidateQueueItems]);
 
   React.useEffect(() => {
     if (historyQueueSize === 0) {

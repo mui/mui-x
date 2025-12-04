@@ -269,6 +269,9 @@
     "historyQueueSize": {
       "description": "The maximum size of the history queue. Set to 0 to disable the undo/redo feature."
     },
+    "historyValidationEvents": {
+      "description": "List of grid events after which the history queue items should be re-validated."
+    },
     "ignoreDiacritics": {
       "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible."
     },

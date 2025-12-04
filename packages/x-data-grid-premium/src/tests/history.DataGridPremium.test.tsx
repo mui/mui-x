@@ -8,10 +8,11 @@ import {
   GridHistoryEventHandler,
   GridEvents,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, waitFor, act, MuiRenderResult } from '@mui/internal-test-utils';
-import { getCell } from 'test/utils/helperFn';
+import { createRenderer, waitFor, act, fireEvent, MuiRenderResult } from '@mui/internal-test-utils';
+import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
+import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - History', () => {
   const { render } = createRenderer();
@@ -38,6 +39,7 @@ describe('<DataGridPremium /> - History', () => {
           apiRef={apiRef}
           disableRowSelectionOnClick
           disableVirtualization
+          cellSelection
         />
       </div>
     );
@@ -66,15 +68,15 @@ describe('<DataGridPremium /> - History', () => {
 
       // Edit a cell
       const cell = getCell(0, 2);
-      await user.click(cell);
-      await user.keyboard('{Enter}');
+      await user.dblClick(cell);
       await user.keyboard('10000');
-      await user.keyboard('{Enter}');
+      // Click another cell to confirm edit
+      await user.click(getCell(1, 2));
 
       // Undo should be available
       expect(apiRef.current!.history.canUndo()).to.equal(true);
 
-      act(() => {
+      await act(async () => {
         apiRef.current!.history.clear();
       });
 
@@ -288,7 +290,9 @@ describe('<DataGridPremium /> - History', () => {
       const historyEvents = new Map<GridEvents, GridHistoryEventHandler>();
       historyEvents.set('cellClick', customHandler);
 
-      const { user } = render(<Test historyEvents={historyEvents} />);
+      const { user } = render(
+        <Test historyEvents={historyEvents} historyValidationEvents={['stateChange']} />,
+      );
 
       const cell = getCell(0, 2);
 
@@ -395,6 +399,137 @@ describe('<DataGridPremium /> - History', () => {
 
       const cell = getCell(0, 2);
       await user.click(cell);
+
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+  });
+
+  // These tests are flaky in JSDOM
+  describe.skipIf(isJSDOM)('Clipboard paste history', () => {
+    function paste(cell: HTMLElement, pasteText: string) {
+      const pasteEvent = new Event('paste');
+
+      // @ts-ignore
+      pasteEvent.clipboardData = {
+        getData: () => pasteText,
+      };
+
+      fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
+      act(() => document.activeElement!.dispatchEvent(pasteEvent));
+    }
+
+    it('should undo clipboard paste and restore original values', async () => {
+      const { user } = render(<Test />);
+
+      // Get original values
+      const originalCol1 = getColumnValues(1);
+      const originalCol2 = getColumnValues(2);
+
+      const cell = getCell(0, 1);
+      await user.click(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(2, 2), { shiftKey: true });
+
+      const clipboardData = [
+        ['1', '2'].join('\t'),
+        ['3', '4'].join('\t'),
+        ['5', '6'].join('\t'),
+      ].join('\n');
+      paste(cell, clipboardData);
+
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text('1');
+      });
+      expect(getCell(0, 2)).to.have.text('2');
+      expect(getCell(1, 1)).to.have.text('3');
+      expect(getCell(1, 2)).to.have.text('4');
+      expect(getCell(2, 1)).to.have.text('5');
+      expect(getCell(2, 2)).to.have.text('6');
+
+      // Undo the paste
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      // All values should be restored
+      expect(getColumnValues(1)).to.deep.equal(originalCol1);
+      expect(getColumnValues(2)).to.deep.equal(originalCol2);
+    });
+
+    it('should redo clipboard paste after undo', async () => {
+      const { user } = render(<Test />);
+
+      const cell = getCell(0, 1);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(1, 1), { shiftKey: true });
+
+      const clipboardData = 'PASTED';
+      paste(cell, clipboardData);
+
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text(clipboardData);
+      });
+      expect(getCell(1, 1)).to.have.text(clipboardData);
+
+      // Undo
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(getCell(0, 1)).not.to.have.text(clipboardData);
+      expect(getCell(1, 1)).not.to.have.text(clipboardData);
+      expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+      // Redo the paste
+      await act(async () => {
+        await apiRef.current!.history.redo();
+      });
+
+      // Pasted values should be restored
+      expect(getCell(0, 1)).to.have.text(clipboardData);
+      expect(getCell(1, 1)).to.have.text(clipboardData);
+    });
+
+    it('should fail validation if the row was modified or deleted after paste', async () => {
+      const { user } = render(<Test />);
+
+      const cell = getCell(0, 1);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      const clipboardData = 'PASTED';
+      paste(cell, clipboardData);
+
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text(clipboardData);
+      });
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      // Modify the row externally
+      await act(async () => {
+        await apiRef.current!.updateRows([{ id: 0, currencyPair: 'MODIFIED' }]);
+      });
+
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
+
+      // Paste again
+      paste(cell, clipboardData);
+
+      await waitFor(() => {
+        expect(getCell(0, 1)).to.have.text(clipboardData);
+      });
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      // Delete the row
+      await act(async () => {
+        await apiRef.current!.updateRows([{ id: 0, _action: 'delete' }]);
+      });
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
