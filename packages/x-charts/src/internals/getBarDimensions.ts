@@ -58,12 +58,14 @@ export function getBarDimensions(params: {
     verticalLayout ? yScale(v)! : xScale(v)!,
   );
 
-  const [visibleMinValueCoord, visibleMaxValueCoord] = findMinMax(visibleValueCoordinates);
+  const [minValueCoord, maxValueCoord] = findMinMax(visibleValueCoordinates).map((v) =>
+    Math.round(v),
+  );
 
   let barSize = 0;
   if (seriesValue !== 0) {
     if (isSeriesVisible) {
-      barSize = Math.max(series.minBarSize, visibleMaxValueCoord - visibleMinValueCoord);
+      barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
     }
   }
 
@@ -72,9 +74,9 @@ export function getBarDimensions(params: {
   let startCoordinate = 0;
 
   if (shouldInvert) {
-    startCoordinate = visibleMaxValueCoord - barSize;
+    startCoordinate = maxValueCoord - barSize;
   } else {
-    startCoordinate = visibleMinValueCoord;
+    startCoordinate = minValueCoord;
   }
 
   return {
