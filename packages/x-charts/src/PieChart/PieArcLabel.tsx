@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
-import { PieItemId } from '../models/seriesType/pie';
+import { type PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */

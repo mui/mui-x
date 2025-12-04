@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { type AxisItemIdentifier, type ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
   selectorChartsInteractionXAxisIndex,
@@ -7,15 +7,15 @@ import {
   selectorChartsInteractionYAxisIndex,
   selectorChartsInteractionYAxisValue,
 } from './useChartCartesianInteraction.selectors';
-import { ChartState } from '../../models/chart';
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { ComputeResult } from './computeAxisValue';
+import { type ChartState } from '../../models/chart';
+import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type ComputeResult } from './computeAxisValue';
 import {
   selectorChartsKeyboardXAxisIndex,
   selectorChartsKeyboardYAxisIndex,
 } from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import { InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
+import { type InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
 import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
 
 const selectorChartControlledCartesianAxisHighlight = (

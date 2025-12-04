@@ -1,7 +1,7 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { createExportIframe } from './common';
-import { ChartPrintExportOptions } from './useChartProExport.types';
+import { type ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export function printChart(

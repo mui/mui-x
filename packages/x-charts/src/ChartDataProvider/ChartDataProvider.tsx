@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { defaultSlotsMaterial, ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { defaultSlotsMaterial, type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
 import { useChartDataProviderProps } from './useChartDataProviderProps';
-import { ChartProvider, ChartProviderProps } from '../context/ChartProvider';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartProvider, type ChartProviderProps } from '../context/ChartProvider';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import {
   ChartsLocalizationProvider,
-  ChartsLocalizationProviderProps,
+  type ChartsLocalizationProviderProps,
 } from '../ChartsLocalizationProvider';
 
 export type ChartDataProviderProps<
