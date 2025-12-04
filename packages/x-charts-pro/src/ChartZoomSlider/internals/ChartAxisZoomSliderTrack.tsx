@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import {
-  AxisId,
+  type AxisId,
   useChartContext,
   getSVGPoint,
   selectorChartAxisZoomOptionsLookup,
@@ -12,7 +12,7 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { shouldForwardProp } from '@mui/system';
 import clsx from 'clsx';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
-import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
+import { type UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderTrack = styled('rect', {

@@ -2,11 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
-import { BarElementOwnerState, useUtilityClasses } from './barElementClasses';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type BarElementOwnerState, useUtilityClasses } from './barElementClasses';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedBarElement, BarProps } from './AnimatedBarElement';
+import { AnimatedBarElement, type BarProps } from './AnimatedBarElement';
 import { useIsItemFocused } from '../hooks/useIsItemFocused';
 
 export interface BarElementSlots {

@@ -2,28 +2,31 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
-import { ChartsSlotProps, ChartsSlots } from '../internals/material';
-import { ChartContainerProps } from '../ChartContainer';
-import { PieSeriesType } from '../models/seriesType';
+import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
+import { type ChartContainerProps } from '../ChartContainer';
+import { type PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
-import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
-import { PieValueType } from '../models/seriesType/pie';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
+import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
+import { PiePlot, type PiePlotProps, type PiePlotSlotProps, type PiePlotSlots } from './PiePlot';
+import { type PieValueType } from '../models/seriesType/pie';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
+import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface PieChartSlots
