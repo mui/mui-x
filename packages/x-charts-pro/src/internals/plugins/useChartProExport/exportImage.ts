@@ -1,7 +1,7 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { applyStyles, createExportIframe } from './common';
-import { ChartImageExportOptions } from './useChartProExport.types';
+import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export const getDrawDocument = async () => {

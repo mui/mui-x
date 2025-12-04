@@ -1,4 +1,4 @@
-import { ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature } from '../../models';
 import type { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
 export type Coordinate = { x: number; y: number };

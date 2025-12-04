@@ -42,5 +42,6 @@ export function processEvent(
     color: model.color,
     draggable: model.draggable,
     resizable: model.resizable,
+    className: model.className,
   };
 }

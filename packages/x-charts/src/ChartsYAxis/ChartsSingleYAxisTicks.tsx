@@ -4,7 +4,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { ChartsYAxisProps } from '../models/axis';
+import { type ChartsYAxisProps } from '../models/axis';
 import { useChartContext } from '../context/ChartProvider';
 import { shortenLabels } from './shortenLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
@@ -40,6 +40,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
+    tickSpacing,
     width: axisWidth,
   } = defaultizedProps;
 
@@ -56,6 +57,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickInterval,
+    tickSpacing,
     direction: 'y',
   });
 

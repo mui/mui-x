@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SeriesItemIdentifierWithData } from '../models';
+import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType, ChartItemIdentifier } from '../models/seriesType/config';
-import { ChartInstance } from '../internals/plugins/models';
+import type { ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
