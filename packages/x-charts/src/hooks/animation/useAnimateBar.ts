@@ -14,11 +14,34 @@ type UseAnimateBarReturnValue = {
 } & Pick<BarProps, 'x' | 'y' | 'width' | 'height'>;
 type BarInterpolatedProps = Pick<UseAnimateBarParams, 'x' | 'y' | 'width' | 'height'>;
 
-function barPropsInterpolator(from: BarInterpolatedProps, to: BarInterpolatedProps) {
-  const interpolateX = interpolateNumber(from.x, to.x);
-  const interpolateY = interpolateNumber(from.y, to.y);
-  const interpolateWidth = interpolateNumber(from.width, to.width);
+function barPropsInterpolator(
+  from: BarInterpolatedProps,
+  to: BarInterpolatedProps,
+  isInitial: boolean,
+) {
+  let interpolateX = interpolateNumber(from.x, to.x);
+  let interpolateY = interpolateNumber(from.y, to.y);
   const interpolateHeight = interpolateNumber(from.height, to.height);
+  const interpolateWidth = interpolateNumber(from.width, to.width);
+
+  // On initial animation, bars should grow from the axis start.
+  if (!isInitial) {
+    // Handle horizontal layout
+    if (to.width === 0) {
+      interpolateX = interpolateNumber(from.x, from.x);
+    }
+    if (from.width === 0) {
+      interpolateX = interpolateNumber(to.x, to.x);
+    }
+
+    // Handle vertical layout
+    if (to.height === 0) {
+      interpolateY = interpolateNumber(from.y, from.y + from.height);
+    }
+    if (from.height === 0) {
+      interpolateY = interpolateNumber(to.y + to.height, to.y);
+    }
+  }
 
   return (t: number) => {
     return {

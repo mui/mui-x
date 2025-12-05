@@ -10,11 +10,16 @@ export interface UseAnimateParams<Props extends {}, Elem extends Element, T exte
    * @param {object} lastProps Props to animate from, i.e., props when the animation was last stopped. If this is the first
    * animation, this value be `initialProps`.
    * @param {object} newProps Props to animate to.
+   * @param {boolean} isInitial Indicates if this is the first animation (from `initialProps` to `props`).
    *
    * @returns {function} Interpolation function that takes a time value between 0 and 1 and returns the interpolated
    * props at time t. This function is called on every frame of the animation.
    */
-  createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
+  createInterpolator: (
+    lastProps: Props,
+    newProps: Props,
+    isInitial: boolean,
+  ) => (t: number) => Props;
   /**
    * Transforms the interpolated props to be passed to `applyProps`, which usually means transforming them to element
    * attributes, e.g., transforming an array of points into a `d` attribute for a path.
