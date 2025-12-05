@@ -1,17 +1,10 @@
 'use client';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { useChartId } from '../hooks/useChartId';
-import { getValueToPositionMapper } from '../hooks/useScale';
-import { useLineSeriesContext } from '../hooks/useLineSeries';
-import { cleanId } from '../internals/cleanId';
 import { type LineItemIdentifier } from '../models/seriesType/line';
 import { CircleMarkElement } from './CircleMarkElement';
-import getColor from './seriesConfig/getColor';
 import { MarkElement, type MarkElementProps } from './MarkElement';
-import { useChartContext } from '../context/ChartProvider';
 import { useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import {
@@ -21,6 +14,8 @@ import {
 import { useSelector } from '../internals/store/useSelector';
 import { type AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
+import { useChartContext } from '../context/ChartProvider';
+import { useMarkPlotData } from './useMarkPlotData';
 
 export interface MarkPlotSlots {
   mark?: React.JSXElementConstructor<MarkElementProps>;
@@ -69,13 +64,10 @@ function MarkPlot(props: MarkPlotProps) {
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
 
-  const seriesData = useLineSeriesContext();
-  const { xAxis, xAxisIds } = useXAxes();
-  const { yAxis, yAxisIds } = useYAxes();
+  const { xAxis } = useXAxes();
+  const { yAxis } = useYAxes();
 
-  const chartId = useChartId();
-  const { instance, store } =
-    useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const { store } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
   const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
 
@@ -92,111 +84,41 @@ function MarkPlot(props: MarkPlotProps) {
     return rep;
   }, [xAxisHighlightIndexes]);
 
-  if (seriesData === undefined) {
-    return null;
-  }
-  const { series, stackingGroups } = seriesData;
-  const defaultXAxisId = xAxisIds[0];
-  const defaultYAxisId = yAxisIds[0];
+  const completedData = useMarkPlotData(xAxis, yAxis);
 
   return (
     <g {...other}>
-      {stackingGroups.flatMap(({ ids: groupIds }) => {
-        return groupIds.map((seriesId) => {
-          const {
-            xAxisId = defaultXAxisId,
-            yAxisId = defaultYAxisId,
-            stackedData,
-            data,
-            showMark = true,
-            shape = 'circle',
-          } = series[seriesId];
+      {completedData.map(({ seriesId, clipId, shape, xAxisId, marks }) => {
+        const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
-          if (showMark === false) {
-            return null;
-          }
+        const isSeriesHighlighted = isHighlighted({ seriesId });
+        const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
 
-          const xScale = getValueToPositionMapper(xAxis[xAxisId].scale);
-          const yScale = yAxis[yAxisId].scale;
-          const xData = xAxis[xAxisId].data;
-
-          if (xData === undefined) {
-            throw new Error(
-              `MUI X Charts: ${
-                xAxisId === DEFAULT_X_AXIS_KEY
-                  ? 'The first `xAxis`'
-                  : `The x-axis with id "${xAxisId}"`
-              } should have data property to be able to display a line plot.`,
-            );
-          }
-
-          const clipId = cleanId(`${chartId}-${seriesId}-line-clip`); // We assume that if displaying line mark, the line will also be rendered
-
-          const colorGetter = getColor(series[seriesId], xAxis[xAxisId], yAxis[yAxisId]);
-
-          const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
-
-          const isSeriesHighlighted = isHighlighted({ seriesId });
-          const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
-
-          return (
-            <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
-              {xData
-                ?.map((x, index) => {
-                  const value = data[index] == null ? null : stackedData[index][1];
-                  return {
-                    x: xScale(x),
-                    y: value === null ? null : yScale(value)!,
-                    position: x,
-                    value,
-                    index,
-                  };
-                })
-                .filter(({ x, y, index, position, value }) => {
-                  if (value === null || y === null) {
-                    // Remove missing data point
-                    return false;
+        return (
+          <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
+            {marks.map(({ x, y, index, color }) => {
+              return (
+                <Mark
+                  key={`${seriesId}-${index}`}
+                  id={seriesId}
+                  dataIndex={index}
+                  shape={shape}
+                  color={color}
+                  x={x}
+                  y={y}
+                  skipAnimation={skipAnimation}
+                  onClick={
+                    onItemClick &&
+                    ((event) => onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
                   }
-                  if (!instance.isPointInside(x, y)) {
-                    // Remove out of range
-                    return false;
-                  }
-                  if (showMark === true) {
-                    return true;
-                  }
-                  return showMark({
-                    x,
-                    y,
-                    index,
-                    position,
-                    value,
-                  });
-                })
-                .map(({ x, y, index }) => {
-                  return (
-                    <Mark
-                      key={`${seriesId}-${index}`}
-                      id={seriesId}
-                      dataIndex={index}
-                      shape={shape}
-                      color={colorGetter(index)}
-                      x={x}
-                      y={y!} // Don't know why TS doesn't get from the filter that y can't be null
-                      skipAnimation={skipAnimation}
-                      onClick={
-                        onItemClick &&
-                        ((event) =>
-                          onItemClick(event, { type: 'line', seriesId, dataIndex: index }))
-                      }
-                      isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
-                      isFaded={isSeriesFaded}
-                      {...slotProps?.mark}
-                    />
-                  );
-                })}
-            </g>
-          );
-        });
+                  isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
+                  isFaded={isSeriesFaded}
+                  {...slotProps?.mark}
+                />
+              );
+            })}
+          </g>
+        );
       })}
     </g>
   );
