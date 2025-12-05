@@ -1,13 +1,13 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import {
-  CartesianSeriesType,
-  CommonDefaultizedProps,
-  CommonSeriesType,
-  SeriesId,
-  StackableSeriesType,
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+  type StackableSeriesType,
 } from './common';
-import { CurveType } from '../curve';
+import { type CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**

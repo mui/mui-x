@@ -2,7 +2,7 @@ import {
   SchedulerResourceId,
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerEvent,
@@ -12,9 +12,9 @@ import {
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
-import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
 import { adapter as defaultAdapter } from './adapters';
 
 export const DEFAULT_TESTING_VISIBLE_DATE_STR = '2025-07-03T00:00:00Z';
@@ -33,6 +33,10 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
  */
 export class EventBuilder {
   protected event: SchedulerEvent;
+
+  protected dataTimezone: TemporalTimezone = 'default';
+
+  protected uiTimezone: TemporalTimezone = 'default';
 
   protected constructor(protected adapter: Adapter) {
     const id = crypto.randomUUID();
@@ -97,7 +101,7 @@ export class EventBuilder {
 
   /** Set exception dates for recurrence. */
   exDates(dates?: string[]) {
-    this.event.exDates = dates?.map((date) => this.adapter.date(date, 'default'));
+    this.event.exDates = dates?.map((date) => this.adapter.date(date, this.dataTimezone));
     return this;
   }
 
@@ -113,6 +117,36 @@ export class EventBuilder {
     return this;
   }
 
+  /** Set the DATA timezone: used for all event fields (start, end, rrule, exDates...). */
+  withTimezone(timezone: TemporalTimezone) {
+    if (timezone === this.dataTimezone) {
+      return this;
+    }
+
+    this.event.start = this.adapter.setTimezone(this.event.start, timezone);
+    this.event.end = this.adapter.setTimezone(this.event.end, timezone);
+
+    if (this.event.exDates) {
+      this.event.exDates = this.event.exDates.map((date) =>
+        this.adapter.setTimezone(date, timezone),
+      );
+    }
+
+    const rrule = this.event.rrule;
+    if (rrule && typeof rrule !== 'string' && rrule.until) {
+      rrule.until = this.adapter.setTimezone(rrule.until, timezone);
+    }
+
+    this.dataTimezone = timezone;
+    return this;
+  }
+
+  /** Set the UI timezone for processed events. */
+  withUITimezone(timezone: TemporalTimezone) {
+    this.uiTimezone = timezone;
+    return this;
+  }
+
   resizable(resizable: boolean | SchedulerEventSide) {
     this.event.resizable = resizable;
     return this;
@@ -120,6 +154,12 @@ export class EventBuilder {
 
   draggable(draggable: boolean) {
     this.event.draggable = draggable;
+    return this;
+  }
+
+  /** Set a custom class name for the event. */
+  className(className: string) {
+    this.event.className = className;
     return this;
   }
 
@@ -132,7 +172,7 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
    */
   startAt(startISO: string) {
-    this.event.start = this.adapter.date(startISO, 'default');
+    this.event.start = this.adapter.date(startISO, this.dataTimezone);
     return this;
   }
 
@@ -141,15 +181,16 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
    */
   endAt(endISO: string) {
-    this.event.end = this.adapter.date(endISO, 'default');
+    this.event.end = this.adapter.date(endISO, this.dataTimezone);
     return this;
   }
 
   /**
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
-  singleDay(start: string | SchedulerValidDate, durationMinutes = 60) {
-    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
+  singleDay(start: string | TemporalSupportedObject, durationMinutes = 60) {
+    const startDate =
+      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = startDate;
     this.event.end = endDate;
@@ -161,7 +202,7 @@ export class EventBuilder {
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
-    const d = this.adapter.date(date, 'default');
+    const d = this.adapter.date(date, this.dataTimezone);
     this.event.start = this.adapter.startOfDay(d);
     this.event.end = this.adapter.endOfDay(d);
     this.event.allDay = true;
@@ -172,9 +213,14 @@ export class EventBuilder {
    * Create an event spanning a start and end.
    * Optionally override `allDay`.
    */
-  span(start: string, end: string, opts?: { allDay?: boolean }) {
-    this.event.start = this.adapter.date(start, 'default');
-    this.event.end = this.adapter.date(end, 'default');
+  span(
+    start: string | TemporalSupportedObject,
+    end: string | TemporalSupportedObject,
+    opts?: { allDay?: boolean },
+  ) {
+    this.event.start =
+      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
+    this.event.end = typeof end === 'string' ? this.adapter.date(end, this.dataTimezone) : end;
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
@@ -191,7 +237,8 @@ export class EventBuilder {
    * - If kind + rule: merges your rrule over the preset.
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
-    const anchor = this.event.start ?? DEFAULT_TESTING_VISIBLE_DATE;
+    const anchor =
+      this.event.start ?? this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, this.dataTimezone);
 
     let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -223,20 +270,24 @@ export class EventBuilder {
    * Defaults to the event start date.
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
-    const event = this.event;
-    const processedEvent = processEvent(event, this.adapter);
-    const effectiveDate = occurrenceStartDate
-      ? this.adapter.date(occurrenceStartDate, 'default')
-      : event.start;
-    const end = this.adapter.addMilliseconds(
-      effectiveDate,
-      processedEvent.end.timestamp - processedEvent.start.timestamp,
-    );
+    const rawStart = occurrenceStartDate
+      ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
+      : this.event.start;
+
+    const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
+    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+    const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
+
+    const occurrenceModel: SchedulerEvent = {
+      ...this.event,
+      start: rawStart,
+      end: rawEnd,
+    };
+
+    const processed = processEvent(occurrenceModel, this.uiTimezone, this.adapter);
 
     return {
-      ...processedEvent,
-      start: processDate(effectiveDate, this.adapter),
-      end: processDate(end, this.adapter),
+      ...processed,
       key: crypto.randomUUID(),
     };
   }
@@ -245,7 +296,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.adapter);
+    return processEvent(this.event, this.uiTimezone, this.adapter);
   }
 
   /**

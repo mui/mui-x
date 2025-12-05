@@ -16,6 +16,7 @@ describeTreeView<TreeViewAnyStore>(
     // tried try-catch + error boundary + window onError preventDefault
     it.skipIf(!isJSDOM)('should throw an error when two items have the same ID', () => {
       if (treeViewComponentName === 'SimpleTreeView') {
+        // eslint-disable-next-line vitest/no-conditional-expect
         expect(() =>
           render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
         ).toErrorDev([
@@ -28,6 +29,7 @@ describeTreeView<TreeViewAnyStore>(
           reactMajor < 19 && `The above error occurred in the <ForwardRef(TreeItem2)> component`,
         ]);
       } else {
+        // eslint-disable-next-line vitest/no-conditional-expect
         expect(() =>
           render({ items: [{ id: '1' }, { id: '1' }], withErrorBoundary: true }),
         ).toErrorDev([

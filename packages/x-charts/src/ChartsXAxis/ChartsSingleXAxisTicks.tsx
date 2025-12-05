@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
-import { ChartsXAxisProps } from '../models/axis';
+import { type ChartsXAxisProps } from '../models/axis';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -46,6 +46,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickLabelMinGap,
+    tickSpacing,
     height: axisHeight,
   } = defaultizedProps;
 
@@ -62,6 +63,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickInterval,
     tickPlacement,
     tickLabelPlacement,
+    tickSpacing,
     direction: 'x',
   });
 

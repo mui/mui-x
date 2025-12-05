@@ -3,9 +3,9 @@ import {
   RecurringEventRecurrenceRule,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '../../models';
-import { Adapter, diffIn } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   estimateOccurrencesUpTo,
@@ -24,8 +24,8 @@ import {
  */
 export function getRecurringEventOccurrencesForVisibleDays(
   event: SchedulerProcessedEvent,
-  start: SchedulerValidDate,
-  end: SchedulerValidDate,
+  start: TemporalSupportedObject,
+  end: TemporalSupportedObject,
   adapter: Adapter,
 ): SchedulerEventOccurrence[] {
   const rule = event.rrule!;
@@ -77,9 +77,9 @@ export function getRecurringEventOccurrencesForVisibleDays(
  */
 export function buildEndGuard(
   rule: RecurringEventRecurrenceRule,
-  seriesStart: SchedulerValidDate,
+  seriesStart: TemporalSupportedObject,
   adapter: Adapter,
-): (date: SchedulerValidDate) => boolean {
+): (date: TemporalSupportedObject) => boolean {
   const hasCount = typeof rule.count === 'number' && rule.count > 0;
   const hasUntil = !!rule.until;
 
@@ -124,7 +124,7 @@ export function buildEndGuard(
  */
 export function matchesRecurrence(
   rule: RecurringEventRecurrenceRule,
-  date: SchedulerValidDate,
+  date: TemporalSupportedObject,
   adapter: Adapter,
   event: SchedulerProcessedEvent,
 ): boolean {
@@ -138,7 +138,7 @@ export function matchesRecurrence(
 
   switch (rule.freq) {
     case 'DAILY': {
-      const daysDiff = diffIn(adapter, candidateDay, seriesStartDay, 'days');
+      const daysDiff = adapter.differenceInDays(candidateDay, seriesStartDay);
       return daysDiff % interval === 0;
     }
 
@@ -156,7 +156,7 @@ export function matchesRecurrence(
         return false;
       }
 
-      const weeksDiff = diffIn(adapter, dateWeek, seriesWeek, 'weeks');
+      const weeksDiff = adapter.differenceInWeeks(dateWeek, seriesWeek);
       return weeksDiff % interval === 0;
     }
 
@@ -164,7 +164,7 @@ export function matchesRecurrence(
       const seriesMonth = adapter.startOfMonth(seriesStartDay);
       const dateMonth = adapter.startOfMonth(candidateDay);
 
-      const monthsDiff = diffIn(adapter, dateMonth, seriesMonth, 'months');
+      const monthsDiff = adapter.differenceInMonths(dateMonth, seriesMonth);
       if (monthsDiff % interval !== 0) {
         return false;
       }
@@ -211,7 +211,7 @@ export function matchesRecurrence(
         return false;
       }
 
-      const yearsDiff = diffIn(adapter, dateYear, seriesYear, 'years');
+      const yearsDiff = adapter.differenceInYears(dateYear, seriesYear);
       return yearsDiff % interval === 0;
     }
 

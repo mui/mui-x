@@ -1,3 +1,4 @@
+import { BaseUIChangeEventDetails } from '@base-ui-components/react';
 import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
 import {
   SchedulerEventColor,
@@ -12,7 +13,7 @@ import {
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerEventSide,
 } from '../../models';
 import { Adapter } from '../../use-adapter/useAdapter.types';
@@ -26,7 +27,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The date used to determine the visible date range in each view.
    */
-  visibleDate: SchedulerValidDate;
+  visibleDate: TemporalSupportedObject;
   /**
    * The model of the events available in the calendar as provided to props.events.
    */
@@ -109,7 +110,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * The current date and time, updated every minute.
    */
-  nowUpdatedEveryMinute: SchedulerValidDate;
+  nowUpdatedEveryMinute: TemporalSupportedObject;
   /**
    * Whether the calendar is in read-only mode.
    * @default false
@@ -132,10 +133,19 @@ export interface SchedulerState<TEvent extends object = any> {
   eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
   /**
    * The timezone used by the scheduler.
-   * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
-   * or "default" to use the adapter's default timezone.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * or keywords understood by the adapter, such as
+   * "default" (use the adapter's default timezone),
+   * "locale" (use the user's current locale timezone),
+   * or "UTC".
    */
   timezone: TemporalTimezone;
+  /**
+   * The event that has been copied or cut, if any.
+   */
+  copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -146,7 +156,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * Callback fired when some event of the calendar change.
    */
-  onEventsChange?: (value: TEvent[]) => void;
+  onEventsChange?: (value: TEvent[], eventDetails: SchedulerChangeEventDetails) => void;
   /**
    * The structure of the event model.
    * It defines how to read and write the properties of the event model.
@@ -166,17 +176,20 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The date currently used to determine the visible date range in each view.
    */
-  visibleDate?: SchedulerValidDate;
+  visibleDate?: TemporalSupportedObject;
   /**
    * The date initially used to determine the visible date range in each view.
    * To render a controlled calendar, use the `visibleDate` prop.
    * @default today
    */
-  defaultVisibleDate?: SchedulerValidDate;
+  defaultVisibleDate?: TemporalSupportedObject;
   /**
    * Event handler called when the visible date changes.
    */
-  onVisibleDateChange?: (visibleDate: SchedulerValidDate, event: React.UIEvent) => void;
+  onVisibleDateChange?: (
+    visibleDate: TemporalSupportedObject,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    * @default false
@@ -211,7 +224,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   /**
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
-   * Can be overridden per event using the `color` property on the event model. (TODO: not implemented yet)
+   * Can be overridden per event using the `color` property on the event model.
    * @default "jade"
    */
   eventColor?: SchedulerEventColor;
@@ -229,8 +242,14 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
   /**
    * The timezone used by the scheduler.
-   * Typically an IANA timezone name (e.g. "America/New_York", "Europe/Paris")
-   * or "default" to use the adapter's default timezone.
+   *
+   * Accepts any valid IANA timezone name
+   * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
+   * or keywords understood by the adapter, such as
+   * "default" (use the adapter's default timezone),
+   * "locale" (use the user's current locale timezone),
+   * or "UTC".
+   *
    * @default "default"
    */
   timezone?: TemporalTimezone;
@@ -243,7 +262,7 @@ export type UpdateRecurringEventParameters = {
   /**
    * The start date of the occurrence affected by the update.
    */
-  occurrenceStart: SchedulerValidDate;
+  occurrenceStart: TemporalSupportedObject;
   /**
    * The changes to apply.
    * Requires `start` and `end`, all other properties are optional.
@@ -295,3 +314,5 @@ export interface UpdateEventsParameters {
   created?: SchedulerEventCreationProperties[];
   updated?: SchedulerEventUpdatedProperties[];
 }
+
+export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;

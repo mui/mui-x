@@ -1,9 +1,9 @@
-import { diffIn, Adapter } from '../../use-adapter';
+import { Adapter } from '../../use-adapter';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
   SchedulerProcessedEvent,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   RecurringEventRecurrenceRule,
 } from '../../models';
 
@@ -20,12 +20,12 @@ export const NOT_LOCALIZED_WEEK_DAYS: RecurringEventWeekDayCode[] = [
   'SU',
 ];
 
-const mondayMap = new WeakMap<Adapter, SchedulerValidDate>();
+const mondayMap = new WeakMap<Adapter, TemporalSupportedObject>();
 /**
  * Returns the week day number (1..7) of Monday for a given adapter.
  */
 export function getMondayWeekDayNumber(adapter: Adapter) {
-  let monday: SchedulerValidDate;
+  let monday: TemporalSupportedObject;
   const mondayFromCache = mondayMap.get(adapter);
   if (mondayFromCache != null) {
     monday = mondayFromCache;
@@ -43,7 +43,7 @@ export function getMondayWeekDayNumber(adapter: Adapter) {
  */
 export function getWeekDayCode(
   adapter: Adapter,
-  date: SchedulerValidDate,
+  date: TemporalSupportedObject,
 ): RecurringEventWeekDayCode {
   const dayOfWeek = adapter.getDayOfWeek(date);
   const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
@@ -129,11 +129,9 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
   return (
-    diffIn(
-      adapter,
+    adapter.differenceInDays(
       adapter.startOfDay(event.end.value),
       adapter.startOfDay(event.start.value),
-      'days',
     ) + 1
   );
 }
@@ -145,10 +143,10 @@ export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcess
  */
 export function nthWeekdayOfMonth(
   adapter: Adapter,
-  monthStart: SchedulerValidDate,
+  monthStart: TemporalSupportedObject,
   weekdayCode: RecurringEventWeekDayCode,
   ordinal: number,
-): SchedulerValidDate | null {
+): TemporalSupportedObject | null {
   const targetWeekdayNumber = getWeekDayNumberFromCode(adapter, weekdayCode);
   const totalDaysInMonth = adapter.getDaysInMonth(monthStart);
 
@@ -198,8 +196,8 @@ const COUNT_OCCURRENCES_UP_TO_EXACT_METHOD_LOOKUP = {
 export function estimateOccurrencesUpTo(
   adapter: Adapter,
   rule: RecurringEventRecurrenceRule,
-  seriesStart: SchedulerValidDate,
-  date: SchedulerValidDate,
+  seriesStart: TemporalSupportedObject,
+  date: TemporalSupportedObject,
 ): number {
   const seriesStartDay = adapter.startOfDay(seriesStart);
 
@@ -223,8 +221,8 @@ interface CountOccurrencesUpToExactParameters {
    * The series start date (DTSTART).
    * This is normalized to startOfDay internally.
    */
-  seriesStartDay: SchedulerValidDate;
-  date: SchedulerValidDate;
+  seriesStartDay: TemporalSupportedObject;
+  date: TemporalSupportedObject;
 }
 
 /**
@@ -232,7 +230,7 @@ interface CountOccurrencesUpToExactParameters {
  */
 function dayInWeek(
   adapter: Adapter,
-  weekStart: SchedulerValidDate,
+  weekStart: TemporalSupportedObject,
   code: RecurringEventWeekDayCode,
 ) {
   const weekStartDow = adapter.getDayOfWeek(weekStart);
@@ -253,7 +251,7 @@ export function countDailyOccurrencesUpToExact(
   }
 
   const interval = Math.max(1, rule.interval ?? 1);
-  const totalDays = diffIn(adapter, adapter.startOfDay(date), seriesStartDay, 'days');
+  const totalDays = adapter.differenceInDays(adapter.startOfDay(date), seriesStartDay);
 
   return Math.floor(totalDays / interval) + 1;
 }

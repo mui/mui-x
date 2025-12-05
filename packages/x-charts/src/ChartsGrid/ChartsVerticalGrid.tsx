@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useTicks } from '../hooks/useTicks';
-import { ComputedXAxis } from '../models/axis';
+import { type ComputedXAxis } from '../models/axis';
 import { GridLine } from './styledComponents';
-import { ChartsGridClasses } from './chartsGridClasses';
+import { type ChartsGridClasses } from './chartsGridClasses';
 import { useChartContext } from '../context/ChartProvider';
 
 interface ChartsGridVerticalProps {
@@ -19,9 +19,15 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
   const { instance } = useChartContext();
   const { axis, start, end, classes } = props;
 
-  const { scale, tickNumber, tickInterval } = axis;
+  const { scale, tickNumber, tickInterval, tickSpacing } = axis;
 
-  const xTicks = useTicks({ scale, tickNumber, tickInterval, direction: 'x' });
+  const xTicks = useTicks({
+    scale,
+    tickNumber,
+    tickInterval,
+    tickSpacing,
+    direction: 'x',
+  });
 
   return (
     <React.Fragment>

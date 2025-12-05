@@ -2,39 +2,57 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsSlots, ChartsSlotProps } from '../internals/material';
-import { AreaPlot, AreaPlotProps, AreaPlotSlotProps, AreaPlotSlots } from './AreaPlot';
-import { LinePlot, LinePlotProps, LinePlotSlotProps, LinePlotSlots } from './LinePlot';
-import { ChartContainerProps } from '../ChartContainer';
-import { MarkPlot, MarkPlotProps, MarkPlotSlotProps, MarkPlotSlots } from './MarkPlot';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
-import { LineSeriesType } from '../models/seriesType/line';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
+import {
+  AreaPlot,
+  type AreaPlotProps,
+  type AreaPlotSlotProps,
+  type AreaPlotSlots,
+} from './AreaPlot';
+import {
+  LinePlot,
+  type LinePlotProps,
+  type LinePlotSlotProps,
+  type LinePlotSlots,
+} from './LinePlot';
+import { type ChartContainerProps } from '../ChartContainer';
+import {
+  MarkPlot,
+  type MarkPlotProps,
+  type MarkPlotSlotProps,
+  type MarkPlotSlots,
+} from './MarkPlot';
+import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis/ChartsAxis';
+import { type LineSeriesType } from '../models/seriesType/line';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
+import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
+import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
+import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
 import {
   LineHighlightPlot,
-  LineHighlightPlotSlots,
-  LineHighlightPlotSlotProps,
+  type LineHighlightPlotSlots,
+  type LineHighlightPlotSlotProps,
 } from './LineHighlightPlot';
-import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
+import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { useLineChartProps } from './useLineChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { LineChartPluginSignatures } from './LineChart.plugins';
-import { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
+import { type LineChartPluginSignatures } from './LineChart.plugins';
+import { type ChartsToolbarSlots, type ChartsToolbarSlotProps } from '../Toolbar';
 import { FocusedMark } from './FocusedMark';
 
 export interface LineChartSlots
@@ -462,6 +480,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -539,6 +558,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -602,6 +622,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -666,6 +687,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -729,6 +751,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -792,6 +815,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -865,6 +889,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -938,6 +963,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1001,6 +1027,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
     ]).isRequired,
@@ -1087,6 +1114,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1163,6 +1191,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1225,6 +1254,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1288,6 +1318,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1350,6 +1381,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1412,6 +1444,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1484,6 +1517,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1556,6 +1590,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1618,6 +1653,7 @@ LineChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
