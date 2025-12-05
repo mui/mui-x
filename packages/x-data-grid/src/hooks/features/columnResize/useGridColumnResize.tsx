@@ -15,6 +15,7 @@ import {
   getFieldsFromGroupHeaderElem,
   findGroupHeaderElementsFromField,
   findGridHeader,
+  findGridHeaderFilter,
   findGridCells,
   findParentElementFromClassName,
   findLeftPinnedHeadersAfterCol,
@@ -250,6 +251,18 @@ function extractColumnWidths(
           gap * (totalChildren - 1) +
           paddingWidth +
           (menuContainer?.clientWidth ?? 0);
+
+        filteredWidths.push(width);
+      }
+    }
+
+    if (options.includeHeaderFilters) {
+      const headerFilter = findGridHeaderFilter(apiRef.current, column.field);
+      if (headerFilter) {
+        const style = window.getComputedStyle(headerFilter, null);
+        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
+        const contentWidth = headerFilter.scrollWidth;
+        const width = contentWidth + paddingWidth;
 
         filteredWidths.push(width);
       }

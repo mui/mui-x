@@ -71,6 +71,7 @@ To configure autosizing behavior, use the `autosizeOptions` with the following o
 - `outliersFactor`: A number representing the factor to determine outliers. Default is **1.5**.
 - `expand`: A boolean, if the total width is less than the available width, expand columns to fill it. Default is **false**.
 - `disableColumnVirtualization`: A boolean to include virtualized columns (not rendered in the DOM) when autosizing. Default is **true**.
+- `includeHeaderFilters` [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan'): A boolean to indicate whether to include the header filter content when autosizing. Default is **false**.
 
 ```tsx
 <DataGrid
@@ -140,6 +141,29 @@ Column autosizing is compatible with the [Dynamic row height](/x/react-data-grid
 :::warning
 When autosizing columns with long content, consider setting the `maxWidth` for the column to avoid it becoming too wide.
 :::
+
+### Autosizing header filters [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+
+To include the header filter content when autosizing columns, pass the `includeHeaderFilters` to the `autosizeOptions`.
+
+```tsx
+<DataGrid
+  {...otherProps}
+  autosizeOptions={{
+    includeHeaderFilters: true,
+  }}
+/>
+```
+
+{{"demo": "ColumnAutosizingHeaderFilters.js", "disableAd": true, "bg": "inline"}}
+
+or when calling the `autosizeColumns()` method programmatically:
+
+```tsx
+apiRef.current.autosizeColumns({
+  includeHeaderFilters: true,
+});
+```
 
 ### Autosizing with grouped rows [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
