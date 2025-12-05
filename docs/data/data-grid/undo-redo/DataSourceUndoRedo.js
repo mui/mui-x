@@ -27,11 +27,7 @@ export default function DataSourceUndoRedo() {
           rowCount: getRowsResponse.rowCount,
         };
       },
-      updateRow: async (params) => {
-        // Simulate a server update
-        const syncedRow = await editRow(params.rowId, params.updatedRow);
-        return syncedRow;
-      },
+      updateRow: (params) => editRow(params.rowId, params.updatedRow),
     }),
     [fetchRows, editRow],
   );
@@ -58,8 +54,10 @@ export default function DataSourceUndoRedo() {
         showToolbar
         disableRowSelectionOnClick
         cellSelection
+        disablePivoting
+        disableRowGrouping
+        disableColumnPinning
       />
     </Box>
   );
 }
-

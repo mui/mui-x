@@ -7,5 +7,7 @@
   showToolbar
   disableRowSelectionOnClick
   cellSelection
+  disablePivoting
+  disableRowGrouping
+  disableColumnPinning
 />
-
