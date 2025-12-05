@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
-import { type AxisScaleConfig, type ChartsXAxisProps, type ComputedAxis } from '../models/axis';
+import type { ChartsXAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
 import { ChartsText, type ChartsTextProps } from '../ChartsText';
@@ -19,14 +19,16 @@ const XAxisRoot = styled(AxisRoot, {
 })({});
 
 interface ChartsXAxisImplProps extends Omit<ChartsXAxisProps, 'axis'> {
-  axis: ComputedAxis<keyof AxisScaleConfig, any, ChartsXAxisProps>;
+  axis: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
 }
 
 /**
  * @ignore - internal component. Use `ChartsXAxis` instead.
  */
 export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
-  const { scale: xScale, tickNumber, reverse, ...settings } = axis;
+  // @ts-expect-error ordinalTimeTicks may not be present on all axis types
+  // Should be set to never, but this causes other issues with proptypes generator.
+  const { scale: xScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
@@ -86,7 +88,11 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
       'groups' in axis && Array.isArray(axis.groups) ? (
         <ChartsGroupedXAxisTicks {...inProps} />
       ) : (
-        <ChartsSingleXAxisTicks {...inProps} axisLabelHeight={labelHeight} />
+        <ChartsSingleXAxisTicks
+          {...inProps}
+          axisLabelHeight={labelHeight}
+          ordinalTimeTicks={ordinalTimeTicks}
+        />
       );
   }
 

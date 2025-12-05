@@ -3,7 +3,8 @@ import * as React from 'react';
 import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
-import { type ChartsXAxisProps } from '../models/axis';
+import type { ChartsXAxisProps } from '../models/axis';
+import type { OrdinalTimeTicks } from '../models/timeTicks';
 import { useMounted } from '../hooks/useMounted';
 import { useDrawingArea } from '../hooks/useDrawingArea';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
@@ -14,13 +15,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleXAxisProps extends ChartsXAxisProps {
   axisLabelHeight: number;
+  ordinalTimeTicks?: OrdinalTimeTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
-  const { axisLabelHeight } = inProps;
+  const { axisLabelHeight, ordinalTimeTicks } = inProps;
   const {
     xScale,
     defaultizedProps,
@@ -65,6 +67,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     tickLabelPlacement,
     tickSpacing,
     direction: 'x',
+    ordinalTimeTicks,
   });
 
   const visibleLabels = getVisibleLabels(xTicks, {
