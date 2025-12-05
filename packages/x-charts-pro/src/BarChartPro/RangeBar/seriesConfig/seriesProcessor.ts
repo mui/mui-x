@@ -1,19 +1,18 @@
 import { warnOnce } from '@mui/x-internals/warning';
-import { type DefaultizedProps } from '@mui/x-internals/types';
 import { type SeriesId } from '@mui/x-charts/models';
 import {
-  type ChartSeries,
-  defaultizeValueFormatter,
+  type DefaultizedRangeBarSeriesType,
+  type RangeBarValueType,
   type SeriesProcessor,
 } from '@mui/x-charts/internals';
+
+const rangeBarValueFormatter = (v: RangeBarValueType | null) =>
+  v == null ? '' : `[${v.start}, ${v.end}]`;
 
 const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
 
-  const completedSeries: Record<
-    SeriesId,
-    DefaultizedProps<ChartSeries<'rangeBar'>, 'data' | 'layout'>
-  > = {};
+  const completedSeries: Record<SeriesId, DefaultizedRangeBarSeriesType> = {};
 
   for (const id of seriesOrder) {
     const seriesData = series[id];
@@ -48,6 +47,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
     completedSeries[id] = {
       layout: 'vertical',
       ...series[id],
+      valueFormatter: series[id].valueFormatter ?? rangeBarValueFormatter,
       data: datasetKeys
         ? dataset!.map((data) => {
             const start = data[datasetKeys.start];
@@ -75,14 +75,12 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
             return { start, end };
           })
         : series[id].data!,
-    };
+    } satisfies DefaultizedRangeBarSeriesType;
   }
 
   return {
     seriesOrder,
-    series: defaultizeValueFormatter(completedSeries, (v) =>
-      v == null ? '' : `[${v.start}, ${v.end}]`,
-    ),
+    series: completedSeries,
   };
 };
 
