@@ -28,7 +28,7 @@ catalogs:
       specifier: ^7.28.5
       version: 7.28.5
     '@date-fns/tz':
-      specifier: ^1.2.0
+      specifier: ^1.4.1
       version: 1.4.1
     '@emotion/cache':
       specifier: ^11.14.0
