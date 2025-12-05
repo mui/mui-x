@@ -33,7 +33,15 @@ export const useGridProps = <PrivateApi extends GridPrivateApiCommon>(
         getRowId: props.getRowId,
         isCellEditable: props.isCellEditable,
         isRowSelectable: props.isRowSelectable,
+        dataSource: props.dataSource,
       },
     }));
-  }, [apiRef, props.listView, props.getRowId, props.isCellEditable, props.isRowSelectable]);
+  }, [
+    apiRef,
+    props.listView,
+    props.getRowId,
+    props.isCellEditable,
+    props.isRowSelectable,
+    props.dataSource,
+  ]);
 };

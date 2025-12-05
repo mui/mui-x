@@ -6,7 +6,7 @@ import {
   type GridEvents,
   gridVisibleRowsSelector,
 } from '@mui/x-data-grid-pro';
-import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type {
   GridHistoryEventHandler,
@@ -19,8 +19,7 @@ import type {
  * Create the default handler for cellEditStop events.
  */
 export const createCellEditHistoryHandler = (
-  apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
+  apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridCellEditHistoryData> => {
   return {
     store: (params: GridCellEditStopParams) => {
@@ -63,7 +62,7 @@ export const createCellEditHistoryHandler = (
     undo: async (data: GridCellEditHistoryData) => {
       const { id, field, oldValue } = data;
 
-      if (props.dataSource?.updateRow) {
+      if (apiRef.current.state.props.dataSource?.updateRow) {
         const row = apiRef.current.getRow(id);
         await apiRef.current.dataSource.editRow({
           rowId: id,
@@ -86,7 +85,7 @@ export const createCellEditHistoryHandler = (
     redo: async (data: GridCellEditHistoryData) => {
       const { id, field, newValue } = data;
 
-      if (props.dataSource?.updateRow) {
+      if (apiRef.current.state.props.dataSource?.updateRow) {
         const row = apiRef.current.getRow(id);
         await apiRef.current.dataSource.editRow({
           rowId: id,
@@ -112,8 +111,7 @@ export const createCellEditHistoryHandler = (
  * Create the default handler for rowEditStop events.
  */
 export const createRowEditHistoryHandler = (
-  apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
+  apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridRowEditHistoryData> => {
   return {
     store: (params: GridRowEditStopParams) => {
@@ -156,7 +154,7 @@ export const createRowEditHistoryHandler = (
     undo: async (data: GridRowEditHistoryData) => {
       const { id, oldRow, newRow } = data;
 
-      if (props.dataSource?.updateRow) {
+      if (apiRef.current.state.props.dataSource?.updateRow) {
         await apiRef.current.dataSource.editRow({
           rowId: id,
           updatedRow: oldRow,
@@ -178,7 +176,7 @@ export const createRowEditHistoryHandler = (
     redo: async (data: GridRowEditHistoryData) => {
       const { id, oldRow, newRow } = data;
 
-      if (props.dataSource?.updateRow) {
+      if (apiRef.current.state.props.dataSource?.updateRow) {
         await apiRef.current.dataSource.editRow({
           rowId: id,
           updatedRow: newRow,
@@ -203,7 +201,7 @@ export const createRowEditHistoryHandler = (
  * Create the default handler for clipboardPasteEnd events.
  */
 export const createClipboardPasteHistoryHandler = (
-  apiRef: RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<GridClipboardPasteHistoryData> => {
   return {
     store: (params: GridClipboardPasteHistoryData) => params,
@@ -293,7 +291,7 @@ export const createClipboardPasteHistoryHandler = (
  * Create the default history events map.
  */
 export const createDefaultHistoryHandlers = (
-  apiRef: RefObject<GridPrivateApiPremium>,
+  apiRef: RefObject<GridApiPremium>,
   props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
 ) => {
   const handlers = {} as Record<
@@ -304,8 +302,8 @@ export const createDefaultHistoryHandlers = (
   >;
 
   if (!props.dataSource || props.dataSource.updateRow) {
-    handlers.cellEditStop = createCellEditHistoryHandler(apiRef, props);
-    handlers.rowEditStop = createRowEditHistoryHandler(apiRef, props);
+    handlers.cellEditStop = createCellEditHistoryHandler(apiRef);
+    handlers.rowEditStop = createRowEditHistoryHandler(apiRef);
   }
 
   if (!props.dataSource) {
