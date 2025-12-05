@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as childProcess from 'child_process';
-import { type Browser, chromium } from '@playwright/test';
+import { type Browser, chromium, Page } from '@playwright/test';
 import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
@@ -23,7 +23,6 @@ const timeSensitiveSuites = [
 await main();
 
 async function main() {
-  const baseUrl = 'http://localhost:5001';
   const screenshotDir = path.resolve(import.meta.dirname, './screenshots/chrome');
 
   const browser = await chromium.launch({
@@ -46,35 +45,15 @@ async function main() {
     }
   });
 
-  // Wait for all requests to finish.
-  // This should load shared resources such as fonts.
-  await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
-
-  // Simulate portrait mode for date pickers.
-  // See `usePickerOrientation`.
-  await page.evaluate(() => {
-    Object.defineProperty(window.screen.orientation, 'angle', {
-      get() {
-        return 0;
-      },
-    });
-  });
-
-  let routes = await page.$$eval('#tests a', (links) => {
-    return links.map((link) => {
-      return (link as HTMLAnchorElement).href;
-    });
-  });
-  routes = routes.map((route) => route.replace(baseUrl, ''));
-
   // prepare screenshots
   await emptyDir(screenshotDir);
 
+  const routes = await page.evaluate(() => window.muiFixture.allTests);
+
   async function navigateToTest(route: string) {
     // Use client-side routing which is much faster than full page navigation via page.goto().
-    await page.waitForFunction(() => window.muiFixture.isReady());
     return page.evaluate((_route) => {
-      window.muiFixture.navigate(`${_route}#no-dev`);
+      window.muiFixture.navigate(_route);
     }, route);
   }
 
@@ -92,14 +71,14 @@ async function main() {
       expect(msg).to.equal(undefined);
     });
 
-    const getTimeout = (route: string) => {
+    const getTimeout = (route: { url: string }) => {
       // With the playwright inspector we might want to call `page.pause` which would lead to a timeout.
       if (process.env.PWDEBUG) {
         return 0;
       }
 
       // Some routes are more complex and take longer to render.
-      if (route.includes('DataGridProDemo')) {
+      if (route.url.includes('DataGridProDemo')) {
         return 6000;
       }
 
@@ -108,62 +87,56 @@ async function main() {
 
     routes.forEach((route) => {
       it(
-        `creates screenshots of ${route}`,
+        `creates screenshots of ${route.url}`,
         {
           timeout: getTimeout(route),
         },
         async () => {
-          if (/^\/docs-charts-tooltip\/Interaction/.test(route)) {
+          if (/^\/docs-charts-tooltip\/Interaction/.test(route.url)) {
             // Ignore tooltip interaction demo screenshot.
             // There is a dedicated test for it in this file, and this is why we don't exclude it with the glob pattern in test/regressions/testsBySuite.ts
             return;
           }
 
+          await navigateToTest(route.url);
+
           // Move cursor offscreen to not trigger unwanted hover effects.
-          // This needs to be done before the navigation to avoid hover and mouse enter/leave effects.
           await page.mouse.move(0, 0);
 
-          // Skip animations
-          await page.emulateMedia({ reducedMotion: 'reduce' });
-
-          try {
-            await navigateToTest(route);
-          } catch (error) {
-            // When one demo crashes, the page becomes empty and there are no links to demos,
-            // so navigation to the next demo throws an error.
-            // Reloading the page fixes this.
-            await page.reload();
-            await navigateToTest(route);
-          }
-
-          const screenshotPath = path.resolve(screenshotDir, `.${route}.png`);
+          const screenshotPath = path.resolve(screenshotDir, `.${route.url}.png`);
 
           const testcase = await page.waitForSelector(
-            `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
+            `[data-testid="testcase"][data-testpath="${route.url}"]:not([aria-busy="true"])`,
           );
 
-          const images = await page.evaluate(() => document.querySelectorAll('img'));
-          if (images.length > 0) {
-            await page.evaluate(() => {
-              images.forEach((img) => {
-                if (!img.complete && img.loading === 'lazy') {
-                  // Force lazy-loaded images to load
-                  img.setAttribute('loading', 'eager');
-                }
-              });
-            });
-            // Wait for the flags to load
-            await page.waitForFunction(() => [...images].every((img) => img.complete), undefined, {
-              timeout: 2000,
-            });
-          }
+          await page.evaluate(async () => {
+            const images = document.querySelectorAll('img');
+            if (images.length <= 0) {
+              return;
+            }
+            const promises = [];
+            for (const img of images) {
+              if (img.complete) {
+                continue;
+              }
+              if (img.loading === 'lazy') {
+                // Force lazy-loaded images to load
+                img.setAttribute('loading', 'eager');
+              }
+              const { promise, resolve, reject } = Promise.withResolvers<void>();
+              img.onload = () => resolve();
+              img.onerror = reject;
+              promises.push(promise);
+            }
+            await Promise.all(promises);
+          });
 
-          if (/^\/docs-charts-.*/.test(route)) {
+          if (/^\/docs-charts-.*/.test(route.url)) {
             // Run one tick of the clock to get the final animation state
             await sleep(10);
           }
 
-          if (timeSensitiveSuites.some((suite) => route.includes(suite))) {
+          if (timeSensitiveSuites.some((suite) => route.url.includes(suite))) {
             await sleep(100);
           }
 
@@ -174,7 +147,7 @@ async function main() {
         },
       );
 
-      it(`should have no errors rendering ${route}`, () => {
+      it(`should have no errors rendering ${route.url}`, () => {
         const msg = errorConsole;
         errorConsole = undefined;
         if (isConsoleWarningIgnored(msg)) {
@@ -216,9 +189,6 @@ async function main() {
 
       await navigateToTest(route);
 
-      // Skip animations
-      await page.emulateMedia({ reducedMotion: 'reduce' });
-
       // Make sure demo got loaded
       await page.waitForSelector(
         `[data-testid="testcase"][data-testpath="${route}"]:not([aria-busy="true"])`,
@@ -254,10 +224,6 @@ async function main() {
 
       beforeEach(async () => {
         page = await newTestPage(browser);
-
-        // Wait for all requests to finish.
-        // This should load shared resources such as fonts.
-        await page.goto(`${baseUrl}#dev`, { waitUntil: 'networkidle' });
       });
 
       afterEach(async () => {
@@ -342,29 +308,6 @@ async function main() {
         });
       });
     });
-
-    // describe('DateTimePicker', () => {
-    //   it('should handle change in pointer correctly', async () => {
-    //     const index = routes.findIndex(
-    //         (route) => route === '/regression-pickers/UncontrolledDateTimePicker',
-    //     );
-    //     const testcase = await renderFixture(index);
-    //
-    //     await page.click('[aria-label="Choose date"]');
-    //     await page.click('[aria-label*="switch to year view"]');
-    //     await takeScreenshot({
-    //       testcase: await page.waitForSelector('[role="dialog"]'),
-    //       route: '/regression-pickers/UncontrolledDateTimePicker-desktop',
-    //     });
-    //     await page.evaluate(() => {
-    //       window.muiTogglePickerMode();
-    //     });
-    //     await takeScreenshot({
-    //       testcase,
-    //       route: '/regression-pickers/UncontrolledDateTimePicker-mobile',
-    //     });
-    //   });
-    // });
   });
 }
 
@@ -415,7 +358,7 @@ function screenshotPrintDialogPreview(
   });
 }
 
-async function newTestPage(browser: Browser) {
+async function newTestPage(browser: Browser): Promise<Page> {
   // reuse viewport from `vrtest`
   // https://github.com/nathanmarks/vrtest/blob/1185b852a6c1813cedf5d81f6d6843d9a241c1ce/src/server/runner.js#L44
   const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });
@@ -432,16 +375,31 @@ async function newTestPage(browser: Browser) {
     }
   });
 
+  // Skip animations
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+
+  // Simulate portrait mode for date pickers.
+  // See `usePickerOrientation`.
+  await page.evaluate(() => {
+    Object.defineProperty(window.screen.orientation, 'angle', {
+      get() {
+        return 0;
+      },
+    });
+  });
+
+  const baseUrl = 'http://localhost:5001';
+  // Wait for all requests to finish.
+  // This should load shared resources such as fonts.
+  await page.goto(baseUrl, { waitUntil: 'networkidle' });
+
+  await page.waitForFunction(() => window.muiFixture?.isReady);
+
   return page;
 }
 
-async function emptyDir(dir: string) {
-  let items;
-  try {
-    items = await fs.readdir(dir);
-  } catch {
-    return fs.mkdir(dir, { recursive: true });
-  }
-
-  return Promise.all(items.map((item) => fs.rm(path.join(dir, item), { recursive: true })));
+async function emptyDir(dir: string): Promise<void> {
+  await fs.mkdir(dir, { recursive: true });
+  const items = await fs.readdir(dir);
+  await Promise.all(items.map((item) => fs.rm(path.join(dir, item), { recursive: true })));
 }
