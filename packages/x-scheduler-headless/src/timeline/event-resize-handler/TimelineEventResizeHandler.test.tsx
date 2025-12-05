@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { TimelineProvider } from '@mui/x-scheduler-headless/timeline-provider';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
@@ -15,17 +14,19 @@ describe('<Timeline.EventResizeHandler />', () => {
     render(node) {
       return render(
         <TimelineProvider events={[]}>
-          <Timeline.Root items={[]}>
-            <Timeline.EventRow start={start.value} end={end.value} resourceId={null}>
-              <Timeline.Event
-                eventId="fake-id"
-                occurrenceKey="fake-key"
-                start={start}
-                end={end}
-                renderDragPreview={() => null}
-              >
-                {node}
-              </Timeline.Event>
+          <Timeline.Root>
+            <Timeline.EventRow resourceId="r1">
+              {() => (
+                <Timeline.Event
+                  eventId="fake-id"
+                  occurrenceKey="fake-key"
+                  start={start}
+                  end={end}
+                  renderDragPreview={() => null}
+                >
+                  {node}
+                </Timeline.Event>
+              )}
             </Timeline.EventRow>
           </Timeline.Root>
         </TimelineProvider>,

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { TemporalSupportedObject } from '../../models';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
@@ -9,19 +8,19 @@ import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 import { processDate } from '../../process-date';
 import { useAdapter } from '../../use-adapter';
 
-export function useTimelinePlaceholderInRange(
-  parameters: useTimelinePlaceholderInRange.Parameters,
-): useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null {
-  const { start, end, occurrences, maxIndex, resourceId } = parameters;
+export function usePlaceholderInRow(
+  parameters: usePlaceholderInRow.Parameters,
+): usePlaceholderInRow.ReturnValue {
+  const { occurrences, maxIndex, resourceId } = parameters;
 
+  // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
+  // Selector hooks
   const rawPlaceholder = useStore(
     store,
-    timelineOccurrencePlaceholderSelectors.placeholderInTimeRange,
-    start,
-    end,
+    timelineOccurrencePlaceholderSelectors.placeholderInResource,
     resourceId,
   );
 
@@ -81,13 +80,14 @@ export function useTimelinePlaceholderInRange(
   }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
 }
 
-export namespace useTimelinePlaceholderInRange {
+export namespace usePlaceholderInRow {
   export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
     /**
      * The resource id of the row in which to render the placeholder.
      */
     resourceId: string | null;
   }
+
+  export type ReturnValue =
+    useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null;
 }

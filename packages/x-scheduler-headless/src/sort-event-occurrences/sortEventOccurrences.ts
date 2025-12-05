@@ -6,7 +6,7 @@ import { Adapter } from '../use-adapter/useAdapter.types';
  * If two occurrences have the same start date, the one with the later end date comes first.
  */
 export function sortEventOccurrences(
-  occurrences: SchedulerEventOccurrence[],
+  occurrences: readonly SchedulerEventOccurrence[],
   adapter: Adapter,
 ): SchedulerEventOccurrence[] {
   return occurrences

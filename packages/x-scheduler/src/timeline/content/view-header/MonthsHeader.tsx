@@ -3,28 +3,27 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { Adapter, useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { MONTHS_UNIT_COUNT } from '../../constants';
-import { HeaderProps } from './Headers.types';
 import './Headers.css';
 
-export function MonthsHeader(props: HeaderProps) {
-  const { className, amount = MONTHS_UNIT_COUNT, ...other } = props;
-
+export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+  // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
 
+  // Feature hooks
   const months = React.useMemo(
-    () => getMonths(adapter, visibleDate, amount),
-    [adapter, visibleDate, amount],
+    () => getMonths(adapter, viewConfig.start, viewConfig.end),
+    [adapter, viewConfig],
   );
 
   return (
-    <div className={clsx('MonthsHeader', className)} {...other}>
+    <div className={clsx('MonthsHeader', props.className)} {...props}>
       {months.map((month, index) => {
         const monthNumber = adapter.getMonth(month.value);
 
@@ -51,9 +50,8 @@ export function MonthsHeader(props: HeaderProps) {
   );
 }
 
-function getMonths(adapter: Adapter, date: TemporalSupportedObject, amount: number) {
-  const end = adapter.startOfMonth(adapter.addMonths(date, amount));
-  let current = adapter.startOfYear(date);
+function getMonths(adapter: Adapter, start: TemporalSupportedObject, end: TemporalSupportedObject) {
+  let current = start;
   const years: SchedulerProcessedDate[] = [];
 
   while (adapter.isBefore(current, end)) {

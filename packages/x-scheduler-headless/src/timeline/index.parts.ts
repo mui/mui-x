@@ -6,5 +6,3 @@ export { TimelineEventPlaceholder as EventPlaceholder } from './event-placeholde
 export { TimelineEventResizeHandler as EventResizeHandler } from './event-resize-handler/TimelineEventResizeHandler';
 export { TimelineRow as Row } from './row/TimelineRow';
 export { TimelineCell as Cell } from './cell/TimelineCell';
-
-export { useTimelinePlaceholderInRange as usePlaceholderInRange } from './use-placeholder-in-range/useTimelinePlaceholderInRange';

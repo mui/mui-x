@@ -38,7 +38,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
     /**
      * The occurrences without the position information
      */
-    occurrences: SchedulerEventOccurrence[];
+    occurrences: readonly SchedulerEventOccurrence[];
     /**
      * Maximum amount of columns an event can span across.
      */

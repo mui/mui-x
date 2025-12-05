@@ -10,7 +10,7 @@ describe('<Timeline.Cell />', () => {
     render(node) {
       return render(
         <TimelineProvider events={[]}>
-          <Timeline.Root items={[]}>
+          <Timeline.Root>
             <Timeline.Row>{node}</Timeline.Row>
           </Timeline.Root>
         </TimelineProvider>,
