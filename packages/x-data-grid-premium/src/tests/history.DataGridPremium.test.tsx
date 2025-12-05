@@ -484,6 +484,101 @@ describe('<DataGridPremium /> - History', () => {
     });
   });
 
+  describe('Data source integration', () => {
+    it('should not track history when dataSource exists without updateRow method', async () => {
+      function TestWithDataSourceNoUpdate() {
+        const dataSource = React.useMemo(
+          () => ({
+            getRows: async () => ({ rows: data.rows, rowCount: data.rows.length }),
+          }),
+          [],
+        );
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <Test rows={undefined} dataSource={dataSource} />
+          </div>
+        );
+      }
+
+      const { user } = render(<TestWithDataSourceNoUpdate />);
+
+      // Wait for data to load
+      await waitFor(() => {
+        expect(getCell(0, 2)).not.to.equal(null);
+      });
+
+      // Edit a cell
+      const cell = getCell(0, 2);
+      await user.dblClick(cell);
+      await user.keyboard('10000');
+      // Click another cell to confirm edit
+      await user.click(getCell(1, 2));
+
+      // Undo should not be available when `dataSource` doesn't have `updateRow`
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
+    });
+
+    it('should call `dataSource.updateRow` when undoing with data source', async () => {
+      const updateRowSpy = spy();
+
+      function TestWithDataSource() {
+        const dataSource = React.useMemo(
+          () => ({
+            getRows: async () => ({ rows: data.rows, rowCount: data.rows.length }),
+            updateRow: async (params: any) => {
+              updateRowSpy(params);
+              return params.updatedRow;
+            },
+          }),
+          [],
+        );
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <Test rows={undefined} dataSource={dataSource} />
+          </div>
+        );
+      }
+
+      const { user } = render(<TestWithDataSource />);
+
+      // Wait for data to load
+      await waitFor(() => {
+        expect(getCell(0, 2)).not.to.equal(null);
+      });
+
+      // Get the original value before editing
+      const originalValue = apiRef.current!.getRow(0).currencyPair;
+
+      // Edit a cell
+      const cell = getCell(0, 2);
+      await user.dblClick(cell);
+      await user.keyboard('10000');
+      // Click another cell to confirm edit
+      await user.click(getCell(1, 2));
+
+      // Undo should be available
+      await waitFor(() => {
+        expect(apiRef.current!.history.canUndo()).to.equal(true);
+      });
+
+      // Reset the call count
+      updateRowSpy.resetHistory();
+
+      // Perform undo
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      // one additional call to `updateRow` should have been made
+      expect(updateRowSpy.callCount).to.equal(1);
+      const undoCall = updateRowSpy.lastCall;
+      expect(undoCall.args[0]).to.have.property('rowId', 0);
+      expect(undoCall.args[0].updatedRow).to.have.property('currencyPair', originalValue);
+    });
+  });
+
   // These tests are flaky in JSDOM
   describe.skipIf(isJSDOM)('Clipboard paste history', () => {
     function paste(cell: HTMLElement, pasteText: string) {
