@@ -1,25 +1,24 @@
 import * as React from 'react';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { LineChart } from '@mui/x-charts/LineChart';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-const data = [
-  { id: 0, value: 10, label: 'Series A' },
-  { id: 1, value: 15, label: 'Series B' },
-  { id: 2, value: 20, label: 'Series C' },
-  { id: 3, value: 12, label: 'Series D' },
-  { id: 4, value: 8, label: 'Series E' },
+const series = [
+  { data: [20, 30, 25, 40, 30], label: 'Series A' },
+  { data: [15, 25, 20, 35, 20], label: 'Series B' },
+  { data: [10, 20, 15, 30, 25], label: 'Series C' },
 ];
 
-export default function TogglePieSliceVisibility() {
-  const [hiddenItems, setHiddenItems] = React.useState([]);
+export default function VisibilityOnChange() {
+  const [hiddenItems, setHiddenItems] = React.useState({});
 
-  const visibleCount = data.length - hiddenItems.length;
+  const visibleCount =
+    series.length - Object.values(hiddenItems).filter((v) => v === false).length;
 
   return (
-    <Stack direction="column" spacing={2}>
-      <PieChart
-        series={[{ data }]}
+    <Stack direction="column" spacing={2} width={'100%'}>
+      <LineChart
+        series={series}
         height={300}
         slotProps={{
           legend: {
@@ -29,7 +28,7 @@ export default function TogglePieSliceVisibility() {
         onVisibilityChange={(newHiddenItems) => setHiddenItems(newHiddenItems)}
       />
       <Typography variant="body2" textAlign="center">
-        Visible slices: {visibleCount} / {data.length}
+        Visible slices: {visibleCount} / {series.length}
       </Typography>
     </Stack>
   );

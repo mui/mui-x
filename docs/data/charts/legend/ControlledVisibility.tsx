@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 const data = [
   { id: 0, value: 10, label: 'Series A' },
@@ -39,13 +41,67 @@ export default function ControlledVisibility() {
     });
   };
 
+  const handleToggleChange = (
+    _event: React.MouseEvent<HTMLElement>,
+    newValue: string | null,
+  ) => {
+    if (newValue === 'all') {
+      handleShowAll();
+    } else if (newValue === 'none') {
+      handleHideAll();
+    } else if (newValue === 'onlyA') {
+      handleShowOnlyA();
+    }
+  };
+
+  const getCurrentValue = () => {
+    const allVisible =
+      visibilityMap['pie-0'] !== false &&
+      visibilityMap['pie-1'] !== false &&
+      visibilityMap['pie-2'] !== false;
+    const allHidden =
+      visibilityMap['pie-0'] === false &&
+      visibilityMap['pie-1'] === false &&
+      visibilityMap['pie-2'] === false;
+    const onlyAVisible =
+      visibilityMap['pie-0'] !== false &&
+      visibilityMap['pie-1'] === false &&
+      visibilityMap['pie-2'] === false;
+
+    if (allVisible) {
+      return 'all';
+    }
+    if (allHidden) {
+      return 'none';
+    }
+    if (onlyAVisible) {
+      return 'onlyA';
+    }
+    return null;
+  };
+
   return (
     <Stack spacing={2}>
-      <ButtonGroup variant="outlined" size="small">
-        <Button onClick={handleShowAll}>Show All</Button>
-        <Button onClick={handleHideAll}>Hide All</Button>
-        <Button onClick={handleShowOnlyA}>Show Only A</Button>
-      </ButtonGroup>
+      <FormControl sx={{ mb: 2 }}>
+        <FormLabel>Controlled Highlighting</FormLabel>
+        <ToggleButtonGroup
+          value={getCurrentValue()}
+          exclusive
+          onChange={handleToggleChange}
+          aria-label="highlight control"
+          size="small"
+        >
+          <ToggleButton value="all" aria-label="show all nodes">
+            Show All
+          </ToggleButton>
+          <ToggleButton value="none" aria-label="show no nodes">
+            Hide All
+          </ToggleButton>
+          <ToggleButton value="onlyA" aria-label="show only node A">
+            Show Only A
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </FormControl>
       <PieChart
         series={[{ id: 'pie', data }]}
         height={300}
