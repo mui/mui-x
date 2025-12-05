@@ -2,7 +2,7 @@ import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { SchedulerEventModelStructure } from '@mui/x-scheduler-headless/models';
 import { TZDate } from '@date-fns/tz';
-import { format, parseISO } from 'date-fns';
+import { formatInTimeZone } from 'date-fns-tz';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -13,42 +13,20 @@ import {
 export default function TimezoneDataset() {
   const eventModelStructure: SchedulerEventModelStructure<TimezoneEvent> = {
     start: {
-      getter: (event) => {
-        const d = parseISO(event.start);
-
-        return new TZDate(
-          d.getFullYear(),
-          d.getMonth(),
-          d.getDate(),
-          d.getHours(),
-          d.getMinutes(),
-          d.getSeconds(),
-          d.getMilliseconds(),
-          event.timezone,
-        );
-      },
+      getter: (event) => new TZDate(event.startUtc, event.timezone),
       setter: (event, newValue) => {
-        event.start = format(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        event.startUtc = formatInTimeZone(
+          newValue,
+          'UTC',
+          "yyyy-MM-dd'T'HH:mm:ss'Z'",
+        );
         return event;
       },
     },
     end: {
-      getter: (event) => {
-        const d = parseISO(event.end);
-
-        return new TZDate(
-          d.getFullYear(),
-          d.getMonth(),
-          d.getDate(),
-          d.getHours(),
-          d.getMinutes(),
-          d.getSeconds(),
-          d.getMilliseconds(),
-          event.timezone,
-        );
-      },
+      getter: (event) => new TZDate(event.endUtc, event.timezone),
       setter: (event, newValue) => {
-        event.end = format(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        event.endUtc = formatInTimeZone(newValue, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'");
         return event;
       },
     },
