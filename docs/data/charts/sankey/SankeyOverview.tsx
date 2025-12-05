@@ -82,7 +82,6 @@ export default function SankeyOverview() {
   return (
     <Box
       sx={{
-        p: 4,
         width: '100%',
       }}
     >
