@@ -175,6 +175,7 @@
   { "name": "ChartsTooltipSlotProps", "kind": "Interface" },
   { "name": "ChartsTooltipSlots", "kind": "Interface" },
   { "name": "ChartsTooltipTable", "kind": "Variable" },
+  { "name": "ChartsTypeFeatureFlags", "kind": "Interface" },
   { "name": "ChartsXAxis", "kind": "Function" },
   { "name": "ChartsXAxisProps", "kind": "Interface" },
   { "name": "ChartsXReferenceLineProps", "kind": "TypeAlias" },

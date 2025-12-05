@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { useSkipAnimation } from '@mui/x-charts/internals';
+import { type RangeBarItemIdentifier, useSkipAnimation } from '@mui/x-charts/internals';
 import {
   BarElement,
   type BarElementSlotProps,
@@ -11,7 +11,6 @@ import {
   type BarLabelSlots,
   type BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
-import { type BarItemIdentifier } from '@mui/x-charts/models';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
@@ -31,11 +30,11 @@ export interface RangeBarPlotProps {
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    barItemIdentifier: BarItemIdentifier,
+    barItemIdentifier: RangeBarItemIdentifier,
   ) => void;
   /**
    * Defines the border radius of the bar element.
@@ -112,7 +111,7 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
                   onClick={
                     onItemClick &&
                     ((event) => {
-                      onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                      onItemClick(event, { type: 'rangeBar', seriesId, dataIndex });
                     })
                   }
                 />
@@ -137,7 +136,7 @@ RangeBarPlot.propTypes = {
   /**
    * Callback fired when a bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   * @param {RangeBarItemIdentifier} barItemIdentifier The range bar item identifier.
    */
   onItemClick: PropTypes.func,
   /**

@@ -1,6 +1,6 @@
 declare module '@mui/x-charts/models' {
-  interface AxisFeatureFlags {
-    rangeBarInSeriesValue: true;
+  interface ChartsTypeFeatureFlags {
+    rangeBarOnClick: true;
   }
 }
 

@@ -19,11 +19,16 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { type HasProperty } from '@mui/x-internals/types';
+import { type ChartsTypeFeatureFlags, type BarItemIdentifier } from '@mui/x-charts/models';
 import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { type RangeBarSeriesType } from '../models/seriesType/rangeBar';
+import {
+  type RangeBarItemIdentifier,
+  type RangeBarSeriesType,
+} from '../models/seriesType/rangeBar';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
@@ -45,12 +50,27 @@ export interface BarChartProSlotProps
 
 export type RangeBarSeries = RangeBarSeriesType;
 
+type ItemIdentifier =
+  HasProperty<ChartsTypeFeatureFlags, 'rangeBarOnClick'> extends true
+    ? BarItemIdentifier | RangeBarItemIdentifier
+    : BarItemIdentifier;
+
 export interface BarChartProProps
-  extends Omit<BarChartProps, 'apiRef' | 'series' | 'slots' | 'slotProps'>,
+  extends Omit<BarChartProps, 'apiRef' | 'series' | 'onItemClick' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
+  /**
+   * Callback fired when a bar or range bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
+   */
+  onItemClick?: (
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    itemIdentifier: ItemIdentifier,
+  ) => void;
+
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
@@ -307,9 +327,9 @@ BarChartPro.propTypes = {
    */
   onHighlightedAxisChange: PropTypes.func,
   /**
-   * Callback fired when a bar item is clicked.
+   * Callback fired when a bar or range bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
+   * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
    */
   onItemClick: PropTypes.func,
   /**

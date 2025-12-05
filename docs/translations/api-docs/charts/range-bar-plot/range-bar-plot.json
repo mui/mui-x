@@ -8,7 +8,7 @@
         "event": { "name": "event", "description": "The event source of the callback." },
         "barItemIdentifier": {
           "name": "barItemIdentifier",
-          "description": "The bar item identifier."
+          "description": "The range bar item identifier."
         }
       }
     },

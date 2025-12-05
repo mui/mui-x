@@ -1,6 +1,7 @@
 export * from './seriesType';
 export * from './stacking';
 export * from './slots';
+export * from './featureFlags';
 export type {
   AxisConfig,
   ChartsYAxisProps,
@@ -14,7 +15,6 @@ export type {
   RotationAxis,
   AxisItemIdentifier,
   AxisValueFormatterContext,
-  AxisFeatureFlags,
 } from './axis';
 
 // Utils shared across the X packages

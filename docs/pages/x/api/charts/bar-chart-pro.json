@@ -87,8 +87,8 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
-        "describedArgs": ["event", "barItemIdentifier"]
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier) => void",
+        "describedArgs": ["event", "itemIdentifier"]
       }
     },
     "onZoomChange": {

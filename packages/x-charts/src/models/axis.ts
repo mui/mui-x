@@ -12,7 +12,7 @@ import type {
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -23,6 +23,7 @@ import {
   type PiecewiseColorConfig,
 } from './colorMapping';
 import { type RangeBarValueType } from './seriesType/rangeBar';
+import { type ChartsTypeFeatureFlags } from './featureFlags';
 
 export type AxisId = string | number;
 
@@ -626,9 +627,6 @@ export function isSymlogScaleConfig(
   return scaleConfig.scaleType === 'symlog';
 }
 
-export interface AxisFeatureFlags {}
-type HasProperty<T, K extends string> = K extends keyof T ? true : false;
-
 /**
  * The data format returned by onAxisClick.
  */
@@ -646,7 +644,7 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<
     string,
-    HasProperty<AxisFeatureFlags, 'rangeBarInSeriesValue'> extends true
+    HasProperty<ChartsTypeFeatureFlags, 'rangeBarOnClick'> extends true
       ? RangeBarValueType | number | null | undefined
       : number | null | undefined
   >;
