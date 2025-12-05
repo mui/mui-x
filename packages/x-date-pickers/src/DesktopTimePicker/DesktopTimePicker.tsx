@@ -84,6 +84,7 @@ const DesktopTimePicker = React.forwardRef(function DesktopTimePicker<
     // Setting only `hours` time view in case of single column time picker
     // Allows for easy view lifecycle management
     views: shouldRenderTimeInASingleColumn ? ['hours' as TimeViewWithMeridiem] : views,
+    shouldRenderTimeInASingleColumn,
     slots: {
       field: TimeField,
       ...defaultizedProps.slots,
@@ -340,6 +341,12 @@ DesktopTimePicker.propTypes = {
    * @returns {boolean} If `true` the time will be disabled.
    */
   shouldDisableTime: PropTypes.func,
+  /**
+   * @ignore
+   * Whether the time picker should render in a single column layout.
+   * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
+   */
+  shouldRenderTimeInASingleColumn: PropTypes.bool,
   /**
    * If `true`, disabled digital clock items will not be rendered.
    * @default false
