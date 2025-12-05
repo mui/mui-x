@@ -7,9 +7,9 @@ import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
+import { RangeBarItemIdentifier } from '@mui/x-charts-pro/models';
 
 import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnClick';
-import { RangeBarItemIdentifier } from '@mui/x-charts/models/seriesType/rangeBar';
 
 const barChartsParams = {
   series: [
