@@ -2,7 +2,7 @@ import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 import { TZDate } from 'date-fns-tz';
-import { parseISO, format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import {
   defaultVisibleDate,
   initialEvents,
