@@ -88,44 +88,45 @@ export function useMarkPlotData(
         const clipId = cleanId(`${chartId}-${seriesId}-line-clip`);
         const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
 
-        const marks: MarkPlotDataPoint[] =
-          xData
-            ?.map((x, index) => {
-              const value = data[index] == null ? null : stackedData[index][1];
-              return {
-                x: xScale(x),
-                y: value === null ? null : yScale(value)!,
-                position: x,
-                value,
-                index,
-              };
-            })
-            .filter(({ x, y, index, position, value }) => {
-              if (value === null || y === null) {
-                // Remove missing data point
-                return false;
-              }
-              if (!instance.isPointInside(x, y)) {
-                // Remove out of range
-                return false;
-              }
-              if (showMark === true) {
-                return true;
-              }
-              return showMark({
-                x,
+        const marks: MarkPlotDataPoint[] = [];
+
+        if (xData) {
+          for (let index = 0; index < xData.length; index += 1) {
+            const x = xData[index];
+            const value = data[index] == null ? null : stackedData[index][1];
+
+            if (value === null) {
+              continue;
+            }
+
+            const y = yScale(value)!;
+            const xPos = xScale(x);
+
+            if (!instance.isPointInside(xPos, y)) {
+              continue;
+            }
+
+            if (showMark !== true) {
+              const shouldInclude = showMark({
+                x: xPos,
                 y,
                 index,
-                position,
+                position: x,
                 value,
               });
-            })
-            .map(({ x, y, index }) => ({
-              x,
-              y: y!,
+              if (!shouldInclude) {
+                continue;
+              }
+            }
+
+            marks.push({
+              x: xPos,
+              y,
               index,
               color: colorGetter(index),
-            })) ?? [];
+            });
+          }
+        }
 
         markPlotData.push({
           seriesId,
