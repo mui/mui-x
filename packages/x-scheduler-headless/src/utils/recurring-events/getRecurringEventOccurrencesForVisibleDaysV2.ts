@@ -10,7 +10,7 @@ import { Adapter } from '../../use-adapter';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
   dayInWeek,
-  estimateOccurrencesUpTo,
+  getRemainingOccurrences,
   getEventDurationInDays,
   getWeekDayCode,
   nthWeekdayOfMonth,
@@ -324,15 +324,16 @@ class RecurringEventExpander {
     const firstOccurrence = this.findFirstOccurrence();
 
     // Initialize COUNT tracking if needed
-    let occurrenceCount = 0;
+    let remainingCount = this.rule.count ?? Infinity;
     if (this.rule.count !== undefined && firstOccurrence !== null) {
       const dayBeforeFirst = this.adapter.addDays(firstOccurrence, -1);
       if (!this.adapter.isBefore(dayBeforeFirst, this.seriesStart)) {
-        occurrenceCount = estimateOccurrencesUpTo(
+        remainingCount = getRemainingOccurrences(
           this.adapter,
           this.rule,
           this.seriesStart,
           dayBeforeFirst,
+          this.rule.count,
         );
       }
     }
@@ -353,11 +354,11 @@ class RecurringEventExpander {
       }
 
       // The recurrence event has ended.
-      if (this.rule.count !== undefined && occurrenceCount >= this.rule.count) {
+      if (this.rule.count !== undefined && remainingCount <= 0) {
         break;
       }
 
-      occurrenceCount += 1;
+      remainingCount -= 1;
 
       // Add occurrence if within scan range and not excluded
       if (!this.adapter.isBefore(currentDay, this.scanFirstDay)) {

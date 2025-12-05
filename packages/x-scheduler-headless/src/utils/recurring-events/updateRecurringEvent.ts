@@ -12,7 +12,7 @@ import {
 import type { UpdateEventsParameters } from '../SchedulerStore';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
-  estimateOccurrencesUpTo,
+  getRemainingOccurrences,
   getAdapterCache,
   getWeekDayCode,
   NOT_LOCALIZED_WEEK_DAYS,
@@ -322,13 +322,13 @@ export function decideSplitRRule(
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
     const dayBefore = adapter.addDays(adapter.startOfDay(splitStart), -1);
-    const occurrencesBeforeSplit = estimateOccurrencesUpTo(
+    const remaining = getRemainingOccurrences(
       adapter,
       originalRule,
       originalSeriesStart,
       dayBefore,
+      originalRule.count,
     );
-    const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
     // If no occurrences remain, the split segment is non-recurring.
     if (remaining <= 0) {
       return undefined;

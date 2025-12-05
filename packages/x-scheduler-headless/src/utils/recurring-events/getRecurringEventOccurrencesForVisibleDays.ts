@@ -8,7 +8,7 @@ import {
 import { Adapter } from '../../use-adapter';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
-  estimateOccurrencesUpTo,
+  getRemainingOccurrences,
   getEventDurationInDays,
   getWeekDayCode,
   nthWeekdayOfMonth,
@@ -71,7 +71,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
 /**
  *  Builds a predicate that says whether the series is still active on a given date.
  *  Supports either COUNT or UNTIL (mutually exclusive, UNTIL is inclusive of that day).
- *  COUNT uses `estimateOccurrencesUpTo` (inclusive) to stop after the Nth occurrence.
+ *  COUNT uses `getRemainingOccurrences` (inclusive) to stop after the Nth occurrence.
  */
 export function buildEndGuard(
   rule: RecurringEventRecurrenceRule,
@@ -102,8 +102,14 @@ export function buildEndGuard(
     }
 
     if (hasCount) {
-      const occurrencesSoFar = estimateOccurrencesUpTo(adapter, rule, seriesStart, dayStart);
-      if (occurrencesSoFar > (rule.count as number)) {
+      const remainingOccurrences = getRemainingOccurrences(
+        adapter,
+        rule,
+        seriesStart,
+        dayStart,
+        rule.count as number,
+      );
+      if (remainingOccurrences < 0) {
         return false;
       }
     }
