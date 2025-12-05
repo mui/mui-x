@@ -56,6 +56,12 @@ describe('Pan Gesture', () => {
         `panEnd: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)} | direction: ${[detail.direction.horizontal, detail.direction.vertical].filter(Boolean).join(' ') || null} | mainAxis: ${detail.direction.mainAxis}`,
       );
     });
+    gestureTarget.addEventListener('panCancel', (event) => {
+      const detail = event.detail;
+      events.push(
+        `panCancel: deltaX: ${Math.floor(detail.totalDeltaX)} | deltaY: ${Math.floor(detail.totalDeltaY)}`,
+      );
+    });
   });
 
   afterEach(() => {
@@ -243,5 +249,25 @@ describe('Pan Gesture', () => {
       preventIf: ['move', 'pinch'],
       direction: ['left', 'right'],
     });
+  });
+
+  it('should emit panCancel and panEnd when cancel is called', async () => {
+    target.addEventListener('pan', ((event: CustomEvent) => {
+      event.detail.cancel();
+    }) as EventListener);
+
+    await touchGesture.pan({
+      target,
+      angle: 0,
+      distance: 50,
+      steps: 1,
+    });
+
+    expect(events).toStrictEqual([
+      `panStart: deltaX: 50 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 50 | deltaY: 0 | direction: null | mainAxis: null`,
+      `panCancel: deltaX: 50 | deltaY: 0`,
+      `panEnd: deltaX: 50 | deltaY: 0 | direction: null | mainAxis: null`,
+    ]);
   });
 });
