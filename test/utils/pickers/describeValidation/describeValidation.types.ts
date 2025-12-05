@@ -3,11 +3,12 @@ import { MuiRenderResult } from '@mui/internal-test-utils/createRenderer';
 import { DateOrTimeView } from '@mui/x-date-pickers/models';
 import { PickerComponentFamily } from '../describe.types';
 
+type DateOrTimeViewWithMeridiem = DateOrTimeView | 'meridiem';
 export interface DescribeValidationInputOptions {
   render: (node: React.ReactElement<any>) => MuiRenderResult;
   after?: () => void;
   componentFamily: PickerComponentFamily;
-  views: DateOrTimeView[];
+  views: DateOrTimeViewWithMeridiem[];
   variant?: 'mobile' | 'desktop';
 }
 
