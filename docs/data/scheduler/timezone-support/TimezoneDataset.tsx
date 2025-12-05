@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerEventModelStructure } from '@mui/x-scheduler-headless/models';
+import { TZDate } from '@date-fns/tz';
+import { format, parseISO } from 'date-fns';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -10,22 +11,44 @@ import {
 } from '../datasets/timezone-events';
 
 export default function TimezoneDataset() {
-  const adapter = useAdapter();
-
   const eventModelStructure: SchedulerEventModelStructure<TimezoneEvent> = {
     start: {
-      getter: (event: TimezoneEvent) => adapter.date(event.start, event.timezone),
+      getter: (event) => {
+        const d = parseISO(event.start);
+
+        return new TZDate(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes(),
+          d.getSeconds(),
+          d.getMilliseconds(),
+          event.timezone,
+        );
+      },
       setter: (event, newValue) => {
-        event.start = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
-        event.timezone = adapter.getTimezone(newValue);
+        event.start = format(newValue, "yyyy-MM-dd'T'HH:mm:ss");
         return event;
       },
     },
     end: {
-      getter: (event: TimezoneEvent) => adapter.date(event.end, event.timezone),
+      getter: (event) => {
+        const d = parseISO(event.end);
+
+        return new TZDate(
+          d.getFullYear(),
+          d.getMonth(),
+          d.getDate(),
+          d.getHours(),
+          d.getMinutes(),
+          d.getSeconds(),
+          d.getMilliseconds(),
+          event.timezone,
+        );
+      },
       setter: (event, newValue) => {
-        event.end = adapter.formatByString(newValue, "yyyy-MM-dd'T'HH:mm:ss");
-        event.timezone = adapter.getTimezone(newValue);
+        event.end = format(newValue, "yyyy-MM-dd'T'HH:mm:ss");
         return event;
       },
     },
@@ -42,8 +65,8 @@ export default function TimezoneDataset() {
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
         timezone="Europe/Paris"
-        areEventsDraggable={true}
-        areEventsResizable={true}
+        areEventsDraggable
+        areEventsResizable
         eventModelStructure={eventModelStructure}
       />
     </div>

@@ -504,6 +504,9 @@ importers:
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.4
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.4.1
       '@docsearch/react':
         specifier: ^3.9.0
         version: 3.9.0(@algolia/client-search@5.35.0)(@types/react@19.2.7)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(search-insights@2.17.3)
