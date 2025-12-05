@@ -330,9 +330,6 @@ export function getRemainingWeeklyOccurrences(
       }
 
       remaining -= 1;
-      if (remaining <= 0) {
-        return 0;
-      }
     }
   }
 
