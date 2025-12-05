@@ -18,6 +18,7 @@ export default function BasicUndoRedo() {
         showToolbar
         disableRowSelectionOnClick
         cellSelection
+        disablePivoting
       />
     </Box>
   );
