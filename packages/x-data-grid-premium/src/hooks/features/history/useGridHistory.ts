@@ -58,6 +58,11 @@ export const useGridHistory = (
     });
   }, [apiRef, props.dataSource, props.historyEventHandlers]);
 
+  const isEnabled = React.useMemo(
+    () => historyQueueSize > 0 && !isObjectEmpty(historyEventHandlers),
+    [historyQueueSize, historyEventHandlers],
+  );
+
   // Internal ref to track undo/redo operation state
   // - 'idle': everything is done
   // - 'in-progress': during async undo/redo handler execution (skip validation and prevent the state change by other events)
@@ -279,7 +284,7 @@ export const useGridHistory = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (_, event: React.KeyboardEvent<HTMLElement>) => {
       // Only handle shortcuts if history is enabled
-      if (historyQueueSize === 0) {
+      if (!isEnabled) {
         return;
       }
 
@@ -301,7 +306,7 @@ export const useGridHistory = (
         return;
       }
     },
-    [apiRef, historyQueueSize],
+    [apiRef, isEnabled],
   );
 
   useGridEvent(apiRef, 'cellKeyDown', runIf(historyQueueSize > 0, handleCellKeyDown));
@@ -310,12 +315,12 @@ export const useGridHistory = (
 
   React.useEffect(() => {
     setHistoryState({
-      enabled: historyQueueSize > 0 && !isObjectEmpty(historyEventHandlers),
+      enabled: isEnabled,
     });
-  }, [historyQueueSize, historyEventHandlers, setHistoryState]);
+  }, [isEnabled, setHistoryState]);
 
   React.useEffect(() => {
-    if (historyQueueSize === 0) {
+    if (!isEnabled) {
       return () => {};
     }
 
@@ -329,7 +334,7 @@ export const useGridHistory = (
       validationEventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       validationEventUnsubscribersRef.current = [];
     };
-  }, [apiRef, historyQueueSize, historyValidationEvents, debouncedValidateQueueItems]);
+  }, [apiRef, isEnabled, historyValidationEvents, debouncedValidateQueueItems]);
 
   React.useEffect(() => {
     if (historyQueueSize === 0) {
