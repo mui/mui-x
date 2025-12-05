@@ -7,6 +7,8 @@ export interface SankeyPlotClasses {
   root: string;
   /** Styles applied to the nodes container. */
   nodes: string;
+  /** Styles applied to the node label container. */
+  nodeLabels: string;
   /** Styles applied to the links container. */
   links: string;
   /** Styles applied to the link label container. */
@@ -20,6 +22,7 @@ export function getSankeyPlotUtilityClass(slot: string) {
 export const sankeyPlotClasses: SankeyPlotClasses = generateUtilityClasses('MuiSankeyChart', [
   'root',
   'nodes',
+  'nodeLabels',
   'links',
   'linkLabels',
 ]);
@@ -30,6 +33,7 @@ export const useUtilityClasses = (ownerState: { classes?: Partial<SankeyPlotClas
   const slots = {
     root: ['root'],
     nodes: ['nodes'],
+    nodeLabels: ['nodeLabels'],
     links: ['links'],
     linkLabels: ['linkLabels'],
   };

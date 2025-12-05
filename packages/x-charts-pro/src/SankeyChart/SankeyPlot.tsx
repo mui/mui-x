@@ -11,6 +11,7 @@ import { SankeyLinkElement } from './SankeyLinkElement';
 import { SankeyLinkLabel } from './SankeyLinkLabel';
 import { useSankeyLayout, useSankeySeriesContext } from '../hooks/useSankeySeries';
 import { sankeyPlotClasses, useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { SankeyNodeLabel } from './SankeyNodeLabel';
 
 export interface SankeyPlotProps {
   /**
@@ -75,6 +76,7 @@ function SankeyPlot(props: SankeyPlotProps) {
     return null;
   }
 
+  const showNodeLabels = nodeOptions?.showLabels ?? true;
   return (
     <SankeyPlotRoot className={classes.root}>
       <g className={classes.links}>
@@ -95,7 +97,6 @@ function SankeyPlot(props: SankeyPlotProps) {
             seriesId={sankeySeries.id}
             key={node.id}
             node={node}
-            showLabel={nodeOptions?.showLabels}
             onClick={onNodeClick}
           />
         ))}
@@ -104,7 +105,15 @@ function SankeyPlot(props: SankeyPlotProps) {
       {linkOptions?.showValues && (
         <g className={classes.linkLabels}>
           {layout.links.map((link) => (
-            <SankeyLinkLabel key={`label-${link.source.id}-${link.target.id}`} link={link} />
+            <SankeyLinkLabel key={`label-link-${link.source.id}-${link.target.id}`} link={link} />
+          ))}
+        </g>
+      )}
+
+      {showNodeLabels && (
+        <g className={classes.nodeLabels}>
+          {layout.nodes.map((node) => (
+            <SankeyNodeLabel key={`label-node-${node.id}`} node={node} />
           ))}
         </g>
       )}
