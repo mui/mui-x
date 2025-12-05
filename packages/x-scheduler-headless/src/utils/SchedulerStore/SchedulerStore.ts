@@ -32,12 +32,22 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
+import { SchedulerDataManager } from './utils';
+import { SchedulerDataSourceCacheDefault } from './cache';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
 export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
   ampm: true,
+};
+
+const MOCK_EVENT_STATE = {
+  eventIdList: [],
+  eventModelLookup: new Map(),
+  eventModelStructure: {},
+  processedEventLookup: new Map(),
+  eventModelList: [],
 };
 
 /**
@@ -59,6 +69,10 @@ export class SchedulerStore<
 
   protected timeoutManager = new TimeoutManager();
 
+  private dataManager: SchedulerDataManager | null = null;
+
+  private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
+
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
@@ -68,8 +82,10 @@ export class SchedulerStore<
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: SchedulerState<TEvent> = {
-      ...stateFromParameters,
-      ...buildEventsState(parameters, adapter, stateFromParameters.timezone),
+      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...(parameters.dataSource
+        ? MOCK_EVENT_STATE
+        : buildEventsState(parameters, adapter, stateFromParameters.timezone)),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -129,6 +145,95 @@ export class SchedulerStore<
     };
   }
 
+  public queueDataFetchForRange = async (range: {
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
+  }) => {
+    if (this.dataManager) {
+      await this.dataManager.queue([range]);
+    }
+  };
+
+  /**
+   * Loads events from the data source.
+   */
+  private loadEventsFromDataSource = async (range: {
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
+  }) => {
+    const { dataSource } = this.parameters;
+    const { adapter, timezone } = this.state;
+
+    if (!dataSource || !this.cache || !this.dataManager) {
+      return;
+    }
+
+    if (
+      this.cache.hasCoverage(
+        adapter.getTime(range.start),
+        adapter.getTime(adapter.endOfDay(range.end)),
+      )
+    ) {
+      const allCachedEvents = this.cache?.getAll() || [];
+      console.log(
+        'SchedulerStore: CACHE hit for range',
+        range,
+        'loaded ranges timestamps: ',
+        this.cache.getLoadedRangesInfo(),
+        'loaded ranges: ',
+        this.cache.getLoadedRangesInfo()?.map((r) => ({
+          start: new Date(r.start),
+          end: new Date(r.end),
+        })),
+      );
+
+      const eventsState = buildEventsState(
+        { ...this.parameters, events: allCachedEvents } as Parameters,
+        adapter,
+        timezone,
+      );
+
+      this.update({
+        ...this.state,
+        ...eventsState,
+      });
+
+      await this.dataManager.setRequestSettled(range);
+
+      return;
+
+      // TODO: Unset loading state
+      // TODO: Handle partial cache hits
+    }
+
+    try {
+      const events = await dataSource.getEvents(range.start, range.end);
+      console.log('SchedulerStore: FETCHED events from data source');
+      this.cache!.setRange(
+        adapter.getTime(range.start),
+        adapter.getTime(adapter.endOfDay(range.end)),
+        events ?? [],
+      );
+      const eventsState = buildEventsState(
+        { ...this.parameters, events } as Parameters,
+        adapter,
+        timezone,
+      );
+      this.update({
+        ...this.state,
+        ...eventsState,
+      });
+      // Mark request as settled
+      await this.dataManager.setRequestSettled(range);
+    } catch (error) {
+      // TODO: Set error state for this range
+      await this.dataManager.setRequestSettled(range);
+    } finally {
+      // TODO: unset loading state
+      await this.dataManager.setRequestSettled(range);
+    }
+  };
+
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
@@ -173,17 +278,22 @@ export class SchedulerStore<
     ) as Partial<State>;
 
     if (
-      parameters.events !== this.parameters.events ||
-      parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-      adapter !== this.state.adapter
+      !parameters.dataSource &&
+      (parameters.events !== this.parameters.events ||
+        parameters.eventModelStructure !== this.parameters.eventModelStructure ||
+        adapter !== this.state.adapter)
     ) {
       Object.assign(
         newSchedulerState,
         buildEventsState(parameters, adapter, newSchedulerState.timezone!),
       );
     }
-
     newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.timezone!);
+
+    if (parameters.dataSource) {
+      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
+      this.dataManager = new SchedulerDataManager(adapter, this.loadEventsFromDataSource);
+    }
 
     if (
       parameters.resources !== this.parameters.resources ||

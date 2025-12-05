@@ -88,6 +88,43 @@ export class EventCalendarStore<
         return null;
       });
     }
+
+    this.registerStoreEffect(
+      (state) => {
+        const visibleDays =
+          state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
+
+        // Build a primitive key that is stable if the visible range didn't change.
+        // Adjust the mapping if your visibleDays items have a different shape.
+        const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
+
+        return {
+          viewConfig: state.viewConfig,
+          visibleDaysKey,
+        };
+      },
+
+      (previous, next) => {
+        // Bail out if nothing relevant changed.
+        if (previous.visibleDaysKey === next.visibleDaysKey) {
+          return;
+        }
+
+        const visibleDays =
+          next.viewConfig?.visibleDaysSelector?.(this.state as EventCalendarState) ?? [];
+
+        if (!this.parameters.dataSource || visibleDays.length === 0) {
+          return;
+        }
+
+        const range = {
+          start: visibleDays[0].value,
+          end: visibleDays[visibleDays.length - 1].value,
+        };
+
+        queueMicrotask(() => this.queueDataFetchForRange(range));
+      },
+    );
   }
 
   private assertViewValidity(view: CalendarView) {

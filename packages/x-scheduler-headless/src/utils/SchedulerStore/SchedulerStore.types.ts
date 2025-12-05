@@ -148,6 +148,10 @@ export interface SchedulerState<TEvent extends object = any> {
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
 }
 
+export interface SchedulerDataSource<TEvent extends object> {
+  getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
+}
+
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
   /**
    * The events currently available in the calendar.
@@ -234,6 +238,11 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
+   * Data source for fetching events asynchronously.
+   * If provided, the `events` prop will be ignored.
+   */
+  dataSource?: SchedulerDataSource<TEvent>;
+  /*
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.
