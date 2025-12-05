@@ -103,45 +103,6 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
       })
       .offset(stackingOffset)(d3Dataset);
 
-    // Post-process visibleStackedData to fix positions for hidden series
-    // Hidden series should collapse to the cumulative position of visible series before them
-    visibleStackedData.forEach((layer, layerIndex) => {
-      const key = idOrder[layerIndex];
-      const keyIndex = keys.indexOf(key);
-      const seriesId = ids[keyIndex];
-
-      if (!isIdentifierVisible?.(`${seriesId}`)) {
-        layer.forEach((point, pointIndex) => {
-          // Get the original value to determine if it's negative or positive
-          const originalValue = d3Dataset[pointIndex]?.[key] ?? 0;
-          const isNegative = originalValue < 0;
-
-          // Calculate the cumulative sum of all visible series before this one
-          // Only accumulate values with the same sign
-          let cumulativeSum = 0;
-          for (let i = 0; i < layerIndex; i += 1) {
-            const prevKey = idOrder[i];
-            const prevKeyIndex = keys.indexOf(prevKey);
-            const prevSeriesId = ids[prevKeyIndex];
-
-            if (isIdentifierVisible?.(`${prevSeriesId}`)) {
-              const value = d3Dataset[pointIndex]?.[prevKey] ?? 0;
-              const isPrevNegative = value < 0;
-
-              // Only accumulate if both have the same sign
-              if (isNegative === isPrevNegative) {
-                cumulativeSum += value;
-              }
-            }
-          }
-
-          // Set both start and end to the cumulative position (zero height/width)
-          point[0] = cumulativeSum;
-          point[1] = cumulativeSum;
-        });
-      }
-    });
-
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
       const data = dataKey
