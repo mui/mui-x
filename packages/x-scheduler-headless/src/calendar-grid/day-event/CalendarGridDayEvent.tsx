@@ -8,7 +8,7 @@ import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
-import { useAdapter, diffIn } from '../../use-adapter';
+import { useAdapter } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
   schedulerEventSelectors,
@@ -69,7 +69,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
 
     const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
     const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
-    const eventDayLengthInRow = diffIn(adapter, eventEndInRow, eventStartInRow, 'days') + 1;
+    const eventDayLengthInRow = adapter.differenceInDays(eventEndInRow, eventStartInRow) + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;

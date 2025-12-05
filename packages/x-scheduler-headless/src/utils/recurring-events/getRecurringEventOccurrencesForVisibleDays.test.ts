@@ -1,6 +1,5 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
-import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import {
   buildEndGuard,
   getRecurringEventOccurrencesForVisibleDays,
@@ -29,7 +28,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         expect(occ.start.key).to.equal(
           adapter.format(adapter.addDays(visibleStart, i), 'localizedNumericDate'),
         );
-        expect(diffIn(adapter, occ.end.value, occ.start.value, 'minutes')).to.equal(90);
+        expect(adapter.differenceInMinutes(occ.end.value, occ.start.value)).to.equal(90);
         expect(occ.key).to.equal(`${event.id}::${occ.start.key}`);
       }
     });
