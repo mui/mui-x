@@ -54,36 +54,64 @@ You can use a starter template to build a reproduction case with:
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
-## Stack Overflow
-
-We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
-
-You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
-
-- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
-- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
-- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
-- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
-
-If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
-
 ## Technical support
 
-:::info
-The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
-:::
+MUI offers two types of support, Standard(free) and Priority(paid).
+
+### Standard support
 
 When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.
+
+### Priority support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Priority support is an add-on service for Premium plan users.
+With priority support you get expedited assistance and troubleshooting for your critical applications.
+
+#### Why teams choose priority support
+
+Priority support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
+
+In addition to the MUI X components, priority support covers the entire MUI ecosystem, including:
+
+- The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
+- Material UI
+- Base UI
+- MUI System
+- Pigment CSS
+- Joy UI
+
+#### Service-level agreement (SLA)
+
+Priority support is governed by a service-level agreement (SLA) that ensures:
+
+- **24-hour response times**: Priority support requests receive an initial response within one business day.
+- **Four-hour pre-screenings**: Priority requests undergo a review of up to four hours to validate and reproduce the issues.
+- **Issue escalation**: Critical issues are escalated to senior engineers for focused attention and prompt resolutions.
+
+For complete details, see our [SLA for technical support](https://mui.com/legal/technical-support-sla/).
+
+#### How to purchase priority support
+
+Priority support is available as an add-on for Premium users and can be purchased from the [pricing page](https://mui.com/pricing/).
+Community and Pro users must upgrade to a Premium license to purchase priority support.
+
+### How to request technical support
+
 Support is available on multiple channels, but the recommended channels are:
 
-- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly. In case of Priority support:
+  - Create a new issue using the **Priority support: SLA ⏰** template—this ensures it will include the necessary labels to trigger our automated process.
+  - After you've created the issue, a GitHub action will prompt you to follow an external link to validate your support key (which was issued to you upon purchase).
+  - Once your support key is validated, the action comment will update to confirm that your SLA is now in effect, and the issue labels will update accordingly to alert our team to review your request as soon as possible.
+
 - Email: If you need to share **private information** you can [submit a request](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to [x@mui.com](mailto:x@mui.com).
 
 Including your Order ID (or Support key) in the issue helps us prioritize the issues based on the following support levels:
 
-1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
-2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support (paid add-on): Provides a 24h SLA for the first answer.
+1. MUI X Priority support: Provides a 24h SLA for the first answer.
+2. MUI X Premium: The same as MUI X Pro, but with higher priority. There is no SLA.
+3. MUI X Pro: maintainers give these issues more attention than the ones from the community.
+4. Community license
 
 ## Long-term support (LTS)
 
@@ -103,6 +131,19 @@ This includes issues introduced by external sources, like browser upgrades or ch
 |        ^4.0.0 | 2021-09-28 | ❌                                                                              |
 
 ## Community
+
+### Stack Overflow
+
+We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
+
+You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
+
+- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
+- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
+- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
+- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
+
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
 
 ### Social media
 
