@@ -110,6 +110,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       }),
     ),
 
+    // scrollPane
     contentProps: createSelectorMemoized(
       Dimensions.selectors.contentHeight,
       Dimensions.selectors.minimalContentHeight,
@@ -124,6 +125,15 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         role: 'presentation',
       }),
     ),
+
+    // viewport
+    viewportProps: createSelectorMemoized(Dimensions.selectors.dimensions, (dimensions) => ({
+      style: {
+        width: '100%',
+        height: '100%',
+      },
+      role: 'presentation',
+    })),
 
     positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
       style: {
@@ -174,6 +184,7 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
 
     const containerProps = store.use(LayoutDataGrid.selectors.containerProps);
     const scrollerProps = store.use(LayoutDataGrid.selectors.scrollerProps);
+    const viewportProps = store.use(LayoutDataGrid.selectors.viewportProps);
     const contentProps = store.use(LayoutDataGrid.selectors.contentProps);
     const positionerProps = store.use(LayoutDataGrid.selectors.positionerProps);
     const scrollbarVerticalProps = store.use(LayoutDataGrid.selectors.scrollbarVerticalProps);
@@ -183,6 +194,7 @@ export class LayoutDataGridLegacy extends LayoutDataGrid {
     return {
       getContainerProps: () => containerProps,
       getScrollerProps: () => scrollerProps,
+      getViewportProps: () => viewportProps,
       getContentProps: () => contentProps,
       getPositionerProps: () => positionerProps,
       getScrollbarVerticalProps: () => scrollbarVerticalProps,
@@ -231,20 +243,18 @@ export class LayoutList extends Layout<ListElements> {
       }),
     ),
 
-    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => {
-      return {
-        style: {
-          position: 'absolute',
-          display: 'inline-block',
-          width: '100%',
-          height: contentHeight,
-          top: 0,
-          left: 0,
-          zIndex: -1,
-        } as React.CSSProperties,
-        role: 'presentation',
-      };
-    }),
+    contentProps: createSelectorMemoized(Dimensions.selectors.contentHeight, (contentHeight) => ({
+      style: {
+        position: 'absolute',
+        display: 'inline-block',
+        width: '100%',
+        height: contentHeight,
+        top: 0,
+        left: 0,
+        zIndex: -1,
+      } as React.CSSProperties,
+      role: 'presentation',
+    })),
 
     positionerProps: createSelectorMemoized(Virtualization.selectors.offsetTop, (offsetTop) => ({
       style: {
