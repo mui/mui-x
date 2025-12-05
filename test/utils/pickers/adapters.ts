@@ -50,7 +50,7 @@ if (/jsdom/.test(window.navigator.userAgent)) {
           .map((key) => `"${key}"`)
           .join(', ')}`;
         // eslint-disable-next-line no-console
-        console.log(message); // log message explicitly, because error message gets swallowed by mocha
+        console.log(message); // log message explicitly, because error message gets swallowed by vitest
         throw new Error(message);
       }
     }
