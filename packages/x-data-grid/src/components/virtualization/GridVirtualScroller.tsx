@@ -76,6 +76,13 @@ const Scroller = styled('div', {
   zIndex: 0,
 });
 
+const Viewport = styled('div')({
+  position: 'sticky',
+  top: 0,
+  left: 0,
+  overflow: 'hidden',
+});
+
 const hasPinnedRightSelector = (apiRef: RefObject<GridApiCommunity>) =>
   apiRef.current.state.dimensions.rightPinnedWidth > 0;
 
@@ -106,6 +113,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const {
     getContainerProps,
     getScrollerProps,
+    getViewportProps,
     getContentProps,
     getPositionerProps,
     getScrollbarVerticalProps,
@@ -123,31 +131,33 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="up" {...getScrollAreaProps()} />
       <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
-        <TopContainer>
-          {!rootProps.listView && <GridHeaders />}
-          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
-        </TopContainer>
+        <Viewport className="VIEWPORT" {...getViewportProps()}>
+          <TopContainer>
+            {!rootProps.listView && <GridHeaders />}
+            <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+          </TopContainer>
 
-        {overlayType && (
-          <GridOverlayWrapper
-            overlayType={overlayType}
-            loadingOverlayVariant={loadingOverlayVariant}
-          >
-            <Overlay {...rootProps.slotProps?.[overlayType]} />
-          </GridOverlayWrapper>
-        )}
+          {overlayType && (
+            <GridOverlayWrapper
+              overlayType={overlayType}
+              loadingOverlayVariant={loadingOverlayVariant}
+            >
+              <Overlay {...rootProps.slotProps?.[overlayType]} />
+            </GridOverlayWrapper>
+          )}
 
-        <Content {...getContentProps()}>
-          <RenderZone role="rowgroup" {...getPositionerProps()}>
-            {rows}
-            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
-          </RenderZone>
-        </Content>
+          <Content {...getContentProps()}>
+            <RenderZone role="rowgroup" {...getPositionerProps()}>
+              {rows}
+              {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+            </RenderZone>
+          </Content>
 
-        {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
-        <rootProps.slots.bottomContainer>
-          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
-        </rootProps.slots.bottomContainer>
+          {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
+          <rootProps.slots.bottomContainer>
+            <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+          </rootProps.slots.bottomContainer>
+        </Viewport>
       </Scroller>
       {hasScrollX && (
         <React.Fragment>
