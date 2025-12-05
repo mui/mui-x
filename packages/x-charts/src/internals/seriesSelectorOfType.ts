@@ -9,8 +9,7 @@ import { useSelector } from './store/useSelector';
 
 export const selectorAllSeriesOfType = createSelector(
   selectorChartSeriesProcessed,
-  <T extends keyof ChartsSeriesConfig>(processedSeries: ProcessedSeries, seriesType: T) =>
-    processedSeries[seriesType],
+  (processedSeries, seriesType: keyof ChartsSeriesConfig) => processedSeries[seriesType],
 );
 
 export const selectorSeriesOfType = createSelectorMemoized(
@@ -32,7 +31,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
       return processedSeries[seriesType]?.series?.[ids];
     }
 
-    const result: ChartSeriesDefaultized<T>[] = [];
+    const result: ChartSeriesDefaultized<typeof seriesType>[] = [];
     const failedIds: SeriesId[] = [];
     for (const id of ids) {
       const series = processedSeries[seriesType]?.series?.[id];
