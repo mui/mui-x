@@ -24,6 +24,7 @@ export interface ProcessedBarData extends AnimationData {
   color: string;
   value: number | null;
   maskId: string;
+  hidden: boolean;
 }
 
 export interface MaskData extends AnimationData {
