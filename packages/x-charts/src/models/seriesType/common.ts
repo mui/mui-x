@@ -3,6 +3,9 @@ import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
 import { type AxisId } from '../axis';
 
+/**
+ * The unique identifier of a series.
+ */
 export type SeriesId = number | string;
 
 export type SeriesValueFormatterContext = {

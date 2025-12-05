@@ -21,7 +21,7 @@ const MarkElementPath = styled('path', {
   strokeWidth: 2,
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'transform, transform-origin',
+    transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
