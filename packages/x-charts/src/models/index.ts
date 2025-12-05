@@ -1,6 +1,7 @@
 export * from './seriesType';
 export * from './stacking';
 export * from './slots';
+export * from './featureFlags';
 export type {
   AxisConfig,
   ChartsYAxisProps,

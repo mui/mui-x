@@ -32,9 +32,7 @@ export interface ProcessedBarLabelData<V extends BarValueType | null> extends An
 /**
  * @ignore - internal component.
  */
-function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
-  props: BarLabelPlotProps<V>,
-) {
+function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, ...other } = props;
   const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, type BarElementSlotProps, type BarElementSlots } from './BarElement';
-import { type BarItemIdentifier, type BarValueType } from '../models';
+import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
 import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
@@ -41,6 +41,7 @@ export interface BarPlotProps {
   borderRadius?: number;
   /**
    * @deprecated Use `barLabel` in the chart series instead.
+   *
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
@@ -159,7 +160,7 @@ function BarPlot(props: BarPlotProps) {
         );
       })}
       {completedData.map((processedSeries) => (
-        <BarLabelPlot<BarValueType | null>
+        <BarLabelPlot
           key={processedSeries.seriesId}
           className={classes.seriesLabels}
           processedSeries={processedSeries}
