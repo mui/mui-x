@@ -726,7 +726,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onCellModesModelChange?: (
     cellModesModel: GridCellModesModel,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any>,
   ) => void;
   /**
    * Controls the modes of the rows.
@@ -737,7 +737,10 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridRowModesModel} rowModesModel Object containing which rows are in "edit" mode.
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onRowModesModelChange?: (rowModesModel: GridRowModesModel, details: GridCallbackDetails) => void;
+  onRowModesModelChange?: (
+    rowModesModel: GridRowModesModel,
+    details: GridCallbackDetails<any>,
+  ) => void;
   /**
    * Set the filter model of the Data Grid.
    */
@@ -759,7 +762,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onRowSelectionModelChange?: (
     rowSelectionModel: GridRowSelectionModel,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<'rowSelection'>,
   ) => void;
   /**
    * Set the column visibility model of the Data Grid.
@@ -773,7 +776,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    */
   onColumnVisibilityModelChange?: (
     model: GridColumnVisibilityModel,
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any>,
   ) => void;
   /**
    * Set the sort model of the Data Grid.
@@ -784,7 +787,7 @@ export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = 
    * @param {GridSortModel} model With all properties from [[GridSortModel]].
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
-  onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails) => void;
+  onSortModelChange?: (model: GridSortModel, details: GridCallbackDetails<any>) => void;
   /**
    * The `aria-label` of the Data Grid.
    */
