@@ -5,7 +5,7 @@
   onEventsChange={setEvents}
   defaultPreferences={{ isSidePanelOpen: false }}
   timezone="Europe/Paris"
-  areEventsDraggable={true}
-  areEventsResizable={true}
+  areEventsDraggable
+  areEventsResizable
   eventModelStructure={eventModelStructure}
 />
