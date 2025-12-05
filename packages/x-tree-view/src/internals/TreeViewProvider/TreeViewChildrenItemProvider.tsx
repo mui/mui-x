@@ -3,9 +3,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTreeViewContext } from './TreeViewContext';
 import { escapeOperandAttributeSelector } from '../utils/utils';
-import type { UseTreeViewJSXItemsSignature } from '../plugins/useTreeViewJSXItems';
-import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { itemsSelectors } from '../plugins/items/selectors';
+import { SimpleTreeViewStore } from '../SimpleTreeViewStore';
 
 export const TreeViewChildrenItemContext =
   React.createContext<TreeViewChildrenItemContextValue | null>(null);
@@ -19,8 +18,7 @@ interface TreeViewChildrenItemProviderProps {
 export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProviderProps) {
   const { children, itemId = null, idAttribute } = props;
 
-  const { instance, store, rootRef } =
-    useTreeViewContext<[UseTreeViewJSXItemsSignature, UseTreeViewItemsSignature]>();
+  const { store, rootRef } = useTreeViewContext<SimpleTreeViewStore<any>>();
   const childrenIdAttrToIdRef = React.useRef<Map<string, string>>(new Map());
 
   React.useEffect(() => {
@@ -53,7 +51,7 @@ export function TreeViewChildrenItemProvider(props: TreeViewChildrenItemProvider
       childrenIds.length !== previousChildrenIds.length ||
       childrenIds.some((childId, index) => childId !== previousChildrenIds[index]);
     if (hasChanged) {
-      instance.setJSXItemsOrderedChildrenIds(itemId ?? null, childrenIds);
+      store.jsxItems.setJSXItemsOrderedChildrenIds(itemId ?? null, childrenIds);
     }
   });
 
