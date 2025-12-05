@@ -217,13 +217,43 @@ function measureSVGTextElement(element: SVGTextElement): { width: number; height
   // getBBox() is more reliable across browsers for SVG elements
   try {
     const result = element.getBBox();
-    return { width: result.width, height: result.height };
+    return {
+      width: result.width,
+      height: fixFirefoxLinuxHeightMeasurement(element, result.height),
+    };
   } catch {
     // Fallback to getBoundingClientRect if getBBox fails
     // This can happen in tests
     const result = element.getBoundingClientRect();
-    return { width: result.width, height: result.height };
+    return {
+      width: result.width,
+      height: fixFirefoxLinuxHeightMeasurement(element, result.height),
+    };
   }
+}
+
+/**
+ * In Firefox on Linux, getBBox and getBoundingClientRect return incorrect height measurements for SVG text elements.
+ * This seems to happen due to font rendering race conditions on that platform.
+ * As a workaround, we use the computed line-height style as the height measurement.
+ * Technically this is 0% accurate, because line-height doesn't work in SVG, but it is technically the size that the text should take in an HTML context.
+ *
+ * This works for our default configuration, but may not be accurate for custom fonts or styles.
+ *
+ * @param element SVG text element
+ * @param height Measured height
+ * @returns Corrected height for Firefox on Linux
+ */
+function fixFirefoxLinuxHeightMeasurement(element: SVGTextElement, height: number) {
+  if (
+    navigator.userAgent.toLowerCase().includes('linux') &&
+    navigator.userAgent.toLowerCase().includes('firefox')
+  ) {
+    const style = window.getComputedStyle(element);
+    return parseFloat(style.lineHeight);
+  }
+
+  return height;
 }
 
 let measurementContainer: SVGSVGElement | null = null;
