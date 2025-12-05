@@ -9,6 +9,7 @@ import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
 
 import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnClick';
+import { RangeBarItemIdentifier } from '@mui/x-charts/models/seriesType/rangeBar';
 
 const barChartsParams = {
   series: [
@@ -49,7 +50,9 @@ const barChartsParams = {
 } as const;
 
 export default function RangeBarClick() {
-  const [itemData, setItemData] = React.useState<BarItemIdentifier>();
+  const [itemData, setItemData] = React.useState<
+    BarItemIdentifier | RangeBarItemIdentifier
+  >();
   const [axisData, setAxisData] = React.useState<ChartsAxisData | null>();
 
   return (
