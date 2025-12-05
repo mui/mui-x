@@ -112,7 +112,7 @@ Track and allow undo of any Data Grid interaction by providing custom history ev
 The following demo keeps all the default handlers, and adds a custom history handler that tracks filter model changes.
 This allows users to undo and redo filter operations.
 
-{{"demo": "CustomHistoryHandler.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "AddFilterHandler.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Validation events
 
