@@ -87,4 +87,5 @@ export type ScatterItemIdentifier = {
 export interface DefaultizedScatterSeriesType
   extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {
   preview: MakeRequired<NonNullable<ScatterSeriesType['preview']>, 'markerSize'>;
+  hidden: boolean;
 }
