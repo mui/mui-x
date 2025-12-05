@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 const MUI_X_PRODUCTS = [
   {
@@ -34,7 +34,7 @@ const MUI_X_PRODUCTS = [
 ];
 
 export default function OnlyReorderLeaves() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewProApiRef();
 
   return (
     <Box sx={{ minHeight: 352, minWidth: 300 }}>

@@ -14,6 +14,7 @@ import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugin
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
 import { type BarItem, type BarLabelContext } from './BarLabel';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -64,7 +65,9 @@ const BarPlotRoot = styled('g', {
   slot: 'Root',
 })({
   [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    transitionProperty: 'opacity, fill',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
 

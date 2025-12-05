@@ -5,6 +5,10 @@ import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
 import { barLabelClasses } from './barLabelClasses';
 import { type BarLabelOwnerState } from './BarLabel.types';
+import {
+  ANIMATION_DURATION_MS,
+  ANIMATION_TIMING_FUNCTION,
+} from '../../internals/animation/animation';
 
 export const BarLabelComponent = styled('text', {
   name: 'MuiBarLabel',
@@ -18,12 +22,10 @@ export const BarLabelComponent = styled('text', {
   ...theme?.typography?.body2,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+  transitionProperty: 'opacity, fill',
+  transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+  transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   pointerEvents: 'none',
-  opacity: 1,
-  [`&.${barLabelClasses.faded}`]: {
-    opacity: 0.3,
-  },
 }));
 
 export type BarLabelProps = Omit<
@@ -85,10 +87,13 @@ function BarLabel(inProps: BarLabelProps): React.JSX.Element {
   const textAnchor = getTextAnchor(props);
   const dominantBaseline = getDominantBaseline(props);
 
+  const fadedOpacity = isFaded ? 0.3 : 1;
+
   return (
     <BarLabelComponent
       textAnchor={textAnchor}
       dominantBaseline={dominantBaseline}
+      opacity={fadedOpacity}
       {...otherProps}
       {...animatedProps}
     />
