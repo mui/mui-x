@@ -3,13 +3,10 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
-import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import {
-  type ChartSeriesType,
-  type ChartItemIdentifierWithData,
-} from '../models/seriesType/config';
-import { type ChartInstance } from '../internals/plugins/models';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { ChartSeriesType, ChartItemIdentifier } from '../models/seriesType/config';
+import type { ChartInstance } from '../internals/plugins/models';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -67,7 +64,7 @@ export const useInteractionItemProps = (
 
 export function getInteractionItemProps(
   instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
-  item: ChartItemIdentifierWithData<ChartSeriesType>,
+  item: ChartItemIdentifier<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;

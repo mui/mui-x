@@ -1,7 +1,7 @@
 import { min } from '@mui/x-charts-vendor/d3-array';
 import type { SankeyLink, SankeyNode, SankeyNodeMinimal } from './sankey.types';
 
-function targetDepth(d: SankeyLink<{}, {}>): number {
+function targetDepth<WithPosition extends boolean>(d: SankeyLink<WithPosition, {}, {}>): number {
   return (d.target as SankeyNodeMinimal<{}, {}>).depth ?? 0;
 }
 
@@ -11,7 +11,9 @@ function targetDepth(d: SankeyLink<{}, {}>): number {
  *
  * @param node Sankey node for which to calculate the horizontal node position.
  */
-export function sankeyLeft(node: SankeyNode<{}, {}>): number {
+export function sankeyLeft<WithPosition extends boolean>(
+  node: SankeyNode<WithPosition, {}, {}>,
+): number {
   return node.depth ?? 0;
 }
 
@@ -22,7 +24,10 @@ export function sankeyLeft(node: SankeyNode<{}, {}>): number {
  * @param node Sankey node for which to calculate the horizontal node position.
  * @param n Total depth n of the graph  (one plus the maximum node.depth)
  */
-export function sankeyRight(node: SankeyNode<{}, {}>, n: number): number {
+export function sankeyRight<WithPosition extends boolean>(
+  node: SankeyNode<WithPosition, {}, {}>,
+  n: number,
+): number {
   return n - 1 - (node.height ?? 0);
 }
 
@@ -34,7 +39,10 @@ export function sankeyRight(node: SankeyNode<{}, {}>, n: number): number {
  * @param node Sankey node for which to calculate the horizontal node position.
  * @param n Total depth n of the graph  (one plus the maximum node.depth)
  */
-export function sankeyJustify(node: SankeyNode<{}, {}>, n: number): number {
+export function sankeyJustify<WithPosition extends boolean>(
+  node: SankeyNode<WithPosition, {}, {}>,
+  n: number,
+): number {
   return node.sourceLinks?.length ? (node.depth ?? 0) : n - 1;
 }
 
@@ -45,7 +53,9 @@ export function sankeyJustify(node: SankeyNode<{}, {}>, n: number): number {
  *
  * @param node Sankey node for which to calculate the horizontal node position.
  */
-export function sankeyCenter(node: SankeyNode<{}, {}>): number {
+export function sankeyCenter<WithPosition extends boolean>(
+  node: SankeyNode<WithPosition, {}, {}>,
+): number {
   if (node.targetLinks?.length) {
     return node.depth ?? 0;
   }
