@@ -3,6 +3,11 @@ import type { GridStatePremium } from '../../../models/gridStatePremium';
 
 const gridHistoryStateSelector = createRootSelector((state: GridStatePremium) => state.history);
 
+export const gridHistoryEnabledSelector = createSelector(
+  gridHistoryStateSelector,
+  (history) => history.enabled,
+);
+
 export const gridHistoryQueueSelector = createSelector(
   gridHistoryStateSelector,
   (history) => history.queue,

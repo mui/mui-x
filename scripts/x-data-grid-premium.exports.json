@@ -448,6 +448,7 @@
   { "name": "GridHeaderSelectionCheckboxParams", "kind": "Interface" },
   { "name": "gridHistoryCanRedoSelector", "kind": "Variable" },
   { "name": "gridHistoryCanUndoSelector", "kind": "Variable" },
+  { "name": "gridHistoryEnabledSelector", "kind": "Variable" },
   { "name": "GridHistoryEventHandler", "kind": "Interface" },
   { "name": "GridHistoryIcon", "kind": "Variable" },
   { "name": "GridHydrateColumnsValue", "kind": "TypeAlias" },

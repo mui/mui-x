@@ -4,9 +4,11 @@ import {
   type GridCellEditStopParams,
   type GridRowEditStopParams,
   type GridEvents,
+  gridVisibleRowsSelector,
 } from '@mui/x-data-grid-pro';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import {
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type {
   GridHistoryEventHandler,
   GridCellEditHistoryData,
   GridRowEditHistoryData,
@@ -18,6 +20,7 @@ import {
  */
 export const createCellEditHistoryHandler = (
   apiRef: RefObject<GridPrivateApiPremium>,
+  props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
 ): GridHistoryEventHandler<GridCellEditHistoryData> => {
   return {
     store: (params: GridCellEditStopParams) => {
@@ -37,11 +40,14 @@ export const createCellEditHistoryHandler = (
     validate: (data: GridCellEditHistoryData, direction: 'undo' | 'redo') => {
       const { id, field, oldValue, newValue } = data;
 
-      // Check if row exists
-      const row = apiRef.current.getRow(id);
-      if (!row) {
+      const visibleRowsData = gridVisibleRowsSelector(apiRef);
+
+      // Check if row is visible
+      if (!visibleRowsData.rowIdToIndexMap.has(id)) {
         return false;
       }
+
+      const row = apiRef.current.getRow(id);
 
       // Check if the value hasn't changed externally
       const currentValue = row[field];
@@ -57,7 +63,17 @@ export const createCellEditHistoryHandler = (
     undo: async (data: GridCellEditHistoryData) => {
       const { id, field, oldValue } = data;
 
-      await apiRef.current.updateRows([{ id, [field]: oldValue }]);
+      if (props.dataSource?.updateRow) {
+        const row = apiRef.current.getRow(id);
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: { ...row, [field]: oldValue },
+          previousRow: row,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, [field]: oldValue }]);
+      }
+
       setTimeout(() => {
         apiRef.current.setCellFocus(id, field);
       }, 0);
@@ -70,7 +86,17 @@ export const createCellEditHistoryHandler = (
     redo: async (data: GridCellEditHistoryData) => {
       const { id, field, newValue } = data;
 
-      await apiRef.current.updateRows([{ id, [field]: newValue }]);
+      if (props.dataSource?.updateRow) {
+        const row = apiRef.current.getRow(id);
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: { ...row, [field]: newValue },
+          previousRow: row,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, [field]: newValue }]);
+      }
+
       setTimeout(() => {
         apiRef.current.setCellFocus(id, field);
       }, 0);
@@ -87,6 +113,7 @@ export const createCellEditHistoryHandler = (
  */
 export const createRowEditHistoryHandler = (
   apiRef: RefObject<GridPrivateApiPremium>,
+  props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
 ): GridHistoryEventHandler<GridRowEditHistoryData> => {
   return {
     store: (params: GridRowEditStopParams) => {
@@ -105,11 +132,14 @@ export const createRowEditHistoryHandler = (
     validate: (data: GridRowEditHistoryData, direction: 'undo' | 'redo') => {
       const { id, oldRow, newRow } = data;
 
-      // Check if row exists
-      const row = apiRef.current.getRow(id);
-      if (!row) {
+      const visibleRowsData = gridVisibleRowsSelector(apiRef);
+
+      // Check if row is visible
+      if (!visibleRowsData.rowIdToIndexMap.has(id)) {
         return false;
       }
+
+      const row = apiRef.current.getRow(id);
 
       // Check if modified fields haven't changed externally
       const expectedRow = direction === 'undo' ? newRow : oldRow;
@@ -124,9 +154,18 @@ export const createRowEditHistoryHandler = (
     },
 
     undo: async (data: GridRowEditHistoryData) => {
-      const { id, oldRow } = data;
+      const { id, oldRow, newRow } = data;
 
-      await apiRef.current.updateRows([{ id, ...oldRow }]);
+      if (props.dataSource?.updateRow) {
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: oldRow,
+          previousRow: newRow,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, ...oldRow }]);
+      }
+
       setTimeout(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
       }, 0);
@@ -137,9 +176,18 @@ export const createRowEditHistoryHandler = (
     },
 
     redo: async (data: GridRowEditHistoryData) => {
-      const { id, newRow } = data;
+      const { id, oldRow, newRow } = data;
 
-      await apiRef.current.updateRows([{ id, ...newRow }]);
+      if (props.dataSource?.updateRow) {
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: newRow,
+          previousRow: oldRow,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, ...newRow }]);
+      }
+
       setTimeout(() => {
         apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
       }, 0);
@@ -244,14 +292,25 @@ export const createClipboardPasteHistoryHandler = (
 /**
  * Create the default history events map.
  */
-export const createDefaultHistoryHandlers = (apiRef: RefObject<GridPrivateApiPremium>) =>
-  ({
-    cellEditStop: createCellEditHistoryHandler(apiRef),
-    rowEditStop: createRowEditHistoryHandler(apiRef),
-    clipboardPasteEnd: createClipboardPasteHistoryHandler(apiRef),
-  }) as Record<
+export const createDefaultHistoryHandlers = (
+  apiRef: RefObject<GridPrivateApiPremium>,
+  props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
+) => {
+  const handlers = {} as Record<
     GridEvents,
-    GridHistoryEventHandler<
-      GridCellEditHistoryData | GridRowEditHistoryData | GridClipboardPasteHistoryData
-    >
+    | GridHistoryEventHandler<GridCellEditHistoryData>
+    | GridHistoryEventHandler<GridRowEditHistoryData>
+    | GridHistoryEventHandler<GridClipboardPasteHistoryData>
   >;
+
+  if (!props.dataSource || props.dataSource.updateRow) {
+    handlers.cellEditStop = createCellEditHistoryHandler(apiRef, props);
+    handlers.rowEditStop = createRowEditHistoryHandler(apiRef, props);
+  }
+
+  if (!props.dataSource) {
+    handlers.clipboardPasteEnd = createClipboardPasteHistoryHandler(apiRef);
+  }
+
+  return handlers;
+};

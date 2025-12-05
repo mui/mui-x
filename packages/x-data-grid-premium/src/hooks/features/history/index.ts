@@ -4,4 +4,8 @@ export {
   createRowEditHistoryHandler,
   createClipboardPasteHistoryHandler,
 } from './defaultHistoryHandlers';
-export { gridHistoryCanUndoSelector, gridHistoryCanRedoSelector } from './gridHistorySelectors';
+export {
+  gridHistoryCanUndoSelector,
+  gridHistoryCanRedoSelector,
+  gridHistoryEnabledSelector,
+} from './gridHistorySelectors';

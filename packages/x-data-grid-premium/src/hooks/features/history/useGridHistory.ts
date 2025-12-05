@@ -29,6 +29,7 @@ export const historyStateInitializer: GridStateInitializer = (state) => {
     history: {
       queue: [],
       currentPosition: -1,
+      enabled: false,
     },
   };
 };
@@ -37,7 +38,12 @@ export const useGridHistory = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'historyQueueSize' | 'historyEventHandlers' | 'historyValidationEvents' | 'onUndo' | 'onRedo'
+    | 'dataSource'
+    | 'historyQueueSize'
+    | 'historyEventHandlers'
+    | 'historyValidationEvents'
+    | 'onUndo'
+    | 'onRedo'
   >,
 ) => {
   const { historyQueueSize, onUndo, onRedo, historyValidationEvents } = props;
@@ -47,8 +53,10 @@ export const useGridHistory = (
     if (props.historyEventHandlers && !isObjectEmpty(props.historyEventHandlers)) {
       return props.historyEventHandlers;
     }
-    return createDefaultHistoryHandlers(apiRef);
-  }, [apiRef, props.historyEventHandlers]);
+    return createDefaultHistoryHandlers(apiRef, {
+      dataSource: props.dataSource,
+    });
+  }, [apiRef, props.dataSource, props.historyEventHandlers]);
 
   // Internal ref to track undo/redo operation state
   // - 'idle': everything is done
@@ -299,6 +307,12 @@ export const useGridHistory = (
   useGridEvent(apiRef, 'cellKeyDown', runIf(historyQueueSize > 0, handleCellKeyDown));
   useGridEvent(apiRef, 'undo', onUndo);
   useGridEvent(apiRef, 'redo', onRedo);
+
+  React.useEffect(() => {
+    setHistoryState({
+      enabled: historyQueueSize > 0 && !isObjectEmpty(historyEventHandlers),
+    });
+  }, [historyQueueSize, historyEventHandlers, setHistoryState]);
 
   React.useEffect(() => {
     if (historyQueueSize === 0) {

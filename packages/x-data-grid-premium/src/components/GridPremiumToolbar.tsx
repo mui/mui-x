@@ -12,15 +12,19 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
-import { gridHistoryCanRedoSelector, gridHistoryCanUndoSelector } from '../hooks/features/history';
+import {
+  gridHistoryCanRedoSelector,
+  gridHistoryCanUndoSelector,
+  gridHistoryEnabledSelector,
+} from '../hooks/features/history';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const showUndoRedo =
-    rootProps.slotProps?.toolbar?.showUndoRedo !== false && rootProps.historyQueueSize > 0;
+  const historyEnabled = useGridSelector(apiRef, gridHistoryEnabledSelector);
+  const showUndoRedo = rootProps.slotProps?.toolbar?.showUndoRedo !== false && historyEnabled;
   const canUndo = useGridSelector(apiRef, gridHistoryCanUndoSelector);
   const canRedo = useGridSelector(apiRef, gridHistoryCanRedoSelector);
 

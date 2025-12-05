@@ -44,6 +44,10 @@ export interface GridHistoryState {
    * -1 means no actions have been executed.
    */
   currentPosition: number;
+  /**
+   * True if the queue size is greater than 0 and there is at least one event handler.
+   */
+  enabled: boolean;
 }
 
 export interface GridHistoryApi {
