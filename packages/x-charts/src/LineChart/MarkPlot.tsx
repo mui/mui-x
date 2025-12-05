@@ -68,6 +68,7 @@ function MarkPlot(props: MarkPlotProps) {
   const { slots, slotProps, skipAnimation: inSkipAnimation, onItemClick, ...other } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
+  const ref = React.useRef<SVGGElement>(null);
 
   const seriesData = useLineSeriesContext();
   const { xAxis, xAxisIds } = useXAxes();
@@ -100,16 +101,17 @@ function MarkPlot(props: MarkPlotProps) {
   const defaultYAxisId = yAxisIds[0];
 
   return (
-    <g {...other}>
+    <g {...other} ref={ref}>
       {stackingGroups.flatMap(({ ids: groupIds }) => {
         return groupIds.map((seriesId) => {
           const {
             xAxisId = defaultXAxisId,
             yAxisId = defaultYAxisId,
-            stackedData,
+            visibleStackedData,
             data,
             showMark = true,
             shape = 'circle',
+            hidden,
           } = series[seriesId];
 
           if (showMark === false) {
@@ -143,10 +145,13 @@ function MarkPlot(props: MarkPlotProps) {
             <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>
               {xData
                 ?.map((x, index) => {
-                  const value = data[index] == null ? null : stackedData[index][1];
+                  const value = data[index] == null ? null : visibleStackedData[index][1];
                   return {
                     x: xScale(x),
-                    y: value === null ? null : yScale(value)!,
+                    y:
+                      value === null
+                        ? null
+                        : yScale(hidden ? (yScale.domain()[0] as number) : value)!,
                     position: x,
                     value,
                     index,
@@ -157,7 +162,7 @@ function MarkPlot(props: MarkPlotProps) {
                     // Remove missing data point
                     return false;
                   }
-                  if (!instance.isPointInside(x, y)) {
+                  if (!instance.isPointInside(x, y, ref.current)) {
                     // Remove out of range
                     return false;
                   }
@@ -183,6 +188,7 @@ function MarkPlot(props: MarkPlotProps) {
                       x={x}
                       y={y!} // Don't know why TS doesn't get from the filter that y can't be null
                       skipAnimation={skipAnimation}
+                      hidden={hidden}
                       onClick={
                         onItemClick &&
                         ((event) =>

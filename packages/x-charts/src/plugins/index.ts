@@ -28,3 +28,9 @@ export {
   useChartZAxis,
   type UseChartZAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartZAxis';
+export {
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
+  type UseChartVisibilityManagerInstance,
+  type UseChartVisibilityManagerParameters,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';

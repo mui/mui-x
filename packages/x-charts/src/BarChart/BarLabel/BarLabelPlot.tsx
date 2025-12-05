@@ -27,6 +27,7 @@ export interface ProcessedBarLabelData<V extends BarValueType | null> extends An
   dataIndex: number;
   color: string;
   value: V;
+  hidden: boolean;
 }
 
 /**
@@ -46,7 +47,7 @@ function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
 
   return (
     <g key={seriesId} className={className} data-series={seriesId}>
-      {data.map(({ x, y, dataIndex, color, value, width, height }) => (
+      {data.map(({ x, y, dataIndex, color, value, width, height, hidden }) => (
         <BarLabelItem
           key={dataIndex}
           seriesId={seriesId}
@@ -61,6 +62,7 @@ function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
           height={height}
           skipAnimation={skipAnimation ?? false}
           layout={layout ?? 'vertical'}
+          hidden={hidden}
           {...other}
           barLabel={barLabel}
           barLabelPlacement={processedSeries.barLabelPlacement || 'center'}

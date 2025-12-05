@@ -57,6 +57,8 @@ export const useChartContainerProps = <
     experimentalFeatures,
     enableKeyboardNavigation,
     brushConfig,
+    onVisibilityChange,
+    visibilityMap,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -95,6 +97,8 @@ export const useChartContainerProps = <
     experimentalFeatures,
     enableKeyboardNavigation,
     brushConfig,
+    onVisibilityChange,
+    visibilityMap,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,

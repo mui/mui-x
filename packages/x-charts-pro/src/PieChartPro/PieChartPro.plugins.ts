@@ -4,6 +4,7 @@ import {
   type UseChartInteractionSignature,
   PIE_CHART_PLUGINS,
   type UseChartKeyboardNavigationSignature,
+  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -13,6 +14,7 @@ import {
 export type PieChartProPluginSignatures = [
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature,
   UseChartKeyboardNavigationSignature,
   UseChartProExportSignature,
 ];

@@ -23,7 +23,6 @@ export type MarkElementClassKey = keyof MarkElementClasses;
 
 export interface MarkElementOwnerState {
   id: SeriesId;
-  color: string;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<MarkElementClasses>;

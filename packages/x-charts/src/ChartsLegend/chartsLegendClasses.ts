@@ -11,6 +11,8 @@ export interface ChartsLegendClasses {
   item: string;
   /** Styles applied to a series element. */
   series: string;
+  /** Styles applied to hidden items. */
+  hidden: string;
   /** Styles applied to series mark element. */
   mark: string;
   /** Styles applied to the series label. */
@@ -33,6 +35,7 @@ export const useUtilityClasses = (props: ChartsLegendProps & ChartsLegendSlotExt
     mark: ['mark'],
     label: ['label'],
     series: ['series'],
+    hidden: ['hidden'],
   };
 
   return composeClasses(slots, getLegendUtilityClass, classes);
@@ -46,4 +49,5 @@ export const legendClasses: ChartsLegendClasses = generateUtilityClasses('MuiCha
   'label',
   'vertical',
   'horizontal',
+  'hidden',
 ]);

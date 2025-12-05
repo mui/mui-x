@@ -51,7 +51,11 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const classes = useUtilityClasses(props.classes);
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea }, seriesIndex) => {
+      {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {
+        if (hidden) {
+          return null;
+        }
+
         return (
           <path
             key={id}

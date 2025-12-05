@@ -1,7 +1,11 @@
 import { type ScatterValueType } from '../../models';
 import { type SeriesProcessor } from '../../internals/plugins/models';
 
-const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
+const seriesProcessor: SeriesProcessor<'scatter'> = (
+  { series, seriesOrder },
+  dataset,
+  isIdentifierVisible,
+) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;
@@ -41,6 +45,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
             ...seriesData?.preview,
           },
           data,
+          hidden: !isIdentifierVisible?.(`${seriesId}`),
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
       ];
