@@ -115,7 +115,7 @@ Internal changes.
 - Bump react-hook-form to ^7.66.1 (#20497) @renovate[bot]
 - Bump rimraf to ^6.1.2 (#20498) @renovate[bot]
 - Bump webpack-bundle-analyzer to ^5.0.1 (#20508) @renovate[bot]
-- Bump next to ^15.5.6 [SECURITY] (#20555) @renovate[bot]
+- Bump next to ^15.5.7 [SECURITY] (#20555) @renovate[bot]
 
 ## 8.20.0
 
