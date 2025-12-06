@@ -51,7 +51,7 @@
     "d3-array": "^3.2.4",
     "d3-format": "^3.1.0",
     "d3-time-format": "^4.1.0",
-    "execa": "^9.6.0",
+    "execa": "^9.6.1",
     "internmap": "^2.0.3",
     "rimraf": "catalog:"
   },
