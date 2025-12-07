@@ -14,7 +14,7 @@ The primary purpose is to demonstrate the use of the [Data Source layer](/x/reac
 
 - Basic React knowledge
 - Understanding of TypeScript interfaces
-- Familiarity with async/await and fetch API
+- Familiarity with async/await and fetch APIs
 
 ### Relevant documentation
 
@@ -25,17 +25,17 @@ The docs listed below may be useful if you're new to the MUI X Data Grid:
 - [Pagination](/x/react-data-grid/pagination/)
 - [Sorting](/x/react-data-grid/sorting/)
 
-## Part one: app setup
+## Part one: App setup
 
-In part one, you'll set up the basic scaffold for a full-stack React app using Vite on the front end and Express.js for the back end.
+In part one, you'll set up the basic scaffolding for a full-stack React app using Vite on the front end and Express.js for the back end.
 
 ### 1. Create the project structure
 
 Create a new directory and set up the folder structure:
 
 ```bash
-mkdir server-side-data
-cd server-side-data
+mkdir server-side-data &&
+cd server-side-data &&
 mkdir client server
 ```
 
@@ -44,16 +44,21 @@ mkdir client server
 Navigate to the server directory and initialize:
 
 ```bash
-cd server
+cd server &&
 pnpm init
 ```
 
 Install server dependencies:
 
 ```bash
-pnpm install express cors
+pnpm install express cors &&
 pnpm install --save-dev typescript @types/express @types/node tsx
 ```
+
+:::tip
+This tutorial uses pnpm, but all MUI libraries are also compatible with npm and yarn.
+See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
+:::
 
 Create a `tsconfig.json` file:
 
@@ -79,8 +84,8 @@ Create a `tsconfig.json` file:
 Navigate to the client directory and create a React app with Vite in TypeScript:
 
 ```bash
-cd ../client
-pnpm create vite@latest . -- --template react-ts
+cd ../client &&
+pnpm create vite@latest . -- --template react-ts &&
 pnpm install
 ```
 
@@ -700,7 +705,7 @@ export default App;
 
 **What's happening here:**
 
-- `CssBaseline` is a Material UI component that applies consistent baseline CSS styles across different browsers, removing default margins and padding, and setting up a consistent font rendering
+- `CssBaseline` is a Material UI component that applies consistent baseline CSS styles across different browsers, removing default margins and padding, and setting up  consistent font rendering.
 
 Replace the boilerplate code in `client/src/main.tsx` with the following:
 
@@ -827,8 +832,7 @@ const dataSource: GridDataSource = useMemo(
   () => ({
     getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
       const urlParams = new URLSearchParams({
-        page: params.paginationModel?.page?.toString() || '0',
-        pageSize: params.paginationModel?.pageSize?.toString() || '40',
+        paginationModel: JSON.stringify(params.paginationModel),
         sortModel: JSON.stringify(params.sortModel || []),
         filterModel: JSON.stringify(params.filterModel || {}),
       });
