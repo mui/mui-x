@@ -20,6 +20,7 @@ const barChartsParams = {
     { data: [4, 3, 1, 5, 8], label: 'B' },
     { data: [4, 2, 5, 4, 1], label: 'C' },
   ],
+  renderer: 'svg-batch',
   height: 400,
 };
 const lineChartsParams = {

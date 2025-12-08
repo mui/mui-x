@@ -1,33 +1,22 @@
 import useId from '@mui/utils/useId';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-
-import { useSvgRef } from '../hooks';
 import { type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 import { useUtilityClasses } from './barClasses';
 import { appendAtKey } from '../internals/appendAtKey';
 import { type IndividualBarPlotProps } from './IndividualBarPlot';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
-import {
-  selectorChartXAxis,
-  selectorChartYAxis,
-  type UseChartCartesianAxisSignature,
-} from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
-import { type SeriesId } from '../models/seriesType/common';
-import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries';
-import { getSVGPoint } from '../internals/getSVGPoint';
 import {
   selectorChartSeriesHighlightedItem,
   selectorChartSeriesUnfadedItem,
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useStore } from '../internals/store/useStore';
-import { getBandSize } from '../internals/getBandSize';
-import { type ComputedAxis } from '../models/axis';
-import { isBandScale } from '../internals/scaleGuards';
+import { useOnItemClick } from './useOnItemClick';
+import { useInteractionItemProps } from './useItemInteractionProps';
 
 interface BatchBarPlotProps extends IndividualBarPlotProps {}
 
@@ -101,127 +90,6 @@ function useCreatePaths(seriesData: ProcessedBarSeriesData, borderRadius: number
   return paths;
 }
 
-function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefined) {
-  const { instance } = useChartContext();
-  const svgRef = useSvgRef();
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
-
-  return function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
-    const element = svgRef.current;
-
-    if (element == null) {
-      return;
-    }
-
-    const svgPoint = getSVGPoint(element, event);
-
-    if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
-      return;
-    }
-
-    const { series, stackingGroups = [] } =
-      selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
-    const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(store.getSnapshot());
-    const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(store.getSnapshot());
-    const defaultXAxisId = xAxisIds[0];
-    const defaultYAxisId = yAxisIds[0];
-
-    let closestPoint: { dataIndex: number; seriesId: SeriesId } | undefined = undefined;
-
-    for (let stackIndex = 0; stackIndex < stackingGroups.length; stackIndex += 1) {
-      const group = stackingGroups[stackIndex];
-      const seriesIds = group.ids;
-
-      for (const seriesId of seriesIds) {
-        const aSeries = (series ?? {})[seriesId];
-
-        const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
-        const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
-
-        const xAxis = xAxes[xAxisId];
-        const yAxis = yAxes[yAxisId];
-
-        const bandAxis = aSeries.layout === 'horizontal' ? yAxis : xAxis;
-        const continuousAxis = aSeries.layout === 'horizontal' ? xAxis : yAxis;
-        const bandScale = bandAxis.scale;
-        const svgPointBandCoordinate = aSeries.layout === 'horizontal' ? svgPoint.y : svgPoint.x;
-
-        if (!isBandScale(bandScale)) {
-          continue;
-        }
-
-        const dataIndex =
-          bandScale.bandwidth() === 0
-            ? Math.floor(
-                (svgPointBandCoordinate - Math.min(...bandScale.range()) + bandScale.step() / 2) /
-                  bandScale.step(),
-              )
-            : Math.floor(
-                (svgPointBandCoordinate - Math.min(...bandScale.range())) / bandScale.step(),
-              );
-
-        const { barWidth, offset } = getBandSize(
-          bandScale.bandwidth(),
-          stackingGroups.length,
-          (bandAxis as ComputedAxis<'band'>).barGapRatio,
-        );
-
-        const barOffset = stackIndex * (barWidth + offset);
-        const bandValue = bandAxis.data?.[dataIndex];
-
-        if (bandValue == null) {
-          continue;
-        }
-
-        const bandStart = bandScale(bandValue);
-
-        if (bandStart == null) {
-          continue;
-        }
-
-        const bandBarStart = bandStart + barOffset;
-        const bandBarEnd = bandBarStart + barWidth;
-        const bandBarMin = Math.min(bandBarStart, bandBarEnd);
-        const bandBarMax = Math.max(bandBarStart, bandBarEnd);
-
-        if (svgPointBandCoordinate >= bandBarMin && svgPointBandCoordinate <= bandBarMax) {
-          // The point is inside the band for this series
-          const svgPointContinuousCoordinate =
-            aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
-          const bar = aSeries.stackedData[dataIndex];
-          const start = continuousAxis.scale(bar[0]);
-          const end = continuousAxis.scale(bar[1]);
-
-          if (start == null || end == null) {
-            continue;
-          }
-
-          const continuousMin = Math.min(start, end);
-          const continuousMax = Math.max(start, end);
-
-          if (
-            svgPointContinuousCoordinate >= continuousMin &&
-            svgPointContinuousCoordinate <= continuousMax
-          ) {
-            closestPoint = {
-              seriesId,
-              dataIndex,
-            };
-          }
-        }
-      }
-    }
-
-    if (closestPoint) {
-      onItemClick?.(event, {
-        type: 'bar',
-        seriesId: closestPoint.seriesId,
-        dataIndex: closestPoint.dataIndex,
-      });
-    }
-  };
-}
-
 export function BatchBarPlot({
   completedData,
   borderRadius = 0,
@@ -230,6 +98,7 @@ export function BatchBarPlot({
 }: BatchBarPlotProps) {
   const classes = useUtilityClasses();
   const onClick = useOnItemClick(onItemClick);
+  const interactionItemProps = useInteractionItemProps();
 
   return (
     <React.Fragment>
@@ -246,7 +115,7 @@ export function BatchBarPlot({
           <BatchBarSeriesPlot processedSeries={series} borderRadius={borderRadius} />
         </BarGroup>
       ))}
-      <DrawingAreaRect onClick={onClick} />
+      <DrawingAreaRect onClick={onClick} {...interactionItemProps} />
     </React.Fragment>
   );
 }
