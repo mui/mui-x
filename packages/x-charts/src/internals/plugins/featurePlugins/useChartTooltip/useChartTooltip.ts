@@ -20,9 +20,9 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }
 
     if (
       prevItem === null ||
-      Object.keys(itemToRemove).some(
+      (Object.keys(itemToRemove) as Array<keyof ChartItemIdentifier<ChartSeriesType>>).some(
         (key) =>
-          itemToRemove[key as keyof typeof itemToRemove] !== prevItem[key as keyof typeof prevItem],
+          itemToRemove[key] !== prevItem[key],
       )
     ) {
       // The current item is already different from the one to remove. No need to clean it.
