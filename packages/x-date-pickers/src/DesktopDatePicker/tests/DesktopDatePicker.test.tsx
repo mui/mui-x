@@ -413,7 +413,7 @@ describe('<DesktopDatePicker />', () => {
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
     });
 
-    it.only('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
+    it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
       const RenderCount = spy((props) => <PickersActionBar {...props} />);
       const actions: PickersActionBarAction[] = ['clear', 'today'];
 
