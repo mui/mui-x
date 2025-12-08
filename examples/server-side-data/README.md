@@ -1,6 +1,6 @@
 # MUI X Data Grid Pro with Data Source layer
 
-A full-stack application demonstrating server-side data handling with the MUI X Data Grid, featuring pagination, sorting, and filtering capabilities.
+A full-stack application demonstrating server-side data handling with the MUI X Data Grid, featuring pagination, sorting, and filtering capabilities.
 This app is the end result of following the [server-side data tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) in the MUI X docs.
 
 ## Installation and setup
