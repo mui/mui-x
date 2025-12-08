@@ -14,7 +14,12 @@ import {
 import type { GridEvents, GridEventListener } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridHistoryApi, GridHistoryState, GridHistoryItem } from './gridHistoryInterfaces';
+import {
+  GridHistoryApi,
+  GridHistoryState,
+  GridHistoryItem,
+  GridHistoryEventHandler,
+} from './gridHistoryInterfaces';
 import {
   gridHistoryCurrentPositionSelector,
   gridHistoryQueueSelector,
@@ -61,6 +66,16 @@ export const useGridHistory = (
   const isEnabled = React.useMemo(
     () => historyQueueSize > 0 && !isObjectEmpty(historyEventHandlers),
     [historyQueueSize, historyEventHandlers],
+  );
+
+  const isValidationNeeded = React.useMemo(
+    () =>
+      isEnabled &&
+      historyValidationEvents.length > 0 &&
+      Object.values(historyEventHandlers).some(
+        (handler: GridHistoryEventHandler<any>) => handler.validate,
+      ),
+    [isEnabled, historyEventHandlers, historyValidationEvents],
   );
 
   // Internal ref to track undo/redo operation state
@@ -178,7 +193,7 @@ export const useGridHistory = (
       if (!handler) {
         clearUndoItems();
       } else {
-        const isValid = handler.validate(item.data, 'undo');
+        const isValid = handler.validate ? handler.validate(item.data, 'undo') : true;
         if (!isValid) {
           clearUndoItems();
         }
@@ -191,7 +206,7 @@ export const useGridHistory = (
       if (!handler) {
         clearRedoItems();
       } else {
-        const isValid = handler.validate(item.data, 'redo');
+        const isValid = handler.validate ? handler.validate(item.data, 'redo') : true;
         if (!isValid) {
           clearRedoItems();
         }
@@ -218,7 +233,7 @@ export const useGridHistory = (
         return false;
       }
 
-      const isValid = handler.validate(data, operation);
+      const isValid = handler.validate ? handler.validate(data, operation) : true;
 
       // The data is validated every time state change event happens.
       // We can get into a situation where the operation is not valid at this point only with the direct state updates.
@@ -238,11 +253,16 @@ export const useGridHistory = (
       });
 
       apiRef.current.publishEvent(operation, { eventName, data });
-      validateQueueItems();
+      if (isValidationNeeded) {
+        validateQueueItems();
+      } else {
+        operationStateRef.current = 'idle';
+      }
       return true;
     },
     [
       apiRef,
+      isValidationNeeded,
       historyEventHandlers,
       clearUndoItems,
       clearRedoItems,
@@ -320,7 +340,7 @@ export const useGridHistory = (
   }, [isEnabled, setHistoryState]);
 
   React.useEffect(() => {
-    if (!isEnabled) {
+    if (!isValidationNeeded) {
       return () => {};
     }
 
@@ -334,7 +354,7 @@ export const useGridHistory = (
       validationEventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       validationEventUnsubscribersRef.current = [];
     };
-  }, [apiRef, isEnabled, historyValidationEvents, debouncedValidateQueueItems]);
+  }, [apiRef, isValidationNeeded, historyValidationEvents, debouncedValidateQueueItems]);
 
   React.useEffect(() => {
     if (historyQueueSize === 0) {
@@ -352,7 +372,9 @@ export const useGridHistory = (
         }
 
         const data = handler.store(...params);
-        addToQueue({ eventName, data });
+        if (data !== null) {
+          addToQueue({ eventName, data });
+        }
       });
 
       eventUnsubscribersRef.current.push(unsubscribe);

@@ -7,9 +7,11 @@ export interface GridHistoryEventHandler<T = any> {
   /**
    * Store the data to be used for undo/redo operations.
    * @param {any} params The parameters from the original event.
-   * @returns {T} The data to store in the history queue.
+   * @returns {T | null} The data to store in the history queue.
+   * Return `null` if the event should not be stored.
+   * This can be used to descrease the granularity of the undo steps.
    */
-  store: (...params: any[]) => T;
+  store: (...params: any[]) => T | null;
   /**
    * Undo the changes made by this event.
    * @param {T} data The stored data.
@@ -24,11 +26,12 @@ export interface GridHistoryEventHandler<T = any> {
   redo: (data: T) => void | Promise<void>;
   /**
    * Validate if the undo/redo operation can be performed.
+   * If validation is not needed, do not provide this method to avoid impacting performance.
    * @param {T} data The stored data.
    * @param {'undo' | 'redo'} operation - The operation to validate.
    * @returns {boolean} True if the operation is valid, false otherwise.
    */
-  validate: (data: T, operation: 'undo' | 'redo') => boolean;
+  validate?: (data: T, operation: 'undo' | 'redo') => boolean;
 }
 
 export interface GridHistoryItem<T = any> {

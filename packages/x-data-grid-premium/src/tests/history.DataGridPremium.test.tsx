@@ -114,7 +114,6 @@ describe('<DataGridPremium /> - History', () => {
         redo: async () => {
           redoCalled = true;
         },
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -154,7 +153,7 @@ describe('<DataGridPremium /> - History', () => {
       let shouldValidate = true;
 
       const customHandler: GridHistoryEventHandler = {
-        store: () => ({ test: 'data' }),
+        store: () => ({ data: 'test' }),
         undo: async () => {},
         redo: async () => {},
         validate: (_, operation) => {
@@ -207,7 +206,6 @@ describe('<DataGridPremium /> - History', () => {
           const cell = getCell(0, 2);
           await user.click(cell);
         },
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -251,7 +249,6 @@ describe('<DataGridPremium /> - History', () => {
           lastUndoData = storedData;
         },
         redo: async () => {},
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -304,7 +301,6 @@ describe('<DataGridPremium /> - History', () => {
         store: () => ({}),
         undo: async () => {},
         redo: async () => {},
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -350,12 +346,31 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canRedo()).to.equal(true);
     });
 
+    it('should not add items to the queue if the store method returns null', async () => {
+      const customHandler: GridHistoryEventHandler = {
+        store: () => null,
+        undo: async () => {},
+        redo: async () => {},
+      };
+
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
+
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
+
+      const cell = getCell(0, 2);
+      await user.click(cell);
+
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
+      expect(apiRef.current!.history.canRedo()).to.equal(false);
+    });
+
     it('should clear forward history when making a new action after undo', async () => {
       const customHandler: GridHistoryEventHandler = {
         store: () => ({ data: 'test' }),
         undo: async () => {},
         redo: async () => {},
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -397,7 +412,6 @@ describe('<DataGridPremium /> - History', () => {
         store: () => ({ data: 'test' }),
         undo: async () => {},
         redo: async () => {},
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -429,7 +443,6 @@ describe('<DataGridPremium /> - History', () => {
         store: () => ({ data: 'test' }),
         undo: async () => {},
         redo: async () => {},
-        validate: () => true,
       };
 
       const historyEventHandlers = {
@@ -466,7 +479,6 @@ describe('<DataGridPremium /> - History', () => {
         store: () => ({ data: 'test' }),
         undo: async () => {},
         redo: async () => {},
-        validate: () => true,
       };
 
       const historyEventHandlers = {
