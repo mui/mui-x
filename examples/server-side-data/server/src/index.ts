@@ -490,7 +490,7 @@ app.get('/api/employees/:id', (req, res) => {
     return res.status(404).json({ error: 'Employee not found' });
   }
 
-  res.json(employee);
+  return res.json(employee);
 });
 
 // Health check
