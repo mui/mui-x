@@ -10,6 +10,7 @@ import { getOccurrencesFromEvents } from '../utils/event-utils';
 import { useAdapter, Adapter } from '../use-adapter';
 import { useTimelineStoreContext } from '../use-timeline-store-context';
 import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
+import { TemporalTimezone } from '../base-ui-copy/types/temporal';
 
 export function useEventOccurrencesGroupedByResource(
   parameters: useEventOccurrencesGroupedByResource.Parameters,
@@ -20,6 +21,7 @@ export function useEventOccurrencesGroupedByResource(
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
+  const uiTimezone = useStore(store, schedulerResourceSelectors.uiTimezone);
   const resourcesChildrenMap = useStore(
     store,
     schedulerResourceSelectors.processedResourceChildrenLookup,
@@ -37,6 +39,7 @@ export function useEventOccurrencesGroupedByResource(
         resourceParentIds,
         start,
         end,
+        uiTimezone,
       ),
     [
       adapter,
@@ -47,6 +50,7 @@ export function useEventOccurrencesGroupedByResource(
       resourceParentIds,
       start,
       end,
+      uiTimezone,
     ],
   );
 }
@@ -81,6 +85,7 @@ export function innerGetEventOccurrencesGroupedByResource(
   resourceParentIds: Map<string, string | null>,
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
+  uiTimezone: TemporalTimezone,
 ): InnerGetEventOccurrencesGroupedByResourceReturnValue[] {
   const occurrencesGroupedByResource = new Map<string, SchedulerEventOccurrence[]>();
 
@@ -91,6 +96,7 @@ export function innerGetEventOccurrencesGroupedByResource(
     events,
     visibleResources,
     resourceParentIds,
+    uiTimezone,
   });
 
   for (const occurrence of occurrences) {

@@ -15,6 +15,7 @@ import {
   parsesByDayForMonthlyFrequency,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
+import { TemporalTimezone } from '../../base-ui-copy/types';
 
 /**
  *  Expands a recurring `event` into concrete occurrences within the visible days.
@@ -27,11 +28,14 @@ export function getRecurringEventOccurrencesForVisibleDays(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   adapter: Adapter,
+  uiTimezone: TemporalTimezone,
 ): SchedulerEventOccurrence[] {
   const rule = event.rrule!;
   const occurrences: SchedulerEventOccurrence[] = [];
+  const eventStartInOriginalTZ = event.modelInBuiltInFormat!.start;
+  const originalTimezone = adapter.getTimezone(eventStartInOriginalTZ);
 
-  const endGuard = buildEndGuard(rule, event.start.value, adapter);
+  const endGuard = buildEndGuard(rule, eventStartInOriginalTZ, adapter);
 
   const eventDuration = getEventDurationInDays(adapter, event);
   const scanStart = adapter.addDays(start, -(eventDuration - 1));
@@ -41,29 +45,46 @@ export function getRecurringEventOccurrencesForVisibleDays(
     !adapter.isAfter(day, end);
     day = adapter.addDays(day, 1)
   ) {
+    const dayOriginalTZ = adapter.setTimezone(day, originalTimezone);
+
     // The series is still active on that day
-    if (!endGuard(day)) {
+    if (!endGuard(dayOriginalTZ)) {
       continue;
     }
     // the pattern matches on that day
-    if (!matchesRecurrence(rule, day, adapter, event)) {
+    if (!matchesRecurrence(rule, dayOriginalTZ, adapter, eventStartInOriginalTZ)) {
       continue;
     }
 
-    const occurrenceStart = mergeDateAndTime(adapter, day, event.start.value);
-    const occurrenceEnd = getOccurrenceEnd({ adapter, event, occurrenceStart });
+    const occurrenceStartOriginalTZ = mergeDateAndTime(
+      adapter,
+      dayOriginalTZ,
+      eventStartInOriginalTZ,
+    );
+    const occurrenceEndOriginalTZ = getOccurrenceEnd({
+      adapter,
+      event,
+      occurrenceStart: occurrenceStartOriginalTZ,
+    });
 
-    const key = `${event.id}::${getDateKey(occurrenceStart, adapter)}`;
+    const key = `${event.id}::${getDateKey(occurrenceStartOriginalTZ, adapter)}`;
 
-    if (event.exDates?.some((exDate) => adapter.isSameDay(exDate, occurrenceStart))) {
+    if (
+      event.modelInBuiltInFormat!.exDates?.some((exDate) =>
+        adapter.isSameDay(exDate, occurrenceStartOriginalTZ),
+      )
+    ) {
       continue;
     }
+
+    const occurrenceStartRenderTZ = adapter.setTimezone(occurrenceStartOriginalTZ, uiTimezone);
+    const occurrenceEndRenderTZ = adapter.setTimezone(occurrenceEndOriginalTZ, uiTimezone);
 
     occurrences.push({
       ...event,
       key,
-      start: processDate(occurrenceStart, adapter),
-      end: processDate(occurrenceEnd, adapter),
+      start: processDate(occurrenceStartRenderTZ, adapter),
+      end: processDate(occurrenceEndRenderTZ, adapter),
     });
   }
 
@@ -126,10 +147,10 @@ export function matchesRecurrence(
   rule: RecurringEventRecurrenceRule,
   date: TemporalSupportedObject,
   adapter: Adapter,
-  event: SchedulerProcessedEvent,
+  seriesStartOriginalTZ: TemporalSupportedObject,
 ): boolean {
   const interval = Math.max(1, rule.interval ?? 1);
-  const seriesStartDay = adapter.startOfDay(event.start.value);
+  const seriesStartDay = adapter.startOfDay(seriesStartOriginalTZ);
   const candidateDay = adapter.startOfDay(date);
 
   if (adapter.isBefore(candidateDay, seriesStartDay)) {

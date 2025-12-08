@@ -102,4 +102,5 @@ export const schedulerResourceSelectors = {
       return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
     },
   ),
+  uiTimezone: createSelector((state: State) => state.timezone),
 };
