@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import Box from '@mui/material/Box';
 import {
   DataGridPremium,
@@ -11,21 +12,47 @@ import {
 import { useDemoData } from '@mui/x-data-grid-generator';
 
 function createFilterHistoryHandler(apiRef) {
-  let previousFilterModel = { items: [] };
+  let previousFilterModel;
 
   return {
     store: (newFilterModel) => {
       const oldFilterModel = previousFilterModel;
       previousFilterModel = { ...newFilterModel };
 
+      // Ignore changes made to the operator for the empty values
+      const oldFilterItemsWithValues = oldFilterModel?.items.filter(
+        (item) => item.value !== undefined,
+      );
+      const newFilterItemsWithValues = newFilterModel.items.filter(
+        (item) => item.value !== undefined,
+      );
+
+      if (
+        !oldFilterModel &&
+        newFilterItemsWithValues.length === 0 &&
+        newFilterModel.quickFilterValues?.length === 0
+      ) {
+        return null;
+      }
+
+      if (
+        oldFilterModel &&
+        isDeepEqual(oldFilterItemsWithValues, newFilterItemsWithValues) &&
+        isDeepEqual(
+          oldFilterModel.quickFilterValues,
+          newFilterModel.quickFilterValues,
+        ) &&
+        oldFilterModel.logicOperator === newFilterModel.logicOperator &&
+        oldFilterModel.quickFilterLogicOperator ===
+          newFilterModel.quickFilterLogicOperator
+      ) {
+        return null;
+      }
+
       return {
-        oldFilterModel,
+        oldFilterModel: oldFilterModel || { items: [] },
         newFilterModel,
       };
-    },
-    validate: () => {
-      // We will assume that the filter model will not be changed in a way that does not send `filterModelChange` event
-      return true;
     },
     undo: async (data) => {
       const { oldFilterModel } = data;
@@ -58,7 +85,8 @@ export default function AddFilterHandler() {
       clipboardPasteEnd: createClipboardPasteHistoryHandler(apiRef),
       filterModelChange: createFilterHistoryHandler(apiRef),
     };
-  }, [apiRef]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [apiRef.current]);
 
   return (
     <Box sx={{ height: 500, width: '100%' }}>
@@ -66,6 +94,12 @@ export default function AddFilterHandler() {
         {...data}
         apiRef={apiRef}
         historyEventHandlers={historyEventHandlers}
+        showToolbar
+        disableRowSelectionOnClick
+        cellSelection
+        disablePivoting
+        disableRowGrouping
+        disableColumnPinning
       />
     </Box>
   );

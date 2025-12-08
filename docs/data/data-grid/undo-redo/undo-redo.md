@@ -55,8 +55,9 @@ A history event handler is an object that defines how to `store()`, `undo()`, `r
 
 ```tsx
 interface GridHistoryEventHandler<T = any> {
-  // Store the data when the event occurs
-  store: (...params: any[]) => T;
+  // Store the data when the event occurs.
+  // Returns null to skip adding the current change to the queue (to control undo step granularity)
+  store: (...params: any[]) => T | null;
 
   // Undo the action
   undo: (data: T) => void | Promise<void>;
@@ -65,7 +66,8 @@ interface GridHistoryEventHandler<T = any> {
   redo: (data: T) => void | Promise<void>;
 
   // Validate if the operation can be performed
-  validate: (data: T, operation: 'undo' | 'redo') => boolean;
+  // Can be ommited if the validation is not needed for the current event handler
+  validate?: (data: T, operation: 'undo' | 'redo') => boolean;
 }
 ```
 
@@ -103,7 +105,7 @@ The following demo shows how to keep the default clipboard paste event handler a
 - Allow undo/redo operations even when the cell is on a different page
 - Automatically navigate to the correct page when undoing/redoing
 
-{{"demo": "CustomValidationUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "CustomCellUpdateHandler.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Creating a new handler
 
@@ -111,6 +113,8 @@ Track and allow undo of any Data Grid interaction by providing custom history ev
 
 The following demo keeps all the default handlers, and adds a custom history handler that tracks filter model changes.
 This allows users to undo and redo filter operations.
+
+To reduce the amount of the undo steps, changes on the filter model items that do not have a value are ignored.
 
 {{"demo": "AddFilterHandler.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -135,7 +139,7 @@ This is useful when you create a handler that tracks changes that are not affect
 
 :::warning
 List the events in the `historyValidationEvents` prop that are enough for the validation to occur at the right time.
-Using `'stateChange'` will have an impact on the performance of Data Grid.
+Adding `'stateChange'` to the list will have an impact on the performance of Data Grid.
 :::
 
 ## API
