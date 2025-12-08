@@ -183,17 +183,16 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
 
   public setTimezone = (value: Date, timezone: TemporalTimezone): Date => {
     const isSystemTimezone = timezone === 'system' || timezone === 'default';
-
-    if (value instanceof TZDate) {
-      if (isSystemTimezone) {
-        return this.toJsDate(value);
-      }
-      return value.withTimeZone(timezone);
-    }
+    const canChangeTz = typeof (value as any)?.withTimeZone === 'function';
 
     if (isSystemTimezone) {
-      return value;
+      return this.toJsDate(value);
     }
+
+    if (canChangeTz) {
+      return (value as any).withTimeZone(timezone);
+    }
+
     return new TZDate(value, timezone);
   };
 
