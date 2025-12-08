@@ -25,10 +25,14 @@ export function createPickerRenderer({
   beforeEach(() => {
     if (clockConfig) {
       vi.setSystemTime(clockConfig);
+      vi.useFakeTimers({
+        toFake: ['Date', 'setTimeout', 'clearTimeout'],
+        shouldAdvanceTime: true,
+      });
     }
   });
   afterEach(() => {
-    if (clockConfig) {
+    if (vi.isFakeTimers()) {
       vi.useRealTimers();
     }
   });

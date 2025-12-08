@@ -70,7 +70,6 @@ export default defineConfig({
       },
     },
     browser: {
-      isolate: false,
       provider: playwright({
         launchOptions: {
           // Required for tests which use scrollbars.

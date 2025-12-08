@@ -477,7 +477,9 @@ describe('<DataGrid /> - Rows', () => {
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-        setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        await act(async () => {
+          setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
     });
@@ -760,13 +762,15 @@ describe('<DataGrid /> - Rows', () => {
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-        setProps({
-          renderCell: (params: GridRenderCellParams) => (
-            <GridActionsCell {...params}>
-              <GridActionsCellItem icon={<span />} label="print" />
-            </GridActionsCell>
-          ),
-        }); // Sets focusedButtonIndex=0
+        await act(async () => {
+          setProps({
+            renderCell: (params: GridRenderCellParams) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            ),
+          }); // Sets focusedButtonIndex=0
+        });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
 

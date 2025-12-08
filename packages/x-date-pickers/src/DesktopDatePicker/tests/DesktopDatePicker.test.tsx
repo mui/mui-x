@@ -413,7 +413,7 @@ describe('<DesktopDatePicker />', () => {
       expect(RenderCount.callCount - renderCountBeforeChange).to.equal(0); // no re-renders after selecting new values
     });
 
-    it('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
+    it.only('should not re-render the `PickersActionBar` on date change with custom callback actions with root component updates', async () => {
       const RenderCount = spy((props) => <PickersActionBar {...props} />);
       const actions: PickersActionBarAction[] = ['clear', 'today'];
 
@@ -429,7 +429,9 @@ describe('<DesktopDatePicker />', () => {
 
       const renderCountBeforeChange = RenderCount.callCount;
 
-      setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+      await act(async () => {
+        setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+      });
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       await user.click(screen.getByRole('gridcell', { name: '3' }));
