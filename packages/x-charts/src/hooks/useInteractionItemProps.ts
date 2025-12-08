@@ -7,6 +7,7 @@ import type { UseChartHighlightSignature } from '../internals/plugins/featurePlu
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import type { ChartSeriesType, ChartItemIdentifier } from '../models/seriesType/config';
 import type { ChartInstance } from '../internals/plugins/models';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -26,17 +27,20 @@ export const useInteractionItemProps = (
   onPointerDown?: (event: React.PointerEvent) => void;
 } => {
   const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+    useChartContext<
+      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+    >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction(data, { interaction: 'pointer' });
+    instance.setLastUpdate('pointer');
+    instance.setItemTooltip(data);
     instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
-    instance.removeItemInteraction(data);
+    instance.removeItemTooltip(data);
     instance.clearHighlight();
   });
 
@@ -63,7 +67,9 @@ export const useInteractionItemProps = (
 };
 
 export function getInteractionItemProps(
-  instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
+  instance: ChartInstance<
+    [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+  >,
   item: ChartItemIdentifier<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
@@ -74,7 +80,8 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.setItemInteraction(item, { interaction: 'pointer' });
+    instance.setLastUpdate('pointer');
+    instance.setItemTooltip(item);
     instance.setHighlight(item);
   }
 
@@ -82,7 +89,7 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.removeItemInteraction(item);
+    instance.removeItemTooltip(item);
     instance.clearHighlight();
   }
 
