@@ -282,6 +282,7 @@ However, this comes with the following limitations:
 
 - CSS styling of single bars is no longer possible. For this reason, when `onItemClick` is set, `cursor: pointer` is not applied to bars.
 - Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible.
+- No animation when highlighting or fading bars.
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 

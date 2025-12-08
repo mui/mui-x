@@ -116,6 +116,8 @@ export function BatchBarPlot({
   );
 }
 
+const MemoFadedHighlightedBars = React.memo(FadedHighlightedBars);
+
 function SeriesBatchPlot({
   series,
   borderRadius,
@@ -144,7 +146,7 @@ function SeriesBatchPlot({
       >
         <BatchBarSeriesPlot processedSeries={series} borderRadius={borderRadius} />
       </BarGroup>
-      <FadedHighlightedBars processedSeries={series} borderRadius={borderRadius} />
+      <MemoFadedHighlightedBars processedSeries={series} borderRadius={borderRadius} />
     </React.Fragment>
   );
 }
