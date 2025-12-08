@@ -1,5 +1,11 @@
 import { useMemo } from 'react';
-import { DataGrid, type GridColDef, type GridDataSource, type GridGetRowsParams, type GridGetRowsResponse } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  type GridColDef,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
+} from '@mui/x-data-grid';
 import { Box, Typography } from '@mui/material';
 
 interface Employee {
@@ -30,28 +36,33 @@ const columns: GridColDef[] = [
 ];
 
 const EmployeeDataGrid = () => {
-  const dataSource: GridDataSource = useMemo(() => ({
-    getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
-      const urlParams = new URLSearchParams({
-        paginationModel: JSON.stringify(params.paginationModel),
-        sortModel: JSON.stringify(params.sortModel || []),
-        filterModel: JSON.stringify(params.filterModel || {}),
-      });
+  const dataSource: GridDataSource = useMemo(
+    () => ({
+      getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+        const urlParams = new URLSearchParams({
+          paginationModel: JSON.stringify(params.paginationModel),
+          sortModel: JSON.stringify(params.sortModel || []),
+          filterModel: JSON.stringify(params.filterModel || {}),
+        });
 
-      const response = await fetch(`http://localhost:3001/api/employees?${urlParams.toString()}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const result: ApiResponse = await response.json();
-      
-      return {
-        rows: result.data,
-        rowCount: result.total,
-      };
-    },
-  }), []);
+        const response = await fetch(
+          `http://localhost:3001/api/employees?${urlParams.toString()}`,
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result: ApiResponse = await response.json();
+
+        return {
+          rows: result.data,
+          rowCount: result.total,
+        };
+      },
+    }),
+    [],
+  );
 
   return (
     <Box sx={{ height: 600, width: '100%' }}>
@@ -61,7 +72,7 @@ const EmployeeDataGrid = () => {
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         Server-side data with pagination, sorting, and filtering.
       </Typography>
-      
+
       <DataGrid
         columns={columns}
         dataSource={dataSource}
