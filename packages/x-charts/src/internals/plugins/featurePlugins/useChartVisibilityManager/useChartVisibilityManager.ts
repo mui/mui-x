@@ -2,8 +2,11 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { type ChartPlugin } from '../../models';
-import { type UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
-import { buildIdentifier as buildIdentifierFn } from './isIdentifierVisible';
+import {
+  type UseChartVisibilityManagerSignature,
+  type VisibilityIdentifier,
+} from './useChartVisibilityManager.types';
+import { buildIdentifier } from './isIdentifierVisible';
 import { EMPTY_VISIBILITY_MAP } from './useChartVisibilityManager.selectors';
 
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({
@@ -33,13 +36,9 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     });
   }, [store, params.visibilityMap]);
 
-  const buildIdentifier = useEventCallback((ids: string | (string | number)[]) =>
-    buildIdentifierFn(ids),
-  );
-
-  const hideItem = useEventCallback((identifier: string | (number | string)[]) => {
+  const hideItem = useEventCallback((...identifiers: VisibilityIdentifier[]) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = buildIdentifier(identifier);
+    const id = buildIdentifier(identifiers);
 
     if (visibilityMap[id] === false) {
       return; // Already hidden
@@ -54,9 +53,9 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     params.onVisibilityChange?.(newVisibility);
   });
 
-  const showItem = useEventCallback((identifier: string | (number | string)[]) => {
+  const showItem = useEventCallback((...identifiers: VisibilityIdentifier[]) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = buildIdentifier(identifier);
+    const id = buildIdentifier(identifiers);
 
     if (visibilityMap[id] !== false) {
       return; // Already visible
@@ -71,9 +70,9 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     params.onVisibilityChange?.(newVisibility);
   });
 
-  const toggleItem = useEventCallback((identifier: string | (number | string)[]) => {
+  const toggleItem = useEventCallback((...identifiers: VisibilityIdentifier[]) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = buildIdentifier(identifier);
+    const id = buildIdentifier(identifiers);
 
     if (visibilityMap[id] === false) {
       showItem(id);

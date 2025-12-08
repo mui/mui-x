@@ -1,5 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type { UseChartVisibilityManagerSignature } from './useChartVisibilityManager.types';
+import type {
+  UseChartVisibilityManagerSignature,
+  VisibilityIdentifier,
+} from './useChartVisibilityManager.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { isIdentifierVisible } from './isIdentifierVisible';
 
@@ -25,8 +28,8 @@ export const selectorVisibilityMap = createSelector(
  */
 export const selectorIsIdentifierVisible = createSelector(
   selectorVisibilityMap,
-  (visibilityMap, identifier: string | (string | number)[]) =>
-    isIdentifierVisible(visibilityMap, identifier),
+  (visibilityMap, identifiers: VisibilityIdentifier[]) =>
+    isIdentifierVisible(visibilityMap, identifiers),
 );
 
 /**
@@ -35,7 +38,7 @@ export const selectorIsIdentifierVisible = createSelector(
 export const selectorIsIdentifierVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
   (visibilityMap) => {
-    return (identifier: string | (string | number)[]) =>
-      isIdentifierVisible(visibilityMap, identifier);
+    return (...identifiers: VisibilityIdentifier[]) =>
+      isIdentifierVisible(visibilityMap, identifiers);
   },
 );
