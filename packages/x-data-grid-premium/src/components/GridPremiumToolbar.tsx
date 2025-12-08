@@ -33,14 +33,18 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
       {showUndoRedo && (
         <React.Fragment>
           <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarUndo')}>
-            <ToolbarButton disabled={!canUndo} onClick={() => apiRef.current.history.undo()}>
-              <rootProps.slots.undoIcon fontSize="small" />
-            </ToolbarButton>
+            <div>
+              <ToolbarButton disabled={!canUndo} onClick={() => apiRef.current.history.undo()}>
+                <rootProps.slots.undoIcon fontSize="small" />
+              </ToolbarButton>
+            </div>
           </rootProps.slots.baseTooltip>
           <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarRedo')}>
-            <ToolbarButton disabled={!canRedo} onClick={() => apiRef.current.history.redo()}>
-              <rootProps.slots.redoIcon fontSize="small" />
-            </ToolbarButton>
+            <div>
+              <ToolbarButton disabled={!canRedo} onClick={() => apiRef.current.history.redo()}>
+                <rootProps.slots.redoIcon fontSize="small" />
+              </ToolbarButton>
+            </div>
           </rootProps.slots.baseTooltip>
         </React.Fragment>
       )}

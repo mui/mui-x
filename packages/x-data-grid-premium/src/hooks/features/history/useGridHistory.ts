@@ -129,14 +129,27 @@ export const useGridHistory = (
     [apiRef, setHistoryState, historyQueueSize],
   );
 
+  const clear = React.useCallback(() => {
+    setHistoryState({
+      queue: [],
+      currentPosition: -1,
+    });
+  }, [setHistoryState]);
+
   const clearUndoItems = React.useCallback(() => {
     const queue = gridHistoryQueueSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-    setHistoryState({
-      queue: queue.slice(0, currentPosition + 1),
-      currentPosition: -1,
-    });
-  }, [apiRef, setHistoryState]);
+
+    // If we're at the end of the queue (no redo items), clear everything
+    if (currentPosition >= queue.length - 1) {
+      clear();
+    } else {
+      setHistoryState({
+        queue: queue.slice(currentPosition + 1),
+        currentPosition: -1,
+      });
+    }
+  }, [apiRef, clear, setHistoryState]);
 
   const clearRedoItems = React.useCallback(() => {
     const queue = gridHistoryQueueSelector(apiRef);
@@ -145,13 +158,6 @@ export const useGridHistory = (
       queue: queue.slice(currentPosition + 1),
     });
   }, [apiRef, setHistoryState]);
-
-  const clear = React.useCallback(() => {
-    setHistoryState({
-      queue: [],
-      currentPosition: -1,
-    });
-  }, [setHistoryState]);
 
   const canUndo = React.useCallback(() => gridHistoryCanUndoSelector(apiRef), [apiRef]);
   const canRedo = React.useCallback(() => gridHistoryCanRedoSelector(apiRef), [apiRef]);
@@ -186,19 +192,6 @@ export const useGridHistory = (
 
     const newQueue = [...queue];
 
-    // Undo check
-    if (currentPosition >= 0) {
-      const item = newQueue[currentPosition];
-      const handler = historyEventHandlers[item.eventName];
-      if (!handler) {
-        clearUndoItems();
-      } else {
-        const isValid = handler.validate ? handler.validate(item.data, 'undo') : true;
-        if (!isValid) {
-          clearUndoItems();
-        }
-      }
-    }
     // Redo check
     if (currentPosition + 1 < newQueue.length) {
       const item = newQueue[currentPosition + 1];
@@ -209,6 +202,20 @@ export const useGridHistory = (
         const isValid = handler.validate ? handler.validate(item.data, 'redo') : true;
         if (!isValid) {
           clearRedoItems();
+        }
+      }
+    }
+
+    // Undo check
+    if (currentPosition >= 0) {
+      const item = newQueue[currentPosition];
+      const handler = historyEventHandlers[item.eventName];
+      if (!handler) {
+        clearUndoItems();
+      } else {
+        const isValid = handler.validate ? handler.validate(item.data, 'undo') : true;
+        if (!isValid) {
+          clearUndoItems();
         }
       }
     }

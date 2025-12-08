@@ -346,6 +346,40 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canRedo()).to.equal(true);
     });
 
+    it('should clear undo history when the first event is invalid', async () => {
+      let eventValid = true;
+
+      const customHandler: GridHistoryEventHandler = {
+        store: () => ({ data: 'test' }),
+        undo: async () => {},
+        redo: async () => {},
+        validate: () => eventValid,
+      };
+
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
+
+      const { user } = render(<Test historyEventHandlers={historyEventHandlers} />);
+
+      const cell = getCell(0, 2);
+      await user.click(cell);
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      eventValid = false;
+
+      // Trigger rowsSet event
+      await act(async () => {
+        await apiRef.current!.updateRows([{ id: 0, currencyPair: 'TEST' }]);
+      });
+
+      // Wait for validation to complete (it's debounced)
+      await waitFor(() => {
+        expect(apiRef.current!.history.canUndo()).to.equal(false);
+      });
+      expect(apiRef.current!.history.canRedo()).to.equal(false);
+    });
+
     it('should not add items to the queue if the store method returns null', async () => {
       const customHandler: GridHistoryEventHandler = {
         store: () => null,

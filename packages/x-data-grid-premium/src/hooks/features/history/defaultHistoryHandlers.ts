@@ -47,8 +47,13 @@ export const createCellEditHistoryHandler = (
 
       const visibleRowsData = gridVisibleRowsSelector(apiRef);
 
-      // Check if row is visible
-      if (!visibleRowsData.rowIdToIndexMap.has(id)) {
+      // Check if row is in the current page
+      const rowIndex = visibleRowsData.rowIdToIndexMap.get(id);
+      if (
+        rowIndex === undefined ||
+        rowIndex < (visibleRowsData.range?.firstRowIndex || 0) ||
+        rowIndex > (visibleRowsData.range?.lastRowIndex || rowIndex)
+      ) {
         return false;
       }
 
@@ -138,8 +143,13 @@ export const createRowEditHistoryHandler = (
 
       const visibleRowsData = gridVisibleRowsSelector(apiRef);
 
-      // Check if row is visible
-      if (!visibleRowsData.rowIdToIndexMap.has(id)) {
+      // Check if row is in the current page
+      const rowIndex = visibleRowsData.rowIdToIndexMap.get(id);
+      if (
+        rowIndex === undefined ||
+        rowIndex < (visibleRowsData.range?.firstRowIndex || 0) ||
+        rowIndex > (visibleRowsData.range?.lastRowIndex || rowIndex)
+      ) {
         return false;
       }
 
