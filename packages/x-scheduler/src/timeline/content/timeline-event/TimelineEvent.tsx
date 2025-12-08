@@ -5,8 +5,8 @@ import { useId } from '@base-ui-components/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { getColorClassName } from '../../../../internals/utils/color-utils';
-import { EventDragPreview } from '../../../../internals/components/event-drag-preview';
+import { getColorClassName } from '../../../internals/utils/color-utils';
+import { EventDragPreview } from '../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
 import './TimelineEvent.css';
 

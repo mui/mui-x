@@ -3,29 +3,27 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { HeaderProps } from './Headers.types';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
-import { WEEKS_UNIT_COUNT } from '../../constants';
 import './Headers.css';
 
-export function WeeksHeader(props: HeaderProps) {
-  const { className, amount = WEEKS_UNIT_COUNT, ...other } = props;
-
+export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+  // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
 
+  // Feature hooks
   const weeks = React.useMemo(() => {
     const days = getDayList({
       adapter,
-      start: adapter.startOfWeek(visibleDate),
-      end: adapter.endOfWeek(adapter.addWeeks(visibleDate, amount - 1)),
+      start: viewConfig.start,
+      end: adapter.endOfWeek(viewConfig.end),
     });
-
     const tempWeeks: SchedulerProcessedDate[][] = [];
     let weekNumber: number | null = null;
     for (const day of days) {
@@ -39,10 +37,10 @@ export function WeeksHeader(props: HeaderProps) {
       }
     }
     return tempWeeks;
-  }, [adapter, amount, visibleDate]);
+  }, [adapter, viewConfig]);
 
   return (
-    <div className={clsx('WeeksHeader', className)} {...other}>
+    <div className={clsx('WeeksHeader', props.className)} {...props}>
       {weeks.map((week) => (
         <div key={`${week[0].key}-week`} className="TimeHeaderCell">
           <div className="DayLabel">
