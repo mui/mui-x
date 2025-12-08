@@ -10,7 +10,6 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   const cleanInteraction = useEventCallback(function cleanInteraction() {
     store.update({
       interaction: { ...store.state.interaction, pointer: null },
-      tooltip: { ...store.state.tooltip, item: null },
     });
   });
 

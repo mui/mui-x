@@ -1,7 +1,7 @@
 import useEventCallback from '@mui/utils/useEventCallback';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { type ChartPlugin } from '../../models';
-import { type UseChartTooltipSignature } from './useChartTooltip.types';
+import type { ChartPlugin } from '../../models';
+import type { UseChartTooltipSignature } from './useChartTooltip.types';
 import type { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }) => {
@@ -21,8 +21,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }
     if (
       prevItem === null ||
       (Object.keys(itemToRemove) as Array<keyof ChartItemIdentifier<ChartSeriesType>>).some(
-        (key) =>
-          itemToRemove[key] !== prevItem[key],
+        (key) => itemToRemove[key] !== prevItem[key],
       )
     ) {
       // The current item is already different from the one to remove. No need to clean it.

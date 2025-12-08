@@ -135,18 +135,21 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       if (!event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeItemTooltip?.();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeItemTooltip?.();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeItemTooltip?.();
       }
     });
 
@@ -156,12 +159,14 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
+        instance.removeItemTooltip?.();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
         instance.removeItemTooltip?.();
         instance.clearHighlight?.();
+        instance.removeItemTooltip?.();
         return;
       }
 
