@@ -75,6 +75,7 @@ For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dep
 | `useChartHighlight`                                |                         |                                                |
 | `useChartInteraction`                              |                         |                                                |
 | `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`,<br/>`useChartHighlight` |
+| `useChartVisibilityManager`                        |                         |                                                |
 | `useChartZAxis`                                    |                         |                                                |
 | `useChartBrush`                                    |                         |                                                |
 | `useChartProExport` <span class="plan-pro"></span> |                         |                                                |
