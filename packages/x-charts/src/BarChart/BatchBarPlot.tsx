@@ -10,6 +10,8 @@ import { useChartContext } from '../context/ChartProvider/useChartContext';
 import { useSelector } from '../internals/store/useSelector';
 import { selectorChartDrawingArea } from '../internals/plugins/corePlugins/useChartDimensions';
 import {
+  selectorChartIsSeriesFaded,
+  selectorChartIsSeriesHighlighted,
   selectorChartSeriesHighlightedItem,
   selectorChartSeriesUnfadedItem,
   type UseChartHighlightSignature,
@@ -96,26 +98,53 @@ export function BatchBarPlot({
   onItemClick,
   skipAnimation = false,
 }: BatchBarPlotProps) {
-  const classes = useUtilityClasses();
   const onClick = useOnItemClick(onItemClick);
   const interactionItemProps = useInteractionItemProps();
 
   return (
     <React.Fragment>
       {completedData.map((series) => (
-        <BarGroup
+        <SeriesBatchPlot
           key={series.seriesId}
-          className={classes.series}
-          data-series={series.seriesId}
-          layout={series.layout}
-          xOrigin={series.xOrigin}
-          yOrigin={series.yOrigin}
+          series={series}
+          borderRadius={borderRadius}
           skipAnimation={skipAnimation}
-        >
-          <BatchBarSeriesPlot processedSeries={series} borderRadius={borderRadius} />
-        </BarGroup>
+        />
       ))}
       <DrawingAreaRect onClick={onClick} {...interactionItemProps} />
+    </React.Fragment>
+  );
+}
+
+function SeriesBatchPlot({
+  series,
+  borderRadius,
+  skipAnimation,
+}: {
+  series: ProcessedBarSeriesData;
+  borderRadius: number;
+  skipAnimation: boolean;
+}) {
+  const classes = useUtilityClasses();
+  const { store } = useChartContext<[UseChartHighlightSignature]>();
+  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, series.seriesId);
+  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, series.seriesId);
+
+  return (
+    <React.Fragment>
+      <BarGroup
+        className={classes.series}
+        data-series={series.seriesId}
+        layout={series.layout}
+        xOrigin={series.xOrigin}
+        yOrigin={series.yOrigin}
+        skipAnimation={skipAnimation}
+        data-faded={isSeriesFaded || undefined}
+        data-highlighted={isSeriesHighlighted || undefined}
+      >
+        <BatchBarSeriesPlot processedSeries={series} borderRadius={borderRadius} />
+      </BarGroup>
+      <FadedHighlightedBars processedSeries={series} borderRadius={borderRadius} />
     </React.Fragment>
   );
 }
@@ -202,12 +231,7 @@ function BatchBarSeriesPlot({
     }
   }
 
-  return (
-    <React.Fragment>
-      {children}
-      <FadedHighlightedBars processedSeries={processedSeries} borderRadius={borderRadius} />
-    </React.Fragment>
-  );
+  return <React.Fragment>{children}</React.Fragment>;
 }
 
 const PathGroup = styled('g')({
