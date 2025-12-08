@@ -112,7 +112,7 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
     const store = useStore<[UseChartVisibilityManagerSignature]>();
-    const isItemVisible = useSelector(store, selectorIsIdentifierVisibleGetter).get;
+    const isItemVisible = useSelector(store, selectorIsIdentifierVisibleGetter);
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
     const isButton = Boolean(onItemClick || toggleVisibilityOnClick);
