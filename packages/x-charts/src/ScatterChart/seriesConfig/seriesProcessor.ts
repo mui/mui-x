@@ -1,6 +1,5 @@
-import { warnOnce } from '@mui/x-internals/warning';
-import { ScatterValueType } from '../../models';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { type ScatterValueType } from '../../models';
+import { type SeriesProcessor } from '../../internals/plugins/models';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(
@@ -18,38 +17,6 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
             `Properties ${missingKeys.map((key) => `"${key}"`).join(', ')} are missing.`,
           ].join('\n'),
         );
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        if (!seriesData.data && dataset) {
-          // If these keys are not present, an error is thrown above
-          const xDataKey = series[seriesId].datasetKeys!.x;
-          const yDataKey = series[seriesId].datasetKeys!.y;
-
-          dataset.forEach((entry, index) => {
-            const x = entry[xDataKey];
-
-            if (x != null && typeof x !== 'number') {
-              warnOnce(
-                [
-                  `MUI X Charts: your dataset key "${xDataKey}" is used for a scatter plot, but the dataset contains the non-null non-numerical element "${x}" at index ${index}.`,
-                  'Scatter plots only support numeric and null values.',
-                ].join('\n'),
-              );
-            }
-
-            const y = entry[yDataKey];
-
-            if (y != null && typeof y !== 'number') {
-              warnOnce(
-                [
-                  `MUI X Charts: your dataset key "${yDataKey}" is used for a scatter plot, but the dataset contains the non-null non-numerical element "${y}" at index ${index}.`,
-                  'Scatter plots only support numeric and null values.',
-                ].join('\n'),
-              );
-            }
-          });
-        }
       }
 
       const data = !datasetKeys

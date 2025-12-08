@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { UseChartClosestPointSignature } from './useChartClosestPoint.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type ChartPlugin } from '../../models';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { useSelector } from '../../../store/useSelector';
 import {
@@ -17,7 +17,6 @@ import {
   selectorChartZoomIsInteracting,
 } from '../useChartCartesianAxis';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { findClosestPoints } from './findClosestPoints';
 
 export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
@@ -27,7 +26,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
   instance,
 }) => {
   const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
 
   const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
   const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
@@ -94,7 +92,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 
         const closestPointIndex = findClosestPoints(
           flatbush,
-          drawingArea,
           aSeries.data,
           xScale,
           yScale,
@@ -208,7 +205,6 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
     voronoiMaxRadius,
     onItemClick,
     disableVoronoi,
-    drawingArea,
     instance,
     seriesOrder,
     series,

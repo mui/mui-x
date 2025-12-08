@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
-import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
+import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
@@ -51,34 +51,32 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   const ref = React.useRef<HTMLDivElement>(null);
 
   // Feature hooks
-  const getSharedDragData: TimelineEventContext['getSharedDragData'] = useEventCallback((input) => {
-    const offsetBeforeRowStart = Math.max(
-      adapter.toJsDate(rowStart).getTime() - start.timestamp,
-      0,
-    );
+  const getSharedDragData: TimelineEventContext['getSharedDragData'] = useStableCallback(
+    (input) => {
+      const offsetBeforeRowStart = Math.max(adapter.getTime(rowStart) - start.timestamp, 0);
+      const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
-    const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
+      const originalOccurrence: SchedulerEventOccurrence = {
+        ...event,
+        key: occurrenceKey,
+        id: eventId,
+        start,
+        end,
+      };
 
-    const originalOccurrence: SchedulerEventOccurrence = {
-      ...event,
-      key: occurrenceKey,
-      id: eventId,
-      start,
-      end,
-    };
+      const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
+      return {
+        eventId,
+        occurrenceKey,
+        originalOccurrence,
+        start: start.value,
+        end: end.value,
+        initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
+      };
+    },
+  );
 
-    const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
-    return {
-      eventId,
-      occurrenceKey,
-      originalOccurrence,
-      start: start.value,
-      end: end.value,
-      initialCursorPositionInEventMs: offsetBeforeRowStart + offsetInsideRow,
-    };
-  });
-
-  const getDragData = useEventCallback((input) => ({
+  const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
     source: 'TimelineEvent',
   }));
@@ -155,8 +153,8 @@ export namespace TimelineEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
     initialCursorPositionInEventMs: number;
   }
 

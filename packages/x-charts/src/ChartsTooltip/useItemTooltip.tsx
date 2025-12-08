@@ -1,6 +1,6 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
-import { ChartSeriesDefaultized, ChartSeriesType } from '../models/seriesType/config';
+import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
@@ -8,14 +8,14 @@ import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
 import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import {
-  ItemTooltip,
-  ItemTooltipWithMultipleValues,
-  TooltipGetter,
-  TooltipGetterAxesConfig,
+  type ItemTooltip,
+  type ItemTooltipWithMultipleValues,
+  type TooltipGetter,
+  type TooltipGetterAxesConfig,
 } from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
-import { ColorProcessor } from '../internals/plugins/models/seriesConfig';
+import { type ColorProcessor } from '../internals/plugins/models/seriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
-import { AxisId } from '../models/axis';
+import { type AxisId } from '../models/axis';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
@@ -59,7 +59,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
 
   const getColor =
     (seriesConfig[itemSeries.type].colorProcessor as ColorProcessor<T>)?.(
-      itemSeries as any,
+      itemSeries,
       xAxisId !== undefined ? xAxis[xAxisId] : undefined,
       yAxisId !== undefined ? yAxis[yAxisId] : undefined,
       zAxisId !== undefined ? zAxis[zAxisId] : undefined,

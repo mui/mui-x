@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/llms.txt`, title: 'llms.txt', newFeature: true },
       { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
       { pathname: `/x/introduction/priority-support`, newFeature: true, plan: 'premium' },
       { pathname: `/x/guides/telemetry`, plan: 'pro' },
@@ -328,6 +329,10 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/api/data-grid/grid-row-spacing-params',
                 title: 'GridRowSpacingParams',
+              },
+              {
+                pathname: '/x/api/data-grid/grid-row-order-change-params',
+                title: 'GridRowOrderChangeParams',
               },
               {
                 pathname: '/x/api/data-grid/grid-aggregation-function',

@@ -7,7 +7,7 @@ describe('<CalendarGrid.HeaderCell />', () => {
   const { render } = createSchedulerRenderer();
 
   describeConformance(
-    <CalendarGrid.HeaderCell date={processDate(adapter.date(), adapter)} />,
+    <CalendarGrid.HeaderCell date={processDate(adapter.now('default'), adapter)} />,
     () => ({
       refInstanceof: window.HTMLDivElement,
       render(node) {

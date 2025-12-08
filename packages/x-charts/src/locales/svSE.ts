@@ -1,5 +1,5 @@
 import { imageMimeTypes } from './utils/imageMimeTypes';
-import { ChartsLocaleText } from './utils/chartsLocaleTextApi';
+import { type ChartsLocaleText } from './utils/chartsLocaleTextApi';
 import { getChartsLocalization } from './utils/getChartsLocalization';
 
 export const svSELocaleText: Partial<ChartsLocaleText> = {

@@ -1,21 +1,33 @@
-import { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
 import {
-  ScatterSeriesType,
-  DefaultizedScatterSeriesType,
-  ScatterItemIdentifier,
-  ScatterValueType,
+  type DefaultizedProps,
+  type MakeOptional,
+  type MakeRequired,
+} from '@mui/x-internals/types';
+import {
+  type ScatterSeriesType,
+  type DefaultizedScatterSeriesType,
+  type ScatterItemIdentifier,
+  type ScatterValueType,
 } from './scatter';
-import { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
-import { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import {
-  PieSeriesType,
-  DefaultizedPieSeriesType,
-  PieItemIdentifier,
-  PieValueType,
-  DefaultizedPieValueType,
+  type LineSeriesType,
+  type DefaultizedLineSeriesType,
+  type LineItemIdentifier,
+} from './line';
+import { type BarItemIdentifier, type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
+import {
+  type PieSeriesType,
+  type DefaultizedPieSeriesType,
+  type PieItemIdentifier,
+  type PieValueType,
+  type DefaultizedPieValueType,
 } from './pie';
-import { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
-import { SeriesColor } from './common';
+import {
+  type DefaultizedRadarSeriesType,
+  type RadarItemIdentifier,
+  type RadarSeriesType,
+} from './radar';
+import { type SeriesColor } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -28,6 +40,11 @@ export interface ChartsSeriesConfig {
      * Series type when stored in the context (with all the preprocessing added))
      */
     series: DefaultizedBarSeriesType;
+    /**
+     * Additional data computed from the series plus drawing area.
+     * Useful for special charts like sankey where the series data is not sufficient to draw the series.
+     * */
+    seriesLayout: {};
     /**
      * Series typing such that the one user need to provide
      */
@@ -42,6 +59,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<LineSeriesType, 'id'> &
       MakeRequired<SeriesColor<number | null>, 'color'>;
     series: DefaultizedLineSeriesType;
+    seriesLayout: {};
     seriesProp: LineSeriesType;
     itemIdentifier: LineItemIdentifier;
     itemIdentifierWithData: LineItemIdentifier;
@@ -53,6 +71,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<ScatterSeriesType, 'id'> &
       MakeRequired<SeriesColor<ScatterValueType | null>, 'color'>;
     series: DefaultizedScatterSeriesType;
+    seriesLayout: {};
     seriesProp: ScatterSeriesType;
     valueType: ScatterValueType;
     itemIdentifier: ScatterItemIdentifier;
@@ -66,6 +85,7 @@ export interface ChartsSeriesConfig {
       >;
     };
     series: DefaultizedPieSeriesType;
+    seriesLayout: {};
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
@@ -75,6 +95,7 @@ export interface ChartsSeriesConfig {
     seriesInput: DefaultizedProps<RadarSeriesType, 'id'> &
       MakeRequired<SeriesColor<number>, 'color'>;
     series: DefaultizedRadarSeriesType;
+    seriesLayout: {};
     seriesProp: RadarSeriesType;
     itemIdentifier: RadarItemIdentifier;
     itemIdentifierWithData: RadarItemIdentifier;
@@ -115,6 +136,10 @@ export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConf
 }
   ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
   : ChartsSeriesConfig[T]['series'];
+
+export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any
+  ? ChartsSeriesConfig[T]['seriesLayout']
+  : never;
 
 export type ChartItemIdentifier<T extends ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifier'];

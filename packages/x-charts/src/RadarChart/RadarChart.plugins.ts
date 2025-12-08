@@ -1,14 +1,14 @@
 import {
   useChartPolarAxis,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import {
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 
 export const RADAR_PLUGINS = [useChartInteraction, useChartPolarAxis, useChartHighlight] as const;

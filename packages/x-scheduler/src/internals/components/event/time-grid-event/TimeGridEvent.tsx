@@ -5,7 +5,6 @@ import { useStore } from '@base-ui-components/utils/store';
 import { Repeat } from 'lucide-react';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
@@ -25,8 +24,14 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   // Selector hooks
   const isRecurring = Boolean(occurrence.rrule);
-  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(store, eventCalendarEventSelectors.isResizable, occurrence.id);
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
+  const isStartResizable = useStore(
+    store,
+    schedulerEventSelectors.isResizable,
+    occurrence.id,
+    'start',
+  );
+  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   // Feature hooks
@@ -103,6 +108,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       isDraggable && 'Draggable',
       isRecurring && 'Recurrent',
       getColorClassName(color),
+      occurrence.className,
     ),
     style: {
       '--first-index': occurrence.position.firstIndex,
@@ -127,11 +133,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}
       {content}
-      {isResizable && (
+      {isEndResizable && (
         <CalendarGrid.TimeEventResizeHandler side="end" className="TimeGridEventResizeHandler" />
       )}
     </CalendarGrid.TimeEvent>

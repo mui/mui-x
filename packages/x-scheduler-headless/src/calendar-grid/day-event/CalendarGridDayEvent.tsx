@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useId } from '@base-ui-components/utils/useId';
 import { useButton } from '../../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useDraggableEvent } from '../../utils/useDraggableEvent';
-import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
-import { useAdapter, diffIn } from '../../use-adapter';
+import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
+import { useAdapter } from '../../use-adapter';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import {
   schedulerEventSelectors,
@@ -62,14 +62,14 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   const id = useId(idProp);
 
   // Feature hooks
-  const getDraggedDay = useEventCallback((input: { clientX: number }) => {
+  const getDraggedDay = useStableCallback((input: { clientX: number }) => {
     if (!ref.current) {
       return start.value;
     }
 
     const eventStartInRow = adapter.isBefore(start.value, rowStart) ? rowStart : start.value;
     const eventEndInRow = adapter.isAfter(end.value, rowEnd) ? rowEnd : end.value;
-    const eventDayLengthInRow = diffIn(adapter, eventEndInRow, eventStartInRow, 'days') + 1;
+    const eventDayLengthInRow = adapter.differenceInDays(eventEndInRow, eventStartInRow) + 1;
     const clientX = input.clientX;
     const elementPosition = ref.current.getBoundingClientRect();
     const positionX = (clientX - elementPosition.x) / ref.current.offsetWidth;
@@ -86,7 +86,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     end,
   };
 
-  const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useEventCallback(
+  const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
     () => ({
       eventId,
       occurrenceKey,
@@ -96,7 +96,7 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     }),
   );
 
-  const getDragData = useEventCallback((input) => ({
+  const getDragData = useStableCallback((input) => ({
     ...getSharedDragData(input),
     source: 'CalendarGridDayEvent',
     draggedDay: getDraggedDay(input),
@@ -165,12 +165,12 @@ export namespace CalendarGridDayEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
 
   export interface DragData extends SharedDragData {
     source: 'CalendarGridDayEvent';
-    draggedDay: SchedulerValidDate;
+    draggedDay: TemporalSupportedObject;
   }
 }

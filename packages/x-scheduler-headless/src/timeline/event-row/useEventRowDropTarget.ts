@@ -1,16 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
+import { SchedulerResourceId, SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
-import {
-  EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-  EVENT_DRAG_PRECISION_MINUTE,
-  EVENT_DRAG_PRECISION_MS,
-} from '../../constants';
+import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'TimelineEvent',
@@ -24,14 +20,12 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
   const adapter = useAdapter();
   const ref = React.useRef<HTMLDivElement>(null);
 
-  // TODO: Avoid JS date conversion
-  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
-  const collectionStartTimestamp = getTimestamp(start);
-  const collectionEndTimestamp = getTimestamp(end);
+  const collectionStartTimestamp = adapter.getTime(start);
+  const collectionEndTimestamp = adapter.getTime(end);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: TimelineEventRowContext['getCursorPositionInElementMs'] =
-    useEventCallback(({ input, elementRef }) => {
+    useStableCallback(({ input, elementRef }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
@@ -43,37 +37,33 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       return Math.round(collectionDurationMs * positionX);
     });
 
-  const getEventDropData: useDropTarget.GetEventDropData = useEventCallback(
-    ({ data, createDropData, input }) => {
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
+    ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        return adapter.addSeconds(date, roundedOffset / 1000);
+        return adapter.addMilliseconds(date, roundedOffset);
       };
 
       // Move a Timeline Event within the Timeline
       if (data.source === 'TimelineEvent') {
-        // TODO: Avoid JS Date conversion
-        const eventDurationMinute =
-          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-          (60 * 1000);
+        const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         const newStartDate = addOffsetToDate(
           start,
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
 
-        const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
+        const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
-        return createDropData(data, newStartDate, newEndDate);
+        return getDataFromInside(data, newStartDate, newEndDate);
       }
 
       // Resize a Timeline Event
@@ -90,13 +80,11 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
             ? cursorDate
             : maxStartDate;
 
-          return createDropData(data, newStartDate, data.end);
+          return getDataFromInside(data, newStartDate, data.end);
         }
 
         if (data.side === 'end') {
-          // TODO: Avoid JS Date conversion
-          const eventDurationMs =
-            adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
+          const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
           const cursorDate = addOffsetToDate(
             start,
@@ -107,21 +95,13 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
           const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
 
-          return createDropData(data, data.start, newEndDate);
+          return getDataFromInside(data, data.start, newEndDate);
         }
       }
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        const cursorDate = addOffsetToDate(start, cursorOffsetMs);
-        return createDropData(
-          data,
-          cursorDate,
-          adapter.addMinutes(
-            cursorDate,
-            data.eventData.duration ?? EVENT_CREATION_DEFAULT_LENGTH_MINUTE,
-          ),
-        );
+        return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
       }
 
       return undefined;
@@ -145,11 +125,11 @@ export namespace useEventRowDropTarget {
     /**
      * The data and time at which the row starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalSupportedObject;
     /**
      * The data and time at which the row ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalSupportedObject;
     /**
      * The id of the resource to drop the event onto.
      * If null, the event will be dropped outside of any resource.

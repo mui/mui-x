@@ -1,9 +1,5 @@
-import { ChartPluginSignature } from '../../models';
-import {
-  ChartItemIdentifier,
-  ChartSeriesType,
-  type ChartItemIdentifierWithData,
-} from '../../../../models/seriesType/config';
+import type { ChartPluginSignature } from '../../models';
+import type { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
 export type Coordinate = { x: number; y: number };
 
@@ -21,7 +17,7 @@ export interface UseChartInteractionInstance {
    * @param {InteractionUpdateSource} context.interaction The source of the interaction update (pointer or keyboard).
    */
   setItemInteraction: (
-    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
+    newItem: ChartItemIdentifier<ChartSeriesType>,
     context: { interaction: InteractionUpdateSource },
   ) => void;
   /**
@@ -41,7 +37,7 @@ export interface UseChartInteractionState {
     /**
      * The item currently interacting.
      */
-    item: null | ChartItemIdentifierWithData<ChartSeriesType>;
+    item: null | ChartItemIdentifier<ChartSeriesType>;
     /**
      * The x/y SVG coordinate of the "main" pointer
      */
