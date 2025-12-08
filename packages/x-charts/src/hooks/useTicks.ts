@@ -128,20 +128,20 @@ function getTimeTicks<T extends { toString(): string }>(
     return [];
   }
 
-  let startSpaceIndex = 0;
+  let startFrequencyIndex = 0;
 
   for (let i = 0; i < ticksFrequencies.length; i += 1) {
     if (ticksFrequencies[i].getTickNumber(start, end) !== 0) {
-      startSpaceIndex = i;
+      startFrequencyIndex = i;
       break;
     }
   }
 
-  let endSpaceIndex = startSpaceIndex;
-  for (let i = startSpaceIndex; i < ticksFrequencies.length; i += 1) {
+  let endFrequencyIndex = startFrequencyIndex;
+  for (let i = startFrequencyIndex; i < ticksFrequencies.length; i += 1) {
     if (i === ticksFrequencies.length - 1) {
       // If we reached the end, use the last tick frequency
-      endSpaceIndex = i;
+      endFrequencyIndex = i;
       break;
     }
 
@@ -150,14 +150,14 @@ function getTimeTicks<T extends { toString(): string }>(
 
     // Smooth ratio between ticks steps: ticksNumber[i]*ticksNumber[i+1] <= targetTickNumber^2
     if (nextTickCount > tickNumber || tickNumber / prevTickCount < nextTickCount / tickNumber) {
-      endSpaceIndex = i;
+      endFrequencyIndex = i;
       break;
     }
   }
 
   const ticks: { index: number; formatter: (d: Date) => string }[] = [];
   for (let tickIndex = Math.max(1, startIndex); tickIndex <= endIndex; tickIndex += 1) {
-    for (let i = startSpaceIndex; i <= endSpaceIndex; i += 1) {
+    for (let i = startFrequencyIndex; i <= endFrequencyIndex; i += 1) {
       const prevDate = domain[tickIndex - 1];
       const currentDate = domain[tickIndex];
 
@@ -169,7 +169,7 @@ function getTimeTicks<T extends { toString(): string }>(
         ticks.push({ index: tickIndex, formatter: ticksFrequencies[i].format });
 
         // once we found a matching tick space, we can break the inner loop
-        i = endSpaceIndex + 1;
+        break;
       }
     }
   }

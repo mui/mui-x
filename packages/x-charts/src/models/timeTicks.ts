@@ -10,7 +10,7 @@ export type TickFrequencyDefinition = {
    */
   getTickNumber: (from: Date, to: Date) => number;
   /**
-   * Indicate if the current date is a tick based on the previous date.
+   * Decides if the current date should be shown as a tick.
    * @param {Date} prev The date before the current date.
    * @param {Date} value The current date to check.
    * @returns {boolean} Whether the current date is a tick or not.
@@ -26,13 +26,13 @@ export type TickFrequencyDefinition = {
 
 /**
  * The predefined tick frequencies for time ordinal axes.
- * - 'years': ticks at the start of each year
- * - 'quarterly': ticks at the start of each quarter
- * - 'months': ticks at the start of each month
- * - 'biweekly': ticks every two weeks
- * - 'weeks': ticks at the start of each week
- * - 'days': ticks at the start of each day
- * - 'hours': ticks at the start of each hour
+ * - 'years': displays the year, placing ticks at the start of each year
+ * - 'quarterly': displays the month, placing ticks at the start of each quarter
+ * - 'months': displays the month, placing ticks at the start of each month
+ * - 'biweekly': displays the day, placing ticks every two weeks
+ * - 'weeks': displays the day, placing ticks at the start of each week
+ * - 'days': displays the day, placing ticks at the start of each day
+ * - 'hours': displays the hour and minutes, placing ticks at the start of each hour
  */
 export type TickFrequency =
   | 'years'
