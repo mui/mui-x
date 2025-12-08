@@ -439,6 +439,7 @@ app.get('/api/employees', (req, res) => {
           });
         }
       });
+      }
     } catch (error) {
       // Invalid filter, return all data
     }

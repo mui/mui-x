@@ -478,7 +478,7 @@ const dummyData = [
   },
 ];
 
-// API route
+// API Routes
 app.get('/api/employees', (req, res) => {
   const { page = 0, pageSize = 40, sortModel = [], filterModel = {} } = req.query;
 
@@ -524,40 +524,33 @@ app.get('/api/employees', (req, res) => {
               }
               return true;
             });
-          } else {
-            // At least one filter item must match (OR logic)
-            return filters.items.some((filterItem: any) => {
-              const value = item[filterItem.field as keyof typeof item];
-
-              if (filterItem.operator === 'contains') {
-                return String(value)
-                  .toLowerCase()
-                  .includes(filterItem.value.toLowerCase());
-              }
-              if (filterItem.operator === 'equals') {
-                return String(value) === filterItem.value;
-              }
-              if (filterItem.operator === 'startsWith') {
-                return String(value)
-                  .toLowerCase()
-                  .startsWith(filterItem.value.toLowerCase());
-              }
-              if (filterItem.operator === 'endsWith') {
-                return String(value)
-                  .toLowerCase()
-                  .endsWith(filterItem.value.toLowerCase());
-              }
-              if (filterItem.operator === 'isEmpty') {
-                return !value || String(value).trim() === '';
-              }
-              if (filterItem.operator === 'isNotEmpty') {
-                return value && String(value).trim() !== '';
-              }
-              return true;
-            });
           }
-        });
-      }
+          // At least one filter item must match (OR logic)
+          return filters.items.some((filterItem: any) => {
+            const value = item[filterItem.field as keyof typeof item];
+
+            if (filterItem.operator === 'contains') {
+              return String(value).toLowerCase().includes(filterItem.value.toLowerCase());
+            }
+            if (filterItem.operator === 'equals') {
+              return String(value) === filterItem.value;
+            }
+            if (filterItem.operator === 'startsWith') {
+              return String(value).toLowerCase().startsWith(filterItem.value.toLowerCase());
+            }
+            if (filterItem.operator === 'endsWith') {
+              return String(value).toLowerCase().endsWith(filterItem.value.toLowerCase());
+            }
+            if (filterItem.operator === 'isEmpty') {
+              return !value || String(value).trim() === '';
+            }
+            if (filterItem.operator === 'isNotEmpty') {
+              return value && String(value).trim() !== '';
+            }
+            return true;
+          });
+        }
+      });
     } catch (error) {
       // Invalid filter, return all data
     }
@@ -573,8 +566,12 @@ app.get('/api/employees', (req, res) => {
             const aVal = a[sort.field as keyof typeof a];
             const bVal = b[sort.field as keyof typeof b];
 
-            if (aVal < bVal) return sort.sort === 'desc' ? 1 : -1;
-            if (aVal > bVal) return sort.sort === 'desc' ? -1 : 1;
+            if (aVal < bVal) {
+              return sort.sort === 'desc' ? 1 : -1;
+            }
+            if (aVal > bVal) {
+              return sort.sort === 'desc' ? -1 : 1;
+            }
           }
           return 0;
         });
@@ -589,7 +586,7 @@ app.get('/api/employees', (req, res) => {
   const endIndex = startIndex + Number(pageSize);
   const paginatedData = filteredData.slice(startIndex, endIndex);
 
-  res.json({
+  return res.json({
     data: paginatedData,
     total: filteredData.length,
     page: Number(page),
@@ -614,8 +611,7 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`API available at http://localhost:${PORT}/api/employees`);
+  // Server started
 });
 ```
 
@@ -689,18 +685,19 @@ export default EmployeeDataGrid;
 Update `client/src/App.tsx` with the boilerplate setup below:
 
 ```tsx
+import * as React from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import EmployeeDataGrid from './components/EmployeeDataGrid';
 
 function App() {
   return (
-    <>
+    <React.Fragment>
       <CssBaseline />
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <EmployeeDataGrid />
       </Container>
-    </>
+    </React.Fragment>
   );
 }
 
@@ -714,9 +711,9 @@ export default App;
 Replace the boilerplate code in `client/src/main.tsx` with the following:
 
 ```tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App.tsx';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -808,8 +805,8 @@ const EmployeeDataGrid = () => { //...
 The `GridDataSource` tells the Grid how to fetch data:
 
 ```tsx
-const EmployeeDataGrid = () => {
-  const dataSource: GridDataSource = useMemo(
+function EmployeeDataGrid() {
+  const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
         // You'll implement this function next
@@ -818,14 +815,24 @@ const EmployeeDataGrid = () => {
     [],
   );
 
-  return ( //...
+  return (
+    <Box sx={{ height: 600, width: '100%' }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        MUI X Data Grid with the Data Source layer
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Server-side data with pagination, sorting, and filtering.
+      </Typography>
+    </Box>
+  );
+}
 ```
 
 **What's happening here:**
 
 - `getRows` is an async function that the grid calls whenever it needs data
 - `params` contains all the information about what data the grid needs
-- Wrap it in `useMemo` to prevent recreating the function on every render
+- Wrap it in `React.useMemo` to prevent recreating the function on every render
 
 ### 11. Build the URL parameters
 
@@ -859,8 +866,7 @@ Fetch the data from your server:
 ```tsx
 getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
   const urlParams = new URLSearchParams({
-    page: params.paginationModel?.page?.toString() || '0',
-    pageSize: params.paginationModel?.pageSize?.toString() || '40',
+    paginationModel: JSON.stringify(params.paginationModel),
     sortModel: JSON.stringify(params.sortModel || []),
     filterModel: JSON.stringify(params.filterModel || {}),
   });
