@@ -188,6 +188,36 @@ At the bottom, you can see one tick for the beginning and the middle of the day,
 
 {{"demo": "TickLabelPosition.js"}}
 
+### Ordinal tick management
+
+Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
+If you have a date axis, you can use the `ordinalTimeTicks` property to configure which ticks to show.
+
+It takes an array of frequencies at which ticks can be placed.
+Those frequencies must be sorted from the largest to the smallest.
+For example `['years', 'months', 'days']`.
+Visible ticks are selected according to those frequencies and the `tickNumber`.
+
+The `ordinalTimeTicks` property can either be an implementation of the `TickFrequencyDefinition` type or a subset of the built-in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
+
+When using `ordinalTimeTicks` the property `tickPlacement` is ignored, and computation are done as if set to `'middle'`.
+
+In the following demo, you can modify the `ordinalTimeTicks` based on built-in frequencies and see how it impacts zoom behavior.
+
+{{"demo": "OrdinalTickPlacement.js"}}
+
+The `TickFrequencyDefinition` is an object made of following properties:
+
+- `getTickNumber: (from: Date, to: Date) => number` Returns the number of ticks that will be displayed between `from` and `to` dates.
+- `isTick: (prev: Date, value: Date) => boolean` Returns `true` is a tick should be placed on `value`. For example if it's the beginning of a new month.
+- `format: (d: Date) => string` Returns for tick label.
+
+The built-in frequency definitions are exported as `tickFrequencies` from `'@mui/x-charts/utils'`.
+
+In the following demo, we use the `tickFrequencies` to display quarters and weeks with different labels.
+
+{{"demo": "CustomTickFrequency.js"}}
+
 ## Position
 
 You can customize axis positioning with the `position` property of the axis configuration.
