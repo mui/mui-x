@@ -147,7 +147,6 @@
     "util": "^0.12.5",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "vitest-fail-on-console": "^0.10.1",
     "yargs": "catalog:"
   },
   "resolutions": {

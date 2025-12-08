@@ -95,10 +95,10 @@ export default defineConfig({
       ],
     },
     // Disable isolation to speed up the tests.
-    isolate: false,
-    // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
+      // Performance improvements for the tests.
+      isolate: false,
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
