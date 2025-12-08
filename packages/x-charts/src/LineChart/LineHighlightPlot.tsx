@@ -1,20 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { LineHighlightElement, LineHighlightElementProps } from './LineHighlightElement';
+import { LineHighlightElement, type LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
 import { useLineSeriesContext } from '../hooks/useLineSeries';
 import getColor from './seriesConfig/getColor';
 import { useChartContext } from '../context/ChartProvider';
 import {
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
   selectorChartsHighlightXAxisIndex,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 export interface LineHighlightPlotSlots {
   lineHighlight?: React.JSXElementConstructor<LineHighlightElementProps>;
@@ -56,7 +57,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
 
   const { instance } = useChartContext();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
 
   if (highlightedIndexes.length === 0) {

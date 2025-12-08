@@ -1,13 +1,11 @@
-import * as React from 'react';
-import { DateTime } from 'luxon';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 
 describe('<CalendarGrid.DayCell />', () => {
   const { render } = createSchedulerRenderer();
 
-  const day = DateTime.now();
+  const day = adapter.now('default');
 
   describeConformance(<CalendarGrid.DayCell value={day} />, () => ({
     refInstanceof: window.HTMLDivElement,
@@ -15,7 +13,7 @@ describe('<CalendarGrid.DayCell />', () => {
       return render(
         <EventCalendarProvider events={[]}>
           <CalendarGrid.Root>
-            <CalendarGrid.DayRow start={day.startOf('day')} end={day.endOf('day')}>
+            <CalendarGrid.DayRow start={adapter.startOfDay(day)} end={adapter.endOfDay(day)}>
               {node}
             </CalendarGrid.DayRow>
           </CalendarGrid.Root>

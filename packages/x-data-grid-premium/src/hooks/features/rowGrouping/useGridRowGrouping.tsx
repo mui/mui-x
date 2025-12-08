@@ -9,6 +9,8 @@ import {
   gridRowMaximumTreeDepthSelector,
   gridRowTreeSelector,
   gridExpandedSortedRowIdsSelector,
+  gridExpandedSortedRowIndexLookupSelector,
+  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -16,7 +18,6 @@ import {
   GridRestoreStatePreProcessingContext,
   GridStateInitializer,
   GridStrategyGroup,
-  gridExpandedSortedRowIndexLookupSelector,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
@@ -35,8 +36,7 @@ import {
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
-import { rowGroupingReorderValidator } from '../rowReorder/reorderValidator';
-import { ReorderValidationContext } from '../rowReorder/types';
+import { rowGroupingReorderValidator } from '../rowReorder/rowGroupingReorderValidator';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -65,7 +65,6 @@ export const useGridRowGrouping = (
     | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
-    | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
@@ -73,6 +72,7 @@ export const useGridRowGrouping = (
     | 'slots'
     | 'dataSource'
     | 'treeData'
+    | 'isValidRowReorder'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -291,7 +291,8 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
-  const getRowReorderTargetIndex = React.useCallback<GridPipeProcessor<'getRowReorderTargetIndex'>>(
+  const isValidRowReorderProp = props.isValidRowReorder;
+  const isRowReorderValid = React.useCallback<GridPipeProcessor<'isRowReorderValid'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
         return initialValue;
@@ -301,7 +302,6 @@ export const useGridRowGrouping = (
       const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
 
-      const sourceRowIndex = expandedSortedRowIndexLookup[sourceRowId];
       const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
       const sourceNode = rowTree[sourceRowId];
       const targetNode = rowTree[targetRowId];
@@ -314,33 +314,38 @@ export const useGridRowGrouping = (
 
       // Basic validity checks
       if (!sourceNode || !targetNode) {
-        return -1;
+        return false;
       }
 
       // Create context object
       const context: ReorderValidationContext = {
+        apiRef,
         sourceNode,
         targetNode,
         prevNode,
         nextNode,
-        rowTree,
         dropPosition,
         dragDirection,
-        targetRowIndex,
-        sourceRowIndex,
-        expandedSortedRowIndexLookup,
       };
 
-      // Check if the reorder is valid
-      if (rowGroupingReorderValidator.validate(context)) {
-        return dropPosition === 'below' ? targetRowIndex + 1 : targetRowIndex;
+      // First apply internal validation
+      let isValid = rowGroupingReorderValidator.validate(context);
+
+      // If internal validation passes AND user provided additional validation
+      if (isValid && isValidRowReorderProp) {
+        // Apply additional user restrictions
+        isValid = isValidRowReorderProp(context);
       }
-      return -1;
+
+      if (isValid) {
+        return true;
+      }
+      return false;
     },
-    [apiRef, props.treeData],
+    [apiRef, props.treeData, isValidRowReorderProp],
   );
 
-  useGridRegisterPipeProcessor(apiRef, 'getRowReorderTargetIndex', getRowReorderTargetIndex);
+  useGridRegisterPipeProcessor(apiRef, 'isRowReorderValid', isRowReorderValid);
   useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);

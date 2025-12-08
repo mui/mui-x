@@ -576,14 +576,6 @@ export interface GridClasses {
    */
   'row--dragging': string;
   /**
-   * Styles applied to the row element when it is a drop target above.
-   */
-  'row--dropAbove': string;
-  /**
-   * Styles applied to the row element when it is a drop target below.
-   */
-  'row--dropBelow': string;
-  /**
    * Styles applied to the row element when it is being dragged (entire row).
    */
   'row--beingDragged': string;
@@ -679,6 +671,18 @@ export interface GridClasses {
    * Styles applied to the scrollbar filler cell.
    */
   'scrollbarFiller--pinnedRight': string;
+  /**
+   * Styles applied to the scroll shadow element.
+   */
+  scrollShadow: string;
+  /**
+   * Styles applied to the horizontal scroll shadow element.
+   */
+  'scrollShadow--horizontal': string;
+  /**
+   * Styles applied to the vertical scroll shadow element.
+   */
+  'scrollShadow--vertical': string;
   /**
    * Styles applied to the footer selected row count element.
    */
@@ -1060,8 +1064,6 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'row--lastVisible',
   // TODO v9: Rename to `cell--dragging`
   'row--dragging',
-  'row--dropAbove',
-  'row--dropBelow',
   'row--beingDragged',
   'row--dynamicHeight',
   'row--detailPanelExpanded',
@@ -1083,6 +1085,9 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'scrollbar--horizontal',
   'scrollbarFiller',
   'scrollbarFiller--pinnedRight',
+  'scrollShadow',
+  'scrollShadow--vertical',
+  'scrollShadow--horizontal',
   'selectedRowCount',
   'sortButton',
   'sortIcon',

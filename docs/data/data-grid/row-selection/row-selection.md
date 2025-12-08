@@ -6,7 +6,7 @@
 
 Single row selection comes enabled by default for the MIT Data Grid component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
-To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and click on it.
+To unselect a row, click on it again.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
@@ -17,6 +17,8 @@ On the Data Grid Pro and Data Grid Premium components, you can select multiple r
 - To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">Shift</kbd> key while selecting rows.
 - To disable multiple row selection, use `disableMultipleRowSelection={true}`.
+
+Unselect one of the selected rows by holding the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and clicking on the selected row.
 
 {{"demo": "MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -69,7 +71,7 @@ The model can be either:
 
 To opt out of the `exclude` model and always use `include` model and a predictable behavior with explicit row IDs, pass `disableRowSelectionExcludeModel` prop to the Data Grid.
 
-By default, the Data Grid uses an exclude model optimization when selecting all rows (e.g., via "Select all" checkbox) for better performance with large datasets.
+By default, the Data Grid uses an exclude model optimization when selecting all rows (for example, via "Select all" checkbox) for better performance with large datasets.
 
 ```tsx
 <DataGrid

@@ -1,24 +1,18 @@
 'use client';
 import * as React from 'react';
-import { ChartPlugin } from '../../models';
-import { UseChartIdSignature } from './useChartId.types';
+import { type ChartPlugin } from '../../models';
+import { type UseChartIdSignature } from './useChartId.types';
 import { createChartDefaultId } from './useChartId.utils';
 
 export const useChartId: ChartPlugin<UseChartIdSignature> = ({ params, store }) => {
   React.useEffect(() => {
-    store.update((prevState) => {
-      if (
-        params.id === undefined ||
-        (params.id === prevState.id.providedChartId && prevState.id.chartId !== undefined)
-      ) {
-        return prevState;
-      }
-
-      return {
-        ...prevState,
-        id: { ...prevState.id, chartId: params.id ?? createChartDefaultId() },
-      };
-    });
+    if (
+      params.id === undefined ||
+      (params.id === store.state.id.providedChartId && store.state.id.chartId !== undefined)
+    ) {
+      return;
+    }
+    store.set('id', { ...store.state.id, chartId: params.id ?? createChartDefaultId() });
   }, [store, params.id]);
   return {};
 };

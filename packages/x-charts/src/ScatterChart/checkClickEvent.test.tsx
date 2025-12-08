@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -33,7 +33,7 @@ describe('ScatterChart - click event', () => {
   // svg.createSVGPoint not supported by JSDom https://github.com/jsdom/jsdom/issues/300
   describe.skipIf(isJSDOM)('onItemClick - using voronoi', () => {
     it('should provide the right context as second argument when clicking svg', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -48,7 +48,7 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -57,7 +57,7 @@ describe('ScatterChart - click event', () => {
           coords: { clientX: 10, clientY: 10 },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 0,
         seriesId: 's1',
@@ -70,17 +70,17 @@ describe('ScatterChart - click event', () => {
           coords: { clientX: 30, clientY: 30 },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 4,
         seriesId: 's1',
       });
 
-      expect(onItemClick.callCount).to.equal(2);
+      expect(onItemClick.mock.calls.length).to.equal(2);
     });
 
     it('should provide the right context as second argument when clicking mark', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -107,18 +107,18 @@ describe('ScatterChart - click event', () => {
           },
         },
       ]);
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
+      expect(onItemClick.mock.calls.length).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 
   describe('onItemClick - disabling voronoi', () => {
     it('should not call onItemClick when clicking the SVG', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -134,7 +134,7 @@ describe('ScatterChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -143,11 +143,11 @@ describe('ScatterChart - click event', () => {
           coords: { clientX: 10, clientY: 10 },
         },
       ]);
-      expect(onItemClick.callCount).to.equal(0);
+      expect(onItemClick.mock.calls.length).to.equal(0);
     });
 
     it('should provide the right context as second argument when clicking mark', async () => {
-      const onItemClick = spy();
+      const onItemClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -176,12 +176,12 @@ describe('ScatterChart - click event', () => {
         },
       ]);
 
-      expect(onItemClick.lastCall.args[1]).to.deep.equal({
+      expect(onItemClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'scatter',
         dataIndex: 1,
         seriesId: 's1',
       });
-      expect(onItemClick.callCount).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
+      expect(onItemClick.mock.calls.length).to.equal(1); // Make sure voronoi + item click does not duplicate event triggering
     });
   });
 });

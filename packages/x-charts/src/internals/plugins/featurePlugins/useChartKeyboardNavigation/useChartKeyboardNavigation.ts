@@ -2,24 +2,26 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { ChartPlugin, ChartState } from '../../models';
-import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import { type ChartPlugin, type ChartState } from '../../models';
+import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import {
   getNextSeriesWithData,
   getPreviousSeriesWithData,
   seriesHasData,
 } from './useChartKeyboardNavigation.helpers';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 
 function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
   if (
     type === undefined ||
     // @ts-ignore sankey is not in MIT version
     type === 'sankey' ||
     seriesId === undefined ||
-    !seriesHasData(state.series.processedSeries, type, seriesId)
+    !seriesHasData(processedSeries, type, seriesId)
   ) {
-    const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
+    const nextSeries = getNextSeriesWithData(processedSeries, type, seriesId);
     if (nextSeries === null) {
       return null;
     }
@@ -27,7 +29,7 @@ function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSi
     seriesId = nextSeries.seriesId;
   }
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
   return {
     type,
     seriesId,
@@ -36,15 +38,16 @@ function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSi
 }
 
 function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
   if (
     type === undefined ||
     // @ts-ignore sankey is not in MIT version
     type === 'sankey' ||
     seriesId === undefined ||
-    !seriesHasData(state.series.processedSeries, type, seriesId)
+    !seriesHasData(processedSeries, type, seriesId)
   ) {
-    const previousSeries = getPreviousSeriesWithData(state.series.processedSeries, type, seriesId);
+    const previousSeries = getPreviousSeriesWithData(processedSeries, type, seriesId);
     if (previousSeries === null) {
       return null;
     }
@@ -52,7 +55,7 @@ function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigati
     seriesId = previousSeries.seriesId;
   }
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
   return {
     type,
     seriesId,
@@ -61,9 +64,10 @@ function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigati
 }
 
 function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
 
-  const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
+  const nextSeries = getNextSeriesWithData(processedSeries, type, seriesId);
 
   if (nextSeries === null) {
     return null; // No series to move the focus to.
@@ -71,7 +75,7 @@ function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationS
   type = nextSeries.type;
   seriesId = nextSeries.seriesId;
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
 
   return {
     type,
@@ -83,16 +87,17 @@ function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationS
 function getPreviousSeriesFocusedItem(
   state: ChartState<[UseChartKeyboardNavigationSignature], []>,
 ) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
 
-  const previousSeries = getPreviousSeriesWithData(state.series.processedSeries, type, seriesId);
+  const previousSeries = getPreviousSeriesWithData(processedSeries, type, seriesId);
   if (previousSeries === null) {
     return null; // No series to move the focus to.
   }
   type = previousSeries.type;
   seriesId = previousSeries.seriesId;
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
 
   return {
     type,
@@ -107,18 +112,12 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
   svgRef,
 }) => {
   const removeFocus = useEventCallback(function removeFocus() {
-    store.update((state) => {
-      if (state.keyboardNavigation.item === null) {
-        return state;
-      }
-      return {
-        ...state,
-        keyboardNavigation: {
-          ...state.keyboardNavigation,
-          item: null,
-        },
-      };
-    });
+    if (store.state.keyboardNavigation.item !== null) {
+      store.set('keyboardNavigation', {
+        ...store.state.keyboardNavigation,
+        item: null,
+      });
+    }
   });
 
   React.useEffect(() => {
@@ -129,47 +128,42 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     }
 
     function keyboardHandler(event: KeyboardEvent) {
-      store.update((prevState) => {
-        let newFocusedItem = prevState.keyboardNavigation.item;
-
-        switch (event.key) {
-          case 'ArrowRight':
-            newFocusedItem = getNextIndexFocusedItem(prevState);
-            break;
-          case 'ArrowLeft':
-            newFocusedItem = getPreviousIndexFocusedItem(prevState);
-            break;
-          case 'ArrowDown': {
-            newFocusedItem = getPreviousSeriesFocusedItem(prevState);
-            break;
-          }
-          case 'ArrowUp': {
-            newFocusedItem = getNextSeriesFocusedItem(prevState);
-            break;
-          }
-          default:
-            break;
+      let newFocusedItem = store.state.keyboardNavigation.item;
+      switch (event.key) {
+        case 'ArrowRight':
+          newFocusedItem = getNextIndexFocusedItem(store.state);
+          break;
+        case 'ArrowLeft':
+          newFocusedItem = getPreviousIndexFocusedItem(store.state);
+          break;
+        case 'ArrowDown': {
+          newFocusedItem = getPreviousSeriesFocusedItem(store.state);
+          break;
         }
-
-        if (newFocusedItem !== prevState.keyboardNavigation.item) {
-          event.preventDefault();
-          return {
-            ...prevState,
-            ...(prevState.highlight && {
-              highlight: { ...prevState.highlight, lastUpdate: 'keyboard' },
-            }),
-            ...(prevState.interaction && {
-              interaction: { ...prevState.interaction, lastUpdate: 'keyboard' },
-            }),
-            keyboardNavigation: {
-              ...prevState.keyboardNavigation,
-              item: newFocusedItem,
-            },
-          };
+        case 'ArrowUp': {
+          newFocusedItem = getNextSeriesFocusedItem(store.state);
+          break;
         }
+        default:
+          break;
+      }
 
-        return prevState;
-      });
+      if (newFocusedItem !== store.state.keyboardNavigation.item) {
+        event.preventDefault();
+
+        store.update({
+          ...(store.state.highlight && {
+            highlight: { ...store.state.highlight, lastUpdate: 'keyboard' },
+          }),
+          ...(store.state.interaction && {
+            interaction: { ...store.state.interaction, lastUpdate: 'keyboard' },
+          }),
+          keyboardNavigation: {
+            ...store.state.keyboardNavigation,
+            item: newFocusedItem,
+          },
+        });
+      }
     }
 
     element.addEventListener('keydown', keyboardHandler);
@@ -180,22 +174,16 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     };
   }, [svgRef, removeFocus, params.enableKeyboardNavigation, store]);
 
-  useEnhancedEffect(
-    () =>
-      store.update((prev) =>
-        prev.keyboardNavigation.enableKeyboardNavigation === params.enableKeyboardNavigation
-          ? prev
-          : {
-              ...prev,
-              keyboardNavigation: {
-                ...prev.keyboardNavigation,
-                enableKeyboardNavigation: !!params.enableKeyboardNavigation,
-              },
-            },
-      ),
-
-    [store, params.enableKeyboardNavigation],
-  );
+  useEnhancedEffect(() => {
+    if (
+      store.state.keyboardNavigation.enableKeyboardNavigation !== params.enableKeyboardNavigation
+    ) {
+      store.set('keyboardNavigation', {
+        ...store.state.keyboardNavigation,
+        enableKeyboardNavigation: !!params.enableKeyboardNavigation,
+      });
+    }
+  }, [store, params.enableKeyboardNavigation]);
 
   return {};
 };

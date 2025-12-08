@@ -147,6 +147,16 @@ In the demo below, the top axis has a `tickMinStep` of half a day, and the botto
 
 {{"demo": "TickNumber.js"}}
 
+### Tick spacing
+
+Use the `tickSpacing` property to define the minimum spacing in pixels between two ticks.
+
+Having a minimum space between ticks improves the readability of the axis and can also improve the chart's performance.
+
+This property defaults to 0 and is only available for ordinal axes, that is, axes with a band or point scale.
+
+{{"demo": "TickSpacing.js"}}
+
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.
@@ -269,6 +279,14 @@ When not set, the default values for the `textAnchor` and `dominantBaseline` pro
 You can test how these values behave and relate to one another in the demo below:
 
 {{"demo": "AxisTextCustomization.js", "hideToolbar": true, "bg": "playground"}}
+
+### Adding tick label icons
+
+A `foreignObject` element can be used to render non-SVG elements inside SVGs. You can leverage this to create components that interact with the charts data. In the demo below, custom tick labels are built by displaying an icon below the text.
+
+Bear in mind that using `foreignObject` might prevent charts from being [exported](/x/react-charts/export/).
+
+{{"demo": "TickLabelImage.js"}}
 
 ## Symlog scale
 

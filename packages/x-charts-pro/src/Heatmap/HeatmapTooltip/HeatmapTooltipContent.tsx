@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -13,7 +12,7 @@ import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../../hooks/useHeatmapSeries';
 import { HeatmapTooltipAxesValue } from './HeatmapTooltipAxesValue';
-import { HeatmapTooltipProps } from './HeatmapTooltip.types';
+import { type HeatmapTooltipProps } from './HeatmapTooltip.types';
 import { useUtilityClasses } from './HeatmapTooltip.classes';
 
 export interface HeatmapTooltipContentProps extends Pick<HeatmapTooltipProps, 'classes'> {}

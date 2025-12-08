@@ -38,7 +38,7 @@ The WAI-ARIA Authoring Practices includes examples on [Tooltip](https://www.w3.o
 
 Some charts have animations when rendering or when data updates.
 For users with vestibular motion disorders those animations can be problematic.
-By default animations are toggled based on the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) media feature.
+By default animations are toggled based on the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion) media feature.
 
 <!--
 ## Screen reader compatibility

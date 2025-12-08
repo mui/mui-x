@@ -1,14 +1,8 @@
 'use client';
-import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
-import { SeriesId } from '../models/seriesType/common';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import {
-  createSeriesSelectorsOfType,
-  createAllSeriesSelectorOfType,
-} from '../internals/createSeriesSelectorOfType';
-
-const useSelectorSeries = createSeriesSelectorsOfType('pie');
-const useSelectorSeriesContext = createAllSeriesSelectorOfType('pie');
+import { type ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
+import { type SeriesId } from '../models/seriesType/common';
+import { type ChartSeriesDefaultized } from '../models/seriesType/config';
+import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 
 export type UsePieSeriesReturnValue = ChartSeriesDefaultized<'pie'>;
 export type UsePieSeriesContextReturnValue = ProcessedSeries['pie'];
@@ -36,7 +30,7 @@ export function usePieSeries(): UsePieSeriesReturnValue[];
  */
 export function usePieSeries(seriesIds: SeriesId[]): UsePieSeriesReturnValue[];
 export function usePieSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSelectorSeries(seriesIds);
+  return useSeriesOfType('pie', seriesIds);
 }
 
 /**
@@ -47,5 +41,5 @@ export function usePieSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the pie series
  */
 export function usePieSeriesContext(): UsePieSeriesContextReturnValue {
-  return useSelectorSeriesContext();
+  return useAllSeriesOfType('pie');
 }

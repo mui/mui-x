@@ -1964,18 +1964,6 @@
       "isGlobal": false
     },
     {
-      "key": "row--dropAbove",
-      "className": "MuiDataGrid-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGrid-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
-      "isGlobal": false
-    },
-    {
       "key": "row--dynamicHeight",
       "className": "MuiDataGrid-row--dynamicHeight",
       "description": "Styles applied to the row if it has dynamic row height.",
@@ -2087,6 +2075,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGrid-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGrid-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGrid-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGrid-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
@@ -2220,6 +2226,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/DataGrid/DataGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

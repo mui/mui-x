@@ -7,8 +7,20 @@
   ],
   "properties": {
     "type": { "type": { "description": "'bar'" }, "required": true },
+    "barLabel": {
+      "type": {
+        "description": "'value' | ((item: BarItem, context: BarLabelContext) =&gt; string | null | undefined)"
+      }
+    },
+    "barLabelPlacement": {
+      "type": { "description": "'center' | 'outside'" },
+      "default": "'center'"
+    },
     "color": { "type": { "description": "string" } },
-    "data": { "type": { "description": "readonly (number | null)[]" } },
+    "colorGetter": {
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+    },
+    "data": { "type": { "description": "ReadonlyArray&lt;BarValueType | null&gt;" } },
     "dataKey": { "type": { "description": "string" } },
     "highlightScope": { "type": { "description": "HighlightScope" } },
     "id": { "type": { "description": "SeriesId" } },
@@ -22,7 +34,7 @@
     "stackOffset": { "type": { "description": "StackOffsetType" }, "default": "'diverging'" },
     "stackOrder": { "type": { "description": "StackOrderType" }, "default": "'none'" },
     "valueFormatter": { "type": { "description": "SeriesValueFormatter&lt;TValue&gt;" } },
-    "xAxisId": { "type": { "description": "string" } },
-    "yAxisId": { "type": { "description": "string" } }
+    "xAxisId": { "type": { "description": "AxisId" } },
+    "yAxisId": { "type": { "description": "AxisId" } }
   }
 }

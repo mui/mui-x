@@ -1,8 +1,16 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
-import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
+import {
+  PieArcPlot,
+  type PieArcPlotProps,
+  type PieArcPlotSlotProps,
+  type PieArcPlotSlots,
+} from './PieArcPlot';
+import {
+  type PieArcLabelPlotSlots,
+  type PieArcLabelPlotSlotProps,
+  PieArcLabelPlot,
+} from './PieArcLabelPlot';
 import { getPercentageValue } from '../internals/getPercentageValue';
 import { getPieCoordinates } from './getPieCoordinates';
 import { usePieSeriesContext } from '../hooks/usePieSeries';

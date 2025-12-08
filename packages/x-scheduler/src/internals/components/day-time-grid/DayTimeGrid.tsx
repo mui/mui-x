@@ -6,17 +6,23 @@ import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
-import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
-import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
+import { useFormatTime } from '../../hooks/useFormatTime';
+import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -24,28 +30,36 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 ) {
   const { days, className, ...other } = props;
 
+  // Context hooks
   const adapter = useAdapter();
   const translations = useTranslations();
+  const store = useEventCalendarStoreContext();
+
+  // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
   const allDayHeaderWrapperRef = React.useRef<HTMLDivElement>(null);
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
-  const store = useEventCalendarStoreContext();
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const hasDayView = useStore(store, selectors.hasDayView);
-  const now = useStore(store, selectors.nowUpdatedEveryMinute);
-  const isMultiDayEvent = useStore(store, selectors.isMultiDayEvent);
-  const ampm = useStore(store, selectors.ampm);
-  const showCurrentTimeIndicator = useStore(store, selectors.showCurrentTimeIndicator);
-  const timeFormat = ampm ? 'hoursMinutes12h' : 'hoursMinutes24h';
+  // Selector hooks
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+  const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
-  const occurrencesMap = useEventOccurrencesGroupedByDay({ days, renderEventIn: 'every-day' });
+  // Feature hooks
+  const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
-    shouldAddPosition: isMultiDayEvent,
+    shouldAddPosition: React.useCallback(
+      (occurrence: SchedulerEventOccurrence) =>
+        isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+      [adapter],
+    ),
   });
+
+  const formatTime = useFormatTime();
 
   const { start, end } = React.useMemo(
     () => ({
@@ -57,8 +71,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const isTodayInView = React.useMemo(
     () =>
-      !adapter.isBeforeDay(now, days[0].value) &&
-      !adapter.isAfterDay(now, days[days.length - 1].value),
+      adapter.isWithinRange(now, [
+        adapter.startOfDay(days[0].value),
+        adapter.endOfDay(days[days.length - 1].value),
+      ]),
     [adapter, days, now],
   );
 
@@ -79,10 +95,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       return false;
     }
     const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
-    return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
+    return Math.abs(adapter.differenceInMinutes(now, slotCenter)) <= 25;
   };
 
-  const renderHeaderContent = (day: CalendarProcessedDate) => (
+  const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day.value, 'ccc')}</span>
@@ -98,15 +114,13 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     >
       <EventPopoverProvider containerRef={containerRef}>
         <div className="DayTimeGridHeader">
-          <div className="DayTimeGridGridRow DayTimeGridHeaderRow" role="row">
+          <CalendarGrid.HeaderRow className="DayTimeGridGridRow DayTimeGridHeaderRow">
             <div className="DayTimeGridAllDayEventsCell" />
             {days.map((day) => (
-              <div
+              <CalendarGrid.HeaderCell
                 key={day.key}
-                id={`DayTimeGridHeaderCell-${day.key}`}
-                role="columnheader"
-                aria-label={`${adapter.format(day.value, 'weekday')} ${adapter.format(day.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(day.value, now) ? '' : undefined}
+                date={day}
+                ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
               >
                 {hasDayView ? (
                   <button
@@ -120,10 +134,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ) : (
                   renderHeaderContent(day)
                 )}
-              </div>
+              </CalendarGrid.HeaderCell>
             ))}
-          </div>
+          </CalendarGrid.HeaderRow>
         </div>
+
         <div
           ref={allDayHeaderWrapperRef}
           className={clsx('DayTimeGridGridRow', 'DayTimeGridAllDayEventsGrid')}
@@ -149,11 +164,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </CalendarGrid.DayRow>
           <div className="ScrollablePlaceholder" />
         </div>
+
         <div className="DayTimeGridRoot">
-          <CalendarGrid.ScrollableContent ref={bodyRef} className="DayTimeGridBody">
-            <div className="DayTimeGridScrollableContent">
+          <div ref={bodyRef} className="DayTimeGridBody">
+            <CalendarGrid.TimeScrollableContent className="DayTimeGridScrollableContent">
               <div className="DayTimeGridTimeAxis" aria-hidden="true">
-                {/* TODO: Handle DST days where there are not exactly 24 hours */}
                 {Array.from({ length: 24 }, (_, hour) => (
                   <div
                     key={hour}
@@ -166,26 +181,24 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
                       )}
                     >
-                      {hour === 0
-                        ? null
-                        : adapter.format(adapter.setHours(visibleDate, hour), timeFormat)}
+                      {hour === 0 ? null : formatTime(adapter.setHours(visibleDate, hour))}
                     </time>
                   </div>
                 ))}
               </div>
+
               <div className="DayTimeGridGrid">
                 {occurrences.days.map((day, index) => (
                   <TimeGridColumn
                     key={day.key}
                     day={day}
-                    isToday={adapter.isSameDay(day.value, now)}
                     index={index}
                     showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
                   />
                 ))}
               </div>
-            </div>
-          </CalendarGrid.ScrollableContent>
+            </CalendarGrid.TimeScrollableContent>
+          </div>
         </div>
       </EventPopoverProvider>
     </CalendarGrid.Root>

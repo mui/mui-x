@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 

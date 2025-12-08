@@ -17,8 +17,8 @@
 }
 
 .ResourceLegendColor {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
   background-color: var(--event-color-9);
@@ -27,6 +27,10 @@
 .ResourceLegendName {
   font-size: var(--font-size-2);
   color: var(--text-secondary);
+}
+
+.ResourceLegendChildren {
+  margin-left: var(--space-2);
 }
 
 .mui-x-scheduler .Button.ResourceLegendButton {

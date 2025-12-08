@@ -1,9 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
+import { CompositeList } from '../../base-ui-copy/composite/list/CompositeList';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { CalendarGridDayRowContext } from './CalendarGridDayRowContext';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 
 export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   componentProps: CalendarGridDayRow.Props,
@@ -20,7 +21,8 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
     ...elementProps
   } = componentProps;
 
-  const props = React.useMemo(() => ({ role: 'row' }), []);
+  const props = { role: 'row' };
+  const cellsRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
   const contextValue: CalendarGridDayRowContext = React.useMemo(
     () => ({
@@ -36,9 +38,11 @@ export const CalendarGridDayRow = React.forwardRef(function CalendarGridDayRow(
   });
 
   return (
-    <CalendarGridDayRowContext.Provider value={contextValue}>
-      {element}
-    </CalendarGridDayRowContext.Provider>
+    <CompositeList elementsRef={cellsRefs}>
+      <CalendarGridDayRowContext.Provider value={contextValue}>
+        {element}
+      </CalendarGridDayRowContext.Provider>
+    </CompositeList>
   );
 });
 
@@ -49,10 +53,10 @@ export namespace CalendarGridDayRow {
     /**
      * The data and time at which the row starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalSupportedObject;
     /**
      * The data and time at which the row ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalSupportedObject;
   }
 }

@@ -1,0 +1,19 @@
+import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+
+// Warning: Only add selectors here that do not belong to any specific feature.
+export const schedulerOtherSelectors = {
+  visibleDate: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (state: State) => state.visibleDate,
+    (state: State) => state.timezone,
+    (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
+  ),
+  isScopeDialogOpen: createSelector(
+    (state: State) => state.pendingUpdateRecurringEventParameters != null,
+  ),
+  /**
+   * The default event color used when no color is specified on the event or its resource.
+   */
+  defaultEventColor: createSelector((state: State) => state.eventColor),
+};

@@ -1,14 +1,12 @@
 @import '../../../styles/tokens.css';
 
-.PopoverPositioner {
+p {
+  margin: 0;
+}
+
+.EventPopoverPositioner {
   max-width: 460px;
-  width: 100%;
-  background-color: var(--panel);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-4);
   overflow: hidden;
-  z-index: 1300;
-  box-shadow: var(--shadow-4);
 }
 
 .EventPopoverHeader {
@@ -49,10 +47,6 @@
 .mui-x-scheduler .PopoverPositioner .PrimaryButton:focus-visible,
 .mui-x-scheduler .PopoverPositioner .SecondaryErrorButton:focus-visible {
   outline: 2px solid var(--event-color-5);
-}
-
-.EventPopoverTitle {
-  flex: 1;
 }
 
 .mui-x-scheduler .EventPopoverTitleInput {
@@ -215,7 +209,8 @@
   height: 0.8rem;
 }
 
-.EventPopoverSelectTrigger {
+.EventPopoverSelectTrigger,
+button.Button.EventPopoverMenuTrigger {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -229,18 +224,23 @@
   cursor: pointer;
   -webkit-user-select: none;
   user-select: none;
+  font-weight: var(--font-weight-1);
 }
 
-.EventPopoverSelectTrigger:focus-visible {
+.EventPopoverSelectTrigger:focus-visible,
+.EventPopoverMenuTrigger:focus-visible {
   outline: 2px solid var(--gray-3);
   outline-offset: var(--outline-focus-offset);
 }
 
-.EventPopoverSelectTrigger.Ghost {
+.EventPopoverSelectTrigger.Ghost,
+button.Button.EventPopoverMenuTrigger.Ghost {
+  background-color: transparent;
   border: 1px solid transparent;
 }
 
-.EventPopoverSelectTrigger.Ghost[data-popup-open] {
+.EventPopoverSelectTrigger.Ghost[data-popup-open],
+.EventPopoverMenuTrigger.Ghost[data-popup-open] {
   background-color: var(--event-color-4);
 }
 
@@ -263,7 +263,8 @@
   outline: 1px solid var(--border-color);
 }
 
-.EventPopoverSelectItem {
+.EventPopoverSelectItem,
+.EventPopoverMenuItem {
   background-color: var(--surface);
   padding: var(--space-2) var(--space-3) var(--space-2) var(--space-2);
   border-radius: var(--radius-3);
@@ -274,25 +275,37 @@
   user-select: none;
 }
 
+.EventPopoverMenuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .EventPopoverSelectItem:hover,
-.EventPopoverSelectItem[data-highlighted] {
+.EventPopoverSelectItem[data-highlighted],
+.EventPopoverMenuItem:hover,
+.EventPopoverMenuItem[data-highlighted] {
   background-color: var(--interactive-hover-bg);
 }
 
-.EventPopoverSelectItem[data-selected] {
+.EventPopoverSelectItem[data-selected],
+.EventPopoverMenuItem[data-selected] {
   background: var(--interactive-selected-bg);
 }
 
-.EventPopoverSelectItem[data-selected]:hover {
+.EventPopoverSelectItem[data-selected]:hover,
+.EventPopoverMenuItem[data-selected]:hover {
   background: var(--interactive-selected-hover-bg);
 }
 
-.EventPopoverSelectItem:focus-visible {
+.EventPopoverSelectItem:focus-visible,
+.EventPopoverMenuItem:focus-visible {
   outline: 2px solid var(--gray-3);
   outline-offset: var(--outline-focus-offset);
 }
 
-.EventPopoverSelectItemTitleWrapper {
+.EventPopoverSelectItemTitleWrapper,
+.EventPopoverMenuItemTitleWrapper {
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -324,4 +337,146 @@
   color: var(--event-color-9);
   border: 1px solid var(--event-color-6);
   border-radius: var(--radius-4);
+}
+
+.EventPopoverTitle {
+  flex: 1;
+  color: var(--event-color-12);
+  font-size: var(--font-size-3);
+  line-height: var(--line-height-3);
+  font-weight: var(--font-weight-2);
+  margin: 0;
+}
+
+.EventPopoverResourceContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.EventPopoverResourceTitle {
+  font-size: var(--font-size-2);
+  color: var(--event-color-11);
+}
+
+.ReadonlyContent {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) var(--space-4);
+  color: var(--default-text-color);
+  gap: var(--space-2);
+}
+
+.EventPopoverDateTimeContainer {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.EventPopoverDateTimeContainer .EventDate,
+.EventPopoverDateTimeContainer .EventTime,
+.EventPopoverDateTimeContainer .EventAllDay {
+  font-size: var(--font-size-2);
+}
+
+.EventRecurrence {
+  font-size: var(--font-size-2);
+  color: var(--secondary-text-color);
+}
+
+.EventPopoverResourceLegendContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.EventPopoverResourceLegendContainer > *:nth-child(n + 2) {
+  margin-left: calc(var(--space-05) * -1);
+}
+
+.ColorRadioItemCircle {
+  width: var(--space-3);
+  height: var(--space-3);
+  border-radius: 50%;
+  background-color: var(--event-color-8);
+}
+
+.ColorRadioGroup {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  width: 100%;
+  max-width: 190px;
+  flex-wrap: wrap;
+}
+
+.EventPopoverTabsList {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--event-color-3);
+  padding-inline: var(--space-6);
+}
+
+.EventPopoverTabTrigger.Ghost {
+  border-radius: var(--radius-3) var(--radius-3) 0 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--event-color-12);
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+}
+
+.EventPopoverTabTrigger.Ghost[data-selected] {
+  background-color: var(--surface);
+}
+
+.EventPopoverRecurrenceFieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+
+  &[data-disabled] {
+    color: var(--disabled-text-color);
+    pointer-events: none;
+  }
+}
+
+.EventPopoverRecurrenceFormLabel {
+  display: inline-block;
+  font-size: var(--font-size-2);
+  font-weight: var(--font-weight-2);
+  padding: 0;
+  margin: 0 0 var(--space-3) 0;
+}
+
+.EventPopoverInputsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-2);
+}
+
+.EventPopoverAfterTimesInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.RecurrenceNumberInput {
+  max-width: var(--space-10);
+}
+
+.EventPopoverRadioRoot {
+  display: grid;
+  grid-template-columns: 16px auto;
+  gap: var(--space-2);
+}
+
+.EventPopoverRadioItemText {
+  grid-column: 2 / 3;
+}
+
+.RadioItem.EventPopoverRecurrenceEndItem {
+  justify-content: flex-start;
+  gap: var(--space-2);
 }

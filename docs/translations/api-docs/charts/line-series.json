@@ -8,7 +8,12 @@
     "baseline": {
       "description": "<p>The value of the line at the base of the series area.<br /><br />- <code>&#39;min&#39;</code> the area will fill the space <strong>under</strong> the line.<br />- <code>&#39;max&#39;</code> the area will fill the space <strong>above</strong> the line.<br />- <code>number</code> the area will fill the space between this value and the line</p>\n"
     },
-    "color": { "description": "Color to use when displaying the series." },
+    "color": {
+      "description": "Color to use when displaying the series.<br />If <code>colorGetter</code> is provided, it will be used to get the color for each data point instead.<br />Otherwise, this color will be used for all data points in the series."
+    },
+    "colorGetter": {
+      "description": "A function that returns a color based on the value and/or the data index of a point.<br />The returned color is used when displaying the specific data point, e.g., a marker in a line chart.<br />When the color of the entire series is required, e.g., in legends, the <code>color</code> property is used instead."
+    },
     "connectNulls": {
       "description": "If <code>true</code>, line and area connect points separated by <code>null</code> values."
     },

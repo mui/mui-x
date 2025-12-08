@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal-test-utils';
+import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSvgRef } from './useSvgRef';
 import { ChartProvider } from '../context/ChartProvider';
@@ -21,12 +21,7 @@ describe('useSvgRef', () => {
   it.skipIf(!isJSDOM)('should throw an error when parent context not present', () => {
     const errorRef = React.createRef<any>();
 
-    const errorMessages = [
-      'MUI X Charts: Could not find the Chart context.',
-      'It looks like you rendered your component outside of a ChartDataProvider.',
-      'The above error occurred in the <UseSvgRef> component',
-    ];
-    const expectedError = reactMajor < 19 ? errorMessages : errorMessages.slice(0, 2).join('\n');
+    const expectedError = ['The above error occurred in the <UseSvgRef> component'];
 
     expect(() =>
       render(

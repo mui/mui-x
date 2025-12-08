@@ -1,72 +1,102 @@
 import * as React from 'react';
 import { EventCalendarParameters } from './EventCalendarStore.types';
 
-export function useExtractEventCalendarParameters<P extends EventCalendarParameters>(
-  props: P,
-): UseExtractEventCalendarParametersReturnValue<P> {
+export function useExtractEventCalendarParameters<
+  TEvent extends object,
+  TResource extends object,
+  P extends EventCalendarParameters<TEvent, TResource>,
+>(props: P): UseExtractEventCalendarParametersReturnValue<TEvent, TResource, P> {
   const {
-    events,
-    onEventsChange,
-    resources,
-    view,
-    defaultView,
-    onViewChange,
-    views,
-    visibleDate,
-    defaultVisibleDate,
-    onVisibleDateChange,
     areEventsDraggable,
     areEventsResizable,
+    canDragEventsFromTheOutside,
+    canDropEventsToTheOutside,
+    defaultPreferences,
+    defaultView,
+    defaultVisibleDate,
+    eventColor,
+    eventCreation,
+    eventModelStructure,
+    events,
+    onEventsChange,
+    onViewChange,
+    onVisibleDateChange,
     preferences,
     preferencesMenuConfig,
-    eventColor,
+    readOnly,
+    resources,
     showCurrentTimeIndicator,
+    timezone,
+    view,
+    views,
+    visibleDate,
     ...forwardedProps
   } = props;
 
-  const parameters: EventCalendarParameters = React.useMemo(
+  const parameters: EventCalendarParameters<TEvent, TResource> = React.useMemo(
     () => ({
-      events,
-      onEventsChange,
-      resources,
-      view,
-      defaultView,
-      onViewChange,
-      views,
-      visibleDate,
-      defaultVisibleDate,
-      onVisibleDateChange,
       areEventsDraggable,
       areEventsResizable,
+      canDragEventsFromTheOutside,
+      canDropEventsToTheOutside,
+      defaultPreferences,
+      defaultView,
+      defaultVisibleDate,
+      eventColor,
+      eventCreation,
+      eventModelStructure,
+      events,
+      onEventsChange,
+      onViewChange,
+      onVisibleDateChange,
       preferences,
       preferencesMenuConfig,
-      eventColor,
+      readOnly,
+      resources,
       showCurrentTimeIndicator,
+      timezone,
+      view,
+      views,
+      visibleDate,
     }),
     [
-      events,
-      onEventsChange,
-      resources,
-      view,
-      defaultView,
-      onViewChange,
-      views,
-      visibleDate,
-      defaultVisibleDate,
-      onVisibleDateChange,
       areEventsDraggable,
       areEventsResizable,
+      canDragEventsFromTheOutside,
+      canDropEventsToTheOutside,
+      defaultPreferences,
+      defaultView,
+      defaultVisibleDate,
+      eventColor,
+      eventCreation,
+      eventModelStructure,
+      events,
+      onEventsChange,
+      onViewChange,
+      onVisibleDateChange,
       preferences,
       preferencesMenuConfig,
-      eventColor,
+      readOnly,
+      resources,
       showCurrentTimeIndicator,
+      timezone,
+      view,
+      views,
+      visibleDate,
     ],
   );
 
-  return { parameters, forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters> };
+  return {
+    parameters,
+    forwardedProps: forwardedProps as Omit<P, keyof EventCalendarParameters<TEvent, TResource>>,
+  };
 }
 
-interface UseExtractEventCalendarParametersReturnValue<P extends EventCalendarParameters> {
-  parameters: EventCalendarParameters;
-  forwardedProps: Omit<P, keyof EventCalendarParameters>;
+interface UseExtractEventCalendarParametersReturnValue<
+  TEvent extends object,
+  TResource extends object,
+  P extends EventCalendarParameters<TEvent, TResource>,
+> {
+  parameters: EventCalendarParameters<TEvent, TResource>;
+  forwardedProps: Omit<P, keyof EventCalendarParameters<TEvent, TResource>>;
 }

@@ -39,9 +39,7 @@ export default function ServerSideDataGridAggregationLazyLoading() {
           aggregateRow: getRowsResponse.aggregateRow,
         };
       },
-      getAggregatedValue: (row, field) => {
-        return row[`${field}Aggregate`];
-      },
+      getAggregatedValue: (row, field) => row[field],
     }),
     [fetchRows],
   );
@@ -60,6 +58,8 @@ export default function ServerSideDataGridAggregationLazyLoading() {
         }}
         lazyLoading
         aggregationFunctions={aggregationFunctions}
+        disablePivoting
+        disableRowGrouping
       />
     </div>
   );

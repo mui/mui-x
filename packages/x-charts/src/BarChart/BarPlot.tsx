@@ -1,25 +1,26 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
-import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { BarItemIdentifier } from '../models';
+import { BarElement, type BarElementSlotProps, type BarElementSlots } from './BarElement';
+import { type BarItemIdentifier, type BarValueType } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelItemProps, BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
-import { useFocusedItem } from '../hooks/useFocusedItem';
+import type { BarItem, BarLabelContext } from './BarLabel';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
+export interface BarPlotProps {
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -39,6 +40,15 @@ export interface BarPlotProps extends Pick<BarLabelItemProps, 'barLabel'> {
    */
   borderRadius?: number;
   /**
+   * @deprecated Use `barLabel` in the chart series instead.
+   * If provided, the function will be used to format the label of the bar.
+   * It can be set to 'value' to display the current value.
+   * @param {BarItem} item The item to format.
+   * @param {BarLabelContext} context data about the bar.
+   * @returns {string} The formatted label.
+   */
+  barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
+  /**
    * The props used for each component slot.
    * @default {}
    */
@@ -55,7 +65,9 @@ const BarPlotRoot = styled('g', {
   slot: 'Root',
 })({
   [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    transitionProperty: 'opacity, fill',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
 
@@ -73,9 +85,6 @@ const BarPlotRoot = styled('g', {
 function BarPlot(props: BarPlotProps) {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
 
-  const theme = useTheme();
-
-  const focusedItem = useFocusedItem();
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
@@ -84,13 +93,6 @@ function BarPlot(props: BarPlotProps) {
 
   const withoutBorderRadius = !borderRadius || borderRadius <= 0;
   const classes = useUtilityClasses();
-
-  const focusedItemProps =
-    focusedItem?.seriesType === 'bar'
-      ? completedData.find((series) => series.seriesId === focusedItem.seriesId)?.data[
-          focusedItem.dataIndex
-        ]
-      : null;
 
   return (
     <BarPlotRoot className={classes.root}>
@@ -116,72 +118,57 @@ function BarPlot(props: BarPlotProps) {
             );
           },
         )}
-      {completedData.map(({ seriesId, data }) => {
+      {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(
-              ({ dataIndex, color, maskId, layout, x, xOrigin, y, yOrigin, width, height }) => {
-                const barElement = (
-                  <BarElement
-                    key={dataIndex}
-                    id={seriesId}
-                    dataIndex={dataIndex}
-                    color={color}
-                    skipAnimation={skipAnimation ?? false}
-                    layout={layout ?? 'vertical'}
-                    x={x}
-                    xOrigin={xOrigin}
-                    y={y}
-                    yOrigin={yOrigin}
-                    width={width}
-                    height={height}
-                    {...other}
-                    onClick={
-                      onItemClick &&
-                      ((event) => {
-                        onItemClick(event, { type: 'bar', seriesId, dataIndex });
-                      })
-                    }
-                  />
-                );
+            {data.map(({ dataIndex, color, maskId, x, y, width, height }) => {
+              const barElement = (
+                <BarElement
+                  key={dataIndex}
+                  id={seriesId}
+                  dataIndex={dataIndex}
+                  color={color}
+                  skipAnimation={skipAnimation ?? false}
+                  layout={layout ?? 'vertical'}
+                  x={x}
+                  xOrigin={xOrigin}
+                  y={y}
+                  yOrigin={yOrigin}
+                  width={width}
+                  height={height}
+                  {...other}
+                  onClick={
+                    onItemClick &&
+                    ((event) => {
+                      onItemClick(event, { type: 'bar', seriesId, dataIndex });
+                    })
+                  }
+                />
+              );
 
-                if (withoutBorderRadius) {
-                  return barElement;
-                }
+              if (withoutBorderRadius) {
+                return barElement;
+              }
 
-                return (
-                  <g key={dataIndex} clipPath={`url(#${maskId})`}>
-                    {barElement}
-                  </g>
-                );
-              },
-            )}
+              return (
+                <g key={dataIndex} clipPath={`url(#${maskId})`}>
+                  {barElement}
+                </g>
+              );
+            })}
           </g>
         );
       })}
-
-      {focusedItemProps && (
-        <rect
-          x={focusedItemProps.x - 3}
-          y={focusedItemProps.y - 3}
-          width={focusedItemProps.width + 6}
-          height={focusedItemProps.height + 6}
-          fill="transparent"
-          stroke={(theme.vars ?? theme).palette.text.primary}
-          strokeWidth={2}
-          rx={3}
-          ry={3}
-          pointerEvents="none"
-        />
-      )}
-      {barLabel && (
-        <BarLabelPlot
-          bars={completedData}
+      {completedData.map((processedSeries) => (
+        <BarLabelPlot<BarValueType | null>
+          key={processedSeries.seriesId}
+          className={classes.seriesLabels}
+          processedSeries={processedSeries}
           skipAnimation={skipAnimation}
           barLabel={barLabel}
           {...other}
         />
-      )}
+      ))}
     </BarPlotRoot>
   );
 }
@@ -199,6 +186,11 @@ BarPlot.propTypes = {
    * @returns {string} The formatted label.
    */
   barLabel: PropTypes.oneOfType([PropTypes.oneOf(['value']), PropTypes.func]),
+  /**
+   * The placement of the bar label.
+   * It controls whether the label is rendered inside or outside the bar.
+   */
+  barLabelPlacement: PropTypes.oneOf(['outside', 'inside']),
   /**
    * Defines the border radius of the bar element.
    */

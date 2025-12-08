@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import {
-  AxisId,
+  type AxisId,
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   selectorChartAxisZoomOptionsLookup,
   useDrawingArea,
@@ -9,7 +9,7 @@ import {
   useStore,
   ZOOM_SLIDER_MARGIN,
   ZOOM_SLIDER_PREVIEW_SIZE,
-  ZoomSliderShowTooltip,
+  type ZoomSliderShowTooltip,
 } from '@mui/x-charts/internals';
 import { useXAxes, useYAxes } from '@mui/x-charts/hooks';
 import { ChartAxisZoomSliderPreview } from './ChartAxisZoomSliderPreview';
@@ -40,8 +40,8 @@ interface ChartZoomSliderProps {
 export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
-  const zoomData = useSelector(store, selectorChartAxisZoomData, [axisId]);
-  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, [axisId]);
+  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
+  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, axisId);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();

@@ -3,8 +3,7 @@ import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { useBarSeriesContext, useXAxes, useYAxes } from '../hooks';
-import { getBandSize, getValueCoordinate } from './useBarPlotData';
-import { ComputedAxis } from '../models/axis';
+import { getBarDimensions } from '../internals/getBarDimensions';
 
 export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
@@ -28,47 +27,25 @@ export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
 
   const verticalLayout = barSeries.series[focusedItem.seriesId].layout === 'vertical';
 
-  const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
-
-  const xScale = xAxisConfig.scale;
-  const yScale = yAxisConfig.scale;
-  const bandWidth = baseScaleConfig.scale.bandwidth();
-
-  const { barWidth, offset } = getBandSize({
-    bandWidth,
-    numberOfGroups: barSeries.stackingGroups.length,
-    gapRatio: baseScaleConfig.barGapRatio,
-  });
   const groupIndex = barSeries.stackingGroups.findIndex((group) =>
     group.ids.includes(focusedItem.seriesId),
   );
-  const barOffset = groupIndex * (barWidth + offset);
 
-  const baseValue = baseScaleConfig.data?.[focusedItem.dataIndex];
+  const barDimensions = getBarDimensions({
+    verticalLayout,
+    xAxisConfig,
+    yAxisConfig,
+    series,
+    dataIndex: focusedItem.dataIndex,
+    numberOfGroups: barSeries.stackingGroups.length,
+    groupIndex,
+  });
 
-  if (baseValue == null || series.data[focusedItem.dataIndex] == null) {
+  if (barDimensions === null) {
     return null;
   }
 
-  const values = series.stackedData[focusedItem.dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
-
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
-
-  const { barSize, startCoordinate } = getValueCoordinate(
-    verticalLayout,
-    minValueCoord,
-    maxValueCoord,
-    series.data[focusedItem.dataIndex],
-    series.minBarSize,
-  );
-
-  const x = verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate;
-  const y = verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset;
-  const height = verticalLayout ? barSize : barWidth;
-  const width = verticalLayout ? barWidth : barSize;
-
+  const { x, y, height, width } = barDimensions;
   return (
     <rect
       fill="none"

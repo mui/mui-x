@@ -9,8 +9,13 @@
     "canMoveItemToNewPosition": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: string, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => boolean",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"],
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ],
         "returned": "boolean"
       }
     },
@@ -47,9 +52,9 @@
       "type": { "name": "func" },
       "default": "(item) => item.id",
       "signature": {
-        "type": "function(item: R) => string",
+        "type": "function(item: R) => TreeViewItemId",
         "describedArgs": ["item"],
-        "returned": "string"
+        "returned": "TreeViewItemId"
       }
     },
     "getItemLabel": {
@@ -78,7 +83,7 @@
       "type": { "name": "func" },
       "default": "() => true",
       "signature": {
-        "type": "function(itemId: string) => boolean",
+        "type": "function(itemId: TreeViewItemId) => boolean",
         "describedArgs": ["itemId"],
         "returned": "boolean"
       }
@@ -92,28 +97,28 @@
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId>) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "type": "function(event: React.MouseEvent, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId, isExpanded: boolean) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
@@ -127,21 +132,26 @@
     "onItemPositionChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: string, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => void",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"]
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ]
       }
     },
     "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemId: TreeViewItemId, isSelected: boolean) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
     "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId> | TreeViewItemId) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },

@@ -1,13 +1,17 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { warnOnce } from '@mui/x-internals/warning';
 import { useDrawingArea, useYScale } from '../hooks';
-import { CommonChartsReferenceLineProps, ReferenceLineRoot } from './common';
+import {
+  type CommonChartsReferenceLineProps,
+  DEFAULT_SPACING,
+  DEFAULT_SPACING_MIDDLE_OTHER_AXIS,
+  ReferenceLineRoot,
+} from './common';
 import { ChartsText } from '../ChartsText';
 import {
-  ChartsReferenceLineClasses,
+  type ChartsReferenceLineClasses,
   getReferenceLineUtilityClass,
 } from './chartsReferenceLineClasses';
 
@@ -24,18 +28,27 @@ export type ChartsYReferenceLineProps<
 type GetTextPlacementParams = {
   left: number;
   width: number;
-  spacingX: number;
-} & Pick<CommonChartsReferenceLineProps, 'labelAlign'>;
+  position: number;
+} & Pick<CommonChartsReferenceLineProps, 'labelAlign' | 'spacing'>;
 
 const getTextParams = ({
   left,
   width,
-  spacingX,
+  spacing,
+  position,
   labelAlign = 'middle',
 }: GetTextPlacementParams) => {
+  const defaultSpacingOtherAxis =
+    labelAlign === 'middle' ? DEFAULT_SPACING_MIDDLE_OTHER_AXIS : DEFAULT_SPACING;
+
+  const spacingX =
+    (typeof spacing === 'object' ? spacing.x : defaultSpacingOtherAxis) ?? defaultSpacingOtherAxis;
+  const spacingY = (typeof spacing === 'object' ? spacing.y : spacing) ?? DEFAULT_SPACING;
+
   switch (labelAlign) {
     case 'start':
       return {
+        y: position - spacingY,
         x: left + spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -45,6 +58,7 @@ const getTextParams = ({
 
     case 'end':
       return {
+        y: position - spacingY,
         x: left + width - spacingX,
         style: {
           dominantBaseline: 'auto',
@@ -54,7 +68,8 @@ const getTextParams = ({
 
     default:
       return {
-        x: left + width / 2,
+        y: position - spacingY,
+        x: left + width / 2 + spacingX,
         style: {
           dominantBaseline: 'auto',
           textAnchor: 'middle',
@@ -79,9 +94,9 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
   const {
     y,
     label = '',
-    spacing = 5,
+    spacing,
     classes: inClasses,
-    labelAlign,
+    labelAlign = 'middle',
     lineStyle,
     labelStyle,
     axisId,
@@ -106,17 +121,14 @@ function ChartsYReferenceLine(props: ChartsYReferenceLineProps) {
 
   const classes = getYReferenceLineClasses(inClasses);
 
-  const spacingX = typeof spacing === 'object' ? (spacing.x ?? 0) : spacing;
-  const spacingY = typeof spacing === 'object' ? (spacing.y ?? 0) : spacing;
-
   const textParams = {
-    y: yPosition - spacingY,
     text: label,
     fontSize: 12,
     ...getTextParams({
       left,
       width,
-      spacingX,
+      spacing,
+      position: yPosition,
       labelAlign,
     }),
     className: classes.label,

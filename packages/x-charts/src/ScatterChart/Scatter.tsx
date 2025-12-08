@@ -2,24 +2,27 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { ScatterMarkerSlotProps, ScatterMarkerSlots } from './ScatterMarker.types';
-import { DefaultizedScatterSeriesType, ScatterItemIdentifier } from '../models/seriesType/scatter';
+import { type ScatterMarkerSlotProps, type ScatterMarkerSlots } from './ScatterMarker.types';
+import {
+  type DefaultizedScatterSeriesType,
+  type ScatterItemIdentifier,
+} from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
 import { useSelector } from '../internals/store/useSelector';
-import { D3Scale } from '../models/axis';
+import { type D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
   selectorChartsIsVoronoiEnabled,
-  UseChartClosestPointSignature,
+  type UseChartClosestPointSignature,
 } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import { ScatterMarker } from './ScatterMarker';
-import { ColorGetter } from '../internals/plugins/models/seriesConfig';
-import { ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
 
 export interface ScatterProps {
@@ -27,7 +30,12 @@ export interface ScatterProps {
   xScale: D3Scale;
   yScale: D3Scale;
   color: string;
-  colorGetter?: ColorGetter<'scatter'>;
+  /**
+   * Function to get the color of a scatter item given its data index.
+   * The data index argument is optional. If not provided, the color for the entire series is returned.
+   * If provided, the color for the specific scatter item is returned.
+   */
+  colorGetter: ColorGetter<'scatter'>;
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
@@ -61,7 +69,6 @@ function Scatter(props: ScatterProps) {
     series,
     xScale,
     yScale,
-    color,
     colorGetter,
     onItemClick,
     classes: inClasses,
@@ -107,7 +114,7 @@ function Scatter(props: ScatterProps) {
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
             dataIndex={dataPoint.dataIndex}
-            color={colorGetter ? colorGetter(dataPoint.dataIndex) : color}
+            color={colorGetter(dataPoint.dataIndex)}
             isHighlighted={isItemHighlighted}
             isFaded={isItemFaded}
             x={dataPoint.x}
@@ -141,7 +148,12 @@ Scatter.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   color: PropTypes.string.isRequired,
-  colorGetter: PropTypes.func,
+  /**
+   * Function to get the color of a scatter item given its data index.
+   * The data index argument is optional. If not provided, the color for the entire series is returned.
+   * If provided, the color for the specific scatter item is returned.
+   */
+  colorGetter: PropTypes.func.isRequired,
   /**
    * Callback fired when clicking on a scatter item.
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.

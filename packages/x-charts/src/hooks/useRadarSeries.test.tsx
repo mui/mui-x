@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useRadarSeries, useRadarSeriesContext } from './useRadarSeries';
-import { DefaultizedRadarSeriesType, RadarSeriesType } from '../models';
+import { type DefaultizedRadarSeriesType, type RadarSeriesType } from '../models';
 import { Unstable_RadarChart as RadarChart } from '../RadarChart';
 
 const mockSeries: RadarSeriesType[] = [

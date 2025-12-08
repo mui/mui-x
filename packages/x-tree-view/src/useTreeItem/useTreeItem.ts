@@ -35,6 +35,13 @@ import { idSelectors } from '../internals/corePlugins/useTreeViewId';
 import { expansionSelectors } from '../internals/plugins/useTreeViewExpansion';
 import { selectionSelectors } from '../internals/plugins/useTreeViewSelection';
 
+const depthSelector = (state: any, itemId: string, depthContext: any) => {
+  if (typeof depthContext === 'function') {
+    return depthContext(state, itemId);
+  }
+  return depthContext;
+};
+
 export const useTreeItem = <
   TSignatures extends UseTreeItemMinimalPlugins = UseTreeItemMinimalPlugins,
   TOptionalSignatures extends UseTreeItemOptionalPlugins = UseTreeItemOptionalPlugins,
@@ -47,17 +54,7 @@ export const useTreeItem = <
   >();
   const depthContext = React.useContext(TreeViewItemDepthContext);
 
-  const depth = useStore(
-    store,
-    (...params) => {
-      if (typeof depthContext === 'function') {
-        return depthContext(...(params as [any, any]));
-      }
-
-      return depthContext;
-    },
-    parameters.itemId,
-  );
+  const depth = useStore(store, depthSelector, parameters.itemId, depthContext);
 
   const { id, itemId, label, children, rootRef } = parameters;
 
@@ -70,7 +67,6 @@ export const useTreeItem = <
   const checkboxRef = React.useRef<HTMLButtonElement>(null);
 
   const treeId = useStore(store, idSelectors.treeId);
-  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
   const idAttribute = generateTreeItemIdAttribute({ itemId, treeId, id });
   const shouldBeAccessibleWithTab = useStore(
@@ -205,19 +201,6 @@ export const useTreeItem = <
       ...extractEventHandlers(externalProps),
     };
 
-    // https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
-    let ariaSelected: boolean | undefined;
-    if (status.selected) {
-      // - each selected node has aria-selected set to true.
-      ariaSelected = true;
-    } else if (!isSelectionEnabledForItem) {
-      // - if the tree contains nodes that are not selectable, aria-selected is not present on those nodes.
-      ariaSelected = undefined;
-    } else {
-      // - all nodes that are selectable but not selected have aria-selected set to false.
-      ariaSelected = false;
-    }
-
     const props: UseTreeItemRootSlotPropsFromUseTreeItem = {
       ...externalEventHandlers,
       ref: handleRootRef,
@@ -225,7 +208,6 @@ export const useTreeItem = <
       tabIndex: shouldBeAccessibleWithTab ? 0 : -1,
       id: idAttribute,
       'aria-expanded': status.expandable ? status.expanded : undefined,
-      'aria-selected': ariaSelected,
       'aria-disabled': status.disabled || undefined,
       ...externalProps,
       style: {

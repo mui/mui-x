@@ -1,14 +1,13 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
-  DEFAULT_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -21,22 +20,35 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
-        view: DEFAULT_VIEW,
-        views: DEFAULT_VIEWS,
-        resources: DEFAULT_RESOURCES,
-        events: [],
-        visibleResources: new Map(),
-        nowUpdatedEveryMinute: adapter.date(),
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
-        showCurrentTimeIndicator: true,
+        canDragEventsFromTheOutside: false,
+        canDropEventsToTheOutside: false,
+        copiedEvent: null,
         eventColor: 'jade',
-        preferences: DEFAULT_PREFERENCES,
-        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
-        viewConfig: null,
+        eventCreation: true,
+        eventIdList: [],
+        eventModelList: [],
+        eventModelLookup: new Map(),
+        eventModelStructure: undefined,
+        nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        visibleDate: adapter.startOfDay(adapter.date()),
+        pendingUpdateRecurringEventParameters: null,
+        preferences: EMPTY_OBJECT,
+        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
+        processedEventLookup: new Map(),
+        processedResourceLookup: new Map(),
+        readOnly: false,
+        resourceChildrenIdLookup: new Map(),
+        resourceIdList: [],
+        resourceModelStructure: undefined,
+        showCurrentTimeIndicator: true,
+        timezone: 'default',
+        view: DEFAULT_VIEW,
+        viewConfig: null,
+        views: DEFAULT_VIEWS,
+        visibleDate: adapter.startOfDay(adapter.now('default')),
+        visibleResources: new Map(),
       };
 
       expect(store.state).to.deep.equal(expectedState);
@@ -70,7 +82,7 @@ describe('Core - EventCalendarStore', () => {
       store.updateStateFromParameters(
         {
           ...DEFAULT_PARAMS,
-          resources: [{ id: 'r1', name: 'Resource 1' }],
+          resources: [{ id: 'r1', title: 'Resource 1' }],
           view: store.state.view,
         },
         adapter,
@@ -87,7 +99,7 @@ describe('Core - EventCalendarStore', () => {
         store.updateStateFromParameters(
           {
             ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', name: 'Resource 1' }],
+            resources: [{ id: 'r1', title: 'Resource 1' }],
             defaultView: 'day',
           },
           adapter,
@@ -114,7 +126,7 @@ describe('Core - EventCalendarStore', () => {
         store.updateStateFromParameters(
           {
             ...DEFAULT_PARAMS,
-            resources: [{ id: 'r1', name: 'Resource 1' }],
+            resources: [{ id: 'r1', title: 'Resource 1' }],
           },
           adapter,
         );

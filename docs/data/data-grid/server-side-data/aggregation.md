@@ -86,7 +86,7 @@ const dataSource = {
    ...
   },
   getAggregatedValue: (row, field) => {
-    return row[`${field}Aggregate`];
+    return row[field];
   },
 }
 ```
@@ -103,6 +103,14 @@ Server-side aggregation works with row grouping similarly to how it's described 
 The aggregated values are acquired from the parent rows using the `getAggregatedValue()` method.
 
 {{"demo": "ServerSideDataGridAggregationRowGrouping.js", "bg": "inline"}}
+
+## Usage with pivoting
+
+When using server-side aggregation with pivoting, only the pivot model is needed in the data query.
+The aggregation model can be omitted since it's driven by the pivot value fields.
+The aggregated values are acquired from the parent rows using the `getAggregatedValue()` method.
+
+{{"demo": "ServerSideDataGridAggregationPivoting.js", "bg": "inline"}}
 
 ## Usage with tree data
 

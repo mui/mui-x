@@ -1,12 +1,12 @@
-import { ScatterValueType } from '../../models';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { type ScatterValueType } from '../../models';
+import { type SeriesProcessor } from '../../internals/plugins/models';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;
 
-      const missingKeys = (['x', 'y', 'id'] as const).filter(
+      const missingKeys = (['x', 'y'] as const).filter(
         (key) => typeof datasetKeys?.[key] !== 'string',
       );
 

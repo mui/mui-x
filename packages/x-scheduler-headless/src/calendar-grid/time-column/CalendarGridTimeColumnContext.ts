@@ -1,18 +1,22 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridTimeColumnContext {
   /**
    * The start date and time of the column.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end date and time of the column.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
-   * Get the cursor position in the element in milliseconds.
+   * The index of the column in the grid.
+   */
+  index: number;
+  /**
+   * Gets the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.
    * @param {{ clientY: number }} parameters.input The input object provided by the drag and drop library for the current event.
    * @param {React.RefObject<HTMLElement | null>} parameters.elementRef The ref of the element on which the event has been triggered.

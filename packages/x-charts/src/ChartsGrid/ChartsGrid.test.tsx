@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
@@ -30,6 +29,9 @@ describe('<ChartsGrid />', () => {
         <ChartsGrid vertical horizontal />
       </ChartContainer>,
     );
+
+    const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
+    expect(gridLines.length).to.be.greaterThan(0);
   });
 
   it('should render grid on band scale without error', () => {
@@ -44,5 +46,8 @@ describe('<ChartsGrid />', () => {
         <ChartsGrid vertical horizontal />
       </ChartContainer>,
     );
+
+    const gridLines = document.querySelectorAll('.MuiChartsGrid-line');
+    expect(gridLines.length).to.be.greaterThan(0);
   });
 });

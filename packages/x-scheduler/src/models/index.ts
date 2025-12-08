@@ -1,2 +1,11 @@
 export * from './translations';
-export type { CalendarEvent, CalendarResource } from '@mui/x-scheduler-headless/models';
+export type {
+  EventCalendarPreferences,
+  SchedulerEvent,
+  SchedulerResource,
+  SchedulerEventColor,
+  SchedulerEventModelStructure,
+  SchedulerResourceModelStructure,
+  RecurringEventRecurrenceRule,
+  SchedulerOccurrencePlaceholderExternalDragData,
+} from '@mui/x-scheduler-headless/models';

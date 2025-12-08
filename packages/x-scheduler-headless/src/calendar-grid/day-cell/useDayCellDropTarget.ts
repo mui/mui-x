@@ -1,49 +1,40 @@
 'use client';
 import * as React from 'react';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { buildIsValidDropTarget } from '../../utils/drag-utils';
-import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
-import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
+import { useAdapter } from '../../use-adapter';
+import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { mergeDateAndTime } from '../../utils/date-utils';
-import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar/EventCalendarStore.selectors';
+import { useDropTarget } from '../../utils/useDropTarget';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridDayEvent',
   'CalendarGridDayEventResizeHandler',
   'CalendarGridTimeEvent',
+  'StandaloneEvent',
 ]);
 
 export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters) {
-  const { value } = parameters;
+  const { value, addPropertiesToDroppedEvent } = parameters;
 
+  // Context hooks
   const adapter = useAdapter();
-  const store = useEventCalendarStoreContext();
+
+  // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const getEventDropData = useEventCallback(
-    (data: any): CalendarOccurrencePlaceholder | undefined => {
+  // Feature hooks
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
+    ({ data, getDataFromInside, getDataFromOutside }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
-      const createDropData = (
-        newStart: SchedulerValidDate,
-        newEnd: SchedulerValidDate,
-      ): CalendarOccurrencePlaceholder => ({
-        start: newStart,
-        end: newEnd,
-        eventId: data.eventId,
-        occurrenceKey: data.occurrenceKey,
-        surfaceType: 'day-grid',
-        originalStart: data.start,
-      });
-
       // Move a Day Grid Event within the Day Grid
       if (data.source === 'CalendarGridDayEvent') {
-        const offset = diffIn(adapter, value, data.draggedDay, 'days');
-        return createDropData(
+        const offset = adapter.differenceInDays(value, data.draggedDay);
+        return getDataFromInside(
+          data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
         );
@@ -52,87 +43,62 @@ export function useDayCellDropTarget(parameters: useDayCellDropTarget.Parameters
       // Resize a Day Grid Event
       if (data.source === 'CalendarGridDayEventResizeHandler') {
         if (data.side === 'start') {
-          if (adapter.isAfterDay(value, data.end)) {
+          if (adapter.isAfter(value, adapter.endOfDay(data.end))) {
             return undefined;
           }
 
-          let newStart: SchedulerValidDate;
+          let newStart: TemporalSupportedObject;
           if (adapter.isSameDay(value, data.end)) {
             newStart = adapter.startOfDay(data.end);
           } else {
             newStart = mergeDateAndTime(adapter, value, data.start);
           }
-          return createDropData(newStart, data.end);
+          return getDataFromInside(data, newStart, data.end);
         }
 
         if (data.side === 'end') {
-          if (adapter.isBeforeDay(value, data.start)) {
+          if (adapter.isBefore(value, adapter.startOfDay(data.start))) {
             return undefined;
           }
 
-          let draggedDay: SchedulerValidDate;
+          let draggedDay: TemporalSupportedObject;
           if (adapter.isSameDay(value, data.start)) {
             draggedDay = adapter.endOfDay(data.start);
           } else {
             draggedDay = mergeDateAndTime(adapter, value, data.end);
           }
 
-          return createDropData(data.start, draggedDay);
+          return getDataFromInside(data, data.start, draggedDay);
         }
       }
 
       // Move a Time Grid Event into the Day Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        const cursorDate = adapter.addSeconds(
-          data.start,
-          data.initialCursorPositionInEventMs / 1000,
-        );
-        const offset = diffIn(adapter, value, cursorDate, 'days');
-        return createDropData(
+        const cursorDate = adapter.addMilliseconds(data.start, data.initialCursorPositionInEventMs);
+        const offset = adapter.differenceInDays(value, cursorDate);
+        return getDataFromInside(
+          data,
           offset === 0 ? data.start : adapter.addDays(data.start, offset),
           offset === 0 ? data.end : adapter.addDays(data.end, offset),
         );
+      }
+
+      // Move an Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        return getDataFromOutside(data, value);
       }
 
       return undefined;
     },
   );
 
-  React.useEffect(() => {
-    if (!ref.current) {
-      return undefined;
-    }
-
-    return dropTargetForElements({
-      element: ref.current,
-      canDrop: (arg) => isValidDropTarget(arg.source.data),
-      onDrag: ({ source: { data } }) => {
-        const newPlaceholder = getEventDropData(data);
-        if (newPlaceholder) {
-          store.setOccurrencePlaceholder(newPlaceholder);
-        }
-      },
-      onDragStart: ({ source: { data } }) => {
-        if (isValidDropTarget(data)) {
-          store.setOccurrencePlaceholder({
-            occurrenceKey: data.occurrenceKey,
-            eventId: data.eventId,
-            start: data.start,
-            end: data.end,
-            originalStart: data.start,
-            surfaceType: 'day-grid',
-          });
-        }
-      },
-      onDrop: ({ source: { data } }) => {
-        const newEvent = getEventDropData(data) ?? selectors.occurrencePlaceholder(store.state);
-        if (newEvent) {
-          store.applyOccurrencePlaceholder(newEvent);
-        }
-      },
-    });
-  }, [adapter, getEventDropData, store]);
+  useDropTarget({
+    surfaceType: 'day-grid',
+    ref,
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+  });
 
   return ref;
 }
@@ -142,6 +108,10 @@ export namespace useDayCellDropTarget {
     /**
      * The value of the cell.
      */
-    value: SchedulerValidDate;
+    value: TemporalSupportedObject;
+    /**
+     * Add properties to the event dropped in the cell before storing it in the store.
+     */
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 }

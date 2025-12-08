@@ -4,7 +4,8 @@ import {
   GridActionsCellItem,
   GridRowId,
   GridColDef,
-  GridActionsCellItemProps,
+  GridActionsCell,
+  GridRenderCellParams,
 } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { randomUserName } from '@mui/x-data-grid-generator';
@@ -21,18 +22,69 @@ const initialRows = [
   { id: 3, name: randomUserName() },
 ];
 
-function DeleteUserActionItem({
-  deleteUser,
-  ...props
-}: GridActionsCellItemProps & { deleteUser: () => void }) {
-  const [open, setOpen] = React.useState(false);
+type Row = (typeof initialRows)[number];
+
+const ActionHandlersContext = React.createContext<
+  ((id: GridRowId) => void) | undefined
+>(undefined);
+
+function ActionsCell(props: GridRenderCellParams) {
+  const setActionRowId = React.useContext(ActionHandlersContext);
+
+  if (!setActionRowId) {
+    throw new Error('ActionHandlersContext is empty');
+  }
 
   return (
-    <React.Fragment>
-      <GridActionsCellItem {...props} onClick={() => setOpen(true)} />
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        label="Delete"
+        showInMenu
+        icon={<DeleteIcon />}
+        onClick={() => setActionRowId(props.id)}
+        closeMenuOnClick={false}
+      />
+    </GridActionsCell>
+  );
+}
+
+const columns: GridColDef<Row>[] = [
+  { field: 'name', type: 'string' },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 80,
+    renderCell: (params) => <ActionsCell {...params} />,
+  },
+];
+
+export default function ActionsWithModalGrid() {
+  const [rows, setRows] = React.useState<Row[]>(initialRows);
+  const [actionRowId, setActionRowId] = React.useState<GridRowId | null>(null);
+
+  const deleteActiveRow = React.useCallback(
+    (rowId: GridRowId) =>
+      setRows((prevRows) => prevRows.filter((row) => row.id !== rowId)),
+    [],
+  );
+
+  const handleCloseDialog = React.useCallback(() => {
+    setActionRowId(null);
+  }, []);
+
+  const handleConfirmDelete = React.useCallback(() => {
+    deleteActiveRow(actionRowId!);
+    handleCloseDialog();
+  }, [actionRowId, deleteActiveRow, handleCloseDialog]);
+
+  return (
+    <div style={{ height: 300, width: '100%' }}>
+      <ActionHandlersContext.Provider value={setActionRowId}>
+        <DataGrid columns={columns} rows={rows} />
+      </ActionHandlersContext.Provider>
       <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
+        open={actionRowId !== null}
+        onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -43,61 +95,12 @@ function DeleteUserActionItem({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button
-            onClick={() => {
-              setOpen(false);
-              deleteUser();
-            }}
-            color="warning"
-            autoFocus
-          >
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleConfirmDelete} color="warning" autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
-  );
-}
-
-type Row = (typeof initialRows)[number];
-
-export default function ActionsWithModalGrid() {
-  const [rows, setRows] = React.useState<Row[]>(initialRows);
-
-  const deleteUser = React.useCallback(
-    (id: GridRowId) => () => {
-      setTimeout(() => {
-        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
-      });
-    },
-    [],
-  );
-
-  const columns = React.useMemo<GridColDef<Row>[]>(
-    () => [
-      { field: 'name', type: 'string' },
-      {
-        field: 'actions',
-        type: 'actions',
-        width: 80,
-        getActions: (params) => [
-          <DeleteUserActionItem
-            label="Delete"
-            showInMenu
-            icon={<DeleteIcon />}
-            deleteUser={deleteUser(params.id)}
-            closeMenuOnClick={false}
-          />,
-        ],
-      },
-    ],
-    [deleteUser],
-  );
-
-  return (
-    <div style={{ height: 300, width: '100%' }}>
-      <DataGrid columns={columns} rows={rows} />
     </div>
   );
 }

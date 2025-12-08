@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickerPopper } from '../../components/PickerPopper/PickerPopper';
 import { UseDesktopPickerParams, UseDesktopPickerProps } from './useDesktopPicker.types';
@@ -84,7 +83,12 @@ export const useDesktopPicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <Field {...fieldProps} slots={slots} slotProps={slotProps} inputRef={inputRef} />
+      <Field
+        {...fieldProps}
+        slots={{ ...slots, ...(fieldProps as any).slots }}
+        slotProps={{ ...slotProps, ...(fieldProps as any).slotProps }}
+        inputRef={inputRef}
+      />
       <PickerPopper slots={slots} slotProps={slotProps}>
         <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
           {renderCurrentView()}

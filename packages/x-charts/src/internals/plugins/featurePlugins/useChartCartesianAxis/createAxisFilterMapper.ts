@@ -1,8 +1,8 @@
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { isDefined } from '../../../isDefined';
-import { AxisConfig } from '../../../../models';
-import { ExtremumFilter } from './useChartCartesianAxis.types';
-import { GetZoomAxisFilters, ZoomAxisFilters } from './zoom.types';
+import { type AxisConfig } from '../../../../models';
+import { type ExtremumFilter } from './useChartCartesianAxis.types';
+import { type GetZoomAxisFilters, type ZoomAxisFilters } from './zoom.types';
 
 export function createDiscreteScaleGetAxisFilter(
   axisData: AxisConfig['data'],
@@ -28,7 +28,7 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  domain: NumberValue[],
+  domain: readonly NumberValue[],
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',

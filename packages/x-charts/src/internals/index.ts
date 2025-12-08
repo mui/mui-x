@@ -2,6 +2,8 @@
 export * from './components/ChartsAxesGradients';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
+export * from '../BarChart/BarLabel/BarLabelPlot';
+export * from '../BarChart/BarClipPath';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -9,7 +11,7 @@ export { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 export { useDrawingArea } from '../hooks/useDrawingArea';
 export { useScatterChartProps } from '../ScatterChart/useScatterChartProps';
 export { useScatterPlotData } from '../ScatterChart/useScatterPlotData';
-export { seriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
+export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seriesConfig';
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
@@ -18,7 +20,8 @@ export { useBarPlotData } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
-export * from './createSeriesSelectorOfType';
+export * from './seriesSelectorOfType';
+export { useSkipAnimation } from '../hooks/useSkipAnimation';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -32,6 +35,7 @@ export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
+export * from './plugins/featurePlugins/useChartBrush';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
@@ -49,7 +53,6 @@ export * from '../RadarChart/RadarChart.plugins';
 export * from '../PieChart/PieChart.plugins';
 
 // utils
-export * from './defaultizeValueFormatter';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
@@ -66,6 +69,8 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
+export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
+export { getBandSize } from './getBandSize';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
@@ -84,3 +89,4 @@ export * from './material';
 export * from './createSvgIcon';
 
 export * from './constants';
+export * from './scales';

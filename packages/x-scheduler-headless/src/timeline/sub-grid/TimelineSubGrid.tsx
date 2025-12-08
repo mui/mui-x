@@ -3,11 +3,13 @@ import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useTimelineRootContext } from '../root/TimelineRootContext';
-import { selectors } from '../root/store';
+import { useTimelineStoreContext } from '../../use-timeline-store-context';
+import { timelineViewSelectors } from '../../timeline-selectors';
+import { schedulerOccurrenceSelectors } from '../../scheduler-selectors';
+import { SchedulerResourceId } from '../../models';
 
-export const TimelineSubGrid = React.forwardRef(function TimelineSubGrid<Item = any>(
-  componentProps: TimelineSubGrid.Props<Item>,
+export const TimelineSubGrid = React.forwardRef(function TimelineSubGrid(
+  componentProps: TimelineSubGrid.Props,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const {
@@ -20,33 +22,38 @@ export const TimelineSubGrid = React.forwardRef(function TimelineSubGrid<Item = 
     ...elementProps
   } = componentProps;
 
-  const { store } = useTimelineRootContext<Item>();
-  const items = useStore(store, selectors.items);
+  // Context hooks
+  const store = useTimelineStoreContext();
+
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
+  const resources = useStore(
+    store,
+    schedulerOccurrenceSelectors.groupedByResourceList,
+    viewConfig.start,
+    viewConfig.end,
+  );
 
   const children = React.useMemo(() => {
     if (!React.isValidElement(childrenProp) && typeof childrenProp === 'function') {
-      return items.map(childrenProp);
+      return resources.map(({ resource }) => childrenProp(resource.id));
     }
 
     return childrenProp;
-  }, [childrenProp, items]);
+  }, [childrenProp, resources]);
 
-  const props = React.useMemo(() => ({ role: 'rowgroup', children }), [children]);
+  const props = { role: 'rowgroup', children };
 
   return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [props, elementProps],
   });
-}) as TimelineSubGrid.Component;
+});
 
 export namespace TimelineSubGrid {
   export interface State {}
 
-  export interface Props<Item = any> extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
-    children?: React.ReactNode | ((item: Item, index: number, items: Item[]) => React.ReactNode);
+  export interface Props extends Omit<BaseUIComponentProps<'div', State>, 'children'> {
+    children?: React.ReactNode | ((resourceId: SchedulerResourceId) => React.ReactNode);
   }
-
-  export type Component = <Item = any>(
-    props: Props<Item> & React.RefAttributes<HTMLDivElement>,
-  ) => React.ReactElement;
 }

@@ -8,13 +8,13 @@ import type { MakeOptional } from '@mui/x-internals/types';
 import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
-import { seriesConfig as sankeySeriesConfig } from './seriesConfig';
+import { sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
 import type { SankeyChartSlotExtension } from './sankeySlots.types';
 
@@ -25,15 +25,7 @@ const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig }
 export interface SankeyChartProps
   extends Omit<
       ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
-      | 'plugins'
-      | 'series'
-      | 'slotProps'
-      | 'slots'
-      | 'dataset'
-      | 'hideLegend'
-      | 'skipAnimation'
-      | 'highlightedItem'
-      | 'onHighlightChange'
+      'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,
     Omit<SankeyPlotProps, 'data'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -125,6 +117,35 @@ SankeyChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * The highlighted item.
+   * Used when the highlight is controlled.
+   */
+  highlightedItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+  ]),
+  /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
@@ -153,6 +174,12 @@ SankeyChart.propTypes = {
       top: PropTypes.number,
     }),
   ]),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {SankeyHighlightItemData | null} highlightedItem The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func,
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.

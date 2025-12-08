@@ -1,39 +1,38 @@
 'use client';
 import * as React from 'react';
-import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { CalendarOccurrencePlaceholder, SchedulerValidDate } from '../../models';
-import {
-  EVENT_DRAG_PRECISION_MINUTE,
-  buildIsValidDropTarget,
-  EVENT_DRAG_PRECISION_MS,
-} from '../../utils/drag-utils';
+import { SchedulerEvent, TemporalSupportedObject } from '../../models';
+import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
+import { useDropTarget } from '../../utils/useDropTarget';
+import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { selectors } from '../../use-event-calendar';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'CalendarGridTimeEvent',
   'CalendarGridTimeEventResizeHandler',
   'CalendarGridDayEvent',
+  'StandaloneEvent',
 ]);
 
 export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
-  const { start, end } = parameters;
+  const { start, end, addPropertiesToDroppedEvent } = parameters;
 
+  // Context hooks
   const adapter = useAdapter();
-  const ref = React.useRef<HTMLDivElement>(null);
   const store = useEventCalendarStoreContext();
 
-  // TODO: Avoid JS date conversion
-  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
-  const collectionStartTimestamp = getTimestamp(start);
-  const collectionEndTimestamp = getTimestamp(end);
+  // Ref hooks
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const collectionStartTimestamp = adapter.getTime(start);
+  const collectionEndTimestamp = adapter.getTime(end);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
-    useEventCallback(({ input, elementRef }) => {
+    useStableCallback(({ input, elementRef }) => {
       if (!ref.current || !elementRef.current) {
         return 0;
       }
@@ -45,52 +44,33 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
       return Math.round(collectionDurationMs * positionY);
     });
 
-  const getEventDropData = useEventCallback(
-    (
-      data: Record<string, unknown>,
-      input: { clientY: number },
-    ): CalendarOccurrencePlaceholder | undefined => {
+  const getEventDropData: useDropTarget.GetEventDropData = useStableCallback(
+    ({ data, getDataFromInside, getDataFromOutside, input }) => {
       if (!isValidDropTarget(data)) {
         return undefined;
       }
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const createDropData = (
-        newStart: SchedulerValidDate,
-        newEnd: SchedulerValidDate,
-      ): CalendarOccurrencePlaceholder => ({
-        start: newStart,
-        end: newEnd,
-        eventId: data.eventId,
-        occurrenceKey: data.occurrenceKey,
-        surfaceType: 'time-grid',
-        originalStart: data.start,
-      });
-
-      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        return adapter.addSeconds(date, roundedOffset / 1000);
+        return adapter.addMilliseconds(date, roundedOffset);
       };
 
       // Move a Time Grid Event within the Time Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        // TODO: Avoid JS Date conversion
-        const eventDurationMinute =
-          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-          (60 * 1000);
+        const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         const newStartDate = addOffsetToDate(
           start,
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
 
-        const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
+        const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
-        return createDropData(newStartDate, newEndDate);
+        return getDataFromInside(data, newStartDate, newEndDate);
       }
 
       // Resize a Time Grid Event
@@ -107,13 +87,11 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
             ? cursorDate
             : maxStartDate;
 
-          return createDropData(newStartDate, data.end);
+          return getDataFromInside(data, newStartDate, data.end);
         }
 
         if (data.side === 'end') {
-          // TODO: Avoid JS Date conversion
-          const eventDurationMs =
-            adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
+          const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
           const cursorDate = addOffsetToDate(
             start,
@@ -124,58 +102,37 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
           const minEndDate = adapter.addMinutes(data.start, EVENT_DRAG_PRECISION_MINUTE);
           const newEndDate = adapter.isAfter(cursorDate, minEndDate) ? cursorDate : minEndDate;
 
-          return createDropData(data.start, newEndDate);
+          return getDataFromInside(data, data.start, newEndDate);
         }
       }
 
       // Move a Day Grid Event into the Time Grid
       if (data.source === 'CalendarGridDayEvent') {
         const newStartDate = addOffsetToDate(start, cursorOffsetMs);
-        const newEndDate = adapter.addMinutes(newStartDate, 60);
+        const newEndDate = adapter.addMinutes(
+          newStartDate,
+          schedulerEventSelectors.defaultEventDuration(store.state),
+        );
 
-        return createDropData(newStartDate, newEndDate);
+        return getDataFromInside(data, newStartDate, newEndDate);
+      }
+
+      // Move a Standalone Event into the Time Grid
+      if (data.source === 'StandaloneEvent') {
+        return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
       }
 
       return undefined;
     },
   );
 
-  React.useEffect(() => {
-    if (!ref.current) {
-      return undefined;
-    }
-
-    return dropTargetForElements({
-      element: ref.current,
-      canDrop: (arg) => isValidDropTarget(arg.source.data),
-      onDrag: ({ source: { data }, location }) => {
-        const newPlaceholder = getEventDropData(data, location.current.input);
-        if (newPlaceholder) {
-          store.setOccurrencePlaceholder(newPlaceholder);
-        }
-      },
-      onDragStart: ({ source: { data } }) => {
-        if (isValidDropTarget(data)) {
-          store.setOccurrencePlaceholder({
-            eventId: data.eventId,
-            occurrenceKey: data.occurrenceKey,
-            surfaceType: 'time-grid',
-            start: data.start,
-            end: data.end,
-            originalStart: data.start,
-          });
-        }
-      },
-      onDrop: ({ source: { data }, location }) => {
-        const newEvent =
-          getEventDropData(data, location.current.input) ??
-          selectors.occurrencePlaceholder(store.state);
-        if (newEvent) {
-          store.applyOccurrencePlaceholder(newEvent);
-        }
-      },
-    });
-  }, [adapter, getEventDropData, store]);
+  useDropTarget({
+    ref,
+    surfaceType: 'time-grid',
+    getEventDropData,
+    isValidDropTarget,
+    addPropertiesToDroppedEvent,
+  });
 
   return { getCursorPositionInElementMs, ref };
 }
@@ -185,11 +142,15 @@ export namespace useTimeDropTarget {
     /**
      * The data and time at which the column starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalSupportedObject;
     /**
      * The data and time at which the column ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalSupportedObject;
+    /**
+     * Add properties to the event dropped in the column before storing it in the store.
+     */
+    addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
   export interface ReturnValue

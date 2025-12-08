@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import {
   AreaPlot,
-  LineChartProps,
-  LineChartSlots,
-  LineChartSlotProps,
+  type LineChartProps,
+  type LineChartSlots,
+  type LineChartSlotProps,
   LineHighlightPlot,
   LinePlot,
   MarkPlot,
@@ -21,17 +21,18 @@ import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { useLineChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import {
-  ChartsToolbarProSlotProps,
-  ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { LINE_CHART_PRO_PLUGINS, LineChartProPluginSignatures } from './LineChartPro.plugins';
+import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
   extends Omit<LineChartSlots, 'toolbar'>,
@@ -130,6 +131,7 @@ const LineChartPro = React.forwardRef(function LineChartPro(
             <MarkPlot {...markPlotProps} />
           </g>
           <LineHighlightPlot {...lineHighlightPlotProps} />
+          <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
@@ -160,6 +162,14 @@ LineChartPro.propTypes = {
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
+  }),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -422,6 +432,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -517,6 +528,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -598,6 +610,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -680,6 +693,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -761,6 +775,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -842,6 +857,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -933,6 +949,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1024,6 +1041,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1105,6 +1123,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1209,6 +1228,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1303,6 +1323,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1383,6 +1404,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1464,6 +1486,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1544,6 +1567,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1624,6 +1648,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1714,6 +1739,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1804,6 +1830,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1884,6 +1911,7 @@ LineChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1962,7 +1990,7 @@ LineChartPro.propTypes = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag']),
+        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -1973,11 +2001,17 @@ LineChartPro.propTypes = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -1992,6 +2026,16 @@ LineChartPro.propTypes = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['doubleTapReset']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,
     ),

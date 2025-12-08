@@ -1,13 +1,13 @@
-import { ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
+import { type ChartsLabelMarkProps } from '@mui/x-charts/ChartsLabel';
 import {
-  CommonSeriesType,
-  CartesianSeriesType,
-  CommonDefaultizedProps,
-  SeriesId,
+  type CommonSeriesType,
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type SeriesId,
 } from '@mui/x-charts/internals';
-import { Position } from '@mui/x-charts/models';
-import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { FunnelCurveType } from './curves';
+import { type Position } from '@mui/x-charts/models';
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import { type FunnelCurveType } from './curves';
 
 export type FunnelItemId = string | number;
 
@@ -36,7 +36,7 @@ export type FunnelValueType = {
 };
 
 export interface FunnelSeriesType
-  extends Omit<CommonSeriesType<FunnelValueType>, 'color'>,
+  extends Omit<CommonSeriesType<FunnelValueType>, 'color' | 'colorGetter'>,
     CartesianSeriesType {
   type: 'funnel';
   /**

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
@@ -55,9 +54,9 @@ describe('<DataGridPro /> - Columns', () => {
       await act(() => apiRef.current?.showColumnMenu('brand'));
       const menu = screen.getByRole('menu');
       await waitFor(() => {
-        expect(menu.id).to.match(/[«|:]r[0-9a-z]+[»|:]/);
+        expect(menu.id).to.match(/[«|:|_]r_?[0-9a-z]+[»|:|_]/);
       });
-      expect(menu.getAttribute('aria-labelledby')).to.match(/[«|:]r[0-9a-z]+[»|:]/);
+      expect(menu.getAttribute('aria-labelledby')).to.match(/[«|:|_]r_?[0-9a-z]+[»|:|_]/);
     });
   });
 
@@ -614,6 +613,31 @@ describe('<DataGridPro /> - Columns', () => {
       await waitFor(() => {
         expect(columns.map((_, i) => getColumnHeaderCell(i).offsetWidth)).to.deep.equal([50, 63]);
       });
+    });
+
+    it('should work with custom column header sort icon', async () => {
+      const iconSize = 24;
+      const gap = 2;
+      const paddingX = 20;
+      function CustomSortIcon() {
+        return <span style={{ width: iconSize, flex: 'none' }}>⇅</span>;
+      }
+      render(
+        <Test
+          rows={rows}
+          columns={columns}
+          slots={{
+            columnHeaderSortIcon: CustomSortIcon,
+          }}
+        />,
+      );
+      await act(async () => apiRef.current?.autosizeColumns());
+
+      // Cell structure: |← padding →|← text →|← gap →|← icon →|← padding →|
+      expect(getWidths()).to.deep.equal([
+        paddingX + 132 + gap + iconSize, // `132` is the width of the text "This is the ID column"
+        paddingX + 154 + gap + iconSize, // `154` is the width of the text "This is the brand column"
+      ]);
     });
 
     describe('options', () => {

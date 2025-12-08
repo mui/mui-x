@@ -1,9 +1,8 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
-import { HeatmapItem, HeatmapItemProps } from './HeatmapItem';
+import { HeatmapItem, type HeatmapItemProps } from './HeatmapItem';
 
 export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
 

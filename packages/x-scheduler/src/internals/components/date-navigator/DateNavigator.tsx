@@ -5,7 +5,11 @@ import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide
 import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import './DateNavigator.css';
@@ -16,12 +20,15 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
 ) {
   const { className, ...other } = props;
 
+  // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const view = useStore(store, selectors.view);
-  const visibleDate = useStore(store, selectors.visibleDate);
-  const isSidePanelOpen = useStore(store, selectors.preferences).isSidePanelOpen;
+
+  // Selector hooks
+  const view = useStore(store, eventCalendarViewSelectors.view);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
     <header
@@ -34,7 +41,9 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         type="button"
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
-        onClick={(event) => store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event)}
+        onClick={(event) =>
+          store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
+        }
       >
         {isSidePanelOpen ? (
           <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />
@@ -43,7 +52,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
         )}
       </button>
       <p className="DateNavigatorLabel" aria-live="polite">
-        {adapter.format(visibleDate, 'month')} {adapter.format(visibleDate, 'year')}
+        {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
       </p>
       <div className="DateNavigatorButtonsContainer">
         <button

@@ -3,46 +3,46 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import useId from '@mui/utils/useId';
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
-import { ChartsAxis, ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
-  ChartsAxisSlots,
-  ChartsAxisSlotProps,
-  ChartSeriesConfig,
-  XAxis,
-  YAxis,
+  type ChartsAxisSlots,
+  type ChartsAxisSlotProps,
+  type ChartSeriesConfig,
+  type XAxis,
+  type YAxis,
 } from '@mui/x-charts/internals';
 import { ChartsWrapper, type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '@mui/x-charts/ChartsOverlay';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import {
   ChartsLegend,
-  ChartsLegendSlotProps,
-  ChartsLegendSlots,
+  type ChartsLegendSlotProps,
+  type ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
-import { ChartContainerProProps } from '../ChartContainerPro';
-import { HeatmapSeriesType } from '../models/seriesType/heatmap';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
+import { type ChartContainerProProps } from '../ChartContainerPro';
+import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
 import { HeatmapPlot } from './HeatmapPlot';
-import { seriesConfig as heatmapSeriesConfig } from './seriesConfig';
-import { HeatmapTooltip, HeatmapTooltipProps } from './HeatmapTooltip';
-import { HeatmapItemSlotProps, HeatmapItemSlots } from './HeatmapItem';
-import { HEATMAP_PLUGINS, HeatmapPluginSignatures } from './Heatmap.plugins';
+import { heatmapSeriesConfig } from './seriesConfig';
+import { HeatmapTooltip, type HeatmapTooltipProps } from './HeatmapTooltip';
+import { type HeatmapItemSlotProps, type HeatmapItemSlots } from './HeatmapItem';
+import { HEATMAP_PLUGINS, type HeatmapPluginSignatures } from './Heatmap.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import {
-  ChartsToolbarProSlotProps,
-  ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface HeatmapSlots
@@ -493,6 +493,7 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ).isRequired,
@@ -575,6 +576,7 @@ Heatmap.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),

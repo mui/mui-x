@@ -1,26 +1,32 @@
 import {
   useChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
   useChartKeyboardNavigation,
-  UseChartKeyboardNavigationSignature,
-  ConvertSignaturesIntoPlugins,
+  type UseChartKeyboardNavigationSignature,
+  useChartBrush,
+  type UseChartBrushSignature,
+  type ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import {
+  useChartProZoom,
+  type UseChartProZoomSignature,
+} from '../internals/plugins/useChartProZoom';
 
 export type BarChartProPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'bar'>,
+  UseChartBrushSignature,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'bar'>,
   UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
@@ -29,8 +35,9 @@ export type BarChartProPluginSignatures = [
 
 export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginSignatures> = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartBrush,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartKeyboardNavigation,
   useChartProZoom,

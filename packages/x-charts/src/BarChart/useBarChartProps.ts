@@ -3,17 +3,17 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import type { BarChartProps } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ChartContainerProps } from '../ChartContainer';
-import { BarPlotProps } from './BarPlot';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
+import { type ChartContainerProps } from '../ChartContainer';
+import { type BarPlotProps } from './BarPlot';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsClipPathProps } from '../ChartsClipPath';
+import { type ChartsOverlayProps } from '../ChartsOverlay';
+import { type ChartsAxisProps } from '../ChartsAxis';
+import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { BAR_CHART_PLUGINS, BarChartPluginSignatures } from './BarChart.plugins';
+import { BAR_CHART_PLUGINS, type BarChartPluginSignatures } from './BarChart.plugins';
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -49,6 +49,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
+    brushConfig,
     ...other
   } = props;
 
@@ -137,6 +138,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    brushConfig,
     plugins: BAR_CHART_PLUGINS,
   };
 

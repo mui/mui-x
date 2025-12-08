@@ -3,25 +3,31 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '../ChartsClipPath';
-import { ChartsColor, ChartsColorPalette } from '../colorPalettes';
+import { type ChartsColor, type ChartsColorPalette } from '../colorPalettes';
 import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
-import { ChartContainerProps } from '../ChartContainer';
+import { type ChartContainerProps } from '../ChartContainer';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { XAxis, YAxis } from '../models/axis';
-import { LineSeriesType, BarSeriesType } from '../models/seriesType';
-import { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
-import { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
-import { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
-import { LineHighlightPlotSlots, LineHighlightPlotSlotProps } from '../LineChart/LineHighlightPlot';
-import { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
-import { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
-import { FocusedMark } from '../LineChart/LineFocusedMark';
+import type {
+  ChartsTooltipSlots,
+  ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
+import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import type { XAxis, YAxis } from '../models/axis';
+import type { LineSeriesType, BarSeriesType } from '../models/seriesType';
+import type { AreaPlotSlots, AreaPlotSlotProps } from '../LineChart/AreaPlot';
+import type { LinePlotSlots, LinePlotSlotProps } from '../LineChart/LinePlot';
+import type { MarkPlotSlots, MarkPlotSlotProps } from '../LineChart/MarkPlot';
+import type {
+  LineHighlightPlotSlots,
+  LineHighlightPlotSlotProps,
+} from '../LineChart/LineHighlightPlot';
+import type { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
+import type { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
+import { LineFocusedMark } from '../LineChart/LineFocusedMark';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -302,7 +308,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         {plotType === 'line' && (
           <React.Fragment>
             <LineHighlightPlot slots={slots} slotProps={slotProps} />
-            <FocusedMark />
+            <LineFocusedMark />
           </React.Fragment>
         )}
         {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
@@ -342,6 +348,14 @@ SparkLineChart.propTypes = {
    * @default 0
    */
   baseline: PropTypes.oneOfType([PropTypes.oneOf(['max', 'min']), PropTypes.number]),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
+  }),
   children: PropTypes.node,
   className: PropTypes.string,
   /**
@@ -614,6 +628,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -689,6 +704,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -750,6 +766,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -812,6 +829,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -873,6 +891,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -934,6 +953,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -1005,6 +1025,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -1076,6 +1097,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
     PropTypes.shape({
@@ -1137,6 +1159,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ]),
@@ -1218,6 +1241,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1292,6 +1316,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1352,6 +1377,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1413,6 +1439,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1473,6 +1500,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1533,6 +1561,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1603,6 +1632,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1673,6 +1703,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),
@@ -1733,6 +1764,7 @@ SparkLineChart.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
     }),

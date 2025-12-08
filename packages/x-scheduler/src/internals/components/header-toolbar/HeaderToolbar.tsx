@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { selectors } from '@mui/x-scheduler-headless/use-event-calendar';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
@@ -17,10 +17,14 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
 ) {
   const { className, ...other } = props;
 
+  // Context hooks
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const views = useStore(store, selectors.views);
-  const view = useStore(store, selectors.view);
+
+  // Selector hooks
+  const views = useStore(store, eventCalendarViewSelectors.views);
+  const view = useStore(store, eventCalendarViewSelectors.view);
+
   const showViewSwitcher = views.length > 1;
 
   return (

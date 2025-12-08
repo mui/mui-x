@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { DEFAULT_IS_MULTI_DAY_EVENT, DEFAULT_RESOURCES } from '../../utils/SchedulerStore';
-import { DEFAULT_PREFERENCES, TimelineStore } from '../TimelineStore';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { TimelineStore } from '../TimelineStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -14,20 +14,33 @@ describe('Core - TimelineStore', () => {
 
       const expectedState = {
         adapter,
-        resources: DEFAULT_RESOURCES,
-        visibleResources: new Map(),
-        events: [],
-        nowUpdatedEveryMinute: adapter.date(),
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
+        canDragEventsFromTheOutside: false,
+        canDropEventsToTheOutside: false,
+        copiedEvent: null,
         eventColor: 'jade',
-        showCurrentTimeIndicator: true,
+        eventCreation: true,
+        eventIdList: [],
+        eventModelList: [],
+        eventModelLookup: new Map(),
+        eventModelStructure: undefined,
+        nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        visibleDate: adapter.startOfDay(adapter.date()),
-        preferences: DEFAULT_PREFERENCES,
+        pendingUpdateRecurringEventParameters: null,
+        preferences: EMPTY_OBJECT,
+        processedEventLookup: new Map(),
+        processedResourceLookup: new Map(),
+        readOnly: false,
+        resourceChildrenIdLookup: new Map(),
+        resourceIdList: [],
+        resourceModelStructure: undefined,
+        showCurrentTimeIndicator: true,
+        timezone: 'default',
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
+        visibleDate: adapter.startOfDay(adapter.now('default')),
+        visibleResources: new Map(),
       };
 
       expect(store.state).to.deep.equal(expectedState);

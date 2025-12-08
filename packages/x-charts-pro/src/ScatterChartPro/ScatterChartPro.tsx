@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import {
-  ScatterChartProps,
-  ScatterChartSlotProps,
-  ScatterChartSlots,
+  type ScatterChartProps,
+  type ScatterChartSlotProps,
+  type ScatterChartSlots,
   ScatterPlot,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -14,22 +14,23 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ChartsTooltip, ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
-  ScatterChartProPluginSignatures,
+  type ScatterChartProPluginSignatures,
 } from './ScatterChartPro.plugins';
 import {
-  ChartsToolbarProSlots,
-  ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface ScatterChartProSlots
@@ -133,6 +134,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
+          <ChartsBrushOverlay />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
@@ -162,6 +164,14 @@ ScatterChartPro.propTypes = {
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
+  }),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -410,6 +420,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -505,6 +516,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -586,6 +598,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -668,6 +681,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -749,6 +763,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -830,6 +845,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -921,6 +937,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1012,6 +1029,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1093,6 +1111,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1197,6 +1216,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1291,6 +1311,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1371,6 +1392,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1452,6 +1474,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1532,6 +1555,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1612,6 +1636,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1702,6 +1727,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1792,6 +1818,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1872,6 +1899,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1950,7 +1978,7 @@ ScatterChartPro.propTypes = {
   zoomInteractionConfig: PropTypes.shape({
     pan: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['drag', 'pressAndDrag']),
+        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -1961,11 +1989,17 @@ ScatterChartPro.propTypes = {
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['pressAndDrag']).isRequired,
         }),
+        PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
       ]).isRequired,
     ),
     zoom: PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.oneOf(['pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
         PropTypes.shape({
           pointerMode: PropTypes.any,
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
@@ -1980,6 +2014,16 @@ ScatterChartPro.propTypes = {
           pointerMode: PropTypes.oneOf(['mouse', 'touch']),
           requiredKeys: PropTypes.arrayOf(PropTypes.string),
           type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['doubleTapReset']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['brush']).isRequired,
         }),
       ]).isRequired,
     ),

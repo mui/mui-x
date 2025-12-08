@@ -1,14 +1,13 @@
-import * as React from 'react';
-import { DateTime } from 'luxon';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
 
 describe('<CalendarGrid.DayEvent />', () => {
   const { render } = createSchedulerRenderer();
 
-  const eventStart = DateTime.now();
-  const eventEnd = eventStart.plus({ hours: 1 });
+  const eventStart = processDate(adapter.now('default'), adapter);
+  const eventEnd = processDate(adapter.addHours(eventStart.value, 1), adapter);
 
   describeConformance(
     <CalendarGrid.DayEvent
@@ -16,6 +15,7 @@ describe('<CalendarGrid.DayEvent />', () => {
       occurrenceKey="fake-key"
       start={eventStart}
       end={eventEnd}
+      renderDragPreview={() => null}
     />,
     () => ({
       refInstanceof: window.HTMLDivElement,
@@ -23,8 +23,8 @@ describe('<CalendarGrid.DayEvent />', () => {
         return render(
           <EventCalendarProvider events={[]}>
             <CalendarGrid.Root>
-              <CalendarGrid.DayRow start={eventStart} end={eventEnd}>
-                <CalendarGrid.DayCell value={eventStart}>{node}</CalendarGrid.DayCell>
+              <CalendarGrid.DayRow start={eventStart.value} end={eventEnd.value}>
+                <CalendarGrid.DayCell value={eventStart.value}>{node}</CalendarGrid.DayCell>
               </CalendarGrid.DayRow>
             </CalendarGrid.Root>
           </EventCalendarProvider>,

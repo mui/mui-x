@@ -1,15 +1,14 @@
-import * as React from 'react';
 import {
-  AxisId,
+  type AxisId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   useBarPlotData,
   useSelector,
   useStore,
 } from '@mui/x-charts/internals';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
+import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 interface BarPreviewPlotProps extends PreviewPlotProps {
   x: number;
@@ -32,9 +31,9 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 
   return (
     <g>
-      {completedData.map(({ seriesId, data }) => (
+      {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => (
         <g key={seriesId}>
-          {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => {
+          {data.map(({ dataIndex, color, x, y, width, height }) => {
             return (
               <BarElement
                 key={dataIndex}
@@ -61,8 +60,8 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
 
   return useBarPlotData(drawingArea, xAxes, yAxes);
 }

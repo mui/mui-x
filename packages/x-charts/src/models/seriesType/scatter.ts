@@ -1,5 +1,10 @@
-import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { CartesianSeriesType, CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import {
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+} from './common';
 
 export type ScatterValueType = {
   x: number;
@@ -27,6 +32,8 @@ export interface ScatterSeriesType
   /**
    * If true, the interaction will not use element hover for this series.
    * @default false
+   * @deprecated This prop will be removed in a future version because it is ambiguous. You can select what to disable
+   *             on hover by disabling the highlight or the tooltip separately.
    */
   disableHover?: boolean;
   /**

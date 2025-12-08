@@ -15,3 +15,4 @@ export { unstable_resetCleanupTracking } from '@mui/x-tree-view/internals';
 export * from '@mui/x-tree-view/models';
 export * from '@mui/x-tree-view/icons';
 export * from '@mui/x-tree-view/hooks';
+export * from './hooks';

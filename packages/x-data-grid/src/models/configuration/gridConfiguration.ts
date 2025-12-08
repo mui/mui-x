@@ -4,10 +4,11 @@ import type {
   GridRowsOverridableMethodsInternalHook,
 } from './gridRowConfiguration';
 import type { GridAggregationInternalHooks } from './gridAggregationConfiguration';
+import type { GridCellEditableInternalHook } from './gridCellEditableConfiguration';
 import type { GridCSSVariablesInterface } from '../../constants/cssVariables';
-import { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridPrivateApiCommon } from '../api/gridApiCommon';
 import type { GridPrivateApiCommunity } from '../api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../props/DataGridProps';
 import type { GridParamsOverridableMethodsInternalHook } from './gridParamsConfiguration';
 
 export interface GridAriaAttributesInternalHook {
@@ -17,8 +18,9 @@ export interface GridAriaAttributesInternalHook {
 export interface GridInternalHook<Api, Props>
   extends GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook,
+    GridCellEditableInternalHook<Api, Props>,
     GridAggregationInternalHooks<Api, Props>,
-    GridRowsOverridableMethodsInternalHook<Api>,
+    GridRowsOverridableMethodsInternalHook<Api, Props>,
     GridParamsOverridableMethodsInternalHook<Api> {
   useCSSVariables: () => { id: string; variables: GridCSSVariablesInterface };
 }

@@ -1,9 +1,15 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { SchedulerValidDate } from '../../models';
+import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
+import { useEventRowDropTarget } from './useEventRowDropTarget';
+import { usePlaceholderInRow } from './usePlaceholderInRow';
+import { useTimelineStoreContext } from '../../use-timeline-store-context';
+import { schedulerOccurrenceSelectors } from '../../scheduler-selectors';
+import { timelineViewSelectors } from '../../timeline-selectors';
 
 export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
   componentProps: TimelineEventRow.Props,
@@ -14,19 +20,58 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
     className,
     render,
     // Internal props
-    start,
-    end,
+    resourceId,
+    addPropertiesToDroppedEvent,
+    children: childrenProp,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  // TODO: Add aria-rowindex using Composite.
-  const props = React.useMemo(() => ({ role: 'row' }), []);
+  // Context hooks
+  const store = useTimelineStoreContext();
 
-  const contextValue: TimelineEventRowContext = React.useMemo(() => ({ start, end }), [start, end]);
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
+  const occurrences = useStore(
+    store,
+    schedulerOccurrenceSelectors.resourceOccurrences,
+    viewConfig.start,
+    viewConfig.end,
+    resourceId,
+  );
+
+  // Feature hooks
+  const { getCursorPositionInElementMs, ref: dropTargetRef } = useEventRowDropTarget({
+    resourceId,
+    addPropertiesToDroppedEvent,
+  });
+
+  const contextValue: TimelineEventRowContext = React.useMemo(
+    () => ({ getCursorPositionInElementMs }),
+    [getCursorPositionInElementMs],
+  );
+
+  const occurrencesWithPosition = useEventOccurrencesWithTimelinePosition({
+    occurrences,
+    maxSpan: 1,
+  });
+
+  const placeholder = usePlaceholderInRow({
+    resourceId,
+    occurrences: occurrencesWithPosition.occurrences,
+    maxIndex: occurrencesWithPosition.maxIndex,
+  });
+
+  const children = React.useMemo(
+    () => childrenProp({ placeholder, ...occurrencesWithPosition }),
+    [childrenProp, placeholder, occurrencesWithPosition],
+  );
+
+  // TODO: Add aria-rowindex using Composite.
+  const props = { role: 'row', children };
 
   const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef],
+    ref: [forwardedRef, dropTargetRef],
     props: [props, elementProps],
   });
 
@@ -40,14 +85,13 @@ export const TimelineEventRow = React.forwardRef(function TimelineEventRow(
 export namespace TimelineEventRow {
   export interface State {}
 
-  export interface Props extends BaseUIComponentProps<'div', State> {
-    /**
-     * The start date and time of the row.
-     */
-    start: SchedulerValidDate;
-    /**
-     * The end date and time of the row.
-     */
-    end: SchedulerValidDate;
+  export interface Props
+    extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
+      useEventRowDropTarget.Parameters {
+    children: (parameters: ChildrenParameters) => React.ReactNode;
+  }
+
+  export interface ChildrenParameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
+    placeholder: usePlaceholderInRow.ReturnValue;
   }
 }

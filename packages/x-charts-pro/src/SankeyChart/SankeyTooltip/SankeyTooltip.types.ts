@@ -1,4 +1,4 @@
-import { ChartsTooltipContainerProps } from '@mui/x-charts/ChartsTooltip';
+import { type ChartsTooltipContainerProps } from '@mui/x-charts/ChartsTooltip';
 
 export interface SankeyTooltipProps
   extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {

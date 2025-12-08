@@ -169,7 +169,7 @@ The order of elements in composition is the only way to define how they overlap.
 
 ### Plotting
 
-To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.
+To display data, you have components named `[Type]Plot` such as `LinePlot`, `AreaPlot`, `MarkPlot`, `BarPlot`, etc.
 
 ### Clipping
 
@@ -260,3 +260,12 @@ If you are not using the axis highlight or the tooltip, consider disabling this 
 ```
 
 :::
+
+## Examples
+
+### Bell curve
+
+This example demonstrates how to combine scatter and line plots to overlay a normal distribution curve (bell curve) over scattered data points.
+The bell curve is calculated based on the mean and standard deviation of the data.
+
+{{"demo": "BellCurveOverlay.js" }}
