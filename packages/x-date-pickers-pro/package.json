@@ -90,7 +90,6 @@
     }
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/luxon": "catalog:",

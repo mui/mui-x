@@ -64,6 +64,11 @@ export default defineConfig({
       NODE_ENV: 'test',
       VITEST: 'true',
     },
+    server: {
+      deps: {
+        inline: ['@mui/internal-test-utils'],
+      },
+    },
     browser: {
       isolate: false,
       provider: playwright({
