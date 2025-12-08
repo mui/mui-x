@@ -636,7 +636,7 @@ This tutorial's backend server implements basic server-side functionality:
 - Sorting: Single-column sorting in ascending or descending order
 - Filtering: Supports operators like `contains`, `equals`, `startsWith`, `endsWith`, `isEmpty`, and `isNotEmpty` with `And`/`Or` logic operators
 
-If your app requires additional features (such as multi-column sorting, advanced filtering operators, cursor-based pagination, or other server-side operations), you'll need to implement them in your backend accordingly.
+If your app requires additional features (such as [multi-column sorting](/x/react-data-grid/sorting/#multi-sorting), [advanced filtering operators](/x/react-data-grid/filtering/customization/), [cursor-based pagination](/x/react-data-grid/server-side-data/recipes/#cursor-based-pagination), or other server-side operations), you'll need to implement them in your backend accordingly.
 :::
 
 ### 5. Add scripts to package.json files
