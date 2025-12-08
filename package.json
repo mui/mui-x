@@ -79,7 +79,7 @@
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#17b31f0196f60aa77c3bd15f18458d1f24323dc6",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "15.5.6",
+    "@next/eslint-plugin-next": "15.5.7",
     "@octokit/plugin-retry": "^8.0.3",
     "@octokit/rest": "^22.0.1",
     "@playwright/test": "catalog:",
