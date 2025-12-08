@@ -59,7 +59,7 @@ pnpm install express cors &&
 pnpm install --save-dev typescript @types/express @types/node tsx
 ```
 
-:::tip
+:::note
 This tutorial uses pnpm, but all MUI libraries are also compatible with npm and yarn.
 See the [Material UI installation page](https://mui.com/material-ui/getting-started/installation/) for more details.
 :::
