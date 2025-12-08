@@ -3,6 +3,7 @@ import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
+import { colorMixIfSupported } from '../components/containers/GridRootStyles';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
@@ -17,11 +18,13 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
 
+  const paperColor = (t.vars || t).palette.background.paper;
+
   const backgroundBase =
     dataGridPalette?.bg ??
     (t.palette.mode === 'dark'
-      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
-      : (t.vars || t).palette.background.paper);
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
+      : paperColor);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.vars
@@ -29,8 +32,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
   const backgroundOverlay =
     t.palette.mode === 'dark'
-      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 90%, #fff)`
-      : (t.vars || t).palette.background.paper;
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 90%, #fff)`, paperColor)
+      : paperColor;
 
   const selectedColor = t.vars
     ? `rgb(${t.vars.palette.primary.mainChannel})`
