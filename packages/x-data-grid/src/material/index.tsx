@@ -148,7 +148,10 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
   const theme = useTheme();
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
   const computedSize = (size ?? textFieldDefaults.size) as 'small' | 'medium' | undefined;
-  const computedVariant = (textFieldDefaults.variant ?? 'outlined') as 'standard' | 'filled' | 'outlined';
+  const computedVariant = (textFieldDefaults.variant ?? 'outlined') as
+    | 'standard'
+    | 'filled'
+    | 'outlined';
   const menuProps = {
     PaperProps: {
       onKeyDown,
@@ -158,7 +161,13 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     menuProps.onClose = onClose;
   }
   return (
-    <MUIFormControl size={computedSize} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
+    <MUIFormControl
+      size={computedSize}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      ref={ref}
+    >
       <MUIInputLabel id={labelId} htmlFor={id} shrink variant={computedVariant}>
         {label}
       </MUIInputLabel>
@@ -384,7 +393,7 @@ function BaseTextField(props: P['baseTextField']) {
   const { slotProps, material, ...other } = props;
   const theme = useTheme();
   const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
-  const computedVariant = (other as any).variant ?? (textFieldDefaults.variant ?? 'outlined');
+  const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
   const computedSize = (other as any).size ?? textFieldDefaults.size;
   return (
     <MUITextField
