@@ -45,9 +45,7 @@ const EmployeeDataGrid = () => {
           filterModel: JSON.stringify(params.filterModel || {}),
         });
 
-        const response = await fetch(
-          `http://localhost:3001/api/employees?${urlParams.toString()}`,
-        );
+        const response = await fetch(`http://localhost:3001/api/employees?${urlParams.toString()}`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
