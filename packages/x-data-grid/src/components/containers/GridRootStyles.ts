@@ -174,8 +174,8 @@ export const GridRootStyles = styled('div', {
 
   const fallbackColors = {
     hover: vars.colors.interactive.hover,
-    selected: setOpacity(selectedColor, 0.15),
-    selectedHover: setOpacity(selectedColor, 0.2),
+    selected: selectedColor,
+    selectedHover: selectedColor,
   };
 
   const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity, fallbackColors.hover);
@@ -876,7 +876,7 @@ function removeOpacity(color: string) {
   return setOpacity(color, 1);
 }
 
-const supportsColorMix =
+export const supportsColorMix =
   typeof CSS !== 'undefined' &&
   typeof CSS.supports === 'function' &&
   CSS.supports('color', 'color-mix(in srgb, red 50%, blue 50%)');

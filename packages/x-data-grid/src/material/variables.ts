@@ -3,7 +3,7 @@ import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
-import { colorMixIfSupported } from '../components/containers/GridRootStyles';
+import { colorMixIfSupported, supportsColorMix } from '../components/containers/GridRootStyles';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
@@ -65,7 +65,9 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
     [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
-    [k.colors.interactive.selected]: selectedColor,
+    [k.colors.interactive.selected]: supportsColorMix
+      ? selectedColor
+      : (t.vars || t).palette.action.selected,
     [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
     [k.header.background.base]: backgroundHeader,
