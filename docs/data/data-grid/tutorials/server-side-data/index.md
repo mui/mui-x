@@ -705,7 +705,7 @@ export default App;
 
 **What's happening here:**
 
-- `CssBaseline` is a Material UI component that applies consistent baseline CSS styles across different browsers, removing default margins and padding, and setting up  consistent font rendering.
+- `CssBaseline` is a Material UI component that applies consistent baseline CSS styles across different browsers, removing default margins and padding, and setting up consistent font rendering.
 
 Replace the boilerplate code in `client/src/main.tsx` with the following:
 
