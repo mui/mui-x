@@ -27,6 +27,7 @@ export function ChartsGridVertical(props: ChartsGridVerticalProps) {
     tickInterval,
     tickSpacing,
     direction: 'x',
+    ordinalTimeTicks: 'ordinalTimeTicks' in axis ? axis.ordinalTimeTicks : undefined,
   });
 
   return (
