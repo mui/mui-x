@@ -7,7 +7,7 @@ title: Data Grid - Undo and redo
 <p class="description">Allow users to undo and reapply changes made to the Data Grid.</p>
 
 The undo/redo feature allows users to reverse and reapply their actions in the Data Grid.
-It tracks registered events, listens for the keyboard events and adds toolbar buttons.
+It tracks registered events, listens for keyboard events and adds toolbar buttons.
 
 ## Basic usage
 
@@ -33,7 +33,7 @@ This will prevent any history from being tracked and hide the undo/redo buttons 
 
 ### Removing the toolbar buttons
 
-To only remove the toolbar buttons for undo and redo, but keep the keyboard controls active, set `showUndoRedo` flag to `false` in the Toolbar's slot props.
+To only remove the toolbar buttons for undo and redo, but keep the keyboard controls active, set the `showUndoRedo` flag to `false` in the Toolbar's slot props.
 
 ```tsx
 <DataGridPremium
@@ -66,7 +66,7 @@ interface GridHistoryEventHandler<T = any> {
   redo: (data: T) => void | Promise<void>;
 
   // Validate if the operation can be performed
-  // Can be ommited if the validation is not needed for the current event handler
+  // Can be omitted if the validation is not needed for the current event handler
   validate?: (data: T, operation: 'undo' | 'redo') => boolean;
 }
 ```
@@ -80,11 +80,11 @@ When not using a data source, the following events are tracked out of the box:
 - `cellEditStop` - Tracks changes made to individual cells in cell edit mode
 - `clipboardPasteEnd` - Tracks paste operations that can modify multiple cells
 
-When using a [data source](/x/react-data-grid/server-side-data/), `clipboardPasteEnd` is not being tracked and the other two events are tracked only if your data source support [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
+When using a [data source](/x/react-data-grid/server-side-data/), `clipboardPasteEnd` is not tracked and the other two events are tracked only if your data source supports [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
 
-If you use data source that does not have an `updateRow` method, event handler list is empty and the feature is disabled.
+If you use a data source that does not have an `updateRow` method, the event handler list is empty and the feature is disabled.
 
-The following demo shows undo/redo feature working with the data source supporting row editing.
+The following demo shows the undo/redo feature working with a data source supporting row editing.
 Remove the `updateRow` method to see the toolbar adjustment.
 
 {{"demo": "DataSourceUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -114,7 +114,7 @@ Track and allow undo of any Data Grid interaction by providing custom history ev
 The following demo keeps all the default handlers, and adds a custom history handler that tracks filter model changes.
 This allows users to undo and redo filter operations.
 
-To reduce the amount of the undo steps, changes on the filter model items that do not have a value are ignored.
+To reduce the number of undo steps, changes on the filter model items that do not have a value are ignored.
 
 {{"demo": "AddFilterHandler.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -135,7 +135,7 @@ You can customize which events trigger revalidation using the `historyValidation
 <DataGridPremium historyValidationEvents={['stateChange']} />
 ```
 
-This is useful when you create a handler that tracks changes that are not affecting rows or columns or if you remove the default handlers and you don't need the validation on the default events anymore.
+This is useful when you create a handler that tracks changes that do not affect rows or columns or if you remove the default handlers and you don't need the validation on the default events anymore.
 
 :::warning
 List the events in the `historyValidationEvents` prop that are enough for the validation to occur at the right time.
