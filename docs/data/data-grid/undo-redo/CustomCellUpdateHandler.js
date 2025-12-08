@@ -9,6 +9,7 @@ import {
   gridExpandedSortedRowIdsSelector,
   gridVisibleColumnFieldsSelector,
   gridPaginationModelSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 
@@ -60,10 +61,8 @@ function createCustomCellEditHandler(apiRef) {
       await apiRef.current.updateRows([{ id, [field]: oldValue }]);
 
       // Navigate to the page with the row if it's on a different page
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
+      const rowIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[id];
       const paginationModel = gridPaginationModelSelector(apiRef);
-
-      console.log('rowIndex', rowIndex, paginationModel);
 
       if (paginationModel && rowIndex !== undefined) {
         const page = Math.floor(rowIndex / paginationModel.pageSize);
@@ -87,7 +86,7 @@ function createCustomCellEditHandler(apiRef) {
       await apiRef.current.updateRows([{ id, [field]: newValue }]);
 
       // Navigate to the row if it's on a different page
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
+      const rowIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[id];
       const paginationModel = gridPaginationModelSelector(apiRef);
 
       if (paginationModel && rowIndex !== undefined) {
@@ -133,6 +132,7 @@ export default function CustomCellUpdateHandler() {
     <Box sx={{ height: 500, width: '100%' }}>
       <DataGridPremium
         {...data}
+        apiRef={apiRef}
         pagination
         pageSizeOptions={[50, 100]}
         showToolbar
