@@ -10,8 +10,9 @@ import {
   isUndoShortcut,
   isRedoShortcut,
   runIf,
+  useGridNativeEventListener,
 } from '@mui/x-data-grid-pro/internals';
-import type { GridEvents, GridEventListener } from '@mui/x-data-grid-pro';
+import type { GridEvents } from '@mui/x-data-grid-pro';
 import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
@@ -81,7 +82,7 @@ export const useGridHistory = (
   // Internal ref to track undo/redo operation state
   // - 'idle': everything is done
   // - 'in-progress': during async undo/redo handler execution (skip validation and prevent the state change by other events)
-  // - 'waiting-replay': after undo/redo handler is done, the same event is triggered again (as undo/redo is doing the same thing).
+  // - 'waiting-replay': after undo/redo handler is done, the validation event is triggered again (as undo/redo is changing the state).
   //   In this hook we want to skip the replayed event.
   const operationStateRef = React.useRef<'idle' | 'in-progress' | 'waiting-replay'>('idle');
 
@@ -260,6 +261,7 @@ export const useGridHistory = (
       });
 
       apiRef.current.publishEvent(operation, { eventName, data });
+      // If there are no validations in the current setup, skip calling it and change the operation state to idle
       if (isValidationNeeded) {
         validateQueueItems();
       } else {
@@ -308,35 +310,35 @@ export const useGridHistory = (
 
   useGridApiMethod(apiRef, { history: historyApi } as GridHistoryApi, 'public');
 
-  const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
-    async (_, event: React.KeyboardEvent<HTMLElement>) => {
-      // Only handle shortcuts if history is enabled
+  const handleKeyDown = React.useCallback(
+    async (event: React.KeyboardEvent<HTMLElement>) => {
       if (!isEnabled) {
         return;
       }
 
-      // Check for undo shortcut
-      if (isUndoShortcut(event)) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        await apiRef.current.history.undo();
+      if (!isUndoShortcut(event) && !isRedoShortcut(event)) {
         return;
       }
 
-      // Check for redo shortcut
-      if (isRedoShortcut(event)) {
-        event.preventDefault();
-        event.stopPropagation();
+      const action = isUndoShortcut(event)
+        ? apiRef.current.history.undo
+        : apiRef.current.history.redo;
+      event.preventDefault();
+      event.stopPropagation();
 
-        await apiRef.current.history.redo();
-        return;
-      }
+      await action();
+      return;
     },
     [apiRef, isEnabled],
   );
 
-  useGridEvent(apiRef, 'cellKeyDown', runIf(historyQueueSize > 0, handleCellKeyDown));
+  useGridNativeEventListener(
+    apiRef,
+    () => apiRef.current.rootElementRef.current,
+    'keydown',
+    runIf(historyQueueSize > 0, handleKeyDown),
+  );
+
   useGridEvent(apiRef, 'undo', onUndo);
   useGridEvent(apiRef, 'redo', onRedo);
 
