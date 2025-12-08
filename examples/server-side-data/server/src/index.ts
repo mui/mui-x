@@ -412,34 +412,33 @@ app.get('/api/employees', (req, res) => {
               }
               return true;
             });
-          } else {
-            // At least one filter item must match (OR logic)
-            return filters.items.some((filterItem: any) => {
-              const value = item[filterItem.field as keyof typeof item];
-
-              if (filterItem.operator === 'contains') {
-                return String(value).toLowerCase().includes(filterItem.value.toLowerCase());
-              }
-              if (filterItem.operator === 'equals') {
-                return String(value) === filterItem.value;
-              }
-              if (filterItem.operator === 'startsWith') {
-                return String(value).toLowerCase().startsWith(filterItem.value.toLowerCase());
-              }
-              if (filterItem.operator === 'endsWith') {
-                return String(value).toLowerCase().endsWith(filterItem.value.toLowerCase());
-              }
-              if (filterItem.operator === 'isEmpty') {
-                return !value || String(value).trim() === '';
-              }
-              if (filterItem.operator === 'isNotEmpty') {
-                return value && String(value).trim() !== '';
-              }
-              return true;
-            });
           }
-        });
-      }
+          // At least one filter item must match (OR logic)
+          return filters.items.some((filterItem: any) => {
+            const value = item[filterItem.field as keyof typeof item];
+
+            if (filterItem.operator === 'contains') {
+              return String(value).toLowerCase().includes(filterItem.value.toLowerCase());
+            }
+            if (filterItem.operator === 'equals') {
+              return String(value) === filterItem.value;
+            }
+            if (filterItem.operator === 'startsWith') {
+              return String(value).toLowerCase().startsWith(filterItem.value.toLowerCase());
+            }
+            if (filterItem.operator === 'endsWith') {
+              return String(value).toLowerCase().endsWith(filterItem.value.toLowerCase());
+            }
+            if (filterItem.operator === 'isEmpty') {
+              return !value || String(value).trim() === '';
+            }
+            if (filterItem.operator === 'isNotEmpty') {
+              return value && String(value).trim() !== '';
+            }
+            return true;
+          });
+        }
+      });
     } catch (error) {
       // Invalid filter, return all data
     }
@@ -455,8 +454,12 @@ app.get('/api/employees', (req, res) => {
             const aVal = a[sort.field as keyof typeof a];
             const bVal = b[sort.field as keyof typeof b];
 
-            if (aVal < bVal) return sort.sort === 'desc' ? 1 : -1;
-            if (aVal > bVal) return sort.sort === 'desc' ? -1 : 1;
+            if (aVal < bVal) {
+              return sort.sort === 'desc' ? 1 : -1;
+            }
+            if (aVal > bVal) {
+              return sort.sort === 'desc' ? -1 : 1;
+            }
           }
           return 0;
         });
@@ -471,7 +474,7 @@ app.get('/api/employees', (req, res) => {
   const endIndex = startIndex + Number(pageSize);
   const paginatedData = filteredData.slice(startIndex, endIndex);
 
-  res.json({
+  return res.json({
     data: paginatedData,
     total: filteredData.length,
     page: Number(page),
@@ -496,6 +499,5 @@ app.get('/health', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`API available at http://localhost:${PORT}/api/employees`);
+  // Server started
 });

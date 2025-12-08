@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import * as React from 'react';
 import {
   DataGrid,
   type GridColDef,
@@ -35,8 +35,8 @@ const columns: GridColDef[] = [
   { field: 'startDate', headerName: 'Start Date', width: 130 },
 ];
 
-const EmployeeDataGrid = () => {
-  const dataSource: GridDataSource = useMemo(
+function EmployeeDataGrid() {
+  const dataSource: GridDataSource = React.useMemo(
     () => ({
       getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
         const urlParams = new URLSearchParams({
@@ -65,7 +65,7 @@ const EmployeeDataGrid = () => {
   return (
     <Box sx={{ height: 600, width: '100%' }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        MUI X Data Grid with the Data Source layer
+        MUI X Data Grid with the Data Source layer
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
         Server-side data with pagination, sorting, and filtering.
@@ -80,6 +80,6 @@ const EmployeeDataGrid = () => {
       />
     </Box>
   );
-};
+}
 
 export default EmployeeDataGrid;
