@@ -53,7 +53,6 @@ export * from '../RadarChart/RadarChart.plugins';
 export * from '../PieChart/PieChart.plugins';
 
 // utils
-export * from './defaultizeValueFormatter';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';

@@ -218,6 +218,7 @@ export default defineConfig(
   {
     files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
     rules: {
+      'import/no-cycle': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {

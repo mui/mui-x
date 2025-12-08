@@ -1,4 +1,8 @@
-import { SchedulerProcessedEvent, TemporalSupportedObject } from '../models';
+import {
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
+  TemporalSupportedObject,
+} from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 
 export function mergeDateAndTime(
@@ -39,4 +43,42 @@ export function getOccurrenceEnd({
 }): TemporalSupportedObject {
   const durationMs = adapter.getTime(event.end.value) - adapter.getTime(event.start.value);
   return adapter.addMilliseconds(occurrenceStart, durationMs);
+}
+
+export function applyDataTimezoneToEventUpdate({
+  adapter,
+  originalEvent,
+  changes,
+}: {
+  adapter: Adapter;
+  originalEvent: SchedulerProcessedEvent;
+  changes: SchedulerEventUpdatedProperties;
+}): SchedulerEventUpdatedProperties {
+  const originalTz = adapter.getTimezone(originalEvent.modelInBuiltInFormat!.start);
+
+  const convertToOriginalTz = (date: TemporalSupportedObject): TemporalSupportedObject =>
+    adapter.setTimezone(date, originalTz);
+
+  const result: SchedulerEventUpdatedProperties = { ...changes };
+
+  if (result.start) {
+    result.start = convertToOriginalTz(result.start);
+  }
+  if (result.end) {
+    result.end = convertToOriginalTz(result.end);
+  }
+
+  if (result.exDates && result.exDates.length > 0) {
+    result.exDates = result.exDates.map((date) => convertToOriginalTz(date));
+  }
+
+  if (result.rrule && typeof result.rrule === 'object' && result.rrule.until) {
+    const resultRrule = {
+      ...result.rrule,
+      until: convertToOriginalTz(result.rrule.until),
+    };
+    result.rrule = resultRrule;
+  }
+
+  return result;
 }
