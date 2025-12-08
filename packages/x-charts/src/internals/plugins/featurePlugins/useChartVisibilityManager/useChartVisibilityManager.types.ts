@@ -5,64 +5,49 @@ export type VisibilityMap = {
   [key: string]: boolean;
 };
 
+export type VisibilityIdentifier = string | number;
+
 export type IsIdentifierVisibleFunction = {
   /**
    * Function to check if an item is visible based on its identifier.
-   * @param {string | (string | number)[]} identifier The identifier of the item.
+   *
+   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
+   * Number values will be converted to strings.
+   *
+   * @param {VisibilityIdentifier} identifier The identifier of the item to check.
    * @returns {boolean} Whether the item is visible.
    */
-  (identifier: string): boolean;
-  /**
-   * Function overload to check if an item is visible based on its identifier array.
-   * @param {(string | number)[]} identifierArray The identifier array of the item.
-   * @returns {boolean} Whether the item is visible.
-   */
-  (identifierArray: (string | number)[]): boolean;
+  (...identifiers: VisibilityIdentifier[]): boolean;
 };
 
 export interface UseChartVisibilityManagerPublicAPI {
   /**
    * Hide an item by its identifier.
    *
-   * @param {string} identifier The identifier of the item to hide.
-   */
-  hideItem(identifier: string): void;
-  /**
-   * Hide an item by providing an array of identifiers to join.
+   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
+   * Number values will be converted to strings.
    *
-   * The array will be joined using '-'.
-   *
-   * @param {(number | string)[]} identifierArray The identifiers array of the item to hide.
+   * @param {VisibilityIdentifier} identifiers The identifiers of the item to hide.
    */
-  hideItem(identifierArray: (number | string)[]): void;
+  hideItem(...identifiers: VisibilityIdentifier[]): void;
   /**
    * Show an item by its identifier.
    *
-   * @param {string} identifier The identifier of the item to show.
-   */
-  showItem(identifier: string): void;
-  /**
-   * Show an item by providing an array of identifiers to join.
+   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
+   * Number values will be converted to strings.
    *
-   * The array will be joined using '-'.
-   *
-   * @param {(number | string)[]} identifierArray The identifiers array of the item to show.
+   * @param {VisibilityIdentifier} identifiers The identifiers of the item to show.
    */
-  showItem(identifierArray: (number | string)[]): void;
+  showItem(...identifiers: VisibilityIdentifier[]): void;
   /**
    * Toggle the visibility of an item by its identifier.
    *
-   * @param {string | (number | string)[]} identifier The identifier of the item to toggle.
-   */
-  toggleItem(identifier: string): void;
-  /**
-   * Toggle the visibility of an item by providing an array of identifiers to join.
+   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
+   * Number values will be converted to strings.
    *
-   * The array will be joined using '-'.
-   *
-   * @param { (number | string)[]} identifierArray the identifiers array of the item to toggle.
+   * @param {VisibilityIdentifier} identifiers The identifiers of the item to toggle.
    */
-  toggleItem(identifierArray: (number | string)[]): void;
+  toggleItem(...identifiers: VisibilityIdentifier[]): void;
 }
 
 export interface UseChartVisibilityManagerInstance extends UseChartVisibilityManagerPublicAPI {}
