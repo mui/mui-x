@@ -1,6 +1,4 @@
 import * as React from 'react';
-
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import Box from '@mui/material/Box';
 import {
   DataGridPremium,
@@ -10,6 +8,7 @@ import {
   createCellEditHistoryHandler,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { isDeepEqual } from './utils';
 
 function createFilterHistoryHandler(apiRef) {
   let previousFilterModel;

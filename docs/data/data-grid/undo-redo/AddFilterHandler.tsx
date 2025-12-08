@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import Box from '@mui/material/Box';
 import {
   DataGridPremium,
@@ -14,6 +12,7 @@ import {
   createCellEditHistoryHandler,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
+import { isDeepEqual } from './utils';
 
 interface FilterHistoryData {
   oldFilterModel: GridFilterModel;
@@ -21,7 +20,7 @@ interface FilterHistoryData {
 }
 
 function createFilterHistoryHandler(
-  apiRef: RefObject<GridApiPremium>,
+  apiRef: React.RefObject<GridApiPremium>,
 ): GridHistoryEventHandler<FilterHistoryData> {
   let previousFilterModel: GridFilterModel | undefined;
 
@@ -85,7 +84,7 @@ export default function AddFilterHandler() {
     editable: true,
   });
 
-  const apiRef = useGridApiRef() as RefObject<GridApiPremium>;
+  const apiRef = useGridApiRef() as React.RefObject<GridApiPremium>;
 
   const historyEventHandlers = React.useMemo(() => {
     if (!apiRef.current) {
