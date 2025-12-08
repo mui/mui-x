@@ -848,8 +848,7 @@ const dataSource: GridDataSource = useMemo(
 
 **What's happening here:**
 
-- `params.paginationModel.page` tells you which page the user is viewing (0-based)
-- `params.paginationModel.pageSize` tells you how many rows per page
+- `params.paginationModel` contains the pagination state
 - `params.sortModel` contains which columns are sorted and in what direction
 - `params.filterModel` contains any active filters
 
@@ -901,8 +900,7 @@ const dataSource: GridDataSource = useMemo(
   () => ({
     getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
       const urlParams = new URLSearchParams({
-        page: params.paginationModel?.page?.toString() || '0',
-        pageSize: params.paginationModel?.pageSize?.toString() || '40',
+        paginationModel: JSON.stringify(params.paginationModel),
         sortModel: JSON.stringify(params.sortModel || []),
         filterModel: JSON.stringify(params.filterModel || {}),
       });
