@@ -1,0 +1,16 @@
+<DataGridPremium
+  {...data}
+  pagination
+  pageSizeOptions={[50, 100]}
+  showToolbar
+  disableRowSelectionOnClick
+  cellSelection
+  disablePivoting
+  disableRowGrouping
+  disableColumnPinning
+  historyEventHandlers={historyEventHandlers}
+  initialState={{
+    ...data.initialState,
+    pagination: { paginationModel: { pageSize: 50 } },
+  }}
+/>

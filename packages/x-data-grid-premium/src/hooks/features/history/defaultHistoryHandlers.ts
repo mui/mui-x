@@ -5,6 +5,7 @@ import {
   type GridRowEditStopParams,
   type GridEvents,
   gridVisibleRowsSelector,
+  gridVisibleColumnFieldsSelector,
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -38,6 +39,11 @@ export const createCellEditHistoryHandler = (
 
     validate: (data: GridCellEditHistoryData, direction: 'undo' | 'redo') => {
       const { id, field, oldValue, newValue } = data;
+
+      // Check if column is visible
+      if (!gridVisibleColumnFieldsSelector(apiRef).includes(field)) {
+        return false;
+      }
 
       const visibleRowsData = gridVisibleRowsSelector(apiRef);
 
