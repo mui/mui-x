@@ -84,9 +84,10 @@ export const createCellEditHistoryHandler = (
         await apiRef.current.updateRows([{ id, [field]: oldValue }]);
       }
 
-      setTimeout(() => {
+      // Use `requestAnimationFrame` to ensure all undo updates are applied
+      requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      }, 0);
+      });
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
         colIndex: apiRef.current.getColumnIndex(field),
@@ -107,9 +108,10 @@ export const createCellEditHistoryHandler = (
         await apiRef.current.updateRows([{ id, [field]: newValue }]);
       }
 
-      setTimeout(() => {
+      // Use `requestAnimationFrame` to ensure all redo updates are applied
+      requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      }, 0);
+      });
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
         colIndex: apiRef.current.getColumnIndex(field),
@@ -180,9 +182,10 @@ export const createRowEditHistoryHandler = (
         await apiRef.current.updateRows([{ id, ...oldRow }]);
       }
 
-      setTimeout(() => {
+      // Use `requestAnimationFrame` to ensure all undo updates are applied
+      requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
-      }, 0);
+      });
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
         colIndex: 0,
@@ -202,9 +205,10 @@ export const createRowEditHistoryHandler = (
         await apiRef.current.updateRows([{ id, ...newRow }]);
       }
 
-      setTimeout(() => {
+      // Use `requestAnimationFrame` to ensure all redo updates are applied
+      requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
-      }, 0);
+      });
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
         colIndex: 0,
@@ -265,9 +269,10 @@ export const createClipboardPasteHistoryHandler = (
         const firstRowId = Object.keys(oldRows)[0];
         const firstField = visibleColumns[0].field;
         if (firstField) {
-          setTimeout(() => {
+          // Use `requestAnimationFrame` to ensure all undo updates are applied
+          requestAnimationFrame(() => {
             apiRef.current.setCellFocus(firstRowId, firstField);
-          }, 0);
+          });
           apiRef.current.scrollToIndexes({
             rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
             colIndex: apiRef.current.getColumnIndex(firstField),
@@ -290,9 +295,10 @@ export const createClipboardPasteHistoryHandler = (
         const firstRowId = Object.keys(newRows)[0];
         const firstField = visibleColumns[0].field;
         if (firstField) {
-          setTimeout(() => {
+          // Use `requestAnimationFrame` to ensure all redo updates are applied
+          requestAnimationFrame(() => {
             apiRef.current.setCellFocus(firstRowId, firstField);
-          }, 0);
+          });
           apiRef.current.scrollToIndexes({
             rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
             colIndex: apiRef.current.getColumnIndex(firstField),
