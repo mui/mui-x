@@ -1,20 +1,21 @@
 # MUI X Data Grid Pro with Data Source layer
 
-A full-stack application demonstrating server-side data handling with the MUI X Data Grid Pro, featuring pagination, sorting, and filtering capabilities.
+A full-stack application demonstrating server-side data handling with the MUI X Data Grid, featuring pagination, sorting, and filtering capabilities.
+This app is the end result of following the [server-side data tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) in the MUI X docs.
 
 ## Installation and setup
 
 ### 1. Install server dependencies
 
 ```bash
-cd server
+cd server &&
 pnpm install
 ```
 
 ### 2. Install client dependencies
 
 ```bash
-cd client
+cd client &&
 pnpm install
 ```
 
@@ -23,7 +24,7 @@ pnpm install
 ### 1. Start the backend server
 
 ```bash
-cd server
+cd server &&
 pnpm dev
 ```
 
@@ -34,7 +35,7 @@ The server will start on `http://localhost:3001`.
 In a new terminal:
 
 ```bash
-cd client
+cd client &&
 pnpm dev
 ```
 

@@ -10,6 +10,10 @@ description: Learn how to use the Data Source layer to streamline communications
 This tutorial walks you through building a Data Grid that fetches data from a server with pagination, sorting, and filtering.
 The primary purpose is to demonstrate the use of the [Data Source layer](/x/react-data-grid/server-side-data/), which streamlines the development of key Data Grid features when working with server-side data by providing an interface for communications between the Grid on the client and the data on the server.
 
+:::success
+If you'd rather skip the tutorial entirely, you can check out [the complete app code on GitHub](https://github.com/mui/mui-x/tree/master/examples/server-side-data/).
+:::
+
 ## Prerequisites
 
 - Basic React knowledge
