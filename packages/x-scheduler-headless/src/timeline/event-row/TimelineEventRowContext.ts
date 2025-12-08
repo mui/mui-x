@@ -1,16 +1,7 @@
 'use client';
 import * as React from 'react';
-import { TemporalSupportedObject } from '../../models';
 
 export interface TimelineEventRowContext {
-  /**
-   * The start date and time of the row.
-   */
-  start: TemporalSupportedObject;
-  /**
-   * The end date and time of the row.
-   */
-  end: TemporalSupportedObject;
   /**
    * Gets the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.
