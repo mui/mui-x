@@ -35,10 +35,7 @@ export const selectorIsIdentifierVisible = createSelector(
 export const selectorIsIdentifierVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
   (visibilityMap) => {
-    return {
-      // Return an object as selectors don't correctly memoize direct functions
-      get: (identifier: string | (string | number)[]) =>
-        isIdentifierVisible(visibilityMap, identifier),
-    };
+    return (identifier: string | (string | number)[]) =>
+      isIdentifierVisible(visibilityMap, identifier);
   },
 );

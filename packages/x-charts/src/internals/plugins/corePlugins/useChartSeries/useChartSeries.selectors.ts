@@ -43,7 +43,7 @@ export const selectorChartSeriesProcessed = createSelectorMemoized(
     dataset,
     isIdentifierVisible,
   ) {
-    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isIdentifierVisible.get);
+    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isIdentifierVisible);
   },
 );
 
