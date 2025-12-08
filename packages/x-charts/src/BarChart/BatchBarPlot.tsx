@@ -184,8 +184,6 @@ function FadedHighlightedBars({
   return <React.Fragment>{siblings}</React.Fragment>;
 }
 
-const MemoFadedHighlightedBars = React.memo(FadedHighlightedBars);
-
 function BatchBarSeriesPlot({
   processedSeries,
   borderRadius,
@@ -207,7 +205,7 @@ function BatchBarSeriesPlot({
   return (
     <React.Fragment>
       {children}
-      <MemoFadedHighlightedBars processedSeries={processedSeries} borderRadius={borderRadius} />
+      <FadedHighlightedBars processedSeries={processedSeries} borderRadius={borderRadius} />
     </React.Fragment>
   );
 }
