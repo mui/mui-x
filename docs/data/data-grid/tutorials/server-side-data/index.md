@@ -530,16 +530,22 @@ app.get('/api/employees', (req, res) => {
             const value = item[filterItem.field as keyof typeof item];
 
             if (filterItem.operator === 'contains') {
-              return String(value).toLowerCase().includes(filterItem.value.toLowerCase());
+              return String(value)
+                .toLowerCase()
+                .includes(filterItem.value.toLowerCase());
             }
             if (filterItem.operator === 'equals') {
               return String(value) === filterItem.value;
             }
             if (filterItem.operator === 'startsWith') {
-              return String(value).toLowerCase().startsWith(filterItem.value.toLowerCase());
+              return String(value)
+                .toLowerCase()
+                .startsWith(filterItem.value.toLowerCase());
             }
             if (filterItem.operator === 'endsWith') {
-              return String(value).toLowerCase().endsWith(filterItem.value.toLowerCase());
+              return String(value)
+                .toLowerCase()
+                .endsWith(filterItem.value.toLowerCase());
             }
             if (filterItem.operator === 'isEmpty') {
               return !value || String(value).trim() === '';
@@ -549,8 +555,7 @@ app.get('/api/employees', (req, res) => {
             }
             return true;
           });
-        }
-      });
+        });
       }
     } catch (error) {
       // Invalid filter, return all data

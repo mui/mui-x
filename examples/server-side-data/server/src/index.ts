@@ -437,8 +437,7 @@ app.get('/api/employees', (req, res) => {
             }
             return true;
           });
-        }
-      });
+        });
       }
     } catch (error) {
       // Invalid filter, return all data
