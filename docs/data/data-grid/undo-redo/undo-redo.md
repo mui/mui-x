@@ -132,7 +132,7 @@ If validation fails for the `redo` operation, all items after the current item i
 You can customize which events trigger revalidation using the `historyValidationEvents` prop.
 
 ```tsx
-<DataGridPremium historyQueueSize={50} historyValidationEvents={['stateChange']} />
+<DataGridPremium historyValidationEvents={['stateChange']} />
 ```
 
 This is useful when you create a handler that tracks changes that are not affecting rows or columns or if you remove the default handlers and you don't need the validation on the default events anymore.

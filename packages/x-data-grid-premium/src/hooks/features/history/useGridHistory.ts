@@ -82,7 +82,7 @@ export const useGridHistory = (
   // - 'idle': everything is done
   // - 'in-progress': during async undo/redo handler execution (skip validation and prevent the state change by other events)
   // - 'waiting-replay': after undo/redo handler is done, the same event is triggered again (as undo/redo is doing the same thing).
-  //   In this hook we need to skip that event and we track that by subscribing to the state change event to cover all custom event handlers as well.
+  //   In this hook we want to skip the replayed event.
   const operationStateRef = React.useRef<'idle' | 'in-progress' | 'waiting-replay'>('idle');
 
   // History event unsubscribers
