@@ -59,7 +59,9 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
     [k.colors.foreground.error]: (t.vars || t).palette.error.dark,
 
-    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
+    [k.colors.interactive.hover]: supportsColorMix
+      ? (t.vars || t).palette.action.hover
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 800 : 100],
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
     [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
@@ -67,7 +69,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
     [k.colors.interactive.selected]: supportsColorMix
       ? selectedColor
-      : (t.vars || t).palette.action.selected,
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 700 : 100],
     [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
     [k.header.background.base]: backgroundHeader,
