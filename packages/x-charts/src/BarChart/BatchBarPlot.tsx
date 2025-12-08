@@ -4,19 +4,14 @@ import { styled } from '@mui/material/styles';
 
 import { useSvgRef } from '../hooks';
 import { type ProcessedBarData, type ProcessedBarSeriesData } from './types';
-import { findClosestPoints } from '../internals/plugins/featurePlugins/useChartClosestPoint/findClosestPoints';
 import { ANIMATION_DURATION_MS } from '../internals/animation/animation';
 import { useUtilityClasses } from './barClasses';
 import { appendAtKey } from '../internals/appendAtKey';
 import { type IndividualBarPlotProps } from './IndividualBarPlot';
 import { useChartContext } from '../context/ChartProvider/useChartContext';
 import {
-  selectorChartAxisZoomData,
-  selectorChartBarSeriesFlatbushMap,
-  selectorChartSeriesEmptyFlatbushMap,
   selectorChartXAxis,
   selectorChartYAxis,
-  selectorChartZoomIsInteracting,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useSelector } from '../internals/store/useSelector';
@@ -30,7 +25,9 @@ import {
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useStore } from '../internals/store/useStore';
-import { type ComputedAxis, getBandSize, invertScale, isBandScale } from '../internals';
+import { getBandSize } from '../internals/getBandSize';
+import { type ComputedAxis } from '../models/axis';
+import { isBandScale } from '../internals/scaleGuards';
 
 interface BatchBarPlotProps extends IndividualBarPlotProps {}
 
@@ -108,7 +105,6 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
   const { instance } = useChartContext();
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
-  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
 
   return function onClick(event: React.MouseEvent<SVGElement, MouseEvent>) {
     const element = svgRef.current;
@@ -122,8 +118,6 @@ function useOnItemClick(onItemClick: BatchBarPlotProps['onItemClick'] | undefine
     if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
       return;
     }
-
-    // TODO: Check if this also works when zoomed in
 
     const { series, stackingGroups = [] } =
       selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
