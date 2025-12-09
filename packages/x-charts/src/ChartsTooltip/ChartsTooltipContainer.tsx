@@ -11,11 +11,11 @@ import { type TriggerOptions, useIsFineMainPointer, usePointerType } from './uti
 import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
+import { selectorChartsLastInteraction } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
-  selectorChartsLastInteraction,
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+} from '../internals/plugins/featurePlugins/useChartTooltip';
 import {
   selectorChartsInteractionAxisTooltip,
   type UseChartCartesianAxisSignature,
