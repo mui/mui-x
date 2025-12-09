@@ -50,22 +50,48 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
     }
 
     return (
-      <text
-        ref={ref}
+      <foreignObject
         x={labelX}
         y={(y0 + y1) / 2}
-        textAnchor={labelAnchor}
-        fill={(theme.vars || theme).palette.text.primary}
-        fontSize={theme.typography.caption.fontSize}
-        fontFamily={theme.typography.fontFamily}
-        pointerEvents="none"
-        opacity={opacity}
+        width={1}
+        height={1}
+        overflow="visible"
         data-node={node.id}
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
       >
-        {node.label}
-      </text>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: `flex-${labelAnchor}`,
+            overflow: 'visible',
+          }}
+        >
+          <div
+            style={{
+              textAnchor: labelAnchor,
+              fontSize: theme.typography.caption.fontSize,
+              fontFamily: theme.typography.fontFamily,
+              pointerEvents: 'none',
+              transform: 'translateY(-50%)',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                opacity: 0.3,
+                background: node.color,
+                left: -2,
+                right: -2,
+                top: -2,
+                bottom: -2,
+                borderRadius: 4,
+              }}
+            />
+            <span>{node.label}</span>
+          </div>
+        </div>
+      </foreignObject>
     );
   },
 );
