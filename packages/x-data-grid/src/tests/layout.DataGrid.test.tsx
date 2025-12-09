@@ -974,7 +974,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         </ThemeProvider>,
       );
-      expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+      expect(document.querySelector('[aria-label="Ordenar"]')).not.to.equal(null);
     });
 
     it('should allow to change localeText on the fly', () => {
