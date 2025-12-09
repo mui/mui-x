@@ -31,6 +31,7 @@ export * from './plugins/corePlugins/useChartInteractionListener';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
+export * from './plugins/featurePlugins/useChartTooltip';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';

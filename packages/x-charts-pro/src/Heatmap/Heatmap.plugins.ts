@@ -3,6 +3,8 @@ import {
   type UseChartZAxisSignature,
   useChartCartesianAxis,
   type UseChartCartesianAxisSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
   type UseChartInteractionSignature,
   useChartHighlight,
@@ -16,6 +18,7 @@ import {
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature,
@@ -24,6 +27,7 @@ export type HeatmapPluginSignatures = [
 
 export const HEATMAP_PLUGINS = [
   useChartZAxis,
+  useChartTooltip,
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,
