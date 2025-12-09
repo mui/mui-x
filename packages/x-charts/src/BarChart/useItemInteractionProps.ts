@@ -24,6 +24,13 @@ export function useInteractionItemProps() {
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
+    const last = lastItem.current;
+
+    if (last) {
+      lastItem.current = undefined;
+      instance.removeItemInteraction(last);
+      instance.clearHighlight();
+    }
   });
 
   const onPointerMove = useEventCallback((event: React.PointerEvent<SVGElement>) => {
@@ -47,9 +54,12 @@ export function useInteractionItemProps() {
       lastItem.current = item;
     } else {
       const last = lastItem.current;
-      lastItem.current = undefined;
-      instance.removeItemInteraction(last);
-      instance.clearHighlight();
+
+      if (last) {
+        lastItem.current = undefined;
+        instance.removeItemInteraction(last);
+        instance.clearHighlight();
+      }
     }
   });
 
