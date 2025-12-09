@@ -21,6 +21,7 @@ import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useScatterPlotData } from './useScatterPlotData';
 import { useChartContext } from '../context/ChartProvider';
+import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
@@ -77,7 +78,9 @@ function Scatter(props: ScatterProps) {
   } = props;
 
   const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+    useChartContext<
+      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+    >();
   const store = useStore<[UseChartClosestPointSignature]>();
   const isVoronoiEnabled = useSelector(store, selectorChartsIsVoronoiEnabled);
 
