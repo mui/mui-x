@@ -111,7 +111,7 @@ function BatchBarSeriesPlot({
   let i = 0;
   for (const [fill, dArray] of paths.entries()) {
     for (const d of dArray) {
-      children.push(<path key={i} fill={fill} d={d} />);
+      children.push(<path key={i} fill={fill} stroke={fill} strokeWidth={0.5} d={d} />);
       i += 1;
     }
   }
