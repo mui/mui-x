@@ -34,8 +34,7 @@ const getSeries = ({ hasNegativeValue, stackOffset }) => [
 ];
 
 export default function StackOffsetDemo() {
-  const [stackOffset, setStackOffset] = React.useState('none');
-
+  const [stackOffset, setStackOffset] = React.useState('diverging');
   const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
 
   return (
