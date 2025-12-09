@@ -20,44 +20,54 @@ import {
   selectorChartsKeyboardItem,
   selectorChartsKeyboardItemIsDefined,
 } from '../useChartKeyboardNavigation';
-import {
-  selectorChartsInteractionItem,
-  selectorChartsInteractionItemIsDefined,
-  selectorChartsLastInteraction,
-} from './useChartInteraction.selectors';
-import { type ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
-import {
-  type AxisId,
-  type ChartsRadiusAxisProps,
-  type ChartsRotationAxisProps,
-  type ChartsXAxisProps,
-  type ChartsYAxisProps,
+import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
+import type { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
+import type {
+  AxisId,
+  ChartsRadiusAxisProps,
+  ChartsRotationAxisProps,
+  ChartsXAxisProps,
+  ChartsYAxisProps,
 } from '../../../../models/axis';
-import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import type { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
-import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import { isCartesianSeries } from '../../../isCartesian';
 import {
   selectorChartRadiusAxis,
   selectorChartRotationAxis,
 } from '../useChartPolarAxis/useChartPolarAxis.selectors';
-import { type ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
+import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
+import type { ChartOptionalRootSelector } from '../../utils/selectors';
+import type { UseChartTooltipSignature } from './useChartTooltip.types';
+
+const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
+
+export const selectorChartsTooltipPointerItem = createSelector(
+  selectTooltip,
+  (tooltip) => tooltip?.item ?? null,
+);
+
+export const selectorChartsTooltipPointerItemIsDefined = createSelector(
+  selectorChartsTooltipPointerItem,
+  (item) => item !== null,
+);
 
 export const selectorChartsTooltipItem = createSelector(
   selectorChartsLastInteraction,
-  selectorChartsInteractionItem,
+  selectorChartsTooltipPointerItem,
   selectorChartsKeyboardItem,
-  (lastInteraction, interactionItem, keyboardItem) =>
-    lastInteraction === 'keyboard' ? keyboardItem : (interactionItem ?? null),
+  (lastInteraction, pointerItem, keyboardItem) =>
+    lastInteraction === 'keyboard' ? keyboardItem : (pointerItem ?? null),
 );
 
 export const selectorChartsTooltipItemIsDefined = createSelector(
   selectorChartsLastInteraction,
-  selectorChartsInteractionItemIsDefined,
+  selectorChartsTooltipPointerItemIsDefined,
   selectorChartsKeyboardItemIsDefined,
 
-  (lastInteraction, interactionItemIsDefined, keyboardItemIsDefined) =>
-    lastInteraction === 'keyboard' ? keyboardItemIsDefined : interactionItemIsDefined,
+  (lastInteraction, pointerItemIsDefined, keyboardItemIsDefined) =>
+    lastInteraction === 'keyboard' ? keyboardItemIsDefined : pointerItemIsDefined,
 );
 
 const selectorChartsTooltipAxisConfig = createSelectorMemoized(
