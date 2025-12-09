@@ -932,13 +932,13 @@ describe('<DataGridPremium /> - Pivoting', () => {
     },
   );
 
-  it('should handle columns with empty string values', async () => {
+  it('should handle columns with non-existing or empty string values', async () => {
     const rows = [
       { id: 1, category: 'A', status: '', sales: 100 },
       { id: 2, category: 'A', status: 'Active', sales: 200 },
       { id: 3, category: 'B', status: '', sales: 150 },
       { id: 4, category: 'B', status: 'Inactive', sales: 300 },
-      { id: 5, category: 'C', status: '', sales: 250 },
+      { id: 5, category: 'C', status: null, sales: 250 },
     ];
 
     const columns: GridColDef[] = [
