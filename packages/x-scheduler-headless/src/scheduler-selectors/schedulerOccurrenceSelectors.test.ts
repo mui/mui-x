@@ -6,11 +6,75 @@ import {
   getTimelineStateFromParameters,
 } from 'test/utils/scheduler';
 import { SchedulerResource } from '../models';
+import { processDate } from '../process-date';
 import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 
 describe('schedulerOccurrenceSelectors', () => {
   describe('isStartedOrEnded', () => {
-    // TODO
+    it('should return started=false and ended=false when now is before start', () => {
+      const state = getTimelineStateFromParameters({ events: [] });
+      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T08:00:00Z', 'default');
+
+      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
+      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
+
+      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
+
+      expect(result.started).to.equal(false);
+      expect(result.ended).to.equal(false);
+    });
+
+    it('should return started=true and ended=false when now is equal to start', () => {
+      const state = getTimelineStateFromParameters({ events: [] });
+      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:00:00Z', 'default');
+
+      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
+      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
+
+      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
+
+      expect(result.started).to.equal(true);
+      expect(result.ended).to.equal(false);
+    });
+
+    it('should return started=true and ended=false when now is between start and end', () => {
+      const state = getTimelineStateFromParameters({ events: [] });
+      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
+
+      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
+      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
+
+      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
+
+      expect(result.started).to.equal(true);
+      expect(result.ended).to.equal(false);
+    });
+
+    it('should return started=true and ended=false when now is equal to end', () => {
+      const state = getTimelineStateFromParameters({ events: [] });
+      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T11:00:00Z', 'default');
+
+      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
+      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
+
+      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
+
+      expect(result.started).to.equal(true);
+      expect(result.ended).to.equal(false);
+    });
+
+    it('should return started=true and ended=true when now is after end', () => {
+      const state = getTimelineStateFromParameters({ events: [] });
+      state.nowUpdatedEveryMinute = adapter.date('2025-07-03T12:00:00Z', 'default');
+
+      const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
+      const end = processDate(adapter.date('2025-07-03T11:00:00Z', 'default'), adapter);
+
+      const result = schedulerOccurrenceSelectors.isStartedOrEnded(state, start, end);
+
+      expect(result.started).to.equal(true);
+      expect(result.ended).to.equal(true);
+    });
   });
 
   describe('groupedByResource', () => {
