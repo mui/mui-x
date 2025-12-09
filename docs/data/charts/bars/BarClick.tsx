@@ -59,7 +59,6 @@ export default function BarClick() {
           {...barChartsParams}
           onItemClick={(event, d) => setItemData(d)}
           onAxisClick={(event, d) => setAxisData(d)}
-          renderer="svg-batch"
         />
       </Box>
 
