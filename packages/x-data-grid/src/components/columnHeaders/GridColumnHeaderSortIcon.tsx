@@ -2,25 +2,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridIconButtonContainer } from './GridIconButtonContainer';
 import { GridColumnSortButton, GridColumnSortButtonProps } from '../GridColumnSortButton';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export interface GridColumnHeaderSortIconProps extends GridColumnSortButtonProps {}
 
 function GridColumnHeaderSortIconRaw(props: GridColumnHeaderSortIconProps) {
-  const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-
   return (
-    <rootProps.slots.baseTooltip
-      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
-      enterDelay={1000}
-      {...rootProps.slotProps?.baseTooltip}
-    >
-      <GridIconButtonContainer>
-        <GridColumnSortButton title={undefined} {...props} tabIndex={-1} />
-      </GridIconButtonContainer>
-    </rootProps.slots.baseTooltip>
+    <GridIconButtonContainer>
+      <GridColumnSortButton {...props} tabIndex={-1} />
+    </GridIconButtonContainer>
   );
 }
 
