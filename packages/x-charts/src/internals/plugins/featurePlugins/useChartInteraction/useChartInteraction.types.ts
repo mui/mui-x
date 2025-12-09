@@ -1,5 +1,4 @@
 import type { ChartPluginSignature } from '../../models';
-import type { UseChartTooltipSignature } from '../useChartTooltip';
 
 export type Coordinate = { x: number; y: number };
 
@@ -21,7 +20,7 @@ export interface UseChartInteractionInstance {
    * @param {InteractionUpdateSource} interaction The source of the last interaction update (pointer or keyboard)
    * @returns {void}
    */
-  setLastUpdate: (interaction: InteractionUpdateSource) => void;
+  setLastUpdateSource: (interaction: InteractionUpdateSource) => void;
 }
 
 export interface UseChartInteractionState {
@@ -41,5 +40,4 @@ export interface UseChartInteractionState {
 export type UseChartInteractionSignature = ChartPluginSignature<{
   instance: UseChartInteractionInstance;
   state: UseChartInteractionState;
-  optionalDependencies: [UseChartTooltipSignature];
 }>;

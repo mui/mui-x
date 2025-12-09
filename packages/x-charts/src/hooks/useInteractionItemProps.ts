@@ -33,14 +33,14 @@ export const useInteractionItemProps = (
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setLastUpdate('pointer');
-    instance.setItemTooltip(data);
+    instance.setLastUpdateSource('pointer');
+    instance.setTooltipItem(data);
     instance.setHighlight(data);
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
-    instance.removeItemTooltip(data);
+    instance.removeTooltipItem(data);
     instance.clearHighlight();
   });
 
@@ -80,8 +80,8 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.setLastUpdate('pointer');
-    instance.setItemTooltip(item);
+    instance.setLastUpdateSource('pointer');
+    instance.setTooltipItem(item);
     instance.setHighlight(item);
   }
 
@@ -89,7 +89,7 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.removeItemTooltip(item);
+    instance.removeTooltipItem(item);
     instance.clearHighlight();
   }
 

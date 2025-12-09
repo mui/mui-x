@@ -13,7 +13,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
     });
   });
 
-  const setLastUpdate = useEventCallback(function setLastUpdate(
+  const setLastUpdateSource = useEventCallback(function setLastUpdateSource(
     interaction: InteractionUpdateSource,
   ) {
     if (store.state.interaction.lastUpdate !== interaction) {
@@ -34,7 +34,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   return {
     instance: {
       cleanInteraction,
-      setLastUpdate,
+      setLastUpdateSource,
       setPointerCoordinate,
     },
   };

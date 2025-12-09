@@ -135,21 +135,21 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       if (!event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
-        instance.removeItemTooltip?.();
+        instance.removeTooltipItem?.();
       }
     });
     const panEndHandler = instance.addInteractionListener('panEnd', (event) => {
       if (!event.detail.activeGestures.move) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
-        instance.removeItemTooltip?.();
+        instance.removeTooltipItem?.();
       }
     });
     const pressEndHandler = instance.addInteractionListener('quickPressEnd', (event) => {
       if (!event.detail.activeGestures.move && !event.detail.activeGestures.pan) {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
-        instance.removeItemTooltip?.();
+        instance.removeTooltipItem?.();
       }
     });
 
@@ -159,20 +159,20 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
       if (closestPoint === 'outside-chart') {
         instance.cleanInteraction?.();
         instance.clearHighlight?.();
-        instance.removeItemTooltip?.();
+        instance.removeTooltipItem?.();
         return;
       }
 
       if (closestPoint === 'outside-voronoi-max-radius' || closestPoint === 'no-point-found') {
-        instance.removeItemTooltip?.();
+        instance.removeTooltipItem?.();
         instance.clearHighlight?.();
-        instance.removeItemTooltip?.();
+        instance.removeTooltipItem?.();
         return;
       }
 
       const { seriesId, dataIndex } = closestPoint;
-      instance.setItemTooltip?.({ type: 'scatter', seriesId, dataIndex });
-      instance.setLastUpdate?.('pointer');
+      instance.setTooltipItem?.({ type: 'scatter', seriesId, dataIndex });
+      instance.setLastUpdateSource?.('pointer');
       instance.setHighlight?.({
         seriesId,
         dataIndex,
