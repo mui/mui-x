@@ -51,6 +51,7 @@ describeAdapters(
       await view.user.keyboard('[ArrowUp][ArrowUp][ArrowDown]');
       await view.user.tab();
 
+      // Still invalid, must not flash to valid between spins
       expect(input).to.have.attribute('aria-invalid', 'true');
 
       view.unmount();
