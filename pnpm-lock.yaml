@@ -43,7 +43,7 @@ catalogs:
       specifier: ^7.3.5
       version: 7.3.5
     '@mui/internal-test-utils':
-      specifier: ^2.0.15
+      specifier: 2.0.15
       version: 2.0.15
     '@mui/material':
       specifier: ^7.3.5
@@ -256,19 +256,19 @@ importers:
         specifier: ^7.10.1
         version: 7.10.1(@types/node@22.19.1)
       '@mui/internal-babel-plugin-display-name':
-        specifier: ^1.0.4-canary.8
+        specifier: 1.0.4-canary.8
         version: 1.0.4-canary.8(@babel/core@7.28.5)(@babel/preset-react@7.28.5(@babel/core@7.28.5))
       '@mui/internal-bundle-size-checker':
-        specifier: ^1.0.9-canary.55
+        specifier: 1.0.9-canary.55
         version: 1.0.9-canary.55(@types/node@22.19.1)(rollup@4.52.5)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: ^0.0.3-canary.53
+        specifier: 0.0.3-canary.53
         version: 0.0.3-canary.53(@next/eslint-plugin-next@15.5.7)(@types/node@22.19.1)(@typescript-eslint/parser@8.48.1(eslint@9.39.1)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.48.1(eslint@9.39.1)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.1))(eslint@9.39.1)(postcss@8.5.6)(prettier@3.6.2)(stylelint@16.26.0(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.15)
       '@mui/internal-markdown':
-        specifier: ^2.0.12
+        specifier: 2.0.12
         version: 2.0.12
       '@mui/internal-netlify-cache':
-        specifier: ^0.0.2-canary.1
+        specifier: 0.0.2-canary.1
         version: 0.0.2-canary.1
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -427,7 +427,7 @@ importers:
         specifier: ^17.1.0
         version: 17.1.0
       prettier:
-        specifier: ^3.6.2
+        specifier: ~3.6.2
         version: 3.6.2
       pretty-quick:
         specifier: ^4.2.2
@@ -529,7 +529,7 @@ importers:
         specifier: 'catalog:'
         version: 7.3.5(@mui/material@7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/react@19.2.7)(react@19.2.1)
       '@mui/internal-docs-infra':
-        specifier: ^0.2.3-canary.15
+        specifier: 0.2.3-canary.15
         version: 0.2.3-canary.15(@types/react@19.2.7)(next@15.5.7(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
       '@mui/joy':
         specifier: ^5.0.0-beta.52
@@ -740,10 +740,10 @@ importers:
         specifier: 'catalog:'
         version: 7.28.5(@babel/core@7.28.5)
       '@mui/internal-docs-utils':
-        specifier: ^2.0.4
+        specifier: 2.0.4
         version: 2.0.4
       '@mui/internal-scripts':
-        specifier: ^2.0.15
+        specifier: 2.0.15
         version: 2.0.15
       '@types/chance':
         specifier: 'catalog:'
@@ -2023,7 +2023,7 @@ importers:
         version: link:../x-internals/build
     devDependencies:
       '@mui/internal-test-utils':
-        specifier: ^2.0.15
+        specifier: 'catalog:'
         version: 2.0.15(@babel/core@7.28.5)(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@mui/types':
         specifier: ^7.4.8
