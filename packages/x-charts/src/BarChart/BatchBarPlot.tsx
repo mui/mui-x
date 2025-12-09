@@ -278,7 +278,7 @@ function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: Animate
   const drawingArea = useSelector(store, selectorChartDrawingArea);
   const clipPathId = useId();
 
-  const animateChildren = [];
+  const animateChildren: React.ReactNode[] = [];
 
   if (layout === 'horizontal') {
     animateChildren.push(
