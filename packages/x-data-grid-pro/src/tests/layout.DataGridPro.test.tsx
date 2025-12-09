@@ -160,7 +160,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Layout', () => {
         </div>
       </ThemeProvider>,
     );
-    expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+    expect(document.querySelector('[aria-label="Ordenar"]')).not.to.equal(null);
   });
 
   it('should support the sx prop', () => {
