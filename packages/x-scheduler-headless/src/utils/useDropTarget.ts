@@ -209,9 +209,12 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const original = schedulerEventSelectors.processedEvent(store.state, eventId);
-  if (!original) {
-    throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+  const adapter = store.state.adapter;
+  if (
+    adapter.isEqual(originalOccurrence.start.value, start) &&
+    adapter.isEqual(originalOccurrence.end.value, end)
+  ) {
+    return;
   }
 
   const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
@@ -226,7 +229,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     Object.assign(changes, addPropertiesToDroppedEvent());
   }
 
-  if (original.rrule) {
+  if (originalOccurrence.rrule) {
     store.updateRecurringEvent({
       occurrenceStart: originalOccurrence.start.value,
       changes,

@@ -8,7 +8,7 @@ import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-e
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
-import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -95,7 +95,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       return false;
     }
     const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
-    return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
+    return Math.abs(adapter.differenceInMinutes(now, slotCenter)) <= 25;
   };
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (

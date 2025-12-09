@@ -9,7 +9,10 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
   const { subType } = identifier;
 
   if (subType === 'node') {
-    const node = identifier.node;
+    const node = series.data.nodes.find((n) => n.id === identifier.nodeId);
+    if (!node) {
+      return null;
+    }
 
     return {
       identifier,
@@ -26,7 +29,9 @@ export const tooltipGetter: TooltipGetter<'sankey'> = (params) => {
   }
 
   if (subType === 'link') {
-    const link = identifier.link;
+    const link = series.data.links.find(
+      (l) => l.source.id === identifier.sourceId && l.target.id === identifier.targetId,
+    );
 
     if (!link) {
       return null;

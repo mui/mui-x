@@ -21,6 +21,7 @@ This package is not published yet.
 - [Resource properties](/x/react-scheduler/resource-properties/)
 - [Recurring events](/x/react-scheduler/recurring-events/)
 - [Drag interactions](/x/react-scheduler/drag-interactions/)
+- [Timezone support](/x/react-scheduler/timezone-support/)
 
 ## Event Calendar
 

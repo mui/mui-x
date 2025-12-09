@@ -158,6 +158,7 @@ export const EventItem = React.forwardRef(function EventItem(
         'EventItemCard',
         `EventItemCard--${variant}`,
         getColorClassName(color),
+        occurrence.className,
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}

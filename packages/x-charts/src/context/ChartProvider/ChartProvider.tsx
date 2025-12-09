@@ -4,10 +4,10 @@ import { useCharts } from '../../internals/store/useCharts';
 import type { ChartProviderProps } from './ChartProvider.types';
 import { ChartContext } from './ChartContext';
 import {
-  ChartAnyPluginSignature,
-  ConvertSignaturesIntoPlugins,
+  type ChartAnyPluginSignature,
+  type ConvertSignaturesIntoPlugins,
 } from '../../internals/plugins/models';
-import { ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
+import { type ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
 import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
@@ -16,7 +16,7 @@ import { barSeriesConfig } from '../../BarChart/seriesConfig';
 import { scatterSeriesConfig } from '../../ScatterChart/seriesConfig';
 import { lineSeriesConfig } from '../../LineChart/seriesConfig';
 import { pieSeriesConfig } from '../../PieChart/seriesConfig';
-import { ChartSeriesType } from '../../models/seriesType/config';
+import { type ChartSeriesType } from '../../models/seriesType/config';
 
 export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> = {
   bar: barSeriesConfig,
