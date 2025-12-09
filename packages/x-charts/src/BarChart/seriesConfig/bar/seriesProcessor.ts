@@ -11,7 +11,7 @@ type BarDataset = DatasetType<number | null>;
 const barValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedBarSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
+const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVisible) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
@@ -66,41 +66,62 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset) => {
 
   const completedSeries: {
     [id: string]: DefaultizedBarSeriesType & {
+      visibleStackedData: [number, number][];
       stackedData: [number, number][];
     };
   } = {};
 
   stackingGroups.forEach((stackingGroup) => {
     const { ids, stackingOffset, stackingOrder } = stackingGroup;
-    // Get stacked values, and derive the domain
-    const stackedSeries = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
-      .keys(
-        ids.map((id) => {
-          // Use dataKey if needed and available
-          const dataKey = series[id].dataKey;
-          return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
-        }),
-      )
+    const keys = ids.map((id) => {
+      // Use dataKey if needed and available
+      const dataKey = series[id].dataKey;
+      return series[id].data === undefined && dataKey !== undefined ? dataKey : id;
+    });
+
+    const stackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
+      .keys(keys)
       .value((d, key) => d[key] ?? 0) // defaultize null value to 0
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
+    // We sort the keys based on the original stacking order to ensure consistency
+    const idOrder = stackedData.sort((a, b) => a.index - b.index).map((s) => s.key);
+
+    // Compute visible stacked data
+    const visibleStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
+      .keys(idOrder)
+      .value((d, key) => {
+        const keyIndex = keys.indexOf(key);
+        const seriesId = ids[keyIndex];
+
+        if (!isIdentifierVisible?.(`${seriesId}`)) {
+          // For hidden series, return 0 so they don't contribute to the stack
+          return 0;
+        }
+        return d[key] ?? 0;
+      })
+      .offset(stackingOffset)(d3Dataset);
+
     ids.forEach((id, index) => {
       const dataKey = series[id].dataKey;
+      const data = dataKey
+        ? dataset!.map((d) => {
+            const value = d[dataKey];
+            return typeof value === 'number' ? value : null;
+          })
+        : series[id].data!;
+      const hidden = !isIdentifierVisible?.(`${id}`);
       completedSeries[id] = {
         layout: 'vertical',
         labelMarkType: 'square',
         minBarSize: 0,
         valueFormatter: series[id].valueFormatter ?? barValueFormatter,
         ...series[id],
-        data: dataKey
-          ? dataset!.map((data) => {
-              const value = data[dataKey];
-
-              return typeof value === 'number' ? value : null;
-            })
-          : series[id].data!,
-        stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
+        data,
+        hidden,
+        stackedData: stackedData[index] as [number, number][],
+        visibleStackedData: visibleStackedData[index] as [number, number][],
       };
     });
   });
