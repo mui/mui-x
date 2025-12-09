@@ -14,6 +14,14 @@ export default function BarBatchRenderer() {
           data: data.map((d) => new Date(d.date)),
           valueFormatter: (v: Date) => tickLabelDateFormatter.format(v),
           zoom: true,
+          ordinalTimeTicks: [
+            'years',
+            'quarterly',
+            'months',
+            'biweekly',
+            'weeks',
+            'days',
+          ],
         },
       ]}
       series={[
