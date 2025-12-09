@@ -194,6 +194,7 @@ function FadedHighlightedBars({
       <path
         key={`highlighted-${processedSeries.seriesId}`}
         fill={barData.color}
+        filter="brightness(120%)"
         data-highlighted
         d={createPath(barData, borderRadius)}
       />,
