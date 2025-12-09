@@ -419,7 +419,11 @@ export const useGridCellSelection = (
       return;
     }
 
-    if (!event.shiftKey && params.cellMode !== GridCellModes.Edit) {
+    if (event.key === ' ' && params.cellMode === GridCellModes.Edit) {
+      return;
+    }
+
+    if (!event.shiftKey) {
       apiRef.current.setCellSelectionModel({});
       return;
     }
