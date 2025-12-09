@@ -1,6 +1,6 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import { getStackingGroups, StackOrder } from '../../internals/stackSeries';
+import { getStackingGroups } from '../../internals/stackSeries';
 import {
   type ChartSeriesDefaultized,
   type DatasetElementType,
@@ -82,12 +82,9 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierV
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
-    // We sort the keys based on the original stacking order to ensure consistency
-    const idOrder = stackedData.sort((a, b) => a.index - b.index).map((s) => s.key);
-
     // Compute visible stacked data
     const visibleStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
-      .keys(idOrder)
+      .keys(keys)
       .value((d, key) => {
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
@@ -98,7 +95,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierV
         }
         return d[key] ?? 0;
       })
-      .order(StackOrder.none)
+      .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
     ids.forEach((id, index) => {

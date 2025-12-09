@@ -85,12 +85,9 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
-    // We sort the keys based on the original stacking order to ensure consistency
-    const idOrder = stackedData.sort((a, b) => a.index - b.index).map((s) => s.key);
-
     // Compute visible stacked data
     const visibleStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
-      .keys(idOrder)
+      .keys(keys)
       .value((d, key) => {
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
@@ -101,6 +98,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
         }
         return d[key] ?? 0;
       })
+      .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
     ids.forEach((id, index) => {
