@@ -11,7 +11,7 @@ export default function BarBatchRenderer() {
     <BarChartPro
       xAxis={[
         {
-          data: data.map((d) => new Date(Date.parse(d.date))),
+          data: data.map((d) => new Date(d.date)),
           valueFormatter: (v: Date) => tickLabelDateFormatter.format(v),
           zoom: true,
         },

@@ -11,6 +11,7 @@ import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/u
 import { getBandSize } from '../internals/getBandSize';
 import { isBandScale } from '../internals/scaleGuards';
 import { type ChartState } from '../internals/plugins/models';
+import { getDataIndexForOrdinalScaleValue } from '../internals/invertScale';
 
 export function getBarItemAtPosition(
   store: Store<ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>>,
@@ -47,15 +48,7 @@ export function getBarItemAtPosition(
         continue;
       }
 
-      const dataIndex =
-        bandScale.bandwidth() === 0
-          ? Math.floor(
-              (svgPointBandCoordinate - Math.min(...bandScale.range()) + bandScale.step() / 2) /
-                bandScale.step(),
-            )
-          : Math.floor(
-              (svgPointBandCoordinate - Math.min(...bandScale.range())) / bandScale.step(),
-            );
+      const dataIndex = getDataIndexForOrdinalScaleValue(bandScale, svgPointBandCoordinate);
 
       const { barWidth, offset } = getBandSize(
         bandScale.bandwidth(),
