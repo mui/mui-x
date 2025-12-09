@@ -1,7 +1,7 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
-import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartInteraction';
+import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
