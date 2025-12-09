@@ -40,9 +40,9 @@ const getSeries = ({ hasNegativeValue, stackOffset }: GetSeriesParams) => [
 ];
 
 export default function StackOffsetDemo() {
-  const [stackOffset, setStackOffset] = React.useState<StackOffsetType>('none');
+  const [stackOffset, setStackOffset] = React.useState<StackOffsetType>('expand');
 
-  const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
+  const [hasNegativeValue, setHasNegativeValue] = React.useState(false);
 
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>
@@ -69,7 +69,16 @@ export default function StackOffsetDemo() {
           labelPlacement="end"
         />
       </Stack>
-      <BarChart height={300} series={getSeries({ hasNegativeValue, stackOffset })} />
+      <BarChart
+        height={300}
+        series={getSeries({ hasNegativeValue, stackOffset })}
+        layout="horizontal"
+        slotProps={{
+          legend: {
+            toggleVisibilityOnClick: true,
+          },
+        }}
+      />
     </Box>
   );
 }
