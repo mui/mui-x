@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { useSvgRef } from '../hooks/useSvgRef';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -12,7 +13,9 @@ import { useStore } from '../internals/store/useStore';
 
 export function useInteractionItemProps() {
   const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+    useChartContext<
+      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+    >();
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
@@ -28,7 +31,7 @@ export function useInteractionItemProps() {
 
     if (lastItem) {
       lastItemRef.current = undefined;
-      instance.removeItemInteraction(lastItem);
+      instance.removeTooltipItem(lastItem);
       instance.clearHighlight();
     }
   });
@@ -49,7 +52,8 @@ export function useInteractionItemProps() {
     const item = getBarItemAtPosition(store, svgPoint);
 
     if (item) {
-      instance.setItemInteraction(item, { interaction: 'pointer' });
+      instance.setLastUpdateSource('pointer');
+      instance.setTooltipItem(item);
       instance.setHighlight(item);
       lastItemRef.current = item;
     } else {
@@ -57,7 +61,7 @@ export function useInteractionItemProps() {
 
       if (lastItem) {
         lastItemRef.current = undefined;
-        instance.removeItemInteraction(lastItem);
+        instance.removeTooltipItem(lastItem);
         instance.clearHighlight();
       }
     }
