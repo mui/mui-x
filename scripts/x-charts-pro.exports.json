@@ -587,6 +587,8 @@
   { "name": "UseChartProZoomSignature", "kind": "TypeAlias" },
   { "name": "useChartRootRef", "kind": "Function" },
   { "name": "useChartsLocalization", "kind": "Variable" },
+  { "name": "useChartTooltip", "kind": "Variable" },
+  { "name": "UseChartTooltipSignature", "kind": "TypeAlias" },
   { "name": "useChartZAxis", "kind": "Variable" },
   { "name": "UseChartZAxisSignature", "kind": "TypeAlias" },
   { "name": "useDataset", "kind": "Function" },
