@@ -7,7 +7,7 @@ export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
     (processedResourceLookup, resourceId: string | null | undefined) =>
-      resourceId == null ? null : processedResourceLookup.get(resourceId),
+      resourceId == null ? null : (processedResourceLookup.get(resourceId) ?? null),
   ),
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
