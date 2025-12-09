@@ -1,5 +1,5 @@
 import type { ScaleBand, ScalePoint } from '@mui/x-charts-vendor/d3-scale';
-import { D3OrdinalScale, D3Scale } from '../models/axis';
+import { type D3OrdinalScale, type D3Scale } from '../models/axis';
 
 export function isOrdinalScale<
   Domain extends { toString(): string } = { toString(): string },

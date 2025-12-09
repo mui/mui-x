@@ -10,7 +10,7 @@ import {
   curveBumpX,
   curveBumpY,
 } from '@mui/x-charts-vendor/d3-shape';
-import { CurveType } from '../models/curve';
+import { type CurveType } from '../models/curve';
 
 export function getCurveFactory(curveType?: CurveType) {
   switch (curveType) {

@@ -79,6 +79,16 @@ describeTreeView<RichTreeViewProStore<any, any>>(
       });
 
       describe('itemReordering prop', () => {
+        it('should not move the item when dropping on itself', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('2'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
         it('should allow to drag and drop items when props.itemsReordering={true}', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }, { id: '3' }],

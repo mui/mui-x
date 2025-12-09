@@ -5,6 +5,8 @@ import {
   GridActionsCellItem,
   GridColDef,
   GridRowId,
+  GridActionsCell,
+  GridRenderCellParams,
 } from '@mui/x-data-grid-pro';
 import ArrowUpIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownIcon from '@mui/icons-material/ArrowDownward';
@@ -33,11 +35,86 @@ for (let i = 0; i < 20; i += 1) {
   data.push(getRow());
 }
 
+interface PinnedRowsIds {
+  top: GridRowId[];
+  bottom: GridRowId[];
+}
+
+interface PinningContextValue {
+  pinnedRowsIds: PinnedRowsIds;
+  pinToBottom: (id: GridRowId) => void;
+  pinToTop: (id: GridRowId) => void;
+  unpin: (id: GridRowId) => void;
+}
+
+const PinningContext = React.createContext<PinningContextValue>({
+  pinnedRowsIds: { top: [], bottom: [] },
+  pinToBottom: () => {},
+  pinToTop: () => {},
+  unpin: () => {},
+});
+
+function ActionsCell(props: GridRenderCellParams) {
+  const { pinnedRowsIds, pinToBottom, pinToTop, unpin } =
+    React.useContext(PinningContext);
+  const isPinnedTop = pinnedRowsIds.top.includes(props.id);
+  const isPinnedBottom = pinnedRowsIds.bottom.includes(props.id);
+
+  if (isPinnedTop || isPinnedBottom) {
+    return (
+      <GridActionsCell {...props}>
+        <GridActionsCellItem
+          label="Unpin"
+          icon={
+            <Tooltip title="Unpin">
+              {isPinnedTop ? <ArrowDownIcon /> : <ArrowUpIcon />}
+            </Tooltip>
+          }
+          onClick={() => unpin(props.id)}
+        />
+      </GridActionsCell>
+    );
+  }
+
+  return (
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        icon={
+          <Tooltip title="Pin at the top">
+            <ArrowUpIcon />
+          </Tooltip>
+        }
+        label="Pin at the top"
+        onClick={() => pinToTop(props.id)}
+      />
+      <GridActionsCellItem
+        icon={
+          <Tooltip title="Pin at the bottom">
+            <ArrowDownIcon />
+          </Tooltip>
+        }
+        label="Pin at the bottom"
+        onClick={() => pinToBottom(props.id)}
+      />
+    </GridActionsCell>
+  );
+}
+
+const columns: GridColDef<(typeof data)[number]>[] = [
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 100,
+    renderCell: (params) => <ActionsCell {...params} />,
+  },
+  { field: 'name', headerName: 'Name', width: 150 },
+  { field: 'city', headerName: 'City', width: 150 },
+  { field: 'username', headerName: 'Username' },
+  { field: 'email', headerName: 'Email', width: 200 },
+];
+
 export default function RowPinningWithActions() {
-  const [pinnedRowsIds, setPinnedRowsIds] = React.useState<{
-    top: GridRowId[];
-    bottom: GridRowId[];
-  }>({
+  const [pinnedRowsIds, setPinnedRowsIds] = React.useState<PinnedRowsIds>({
     top: [],
     bottom: [],
   });
@@ -65,80 +142,42 @@ export default function RowPinningWithActions() {
     };
   }, [pinnedRowsIds]);
 
-  const columns = React.useMemo<GridColDef<(typeof data)[number]>[]>(
-    () => [
-      {
-        field: 'actions',
-        type: 'actions',
-        width: 100,
-        getActions: (params) => {
-          const isPinnedTop = pinnedRowsIds.top.includes(params.id);
-          const isPinnedBottom = pinnedRowsIds.bottom.includes(params.id);
-          if (isPinnedTop || isPinnedBottom) {
-            return [
-              <GridActionsCellItem
-                label="Unpin"
-                icon={
-                  <Tooltip title="Unpin">
-                    {isPinnedTop ? <ArrowDownIcon /> : <ArrowUpIcon />}
-                  </Tooltip>
-                }
-                onClick={() =>
-                  setPinnedRowsIds((prevPinnedRowsIds) => ({
-                    top: prevPinnedRowsIds.top.filter(
-                      (rowId) => rowId !== params.id,
-                    ),
-                    bottom: prevPinnedRowsIds.bottom.filter(
-                      (rowId) => rowId !== params.id,
-                    ),
-                  }))
-                }
-              />,
-            ];
-          }
-          return [
-            <GridActionsCellItem
-              icon={
-                <Tooltip title="Pin at the top">
-                  <ArrowUpIcon />
-                </Tooltip>
-              }
-              label="Pin at the top"
-              onClick={() =>
-                setPinnedRowsIds((prevPinnedRowsIds) => ({
-                  ...prevPinnedRowsIds,
-                  top: [...prevPinnedRowsIds.top, params.id],
-                }))
-              }
-            />,
-            <GridActionsCellItem
-              icon={
-                <Tooltip title="Pin at the bottom">
-                  <ArrowDownIcon />
-                </Tooltip>
-              }
-              label="Pin at the bottom"
-              onClick={() =>
-                setPinnedRowsIds((prevPinnedRowsIds) => ({
-                  ...prevPinnedRowsIds,
-                  bottom: [...prevPinnedRowsIds.bottom, params.id],
-                }))
-              }
-            />,
-          ];
-        },
-      },
-      { field: 'name', headerName: 'Name', width: 150 },
-      { field: 'city', headerName: 'City', width: 150 },
-      { field: 'username', headerName: 'Username' },
-      { field: 'email', headerName: 'Email', width: 200 },
-    ],
-    [pinnedRowsIds],
+  const pinToTop = React.useCallback((id: GridRowId) => {
+    setPinnedRowsIds((prevPinnedRowsIds) => ({
+      ...prevPinnedRowsIds,
+      top: [...prevPinnedRowsIds.top, id],
+    }));
+  }, []);
+
+  const pinToBottom = React.useCallback((id: GridRowId) => {
+    setPinnedRowsIds((prevPinnedRowsIds) => ({
+      ...prevPinnedRowsIds,
+      bottom: [...prevPinnedRowsIds.bottom, id],
+    }));
+  }, []);
+
+  const unpin = React.useCallback((id: GridRowId) => {
+    setPinnedRowsIds((prevPinnedRowsIds) => ({
+      top: prevPinnedRowsIds.top.filter((rowId) => rowId !== id),
+      bottom: prevPinnedRowsIds.bottom.filter((rowId) => rowId !== id),
+    }));
+  }, []);
+
+  const pinningContextValue = React.useMemo<PinningContextValue>(
+    () => ({
+      pinnedRowsIds,
+      pinToTop,
+      pinToBottom,
+      unpin,
+    }),
+    [pinnedRowsIds, pinToTop, pinToBottom, unpin],
   );
 
   return (
     <div style={{ height: 500, width: '100%' }}>
-      <DataGridPro columns={columns} pinnedRows={pinnedRows} rows={rows} />
+      <PinningContext.Provider value={pinningContextValue}>
+        <DataGridPro columns={columns} pinnedRows={pinnedRows} rows={rows} />
+      </PinningContext.Provider>
     </div>
   );
 }

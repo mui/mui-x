@@ -1,11 +1,11 @@
-import { CalendarEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 
 export interface MoreEventsPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The event occurrence to display in the popover.
    */
-  occurrences: CalendarEventOccurrence[];
+  occurrences: SchedulerEventOccurrence[];
   /**
    * The total count of occurrences.
    */

@@ -1,6 +1,6 @@
-import { CalendarEventColor } from '@mui/x-scheduler-headless/models';
+import { SchedulerEventColor } from '@mui/x-scheduler-headless/models';
 
 // TODO: Add support for event.color
-export function getColorClassName(color: CalendarEventColor): string {
+export function getColorClassName(color: SchedulerEventColor): string {
   return `palette-${color}`;
 }

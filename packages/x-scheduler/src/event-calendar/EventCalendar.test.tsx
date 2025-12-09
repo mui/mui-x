@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { adapter, createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
+import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
@@ -246,24 +246,11 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
+      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00').build();
+      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00').build();
+
       const { user } = render(
-        <EventCalendar
-          events={[
-            {
-              id: '1',
-              start: adapter.date('2025-05-31'),
-              end: adapter.date('2025-05-31'),
-              title: 'Saturday event',
-            },
-            {
-              id: '2',
-              start: adapter.date('2025-06-02'),
-              end: adapter.date('2025-06-02'),
-              title: 'Monday event',
-            },
-          ]}
-          defaultView="agenda"
-        />,
+        <EventCalendar events={[saturdayEvent, sundayEvent]} defaultView="agenda" />,
       );
 
       // Empty days should be visible by default
@@ -282,6 +269,48 @@ describe('EventCalendar', () => {
       await user.click(document.body);
 
       expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+    });
+  });
+
+  describe('className property', () => {
+    it('should apply className to event elements in week view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Important Meeting')
+        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .className('custom-event-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} />);
+
+      const eventElement = screen.getByRole('button', { name: /Important Meeting/i });
+      expect(eventElement.classList.contains('custom-event-class')).to.equal(true);
+    });
+
+    it('should apply className to event elements in month view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Monthly Event')
+        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .className('monthly-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} defaultView="month" />);
+
+      const eventElement = screen.getByLabelText(/Monthly Event/i);
+      expect(eventElement.classList.contains('monthly-class')).to.equal(true);
+    });
+
+    it('should apply className to event elements in agenda view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Agenda Event')
+        .span('2025-05-26T14:00:00', '2025-05-26T15:00:00')
+        .className('agenda-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} defaultView="agenda" />);
+
+      const eventElement = document.querySelector('.agenda-class');
+      expect(eventElement).not.to.equal(null);
+      expect(eventElement?.textContent).to.include('Agenda Event');
     });
   });
 });

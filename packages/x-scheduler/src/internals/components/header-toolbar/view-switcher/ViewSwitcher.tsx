@@ -11,7 +11,7 @@ import { useTranslations } from '../../../utils/TranslationsContext';
 export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   views: T[];
   view: T;
-  onViewChange: (view: T, event: Event | React.MouseEvent<HTMLElement>) => void;
+  onViewChange: (view: T, event: Event) => void;
 }
 
 type ViewSwitcherComponent = <T extends string>(
@@ -33,7 +33,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const newView = (event.currentTarget as HTMLElement).getAttribute('data-view') as T;
       if (newView) {
-        onViewChange(newView, event);
+        onViewChange(newView, event.nativeEvent);
       }
     },
     [onViewChange],

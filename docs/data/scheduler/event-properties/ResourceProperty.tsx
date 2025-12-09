@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
+import { setHours } from 'date-fns/setHours';
+import { setMinutes } from 'date-fns/setMinutes';
 import capitalize from '@mui/utils/capitalize';
 import {
-  CalendarResource,
+  SchedulerResource,
   SchedulerEventModelStructure,
 } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
@@ -10,8 +11,8 @@ import { defaultVisibleDate } from '../datasets/personal-agenda';
 
 interface CustomEvent {
   id: string;
-  start: DateTime;
-  end: DateTime;
+  start: Date;
+  end: Date;
   room: string;
   teacher: string;
 }
@@ -22,22 +23,22 @@ const initialEvents: CustomEvent[] = [
   // 8:00-9:30 AM slots
   {
     id: 'math-1-room-a',
-    start: defaultVisibleDate.set({ hour: 8, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 9, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 8), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 9), 30),
     room: 'Room A',
     teacher: 'french',
   },
   {
     id: 'science-1-room-b',
-    start: defaultVisibleDate.set({ hour: 8, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 9, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 8), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 9), 30),
     room: 'Room B',
     teacher: 'science',
   },
   {
     id: 'english-1-room-c',
-    start: defaultVisibleDate.set({ hour: 8, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 9, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 8), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 9), 30),
     room: 'Room C',
     teacher: 'english',
   },
@@ -45,22 +46,22 @@ const initialEvents: CustomEvent[] = [
   // 10:00-11:30 AM slots
   {
     id: 'history-1-room-a',
-    start: defaultVisibleDate.set({ hour: 10, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 11, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 10), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 11), 30),
     room: 'Room A',
     teacher: 'history',
   },
   {
     id: 'math-2-room-b',
-    start: defaultVisibleDate.set({ hour: 10, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 11, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 10), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 11), 30),
     room: 'Room B',
     teacher: 'french',
   },
   {
     id: 'science-2-room-c',
-    start: defaultVisibleDate.set({ hour: 10, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 11, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 10), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 11), 30),
     room: 'Room C',
     teacher: 'science',
   },
@@ -68,22 +69,22 @@ const initialEvents: CustomEvent[] = [
   // 12:00-1:30 PM slots
   {
     id: 'english-2-room-a',
-    start: defaultVisibleDate.set({ hour: 12, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 13, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 12), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 13), 30),
     room: 'Room A',
     teacher: 'english',
   },
   {
     id: 'history-2-room-b',
-    start: defaultVisibleDate.set({ hour: 12, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 13, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 12), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 13), 30),
     room: 'Room B',
     teacher: 'history',
   },
   {
     id: 'math-3-room-c',
-    start: defaultVisibleDate.set({ hour: 12, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 13, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 12), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 13), 30),
     room: 'Room C',
     teacher: 'french',
   },
@@ -91,34 +92,34 @@ const initialEvents: CustomEvent[] = [
   // 2:00-3:30 PM slots
   {
     id: 'science-3-room-a',
-    start: defaultVisibleDate.set({ hour: 14, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 15, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 14), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 15), 30),
     room: 'Room A',
     teacher: 'science',
   },
   {
     id: 'english-3-room-b',
-    start: defaultVisibleDate.set({ hour: 14, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 15, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 14), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 15), 30),
     room: 'Room B',
     teacher: 'english',
   },
   {
     id: 'history-3-room-c',
-    start: defaultVisibleDate.set({ hour: 14, minute: 0 }),
-    end: defaultVisibleDate.set({ hour: 15, minute: 30 }),
+    start: setMinutes(setHours(defaultVisibleDate, 14), 0),
+    end: setMinutes(setHours(defaultVisibleDate, 15), 30),
     room: 'Room C',
     teacher: 'history',
   },
 ];
 
-const rooms: CalendarResource[] = [
+const rooms: SchedulerResource[] = [
   { id: 'Room A', title: 'Room A', eventColor: 'violet' },
   { id: 'Room B', title: 'Room B', eventColor: 'jade' },
   { id: 'Room C', title: 'Room C', eventColor: 'lime' },
 ];
 
-const classes: CalendarResource[] = [
+const classes: SchedulerResource[] = [
   { id: 'french', title: 'French', eventColor: 'orange' },
   { id: 'science', title: 'Science', eventColor: 'cyan' },
   { id: 'english', title: 'English', eventColor: 'pink' },

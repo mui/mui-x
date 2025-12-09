@@ -457,7 +457,16 @@
       "isPremiumPlan": true
     },
     "setRowIndex": {
-      "type": { "description": "(rowId: GridRowId, targetIndex: number) =&gt; void" },
+      "type": {
+        "description": "(rowId: GridRowId, targetIndex: number) =&gt; void | Promise&lt;void&gt;"
+      },
+      "required": true,
+      "isProPlan": true
+    },
+    "setRowPosition": {
+      "type": {
+        "description": "(sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) =&gt; void | Promise&lt;void&gt;"
+      },
       "required": true,
       "isProPlan": true
     },

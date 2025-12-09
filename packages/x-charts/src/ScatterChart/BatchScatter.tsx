@@ -1,19 +1,19 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { D3Scale } from '../models/axis';
-import { ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import { type D3Scale } from '../models/axis';
+import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { ColorGetter } from '../internals/plugins/models/seriesConfig';
+import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
 import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
   selectorChartSeriesUnfadedItem,
   selectorChartSeriesHighlightedItem,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 
 export interface BatchScatterProps {

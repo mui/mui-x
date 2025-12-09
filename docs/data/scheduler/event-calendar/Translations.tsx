@@ -19,7 +19,7 @@ export default function Translations() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         translations={frFR}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

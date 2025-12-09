@@ -1,12 +1,15 @@
 'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
-import { ChartProviderProps } from '../context/ChartProvider';
-import { ChartAnyPluginSignature, MergeSignaturesProperty } from '../internals/plugins/models';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
-import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
-import { ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
+import { type ChartProviderProps } from '../context/ChartProvider';
+import {
+  type ChartAnyPluginSignature,
+  type MergeSignaturesProperty,
+} from '../internals/plugins/models';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import { type ChartsLocalizationProviderProps } from '../ChartsLocalizationProvider';
 
 export const useChartDataProviderProps = <
   TSeries extends ChartSeriesType = ChartSeriesType,

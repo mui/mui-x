@@ -1,14 +1,8 @@
 'use client';
-import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
-import { SeriesId } from '../models/seriesType/common';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
-import {
-  createSeriesSelectorsOfType,
-  createAllSeriesSelectorOfType,
-} from '../internals/createSeriesSelectorOfType';
-
-const useSelectorSeries = createSeriesSelectorsOfType('bar');
-const useSelectorSeriesContext = createAllSeriesSelectorOfType('bar');
+import { type ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
+import { type SeriesId } from '../models/seriesType/common';
+import { type ChartSeriesDefaultized } from '../models/seriesType/config';
+import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 
 export type UseBarSeriesReturnValue = ChartSeriesDefaultized<'bar'>;
 export type UseBarSeriesContextReturnValue = ProcessedSeries['bar'];
@@ -36,7 +30,7 @@ export function useBarSeries(): UseBarSeriesReturnValue[];
  */
 export function useBarSeries(seriesIds: SeriesId[]): UseBarSeriesReturnValue[];
 export function useBarSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSelectorSeries(seriesIds);
+  return useSeriesOfType('bar', seriesIds);
 }
 
 /**
@@ -48,5 +42,5 @@ export function useBarSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the bar series
  */
 export function useBarSeriesContext(): UseBarSeriesContextReturnValue {
-  return useSelectorSeriesContext();
+  return useAllSeriesOfType('bar');
 }

@@ -1,4 +1,4 @@
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
 import {
   getNextSeriesWithData,
   getPreviousSeriesWithData,

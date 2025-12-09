@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useGaugeState } from './GaugeProvider';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { gaugeClasses } from './gaugeClasses';
 
 export interface GaugeFormatterParams {

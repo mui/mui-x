@@ -1,7 +1,7 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
 import { createExportIframe } from './common';
-import { ChartPrintExportOptions } from './useChartProExport.types';
+import { type ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
 export function printChart(
@@ -10,6 +10,7 @@ export function printChart(
     fileName,
     onBeforeExport = defaultOnBeforeExport,
     copyStyles = true,
+    nonce,
   }: ChartPrintExportOptions = {},
 ) {
   const printWindow = createExportIframe(fileName);
@@ -26,7 +27,7 @@ export function printChart(
       rootCandidate.constructor.name === 'ShadowRoot' ? (rootCandidate as ShadowRoot) : doc;
 
     if (copyStyles) {
-      await Promise.all(loadStyleSheets(printDoc, root));
+      await Promise.all(loadStyleSheets(printDoc, root, nonce));
     }
 
     const mediaQueryList = printWindow.contentWindow!.matchMedia('print');

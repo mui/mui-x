@@ -1,10 +1,10 @@
-import { NumberValue } from '@mui/x-charts-vendor/d3-scale';
-import { ContinuousScaleName, DefaultedAxis } from '../../../../models/axis';
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
+import { type ContinuousScaleName, type DefaultedAxis } from '../../../../models/axis';
 import { getScale } from '../../../getScale';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries';
 import { getAxisDomainLimit } from './getAxisDomainLimit';
 import { getTickNumber } from '../../../ticks';
-import { TickParams } from '../../../../hooks/useTicks';
+import { type TickParams } from '../../../../hooks/useTicks';
 
 function niceDomain(
   scaleType: ContinuousScaleName | undefined,

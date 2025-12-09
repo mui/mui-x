@@ -96,8 +96,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
           </ErrorBoundary>,
         );
       }).to.toErrorDev([
-        'MUI X: Expired license key',
-        reactMajor < 19 && 'MUI X: Expired license key',
+        reactMajor >= 19 && 'MUI X: Expired license key',
         reactMajor < 19 && 'The above error occurred in the <TestComponent> component',
       ]);
       expect((errorRef.current as any).errors[0].toString()).to.match(/MUI X: Expired license key/);

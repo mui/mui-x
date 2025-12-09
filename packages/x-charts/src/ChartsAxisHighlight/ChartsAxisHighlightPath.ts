@@ -1,6 +1,6 @@
 'use client';
 import { styled } from '@mui/material/styles';
-import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
+import { type ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
 
 export const ChartsAxisHighlightPath = styled('path', {
   name: 'MuiChartsAxisHighlight',

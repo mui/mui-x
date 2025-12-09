@@ -2,9 +2,9 @@ import { describe } from 'vitest';
 import { scaleLinear, scaleLog } from '@mui/x-charts-vendor/d3-scale';
 import { Flatbush } from '../../../Flatbush';
 import { findClosestPoints } from './findClosestPoints';
-import { D3Scale } from '../../../../models/axis';
+import { type D3Scale } from '../../../../models/axis';
 import { zoomScaleRange } from '../useChartCartesianAxis/zoom';
-import { ScatterValueType } from '../../../../models/seriesType/scatter';
+import { type ScatterValueType } from '../../../../models/seriesType/scatter';
 
 function prepareFlatbush(seriesData: ScatterValueType[], xScale: D3Scale, yScale: D3Scale) {
   const flatbush = new Flatbush(seriesData.length);
@@ -41,7 +41,6 @@ describe('findClosestPoints', () => {
 
     const closestPoint = findClosestPoints(
       flatbush,
-      drawingArea,
       seriesData,
       xScale,
       yScale,
@@ -76,7 +75,6 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        drawingArea,
         seriesData,
         xScale,
         yScale,
@@ -121,7 +119,6 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            drawingArea,
             seriesData,
             xScale,
             yScale,
@@ -150,7 +147,6 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            drawingArea,
             seriesData,
             xScale,
             yScale,
@@ -186,7 +182,6 @@ describe('findClosestPoints', () => {
         expect(
           findClosestPoints(
             flatbush,
-            drawingArea,
             seriesData,
             xScale,
             yScale,
@@ -222,7 +217,6 @@ describe('findClosestPoints', () => {
 
       const closestPoint = findClosestPoints(
         flatbush,
-        drawingArea,
         seriesData,
         xScale,
         yScale,

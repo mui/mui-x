@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  AxisId,
+  type AxisId,
   useSelector,
   useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  SeriesId,
+  type SeriesId,
 } from '@mui/x-charts/internals';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
-})();
+})({});
 
 interface AreaPreviewPlotProps extends PreviewPlotProps {}
 

@@ -3,12 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
-import { PieArc, PieArcProps, pieArcClasses } from './PieArc';
+import { PieArc, type PieArcProps, pieArcClasses } from './PieArc';
 import {
-  ComputedPieRadius,
-  DefaultizedPieSeriesType,
-  DefaultizedPieValueType,
-  PieItemIdentifier,
+  type ComputedPieRadius,
+  type DefaultizedPieSeriesType,
+  type DefaultizedPieValueType,
+  type PieItemIdentifier,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
 
@@ -89,8 +89,11 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
 
-  const { dataIndex: focusedIndex = -1 } = useFocusedItem() ?? {};
-  const focusedItem = focusedIndex !== -1 ? transformedData[focusedIndex] : null;
+  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
+  const focusedItem =
+    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
+      ? transformedData[dataIndex]
+      : null;
 
   if (data.length === 0) {
     return null;
@@ -141,7 +144,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           stroke={(theme.vars ?? theme).palette.text.primary}
           id={id}
           className={pieArcClasses.focusIndicator}
-          dataIndex={focusedIndex}
+          dataIndex={focusedItem.dataIndex}
           isFaded={false}
           isHighlighted={false}
           isFocused={false}

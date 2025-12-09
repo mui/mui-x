@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useChartContext } from '../context/ChartProvider';
 import { useSvgRef } from '../hooks';

@@ -3,6 +3,7 @@ export * from './cartesianExtremumGetter.types';
 export * from './polarExtremumGetter.types';
 export * from './seriesConfig.types';
 export * from './seriesProcessor.types';
+export * from './seriesLayout.types';
 export * from './tooltipGetter.types';
 export * from './tooltipItemPositionGetter.types';
 export * from './legendGetter.types';

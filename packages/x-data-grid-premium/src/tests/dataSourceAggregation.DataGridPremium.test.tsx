@@ -117,7 +117,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   }
 
   // TODO @MBilalShafi: Flaky test, fix it
-  it.skip('should show aggregation option in the column menu', async () => {
+  it.todo('should show aggregation option in the column menu', async () => {
     const dataSource = {
       getRows: async () => {
         fetchRowsSpy();

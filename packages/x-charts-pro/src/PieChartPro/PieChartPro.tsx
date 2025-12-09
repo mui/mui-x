@@ -6,17 +6,22 @@ import * as React from 'react';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { PieChartProps, PieChartSlotProps, PieChartSlots, PiePlot } from '@mui/x-charts/PieChart';
+import {
+  type PieChartProps,
+  type PieChartSlotProps,
+  type PieChartSlots,
+  PiePlot,
+} from '@mui/x-charts/PieChart';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartsSlotsPro, ChartsSlotPropsPro } from '../internals/material';
+import { type ChartsSlotsPro, type ChartsSlotPropsPro } from '../internals/material';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
-import { ChartContainerProProps } from '../ChartContainerPro';
-import { PIE_CHART_PRO_PLUGINS, PieChartProPluginSignatures } from './PieChartPro.plugins';
+import { type ChartContainerProProps } from '../ChartContainerPro';
+import { PIE_CHART_PRO_PLUGINS, type PieChartProPluginSignatures } from './PieChartPro.plugins';
 import {
-  ChartsToolbarProSlotProps,
-  ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface PieChartProSlots

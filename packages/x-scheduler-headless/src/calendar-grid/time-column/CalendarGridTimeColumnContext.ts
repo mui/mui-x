@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridTimeColumnContext {
   /**
    * The start date and time of the column.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end date and time of the column.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * The index of the column in the grid.
    */

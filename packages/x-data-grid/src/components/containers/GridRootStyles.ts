@@ -28,9 +28,11 @@ const ignoreSsrWarning =
   '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
 const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.dimensions.hasScrollX &&
-  (!apiRef.current.state.dimensions.hasScrollY ||
-    apiRef.current.state.dimensions.scrollbarSize === 0);
+  !apiRef.current.state.dimensions.isReady
+    ? apiRef.current.state.dimensions.scrollbarSize === 0
+    : apiRef.current.state.dimensions.hasScrollX &&
+      (!apiRef.current.state.dimensions.hasScrollY ||
+        apiRef.current.state.dimensions.scrollbarSize === 0);
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -150,8 +152,6 @@ export const GridRootStyles = styled('div', {
     },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
-    { [`& .${c['row--dropAbove']}`]: styles['row--dropAbove'] },
-    { [`& .${c['row--dropBelow']}`]: styles['row--dropBelow'] },
     { [`& .${c['row--beingDragged']}`]: styles['row--beingDragged'] },
   ],
 })<{ ownerState: OwnerState }>(() => {
@@ -345,6 +345,9 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       backgroundColor: headerBackground,
     },
+    [`& .${c.columnHeader} .${c.sortButton}`]: {
+      backgroundColor: vars.header.background.base,
+    },
     [`& .${c['columnHeader--filter']}`]: {
       paddingTop: 8,
       paddingBottom: 8,
@@ -445,8 +448,18 @@ export const GridRootStyles = styled('div', {
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
         {
-          opacity: 0.5,
+          opacity: 1,
         },
+      // Add opacity only to the button content to avoid affecting the background color
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible > *`]:
+        {
+          opacity: 0.78,
+        },
+      [`& .${c.pivotPanelFieldActionContainer} button:hover`]: {
+        backgroundColor: vars.colors.background.base,
+      },
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader} .${c.menuIcon}`]: {
@@ -460,7 +473,7 @@ export const GridRootStyles = styled('div', {
         },
       },
       [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}`]: {
-        opacity: 0.5,
+        opacity: 0.78,
       },
     },
     // Hide the column separator when the column has border and it is not resizable
@@ -560,6 +573,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
+      position: 'relative',
     },
 
     /* Cell styles */
@@ -804,39 +818,6 @@ export const GridRootStyles = styled('div', {
       // Hide grid content
       [`& .${c.pinnedRows}`]: {
         display: 'none',
-      },
-    },
-    [`& .${c['row--dropAbove']}`]: {
-      position: 'relative',
-      '&::before': {
-        pointerEvents: 'none',
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '2px',
-        backgroundColor: vars.colors.interactive.selected,
-      },
-    },
-    [`& .${c['row--dropBelow']}`]: {
-      position: 'relative',
-      '&::after': {
-        zIndex: 100,
-        pointerEvents: 'none',
-        content: '""',
-        position: 'absolute',
-        bottom: '-2px',
-        left: 0,
-        width: '100%',
-        height: '2px',
-        backgroundColor: vars.colors.interactive.selected,
-      },
-      [`&.${c['row--lastVisible']}`]: {
-        '&::after': {
-          bottom:
-            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -2px)',
-        },
       },
     },
     [`& .${c['row--beingDragged']}`]: {

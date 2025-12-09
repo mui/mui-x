@@ -3,16 +3,20 @@ import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import {
   ChartProvider,
-  ChartSeriesType,
-  ChartAnyPluginSignature,
-  ChartProviderProps,
+  type ChartSeriesType,
+  type ChartAnyPluginSignature,
+  type ChartProviderProps,
   ChartsSlotsProvider,
 } from '@mui/x-charts/internals';
-import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { ChartsSlotPropsPro, ChartsSlotsPro, defaultSlotsMaterial } from '../internals/material';
-import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import {
+  type ChartsSlotPropsPro,
+  type ChartsSlotsPro,
+  defaultSlotsMaterial,
+} from '../internals/material';
+import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 
 const releaseInfo = '__RELEASE_INFO__';

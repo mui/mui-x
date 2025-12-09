@@ -3,7 +3,6 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
 import { useInteractionItemProps, useStore, useSelector } from '@mui/x-charts/internals';
-import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
 import { selectorIsNodeHighlighted } from './plugins';
 import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
@@ -17,10 +16,6 @@ export interface SankeyNodeElementProps {
    * The node data
    */
   node: SankeyLayoutNode;
-  /**
-   * Whether to show the node label
-   */
-  showLabel?: boolean;
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -37,8 +32,7 @@ export interface SankeyNodeElementProps {
  */
 export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElementProps>(
   function SankeyNodeElement(props, ref) {
-    const { node, showLabel = true, onClick, seriesId } = props;
-    const theme = useTheme();
+    const { node, onClick, seriesId } = props;
     const store = useStore();
 
     const x0 = node.x0 ?? 0;
@@ -48,14 +42,6 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
 
     const nodeWidth = x1 - x0;
     const nodeHeight = y1 - y0;
-
-    // Determine label position
-    const labelX =
-      node.depth === 0
-        ? x1 + 6 // Right side for first column
-        : x0 - 6; // Left side for other columns
-
-    const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
     const identifier: SankeyNodeIdentifierWithData = {
       type: 'sankey',
@@ -98,21 +84,6 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
           data-faded={isFaded || undefined}
           {...interactionProps}
         />
-
-        {showLabel && node.label && (
-          <text
-            x={labelX}
-            y={(y0 + y1) / 2}
-            textAnchor={labelAnchor}
-            fill={(theme.vars || theme).palette.text.primary}
-            fontSize={theme.typography.caption.fontSize}
-            fontFamily={theme.typography.fontFamily}
-            pointerEvents="none"
-            opacity={opacity}
-          >
-            {node.label}
-          </text>
-        )}
       </g>
     );
   },

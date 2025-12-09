@@ -1,4 +1,5 @@
 <DataGridPro
+  autoHeight
   columns={columns}
   rows={rows}
   initialState={{

@@ -1,8 +1,4 @@
-import {
-  adapter,
-  createOccurrenceFromEvent,
-  DEFAULT_EVENT_CALENDAR_STATE,
-} from 'test/utils/scheduler';
+import { adapter, DEFAULT_EVENT_CALENDAR_STATE, EventBuilder } from 'test/utils/scheduler';
 import { eventCalendarOccurrencePlaceholderSelectors } from './eventCalendarOccurrencePlaceholderSelectors';
 import { EventCalendarState } from '../use-event-calendar';
 
@@ -16,7 +12,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('isCreatingInDayCell', () => {
-    const day = adapter.date('2024-01-15');
+    const day = adapter.date('2024-01-15', 'default');
 
     it('should return false when there is no placeholder', () => {
       const state = DEFAULT_EVENT_CALENDAR_STATE;
@@ -52,12 +48,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
-          originalOccurrence: createOccurrenceFromEvent({
-            id: 'event-id',
-            title: 'Event',
-            start: adapter.startOfDay(day),
-            end: adapter.endOfDay(day),
-          }),
+          originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
         },
       };
       expect(eventCalendarOccurrencePlaceholderSelectors.isCreatingInDayCell(state, day)).to.equal(
@@ -100,7 +91,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
   });
 
   describe('isCreatingInTimeRange', () => {
-    const day = adapter.date('2024-01-15');
+    const day = adapter.date('2024-01-15', 'default');
     const dayStart = adapter.startOfDay(day);
     const dayEnd = adapter.endOfDay(day);
 
@@ -138,12 +129,7 @@ describe('eventCalendarOccurrencePlaceholderSelectors', () => {
           start: adapter.startOfDay(day),
           end: adapter.endOfDay(day),
           resourceId: null,
-          originalOccurrence: createOccurrenceFromEvent({
-            id: 'event-id',
-            title: 'Event',
-            start: adapter.startOfDay(day),
-            end: adapter.endOfDay(day),
-          }),
+          originalOccurrence: EventBuilder.new().id('event-id').toOccurrence(),
         },
       };
       expect(

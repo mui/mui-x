@@ -9,7 +9,7 @@ describe('<DataGridPremium /> - Columns', () => {
   describe('resizing', () => {
     // https://github.com/mui/mui-x/issues/10078
     // Needs layout
-    it.skipIf(isJSDOM)('should properly resize aggregated column', () => {
+    it.skipIf(isJSDOM)('should properly resize aggregated column', async () => {
       render(
         <div style={{ width: 300, height: 300 }}>
           <DataGridPremium
@@ -29,6 +29,9 @@ describe('<DataGridPremium /> - Columns', () => {
           />
         </div>,
       );
+
+      // Fixes act warning
+      await act(() => Promise.resolve());
 
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
       fireEvent.mouseDown(separator, { clientX: 100 });

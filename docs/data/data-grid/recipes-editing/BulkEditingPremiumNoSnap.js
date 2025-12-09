@@ -5,12 +5,13 @@ import {
   useGridApiRef,
   GridActionsCellItem,
   gridClasses,
+  GridActionsCell,
+  useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestoreIcon from '@mui/icons-material/Restore';
-import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import { darken } from '@mui/material/styles';
 
@@ -22,6 +23,53 @@ const visibleFields = [
   'quantity',
   'filledQuantity',
 ];
+
+const BulkEditingContext = React.createContext(null);
+
+function ActionsCell(props) {
+  const context = React.useContext(BulkEditingContext);
+  const apiRef = useGridApiContext();
+  if (!context) {
+    return null;
+  }
+  const { unsavedChangesRef, setHasUnsavedRows } = context;
+  const { id, row } = props;
+
+  return (
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        icon={<RestoreIcon />}
+        label="Discard changes"
+        disabled={unsavedChangesRef.current.unsavedRows[id] === undefined}
+        onClick={() => {
+          apiRef.current?.updateRows([
+            unsavedChangesRef.current.rowsBeforeChange[id],
+          ]);
+          delete unsavedChangesRef.current.rowsBeforeChange[id];
+          delete unsavedChangesRef.current.unsavedRows[id];
+          setHasUnsavedRows(
+            Object.keys(unsavedChangesRef.current.unsavedRows).length > 0,
+          );
+        }}
+      />
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        label="Delete"
+        onClick={() => {
+          unsavedChangesRef.current.unsavedRows[id] = {
+            ...row,
+            _action: 'delete',
+          };
+          if (!unsavedChangesRef.current.rowsBeforeChange[id]) {
+            unsavedChangesRef.current.rowsBeforeChange[id] = row;
+          }
+          setHasUnsavedRows(true);
+          apiRef.current?.updateRows([row]); // to trigger row render
+        }}
+      />
+    </GridActionsCell>
+  );
+}
 
 export default function BulkEditingPremiumNoSnap() {
   const { data } = useDemoData({
@@ -46,44 +94,11 @@ export default function BulkEditingPremiumNoSnap() {
       {
         field: 'actions',
         type: 'actions',
-        getActions: ({ id, row }) => {
-          return [
-            <GridActionsCellItem
-              icon={<RestoreIcon />}
-              label="Discard changes"
-              disabled={unsavedChangesRef.current.unsavedRows[id] === undefined}
-              onClick={() => {
-                apiRef.current?.updateRows([
-                  unsavedChangesRef.current.rowsBeforeChange[id],
-                ]);
-                delete unsavedChangesRef.current.rowsBeforeChange[id];
-                delete unsavedChangesRef.current.unsavedRows[id];
-                setHasUnsavedRows(
-                  Object.keys(unsavedChangesRef.current.unsavedRows).length > 0,
-                );
-              }}
-            />,
-            <GridActionsCellItem
-              icon={<DeleteIcon />}
-              label="Delete"
-              onClick={() => {
-                unsavedChangesRef.current.unsavedRows[id] = {
-                  ...row,
-                  _action: 'delete',
-                };
-                if (!unsavedChangesRef.current.rowsBeforeChange[id]) {
-                  unsavedChangesRef.current.rowsBeforeChange[id] = row;
-                }
-                setHasUnsavedRows(true);
-                apiRef.current?.updateRows([row]); // to trigger row render
-              }}
-            />,
-          ];
-        },
+        renderCell: (params) => <ActionsCell {...params} />,
       },
       ...data.columns,
     ];
-  }, [data.columns, unsavedChangesRef, apiRef]);
+  }, [data.columns]);
 
   const processRowUpdate = React.useCallback((newRow, oldRow) => {
     const rowId = newRow.id;
@@ -144,10 +159,18 @@ export default function BulkEditingPremiumNoSnap() {
     return '';
   }, []);
 
+  const bulkEditingContextValue = React.useMemo(
+    () => ({
+      unsavedChangesRef,
+      setHasUnsavedRows,
+    }),
+    [unsavedChangesRef],
+  );
+
   return (
     <div style={{ width: '100%' }}>
       <div style={{ marginBottom: 8 }}>
-        <LoadingButton
+        <Button
           disabled={!hasUnsavedRows}
           loading={isSaving}
           onClick={saveChanges}
@@ -155,7 +178,7 @@ export default function BulkEditingPremiumNoSnap() {
           loadingPosition="start"
         >
           <span>Save</span>
-        </LoadingButton>
+        </Button>
         <Button
           disabled={!hasUnsavedRows || isSaving}
           onClick={discardChanges}
@@ -165,35 +188,37 @@ export default function BulkEditingPremiumNoSnap() {
         </Button>
       </div>
       <div style={{ height: 400 }}>
-        <DataGridPremium
-          {...data}
-          columns={columns}
-          apiRef={apiRef}
-          disableRowSelectionOnClick
-          cellSelection
-          processRowUpdate={processRowUpdate}
-          ignoreValueFormatterDuringExport
-          sx={{
-            [`& .${gridClasses.row}.row--removed`]: {
-              backgroundColor: (theme) => {
-                if (theme.palette.mode === 'light') {
-                  return 'rgba(255, 170, 170, 0.3)';
-                }
-                return darken('rgba(255, 170, 170, 1)', 0.7);
+        <BulkEditingContext.Provider value={bulkEditingContextValue}>
+          <DataGridPremium
+            {...data}
+            columns={columns}
+            apiRef={apiRef}
+            disableRowSelectionOnClick
+            cellSelection
+            processRowUpdate={processRowUpdate}
+            ignoreValueFormatterDuringExport
+            sx={{
+              [`& .${gridClasses.row}.row--removed`]: {
+                backgroundColor: (theme) => {
+                  if (theme.palette.mode === 'light') {
+                    return 'rgba(255, 170, 170, 0.3)';
+                  }
+                  return darken('rgba(255, 170, 170, 1)', 0.7);
+                },
               },
-            },
-            [`& .${gridClasses.row}.row--edited`]: {
-              backgroundColor: (theme) => {
-                if (theme.palette.mode === 'light') {
-                  return 'rgba(255, 254, 176, 0.3)';
-                }
-                return darken('rgba(255, 254, 176, 1)', 0.6);
+              [`& .${gridClasses.row}.row--edited`]: {
+                backgroundColor: (theme) => {
+                  if (theme.palette.mode === 'light') {
+                    return 'rgba(255, 254, 176, 0.3)';
+                  }
+                  return darken('rgba(255, 254, 176, 1)', 0.6);
+                },
               },
-            },
-          }}
-          loading={isSaving}
-          getRowClassName={getRowClassName}
-        />
+            }}
+            loading={isSaving}
+            getRowClassName={getRowClassName}
+          />
+        </BulkEditingContext.Provider>
       </div>
     </div>
   );

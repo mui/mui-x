@@ -1,0 +1,10 @@
+<BarChart
+  xAxis={[{ data: ['group A', 'group B', 'group C'] }]}
+  series={[
+    { data: [1, 1, -4], barLabel: 'value', barLabelPlacement: 'outside' },
+    { data: [2, 0, -1], barLabel: 'value', barLabelPlacement: 'center' },
+    { data: [3, -1, 4], barLabel: 'value' },
+  ]}
+  height={300}
+  yAxis={[{ width: 30, min: -5 }]}
+/>

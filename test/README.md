@@ -118,13 +118,14 @@ After the command is executed, you can open the browser and go to `http://localh
 
 You can check integration of different versions of React (for example different [release channels](https://react.dev/community/versioning-policy) or PRs to React) by running the following command:
 
-`pnpm use-react-version <version>`
+`pnpm exec code-infra set-version-overrides --pkg react@<version>`
 
 Possible values for `version`:
 
-- default: `stable` (minimum supported React version)
-- a tag on npm, for example `next`, `experimental` or `latest`
-- an older version, for example `^17.0.0`
+- an npm tag, for example `next`, `experimental` or `latest`
+- an older version, for example `18`
+
+For React 18 specifically, you can run the `pnpm use-react-18` script.
 
 ### Testing multiple versions of Material UI
 

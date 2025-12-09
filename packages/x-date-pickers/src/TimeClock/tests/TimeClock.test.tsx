@@ -277,7 +277,7 @@ describe('<TimeClock />', () => {
     },
   );
 
-  describe.skipIf(!hasTouchSupport)('Time validation on touch ', () => {
+  describe.skipIf(!hasTouchSupport)('Time validation on touch', () => {
     const clockTouchEvent = {
       '13:--': {
         changedTouches: [

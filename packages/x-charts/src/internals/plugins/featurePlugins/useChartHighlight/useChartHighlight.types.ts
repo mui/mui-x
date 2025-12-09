@@ -1,7 +1,7 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '../../models';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type ChartPluginSignature } from '../../models';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 /**
  * The data of the highlighted item.
@@ -65,6 +65,10 @@ export type UseChartHighlightDefaultizedParameters = DefaultizedProps<
 
 export interface UseChartHighlightState {
   highlight: {
+    /**
+     * Indicates if the highlighted item is controlled.
+     */
+    isControlled: boolean;
     /**
      * The item currently highlighted.
      */

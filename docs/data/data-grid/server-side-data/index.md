@@ -9,6 +9,10 @@ Challenges include manual data fetching, pagination, sorting, filtering, and per
 A dedicated module can help abstract these complexities to improve the developer experience.
 The Data Grid provides the Data Source layer for this purpose.
 
+:::success
+If you prefer to learn by example, the [server-side data tutorial](/x/react-data-grid/tutorials/server-side-data/) shows you how to implement the Data Source layer in a full-stack app.
+:::
+
 ### The problem: compounding complexity
 
 Consider a Data Grid displaying a list of users that supports pagination, sorting by column headers, and filtering.

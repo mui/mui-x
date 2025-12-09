@@ -926,7 +926,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   describe('warnings', () => {
     // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
-    it.skip('should raise a warning if trying to use an enterprise feature', () => {
+    it.todo('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>
@@ -954,8 +954,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 &&
+        reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
       ]);

@@ -61,7 +61,7 @@ const parseItemChildrenIndentation = (
   return value;
 };
 
-interface GetNewPositionParams {
+interface GetNewPositionParameters {
   itemChildrenIndentation: string | number;
   validActions: TreeViewItemItemReorderingValidActions;
   targetHeight: number;
@@ -79,7 +79,7 @@ export const chooseActionToApply = ({
   cursorX,
   cursorY,
   contentElement,
-}: GetNewPositionParams) => {
+}: GetNewPositionParameters) => {
   let action: TreeViewItemsReorderingAction | null;
 
   const itemChildrenIndentationPx = parseItemChildrenIndentation(

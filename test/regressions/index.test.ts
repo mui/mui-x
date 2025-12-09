@@ -5,7 +5,6 @@ import { major } from '@mui/material/version';
 import fs from 'node:fs/promises';
 
 const isMaterialUIv6 = major === 6;
-const isMaterialUIv7 = major === 7;
 
 // Tests that need a longer timeout.
 const timeSensitiveSuites = [
@@ -292,6 +291,33 @@ async function main() {
         });
       });
 
+      it('should take a screenshot of the print export with dynamic row height', async () => {
+        const route = '/test-regressions-data-grid/PrintExportDynamicRowHeight';
+        const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
+
+        await navigateToTest(route);
+
+        // Click the export button in the toolbar.
+        await page.getByRole('button', { name: 'Export' }).click();
+
+        const printButton = page.getByRole('menuitem', { name: 'Print' });
+        // Click the print export option from the export menu in the toolbar.
+        // Trigger the action async because window.print() is blocking the main thread
+        // like window.alert() is.
+        setTimeout(() => {
+          printButton.click();
+        });
+
+        await sleep(5000);
+
+        await screenshotPrintDialogPreview(screenshotPath, {
+          x: 72,
+          y: 99,
+          width: 520,
+          height: 400,
+        });
+      });
+
       it('should take a screenshot of the charts print preview', async () => {
         const route = '/docs-charts-export/PrintChart';
         const screenshotPath = path.resolve(screenshotDir, `.${route}Print.png`);
@@ -349,12 +375,6 @@ function isConsoleWarningIgnored(msg?: string) {
       'MUI: The Experimental_CssVarsProvider component has been ported into ThemeProvider.',
     );
 
-  const isMuiLoadingButtonWarning =
-    (isMaterialUIv6 || isMaterialUIv7) &&
-    msg?.includes(
-      'MUI: The LoadingButton component functionality is now part of the Button component from Material UI.',
-    );
-
   const isReactRouterFlagsError = msg?.includes('React Router Future Flag Warning');
 
   const isNoDevRoute = msg?.includes('No routes matched location "/#no-dev"');
@@ -364,13 +384,7 @@ function isConsoleWarningIgnored(msg?: string) {
     'The browser build of Tailwind CSS should not be used in production.',
   );
 
-  if (
-    isMuiV6Error ||
-    isReactRouterFlagsError ||
-    isNoDevRoute ||
-    isTailwindCdnWarning ||
-    isMuiLoadingButtonWarning
-  ) {
+  if (isMuiV6Error || isReactRouterFlagsError || isNoDevRoute || isTailwindCdnWarning) {
     return true;
   }
   return false;

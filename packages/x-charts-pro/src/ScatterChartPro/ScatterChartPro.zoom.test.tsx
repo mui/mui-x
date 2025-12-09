@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import * as sinon from 'sinon';
+import { vi } from 'vitest';
 import { ScatterChartPro } from './ScatterChartPro';
 import { CHART_SELECTOR } from '../tests/constants';
 
@@ -76,7 +76,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
   };
 
   it('should zoom on wheel', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <ScatterChartPro {...scatterChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -99,7 +99,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     fireEvent.wheel(svg, { deltaY: -100, clientX: 80, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(1);
+    expect(onZoomChange.mock.calls.length).to.equal(1);
     expect(getAxisTickValues('x')).to.deep.equal(['2']);
     expect(getAxisTickValues('y')).to.deep.equal(['20']);
 
@@ -107,14 +107,14 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     fireEvent.wheel(svg, { deltaY: 100, clientX: 80, clientY: 50 });
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.equal(2);
+    expect(onZoomChange.mock.calls.length).to.equal(2);
     expect(getAxisTickValues('x')).to.deep.equal(['1', '2', '3']);
     expect(getAxisTickValues('y')).to.deep.equal(['10', '20', '30']);
   });
 
   ['MouseLeft', 'TouchA'].forEach((pointerName) => {
     it(`should pan on ${pointerName} drag`, async () => {
-      const onZoomChange = sinon.spy();
+      const onZoomChange = vi.fn();
       const { user } = render(
         <ScatterChartPro
           {...scatterChartProps}
@@ -153,7 +153,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(1);
+      expect(onZoomChange.mock.calls.length).to.equal(1);
       expect(getAxisTickValues('x')).to.deep.equal(['2.0', '2.2', '2.4']);
       expect(getAxisTickValues('y')).to.deep.equal(['20', '22', '24']);
 
@@ -178,14 +178,14 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
       // Wait the animation frame
       await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-      expect(onZoomChange.callCount).to.equal(2);
+      expect(onZoomChange.mock.calls.length).to.equal(2);
       expect(getAxisTickValues('x')).to.deep.equal(['1.0', '1.2', '1.4']);
       expect(getAxisTickValues('y')).to.deep.equal(['10', '12', '14']);
     });
   });
 
   it('should zoom on pinch', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <ScatterChartPro {...scatterChartProps} onZoomChange={onZoomChange} />,
       options,
@@ -230,13 +230,13 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     expect(getAxisTickValues('x')).to.deep.equal(['2.0']);
     expect(getAxisTickValues('y')).to.deep.equal(['20']);
   });
 
   it('should zoom on tap and drag', async () => {
-    const onZoomChange = sinon.spy();
+    const onZoomChange = vi.fn();
     const { user } = render(
       <ScatterChartPro
         {...scatterChartProps}
@@ -282,7 +282,7 @@ describe.skipIf(isJSDOM)('<ScatterChartPro /> - Zoom', () => {
     ]);
     await act(async () => new Promise((r) => requestAnimationFrame(r)));
 
-    expect(onZoomChange.callCount).to.be.above(0);
+    expect(onZoomChange.mock.calls.length).to.be.above(0);
     // Should have zoomed in to show fewer ticks
     expect(getAxisTickValues('x').length).to.be.lessThan(3);
   });

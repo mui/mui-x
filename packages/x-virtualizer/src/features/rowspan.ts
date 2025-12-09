@@ -1,5 +1,5 @@
 import { Store } from '@mui/x-internals/store';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 import type { RowRange } from '../models';
 import type { RowSpanningState, RowSpanningCaches } from '../models/rowspan';
 import { Virtualization } from './virtualization';
@@ -32,7 +32,7 @@ export namespace Rowspan {
   export type API = ReturnType<typeof useRowspan>;
 }
 
-function initializeState(params: VirtualizerParams): Rowspan.State {
+function initializeState(params: ParamsWithDefaults): Rowspan.State {
   return {
     rowSpanning: params.initialState?.rowSpanning ?? {
       caches: EMPTY_CACHES,
@@ -43,7 +43,7 @@ function initializeState(params: VirtualizerParams): Rowspan.State {
 
 function useRowspan(
   store: Store<BaseState & Rowspan.State>,
-  _params: VirtualizerParams,
+  _params: ParamsWithDefaults,
   _api: Virtualization.API,
 ) {
   const getHiddenCellsOrigin = () => selectors.hiddenCellsOriginMap(store.state);

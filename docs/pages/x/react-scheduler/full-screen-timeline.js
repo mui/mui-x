@@ -5,7 +5,7 @@ import {
   initialEvents,
   defaultVisibleDate,
   resources,
-} from '../../../data/scheduler/datasets/timeline-events';
+} from '../../../data/scheduler/datasets/company-roadmap';
 
 export default function FullTimeline() {
   const [events, setEvents] = React.useState(initialEvents);

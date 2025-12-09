@@ -133,8 +133,8 @@ export const useMobileRangePicker = <
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
         <Field
           {...fieldProps}
-          slots={slots}
-          slotProps={slotProps}
+          slots={{ ...slots, ...(fieldProps as any).slots }}
+          slotProps={{ ...slotProps, ...(fieldProps as any).slotProps }}
           {...(isSingleInput && {
             inputRef,
           })}

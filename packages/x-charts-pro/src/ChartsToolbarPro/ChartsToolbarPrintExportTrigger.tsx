@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { useChartsSlots } from '@mui/x-charts/internals';
 import { useChartProApiContext } from '../context';
-import { ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartPrintExportOptions } from '../internals/plugins/useChartProExport';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarPrintExportOptions extends ChartPrintExportOptions {
   /**
@@ -75,6 +75,7 @@ ChartsToolbarPrintExportTrigger.propTypes = {
   options: PropTypes.shape({
     copyStyles: PropTypes.bool,
     fileName: PropTypes.string,
+    nonce: PropTypes.string,
     onBeforeExport: PropTypes.func,
   }),
   /**

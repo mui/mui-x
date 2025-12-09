@@ -4,7 +4,12 @@ export type { GridParamsApi } from './gridParamsApi';
 export type { GridCoreApi } from './gridCoreApi';
 export * from './gridColumnApi';
 export * from './gridDensityApi';
-export * from './gridRowApi';
+export type {
+  GridRowGroupChildrenGetterParams,
+  GridRowApi,
+  GridRowProApi,
+  GridRowProPrivateApi,
+} from './gridRowApi';
 export type { GridRowsMetaApi } from './gridRowsMetaApi';
 export * from './gridRowSelectionApi';
 export * from './gridSortApi';

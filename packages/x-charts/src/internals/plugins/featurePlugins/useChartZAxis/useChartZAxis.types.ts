@@ -1,8 +1,8 @@
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '../../models';
-import { DatasetType } from '../../../../models/seriesType/config';
-import { AxisId } from '../../../../models/axis';
-import { ZAxisConfig, ZAxisDefaultized } from '../../../../models/z-axis';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { type ChartPluginSignature } from '../../models';
+import { type DatasetType } from '../../../../models/seriesType/config';
+import { type AxisId } from '../../../../models/axis';
+import { type ZAxisConfig, type ZAxisDefaultized } from '../../../../models/z-axis';
 
 type DefaultizedZAxisConfig = {
   [axisId: string]: ZAxisDefaultized;

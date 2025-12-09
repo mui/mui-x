@@ -306,6 +306,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       (child) => {
         const node = apiRef.current?.state.rows.tree[child];
         if (node?.type === 'group') {
+          // eslint-disable-next-line vitest/no-conditional-expect
           expect(apiRef.current?.state.rows.groupsToFetch).to.include(child);
         }
       },

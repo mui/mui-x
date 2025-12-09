@@ -1,4 +1,4 @@
-import { RadarAxisProps } from './RadarAxis';
+import { type RadarAxisProps } from './RadarAxis';
 
 /**
  * Return text anchor of labels.

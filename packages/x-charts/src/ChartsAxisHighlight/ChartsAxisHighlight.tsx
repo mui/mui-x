@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { getAxisHighlightUtilityClass } from './chartsAxisHighlightClasses';
 import ChartsYHighlight from './ChartsYAxisHighlight';
 import ChartsXHighlight from './ChartsXAxisHighlight';
-import { ChartsAxisHighlightProps } from './ChartsAxisHighlight.types';
+import { type ChartsAxisHighlightProps } from './ChartsAxisHighlight.types';
 
 const useUtilityClasses = () => {
   const slots = {

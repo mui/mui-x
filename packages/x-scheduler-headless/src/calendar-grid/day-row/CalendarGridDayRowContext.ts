@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 
 export interface CalendarGridDayRowContext {
   /**
    * The start date and time of the row
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end date and time of the row
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
 }
 
 export const CalendarGridDayRowContext = React.createContext<CalendarGridDayRowContext | undefined>(

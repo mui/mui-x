@@ -17,10 +17,15 @@ import './ScopeDialog.css';
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
     const { className, containerRef, ...other } = props;
+
+    // Context hooks
     const translations = useTranslations();
     const store = useSchedulerStoreContext();
+
+    // Selector hooks
     const open = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
+    // Feature hooks
     const handleOpenChange = React.useCallback(
       (next: boolean) => {
         if (!next) {
@@ -50,21 +55,21 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
                     aria-label={translations.radioGroupAriaLabel}
                     defaultValue={'only-this'}
                   >
-                    <Field.Label className="RadioItem">
-                      {translations.onlyThis}
-                      <Radio.Root value="only-this">
+                    <Field.Label htmlFor="scope-only-this" className="RadioItem">
+                      <Radio.Root value="only-this" id="scope-only-this">
+                        <span>{translations.onlyThis}</span>
                         <Radio.Indicator className="RadioItemIndicator" />
                       </Radio.Root>
                     </Field.Label>
-                    <Field.Label className="RadioItem">
-                      {translations.thisAndFollowing}
-                      <Radio.Root value="this-and-following">
+                    <Field.Label htmlFor="scope-this-and-following" className="RadioItem">
+                      <Radio.Root value="this-and-following" id="scope-this-and-following">
+                        <span>{translations.thisAndFollowing}</span>
                         <Radio.Indicator className="RadioItemIndicator" />
                       </Radio.Root>
                     </Field.Label>
-                    <Field.Label className="RadioItem">
-                      {translations.all}
-                      <Radio.Root value="all">
+                    <Field.Label htmlFor="scope-all" className="RadioItem">
+                      <Radio.Root value="all" id="scope-all">
+                        <span>{translations.all}</span>
                         <Radio.Indicator className="RadioItemIndicator" />
                       </Radio.Root>
                     </Field.Label>

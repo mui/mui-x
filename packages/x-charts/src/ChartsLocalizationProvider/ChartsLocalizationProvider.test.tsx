@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
-import { ChartsLocaleText } from '@mui/x-charts/locales';
+import { type ChartsLocaleText } from '@mui/x-charts/locales';
 
 function ContextListener({
   onContextChange,
@@ -24,7 +24,7 @@ describe('<ChartsLocalizationProvider />', () => {
   const { render } = createRenderer();
 
   it('should respect localeText from the theme', () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     const theme = createTheme({
       components: {
@@ -44,13 +44,13 @@ describe('<ChartsLocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.noData).to.equal('Pas de data');
     expect(localeText.loading).to.equal('Loading data…');
   });
 
   it('should prioritize localeText key passed on LocalizationProvider compared to key passed from the theme', () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     const theme = createTheme({
       components: {
@@ -70,12 +70,12 @@ describe('<ChartsLocalizationProvider />', () => {
       </ThemeProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.noData).to.equal('Prioritized');
   });
 
   it('should prioritize deepest LocalizationProvider when using nested ones', () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     render(
       <ChartsLocalizationProvider localeText={{ noData: 'Not Prioritized' }}>
@@ -85,12 +85,12 @@ describe('<ChartsLocalizationProvider />', () => {
       </ChartsLocalizationProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.noData).to.equal('Prioritized');
   });
 
   it("should not lose locales from higher LocalizationProvider when deepest one don't have the translation key", () => {
-    const handleContextChange = spy();
+    const handleContextChange = vi.fn();
 
     render(
       <ChartsLocalizationProvider localeText={{ noData: 'Prioritized' }}>
@@ -100,7 +100,7 @@ describe('<ChartsLocalizationProvider />', () => {
       </ChartsLocalizationProvider>,
     );
 
-    const localeText: ChartsLocaleText = handleContextChange.lastCall.args[0].localeText;
+    const localeText: ChartsLocaleText = handleContextChange.mock.lastCall?.[0].localeText;
     expect(localeText.noData).to.equal('Prioritized');
     expect(localeText.loading).to.equal('Other Locale');
   });

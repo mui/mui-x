@@ -532,6 +532,7 @@ describe('<DateRangeCalendar />', () => {
         'draggable',
       );
       if (prop === 'disabled') {
+        // eslint-disable-next-line vitest/no-conditional-expect
         expect(screen.getByRole('gridcell', { name: '1', selected: true })).to.have.attribute(
           'disabled',
         );

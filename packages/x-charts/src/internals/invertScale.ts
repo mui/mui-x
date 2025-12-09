@@ -1,4 +1,4 @@
-import { D3Scale } from '../models/axis';
+import { type D3Scale } from '../models/axis';
 import { isOrdinalScale } from './scaleGuards';
 
 export function invertScale<T>(scale: D3Scale, data: readonly T[], value: number) {

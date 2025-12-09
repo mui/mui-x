@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { ChartApi } from './ChartApi';
+import { type ChartApi } from './ChartApi';
 import { useChartContext } from './ChartProvider';
 
 type PluginSignaturesFromApi<Api> =

@@ -1,4 +1,4 @@
-export * from './date';
+export type { TemporalSupportedObject } from '../base-ui-copy/types';
 export * from './event';
 export * from './resource';
 export * from './view';

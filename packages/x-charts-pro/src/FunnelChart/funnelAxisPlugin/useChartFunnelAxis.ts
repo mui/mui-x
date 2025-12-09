@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  ChartPlugin,
+  type ChartPlugin,
   getSVGPoint,
   getCartesianAxisIndex,
   selectorChartDrawingArea,
@@ -12,8 +12,8 @@ import {
   defaultizeXAxis,
   defaultizeYAxis,
 } from '@mui/x-charts/internals';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRendering.selectors';
 
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({

@@ -9,7 +9,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { PieItemId } from '../models';
+import { type PieItemId } from '../models';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */

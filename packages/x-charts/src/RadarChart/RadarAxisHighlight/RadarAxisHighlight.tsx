@@ -5,7 +5,7 @@ import { useRadarAxisHighlight } from './useRadarAxisHighlight';
 
 import {
   getRadarAxisHighlightUtilityClass,
-  RadarAxisHighlightClasses,
+  type RadarAxisHighlightClasses,
 } from './radarAxisHighlightClasses';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 

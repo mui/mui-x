@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import { styled, useTheme } from '@mui/material/styles';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import {
+  markElementClasses,
+  type MarkElementOwnerState,
+  useUtilityClasses,
+} from './markElementClasses';
 
 export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
@@ -32,7 +36,7 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
 const Circle = styled('circle')({
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'cx, cy',
+    transitionProperty: 'cx, cy, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });

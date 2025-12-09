@@ -18,7 +18,9 @@ function CustomHeaderFilter(props) {
     if (hasFocus && cellRef.current) {
       const focusableElement = cellRef.current.querySelector('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
-      elementToFocus?.focus();
+      elementToFocus?.focus({
+        preventScroll: true,
+      });
     }
   }, [apiRef, hasFocus]);
 

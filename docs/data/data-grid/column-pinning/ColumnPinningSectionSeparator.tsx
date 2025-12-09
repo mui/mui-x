@@ -11,6 +11,7 @@ import {
   type GridColDef,
   type GridRowsProp,
   type DataGridProProps,
+  GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -87,10 +88,12 @@ const columns: GridColDef[] = [
     field: 'actions',
     type: 'actions',
     width: 100,
-    getActions: () => [
-      <GridActionsCellItem icon={<EditIcon />} label="Edit" />,
-      <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
-    ],
+    renderCell: (params) => (
+      <GridActionsCell {...params}>
+        <GridActionsCellItem icon={<EditIcon />} label="Edit" />
+        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />
+      </GridActionsCell>
+    ),
   },
 ];
 

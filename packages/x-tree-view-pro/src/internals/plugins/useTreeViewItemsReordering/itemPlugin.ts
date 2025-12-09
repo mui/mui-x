@@ -32,7 +32,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
     itemId,
   );
   const canItemBeReordered = useStore(store, itemsReorderingSelectors.canItemBeReordered, itemId);
-  const isValidTarget = useStore(store, itemsReorderingSelectors.isItemValidDropTarget, itemId);
+  const isDragging = useStore(store, itemsReorderingSelectors.isDragging, itemId);
 
   return {
     propsEnhancers: {
@@ -41,13 +41,9 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         contentRefObject,
         externalEventHandlers,
       }): UseTreeItemRootSlotPropsFromItemsReordering => {
-        if (!canItemBeReordered) {
-          return {};
-        }
-
         const handleDragStart = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragStart?.(event);
-          if (event.defaultMuiPrevented || event.defaultPrevented) {
+          if (!canItemBeReordered || event.defaultMuiPrevented || event.defaultPrevented) {
             return;
           }
 
@@ -98,7 +94,7 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         };
 
         return {
-          draggable: true,
+          draggable: canItemBeReordered ? true : undefined,
           onDragStart: handleDragStart,
           onDragOver: handleRootDragOver,
           onDragEnd: handleRootDragEnd,
@@ -108,19 +104,24 @@ export const useTreeViewItemsReorderingItemPlugin: TreeViewItemPlugin = ({ props
         externalEventHandlers,
         contentRefObject,
       }): UseTreeItemContentSlotPropsFromItemsReordering => {
-        if (!isValidTarget) {
+        if (!isDragging) {
           return {};
         }
 
         const handleDragOver = (event: React.DragEvent & TreeViewCancellableEvent) => {
           externalEventHandlers.onDragOver?.(event);
-          if (event.defaultMuiPrevented || validActionsRef.current == null) {
+          if (
+            event.defaultMuiPrevented ||
+            validActionsRef.current == null ||
+            !contentRefObject.current
+          ) {
             return;
           }
 
-          const rect = (event.target as HTMLDivElement).getBoundingClientRect();
+          const rect = contentRefObject.current.getBoundingClientRect();
           const y = event.clientY - rect.top;
           const x = event.clientX - rect.left;
+
           instance.setDragTargetItem({
             itemId,
             validActions: validActionsRef.current,

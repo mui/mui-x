@@ -9,10 +9,11 @@
  * - Uses actual versions from package.json files
  * - Can return the changelog as a string when --returnEntry is passed
  */
+import { retry } from '@octokit/plugin-retry';
+import { Octokit } from '@octokit/rest';
+import readline from 'node:readline/promises';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { Octokit } from '@octokit/rest';
-import { retry } from '@octokit/plugin-retry';
 import { getChangelogUtils } from './changelogUtils.mjs';
 
 /**
@@ -33,15 +34,29 @@ const MyOctokit = Octokit.plugin(retry);
 async function main(argv) {
   const { githubToken, ...other } = argv;
 
-  if (!githubToken) {
-    throw new TypeError(
-      'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
-    );
+  // Temporary code till everyone removes usage of GITHUB_TOKEN
+  /**
+   * @type {import('@octokit/rest').Octokit | undefined}
+   */
+  let octokit;
+  if (githubToken || process.env.GITHUB_TOKEN) {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    const startMessage = githubToken
+      ? `You have provided a GitHub token via --githubToken. It is not recommended to pass it now since we will deprecate this flag in the future.`
+      : 'Found a value in "GITHUB_TOKEN" environment variable.\nIt is not recommended to use it and you should remove it\nfrom your shell rc file (.bashrc/.zshrc etc) if set there.';
+    const answer = (await rl.question(`${startMessage}\nDo you still want to use it? (y/N): `))
+      .trim()
+      .toLowerCase();
+    rl.close();
+    if (answer === 'y') {
+      // eslint-disable-next-line no-console
+      console.log('\n\n');
+      octokit = new MyOctokit({ auth: githubToken || process.env.GITHUB_TOKEN });
+    }
   }
-
-  const octokit = new MyOctokit({
-    auth: githubToken,
-  });
 
   const { generateChangelog } = getChangelogUtils(octokit);
 
@@ -60,7 +75,6 @@ yargs(hideBin(process.argv))
           type: 'string',
         })
         .option('githubToken', {
-          default: process.env.GITHUB_TOKEN,
           describe:
             'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
           type: 'string',

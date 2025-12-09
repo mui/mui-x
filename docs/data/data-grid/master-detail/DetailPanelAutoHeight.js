@@ -10,6 +10,7 @@ import {
   DataGridPro,
   useGridApiContext,
   GridActionsCellItem,
+  GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import {
   randomId,
@@ -31,6 +32,26 @@ function generateProduct() {
     quantity: randomInt(1, 5),
     unitPrice: randomPrice(1, 1000),
   };
+}
+
+const DetailPanelActionHandlersContext = React.createContext(undefined);
+
+function DetailPanelActionsCell(props) {
+  const deleteProduct = React.useContext(DetailPanelActionHandlersContext);
+
+  if (!deleteProduct) {
+    throw new Error('DetailPanelActionHandlersContext is empty');
+  }
+
+  return (
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        icon={<DeleteIcon />}
+        label="delete"
+        onClick={() => deleteProduct(props.row.id)}
+      />
+    </GridActionsCell>
+  );
 }
 
 function DetailPanelContent({ row: rowProp }) {
@@ -76,16 +97,10 @@ function DetailPanelContent({ row: rowProp }) {
         headerName: '',
         type: 'actions',
         width: 50,
-        getActions: ({ row }) => [
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="delete"
-            onClick={deleteProduct(row.id)}
-          />,
-        ],
+        renderCell: (params) => <DetailPanelActionsCell {...params} />,
       },
     ],
-    [deleteProduct],
+    [],
   );
 
   return (
@@ -119,12 +134,14 @@ function DetailPanelContent({ row: rowProp }) {
             </Button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-            <DataGridPro
-              density="compact"
-              columns={columns}
-              rows={rowProp.products}
-              hideFooter
-            />
+            <DetailPanelActionHandlersContext.Provider value={deleteProduct}>
+              <DataGridPro
+                density="compact"
+                columns={columns}
+                rows={rowProp.products}
+                hideFooter
+              />
+            </DetailPanelActionHandlersContext.Provider>
           </div>
         </Stack>
       </Paper>

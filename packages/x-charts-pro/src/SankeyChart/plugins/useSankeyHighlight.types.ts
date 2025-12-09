@@ -1,6 +1,6 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '@mui/x-charts/internals';
-import { SankeyItemIdentifier } from '../sankey.types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type ChartPluginSignature } from '@mui/x-charts/internals';
+import { type SankeyItemIdentifier } from '../sankey.types';
 
 /**
  * The data of the highlighted item in a Sankey chart.

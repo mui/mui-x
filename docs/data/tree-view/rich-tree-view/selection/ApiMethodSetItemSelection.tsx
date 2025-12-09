@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   {
@@ -37,7 +37,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
 ];
 
 export default function ApiMethodSetItemSelection() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
   const handleSelectGridPro = (event: React.SyntheticEvent) => {
     apiRef.current?.setItemSelection({ event, itemId: 'grid-pro' });
   };

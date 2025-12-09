@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewState, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
@@ -14,7 +14,7 @@ export const itemsReorderingSelectors = {
   /**
    * Gets the properties of the dragged item.
    */
-  draggedItemProperties: createSelector(
+  draggedItemProperties: createSelectorMemoized(
     (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
       state.itemsReordering.currentReorder,
     itemsSelectors.itemMetaLookup,
@@ -41,13 +41,11 @@ export const itemsReorderingSelectors = {
     },
   ),
   /**
-   * Checks whether an item is a valid target for the dragged item.
+   * Checks whether an item is being dragged.
    */
-  isItemValidDropTarget: createSelector(
-    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>, itemId: TreeViewItemId) => {
-      const draggedItemId = state.itemsReordering.currentReorder?.draggedItemId;
-      return draggedItemId != null && draggedItemId !== itemId;
-    },
+  isDragging: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
+      !!state.itemsReordering.currentReorder?.draggedItemId,
   ),
   /**
    * Checks whether an item can be reordered.

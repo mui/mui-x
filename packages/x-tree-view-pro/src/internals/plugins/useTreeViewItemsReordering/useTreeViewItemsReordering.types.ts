@@ -4,12 +4,6 @@ import { TreeViewItemId, TreeViewItemsReorderingAction } from '@mui/x-tree-view/
 
 export interface UseTreeViewItemsReorderingInstance {
   /**
-   * Check if a given item can be dragged.
-   * @param {TreeViewItemId} itemId The id of the item to check.
-   * @returns {boolean} `true` if the item can be dragged, `false` otherwise.
-   */
-  canItemBeDragged: (itemId: TreeViewItemId) => boolean;
-  /**
    * Get the valid reordering action if a given item is the target of the ongoing reordering.
    * @param {TreeViewItemId} itemId The id of the item to get the action of.
    * @returns {TreeViewItemItemReorderingValidActions} The valid actions for the item.

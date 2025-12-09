@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
-import { PieItemId } from '../models/seriesType/pie';
+import { type PieItemId } from '../models/seriesType/pie';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -74,6 +74,9 @@ const PieArcLabelRoot = styled('text', {
   animationName: 'animate-opacity',
   animationDuration: '0s',
   animationTimingFunction: ANIMATION_TIMING_FUNCTION,
+  transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+  transitionProperty: 'opacity',
+  transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   [`&.${pieArcLabelClasses.animate}`]: {
     animationDuration: `${ANIMATION_DURATION_MS}ms`,
   },
@@ -111,7 +114,6 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       formattedArcLabel,
       isHighlighted,
       isFaded,
-      style,
       skipAnimation,
       ...other
     } = props;

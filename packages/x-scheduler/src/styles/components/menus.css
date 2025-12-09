@@ -139,3 +139,30 @@
     text-transform: uppercase;
   }
 }
+
+/* ToggleGroup */
+.mui-x-scheduler .ToggleGroup {
+  display: flex;
+  width: fit-content;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-3);
+}
+
+.mui-x-scheduler .ToggleItem {
+  background-color: transparent;
+  padding: var(--space-1) var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-1);
+  color: var(--secondary-text-color);
+  border-radius: var(--radius-3);
+}
+
+.mui-x-scheduler .ToggleItem[data-pressed] {
+  background-color: var(--primary-3);
+  color: var(--primary-12);
+}

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { ChartsToolbarProProps } from './ChartsToolbarPro';
+import type * as React from 'react';
+import { type ChartsToolbarProProps } from './ChartsToolbarPro';
 
 export interface ChartsToolbarProSlots {
   /**

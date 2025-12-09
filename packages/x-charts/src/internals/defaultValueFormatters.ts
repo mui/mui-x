@@ -1,4 +1,8 @@
-import { AxisValueFormatterContext, ContinuousScaleName, D3ContinuousScale } from '../models/axis';
+import {
+  type AxisValueFormatterContext,
+  type ContinuousScaleName,
+  type D3ContinuousScale,
+} from '../models/axis';
 
 /**
  * Creates a default formatter function for continuous scales (e.g., linear, sqrt, log).

@@ -1,6 +1,6 @@
-import { ChartDrawingArea } from '../hooks';
+import { type ChartDrawingArea } from '../hooks';
 import { getPercentageValue } from '../internals/getPercentageValue';
-import { DefaultizedPieSeriesType } from '../models/seriesType/pie';
+import { type DefaultizedPieSeriesType } from '../models/seriesType/pie';
 
 export function getPieCoordinates(
   series: Pick<DefaultizedPieSeriesType, 'cx' | 'cy'>,

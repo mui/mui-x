@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
@@ -145,6 +145,13 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     fullWidth,
     ...other
   } = props;
+  const theme = useTheme();
+  const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
+  const computedSize = (size ?? textFieldDefaults.size) as 'small' | 'medium' | undefined;
+  const computedVariant = (textFieldDefaults.variant ?? 'outlined') as
+    | 'standard'
+    | 'filled'
+    | 'outlined';
   const menuProps = {
     PaperProps: {
       onKeyDown,
@@ -154,8 +161,14 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     menuProps.onClose = onClose;
   }
   return (
-    <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
-      <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
+    <MUIFormControl
+      size={computedSize}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      ref={ref}
+    >
+      <MUIInputLabel id={labelId} htmlFor={id} shrink variant={computedVariant}>
         {label}
       </MUIInputLabel>
       <MUISelect
@@ -164,13 +177,12 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         label={label}
         displayEmpty
         onChange={onChange as any}
-        variant="outlined"
+        variant={computedVariant as any}
         {...other}
-        notched
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
         MenuProps={menuProps}
-        size={size}
+        size={computedSize}
         {...material}
       />
     </MUIFormControl>
@@ -379,9 +391,14 @@ function BaseTextField(props: P['baseTextField']) {
   // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
   // translate the pattern.
   const { slotProps, material, ...other } = props;
+  const theme = useTheme();
+  const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
+  const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
+  const computedSize = (other as any).size ?? textFieldDefaults.size;
   return (
     <MUITextField
-      variant="outlined"
+      variant={computedVariant as any}
+      size={computedSize as any}
       {...other}
       {...material}
       inputProps={slotProps?.htmlInput}
@@ -540,9 +557,6 @@ function BasePopper(props: P['basePopper']) {
       result.push({
         name: 'flip',
         enabled: true,
-        options: {
-          rootBoundary: 'document',
-        },
       });
     }
     if (onDidShow || onDidHide) {

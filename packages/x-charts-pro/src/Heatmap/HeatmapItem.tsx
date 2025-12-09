@@ -4,8 +4,8 @@ import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
-import { useInteractionItemProps, SeriesId } from '@mui/x-charts/internals';
-import { HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
+import { useInteractionItemProps, type SeriesId } from '@mui/x-charts/internals';
+import { type HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
 
 export interface HeatmapItemSlots {
   /**

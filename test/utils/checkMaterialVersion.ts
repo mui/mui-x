@@ -1,5 +1,4 @@
 import semver from 'semver';
-import childProcess from 'child_process';
 import { isJSDOM } from 'test/utils/skipIf';
 
 type PackageJson = {
@@ -7,53 +6,39 @@ type PackageJson = {
   version: string;
 };
 
+let catalogCache: Record<string, string> | null = null;
+
+async function getCatalog(): Promise<Record<string, string>> {
+  if (!catalogCache) {
+    const { execa } = await import('execa');
+    const { stdout } = await execa('pnpm', ['config', 'list', '--json']);
+    const pnpmWorkspaceConfig = JSON.parse(stdout);
+    catalogCache = pnpmWorkspaceConfig.catalog as Record<string, string>;
+  }
+  return catalogCache;
+}
+
 export function checkMaterialVersion({
   packageJson,
   materialPackageJson,
-  testFilePath,
 }: {
   packageJson: PackageJson & { devDependencies: { '@mui/material': string } };
   materialPackageJson: PackageJson;
-  testFilePath: string;
 }) {
-  it.skipIf(!isJSDOM)(`${packageJson.name} should resolve proper @mui/material version`, () => {
-    let expectedVersion = packageJson.devDependencies['@mui/material'];
+  it.skipIf(!isJSDOM)(
+    `${packageJson.name} should resolve proper @mui/material version`,
+    async () => {
+      let versionRange = packageJson.devDependencies['@mui/material'];
 
-    if (expectedVersion === 'catalog:') {
-      // take only relevant part of the file path
-      // e.g. file:///Users/dev/mui/mui-x/packages/x-charts-pro/src/tests/materialVersion.test.tsx
-      // becomes packages/x-charts-pro
-      const workingDirectory = testFilePath.substring(
-        testFilePath.indexOf('packages/'),
-        testFilePath.indexOf('/src/'),
-      );
-      const listedMuiMaterial = childProcess.execSync('pnpm list "@mui/material" --json', {
-        cwd: workingDirectory,
-      });
-      if (listedMuiMaterial) {
-        const jsonListedDependencies = JSON.parse(listedMuiMaterial.toString());
-        expectedVersion = jsonListedDependencies[0].devDependencies['@mui/material'].version;
+      if (versionRange === 'catalog:') {
+        const catalog = await getCatalog();
+        versionRange = catalog['@mui/material'];
       }
-    }
 
-    const versions = childProcess.execSync(
-      `npm dist-tag ls ${'@mui/material'} ${expectedVersion}`,
-      {
-        encoding: 'utf8',
-      },
-    );
-    const tagMapping = versions
-      .split('\n')
-      .find((mapping) => {
-        return mapping.startsWith(`${expectedVersion}: `);
-      })
-      ?.split(': ')[1];
-
-    const version = tagMapping ?? expectedVersion;
-
-    expect(semver.satisfies(materialPackageJson.version, version)).to.equal(
-      true,
-      `Expected @mui/material ${version}, but found ${materialPackageJson.version}`,
-    );
-  });
+      expect(semver.satisfies(materialPackageJson.version, versionRange)).to.equal(
+        true,
+        `Expected @mui/material ${versionRange}, but found ${materialPackageJson.version}`,
+      );
+    },
+  );
 }

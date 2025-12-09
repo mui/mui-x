@@ -85,7 +85,7 @@ const availableStackOrder = [
 ];
 
 export default function StackOrderDemo() {
-  const [stackOrder, setStackOrder] = React.useState('none');
+  const [stackOrder, setStackOrder] = React.useState('appearance');
 
   const modifiedSeries = [{ ...series[0], stackOrder }, ...series.slice(1)];
   return (

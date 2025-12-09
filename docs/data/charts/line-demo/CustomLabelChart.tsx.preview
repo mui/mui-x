@@ -1,0 +1,9 @@
+<LineChart
+  series={[{ data: pData, label: 'pv' }]}
+  xAxis={[{ scaleType: 'point', data: xLabels }]}
+  yAxis={[{ width: 50 }]}
+  margin={margin}
+  slots={{
+    mark: CustomMark,
+  }}
+/>

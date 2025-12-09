@@ -5,7 +5,7 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridRoot,
   GridContextProvider,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import {
@@ -13,7 +13,7 @@ import {
   propValidatorsDataGridPro,
   PropValidator,
   validateProps,
-  GridConfiguration,
+  type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
 } from '@mui/x-data-grid-pro/internals';
@@ -78,7 +78,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
+  const props = useDataGridPremiumComponent(
+    privateApiRef,
+    initialProps,
+    configuration as GridConfiguration,
+  );
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -197,13 +201,11 @@ DataGridPremiumRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
+   * Use it instead of a flex parent container approach, if:
+   * - you don't need to set a minimum or maximum height for the Data Grid
+   * - you want to avoid the scrollbar flickering when the content changes
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
-   * @example
-   * <div style={{ display: 'flex', flexDirection: 'column' }}>
-   *   <DataGrid />
-   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -635,11 +637,28 @@ DataGridPremiumRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -1323,6 +1342,15 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
+  /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
@@ -1383,6 +1411,15 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Sets the tab navigation behavior for the Data Grid.
+   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabNavigation: PropTypes.oneOf(['all', 'content', 'header', 'none']),
   /**
    * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.

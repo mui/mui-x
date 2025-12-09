@@ -1,8 +1,8 @@
-import { createSelectorMemoized } from '@mui/x-internals/store';
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { type ChartRootSelector } from '../../utils/selectors';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartAxisSizes } from '../../featurePlugins/useChartCartesianAxis/useChartAxisSize.selectors';
-import { ChartState } from '../../models/chart';
+import { type ChartState } from '../../models/chart';
 
 export const selectorChartDimensionsState: ChartRootSelector<UseChartDimensionsSignature> = (
   state,
@@ -32,21 +32,21 @@ export const selectorChartDrawingArea = createSelectorMemoized(
 );
 
 export const selectorChartSvgWidth = createSelector(
-  [selectorChartDimensionsState],
+  selectorChartDimensionsState,
   (dimensionsState) => dimensionsState.width,
 );
 
 export const selectorChartSvgHeight = createSelector(
-  [selectorChartDimensionsState],
+  selectorChartDimensionsState,
   (dimensionsState) => dimensionsState.height,
 );
 
 export const selectorChartPropsWidth = createSelector(
-  [selectorChartDimensionsState],
+  selectorChartDimensionsState,
   (dimensionsState) => dimensionsState.propsWidth,
 );
 
 export const selectorChartPropsHeight = createSelector(
-  [selectorChartDimensionsState],
+  selectorChartDimensionsState,
   (dimensionsState) => dimensionsState.propsHeight,
 );

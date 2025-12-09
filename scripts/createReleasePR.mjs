@@ -23,6 +23,7 @@
  *     with a checklist of all release steps
  */
 
+import { persistentAuthStrategy } from '@mui/internal-code-infra/github';
 import { execa } from 'execa';
 import { Octokit } from '@octokit/rest';
 import { retry } from '@octokit/plugin-retry';
@@ -832,7 +833,7 @@ async function createPullRequest(title, body, head, base) {
 /**
  * Main function
  */
-async function main({ githubToken }) {
+async function main() {
   try {
     // Check if we're in the repository root
     try {
@@ -848,16 +849,8 @@ async function main({ githubToken }) {
     console.log('package.json and CHANGELOG.md found, proceeding...');
     console.log(`Current package version: ${packageVersion}`);
 
-    // If no token is provided, throw an error
-    if (!githubToken) {
-      console.error(
-        'Unable to authenticate. Make sure you either call the script with `--githubToken $token` or set `process.env.GITHUB_TOKEN`. The token needs `public_repo` permissions.',
-      );
-      process.exit(1);
-    }
-
     octokit = new MyOctokit({
-      auth: githubToken,
+      authStrategy: persistentAuthStrategy,
     });
 
     const { findLatestTaggedVersionForMajor, generateChangelog: generator } =
@@ -1086,14 +1079,6 @@ yargs(hideBin(process.argv))
   .command({
     command: '$0',
     description: 'Prepares a release PR for MUI X',
-    builder: (command) => {
-      return command.option('githubToken', {
-        default: process.env.GITHUB_TOKEN,
-        describe:
-          'The personal access token to use for authenticating with GitHub. Needs public_repo permissions.',
-        type: 'string',
-      });
-    },
     handler: main,
   })
   .help()

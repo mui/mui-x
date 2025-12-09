@@ -1,5 +1,5 @@
 import type { Path } from '@mui/x-charts-vendor/d3-path';
-import { CurveOptions, FunnelCurveType } from './curve.types';
+import { type CurveOptions, type FunnelCurveType } from './curve.types';
 import { Step } from './step';
 import { Linear } from './linear';
 import { Bump } from './bump';

@@ -13,12 +13,7 @@ import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 
-type WrappableColumnProperty =
-  | 'valueGetter'
-  | 'valueFormatter'
-  | 'renderCell'
-  | 'renderHeader'
-  | 'filterOperators';
+type WrappableColumnProperty = 'renderCell' | 'renderHeader';
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties: {

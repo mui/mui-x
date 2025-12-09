@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Store } from '@mui/x-internals/store';
+import type * as React from 'react';
+import { type Store } from '@mui/x-internals/store';
 import type {
   ChartAnyPluginSignature,
   ChartInstance,

@@ -1,6 +1,6 @@
-import { HighlightItemData } from './useChartHighlight.types';
-import { HighlightScope } from './highlightConfig.types';
-import { SeriesId } from '../../../../models/seriesType/common';
+import { type HighlightItemData } from './useChartHighlight.types';
+import { type HighlightScope } from './highlightConfig.types';
+import { type SeriesId } from '../../../../models/seriesType/common';
 
 export function isSeriesHighlighted(
   scope: Partial<HighlightScope> | null,

@@ -22,9 +22,7 @@ describe('useSeries', () => {
       'It looks like you rendered your component outside of a ChartDataProvider.';
     const errorMessage3 = 'The above error occurred in the <UseSeries> component:';
     const expectedError =
-      reactMajor < 19
-        ? [errorMessage1, errorMessage2, errorMessage3]
-        : [errorMessage1, errorMessage2].join('\n');
+      reactMajor < 19 ? [errorMessage3] : [errorMessage1, errorMessage2].join('\n');
 
     expect(() =>
       render(

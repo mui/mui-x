@@ -1,9 +1,9 @@
-import { BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import { type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
 import {
-  CartesianChartSeriesType,
-  ChartSeriesType,
-  ChartsSeriesConfig,
-  StackableChartSeriesType,
+  type CartesianChartSeriesType,
+  type ChartSeriesType,
+  type ChartsSeriesConfig,
+  type StackableChartSeriesType,
 } from './config';
 
 // Series definition
@@ -40,6 +40,7 @@ export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
 export type SeriesItemIdentifierWithData<T extends ChartSeriesType = ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifierWithData'];
 
+export { type SeriesId } from './common';
 export * from './line';
 export * from './bar';
 export * from './scatter';

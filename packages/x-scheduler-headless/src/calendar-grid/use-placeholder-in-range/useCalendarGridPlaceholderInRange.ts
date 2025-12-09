@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { CalendarEventOccurrenceWithTimePosition, SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
@@ -11,7 +11,7 @@ import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
-): useCalendarGridPlaceholderInRange.ReturnValue {
+): useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
 
   const adapter = useAdapter();
@@ -82,9 +82,7 @@ export function useCalendarGridPlaceholderInRange(
 
 export namespace useCalendarGridPlaceholderInRange {
   export interface Parameters extends useEventOccurrencesWithTimelinePosition.ReturnValue {
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
   }
-
-  export type ReturnValue = CalendarEventOccurrenceWithTimePosition | null;
 }

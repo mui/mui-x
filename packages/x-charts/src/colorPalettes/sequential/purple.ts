@@ -1,5 +1,5 @@
 // Purple sequential gradient palette based on the color scheme
-import { ChartsColorPaletteCallback } from '../types';
+import { type ChartsColorPaletteCallback } from '../types';
 
 export const purplePaletteLight = [
   '#CAD4EE',
