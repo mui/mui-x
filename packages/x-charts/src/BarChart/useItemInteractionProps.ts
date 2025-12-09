@@ -16,7 +16,7 @@ export function useInteractionItemProps() {
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
-  const lastItem = React.useRef<ReturnType<typeof getBarItemAtPosition>>(undefined);
+  const lastItemRef = React.useRef<ReturnType<typeof getBarItemAtPosition>>(undefined);
 
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
@@ -24,11 +24,11 @@ export function useInteractionItemProps() {
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
-    const last = lastItem.current;
+    const lastItem = lastItemRef.current;
 
-    if (last) {
-      lastItem.current = undefined;
-      instance.removeItemInteraction(last);
+    if (lastItem) {
+      lastItemRef.current = undefined;
+      instance.removeItemInteraction(lastItem);
       instance.clearHighlight();
     }
   });
@@ -51,13 +51,13 @@ export function useInteractionItemProps() {
     if (item) {
       instance.setItemInteraction(item, { interaction: 'pointer' });
       instance.setHighlight(item);
-      lastItem.current = item;
+      lastItemRef.current = item;
     } else {
-      const last = lastItem.current;
+      const lastItem = lastItemRef.current;
 
-      if (last) {
-        lastItem.current = undefined;
-        instance.removeItemInteraction(last);
+      if (lastItem) {
+        lastItemRef.current = undefined;
+        instance.removeItemInteraction(lastItem);
         instance.clearHighlight();
       }
     }
