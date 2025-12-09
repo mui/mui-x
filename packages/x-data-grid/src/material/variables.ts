@@ -69,7 +69,7 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
     [k.colors.interactive.selected]: supportsColorMix
       ? selectedColor
-      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 700 : 100],
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 700 : 200],
     [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
     [k.header.background.base]: backgroundHeader,
