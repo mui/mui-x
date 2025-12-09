@@ -93,6 +93,8 @@ export default chartsApiPages;
       'x-charts/src/LineChart/CircleMarkElement.tsx',
       'x-charts/src/ScatterChart/ScatterMarker.tsx',
       'x-charts/src/BarChart/AnimatedBarElement.tsx',
+      'x-charts/src/BarChart/BatchBarPlot/BarGroup.tsx',
+      'x-charts/src/BarChart/BatchBarPlot/BatchBarPlot.tsx',
       'x-charts/src/RadarChart/RadarDataProvider/RadarDataProvider.tsx',
       'x-charts/src/LineChart/FocusedLineMark.tsx',
       'x-charts/src/PieChart/FocusedPieArc.tsx',
