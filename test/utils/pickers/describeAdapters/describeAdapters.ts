@@ -27,7 +27,7 @@ function innerDescribeAdapters<P extends {}>(
     }
 
     beforeEach(() => {
-      vi.setSystemTime(new Date('2022-06-15T12:00:00Z'));
+      vi.setSystemTime(new Date('2022-06-15T00:00:00Z'));
     });
 
     afterEach(() => {

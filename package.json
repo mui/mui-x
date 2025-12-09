@@ -159,7 +159,8 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@base-ui-components/react": "patches/@base-ui-components__react.patch"
+      "@base-ui-components/react": "patches/@base-ui-components__react.patch",
+      "@mui/material": "patches/@mui__material.patch"
     }
   }
 }
