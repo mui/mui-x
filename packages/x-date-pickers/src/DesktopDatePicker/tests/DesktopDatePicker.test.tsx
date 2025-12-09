@@ -387,8 +387,9 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('should throw console warning when invalid `openTo` prop is provided', () => {
-    expect(async () => {
+  // .toWarnDev doesn't support async functions correctly
+  it.todo('should throw console warning when invalid `openTo` prop is provided', async () => {
+    await expect(async () => {
       const { user } = render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
       await openPickerAsync(user, { type: 'date' });
