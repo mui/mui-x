@@ -865,9 +865,6 @@ importers:
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-      flatqueue:
-        specifier: ^3.0.0
-        version: 3.0.0
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
@@ -1080,6 +1077,9 @@ importers:
       d3-timer:
         specifier: ^3.0.1
         version: 3.0.1
+      flatqueue:
+        specifier: ^3.0.0
+        version: 3.0.0
     devDependencies:
       '@babel/cli':
         specifier: 'catalog:'
