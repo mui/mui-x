@@ -8,7 +8,7 @@ export * from './useSvgRef';
 export * from './useSeries';
 export * from './useDataset';
 export * from './useScatterSeries';
-export * from './usePieSeries';
+export { usePieSeries, usePieSeriesContext } from './usePieSeries';
 export * from './useBarSeries';
 export * from './useLineSeries';
 export * from './useRadarSeries';
