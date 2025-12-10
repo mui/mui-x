@@ -62,20 +62,20 @@ export function applyRecurringUpdateFollowing(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? originalEvent.start.value;
+  const newStart = changes.start ?? originalEvent.modelInBuiltInFormat!.start;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
-  const originalRule = originalEvent.rrule as RecurringEventRecurrenceRule;
+  const originalRule = originalEvent.modelInBuiltInFormat!.rrule as RecurringEventRecurrenceRule;
   const { count, until, ...baseRule } = originalRule;
 
   // 2) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    originalEvent.start.value,
+    originalEvent.modelInBuiltInFormat!.start,
     occurrenceStart,
     changes,
   );
@@ -86,13 +86,13 @@ export function applyRecurringUpdateFollowing(
     ...changes,
     id: newEventId,
     rrule: newRRule,
-    extractedFromId: originalEvent.id,
+    extractedFromId: originalEvent.modelInBuiltInFormat!.id,
   };
 
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
   const shouldDropOldSeries = adapter.isBefore(
     adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start.value),
+    adapter.startOfDay(originalEvent.modelInBuiltInFormat!.start),
   );
 
   if (shouldDropOldSeries) {
@@ -131,7 +131,10 @@ export function applyRecurringUpdateAll(
   const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start.value);
+  const editedIsDtstart = adapter.isSameDay(
+    occurrenceStart,
+    originalEvent.modelInBuiltInFormat!.start,
+  );
 
   // 3) Decide new start/end
   if (changes.start != null) {
@@ -144,7 +147,7 @@ export function applyRecurringUpdateAll(
         // Not first: keep original DTSTART date, merge only time
         eventUpdatedProperties.start = mergeDateAndTime(
           adapter,
-          originalEvent.start.value,
+          originalEvent.modelInBuiltInFormat!.start,
           changes.start,
         );
       }
@@ -152,7 +155,7 @@ export function applyRecurringUpdateAll(
       // Same day -> merge time into original date
       eventUpdatedProperties.start = mergeDateAndTime(
         adapter,
-        originalEvent.start.value,
+        originalEvent.modelInBuiltInFormat!.start,
         changes.start,
       );
     }
@@ -165,21 +168,29 @@ export function applyRecurringUpdateAll(
       } else {
         eventUpdatedProperties.end = mergeDateAndTime(
           adapter,
-          originalEvent.end.value,
+          originalEvent.modelInBuiltInFormat!.end,
           changes.end,
         );
       }
     } else {
-      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end.value, changes.end);
+      eventUpdatedProperties.end = mergeDateAndTime(
+        adapter,
+        originalEvent.modelInBuiltInFormat!.end,
+        changes.end,
+      );
     }
   }
 
   // 4) RRULE adjustment: only if day changed and the event is recurring
-  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule) {
+  if (
+    (touchedStartDate || touchedEndDate) &&
+    originalEvent.modelInBuiltInFormat!.rrule &&
+    typeof originalEvent.modelInBuiltInFormat!.rrule === 'object'
+  ) {
     const newOccurrenceStart = changes.start ?? occurrenceStart;
     eventUpdatedProperties.rrule = adjustRRuleForAllMove(
       adapter,
-      originalEvent.rrule,
+      originalEvent.modelInBuiltInFormat!.rrule,
       occurrenceStart,
       newOccurrenceStart,
     );
