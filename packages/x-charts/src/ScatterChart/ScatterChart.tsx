@@ -36,7 +36,7 @@ import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import type { ScatterChartPluginSignatures } from './ScatterChart.plugins';
-import { ScatterFocusedMark } from './ScatterFocusedMark';
+import { FocusedScatterMark } from './FocusedScatterMark';
 
 export interface ScatterChartSlots
   extends ChartsAxisSlots,
@@ -172,7 +172,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
-          <ScatterFocusedMark />
+          <FocusedScatterMark />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}

@@ -11,7 +11,7 @@ export * from './LineElement';
 export * from './AnimatedLine';
 export * from './MarkElement';
 
-export * from './LineFocusedMark';
+export * from './FocusedLineMark';
 
 export * from './LineHighlightElement';
 export * from './LineChart.plugins';

@@ -90,7 +90,7 @@ Each series type has its own component.
 Exception for the pie chart that has the focus directly managed in the `<PieArcPlot />`.
 
 ```js
-// import { FocusedBar } from '@mui/x-charts/BarChart';
-import { LineFocusedMark } from '@mui/x-charts/LineChart';
-import { ScatterFocusedMark } from '@mui/x-charts/ScatterChart';
+import { FocusedBar } from '@mui/x-charts/BarChart';
+import { FocusedLineMark } from '@mui/x-charts/LineChart';
+import { FocusedScatterMark } from '@mui/x-charts/ScatterChart';
 ```

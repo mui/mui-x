@@ -27,7 +27,7 @@ import type {
 } from '../LineChart/LineHighlightPlot';
 import type { BarPlotSlots, BarPlotSlotProps } from '../BarChart/BarPlot';
 import type { ChartMargin } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.types';
-import { LineFocusedMark } from '../LineChart/LineFocusedMark';
+import { FocusedLineMark } from '../LineChart/FocusedLineMark';
 
 export interface SparkLineChartSlots
   extends AreaPlotSlots,
@@ -308,7 +308,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         {plotType === 'line' && (
           <React.Fragment>
             <LineHighlightPlot slots={slots} slotProps={slotProps} />
-            <LineFocusedMark />
+            <FocusedLineMark />
           </React.Fragment>
         )}
         {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}

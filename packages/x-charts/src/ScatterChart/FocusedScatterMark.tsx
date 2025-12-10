@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { useFocusedItem } from '../hooks/useFocusedItem';
 import { getValueToPositionMapper, useScatterSeriesContext, useXAxes, useYAxes } from '../hooks';
 
-export function ScatterFocusedMark(props: React.SVGAttributes<SVGRectElement>) {
+export function FocusedScatterMark(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
   const focusedItem = useFocusedItem();
 
