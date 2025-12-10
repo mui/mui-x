@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import FlatQueue from '@mui/x-charts-vendor/flatqueue';
+import { default as FlatQueue } from '@mui/x-charts-vendor/flatqueue';
 
 const ARRAY_TYPES = [
   Int8Array,
