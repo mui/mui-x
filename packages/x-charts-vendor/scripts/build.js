@@ -24,6 +24,7 @@ const getEsmIndex = (pkg) => `
 // See upstream license: ${pkg.repository.url.replace(/\.git$/, '')}/blob/main/LICENSE
 //
 // Our ESM package uses the underlying installed dependencies of \`node_modules/${pkg.name}\`
+export { default } from "${pkg.name}";
 export * from "${pkg.name}";
 `;
 
