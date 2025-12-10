@@ -313,6 +313,7 @@ In addition to the common chart components available for [composition](/x/react-
 - `<LinePlot />` renders the series lines.
 - `<MarkPlot />` renders the series marks.
 - `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+- `<FocusedLineMark />` renders a focus indicator when the user focuses a data point.
 
 Here's how the Line Chart is composed:
 
@@ -329,6 +330,7 @@ Here's how the Line Chart is composed:
         <ChartsOverlay />
         <ChartsAxisHighlight />
       </g>
+      <FocusedLineMark />
       <ChartsAxis />
       <g data-drawing-container>
         {/* Elements able to overflow the drawing area. */}

@@ -192,6 +192,7 @@ Here's how the Scatter Chart is composed:
         {/* Elements able to overflow the drawing area. */}
         <ScatterPlot />
       </g>
+      <FocusedScatterMark />
       <ChartsOverlay />
       <ChartsAxisHighlight />
     </ChartsSurface>

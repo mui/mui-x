@@ -166,6 +166,7 @@ Here's how the Pie Chart is composed:
     <ChartsLegend />
     <ChartsSurface>
       <PiePlot />
+      <FocusedPieArc />
       <ChartsOverlay />
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
