@@ -1,7 +1,11 @@
 import * as React from 'react';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { initialEvents, resources, defaultVisibleDate } from '../datasets/personal-agenda';
+import {
+  initialEvents,
+  resources,
+  defaultVisibleDate,
+} from '../datasets/personal-agenda';
 
 export default function VisibleResources() {
   const [events, setEvents] = React.useState(initialEvents);
