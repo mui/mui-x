@@ -1,7 +1,7 @@
 {
   "name": "@mui/x-charts-material",
   "version": "0.0.1",
-  "description": "Material UI integration for @mui/x-charts-base",
+  "description": "Material UI integration for @mui/x-charts-headless",
   "author": "MUI Team",
   "main": "src/index.ts",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "@babel/runtime": "catalog:",
     "@mui/material": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/x-charts-base": "workspace:^",
+    "@mui/x-charts-headless": "workspace:^",
     "@mui/x-internals": "workspace:^",
     "clsx": "catalog:"
   },

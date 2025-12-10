@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PieChart as PieChartBase } from '@mui/x-charts-base';
+import { PieChart as PieChartBase } from 'packages/x-charts-headless/src';
 import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
 import type { PieChartProps } from '@mui/x-charts/PieChart';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@mui/x-charts-base",
+  "name": "@mui/x-charts-headless",
   "version": "0.0.1",
   "description": "Framework-agnostic base charting library for MUI X Charts",
   "author": "MUI Team",

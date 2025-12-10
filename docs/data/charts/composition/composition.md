@@ -274,7 +274,7 @@ The bell curve is calculated based on the mean and standard deviation of the dat
 
 This example demonstrates the proposed architecture where charts functionality is split into two packages:
 
-- **@mui/x-charts-base**: Framework-agnostic core with inline styles and a custom theme system
+- **@mui/x-charts-headless**: Framework-agnostic core with inline styles and a custom theme system
 - **@mui/x-charts-material**: Material UI integration layer using material components and theming
 
 {{"demo": "PocBaseAndMaterial.js" }}
