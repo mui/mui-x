@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PieChart as PieChartBase } from 'packages/x-charts-headless/src';
-import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
+// import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
 import type { PieChartProps } from '@mui/x-charts/PieChart';
 
 const data: PieChartProps = {
@@ -52,7 +52,7 @@ export default function PocBaseAndMaterial() {
           <PieChartBase.LabelPlot />
         </PieChartBase.Surface>
       </PieChartBase.Root>
-      <PieChartMaterial {...data} />
+      {/* <PieChartMaterial {...data} /> */}
     </div>
   );
 }

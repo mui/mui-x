@@ -2,7 +2,6 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { useSvgRef } from '@mui/x-charts';
-import { ChartsAxesGradients } from '@mui/x-charts/internals/components/ChartsAxesGradients';
 import {
   selectorChartSvgWidth,
   selectorChartSvgHeight,
@@ -14,7 +13,6 @@ import {
   selectorChartsHasFocusedItem,
 } from '@mui/x-charts/internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useSelector } from '@mui/x-charts/internals/store/useSelector';
-import clsx from 'clsx';
 import { useStore } from '@mui/x-charts/internals/store/useStore';
 
 export interface ChartsSurfaceProps
@@ -23,8 +21,6 @@ export interface ChartsSurfaceProps
     'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
   > {
   className?: string;
-  title?: string;
-  desc?: string;
   children?: React.ReactNode;
 }
 
@@ -44,28 +40,25 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
 
-  const { children, className, title, desc, ...other } = inProps;
+  const { children, style, ...other } = inProps;
 
   const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   const styles = {
-    ...(propsWidth ? { '--chart-surface-width': `${propsWidth}px` } : {}),
-    ...(propsHeight ? { '--chart-surface-height': `${propsHeight}px` } : {}),
+    height: propsWidth ? `${propsHeight}px` : '100%',
+    width: propsWidth ? `${propsWidth}px` : '100%',
+    ...style,
   } as React.CSSProperties;
 
   return (
     <svg
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
-      className={clsx('ChartsSurface-root', className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       data-has-focused-item={hasFocusedItem || undefined}
       style={styles}
       {...other}
       ref={handleRef}
     >
-      {title && <title>{title}</title>}
-      {desc && <desc>{desc}</desc>}
-      <ChartsAxesGradients />
       {hasIntrinsicSize && children}
     </svg>
   );

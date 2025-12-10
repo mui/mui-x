@@ -1,7 +1,6 @@
 'use client';
 import { type PieItemId } from '@mui/x-charts';
 import { useInteractionItemProps } from '@mui/x-charts/hooks/useInteractionItemProps';
-import clsx from 'clsx';
 import * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 
@@ -29,7 +28,6 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
   const {
-    className,
     color,
     dataIndex,
     id,
@@ -75,7 +73,6 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       ref={ref}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
-      className={clsx('PieArc-root', className)}
       fill={color}
       opacity={isFaded ? 0.3 : 1}
       filter={isHighlighted ? 'brightness(120%)' : 'none'}

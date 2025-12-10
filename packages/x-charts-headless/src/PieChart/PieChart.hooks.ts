@@ -1,15 +1,17 @@
 import { getPieCoordinates } from '@mui/x-charts';
 import { getPercentageValue } from '@mui/x-charts/internals/getPercentageValue';
 import { selectorChartDrawingArea } from '@mui/x-charts/internals/plugins/corePlugins/useChartDimensions';
-import type { ProcessedSeries } from '@mui/x-charts/internals/plugins/corePlugins/useChartSeries';
-import { selectorAllSeriesOfType } from '@mui/x-charts/internals/seriesSelectorOfType';
+import { selectorChartSeriesProcessed } from '@mui/x-charts/internals/plugins/corePlugins/useChartSeries';
 import { useSelector } from '@mui/x-charts/internals/store/useSelector';
 import { useStore } from '@mui/x-charts/internals/store/useStore';
-import { createSelector } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 
-const pieSelector = (store: any) => selectorAllSeriesOfType(store, 'pie') as ProcessedSeries['pie'];
+const pieSelector = createSelectorMemoized(
+  selectorChartSeriesProcessed,
+  (seriesByType) => seriesByType?.pie,
+);
 
-const selectorPieSeriesData = createSelector(
+const selectorPieSeriesData = createSelectorMemoized(
   pieSelector,
   selectorChartDrawingArea,
   (pieSeries, drawingArea) => {

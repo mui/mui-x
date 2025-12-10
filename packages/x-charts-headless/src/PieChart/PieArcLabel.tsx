@@ -48,13 +48,12 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     return (
       <text
         ref={ref}
-        className={'PieChart-arcLabel-root'}
         x={x}
         y={y}
         textAnchor="middle"
         dominantBaseline="middle"
         pointerEvents="none"
-        fill="var(--PieChart-arc-label-fill, currentColor)"
+        fill="currentColor"
         {...other}
       >
         {formattedArcLabel}

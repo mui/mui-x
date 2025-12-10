@@ -5,7 +5,6 @@ import {
   type PieItemIdentifier,
   type DefaultizedPieValueType,
 } from '@mui/x-charts';
-import { useFocusedItem } from '@mui/x-charts/hooks/useFocusedItem';
 import { useTransformData } from '@mui/x-charts/PieChart/dataTransform/useTransformData';
 import * as React from 'react';
 import { PieArc } from './PieArc';
@@ -60,12 +59,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     data,
   });
 
-  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
-  const focusedItem =
-    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
-      ? transformedData[dataIndex]
-      : null;
-
   if (data.length === 0) {
     return null;
   }
@@ -83,7 +76,7 @@ function PieArcPlot(props: PieArcPlotProps) {
           cornerRadius={item.cornerRadius}
           id={id}
           color={item.color}
-          stroke={'var(--PieChart-arc-stroke, transparent)'}
+          stroke={'transparent'}
           dataIndex={index}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
@@ -96,28 +89,6 @@ function PieArcPlot(props: PieArcPlotProps) {
           }
         />
       ))}
-      {/* Render the focus indicator last, so it can align nicely over all arcs */}
-      {focusedItem && (
-        <PieArc
-          startAngle={focusedItem.startAngle}
-          endAngle={focusedItem.endAngle}
-          paddingAngle={focusedItem.paddingAngle}
-          innerRadius={focusedItem.innerRadius}
-          color="transparent"
-          pointerEvents="none"
-          skipInteraction
-          outerRadius={focusedItem.outerRadius}
-          cornerRadius={focusedItem.cornerRadius}
-          stroke={'var(--FocusIndicator-color, blue)'}
-          id={id}
-          className={'PieArc-focusIndicator'}
-          dataIndex={focusedItem.dataIndex}
-          isFaded={false}
-          isHighlighted={false}
-          isFocused={false}
-          strokeWidth={3}
-        />
-      )}
     </g>
   );
 }

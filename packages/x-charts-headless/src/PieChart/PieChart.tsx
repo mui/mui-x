@@ -13,7 +13,6 @@ import * as React from 'react';
 import { defaultizeMargin } from '@mui/x-charts/internals/defaultizeMargin';
 import { DEFAULT_PIE_CHART_MARGIN } from '@mui/x-charts/internals/constants';
 import { useChartContainerProps } from '@mui/x-charts/ChartContainer/useChartContainerProps';
-import { FakeCss } from '../FakeCss';
 import { ChartsSurface } from '../ChartsSurface';
 import { PiePlot } from './PiePlot';
 import { PieLabelPlot } from './PieLabelPlot';
@@ -85,7 +84,7 @@ const PieRoot = React.forwardRef(function PieChart(
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
-      <FakeCss>{children}</FakeCss>
+      {children}
     </ChartDataProvider>
   );
 });
