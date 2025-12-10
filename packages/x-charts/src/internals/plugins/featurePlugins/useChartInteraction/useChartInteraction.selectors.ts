@@ -10,11 +10,6 @@ export const selectorChartsInteractionIsInitialized = createSelector(
   (interaction) => interaction !== undefined,
 );
 
-export const selectorChartsInteractionItem = createSelector(
-  selectInteraction,
-  (interaction) => interaction?.item ?? null,
-);
-
 export const selectorChartsInteractionPointer = createSelector(
   selectInteraction,
   (interaction) => interaction?.pointer ?? null,
@@ -28,11 +23,6 @@ export const selectorChartsInteractionPointerX = createSelector(
 export const selectorChartsInteractionPointerY = createSelector(
   selectorChartsInteractionPointer,
   (pointer) => pointer && pointer.y,
-);
-
-export const selectorChartsInteractionItemIsDefined = createSelector(
-  selectorChartsInteractionItem,
-  (item) => item !== null,
 );
 
 export const selectorChartsLastInteraction = createSelector(

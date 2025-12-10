@@ -405,7 +405,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
         // get the sort button in column header 1
         const columnMenuButton =
-          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
+          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[aria-label="Sort"]`)!;
 
         // Simulate click on this button
         await user.click(columnMenuButton);
