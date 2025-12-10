@@ -20,7 +20,11 @@ export function useOnItemClick(onItemClick: IndividualBarPlotProps['onItemClick'
       return;
     }
 
-    const svgPoint = getSVGPoint(element, event);
+    // Round the coordinates to avoid sub-pixel issues.
+    const svgPoint = getSVGPoint(element, {
+      clientX: Math.round(event.clientX),
+      clientY: Math.round(event.clientY),
+    });
 
     if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
       return;
