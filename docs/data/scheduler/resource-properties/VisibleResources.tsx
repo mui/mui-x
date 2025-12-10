@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { SchedulerResourceId } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
@@ -10,7 +9,7 @@ import {
 export default function VisibleResources() {
   const [events, setEvents] = React.useState(initialEvents);
   const [visibleResources, setVisibleResources] = React.useState<
-    Map<SchedulerResourceId, boolean>
+    Map<string, boolean>
   >(
     () =>
       new Map([
@@ -20,7 +19,7 @@ export default function VisibleResources() {
   );
 
   const handleVisibleResourcesChange = React.useCallback(
-    (newVisibleResources: Map<SchedulerResourceId, boolean>) => {
+    (newVisibleResources: Map<string, boolean>) => {
       setVisibleResources(newVisibleResources);
     },
     [],
