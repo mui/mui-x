@@ -160,6 +160,12 @@ With composition, you can use your component inside the `ChartDataProvider`.
 </ChartDataProvider>
 ```
 
+## Controlling item tooltip
+
+You can controll the tooltip
+
+{{"demo": "SyncTooltip.js"}}
+
 ## Creating a tooltip
 
 To create your custom tooltip, the library exports some helpers which are explained in the following sections:

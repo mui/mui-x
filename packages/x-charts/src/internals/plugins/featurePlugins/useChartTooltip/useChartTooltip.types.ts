@@ -1,3 +1,4 @@
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { ChartPluginSignature } from '../../models';
 import type { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
@@ -17,8 +18,30 @@ export interface UseChartTooltipInstance {
   removeTooltipItem: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
 }
 
+export interface UseChartTooltipParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem?: ChartItemIdentifier<SeriesType> | null;
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {ChartItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange?: (tooltipItem: ChartItemIdentifier<SeriesType> | null) => void;
+}
+
+export type UseChartTooltipDefaultizedParameters<
+  SeriesType extends ChartSeriesType = ChartSeriesType,
+> = DefaultizedProps<UseChartTooltipParameters<SeriesType>, 'tooltipItem'>;
+
 export interface UseChartTooltipState {
   tooltip: {
+    /**
+     * Indicates if the tooltip item is controlled.
+     */
+    itemIsControlled: boolean;
     /**
      * The item currently under the pointer.
      */
@@ -26,7 +49,10 @@ export interface UseChartTooltipState {
   };
 }
 
-export type UseChartTooltipSignature = ChartPluginSignature<{
-  instance: UseChartTooltipInstance;
-  state: UseChartTooltipState;
-}>;
+export type UseChartTooltipSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  ChartPluginSignature<{
+    instance: UseChartTooltipInstance;
+    state: UseChartTooltipState;
+    params: UseChartTooltipParameters<SeriesType>;
+    defaultizedParams: UseChartTooltipDefaultizedParameters<SeriesType>;
+  }>;

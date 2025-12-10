@@ -36,7 +36,7 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
   seriesConfig: ChartSeriesConfig<any>;
 }
 
-type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
+export type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
   'publicAPI',
   TSignature['publicAPI']
 > &
