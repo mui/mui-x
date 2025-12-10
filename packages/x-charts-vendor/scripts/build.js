@@ -24,8 +24,11 @@ const getEsmIndex = (pkg) => `
 // See upstream license: ${pkg.repository.url.replace(/\.git$/, '')}/blob/main/LICENSE
 //
 // Our ESM package uses the underlying installed dependencies of \`node_modules/${pkg.name}\`
-export { default } from "${pkg.name}";
 export * from "${pkg.name}";
+`;
+
+const getEsmDefaultExport = (pkg) => `
+export { default } from "${pkg.name}";
 `;
 
 const getCjsIndex = (pkg, hasSrc) => `
@@ -51,6 +54,8 @@ const getTypeDefinitionFile = (pkg) => `
 // Export the type definitions for this package:
 export * from "${pkg.name}";
 `;
+
+const DEFAULT_EXPORT_PKGS = new Set(['flatqueue']);
 
 // Main.
 const main = async () => {
@@ -128,7 +133,10 @@ const main = async () => {
 
     // Create library indexes and copy licenses to `lib-vendor.
     await Promise.all([
-      fs.writeFile(path.join(EsmBasePath, `${pkgName}.mjs`), getEsmIndex(pkg)),
+      fs.writeFile(
+        path.join(EsmBasePath, `${pkgName}.mjs`),
+        getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getEsmDefaultExport(pkg) : ''),
+      ),
       fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg, hasSrc)),
       fs
         .copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE'))
