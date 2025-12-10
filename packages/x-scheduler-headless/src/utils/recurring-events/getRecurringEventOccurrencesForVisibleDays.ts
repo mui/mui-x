@@ -92,6 +92,14 @@ class RecurringEventExpander {
   }
 
   private initializeFrequencyData(): void {
+    const hasCount = typeof this.rule.count === 'number' && this.rule.count > 0;
+    const hasUntil = !!this.rule.until;
+    if (hasCount && hasUntil) {
+      throw new Error(
+        'Scheduler: The recurring rule cannot have both the count and until properties.',
+      );
+    }
+
     switch (this.rule.freq) {
       case 'WEEKLY': {
         const byDayCodes = parsesByDayForWeeklyFrequency(this.rule.byDay) ?? [
@@ -120,6 +128,14 @@ class RecurringEventExpander {
         break;
       }
       case 'YEARLY': {
+        // Only exact "same month + same day" recurrence is supported.
+        // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
+        if (this.rule.byMonth?.length || this.rule.byMonthDay?.length || this.rule.byDay?.length) {
+          throw new Error(
+            'Scheduler: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
+          );
+        }
+
         this.yearlyTargetMonth = this.adapter.getMonth(this.seriesStart);
         this.yearlyTargetDay = this.adapter.getDate(this.seriesStart);
         break;
@@ -214,14 +230,6 @@ class RecurringEventExpander {
   }
 
   private getNextOccurrence(current: TemporalSupportedObject): TemporalSupportedObject | null {
-    const hasCount = typeof this.rule.count === 'number' && this.rule.count > 0;
-    const hasUntil = !!this.rule.until;
-    if (hasCount && hasUntil) {
-      throw new Error(
-        'Scheduler: The recurring rule cannot have both the count and until properties.',
-      );
-    }
-
     switch (this.rule.freq) {
       case 'DAILY': {
         return this.adapter.addDays(current, this.interval);
@@ -251,14 +259,6 @@ class RecurringEventExpander {
         return this.findFirstInMonth(nextMonth, this.seriesStart);
       }
       case 'YEARLY': {
-        // Only exact "same month + same day" recurrence is supported.
-        // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
-        if (this.rule.byMonth?.length || this.rule.byMonthDay?.length || this.rule.byDay?.length) {
-          throw new Error(
-            'Scheduler: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
-          );
-        }
-
         const nextYear = this.adapter.addYears(this.adapter.startOfYear(current), this.interval);
         return this.findFirstInYear(nextYear, this.seriesStart);
       }
