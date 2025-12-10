@@ -58,7 +58,7 @@ const main = async () => {
 
   // Get d3-related packages we want to vendor.
   const pkgs = (await fs.readdir(path.resolve(__dirname, '../node_modules/'))).filter((name) =>
-    /^(d3-|internmap)/.test(name),
+    /^(d3-|internmap|flatqueue)/.test(name),
   );
 
   // Safety check: we assume that **all** are flattened to root level of this
