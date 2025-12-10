@@ -17,10 +17,9 @@ export function getBarItemAtPosition(
   store: Store<ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>>,
   svgPoint: Pick<DOMPoint, 'x' | 'y'>,
 ): BarItemIdentifier | undefined {
-  const { series, stackingGroups = [] } =
-    selectorChartSeriesProcessed(store.getSnapshot())?.bar ?? {};
-  const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(store.getSnapshot());
-  const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(store.getSnapshot());
+  const { series, stackingGroups = [] } = selectorChartSeriesProcessed(store.state)?.bar ?? {};
+  const { axis: xAxes, axisIds: xAxisIds } = selectorChartXAxis(store.state);
+  const { axis: yAxes, axisIds: yAxisIds } = selectorChartYAxis(store.state);
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
 
