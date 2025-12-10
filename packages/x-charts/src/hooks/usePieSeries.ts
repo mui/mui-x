@@ -53,7 +53,6 @@ export function usePieSeriesContext(): UsePieSeriesContextReturnValue {
  * @returns {Record<SeriesId, PieSeriesLayout>} the pie layout
  */
 export function usePieSeriesLayout(): Record<SeriesId, PieSeriesLayout> {
-  // export function usePieSeriesLayout(): Record<SeriesId, ChartSeriesLayout<'pie'>> {
   const store = useStore();
 
   const seriesLayout = useSelector(store, selectorChartSeriesLayout);

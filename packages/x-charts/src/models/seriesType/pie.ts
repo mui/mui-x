@@ -201,7 +201,7 @@ export type PieSeriesLayout = {
      */
     outer: number;
     /**
-     * The pie outer radius in px, except if overridden by item state (highlight/faded).
+     * The pie label radius in px, except if overridden by item state (highlight/faded).
      */
     label: number;
   };
