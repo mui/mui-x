@@ -4,8 +4,12 @@ export function getPreferencesMenu() {
   return screen.queryByRole('button', { name: /settings/i });
 }
 
+export async function findPreferencesMenu() {
+  return screen.findByRole('button', { name: /settings/i });
+}
+
 export async function openPreferencesMenu(user) {
-  const button = getPreferencesMenu();
+  const button = await findPreferencesMenu();
   await user.click(button);
   await screen.findByRole('menu');
   return button;
@@ -35,19 +39,29 @@ async function openTimeFormatSubmenu() {
 export async function changeTo24HoursFormat(user) {
   await openTimeFormatSubmenu();
 
-  const h24Radio = screen.getByRole('menuitemradio', {
+  const h24Radio = await screen.findByRole('menuitemradio', {
     name: /24-hour \(13:00\)/i,
   });
 
   await user.click(h24Radio);
+
+  await screen.findByRole('menuitemradio', {
+    name: /24-hour \(13:00\)/i,
+    checked: true,
+  });
 }
 
 export async function changeTo12HoursFormat(user) {
   await openTimeFormatSubmenu();
 
-  const h12Radio = screen.getByRole('menuitemradio', {
+  const h12Radio = await screen.findByRole('menuitemradio', {
     name: /12-hour \(1:00PM\)/i,
   });
 
   await user.click(h12Radio);
+
+  await screen.findByRole('menuitemradio', {
+    name: /12-hour \(1:00PM\)/i,
+    checked: true,
+  });
 }
