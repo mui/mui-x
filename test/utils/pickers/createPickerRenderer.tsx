@@ -19,19 +19,19 @@ export function createPickerRenderer({
   clockConfig,
   ...createRendererOptions
 }: CreatePickerRendererOptions = {}) {
+  const { render: clientRender } = createRenderer({
+    ...createRendererOptions,
+  });
+
   beforeEach(() => {
     if (clockConfig) {
       vi.setSystemTime(clockConfig);
     }
   });
   afterEach(() => {
-    if (vi.isFakeTimers()) {
+    if (clockConfig) {
       vi.useRealTimers();
     }
-  });
-
-  const { render: clientRender } = createRenderer({
-    ...createRendererOptions,
   });
 
   let adapterLocale = [

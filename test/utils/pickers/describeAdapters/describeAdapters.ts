@@ -26,20 +26,10 @@ function innerDescribeAdapters<P extends {}>(
       moment.locale('en');
     }
 
-    beforeEach(() => {
-      vi.setSystemTime(new Date('2022-06-15T00:00:00Z'));
-    });
-
-    afterEach(() => {
-      if (vi.isFakeTimers()) {
-        vi.useRealTimers();
-      }
-    });
-
     describe(`${title} - adapter: ${adapterName}`, () => {
       const pickerRendererResponse = createPickerRenderer({
         adapterName,
-
+        clockConfig: new Date(2022, 5, 15),
         instance: adapterName === 'moment' ? momentTZ : undefined,
       });
 
