@@ -24,7 +24,6 @@ import { useChartContext } from '../context/ChartProvider';
 import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { useIsItemFocusedGetter } from '../hooks/useIsItemFocusedGetter';
 
 export interface ScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -86,7 +85,6 @@ function Scatter(props: ScatterProps) {
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
-  const isFocused = useIsItemFocusedGetter();
 
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
 
@@ -108,11 +106,7 @@ function Scatter(props: ScatterProps) {
       {scatterPlotData.map((dataPoint) => {
         const isItemHighlighted = isHighlighted(dataPoint);
         const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
-        const isItemFocused = isFocused({
-          seriesType: 'scatter',
-          seriesId: series.id,
-          dataIndex: dataPoint.dataIndex,
-        });
+
         return (
           <Marker
             key={dataPoint.id ?? dataPoint.dataIndex}
@@ -133,7 +127,6 @@ function Scatter(props: ScatterProps) {
             }
             data-highlighted={isItemHighlighted || undefined}
             data-faded={isItemFaded || undefined}
-            data-focused={isItemFocused || undefined}
             {...(skipInteractionHandlers
               ? undefined
               : getInteractionItemProps(instance, dataPoint))}
