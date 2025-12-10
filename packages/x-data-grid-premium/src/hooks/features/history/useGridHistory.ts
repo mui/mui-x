@@ -44,6 +44,8 @@ export const useGridHistory = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
+    | 'columns'
+    | 'isCellEditable'
     | 'dataSource'
     | 'historyQueueSize'
     | 'historyEventHandlers'
@@ -61,8 +63,10 @@ export const useGridHistory = (
     }
     return createDefaultHistoryHandlers(apiRef, {
       dataSource: props.dataSource,
+      columns: props.columns,
+      isCellEditable: props.isCellEditable,
     });
-  }, [apiRef, props.dataSource, props.historyEventHandlers]);
+  }, [apiRef, props.columns, props.isCellEditable, props.dataSource, props.historyEventHandlers]);
 
   const isEnabled = React.useMemo(
     () => historyQueueSize > 0 && !isObjectEmpty(historyEventHandlers),

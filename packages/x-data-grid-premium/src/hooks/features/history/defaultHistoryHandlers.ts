@@ -314,7 +314,7 @@ export const createClipboardPasteHistoryHandler = (
  */
 export const createDefaultHistoryHandlers = (
   apiRef: RefObject<GridApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'isCellEditable' | 'dataSource'>,
+  props: Pick<DataGridPremiumProcessedProps, 'columns' | 'isCellEditable' | 'dataSource'>,
 ) => {
   const handlers = {} as Record<
     GridEvents,
@@ -323,8 +323,7 @@ export const createDefaultHistoryHandlers = (
     | GridHistoryEventHandler<GridClipboardPasteHistoryData>
   >;
 
-  const canHaveEditing =
-    apiRef.current.getAllColumns().some((col) => col.editable) || props.isCellEditable;
+  const canHaveEditing = props.columns.some((col) => col.editable) || props.isCellEditable;
 
   if (!canHaveEditing) {
     return handlers;
