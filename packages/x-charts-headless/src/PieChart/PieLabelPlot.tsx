@@ -23,6 +23,7 @@ function PieLabelPlot() {
 
     return (
       <PieArcLabelPlot
+        key={id}
         transform={transform}
         innerRadius={innerRadius}
         outerRadius={outerRadius ?? availableRadius}

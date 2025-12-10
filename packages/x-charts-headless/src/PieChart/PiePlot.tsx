@@ -25,6 +25,7 @@ function PiePlot(props: PiePlotProps) {
 
     return (
       <PieArcPlot
+        key={id}
         transform={transform}
         innerRadius={innerRadius}
         outerRadius={outerRadius}

@@ -1,3 +1,4 @@
+'use client';
 import { getPieCoordinates } from '@mui/x-charts';
 import { getPercentageValue } from '@mui/x-charts/internals/getPercentageValue';
 import { selectorChartDrawingArea } from '@mui/x-charts/internals/plugins/corePlugins/useChartDimensions';

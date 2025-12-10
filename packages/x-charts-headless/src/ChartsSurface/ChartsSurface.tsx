@@ -47,6 +47,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const styles = {
     height: propsWidth ? `${propsHeight}px` : '100%',
     width: propsWidth ? `${propsWidth}px` : '100%',
+    userSelect: 'none',
     ...style,
   } as React.CSSProperties;
 
