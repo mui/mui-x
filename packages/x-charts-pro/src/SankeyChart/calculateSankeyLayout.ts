@@ -1,7 +1,7 @@
 'use client';
-import { sankey, type SankeyGraph } from '@mui/x-charts-vendor/d3-sankey';
 import type { ChartDrawingArea } from '@mui/x-charts/hooks';
 import { path } from '@mui/x-charts-vendor/d3-path';
+import { sankey, type SankeyGraph } from './d3Sankey';
 import type {
   SankeyLayout,
   SankeyLayoutLink,
@@ -22,41 +22,35 @@ import { getNodeAlignFunction } from './utils';
 export function calculateSankeyLayout(
   series: DefaultizedSankeySeriesType,
   drawingArea: ChartDrawingArea,
-): SankeyLayout {
+): SankeyLayout<true> {
   const { data, iterations = 6, nodeOptions, linkOptions } = series;
   const {
     width: nodeWidth = 15,
     padding: nodePadding = 10,
-    align: nodeAlign = 'justify',
+    align: nodeAlign,
     sort: nodeSort,
   } = nodeOptions ?? {};
 
-  const { color: linkColor = 'source', sort: linkSort, curveCorrection = 10 } = linkOptions ?? {};
+  const { sort: linkSort, curveCorrection = 10 } = linkOptions ?? {};
 
-  const { width, height, left, top, bottom, right } = drawingArea;
   if (!data || !data.links) {
     return { nodes: [], links: [] };
   }
 
-  // Prepare the data structure expected by d3-sankey
-  const graph = {
-    nodes: data.nodes
-      .values()
-      .toArray()
-      .map((v) => ({ ...v })),
-    links: data.links.map((v) => ({ ...v })),
-  };
+  const { width, height, left, top, bottom, right } = drawingArea;
 
   // Create the sankey layout generator
-  const sankeyGenerator = sankey<typeof graph, SankeyLayoutNode, SankeyLayoutLink>()
+  const sankeyGenerator = sankey<typeof data, SankeyLayoutNode<true>, SankeyLayoutLink<true>, true>(
+    true,
+  )
     .nodeWidth(nodeWidth)
     .nodePadding(nodePadding)
     .nodeAlign(getNodeAlignFunction(nodeAlign))
+    .nodeId((d) => d.id)
     .extent([
       [left, top],
       [width + right, height + bottom],
     ])
-    .nodeId((d) => d.id)
     .iterations(iterations);
 
   // For 'auto' or undefined, don't set anything (use d3-sankey default behavior)
@@ -75,9 +69,9 @@ export function calculateSankeyLayout(
   }
 
   // Generate the layout
-  let result: SankeyGraph<SankeyLayoutNode, SankeyLayoutLink>;
+  let result: SankeyGraph<true, SankeyLayoutNode<true>, SankeyLayoutLink<true>>;
   try {
-    result = sankeyGenerator(graph);
+    result = sankeyGenerator(data);
   } catch (error) {
     // There are two errors that can occur:
     // 1. If the data contains circular references, d3-sankey will throw an error.
@@ -92,45 +86,23 @@ export function calculateSankeyLayout(
   const { nodes, links } = result;
 
   // Convert d3-sankey links to our format
-  const layoutLinks = (links as SankeyLayoutLink[]).map((link) => {
-    // Get the original link data
-    const originalLink = data.links.find((l) => {
-      return l.source === link.source.id && l.target === link.target.id;
-    });
-
-    let resolvedColor = originalLink?.color ?? linkColor;
-
-    if (resolvedColor === 'source') {
-      resolvedColor = link.source.color ?? linkColor;
-    } else if (resolvedColor === 'target') {
-      resolvedColor = link.target.color ?? linkColor;
-    }
-
-    return {
-      ...originalLink,
+  const layoutLinks = (links as SankeyLayoutLink<true>[]).map((link): SankeyLayoutLink<true> => {
+    const rep = {
       ...link,
-      color: resolvedColor,
-      path: improvedNaiveSankeyLinkPathHorizontal(link, curveCorrection),
+      path: improvedNaiveSankeyLinkPathHorizontal(link as SankeyLayoutLink<true>, curveCorrection),
     };
-  });
 
-  const layoutNodes = nodes.map((node) => {
-    const originalNode = data.nodes.get(node.id) || {};
-
-    return {
-      ...originalNode,
-      ...node,
-    };
+    return rep;
   });
 
   return {
-    nodes: layoutNodes,
+    nodes,
     links: layoutLinks,
   };
 }
 
 export function improvedNaiveSankeyLinkPathHorizontal(
-  link: SankeyLayoutLink,
+  link: SankeyLayoutLink<true>,
   curveCorrection?: number,
 ) {
   const sx = link.source.x1!;

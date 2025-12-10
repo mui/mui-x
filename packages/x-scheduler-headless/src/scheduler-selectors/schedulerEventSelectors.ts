@@ -53,6 +53,16 @@ export const schedulerEventSelectors = {
     },
   ),
   processedEvent: processedEventSelector,
+  processedEventRequired: createSelector(
+    processedEventSelector,
+    (event, eventId: SchedulerEventId) => {
+      if (!event) {
+        throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+      }
+
+      return event;
+    },
+  ),
   isReadOnly: isEventReadOnlySelector,
   color: createSelector((state: State, eventId: SchedulerEventId) => {
     const event = processedEventSelector(state, eventId);

@@ -83,15 +83,15 @@ Use the `onItemClick` prop to track the clicked item:
 ## Imperative API
 
 :::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+const apiRef = useSimpleTreeViewApiRef();
 
-return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+return <SimpleTreeView apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` is `undefined`.
+When your component first renders, `apiRef.current` will be `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 

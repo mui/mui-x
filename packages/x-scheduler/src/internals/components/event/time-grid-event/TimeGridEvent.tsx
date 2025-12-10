@@ -108,6 +108,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       isDraggable && 'Draggable',
       isRecurring && 'Recurrent',
       getColorClassName(color),
+      occurrence.className,
     ),
     style: {
       '--first-index': occurrence.position.firstIndex,

@@ -169,7 +169,7 @@ The order of elements in composition is the only way to define how they overlap.
 
 ### Plotting
 
-To display data, you have components named `<XxxPlot />` such as `<LinePlot />`, `<AreaPlot />`, `<MarkPlot />`, `<BarPlot />`, etc.
+To display data, you have components named `[Type]Plot` such as `LinePlot`, `AreaPlot`, `MarkPlot`, `BarPlot`, etc.
 
 ### Clipping
 
