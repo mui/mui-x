@@ -127,40 +127,46 @@ function FadedHighlightedBars({
   borderRadius: number;
 }) {
   const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const seriesHighlightedItem = useSelector(
+  const seriesHighlightedDataIndex = useSelector(
     store,
     selectorChartSeriesHighlightedItem,
     processedSeries.seriesId,
   );
-  const seriesUnfadedItem = useSelector(
+  const seriesUnfadedDataIndex = useSelector(
     store,
     selectorChartSeriesUnfadedItem,
     processedSeries.seriesId,
   );
 
+  const seriesHighlightedItem =
+    seriesHighlightedDataIndex != null
+      ? processedSeries.data.find((v) => v.dataIndex === seriesHighlightedDataIndex) || null
+      : null;
+
+  const seriesUnfadedItem =
+    seriesUnfadedDataIndex != null
+      ? processedSeries.data.find((v) => v.dataIndex === seriesUnfadedDataIndex) || null
+      : null;
+
   const siblings: React.ReactNode[] = [];
   if (seriesHighlightedItem != null) {
-    const barData = processedSeries.data[seriesHighlightedItem];
-
     siblings.push(
       <path
         key={`highlighted-${processedSeries.seriesId}`}
-        fill={barData.color}
+        fill={seriesHighlightedItem.color}
         filter="brightness(120%)"
         data-highlighted
-        d={createPath(barData, borderRadius)}
+        d={createPath(seriesHighlightedItem, borderRadius)}
       />,
     );
   }
 
   if (seriesUnfadedItem != null) {
-    const barData = processedSeries.data[seriesUnfadedItem];
-
     siblings.push(
       <path
-        key={`unfaded-${processedSeries.seriesId}`}
-        fill={barData.color}
-        d={createPath(barData, borderRadius)}
+        key={`unfaded-${seriesUnfadedItem.seriesId}`}
+        fill={seriesUnfadedItem.color}
+        d={createPath(seriesUnfadedItem, borderRadius)}
       />,
     );
   }
