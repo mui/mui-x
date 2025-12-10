@@ -173,3 +173,36 @@ export interface ComputedPieRadius {
    */
   arcLabelRadius?: number;
 }
+
+/**
+ * Layout information computed from the pie series and rhe drawing area.
+ */
+export type PieSeriesLayout = {
+  /**
+   * The pie center coordinate in px.
+   */
+  center: { x: number; y: number };
+  /**
+   * The pie radius in px.
+   * Computed based on the drawing area and the center placement.
+   */
+  radius: {
+    /**
+     * The maximal available radius in px.
+     * Correspond to radius='100%'.
+     */
+    available: number;
+    /**
+     * The pie inner radius in px, except if overridden by item state (highlight/faded).
+     */
+    inner: number;
+    /**
+     * The pie outer radius in px, except if overridden by item state (highlight/faded).
+     */
+    outer: number;
+    /**
+     * The pie outer radius in px, except if overridden by item state (highlight/faded).
+     */
+    label: number;
+  };
+};
