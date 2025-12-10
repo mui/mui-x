@@ -26,7 +26,6 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/utils": "catalog:",
-    "@mui/material": "catalog:",
     "@mui/x-charts-vendor": "workspace:^",
     "@mui/x-internals": "workspace:^",
     "@mui/x-charts": "workspace:^"
