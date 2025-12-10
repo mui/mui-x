@@ -29,8 +29,7 @@
     "@mui/material": "catalog:",
     "@mui/x-charts-vendor": "workspace:^",
     "@mui/x-internals": "workspace:^",
-    "@mui/x-charts": "workspace:^",
-    "clsx": "catalog:"
+    "@mui/x-charts": "workspace:^"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
