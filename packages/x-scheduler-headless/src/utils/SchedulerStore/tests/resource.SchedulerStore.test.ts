@@ -135,10 +135,7 @@ storeClasses.forEach((storeClass) => {
     describe('prop: defaultVisibleResources', () => {
       it('should use the provided defaultVisibleResources on mount', () => {
         const defaultVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
-        const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, defaultVisibleResources },
-          adapter,
-        );
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, defaultVisibleResources }, adapter);
 
         expect(store.state.visibleResources).to.equal(defaultVisibleResources);
       });
@@ -229,7 +226,11 @@ storeClasses.forEach((storeClass) => {
         const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
 
         const store = new storeClass.Value(
-          { ...DEFAULT_PARAMS, defaultVisibleResources: visibleResources, onVisibleResourcesChange },
+          {
+            ...DEFAULT_PARAMS,
+            defaultVisibleResources: visibleResources,
+            onVisibleResourcesChange,
+          },
           adapter,
         );
 
