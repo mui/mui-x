@@ -18,15 +18,7 @@ export interface ProcessedBarSeriesData {
   yOrigin: number;
 }
 
-export const BorderRadiusSide = {
-  top: 'top',
-  bottom: 'bottom',
-  left: 'left',
-  right: 'right',
-} as const;
-
-// eslint-disable-next-line @typescript-eslint/no-redeclare
-export type BorderRadiusSide = (typeof BorderRadiusSide)[keyof typeof BorderRadiusSide];
+export type BorderRadiusSide = 'top' | 'bottom' | 'left' | 'right';
 
 export interface ProcessedBarData extends AnimationData {
   seriesId: SeriesId;
