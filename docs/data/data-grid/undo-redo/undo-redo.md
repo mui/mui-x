@@ -65,22 +65,27 @@ interface GridHistoryEventHandler<T = any> {
   // Redo the action
   redo: (data: T) => void | Promise<void>;
 
-  // Validate if the operation can be performed
-  // Can be omitted if the validation is not needed for the current event handler
+  // Validate whether the operation can be performed
+  // Can be omitted if validation is not needed for the current event handler
   validate?: (data: T, operation: 'undo' | 'redo') => boolean;
 }
 ```
 
 ### Default handlers
 
-The list of the events that are handled by default depends on the way the data is provided to the Data Grid.
-When not using a data source, the following events are tracked out of the box:
+The list of events that are handled by default depends on the props passed to Data Grid.
+
+If none of the columns are [editable](/x/react-data-grid/editing/#making-a-column-editable), and [`isCellEditable()`](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row) is not provided, there are no default event handlers which makes the feature disabled.
+
+If there are editable cells, then the list of the default handlers depends on the way the data is provided to Data Grid.
+
+When not using a [data source](/x/react-data-grid/server-side-data/), the following events are tracked out of the box:
 
 - `rowEditStop` - Tracks changes made to entire rows in row edit mode
 - `cellEditStop` - Tracks changes made to individual cells in cell edit mode
 - `clipboardPasteEnd` - Tracks paste operations that can modify multiple cells
 
-When using a [data source](/x/react-data-grid/server-side-data/), `clipboardPasteEnd` is not tracked and the other two events are tracked only if your data source supports [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
+When using a data source, `clipboardPasteEnd` is not tracked and the other two events are tracked only if your data source supports [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
 
 If you use a data source that does not have an `updateRow` method, the event handler list is empty and the feature is disabled.
 
@@ -138,7 +143,7 @@ You can customize which events trigger revalidation using the `historyValidation
 This is useful when you create a handler that tracks changes that do not affect rows or columns or if you remove the default handlers and you don't need the validation on the default events anymore.
 
 :::warning
-List the events in the `historyValidationEvents` prop that are enough for the validation to occur at the right time.
+List the events in the `historyValidationEvents` prop that are sufficient for validation to occur at the right time.
 Adding `'stateChange'` to the list will have an impact on the performance of Data Grid.
 :::
 

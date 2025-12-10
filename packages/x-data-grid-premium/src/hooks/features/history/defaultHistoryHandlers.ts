@@ -314,7 +314,7 @@ export const createClipboardPasteHistoryHandler = (
  */
 export const createDefaultHistoryHandlers = (
   apiRef: RefObject<GridApiPremium>,
-  props: Pick<DataGridPremiumProcessedProps, 'dataSource'>,
+  props: Pick<DataGridPremiumProcessedProps, 'isCellEditable' | 'dataSource'>,
 ) => {
   const handlers = {} as Record<
     GridEvents,
@@ -322,6 +322,13 @@ export const createDefaultHistoryHandlers = (
     | GridHistoryEventHandler<GridRowEditHistoryData>
     | GridHistoryEventHandler<GridClipboardPasteHistoryData>
   >;
+
+  const canHaveEditing =
+    apiRef.current.getAllColumns().some((col) => col.editable) || props.isCellEditable;
+
+  if (!canHaveEditing) {
+    return handlers;
+  }
 
   if (!props.dataSource || props.dataSource.updateRow) {
     handlers.cellEditStop = createCellEditHistoryHandler(apiRef);
