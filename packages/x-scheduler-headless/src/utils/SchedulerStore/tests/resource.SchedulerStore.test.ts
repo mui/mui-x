@@ -132,17 +132,111 @@ storeClasses.forEach((storeClass) => {
       });
     });
 
-    describe('Method: setVisibleResources', () => {
-      it('should set only when reference changes', () => {
+    describe('prop: defaultVisibleResources', () => {
+      it('should use the provided defaultVisibleResources on mount', () => {
+        const defaultVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultVisibleResources },
+          adapter,
+        );
+
+        expect(store.state.visibleResources).to.equal(defaultVisibleResources);
+      });
+
+      it('should use an empty Map when defaultVisibleResources is not provided', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
 
-        const resourcesMap = new Map<SchedulerResourceId, boolean>([['r1', true]]);
-        store.setVisibleResources(resourcesMap);
-        expect(store.state.visibleResources).to.equal(resourcesMap);
+        expect(store.state.visibleResources.size).to.equal(0);
+      });
+    });
 
-        const setSpy = spy(store, 'set');
-        store.setVisibleResources(resourcesMap);
-        expect(setSpy.called).to.equal(false);
+    describe('prop: visibleResources (controlled)', () => {
+      it('should use the provided visibleResources on mount', () => {
+        const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleResources }, adapter);
+
+        expect(store.state.visibleResources).to.equal(visibleResources);
+      });
+
+      it('should prefer visibleResources over defaultVisibleResources', () => {
+        const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const defaultVisibleResources = new Map<SchedulerResourceId, boolean>([['r2', false]]);
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, visibleResources, defaultVisibleResources },
+          adapter,
+        );
+
+        expect(store.state.visibleResources).to.equal(visibleResources);
+      });
+
+      it('should update visibleResources when controlled prop changes', () => {
+        const visibleResources1 = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const visibleResources2 = new Map<SchedulerResourceId, boolean>([['r2', false]]);
+
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, visibleResources: visibleResources1 },
+          adapter,
+        );
+        expect(store.state.visibleResources).to.equal(visibleResources1);
+
+        store.updateStateFromParameters(
+          { ...DEFAULT_PARAMS, visibleResources: visibleResources2 },
+          adapter,
+        );
+        expect(store.state.visibleResources).to.equal(visibleResources2);
+      });
+    });
+
+    describe('Method: setVisibleResources', () => {
+      it('should update visibleResources and call onVisibleResourcesChange when is uncontrolled', () => {
+        const onVisibleResourcesChange = spy();
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, onVisibleResourcesChange },
+          adapter,
+        );
+
+        const newVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        store.setVisibleResources(newVisibleResources, new Event('click'));
+
+        expect(store.state.visibleResources).to.equal(newVisibleResources);
+        expect(onVisibleResourcesChange.calledOnce).to.equal(true);
+        expect(onVisibleResourcesChange.lastCall.firstArg).to.equal(newVisibleResources);
+      });
+
+      it('should not change the state but call onVisibleResourcesChange when is controlled', () => {
+        const onVisibleResourcesChange = spy();
+        const controlledVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', true]]);
+
+        const store = new storeClass.Value(
+          {
+            ...DEFAULT_PARAMS,
+            visibleResources: controlledVisibleResources,
+            onVisibleResourcesChange,
+          },
+          adapter,
+        );
+
+        const newVisibleResources = new Map<SchedulerResourceId, boolean>([['r2', false]]);
+        store.setVisibleResources(newVisibleResources, new Event('click'));
+
+        expect(store.state.visibleResources).to.equal(controlledVisibleResources);
+        expect(onVisibleResourcesChange.calledOnce).to.equal(true);
+        expect(onVisibleResourcesChange.lastCall.firstArg).to.equal(newVisibleResources);
+      });
+
+      it('should do nothing if visibleResources is the same reference (no state change, no callback)', () => {
+        const onVisibleResourcesChange = spy();
+        const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+
+        const store = new storeClass.Value(
+          { ...DEFAULT_PARAMS, defaultVisibleResources: visibleResources, onVisibleResourcesChange },
+          adapter,
+        );
+
+        store.setVisibleResources(visibleResources, new Event('click'));
+
+        expect(store.state.visibleResources).to.equal(visibleResources);
+        expect(onVisibleResourcesChange.called).to.equal(false);
       });
     });
   });

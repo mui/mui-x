@@ -1,0 +1,8 @@
+<EventCalendar
+  events={events}
+  onEventsChange={setEvents}
+  defaultVisibleDate={defaultVisibleDate}
+  resources={resources}
+  visibleResources={visibleResources}
+  onVisibleResourcesChange={handleVisibleResourcesChange}
+/>

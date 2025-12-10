@@ -37,3 +37,13 @@ function Calendar() {
 ```
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Controlling visible resources
+
+You can control which resources are visible by using the `visibleResources`, `defaultVisibleResources`, and `onVisibleResourcesChange` props:
+
+- `visibleResources`: A `Map<SchedulerResourceId, boolean>` that defines the visibility status of each resource. A resource is visible if it is not in the map or if it has a `true` value.
+- `defaultVisibleResources`: The initial visibility state for uncontrolled components.
+- `onVisibleResourcesChange`: A callback fired when the visibility of resources changes.
+
+{{"demo": "VisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}

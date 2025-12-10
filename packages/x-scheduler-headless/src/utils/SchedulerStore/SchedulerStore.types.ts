@@ -174,6 +174,24 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   resourceModelStructure?: SchedulerResourceModelStructure<TResource>;
   /**
+   * The IDs of the resources currently visible.
+   * A resource is visible if it is not included in this map or if it is included with `true` value.
+   */
+  visibleResources?: Map<SchedulerResourceId, boolean>;
+  /**
+   * The IDs of the resources initially visible.
+   * To render a controlled scheduler, use the `visibleResources` prop.
+   * @default new Map() - all resources are visible
+   */
+  defaultVisibleResources?: Map<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the visible resources change.
+   */
+  onVisibleResourcesChange?: (
+    visibleResources: Map<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
+  /**
    * The date currently used to determine the visible date range in each view.
    */
   visibleDate?: TemporalSupportedObject;
