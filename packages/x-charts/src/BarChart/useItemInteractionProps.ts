@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
+import { type BarItemIdentifier } from '../models/seriesType';
 import { useSvgRef } from '../hooks/useSvgRef';
 import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -8,8 +9,8 @@ import { type UseChartInteractionSignature } from '../internals/plugins/featureP
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useChartContext } from '../context/ChartProvider';
 import { getSVGPoint } from '../internals/getSVGPoint';
-import { getBarItemAtPosition } from './getBarItemAtPosition';
 import { useStore } from '../internals/store/useStore';
+import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
 export function useInteractionItemProps() {
   const { instance } =
@@ -19,7 +20,7 @@ export function useInteractionItemProps() {
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
-  const lastItemRef = React.useRef<ReturnType<typeof getBarItemAtPosition>>(undefined);
+  const lastItemRef = React.useRef<BarItemIdentifier | undefined>(undefined);
 
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
@@ -53,7 +54,7 @@ export function useInteractionItemProps() {
       return;
     }
 
-    const item = getBarItemAtPosition(store, svgPoint);
+    const item = selectorBarItemAtPosition(store.state, svgPoint);
 
     if (item) {
       instance.setLastUpdateSource('pointer');

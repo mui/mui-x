@@ -1,12 +1,12 @@
 import type * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
 import { type IndividualBarPlotProps } from './IndividualBarPlot';
-import { getBarItemAtPosition } from './getBarItemAtPosition';
 import { useStore } from '../internals/store/useStore';
 import { getSVGPoint } from '../internals/getSVGPoint';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { useSvgRef } from '../hooks/useSvgRef';
+import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
 export function useOnItemClick(onItemClick: IndividualBarPlotProps['onItemClick'] | undefined) {
   const { instance } = useChartContext();
@@ -30,7 +30,7 @@ export function useOnItemClick(onItemClick: IndividualBarPlotProps['onItemClick'
       return;
     }
 
-    const item = getBarItemAtPosition(store, svgPoint);
+    const item = selectorBarItemAtPosition(store.state, svgPoint);
 
     if (item) {
       onItemClick?.(event, {
