@@ -13,13 +13,6 @@ describe('sortEventOccurrences', () => {
     });
 
     it('should sort occurrences by start date (earliest first)', () => {
-      const early = EventBuilder.new().id('early').singleDay('2024-01-15T08:00:00').toOccurrence();
-      const late = EventBuilder.new().id('late').singleDay('2024-01-15T14:00:00').toOccurrence();
-
-      expect(sortEventOccurrences([late, early], adapter)).to.deep.equal([early, late]);
-    });
-
-    it('should sort three occurrences correctly', () => {
       const first = EventBuilder.new().id('first').singleDay('2024-01-15T08:00:00').toOccurrence();
       const second = EventBuilder.new()
         .id('second')
