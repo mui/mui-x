@@ -11,6 +11,25 @@ _Dec 11, 2025_
 
 We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
 
+- Each Tree View component now exposes its own hook to initialize the `apiRef` object with accurate typing:
+
+  ```diff
+  -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  +import { useSimpleTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  -const apiRef = useTreeViewApiRef();
+  +const apiRef = useSimpleTreeViewApiRef();
+  
+  -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  +import { useRichTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  -const apiRef = useTreeViewApiRef();
+  +const apiRef = useRichTreeViewApiRef();
+  
+  -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  +import { useRichTreeViewProApiRef  } from '@mui/x-tree-view-pro/hooks';
+  -const apiRef = useTreeViewApiRef();
+  +const apiRef = useRichTreeViewProApiRef();      
+  ```
+
 - 📚 [Tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) on building a Data Grid with server-side data
 - 🐞 Bugfixes
 
