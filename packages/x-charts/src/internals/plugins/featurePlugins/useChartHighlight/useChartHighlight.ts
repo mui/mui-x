@@ -33,7 +33,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
 
   const clearHighlight = useEventCallback(() => {
     params.onHighlightChange?.(null);
-    const prevHighlight = store.getSnapshot().highlight;
+    const prevHighlight = store.state.highlight;
     if (prevHighlight.item === null || prevHighlight.isControlled) {
       return;
     }
@@ -46,7 +46,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   });
 
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
-    const prevHighlight = store.getSnapshot().highlight;
+    const prevHighlight = store.state.highlight;
 
     if (prevHighlight.isControlled || fastObjectShallowCompare(prevHighlight.item, newItem)) {
       return;
