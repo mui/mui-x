@@ -27,7 +27,7 @@ export function BatchBarPlot({
   skipAnimation = false,
 }: BatchBarPlotProps) {
   const onClick = useOnItemClick(onItemClick);
-  const interactionItemProps = useInteractionItemProps();
+  const interactionItemProps = useInteractionItemProps(onItemClick != null);
 
   return (
     <React.Fragment>
