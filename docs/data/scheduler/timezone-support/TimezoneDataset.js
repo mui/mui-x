@@ -14,18 +14,22 @@ export default function TimezoneDataset() {
     start: {
       getter: (event) => new TZDate(event.startUtc, event.timezone),
       setter: (event, newValue) => {
+        const tz = newValue.timeZone;
         event.startUtc = formatInTimeZone(
           newValue,
           'UTC',
           "yyyy-MM-dd'T'HH:mm:ss'Z'",
         );
+        event.timezone = tz;
         return event;
       },
     },
     end: {
       getter: (event) => new TZDate(event.endUtc, event.timezone),
       setter: (event, newValue) => {
+        const tz = newValue.timeZone;
         event.endUtc = formatInTimeZone(newValue, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'");
+        event.timezone = tz;
         return event;
       },
     },
