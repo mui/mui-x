@@ -131,16 +131,9 @@ jobs:
                 name: Test Browser + Coverage
                 environment:
                   TZ: UTC
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  pnpm test:unit:browser --coverage --project "x-charts*" 
-                  pnpm test:unit:browser --coverage --project "x-data-grid*" 
-                  pnpm test:unit:browser --coverage --project "x-date-pickers*" 
-                  pnpm test:unit:browser --coverage --project "x-internal-gestures" 
-                  pnpm test:unit:browser --coverage --project "x-license" 
-                  pnpm test:unit:browser --coverage --project "x-scheduler*" 
-                  pnpm test:unit:browser --coverage --project "x-telemetry" 
-                  pnpm test:unit:browser --coverage --project "x-tree-view*" 
-                  pnpm test:unit:browser --coverage --project "x-virtualizer"
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
