@@ -42,7 +42,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
@@ -97,6 +96,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
     return Math.abs(adapter.differenceInMinutes(now, slotCenter)) <= 25;
   };
+
+  const template = new Date(Date.UTC(2020, 0, 1));
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
@@ -181,7 +182,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
                       )}
                     >
-                      {hour === 0 ? null : formatTime(adapter.setHours(visibleDate, hour))}
+                      {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
                     </time>
                   </div>
                 ))}
