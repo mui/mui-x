@@ -3,7 +3,6 @@ import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps, ContinuousScaleName
 import type { ComputedAxis, D3ContinuousScale } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { getBandSize } from './getBandSize';
-import { findMinMax } from './findMinMax';
 
 function shouldInvertStartCoordinate(verticalLayout: boolean, baseValue: number, reverse: boolean) {
   const isVerticalAndPositive = verticalLayout && baseValue > 0;
@@ -105,11 +104,23 @@ export function getBarContinuousDimensions(
   }
 
   const values = series.stackedData[dataIndex];
-  const valueCoordinates = values.map((v) => continuousScale(v)!);
 
-  const minMax = findMinMax(valueCoordinates);
-  const minValueCoord = Math.round(minMax[0]);
-  const maxValueCoord = Math.round(minMax[1]);
+  let min = Infinity;
+  let max = -Infinity;
+  for (const value of values) {
+    const coord = continuousScale(value)!;
+
+    if (coord < min) {
+      min = coord;
+    }
+
+    if (coord > max) {
+      max = coord;
+    }
+  }
+
+  const minValueCoord = Math.round(min);
+  const maxValueCoord = Math.round(max);
 
   const barSize =
     seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
