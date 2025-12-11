@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 
@@ -14,11 +13,13 @@ export default function SyncTooltip() {
       spacing={1}
       sx={{ width: '100%' }}
     >
-      <BarChart
-        {...barChartsProps}
-        tooltipItem={barTooltipItem}
-        onTooltipItemChange={(newItem) => {
-          (setBarTooltipItem(newItem),
+      <Stack direction="column" spacing={1}>
+        <BarChart
+          {...barChartsProps}
+          slotProps={{ tooltip: { trigger: 'item' } }}
+          tooltipItem={barTooltipItem}
+          onTooltipItemChange={(newItem) => {
+            setBarTooltipItem(newItem);
             setPieTooltipItem(
               newItem === null
                 ? null
@@ -26,14 +27,17 @@ export default function SyncTooltip() {
                     ...newItem,
                     type: 'pie',
                   },
-            ));
-        }}
-      />
-      <PieChart
-        {...pieChartProps}
-        tooltipItem={pieTooltipItem}
-        onTooltipItemChange={(newItem) => {
-          (setPieTooltipItem(newItem),
+            );
+          }}
+        />
+        <pre>Tooltip Item: {JSON.stringify(barTooltipItem, null, 2)}</pre>
+      </Stack>
+      <Stack direction="column" spacing={1}>
+        <PieChart
+          {...pieChartProps}
+          tooltipItem={pieTooltipItem}
+          onTooltipItemChange={(newItem) => {
+            setPieTooltipItem(newItem);
             setBarTooltipItem(
               newItem === null
                 ? null
@@ -41,9 +45,11 @@ export default function SyncTooltip() {
                     ...newItem,
                     type: 'bar',
                   },
-            ));
-        }}
-      />
+            );
+          }}
+        />
+        <pre>Tooltip Item: {JSON.stringify(pieTooltipItem, null, 2)}</pre>
+      </Stack>
     </Stack>
   );
 }

@@ -125,7 +125,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   );
 
   const lastInteraction = useSelector(store, selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
+  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
   const itemPosition = useSelector(
     store,
