@@ -72,7 +72,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
-  visibleResources: Map<SchedulerResourceId, boolean>;
+  visibleResources: Record<SchedulerResourceId, boolean>;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
@@ -175,20 +175,20 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
   resourceModelStructure?: SchedulerResourceModelStructure<TResource>;
   /**
    * The IDs of the resources currently visible.
-   * A resource is visible if it is not included in this map or if it is included with `true` value.
+   * A resource is visible if it is not included in this object or if it is included with `true` value.
    */
-  visibleResources?: Map<SchedulerResourceId, boolean>;
+  visibleResources?: Record<SchedulerResourceId, boolean>;
   /**
    * The IDs of the resources initially visible.
    * To render a controlled scheduler, use the `visibleResources` prop.
-   * @default new Map() - all resources are visible
+   * @default {} - all resources are visible
    */
-  defaultVisibleResources?: Map<SchedulerResourceId, boolean>;
+  defaultVisibleResources?: Record<SchedulerResourceId, boolean>;
   /**
    * Event handler called when the visible resources change.
    */
   onVisibleResourcesChange?: (
-    visibleResources: Map<SchedulerResourceId, boolean>,
+    visibleResources: Record<SchedulerResourceId, boolean>,
     eventDetails: SchedulerChangeEventDetails,
   ) => void;
   /**

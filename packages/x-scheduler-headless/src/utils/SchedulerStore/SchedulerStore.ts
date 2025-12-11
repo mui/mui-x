@@ -78,8 +78,7 @@ export class SchedulerStore<
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.timezone),
       pendingUpdateRecurringEventParameters: null,
-      visibleResources:
-        parameters.visibleResources ?? parameters.defaultVisibleResources ?? new Map(),
+      visibleResources: parameters.visibleResources ?? parameters.defaultVisibleResources ?? {},
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
@@ -465,7 +464,7 @@ export class SchedulerStore<
    * Updates the visible resources.
    */
   public setVisibleResources = (
-    visibleResources: Map<SchedulerResourceId, boolean>,
+    visibleResources: Record<SchedulerResourceId, boolean>,
     event: Event,
   ) => {
     const { visibleResources: visibleResourcesProp, onVisibleResourcesChange } = this.parameters;

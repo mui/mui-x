@@ -134,30 +134,30 @@ storeClasses.forEach((storeClass) => {
 
     describe('prop: defaultVisibleResources', () => {
       it('should use the provided defaultVisibleResources on mount', () => {
-        const defaultVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const defaultVisibleResources: Record<SchedulerResourceId, boolean> = { r1: false };
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, defaultVisibleResources }, adapter);
 
         expect(store.state.visibleResources).to.equal(defaultVisibleResources);
       });
 
-      it('should use an empty Map when defaultVisibleResources is not provided', () => {
+      it('should use an empty object when defaultVisibleResources is not provided', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
 
-        expect(store.state.visibleResources.size).to.equal(0);
+        expect(Object.keys(store.state.visibleResources).length).to.equal(0);
       });
     });
 
     describe('prop: visibleResources (controlled)', () => {
       it('should use the provided visibleResources on mount', () => {
-        const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const visibleResources: Record<SchedulerResourceId, boolean> = { r1: false };
         const store = new storeClass.Value({ ...DEFAULT_PARAMS, visibleResources }, adapter);
 
         expect(store.state.visibleResources).to.equal(visibleResources);
       });
 
       it('should prefer visibleResources over defaultVisibleResources', () => {
-        const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
-        const defaultVisibleResources = new Map<SchedulerResourceId, boolean>([['r2', false]]);
+        const visibleResources: Record<SchedulerResourceId, boolean> = { r1: false };
+        const defaultVisibleResources: Record<SchedulerResourceId, boolean> = { r2: false };
         const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, visibleResources, defaultVisibleResources },
           adapter,
@@ -167,8 +167,8 @@ storeClasses.forEach((storeClass) => {
       });
 
       it('should update visibleResources when controlled prop changes', () => {
-        const visibleResources1 = new Map<SchedulerResourceId, boolean>([['r1', false]]);
-        const visibleResources2 = new Map<SchedulerResourceId, boolean>([['r2', false]]);
+        const visibleResources1: Record<SchedulerResourceId, boolean> = { r1: false };
+        const visibleResources2: Record<SchedulerResourceId, boolean> = { r2: false };
 
         const store = new storeClass.Value(
           { ...DEFAULT_PARAMS, visibleResources: visibleResources1 },
@@ -192,7 +192,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        const newVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const newVisibleResources: Record<SchedulerResourceId, boolean> = { r1: false };
         store.setVisibleResources(newVisibleResources, new Event('click'));
 
         expect(store.state.visibleResources).to.equal(newVisibleResources);
@@ -202,7 +202,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should not change the state but call onVisibleResourcesChange when is controlled', () => {
         const onVisibleResourcesChange = spy();
-        const controlledVisibleResources = new Map<SchedulerResourceId, boolean>([['r1', true]]);
+        const controlledVisibleResources: Record<SchedulerResourceId, boolean> = { r1: true };
 
         const store = new storeClass.Value(
           {
@@ -213,7 +213,7 @@ storeClasses.forEach((storeClass) => {
           adapter,
         );
 
-        const newVisibleResources = new Map<SchedulerResourceId, boolean>([['r2', false]]);
+        const newVisibleResources: Record<SchedulerResourceId, boolean> = { r2: false };
         store.setVisibleResources(newVisibleResources, new Event('click'));
 
         expect(store.state.visibleResources).to.equal(controlledVisibleResources);
@@ -223,7 +223,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should do nothing if visibleResources is the same reference (no state change, no callback)', () => {
         const onVisibleResourcesChange = spy();
-        const visibleResources = new Map<SchedulerResourceId, boolean>([['r1', false]]);
+        const visibleResources: Record<SchedulerResourceId, boolean> = { r1: false };
 
         const store = new storeClass.Value(
           {

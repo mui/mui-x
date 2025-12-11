@@ -8,13 +8,10 @@ import {
 
 export default function VisibleResources() {
   const [events, setEvents] = React.useState(initialEvents);
-  const [visibleResources, setVisibleResources] = React.useState(
-    () =>
-      new Map([
-        ['holidays', false],
-        ['medical', false],
-      ]),
-  );
+  const [visibleResources, setVisibleResources] = React.useState(() => ({
+    holidays: false,
+    medical: false,
+  }));
 
   const handleVisibleResourcesChange = React.useCallback((newVisibleResources) => {
     setVisibleResources(newVisibleResources);
