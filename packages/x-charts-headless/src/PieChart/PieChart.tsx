@@ -3,12 +3,10 @@ import {
   PIE_CHART_PLUGINS,
   type ChartDataProviderProps,
   type PieChartPluginSignatures,
-  type PiePlotProps,
   type PieSeriesType,
   type PieValueType,
 } from '@mui/x-charts';
 import type { MakeOptional } from '@mui/x-internals/types';
-import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import * as React from 'react';
 import { defaultizeMargin } from '@mui/x-charts/internals/defaultizeMargin';
 import { DEFAULT_PIE_CHART_MARGIN } from '@mui/x-charts/internals/constants';
@@ -20,28 +18,14 @@ import { PieLabelPlot } from './PieLabelPlot';
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieRootProps
   extends Omit<
-      ChartDataProviderProps<'pie', PieChartPluginSignatures>,
-      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
-    >,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    ChartDataProviderProps<'pie', PieChartPluginSignatures>,
+    'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
+  > {
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeries]] objects.
    */
   series: Readonly<PieSeries[]>;
-  /**
-   * If `true`, the legend is not rendered.
-   */
-  hideLegend?: boolean;
-  /**
-   * Callback fired when a pie arc is clicked.
-   */
-  onItemClick?: PiePlotProps['onItemClick'];
-  /**
-   * If true, shows the default chart toolbar.
-   * @default false
-   */
-  showToolbar?: boolean;
 }
 
 const PieRoot = React.forwardRef(function PieChart(
@@ -55,13 +39,9 @@ const PieRoot = React.forwardRef(function PieChart(
     margin: marginProps,
     colors,
     skipAnimation,
-    hideLegend,
     children,
-    onItemClick,
-    loading,
     highlightedItem,
     onHighlightChange,
-    showToolbar,
     ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_PIE_CHART_MARGIN);
