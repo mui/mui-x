@@ -5,6 +5,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.21.1
+
+_Dec 11, 2025_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- 📚 [Tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) on building a Data Grid with server-side data
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@kzhgit
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @mapache-salvaje, @michelengelen, @noraleonte, @oliviertassinari
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.21.1`
+
+- [DataGrid] Sync component props with theme defaults (#20590) @michelengelen
+- [DataGrid] Add fallback for CSS `color-mix` if it is unsupported (#20597) @cherniavskii
+- [DataGrid] Use `baseTooltip` slot for column header sort icon (#20460) @kzhgit
+
+#### `@mui/x-data-grid-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.21.1`.
+
+#### `@mui/x-data-grid-premium@8.21.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.21.1`, plus:
+
+- [DataGridPremium] Handle pivoting column name generation for empty strings (#20608) @arminmeh
+- [DataGridPremium] Pass a row with aggregated value to the custom aggregation function `valueFormatter` (#20607) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.21.1`
+
+- [pickers] Fix invalid date tests (#20606) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.21.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.21.1`
+
+- [charts] Add consistent animation duration and timing (#20564) @JCQuintas
+- [charts] Extract a tooltip plugin from the interaction one (#20591) @alexfauquette
+- [charts] General type improvements (#20565) @JCQuintas
+- [charts] Place ordinal ticks according to a continuous scale (#19808) @alexfauquette
+- [charts] Remove layout data from the tooltip internals (#20548) @alexfauquette
+- [charts] Remove usage of focus outline for item highlight (#19856) @alexfauquette
+- [charts] Simplify `MarkPlot` by moving calculation to `useMarkPlotData` (#20570) @JCQuintas
+- [charts] Use `store.state` over `store.getSnapshot()` (#20616) @bernardobelchior
+- [charts] Vendor flatqueue (#20610) @bernardobelchior
+- [charts] Extract pie layout computation (#20611) @alexfauquette
+- [charts][infra] Enable `@typescript-eslint/consistent-type-imports` eslint rules (#20560) @JCQuintas
+- [charts][infra] Enable `import/no-cycle` eslint rules (#20554) @JCQuintas
+
+#### `@mui/x-charts-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.21.1`, plus:
+
+- [charts-pro] Display sankey labels on top of nodes (#20569) @alexfauquette
+
+#### `@mui/x-charts-premium@8.21.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.21.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.21.1`
+
+- [tree view] Expose one hook per component to initialize the `apiRef` (#20235) @flaviendelangle
+- [tree view] Update the typing of `updateItemChildren()` to accept `null` (#20483) @noraleonte
+
+#### `@mui/x-tree-view-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.21.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.21.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add tutorial on building a Data Grid with server-side data (DX-22) (#19782) @mapache-salvaje
+- [docs] Modify the default value for the stacking demo (#20596) @alexfauquette
+- [docs] Revise the Charts Custom Components doc (#19793) @mapache-salvaje
+
+### Core
+
+- [internal] Remove unsafe dependency version from range (#20574) @oliviertassinari
+
+### Miscellaneous
+
+- Bump `@mui/monorepo` digest to `800638d` (#20337) @renovate[bot]
+- Bump `@next/eslint-plugin-next` to `15.5.7` (#20575) @renovate[bot]
+- Bump GitHub Actions (#20577) @renovate[bot]
+- Bump Tanstack query to `^5.90.12` (#20582) @renovate[bot]
+- Bump Vite & Vitest (#20583) @renovate[bot]
+- Bump `eslint` to `^8.48.1` (#20576) @renovate[bot]
+- Bump `markdown-to-jsx` to `^9.3.2` (#20507) @renovate[bot]
+- Bump `motion` to `^12.23.25` (#20579) @renovate[bot]
+- Bump react monorepo to `19.2.1` (#20581) @renovate[bot]
+- Bump `react-hook-form` to `^7.68.0` (#20584) @renovate[bot]
+- Bump `react-router` to `^7.10.1` (#20341) @renovate[bot]
+- Bump `tsx` to `^4.21.0` (#20585) @renovate[bot]
+- [infra] Automatically add teams to release PRs (#20558) @JCQuintas
+- [infra] Fix codeowners typo (#20562) @JCQuintas
+
 ## 8.21.0
 
 _Dec 3, 2025_
