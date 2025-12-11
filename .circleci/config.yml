@@ -133,7 +133,8 @@ jobs:
                   TZ: UTC
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
+                  # --project "x-charts*" --project "x-data-grid*" --project "x-date-pickers*" --project "x-internal-gestures" --project "x-license" --project "x-scheduler*" --project "x-telemetry" --project "x-tree-view*" --project "x-virtualizer"
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage --project "x-charts*" --project "x-data-grid*" --project "x-date-pickers*" --project "x-internal-gestures"
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
