@@ -1,3 +1,4 @@
+import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
@@ -6,7 +7,8 @@ import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
-import { getBarDimensions } from '../internals/getBarDimensions';
+import { getBarBandDimensions, getBarContinuousDimensions } from '../internals/getBarDimensions';
+import { getBandSize } from '../internals/getBandSize';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -66,20 +68,43 @@ export function useBarPlotData(
       const colorGetter = getColor(series[seriesId], xAxes[xAxisId], yAxes[yAxisId]);
 
       const seriesDataPoints: ProcessedBarData[] = [];
-      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-        const barDimensions = getBarDimensions({
-          verticalLayout,
-          xAxisConfig,
-          yAxisConfig,
-          series: series[seriesId],
-          dataIndex,
-          numberOfGroups: stackingGroups.length,
-          groupIndex,
-        });
 
-        if (barDimensions == null) {
+      const { barWidth, offset } = getBandSize(
+        baseScaleConfig.scale.bandwidth(),
+        stackingGroups.length,
+        baseScaleConfig.barGapRatio,
+      );
+
+      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
+        const bandAxis = verticalLayout ? xAxisConfig : yAxisConfig;
+        const continuousAxis = verticalLayout ? yAxisConfig : xAxisConfig;
+
+        const bandDimensions = getBarBandDimensions(
+          bandAxis.scale as ScaleBand<{ toString(): string }>,
+          bandAxis.data?.[dataIndex],
+          barWidth,
+          offset,
+          groupIndex,
+        );
+        const continuousDimensions = getBarContinuousDimensions(
+          verticalLayout,
+          xAxisConfig.scale,
+          yAxisConfig.scale,
+          series[seriesId],
+          continuousAxis.reverse ?? false,
+          dataIndex,
+        );
+
+        if (bandDimensions == null || continuousDimensions == null) {
           continue;
         }
+
+        const barDimensions = {
+          x: verticalLayout ? bandDimensions.start : continuousDimensions.start,
+          y: verticalLayout ? continuousDimensions.start : bandDimensions.start,
+          width: verticalLayout ? bandDimensions.size : continuousDimensions.size,
+          height: verticalLayout ? continuousDimensions.size : bandDimensions.size,
+        };
 
         const stackId = series[seriesId].stack;
 
