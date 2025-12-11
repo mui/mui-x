@@ -77,10 +77,14 @@ class RecurringEventExpander {
     this.seriesStart = adapter.startOfDay(event.modelInBuiltInFormat!.start);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
+    const dataTz = adapter.getTimezone(event.modelInBuiltInFormat!.start);
+    const visibleStartDataTz = adapter.startOfDay(adapter.setTimezone(start, dataTz));
+    const visibleEndDataTz = adapter.startOfDay(adapter.setTimezone(end, dataTz));
+
     // Adjust scan range to catch multi-day events starting before visible range
     const eventDuration = getEventDurationInDays(adapter, event);
-    this.scanFirstDay = adapter.startOfDay(adapter.addDays(start, 1 - eventDuration));
-    this.scanLastDay = adapter.startOfDay(end);
+    this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
+    this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
     // Pre-compute boundaries and exclusions
     this.exDateKeys = new Set(
