@@ -39,7 +39,8 @@
     "d3-shape": "^3.2.0",
     "d3-time": "^3.1.0",
     "d3-timer": "^3.0.1",
-    "d3-path": "^3.1.0"
+    "d3-path": "^3.1.0",
+    "flatqueue": "^3.0.0"
   },
   "devDependencies": {
     "@babel/cli": "catalog:",

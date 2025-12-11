@@ -175,7 +175,7 @@ export interface ComputedPieRadius {
 }
 
 /**
- * Layout information computed from the pie series and rhe drawing area.
+ * Layout information computed from the pie series and the drawing area.
  */
 export type PieSeriesLayout = {
   /**
@@ -188,7 +188,7 @@ export type PieSeriesLayout = {
    */
   radius: {
     /**
-     * The maximal available radius in px.
+     * The maximum available radius in px.
      * Correspond to radius='100%'.
      */
     available: number;
@@ -201,7 +201,7 @@ export type PieSeriesLayout = {
      */
     outer: number;
     /**
-     * The pie outer radius in px, except if overridden by item state (highlight/faded).
+     * The pie label radius in px, except if overridden by item state (highlight/faded).
      */
     label: number;
   };

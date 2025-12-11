@@ -5,7 +5,7 @@ import { getPercentageValue } from '../../internals/getPercentageValue';
 import { getPieCoordinates } from '../getPieCoordinates';
 
 const seriesLayout: SeriesLayoutGetter<'pie'> = (series, drawingArea) => {
-  const rep: Record<SeriesId, PieSeriesLayout> = {};
+  const seriesLayoutRecord: Record<SeriesId, PieSeriesLayout> = {};
 
   for (const seriesId of series.seriesOrder) {
     const {
@@ -28,7 +28,7 @@ const seriesLayout: SeriesLayoutGetter<'pie'> = (series, drawingArea) => {
         ? (inner + outer) / 2
         : getPercentageValue(arcLabelRadius, availableRadius);
 
-    rep[seriesId] = {
+    seriesLayoutRecord[seriesId] = {
       radius: {
         available: availableRadius,
         inner,
@@ -41,7 +41,7 @@ const seriesLayout: SeriesLayoutGetter<'pie'> = (series, drawingArea) => {
       },
     };
   }
-  return rep;
+  return seriesLayoutRecord;
 };
 
 export default seriesLayout;
