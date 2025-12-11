@@ -23,13 +23,13 @@ export function testPropForwarding(
         'data-foobar': randomStringValue(),
       };
 
-      const { getByTestId } = await render(
+      const { findByTestId } = await render(
         React.cloneElement(element, { 'data-testid': 'root', ...otherProps }),
       );
 
       await flushMicrotasks();
 
-      const customRoot = getByTestId('root');
+      const customRoot = await findByTestId('root');
       expect(customRoot).to.have.attribute('lang', otherProps.lang);
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
     });
@@ -40,7 +40,7 @@ export function testPropForwarding(
         'data-foobar': randomStringValue(),
       };
 
-      const { getByTestId } = await render(
+      const { findByTestId } = await render(
         React.cloneElement(element, {
           render: (props: any) => <Element {...props} data-testid="custom-root" />,
           ...otherProps,
@@ -49,7 +49,7 @@ export function testPropForwarding(
 
       await flushMicrotasks();
 
-      const customRoot = getByTestId('custom-root');
+      const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('lang', otherProps.lang);
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
     });
@@ -60,7 +60,7 @@ export function testPropForwarding(
         'data-foobar': randomStringValue(),
       };
 
-      const { getByTestId } = await render(
+      const { findByTestId } = await render(
         React.cloneElement(element, {
           render: <Element data-testid="custom-root" />,
           ...otherProps,
@@ -69,13 +69,13 @@ export function testPropForwarding(
 
       await flushMicrotasks();
 
-      const customRoot = getByTestId('custom-root');
+      const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('lang', otherProps.lang);
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
     });
 
     it('forwards the custom `style` attribute defined on the component', async () => {
-      const { getByTestId } = await render(
+      const { findByTestId } = await render(
         React.cloneElement(element, {
           style: { color: 'green' },
           'data-testid': 'custom-root',
@@ -84,13 +84,13 @@ export function testPropForwarding(
 
       await flushMicrotasks();
 
-      const customRoot = getByTestId('custom-root');
+      const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('style');
       expect(customRoot.getAttribute('style')).to.contain('color: green');
     });
 
     it('forwards the custom `style` attribute defined on the render function', async () => {
-      const { getByTestId } = await render(
+      const { findByTestId } = await render(
         React.cloneElement(element, {
           render: (props: any) => (
             <Element {...props} style={{ color: 'green' }} data-testid="custom-root" />
@@ -100,13 +100,13 @@ export function testPropForwarding(
 
       await flushMicrotasks();
 
-      const customRoot = getByTestId('custom-root');
+      const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('style');
       expect(customRoot.getAttribute('style')).to.contain('color: green');
     });
 
     it('forwards the custom `style` attribute defined on the render function', async () => {
-      const { getByTestId } = await render(
+      const { findByTestId } = await render(
         React.cloneElement(element, {
           render: <Element style={{ color: 'green' }} data-testid="custom-root" />,
         }),
@@ -114,7 +114,7 @@ export function testPropForwarding(
 
       await flushMicrotasks();
 
-      const customRoot = getByTestId('custom-root');
+      const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('style');
       expect(customRoot.getAttribute('style')).to.contain('color: green');
     });
