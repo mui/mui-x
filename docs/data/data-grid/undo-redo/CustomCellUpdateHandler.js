@@ -8,6 +8,7 @@ import {
   gridVisibleColumnFieldsSelector,
   gridPaginationModelSelector,
   gridExpandedSortedRowIndexLookupSelector,
+  gridFocusCellSelector,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { isDeepEqual } from './utils';
@@ -19,6 +20,10 @@ function createCustomCellEditHandler(apiRef) {
 
       const oldValue = apiRef.current.getRow(id)[field];
       const newValue = apiRef.current.getRowWithUpdatedValues(id, field)[field];
+
+      if (isDeepEqual(oldValue, newValue)) {
+        return null;
+      }
 
       return {
         id,
@@ -70,9 +75,14 @@ function createCustomCellEditHandler(apiRef) {
         }
       }
 
-      setTimeout(() => {
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id && currentFocus?.field === field) {
+        return;
+      }
+
+      requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      }, 0);
+      });
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
         colIndex: apiRef.current.getColumnIndex(field),
@@ -95,9 +105,14 @@ function createCustomCellEditHandler(apiRef) {
         }
       }
 
-      setTimeout(() => {
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id && currentFocus?.field === field) {
+        return;
+      }
+
+      requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      }, 0);
+      });
       apiRef.current.scrollToIndexes({
         rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
         colIndex: apiRef.current.getColumnIndex(field),

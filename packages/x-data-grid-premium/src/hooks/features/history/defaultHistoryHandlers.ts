@@ -6,6 +6,7 @@ import {
   type GridEvents,
   gridVisibleRowsSelector,
   gridVisibleColumnFieldsSelector,
+  gridFocusCellSelector,
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
@@ -28,6 +29,10 @@ export const createCellEditHistoryHandler = (
 
       const oldValue = apiRef.current.getRow(id)[field];
       const newValue = apiRef.current.getRowWithUpdatedValues(id, field)[field];
+
+      if (isDeepEqual(oldValue, newValue)) {
+        return null;
+      }
 
       return {
         id,
@@ -84,6 +89,11 @@ export const createCellEditHistoryHandler = (
         await apiRef.current.updateRows([{ id, [field]: oldValue }]);
       }
 
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id && currentFocus?.field === field) {
+        return;
+      }
+
       // Use `requestAnimationFrame` to ensure all undo updates are applied
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
@@ -106,6 +116,11 @@ export const createCellEditHistoryHandler = (
         });
       } else {
         await apiRef.current.updateRows([{ id, [field]: newValue }]);
+      }
+
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id && currentFocus?.field === field) {
+        return;
       }
 
       // Use `requestAnimationFrame` to ensure all redo updates are applied
@@ -132,6 +147,10 @@ export const createRowEditHistoryHandler = (
 
       const oldRow = apiRef.current.getRow(id) || {};
       const newRow = apiRef.current.getRowWithUpdatedValues(id, '');
+
+      if (isDeepEqual(oldRow, newRow)) {
+        return null;
+      }
 
       return {
         id,
@@ -182,6 +201,11 @@ export const createRowEditHistoryHandler = (
         await apiRef.current.updateRows([{ id, ...oldRow }]);
       }
 
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id) {
+        return;
+      }
+
       // Use `requestAnimationFrame` to ensure all undo updates are applied
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
@@ -203,6 +227,11 @@ export const createRowEditHistoryHandler = (
         });
       } else {
         await apiRef.current.updateRows([{ id, ...newRow }]);
+      }
+
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id) {
+        return;
       }
 
       // Use `requestAnimationFrame` to ensure all redo updates are applied
