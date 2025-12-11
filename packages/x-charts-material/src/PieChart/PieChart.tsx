@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type PieChartProps } from '@mui/x-charts';
-import { PieChart as PieChartBase } from 'packages/x-charts-headless/src';
+import { PieChart as PieChartBase } from '@mui/x-charts-headless';
 import { ChartsSurface } from '../ChartsSurface/ChartsSurface';
 import { ChartsTooltip } from '../ChartsTooltip';
 
