@@ -30,6 +30,10 @@ export class Store<State> {
     };
   };
 
+  /**
+   * Returns the current state snapshot. Meant for usage with `useSyncExternalStore`.
+   * If you want to access the state, use the `state` property instead.
+   */
   getSnapshot = () => {
     return this.state;
   };
