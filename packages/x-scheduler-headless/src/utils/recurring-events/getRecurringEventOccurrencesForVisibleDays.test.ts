@@ -17,6 +17,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 4),
         adapter,
+        'default',
       );
       expect(result).to.have.length(5);
       for (let i = 0; i < result.length; i += 1) {
@@ -42,6 +43,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 9),
         adapter,
+        'default',
       );
       // Jan 1..5 inclusive
       expect(result.map((o) => adapter.getDate(o.start.value))).to.deep.equal([1, 2, 3, 4, 5]);
@@ -59,6 +61,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 6),
         adapter,
+        'default',
       );
       expect(result).to.have.length(3);
       expect(result.map((o) => adapter.getDate(o.start.value))).to.deep.equal([1, 2, 3]);
@@ -76,6 +79,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 29),
         adapter,
+        'default',
       );
       // Expect Fridays at week 0, 2 and 4
       const dates = result.map((o) => adapter.getDate(o.start.value));
@@ -98,6 +102,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 119),
         adapter,
+        'default',
       );
       const daysOfMonth = result.map((o) => adapter.getDate(o.start.value));
       expect(daysOfMonth).to.deep.equal([10, 10, 10, 10]);
@@ -115,6 +120,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addYears(visibleStart, 5),
         adapter,
+        'default',
       );
       const years = result.map((o) => adapter.getYear(o.start.value));
       expect(years).to.deep.equal([2025, 2027, 2029]);
@@ -134,6 +140,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 4),
         adapter,
+        'default',
       );
       expect(result).to.have.length(1);
       expect(adapter.getDate(result[0].start.value)).to.equal(3);
@@ -157,6 +164,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 7),
         adapter,
+        'default',
       );
       const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
 
@@ -181,6 +189,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 28),
         adapter,
+        'default',
       );
       expect(result).to.have.length(0);
     });
@@ -200,6 +209,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 10),
         adapter,
+        'default',
       );
       // Should only have occurrences from Jan 10 onwards (6 days: 10,11,12,13,14,15)
       expect(result).to.have.length(6);
@@ -218,6 +228,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 6),
         adapter,
+        'default',
       );
       // Days: 1, 3, 5, 7 => 4 occurrences
       expect(result.map((o) => adapter.getDate(o.start.value))).to.deep.equal([1, 3, 5, 7]);
@@ -237,6 +248,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 6), // Mon-Sun
         adapter,
+        'default',
       );
       const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
       expect(dows).to.deep.equal(['MO', 'WE', 'FR']);
@@ -254,6 +266,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 6),
         adapter,
+        'default',
       );
       const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
       // Monday is DTSTART but not in byDay, so Tue(7) and Thu(9) are generated
@@ -272,6 +285,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addDays(visibleStart, 14),
         adapter,
+        'default',
       );
       // Should only generate Fridays: Jan 10, 17, 24
       const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
@@ -291,6 +305,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           visibleStart,
           adapter.addDays(visibleStart, 7),
           adapter,
+          'default',
         ),
       ).to.throw();
     });
@@ -309,6 +324,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 6),
         adapter,
+        'default',
       );
       // Jan, Mar, May, Jul => 4 occurrences
       const months = result.map((o) => adapter.getMonth(o.start.value));
@@ -327,6 +343,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 3),
         adapter,
+        'default',
       );
       // Should generate on the 15th: Mar, Apr, May, Jun
       const days = result.map((o) => adapter.getDate(o.start.value));
@@ -345,6 +362,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 5),
         adapter,
+        'default',
       );
       // Jan(31), Feb(skip), Mar(31), Apr(skip), May(31), Jun(skip)
       const months = result.map((o) => adapter.getMonth(o.start.value));
@@ -365,6 +383,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 4), // Jul, Aug, Sep, Oct
         adapter,
+        'default',
       );
       // Jul 8, Aug 12, Sep 9, Oct 14
       const dates = result.map((o) => adapter.getDate(o.start.value));
@@ -383,6 +402,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 3), // Jul, Aug, Sep
         adapter,
+        'default',
       );
       // July: Wednesdays are 2,9,16,23,30 → 2nd last is 23
       // Aug: Wednesdays are 6,13,20,27 → 2nd last is 20
@@ -403,6 +423,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 5),
         adapter,
+        'default',
       );
       // Jul 4, Sep 5, Nov 7 (every 2 months)
       const dates = result.map((o) => adapter.getDate(o.start.value));
@@ -423,6 +444,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addMonths(visibleStart, 3), // Jul, Aug, Sep
         adapter,
+        'default',
       );
       // July 8 is skipped (before DTSTART), Aug 12, Sep 9
       const dates = result.map((o) => adapter.getDate(o.start.value));
@@ -442,6 +464,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           visibleStart,
           adapter.addMonths(visibleStart, 1),
           adapter,
+          'default',
         ),
       ).to.throw();
     });
@@ -460,6 +483,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addYears(visibleStart, 3),
         adapter,
+        'default',
       );
       // Jul 20 each year: 2025, 2026, 2027, 2028
       const years = result.map((o) => adapter.getYear(o.start.value));
@@ -482,10 +506,100 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         visibleStart,
         adapter.addYears(visibleStart, 8),
         adapter,
+        'default',
       );
       // Only leap years: 2024, 2028, 2032
       const years = result.map((o) => adapter.getYear(o.start.value));
       expect(years).to.deep.equal([2024, 2028, 2032]);
+    });
+  });
+
+  describe('timezone handling', () => {
+    it('converts recurring occurrences from the data timezone into the UI timezone before grouping', () => {
+      // DTSTART in New York
+      // 2024-01-10 23:00 NY = 2024-01-11 04:00 UTC
+      // UI timezone = Europe/Madrid (UTC+1 in January)
+      // → final rendering = 2024-01-11 05:00 → should fall on day 11, 12 and 13.
+
+      const event = EventBuilder.new(adapter)
+        .singleDay('2024-01-10T23:00:00Z')
+        .withTimezone('America/New_York')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2024-01-10T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 3);
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'Europe/Madrid',
+      );
+
+      // Should appear only on the 11th, 12th and 13th in Europe/Madrid
+      const days = result.map((o) => adapter.format(o.start.value, 'dayOfMonth'));
+      expect(days).to.deep.equal(['11', '12', '13']);
+    });
+
+    it('keeps each recurrence tied to the event’s original local day even when UI timezone conversion crosses midnight', () => {
+      // Event at 00:30 in Tokyo (UTC+9)
+      // In Madrid this becomes 16:30 of the previous day.
+      // Recurrence must still belong to the original day (Tokyo's day), not Madrid's previous day.
+
+      const event = EventBuilder.new(adapter)
+        .singleDay('2025-01-10T00:30:00Z', 30)
+        .withTimezone('Asia/Tokyo')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2025-01-09T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 3);
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'Europe/Madrid',
+      );
+
+      // Only three occurrences, still belonging to Jan 10
+      expect(result).to.have.length(3);
+      expect(adapter.getDate(result[0].modelInBuiltInFormat!.start)).to.equal(10);
+    });
+
+    it('preserves multi-day duration when converting occurrences to the UI timezone', () => {
+      // 48-hour event starting in Los Angeles
+      // LA UTC−8 → Madrid UTC+1 → +9 hours
+      // Duration must remain exactly 48h after expanding + converting.
+
+      const event = EventBuilder.new(adapter)
+        .span('2025-03-01T08:00:00Z', '2025-03-03T08:00:00Z') // 48h
+        .withTimezone('America/Los_Angeles')
+        .rrule({ freq: 'DAILY' })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 4);
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'Europe/Madrid',
+      );
+
+      result.forEach((occ) => {
+        expect(adapter.isWithinRange(occ.start.value, [visibleStart, visibleEnd])).to.equal(true);
+      });
+      // Duration must remain exactly 48h
+      result.forEach((occ) => {
+        const hours = adapter.differenceInHours(occ.end.value, occ.start.value);
+        expect(hours).to.equal(48);
+      });
     });
   });
 });

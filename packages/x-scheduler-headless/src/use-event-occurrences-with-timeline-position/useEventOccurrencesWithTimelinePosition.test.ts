@@ -15,6 +15,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         start: collectionStart,
         end: collectionEnd,
         events,
+        uiTimezone: 'default',
         visibleResources: new Map(),
         resourceParentIds: new Map(),
       });

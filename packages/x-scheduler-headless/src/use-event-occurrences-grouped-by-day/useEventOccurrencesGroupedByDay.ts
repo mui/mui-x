@@ -8,7 +8,11 @@ import {
 } from '../utils/event-utils';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { useEventCalendarStoreContext } from '../use-event-calendar-store-context';
-import { schedulerEventSelectors, schedulerResourceSelectors } from '../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '../scheduler-selectors';
 
 /**
  * Gets all the event occurrences for the given days.
@@ -25,7 +29,7 @@ export function useEventOccurrencesGroupedByDay(
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
   const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
-  const uiTimezone = useStore(store, schedulerResourceSelectors.uiTimezone);
+  const uiTimezone = useStore(store, schedulerOtherSelectors.uiTimezone);
 
   return React.useMemo(
     () =>
