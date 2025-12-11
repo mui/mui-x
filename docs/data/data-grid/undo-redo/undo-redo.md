@@ -29,11 +29,11 @@ To disable the undo/redo feature, set `historyQueueSize` to `0`:
 <DataGridPremium historyQueueSize={0} />
 ```
 
-This will prevent any history from being tracked and hide the undo/redo buttons from the toolbar.
+This prevents any history from being tracked and hides the undo/redo buttons from the toolbar.
 
 ### Removing the toolbar buttons
 
-To only remove the toolbar buttons for undo and redo, but keep the keyboard controls active, set the `showUndoRedo` flag to `false` in the Toolbar's slot props.
+To remove the toolbar buttons for undo and redo while keeping the keyboard controls active, set the `showUndoRedo` flag to `false` in the Toolbar's slot props.
 
 ```tsx
 <DataGridPremium
@@ -75,21 +75,21 @@ interface GridHistoryEventHandler<T = any> {
 
 The list of events that are handled by default depends on the props passed to Data Grid.
 
-If none of the columns are [editable](/x/react-data-grid/editing/#making-a-column-editable), and [`isCellEditable()`](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row) is not provided, there are no default event handlers which makes the feature disabled.
+If none of the columns are [editable](/x/react-data-grid/editing/#making-a-column-editable), and [`isCellEditable()`](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row) is not provided, then the feature is disabled because there are no default event handlers.
 
 If there are editable cells, then the list of the default handlers depends on the way the data is provided to Data Grid.
 
-When not using a [data source](/x/react-data-grid/server-side-data/), the following events are tracked out of the box:
+When not using a [Data Source](/x/react-data-grid/server-side-data/), the following events are tracked out of the box:
 
 - `rowEditStop` - Tracks changes made to entire rows in row edit mode
 - `cellEditStop` - Tracks changes made to individual cells in cell edit mode
 - `clipboardPasteEnd` - Tracks paste operations that can modify multiple cells
 
-When using a data source, `clipboardPasteEnd` is not tracked and the other two events are tracked only if your data source supports [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
+When using a Data Source, `clipboardPasteEnd` is not tracked and the other two events are only tracked if your Data Source is set up to support [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
 
-If you use a data source that does not have an `updateRow` method, the event handler list is empty and the feature is disabled.
+If you use a Data Source that doesn't have an `updateRow` method, then the event handler list is empty and the feature is disabled.
 
-The following demo shows the undo/redo feature working with a data source supporting row editing.
+The following demo shows the undo/redo feature working with a Data Source that supports row editing.
 Remove the `updateRow` method to see the toolbar adjustment.
 
 {{"demo": "DataSourceUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -114,7 +114,7 @@ The following demo shows how to keep the default clipboard paste event handler a
 
 ### Creating a new handler
 
-Track and allow undo of any Data Grid interaction by providing custom history event handlers.
+Track and let users undo of any Data Grid interaction by providing custom history event handlers.
 
 The following demo keeps all the default handlers, and adds a custom history handler that tracks filter model changes.
 This allows users to undo and redo filter operations.
@@ -140,11 +140,11 @@ You can customize which events trigger revalidation using the `historyValidation
 <DataGridPremium historyValidationEvents={['stateChange']} />
 ```
 
-This is useful when you create a handler that tracks changes that do not affect rows or columns or if you remove the default handlers and you don't need the validation on the default events anymore.
+This is useful when you create a handler that tracks changes that don't affect rows or columns, or if you remove the default handlers and you don't need the validation on the default events anymore.
 
 :::warning
 List the events in the `historyValidationEvents` prop that are sufficient for validation to occur at the right time.
-Adding `'stateChange'` to the list will have an impact on the performance of Data Grid.
+Be aware that adding `'stateChange'` to the list does have an impact on the performance of Data Grid.
 :::
 
 ## API
