@@ -6,6 +6,7 @@ import { type BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
+import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
