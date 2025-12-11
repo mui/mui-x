@@ -1,9 +1,8 @@
+import { spy } from 'sinon';
+import { isJSDOM } from 'test/utils/skipIf';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
 import { CHART_SELECTOR } from '../../../../tests/constants';
-import { isJSDOM } from 'test/utils/skipIf';
-import { spy } from 'sinon';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 describe('highlight', () => {
   const { render } = createRenderer();

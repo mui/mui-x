@@ -37,6 +37,7 @@ export const useInteractionItemProps = (
     instance.setTooltipItem(data);
     // TODO: uniformize sankey and other types to get a single plugin
     instance.setHighlight(
+      // @ts-ignore
       data.type === 'sankey' ? data : { seriesId: data.seriesId, dataIndex: data.dataIndex },
     );
   });
@@ -86,6 +87,7 @@ export function getInteractionItemProps(
     instance.setLastUpdateSource('pointer');
     instance.setTooltipItem(item);
     instance.setHighlight(
+      // @ts-ignore
       item.type === 'sankey' ? item : { seriesId: item.seriesId, dataIndex: item.dataIndex },
     );
   }
