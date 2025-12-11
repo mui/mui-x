@@ -1,5 +1,5 @@
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '../models';
+import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps, ContinuousScaleName } from '../models';
 import type { ComputedAxis, D3ContinuousScale } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { getBandSize } from './getBandSize';
@@ -32,43 +32,47 @@ export function getBarDimensions(params: {
     groupIndex,
   } = params;
 
-  const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
-  const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
+  const bandAxis = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+  const continuousAxis = (
+    verticalLayout ? yAxisConfig : xAxisConfig
+  ) as ComputedAxis<ContinuousScaleName>;
 
   const { barWidth, offset } = getBandSize(
-    baseScaleConfig.scale.bandwidth(),
+    bandAxis.scale.bandwidth(),
     numberOfGroups,
-    baseScaleConfig.barGapRatio,
+    bandAxis.barGapRatio,
   );
-  const barOffset = groupIndex * (barWidth + offset);
 
-  const xScale = xAxisConfig.scale;
-  const yScale = yAxisConfig.scale;
-
-  const baseValue = baseScaleConfig.data![dataIndex];
   const seriesValue = series.data[dataIndex];
 
   if (seriesValue == null) {
     return null;
   }
 
-  const values = series.stackedData[dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+  const bandDimensions = getBarBandDimensions(
+    bandAxis.scale as ScaleBand<{ toString(): string }>,
+    bandAxis.data?.[dataIndex],
+    barWidth,
+    offset,
+    groupIndex,
+  );
+  const continuousDimensions = getBarContinuousDimensions(
+    verticalLayout,
+    continuousAxis.scale as D3ContinuousScale,
+    series,
+    continuousAxis.reverse ?? false,
+    dataIndex,
+  );
 
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
-
-  const barSize =
-    seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
-  const startCoordinate = shouldInvertStartCoordinate(verticalLayout, seriesValue, reverse)
-    ? maxValueCoord - barSize
-    : minValueCoord;
+  if (bandDimensions == null || continuousDimensions == null) {
+    return null;
+  }
 
   return {
-    x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
-    y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
-    height: verticalLayout ? barSize : barWidth,
-    width: verticalLayout ? barWidth : barSize,
+    x: verticalLayout ? bandDimensions.start : continuousDimensions.start,
+    y: verticalLayout ? continuousDimensions.start : bandDimensions.start,
+    width: verticalLayout ? bandDimensions.size : continuousDimensions.size,
+    height: verticalLayout ? continuousDimensions.size : bandDimensions.size,
   };
 }
 
