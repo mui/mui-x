@@ -36,9 +36,7 @@ export type UseChartTooltipDefaultizedParameters<
   TSeries extends ChartSeriesType = ChartSeriesType,
 > = DefaultizedProps<UseChartTooltipParameters<TSeries>, 'tooltipItem'>;
 
-export interface UseChartTooltipState<
-  TSeries extends ChartSeriesType = ChartSeriesType,
-> {
+export interface UseChartTooltipState<TSeries extends ChartSeriesType = ChartSeriesType> {
   tooltip: {
     /**
      * Indicates if the tooltip item is controlled.

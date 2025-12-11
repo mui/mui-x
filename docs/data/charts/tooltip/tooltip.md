@@ -162,9 +162,19 @@ With composition, you can use your component inside the `ChartDataProvider`.
 
 ## Controlling item tooltip
 
-You can controll the tooltip
+You can control the item tooltip with `tooltipItem` and `onTooltipItemChange`.
+
+When the item tooltip is controlled, the `anchor` is set to `'node'` if the pointer is outside of the chart.
+
+:::warning
+Make sure the tooltip `trigger` is set to `"item"`.
+Otherwise you might control the item tooltip and render an axis tooltip
+:::
 
 {{"demo": "ControlledTooltip.js"}}
+
+The item tooltip control can be used to sync tooltip between multiple charts.
+
 {{"demo": "SyncTooltip.js"}}
 
 ## Creating a tooltip
