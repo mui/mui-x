@@ -266,8 +266,8 @@ describe('<DataGrid /> - Rows', () => {
         render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="delete" />,
-              <GridActionsCellItem label="print" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={2} label="print" showInMenu />,
             ]}
           />,
         );
