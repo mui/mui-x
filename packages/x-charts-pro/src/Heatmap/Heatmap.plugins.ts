@@ -18,7 +18,7 @@ import {
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'heatmap'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature,

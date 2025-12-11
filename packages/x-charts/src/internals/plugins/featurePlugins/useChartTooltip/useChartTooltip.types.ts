@@ -18,25 +18,27 @@ export interface UseChartTooltipInstance {
   removeTooltipItem: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
 }
 
-export interface UseChartTooltipParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
+export interface UseChartTooltipParameters<TSeries extends ChartSeriesType = ChartSeriesType> {
   /**
    * The tooltip item.
    * Used when the tooltip is controlled.
    */
-  tooltipItem?: ChartItemIdentifier<SeriesType> | null;
+  tooltipItem?: ChartItemIdentifier<TSeries> | null;
   /**
    * The callback fired when the tooltip item changes.
    *
-   * @param {ChartItemIdentifier<SeriesType> | null} tooltipItem  The newly highlighted item.
+   * @param {ChartItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
    */
-  onTooltipItemChange?: (tooltipItem: ChartItemIdentifier<SeriesType> | null) => void;
+  onTooltipItemChange?: (tooltipItem: ChartItemIdentifier<TSeries> | null) => void;
 }
 
 export type UseChartTooltipDefaultizedParameters<
-  SeriesType extends ChartSeriesType = ChartSeriesType,
-> = DefaultizedProps<UseChartTooltipParameters<SeriesType>, 'tooltipItem'>;
+  TSeries extends ChartSeriesType = ChartSeriesType,
+> = DefaultizedProps<UseChartTooltipParameters<TSeries>, 'tooltipItem'>;
 
-export interface UseChartTooltipState {
+export interface UseChartTooltipState<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+> {
   tooltip: {
     /**
      * Indicates if the tooltip item is controlled.
@@ -45,14 +47,14 @@ export interface UseChartTooltipState {
     /**
      * The item currently under the pointer.
      */
-    item: null | ChartItemIdentifier<ChartSeriesType>;
+    item: null | ChartItemIdentifier<TSeries>;
   };
 }
 
-export type UseChartTooltipSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
+export type UseChartTooltipSignature<TSeries extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     instance: UseChartTooltipInstance;
     state: UseChartTooltipState;
-    params: UseChartTooltipParameters<SeriesType>;
-    defaultizedParams: UseChartTooltipDefaultizedParameters<SeriesType>;
+    params: UseChartTooltipParameters<TSeries>;
+    defaultizedParams: UseChartTooltipDefaultizedParameters<TSeries>;
   }>;

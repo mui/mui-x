@@ -372,6 +372,12 @@ Heatmap.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {ChartItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
    */
@@ -408,6 +414,15 @@ Heatmap.propTypes = {
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip: PropTypes.object,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf(['heatmap']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

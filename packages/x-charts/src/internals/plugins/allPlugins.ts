@@ -30,7 +30,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartBrushSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartClosestPointSignature,
@@ -40,7 +40,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartHighlightSignature,

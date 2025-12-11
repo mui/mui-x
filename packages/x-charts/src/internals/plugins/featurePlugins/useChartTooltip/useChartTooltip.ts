@@ -7,7 +7,7 @@ import type { ChartPlugin, ChartPluginOptions } from '../../models';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
 import type { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
 
-export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = <
+export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
   SeriesType extends ChartSeriesType = ChartSeriesType,
 >({
   store,
