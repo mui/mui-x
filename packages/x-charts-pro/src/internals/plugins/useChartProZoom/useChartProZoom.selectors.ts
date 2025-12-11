@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import { createSelector } from '@mui/x-internals/store';
 import {
   type AxisId,
   type ChartRootSelector,
@@ -21,7 +21,7 @@ export const selectorChartZoomIsEnabled = createSelector(
   (optionsLookup) => Object.keys(optionsLookup).length > 0,
 );
 
-export const selectorChartAxisZoomData = createSelectorMemoized(
+export const selectorChartAxisZoomData = createSelector(
   selectorChartZoomMap,
   (zoomMap, axisId: AxisId) => zoomMap?.get(axisId),
 );
