@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.21.1
+## 8.22.0
 
 _Dec 11, 2025_
 
@@ -18,16 +18,16 @@ We'd like to extend a big thank you to the 11 contributors who made this release
   +import { useSimpleTreeViewApiRef  } from '@mui/x-tree-view/hooks';
   -const apiRef = useTreeViewApiRef();
   +const apiRef = useSimpleTreeViewApiRef();
-  
+
   -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
   +import { useRichTreeViewApiRef  } from '@mui/x-tree-view/hooks';
   -const apiRef = useTreeViewApiRef();
   +const apiRef = useRichTreeViewApiRef();
-  
+
   -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
   +import { useRichTreeViewProApiRef  } from '@mui/x-tree-view-pro/hooks';
   -const apiRef = useTreeViewApiRef();
-  +const apiRef = useRichTreeViewProApiRef();      
+  +const apiRef = useRichTreeViewProApiRef();
   ```
 
 - 📚 [Tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) on building a Data Grid with server-side data
@@ -41,36 +41,36 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.21.1`
+#### `@mui/x-data-grid@8.22.0`
 
 - [DataGrid] Sync component props with theme defaults (#20590) @michelengelen
 - [DataGrid] Add fallback for CSS `color-mix` if it is unsupported (#20597) @cherniavskii
 - [DataGrid] Use `baseTooltip` slot for column header sort icon (#20460) @kzhgit
 
-#### `@mui/x-data-grid-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.21.1`.
+Same changes as in `@mui/x-data-grid@8.22.0`.
 
-#### `@mui/x-data-grid-premium@8.21.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.22.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.21.1`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.22.0`, plus:
 
 - [DataGridPremium] Handle pivoting column name generation for empty strings (#20608) @arminmeh
 - [DataGridPremium] Pass a row with aggregated value to the custom aggregation function `valueFormatter` (#20607) @arminmeh
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.21.1`
+#### `@mui/x-date-pickers@8.22.0`
 
 - [pickers] Fix invalid date tests (#20606) @michelengelen
 
-#### `@mui/x-date-pickers-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.21.1`.
+Same changes as in `@mui/x-date-pickers@8.22.0`.
 
 ### Charts
 
-#### `@mui/x-charts@8.21.1`
+#### `@mui/x-charts@8.22.0`
 
 - [charts] Add consistent animation duration and timing (#20564) @JCQuintas
 - [charts] Extract a tooltip plugin from the interaction one (#20591) @alexfauquette
@@ -85,30 +85,30 @@ Same changes as in `@mui/x-date-pickers@8.21.1`.
 - [charts][infra] Enable `@typescript-eslint/consistent-type-imports` eslint rules (#20560) @JCQuintas
 - [charts][infra] Enable `import/no-cycle` eslint rules (#20554) @JCQuintas
 
-#### `@mui/x-charts-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.21.1`, plus:
+Same changes as in `@mui/x-charts@8.22.0`, plus:
 
 - [charts-pro] Display sankey labels on top of nodes (#20569) @alexfauquette
 
-#### `@mui/x-charts-premium@8.21.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.22.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.21.1`.
+Same changes as in `@mui/x-charts-pro@8.22.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.21.1`
+#### `@mui/x-tree-view@8.22.0`
 
 - [tree view] Expose one hook per component to initialize the `apiRef` (#20235) @flaviendelangle
 - [tree view] Update the typing of `updateItemChildren()` to accept `null` (#20483) @noraleonte
 
-#### `@mui/x-tree-view-pro@8.21.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.21.1`.
+Same changes as in `@mui/x-tree-view@8.22.0`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.21.1`
+#### `@mui/x-codemod@8.22.0`
 
 Internal changes.
 
