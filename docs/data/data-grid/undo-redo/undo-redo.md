@@ -4,9 +4,9 @@ title: Data Grid - Undo and redo
 
 # Data Grid - Undo and redo [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">Allow users to undo and reapply changes made to the Data Grid.</p>
+<p class="description">Let users undo and reapply changes made to the Data Grid.</p>
 
-The undo/redo feature allows users to reverse and reapply their actions in the Data Grid.
+The undo/redo feature lets users reverse and reapply their actions in the Data Grid.
 It tracks registered events, listens for keyboard events and adds toolbar buttons.
 
 ## Basic usage
@@ -107,7 +107,7 @@ Use default handler exports (like `createCellEditHistoryHandler()`) to create a 
 
 The following demo shows how to keep the default clipboard paste event handler and customize the cell edit handler to:
 
-- Allow undo/redo operations even when the cell is on a different page
+- Keep undo/redo operations valid even when the cell is on a different page
 - Automatically navigate to the correct page when undoing/redoing
 
 {{"demo": "CustomCellUpdateHandler.js", "bg": "inline", "defaultCodeOpen": false}}
@@ -117,7 +117,7 @@ The following demo shows how to keep the default clipboard paste event handler a
 Track and let users undo of any Data Grid interaction by providing custom history event handlers.
 
 The following demo keeps all the default handlers, and adds a custom history handler that tracks filter model changes.
-This allows users to undo and redo filter operations.
+This lets users to undo and redo filter operations.
 
 To reduce the number of undo steps, changes on the filter model items that do not have a value are ignored.
 
