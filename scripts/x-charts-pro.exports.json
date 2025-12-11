@@ -619,6 +619,8 @@
   { "name": "useMouseTracker", "kind": "Function" },
   { "name": "usePieSeries", "kind": "Function" },
   { "name": "usePieSeriesContext", "kind": "Function" },
+  { "name": "UsePieSeriesContextReturnValue", "kind": "TypeAlias" },
+  { "name": "UsePieSeriesReturnValue", "kind": "TypeAlias" },
   { "name": "useRadarAxis", "kind": "Function" },
   { "name": "UseRadarAxisParams", "kind": "Interface" },
   { "name": "useRadarItemTooltip", "kind": "Variable" },
