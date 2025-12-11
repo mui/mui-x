@@ -17,6 +17,7 @@
     "@types/node": "^22.18.13",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@mui/x-charts-headless": "workspace:^"
+    "@mui/x-charts-headless": "workspace:^",
+    "@mui/x-charts-material": "workspace:^"
   }
 }

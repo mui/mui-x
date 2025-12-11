@@ -952,6 +952,9 @@ importers:
       '@mui/x-charts-headless':
         specifier: workspace:^
         version: link:../x-charts-headless/build
+      '@mui/x-charts-material':
+        specifier: workspace:^
+        version: link:../x-charts-material/build
       '@types/node':
         specifier: ^22.18.13
         version: 22.19.1
