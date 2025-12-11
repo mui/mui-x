@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flushMicrotasks, randomStringValue } from '@mui/internal-test-utils';
+import { randomStringValue } from '@mui/internal-test-utils';
 import { throwMissingPropError } from './utils';
 import type {
   ConformantComponentProps,
@@ -27,8 +27,6 @@ export function testPropForwarding(
         React.cloneElement(element, { 'data-testid': 'root', ...otherProps }),
       );
 
-      await flushMicrotasks();
-
       const customRoot = await findByTestId('root');
       expect(customRoot).to.have.attribute('lang', otherProps.lang);
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
@@ -46,8 +44,6 @@ export function testPropForwarding(
           ...otherProps,
         }),
       );
-
-      await flushMicrotasks();
 
       const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('lang', otherProps.lang);
@@ -67,8 +63,6 @@ export function testPropForwarding(
         }),
       );
 
-      await flushMicrotasks();
-
       const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('lang', otherProps.lang);
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
@@ -81,8 +75,6 @@ export function testPropForwarding(
           'data-testid': 'custom-root',
         }),
       );
-
-      await flushMicrotasks();
 
       const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('style');
@@ -98,8 +90,6 @@ export function testPropForwarding(
         }),
       );
 
-      await flushMicrotasks();
-
       const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('style');
       expect(customRoot.getAttribute('style')).to.contain('color: green');
@@ -111,8 +101,6 @@ export function testPropForwarding(
           render: <Element style={{ color: 'green' }} data-testid="custom-root" />,
         }),
       );
-
-      await flushMicrotasks();
 
       const customRoot = await findByTestId('custom-root');
       expect(customRoot).to.have.attribute('style');
