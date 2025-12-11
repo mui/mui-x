@@ -83,6 +83,7 @@ export default defineConfig({
             }
           : {}),
       }),
+      viewport: { width: 1280, height: 800 },
       headless: true,
       screenshotFailures: false,
       orchestratorScripts: [
