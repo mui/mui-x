@@ -12,7 +12,11 @@ import { getSVGPoint } from '../internals/getSVGPoint';
 import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
-export function useInteractionItemProps() {
+/**
+ * Hook to get pointer interaction props for chart items.
+ * @param setCursorPointer If true, sets the cursor to pointer when hovering a bar.
+ */
+export function useInteractionItemProps(setCursorPointer: boolean) {
   const { instance } =
     useChartContext<
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
@@ -21,13 +25,13 @@ export function useInteractionItemProps() {
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
   const interactionActive = React.useRef(false);
   const lastItemRef = React.useRef<BarItemIdentifier | undefined>(undefined);
+  const prevCursorRef = React.useRef<string | null>(null);
 
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
   });
 
-  const onPointerLeave = useEventCallback(() => {
-    interactionActive.current = false;
+  const reset = useEventCallback(() => {
     const lastItem = lastItemRef.current;
 
     if (lastItem) {
@@ -35,6 +39,16 @@ export function useInteractionItemProps() {
       instance.removeTooltipItem(lastItem);
       instance.clearHighlight();
     }
+
+    if (setCursorPointer && prevCursorRef.current !== null) {
+      document.body.style.cursor = prevCursorRef.current;
+      prevCursorRef.current = null;
+    }
+  });
+
+  const onPointerLeave = useEventCallback(() => {
+    interactionActive.current = false;
+    reset();
   });
 
   const onPointerMove = useEventCallback((event: React.PointerEvent<SVGElement>) => {
@@ -57,18 +71,17 @@ export function useInteractionItemProps() {
     const item = selectorBarItemAtPosition(store.state, svgPoint);
 
     if (item) {
+      if (setCursorPointer && prevCursorRef.current === null) {
+        prevCursorRef.current = document.body.style.cursor;
+        document.body.style.cursor = 'pointer';
+      }
+
       instance.setLastUpdateSource('pointer');
       instance.setTooltipItem(item);
       instance.setHighlight(item);
       lastItemRef.current = item;
     } else {
-      const lastItem = lastItemRef.current;
-
-      if (lastItem) {
-        lastItemRef.current = undefined;
-        instance.removeTooltipItem(lastItem);
-        instance.clearHighlight();
-      }
+      reset();
     }
   });
 
