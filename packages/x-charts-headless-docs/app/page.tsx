@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
 import { PieChart as PieChartBase } from 'packages/x-charts-headless/src';
-// import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
+import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
 import type { PieChartProps } from '@mui/x-charts/PieChart';
 
 const data: PieChartProps = {
   height: 300,
+  width: 500,
   series: [
     {
       arcLabel: 'value',
@@ -62,13 +63,19 @@ export default function Home() {
         </li>
       </ul>
 
-      <PieChartBase.Root {...data}>
-        <PieChartBase.Surface>
-          <PieChartBase.Plot />
-          <PieChartBase.LabelPlot />
-        </PieChartBase.Surface>
-      </PieChartBase.Root>
-      {/* <PieChartMaterial {...data} /> */}
+      <div>
+        <h2>Base Pie Chart</h2>
+        <PieChartBase.Root {...data}>
+          <PieChartBase.Surface>
+            <PieChartBase.Plot />
+            <PieChartBase.LabelPlot />
+          </PieChartBase.Surface>
+        </PieChartBase.Root>
+      </div>
+      <div>
+        <h2>Material UI Pie Chart</h2>
+        <PieChartMaterial {...data} />
+      </div>
     </div>
   );
 }
