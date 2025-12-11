@@ -9,6 +9,16 @@ body {
   padding: 16px;
 }
 
+.plot path {
+  stroke: #f5f5f5;
+  stroke-width: 5px;
+}
+
+.label-plot text {
+  font-size: 12px;
+  fill: #333;
+}
+
 .tooltip-container {
   pointer-events: none;
   background: rgba(0, 0, 0, 0.7);
