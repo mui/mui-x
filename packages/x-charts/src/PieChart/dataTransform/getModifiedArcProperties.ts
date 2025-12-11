@@ -4,7 +4,7 @@ import { deg2rad } from '../../internals/angleConversion';
 /**
  * Function that returns arc properties after applying transformation from highlight/fade states.
  */
-export function applyArcModifiers(
+export function getModifiedArcProperties(
   seriesDef: Pick<
     DefaultizedPieSeriesType,
     'cornerRadius' | 'paddingAngle' | 'id' | 'highlighted' | 'faded' | 'data'

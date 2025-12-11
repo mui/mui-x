@@ -7,7 +7,7 @@ import {
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
-import { applyArcModifiers } from './applyArcModifiers';
+import { getModifiedArcProperties } from './getModifiedArcProperties';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -50,7 +50,7 @@ export function useTransformData(
         const isFocused = isItemFocused({ seriesType: 'pie', seriesId, dataIndex: itemIndex });
 
         // TODO v9: Replace the second argument with the result of useSeriesLayout
-        const arcSizes = applyArcModifiers(
+        const arcSizes = getModifiedArcProperties(
           series,
           {
             radius: {

@@ -5,7 +5,7 @@ import { useFocusedItem } from '../hooks/useFocusedItem';
 import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
 import { PieArc, pieArcClasses, type PieArcProps } from './PieArc';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { applyArcModifiers } from './dataTransform/applyArcModifiers';
+import { getModifiedArcProperties } from './dataTransform/getModifiedArcProperties';
 
 export function FocusedPieArc(
   props: Partial<
@@ -35,7 +35,7 @@ export function FocusedPieArc(
 
   const item = series.data[focusedItem.dataIndex];
 
-  const arcSizes = applyArcModifiers(
+  const arcSizes = getModifiedArcProperties(
     series,
     pieSeriesLayout[focusedItem.seriesId],
     isHighlighted,
