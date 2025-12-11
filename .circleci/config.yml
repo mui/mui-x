@@ -132,15 +132,15 @@ jobs:
                 environment:
                   TZ: UTC
                 command: |
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-charts*" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-data-grid*" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-date-pickers*" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-internal-gestures" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-license" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-scheduler*" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-telemetry" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-tree-view*" 
-                  pnpm test:unit:browser --maxWorkers=2 --isolate --coverage --project "x-virtualizer"
+                  pnpm test:unit:browser --coverage --project "x-charts*" 
+                  pnpm test:unit:browser --coverage --project "x-data-grid*" 
+                  pnpm test:unit:browser --coverage --project "x-date-pickers*" 
+                  pnpm test:unit:browser --coverage --project "x-internal-gestures" 
+                  pnpm test:unit:browser --coverage --project "x-license" 
+                  pnpm test:unit:browser --coverage --project "x-scheduler*" 
+                  pnpm test:unit:browser --coverage --project "x-telemetry" 
+                  pnpm test:unit:browser --coverage --project "x-tree-view*" 
+                  pnpm test:unit:browser --coverage --project "x-virtualizer"
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
