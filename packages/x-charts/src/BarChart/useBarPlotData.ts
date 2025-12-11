@@ -1,9 +1,8 @@
-import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import {
   type ChartsXAxisProps,
   type ChartsYAxisProps,
   type ComputedAxis,
-  type D3ContinuousScale,
+  type ContinuousScaleName,
 } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
@@ -63,7 +62,10 @@ export function useBarPlotData(
         yAxes,
       );
 
-      const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+      const bandAxis = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+      const continuousAxis = (
+        verticalLayout ? yAxisConfig : xAxisConfig
+      ) as ComputedAxis<ContinuousScaleName>;
 
       const xScale = xAxisConfig.scale;
       const yScale = yAxisConfig.scale;
@@ -75,17 +77,14 @@ export function useBarPlotData(
       const seriesDataPoints: ProcessedBarData[] = [];
 
       const { barWidth, offset } = getBandSize(
-        baseScaleConfig.scale.bandwidth(),
+        bandAxis.scale.bandwidth(),
         stackingGroups.length,
-        baseScaleConfig.barGapRatio,
+        bandAxis.barGapRatio,
       );
 
-      for (let dataIndex = 0; dataIndex < baseScaleConfig.data!.length; dataIndex += 1) {
-        const bandAxis = verticalLayout ? xAxisConfig : yAxisConfig;
-        const continuousAxis = verticalLayout ? yAxisConfig : xAxisConfig;
-
+      for (let dataIndex = 0; dataIndex < bandAxis.data!.length; dataIndex += 1) {
         const bandDimensions = getBarBandDimensions(
-          bandAxis.scale as ScaleBand<{ toString(): string }>,
+          bandAxis.scale,
           bandAxis.data?.[dataIndex],
           barWidth,
           offset,
@@ -93,7 +92,7 @@ export function useBarPlotData(
         );
         const continuousDimensions = getBarContinuousDimensions(
           verticalLayout,
-          continuousAxis.scale as D3ContinuousScale,
+          continuousAxis.scale,
           series[seriesId],
           continuousAxis.reverse ?? false,
           dataIndex,
@@ -110,6 +109,15 @@ export function useBarPlotData(
           height: verticalLayout ? continuousDimensions.size : bandDimensions.size,
         };
 
+        if (
+          barDimensions.x > xMax ||
+          barDimensions.x + barDimensions.width < xMin ||
+          barDimensions.y > yMax ||
+          barDimensions.y + barDimensions.height < yMin
+        ) {
+          continue;
+        }
+
         const stackId = series[seriesId].stack;
 
         const result = {
@@ -120,15 +128,6 @@ export function useBarPlotData(
           value: series[seriesId].data[dataIndex],
           maskId: `${chartId}_${stackId || seriesId}_${groupIndex}_${dataIndex}`,
         };
-
-        if (
-          result.x > xMax ||
-          result.x + result.width < xMin ||
-          result.y > yMax ||
-          result.y + result.height < yMin
-        ) {
-          continue;
-        }
 
         if (!masks[result.maskId]) {
           masks[result.maskId] = {
