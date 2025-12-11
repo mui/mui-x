@@ -1,5 +1,10 @@
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
-import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
+import {
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ComputedAxis,
+  type D3ContinuousScale,
+} from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
@@ -88,8 +93,7 @@ export function useBarPlotData(
         );
         const continuousDimensions = getBarContinuousDimensions(
           verticalLayout,
-          xAxisConfig.scale,
-          yAxisConfig.scale,
+          continuousAxis.scale as D3ContinuousScale,
           series[seriesId],
           continuousAxis.reverse ?? false,
           dataIndex,

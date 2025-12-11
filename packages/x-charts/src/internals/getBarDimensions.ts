@@ -1,6 +1,6 @@
 import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
 import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '../models';
-import type { ComputedAxis, D3Scale } from '../models/axis';
+import type { ComputedAxis, D3ContinuousScale } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { getBandSize } from './getBandSize';
 import { findMinMax } from './findMinMax';
@@ -89,8 +89,7 @@ export function getBarBandDimensions(
 
 export function getBarContinuousDimensions(
   verticalLayout: boolean,
-  xScale: D3Scale,
-  yScale: D3Scale,
+  continuousScale: D3ContinuousScale,
   series: ChartSeriesDefaultized<'bar'>,
   reverse: boolean,
   dataIndex: number,
@@ -102,7 +101,7 @@ export function getBarContinuousDimensions(
   }
 
   const values = series.stackedData[dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
+  const valueCoordinates = values.map((v) => continuousScale(v)!);
 
   const minMax = findMinMax(valueCoordinates);
   const minValueCoord = Math.round(minMax[0]);
