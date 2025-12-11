@@ -77,6 +77,7 @@ export default function ControlledTooltip() {
         </Stack>
         <BarChart
           {...barChartsProps}
+          slotProps={{ tooltip: { trigger: 'item' } }}
           tooltipItem={tooltipItem}
           onTooltipItemChange={setTooltipItem}
         />
