@@ -14,18 +14,18 @@ We'd like to extend a big thank you to the 11 contributors who made this release
 - Each Tree View component now exposes its own hook to initialize the `apiRef` object with accurate typing:
 
   ```diff
-  -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
-  +import { useSimpleTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  -import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  +import { useSimpleTreeViewApiRef } from '@mui/x-tree-view/hooks';
   -const apiRef = useTreeViewApiRef();
   +const apiRef = useSimpleTreeViewApiRef();
 
-  -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
-  +import { useRichTreeViewApiRef  } from '@mui/x-tree-view/hooks';
+  -import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  +import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
   -const apiRef = useTreeViewApiRef();
   +const apiRef = useRichTreeViewApiRef();
 
-  -import { useTreeViewApiRef  } from '@mui/x-tree-view/hooks';
-  +import { useRichTreeViewProApiRef  } from '@mui/x-tree-view-pro/hooks';
+  -import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  +import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
   -const apiRef = useTreeViewApiRef();
   +const apiRef = useRichTreeViewProApiRef();
   ```
@@ -33,7 +33,7 @@ We'd like to extend a big thank you to the 11 contributors who made this release
 - 📚 [Tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) on building a Data Grid with server-side data
 - 🐞 Bugfixes
 
-Special thanks go out to these community members for their valuable contributions:
+Special thanks go out to this community member for their valuable contributions:
 @kzhgit
 
 The following team members contributed to this release:
@@ -117,6 +117,7 @@ Internal changes.
 - [docs] Add tutorial on building a Data Grid with server-side data (DX-22) (#19782) @mapache-salvaje
 - [docs] Modify the default value for the stacking demo (#20596) @alexfauquette
 - [docs] Revise the Charts Custom Components doc (#19793) @mapache-salvaje
+- [docs] Remove copy-pasted `aria-label` (#20620) @alexfauquette
 
 ### Core
 
@@ -136,6 +137,7 @@ Internal changes.
 - Bump `react-hook-form` to `^7.68.0` (#20584) @renovate[bot]
 - Bump `react-router` to `^7.10.1` (#20341) @renovate[bot]
 - Bump `tsx` to `^4.21.0` (#20585) @renovate[bot]
+- Bump MUI infra packages (#20478) @renovate[bot]
 - [infra] Automatically add teams to release PRs (#20558) @JCQuintas
 - [infra] Fix codeowners typo (#20562) @JCQuintas
 
