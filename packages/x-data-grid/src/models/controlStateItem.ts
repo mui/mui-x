@@ -16,7 +16,7 @@ export interface GridControlStateItem<
     | ((apiRef: RefObject<{ state: State }>) => GridControlledStateEventLookup[E]['params']);
   propOnChange?: (
     model: GridControlledStateEventLookup[E]['params'],
-    details: GridCallbackDetails,
+    details: GridCallbackDetails<any>,
   ) => void;
   changeEvent: E;
 }
