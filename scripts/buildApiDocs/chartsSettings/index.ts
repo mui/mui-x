@@ -99,6 +99,9 @@ export default chartsApiPages;
       'x-charts/src/ScatterChart/BatchScatter.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
+      // TODO(#20275): These two components will be documented in the range bar PR
+      'x-charts-premium/src/BarChartPremium/BarChartPremium.tsx',
+      'x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
