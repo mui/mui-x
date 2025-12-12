@@ -29,7 +29,7 @@ function DemoContainer({
       <Stack direction="row" spacing={2} sx={{ mb: 3, justifyContent: 'end' }}>
         <Button
           startIcon={<GitHubIcon />}
-          sx={(theme) => ({
+          sx={(containerTheme) => ({
             padding: '5px 12px',
             background: '#fff',
             borderRadius: '10px',
@@ -41,13 +41,13 @@ function DemoContainer({
             letterSpacing: '0.01em',
             borderColor: 'divider',
             boxShadow: '1px 1px 2px rgba(0, 0, 0, 0.1)',
-            ...theme.applyStyles('dark', {
+            ...containerTheme.applyStyles('dark', {
               color: '#f2eff3',
               background: '#1d2329',
             }),
             '&:hover': {
               backgroundColor: '#faf8ff',
-              ...theme.applyStyles('dark', {
+              ...containerTheme.applyStyles('dark', {
                 backgroundColor: '#252d34',
               }),
             },
