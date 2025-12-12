@@ -63,7 +63,6 @@ export const initialEvents = [
     resource: 'ny',
     rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE'] },
   },
-
   // Paris monthly 15th UNTIL — 18:00 Paris → DST change on Mar 30
   // Mar 15 → UTC+1 → 17:00Z
   {
@@ -79,7 +78,6 @@ export const initialEvents = [
       until: new Date('2025-06-30T21:59:00Z'), // 23:59 Paris → 21:59Z (after DST adjust)
     },
   },
-
   // Tokyo daily — 07:00 JST → always UTC+9 (Tokyo has no DST)
   // Mar 1 → 22:00Z previous day
   // When viewed in Europe/Paris, this shifts from 23:00 to 00:00 after DST.
@@ -92,7 +90,6 @@ export const initialEvents = [
     resource: 'tokyo',
     rrule: { freq: 'DAILY' },
   },
-
   // LA weekly COUNT — 16:00 LA
   // 1st: Mar 02 → UTC-8 → 00:00Z (Mar 03) → shows 01:00 Paris
   // 2nd: Mar 09 → UTC-7 → 23:00Z       → shows 00:00 Paris
@@ -110,10 +107,9 @@ export const initialEvents = [
       count: 5,
     },
   },
-
   // Sydney exDates — 13:00 Sydney (local time)
-  // Mar 14 → UTC+11 → 02:00Z
-  // Mar 21 → excluded
+  // Mar 14 → UTC+11 → 02:00Z → shows 03:00 Paris
+  // Mar 21 → excluded (should NOT appear in Paris UI)
   {
     id: 'syd-exdates',
     title: 'Sydney Weekly Skip One',

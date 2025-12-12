@@ -125,8 +125,8 @@ export const initialEvents: TimezoneEvent[] = [
   },
 
   // Sydney exDates — 13:00 Sydney (local time)
-  // Mar 14 → UTC+11 → 02:00Z → shows **03:00 Paris**
-  // Mar 21 → ❌ excluded (should NOT appear in Paris UI)
+  // Mar 14 → UTC+11 → 02:00Z → shows 03:00 Paris
+  // Mar 21 → excluded (should NOT appear in Paris UI)
   {
     id: 'syd-exdates',
     title: 'Sydney Weekly Skip One',
