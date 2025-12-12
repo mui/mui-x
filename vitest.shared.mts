@@ -64,7 +64,6 @@ export default defineConfig({
       NODE_ENV: 'test',
       VITEST: 'true',
     },
-    server: {
     browser: {
       provider: playwright({
         launchOptions: {
