@@ -1,9 +1,14 @@
 'use client';
 
-import { PieArcLabelPlot } from './PieArcLabelPlot';
+import { PieArcLabelPlot, type PieArcLabelItemValues } from './PieArcLabelPlot';
 import { usePiePlotData } from './PieChart.hooks';
 
-function PieLabelPlot() {
+export interface PieLabelPlotProps {
+  children: (item: PieArcLabelItemValues, index: number) => React.ReactNode;
+}
+
+function PieLabelPlot(props: PieLabelPlotProps) {
+  const { children } = props;
   const plotData = usePiePlotData();
 
   return plotData?.map((seriesData) => {
@@ -34,7 +39,9 @@ function PieLabelPlot() {
         data={data}
         arcLabel={arcLabel}
         arcLabelMinAngle={arcLabelMinAngle}
-      />
+      >
+        {children}
+      </PieArcLabelPlot>
     );
   });
 }

@@ -14,7 +14,7 @@ body {
   stroke-width: 5px;
 }
 
-.label-plot text {
+.arc-label {
   font-size: 12px;
   fill: #333;
 }

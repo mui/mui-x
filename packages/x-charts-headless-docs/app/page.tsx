@@ -74,7 +74,9 @@ export default function Home() {
             <PieChartHeadless.Plot>
               {(item, index) => <PieChartHeadless.Arc key={index} {...item} />}
             </PieChartHeadless.Plot>
-            <PieChartHeadless.LabelPlot />
+            <PieChartHeadless.LabelPlot>
+              {(item, index) => <PieChartHeadless.ArcLabel key={index} {...item} />}
+            </PieChartHeadless.LabelPlot>
           </PieChartHeadless.Surface>
         </PieChartHeadless.Root>
       </div>
@@ -89,9 +91,11 @@ export default function Home() {
             <PieChartHeadless.Plot>
               {(item, index) => <PieChartHeadless.Arc key={index} className="arc" {...item} />}
             </PieChartHeadless.Plot>
-            <g className="label-plot">
-              <PieChartHeadless.LabelPlot />
-            </g>
+            <PieChartHeadless.LabelPlot>
+              {(item, index) => (
+                <PieChartHeadless.ArcLabel key={index} className="arc-label" {...item} />
+              )}
+            </PieChartHeadless.LabelPlot>
           </PieChartHeadless.Surface>
           <PieTooltip />
         </PieChartHeadless.Root>

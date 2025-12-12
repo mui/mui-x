@@ -10,6 +10,12 @@ const Arc = styled(PieChartBase.Arc)(({ theme }) => ({
   strokeWidth: 2,
 }));
 
+const ArcLabel = styled(PieChartBase.ArcLabel)(({ theme }) => ({
+  fontFamily: theme.typography.fontFamily,
+  fontSize: theme.typography.pxToRem(20),
+  fontWeight: theme.typography.fontWeightMedium,
+}));
+
 export const PieChart = React.forwardRef(function PieChart(
   props: PieChartProps,
   ref: React.Ref<SVGSVGElement>,
@@ -22,7 +28,9 @@ export const PieChart = React.forwardRef(function PieChart(
         <title>{title}</title>
         <desc>{desc}</desc>
         <PieChartBase.Plot>{(item, index) => <Arc key={index} {...item} />}</PieChartBase.Plot>
-        <PieChartBase.LabelPlot />
+        <PieChartBase.LabelPlot>
+          {(item, index) => <ArcLabel key={index} {...item} />}
+        </PieChartBase.LabelPlot>
       </ChartsSurface>
       <ChartsTooltip trigger="item" />
     </PieChartBase.Root>

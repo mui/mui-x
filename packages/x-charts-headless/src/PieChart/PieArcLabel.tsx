@@ -12,7 +12,8 @@ export type PieArcLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'col
   cornerRadius: number;
   paddingAngle: number;
   formattedArcLabel?: string | null;
-  id: PieItemId;
+  seriesId: PieItemId;
+  dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -21,7 +22,8 @@ export type PieArcLabelProps = Omit<React.SVGProps<SVGTextElement>, 'ref' | 'col
 const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
   function PieArcLabel(props, ref) {
     const {
-      id,
+      seriesId,
+      dataIndex,
       color,
       startAngle,
       endAngle,

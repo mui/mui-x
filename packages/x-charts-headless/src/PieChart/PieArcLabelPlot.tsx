@@ -6,10 +6,31 @@ import {
   type ComputedPieRadius,
 } from '@mui/x-charts';
 import { getLabel } from '@mui/x-charts/internals/getLabel';
-import { useTransformData } from '@mui/x-charts/PieChart/dataTransform/useTransformData';
-import { PieArcLabel } from './PieArcLabel';
+import {
+  useTransformData,
+  type ValueWithHighlight,
+} from '@mui/x-charts/PieChart/dataTransform/useTransformData';
+import * as React from 'react';
 
 const RATIO = 180 / Math.PI;
+
+export type PieArcLabelItemValues = Pick<
+  ValueWithHighlight,
+  | 'innerRadius'
+  | 'outerRadius'
+  | 'arcLabelRadius'
+  | 'cornerRadius'
+  | 'paddingAngle'
+  | 'startAngle'
+  | 'endAngle'
+  | 'color'
+  | 'isFaded'
+  | 'isHighlighted'
+  | 'dataIndex'
+  | 'seriesId'
+> & {
+  formattedArcLabel?: string | null;
+};
 
 function getItemLabel(
   arcLabel: PieSeriesType['arcLabel'],
@@ -58,6 +79,7 @@ export interface PieArcLabelPlotProps
    * @default { additionalRadius: -5 }
    */
   faded?: DefaultizedPieSeriesType['faded'];
+  children: (item: PieArcLabelItemValues, index: number) => React.ReactNode;
 }
 
 function PieArcLabelPlot(props: PieArcLabelPlotProps) {
@@ -73,6 +95,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     innerRadius,
     outerRadius,
     paddingAngle = 0,
+    children,
     ...other
   } = props;
 
@@ -94,23 +117,26 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
 
   return (
     <g {...other}>
-      {transformedData.map((item) => (
-        <PieArcLabel
-          key={item.dataIndex}
-          startAngle={item.startAngle}
-          endAngle={item.endAngle}
-          paddingAngle={item.paddingAngle}
-          innerRadius={item.innerRadius}
-          outerRadius={item.outerRadius}
-          arcLabelRadius={item.arcLabelRadius}
-          cornerRadius={item.cornerRadius}
-          id={id}
-          color={item.color}
-          isFaded={item.isFaded}
-          isHighlighted={item.isHighlighted}
-          formattedArcLabel={getItemLabel(arcLabel, arcLabelMinAngle, item)}
-        />
-      ))}
+      {transformedData.map((item, index) =>
+        children(
+          {
+            seriesId: item.seriesId,
+            dataIndex: item.dataIndex,
+            startAngle: item.startAngle,
+            endAngle: item.endAngle,
+            paddingAngle: item.paddingAngle,
+            innerRadius: item.innerRadius,
+            outerRadius: item.outerRadius,
+            arcLabelRadius: item.arcLabelRadius,
+            cornerRadius: item.cornerRadius,
+            color: item.color,
+            isFaded: item.isFaded,
+            isHighlighted: item.isHighlighted,
+            formattedArcLabel: getItemLabel(arcLabel, arcLabelMinAngle, item),
+          },
+          index,
+        ),
+      )}
     </g>
   );
 }
