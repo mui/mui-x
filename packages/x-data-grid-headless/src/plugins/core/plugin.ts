@@ -1,7 +1,7 @@
 import { type Store } from '@base-ui/utils/store';
 import { type PluginRegistry } from './pluginRegistry';
 
-interface BaseApi {
+export interface BaseApi {
   pluginRegistry: PluginRegistry;
 }
 
