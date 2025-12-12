@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
-import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
+import { useDrawingArea, useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
@@ -18,7 +18,7 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
-export type RendererType = 'svg-single' | 'svg-batch';
+export type RendererType = 'svg-single' | 'svg-batch' | 'canvas';
 
 export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
   /**
@@ -58,12 +58,12 @@ function ScatterPlot(props: ScatterPlotProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
   const { zAxis, zAxisIds } = useZAxes();
+  const drawingArea = useDrawingArea();
 
   if (seriesData === undefined) {
     return null;
   }
 
-  const drawingArea = useDrawingArea();
   const { series, seriesOrder } = seriesData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];

@@ -44,7 +44,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
-    renderer = 'canvas',
+    renderer,
     brushConfig,
     ...other
   } = props;

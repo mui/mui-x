@@ -21,12 +21,17 @@ export const CanvasProvider = React.forwardRef<
 
     if (canvas) {
       const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        return;
+      }
+
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
       setContext(ctx);
     }
   }, []);
 
   React.useLayoutEffect(() => {
-    console.log('layout parent');
     if (!context) {
       return;
     }
@@ -34,10 +39,7 @@ export const CanvasProvider = React.forwardRef<
     // eslint-disable-next-line react-compiler/react-compiler
     context.fillStyle = 'white';
     context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-    console.log('clear');
   });
-
-  console.log('render canvas');
 
   return (
     <CanvasContext.Provider value={context}>

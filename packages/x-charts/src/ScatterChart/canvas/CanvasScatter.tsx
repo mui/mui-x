@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useDrawingArea } from '@mui/x-charts';
+import { useDrawingArea } from '../../hooks/useDrawingArea';
 import {
   type DefaultizedScatterSeriesType,
   type ScatterItemIdentifier,
 } from '../../models/seriesType/scatter';
 import { type D3Scale } from '../../models/axis';
-import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { type ColorGetter } from '../../internals/plugins/models/seriesConfig';
 import { useScatterPlotData } from '../useScatterPlotData';
 import { useChartContext } from '../../context/ChartProvider';
@@ -82,22 +81,20 @@ function CanvasScatter(props: ScatterProps) {
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
 
-  const { isFaded, isHighlighted } = useItemHighlightedGetter();
-
   const scatterPlotData = useScatterPlotData(series, xScale, yScale, instance.isPointInside);
   const ctx = useCanvasContext();
 
   React.useEffect(() => {
-    console.log('effect child');
     if (!ctx) {
       return;
     }
 
     ctx.save();
+    const scale = window.devicePixelRatio;
 
-    scatterPlotData.slice(0, 1000).forEach((dataPoint) => {
-      const isItemHighlighted = isHighlighted(dataPoint);
-      const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
+    scatterPlotData.forEach((dataPoint) => {
+      const isItemHighlighted = false; // isHighlighted(dataPoint);
+      const isItemFaded = false; // !isItemHighlighted && isFaded(dataPoint);
 
       // eslint-disable-next-line react-compiler/react-compiler
       ctx.fillStyle = colorGetter(dataPoint.dataIndex);
@@ -105,9 +102,9 @@ function CanvasScatter(props: ScatterProps) {
 
       ctx.beginPath();
       ctx.arc(
-        dataPoint.x - drawingArea.left,
-        dataPoint.y - drawingArea.top,
-        (isItemFaded ? 1.2 : 1) * series.markerSize,
+        (dataPoint.x - drawingArea.left) / scale,
+        (dataPoint.y - drawingArea.top) / scale,
+        ((isItemFaded ? 1.2 : 1) * series.markerSize) / scale,
         0,
         2 * Math.PI,
       );
@@ -115,18 +112,8 @@ function CanvasScatter(props: ScatterProps) {
       ctx.fill();
     });
 
-    console.log('fill');
     ctx.restore();
-  }, [
-    ctx,
-    colorGetter,
-    isFaded,
-    isHighlighted,
-    scatterPlotData,
-    series.markerSize,
-    drawingArea.left,
-    drawingArea.top,
-  ]);
+  }, [ctx, colorGetter, scatterPlotData, series.markerSize, drawingArea.left, drawingArea.top]);
 
   return null;
 }
