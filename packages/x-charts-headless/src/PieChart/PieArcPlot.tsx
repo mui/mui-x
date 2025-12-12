@@ -10,7 +10,6 @@ import {
   type ValueWithHighlight,
 } from '@mui/x-charts/PieChart/dataTransform/useTransformData';
 import * as React from 'react';
-import { PieArc } from './PieArc';
 
 export type PieArcItemValues = Pick<
   ValueWithHighlight,
@@ -52,7 +51,7 @@ export interface PieArcPlotProps
     pieItemIdentifier: PieItemIdentifier,
     item: DefaultizedPieValueType,
   ) => void;
-  children?: (item: PieArcItemValues, index: number) => React.ReactNode;
+  children: (item: PieArcItemValues, index: number) => React.ReactNode;
 }
 
 function PieArcPlot(props: PieArcPlotProps) {
@@ -86,53 +85,28 @@ function PieArcPlot(props: PieArcPlotProps) {
     return null;
   }
 
-  if (children) {
-    return (
-      <g {...other}>
-        {transformedData.map((item, index) =>
-          children(
-            {
-              seriesId: item.seriesId,
-              dataIndex: item.dataIndex,
-              startAngle: item.startAngle,
-              endAngle: item.endAngle,
-              paddingAngle: item.paddingAngle,
-              innerRadius: item.innerRadius,
-              outerRadius: item.outerRadius,
-              cornerRadius: item.cornerRadius,
-              color: item.color,
-              isFaded: item.isFaded,
-              isHighlighted: item.isHighlighted,
-              isFocused: item.isFocused,
-              onClick: item.onClick,
-            },
-            index,
-          ),
-        )}
-      </g>
-    );
-  }
-
   return (
     <g {...other}>
-      {transformedData.map((item, index) => (
-        <PieArc
-          key={item.dataIndex}
-          startAngle={item.startAngle}
-          endAngle={item.endAngle}
-          paddingAngle={item.paddingAngle}
-          innerRadius={item.innerRadius}
-          outerRadius={item.outerRadius}
-          cornerRadius={item.cornerRadius}
-          seriesId={id}
-          color={item.color}
-          dataIndex={index}
-          isFaded={item.isFaded}
-          isHighlighted={item.isHighlighted}
-          isFocused={item.isFocused}
-          onClick={item.onClick}
-        />
-      ))}
+      {transformedData.map((item, index) =>
+        children(
+          {
+            seriesId: item.seriesId,
+            dataIndex: item.dataIndex,
+            startAngle: item.startAngle,
+            endAngle: item.endAngle,
+            paddingAngle: item.paddingAngle,
+            innerRadius: item.innerRadius,
+            outerRadius: item.outerRadius,
+            cornerRadius: item.cornerRadius,
+            color: item.color,
+            isFaded: item.isFaded,
+            isHighlighted: item.isHighlighted,
+            isFocused: item.isFocused,
+            onClick: item.onClick,
+          },
+          index,
+        ),
+      )}
     </g>
   );
 }

@@ -15,7 +15,9 @@ export const PieChart = React.forwardRef(function PieChart(
       <ChartsSurface ref={ref} sx={sx}>
         <title>{title}</title>
         <desc>{desc}</desc>
-        <PieChartBase.Plot />
+        <PieChartBase.Plot>
+          {(item, index) => <PieChartBase.Arc key={index} {...item} />}
+        </PieChartBase.Plot>
         <PieChartBase.LabelPlot />
       </ChartsSurface>
       <ChartsTooltip trigger="item" />

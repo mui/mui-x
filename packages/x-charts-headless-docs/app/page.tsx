@@ -71,7 +71,9 @@ export default function Home() {
         <h2>Headless Pie Chart</h2>
         <PieChartHeadless.Root {...data}>
           <PieChartHeadless.Surface>
-            <PieChartHeadless.Plot />
+            <PieChartHeadless.Plot>
+              {(item, index) => <PieChartHeadless.Arc key={index} {...item} />}
+            </PieChartHeadless.Plot>
             <PieChartHeadless.LabelPlot />
           </PieChartHeadless.Surface>
         </PieChartHeadless.Root>
