@@ -125,7 +125,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   );
 
   const lastInteraction = useSelector(store, selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
+  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
   const itemPosition = useSelector(
     store,
@@ -235,7 +235,9 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           {...other}
           className={classes?.root}
           open={isOpen}
-          placement={other.placement ?? position ?? (isMouse ? 'right-start' : 'top')}
+          placement={
+            other.placement ?? position ?? (pointerType !== null && isMouse ? 'right-start' : 'top')
+          }
           popperRef={popperRef}
           anchorEl={anchorEl}
           modifiers={modifiers}

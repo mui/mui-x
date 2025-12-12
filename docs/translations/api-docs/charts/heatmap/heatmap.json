@@ -45,6 +45,12 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/heatmap-series/'>HeatmapSeries</a> objects."
     },
@@ -55,6 +61,7 @@
       "description": "The configuration of the tooltip.",
       "seeMoreText": "See {{link}} for more details."
     },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },

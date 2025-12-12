@@ -17,7 +17,7 @@ import {
 import { type ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 
 export type PieChartPluginSignatures = [
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'pie'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartKeyboardNavigationSignature,
