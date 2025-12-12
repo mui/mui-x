@@ -16,7 +16,7 @@ storeClasses.forEach((storeClass) => {
       it('should apply the configured timezone to the visibleDate', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const state = new storeClass.Value(
-          { events: [], visibleDate, timezone: 'America/New_York' },
+          { events: [], visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         ).state;
         const result = schedulerOtherSelectors.visibleDate(state);
@@ -50,13 +50,13 @@ storeClasses.forEach((storeClass) => {
       it('should return a new reference when timezone changes', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const store = new storeClass.Value(
-          { events: [], visibleDate, timezone: 'default' },
+          { events: [], visibleDate, displayTimezone: 'default' },
           adapter,
         );
         const result1 = schedulerOtherSelectors.visibleDate(store.state);
 
         store.updateStateFromParameters(
-          { events: [], visibleDate, timezone: 'America/New_York' },
+          { events: [], visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         );
         const result2 = schedulerOtherSelectors.visibleDate(store.state);
