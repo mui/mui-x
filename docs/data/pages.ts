@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/llms.txt`, title: 'llms.txt', newFeature: true },
       { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
       { pathname: `/x/guides/telemetry`, plan: 'pro' },
       { pathname: `/x/introduction/roadmap` },
@@ -329,6 +330,10 @@ const pages: MuiPage[] = [
                 title: 'GridRowSpacingParams',
               },
               {
+                pathname: '/x/api/data-grid/grid-row-order-change-params',
+                title: 'GridRowOrderChangeParams',
+              },
+              {
                 pathname: '/x/api/data-grid/grid-aggregation-function',
                 title: 'GridAggregationFunction',
               },
@@ -350,6 +355,13 @@ const pages: MuiPage[] = [
               },
             ],
           },
+        ],
+      },
+      {
+        pathname: '/x/tutorials',
+        subheader: 'Tutorials',
+        children: [
+          { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
         ],
       },
     ],

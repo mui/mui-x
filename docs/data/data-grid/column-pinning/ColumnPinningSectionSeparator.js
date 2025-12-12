@@ -5,7 +5,11 @@ import FormControl from '@mui/material/FormControl';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
-import { DataGridPro, GridActionsCellItem } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  GridActionsCellItem,
+  GridActionsCell,
+} from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
   randomTraderName,
@@ -76,10 +80,12 @@ const columns = [
     field: 'actions',
     type: 'actions',
     width: 100,
-    getActions: () => [
-      <GridActionsCellItem icon={<EditIcon />} label="Edit" />,
-      <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
-    ],
+    renderCell: (params) => (
+      <GridActionsCell {...params}>
+        <GridActionsCellItem icon={<EditIcon />} label="Edit" />
+        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />
+      </GridActionsCell>
+    ),
   },
 ];
 

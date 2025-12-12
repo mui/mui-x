@@ -1,4 +1,4 @@
-import type { SchedulerValidDate } from './date';
+import type { TemporalSupportedObject } from '../base-ui-copy/types';
 
 export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
@@ -79,7 +79,7 @@ export interface RecurringEventRecurrenceRule {
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: SchedulerValidDate;
+  until?: TemporalSupportedObject;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.

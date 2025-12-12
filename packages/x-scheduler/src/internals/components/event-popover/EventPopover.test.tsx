@@ -2,7 +2,6 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   adapter,
-  createOccurrenceFromEvent,
   createSchedulerRenderer,
   EventBuilder,
   SchedulerStoreRunner,
@@ -12,16 +11,15 @@ import {
 
 import { screen, within } from '@mui/internal-test-utils';
 import {
-  SchedulerOccurrencePlaceholderCreation,
   SchedulerResource,
-  SchedulerEvent,
+  SchedulerResourceId,
+  SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
-import { DEFAULT_EVENT_COLOR } from '@mui/x-scheduler-headless/constants';
 import { Popover } from '@base-ui-components/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventPopoverContent } from './EventPopover';
-import { getColorClassName } from '../../utils/color-utils';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
@@ -51,7 +49,13 @@ describe('<EventPopoverContent />', () => {
   const defaultProps = {
     anchor,
     container: document.body,
-    occurrence: createOccurrenceFromEvent(DEFAULT_EVENT),
+    occurrence: EventBuilder.new()
+      .id(DEFAULT_EVENT.id)
+      .title(DEFAULT_EVENT.title)
+      .description(DEFAULT_EVENT.description)
+      .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
+      .resource(DEFAULT_EVENT.resource as SchedulerResourceId)
+      .toOccurrence(),
     onClose: () => {},
   };
 
@@ -75,7 +79,7 @@ describe('<EventPopoverContent />', () => {
       'aria-checked',
       'false',
     );
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/personal/i);
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/personal/i);
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     expect(screen.getByRole('combobox', { name: /recurrence/i }).textContent).to.match(
       /don't repeat/i,
@@ -100,8 +104,9 @@ describe('<EventPopoverContent />', () => {
     await user.click(screen.getByRole('tab', { name: /recurrence/i }));
     await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
     await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
-    await user.click(screen.getByRole('combobox', { name: /resource/i }));
-    await user.click(await screen.findByRole('option', { name: /work/i }));
+    await user.click(screen.getByRole('button', { name: /resource/i }));
+    await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
+    await user.click(await screen.findByRole('menuitemradio', { name: /pink/i }));
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onEventsChange.calledOnce).to.equal(true);
@@ -116,6 +121,7 @@ describe('<EventPopoverContent />', () => {
       allDay: true,
       rrule: { freq: 'DAILY', interval: 1 },
       resource: 'r1',
+      color: 'pink',
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
@@ -156,13 +162,19 @@ describe('<EventPopoverContent />', () => {
 
   it('should handle read-only events and render ReadonlyContent', () => {
     const readOnlyEvent = { ...DEFAULT_EVENT, readOnly: true };
+
+    const readOnlyOccurrence = EventBuilder.new(adapter)
+      .id(readOnlyEvent.id)
+      .title(readOnlyEvent.title)
+      .description(readOnlyEvent.description)
+      .span(readOnlyEvent.start, readOnlyEvent.end)
+      .readOnly(true)
+      .toOccurrence();
+
     render(
       <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
         <Popover.Root open>
-          <EventPopoverContent
-            {...defaultProps}
-            occurrence={createOccurrenceFromEvent(readOnlyEvent)}
-          />
+          <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -184,18 +196,23 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
     expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
   it('should handle read-only events if EventCalendar is read-only', () => {
+    const readOnlyOccurrence = EventBuilder.new(adapter)
+      .id(DEFAULT_EVENT.id)
+      .title(DEFAULT_EVENT.title)
+      .description(DEFAULT_EVENT.description)
+      .span(DEFAULT_EVENT.start, DEFAULT_EVENT.end)
+      .readOnly(true)
+      .toOccurrence();
+
     render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
         <Popover.Root open>
-          <EventPopoverContent
-            {...defaultProps}
-            occurrence={createOccurrenceFromEvent(DEFAULT_EVENT)}
-          />
+          <EventPopoverContent {...defaultProps} occurrence={readOnlyOccurrence} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -217,7 +234,7 @@ describe('<EventPopoverContent />', () => {
     expect(screen.queryByRole('checkbox', { name: /all day/i })).to.equal(null);
 
     // Should not have resource/recurrence comboboxes
-    expect(screen.queryByRole('combobox', { name: /resource/i })).to.equal(null);
+    expect(screen.queryByRole('button', { name: /resource/i })).to.equal(null);
     expect(screen.queryByRole('combobox', { name: /recurrence/i })).to.equal(null);
   });
 
@@ -235,6 +252,14 @@ describe('<EventPopoverContent />', () => {
       resource: 'r3',
     };
 
+    const eventWithNoResourceColorOccurrence = EventBuilder.new(adapter)
+      .id(eventWithNoResourceColor.id)
+      .title(eventWithNoResourceColor.title)
+      .description(eventWithNoResourceColor.description)
+      .span(eventWithNoResourceColor.start, eventWithNoResourceColor.end)
+      .resource(eventWithNoResourceColor.resource as SchedulerResourceId)
+      .toOccurrence();
+
     render(
       <EventCalendarProvider
         events={[eventWithNoResourceColor]}
@@ -242,18 +267,13 @@ describe('<EventPopoverContent />', () => {
         resources={resourcesNoColor}
       >
         <Popover.Root open>
-          <EventPopoverContent
-            {...defaultProps}
-            occurrence={createOccurrenceFromEvent(eventWithNoResourceColor)}
-          />
+          <EventPopoverContent {...defaultProps} occurrence={eventWithNoResourceColorOccurrence} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(/NoColor/i);
-    expect(document.querySelector('.ResourceLegendColor')).to.have.class(
-      getColorClassName(DEFAULT_EVENT_COLOR),
-    );
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
+    expect(document.querySelector('.ResourceLegendColor')).to.have.class('palette-jade');
   });
 
   it('should fallback to "No resource" with default color when the event has no resource', async () => {
@@ -264,6 +284,13 @@ describe('<EventPopoverContent />', () => {
       resource: undefined,
     };
 
+    const eventWithoutResourceOccurrence = EventBuilder.new(adapter)
+      .id(eventWithoutResource.id)
+      .title(eventWithoutResource.title)
+      .description(eventWithoutResource.description)
+      .span(eventWithoutResource.start, eventWithoutResource.end)
+      .toOccurrence();
+
     const { user } = render(
       <EventCalendarProvider
         events={[eventWithoutResource]}
@@ -271,21 +298,14 @@ describe('<EventPopoverContent />', () => {
         resources={resources}
       >
         <Popover.Root open>
-          <EventPopoverContent
-            {...defaultProps}
-            occurrence={createOccurrenceFromEvent(eventWithoutResource)}
-          />
+          <EventPopoverContent {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
         </Popover.Root>
       </EventCalendarProvider>,
     );
 
-    expect(screen.getByRole('combobox', { name: /resource/i }).textContent).to.match(
-      /no resource/i,
-    );
+    expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
 
-    expect(document.querySelector('.ResourceLegendColor')).to.have.class(
-      getColorClassName(DEFAULT_EVENT_COLOR),
-    );
+    expect(document.querySelector('.ResourceLegendColor')).to.have.class('palette-jade');
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));
 
@@ -296,18 +316,14 @@ describe('<EventPopoverContent />', () => {
 
   describe('Event creation', () => {
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00');
-      const end = adapter.date('2025-05-26T08:30:00');
+      const start = adapter.date('2025-05-26T07:30:00', 'default');
+      const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'tmp',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: false,
-      });
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start, end)
+        .toOccurrence();
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -343,18 +359,15 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
-      const start = adapter.date('2025-05-26T07:30:00');
-      const end = adapter.date('2025-05-26T08:30:00');
+      const start = adapter.date('2025-05-26T07:30:00', 'default');
+      const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'tmp',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: true,
-      });
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start, end)
+        .allDay(true)
+        .toOccurrence();
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -390,18 +403,14 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00');
-      const end = adapter.date('2025-05-26T08:30:00');
+      const start = adapter.date('2025-05-26T07:30:00', 'default');
+      const end = adapter.date('2025-05-26T08:30:00', 'default');
       const handleSurfaceChange = spy();
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'tmp',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: false,
-      });
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('tmp')
+        .span(start, end)
+        .toOccurrence();
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
@@ -436,8 +445,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
-      const start = adapter.date('2025-06-10T09:00:00');
-      const end = adapter.date('2025-06-10T09:30:00');
+      const start = adapter.date('2025-06-10T09:00:00', 'default');
+      const end = adapter.date('2025-06-10T09:30:00', 'default');
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
@@ -447,14 +456,12 @@ describe('<EventPopoverContent />', () => {
         resourceId: null,
       };
 
-      const creationOccurrence = createOccurrenceFromEvent({
-        id: 'placeholder-id',
-        start,
-        end,
-        title: '',
-        description: '',
-        allDay: false,
-      });
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('placeholder-id')
+        .span(start, end)
+        .title('')
+        .description('')
+        .toOccurrence();
 
       const onEventsChange = spy();
       let createEventSpy;
@@ -481,8 +488,8 @@ describe('<EventPopoverContent />', () => {
 
       await user.type(screen.getByLabelText(/event title/i), ' New title ');
       await user.type(screen.getByLabelText(/description/i), ' Some details ');
-      await user.click(screen.getByRole('combobox', { name: /resource/i }));
-      await user.click(await screen.findByRole('option', { name: /work/i }));
+      await user.click(screen.getByRole('button', { name: /resource/i }));
+      await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
       await user.click(screen.getByRole('tab', { name: /recurrence/i }));
       await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
       await user.click(await screen.findByRole('option', { name: /daily/i }));
@@ -491,7 +498,6 @@ describe('<EventPopoverContent />', () => {
       expect(createEventSpy?.calledOnce).to.equal(true);
       const payload = createEventSpy.lastCall.firstArg;
 
-      expect(payload.id).to.be.a('string');
       expect(payload.title).to.equal('New title');
       expect(payload.description).to.equal('Some details');
       expect(payload.allDay).to.equal(false);
@@ -510,7 +516,13 @@ describe('<EventPopoverContent />', () => {
         .resource('r2')
         .recurrent('DAILY')
         .build();
-      const originalRecurringEventOccurrence = createOccurrenceFromEvent(originalRecurringEvent);
+      const originalRecurringEventOccurrence = EventBuilder.new(adapter)
+        .id(originalRecurringEvent.id)
+        .title(originalRecurringEvent.title)
+        .description(originalRecurringEvent.description)
+        .span(originalRecurringEvent.start, originalRecurringEvent.end)
+        .recurrent('DAILY')
+        .toOccurrence();
 
       it('should not call updateRecurringEvent if the user cancels the scope dialog', async () => {
         let updateRecurringEventSpy, selectRecurringEventUpdateScopeSpy;
@@ -552,7 +564,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/All events in the series/i));
+        await user.click(screen.getByText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Cancel/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -601,7 +613,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/All events in the series/i));
+        await user.click(screen.getByText(/All events in the series/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -611,8 +623,12 @@ describe('<EventPopoverContent />', () => {
         expect(openPayload.changes.title).to.equal('Daily standup');
         expect(openPayload.changes.description).to.equal('sync');
         expect(openPayload.changes.allDay).to.equal(false);
-        expect(openPayload.changes.start).to.toEqualDateTime(adapter.date('2025-06-11T10:05:00'));
-        expect(openPayload.changes.end).to.toEqualDateTime(adapter.date('2025-06-11T10:35:00'));
+        expect(openPayload.changes.start).to.toEqualDateTime(
+          adapter.date('2025-06-11T10:05:00', 'default'),
+        );
+        expect(openPayload.changes.end).to.toEqualDateTime(
+          adapter.date('2025-06-11T10:35:00', 'default'),
+        );
         expect(openPayload.changes).to.not.have.property('rrule');
 
         expect(selectRecurringEventUpdateScopeSpy?.calledOnce).to.equal(true);
@@ -658,7 +674,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/Only this event/i));
+        await user.click(screen.getByText(/Only this event/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -718,7 +734,7 @@ describe('<EventPopoverContent />', () => {
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         await screen.findByText(/Apply this change to:/i);
-        await user.click(screen.getByLabelText(/This and following events/i));
+        await user.click(screen.getByText(/This and following events/i));
         await user.click(screen.getByRole('button', { name: /Confirm/i }));
 
         expect(updateRecurringEventSpy?.calledOnce).to.equal(true);
@@ -750,7 +766,7 @@ describe('<EventPopoverContent />', () => {
           );
 
           expect(screen.getByLabelText(/repeat/i)).to.have.attribute('aria-disabled', 'true');
-          expect(screen.getByLabelText(/ends/i)).to.have.attribute('aria-disabled', 'true');
+          expect(screen.getByText('Ends').parentElement).to.have.attribute('aria-disabled', 'true');
         });
 
         it('should keep recurrence fields disabled when a preset is selected', async () => {
@@ -767,7 +783,10 @@ describe('<EventPopoverContent />', () => {
           await user.click(await screen.findByRole('option', { name: /repeats daily/i }));
 
           expect(screen.getByLabelText(/repeat/i)).to.have.attribute('aria-disabled', 'true');
-          expect(screen.getByLabelText(/ends/i)).to.have.attribute('aria-disabled', 'true');
+          expect(screen.getByText('Never').parentElement).to.have.attribute(
+            'aria-disabled',
+            'true',
+          );
         });
 
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
@@ -784,7 +803,7 @@ describe('<EventPopoverContent />', () => {
           await user.click(await screen.findByRole('option', { name: /custom repeat rule/i }));
 
           expect(screen.getByLabelText(/repeat/i)).not.to.have.attribute('disabled');
-          expect(screen.getByLabelText(/ends/i)).not.to.have.attribute('disabled');
+          expect(screen.getByText('Never').parentElement).not.to.have.attribute('disabled');
         });
 
         it('should submit custom recurrence with Ends: after', async () => {
@@ -819,7 +838,7 @@ describe('<EventPopoverContent />', () => {
 
           // Ends: select "After"
           const endsFieldset = screen.getByRole('group', { name: /ends/i });
-          const afterRadio = within(endsFieldset).getByRole('radio', { name: /after/i });
+          const afterRadio = within(endsFieldset).getByText('After');
           await user.click(afterRadio);
 
           // Set count = 5
@@ -873,7 +892,7 @@ describe('<EventPopoverContent />', () => {
 
           // Ends: keep Never (default)
           const endsFieldset = screen.getByRole('group', { name: /ends/i });
-          expect(within(endsFieldset).getByRole('radio', { name: /never/i })).to.have.attribute(
+          expect(within(endsFieldset).getByText('Never').parentElement).to.have.attribute(
             'aria-checked',
             'true',
           );
@@ -920,10 +939,10 @@ describe('<EventPopoverContent />', () => {
           await user.click(freqCombo);
           await user.click(await screen.findByRole('option', { name: /years/i }));
 
-          const endsGroup = screen.getByRole('group', { name: /ends/i });
-
           // Ends: "Until" and date 2025-07-20
-          const untilRadio = within(endsGroup).getByRole('radio', { name: /until/i });
+          const untilRadio = within(screen.getByRole('group', { name: /ends/i })).getByText(
+            'Until',
+          );
           await user.click(untilRadio);
           const labelEl = untilRadio.closest('label');
           const dateInput = labelEl?.querySelector('input[type="date"]') as HTMLInputElement;
@@ -938,9 +957,125 @@ describe('<EventPopoverContent />', () => {
 
           expect(updated.rrule).to.deep.include({ freq: 'YEARLY', interval: 3 });
           expect(updated.rrule?.count ?? undefined).to.equal(undefined);
-          expect(updated.rrule?.until).toEqualDateTime(
-            adapter.startOfDay(adapter.date('2025-07-20T00:00:00')),
+          expect(updated.rrule?.until).toEqualDateTime('2025-07-20T00:00:00.000Z');
+        });
+
+        it('should submit custom weekly with selected weekdays', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
           );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /weeks/i }));
+
+          // Select Monday and Friday in the weekly day toggles
+          await user.click(screen.getByRole('button', { name: /monday/i }));
+          await user.click(screen.getByRole('button', { name: /friday/i }));
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'WEEKLY',
+            interval: 1,
+            byDay: ['MO', 'FR'],
+            byMonthDay: [],
+          });
+        });
+
+        it('should submit custom monthly with "day of month" option', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          await user.click(screen.getByRole('button', { name: /day 26/i })); // DEFAULT_EVENT is 2025-05-26
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byMonthDay: [26],
+          });
+        });
+
+        it('should submit custom monthly with "ordinal weekday" option', async () => {
+          const onEventsChange = spy();
+
+          const { user } = render(
+            <EventCalendarProvider
+              events={[DEFAULT_EVENT]}
+              resources={resources}
+              onEventsChange={onEventsChange}
+            >
+              <Popover.Root open>
+                <EventPopoverContent {...defaultProps} />
+              </Popover.Root>
+            </EventCalendarProvider>,
+          );
+
+          await user.click(screen.getByRole('tab', { name: /recurrence/i }));
+          await user.click(screen.getByRole('combobox', { name: /recurrence/i }));
+          await user.click(await screen.findByRole('option', { name: /custom/i }));
+
+          const repeatGroup = screen.getByRole('group', { name: /repeat/i });
+          const freqCombo = within(repeatGroup).getByRole('combobox');
+          await user.click(freqCombo);
+          await user.click(await screen.findByRole('option', { name: /months/i }));
+
+          // The DEFAULT_EVENT (2025-05-26 Mon) is the last Monday of the month ("-1MO")
+          await user.click(screen.getByRole('button', { name: /mon.*last week/i }));
+
+          await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+          expect(onEventsChange.calledOnce).to.equal(true);
+          const updated = onEventsChange.firstCall.firstArg[0];
+
+          expect(updated.rrule).to.deep.equal({
+            freq: 'MONTHLY',
+            interval: 1,
+            byDay: ['-1MO'],
+          });
         });
       });
     });
@@ -952,7 +1087,12 @@ describe('<EventPopoverContent />', () => {
         .description('description')
         .singleDay('2025-06-12T14:00:00')
         .build();
-      const nonRecurringEventOccurrence = createOccurrenceFromEvent(nonRecurringEvent);
+      const nonRecurringEventOccurrence = EventBuilder.new(adapter)
+        .id(nonRecurringEvent.id)
+        .title(nonRecurringEvent.title)
+        .description(nonRecurringEvent.description)
+        .singleDay('2025-06-12T14:00:00')
+        .toOccurrence();
 
       it('should call updateEvent with updated values on Submit', async () => {
         let updateEventSpy;
@@ -974,8 +1114,8 @@ describe('<EventPopoverContent />', () => {
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
         await user.clear(screen.getByLabelText(/description/i));
         await user.type(screen.getByLabelText(/description/i), '  new description  ');
-        await user.click(screen.getByRole('combobox', { name: /resource/i }));
-        await user.click(await screen.findByRole('option', { name: /work/i }));
+        await user.click(screen.getByRole('button', { name: /resource/i }));
+        await user.click(await screen.findByRole('menuitemradio', { name: /work/i }));
         await user.click(screen.getByRole('button', { name: /save changes/i }));
 
         expect(updateEventSpy?.calledOnce).to.equal(true);
@@ -986,8 +1126,8 @@ describe('<EventPopoverContent />', () => {
         expect(payload.description).to.equal('new description');
         expect(payload.resource).to.equal('r1');
         expect(payload.allDay).to.equal(false);
-        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00'));
-        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00'));
+        expect(payload.start).toEqualDateTime(adapter.date('2025-06-12T14:00:00', 'default'));
+        expect(payload.end).toEqualDateTime(adapter.date('2025-06-12T15:00:00', 'default'));
         expect(payload.rrule).to.equal(undefined);
       });
 

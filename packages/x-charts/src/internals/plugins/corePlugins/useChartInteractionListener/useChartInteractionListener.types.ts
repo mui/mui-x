@@ -1,12 +1,12 @@
 import {
-  MoveEvent,
-  PanEvent,
-  PanGestureOptions,
-  PinchEvent,
-  PinchGestureOptions,
-  PressEvent,
-  TapEvent,
-  TurnWheelEvent,
+  type MoveEvent,
+  type PanEvent,
+  type PanGestureOptions,
+  type PinchEvent,
+  type PinchGestureOptions,
+  type PressEvent,
+  type TapEvent,
+  type TurnWheelEvent,
   type PressAndDragEvent,
   type PressAndDragGestureOptions,
   type TapAndDragEvent,
@@ -14,7 +14,7 @@ import {
   type TapGestureOptions,
   type TurnWheelGestureOptions,
 } from '@mui/x-internal-gestures/core';
-import { ChartPluginSignature } from '../../models';
+import { type ChartPluginSignature } from '../../models';
 
 export type ChartInteraction =
   | 'pan'
@@ -27,6 +27,7 @@ export type ChartInteraction =
   | 'zoomPinchStart'
   | 'zoomPinchEnd'
   | 'zoomTurnWheel'
+  | 'panTurnWheel'
   | 'zoomTapAndDrag'
   | 'zoomTapAndDragStart'
   | 'zoomTapAndDragEnd'
@@ -74,6 +75,11 @@ export type AddInteractionListener = {
     options?: boolean | AddEventListenerOptions,
   ): InteractionListenerResult;
   <CustomData extends Record<string, unknown> = Record<string, unknown>>(
+    interaction: 'panTurnWheel',
+    callback: (event: TurnWheelEvent<CustomData>) => void,
+    options?: boolean | AddEventListenerOptions,
+  ): InteractionListenerResult;
+  <CustomData extends Record<string, unknown> = Record<string, unknown>>(
     interaction: 'move' | 'moveStart' | 'moveEnd',
     callback: (event: MoveEvent<CustomData>) => void,
     options?: boolean | AddEventListenerOptions,
@@ -106,6 +112,10 @@ export type UpdateZoomInteractionListeners = {
   (
     interaction: 'zoomTurnWheel',
     options?: Omit<TurnWheelGestureOptions<'zoomTurnWheel'>, 'name'>,
+  ): void;
+  (
+    interaction: 'panTurnWheel',
+    options?: Omit<TurnWheelGestureOptions<'panTurnWheel'>, 'name'>,
   ): void;
   (
     interaction: 'zoomTapAndDrag',

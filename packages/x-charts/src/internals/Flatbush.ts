@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import FlatQueue from 'flatqueue';
+import FlatQueue from '@mui/x-charts-vendor/flatqueue';
 
 const ARRAY_TYPES = [
   Int8Array,
@@ -325,7 +325,7 @@ export class Flatbush {
     x,
     y,
     maxResults = Infinity,
-    maxDistSq?: number = Infinity,
+    maxDistSq: number = Infinity,
     filterFn?: (index: number) => boolean,
     sqDistFn = sqDist,
   ) {

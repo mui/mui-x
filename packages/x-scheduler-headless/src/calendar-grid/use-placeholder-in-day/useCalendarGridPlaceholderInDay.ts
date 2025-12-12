@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { useAdapter } from '../../use-adapter/useAdapter';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerValidDate,
+  day: TemporalSupportedObject,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
 ): useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition | null {
   const adapter = useAdapter();
@@ -54,7 +54,7 @@ export function useCalendarGridPlaceholderInDay(
         ),
         position: {
           index: 1,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
     }
@@ -68,7 +68,7 @@ export function useCalendarGridPlaceholderInDay(
         end: processDate(rawPlaceholder.end, adapter),
         position: {
           index: 1,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
     }
@@ -91,7 +91,7 @@ export function useCalendarGridPlaceholderInDay(
       end: processDate(rawPlaceholder.end, adapter),
       position: {
         index: positionIndex,
-        daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
   }, [adapter, day, originalEvent, rawPlaceholder, row.days, rowEnd]);

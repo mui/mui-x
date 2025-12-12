@@ -817,7 +817,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(4);
+      expect(onRowSelectionModelChange.callCount).to.equal(3);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
@@ -1336,7 +1336,7 @@ describe('<DataGridPro /> - Row selection', () => {
   });
 
   describe('controlled selection', () => {
-    it('should not publish "rowSelectionChange" if the selection state did not change ', () => {
+    it('should not publish "rowSelectionChange" if the selection state did not change', () => {
       const handleSelectionChange = spy();
       const rowSelectionModel: GridRowSelectionModel = includeRowSelection([]);
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);

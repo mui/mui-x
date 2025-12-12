@@ -1,14 +1,13 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 import {
-  DEFAULT_EVENT_CALENDAR_PREFERENCES,
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
   DEFAULT_VIEWS,
   EventCalendarStore,
 } from '../EventCalendarStore';
 import { CalendarView } from '../../models';
-import { DEFAULT_IS_MULTI_DAY_EVENT } from '../../utils/SchedulerStore';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -21,33 +20,35 @@ describe('Core - EventCalendarStore', () => {
 
       const expectedState = {
         adapter,
-        view: DEFAULT_VIEW,
-        views: DEFAULT_VIEWS,
-        eventIdList: [],
-        eventModelList: [],
-        eventModelLookup: new Map(),
-        processedEventLookup: new Map(),
-        eventModelStructure: undefined,
-        resourceIdList: [],
-        processedResourceLookup: new Map(),
-        resourceModelStructure: undefined,
-        resourceChildrenIdLookup: new Map(),
-        visibleResources: new Map(),
-        nowUpdatedEveryMinute: adapter.date(),
-        isMultiDayEvent: DEFAULT_IS_MULTI_DAY_EVENT,
         areEventsDraggable: false,
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
-        showCurrentTimeIndicator: true,
+        copiedEvent: null,
         eventColor: 'jade',
-        pendingUpdateRecurringEventParameters: null,
-        preferences: DEFAULT_EVENT_CALENDAR_PREFERENCES,
-        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
-        viewConfig: null,
+        eventCreation: true,
+        eventIdList: [],
+        eventModelList: [],
+        eventModelLookup: new Map(),
+        eventModelStructure: undefined,
+        nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
-        visibleDate: adapter.startOfDay(adapter.date()),
+        pendingUpdateRecurringEventParameters: null,
+        preferences: EMPTY_OBJECT,
+        preferencesMenuConfig: DEFAULT_PREFERENCES_MENU_CONFIG,
+        processedEventLookup: new Map(),
+        processedResourceLookup: new Map(),
         readOnly: false,
+        resourceChildrenIdLookup: new Map(),
+        resourceIdList: [],
+        resourceModelStructure: undefined,
+        showCurrentTimeIndicator: true,
+        timezone: 'default',
+        view: DEFAULT_VIEW,
+        viewConfig: null,
+        views: DEFAULT_VIEWS,
+        visibleDate: adapter.startOfDay(adapter.now('default')),
+        visibleResources: new Map(),
       };
 
       expect(store.state).to.deep.equal(expectedState);

@@ -2,10 +2,13 @@ import { createSelector, createSelectorMemoized } from '@base-ui-components/util
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
+  RecurringEventWeekDayCode,
   SchedulerProcessedDate,
+  TemporalSupportedObject,
 } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { getWeekDayCode, serializeRRule } from '../utils/recurring-event-utils';
+import { computeMonthlyOrdinal, getWeekDayCode, serializeRRule } from '../utils/recurring-events';
+import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 export const schedulerRecurringEventSelectors = {
   /**
@@ -127,6 +130,46 @@ export const schedulerRecurringEventSelectors = {
         return false;
       } // One missing -> different
       return serializeRRule(adapter, rruleA) === serializeRRule(adapter, rruleB);
+    },
+  ),
+  /**
+   * Returns the 7 week days with code and date, starting at startOfWeek(visibleDate).
+   */
+  weeklyDays: createSelectorMemoized(
+    (state: State) => state.adapter,
+    schedulerOtherSelectors.visibleDate,
+    (
+      adapter,
+      visibleDate,
+    ): { code: RecurringEventWeekDayCode; date: TemporalSupportedObject }[] => {
+      const start = adapter.startOfWeek(visibleDate);
+      return Array.from({ length: 7 }, (_, i) => {
+        const date = adapter.addDays(start, i);
+        return { code: getWeekDayCode(adapter, date), date };
+      });
+    },
+  ),
+
+  /**
+   * Returns month reference for the given occurrence: dayOfMonth, weekday code and ordinal.
+   */
+  monthlyReference: createSelectorMemoized(
+    (state: State) => state.adapter,
+    (
+      adapter,
+      date: SchedulerProcessedDate,
+    ): {
+      dayOfMonth: number;
+      code: RecurringEventWeekDayCode;
+      ord: number;
+      date: TemporalSupportedObject;
+    } => {
+      return {
+        dayOfMonth: adapter.getDate(date.value),
+        code: getWeekDayCode(adapter, date.value),
+        ord: computeMonthlyOrdinal(adapter, date.value),
+        date: date.value,
+      };
     },
   ),
 };

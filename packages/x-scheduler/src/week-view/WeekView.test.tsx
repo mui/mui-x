@@ -30,28 +30,35 @@ describe('<WeekView />', () => {
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
-        <EventCalendarProvider events={allDayEvents} resources={[]}>
+        <EventCalendarProvider
+          events={[EventBuilder.new().span('2025-05-05', '2025-05-07', { allDay: true }).build()]}
+          resources={[]}
+        >
           <WeekView />
         </EventCalendarProvider>,
       );
-      const allDayCells = screen.getAllByRole('gridcell');
-      const may5Cell = allDayCells.find((cell) => {
-        const labelledBy = cell.getAttribute('aria-labelledby');
-        return labelledBy?.includes('DayTimeGridHeaderCell-5 DayTimeGridAllDayEventsHeaderCell');
-      });
+
+      const getEventsFromDate = (date: number) => {
+        return screen
+          .getAllByRole('gridcell')
+          .find((cell) => {
+            const labelledBy = cell.getAttribute('aria-labelledby');
+            return labelledBy?.includes(
+              `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
+            );
+          })!
+          .querySelectorAll('.EventContainer');
+      };
 
       // Main event should render in the start date cell
-      expect(within(may5Cell!).getByText(multiDayEvent.title)).not.to.equal(null);
+      expect(getEventsFromDate(5)).toHaveLength(1);
 
       // Invisible events should exist in the spanned cells
-      const allEvents = screen.getAllByLabelText(multiDayEvent.title);
-      expect(allEvents.length).to.be.greaterThan(1);
-
-      // Check that invisible events have aria-hidden attribute
-      const hiddenEvents = allEvents.filter(
-        (event) => event.getAttribute('aria-hidden') === 'true',
-      );
-      expect(hiddenEvents.length).to.be.greaterThan(0);
+      // Also check that invisible events have aria-hidden attribute
+      expect(getEventsFromDate(6)).toHaveLength(1);
+      expect(getEventsFromDate(6)[0]).to.have.attribute('aria-hidden', 'true');
+      expect(getEventsFromDate(7)).toHaveLength(1);
+      expect(getEventsFromDate(7)[0]).to.have.attribute('aria-hidden', 'true');
     });
 
     it('should render all-day event in first cell of week when event starts before the week', () => {
@@ -200,7 +207,7 @@ describe('<WeekView />', () => {
 
   describe('current time indicator', () => {
     it('renders one indicator per day when today is in view', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z');
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
@@ -211,7 +218,7 @@ describe('<WeekView />', () => {
     });
 
     it("doesn't render the current time indicator if today is not in view", () => {
-      const visibleDate = adapter.date('2025-05-18T00:00:00Z');
+      const visibleDate = adapter.date('2025-05-18T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
       const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
@@ -223,7 +230,7 @@ describe('<WeekView />', () => {
 
     it('hides hour labels close to the indicator', () => {
       // 12:10 => the 12 hour label should be hidden
-      const visibleDate = adapter.date('2025-05-04T12:10:00Z');
+      const visibleDate = adapter.date('2025-05-04T12:10:00Z', 'default');
 
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
@@ -232,7 +239,7 @@ describe('<WeekView />', () => {
     });
 
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
-      const visibleDate = adapter.date('2025-05-04T00:00:00Z');
+      const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
 
       render(
         <EventCalendar

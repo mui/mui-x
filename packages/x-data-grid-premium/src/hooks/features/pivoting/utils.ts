@@ -244,7 +244,13 @@ export const createPivotPropsFromRows = ({
         if (!column) {
           continue;
         }
-        let colValue = apiRef.current.getRowValue(row, column) ?? '(No value)';
+        const noValueString = '(No value)';
+        let colValue = apiRef.current.getRowValue(row, column) ?? noValueString;
+        // Handle empty strings to prevent issues with column grouping model
+        // https://github.com/mui/mui-x/issues/20552
+        if (colValue === '') {
+          colValue = noValueString;
+        }
 
         if (column.type === 'singleSelect') {
           const singleSelectColumn = column as GridSingleSelectColDef;
