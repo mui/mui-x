@@ -390,11 +390,19 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = resolveProps(existingState, {
+    // Keep only the properties explicitly defined on the new column (exclude `undefined`)
+    const newColumnDefinedProps = Object.fromEntries(
+      Object.entries(newColumn).filter(([, value]) => value !== undefined),
+    ) as Partial<GridColDef>;
+
+    const mergedProps = {
       ...getDefaultColTypeDef(newColumn.type),
-      ...newColumn,
+      ...newColumnDefinedProps,
+      field,
       hasBeenResized,
-    });
+    };
+
+    columnsState.lookup[field] = resolveProps(existingState, mergedProps);
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
