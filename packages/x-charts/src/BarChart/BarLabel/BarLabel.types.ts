@@ -13,7 +13,7 @@ export interface BarLabelOwnerState {
   classes?: Partial<BarLabelClasses>;
 }
 
-export type BarItem<V extends BarValueType | null = BarValueType | null> = {
+export type BarItem = {
   /**
    * The series id of the bar.
    */
@@ -25,7 +25,7 @@ export type BarItem<V extends BarValueType | null = BarValueType | null> = {
   /**
    * The value of the data point.
    */
-  value: V;
+  value: BarValueType | null;
 };
 
 export type BarLabelContext = {
@@ -43,7 +43,7 @@ export type BarLabelContext = {
   };
 };
 
-export type BarLabelFunction<V extends BarValueType | null = BarValueType | null> = (
-  item: BarItem<V>,
+export type BarLabelFunction = (
+  item: BarItem,
   context: BarLabelContext,
 ) => string | null | undefined;
