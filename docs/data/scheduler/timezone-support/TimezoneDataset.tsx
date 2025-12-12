@@ -2,7 +2,6 @@ import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { SchedulerEventModelStructure } from '@mui/x-scheduler-headless/models';
 import { TZDate } from '@date-fns/tz';
-import { formatInTimeZone } from 'date-fns-tz';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -16,11 +15,7 @@ export default function TimezoneDataset() {
       getter: (event) => new TZDate(event.startUtc, event.timezone),
       setter: (event, newValue) => {
         const tz = (newValue as any).timeZone;
-        event.startUtc = formatInTimeZone(
-          newValue,
-          'UTC',
-          "yyyy-MM-dd'T'HH:mm:ss'Z'",
-        );
+        event.startUtc = newValue.toISOString();
         event.timezone = tz;
         return event;
       },
@@ -29,7 +24,7 @@ export default function TimezoneDataset() {
       getter: (event) => new TZDate(event.endUtc, event.timezone),
       setter: (event, newValue) => {
         const tz = (newValue as any).timeZone;
-        event.endUtc = formatInTimeZone(newValue, 'UTC', "yyyy-MM-dd'T'HH:mm:ss'Z'");
+        event.endUtc = newValue.toISOString();
         event.timezone = tz;
         return event;
       },
