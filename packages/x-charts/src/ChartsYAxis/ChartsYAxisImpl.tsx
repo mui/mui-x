@@ -2,10 +2,10 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme, styled } from '@mui/material/styles';
-import { AxisScaleConfig, ChartsYAxisProps, ComputedAxis } from '../models/axis';
+import type { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { defaultProps, useUtilityClasses } from './utilities';
 import { isInfinity } from '../internals/isInfinity';
 import { useDrawingArea } from '../hooks/useDrawingArea';
@@ -20,14 +20,16 @@ const YAxisRoot = styled(AxisRoot, {
 })({});
 
 interface ChartsYAxisImplProps extends Omit<ChartsYAxisProps, 'axis'> {
-  axis: ComputedAxis<keyof AxisScaleConfig, any, ChartsYAxisProps>;
+  axis: ComputedAxis<ScaleName, any, ChartsYAxisProps>;
 }
 
 /**
  * @ignore - internal component. Use `ChartsYAxis` instead.
  */
 export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
-  const { scale: yScale, tickNumber, reverse, ...settings } = axis;
+  // @ts-expect-error ordinalTimeTicks may not be present on all axis types
+  // Should be set to never, but this causes other issues with proptypes generator.
+  const { scale: yScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
   const isHydrated = useIsHydrated();
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
@@ -106,7 +108,11 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
       'groups' in axis && Array.isArray(axis.groups) ? (
         <ChartsGroupedYAxisTicks {...inProps} />
       ) : (
-        <ChartsSingleYAxisTicks {...inProps} axisLabelHeight={axisLabelHeight} />
+        <ChartsSingleYAxisTicks
+          {...inProps}
+          axisLabelHeight={axisLabelHeight}
+          ordinalTimeTicks={ordinalTimeTicks}
+        />
       );
   }
 

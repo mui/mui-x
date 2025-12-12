@@ -10,6 +10,8 @@ import {
   RecurringEventUpdateScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
+  SchedulerEventPasteProperties,
+  SchedulerEvent,
 } from '../../models';
 import {
   SchedulerState,
@@ -30,7 +32,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { DEFAULT_EVENT_COLOR } from '../../constants';
+import { applyDataTimezoneToEventUpdate } from '../date-utils';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -73,6 +75,7 @@ export class SchedulerStore<
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
+      copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.timezone),
       pendingUpdateRecurringEventParameters: null,
       visibleResources: new Map(),
@@ -119,7 +122,7 @@ export class SchedulerStore<
       areEventsResizable: parameters.areEventsResizable ?? false,
       canDragEventsFromTheOutside: parameters.canDragEventsFromTheOutside ?? false,
       canDropEventsToTheOutside: parameters.canDropEventsToTheOutside ?? false,
-      eventColor: parameters.eventColor ?? DEFAULT_EVENT_COLOR,
+      eventColor: parameters.eventColor ?? 'jade',
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
@@ -284,7 +287,7 @@ export class SchedulerStore<
 
     return {
       deleted: deletedParam ?? [],
-      updated: Array.from(updated.keys()),
+      updated: Array.from(updated.keys()) as SchedulerEventId[],
       created: createdIds,
     };
   }
@@ -308,20 +311,23 @@ export class SchedulerStore<
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
-    const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
-
-    if (!original) {
-      throw new Error(
-        `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
-      );
-    }
+    const { adapter } = this.state;
+    const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (original?.rrule) {
       throw new Error(
         `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
       );
     }
 
-    this.updateEvents({ updated: [calendarEvent] });
+    const updatedEventInDataTimezone = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent: original,
+      changes: calendarEvent,
+    });
+
+    this.updateEvents({
+      updated: [updatedEventInDataTimezone],
+    });
   };
 
   /**
@@ -347,19 +353,29 @@ export class SchedulerStore<
     }
 
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = schedulerEventSelectors.processedEvent(this.state, changes.id);
-    if (!original) {
-      throw new Error(
-        `${this.instanceName}: the original event was not found (id="${changes.id}").`,
-      );
-    }
+    const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
     if (!original.rrule) {
       throw new Error(
         `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
     }
 
-    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
+    const changesInDataTimezone = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent: original,
+      changes,
+    });
+
+    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat!.start);
+    const occurrenceStartInDataTimezone = adapter.setTimezone(occurrenceStart, originalTz);
+
+    const updatedEvents = updateRecurringEvent(
+      adapter,
+      original,
+      occurrenceStartInDataTimezone,
+      changesInDataTimezone,
+      scope,
+    );
     this.updateEvents(updatedEvents);
 
     const submit = onSubmit;
@@ -386,13 +402,61 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
-    const original = schedulerEventSelectors.processedEvent(this.state, eventId);
-    if (!original) {
-      throw new Error(`${this.instanceName}: the original event was not found (id="${eventId}").`);
-    }
-
+    const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
+  };
+
+  /**
+   * Copies an event to be pasted later.
+   */
+  public copyEvent = (eventId: SchedulerEventId) => {
+    // Asserts that the event exists.
+    schedulerEventSelectors.processedEventRequired(this.state, eventId);
+
+    this.set('copiedEvent', { id: eventId, action: 'copy' });
+  };
+
+  /**
+   * Cuts an event to be pasted later.
+   */
+  public cutEvent = (eventId: SchedulerEventId) => {
+    // Asserts that the event exists.
+    schedulerEventSelectors.processedEventRequired(this.state, eventId);
+
+    this.set('copiedEvent', { id: eventId, action: 'cut' });
+  };
+
+  /**
+   * Pastes the copied or cut event with the provided changes.
+   */
+  public pasteEvent = (changes: SchedulerEventPasteProperties) => {
+    const { adapter, copiedEvent } = this.state;
+    if (!copiedEvent) {
+      return null;
+    }
+
+    const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
+    const cleanChanges: Partial<SchedulerEvent> = { ...changes };
+    if (cleanChanges.start != null) {
+      cleanChanges.end = adapter.addMilliseconds(
+        cleanChanges.start,
+        original.end.timestamp - original.start.timestamp,
+      );
+    }
+
+    if (copiedEvent.action === 'cut') {
+      const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
+      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+    }
+
+    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat!;
+    const createdEvent: SchedulerEventCreationProperties = {
+      ...copiedEventWithoutId,
+      ...cleanChanges,
+      extractedFromId: id,
+    };
+    return this.updateEvents({ created: [createdEvent] }).created[0];
   };
 
   /**

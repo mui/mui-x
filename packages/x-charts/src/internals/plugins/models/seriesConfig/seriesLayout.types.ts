@@ -1,7 +1,7 @@
 import type { ChartSeriesType, ChartSeriesLayout } from '../../../../models/seriesType/config';
-import { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { type ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import type { SeriesId } from '../../../../models/seriesType/common';
-import { SeriesProcessorResult } from './seriesProcessor.types';
+import { type SeriesProcessorResult } from './seriesProcessor.types';
 
 export type SeriesLayoutGetterResult<TSeriesType extends ChartSeriesType> = Record<
   SeriesId,

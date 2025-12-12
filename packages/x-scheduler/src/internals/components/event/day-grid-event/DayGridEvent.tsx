@@ -159,6 +159,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       'EventCard',
       `EventCard--${variant}`,
       getColorClassName(color),
+      occurrence.className,
     ),
     style: {
       '--grid-row': occurrence.position.index,

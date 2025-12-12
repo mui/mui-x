@@ -5,6 +5,254 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.22.0
+
+_Dec 11, 2025_
+
+We'd like to extend a big thank you to the 11 contributors who made this release possible. Here are some highlights ✨:
+
+- Each Tree View component now exposes its own hook to initialize the `apiRef` object with accurate typing:
+
+  ```diff
+  -import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  +import { useSimpleTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  -const apiRef = useTreeViewApiRef();
+  +const apiRef = useSimpleTreeViewApiRef();
+
+  -import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  +import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  -const apiRef = useTreeViewApiRef();
+  +const apiRef = useRichTreeViewApiRef();
+
+  -import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+  +import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
+  -const apiRef = useTreeViewApiRef();
+  +const apiRef = useRichTreeViewProApiRef();
+  ```
+
+- 📚 [Tutorial](https://mui.com/x/react-data-grid/tutorials/server-side-data/) on building a Data Grid with server-side data
+- 🐞 Bugfixes
+
+Special thanks go out to this community member for their valuable contributions:
+@kzhgit
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @mapache-salvaje, @michelengelen, @noraleonte, @oliviertassinari
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.22.0`
+
+- [DataGrid] Sync component props with theme defaults (#20590) @michelengelen
+- [DataGrid] Add fallback for CSS `color-mix` if it is unsupported (#20597) @cherniavskii
+- [DataGrid] Use `baseTooltip` slot for column header sort icon (#20460) @kzhgit
+
+#### `@mui/x-data-grid-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.22.0`.
+
+#### `@mui/x-data-grid-premium@8.22.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.22.0`, plus:
+
+- [DataGridPremium] Handle pivoting column name generation for empty strings (#20608) @arminmeh
+- [DataGridPremium] Pass a row with aggregated value to the custom aggregation function `valueFormatter` (#20607) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.22.0`
+
+- [pickers] Fix invalid date tests (#20606) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.22.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.22.0`
+
+- [charts] Add consistent animation duration and timing (#20564) @JCQuintas
+- [charts] Extract a tooltip plugin from the interaction one (#20591) @alexfauquette
+- [charts] General type improvements (#20565) @JCQuintas
+- [charts] Place ordinal ticks according to a continuous scale (#19808) @alexfauquette
+- [charts] Remove layout data from the tooltip internals (#20548) @alexfauquette
+- [charts] Remove usage of focus outline for item highlight (#19856) @alexfauquette
+- [charts] Simplify `MarkPlot` by moving calculation to `useMarkPlotData` (#20570) @JCQuintas
+- [charts] Use `store.state` over `store.getSnapshot()` (#20616) @bernardobelchior
+- [charts] Vendor flatqueue (#20610) @bernardobelchior
+- [charts] Extract pie layout computation (#20611) @alexfauquette
+- [charts][infra] Enable `@typescript-eslint/consistent-type-imports` eslint rules (#20560) @JCQuintas
+- [charts][infra] Enable `import/no-cycle` eslint rules (#20554) @JCQuintas
+
+#### `@mui/x-charts-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.22.0`, plus:
+
+- [charts-pro] Display sankey labels on top of nodes (#20569) @alexfauquette
+
+#### `@mui/x-charts-premium@8.22.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.22.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.22.0`
+
+- [tree view] Expose one hook per component to initialize the `apiRef` (#20235) @flaviendelangle
+- [tree view] Update the typing of `updateItemChildren()` to accept `null` (#20483) @noraleonte
+
+#### `@mui/x-tree-view-pro@8.22.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.22.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.22.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add tutorial on building a Data Grid with server-side data (DX-22) (#19782) @mapache-salvaje
+- [docs] Modify the default value for the stacking demo (#20596) @alexfauquette
+- [docs] Revise the Charts Custom Components doc (#19793) @mapache-salvaje
+- [docs] Remove copy-pasted `aria-label` (#20620) @alexfauquette
+
+### Core
+
+- [internal] Remove unsafe dependency version from range (#20574) @oliviertassinari
+
+### Miscellaneous
+
+- Bump `@mui/monorepo` digest to `800638d` (#20337) @renovate[bot]
+- Bump `@next/eslint-plugin-next` to `15.5.7` (#20575) @renovate[bot]
+- Bump GitHub Actions (#20577) @renovate[bot]
+- Bump Tanstack query to `^5.90.12` (#20582) @renovate[bot]
+- Bump Vite & Vitest (#20583) @renovate[bot]
+- Bump `eslint` to `^8.48.1` (#20576) @renovate[bot]
+- Bump `markdown-to-jsx` to `^9.3.2` (#20507) @renovate[bot]
+- Bump `motion` to `^12.23.25` (#20579) @renovate[bot]
+- Bump react monorepo to `19.2.1` (#20581) @renovate[bot]
+- Bump `react-hook-form` to `^7.68.0` (#20584) @renovate[bot]
+- Bump `react-router` to `^7.10.1` (#20341) @renovate[bot]
+- Bump `tsx` to `^4.21.0` (#20585) @renovate[bot]
+- Bump MUI infra packages (#20478) @renovate[bot]
+- [infra] Automatically add teams to release PRs (#20558) @JCQuintas
+- [infra] Fix codeowners typo (#20562) @JCQuintas
+
+## 8.21.0
+
+_Dec 3, 2025_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+- ✨ Add [tick spacing property](https://mui.com/x/react-charts/axis/#tick-spacing) to charts axis to control the distance between ticks.
+
+The following team members contributed to this release:
+@alexfauquette, @bernardobelchior, @ElliottMiller, @Janpot, @JCQuintas, @romgrk, @sai6855, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.21.0`
+
+- [DataGrid] Fix autosizing header width calculation (#20323) @siriwatknp
+- [DataGrid] Virtualizer refactor (#19465) @romgrk
+
+#### `@mui/x-data-grid-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.21.0`.
+
+#### `@mui/x-data-grid-premium@8.21.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.21.0`, plus:
+
+- [DataGridPremium] Prevent pasting to non-editable cells (#20333) @ElliottMiller
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.21.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.21.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.21.0`
+
+- [charts] Fix string measuring types (#20454) @bernardobelchior
+- [charts] Fix typo in performance note for CustomLineMarks demo (#20529) @sai6855
+- [charts] Introduce the notion of series with positions (#20461) @alexfauquette
+- [charts] Migrate from sinon to Vitest mocking utilities for x-charts\* packages (#20444) @Copilot
+- [charts] Move series-level values to series computed data in bar plot (#20467) @bernardobelchior
+- [charts] Refactor bar chart components in preparation for range bar chart (#20521) @bernardobelchior
+- [charts] Remove unnecessary `any` types (#20527) @sai6855
+- [charts] Remove unused `drawingArea` from `findClosestPoints` (#20471) @bernardobelchior
+- [charts] Revert `useIsHydrated` to default=false (#20511) @JCQuintas
+- [charts] Support tooltip anchor position for radar (#20422) @alexfauquette
+- [charts] Add tick spacing property (#20282) @bernardobelchior
+- [charts] Fix Vitest lint error (#20550) @bernardobelchior
+- [charts] Fix infinite loop when highlighting pie slices or scatter points (#20549) @bernardobelchior
+
+#### `@mui/x-charts-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.21.0`, plus:
+
+- [charts-pro] Add support for `anchor="node"` on Sankey tooltip (#20462) @alexfauquette
+
+#### `@mui/x-charts-premium@8.21.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.21.0`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.21.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.21.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.21.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.21.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Migrate to `next/font` for fonts loading (#20407) @Copilot
+
+### Core
+
+- [code-infra] Enable vitest eslint plugin (#20530) @Janpot
+- [code-infra] Fix missing font loading for local fonts (#20480) @Janpot
+- [internal] Performance: use raw `useSyncExternalStore` (#20447) @romgrk
+- [code-infra] Enable `vitest/expect-expect` and `vitest/no-standalone-expect` rules for x-charts packages (#20535) @Copilot
+
+### Miscellaneous
+
+- Bump @types/d3-sankey to ^0.12.5 (#20489) @renovate[bot]
+- Bump @types/react to 19.2.7 (#20490) @renovate[bot]
+- Bump @types/yargs to ^17.0.35 (#20491) @renovate[bot]
+- Bump Vite & Vitest to ^4.0.14 (#20500) @renovate[bot]
+- Bump csstype to ^3.2.3 (#20493) @renovate[bot]
+- Bump es-toolkit to ^1.42.0 (#20494) @renovate[bot]
+- Bump eslint to ^8.48.0 (#20495) @renovate[bot]
+- Bump lerna to ^9.0.3 (#20496) @renovate[bot]
+- Bump lucide-react to ^0.555.0 (#20502) @renovate[bot]
+- Bump playwright monorepo (#20503) @renovate[bot]
+- Bump pnpm to 10.24.0 (#20504) @renovate[bot]
+- Bump react monorepo (#20340) @renovate[bot]
+- Bump react-hook-form to ^7.66.1 (#20497) @renovate[bot]
+- Bump rimraf to ^6.1.2 (#20498) @renovate[bot]
+- Bump webpack-bundle-analyzer to ^5.0.1 (#20508) @renovate[bot]
+- Bump next to ^15.5.7 [SECURITY] (#20555) @renovate[bot]
+
 ## 8.20.0
 
 _Nov 26, 2025_

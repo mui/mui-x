@@ -1,5 +1,5 @@
 'use client';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
@@ -36,37 +36,24 @@ export interface ChartsSurfaceProps
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number; hasZoom: boolean } }>(
-  ({ ownerState, theme }) => ({
-    width: ownerState.width ?? '100%',
-    height: ownerState.height ?? '100%',
-    display: 'flex',
-    position: 'relative',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    // This prevents default touch actions when using the svg on mobile devices.
-    // For example, prevent page scroll & zoom.
-    touchAction: ownerState.hasZoom ? 'pan-y' : undefined,
-    userSelect: 'none',
-    gridArea: 'chart',
-    '&:focus': {
-      outline: 'none', // By default don't show focus on the SVG container
-    },
-    '&:focus-visible': {
-      // Show focus outline on the SVG container only when using keyboard navigation
-      outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-      '&[data-has-focused-item=true]': {
-        // But not if the chart has a focused children item
-        outline: 'none',
-      },
-    },
-    '& [data-focused=true]': {
-      outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-    },
-  }),
-);
+})<{ ownerState: { width?: number; height?: number; hasZoom: boolean } }>(({ ownerState }) => ({
+  width: ownerState.width ?? '100%',
+  height: ownerState.height ?? '100%',
+  display: 'flex',
+  position: 'relative',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  overflow: 'hidden',
+  // This prevents default touch actions when using the svg on mobile devices.
+  // For example, prevent page scroll & zoom.
+  touchAction: ownerState.hasZoom ? 'pan-y' : undefined,
+  userSelect: 'none',
+  gridArea: 'chart',
+  '&:focus': {
+    outline: 'none', // By default don't show focus on the SVG container
+  },
+}));
 
 /**
  * It provides the drawing area for the chart elements.
