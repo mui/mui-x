@@ -36,7 +36,7 @@ export class EventBuilder {
 
   protected dataTimezone: TemporalTimezone = 'default';
 
-  protected uiTimezone: TemporalTimezone = 'default';
+  protected displayTimezone: TemporalTimezone = 'default';
 
   protected constructor(protected adapter: Adapter) {
     const id = crypto.randomUUID();
@@ -117,7 +117,7 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the DATA timezone: used for all event fields (start, end, rrule, exDates...). */
+  /** Set the data timezone: used for all event fields (start, end, rrule, exDates...). */
   withTimezone(timezone: TemporalTimezone) {
     if (timezone === this.dataTimezone) {
       return this;
@@ -141,9 +141,9 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the UI timezone for processed events. */
-  withUITimezone(timezone: TemporalTimezone) {
-    this.uiTimezone = timezone;
+  /** Set the display timezone for processed events. */
+  withDisplayTimezone(timezone: TemporalTimezone) {
+    this.displayTimezone = timezone;
     return this;
   }
 
@@ -287,7 +287,7 @@ export class EventBuilder {
       end: rawEnd,
     };
 
-    const processed = processEvent(occurrenceModel, this.uiTimezone, this.adapter);
+    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);
 
     return {
       ...processed,
@@ -299,7 +299,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.uiTimezone, this.adapter);
+    return processEvent(this.event, this.displayTimezone, this.adapter);
   }
 
   /**

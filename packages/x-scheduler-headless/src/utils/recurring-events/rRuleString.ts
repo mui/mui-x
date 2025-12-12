@@ -20,12 +20,12 @@ const SUPPORTED_RRULE_KEYS = new Set([
  *
  * @param adapter The date adapter used to parse and convert dates.
  * @param input The RRULE value. Can be a string or an RecurringEventRecurrenceRule object.
- * @param uiTimezone The render timezone used to display RRULE dates (like UNTIL) in the UI.
+ * @param displayTimezone The timezone used to display RRULE-related dates (like UNTIL) in the UI.
  */
 export function parseRRuleString(
   adapter: Adapter,
   input: string | RecurringEventRecurrenceRule,
-  uiTimezone: TemporalTimezone,
+  displayTimezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
     if (!input.until) {
@@ -34,7 +34,7 @@ export function parseRRuleString(
 
     return {
       ...input,
-      until: adapter.setTimezone(input.until, uiTimezone),
+      until: adapter.setTimezone(input.until, displayTimezone),
     };
   }
 
@@ -109,7 +109,7 @@ export function parseRRuleString(
     const parsed = adapter.parse(
       rruleObject.UNTIL,
       getAdapterCache(adapter).untilFormat,
-      uiTimezone,
+      displayTimezone,
     );
 
     if (!adapter.isValid(parsed)) {

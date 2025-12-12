@@ -84,7 +84,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   model: TEvent,
   adapter: Adapter,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
-  uiTimezone: TemporalTimezone,
+  displayTimezone: TemporalTimezone,
 ): SchedulerProcessedEvent {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
@@ -98,7 +98,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   }
 
   // 2. Convert the default event model to a processed event
-  return processEvent(modelInDefaultFormat, uiTimezone, adapter);
+  return processEvent(modelInDefaultFormat, displayTimezone, adapter);
 }
 
 /**
@@ -213,7 +213,7 @@ type AnyEventSetter<TEvent extends object> = (
 export function buildEventsState<TEvent extends object, TResource extends object>(
   parameters: Pick<SchedulerParameters<TEvent, TResource>, 'events' | 'eventModelStructure'>,
   adapter: Adapter,
-  uiTimezone: TemporalTimezone,
+  displayTimezone: TemporalTimezone,
 ): Pick<
   SchedulerState<TEvent>,
   | 'eventIdList'
@@ -233,7 +233,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
       event,
       adapter,
       eventModelStructure,
-      uiTimezone,
+      displayTimezone,
     );
     eventIdList.push(processedEvent.id);
     eventModelLookup.set(processedEvent.id, event);

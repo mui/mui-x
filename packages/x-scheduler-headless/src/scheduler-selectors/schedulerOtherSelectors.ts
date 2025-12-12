@@ -6,7 +6,7 @@ export const schedulerOtherSelectors = {
   visibleDate: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.visibleDate,
-    (state: State) => state.timezone,
+    (state: State) => state.displayTimezone,
     (adapter, visibleDate, timezone) => adapter.setTimezone(visibleDate, timezone),
   ),
   isScopeDialogOpen: createSelector(
