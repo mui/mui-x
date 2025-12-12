@@ -5,7 +5,7 @@ import { PieArcPlot, type PieArcItemValues } from './PieArcPlot';
 import { usePiePlotData } from './PieChart.hooks';
 
 export interface PiePlotProps extends Pick<PieArcPlotProps, 'onItemClick'> {
-  children?: (item: PieArcItemValues, index: number) => React.ReactNode;
+  children: (item: PieArcItemValues, index: number) => React.ReactNode;
 }
 
 function PiePlot(props: PiePlotProps) {
