@@ -55,7 +55,7 @@ storeClasses.forEach((storeClass) => {
         expect(onVisibleDateChange.called).to.equal(false);
       });
 
-      it('should use the provided displayTimezone when going to today (uncontrolled)', () => {
+      it('should use the provided display timezone when going to today (uncontrolled)', () => {
         const onVisibleDateChange = spy();
         const displayTimezone = 'Pacific/Kiritimati';
 
