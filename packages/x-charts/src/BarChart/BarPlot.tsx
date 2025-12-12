@@ -117,7 +117,9 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
       <BarElementPlot
         completedData={completedData}
         masksData={masksData}
-        skipAnimation={skipAnimation}
+        /* The batch renderer doesn't animate bars after the initial mount. Providing skipAnimation was causing an issue
+         * where bars would animate again after a zoom interaction because skipAnimation would change from true to false. */
+        skipAnimation={renderer === 'svg-batch' ? inSkipAnimation : skipAnimation}
         onItemClick={onItemClick}
         borderRadius={borderRadius}
         {...other}
