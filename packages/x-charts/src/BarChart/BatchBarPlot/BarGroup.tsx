@@ -61,10 +61,10 @@ const AnimatedRect = styled('rect')({
   },
   animationDuration: `${ANIMATION_DURATION_MS}ms`,
   animationFillMode: 'forwards',
-  '&[data-direction="horizontal-left"],&[data-direction="horizontal-right"]': {
+  '&[data-orientation="horizontal"]': {
     animationName: 'scaleInX',
   },
-  '&[data-direction="vertical-top"],&[data-direction="vertical-bottom"]': {
+  '&[data-orientation="vertical"]': {
     animationName: 'scaleInY',
   },
 });
@@ -80,7 +80,7 @@ function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: Animate
     animateChildren.push(
       <AnimatedRect
         key="left"
-        data-direction="horizontal-left"
+        data-orientation="horizontal"
         x={drawingArea.left}
         width={xOrigin - drawingArea.left}
         y={drawingArea.top}
@@ -93,7 +93,7 @@ function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: Animate
     animateChildren.push(
       <AnimatedRect
         key="right"
-        data-direction="horizontal-right"
+        data-orientation="horizontal"
         x={xOrigin}
         width={drawingArea.left + drawingArea.width - xOrigin}
         y={drawingArea.top}
@@ -107,7 +107,7 @@ function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: Animate
     animateChildren.push(
       <AnimatedRect
         key="top"
-        data-direction="vertical-top"
+        data-orientation="vertical"
         x={drawingArea.left}
         width={drawingArea.width}
         y={drawingArea.top}
@@ -120,7 +120,7 @@ function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: Animate
     animateChildren.push(
       <AnimatedRect
         key="bottom"
-        data-direction="vertical-bottom"
+        data-orientation="vertical"
         x={drawingArea.left}
         width={drawingArea.width}
         y={yOrigin}
