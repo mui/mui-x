@@ -2,7 +2,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { AxisValueFormatterContext } from '@mui/x-charts/models';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import { temperatureBerlinPorto } from '../dataset/temperatureBerlinPorto';
 
 export default function BasicRangeBar() {
@@ -11,7 +11,7 @@ export default function BasicRangeBar() {
       <Typography textAlign="center">
         Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
       </Typography>
-      <BarChartPro
+      <BarChartPremium
         xAxis={[
           {
             data: temperatureBerlinPorto.months,

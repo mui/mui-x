@@ -77,7 +77,6 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts",
-    "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
+    "./*": "./src/*/index.ts"
   }
 }

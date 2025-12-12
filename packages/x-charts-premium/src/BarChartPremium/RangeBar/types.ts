@@ -1,6 +1,6 @@
 import type { SeriesId } from '@mui/x-charts/models';
 import { type RangeBarValueType } from '@mui/x-charts/internals';
-import type { BarSeriesType } from '../../models';
+import type { BarSeriesType } from '@mui/x-charts-pro/models';
 
 export interface LayoutData {
   x: number;

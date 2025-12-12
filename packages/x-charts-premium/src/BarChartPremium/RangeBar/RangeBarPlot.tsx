@@ -12,9 +12,9 @@ import {
   type BarLabelSlotProps,
 } from '@mui/x-charts/BarChart';
 import { useDrawingArea, useXAxes, useYAxes } from '@mui/x-charts/hooks';
+import { useIsZoomInteracting } from '@mui/x-charts-pro/hooks';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
-import { useIsZoomInteracting } from '../../hooks';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
 
 export interface RangeBarPlotSlots extends BarElementSlots, BarLabelSlots {}

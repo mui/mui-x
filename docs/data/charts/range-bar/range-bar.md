@@ -1,10 +1,10 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChartPro, RangeBarPlot
+components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium
 ---
 
-# Charts - Range Bar [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
+# Charts - Range Bar [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 <p class="description">Range bar charts highlight the range between minimum and maximum values across categories.</p>
 
@@ -16,7 +16,7 @@ Each bar extends from a lower to an upper value, and is commonly used for visual
 
 ## Basics
 
-A range bar chart is created by rendering a `BarChartPro` where at least one series has the type `'rangeBar'`.
+A range bar chart is created by rendering a `BarChartPremium` where at least one series has the type `'rangeBar'`.
 
 Each data point in a range bar series consists of a `{ start: number, end: number }` object.
 
@@ -32,7 +32,7 @@ See [Axis—Grid](/x/react-charts/axis/#grid) documentation for more information
 
 ### Border radius
 
-A range bar chart supports rounded corners. To achieve it, set the value of the `borderRadius` prop on the `BarChartPro` to any positive value.
+A range bar chart supports rounded corners. To achieve it, set the value of the `borderRadius` prop on the `BarChartPremium` to any positive value.
 
 When using composition, you can set the `borderRadius` prop on the `RangeBarPlot` component.
 
@@ -92,14 +92,14 @@ You read more about it in bar chart's [Animation](/x/react-charts/bars/#animatio
 
 ## Composition
 
-You can use the `ChartDataProviderPro` to provide `series`, `xAxis`, and `yAxis` props for composition.
+You can use the `ChartDataProviderPremium` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 Besides the common chart components available for [composition](/x/react-charts/composition/), to compose a range bar chart you need to render the `RangeBarPlot` component to display the range bars and their labels.
 
-Here's roughly a `BarChartPro` is composed, which you can use as a reference:
+Here's roughly a `BarChartPremium` is composed, which you can use as a reference:
 
 ```jsx
-<ChartDataProviderPro>
+<ChartDataProviderPremium>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -115,7 +115,7 @@ Here's roughly a `BarChartPro` is composed, which you can use as a reference:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartDataProviderPro>
+</ChartDataProviderPremium>
 ```
 
 In the example below, we follow a similar pattern and create a project schedule chart using range bars to represent task durations.

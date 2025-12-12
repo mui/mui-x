@@ -4,12 +4,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
-import { RangeBarItemIdentifier } from '@mui/x-charts-pro/models';
+import { RangeBarItemIdentifier } from '@mui/x-charts-premium/models';
 
-import type {} from '@mui/x-charts-pro/moduleAugmentation/rangeBarOnClick';
+import type {} from '@mui/x-charts-premium/moduleAugmentation/rangeBarOnClick';
 
 const barChartsParams = {
   series: [
@@ -62,7 +62,7 @@ export default function RangeBarClick() {
       sx={{ width: '100%' }}
     >
       <Box sx={{ flexGrow: 1 }}>
-        <BarChartPro
+        <BarChartPremium
           {...barChartsParams}
           onItemClick={(event, d) => setItemData(d)}
           onAxisClick={(event, d) => setAxisData(d)}

@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
@@ -48,7 +48,7 @@ export default function RangeBarBorderRadius() {
           labelPlacement="end"
         />
       </Stack>
-      <BarChartPro
+      <BarChartPremium
         series={[
           {
             type: 'rangeBar',
@@ -61,7 +61,7 @@ export default function RangeBarBorderRadius() {
         borderRadius={radius}
       />
       <HighlightedCode
-        code={`<BarChartPro
+        code={`<BarChartPremium
   // ...
   borderRadius={${radius}}
 />`}

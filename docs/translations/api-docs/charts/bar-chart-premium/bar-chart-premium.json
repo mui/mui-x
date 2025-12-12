@@ -66,13 +66,10 @@
       }
     },
     "onItemClick": {
-      "description": "Callback fired when a bar item is clicked.",
+      "description": "Callback fired when a bar or range bar item is clicked.",
       "typeDescriptions": {
         "event": { "name": "event", "description": "The event source of the callback." },
-        "barItemIdentifier": {
-          "name": "barItemIdentifier",
-          "description": "The bar item identifier."
-        }
+        "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
       }
     },
     "onZoomChange": {
@@ -81,11 +78,8 @@
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
     },
-    "renderer": {
-      "description": "The type of renderer to use for the bar plot. - <code>svg-single</code>: Renders every bar in a <code>&lt;rect /&gt;</code> element. - <code>svg-batch</code>: Batch renders bars in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/bars/#performance\">https://mui.com/x/react-charts/bars/#performance</a>"
-    },
     "series": {
-      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> objects."
+      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> or RangeBarSeries objects."
     },
     "showToolbar": { "description": "If true, shows the default chart toolbar." },
     "skipAnimation": {
@@ -106,28 +100,5 @@
     "zoomData": { "description": "The list of zoom data related to each axis." },
     "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
   },
-  "classDescriptions": {},
-  "slotDescriptions": {
-    "axisLabel": "Custom component for axis label.",
-    "axisLine": "Custom component for the axis main line.",
-    "axisTick": "Custom component for the axis tick.",
-    "axisTickLabel": "Custom component for tick label.",
-    "bar": "The component that renders the bar.",
-    "barLabel": "The component that renders the bar label.",
-    "baseButton": "",
-    "baseDivider": "",
-    "baseIconButton": "",
-    "baseMenuItem": "",
-    "baseMenuList": "",
-    "basePopper": "",
-    "baseTooltip": "",
-    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
-    "legend": "Custom rendering of the legend.",
-    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
-    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
-    "toolbar": "Custom component for the toolbar.",
-    "tooltip": "Custom component for the tooltip popper.",
-    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
-    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
-  }
+  "classDescriptions": {}
 }

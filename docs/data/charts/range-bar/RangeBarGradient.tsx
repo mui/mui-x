@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { barElementClasses } from '@mui/x-charts/BarChart';
-import { BarChartPro, rangeBarClasses } from '@mui/x-charts-pro/BarChartPro';
+import {
+  BarChartPremium,
+  rangeBarClasses,
+} from '@mui/x-charts-premium/BarChartPremium';
 
 const settings = {
   xAxis: [{ data: ['group A', 'group B', 'group C'] }],
@@ -39,7 +42,7 @@ const settings = {
 
 export default function RangeBarGradient() {
   return (
-    <BarChartPro
+    <BarChartPremium
       {...settings}
       sx={{
         [`& .${rangeBarClasses.series}[data-series="2"] .${barElementClasses.root}`]:
@@ -51,7 +54,7 @@ export default function RangeBarGradient() {
       <defs>
         <Gradient id="bar-gradient" />
       </defs>
-    </BarChartPro>
+    </BarChartPremium>
   );
 }
 

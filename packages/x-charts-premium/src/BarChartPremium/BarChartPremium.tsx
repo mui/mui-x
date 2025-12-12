@@ -6,11 +6,10 @@ import { type BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot } from '@mui/x-charts/BarChart';
+import { BarPlot, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -22,8 +21,28 @@ import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins'
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import { type BarItemIdentifier, type RangeBarSeriesType } from '../models';
+import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 
-export interface BarChartPremiumProps extends BarChartProProps {}
+export type RangeBarSeries = RangeBarSeriesType;
+
+export interface BarChartPremiumProps extends Omit<BarChartProProps, 'series' | 'onItemClick'> {
+  /**
+   * Callback fired when a bar or range bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
+   */
+  onItemClick?(
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    itemIdentifier: BarItemIdentifier,
+  ): void;
+
+  /**
+   * The series to display in the bar chart.
+   * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
+   */
+  series: ReadonlyArray<BarSeries | RangeBarSeries>;
+}
 
 /**
  * Demos:
@@ -47,6 +66,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
+    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -58,7 +78,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   } = useBarChartPremiumProps(other);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
-    'bar',
+    'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
   >(
     {
@@ -84,6 +104,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
+            <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>

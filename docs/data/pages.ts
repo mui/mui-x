@@ -543,7 +543,7 @@ const pages: MuiPage[] = [
               {
                 pathname: '/x/react-charts/range-bar',
                 title: 'Range bar',
-                plan: 'pro',
+                plan: 'premium',
                 newFeature: true,
               },
               { pathname: '/x/react-charts/bar-demo', title: 'Demos' },

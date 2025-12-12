@@ -43,7 +43,6 @@ export interface BarPlotProps {
   borderRadius?: number;
   /**
    * @deprecated Use `barLabel` in the chart series instead.
-   *
    * If provided, the function will be used to format the label of the bar.
    * It can be set to 'value' to display the current value.
    * @param {BarItem} item The item to format.
