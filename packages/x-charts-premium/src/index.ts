@@ -1,6 +1,5 @@
-// TODO: Add typeOverloads when available
-// import './typeOverloads/modules';
 import '@mui/x-charts-pro/typeOverloads';
+import './typeOverloads/modules';
 
 // exports from MIT package
 export * from '@mui/x-charts/ChartsClipPath';

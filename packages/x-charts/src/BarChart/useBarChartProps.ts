@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { type RangeBarSeriesType } from '../models/seriesType/rangeBar';
 import { type BarChartProps, type BarSeries } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { type ChartContainerProps } from '../ChartContainer';
@@ -16,9 +15,16 @@ import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
 import { BAR_CHART_PLUGINS, type BarChartPluginSignatures } from './BarChart.plugins';
 
-interface UseBarChartProps extends Omit<BarChartProps, 'series'> {
-  series: ReadonlyArray<BarSeries | RangeBarSeriesType>;
-}
+export interface UseBarChartPropsExtensions {}
+
+export type UseBarChartProps = Omit<BarChartProps, 'series'> &
+  Omit<
+    {
+      series: ReadonlyArray<BarSeries>;
+    },
+    keyof UseBarChartPropsExtensions
+  > &
+  UseBarChartPropsExtensions;
 
 /**
  * A helper function that extracts BarChartProps from the input props
