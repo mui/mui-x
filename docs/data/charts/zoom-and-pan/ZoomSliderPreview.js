@@ -146,7 +146,7 @@ export default function ZoomSliderPreview() {
         fullWidth
       >
         {['bar', 'line', 'area', 'scatter'].map((type) => (
-          <ToggleButton key={type} value={type} aria-label="left aligned">
+          <ToggleButton key={type} value={type}>
             {type}
           </ToggleButton>
         ))}
