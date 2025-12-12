@@ -20,7 +20,7 @@ const SUPPORTED_RRULE_KEYS = new Set([
  *
  * @param adapter The date adapter used to parse and convert dates.
  * @param input The RRULE value. Can be a string or an RecurringEventRecurrenceRule object.
- * @param displayTimezone The render timezone used to display RRULE dates (like UNTIL) in the UI.
+ * @param displayTimezone The timezone used to display RRULE-related dates (like UNTIL) in the UI.
  */
 export function parseRRuleString(
   adapter: Adapter,
