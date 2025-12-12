@@ -7,8 +7,8 @@ import {
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-import { useRangeBarPlotData } from '@mui/x-charts-premium/BarChartPremium/RangeBar/useRangeBarPlotData';
-import { type PreviewPlotProps } from './PreviewPlot.types';
+import { type PreviewPlotProps } from '@mui/x-charts-pro/internals';
+import { useRangeBarPlotData } from '../../../BarChartPremium/RangeBar/useRangeBarPlotData';
 
 interface RangeBarPreviewPlotProps extends PreviewPlotProps {
   x: number;
