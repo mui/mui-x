@@ -1,5 +1,6 @@
-import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '../models';
-import type { ComputedAxis } from '../models/axis';
+import { type ScaleBand } from '@mui/x-charts-vendor/d3-scale';
+import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps, ContinuousScaleName } from '../models';
+import type { ComputedAxis, D3ContinuousScale } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { getBandSize } from './getBandSize';
 
@@ -30,20 +31,72 @@ export function getBarDimensions(params: {
     groupIndex,
   } = params;
 
-  const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
-  const reverse = (verticalLayout ? yAxisConfig.reverse : xAxisConfig.reverse) ?? false;
+  const bandAxis = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
+  const continuousAxis = (
+    verticalLayout ? yAxisConfig : xAxisConfig
+  ) as ComputedAxis<ContinuousScaleName>;
 
   const { barWidth, offset } = getBandSize(
-    baseScaleConfig.scale.bandwidth(),
+    bandAxis.scale.bandwidth(),
     numberOfGroups,
-    baseScaleConfig.barGapRatio,
+    bandAxis.barGapRatio,
   );
+
+  const seriesValue = series.data[dataIndex];
+
+  if (seriesValue == null) {
+    return null;
+  }
+
+  const bandDimensions = getBarBandDimensions(
+    bandAxis.scale as ScaleBand<{ toString(): string }>,
+    bandAxis.data?.[dataIndex],
+    barWidth,
+    offset,
+    groupIndex,
+  );
+  const continuousDimensions = getBarContinuousDimensions(
+    verticalLayout,
+    continuousAxis.scale as D3ContinuousScale,
+    series,
+    continuousAxis.reverse ?? false,
+    dataIndex,
+  );
+
+  if (continuousDimensions == null) {
+    return null;
+  }
+
+  return {
+    x: verticalLayout ? bandDimensions.start : continuousDimensions.start,
+    y: verticalLayout ? continuousDimensions.start : bandDimensions.start,
+    width: verticalLayout ? bandDimensions.size : continuousDimensions.size,
+    height: verticalLayout ? continuousDimensions.size : bandDimensions.size,
+  };
+}
+
+export function getBarBandDimensions(
+  bandScale: ScaleBand<{ toString(): string }>,
+  baseValue: any,
+  barWidth: number,
+  offset: number,
+  groupIndex: number,
+) {
   const barOffset = groupIndex * (barWidth + offset);
 
-  const xScale = xAxisConfig.scale;
-  const yScale = yAxisConfig.scale;
+  return {
+    start: bandScale(baseValue)! + barOffset,
+    size: barWidth,
+  };
+}
 
-  const baseValue = baseScaleConfig.data![dataIndex];
+export function getBarContinuousDimensions(
+  verticalLayout: boolean,
+  continuousScale: D3ContinuousScale,
+  series: ChartSeriesDefaultized<'bar'>,
+  reverse: boolean,
+  dataIndex: number,
+) {
   const seriesValue = series.data[dataIndex];
 
   if (seriesValue == null) {
@@ -51,10 +104,23 @@ export function getBarDimensions(params: {
   }
 
   const values = series.stackedData[dataIndex];
-  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  const minValueCoord = Math.round(Math.min(...valueCoordinates));
-  const maxValueCoord = Math.round(Math.max(...valueCoordinates));
+  let min = Infinity;
+  let max = -Infinity;
+  for (const value of values) {
+    const coord = continuousScale(value)!;
+
+    if (coord < min) {
+      min = coord;
+    }
+
+    if (coord > max) {
+      max = coord;
+    }
+  }
+
+  const minValueCoord = Math.round(min);
+  const maxValueCoord = Math.round(max);
 
   const barSize =
     seriesValue === 0 ? 0 : Math.max(series.minBarSize, maxValueCoord - minValueCoord);
@@ -62,10 +128,5 @@ export function getBarDimensions(params: {
     ? maxValueCoord - barSize
     : minValueCoord;
 
-  return {
-    x: verticalLayout ? xScale(baseValue)! + barOffset : startCoordinate,
-    y: verticalLayout ? startCoordinate : yScale(baseValue)! + barOffset,
-    height: verticalLayout ? barSize : barWidth,
-    width: verticalLayout ? barWidth : barSize,
-  };
+  return { start: startCoordinate, size: barSize };
 }
