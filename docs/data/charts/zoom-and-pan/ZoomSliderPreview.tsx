@@ -15,6 +15,10 @@ import {
 } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro, BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
 import {
+  BarChartPremium,
+  BarChartPremiumProps,
+} from '@mui/x-charts-premium/BarChartPremium';
+import {
   dateAxisFormatter,
   usUnemploymentRate,
 } from '../dataset/usUnemploymentRate';
@@ -165,7 +169,7 @@ const rangeBarSettings = {
     },
   ],
   height: 300,
-} satisfies BarChartProProps;
+} satisfies BarChartPremiumProps;
 
 export default function ZoomSliderPreview() {
   const [chartType, setChartType] = React.useState('bar');
@@ -261,7 +265,7 @@ function RangeBarChartPreview() {
       <Typography variant="h6" sx={{ alignSelf: 'center' }}>
         Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
       </Typography>
-      <BarChartPro
+      <BarChartPremium
         {...rangeBarSettings}
         xAxis={[
           { ...rangeBarXAxis, zoom: { slider: { enabled: true, preview: true } } },

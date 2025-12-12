@@ -7,6 +7,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 import {
   dateAxisFormatter,
   usUnemploymentRate,
@@ -249,7 +250,7 @@ function RangeBarChartPreview() {
       <Typography variant="h6" sx={{ alignSelf: 'center' }}>
         Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
       </Typography>
-      <BarChartPro
+      <BarChartPremium
         {...rangeBarSettings}
         xAxis={[
           { ...rangeBarXAxis, zoom: { slider: { enabled: true, preview: true } } },

@@ -16,13 +16,16 @@ import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useChartContainerProProps } from '@mui/x-charts-pro/internals';
+import { seriesPreviewPlotMap, useChartContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type BarItemIdentifier, type RangeBarSeriesType } from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
+import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
+
+seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export type RangeBarSeries = RangeBarSeriesType;
 
