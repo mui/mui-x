@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { useSelector } from '../../../store/useSelector';
 import { useStore } from '../../../store/useStore';
 import { selectorChartSeriesConfig } from './useChartSeries.selectors';
-import { ColorProcessor } from '../../models/seriesConfig';
+import { type ColorProcessor } from '../../models/seriesConfig';
 
 export type ColorProcessorsConfig<T extends ChartSeriesType> = {
   [Key in T]?: ColorProcessor<Key>;

@@ -7,6 +7,12 @@ import { addSeconds } from 'date-fns/addSeconds';
 import { addMilliseconds } from 'date-fns/addMilliseconds';
 import { addWeeks } from 'date-fns/addWeeks';
 import { addYears } from 'date-fns/addYears';
+import { differenceInDays } from 'date-fns/differenceInDays';
+import { differenceInHours } from 'date-fns/differenceInHours';
+import { differenceInMinutes } from 'date-fns/differenceInMinutes';
+import { differenceInMonths } from 'date-fns/differenceInMonths';
+import { differenceInWeeks } from 'date-fns/differenceInWeeks';
+import { differenceInYears } from 'date-fns/differenceInYears';
 import { endOfDay } from 'date-fns/endOfDay';
 import { endOfHour } from 'date-fns/endOfHour';
 import { endOfMinute } from 'date-fns/endOfMinute';
@@ -177,17 +183,16 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
 
   public setTimezone = (value: Date, timezone: TemporalTimezone): Date => {
     const isSystemTimezone = timezone === 'system' || timezone === 'default';
-
-    if (value instanceof TZDate) {
-      if (isSystemTimezone) {
-        return this.toJsDate(value);
-      }
-      return value.withTimeZone(timezone);
-    }
+    const canChangeTz = typeof (value as any)?.withTimeZone === 'function';
 
     if (isSystemTimezone) {
-      return value;
+      return this.toJsDate(value);
     }
+
+    if (canChangeTz) {
+      return (value as any).withTimeZone(timezone);
+    }
+
     return new TZDate(value, timezone);
   };
 
@@ -404,6 +409,30 @@ export class TemporalAdapterDateFns implements TemporalAdapter {
 
   public setMilliseconds = (value: Date, milliseconds: number): Date => {
     return setMilliseconds(value, milliseconds);
+  };
+
+  public differenceInYears = (value: Date, comparing: Date): number => {
+    return differenceInYears(value, comparing);
+  };
+
+  public differenceInMonths = (value: Date, comparing: Date): number => {
+    return differenceInMonths(value, comparing);
+  };
+
+  public differenceInWeeks = (value: Date, comparing: Date): number => {
+    return differenceInWeeks(value, comparing);
+  };
+
+  public differenceInDays = (value: Date, comparing: Date): number => {
+    return differenceInDays(value, comparing);
+  };
+
+  public differenceInHours = (value: Date, comparing: Date): number => {
+    return differenceInHours(value, comparing);
+  };
+
+  public differenceInMinutes = (value: Date, comparing: Date): number => {
+    return differenceInMinutes(value, comparing);
   };
 
   public getDaysInMonth = (value: Date): number => {

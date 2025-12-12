@@ -1,12 +1,11 @@
 import { spy } from 'sinon';
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import {
-  SchedulerEvent,
   SchedulerEventModelStructure,
-  SchedulerValidDate,
+  TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { buildEvent, storeClasses, getIds } from './utils';
+import { storeClasses } from './utils';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
 
 storeClasses.forEach((storeClass) => {
@@ -145,8 +144,8 @@ storeClasses.forEach((storeClass) => {
         interface MyEvent2 {
           myId: string;
           title: string;
-          start: SchedulerValidDate;
-          end: SchedulerValidDate;
+          start: TemporalSupportedObject;
+          end: TemporalSupportedObject;
         }
 
         const idGetter = spy((event: MyEvent2) => event.myId);
@@ -234,41 +233,25 @@ storeClasses.forEach((storeClass) => {
     describe('Method: updateEvent', () => {
       it('should replace matching id and emit onEventsChange with the updated events', () => {
         const onEventsChange = spy();
-        const events = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '2',
-            'Event 2',
-            adapter.date('2025-07-01T11:00:00Z', 'default'),
-            adapter.date('2025-07-01T12:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events: [event1, event2], onEventsChange }, adapter);
 
-        const updatedEvent = buildEvent(
-          '2',
-          'Event 2 updated',
-          adapter.date('2025-07-01T11:30:00Z', 'default'),
-          adapter.date('2025-07-01T12:30:00Z', 'default'),
-          {
-            description: 'Event 2 description',
-            allDay: false,
-          },
-        );
-
-        store.updateEvent(updatedEvent);
+        store.updateEvent({
+          id: event2.id,
+          title: 'Event 2 updated',
+          description: 'Event 2 description',
+          allDay: false,
+          start: adapter.date('2025-07-01T11:30:00Z', 'default'),
+          end: adapter.date('2025-07-01T12:30:00Z', 'default'),
+        });
 
         expect(onEventsChange.calledOnce).to.equal(true);
         const updatedEvents = onEventsChange.lastCall.firstArg;
 
         expect(updatedEvents).to.have.length(2);
-        expect(updatedEvents[0].title).to.equal('Event 1');
+        expect(updatedEvents[0].title).to.equal(event1.title);
         expect(updatedEvents[1].title).to.equal('Event 2 updated');
         expect(updatedEvents[1].description).to.equal('Event 2 description');
         expect(updatedEvents[1].start).toEqualDateTime(
@@ -278,80 +261,85 @@ storeClasses.forEach((storeClass) => {
           adapter.date('2025-07-01T12:30:00Z', 'default'),
         );
       });
+
+      it('should convert all updated date fields back to the data timezone and preserve unrelated properties', () => {
+        const onEventsChange = spy();
+
+        const dataTimezone = 'America/New_York';
+        const uiTimezone = 'Europe/Paris';
+
+        const event = EventBuilder.new()
+          .title('Original title')
+          .description('Original description')
+          .span('2025-03-10T09:00:00', '2025-03-10T10:00:00')
+          .withTimezone(dataTimezone)
+          .build();
+
+        const store = new storeClass.Value(
+          { events: [event], onEventsChange, timezone: uiTimezone },
+          adapter,
+        );
+
+        const newStartParis = adapter.date('2025-03-10T14:00:00', uiTimezone);
+        const newEndParis = adapter.date('2025-03-10T15:00:00', uiTimezone);
+
+        store.updateEvent({
+          id: event.id,
+          title: 'Updated title',
+          start: newStartParis,
+          end: newEndParis,
+        });
+
+        const updated = onEventsChange.lastCall.firstArg[0];
+
+        expect(updated.title).to.equal('Updated title');
+        expect(updated.description).to.equal(event.description);
+
+        expect(updated.start).toEqualDateTime(adapter.date('2025-03-10T09:00:00', dataTimezone));
+        expect(updated.end).toEqualDateTime(adapter.date('2025-03-10T10:00:00', dataTimezone));
+        expect(adapter.getTimezone(updated.start)).to.equal(dataTimezone);
+        expect(adapter.getTimezone(updated.end)).to.equal(dataTimezone);
+      });
     });
 
     describe('Method: deleteEvent', () => {
       it('should remove by id and call onEventsChange with the updated events', () => {
         const onEventsChange = spy();
-        const events = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '2',
-            'Event 2',
-            adapter.date('2025-07-01T11:00:00Z', 'default'),
-            adapter.date('2025-07-01T12:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '3',
-            'Event 3',
-            adapter.date('2025-07-01T13:00:00Z', 'default'),
-            adapter.date('2025-07-01T14:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
+        const event3 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events, onEventsChange }, adapter);
-        store.deleteEvent('2');
+        const store = new storeClass.Value(
+          {
+            events: [event1, event2, event3],
+            onEventsChange,
+          },
+          adapter,
+        );
+        store.deleteEvent(event2.id);
 
         expect(onEventsChange.calledOnce).to.equal(true);
         const updatedEvents = onEventsChange.lastCall.firstArg;
-        expect(updatedEvents.map((event) => event.id)).to.deep.equal(['1', '3']);
+        expect(updatedEvents).to.deep.equal([event1, event3]);
       });
     });
 
     describe('Method: createEvent', () => {
       it('should append the new event and emit onEventsChange with the updated list', () => {
         const onEventsChange = spy();
-        const existing = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-07-01T09:00:00Z', 'default'),
-            adapter.date('2025-07-01T10:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
 
-        const store = new storeClass.Value({ events: existing, onEventsChange }, adapter);
+        const store = new storeClass.Value({ events: [event1], onEventsChange }, adapter);
 
-        // TODO: When migrating to EventBuilder, add an EventBuilder.buildWithoutId() method to pass to store.createEvent()
-        const newEvent = buildEvent(
-          '2',
-          'New Event',
-          adapter.date('2025-07-01T11:00:00Z', 'default'),
-          adapter.date('2025-07-01T12:00:00Z', 'default'),
-          { description: 'New event description', allDay: true },
-        );
+        const newEvent = EventBuilder.new().toCreationProperties();
 
         const createdId = store.createEvent(newEvent);
 
         expect(onEventsChange.calledOnce).to.equal(true);
-        const created = onEventsChange.lastCall.firstArg.find(
-          (event: SchedulerEvent) => event.id === createdId,
-        );
-        expect(created.title).to.equal('New Event');
-        const updated = onEventsChange.lastCall.firstArg;
-        expect(getIds(updated)).to.deep.equal(['1', createdId]);
-
-        const appended = updated[1];
-        expect(appended.title).to.equal('New Event');
-        expect(appended.description).to.equal('New event description');
-        expect(appended.allDay).to.equal(true);
-        expect(appended.start).toEqualDateTime(adapter.date('2025-07-01T11:00:00Z', 'default'));
-        expect(appended.end).toEqualDateTime(adapter.date('2025-07-01T12:00:00Z', 'default'));
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event1,
+          { ...newEvent, id: createdId },
+        ]);
       });
     });
 
@@ -396,6 +384,176 @@ storeClasses.forEach((storeClass) => {
             extractedFromId: event.id,
             start,
             end,
+          },
+        ]);
+      });
+    });
+
+    describe('Method: copyEvent', () => {
+      it('should set the copiedEvent state with the event and action', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ events: [event] }, adapter);
+        store.copyEvent(event.id);
+
+        expect(store.state.copiedEvent).to.deep.equal({
+          id: event.id,
+          action: 'copy',
+        });
+      });
+    });
+
+    describe('Method: cutEvent', () => {
+      it('should set the copiedEvent state with the event and action', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ events: [event] }, adapter);
+        store.cutEvent(event.id);
+
+        expect(store.state.copiedEvent).to.deep.equal({
+          id: event.id,
+          action: 'cut',
+        });
+      });
+    });
+
+    describe('Method: pasteEvent', () => {
+      it('should do nothing if there is no copiedEvent', () => {
+        const event = EventBuilder.new().build();
+        const store = new storeClass.Value({ events: [event] }, adapter);
+        const oldState = store.state;
+        store.pasteEvent({ start: adapter.date('2025-07-01T09:00:00Z', 'default') });
+        expect(store.state).to.deep.equal(oldState);
+      });
+
+      it('should paste a copied event and emit onEventsChange with the updated list (only changes start date)', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        store.copyEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+        });
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event,
+          {
+            ...event,
+            id: createdEventId,
+            start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+            end: adapter.date('2025-07-01T10:00:00Z', 'default'),
+            extractedFromId: event.id,
+          },
+        ]);
+      });
+
+      it('should paste a copied event and emit onEventsChange with the updated list (only changes resource)', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().resource('resource-1').build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        store.copyEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          resource: 'resource-2',
+        });
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event,
+          {
+            ...event,
+            id: createdEventId,
+            resource: 'resource-2',
+            extractedFromId: event.id,
+          },
+        ]);
+      });
+
+      it('should paste a copied event and emit onEventsChange with the updated list (only changes allDay)', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        store.copyEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          allDay: true,
+        });
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          event,
+          {
+            ...event,
+            id: createdEventId,
+            allDay: true,
+            extractedFromId: event.id,
+          },
+        ]);
+      });
+
+      it('should paste a cut event and emit onEventsChange with the updated list (only changes start date)', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        store.cutEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+        });
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          {
+            ...event,
+            id: createdEventId,
+            start: adapter.date('2025-07-01T09:00:00Z', 'default'),
+            end: adapter.date('2025-07-01T10:00:00Z', 'default'),
+          },
+        ]);
+      });
+
+      it('should paste a cut event and emit onEventsChange with the updated list (only changes resource)', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().resource('resource-1').build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        store.cutEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          resource: 'resource-2',
+        });
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          {
+            ...event,
+            id: createdEventId,
+            resource: 'resource-2',
+          },
+        ]);
+      });
+
+      it('should paste a cut event and emit onEventsChange with the updated list (only changes allDay)', () => {
+        const onEventsChange = spy();
+        const event = EventBuilder.new().build();
+
+        const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
+        store.cutEvent(event.id);
+
+        const createdEventId = store.pasteEvent({
+          allDay: true,
+        });
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([
+          {
+            ...event,
+            id: createdEventId,
+            allDay: true,
           },
         ]);
       });

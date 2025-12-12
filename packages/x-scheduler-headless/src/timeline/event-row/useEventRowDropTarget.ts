@@ -1,12 +1,15 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStore } from '@base-ui-components/utils/store';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerResourceId, SchedulerEvent, SchedulerValidDate } from '../../models';
+import { SchedulerResourceId, SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
 import { useDropTarget } from '../../utils/useDropTarget';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
+import { useTimelineStoreContext } from '../../use-timeline-store-context';
+import { timelineViewSelectors } from '../../timeline-selectors';
 
 const isValidDropTarget = buildIsValidDropTarget([
   'TimelineEvent',
@@ -15,13 +18,20 @@ const isValidDropTarget = buildIsValidDropTarget([
 ]);
 
 export function useEventRowDropTarget(parameters: useEventRowDropTarget.Parameters) {
-  const { start, end, resourceId, addPropertiesToDroppedEvent } = parameters;
+  const { resourceId, addPropertiesToDroppedEvent } = parameters;
 
+  // Context hooks
   const adapter = useAdapter();
+  const store = useTimelineStoreContext();
+
+  // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  const collectionStartTimestamp = adapter.getTime(start);
-  const collectionEndTimestamp = adapter.getTime(end);
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
+
+  const collectionStartTimestamp = adapter.getTime(viewConfig.start);
+  const collectionEndTimestamp = adapter.getTime(viewConfig.end);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: TimelineEventRowContext['getCursorPositionInElementMs'] =
@@ -45,7 +55,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
@@ -57,7 +67,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
         const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         const newStartDate = addOffsetToDate(
-          start,
+          viewConfig.start,
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
 
@@ -70,7 +80,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
       if (data.source === 'TimelineEventResizeHandler') {
         if (data.side === 'start') {
           const cursorDate = addOffsetToDate(
-            start,
+            viewConfig.start,
             cursorOffsetMs - data.initialCursorPositionInEventMs,
           );
 
@@ -87,7 +97,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
           const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
           const cursorDate = addOffsetToDate(
-            start,
+            viewConfig.start,
             cursorOffsetMs - data.initialCursorPositionInEventMs + eventDurationMs,
           );
 
@@ -101,7 +111,7 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 
       // Move a Standalone Event into the Time Grid
       if (data.source === 'StandaloneEvent') {
-        return getDataFromOutside(data, addOffsetToDate(start, cursorOffsetMs));
+        return getDataFromOutside(data, addOffsetToDate(viewConfig.start, cursorOffsetMs));
       }
 
       return undefined;
@@ -123,18 +133,9 @@ export function useEventRowDropTarget(parameters: useEventRowDropTarget.Paramete
 export namespace useEventRowDropTarget {
   export interface Parameters {
     /**
-     * The data and time at which the row starts.
-     */
-    start: SchedulerValidDate;
-    /**
-     * The data and time at which the row ends.
-     */
-    end: SchedulerValidDate;
-    /**
      * The id of the resource to drop the event onto.
-     * If null, the event will be dropped outside of any resource.
      */
-    resourceId: SchedulerResourceId | null;
+    resourceId: SchedulerResourceId;
     /**
      * Add properties to the event dropped in the row before storing it in the store.
      */

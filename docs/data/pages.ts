@@ -358,6 +358,13 @@ const pages: MuiPage[] = [
           },
         ],
       },
+      {
+        pathname: '/x/tutorials',
+        subheader: 'Tutorials',
+        children: [
+          { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
+        ],
+      },
     ],
   },
   {

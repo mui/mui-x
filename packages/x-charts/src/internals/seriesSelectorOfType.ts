@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { ChartSeriesDefaultized, ChartsSeriesConfig } from '../models/seriesType/config';
-import { SeriesId } from '../models/seriesType/common';
+import { type ChartSeriesDefaultized, type ChartsSeriesConfig } from '../models/seriesType/config';
+import { type SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 import { useStore } from './store/useStore';
@@ -20,7 +20,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
     seriesType: T,
     ids?: SeriesId | SeriesId[],
   ) => {
-    if (!ids || (Array.isArray(ids) && ids.length === 0)) {
+    if (ids === undefined || (Array.isArray(ids) && ids.length === 0)) {
       return (
         processedSeries[seriesType]?.seriesOrder?.map(
           (seriesId) => processedSeries[seriesType]?.series[seriesId],

@@ -1,8 +1,8 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useHeatmapSeries, useHeatmapSeriesContext } from './useHeatmapSeries';
 import { Heatmap } from '../Heatmap';
-import { DefaultizedHeatmapSeriesType, HeatmapSeriesType } from '../models';
+import { type DefaultizedHeatmapSeriesType, type HeatmapSeriesType } from '../models';
 
 const mockSeries: HeatmapSeriesType[] = [
   {

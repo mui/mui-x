@@ -1,5 +1,5 @@
-import { LegendItemParams } from '@mui/x-charts/ChartsLegend';
-import { LegendGetter, getLabel } from '@mui/x-charts/internals';
+import { type LegendItemParams } from '@mui/x-charts/ChartsLegend';
+import { type LegendGetter, getLabel } from '@mui/x-charts/internals';
 
 const legendGetter: LegendGetter<'funnel'> = (params) => {
   const { seriesOrder, series } = params;

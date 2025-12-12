@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { TreeViewState, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { UseTreeViewItemsReorderingSignature } from './useTreeViewItemsReordering.types';
@@ -14,7 +14,7 @@ export const itemsReorderingSelectors = {
   /**
    * Gets the properties of the dragged item.
    */
-  draggedItemProperties: createSelector(
+  draggedItemProperties: createSelectorMemoized(
     (state: TreeViewState<[UseTreeViewItemsReorderingSignature]>) =>
       state.itemsReordering.currentReorder,
     itemsSelectors.itemMetaLookup,

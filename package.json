@@ -1,5 +1,5 @@
 {
-  "version": "8.20.0",
+  "version": "8.22.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -71,15 +71,15 @@
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "^7.10.1",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.8",
-    "@mui/internal-bundle-size-checker": "^1.0.9-canary.55",
-    "@mui/internal-code-infra": "^0.0.3-canary.52",
-    "@mui/internal-markdown": "^2.0.12",
+    "@mui/internal-bundle-size-checker": "^1.0.9-canary.56",
+    "@mui/internal-code-infra": "^0.0.3-canary.55",
+    "@mui/internal-markdown": "^2.0.13",
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
-    "@mui/monorepo": "github:mui/material-ui#6da6eb206edf9a837671095bdaaab3685aae21f2",
+    "@mui/monorepo": "github:mui/material-ui#800638d6fdc275d7a5e4255a08646a6ee692ff75",
     "@mui/utils": "catalog:",
-    "@next/eslint-plugin-next": "15.5.6",
+    "@next/eslint-plugin-next": "15.5.7",
     "@octokit/plugin-retry": "^8.0.3",
     "@octokit/rest": "^22.0.1",
     "@playwright/test": "catalog:",
@@ -91,7 +91,7 @@
     "@types/react-dom": "catalog:",
     "@types/requestidlecallback": "^0.3.7",
     "@types/sinon": "^21.0.0",
-    "@types/yargs": "^17.0.34",
+    "@types/yargs": "^17.0.35",
     "@typescript-eslint/parser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
     "@vitest/browser-playwright": "catalog:",
@@ -110,7 +110,7 @@
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "^1.42.0",
-    "esbuild": "^0.27.0",
+    "esbuild": "^0.27.1",
     "eslint": "^9.39.1",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
@@ -120,7 +120,7 @@
     "glob-gitignore": "^1.0.15",
     "globby": "^15.0.0",
     "jsdom": "^26.1.0",
-    "lerna": "^9.0.0",
+    "lerna": "^9.0.3",
     "magic-string": "^0.30.21",
     "markdownlint-cli2": "^0.18.1",
     "moment": "catalog:",
@@ -153,9 +153,9 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.23.0",
+  "packageManager": "pnpm@10.24.0",
   "engines": {
-    "pnpm": "10.23.0",
+    "pnpm": "10.24.0",
     "node": ">=22.18"
   },
   "pnpm": {
