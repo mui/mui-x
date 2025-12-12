@@ -47,7 +47,6 @@ export const initialEvents = [
     timezone: 'America/Los_Angeles',
     resource: 'la',
   },
-
   // -----------------------------------------------------
   // RECURRING EVENTS
   // -----------------------------------------------------
