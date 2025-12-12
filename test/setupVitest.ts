@@ -1,9 +1,10 @@
-import { afterAll, beforeAll, beforeEach, afterEach, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, afterEach } from 'vitest';
 import 'test/utils/addChaiAssertions';
 import 'test/utils/licenseRelease';
 import { generateTestLicenseKey, setupTestLicenseKey } from 'test/utils/testLicense';
-import { cleanup, configure } from '@testing-library/react/pure';
+import { configure } from '@mui/internal-test-utils';
 import { config } from 'react-transition-group';
+
 import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
@@ -40,11 +41,6 @@ afterEach(() => {
   // See https://github.com/sinonjs/sinon/issues/1866
   sinon.restore();
   config.disabled = false;
-
-  if (vi.isFakeTimers()) {
-    vi.useRealTimers();
-  }
-  cleanup();
 });
 
 configure({
