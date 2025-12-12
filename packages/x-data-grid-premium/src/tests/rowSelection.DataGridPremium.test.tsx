@@ -216,7 +216,9 @@ describe('<DataGridPremium /> - Row selection', () => {
         <Test
           defaultGroupingExpansionDepth={-1}
           density="compact"
-          isRowSelectable={({ id }) => id === 'auto-generated-row-category1/Cat A' || id === 0 || id === 2}
+          isRowSelectable={({ id }) =>
+            id === 'auto-generated-row-category1/Cat A' || id === 0 || id === 2
+          }
         />,
       );
 
