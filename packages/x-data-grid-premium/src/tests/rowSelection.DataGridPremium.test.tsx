@@ -210,8 +210,6 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    // TODO: Use case yet to be supported
-    describe.todo('prop: keepNonExistentRowsSelected', () => {
     // Regression for bugfix/20525: parent checkbox state and auto-select parents should ignore non-selectable rows
     it('should auto-select parent when all selectable siblings are selected, ignoring non-selectable ones', () => {
       render(
@@ -242,8 +240,8 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    // Use case yet to be supported
-    describe.skip('prop: keepNonExistentRowsSelected', () => {
+    // TODO: Use case yet to be supported
+    describe.todo('prop: keepNonExistentRowsSelected', () => {
       it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
         const onRowSelectionModelChange = spy();
         const { setProps } = render(
