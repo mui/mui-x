@@ -191,6 +191,6 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 
 ## API
 
-- [DataGrid](/x/api/data-grid/data-grid/)
+- [DataGrid](/x/api/data-grid/i-dont-exist/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
