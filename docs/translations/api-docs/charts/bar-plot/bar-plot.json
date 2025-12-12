@@ -1,12 +1,6 @@
 {
   "componentDescription": "",
   "propDescriptions": {
-    "barLabel": {
-      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
-    },
-    "barLabelPlacement": {
-      "description": "The placement of the bar label. It controls whether the label is rendered inside or outside the bar."
-    },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
     "onItemClick": {
       "description": "Callback fired when a bar item is clicked.",
@@ -17,6 +11,9 @@
           "description": "The bar item identifier."
         }
       }
+    },
+    "renderer": {
+      "description": "The type of renderer to use for the bar plot. - <code>svg-single</code>: Renders every bar in a <code>&lt;rect /&gt;</code> element. - <code>svg-batch</code>: Batch renders bars in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/bars/#performance\">https://mui.com/x/react-charts/bars/#performance</a>"
     },
     "skipAnimation": { "description": "If <code>true</code>, animations are skipped." },
     "slotProps": { "description": "The props used for each component slot." },
