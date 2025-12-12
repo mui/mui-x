@@ -2,7 +2,6 @@ import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 
 import { TZDate } from '@date-fns/tz';
-import { format, parseISO } from 'date-fns';
 import {
   defaultVisibleDate,
   initialEvents,
@@ -10,44 +9,24 @@ import {
 } from '../datasets/timezone-events';
 
 export default function TimezoneDataset() {
+  // Temporary DX workaround.
+  // We plan to support `event.timezone` out of the box (Issue #20598).
   const eventModelStructure = {
     start: {
-      getter: (event) => {
-        const d = parseISO(event.start);
-
-        return new TZDate(
-          d.getFullYear(),
-          d.getMonth(),
-          d.getDate(),
-          d.getHours(),
-          d.getMinutes(),
-          d.getSeconds(),
-          d.getMilliseconds(),
-          event.timezone,
-        );
-      },
+      getter: (event) => new TZDate(event.startUtc, event.timezone),
       setter: (event, newValue) => {
-        event.start = format(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        const tz = newValue.timeZone;
+        event.startUtc = newValue.toISOString();
+        event.timezone = tz;
         return event;
       },
     },
     end: {
-      getter: (event) => {
-        const d = parseISO(event.end);
-
-        return new TZDate(
-          d.getFullYear(),
-          d.getMonth(),
-          d.getDate(),
-          d.getHours(),
-          d.getMinutes(),
-          d.getSeconds(),
-          d.getMilliseconds(),
-          event.timezone,
-        );
-      },
+      getter: (event) => new TZDate(event.endUtc, event.timezone),
       setter: (event, newValue) => {
-        event.end = format(newValue, "yyyy-MM-dd'T'HH:mm:ss");
+        const tz = newValue.timeZone;
+        event.endUtc = newValue.toISOString();
+        event.timezone = tz;
         return event;
       },
     },

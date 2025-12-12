@@ -10,6 +10,7 @@ import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
+import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   (state: State) => state.adapter,
@@ -18,6 +19,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   schedulerResourceSelectors.processedResourceList,
   schedulerResourceSelectors.processedResourceChildrenLookup,
   schedulerResourceSelectors.resourceParentIdLookup,
+  schedulerOtherSelectors.uiTimezone,
+
   (
     adapter,
     events,
@@ -25,6 +28,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     resources,
     resourcesChildrenMap,
     resourceParentIds,
+    uiTimezone,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
@@ -37,6 +41,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       events,
       visibleResources,
       resourceParentIds,
+      uiTimezone,
     });
 
     for (const occurrence of occurrences) {

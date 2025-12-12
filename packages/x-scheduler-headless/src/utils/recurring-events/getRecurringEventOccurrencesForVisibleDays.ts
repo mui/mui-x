@@ -1,3 +1,4 @@
+import { TemporalTimezone } from '../../base-ui-copy/types';
 import { processDate } from '../../process-date';
 import {
   RecurringEventRecurrenceRule,
@@ -35,6 +36,8 @@ const YEARLY_MAX_ATTEMPTS = 4;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
+  private readonly eventModel: NonNullable<SchedulerProcessedEvent['modelInBuiltInFormat']>;
+
   private readonly rule: RecurringEventRecurrenceRule;
 
   private readonly seriesStart: TemporalSupportedObject;
@@ -68,20 +71,30 @@ class RecurringEventExpander {
   constructor(
     private readonly adapter: Adapter,
     private readonly event: SchedulerProcessedEvent,
+    private readonly uiTimezone: TemporalTimezone,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
-    this.rule = event.rrule!;
-    this.seriesStart = adapter.startOfDay(event.start.value);
+    // Important: We use `modelInBuiltInFormat` because it preserves the event's original (data) timezone.
+    // The processed event is already converted to the UI timezone, which would make recurrence
+    // calculations incorrect around DST and timezone boundaries.
+
+    this.eventModel = this.event.modelInBuiltInFormat!;
+    this.rule = this.eventModel.rrule! as RecurringEventRecurrenceRule;
+    this.seriesStart = adapter.startOfDay(this.eventModel.start);
     this.interval = Math.max(1, this.rule.interval ?? 1);
+
+    const dataTz = adapter.getTimezone(this.eventModel.start);
+    const visibleStartDataTz = adapter.startOfDay(adapter.setTimezone(start, dataTz));
+    const visibleEndDataTz = adapter.startOfDay(adapter.setTimezone(end, dataTz));
 
     // Adjust scan range to catch multi-day events starting before visible range
     const eventDuration = getEventDurationInDays(adapter, event);
-    this.scanFirstDay = adapter.startOfDay(adapter.addDays(start, 1 - eventDuration));
-    this.scanLastDay = adapter.startOfDay(end);
+    this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
+    this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
     // Pre-compute boundaries and exclusions
-    this.exDateKeys = new Set(event.exDates?.map((d) => getDateKey(d, adapter)));
+    this.exDateKeys = new Set(this.eventModel.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStart, this.scanFirstDay)
       ? this.scanFirstDay
@@ -158,15 +171,27 @@ class RecurringEventExpander {
       return;
     }
 
-    const occurrenceStart = mergeDateAndTime(this.adapter, day, this.event.start.value);
+    const baseTimeOriginal = this.eventModel.start;
+    const occurrenceStartOriginal = mergeDateAndTime(this.adapter, day, baseTimeOriginal);
+    const occurrenceEndOriginal = getOccurrenceEnd({
+      adapter: this.adapter,
+      event: this.event,
+      occurrenceStart: occurrenceStartOriginal,
+    });
+
+    const occurrenceStartUITimezone = this.adapter.setTimezone(
+      occurrenceStartOriginal,
+      this.uiTimezone,
+    );
+    const occurrenceEndUITimezone = this.adapter.setTimezone(
+      occurrenceEndOriginal,
+      this.uiTimezone,
+    );
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
-      start: processDate(occurrenceStart, this.adapter),
-      end: processDate(
-        getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
-        this.adapter,
-      ),
+      start: processDate(occurrenceStartUITimezone, this.adapter),
+      end: processDate(occurrenceEndUITimezone, this.adapter),
     });
   }
 
@@ -398,6 +423,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   adapter: Adapter,
+  uiTimezone: TemporalTimezone,
 ): SchedulerEventOccurrence[] {
-  return new RecurringEventExpander(adapter, event, start, end).expand();
+  return new RecurringEventExpander(adapter, event, uiTimezone, start, end).expand();
 }
