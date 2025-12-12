@@ -390,15 +390,10 @@ export const createColumnsState = ({
       }
     });
 
-    const newColumnDefinedProps = {};
-    Object.keys(newColumn).forEach((key) => {
-      // @ts-expect-error - index access on GridColDef
-      const value = newColumn[key];
-      if (value !== undefined) {
-        // @ts-expect-error - index access on GridColDef
-        newColumnDefinedProps[key] = value;
-      }
-    });
+    // Keep only the properties explicitly defined on the new column (exclude `undefined`)
+    const newColumnDefinedProps = Object.fromEntries(
+      Object.entries(newColumn).filter(([, value]) => value !== undefined),
+    ) as Partial<GridColDef>;
 
     const mergedProps = {
       ...getDefaultColTypeDef(newColumn.type),
