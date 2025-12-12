@@ -42,6 +42,33 @@ interface AnimatedGroupProps extends React.HTMLAttributes<SVGGElement> {
   yOrigin: number;
 }
 
+const AnimatedRect = styled('rect')({
+  '@keyframes scaleInX': {
+    from: {
+      transform: 'scaleX(0)',
+    },
+    to: {
+      transform: 'scaleX(1)',
+    },
+  },
+  '@keyframes scaleInY': {
+    from: {
+      transform: 'scaleY(0)',
+    },
+    to: {
+      transform: 'scaleY(1)',
+    },
+  },
+  animationDuration: `${ANIMATION_DURATION_MS}ms`,
+  animationFillMode: 'forwards',
+  '&[data-direction="horizontal-left"],&[data-direction="horizontal-right"]': {
+    animationName: 'scaleInX',
+  },
+  '&[data-direction="vertical-top"],&[data-direction="vertical-bottom"]': {
+    animationName: 'scaleInY',
+  },
+});
+
 function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: AnimatedGroupProps) {
   const store = useStore();
   const drawingArea = useSelector(store, selectorChartDrawingArea);
@@ -51,87 +78,57 @@ function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: Animate
 
   if (layout === 'horizontal') {
     animateChildren.push(
-      <rect
+      <AnimatedRect
         key="left"
+        data-direction="horizontal-left"
         x={drawingArea.left}
         width={xOrigin - drawingArea.left}
         y={drawingArea.top}
         height={drawingArea.height}
-      >
-        <animate
-          attributeName="x"
-          from={xOrigin}
-          to={drawingArea.left}
-          dur={`${ANIMATION_DURATION_MS}ms`}
-          fill="freeze"
-        />
-        <animate
-          attributeName="width"
-          from={0}
-          to={xOrigin - drawingArea.left}
-          dur={`${ANIMATION_DURATION_MS}ms`}
-          fill="freeze"
-        />
-      </rect>,
+        style={{
+          transformOrigin: `${xOrigin}px ${drawingArea.top + drawingArea.height / 2}px`,
+        }}
+      />,
     );
     animateChildren.push(
-      <rect
+      <AnimatedRect
         key="right"
+        data-direction="horizontal-right"
         x={xOrigin}
         width={drawingArea.left + drawingArea.width - xOrigin}
         y={drawingArea.top}
         height={drawingArea.height}
-      >
-        <animate
-          attributeName="width"
-          from={0}
-          to={drawingArea.left + drawingArea.width - xOrigin}
-          dur={`${ANIMATION_DURATION_MS}ms`}
-          fill="freeze"
-        />
-      </rect>,
+        style={{
+          transformOrigin: `${xOrigin}px ${drawingArea.top + drawingArea.height / 2}px`,
+        }}
+      />,
     );
   } else {
     animateChildren.push(
-      <rect
+      <AnimatedRect
         key="top"
+        data-direction="vertical-top"
         x={drawingArea.left}
         width={drawingArea.width}
         y={drawingArea.top}
         height={yOrigin - drawingArea.top}
-      >
-        <animate
-          attributeName="y"
-          from={yOrigin}
-          to={drawingArea.top}
-          dur={`${ANIMATION_DURATION_MS}ms`}
-          fill="freeze"
-        />
-        <animate
-          attributeName="height"
-          from={0}
-          to={yOrigin - drawingArea.top}
-          dur={`${ANIMATION_DURATION_MS}ms`}
-          fill="freeze"
-        />
-      </rect>,
+        style={{
+          transformOrigin: `${drawingArea.left + drawingArea.width / 2}px ${yOrigin}px`,
+        }}
+      />,
     );
     animateChildren.push(
-      <rect
+      <AnimatedRect
         key="bottom"
+        data-direction="vertical-bottom"
         x={drawingArea.left}
         width={drawingArea.width}
         y={yOrigin}
         height={drawingArea.top + drawingArea.height - yOrigin}
-      >
-        <animate
-          attributeName="height"
-          from={0}
-          to={drawingArea.top + drawingArea.height - yOrigin}
-          dur={`${ANIMATION_DURATION_MS}ms`}
-          fill="freeze"
-        />
-      </rect>,
+        style={{
+          transformOrigin: `${drawingArea.left + drawingArea.width / 2}px ${yOrigin}px`,
+        }}
+      />,
     );
   }
 
