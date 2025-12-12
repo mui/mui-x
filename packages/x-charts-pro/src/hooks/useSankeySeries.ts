@@ -52,6 +52,7 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
   return useAllSeriesOfType('sankey');
 }
+
 /**
  * Get access to the sankey layout.
  * @returns {SankeyLayout | undefined} the sankey layout
