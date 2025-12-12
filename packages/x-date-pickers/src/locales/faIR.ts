@@ -33,7 +33,7 @@ const faIRPickers: Partial<PickersLocaleText> = {
   // Action bar
   cancelButtonLabel: 'لغو',
   clearButtonLabel: 'پاک کردن',
-  okButtonLabel: 'اوکی',
+  okButtonLabel: 'تایید',
   todayButtonLabel: 'امروز',
   nextStepButtonLabel: 'آینده',
 
@@ -46,7 +46,7 @@ const faIRPickers: Partial<PickersLocaleText> = {
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
-    ` را انتخاب کنید ${timeViews[view]}. ${!formattedTime ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${formattedTime} می باشد`}`,
+    ` را انتخاب کنید ${timeViews[view]}. ${!formattedTime ? 'هیچ ساعتی انتخاب نشده است' : `ساعت انتخاب ${formattedTime} است`}`,
   hoursClockNumberText: (hours) => `${hours} ساعت‌ها`,
   minutesClockNumberText: (minutes) => `${minutes} دقیقه‌ها`,
   secondsClockNumberText: (seconds) => `${seconds} ثانیه‌ها`,
@@ -63,11 +63,11 @@ const faIRPickers: Partial<PickersLocaleText> = {
   // Open Picker labels
   openDatePickerDialogue: (formattedDate) =>
     formattedDate
-      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate} می‌باشد`
+      ? `تاریخ را انتخاب کنید، تاریخ انتخاب شده ${formattedDate} است`
       : 'تاریخ را انتخاب کنید',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime
-      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime} می‌باشد`
+      ? `ساعت را انتخاب کنید، ساعت انتخاب شده ${formattedTime} است`
       : 'ساعت را انتخاب کنید',
   // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
   fieldClearLabel: 'پاک کردن مقدار',
