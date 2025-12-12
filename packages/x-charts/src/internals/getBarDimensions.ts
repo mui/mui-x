@@ -63,7 +63,7 @@ export function getBarDimensions(params: {
     dataIndex,
   );
 
-  if (bandDimensions == null || continuousDimensions == null) {
+  if (continuousDimensions == null) {
     return null;
   }
 

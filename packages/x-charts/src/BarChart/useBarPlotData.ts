@@ -98,7 +98,7 @@ export function useBarPlotData(
           dataIndex,
         );
 
-        if (bandDimensions == null || continuousDimensions == null) {
+        if (continuousDimensions == null) {
           continue;
         }
 
