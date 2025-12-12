@@ -36,6 +36,8 @@ const YEARLY_MAX_ATTEMPTS = 4;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
+  private readonly eventModel: NonNullable<SchedulerProcessedEvent['modelInBuiltInFormat']>;
+
   private readonly rule: RecurringEventRecurrenceRule;
 
   private readonly seriesStart: TemporalSupportedObject;
@@ -73,11 +75,16 @@ class RecurringEventExpander {
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
-    this.rule = event.modelInBuiltInFormat!.rrule! as RecurringEventRecurrenceRule;
-    this.seriesStart = adapter.startOfDay(event.modelInBuiltInFormat!.start);
+    // Important: We use `modelInBuiltInFormat` because it preserves the event's original (data) timezone.
+    // The processed event is already converted to the UI timezone, which would make recurrence
+    // calculations incorrect around DST and timezone boundaries.
+
+    this.eventModel = this.event.modelInBuiltInFormat!;
+    this.rule = this.eventModel.rrule! as RecurringEventRecurrenceRule;
+    this.seriesStart = adapter.startOfDay(this.eventModel.start);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
-    const dataTz = adapter.getTimezone(event.modelInBuiltInFormat!.start);
+    const dataTz = adapter.getTimezone(this.eventModel.start);
     const visibleStartDataTz = adapter.startOfDay(adapter.setTimezone(start, dataTz));
     const visibleEndDataTz = adapter.startOfDay(adapter.setTimezone(end, dataTz));
 
@@ -87,9 +94,7 @@ class RecurringEventExpander {
     this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
     // Pre-compute boundaries and exclusions
-    this.exDateKeys = new Set(
-      event.modelInBuiltInFormat!.exDates?.map((d) => getDateKey(d, adapter)),
-    );
+    this.exDateKeys = new Set(this.eventModel.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStart, this.scanFirstDay)
       ? this.scanFirstDay
@@ -166,7 +171,7 @@ class RecurringEventExpander {
       return;
     }
 
-    const baseTimeOriginal = this.event.modelInBuiltInFormat!.start;
+    const baseTimeOriginal = this.eventModel.start;
     const occurrenceStartOriginal = mergeDateAndTime(this.adapter, day, baseTimeOriginal);
     const occurrenceEndOriginal = getOccurrenceEnd({
       adapter: this.adapter,
