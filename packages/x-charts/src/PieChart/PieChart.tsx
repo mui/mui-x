@@ -28,6 +28,7 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartsWrapper } from '../ChartsWrapper';
 import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
+import { FocusedPieArc } from './FocusedPieArc';
 
 export interface PieChartSlots
   extends PiePlotSlots,
@@ -161,6 +162,7 @@ const PieChart = React.forwardRef(function PieChart(
         )}
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+          <FocusedPieArc />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           {children}
         </ChartsSurface>
