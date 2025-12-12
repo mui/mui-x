@@ -37,3 +37,17 @@ function Calendar() {
 ```
 
 {{"demo": "TitleProperty.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Visible resources
+
+### Initialize the visible resources
+
+Use the `defaultVisibleResources` prop to set the initial visibility state of resources. A resource is visible if it is not in the object or if it has a `true` value.
+
+{{"demo": "DefaultVisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Control the visible resources
+
+Use the `visibleResources` and `onVisibleResourcesChange` props to control the visibility state of resources.
+
+{{"demo": "VisibleResources.js", "bg": "inline", "defaultCodeOpen": false}}

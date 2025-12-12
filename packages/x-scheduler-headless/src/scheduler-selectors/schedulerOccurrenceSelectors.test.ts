@@ -210,7 +210,7 @@ describe('schedulerOccurrenceSelectors', () => {
 
       const state = getTimelineStateFromParameters({ events: [event], resources: [R1] });
       // TODO: Use props.defaultVisibleResources when available
-      state.visibleResources = new Map([[R1.id, false]]);
+      state.visibleResources = { [R1.id]: false };
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response[0].occurrences).to.have.length(0);

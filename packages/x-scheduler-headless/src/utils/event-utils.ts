@@ -36,14 +36,14 @@ export function getDaysTheOccurrenceIsVisibleOn(
 
 const checkResourceVisibility = (
   resourceId: string,
-  visibleResources: Map<string, boolean>,
+  visibleResources: Record<string, boolean>,
   resourceParentIds: Map<string, string | null>,
 ): boolean => {
   if (!resourceId) {
     return true;
   }
 
-  const isResourceVisible = visibleResources.get(resourceId) !== false;
+  const isResourceVisible = visibleResources[resourceId] !== false;
 
   if (isResourceVisible) {
     const parentId = resourceParentIds.get(resourceId);
@@ -95,6 +95,6 @@ export interface GetOccurrencesFromEventsParameters {
   start: TemporalSupportedObject;
   end: TemporalSupportedObject;
   events: SchedulerProcessedEvent[];
-  visibleResources: Map<string, boolean>;
+  visibleResources: Record<string, boolean>;
   resourceParentIds: Map<string, string | null>;
 }

@@ -386,7 +386,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-3', title: 'Resource 3' },
         ];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        state.visibleResources = new Map([['resource-2', false]]);
+        state.visibleResources = { 'resource-2': false };
         const result = schedulerResourceSelectors.visibleIdList(state);
         expect(result).to.deep.equal(['resource-1', 'resource-3']);
       });
@@ -397,7 +397,7 @@ storeClasses.forEach((storeClass) => {
           { id: 'resource-2', title: 'Resource 2' },
         ];
         const state = new storeClass.Value({ events: [], resources }, adapter).state;
-        state.visibleResources = new Map([['resource-1', true]]);
+        state.visibleResources = { 'resource-1': true };
         const result = schedulerResourceSelectors.visibleIdList(state);
         expect(result).to.deep.equal(['resource-1', 'resource-2']);
       });

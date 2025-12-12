@@ -48,7 +48,7 @@ describe('Core - EventCalendarStore', () => {
         viewConfig: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
-        visibleResources: new Map(),
+        visibleResources: {},
       };
 
       expect(store.state).to.deep.equal(expectedState);
