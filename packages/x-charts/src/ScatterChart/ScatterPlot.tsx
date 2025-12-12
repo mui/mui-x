@@ -3,10 +3,12 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
-import { useXAxes, useYAxes } from '../hooks';
+import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
+import { CanvasScatter } from './canvas/CanvasScatter';
+import { CanvasProvider } from './canvas/CanvasContext';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -61,44 +63,59 @@ function ScatterPlot(props: ScatterPlotProps) {
     return null;
   }
 
+  const drawingArea = useDrawingArea();
   const { series, seriesOrder } = seriesData;
   const defaultXAxisId = xAxisIds[0];
   const defaultYAxisId = yAxisIds[0];
   const defaultZAxisId = zAxisIds[0];
 
-  const DefaultScatterItems = renderer === 'svg-batch' ? BatchScatter : Scatter;
+  const DefaultScatterItems =
+    renderer === 'canvas' ? CanvasScatter : renderer === 'svg-batch' ? BatchScatter : Scatter;
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
-  return (
-    <React.Fragment>
-      {seriesOrder.map((seriesId) => {
-        const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
+  const children = seriesOrder.map((seriesId) => {
+    const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
-        const colorGetter = scatterSeriesConfig.colorProcessor(
-          series[seriesId],
-          xAxis[xAxisId ?? defaultXAxisId],
-          yAxis[yAxisId ?? defaultYAxisId],
-          zAxis[zAxisId ?? defaultZAxisId],
-        );
-        const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
-        const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
-        return (
-          <ScatterItems
-            key={id}
-            xScale={xScale}
-            yScale={yScale}
-            color={color}
-            colorGetter={colorGetter}
-            series={series[seriesId]}
-            onItemClick={onItemClick}
-            slots={slots}
-            slotProps={slotProps}
-            {...slotProps?.scatter}
-          />
-        );
-      })}
-    </React.Fragment>
-  );
+    const colorGetter = scatterSeriesConfig.colorProcessor(
+      series[seriesId],
+      xAxis[xAxisId ?? defaultXAxisId],
+      yAxis[yAxisId ?? defaultYAxisId],
+      zAxis[zAxisId ?? defaultZAxisId],
+    );
+    const xScale = xAxis[xAxisId ?? defaultXAxisId].scale;
+    const yScale = yAxis[yAxisId ?? defaultYAxisId].scale;
+    return (
+      <ScatterItems
+        key={id}
+        xScale={xScale}
+        yScale={yScale}
+        color={color}
+        colorGetter={colorGetter}
+        series={series[seriesId]}
+        onItemClick={onItemClick}
+        slots={slots}
+        slotProps={slotProps}
+        {...slotProps?.scatter}
+      />
+    );
+  });
+
+  if (renderer === 'canvas') {
+    return (
+      <foreignObject
+        x={drawingArea.left}
+        y={drawingArea.top}
+        width={drawingArea.width}
+        height={drawingArea.height}
+      >
+        <CanvasProvider width={drawingArea.width} height={drawingArea.height}>
+          {children}
+        </CanvasProvider>
+      </foreignObject>
+    );
+  }
+
+  return <React.Fragment>{children}</React.Fragment>;
 }
 
 ScatterPlot.propTypes = {
