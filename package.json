@@ -75,7 +75,7 @@
     "@mui/internal-code-infra": "^0.0.3-canary.55",
     "@mui/internal-markdown": "^2.0.13",
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
-    "@mui/internal-test-utils": "catalog:",
+    "@mui/internal-test-utils": "https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@690ccf7",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#800638d6fdc275d7a5e4255a08646a6ee692ff75",
     "@mui/utils": "catalog:",
@@ -147,7 +147,6 @@
     "util": "^0.12.5",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "vitest-fail-on-console": "^0.10.1",
     "yargs": "catalog:"
   },
   "resolutions": {
@@ -159,13 +158,6 @@
     "node": ">=22.18"
   },
   "pnpm": {
-    "packageExtensions": {
-      "@mui/internal-test-utils": {
-        "dependencies": {
-          "lodash.kebabcase": "^4.1.1"
-        }
-      }
-    },
     "patchedDependencies": {
       "@base-ui-components/react": "patches/@base-ui-components__react.patch"
     }

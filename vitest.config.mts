@@ -47,6 +47,9 @@ const getProjects = () => {
 export default defineConfig({
   test: {
     projects: getProjects(),
+    sequence: {
+      hooks: 'list',
+    },
     reporters: process.env.CI
       ? ['default', ['junit', { outputFile: './test-results/junit.xml' }]]
       : ['default'],

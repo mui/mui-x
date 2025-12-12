@@ -46,7 +46,6 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "catalog:",
     "@types/prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

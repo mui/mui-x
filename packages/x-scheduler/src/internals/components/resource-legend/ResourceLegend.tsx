@@ -27,6 +27,7 @@ function ResourceLegendItem(props: { resource: SchedulerResource }) {
       <Checkbox.Root
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
         value={resource.id}
+        nativeButton
         render={(rootProps, state) => (
           <button
             type="button"

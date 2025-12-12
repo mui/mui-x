@@ -65,7 +65,6 @@ export default defineConfig({
       VITEST: 'true',
     },
     browser: {
-      isolate: false,
       provider: playwright({
         launchOptions: {
           // Required for tests which use scrollbars.
@@ -79,6 +78,7 @@ export default defineConfig({
             }
           : {}),
       }),
+      viewport: { width: 1280, height: 800 },
       headless: true,
       screenshotFailures: false,
       orchestratorScripts: [
@@ -91,15 +91,13 @@ export default defineConfig({
     },
     // Disable isolation to speed up the tests.
     isolate: false,
-    // Performance improvements for the tests.
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
+      // Performance improvements for the tests.
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
       testTimeout: 30000,
-      // Retry failed tests up to 3 times. This is useful for flaky tests.
-      retry: 3,
       // Reduce the number of workers to avoid CI timeouts.
       maxWorkers: 1,
     }),
