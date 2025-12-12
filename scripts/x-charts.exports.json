@@ -331,6 +331,7 @@
   { "name": "PiePlotSlotProps", "kind": "Interface" },
   { "name": "PiePlotSlots", "kind": "Interface" },
   { "name": "PieSeries", "kind": "TypeAlias" },
+  { "name": "PieSeriesLayout", "kind": "TypeAlias" },
   { "name": "PieSeriesType", "kind": "Interface" },
   { "name": "PieValueType", "kind": "TypeAlias" },
   { "name": "pinkPalette", "kind": "Variable" },
