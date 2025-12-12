@@ -11,7 +11,6 @@ export async function findPreferencesMenu() {
 export async function openPreferencesMenu(user) {
   const button = await findPreferencesMenu();
   await user.click(button);
-  await screen.findByRole('menu');
   return button;
 }
 
