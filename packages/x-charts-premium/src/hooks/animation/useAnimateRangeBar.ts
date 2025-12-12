@@ -1,7 +1,7 @@
 import type * as React from 'react';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from '@mui/x-charts/hooks';
-import { type AnimatedRangeBarElementProps } from '../../BarChartPro/RangeBar/AnimatedRangeBarElement';
+import { type AnimatedRangeBarElementProps } from '../../BarChartPremium/RangeBar/AnimatedRangeBarElement';
 
 type UseAnimateRangeBarParams = Pick<
   AnimatedRangeBarElementProps,

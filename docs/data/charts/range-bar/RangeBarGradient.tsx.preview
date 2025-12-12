@@ -1,4 +1,4 @@
-<BarChartPro
+<BarChartPremium
   {...settings}
   sx={{
     [`& .${rangeBarClasses.series}[data-series="2"] .${barElementClasses.root}`]:
@@ -10,4 +10,4 @@
   <defs>
     <Gradient id="bar-gradient" />
   </defs>
-</BarChartPro>
+</BarChartPremium>

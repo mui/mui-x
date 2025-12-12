@@ -13,7 +13,7 @@ import {
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/models';
 import { type DefaultizedRangeBarSeriesType } from '../../models/seriesType/rangeBar';
 import { type ProcessedRangeBarData, type ProcessedRangeBarSeriesData } from './types';
-import { useRangeBarSeriesContext } from '../../hooks';
+import { useRangeBarSeriesContext } from '../../hooks/useRangeBarSeries';
 
 export function useRangeBarPlotData(
   drawingArea: ChartDrawingArea,

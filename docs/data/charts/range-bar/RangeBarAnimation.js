@@ -5,7 +5,7 @@ import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 
 export default function RangeBarAnimation() {
   const [seriesNb, setSeriesNb] = React.useState(2);
@@ -27,7 +27,7 @@ export default function RangeBarAnimation() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <BarChartPro
+      <BarChartPremium
         height={300}
         series={series
           .slice(0, seriesNb)

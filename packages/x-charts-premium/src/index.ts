@@ -50,3 +50,5 @@ export * from './models';
 
 // Premium components
 export * from './ChartsRenderer';
+export * from './ChartDataProviderPremium';
+export * from './BarChartPremium';

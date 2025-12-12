@@ -3,7 +3,10 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
-import { BarChartPro, RangeBarSeries } from '@mui/x-charts-pro/BarChartPro';
+import {
+  BarChartPremium,
+  RangeBarSeries,
+} from '@mui/x-charts-premium/BarChartPremium';
 
 const series = [
   {
@@ -45,7 +48,7 @@ export default function RangeBarColorScale() {
         </TextField>
       </Stack>
 
-      <BarChartPro
+      <BarChartPremium
         height={300}
         grid={{ horizontal: true }}
         series={series}

@@ -1,4 +1,4 @@
-import { RangeBarPlot } from '@mui/x-charts-pro/BarChartPro';
+import { RangeBarPlot } from '@mui/x-charts-premium/BarChartPremium';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
