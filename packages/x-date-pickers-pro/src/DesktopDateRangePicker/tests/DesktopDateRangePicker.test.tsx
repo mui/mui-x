@@ -789,4 +789,26 @@ describe('<DesktopDateRangePicker />', () => {
       expect(getPickerDay('17')).to.have.attribute('disabled');
     });
   });
+
+  it('should close the Picker and move focus to the text field when clicking it', async () => {
+    const { user } = render(
+      <React.Fragment>
+        <input aria-label="decoy" />
+        <DesktopDateRangePicker />
+      </React.Fragment>,
+    );
+
+    await openPickerAsync(user, {
+      type: 'date-range',
+      initialFocus: 'start',
+      fieldType: 'single-input',
+    });
+
+    const decoyInput = screen.getByRole('textbox', { name: 'decoy' });
+    await user.click(decoyInput);
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).to.equal(null));
+    // the input should be focused—the new active element
+    expect(document.activeElement!).to.equal(decoyInput);
+  });
 });
