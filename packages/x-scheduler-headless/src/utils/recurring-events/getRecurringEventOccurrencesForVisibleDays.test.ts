@@ -524,6 +524,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const event = EventBuilder.new(adapter)
         .singleDay('2024-01-10T23:00:00Z')
         .withTimezone('America/New_York')
+        .withUITimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
@@ -551,6 +552,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const event = EventBuilder.new(adapter)
         .singleDay('2025-01-10T00:30:00Z', 30)
         .withTimezone('Asia/Tokyo')
+        .withUITimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
@@ -578,6 +580,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const event = EventBuilder.new(adapter)
         .span('2025-03-01T08:00:00Z', '2025-03-03T08:00:00Z') // 48h
         .withTimezone('America/Los_Angeles')
+        .withUITimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 

@@ -9,6 +9,8 @@ import {
 } from '../datasets/timezone-events';
 
 export default function TimezoneDataset() {
+  // Temporary DX workaround.
+  // We plan to support `event.timezone` out of the box (Issue #20598).
   const eventModelStructure = {
     start: {
       getter: (event) => new TZDate(event.startUtc, event.timezone),
