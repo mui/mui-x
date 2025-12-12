@@ -5,9 +5,29 @@ import {
   type PieItemIdentifier,
   type DefaultizedPieValueType,
 } from '@mui/x-charts';
-import { useTransformData } from '@mui/x-charts/PieChart/dataTransform/useTransformData';
+import {
+  useTransformData,
+  type ValueWithHighlight,
+} from '@mui/x-charts/PieChart/dataTransform/useTransformData';
 import * as React from 'react';
 import { PieArc } from './PieArc';
+
+export type PieArcItemValues = Pick<
+  ValueWithHighlight,
+  | 'innerRadius'
+  | 'outerRadius'
+  | 'cornerRadius'
+  | 'paddingAngle'
+  | 'startAngle'
+  | 'endAngle'
+  | 'color'
+  | 'isFaded'
+  | 'isHighlighted'
+  | 'isFocused'
+  | 'onClick'
+  | 'dataIndex'
+  | 'seriesId'
+>;
 
 export interface PieArcPlotProps
   extends Pick<
@@ -32,6 +52,7 @@ export interface PieArcPlotProps
     pieItemIdentifier: PieItemIdentifier,
     item: DefaultizedPieValueType,
   ) => void;
+  children?: (item: PieArcItemValues, index: number) => React.ReactNode;
 }
 
 function PieArcPlot(props: PieArcPlotProps) {
@@ -45,6 +66,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     faded = { additionalRadius: -5 },
     data,
     onItemClick,
+    children,
     ...other
   } = props;
 
@@ -57,10 +79,38 @@ function PieArcPlot(props: PieArcPlotProps) {
     highlighted,
     faded,
     data,
+    onItemClick,
   });
 
   if (data.length === 0) {
     return null;
+  }
+
+  if (children) {
+    return (
+      <g {...other}>
+        {transformedData.map((item, index) =>
+          children(
+            {
+              seriesId: item.seriesId,
+              dataIndex: item.dataIndex,
+              startAngle: item.startAngle,
+              endAngle: item.endAngle,
+              paddingAngle: item.paddingAngle,
+              innerRadius: item.innerRadius,
+              outerRadius: item.outerRadius,
+              cornerRadius: item.cornerRadius,
+              color: item.color,
+              isFaded: item.isFaded,
+              isHighlighted: item.isHighlighted,
+              isFocused: item.isFocused,
+              onClick: item.onClick,
+            },
+            index,
+          ),
+        )}
+      </g>
+    );
   }
 
   return (
@@ -74,19 +124,13 @@ function PieArcPlot(props: PieArcPlotProps) {
           innerRadius={item.innerRadius}
           outerRadius={item.outerRadius}
           cornerRadius={item.cornerRadius}
-          id={id}
+          seriesId={id}
           color={item.color}
-          stroke={'transparent'}
           dataIndex={index}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
           isFocused={item.isFocused}
-          onClick={
-            onItemClick &&
-            ((event) => {
-              onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
-            })
-          }
+          onClick={item.onClick}
         />
       ))}
     </g>

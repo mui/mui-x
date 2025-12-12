@@ -84,9 +84,9 @@ export default function Home() {
         <h2>Headless + CSS</h2>
         <PieChartHeadless.Root {...data}>
           <PieChartHeadless.Surface className="surface">
-            <g className="plot">
-              <PieChartHeadless.Plot />
-            </g>
+            <PieChartHeadless.Plot>
+              {(item, index) => <PieChartHeadless.Arc key={index} className="arc" {...item} />}
+            </PieChartHeadless.Plot>
             <g className="label-plot">
               <PieChartHeadless.LabelPlot />
             </g>

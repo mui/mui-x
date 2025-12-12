@@ -17,7 +17,7 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
    * Those are used, for example, to display a tooltip or highlight the arc on hover.
    */
   skipInteraction?: boolean;
-  id: PieItemId;
+  seriesId: PieItemId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -30,7 +30,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   const {
     color,
     dataIndex,
-    id,
+    seriesId,
     isFaded,
     isHighlighted,
     isFocused,
@@ -47,7 +47,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
   } = props;
 
   const interactionProps = useInteractionItemProps(
-    { type: 'pie', seriesId: id, dataIndex },
+    { type: 'pie', seriesId, dataIndex },
     skipInteraction,
   );
   const p = {
@@ -81,7 +81,7 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       strokeLinejoin="round"
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
-      data-series={id}
+      data-series={seriesId}
       data-index={dataIndex}
       d={d}
       visibility={visibility}

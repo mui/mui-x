@@ -9,7 +9,7 @@ body {
   padding: 16px;
 }
 
-.plot path {
+.arc {
   stroke: #f5f5f5;
   stroke-width: 5px;
 }

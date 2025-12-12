@@ -1,13 +1,15 @@
 'use client';
 
 import { type PieArcPlotProps } from '@mui/x-charts';
-import { PieArcPlot } from './PieArcPlot';
+import { PieArcPlot, type PieArcItemValues } from './PieArcPlot';
 import { usePiePlotData } from './PieChart.hooks';
 
-export interface PiePlotProps extends Pick<PieArcPlotProps, 'onItemClick'> {}
+export interface PiePlotProps extends Pick<PieArcPlotProps, 'onItemClick'> {
+  children?: (item: PieArcItemValues, index: number) => React.ReactNode;
+}
 
 function PiePlot(props: PiePlotProps) {
-  const { onItemClick } = props;
+  const { onItemClick, children } = props;
   const plotData = usePiePlotData();
 
   return plotData?.map((seriesData) => {
@@ -36,7 +38,9 @@ function PiePlot(props: PiePlotProps) {
         highlighted={highlighted}
         faded={faded}
         onItemClick={onItemClick}
-      />
+      >
+        {children}
+      </PieArcPlot>
     );
   });
 }

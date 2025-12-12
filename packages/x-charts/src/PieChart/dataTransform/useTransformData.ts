@@ -4,6 +4,8 @@ import {
   type ComputedPieRadius,
   type DefaultizedPieSeriesType,
   type DefaultizedPieValueType,
+  type PieItemId,
+  type PieItemIdentifier,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
@@ -19,11 +21,13 @@ export interface AnimatedObject {
   paddingAngle: number;
 }
 
-export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
+export interface ValueWithHighlight extends Omit<DefaultizedPieValueType, 'id'>, AnimatedObject {
+  seriesId: PieItemId;
   dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
   isFocused: boolean;
+  onClick: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
 }
 
 export function useTransformData(
@@ -31,7 +35,13 @@ export function useTransformData(
     DefaultizedPieSeriesType,
     'cornerRadius' | 'paddingAngle' | 'id' | 'highlighted' | 'faded' | 'data'
   > &
-    ComputedPieRadius,
+    ComputedPieRadius & {
+      onItemClick?: (
+        event: React.MouseEvent<SVGPathElement, MouseEvent>,
+        pieItemIdentifier: PieItemIdentifier,
+        item: DefaultizedPieValueType,
+      ) => void;
+    },
 ) {
   const {
     id: seriesId,
@@ -43,6 +53,7 @@ export function useTransformData(
     arcLabelRadius: baseArcLabelRadius,
     outerRadius: baseOuterRadius,
     cornerRadius: baseCornerRadius = 0,
+    onItemClick,
   } = series;
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
@@ -80,9 +91,14 @@ export function useTransformData(
           baseArcLabelRadius ??
           (innerRadius + outerRadius) / 2;
 
+        const onClick = (event: React.MouseEvent<SVGPathElement, MouseEvent>) => {
+          onItemClick?.(event, { type: 'pie', seriesId, dataIndex: itemIndex }, item);
+        };
+
         return {
           ...item,
           ...attributesOverride,
+          seriesId,
           dataIndex: itemIndex,
           isFaded,
           isHighlighted,
@@ -92,6 +108,7 @@ export function useTransformData(
           outerRadius,
           cornerRadius,
           arcLabelRadius,
+          onClick,
         };
       }),
     [
@@ -107,6 +124,7 @@ export function useTransformData(
       isItemHighlighted,
       isItemFocused,
       seriesId,
+      onItemClick,
     ],
   );
 

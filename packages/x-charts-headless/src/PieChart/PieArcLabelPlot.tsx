@@ -96,7 +96,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
     <g {...other}>
       {transformedData.map((item) => (
         <PieArcLabel
-          key={item.id ?? item.dataIndex}
+          key={item.dataIndex}
           startAngle={item.startAngle}
           endAngle={item.endAngle}
           paddingAngle={item.paddingAngle}
