@@ -16,6 +16,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Sloupce',
   toolbarColumnsLabel: 'Vybrat sloupec',

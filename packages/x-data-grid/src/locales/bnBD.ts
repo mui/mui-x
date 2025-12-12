@@ -16,6 +16,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'মানক',
   toolbarDensityComfortable: 'স্বাচ্ছন্দ্যদায়ক',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'কলাম',
   toolbarColumnsLabel: 'কলাম নির্বাচন করুন',

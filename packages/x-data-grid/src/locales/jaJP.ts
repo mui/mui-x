@@ -16,6 +16,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '広め',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: '列一覧',
   toolbarColumnsLabel: '列選択',

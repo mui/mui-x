@@ -16,6 +16,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '기본',
   toolbarDensityComfortable: '넓게',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: '열 목록',
   toolbarColumnsLabel: '열 선택',

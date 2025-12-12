@@ -1,0 +1,13 @@
+<DataGridPremium
+  columns={columns}
+  dataSource={dataSource}
+  pagination
+  initialState={initialState}
+  pageSizeOptions={[10, 20, 50]}
+  showToolbar
+  disableRowSelectionOnClick
+  cellSelection
+  disablePivoting
+  disableRowGrouping
+  disableColumnPinning
+/>

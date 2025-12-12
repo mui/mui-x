@@ -1,0 +1,371 @@
+import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import {
+  type GridCellEditStopParams,
+  type GridRowEditStopParams,
+  type GridEvents,
+  gridVisibleRowsSelector,
+  gridVisibleColumnFieldsSelector,
+  gridFocusCellSelector,
+} from '@mui/x-data-grid-pro';
+import type { GridApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type {
+  GridHistoryEventHandler,
+  GridCellEditHistoryData,
+  GridRowEditHistoryData,
+  GridClipboardPasteHistoryData,
+} from './gridHistoryInterfaces';
+
+/**
+ * Create the default handler for cellEditStop events.
+ */
+export const createCellEditHistoryHandler = (
+  apiRef: RefObject<GridApiPremium>,
+): GridHistoryEventHandler<GridCellEditHistoryData> => {
+  return {
+    store: (params: GridCellEditStopParams) => {
+      const { id, field } = params;
+
+      const oldValue = apiRef.current.getRow(id)[field];
+      const newValue = apiRef.current.getRowWithUpdatedValues(id, field)[field];
+
+      if (isDeepEqual(oldValue, newValue)) {
+        return null;
+      }
+
+      return {
+        id,
+        field,
+        oldValue,
+        newValue,
+      };
+    },
+
+    validate: (data: GridCellEditHistoryData, direction: 'undo' | 'redo') => {
+      const { id, field, oldValue, newValue } = data;
+
+      // Check if column is visible
+      if (!gridVisibleColumnFieldsSelector(apiRef).includes(field)) {
+        return false;
+      }
+
+      const visibleRowsData = gridVisibleRowsSelector(apiRef);
+
+      // Check if row is in the current page
+      const rowIndex = visibleRowsData.rowIdToIndexMap.get(id);
+      if (
+        rowIndex === undefined ||
+        rowIndex < (visibleRowsData.range?.firstRowIndex || 0) ||
+        rowIndex > (visibleRowsData.range?.lastRowIndex || rowIndex)
+      ) {
+        return false;
+      }
+
+      const row = apiRef.current.getRow(id);
+
+      // Check if the value hasn't changed externally
+      const currentValue = row[field];
+      const expectedValue = direction === 'undo' ? newValue : oldValue;
+
+      if (!isDeepEqual(currentValue, expectedValue)) {
+        return false;
+      }
+
+      return true;
+    },
+
+    undo: async (data: GridCellEditHistoryData) => {
+      const { id, field, oldValue } = data;
+
+      if (apiRef.current.state.props.dataSource?.updateRow) {
+        const row = apiRef.current.getRow(id);
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: { ...row, [field]: oldValue },
+          previousRow: row,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, [field]: oldValue }]);
+      }
+
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id && currentFocus?.field === field) {
+        return;
+      }
+
+      // Use `requestAnimationFrame` to ensure all undo updates are applied
+      requestAnimationFrame(() => {
+        apiRef.current.setCellFocus(id, field);
+      });
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: apiRef.current.getColumnIndex(field),
+      });
+    },
+
+    redo: async (data: GridCellEditHistoryData) => {
+      const { id, field, newValue } = data;
+
+      if (apiRef.current.state.props.dataSource?.updateRow) {
+        const row = apiRef.current.getRow(id);
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: { ...row, [field]: newValue },
+          previousRow: row,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, [field]: newValue }]);
+      }
+
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id && currentFocus?.field === field) {
+        return;
+      }
+
+      // Use `requestAnimationFrame` to ensure all redo updates are applied
+      requestAnimationFrame(() => {
+        apiRef.current.setCellFocus(id, field);
+      });
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: apiRef.current.getColumnIndex(field),
+      });
+    },
+  };
+};
+
+/**
+ * Create the default handler for rowEditStop events.
+ */
+export const createRowEditHistoryHandler = (
+  apiRef: RefObject<GridApiPremium>,
+): GridHistoryEventHandler<GridRowEditHistoryData> => {
+  return {
+    store: (params: GridRowEditStopParams) => {
+      const { id } = params;
+
+      const oldRow = apiRef.current.getRow(id) || {};
+      const newRow = apiRef.current.getRowWithUpdatedValues(id, '');
+
+      if (isDeepEqual(oldRow, newRow)) {
+        return null;
+      }
+
+      return {
+        id,
+        oldRow,
+        newRow,
+      };
+    },
+
+    validate: (data: GridRowEditHistoryData, direction: 'undo' | 'redo') => {
+      const { id, oldRow, newRow } = data;
+
+      const visibleRowsData = gridVisibleRowsSelector(apiRef);
+
+      // Check if row is in the current page
+      const rowIndex = visibleRowsData.rowIdToIndexMap.get(id);
+      if (
+        rowIndex === undefined ||
+        rowIndex < (visibleRowsData.range?.firstRowIndex || 0) ||
+        rowIndex > (visibleRowsData.range?.lastRowIndex || rowIndex)
+      ) {
+        return false;
+      }
+
+      const row = apiRef.current.getRow(id);
+
+      // Check if modified fields haven't changed externally
+      const expectedRow = direction === 'undo' ? newRow : oldRow;
+
+      for (const field of Object.keys(expectedRow)) {
+        if (!isDeepEqual(row[field], expectedRow[field])) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+
+    undo: async (data: GridRowEditHistoryData) => {
+      const { id, oldRow, newRow } = data;
+
+      if (apiRef.current.state.props.dataSource?.updateRow) {
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: oldRow,
+          previousRow: newRow,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, ...oldRow }]);
+      }
+
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id) {
+        return;
+      }
+
+      // Use `requestAnimationFrame` to ensure all undo updates are applied
+      requestAnimationFrame(() => {
+        apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
+      });
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: 0,
+      });
+    },
+
+    redo: async (data: GridRowEditHistoryData) => {
+      const { id, oldRow, newRow } = data;
+
+      if (apiRef.current.state.props.dataSource?.updateRow) {
+        await apiRef.current.dataSource.editRow({
+          rowId: id,
+          updatedRow: newRow,
+          previousRow: oldRow,
+        });
+      } else {
+        await apiRef.current.updateRows([{ id, ...newRow }]);
+      }
+
+      const currentFocus = gridFocusCellSelector(apiRef);
+      if (currentFocus?.id === id) {
+        return;
+      }
+
+      // Use `requestAnimationFrame` to ensure all redo updates are applied
+      requestAnimationFrame(() => {
+        apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
+      });
+      apiRef.current.scrollToIndexes({
+        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+        colIndex: 0,
+      });
+    },
+  };
+};
+
+/**
+ * Create the default handler for clipboardPasteEnd events.
+ */
+export const createClipboardPasteHistoryHandler = (
+  apiRef: RefObject<GridApiPremium>,
+): GridHistoryEventHandler<GridClipboardPasteHistoryData> => {
+  return {
+    store: (params: GridClipboardPasteHistoryData) => params,
+    validate: (data: GridClipboardPasteHistoryData, direction: 'undo' | 'redo') => {
+      const { oldRows, newRows } = data;
+      const updatedRowIds = Object.keys(newRows);
+
+      // Check if any rows were updated
+      if (updatedRowIds.length === 0) {
+        return false;
+      }
+
+      // Check if all affected rows still exist and have expected values
+      for (let i = 0; i < updatedRowIds.length; i += 1) {
+        const rowId = updatedRowIds[i];
+        const row = apiRef.current.getRow(rowId);
+        if (!row) {
+          return false;
+        }
+
+        const expectedRow = direction === 'undo' ? newRows[rowId] : oldRows[rowId];
+
+        // Check if the row values match what we expect
+        for (const field of Object.keys(expectedRow)) {
+          if (!isDeepEqual(row[field], expectedRow[field])) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    },
+
+    undo: async (data: GridClipboardPasteHistoryData) => {
+      const { oldRows } = data;
+      const oldRowsValues = Object.values(oldRows);
+
+      // Restore all rows to their original state
+      await apiRef.current.updateRows(oldRowsValues);
+
+      const visibleColumns = apiRef.current.getVisibleColumns();
+
+      // Focus the first affected cell
+      if (oldRowsValues.length > 0 && visibleColumns.length > 0) {
+        const firstRowId = Object.keys(oldRows)[0];
+        const firstField = visibleColumns[0].field;
+        if (firstField) {
+          // Use `requestAnimationFrame` to ensure all undo updates are applied
+          requestAnimationFrame(() => {
+            apiRef.current.setCellFocus(firstRowId, firstField);
+          });
+          apiRef.current.scrollToIndexes({
+            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
+            colIndex: apiRef.current.getColumnIndex(firstField),
+          });
+        }
+      }
+    },
+
+    redo: async (data: GridClipboardPasteHistoryData) => {
+      const { newRows } = data;
+      const newRowsValues = Object.values(newRows);
+
+      // Restore all rows to the pasted state
+      await apiRef.current.updateRows(newRowsValues);
+
+      const visibleColumns = apiRef.current.getVisibleColumns();
+
+      // Focus the first affected cell
+      if (newRowsValues.length > 0 && visibleColumns.length > 0) {
+        const firstRowId = Object.keys(newRows)[0];
+        const firstField = visibleColumns[0].field;
+        if (firstField) {
+          // Use `requestAnimationFrame` to ensure all redo updates are applied
+          requestAnimationFrame(() => {
+            apiRef.current.setCellFocus(firstRowId, firstField);
+          });
+          apiRef.current.scrollToIndexes({
+            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
+            colIndex: apiRef.current.getColumnIndex(firstField),
+          });
+        }
+      }
+    },
+  };
+};
+
+/**
+ * Create the default history events map.
+ */
+export const createDefaultHistoryHandlers = (
+  apiRef: RefObject<GridApiPremium>,
+  props: Pick<DataGridPremiumProcessedProps, 'columns' | 'isCellEditable' | 'dataSource'>,
+) => {
+  const handlers = {} as Record<
+    GridEvents,
+    | GridHistoryEventHandler<GridCellEditHistoryData>
+    | GridHistoryEventHandler<GridRowEditHistoryData>
+    | GridHistoryEventHandler<GridClipboardPasteHistoryData>
+  >;
+
+  const canHaveEditing = props.columns.some((col) => col.editable) || props.isCellEditable;
+
+  if (!canHaveEditing) {
+    return handlers;
+  }
+
+  if (!props.dataSource || props.dataSource.updateRow) {
+    handlers.cellEditStop = createCellEditHistoryHandler(apiRef);
+    handlers.rowEditStop = createRowEditHistoryHandler(apiRef);
+  }
+
+  if (!props.dataSource) {
+    handlers.clipboardPasteEnd = createClipboardPasteHistoryHandler(apiRef);
+  }
+
+  return handlers;
+};

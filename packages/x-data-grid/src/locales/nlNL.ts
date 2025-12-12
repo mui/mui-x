@@ -16,6 +16,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Normaal',
   toolbarDensityComfortable: 'Breed',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolommen',
   toolbarColumnsLabel: 'Kies kolommen',

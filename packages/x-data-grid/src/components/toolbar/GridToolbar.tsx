@@ -14,6 +14,11 @@ import { GridToolbarLabel } from '../toolbarV8/GridToolbar';
 
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
+   * Show the undo/redo buttons.
+   * @default true
+   */
+  showUndoRedo?: boolean;
+  /**
    * Show the quick filter component.
    * @default true
    */
@@ -90,6 +95,11 @@ GridToolbar.propTypes = {
    * @default true
    */
   showQuickFilter: PropTypes.bool,
+  /**
+   * Show the undo/redo buttons.
+   * @default true
+   */
+  showUndoRedo: PropTypes.bool,
   /**
    * The props used for each slot inside.
    * @default {}

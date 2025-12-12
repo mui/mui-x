@@ -36,6 +36,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Стандартная',
   toolbarDensityComfortable: 'Комфортная',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Столбцы',
   toolbarColumnsLabel: 'Выделите столбцы',

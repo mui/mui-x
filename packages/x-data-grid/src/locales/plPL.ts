@@ -16,6 +16,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfort',
 
+  // Undo/redo toolbar button text
+  // toolbarUndo: 'Undo',
+  // toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumny',
   toolbarColumnsLabel: 'Zaznacz kolumny',

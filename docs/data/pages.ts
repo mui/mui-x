@@ -171,6 +171,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
+          {
+            pathname: '/x/react-data-grid/undo-redo',
+            title: 'Undo and redo',
+            plan: 'premium',
+            newFeature: true,
+          },
           { pathname: '/x/react-data-grid/scrolling' },
           {
             pathname: '/x/react-data-grid/list-view',
