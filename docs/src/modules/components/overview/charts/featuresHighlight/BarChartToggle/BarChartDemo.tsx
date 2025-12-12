@@ -32,7 +32,9 @@ export default function BarChartDemo(props: { selected: SelectOptions }) {
 
   useEnhancedEffect(() => {
     if (props.selected === 'highlighting') {
-      setHighlightedItem({ seriesId: 'B' });
+      setHighlightedItem({ seriesId: 'B', dataIndex: 2 });
+    } else {
+      setHighlightedItem(null);
     }
   }, [props.selected]);
   return (
