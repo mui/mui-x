@@ -9,8 +9,14 @@ import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridP
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import setupVitest from '@mui/internal-test-utils/setupVitest';
+import { configure, isJsdom } from '@mui/internal-test-utils';
 
 setupVitest({ emotion: true });
+
+configure({
+  // JSDOM logs errors otherwise on `getComputedStyle(element, pseudoElement)` calls.
+  computedStyleSupportsPseudoElements: !isJsdom(),
+});
 
 let licenseKey: string = '';
 

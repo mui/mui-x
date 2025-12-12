@@ -65,10 +65,6 @@ export default defineConfig({
       VITEST: 'true',
     },
     server: {
-      deps: {
-        inline: ['@mui/internal-test-utils'],
-      },
-    },
     browser: {
       provider: playwright({
         launchOptions: {
@@ -95,10 +91,10 @@ export default defineConfig({
       ],
     },
     // Disable isolation to speed up the tests.
+    isolate: false,
     // https://vitest.dev/guide/improving-performance.html#improving-performance
     ...(process.env.CI && {
       // Performance improvements for the tests.
-      isolate: false,
       // Important to avoid timeouts on CI.
       fileParallelism: false,
       // Increase the timeout for the tests due to slow CI machines.
