@@ -50,6 +50,7 @@ import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
+import { gridHeaderFilteringEnabledSelector } from '../headerFiltering';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
@@ -209,6 +210,9 @@ function extractColumnWidths(
   const root = apiRef.current.rootElementRef!.current!;
   root.classList.add(gridClasses.autosizing);
 
+  const includeHeaderFilters =
+    options.includeHeaderFilters && gridHeaderFilteringEnabledSelector(apiRef);
+
   columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
 
@@ -242,7 +246,7 @@ function extractColumnWidths(
       }
     }
 
-    if (options.includeHeaderFilters) {
+    if (includeHeaderFilters) {
       const headerFilter = findGridHeaderFilter(apiRef.current, column.field);
       if (headerFilter) {
         const style = window.getComputedStyle(headerFilter, null);

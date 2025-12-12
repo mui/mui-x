@@ -3,11 +3,23 @@ import Rating from '@mui/material/Rating';
 import { DataGridPremium } from '@mui/x-data-grid-premium';
 import { randomRating, randomTraderName } from '@mui/x-data-grid-generator';
 
+const columns = [
+  { field: 'id', headerName: 'Brand ID' },
+  { field: 'brand', headerName: 'Brand name' },
+  { field: 'rep', headerName: 'Representative' },
+  {
+    field: 'rating',
+    headerName: 'Rating',
+    renderCell: renderRating,
+    display: 'flex' as const,
+  },
+];
+
 function renderRating(params: any) {
   return <Rating readOnly value={params.value} />;
 }
 
-function useData(length: number) {
+function useRows(length: number) {
   return React.useMemo(() => {
     const names = [
       'Nike',
@@ -25,30 +37,19 @@ function useData(length: number) {
       rating: randomRating(),
     }));
 
-    const columns = [
-      { field: 'id', headerName: 'Brand ID' },
-      { field: 'brand', headerName: 'Brand name' },
-      { field: 'rep', headerName: 'Representative' },
-      {
-        field: 'rating',
-        headerName: 'Rating',
-        renderCell: renderRating,
-        display: 'flex' as const,
-      },
-    ];
-
-    return { rows, columns };
+    return rows;
   }, [length]);
 }
 
 export default function ColumnAutosizingHeaderFilters() {
-  const data = useData(100);
+  const rows = useRows(100);
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGridPremium
         density="compact"
-        {...data}
+        rows={rows}
+        columns={columns}
         headerFilters
         autosizeOptions={{
           includeHeaderFilters: true,
