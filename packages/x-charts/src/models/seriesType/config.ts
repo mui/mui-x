@@ -17,6 +17,12 @@ import type {
 } from './pie';
 import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
 import type { SeriesColor } from './common';
+import type {
+  DefaultizedRangeBarSeriesType,
+  RangeBarItemIdentifier,
+  RangeBarSeriesType,
+  RangeBarValueType,
+} from './rangeBar';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -42,6 +48,17 @@ export interface ChartsSeriesConfig {
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;
+    axisType: 'cartesian';
+  };
+  rangeBar: {
+    seriesInput: DefaultizedProps<RangeBarSeriesType, 'id'> &
+      MakeRequired<SeriesColor<RangeBarValueType | null>, 'color'>;
+    series: DefaultizedRangeBarSeriesType;
+    seriesLayout: {};
+    seriesProp: RangeBarSeriesType;
+    itemIdentifier: RangeBarItemIdentifier;
+    itemIdentifierWithData: RangeBarItemIdentifier;
+    valueType: RangeBarValueType | null;
     axisType: 'cartesian';
   };
   line: {

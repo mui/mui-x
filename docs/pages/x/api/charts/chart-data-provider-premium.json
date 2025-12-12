@@ -1,0 +1,40 @@
+{
+  "props": {
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
+    },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "width": { "type": { "name": "number" } }
+  },
+  "name": "ChartDataProviderPremium",
+  "imports": [
+    "import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';",
+    "import { ChartDataProviderPremium } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "spread": false,
+  "themeDefaultProps": false,
+  "muiName": "MuiChartDataProviderPremium",
+  "forwardsRefTo": "SVGSVGElement",
+  "filename": "/packages/x-charts-premium/src/ChartDataProviderPremium/ChartDataProviderPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}
