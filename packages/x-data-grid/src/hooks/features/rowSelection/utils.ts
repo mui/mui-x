@@ -111,7 +111,13 @@ export const checkboxPropsSelector = createSelector(
         node.children.forEach(traverseDescendants);
       }
       // Check if row is selectable before considering it for parent selection state
-      const rowIsSelectable = apiRef.current.isRowSelectable(itemToTraverseId);
+      const descendantRowParams: GridRowParams = {
+        id: itemToTraverseId,
+        row: rowsLookup[itemToTraverseId],
+        columns,
+      };
+      const rowIsSelectable =
+        typeof isRowSelectable === 'function' ? isRowSelectable(descendantRowParams) : true;
 
       // Only consider selectable rows when determining parent selection state
       if (rowIsSelectable) {
