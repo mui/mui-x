@@ -6,7 +6,8 @@ describe('<DesktopTimePicker /> - Describe Validation', () => {
 
   describeValidation(DesktopTimePicker, () => ({
     render,
-    views: ['hours', 'minutes'],
+    views: ['hours', 'minutes', 'meridiem'],
     componentFamily: 'picker',
+    variant: 'desktop',
   }));
 });
