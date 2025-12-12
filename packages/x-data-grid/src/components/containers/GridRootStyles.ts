@@ -317,6 +317,10 @@ export const GridRootStyles = styled('div', {
       [`& .${c.treeDataGroupingCell}`]: {
         width: 'unset',
       },
+      [`& .${c['columnHeader--filter']}`]: {
+        flex: 'none !important',
+        width: 'unset !important',
+      },
     },
     [`&.${c.withSidePanel}`]: {
       flexDirection: 'row',

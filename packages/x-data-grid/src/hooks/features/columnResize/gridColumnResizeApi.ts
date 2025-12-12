@@ -2,6 +2,7 @@ import type { GridColDef } from '../../../models/colDef/gridColDef';
 
 export const DEFAULT_GRID_AUTOSIZE_OPTIONS = {
   includeHeaders: true,
+  includeHeaderFilters: false,
   includeOutliers: false,
   outliersFactor: 1.5,
   expand: false,
@@ -18,6 +19,12 @@ export type GridAutosizeOptions = {
    * @default false
    */
   includeHeaders?: boolean;
+  /**
+   * If true, include header filter widths in the calculation.
+   * Only applies when header filters are enabled.
+   * @default false
+   */
+  includeHeaderFilters?: boolean;
   /**
    * If true, width outliers will be ignored.
    * @default false
