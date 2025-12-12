@@ -30,7 +30,8 @@ import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { type BarChartPluginSignatures } from './BarChart.plugins';
+import type { BarChartPluginSignatures } from './BarChart.plugins';
+import { FocusedBar } from './FocusedBar';
 
 export interface BarChartSlots
   extends ChartsAxisSlots,
@@ -150,6 +151,7 @@ const BarChart = React.forwardRef(function BarChart(
             <BarPlot {...barPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
+            <FocusedBar />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsClipPath {...clipPathProps} />
