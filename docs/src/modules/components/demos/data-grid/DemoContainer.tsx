@@ -26,7 +26,7 @@ function DemoContainer({
 
   return (
     <ThemeProvider theme={modifiedTheme}>
-      <Stack direction="row" spacing={2} sx={{ mb: 3, justifyContent: 'end' }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 2, justifyContent: 'end' }}>
         <Button
           startIcon={<GitHubIcon />}
           sx={(containerTheme) => ({
