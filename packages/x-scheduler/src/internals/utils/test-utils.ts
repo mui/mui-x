@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { fireEvent, screen } from '@mui/internal-test-utils';
 
 export function getPreferencesMenu() {
   return screen.queryByRole('button', { name: /settings/i });
@@ -38,13 +38,13 @@ async function openTimeFormatSubmenu(user) {
 export async function changeTo24HoursFormat(user) {
   await openTimeFormatSubmenu(user);
   const h24Radio = await screen.findByRole('menuitemradio', { name: /24-hour \(13:00\)/i });
-  await user.click(h24Radio);
+  fireEvent.click(h24Radio);
   await screen.findByRole('menuitemradio', { name: /24-hour \(13:00\)/i, checked: true });
 }
 
 export async function changeTo12HoursFormat(user) {
   await openTimeFormatSubmenu(user);
   const h12Radio = await screen.findByRole('menuitemradio', { name: /12-hour \(1:00PM\)/i });
-  await user.click(h12Radio);
+  fireEvent.click(h12Radio);
   await screen.findByRole('menuitemradio', { name: /12-hour \(1:00PM\)/i, checked: true });
 }
