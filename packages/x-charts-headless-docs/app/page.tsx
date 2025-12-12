@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { PieChart as PieChartHeadless } from 'packages/x-charts-headless/src';
+import { PieChart } from 'packages/x-charts-headless/src';
 import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
 import type { PieChartProps } from '@mui/x-charts/PieChart';
 import './page.css';
@@ -69,16 +69,14 @@ export default function Home() {
 
       <div>
         <h2>Headless Pie Chart</h2>
-        <PieChartHeadless.Root {...data}>
-          <PieChartHeadless.Surface>
-            <PieChartHeadless.Plot>
-              {(item, index) => <PieChartHeadless.Arc key={index} {...item} />}
-            </PieChartHeadless.Plot>
-            <PieChartHeadless.LabelPlot>
-              {(item, index) => <PieChartHeadless.ArcLabel key={index} {...item} />}
-            </PieChartHeadless.LabelPlot>
-          </PieChartHeadless.Surface>
-        </PieChartHeadless.Root>
+        <PieChart.Root {...data}>
+          <PieChart.Surface>
+            <PieChart.Plot>{(item, index) => <PieChart.Arc key={index} {...item} />}</PieChart.Plot>
+            <PieChart.LabelPlot>
+              {(item, index) => <PieChart.ArcLabel key={index} {...item} />}
+            </PieChart.LabelPlot>
+          </PieChart.Surface>
+        </PieChart.Root>
       </div>
       <div>
         <h2>Material UI Pie Chart</h2>
@@ -86,19 +84,17 @@ export default function Home() {
       </div>
       <div>
         <h2>Headless + CSS</h2>
-        <PieChartHeadless.Root {...data}>
-          <PieChartHeadless.Surface className="surface">
-            <PieChartHeadless.Plot>
-              {(item, index) => <PieChartHeadless.Arc key={index} className="arc" {...item} />}
-            </PieChartHeadless.Plot>
-            <PieChartHeadless.LabelPlot>
-              {(item, index) => (
-                <PieChartHeadless.ArcLabel key={index} className="arc-label" {...item} />
-              )}
-            </PieChartHeadless.LabelPlot>
-          </PieChartHeadless.Surface>
+        <PieChart.Root {...data}>
+          <PieChart.Surface className="surface">
+            <PieChart.Plot>
+              {(item, index) => <PieChart.Arc key={index} className="arc" {...item} />}
+            </PieChart.Plot>
+            <PieChart.LabelPlot>
+              {(item, index) => <PieChart.ArcLabel key={index} className="arc-label" {...item} />}
+            </PieChart.LabelPlot>
+          </PieChart.Surface>
           <PieTooltip />
-        </PieChartHeadless.Root>
+        </PieChart.Root>
       </div>
     </div>
   );
