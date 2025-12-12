@@ -118,11 +118,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     // UI timezone is Europe/Paris (UTC+1 in January), which makes it 2024-01-11 05:00.
     // This means the occurrence must always appear on day1 (Jan 11) and day2 (Jan 12) in the UI, never on day0.
 
-    const uiTimezone = 'Europe/Paris' as const;
-
     const event = EventBuilder.new(adapter)
       .span('2024-01-10T23:00:00', '2024-01-11T00:00:00') // local NY time
       .withTimezone('America/New_York')
+      .withUITimezone('Europe/Paris')
       .rrule({ freq: 'DAILY' })
       .toProcessed();
 
@@ -132,7 +131,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [event],
       visibleResources: visible,
       resourceParentIds: noParents,
-      uiTimezone,
+      uiTimezone: 'Europe/Paris',
     });
 
     // Should NOT appear on Jan 10 in Paris
