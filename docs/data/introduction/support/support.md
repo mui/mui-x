@@ -56,7 +56,7 @@ You can use a starter template to build a reproduction case with:
 
 ## Technical support
 
-MUI offers two types of support, Standard(free) and Priority(paid).
+MUI offers two support plans, Standard(free) and Priority(paid).
 
 ### Standard support
 
@@ -71,7 +71,7 @@ With priority support you get expedited assistance and troubleshooting for your 
 
 Priority support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
 
-In addition to the MUI X components, priority support covers the entire MUI ecosystem, including:
+In addition to the MUI X components, priority support covers the entire MUI ecosystem, including:
 
 - The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
 - Material UI
