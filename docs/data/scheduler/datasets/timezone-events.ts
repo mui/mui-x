@@ -95,6 +95,7 @@ export const initialEvents: TimezoneEvent[] = [
 
   // Tokyo daily — 07:00 JST → always UTC+9 (Tokyo has no DST)
   // Mar 1 → 22:00Z previous day
+  // When viewed in Europe/Paris, this shifts from 23:00 to 00:00 after DST.
   {
     id: 'daily-tokyo',
     title: 'Tokyo Sunrise Daily',

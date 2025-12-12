@@ -15,6 +15,7 @@ export const eventCalendarAgendaSelectors = {
   visibleDays: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
+    schedulerOtherSelectors.uiTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
     schedulerEventSelectors.processedEventList,
@@ -23,6 +24,7 @@ export const eventCalendarAgendaSelectors = {
     (
       adapter,
       visibleDate,
+      uiTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
       events,
@@ -46,6 +48,7 @@ export const eventCalendarAgendaSelectors = {
         events,
         visibleResources,
         resourceParentIds,
+        uiTimezone,
       });
 
       const hasEvents = (day: SchedulerProcessedDate) =>
@@ -92,6 +95,7 @@ export const eventCalendarAgendaSelectors = {
           events,
           visibleResources,
           resourceParentIds,
+          uiTimezone,
         });
 
         daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);
