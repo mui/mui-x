@@ -85,6 +85,7 @@
   },
   "devDependencies": {
     "@date-fns/tz": "catalog:",
+    "@mui/internal-test-utils": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "date-fns": "catalog:",

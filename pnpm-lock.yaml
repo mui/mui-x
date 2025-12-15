@@ -42,6 +42,9 @@ catalogs:
     '@mui/icons-material':
       specifier: ^7.3.5
       version: 7.3.5
+    '@mui/internal-test-utils':
+      specifier: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788
+      version: 2.0.17
     '@mui/material':
       specifier: ^7.3.5
       version: 7.3.5
@@ -266,7 +269,7 @@ importers:
         specifier: ^0.0.2-canary.1
         version: 0.0.2-canary.1
       '@mui/internal-test-utils':
-        specifier: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788
+        specifier: 'catalog:'
         version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@22.19.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
@@ -875,6 +878,9 @@ importers:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1186,6 +1192,9 @@ importers:
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 7.3.5(@mui/material@7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(@types/react@19.2.7)(react@19.2.1)
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1277,6 +1286,9 @@ importers:
         specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1312,6 +1324,9 @@ importers:
         specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1344,6 +1359,9 @@ importers:
         specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1394,6 +1412,9 @@ importers:
         specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1453,6 +1474,9 @@ importers:
         specifier: 'catalog:'
         version: 15.8.1
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1509,6 +1533,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1601,6 +1628,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1661,6 +1691,9 @@ importers:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/use-sync-external-store':
         specifier: 'catalog:'
         version: 1.5.0
@@ -1690,6 +1723,9 @@ importers:
         specifier: workspace:*
         version: link:../x-telemetry/build
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       react:
         specifier: 'catalog:'
         version: 19.2.1
@@ -1728,6 +1764,9 @@ importers:
         specifier: ^0.555.0
         version: 0.555.0(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1784,6 +1823,9 @@ importers:
       '@date-fns/tz':
         specifier: 'catalog:'
         version: 1.4.1
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/prop-types':
         specifier: 'catalog:'
         version: 15.7.15
@@ -1825,6 +1867,9 @@ importers:
         specifier: ^1.1.12
         version: 1.1.12
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@types/device-uuid':
         specifier: ^1.0.3
         version: 1.0.3
@@ -1866,6 +1911,9 @@ importers:
         specifier: 'catalog:'
         version: 4.4.5(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1931,6 +1979,9 @@ importers:
         specifier: 'catalog:'
         version: 1.6.0(react@19.2.1)
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
       '@mui/material':
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react@19.2.1))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -1966,6 +2017,9 @@ importers:
         specifier: workspace:*
         version: link:../x-internals/build
     devDependencies:
+      '@mui/internal-test-utils':
+        specifier: ^2.0.15
+        version: 2.0.16(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@mui/types':
         specifier: ^7.4.8
         version: 7.4.8(@types/react@19.2.7)
@@ -4326,6 +4380,14 @@ packages:
 
   '@mui/internal-scripts@2.0.16':
     resolution: {integrity: sha512-kmEnuMyB4s+Snjr4AB7Fq+CTFzt+o6PMMoPgaKlZuRTthvWnNBMGhBDDJo402lpkFDKuoxVRcJxA8ZW7eDsINw==}
+
+  '@mui/internal-test-utils@2.0.16':
+    resolution: {integrity: sha512-ihRnALFg3qroIsGdwdMmFO/v/ibjyTnBcQ6mwNtFnT8wuRQnnEhm/qiw+6TO8hwMCyXjCXTD/vqXwd81Of97JQ==}
+    peerDependencies:
+      '@playwright/test': ^1.53.1
+      chai: ^4.5.0 || ^5.0.0 || ^6.0.0
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
 
   '@mui/internal-test-utils@https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788':
     resolution: {tarball: https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788}
@@ -14712,6 +14774,34 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@mui/internal-test-utils@2.0.16(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@emotion/cache': 11.14.0
+      '@emotion/react': 11.14.0(@types/react@19.2.7)(react@19.2.1)
+      '@playwright/test': 1.57.0
+      '@testing-library/dom': 10.4.1
+      '@testing-library/react': 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
+      assertion-error: 2.0.1
+      chai: 6.2.1
+      chai-dom: 1.12.1(chai@6.2.1)
+      dom-accessibility-api: 0.7.0
+      es-toolkit: 1.42.0
+      format-util: 1.0.5
+      jsdom: 26.1.0
+      prop-types: 15.8.1
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      sinon: 21.0.0
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
+
   '@mui/internal-test-utils@https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@22.19.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)':
     dependencies:
       '@babel/runtime': 7.28.4
@@ -14732,6 +14822,40 @@ snapshots:
       react-dom: 19.2.1(react@19.2.1)
       sinon: 21.0.0
       vitest-fail-on-console: 0.10.1(@vitest/utils@4.0.15)(vite@7.2.7(@types/node@22.19.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
+    optionalDependencies:
+      '@emotion/cache': 11.14.0
+      '@emotion/react': 11.14.0(@types/react@19.2.7)(react@19.2.1)
+    transitivePeerDependencies:
+      - '@types/react'
+      - '@types/react-dom'
+      - '@vitest/utils'
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
+      - vite
+      - vitest
+
+  '@mui/internal-test-utils@https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.1))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.15)(chai@6.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)':
+    dependencies:
+      '@babel/runtime': 7.28.4
+      '@playwright/test': 1.57.0
+      '@testing-library/dom': 10.4.1
+      '@testing-library/react': 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      '@testing-library/user-event': 14.6.1(@testing-library/dom@10.4.1)
+      '@types/chai-dom': 1.11.3
+      assertion-error: 2.0.1
+      chai: 6.2.1
+      chai-dom: 1.12.1(chai@6.2.1)
+      dom-accessibility-api: 0.7.0
+      es-toolkit: 1.42.0
+      format-util: 1.0.5
+      jsdom: 26.1.0
+      prop-types: 15.8.1
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      sinon: 21.0.0
+      vitest-fail-on-console: 0.10.1(@vitest/utils@4.0.15)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15)
     optionalDependencies:
       '@emotion/cache': 11.14.0
       '@emotion/react': 11.14.0(@types/react@19.2.7)(react@19.2.1)
@@ -23398,6 +23522,13 @@ snapshots:
       chalk: 5.6.2
       vite: 7.2.7(@types/node@22.19.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
       vitest: 4.0.15(@opentelemetry/api@1.9.0)(@types/node@22.19.2)(@vitest/browser-playwright@4.0.15)(@vitest/ui@4.0.15)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
+
+  vitest-fail-on-console@0.10.1(@vitest/utils@4.0.15)(vite@7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.15):
+    dependencies:
+      '@vitest/utils': 4.0.15
+      chalk: 5.6.2
+      vite: 7.2.7(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
+      vitest: 4.0.15(@opentelemetry/api@1.9.0)(@types/node@24.5.2)(@vitest/browser-playwright@4.0.15)(@vitest/ui@4.0.15)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
 
   vitest@4.0.15(@opentelemetry/api@1.9.0)(@types/node@22.19.2)(@vitest/browser-playwright@4.0.15)(@vitest/ui@4.0.15)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:

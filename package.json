@@ -75,7 +75,7 @@
     "@mui/internal-code-infra": "^0.0.3-canary.55",
     "@mui/internal-markdown": "^2.0.13",
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
-    "@mui/internal-test-utils": "https://pkg.pr.new/mui/mui-public/@mui/internal-test-utils@871c788",
+    "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/monorepo": "github:mui/material-ui#800638d6fdc275d7a5e4255a08646a6ee692ff75",
     "@mui/utils": "catalog:",
