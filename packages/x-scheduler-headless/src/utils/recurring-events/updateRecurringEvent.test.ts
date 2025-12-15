@@ -266,7 +266,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       const until = (updated.updated![0].rrule as RecurringEventRecurrenceRule).until!;
 
-      // The UI thinks it's Jan 4, but truncation MUST use Jan 3 NY → until Jan 2.
+      // The UI thinks it's Jan 4 (display timezone), but truncation MUST use Jan 3 NY → until Jan 2.
       expect(adapter.getDate(until)).to.equal(2);
     });
 
