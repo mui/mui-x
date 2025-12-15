@@ -71,11 +71,7 @@ export function ChartAxisZoomSliderTrack({
     }
 
     const pointerDownPoint = getSVGPoint(element, event);
-    const zoomFromPointerDown = calculateZoomFromPoint(
-      store.getSnapshot(),
-      axisId,
-      pointerDownPoint,
-    );
+    const zoomFromPointerDown = calculateZoomFromPoint(store.state, axisId, pointerDownPoint);
 
     if (zoomFromPointerDown === null) {
       return;
@@ -83,17 +79,13 @@ export function ChartAxisZoomSliderTrack({
 
     const onPointerMove = rafThrottle(function onPointerMove(pointerMoveEvent: PointerEvent) {
       const pointerMovePoint = getSVGPoint(element, pointerMoveEvent);
-      const zoomFromPointerMove = calculateZoomFromPoint(
-        store.getSnapshot(),
-        axisId,
-        pointerMovePoint,
-      );
+      const zoomFromPointerMove = calculateZoomFromPoint(store.state, axisId, pointerMovePoint);
 
       if (zoomFromPointerMove === null) {
         return;
       }
 
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
 
       instance.setAxisZoomData(axisId, (prevZoomData) => {
         if (zoomFromPointerMove > zoomFromPointerDown) {

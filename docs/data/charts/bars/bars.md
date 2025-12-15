@@ -91,6 +91,13 @@ You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
 
+### Date axis
+
+If your band axis represents dates in a usual way (they are sorted and evenly spaced), you can set `ordinalTimeTicks` to pick some date frequencies.
+This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+
+Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
+
 ### Minimum bar size
 
 You can set a minimum bar size with the `minBarSize` property.

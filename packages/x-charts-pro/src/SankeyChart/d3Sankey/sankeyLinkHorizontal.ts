@@ -1,11 +1,11 @@
 import { linkHorizontal, type Link } from '@mui/x-charts-vendor/d3-shape';
 import type { SankeyExtraProperties, SankeyLink, SankeyNodeMinimal } from './sankey.types';
 
-function horizontalSource(d: SankeyLink<{}, {}>): [number, number] {
+function horizontalSource(d: SankeyLink<true, {}, {}>): [number, number] {
   return [(d.source as SankeyNodeMinimal<{}, {}>).x1!, d.y0!];
 }
 
-function horizontalTarget(d: SankeyLink<{}, {}>): [number, number] {
+function horizontalTarget(d: SankeyLink<true, {}, {}>): [number, number] {
   return [(d.target as SankeyNodeMinimal<{}, {}>).x0!, d.y1!];
 }
 
@@ -14,7 +14,7 @@ function horizontalTarget(d: SankeyLink<{}, {}>): [number, number] {
  * Source and target accessors are pre-configured and work with the
  * default x- and y- accessors of the link shape generator.
  */
-export function sankeyLinkHorizontal(): Link<any, SankeyLink<{}, {}>, [number, number]>;
+export function sankeyLinkHorizontal(): Link<any, SankeyLink<true, {}, {}>, [number, number]>;
 /**
  * Get a horizontal link shape suitable for a Sankey diagram.
  * Source and target accessors are pre-configured and work with the
@@ -31,9 +31,9 @@ export function sankeyLinkHorizontal(): Link<any, SankeyLink<{}, {}>, [number, n
 export function sankeyLinkHorizontal<
   N extends SankeyExtraProperties,
   L extends SankeyExtraProperties,
->(): Link<any, SankeyLink<N, L>, [number, number]>;
+>(): Link<any, SankeyLink<true, N, L>, [number, number]>;
 export function sankeyLinkHorizontal() {
-  return linkHorizontal<SankeyLink<{}, {}>, [number, number]>()
+  return linkHorizontal<SankeyLink<true, {}, {}>, [number, number]>()
     .source(horizontalSource)
     .target(horizontalTarget);
 }

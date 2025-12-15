@@ -48,11 +48,11 @@ declare module '@mui/x-charts/internals' {
       seriesInput: DefaultizedSankeySeriesType;
       series: DefaultizedSankeySeriesType;
       seriesLayout: {
-        sankeyLayout: SankeyLayout;
+        sankeyLayout: SankeyLayout<true>;
       };
       seriesProp: SankeySeriesType;
       itemIdentifier: SankeyItemIdentifier;
-      itemIdentifierWithData: SankeyItemIdentifierWithData;
+      itemIdentifierWithData: SankeyItemIdentifierWithData<true>;
       valueType: number;
     };
   }

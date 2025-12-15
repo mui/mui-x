@@ -99,7 +99,7 @@ export type SankeyNodeOptions = {
    *
    * @default 'auto'
    */
-  sort?: 'auto' | 'fixed' | ((a: SankeyLayoutNode, b: SankeyLayoutNode) => number);
+  sort?: 'auto' | 'fixed' | ((a: SankeyLayoutNode<true>, b: SankeyLayoutNode<true>) => number);
 } & SankeyNodeHighlightScope;
 
 export type SankeyLinkOptions = {
@@ -132,7 +132,7 @@ export type SankeyLinkOptions = {
 
   * @default 'auto'
    */
-  sort?: 'auto' | 'fixed' | ((a: SankeyLayoutLink, b: SankeyLayoutLink) => number);
+  sort?: 'auto' | 'fixed' | ((a: SankeyLayoutLink<true>, b: SankeyLayoutLink<true>) => number);
   /**
    * Applies the given number to the X dimension of the control points of the link's curve function.
    * This can create better looking links between nodes, but is dependent on the graph layout.
@@ -205,43 +205,79 @@ export interface SankeySeriesType {
   valueFormatter?: (value: number, context: SankeyValueFormatterContext) => string | null;
 }
 
-/**
- * Represents the calculated positions and dimensions for a node in the Sankey diagram
- */
-export interface SankeyLayoutNode
-  extends D3SankeyNode<MakeRequired<SankeyNode, 'label' | 'color'>, SankeyLayoutLink> {
-  targetLinks: SankeyLayoutLink[];
-  sourceLinks: SankeyLayoutLink[];
+// ----------------------------------------------------------------------------------------
+// Those interfaces are here to allow circular dependencies between nodes and links.
+
+export interface SankeyLayoutNodeWithoutPosition
+  extends D3SankeyNode<
+    false,
+    MakeRequired<SankeyNode, 'label' | 'color'>,
+    SankeyLayoutLinkWithoutPosition
+  > {
+  targetLinks: SankeyLayoutLinkWithoutPosition[];
+  sourceLinks: SankeyLayoutLinkWithoutPosition[];
   value: number;
 }
-
-/**
- * Represents the calculated positions and paths for a link in the Sankey diagram
- */
-export interface SankeyLayoutLink
+export interface SankeyLayoutLinkWithoutPosition
   extends D3SankeyLink<
-    SankeyLayoutNode,
+    false,
+    SankeyLayoutNodeWithoutPosition,
+    Omit<MakeRequired<SankeyLink, 'color'>, 'source' | 'target'>
+  > {
+  source: SankeyLayoutNodeWithoutPosition;
+  target: SankeyLayoutNodeWithoutPosition;
+}
+export interface SankeyLayoutNodeWithPosition
+  extends D3SankeyNode<
+    true,
+    MakeRequired<SankeyNode, 'label' | 'color'>,
+    SankeyLayoutLinkWithPosition
+  > {
+  targetLinks: SankeyLayoutLinkWithPosition[];
+  sourceLinks: SankeyLayoutLinkWithPosition[];
+  value: number;
+}
+export interface SankeyLayoutLinkWithPosition
+  extends D3SankeyLink<
+    true,
+    SankeyLayoutNodeWithPosition,
     Omit<MakeRequired<SankeyLink, 'color'>, 'source' | 'target'>
   > {
   path?: string | null;
-  source: SankeyLayoutNode;
-  target: SankeyLayoutNode;
+  source: SankeyLayoutNodeWithPosition;
+  target: SankeyLayoutNodeWithPosition;
 }
+
+// ------------------------------------------
+
+/**
+ * Represents the calculated positions and dimensions for a node in the Sankey diagram
+ */
+export type SankeyLayoutNode<WithPosition extends boolean = true> = WithPosition extends true
+  ? SankeyLayoutNodeWithPosition
+  : SankeyLayoutNodeWithoutPosition;
+/**
+ * Represents the calculated positions and paths for a link in the Sankey diagram
+ */
+export type SankeyLayoutLink<WithPosition extends boolean = true> = WithPosition extends true
+  ? SankeyLayoutLinkWithPosition
+  : SankeyLayoutLinkWithoutPosition;
 
 /**
  * Calculated layout for the Sankey diagram
  */
-export interface SankeyLayout {
-  nodes: readonly SankeyLayoutNode[];
-  links: readonly SankeyLayoutLink[];
+export interface SankeyLayout<WithPosition extends boolean = true> {
+  nodes: readonly SankeyLayoutNode<WithPosition>[];
+  links: readonly SankeyLayoutLink<WithPosition>[];
 }
 
 export interface DefaultizedSankeySeriesType
   extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id' | 'valueFormatter'> {
-  data: {
-    nodes: Map<SankeyNodeId, SankeyNode>;
-    links: readonly SankeyLink[];
-  };
+  // data: {
+  //   nodes: Map<SankeyNodeId, SankeyNode>;
+  //   links: readonly SankeyLink[];
+  // };
+  data: SankeyLayout<false>;
   // TODO: Implement, currently here so types don't break.
   highlightScope?: HighlightScope;
 }
@@ -265,12 +301,13 @@ export type SankeyNodeIdentifier = SankeyNodeIdentifierBase & {
   nodeId: SankeyNodeId;
 };
 
-export type SankeyNodeIdentifierWithData = SankeyNodeIdentifier & {
-  /**
-   * The node object with all the calculated properties
-   */
-  node: SankeyLayoutNode;
-};
+export type SankeyNodeIdentifierWithData<WithPosition extends boolean = true> =
+  SankeyNodeIdentifier & {
+    /**
+     * The node object with all the calculated properties
+     */
+    node: SankeyLayoutNode<WithPosition>;
+  };
 
 export type SankeyLinkIdentifier = SankeyNodeIdentifierBase & {
   /**
@@ -287,18 +324,19 @@ export type SankeyLinkIdentifier = SankeyNodeIdentifierBase & {
   targetId: SankeyNodeId;
 };
 
-export type SankeyLinkIdentifierWithData = SankeyLinkIdentifier & {
-  /**
-   * The link object with all the calculated properties
-   */
-  link: SankeyLayoutLink;
-};
+export type SankeyLinkIdentifierWithData<WithPosition extends boolean = true> =
+  SankeyLinkIdentifier & {
+    /**
+     * The link object with all the calculated properties
+     */
+    link: SankeyLayoutLink<WithPosition>;
+  };
 
 export type SankeyItemIdentifier = SankeyNodeIdentifier | SankeyLinkIdentifier;
 
-export type SankeyItemIdentifierWithData =
-  | SankeyNodeIdentifierWithData
-  | SankeyLinkIdentifierWithData;
+export type SankeyItemIdentifierWithData<WithPosition extends boolean = true> =
+  | SankeyNodeIdentifierWithData<WithPosition>
+  | SankeyLinkIdentifierWithData<WithPosition>;
 
 export type SankeyValueFormatterContext =
   | {

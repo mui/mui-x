@@ -73,7 +73,8 @@ For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dep
 | `useChartCartesianAxis`                            |                         | `useChartInteraction`                          |
 | `useChartPolarAxis`                                |                         | `useChartInteraction`                          |
 | `useChartHighlight`                                |                         |                                                |
-| `useChartInteraction`                              |                         |                                                |
+| `useChartTooltip`                                  |                         |                                                |
+| `useChartInteraction`                              |                         | `useChartTooltip`                              |
 | `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`,<br/>`useChartHighlight` |
 | `useChartZAxis`                                    |                         |                                                |
 | `useChartBrush`                                    |                         |                                                |
