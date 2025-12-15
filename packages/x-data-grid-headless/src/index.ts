@@ -7,7 +7,6 @@ export { default as paginationPlugin } from './plugins/pagination';
 
 // Plugin types
 export type { Plugin } from './plugins/core/plugin';
-export type { BaseApi, BaseState } from './core/plugins';
 export type { PluginsApi, PluginsOptions, PluginsState } from './plugins/core/helpers';
 
 // Sorting types

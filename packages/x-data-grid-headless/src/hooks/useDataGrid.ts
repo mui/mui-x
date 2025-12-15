@@ -1,11 +1,10 @@
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@base-ui/utils/store';
 import { ColumnDef } from '../columnDef/columnDef';
-import { Plugin } from '../plugins/core/plugin';
+import { BaseApi, Plugin } from '../plugins/core/plugin';
 import { PluginsApi, PluginsOptions, PluginsState } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
-import { BaseApi, BaseState } from '../core/plugins';
-import { internalPlugins } from '../plugins/internal';
+import { internalPlugins, InternalPluginsApi, InternalPluginsState } from '../plugins/internal';
 
 // ================================
 // Core Options
@@ -22,7 +21,6 @@ interface CoreDataGridOptions<TData> {
 // Combined Types
 // ================================
 
-// Full options = Core + Plugin options
 type UseDataGridOptions<
   TData,
   TPlugins extends readonly Plugin<any, any, any, any, any>[],
@@ -32,11 +30,9 @@ type UseDataGridOptions<
     initialState?: Partial<PluginsState<TPlugins>>;
   };
 
-// Full state = BaseState (internal plugins) + User Plugin states
 type DataGridState<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
   PluginsState<TPlugins>;
 
-// Full API = BaseApi (internal plugins) + User Plugin APIs
 type DataGridApi<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
   PluginsApi<TPlugins>;
 
@@ -74,7 +70,7 @@ export const useDataGrid = <
       } as any);
       baseStateParts.push(pluginState as Record<string, any>);
     });
-    const baseState = Object.assign({}, ...baseStateParts) as BaseState;
+    const baseState = Object.assign({}, ...baseStateParts) as InternalPluginsState;
 
     // 3. Initialize user plugin states
     const userPluginStateParts: Record<string, any>[] = [];
@@ -95,7 +91,7 @@ export const useDataGrid = <
     // 5. Create base API from internal plugins
     const base = {
       pluginRegistry: registry,
-    } as BaseApi;
+    } as BaseApi & InternalPluginsApi;
 
     // Initialize internal plugin APIs
     internalPlugins.forEach((plugin: Plugin<any, any, any, any, any>) => {
