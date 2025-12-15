@@ -45,7 +45,7 @@ See [Tree Item customization](/x/react-tree-view/tree-item-customization/) to le
 
 ### Headless API
 
-Use the `useTreeItem` hook to create your ownn fully custom component.
+Use the `useTreeItem()` hook to create your ownn fully custom component.
 The demo below shows how to add an avatar and custom typography elements.
 
 {{"demo": "HeadlessAPI.js", "defaultCodeOpen": false}}

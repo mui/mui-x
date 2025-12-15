@@ -54,7 +54,7 @@ To modify this behavior, use the `slotProps` on the `TreeItem` as shown below:
 
 ## Validation
 
-You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItemUtils`:
+You can override the event handlers of the `labelInput` and implement a custom validation logic using the interaction methods from `useTreeItemUtils()`:
 
 {{"demo": "Validation.js"}}
 
@@ -119,7 +119,7 @@ apiRef.current.setEditedItem(
 
 ## Editing lazy loaded children
 
-To store the updated item labels on your server, use the `onItemLabelChange` callback function.
+To store the updated item labels on your server, use the `onItemLabelChange()` callback function.
 
 Changes to the label are not automatically updated in the `dataSourceCache` and must be updated manually.
 

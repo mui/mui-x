@@ -99,12 +99,12 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
 
 ### useTreeItem
 
-The `useTreeItem` hook lets you manage and customize individual `TreeItem` components.
+The `useTreeItem()` hook lets you manage and customize individual `TreeItem` components.
 You can use it to get the properties needed for all slots, the status of any given item, or to tap into the interactive API of the Tree View.
 
 #### Slot properties
 
-The `useTreeItem` hook gives you granular control over the layout of `TreeItem` by providing resolvers to get the appropriate props for each slot.
+The `useTreeItem()` hook gives you granular control over the layout of `TreeItem` by providing resolvers to get the appropriate props for each slot.
 This makes it possible to build a fully custom layout for `TreeItem` components.
 
 The demo below shows how to get the props needed for each slot, and how to pass them correctly.
@@ -124,7 +124,7 @@ You can pass additional props to a slot—or override existing slots—by passin
 
 #### Item status
 
-The `useTreeItem` hook also returns a `status` object that holds boolean values for each possible state of a `TreeItem`.
+The `useTreeItem()` hook also returns a `status` object that holds boolean values for each possible state of a `TreeItem`.
 
 ```jsx
 const {
@@ -139,7 +139,7 @@ You can use these statuses to apply custom styling to the item or conditionally 
 #### Imperative API
 
 The `publicAPI` object provides a number of methods to programmatically interact with the Tree View.
-You can use the `useTreeItem` hook to access the `publicAPI` object from within a `TreeItem`.
+You can use the `useTreeItem()` hook to access the `publicAPI` object from within a `TreeItem`.
 
 {{"demo": "useTreeItemHookPublicAPI.js"}}
 
@@ -148,13 +148,13 @@ See the Imperative API section on each feature page to learn more about the publ
 :::warning
 The `publicAPI` object should not be used in the render because the item won't necessarily re-render when the returned value is updated.
 
-If you want to access the item model, you can use the `useTreeItemModel` hook.
+If you want to access the item model, you can use the `useTreeItemModel()` hook.
 See [Tree Item customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.
 :::
 
 ### `useTreeItemUtils`
 
-The `useTreeItemUtils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
+The `useTreeItemUtils()` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
 It also returns the status of the `TreeItem`.
 
 ```jsx
@@ -197,7 +197,7 @@ The demo below shows how to introduce a new element that expands and collapses t
 
 #### Label editing
 
-The `useTreeItemUtils` hook provides the following interaction methods relevant to label editing behavior:
+The `useTreeItemUtils()` hook provides the following interaction methods relevant to label editing behavior:
 
 ```jsx
 const {
@@ -216,7 +216,7 @@ See [Editing—enable editing using only icons](/x/react-tree-view/rich-tree-vie
 
 ### `useTreeItemModel`
 
-The `useTreeItemModel` hook lets you access the item model (the object passed to `props.items`):
+The `useTreeItemModel()` hook lets you access the item model (the object passed to `props.items`):
 
 ```jsx
 const item = useTreeItemModel(itemId);
