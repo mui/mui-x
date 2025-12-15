@@ -55,7 +55,9 @@ const sortingPlugin = {
     };
   },
   selectors: {
-    sortModel: (state: any) => state.sorting.sortModel,
+    sorting: {
+      sortModel: (state: any) => state.sorting.sortModel,
+    },
   },
 } satisfies Plugin<'sorting', SortingState, SortingApi, SortingOptions>;
 

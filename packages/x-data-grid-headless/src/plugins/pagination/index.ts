@@ -52,6 +52,11 @@ const paginationPlugin = {
       },
     };
   },
+  selectors: {
+    pagination: {
+      model: (state) => state.pagination.paginationModel,
+    },
+  },
 } satisfies Plugin<'pagination', PaginationState, PaginationApi, PaginationOptions>;
 
 export default paginationPlugin;

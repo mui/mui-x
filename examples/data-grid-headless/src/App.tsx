@@ -109,22 +109,11 @@ function DataGrid() {
     plugins: [sortingPlugin, paginationPlugin],
   });
 
-  // Subscribe to state changes for reactivity using useStore
-  // Select specific parts to avoid object recreation issues
-  const orderedFields = useStore(
-    grid.store,
-    (state: typeof grid.state) => state.columns.orderedFields,
-  );
-  const columnsLookup = useStore(grid.store, (state: typeof grid.state) => state.columns.lookup);
-  const columnVisibilityModel = useStore(
-    grid.store,
-    (state: typeof grid.state) => state.columns.columnVisibilityModel,
-  );
-  const rowIds = useStore(grid.store, (state: typeof grid.state) => state.rows.dataRowIds);
-  const rowsData = useStore(
-    grid.store,
-    (state: typeof grid.state) => state.rows.dataRowIdToModelLookup,
-  );
+  const orderedFields = useStore(grid.store, grid.selectors.columns.orderedFields);
+  const columnsLookup = useStore(grid.store, grid.selectors.columns.lookup);
+  const columnVisibilityModel = useStore(grid.store, grid.selectors.columns.columnVisibilityModel);
+  const rowIds = useStore(grid.store, grid.selectors.rows.dataRowIds);
+  const rowsData = useStore(grid.store, grid.selectors.rows.dataRowIdToModelLookup);
 
   // Derive visible columns from state
   const visibleColumns = React.useMemo(() => {

@@ -1,11 +1,17 @@
 'use client';
+import type { UnionToIntersection } from 'type-fest';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@base-ui/utils/store';
 import { ColumnDef } from '../columnDef/columnDef';
 import { BaseApi, Plugin } from '../plugins/core/plugin';
 import { PluginsApi, PluginsOptions, PluginsState } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
-import { internalPlugins, InternalPluginsApi, InternalPluginsState } from '../plugins/internal';
+import {
+  internalPlugins,
+  InternalPluginsApi,
+  InternalPluginsState,
+  InternalPluginsSelectors,
+} from '../plugins/internal';
 
 // ================================
 // Core Options
@@ -37,6 +43,21 @@ type DataGridState<TPlugins extends readonly Plugin<any, any, any, any, any>[]> 
 type DataGridApi<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
   PluginsApi<TPlugins>;
 
+// Helper to extract selectors from a plugin, preserving their shape
+type ExtractPluginSelectors<T> = T extends { selectors?: infer S } ? S : {};
+
+// Merge all plugin selectors (internal + user plugins), preserving their shape
+type PluginsSelectors<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
+  UnionToIntersection<
+    {
+      [K in keyof TPlugins]: ExtractPluginSelectors<TPlugins[K]>;
+    }[number]
+  > &
+    InternalPluginsSelectors;
+
+type DataGridSelectors<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
+  PluginsSelectors<TPlugins>;
+
 // ================================
 // Instance
 // ================================
@@ -46,6 +67,7 @@ interface DataGridInstance<TData, TPlugins extends readonly Plugin<any, any, any
   state: DataGridState<TPlugins>;
   store: Store<DataGridState<TPlugins>>;
   api: DataGridApi<TPlugins>;
+  selectors: DataGridSelectors<TPlugins>;
 }
 
 // ================================
@@ -121,10 +143,32 @@ export const useDataGrid = <
     Object.assign(api, pluginApi);
   });
 
+  // Collect selectors from all plugins, preserving their shape
+  const selectors = useRefWithInit(() => {
+    const allSelectors: Record<string, any> = {};
+
+    // Collect selectors from internal plugins
+    internalPlugins.forEach((plugin) => {
+      if (plugin.selectors) {
+        Object.assign(allSelectors, plugin.selectors);
+      }
+    });
+
+    // Collect selectors from user plugins
+    pluginRegistry.forEachUserPlugin((plugin) => {
+      if (plugin.selectors) {
+        Object.assign(allSelectors, plugin.selectors);
+      }
+    });
+
+    return allSelectors as DataGridSelectors<TPlugins>;
+  }).current;
+
   return {
     store: stateStore,
     state: stateStore.state,
     api,
+    selectors,
     options,
   };
 };

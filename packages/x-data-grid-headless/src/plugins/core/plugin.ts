@@ -6,6 +6,8 @@ export interface BaseApi {
   pluginRegistry: PluginRegistry;
 }
 
+type Selector<TState> = (state: TState, ...args: any[]) => any;
+
 export interface Plugin<
   TName extends string,
   TState,
@@ -20,5 +22,5 @@ export interface Plugin<
     params: TParams & InternalPluginsOptions,
     api: TRequiredApi & BaseApi & InternalPluginsApi,
   ) => TApi;
-  selectors?: Record<string, (state: TState, ...args: any[]) => any>;
+  selectors?: Record<string, Selector<TState> | Record<string, Selector<TState>>>;
 }

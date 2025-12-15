@@ -68,22 +68,24 @@ const columnsPlugin = {
     return { columns: columnsApi };
   },
   selectors: {
-    orderedFields: (state) => state.columns.orderedFields,
-    lookup: (state) => state.columns.lookup,
-    columnVisibilityModel: (state) => state.columns.columnVisibilityModel,
-    initialColumnVisibilityModel: (state) => state.columns.initialColumnVisibilityModel,
-    allColumns: (state) => {
-      const { orderedFields, lookup } = state.columns;
-      return orderedFields.map((field) => lookup[field]).filter(Boolean);
+    columns: {
+      orderedFields: (state) => state.columns.orderedFields,
+      lookup: (state) => state.columns.lookup,
+      columnVisibilityModel: (state) => state.columns.columnVisibilityModel,
+      initialColumnVisibilityModel: (state) => state.columns.initialColumnVisibilityModel,
+      allColumns: (state) => {
+        const { orderedFields, lookup } = state.columns;
+        return orderedFields.map((field) => lookup[field]).filter(Boolean);
+      },
+      visibleColumns: (state) => {
+        const { orderedFields, lookup, columnVisibilityModel } = state.columns;
+        return orderedFields
+          .filter((field) => columnVisibilityModel[field] !== false)
+          .map((field) => lookup[field])
+          .filter(Boolean);
+      },
+      column: (state, field: string) => state.columns.lookup[field],
     },
-    visibleColumns: (state) => {
-      const { orderedFields, lookup, columnVisibilityModel } = state.columns;
-      return orderedFields
-        .filter((field) => columnVisibilityModel[field] !== false)
-        .map((field) => lookup[field])
-        .filter(Boolean);
-    },
-    column: (state, field: string) => state.columns.lookup[field],
   },
 } satisfies Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
 

@@ -45,6 +45,13 @@ export function Example() {
   // Internal plugins state is available
   grid1.state.rows.tree;
 
+  // Selectors
+  grid1.selectors.rows.tree;
+  grid1.selectors.columns.orderedFields;
+  grid1.selectors.sorting.sortModel;
+  // @ts-expect-error pagination selector does not exist
+  grid1.selectors.pagination.model;
+
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
     data: [] as User[],
@@ -71,6 +78,12 @@ export function Example() {
   // ✓ Both APIs available
   grid2.api.sorting.sortColumn('name', 'asc');
   grid2.api.pagination.setPage(1);
+
+  // Selectors
+  grid2.selectors.rows.tree;
+  grid2.selectors.columns.orderedFields;
+  grid2.selectors.sorting.sortModel;
+  grid2.selectors.pagination.model;
 
   return;
 }

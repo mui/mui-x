@@ -78,16 +78,18 @@ const rowsPlugin = {
     return { rows: rowsApi };
   },
   selectors: {
-    dataRowIds: (state) => state.rows.dataRowIds,
-    dataRowIdToModelLookup: (state) => state.rows.dataRowIdToModelLookup,
-    tree: (state) => state.rows.tree,
-    treeDepths: (state) => state.rows.treeDepths,
-    totalRowCount: (state) => state.rows.totalRowCount,
-    totalTopLevelRowCount: (state) => state.rows.totalTopLevelRowCount,
-    loading: (state) => state.rows.loading,
-    groupingName: (state) => state.rows.groupingName,
-    row: (state, id: GridRowId) => state.rows.dataRowIdToModelLookup[id] ?? null,
-    rowNode: (state, id: GridRowId) => state.rows.tree[id] ?? null,
+    rows: {
+      dataRowIds: (state) => state.rows.dataRowIds,
+      dataRowIdToModelLookup: (state) => state.rows.dataRowIdToModelLookup,
+      tree: (state) => state.rows.tree,
+      treeDepths: (state) => state.rows.treeDepths,
+      totalRowCount: (state) => state.rows.totalRowCount,
+      totalTopLevelRowCount: (state) => state.rows.totalTopLevelRowCount,
+      loading: (state) => state.rows.loading,
+      groupingName: (state) => state.rows.groupingName,
+      row: (state, id: GridRowId) => state.rows.dataRowIdToModelLookup[id] ?? null,
+      rowNode: (state, id: GridRowId) => state.rows.tree[id] ?? null,
+    },
   },
 } satisfies Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
 
