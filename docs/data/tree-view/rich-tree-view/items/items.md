@@ -219,7 +219,7 @@ const itemTree = apiRef.current.getItemTree();
 
 :::info
 This method is mostly useful when `RichTreeView` has some internal updates on the items.
-For now, the only features causing updates on the items is the [re-ordering](/x/react-tree-view/rich-tree-view/ordering/).
+For now, the only features causing updates on the items is the [reordering](/x/react-tree-view/rich-tree-view/ordering/).
 :::
 
 ### Get an item's children by ID

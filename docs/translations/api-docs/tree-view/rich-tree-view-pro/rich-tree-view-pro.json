@@ -9,7 +9,7 @@
       "typeDescriptions": {
         "parameters": {
           "name": "parameters",
-          "description": "The params describing the item re-ordering."
+          "description": "The params describing the item reordering."
         },
         "parameters.itemId": {
           "name": "parameters.itemId",
@@ -156,7 +156,7 @@
       "typeDescriptions": {
         "parameters": {
           "name": "parameters",
-          "description": "The params describing the item re-ordering."
+          "description": "The params describing the item reordering."
         },
         "parameters.itemId": {
           "name": "parameters.itemId",
