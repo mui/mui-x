@@ -48,7 +48,7 @@ export const eventCalendarAgendaSelectors = {
         events,
         visibleResources,
         resourceParentIds,
-        uiTimezone,
+        displayTimezone,
       });
 
       const hasEvents = (day: SchedulerProcessedDate) =>
@@ -95,7 +95,7 @@ export const eventCalendarAgendaSelectors = {
           events,
           visibleResources,
           resourceParentIds,
-          uiTimezone,
+          displayTimezone,
         });
 
         daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);

@@ -518,13 +518,13 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
     it('converts recurring occurrences from the data timezone into the UI timezone before grouping', () => {
       // DTSTART in New York
       // 2024-01-10 23:00 NY = 2024-01-11 04:00 UTC
-      // UI timezone = Europe/Madrid (UTC+1 in January)
+      // Display timezone = Europe/Madrid (UTC+1 in January)
       // → final rendering = 2024-01-11 05:00 → should fall on day 11, 12 and 13.
 
       const event = EventBuilder.new(adapter)
         .singleDay('2024-01-10T23:00:00Z')
         .withTimezone('America/New_York')
-        .withUITimezone('Europe/Madrid')
+        .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
@@ -544,7 +544,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(days).to.deep.equal(['11', '12', '13']);
     });
 
-    it('keeps each recurrence tied to the event’s original local day even when UI timezone conversion crosses midnight', () => {
+    it('keeps each recurrence tied to the event’s original local day even when display timezone conversion crosses midnight', () => {
       // Event at 00:30 in Tokyo (UTC+9)
       // In Madrid this becomes 16:30 of the previous day.
       // Recurrence must still belong to the original day (Tokyo's day), not Madrid's previous day.
@@ -552,7 +552,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const event = EventBuilder.new(adapter)
         .singleDay('2025-01-10T00:30:00Z', 30)
         .withTimezone('Asia/Tokyo')
-        .withUITimezone('Europe/Madrid')
+        .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
@@ -572,7 +572,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(adapter.getDate(result[0].modelInBuiltInFormat!.start)).to.equal(10);
     });
 
-    it('preserves multi-day duration when converting occurrences to the UI timezone', () => {
+    it('preserves multi-day duration when converting occurrences to the display timezone', () => {
       // 48-hour event starting in Los Angeles
       // LA UTC−8 → Madrid UTC+1 → +9 hours
       // Duration must remain exactly 48h after expanding + converting.
@@ -580,7 +580,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const event = EventBuilder.new(adapter)
         .span('2025-03-01T08:00:00Z', '2025-03-03T08:00:00Z') // 48h
         .withTimezone('America/Los_Angeles')
-        .withUITimezone('Europe/Madrid')
+        .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 

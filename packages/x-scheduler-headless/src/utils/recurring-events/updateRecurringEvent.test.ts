@@ -236,7 +236,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const original = EventBuilder.new(adapter)
         .singleDay('2025-01-03T04:30:00Z') // 23:30 Jan 2 NY
         .withTimezone('America/New_York')
-        .withUITimezone('Europe/Madrid')
+        .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
@@ -476,7 +476,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const original = EventBuilder.new(adapter)
         .singleDay('2025-01-09T15:30:00Z')
         .withTimezone('Asia/Tokyo')
-        .withUITimezone('Europe/Madrid')
+        .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
@@ -721,7 +721,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const original = EventBuilder.new()
         .singleDay('2025-03-01T23:00:00Z')
         .withTimezone('America/New_York')
-        .withUITimezone('Europe/Madrid')
+        .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
