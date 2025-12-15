@@ -43,7 +43,7 @@ export default function TimezoneDataset() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         defaultPreferences={{ isSidePanelOpen: false }}
-        timezone="Europe/Paris"
+        displayTimezone="Europe/Paris"
         areEventsDraggable
         areEventsResizable
         eventModelStructure={eventModelStructure}
