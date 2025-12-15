@@ -16,7 +16,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 To dynamically load data from the server, including lazy-loading of children, you must create a data source and pass the `dataSource` prop to `RichTreeView`.
 
 The data source also requires the `getChildrenCount()` attribute to handle tree data.
-`getChildrenCount()` returns the number of children for the item. 
+`getChildrenCount()` returns the number of children for the item.
 If the children count is not available, but there are children present, it returns `-1`.
 
 The `items` prop serves as the initial state.
@@ -46,7 +46,7 @@ The following demo uses `QueryClient` from `react-query` as a data source cache.
 
 ### Customize the cache lifetime
 
-The `DataSourceCacheDefault` has a default time to live (`ttl`) of 5 minutes. 
+The `DataSourceCacheDefault` has a default time to live (`ttl`) of 5 minutes.
 To customize it, pass the `ttl` option in milliseconds to the `DataSourceCacheDefault` constructor, and then pass it as the `dataSourceCache` prop.
 
 {{"demo": "LowTTLCache.js"}}
@@ -59,7 +59,7 @@ To customize it, pass the `ttl` option in milliseconds to the `DataSourceCacheDe
 
 To store the updated item labels on your server, use the `onItemLabelChange()` callback function.
 
-Changes to the label are not automatically updated in the `dataSourceCache` and must be updated manually. 
+Changes to the label are not automatically updated in the `dataSourceCache` and must be updated manually.
 The demo below shows you how to update the cache once a label is changed so the changes are reflected in the tree.
 
 {{"demo": "LazyLoadingAndLabelEditing.js"}}

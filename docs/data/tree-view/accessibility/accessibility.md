@@ -54,7 +54,7 @@ When typing a set of characters, focus moves to the next item with a label that 
 
 ## Selection
 
-The Tree View components support both single and multi-selection. 
+The Tree View components support both single and multi-selection.
 To learn more about the selection API, visit the dedicated page for [`SimpleTreeView`](/x/react-tree-view/simple-tree-view/selection/) or [`RichTreeView`](/x/react-tree-view/rich-tree-view/selection/).
 
 To read more about the distinction between selection and focus, refer to the [WAI-ARIA Authoring Practices guide](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_vs_selection).

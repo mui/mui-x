@@ -74,7 +74,7 @@ Use the `onItemSelectionToggle` prop to react to an item selection change:
 
 ## Automatic parents and children selection
 
-By default, selecting a parent item does not select its children. 
+By default, selecting a parent item does not select its children.
 You can override this behavior using the `selectionPropagation` prop.
 
 Here's how it's structured:

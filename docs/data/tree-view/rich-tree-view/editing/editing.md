@@ -21,8 +21,8 @@ If set to `true`, this prop enables label editing on all items as shown in the d
 :::success
 If an item is editable, the editing state can be toggled by double clicking on it, or by pressing <kbd class="key">Enter</kbd> on the keyboard when the item is in focus.
 
-Once an item is in the editing state, the value of the label can be edited. 
-Pressing <kbd class="key">Enter</kbd> again or blurring the item will save the new value. 
+Once an item is in the editing state, the value of the label can be edited.
+Pressing <kbd class="key">Enter</kbd> again or blurring the item will save the new value.
 Pressing <kbd class="key">Esc</kbd> will cancel the action and restore the item to its original state.
 
 :::

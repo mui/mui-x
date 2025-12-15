@@ -82,7 +82,7 @@ function getItemLabel(item) {
 {{"demo": "GetItemLabel.js", "defaultCodeOpen": false}}
 
 :::warning
-Unlike `SimpleTreeView`, `RichTreeView` only supports string labels. 
+Unlike `SimpleTreeView`, `RichTreeView` only supports string labels.
 You cannot pass React nodes to it.
 :::
 
