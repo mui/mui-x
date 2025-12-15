@@ -6,7 +6,6 @@ import {
   stackOrderNone as d3StackOrderNone,
   stackOrderReverse as d3StackOrderReverse,
   stackOffsetExpand as d3StackOffsetExpand,
-  stackOffsetDiverging as d3StackOffsetDiverging,
   stackOffsetNone as d3StackOffsetNone,
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
@@ -29,6 +28,45 @@ export type StackingGroupsType = {
   stackingOrder: (series: Series<any, any>) => number[];
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
+
+function offsetDiverging(series: any[], order: Iterable<number>) {
+  if (series.length === 0) {
+    return;
+  }
+
+  const seriesCount = series.length;
+  const numericOrder = order as number[];
+  const pointCount = series[numericOrder[0]].length;
+
+  for (let pointIndex = 0; pointIndex < pointCount; pointIndex += 1) {
+    let positiveSum = 0;
+    let negativeSum = 0;
+
+    for (let seriesIndex = 0; seriesIndex < seriesCount; seriesIndex += 1) {
+      const dataPoint = series[numericOrder[seriesIndex]][pointIndex];
+      const difference = dataPoint[1] - dataPoint[0];
+
+      if (difference > 0) {
+        dataPoint[0] = positiveSum;
+        positiveSum += difference;
+        dataPoint[1] = positiveSum;
+      } else if (difference < 0) {
+        dataPoint[1] = negativeSum;
+        negativeSum += difference;
+        dataPoint[0] = negativeSum;
+      } else if (dataPoint.data[series[numericOrder[seriesIndex]].key] > 0) {
+        dataPoint[0] = positiveSum;
+        dataPoint[1] = positiveSum;
+      } else if (dataPoint.data[series[numericOrder[seriesIndex]].key] < 0) {
+        dataPoint[1] = negativeSum;
+        dataPoint[0] = negativeSum;
+      } else {
+        dataPoint[0] = 0;
+        dataPoint[1] = 0;
+      }
+    }
+  }
+}
 
 export const StackOrder = {
   /**
@@ -67,7 +105,7 @@ export const StackOffset = {
   /**
    * Positive values are stacked above zero, negative values are stacked below zero, and zero values are stacked at zero.
    * */
-  diverging: d3StackOffsetDiverging,
+  diverging: offsetDiverging,
   /**
    * Applies a zero baseline.
    * */
