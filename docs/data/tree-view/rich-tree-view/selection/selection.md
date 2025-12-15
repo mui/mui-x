@@ -12,12 +12,12 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Single selection
 
-By default, the Tree View allows selecting a single item.
+By default, `RichTreeView` allows selecting a single item.
 
 {{"demo": "SingleSelectTreeView.js"}}
 
 :::success
-When the Tree View uses single selection, you can select an item by clicking it,
+When `RichTreeView` uses single selection, you can select an item by clicking it,
 or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
 :::
 
@@ -28,7 +28,7 @@ Use the `multiSelect` prop to enable multi-selection.
 {{"demo": "MultiSelectTreeView.js"}}
 
 :::success
-When the Tree View uses multi selection, you can select multiple items using the mouse in two ways:
+When `RichTreeView` uses multi selection, you can select multiple items using the mouse in two ways:
 
 - To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
 - To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
@@ -151,18 +151,17 @@ In the example below, only Anna, Michael, Elizabeth, and William are selected in
 {{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
 
 :::success
-The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to the Rich Tree View component:
+The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to `RichTreeView`:
 
 - `items`
 - `selectionPropagation`
-- `getItemId` (can be skipped if not provided to Rich Tree View)
-- `getItemChildren` (can be skipped if not provided to Rich Tree View)
+- `getItemId` (can be skipped if not provided to `RichTreeView`)
+- `getItemChildren` (can be skipped if not provided to `RichTreeView`)
 
 :::
 
 ## Imperative API
 
-:::success
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef` or `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
@@ -177,9 +176,8 @@ const apiRef = useRichTreeViewProApiRef();
 return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef.current` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
 
 ### Select or deselect an item
 

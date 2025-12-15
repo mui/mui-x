@@ -9,7 +9,7 @@ packageName: '@mui/x-tree-view'
 
 # Rich Tree View - Label editing
 
-<p class="description">Learn how to edit the label of Tree View items.</p>
+<p class="description">Learn how to edit the label of `RichTreeView` items.</p>
 
 ## Enable label editing
 
@@ -45,8 +45,8 @@ Use the `onItemLabelChange` prop to trigger an action when the label of an item 
 
 ## Change the default behavior
 
-By default, blurring the Tree Item saves the new value if there is one.
-To modify this behavior, use the `slotProps` of the Tree Item.
+By default, blurring the `TreeItem` saves the new value if there is one.
+To modify this behavior, use the `slotProps` of `TreeItem`.
 
 {{"demo": "CustomBehavior.js"}}
 
@@ -70,7 +70,6 @@ The demo below shows how to use a different component in the `labelInput` slot.
 
 ## Imperative API
 
-:::success
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef` or `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
@@ -85,9 +84,8 @@ const apiRef = useRichTreeViewProApiRef();
 return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef.current` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
 
 ### Change the label of an item
 

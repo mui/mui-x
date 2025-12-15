@@ -34,13 +34,12 @@ Use the `onItemExpansionToggle` prop if you want to react to an item expansion c
 
 ## Limit expansion to icon container
 
-You can use the `expansionTrigger` prop to decide if the expansion interaction should be triggered by clicking on the icon container instead of the whole Tree Item content.
+You can use the `expansionTrigger` prop to decide if the expansion interaction should be triggered by clicking on the icon container instead of the whole `TreeItem` content.
 
 {{"demo": "IconExpansionTreeView.js"}}
 
 ## Imperative API
 
-:::success
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef` or `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
@@ -55,9 +54,8 @@ const apiRef = useRichTreeViewProApiRef();
 return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef.current` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
 
 ### Change an item expansion
 

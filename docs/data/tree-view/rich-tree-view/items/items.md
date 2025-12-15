@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Rich Tree View - Items
 
-<p class="description">Pass data to your Tree View.</p>
+<p class="description">Pass data to your `RichTreeView`.</p>
 
 ## Basic usage
 
@@ -16,7 +16,7 @@ The items can be defined with the `items` prop, which expects an array of object
 
 :::warning
 The `items` prop should keep the same reference between two renders except if you want to apply new items.
-Otherwise, the Tree View will re-generate its entire structure.
+Otherwise, `RichTreeView` will re-generate its entire structure.
 :::
 
 {{"demo": "BasicRichTreeView.js"}}
@@ -27,7 +27,7 @@ Each item must have a unique identifier.
 
 This identifier is used internally to identify the item in the various models and to track the item across updates.
 
-By default, the Rich Tree View component looks for a property named `id` in the data set to get that identifier:
+By default, `RichTreeView` looks for a property named `id` in the data set to get that identifier:
 
 ```tsx
 const ITEMS = [{ id: 'tree-view-community' }];
@@ -35,7 +35,7 @@ const ITEMS = [{ id: 'tree-view-community' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell the Rich Tree View component where it is located.
+If the item's identifier is not called `id`, then you need to use the `getItemId` prop to tell `RichTreeView` where it is located.
 
 The following demo shows how to use `getItemId` to grab the unique identifier from a property named `internalId`:
 
@@ -53,7 +53,7 @@ function getItemId(item) {
 
 :::warning
 Just like the `items` prop, the `getItemId` function should keep the same JavaScript reference between two renders.
-Otherwise, the Tree View will re-generate its entire structure.
+Otherwise, `RichTreeView` will re-generate its entire structure.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
@@ -62,7 +62,7 @@ It could be achieved by either defining the prop outside the component scope or 
 
 Each item must have a label which does not need to be unique.
 
-By default, the Rich Tree View component looks for a property named `label` in the data set to get that label:
+By default, `RichTreeView` looks for a property named `label` in the data set to get that label:
 
 ```tsx
 const ITEMS = [{ label: '@mui/x-tree-view' }];
@@ -70,7 +70,7 @@ const ITEMS = [{ label: '@mui/x-tree-view' }];
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell the Rich Tree View component where it's located:
+If the item's label is not called `label`, then you need to use the `getItemLabel` prop to tell `RichTreeView` where it's located:
 
 The following demo shows how to use `getItemLabel` to grab the unique identifier from a property named `name`:
 
@@ -88,20 +88,20 @@ function getItemLabel(item) {
 
 :::warning
 Just like the `items` prop, the `getItemLabel` function should keep the same JavaScript reference between two renders.
-Otherwise, the Tree View will re-generate its entire structure.
+Otherwise, `RichTreeView` will re-generate its entire structure.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
 :::warning
-Unlike the Simple Tree View component, the Rich Tree View component only supports string labels, you cannot pass React nodes to it.
+Unlike `SimpleTreeView`, `RichTreeView` only supports string labels, you cannot pass React nodes to it.
 :::
 
 ## Item children
 
 Each item can contain children, which are rendered as nested nodes in the tree.
 
-By default, the Rich Tree View component looks for a property named `children` in the data set to get the children:
+By default, `RichTreeView` looks for a property named `children` in the data set to get the children:
 
 ```tsx
 const ITEMS = [
@@ -111,7 +111,7 @@ const ITEMS = [
 <RichTreeView items={ITEMS} />;
 ```
 
-If the item's children are not called `children`, then you need to use the `getItemChildren` prop to tell the Rich Tree View component where they're located:
+If the item's children are not called `children`, then you need to use the `getItemChildren` prop to tell `RichTreeView` where they're located:
 
 The following demo shows how to use `getItemChildren` to grab the children from a property named `nodes`:
 
@@ -131,14 +131,14 @@ function getItemChildren(item) {
 
 :::warning
 Just like the `items` prop, the `getItemChildren` function should keep the same JavaScript reference between two renders.
-Otherwise, the Tree View will re-generate its entire structure.
+Otherwise, `RichTreeView` will re-generate its entire structure.
 
 It could be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
 ## Disabled items
 
-Use the `isItemDisabled` prop on the Rich Tree View to disable interaction and focus on a Tree Item:
+Use the `isItemDisabled` prop on `RichTreeView` to disable interaction and focus on a `TreeItem`:
 
 ```tsx
 function isItemDisabled(item) {
@@ -152,14 +152,14 @@ function isItemDisabled(item) {
 
 :::warning
 Just like the `items` prop, the `isItemDisabled` function should keep the same JavaScript reference between two renders.
-Otherwise, the Tree View will re-generate its entire structure.
+Otherwise, `RichTreeView` will re-generate its entire structure.
 
 This can be achieved by either defining the prop outside the component scope or by memoizing using the `React.useCallback` hook if the function reuses something from the component scope.
 :::
 
 ### Focus disabled items
 
-Use the `disabledItemsFocusable` prop to control if disabled Tree Items can be focused.
+Use the `disabledItemsFocusable` prop to control if disabled `TreeItem` components can be focused.
 
 When this prop is set to false:
 
@@ -189,7 +189,6 @@ Use the `onItemClick` prop to track the clicked item:
 
 ## Imperative API
 
-:::success
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef` or `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
@@ -204,9 +203,8 @@ const apiRef = useRichTreeViewProApiRef();
 return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef.current` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
 
 ### Get an item by ID
 
@@ -245,7 +243,7 @@ const itemTree = apiRef.current.getItemTree();
 {{"demo": "ApiMethodGetItemTree.js", "defaultCodeOpen": false}}
 
 :::info
-This method is mostly useful when the Tree View has some internal updates on the items.
+This method is mostly useful when `RichTreeView` has some internal updates on the items.
 For now, the only features causing updates on the items is the [re-ordering](/x/react-tree-view/rich-tree-view/ordering/).
 :::
 

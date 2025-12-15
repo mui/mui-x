@@ -37,7 +37,7 @@ You can use the `onItemPositionChange` to send the new position of an item to yo
 {{"demo": "OnItemPositionChange.js"}}
 
 If you want to send the entire dataset to your backend, you can use the [`getItemTree`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
-The following demo demonstrates it by synchronizing the first Tree View with the second one whenever you do a re-ordering:
+The following demo demonstrates it by synchronizing the first `RichTreeView` with the second one whenever you do a re-ordering:
 
 {{"demo": "SendAllItemsToServer.js"}}
 
@@ -45,7 +45,7 @@ The following demo demonstrates it by synchronizing the first Tree View with the
 
 ### Only trigger the reordering from a drag handle
 
-You can create a custom Tree Item component to render a drag handle icon and only trigger the reordering when dragging from it:
+You can create a custom `TreeItem` component to render a drag handle icon and only trigger the reordering when dragging from it:
 
 {{"demo": "OnlyReorderFromDragHandle.js"}}
 

@@ -9,11 +9,11 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Rich Tree View - Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Lazy load the data from your Tree View.</p>
+<p class="description">Lazy load the data from your `RichTreeView`.</p>
 
 ## Basic usage
 
-To dynamically load data from the server, including lazy-loading of children, you must create a data source and pass the dataSource prop to the Rich Tree View.
+To dynamically load data from the server, including lazy-loading of children, you must create a data source and pass the dataSource prop to `RichTreeView`.
 
 The data source also requires the `getChildrenCount()` attribute to handle tree data:
 
@@ -23,7 +23,7 @@ The `items` prop serves as an initial state.
 
 {{"demo": "LazyLoadingInitialState.js"}}
 
-If you want to dynamically load all items of the Tree View, you can pass and empty array to the `items` prop, and the `getTreeItems` method will be called on the first render.
+If you want to dynamically load all items of `RichTreeView`, you can pass and empty array to the `items` prop, and the `getTreeItems` method will be called on the first render.
 
 {{"demo": "BasicLazyLoading.js"}}
 
@@ -64,7 +64,6 @@ Changes to the label are not automatically updated in the `dataSourceCache` and 
 
 ## Imperative API
 
-:::success
 To use the `apiRef` object, you need to initialize it using the `useRichTreeViewProApiRef` hook as follows:
 
 ```tsx
@@ -73,9 +72,8 @@ const apiRef = useRichTreeViewProApiRef();
 return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef.current` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
 
 ### Update the children of an item
 
