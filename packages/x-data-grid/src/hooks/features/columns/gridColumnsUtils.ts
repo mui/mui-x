@@ -390,11 +390,20 @@ export const createColumnsState = ({
       }
     });
 
-    columnsState.lookup[field] = resolveProps(existingState, {
+    const mergedProps = {
       ...getDefaultColTypeDef(newColumn.type),
-      ...newColumn,
       hasBeenResized,
-    });
+      field,
+    };
+
+    let key: keyof GridColDef;
+    for (key in newColumn) {
+      if (newColumn[key] !== undefined && key !== 'field') {
+        mergedProps[key] = newColumn[key] as any;
+      }
+    }
+
+    columnsState.lookup[field] = resolveProps(existingState, mergedProps);
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {
