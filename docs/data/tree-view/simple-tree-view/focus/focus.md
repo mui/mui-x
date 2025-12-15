@@ -13,7 +13,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Imperative API
 
-To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef()` hook as follows:
 
 ```tsx
 const apiRef = useSimpleTreeViewApiRef();

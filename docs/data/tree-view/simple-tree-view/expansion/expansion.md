@@ -41,7 +41,7 @@ You can use the `expansionTrigger` prop to decide if the expansion interaction s
 ## Imperative API
 
 :::success
-To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef()` hook as follows:
 
 ```tsx
 const apiRef = useSimpleTreeViewApiRef();

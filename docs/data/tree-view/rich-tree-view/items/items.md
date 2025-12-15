@@ -164,7 +164,7 @@ Use the `onItemClick` prop to track the clicked item:
 
 ## Imperative API
 
-To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef` or `useRichTreeViewProApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef()` or `useRichTreeViewProApiRef()` hook as follows:
 
 ```tsx
 // Community package
