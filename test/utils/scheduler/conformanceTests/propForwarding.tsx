@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flushMicrotasks, randomStringValue, cleanup } from '@mui/internal-test-utils';
+import { flushMicrotasks, randomStringValue } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { throwMissingPropError } from './utils';
 import type {
@@ -18,10 +18,6 @@ export function testPropForwarding(
   }
 
   describe('prop forwarding', () => {
-    afterEach(() => {
-      console.log('x cleanup');
-      cleanup();
-    });
     it('forwards custom props to the default element', async () => {
       const otherProps = {
         lang: 'fr',
