@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 
 interface CreateSchedulerRendererOptions
   extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {}
