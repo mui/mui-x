@@ -716,7 +716,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       ]);
     });
 
-    it('should add EXDATE based on the original event timezone, not the UI-shifted day', () => {
+    it('should add EXDATE based on the original event timezone, not the display timezone shifted day', () => {
       // Original event in New York
       const original = EventBuilder.new()
         .singleDay('2025-03-01T23:00:00Z')
@@ -725,7 +725,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      // OccurrenceStart in UI (Madrid) will look like next day,
+      // OccurrenceStart in display timezone (Madrid) will look like next day,
       // but update must use data timezone
       const occurrenceStart = original.modelInBuiltInFormat!.start;
 
@@ -734,7 +734,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         title: 'Edit only this',
       });
 
-      // EXDATE should match America/New_York startOfDay, not the UI shifted date
+      // EXDATE should match America/New_York startOfDay, not the display timezone shifted date
       expect(
         adapter.isSameDay(updated.updated![0].exDates![0], adapter.startOfDay(occurrenceStart)),
       ).to.equal(true);
