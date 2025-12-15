@@ -1,5 +1,6 @@
 import { type Store } from '@base-ui/utils/store';
 import { type PluginRegistry } from './pluginRegistry';
+import type { InternalPluginsApi, InternalPluginsOptions, InternalPluginsState } from '../internal';
 
 export interface BaseApi {
   pluginRegistry: PluginRegistry;
@@ -14,6 +15,10 @@ export interface Plugin<
 > {
   name: TName;
   initialize: (params: TParams) => TState;
-  use: (store: Store<any>, params: TParams, api: TRequiredApi & BaseApi) => TApi;
+  use: (
+    store: Store<TState & InternalPluginsState>,
+    params: TParams & InternalPluginsOptions,
+    api: TRequiredApi & BaseApi & InternalPluginsApi,
+  ) => TApi;
   selectors?: Record<string, (state: any, ...args: any[]) => any>;
 }

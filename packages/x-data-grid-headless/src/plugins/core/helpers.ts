@@ -1,5 +1,6 @@
 import type { UnionToIntersection } from 'type-fest';
 import type { Plugin } from './plugin';
+import { InternalPluginsApi, InternalPluginsOptions, InternalPluginsState } from '../internal';
 
 // Helper to extract params (options) from a plugin
 export type ExtractPluginParams<T> =
@@ -18,7 +19,8 @@ export type PluginsOptions<TPlugins extends readonly Plugin<any, any, any, any, 
     {
       [K in keyof TPlugins]: ExtractPluginParams<TPlugins[K]>;
     }[number]
-  >;
+  > &
+    InternalPluginsOptions;
 
 // Union all plugin states
 export type PluginsState<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
@@ -26,7 +28,8 @@ export type PluginsState<TPlugins extends readonly Plugin<any, any, any, any, an
     {
       [K in keyof TPlugins]: ExtractPluginState<TPlugins[K]>;
     }[number]
-  >;
+  > &
+    InternalPluginsState;
 
 // Union all plugin APIs
 export type PluginsApi<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
@@ -34,4 +37,5 @@ export type PluginsApi<TPlugins extends readonly Plugin<any, any, any, any, any>
     {
       [K in keyof TPlugins]: ExtractPluginApi<TPlugins[K]>;
     }[number]
-  >;
+  > &
+    InternalPluginsApi;
