@@ -19,6 +19,7 @@ export function testPropForwarding(
 
   describe('prop forwarding', () => {
     afterEach(() => {
+      console.log('x cleanup');
       cleanup();
     });
     it('forwards custom props to the default element', async () => {
