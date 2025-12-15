@@ -3,12 +3,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Scatter, type ScatterProps, type ScatterSlotProps, type ScatterSlots } from './Scatter';
 import { useScatterSeriesContext } from '../hooks/useScatterSeries';
-import { useDrawingArea, useItemHighlightedGetter, useXAxes, useYAxes } from '../hooks';
+import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { useZAxes } from '../hooks/useZAxis';
 import { scatterSeriesConfig as scatterSeriesConfig } from './seriesConfig';
 import { BatchScatter } from './BatchScatter';
 import { CanvasScatter } from './canvas/CanvasScatter';
 import { CanvasProvider } from './canvas/CanvasContext';
+import { WebGLProvider } from './webgl/WebGLContext';
+import { WebGLScatter } from './webgl/WebGLScatter';
 
 export interface ScatterPlotSlots extends ScatterSlots {
   scatter?: React.JSXElementConstructor<ScatterProps>;
@@ -18,7 +20,7 @@ export interface ScatterPlotSlotProps extends ScatterSlotProps {
   scatter?: Partial<ScatterProps>;
 }
 
-export type RendererType = 'svg-single' | 'svg-batch' | 'canvas';
+export type RendererType = 'svg-single' | 'svg-batch' | 'canvas' | 'webgl';
 
 export interface ScatterPlotProps extends Pick<ScatterProps, 'onItemClick'> {
   /**
@@ -70,7 +72,13 @@ function ScatterPlot(props: ScatterPlotProps) {
   const defaultZAxisId = zAxisIds[0];
 
   const DefaultScatterItems =
-    renderer === 'canvas' ? CanvasScatter : renderer === 'svg-batch' ? BatchScatter : Scatter;
+    renderer === 'webgl'
+      ? WebGLScatter
+      : renderer === 'canvas'
+        ? CanvasScatter
+        : renderer === 'svg-batch'
+          ? BatchScatter
+          : Scatter;
   const ScatterItems = slots?.scatter ?? DefaultScatterItems;
 
   const children = seriesOrder.map((seriesId) => {
@@ -99,6 +107,21 @@ function ScatterPlot(props: ScatterPlotProps) {
       />
     );
   });
+
+  if (renderer === 'webgl') {
+    return (
+      <foreignObject
+        x={drawingArea.left}
+        y={drawingArea.top}
+        width={drawingArea.width}
+        height={drawingArea.height}
+      >
+        <WebGLProvider width={drawingArea.width} height={drawingArea.height}>
+          {children}
+        </WebGLProvider>
+      </foreignObject>
+    );
+  }
 
   if (renderer === 'canvas') {
     return (

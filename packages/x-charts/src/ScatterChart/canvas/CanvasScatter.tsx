@@ -90,17 +90,28 @@ function CanvasScatter(props: ScatterProps) {
       return () => void 0;
     }
 
-    const rafId = requestAnimationFrame(() => {
+    const rafId = requestAnimationFrame(function renderMarkers() {
       ctx.save();
       const scale = window.devicePixelRatio;
+
+      let currentColor: string | null = null;
+      let currentAlpha: number | null = null;
 
       scatterPlotData.forEach((dataPoint) => {
         // const isItemHighlighted = false; // isHighlighted(dataPoint);
         const isItemFaded = false; // !isItemHighlighted && isFaded(dataPoint);
 
-        // eslint-disable-next-line react-compiler/react-compiler
-        ctx.fillStyle = colorGetter(dataPoint.dataIndex);
-        ctx.globalAlpha = isItemFaded ? 0.3 : 1;
+        const color = colorGetter(dataPoint.dataIndex);
+        if (currentColor !== color) {
+          currentColor = color;
+          // eslint-disable-next-line react-compiler/react-compiler
+          ctx.fillStyle = color;
+        }
+
+        if (currentAlpha !== (isItemFaded ? 0.3 : 1)) {
+          currentAlpha = isItemFaded ? 0.3 : 1;
+          ctx.globalAlpha = currentAlpha;
+        }
 
         ctx.beginPath();
         ctx.arc(
