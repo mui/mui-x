@@ -390,17 +390,18 @@ export const createColumnsState = ({
       }
     });
 
-    // Keep only the properties explicitly defined on the new column (exclude `undefined`)
-    const newColumnDefinedProps = Object.fromEntries(
-      Object.entries(newColumn).filter(([, value]) => value !== undefined),
-    ) as Partial<GridColDef>;
-
     const mergedProps = {
       ...getDefaultColTypeDef(newColumn.type),
-      ...newColumnDefinedProps,
-      field,
       hasBeenResized,
+      field,
     };
+
+    let key: keyof GridColDef;
+    for (key in newColumn) {
+      if (newColumn[key] !== undefined && key !== 'field') {
+        mergedProps[key] = newColumn[key] as any;
+      }
+    }
 
     columnsState.lookup[field] = resolveProps(existingState, mergedProps);
   });
