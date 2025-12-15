@@ -26,7 +26,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       days,
       events,
       visibleResources: visible,
-      uiTimezone: 'default',
+      displayTimezone: 'default',
       resourceParentIds: noParents,
     });
   }
@@ -80,7 +80,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       days,
       events: [visibleEvent, invisibleEvent],
       visibleResources: visibilityWithHidden,
-      uiTimezone: 'default',
+      displayTimezone: 'default',
       resourceParentIds: noParents,
     });
 
@@ -112,16 +112,16 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     expect(result.get(days[2].key)!.map((o) => o.id)).to.deep.equal([e2.id, e3.id]);
   });
 
-  it('should convert recurring event occurrences to the UI timezone before grouping', () => {
+  it('should convert recurring event occurrences to the display timezone before grouping', () => {
     // Event at Jan 10, 23:00 local time in New York.
     // In January New York is UTC−5, so the event corresponds to 2024-01-11 04:00 UTC.
-    // UI timezone is Europe/Paris (UTC+1 in January), which makes it 2024-01-11 05:00.
+    // Display timezone is Europe/Paris (UTC+1 in January), which makes it 2024-01-11 05:00.
     // This means the occurrence must always appear on day1 (Jan 11) and day2 (Jan 12) in the UI, never on day0.
 
     const event = EventBuilder.new(adapter)
       .span('2024-01-10T23:00:00', '2024-01-11T00:00:00') // local NY time
       .withTimezone('America/New_York')
-      .withUITimezone('Europe/Paris')
+      .withDisplayTimezone('Europe/Paris')
       .rrule({ freq: 'DAILY' })
       .toProcessed();
 
@@ -131,7 +131,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
       events: [event],
       visibleResources: visible,
       resourceParentIds: noParents,
-      uiTimezone: 'Europe/Paris',
+      displayTimezone: 'Europe/Paris',
     });
 
     // Should NOT appear on Jan 10 in Paris
