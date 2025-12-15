@@ -131,27 +131,9 @@ jobs:
                 name: Test Browser + Coverage
                 environment:
                   TZ: UTC
-                  # PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
+                  PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
-                  # node ./scripts/playwrightLaunchServer.mjs & 
-                  (pnpm test:unit:browser --project x-scheduler-headless || true) && \
-                  pnpm test:unit:browser --project x-scheduler-headless && \
-                  pnpm test:unit:browser --project x-scheduler && \
-                  pnpm test:unit:browser --project x-charts-premium && \
-                  pnpm test:unit:browser --project x-charts-pro && \
-                  pnpm test:unit:browser --project x-charts-vendor && \
-                  pnpm test:unit:browser --project x-charts && \
-                  pnpm test:unit:browser --project x-data-grid-premium && \
-                  pnpm test:unit:browser --project x-data-grid-pro && \
-                  pnpm test:unit:browser --project x-data-grid && \
-                  pnpm test:unit:browser --project x-date-pickers-pro && \
-                  pnpm test:unit:browser --project x-date-pickers && \
-                  pnpm test:unit:browser --project x-internal-gestures && \
-                  pnpm test:unit:browser --project x-license && \
-                  pnpm test:unit:browser --project x-telemetry && \
-                  pnpm test:unit:browser --project x-tree-view-pro && \
-                  pnpm test:unit:browser --project x-tree-view && \
-                  pnpm test:unit:browser --project x-virtualizer
+                  node ./scripts/playwrightLaunchServer.mjs & pnpm test:unit:browser --coverage
             - code-infra/upload-coverage:
                 key: << parameters.react-version >>-browser
       - store_test_results:
