@@ -33,12 +33,18 @@ export const CanvasProvider = React.forwardRef<
 
   React.useLayoutEffect(() => {
     if (!context) {
-      return;
+      return () => void 0;
     }
 
-    // eslint-disable-next-line react-compiler/react-compiler
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    const rafId = requestAnimationFrame(() => {
+      // eslint-disable-next-line react-compiler/react-compiler
+      context.fillStyle = 'white';
+      context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+    });
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   });
 
   return (

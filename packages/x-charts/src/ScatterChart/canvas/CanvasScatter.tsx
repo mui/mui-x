@@ -29,6 +29,7 @@ export interface ScatterProps {
    * @param {MouseEvent} event Mouse event recorded on the `<svg/>` element.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
+  // eslint-disable-next-line react/no-unused-prop-types
   onItemClick?: (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     scatterItemIdentifier: ScatterItemIdentifier,
@@ -86,33 +87,38 @@ function CanvasScatter(props: ScatterProps) {
 
   React.useEffect(() => {
     if (!ctx) {
-      return;
+      return () => void 0;
     }
 
-    ctx.save();
-    const scale = window.devicePixelRatio;
+    const rafId = requestAnimationFrame(() => {
+      ctx.save();
+      const scale = window.devicePixelRatio;
 
-    scatterPlotData.forEach((dataPoint) => {
-      const isItemHighlighted = false; // isHighlighted(dataPoint);
-      const isItemFaded = false; // !isItemHighlighted && isFaded(dataPoint);
+      scatterPlotData.forEach((dataPoint) => {
+        // const isItemHighlighted = false; // isHighlighted(dataPoint);
+        const isItemFaded = false; // !isItemHighlighted && isFaded(dataPoint);
 
-      // eslint-disable-next-line react-compiler/react-compiler
-      ctx.fillStyle = colorGetter(dataPoint.dataIndex);
-      ctx.globalAlpha = isItemFaded ? 0.3 : 1;
+        // eslint-disable-next-line react-compiler/react-compiler
+        ctx.fillStyle = colorGetter(dataPoint.dataIndex);
+        ctx.globalAlpha = isItemFaded ? 0.3 : 1;
 
-      ctx.beginPath();
-      ctx.arc(
-        (dataPoint.x - drawingArea.left) / scale,
-        (dataPoint.y - drawingArea.top) / scale,
-        ((isItemFaded ? 1.2 : 1) * series.markerSize) / scale,
-        0,
-        2 * Math.PI,
-      );
-      ctx.closePath();
-      ctx.fill();
+        ctx.beginPath();
+        ctx.arc(
+          (dataPoint.x - drawingArea.left) / scale,
+          (dataPoint.y - drawingArea.top) / scale,
+          ((isItemFaded ? 1.2 : 1) * series.markerSize) / scale,
+          0,
+          2 * Math.PI,
+        );
+        ctx.fill();
+      });
+
+      ctx.restore();
     });
 
-    ctx.restore();
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   }, [ctx, colorGetter, scatterPlotData, series.markerSize, drawingArea.left, drawingArea.top]);
 
   return null;
