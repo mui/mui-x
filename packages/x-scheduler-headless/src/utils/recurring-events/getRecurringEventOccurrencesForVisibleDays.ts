@@ -71,12 +71,12 @@ class RecurringEventExpander {
   constructor(
     private readonly adapter: Adapter,
     private readonly event: SchedulerProcessedEvent,
-    private readonly uiTimezone: TemporalTimezone,
+    private readonly displayTimezone: TemporalTimezone,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
     // Important: We use `modelInBuiltInFormat` because it preserves the event's original (data) timezone.
-    // The processed event is already converted to the UI timezone, which would make recurrence
+    // The processed event is already converted to the display timezone, which would make recurrence
     // calculations incorrect around DST and timezone boundaries.
 
     this.eventModel = this.event.modelInBuiltInFormat!;
@@ -179,19 +179,19 @@ class RecurringEventExpander {
       occurrenceStart: occurrenceStartOriginal,
     });
 
-    const occurrenceStartUITimezone = this.adapter.setTimezone(
+    const occurrenceStartDisplayTimezone = this.adapter.setTimezone(
       occurrenceStartOriginal,
-      this.uiTimezone,
+      this.displayTimezone,
     );
-    const occurrenceEndUITimezone = this.adapter.setTimezone(
+    const occurrenceEndDisplayTimezone = this.adapter.setTimezone(
       occurrenceEndOriginal,
-      this.uiTimezone,
+      this.displayTimezone,
     );
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
-      start: processDate(occurrenceStartUITimezone, this.adapter),
-      end: processDate(occurrenceEndUITimezone, this.adapter),
+      start: processDate(occurrenceStartDisplayTimezone, this.adapter),
+      end: processDate(occurrenceEndDisplayTimezone, this.adapter),
     });
   }
 
@@ -423,7 +423,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   adapter: Adapter,
-  uiTimezone: TemporalTimezone,
+  displayTimezone: TemporalTimezone,
 ): SchedulerEventOccurrence[] {
-  return new RecurringEventExpander(adapter, event, uiTimezone, start, end).expand();
+  return new RecurringEventExpander(adapter, event, displayTimezone, start, end).expand();
 }

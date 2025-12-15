@@ -515,7 +515,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
   });
 
   describe('timezone handling', () => {
-    it('converts recurring occurrences from the data timezone into the UI timezone before grouping', () => {
+    it('converts recurring occurrences from the data timezone into the display timezone before grouping', () => {
       // DTSTART in New York
       // 2024-01-10 23:00 NY = 2024-01-11 04:00 UTC
       // Display timezone = Europe/Madrid (UTC+1 in January)
