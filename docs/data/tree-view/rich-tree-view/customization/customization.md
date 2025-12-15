@@ -19,7 +19,7 @@ See [Common concepts—Slots and subcomponents](/x/common-concepts/custom-compon
 ### Custom icons
 
 Use the `collapseIcon` slot, the `expandIcon` slot and the `defaultEndIcon` prop to customize `RichTreeView` icons.
-The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [SVG Icon component](/material-ui/icons/#svgicon).
+The demo below shows how to add icons using both an existing icon library, such as [Material Icons](/material-ui/material-icons/), and creating an icon from scratch using Material UI's [`SvgIcon`](/material-ui/icons/#svgicon).
 
 {{"demo": "CustomIcons.js", "defaultCodeOpen": false}}
 
@@ -27,13 +27,13 @@ The demo below shows how to add icons using both an existing icon library, such 
 
 Use the `groupTransition` slot on `TreeItem` to pass a component that handles your animation.
 
-The demo below is animated using Material UI's [Collapse](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
+The demo below is animated using Material UI's [`Collapse`](/material-ui/transitions/#collapse) component together with the [react-spring](https://www.react-spring.dev/) library.
 
 {{"demo": "CustomAnimation.js", "defaultCodeOpen": false}}
 
 ### Custom styling
 
-Use `treeItemClasses` to target internal elements of `TreeItem` and change their styles.
+Use `treeItemClasses` to target internal elements of a `TreeItem` and change its styles.
 
 {{"demo": "CustomStyling.js"}}
 
@@ -45,7 +45,7 @@ See [Tree Item customization](/x/react-tree-view/tree-item-customization/) to le
 
 ### Headless API
 
-Use the `useTreeItem` hook to create your own component.
+Use the `useTreeItem` hook to create your ownn fully custom component.
 The demo below shows how to add an avatar and custom typography elements.
 
 {{"demo": "HeadlessAPI.js", "defaultCodeOpen": false}}
@@ -54,6 +54,6 @@ The demo below shows how to add an avatar and custom typography elements.
 
 ### File explorer
 
-The demo below shows many of the previous customization examples brought together to make `RichTreeView` look completely different than its default design.
+The file explorer demo below leverages many of the customization options described above to make `RichTreeView` look significantly different than its default design:
 
 {{"demo": "FileExplorer.js", "defaultCodeOpen": false}}

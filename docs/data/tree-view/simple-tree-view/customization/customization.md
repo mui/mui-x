@@ -34,7 +34,7 @@ The demo below is animated using Material UI's [`Collapse`](/material-ui/transi
 
 ### Custom styling
 
-Use `treeItemClasses` to target internal elements of `SimpleTreeView` and change their styles.
+Use `treeItemClasses` to target internal elements of a `TreeItem` and change its styles.
 
 {{"demo": "CustomStyling.js"}}
 
