@@ -1,7 +1,9 @@
 import * as React from 'react';
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 
 const data = {
   nodes: [
@@ -74,12 +76,11 @@ const valueFormatter = (value, context) => {
 };
 
 export default function SankeyOverview() {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('sm'));
+
   return (
-    <Box
-      sx={{
-        width: '100%',
-      }}
-    >
+    <Box sx={{ width: '100%' }}>
       <Typography
         variant="h5"
         component="h2"
@@ -97,7 +98,7 @@ export default function SankeyOverview() {
       >
         Flow from Revenue to Net Income (in Billions USD)
       </Typography>
-      <Box sx={{ width: '100%', height: 500 }}>
+      <Box sx={{ width: '100%', height: 600 }}>
         <SankeyChart
           series={{
             data,
@@ -106,11 +107,13 @@ export default function SankeyOverview() {
               sort: 'fixed',
               padding: 20,
               width: 9,
+              showLabels: isDesktop,
             },
             linkOptions: {
               color: 'target',
               opacity: 0.6,
               curveCorrection: 0,
+              showValues: !isDesktop,
             },
           }}
           margin={{ top: 20 }}

@@ -26,14 +26,22 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
     const y0 = node.y0 ?? 0;
     const x1 = node.x1 ?? 0;
     const y1 = node.y1 ?? 0;
+    const depth = node.depth ?? 0;
+
+    const isRightSide = depth <= 3;
 
     // Determine label position
-    const labelX =
-      node.depth === 0
-        ? x1 + 6 // Right side for first column
-        : x0 - 6; // Left side for other columns
+    const labelX = isRightSide
+      ? x1 + 6 // Right side for first column
+      : x0 - 6; // Left side for other columns
 
-    const labelAnchor = node.depth === 0 ? 'start' : 'end';
+    const labelAnchor = isRightSide ? 'start' : 'end';
+
+    const nextNodeX = isRightSide
+      ? Math.min(...node.sourceLinks.map((link) => link.target.x0 ?? Infinity))
+      : Math.max(...node.targetLinks.map((link) => link.source.x1 ?? -Infinity));
+
+    const width = Math.abs(nextNodeX - labelX);
 
     const isHighlighted = useSelector(store, selectorIsNodeHighlighted, node.id);
     const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
@@ -60,20 +68,19 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
         data-highlighted={isHighlighted || undefined}
         data-faded={isFaded || undefined}
       >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: `flex-${labelAnchor}`,
-            overflow: 'visible',
-          }}
-        >
+        <div style={{ position: 'relative', overflow: 'visible' }}>
           <div
             style={{
-              textAnchor: labelAnchor,
+              display: 'flex',
+              justifyContent: isRightSide ? 'flex-start' : 'flex-end',
+              position: 'fixed',
+              textAlign: labelAnchor,
               fontSize: theme.typography.caption.fontSize,
               fontFamily: theme.typography.fontFamily,
               pointerEvents: 'none',
               transform: 'translateY(-50%)',
+              ...(isRightSide ? { left: 0 } : { right: 0 }),
+              width: 'max-content',
             }}
           >
             <div
@@ -88,7 +95,7 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
                 borderRadius: 4,
               }}
             />
-            <span>{node.label}</span>
+            <span style={{ maxWidth: width }}>{node.label}</span>
           </div>
         </div>
       </foreignObject>
