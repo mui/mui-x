@@ -1,3 +1,4 @@
+'use client';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@base-ui/utils/store';
 import { ColumnDef } from '../columnDef/columnDef';
@@ -57,7 +58,7 @@ export const useDataGrid = <
 >(
   options: UseDataGridOptions<TData, TPlugins>,
 ): DataGridInstance<TData, TPlugins> => {
-  const { pluginRegistry, stateStore, baseApi } = useRefWithInit(() => {
+  const { pluginRegistry, stateStore } = useRefWithInit(() => {
     // 1. Create registry with internal + user plugins (order maintained)
     const registry = new PluginRegistry(internalPlugins, options.plugins);
 
@@ -88,38 +89,37 @@ export const useDataGrid = <
       Object.assign({}, baseState, userPluginState) as DataGridState<TPlugins>,
     );
 
-    // 5. Create base API from internal plugins
-    const base = {
-      pluginRegistry: registry,
-    } as BaseApi & InternalPluginsApi;
-
-    // Initialize internal plugin APIs
-    internalPlugins.forEach((plugin: Plugin<any, any, any, any, any>) => {
-      const pluginApi = plugin.use(store, options as any, base);
-      Object.assign(base, pluginApi);
-    });
-
     return {
       pluginRegistry: registry,
       stateStore: store,
-      baseApi: base,
     };
   }).current;
 
+  // Create base API from internal plugins (called on every render so hooks work)
+  const baseApi = useRefWithInit(() => {
+    return {
+      pluginRegistry,
+    } as BaseApi & InternalPluginsApi;
+  }).current;
+
+  // Initialize internal plugin APIs (called on every render so hooks inside work)
+  internalPlugins.forEach((plugin: Plugin<any, any, any, any, any>) => {
+    const pluginApi = plugin.use(stateStore, options as any, baseApi);
+    Object.assign(baseApi, pluginApi);
+  });
+
   // Build full API: base (internal) + user plugins
   const api = useRefWithInit(() => {
-    const fullApi: DataGridApi<TPlugins> = {
+    return {
       ...baseApi,
     } as DataGridApi<TPlugins>;
-
-    // Initialize user plugin APIs (they receive baseApi which includes internal plugin APIs)
-    pluginRegistry.forEachUserPlugin((plugin) => {
-      const pluginApi = plugin.use(stateStore, options, baseApi);
-      Object.assign(fullApi, pluginApi);
-    });
-
-    return fullApi;
   }).current;
+
+  // Initialize user plugin APIs (called on every render so hooks inside work)
+  pluginRegistry.forEachUserPlugin((plugin) => {
+    const pluginApi = plugin.use(stateStore, options, baseApi);
+    Object.assign(api, pluginApi);
+  });
 
   return {
     store: stateStore,

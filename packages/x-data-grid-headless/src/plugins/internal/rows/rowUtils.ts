@@ -330,20 +330,3 @@ export function createRowsApi<TData extends GridRowModel>(
     setLoading,
   };
 }
-
-// ================================
-// Selectors
-// ================================
-
-export const rowsSelectors = {
-  dataRowIds: (state: CoreState) => state.rows.dataRowIds,
-  dataRowIdToModelLookup: (state: CoreState) => state.rows.dataRowIdToModelLookup,
-  tree: (state: CoreState) => state.rows.tree,
-  treeDepths: (state: CoreState) => state.rows.treeDepths,
-  totalRowCount: (state: CoreState) => state.rows.totalRowCount,
-  totalTopLevelRowCount: (state: CoreState) => state.rows.totalTopLevelRowCount,
-  loading: (state: CoreState) => state.rows.loading,
-  groupingName: (state: CoreState) => state.rows.groupingName,
-  row: (state: CoreState, id: GridRowId) => state.rows.dataRowIdToModelLookup[id] ?? null,
-  rowNode: (state: CoreState, id: GridRowId) => state.rows.tree[id] ?? null,
-};

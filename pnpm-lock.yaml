@@ -799,6 +799,9 @@ importers:
 
   examples/data-grid-headless:
     dependencies:
+      '@base-ui/utils':
+        specifier: 0.2.3
+        version: 0.2.3(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/x-data-grid-headless':
         specifier: workspace:@mui/x-data-grid-headless@*
         version: link:../../packages/x-data-grid-headless/build

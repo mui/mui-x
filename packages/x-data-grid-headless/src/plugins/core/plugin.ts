@@ -20,5 +20,5 @@ export interface Plugin<
     params: TParams & InternalPluginsOptions,
     api: TRequiredApi & BaseApi & InternalPluginsApi,
   ) => TApi;
-  selectors?: Record<string, (state: any, ...args: any[]) => any>;
+  selectors?: Record<string, (state: TState, ...args: any[]) => any>;
 }

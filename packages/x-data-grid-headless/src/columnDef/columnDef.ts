@@ -5,4 +5,7 @@ export interface ColumnDef<TData> {
   sortable?: boolean;
   filterable?: boolean;
   width?: number;
+  minWidth?: number;
+  maxWidth?: number;
+  flex?: number;
 }
