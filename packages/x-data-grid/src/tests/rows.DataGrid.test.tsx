@@ -277,7 +277,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
+          />,
         );
         expect(screen.queryByText('print')).to.equal(null);
         await user.click(screen.getByRole('menuitem', { name: 'more' }));
