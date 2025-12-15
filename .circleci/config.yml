@@ -134,6 +134,8 @@ jobs:
                   PLAYWRIGHT_SERVER_WS: 'ws://127.0.0.1:9050/mui-browser'
                 command: |
                   node ./scripts/playwrightLaunchServer.mjs & 
+                  pnpm test:unit:browser --project x-scheduler-headless && \
+                  pnpm test:unit:browser --project x-scheduler && \
                   pnpm test:unit:browser --project x-charts-premium && \
                   pnpm test:unit:browser --project x-charts-pro && \
                   pnpm test:unit:browser --project x-charts-vendor && \
@@ -145,8 +147,6 @@ jobs:
                   pnpm test:unit:browser --project x-date-pickers && \
                   pnpm test:unit:browser --project x-internal-gestures && \
                   pnpm test:unit:browser --project x-license && \
-                  pnpm test:unit:browser --project x-scheduler-headless && \
-                  pnpm test:unit:browser --project x-scheduler && \
                   pnpm test:unit:browser --project x-telemetry && \
                   pnpm test:unit:browser --project x-tree-view-pro && \
                   pnpm test:unit:browser --project x-tree-view && \
