@@ -1289,7 +1289,7 @@ importers:
         version: 7.28.4
       '@base-ui/utils':
         specifier: 0.2.3
-        version: 0.2.3(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 0.2.3(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -13728,14 +13728,14 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.7
 
-  '@base-ui/utils@0.2.3(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
+  '@base-ui/utils@0.2.3(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@floating-ui/utils': 0.2.10
-      react: 19.2.1
-      react-dom: 19.2.1(react@19.2.1)
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
       reselect: 5.1.1
-      use-sync-external-store: 1.6.0(react@19.2.1)
+      use-sync-external-store: 1.6.0(react@19.2.3)
     optionalDependencies:
       '@types/react': 19.2.7
 
