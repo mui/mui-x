@@ -23,11 +23,7 @@ export function useAnimateInternal<Props extends {}, Elem extends Element>(
     skip,
     initialProps = props,
   }: {
-    createInterpolator: (
-      lastProps: Props,
-      newProps: Props,
-      isInitial: boolean,
-    ) => (t: number) => Props;
+    createInterpolator: (lastProps: Props, newProps: Props) => (t: number) => Props;
     applyProps: (element: Elem, props: Props) => void;
     skip?: boolean;
     initialProps?: Props;
@@ -37,7 +33,6 @@ export function useAnimateInternal<Props extends {}, Elem extends Element>(
   const transitionRef = React.useRef<Transition>(null);
   const elementRef = React.useRef<Elem>(null);
   const lastPropsRef = React.useRef<Props>(props);
-  const isInitial = React.useRef<boolean>(true);
 
   useEnhancedEffect(() => {
     lastPropsRef.current = props;
@@ -55,8 +50,7 @@ export function useAnimateInternal<Props extends {}, Elem extends Element>(
   const animate = React.useCallback(
     (element: Elem) => {
       const lastInterpolatedProps = lastInterpolatedPropsRef.current;
-      const interpolate = createInterpolator(lastInterpolatedProps, props, isInitial.current);
-      isInitial.current = false;
+      const interpolate = createInterpolator(lastInterpolatedProps, props);
       transitionRef.current = new Transition(
         ANIMATION_DURATION_MS,
         ANIMATION_TIMING_FUNCTION_JS,
