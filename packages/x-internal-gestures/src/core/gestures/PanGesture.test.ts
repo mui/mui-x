@@ -244,4 +244,117 @@ describe('Pan Gesture', () => {
       direction: ['left', 'right'],
     });
   });
+
+  it('should not jump when a new pointer is added during an active gesture', async () => {
+    const gesture = touchGesture.setup();
+
+    // Start a pan gesture with one pointer
+    await gesture.pan({
+      target,
+      pointers: { ids: [50] },
+      angle: 0, // Horizontal pan (right)
+      distance: 50,
+      steps: 2,
+      releasePointers: false,
+    });
+
+    expect(events).toStrictEqual([
+      `panStart: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+    ]);
+
+    // Record the last delta values before adding a new pointer
+    const lastDeltaX = 50;
+
+    events = []; // Clear events
+
+    // Now add a second pointer by using the pointerDown method directly
+    // This simulates a user adding a second finger while already panning
+    const rect = target.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // The second pointer is placed at a different position
+    // Without the fix, this would cause the centroid to jump
+    gesture.pointerManager.parsePointers({ ids: [60] }, target, { amount: 1, distance: 50 });
+    gesture.pointerManager.pointerDown({ id: 60, x: centerX - 30, y: centerY, target });
+
+    // Continue panning with both pointers
+    await gesture.pan({
+      target,
+      pointers: { ids: [50, 60] },
+      angle: 0, // Continue horizontal pan
+      distance: 20,
+      steps: 1,
+      releasePointers: true,
+    });
+
+    // The delta should continue smoothly from where it was (around 50 + 20 = 70)
+    // Without the fix, the delta would jump significantly due to centroid recalculation
+    const panEvents = events.filter((e) => e.startsWith('pan:'));
+    expect(panEvents.length).toBeGreaterThan(0);
+
+    // Extract the deltaX from the last pan event
+    const lastPanEvent = panEvents[panEvents.length - 1];
+    const deltaXMatch = lastPanEvent.match(/deltaX: (-?\d+)/);
+    const finalDeltaX = deltaXMatch ? parseInt(deltaXMatch[1], 10) : 0;
+
+    // The final deltaX should be close to the expected value (previous delta + new movement)
+    // Allow some tolerance for the centroid calculation
+    expect(Math.abs(finalDeltaX - (lastDeltaX + 20))).toBeLessThan(35);
+  });
+
+  it('should not jump when a pointer is removed during an active gesture', async () => {
+    gestureManager.setGestureOptions('pan', target, {
+      minPointers: 1,
+      maxPointers: 3,
+    });
+
+    const gesture = touchGesture.setup();
+
+    // Start a pan gesture with two pointers
+    await gesture.pan({
+      target,
+      pointers: { ids: [50, 60], distance: 40 },
+      angle: 0, // Horizontal pan (right)
+      distance: 50,
+      steps: 2,
+      releasePointers: false,
+    });
+
+    // Get the last deltaX before removing a pointer
+    const lastPanEvent = events.filter((e) => e.startsWith('pan:')).pop();
+    const deltaXMatch = lastPanEvent?.match(/deltaX: (-?\d+)/);
+    const lastDeltaX = deltaXMatch ? parseInt(deltaXMatch[1], 10) : 0;
+
+    events = []; // Clear events
+
+    // Remove one pointer (lift one finger)
+    gesture.pointerManager.pointerUp({ id: 60, x: 0, y: 0, target });
+
+    // Continue panning with the remaining pointer
+    await gesture.pan({
+      target,
+      pointers: { ids: [50] },
+      angle: 0, // Continue horizontal pan
+      distance: 20,
+      steps: 1,
+      releasePointers: true,
+    });
+
+    // The delta should continue smoothly from where it was
+    // Without the fix, the delta would jump significantly due to centroid recalculation
+    const panEvents = events.filter((e) => e.startsWith('pan:'));
+    expect(panEvents.length).toBeGreaterThan(0);
+
+    // Extract the deltaX from the first pan event after pointer removal
+    const firstNewPanEvent = panEvents[0];
+    const newDeltaXMatch = firstNewPanEvent.match(/deltaX: (-?\d+)/);
+    const newDeltaX = newDeltaXMatch ? parseInt(newDeltaXMatch[1], 10) : 0;
+
+    // The delta should not have jumped by more than 35 pixels
+    // (a significant jump would be > 50 pixels due to centroid shift)
+    expect(Math.abs(newDeltaX - lastDeltaX)).toBeLessThan(35);
+  });
 });

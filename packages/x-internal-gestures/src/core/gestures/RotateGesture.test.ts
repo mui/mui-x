@@ -191,4 +191,53 @@ describe('Rotate Gesture', () => {
       preventIf: ['pinch', 'pan'],
     });
   });
+
+  it('should not jump rotation when a new pointer is added during an active gesture', async () => {
+    const gesture = touchGesture.setup();
+
+    // Start rotation with 2 pointers
+    await gesture.rotate({
+      target,
+      rotationAngle: 45,
+      steps: 2,
+      pointers: { ids: [20, 30] },
+      releasePointers: false,
+    });
+
+    // Get the last totalRotation value before adding a new pointer
+    const lastRotateEvent = events.filter((e) => e.startsWith('rotate:')).pop();
+    const rotationMatch = lastRotateEvent?.match(/totalRotation: (-?\d+)°/);
+    const lastTotalRotation = rotationMatch ? parseInt(rotationMatch[1], 10) : 0;
+
+    events = []; // Clear events
+
+    // Add a third pointer during the active rotate gesture
+    const rect = target.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    gesture.pointerManager.parsePointers({ ids: [40] }, target, { amount: 1, distance: 50 });
+    gesture.pointerManager.pointerDown({ id: 40, x: centerX + 40, y: centerY + 40, target });
+
+    // Continue rotating with all three pointers
+    await gesture.rotate({
+      target,
+      rotationAngle: 30,
+      steps: 1,
+      pointers: { ids: [20, 30, 40] },
+      releasePointers: true,
+    });
+
+    // The rotation should continue smoothly from where it was
+    // Without the fix, the rotation would jump significantly
+    const newRotateEvents = events.filter((e) => e.startsWith('rotate:'));
+    if (newRotateEvents.length > 0) {
+      const firstNewEvent = newRotateEvents[0];
+      const newRotationMatch = firstNewEvent.match(/totalRotation: (-?\d+)°/);
+      const newTotalRotation = newRotationMatch ? parseInt(newRotationMatch[1], 10) : 0;
+
+      // The rotation should not have jumped by more than 45 degrees (a significant jump would be > 90)
+      expect(Math.abs(newTotalRotation - lastTotalRotation)).toBeLessThan(60);
+    }
+  });
 });

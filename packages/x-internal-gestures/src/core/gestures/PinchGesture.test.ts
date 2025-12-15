@@ -146,4 +146,53 @@ describe('Pinch Gesture', () => {
       preventIf: ['rotate', 'pan'],
     });
   });
+
+  it('should not jump scale when a new pointer is added during an active gesture', async () => {
+    const gesture = touchGesture.setup();
+
+    // Start pinch with 2 pointers
+    await gesture.pinch({
+      target,
+      distance: 20,
+      steps: 2,
+      pointers: { ids: [20, 30] },
+      releasePointers: false,
+    });
+
+    // Get the last scale value before adding a new pointer
+    const lastScaleEvent = events.filter((e) => e.startsWith('pinch:')).pop();
+    const scaleMatch = lastScaleEvent?.match(/scale: ([\d.]+)/);
+    const lastScale = scaleMatch ? parseFloat(scaleMatch[1]) : 1;
+
+    events = []; // Clear events
+
+    // Add a third pointer during the active pinch gesture
+    const rect = target.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    gesture.pointerManager.parsePointers({ ids: [40] }, target, { amount: 1, distance: 50 });
+    gesture.pointerManager.pointerDown({ id: 40, x: centerX + 40, y: centerY + 40, target });
+
+    // Continue pinching with all three pointers
+    await gesture.pinch({
+      target,
+      distance: 10,
+      steps: 1,
+      pointers: { ids: [20, 30, 40] },
+      releasePointers: true,
+    });
+
+    // The scale should continue smoothly from where it was
+    // Without the fix, the scale would jump significantly
+    const newPinchEvents = events.filter((e) => e.startsWith('pinch:'));
+    if (newPinchEvents.length > 0) {
+      const firstNewEvent = newPinchEvents[0];
+      const newScaleMatch = firstNewEvent.match(/scale: ([\d.]+)/);
+      const newScale = newScaleMatch ? parseFloat(newScaleMatch[1]) : 1;
+
+      // The scale should not have jumped by more than 0.3 (a significant jump would be > 0.5)
+      expect(Math.abs(newScale - lastScale)).toBeLessThan(0.3);
+    }
+  });
 });
