@@ -21,7 +21,7 @@ You can enable the drag & drop re-ordering of items by setting the `itemsReorder
 
 By default, all the items are reorderable.
 You can prevent the re-ordering of some items using the `isItemReorderable` prop.
-The following example shows how to only let users reorder the leaves using the [`getItemOrderedChildrenIds`](/x/react-tree-view/rich-tree-view/items/#get-an-items-children-by-id) API method.
+The following example shows how to only let users reorder the leaves using the [`getItemOrderedChildrenIds()`](/x/react-tree-view/rich-tree-view/items/#get-an-items-children-by-id) API method.
 
 {{"demo": "OnlyReorderLeaves.js"}}
 
@@ -36,7 +36,7 @@ You can use the `onItemPositionChange` to send the new position of an item to yo
 
 {{"demo": "OnItemPositionChange.js"}}
 
-If you want to send the entire dataset to your backend, you can use the [`getItemTree`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
+If you want to send the entire dataset to your backend, you can use the [`getItemTree()`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
 The following demo demonstrates it by synchronizing the first `RichTreeView` with the second one whenever you do a re-ordering:
 
 {{"demo": "SendAllItemsToServer.js"}}

@@ -26,7 +26,7 @@ After the initial render, `apiRef` holds methods to interact imperatively with t
 
 ### Focus a specific item
 
-Use the `focusItem` API method to focus a specific item.
+Use the `focusItem()` API method to focus a specific item.
 
 ```ts
 apiRef.current.focusItem(
