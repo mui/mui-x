@@ -15,7 +15,7 @@ export const eventCalendarAgendaSelectors = {
   visibleDays: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
-    schedulerOtherSelectors.uiTimezone,
+    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
     schedulerEventSelectors.processedEventList,

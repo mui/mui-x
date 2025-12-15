@@ -19,7 +19,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   schedulerResourceSelectors.processedResourceList,
   schedulerResourceSelectors.processedResourceChildrenLookup,
   schedulerResourceSelectors.resourceParentIdLookup,
-  schedulerOtherSelectors.uiTimezone,
+  schedulerOtherSelectors.displayTimezone,
 
   (
     adapter,

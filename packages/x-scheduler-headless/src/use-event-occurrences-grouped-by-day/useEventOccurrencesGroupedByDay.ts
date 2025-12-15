@@ -29,7 +29,7 @@ export function useEventOccurrencesGroupedByDay(
   const events = useStore(store, schedulerEventSelectors.processedEventList);
   const visibleResources = useStore(store, schedulerResourceSelectors.visibleMap);
   const resourceParentIds = useStore(store, schedulerResourceSelectors.resourceParentIdLookup);
-  const uiTimezone = useStore(store, schedulerOtherSelectors.uiTimezone);
+  const uiTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   return React.useMemo(
     () =>
