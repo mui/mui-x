@@ -135,7 +135,7 @@ jobs:
                 command: |
                   node ./scripts/playwrightLaunchServer.mjs & 
                   pnpm test:unit:browser --project x-scheduler-headless src/standalone-event/StandaloneEvent.test.tsx && \
-                  pnpm test:unit:browser --project x-scheduler && \
+                  pnpm test:unit:browser --project x-scheduler src/internals/components/header-toolbar/HeaderToolbar.test.tsx && \
                   pnpm test:unit:browser --project x-charts-premium && \
                   pnpm test:unit:browser --project x-charts-pro && \
                   pnpm test:unit:browser --project x-charts-vendor && \
