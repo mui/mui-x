@@ -24,7 +24,7 @@ export const eventCalendarAgendaSelectors = {
     (
       adapter,
       visibleDate,
-      uiTimezone,
+      displayTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
       events,

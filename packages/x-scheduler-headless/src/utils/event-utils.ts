@@ -61,7 +61,7 @@ const checkResourceVisibility = (
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, resourceParentIds, uiTimezone } =
+  const { adapter, start, end, events, visibleResources, resourceParentIds, displayTimezone } =
     parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
 
@@ -78,7 +78,7 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     if (event.rrule) {
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
       occurrences.push(
-        ...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter, uiTimezone),
+        ...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
       );
       continue;
     }
@@ -101,5 +101,5 @@ export interface GetOccurrencesFromEventsParameters {
   events: SchedulerProcessedEvent[];
   visibleResources: Map<string, boolean>;
   resourceParentIds: Map<string, string | null>;
-  uiTimezone: TemporalTimezone;
+  displayTimezone: TemporalTimezone;
 }
