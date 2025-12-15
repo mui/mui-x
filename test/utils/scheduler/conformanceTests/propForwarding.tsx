@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { flushMicrotasks, randomStringValue } from '@mui/internal-test-utils';
+import { flushMicrotasks, randomStringValue, cleanup } from '@mui/internal-test-utils';
 import { describe, it, expect } from 'vitest';
 import { throwMissingPropError } from './utils';
 import type {
@@ -18,7 +18,10 @@ export function testPropForwarding(
   }
 
   describe('prop forwarding', () => {
-    it.skip('forwards custom props to the default element', async () => {
+    afterEach(() => {
+      cleanup();
+    });
+    it('forwards custom props to the default element', async () => {
       const otherProps = {
         lang: 'fr',
         'data-foobar': randomStringValue(),
@@ -35,7 +38,7 @@ export function testPropForwarding(
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
     });
 
-    it.skip('forwards custom props to the customized element defined with a function', async () => {
+    it('forwards custom props to the customized element defined with a function', async () => {
       const otherProps = {
         lang: 'fr',
         'data-foobar': randomStringValue(),
