@@ -12,28 +12,27 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Single selection
 
-By default, `RichTreeView` allows selecting a single item.
+By default, `RichTreeView` lets users select one item at a time.
 
 {{"demo": "SingleSelectTreeView.js"}}
 
 :::success
-When `RichTreeView` uses single selection, you can select an item by clicking it,
-or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
+When `RichTreeView` is set to allow one seletion at a time, users can select an item by clicking it or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
 :::
 
-## Multi selection
+## Multi-selection
 
 Use the `multiSelect` prop to enable multi-selection.
 
 {{"demo": "MultiSelectTreeView.js"}}
 
 :::success
-When `RichTreeView` uses multi selection, you can select multiple items using the mouse in two ways:
+When multi-selection is enabled, users can select multiple items using the mouse in two ways:
 
-- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
-- To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
+1. To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
+2. To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
 
-You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
+You can also use [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
 :::
 
 ## Disable selection
@@ -44,19 +43,18 @@ Use the `disableSelection` prop if you don't want the items to be selectable:
 
 ## Checkbox selection
 
-To activate checkbox selection set `checkboxSelection={true}`:
+To enable checkbox selection, set `checkboxSelection={true}`:
 
 {{"demo": "CheckboxSelection.js"}}
 
-This is also compatible with multi selection:
+This is also compatible with multi-selection:
 
 {{"demo": "CheckboxMultiSelection.js"}}
 
 ## Controlled selection
 
-Use the `selectedItems` prop to control the selected items.
-
-You can use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
+Use the `selectedItems` prop to control selected `TreeItem` components.
+You can also use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 
@@ -76,7 +74,8 @@ Use the `onItemSelectionToggle` prop to react to an item selection change:
 
 ## Automatic parents and children selection
 
-By default, selecting a parent item does not select its children. You can override this behavior using the `selectionPropagation` prop.
+By default, selecting a parent item does not select its children. 
+You can override this behavior using the `selectionPropagation` prop.
 
 Here's how it's structured:
 
@@ -102,7 +101,7 @@ The example below demonstrates the usage of the `selectionPropagation` prop.
 {{"demo": "SelectionPropagation.js", "defaultCodeOpen": false}}
 
 :::warning
-This feature only works when multi selection is enabled using `props.multiSelect`.
+This feature only works when multi-selection is enabled using `props.multiSelect`.
 :::
 
 ### Apply propagation on mount
@@ -146,7 +145,8 @@ return (
 );
 ```
 
-In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data, their ancestors are added to the `defaultSelectedItems` prop by the hook:
+In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data.
+Their ancestors are added to the `defaultSelectedItems` prop by the hook:
 
 {{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
 
@@ -177,7 +177,7 @@ return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
 When your component first renders, `apiRef.current` is `undefined`.
-After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
+After the initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 
 ### Select or deselect an item
 

@@ -20,7 +20,7 @@ You can enable the drag-and-drop reordering of items by setting the `itemsReorde
 ## Limit reordering
 
 By default, all items are reorderable.
-You can prevent the reordering of some items using the `isItemReorderable` prop.
+You can prevent reordering of specifc items using the `isItemReorderable` prop.
 The following example shows how to only let users reorder the leaves using the [`getItemOrderedChildrenIds()`](/x/react-tree-view/rich-tree-view/items/#get-an-items-children-by-id) API method.
 
 {{"demo": "OnlyReorderLeaves.js"}}
@@ -37,15 +37,15 @@ You can use the `onItemPositionChange` to send the new position of an item to yo
 {{"demo": "OnItemPositionChange.js"}}
 
 If you want to send the entire dataset to your backend, you can use the [`getItemTree()`](/x/react-tree-view/rich-tree-view/items/#get-the-current-item-tree) API method.
-The following demo demonstrates it by synchronizing the first `RichTreeView` with the second one whenever you do a reordering:
+The following demo demonstrates it by synchronizing the first `RichTreeView` with the second one whenever you perform a reordering:
 
 {{"demo": "SendAllItemsToServer.js"}}
 
 ## Customization
 
-### Only trigger the reordering from a drag handle
+### Only trigger reordering from a drag handle
 
-You can create a custom `TreeItem` component to render a drag handle icon and only trigger the reordering when dragging from it:
+You can create a custom `TreeItem` component to render a drag handle icon and only trigger reordering when dragging from it:
 
 {{"demo": "OnlyReorderFromDragHandle.js"}}
 
@@ -53,7 +53,7 @@ You can create a custom `TreeItem` component to render a drag handle icon and on
 
 ### File explorer
 
-The example below is a simplified version of the [File Explorer](/x/react-tree-view/rich-tree-view/customization/#file-explorer) example with drag & drop reordering.
+The example below is a simplified version of the [file explorer](/x/react-tree-view/rich-tree-view/customization/#file-explorer) example with drag-and-drop reordering.
 You can reorder items but only inside folders (or inside the trash).
 
 {{"demo": "FileExplorer.js"}}

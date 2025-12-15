@@ -18,8 +18,7 @@ By default, `SimpleTreeView` lets users select a single item.
 {{"demo": "SingleSelectTreeView.js"}}
 
 :::success
-When `SimpleTreeView` uses single selection, you can select an item by clicking it
-or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
+When `SimpleTreeView` is set to allow one seletion at a time, users can select an item by clicking it or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
 :::
 
 ## Multi-selection
@@ -29,7 +28,7 @@ Use the `multiSelect` prop to enable multi-selection.
 {{"demo": "MultiSelectTreeView.js"}}
 
 :::success
-When multi-selection is enabled, you can select multiple items using the mouse in two ways:
+When multi-selection is enabled, users can select multiple items using the mouse in two ways:
 
 1. To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
 2. To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
@@ -45,7 +44,7 @@ Use the `disableSelection` prop if you don't want the items to be selectable:
 
 ## Checkbox selection
 
-To activate checkbox selection set `checkboxSelection={true}`:
+To enable checkbox selection, set `checkboxSelection={true}`:
 
 {{"demo": "CheckboxSelection.js"}}
 
