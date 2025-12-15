@@ -9,7 +9,7 @@ export default mergeConfig(
       name: getTestName(import.meta.url),
       browser: {
         enabled: true,
-        instances: [{ browser: 'firefox' }],
+        instances: [{ browser: 'chromium' }],
       },
     },
   }),

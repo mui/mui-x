@@ -103,7 +103,4 @@ export default defineConfig({
     }),
     exclude: ['**/*.spec.{js,ts,tsx}', '**/node_modules/**', '**/dist/**'],
   },
-  optimizeDeps: {
-    force: true,
-  },
 });

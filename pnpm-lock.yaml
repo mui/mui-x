@@ -174,6 +174,9 @@ catalogs:
     motion:
       specifier: ^12.23.25
       version: 12.23.25
+    playwright:
+      specifier: ^1.57.0
+      version: 1.57.0
     prop-types:
       specifier: ^15.8.1
       version: 15.8.1
@@ -424,6 +427,9 @@ importers:
       nyc:
         specifier: ^17.1.0
         version: 17.1.0
+      playwright:
+        specifier: 'catalog:'
+        version: 1.57.0
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -2087,9 +2093,6 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../packages/x-scheduler-headless/build
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.57.0
       '@react-spring/web':
         specifier: 'catalog:'
         version: 10.0.3(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -2223,9 +2226,6 @@ importers:
       '@mui/x-license':
         specifier: workspace:*
         version: link:../../packages/x-license/build
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.57.0
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
@@ -2361,9 +2361,6 @@ importers:
       '@mui/x-tree-view-pro':
         specifier: workspace:*
         version: link:../../packages/x-tree-view-pro/build
-      '@playwright/test':
-        specifier: 'catalog:'
-        version: 1.57.0
       '@types/moment-jalaali':
         specifier: 'catalog:'
         version: 0.7.9
