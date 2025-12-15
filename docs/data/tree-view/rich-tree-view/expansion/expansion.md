@@ -67,9 +67,9 @@ apiRef.current.setItemExpansion({
   event,
   // The id of the item to expand or collapse
   itemId,
-  // If `true` the item will be expanded
-  // If `false` the item will be collapsed
-  // If not defined, the item's expansion status will be toggled.
+  // If `true` the item is expanded
+  // If `false` the item is collapsed
+  // If not defined, the item's expansion status is toggled.
   shouldBeExpanded,
 });
 ```

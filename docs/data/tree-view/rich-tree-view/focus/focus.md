@@ -35,7 +35,7 @@ Use the `focusItem` API method to focus a specific item.
 
 ```ts
 apiRef.current.focusItem(
-  // The DOM event that triggered the change
+  // The DOM event that triggers the change
   event,
   // The id of the item to focus
   itemId,
@@ -44,7 +44,7 @@ apiRef.current.focusItem(
 
 :::info
 This method only works with items that are currently visible.
-Calling `apiRef.focusItem()` on an item whose parent is collapsed does nothing.
+Calling `apiRef.focusItem()` on an item with a collapsed parent has no effect.
 :::
 
 {{"demo": "ApiMethodFocusItem.js"}}

@@ -38,7 +38,7 @@ You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-m
 
 ## Disable selection
 
-Use the `disableSelection` prop if you don't want your items to be selectable:
+Use the `disableSelection` prop if you don't want the items to be selectable:
 
 {{"demo": "DisableSelection.js"}}
 
@@ -70,7 +70,7 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track item selection change
 
-Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
+Use the `onItemSelectionToggle` prop to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}
 
@@ -202,6 +202,6 @@ apiRef.current.setItemSelection({
 
 {{"demo": "ApiMethodSetItemSelection.js", "defaultCodeOpen": false}}
 
-You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
+You can use the `keepExistingSelection` property to avoid losing the items that have already been selected when using `multiSelect`:
 
 {{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js", "defaultCodeOpen": false}}
