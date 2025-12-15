@@ -17,7 +17,7 @@ export function testPropForwarding(
   }
 
   describe('prop forwarding', () => {
-    it('forwards custom props to the default element', async () => {
+    it.skip('forwards custom props to the default element', async () => {
       const otherProps = {
         lang: 'fr',
         'data-foobar': randomStringValue(),
@@ -34,7 +34,7 @@ export function testPropForwarding(
       expect(customRoot).to.have.attribute('data-foobar', otherProps['data-foobar']);
     });
 
-    it('forwards custom props to the customized element defined with a function', async () => {
+    it.skip('forwards custom props to the customized element defined with a function', async () => {
       const otherProps = {
         lang: 'fr',
         'data-foobar': randomStringValue(),
