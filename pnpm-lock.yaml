@@ -61,7 +61,7 @@ catalogs:
       specifier: 4.4.3
       version: 4.4.3
     '@playwright/test':
-      specifier: ^1.57.0
+      specifier: ^1.55.0
       version: 1.57.0
     '@react-spring/web':
       specifier: ^10.0.3
@@ -175,7 +175,7 @@ catalogs:
       specifier: ^12.23.25
       version: 12.23.25
     playwright:
-      specifier: ^1.57.0
+      specifier: ^1.55.0
       version: 1.57.0
     prop-types:
       specifier: ^15.8.1
