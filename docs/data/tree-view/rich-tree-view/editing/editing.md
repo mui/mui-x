@@ -9,7 +9,7 @@ packageName: '@mui/x-tree-view'
 
 # Rich Tree View - Label editing
 
-<p class="description">Learn how to edit the label of `RichTreeView` items.</p>
+<p class="description">Learn how to edit the label of Tree View items.</p>
 
 ## Enable label editing
 

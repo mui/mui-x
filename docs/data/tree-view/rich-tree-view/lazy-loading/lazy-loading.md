@@ -9,7 +9,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Rich Tree View - Lazy loading [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Lazy load the data from your `RichTreeView`.</p>
+<p class="description">Lazy load the data from your Tree View.</p>
 
 ## Basic usage
 

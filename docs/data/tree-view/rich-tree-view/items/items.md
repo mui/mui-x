@@ -8,7 +8,7 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 # Rich Tree View - Items
 
-<p class="description">Pass data to your `RichTreeView`.</p>
+<p class="description">Pass data to your Tree View.</p>
 
 ## Basic usage
 
