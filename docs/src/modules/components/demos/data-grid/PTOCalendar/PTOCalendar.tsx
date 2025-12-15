@@ -742,7 +742,10 @@ function PTOCalendar() {
   const todayStr = format(new Date(), 'yyyy-MM-dd');
 
   return (
-    <DemoContainer theme={ptoCalendarTheme}>
+    <DemoContainer
+      theme={ptoCalendarTheme}
+      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/PTOCalendar"
+    >
       <CalendarContext.Provider value={calendarState}>
         <Box
           sx={(theme) => ({
