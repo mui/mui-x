@@ -222,8 +222,6 @@
   { "name": "DefaultizedScatterSeriesType", "kind": "Interface" },
   { "name": "DefaultizedSeriesType", "kind": "TypeAlias" },
   { "name": "defaultOnBeforeExport", "kind": "Function" },
-  { "name": "defaultSeriesConfigPremium", "kind": "Variable" },
-  { "name": "defaultSeriesConfigPro", "kind": "Variable" },
   { "name": "Direction", "kind": "TypeAlias" },
   { "name": "FadeOptions", "kind": "TypeAlias" },
   { "name": "FocusedBar", "kind": "Function" },
