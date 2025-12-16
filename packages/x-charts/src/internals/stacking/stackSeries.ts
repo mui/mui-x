@@ -1,19 +1,16 @@
 import {
-  stackOrderAppearance as d3StackOrderAppearance,
-  stackOrderAscending as d3StackOrderAscending,
-  stackOrderDescending as d3StackOrderDescending,
-  stackOrderInsideOut as d3StackOrderInsideOut,
   stackOrderNone as d3StackOrderNone,
   stackOrderReverse as d3StackOrderReverse,
   stackOffsetExpand as d3StackOffsetExpand,
-  stackOffsetDiverging as d3StackOffsetDiverging,
   stackOffsetNone as d3StackOffsetNone,
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
   type Series,
 } from '@mui/x-charts-vendor/d3-shape';
-import type { StackOffsetType, StackOrderType } from '../models/stacking';
-import { type SeriesId, type StackableSeriesType } from '../models/seriesType/common';
+import type { StackOffsetType, StackOrderType } from '../../models/stacking';
+import { type SeriesId, type StackableSeriesType } from '../../models/seriesType/common';
+import { offsetDiverging } from './offsetDiverging';
+import { orderAppearance, orderAscending, orderDescending, orderInsideOut } from './order';
 
 type FormatterParams<T> = {
   series: Record<SeriesId, T>;
@@ -34,19 +31,19 @@ export const StackOrder = {
   /**
    * Series order such that the earliest series (according to the maximum value) is at the bottom.
    * */
-  appearance: d3StackOrderAppearance,
+  appearance: orderAppearance,
   /**
    *  Series order such that the smallest series (according to the sum of values) is at the bottom.
    * */
-  ascending: d3StackOrderAscending,
+  ascending: orderAscending,
   /**
    * Series order such that the largest series (according to the sum of values) is at the bottom.
    */
-  descending: d3StackOrderDescending,
+  descending: orderDescending,
   /**
    * Series order such that the earliest series (according to the maximum value) are on the inside and the later series are on the outside. This order is recommended for streamgraphs in conjunction with the wiggle offset. See Stacked Graphs—Geometry & Aesthetics by Byron & Wattenberg for more information.
    */
-  insideOut: d3StackOrderInsideOut,
+  insideOut: orderInsideOut,
   /**
    * Given series order [0, 1, … n - 1] where n is the number of elements in series. Thus, the stack order is given by the key accessor.
    */
@@ -67,7 +64,7 @@ export const StackOffset = {
   /**
    * Positive values are stacked above zero, negative values are stacked below zero, and zero values are stacked at zero.
    * */
-  diverging: d3StackOffsetDiverging,
+  diverging: offsetDiverging,
   /**
    * Applies a zero baseline.
    * */
