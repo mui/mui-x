@@ -128,18 +128,6 @@ export namespace useEventOccurrencesWithDayGridPosition {
     isInvisible?: boolean;
   }
 
-  export type EventDisplayOccurrenceWithPosition = Omit<
-    SchedulerEventOccurrence,
-    'dataTimezone' | 'displayTimezone'
-  > & {
-    /**
-     * Display-only occurrence used for UI rendering.
-     * Does not represent persisted event data.
-     */
-    start: SchedulerProcessedDate;
-    end: SchedulerProcessedDate;
-  };
-
   export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
     position: EventOccurrencePosition;
   }
