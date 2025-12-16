@@ -54,6 +54,7 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
       parentId,
       expandable,
       disabled,
+      selectable: true,
     });
   }, [instance, parentId, itemId, expandable, disabled, id]);
 
