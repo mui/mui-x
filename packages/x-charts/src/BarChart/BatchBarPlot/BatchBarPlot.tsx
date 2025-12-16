@@ -26,7 +26,7 @@ export function BatchBarPlot({
   onItemClick,
   skipAnimation = false,
 }: BatchBarPlotProps) {
-  const onClick = useOnItemClick(onItemClick);
+  const { onClick, onPointerUp } = useOnItemClick(onItemClick);
   const interactionItemProps = useInteractionItemProps(onItemClick != null);
 
   return (
@@ -39,7 +39,7 @@ export function BatchBarPlot({
           skipAnimation={skipAnimation}
         />
       ))}
-      <DrawingAreaRect onClick={onClick} {...interactionItemProps} />
+      <DrawingAreaRect onClick={onClick} onPointerUp={onPointerUp} {...interactionItemProps} />
     </React.Fragment>
   );
 }
