@@ -314,8 +314,8 @@ function HappeningTooltip() {
       <Typography fontWeight="bold">{happening.x}</Typography>
       <Typography>
         {importantHappeningsLabels[dataIndex].split('\n').map((line, index) => (
-          <React.Fragment>
-            <span key={index}>{line}</span>
+          <React.Fragment key={index}>
+            <span>{line}</span>
             <br />
           </React.Fragment>
         ))}
