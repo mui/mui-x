@@ -61,8 +61,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
         ...event,
         key: occurrenceKey,
         id: eventId,
-        start,
-        end,
+        displayTimezone: { ...event.displayTimezone, start, end },
       };
 
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });

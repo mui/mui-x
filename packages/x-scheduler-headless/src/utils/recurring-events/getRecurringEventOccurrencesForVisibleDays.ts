@@ -71,8 +71,8 @@ class RecurringEventExpander {
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
-    this.rule = event.rrule!;
-    this.seriesStart = adapter.startOfDay(event.start.value);
+    this.rule = event.dataTimezone.rrule!;
+    this.seriesStart = adapter.startOfDay(event.dataTimezone.start);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
     // Adjust scan range to catch multi-day events starting before visible range
@@ -81,7 +81,7 @@ class RecurringEventExpander {
     this.scanLastDay = adapter.startOfDay(end);
 
     // Pre-compute boundaries and exclusions
-    this.exDateKeys = new Set(event.exDates?.map((d) => getDateKey(d, adapter)));
+    this.exDateKeys = new Set(event.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStart, this.scanFirstDay)
       ? this.scanFirstDay
@@ -158,15 +158,23 @@ class RecurringEventExpander {
       return;
     }
 
-    const occurrenceStart = mergeDateAndTime(this.adapter, day, this.event.start.value);
+    const occurrenceStart = mergeDateAndTime(this.adapter, day, this.event.dataTimezone.start);
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
-      start: processDate(occurrenceStart, this.adapter),
-      end: processDate(
-        getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
-        this.adapter,
-      ),
+      dataTimezone: {
+        start: occurrenceStart,
+        end: getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
+        timezone: this.event.dataTimezone.timezone,
+      },
+      displayTimezone: {
+        start: processDate(occurrenceStart, this.adapter),
+        end: processDate(
+          getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
+          this.adapter,
+        ),
+        timezone: this.event.displayTimezone.timezone,
+      },
     });
   }
 

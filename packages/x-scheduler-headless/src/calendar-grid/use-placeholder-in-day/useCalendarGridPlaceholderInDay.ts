@@ -42,16 +42,26 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
+      const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
         id: 'occurrence-placeholder',
         title: '',
         allDay: true,
-        start: processDate(day, adapter),
-        end: processDate(
-          adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
-          adapter,
-        ),
+        // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
+        dataTimezone: {
+          start: day,
+          end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+          timezone,
+        },
+        displayTimezone: {
+          start: processDate(day, adapter),
+          end: processDate(
+            adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+            adapter,
+          ),
+          timezone,
+        },
         position: {
           index: 1,
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
@@ -60,12 +70,23 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     if (rawPlaceholder.type === 'external-drag') {
+      const timezone = adapter.getTimezone(rawPlaceholder.start);
+
       return {
         ...sharedProperties,
         id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
-        start: processDate(rawPlaceholder.start, adapter),
-        end: processDate(rawPlaceholder.end, adapter),
+        dataTimezone: {
+          start: rawPlaceholder.start,
+          end: rawPlaceholder.end,
+          timezone,
+        },
+        // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
+        displayTimezone: {
+          start: processDate(rawPlaceholder.start, adapter),
+          end: processDate(rawPlaceholder.end, adapter),
+          timezone,
+        },
         position: {
           index: 1,
           daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,

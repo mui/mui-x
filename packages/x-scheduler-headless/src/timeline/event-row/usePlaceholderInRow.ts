@@ -33,11 +33,20 @@ export function usePlaceholderInRow(
     if (!rawPlaceholder) {
       return null;
     }
-
+    const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      start: processDate(rawPlaceholder.start, adapter),
-      end: processDate(rawPlaceholder.end, adapter),
+      // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
+      dataTimezone: {
+        start: rawPlaceholder.start,
+        end: rawPlaceholder.end,
+        timezone,
+      },
+      displayTimezone: {
+        start: processDate(rawPlaceholder.start, adapter),
+        end: processDate(rawPlaceholder.end, adapter),
+        timezone,
+      },
       modelInBuiltInFormat: null,
     };
 

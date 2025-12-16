@@ -57,7 +57,7 @@ export const EventItem = React.forwardRef(function EventItem(
   const formatTime = useFormatTime();
 
   const content = React.useMemo(() => {
-    const isRecurring = Boolean(occurrence.rrule);
+    const isRecurring = Boolean(occurrence.displayTimezone.rrule);
 
     switch (variant) {
       case 'compact':
@@ -77,7 +77,7 @@ export const EventItem = React.forwardRef(function EventItem(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="EventItemTime EventItemTime--compact">
-                <span>{formatTime(occurrence.start.value)}</span>
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
               </time>
 
               <span className="EventItemTitle">{occurrence.title}</span>
@@ -177,13 +177,15 @@ function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
   const translations = useTranslations();
   const formatTime = useFormatTime();
 
-  if (!adapter.isSameDay(occurrence.start.value, occurrence.end.value)) {
+  if (
+    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
+  ) {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <time className="EventItemTime">
         <span>
           {translations.eventItemMultiDayLabel(
-            adapter.formatByString(occurrence.end.value, format),
+            adapter.formatByString(occurrence.displayTimezone.end.value, format),
           )}
         </span>
       </time>
@@ -194,8 +196,8 @@ function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
   }
   return (
     <time className="EventItemTime">
-      <span>{formatTime(occurrence.start.value)}</span>
-      <span> - {formatTime(occurrence.end.value)}</span>
+      <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+      <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
     </time>
   );
 }

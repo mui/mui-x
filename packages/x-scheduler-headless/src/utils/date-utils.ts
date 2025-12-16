@@ -41,7 +41,8 @@ export function getOccurrenceEnd({
   occurrenceStart: TemporalSupportedObject;
   adapter: Adapter;
 }): TemporalSupportedObject {
-  const durationMs = adapter.getTime(event.end.value) - adapter.getTime(event.start.value);
+  const durationMs =
+    adapter.getTime(event.dataTimezone.end) - adapter.getTime(event.dataTimezone.start);
   return adapter.addMilliseconds(occurrenceStart, durationMs);
 }
 

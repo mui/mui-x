@@ -62,7 +62,8 @@ export function useEventOccurrencesWithDayGridPosition(
             i += 1;
           }
 
-          const durationInDays = adapter.differenceInDays(occurrence.end.value, day.value) + 1;
+          const durationInDays =
+            adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
           position = {
             index: i,
             daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end
@@ -126,6 +127,18 @@ export namespace useEventOccurrencesWithDayGridPosition {
      */
     isInvisible?: boolean;
   }
+
+  export type EventDisplayOccurrenceWithPosition = Omit<
+    SchedulerEventOccurrence,
+    'dataTimezone' | 'displayTimezone'
+  > & {
+    /**
+     * Display-only occurrence used for UI rendering.
+     * Does not represent persisted event data.
+     */
+    start: SchedulerProcessedDate;
+    end: SchedulerProcessedDate;
+  };
 
   export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
     position: EventOccurrencePosition;

@@ -75,7 +75,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   // Feature hooks
   const formatTime = useFormatTime();
-  const isRecurring = Boolean(occurrence.rrule);
+  const isRecurring = Boolean(occurrence.displayTimezone.rrule);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -120,8 +120,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="DayGridEventTime">
-                <span>{formatTime(occurrence.start.value)}</span>
-                <span> - {formatTime(occurrence.end.value)}</span>
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
               </time>
               <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>
@@ -139,19 +139,19 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         throw new Error('Unsupported variant provided to EventItem component.');
     }
   }, [
-    formatTime,
     variant,
     occurrence.title,
-    occurrence.start,
-    occurrence.end,
+    occurrence.displayTimezone.start.value,
+    occurrence.displayTimezone.end.value,
     isRecurring,
     resource?.title,
     translations,
+    formatTime,
   ]);
 
   const sharedProps = {
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     className: clsx(
       classNameProp,
