@@ -198,6 +198,8 @@ export default defineConfig(
     rules: {
       // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
       'vitest/valid-expect': 'off',
+      // Annoying auto-fix
+      'vitest/no-focused-tests': 'off',
     },
   },
   {
