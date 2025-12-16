@@ -62,7 +62,7 @@ export function applyRecurringUpdateFollowing(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? originalEvent.dataTimezone.start;
+  const newStart = changes.start ?? originalEvent.dataTimezone.start.value;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
@@ -75,7 +75,7 @@ export function applyRecurringUpdateFollowing(
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    originalEvent.dataTimezone.start,
+    originalEvent.dataTimezone.start.value,
     occurrenceStart,
     changes,
   );
@@ -92,7 +92,7 @@ export function applyRecurringUpdateFollowing(
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
   const shouldDropOldSeries = adapter.isBefore(
     adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.dataTimezone.start),
+    adapter.startOfDay(originalEvent.dataTimezone.start.value),
   );
 
   if (shouldDropOldSeries) {
@@ -131,7 +131,10 @@ export function applyRecurringUpdateAll(
   const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.dataTimezone.start);
+  const editedIsDtstart = adapter.isSameDay(
+    occurrenceStart,
+    originalEvent.dataTimezone.start.value,
+  );
 
   // 3) Decide new start/end
   if (changes.start != null) {
@@ -144,7 +147,7 @@ export function applyRecurringUpdateAll(
         // Not first: keep original DTSTART date, merge only time
         eventUpdatedProperties.start = mergeDateAndTime(
           adapter,
-          originalEvent.dataTimezone.start,
+          originalEvent.dataTimezone.start.value,
           changes.start,
         );
       }
@@ -152,7 +155,7 @@ export function applyRecurringUpdateAll(
       // Same day -> merge time into original date
       eventUpdatedProperties.start = mergeDateAndTime(
         adapter,
-        originalEvent.dataTimezone.start,
+        originalEvent.dataTimezone.start.value,
         changes.start,
       );
     }
@@ -165,14 +168,14 @@ export function applyRecurringUpdateAll(
       } else {
         eventUpdatedProperties.end = mergeDateAndTime(
           adapter,
-          originalEvent.dataTimezone.end,
+          originalEvent.dataTimezone.end.value,
           changes.end,
         );
       }
     } else {
       eventUpdatedProperties.end = mergeDateAndTime(
         adapter,
-        originalEvent.dataTimezone.end,
+        originalEvent.dataTimezone.end.value,
         changes.end,
       );
     }

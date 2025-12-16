@@ -89,8 +89,8 @@ describe('processEvent', () => {
 
       const processed = processEvent(event, 'Pacific/Kiritimati', adapter);
 
-      expect(adapter.getTimezone(processed.dataTimezone.start)).to.equal('America/New_York');
-      expect(adapter.getTimezone(processed.dataTimezone.end)).to.equal('America/New_York');
+      expect(adapter.getTimezone(processed.dataTimezone.start.value)).to.equal('America/New_York');
+      expect(adapter.getTimezone(processed.dataTimezone.end.value)).to.equal('America/New_York');
     });
 
     it('keeps the data timezone for rrule.until when rrule is an object', () => {

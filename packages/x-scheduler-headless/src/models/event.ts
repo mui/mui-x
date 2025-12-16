@@ -25,11 +25,11 @@ export interface SchedulerProcessedEvent {
     /**
      * The start date and time of the event.
      */
-    start: TemporalSupportedObject;
+    start: SchedulerProcessedDate;
     /**
      * The end date and time of the event.
      */
-    end: TemporalSupportedObject;
+    end: SchedulerProcessedDate;
     /**
      * The timezone of the event dates.
      * */

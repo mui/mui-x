@@ -431,7 +431,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should use the rrule provided in changes when present', () => {
-      const occurrenceStart = defaultEvent.dataTimezone.start;
+      const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         title: 'Now Weekly',
@@ -453,7 +453,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should remove recurrence when changes.rrule is explicitly undefined', () => {
-      const occurrenceStart = defaultEvent.dataTimezone.start;
+      const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         title: 'One-off',
@@ -497,8 +497,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: mergeDateAndTime(adapter, defaultEvent.dataTimezone.start, newStart),
-          end: mergeDateAndTime(adapter, defaultEvent.dataTimezone.end, newEnd),
+          start: mergeDateAndTime(adapter, defaultEvent.dataTimezone.start.value, newStart),
+          end: mergeDateAndTime(adapter, defaultEvent.dataTimezone.end.value, newEnd),
         },
       ]);
     });
@@ -522,8 +522,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: mergeDateAndTime(adapter, original.dataTimezone.start, changes.start!),
-          end: mergeDateAndTime(adapter, original.dataTimezone.end, changes.end!),
+          start: mergeDateAndTime(adapter, original.dataTimezone.start.value, changes.start!),
+          end: mergeDateAndTime(adapter, original.dataTimezone.end.value, changes.end!),
           rrule: { byDay: ['SA'], freq: 'WEEKLY' },
         },
       ]);
@@ -531,7 +531,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
     it('should update the start date of the original event when editing the first occurrence (DTSTART)', () => {
       // DTSTART = 2025-01-01
-      const occurrenceStart = defaultEvent.dataTimezone.start;
+      const occurrenceStart = defaultEvent.dataTimezone.start.value;
 
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,

@@ -37,8 +37,8 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: model.start,
-      end: model.end,
+      start: processDate(model.start, adapter),
+      end: processDate(model.end, adapter),
       timezone: startTimezone,
       rrule: parsedDataRRule,
       exDates: model.exDates,

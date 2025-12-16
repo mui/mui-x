@@ -441,7 +441,7 @@ export class SchedulerStore<
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
-        adapter.getTime(original.dataTimezone.end) - adapter.getTime(original.dataTimezone.start),
+        original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
       );
     }
 

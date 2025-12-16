@@ -72,7 +72,7 @@ class RecurringEventExpander {
     end: TemporalSupportedObject,
   ) {
     this.rule = event.dataTimezone.rrule!;
-    this.seriesStart = adapter.startOfDay(event.dataTimezone.start);
+    this.seriesStart = adapter.startOfDay(event.dataTimezone.start.value);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
     // Adjust scan range to catch multi-day events starting before visible range
@@ -158,21 +158,27 @@ class RecurringEventExpander {
       return;
     }
 
-    const occurrenceStart = mergeDateAndTime(this.adapter, day, this.event.dataTimezone.start);
+    const occurrenceStart = mergeDateAndTime(
+      this.adapter,
+      day,
+      this.event.dataTimezone.start.value,
+    );
+    const occurrenceStartProcessed = processDate(occurrenceStart, this.adapter);
+    const occurrenceEndProcessed = processDate(
+      getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
+      this.adapter,
+    );
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
       dataTimezone: {
-        start: occurrenceStart,
-        end: getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
+        start: occurrenceStartProcessed,
+        end: occurrenceEndProcessed,
         timezone: this.event.dataTimezone.timezone,
       },
       displayTimezone: {
-        start: processDate(occurrenceStart, this.adapter),
-        end: processDate(
-          getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
-          this.adapter,
-        ),
+        start: occurrenceStartProcessed,
+        end: occurrenceEndProcessed,
         timezone: this.event.displayTimezone.timezone,
       },
     });

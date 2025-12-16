@@ -42,6 +42,11 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
+      const startProcessed = processDate(day, adapter);
+      const endProcessed = processDate(
+        adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        adapter,
+      );
       const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
@@ -50,16 +55,13 @@ export function useCalendarGridPlaceholderInDay(
         allDay: true,
         // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
         dataTimezone: {
-          start: day,
-          end: adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+          start: startProcessed,
+          end: endProcessed,
           timezone,
         },
         displayTimezone: {
-          start: processDate(day, adapter),
-          end: processDate(
-            adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
-            adapter,
-          ),
+          start: startProcessed,
+          end: endProcessed,
           timezone,
         },
         position: {
@@ -70,6 +72,8 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     if (rawPlaceholder.type === 'external-drag') {
+      const startProcessed = processDate(rawPlaceholder.start, adapter);
+      const endProcessed = processDate(rawPlaceholder.end, adapter);
       const timezone = adapter.getTimezone(rawPlaceholder.start);
 
       return {
@@ -77,14 +81,14 @@ export function useCalendarGridPlaceholderInDay(
         id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
         dataTimezone: {
-          start: rawPlaceholder.start,
-          end: rawPlaceholder.end,
+          start: startProcessed,
+          end: endProcessed,
           timezone,
         },
         // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
         displayTimezone: {
-          start: processDate(rawPlaceholder.start, adapter),
-          end: processDate(rawPlaceholder.end, adapter),
+          start: startProcessed,
+          end: endProcessed,
           timezone,
         },
         position: {
