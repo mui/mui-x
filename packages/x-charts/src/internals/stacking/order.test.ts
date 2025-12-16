@@ -75,6 +75,27 @@ describe('order functions', () => {
       // Series B peaks at index 0, Series A peaks at index 1
       expect(result).to.deep.equal([1, 0]);
     });
+
+    it('should handle null values', () => {
+      const series: any = [
+        [
+          { data: { A: null }, 0: 0, 1: null },
+          { data: { A: 5 }, 0: 0, 1: 5 },
+          { data: { A: 3 }, 0: 0, 1: 3 },
+        ],
+        [
+          { data: { B: 10 }, 0: 0, 1: 10 },
+          { data: { B: null }, 0: 0, 1: null },
+          { data: { B: 2 }, 0: 0, 1: 2 },
+        ],
+      ];
+      series[0].key = 'A';
+      series[1].key = 'B';
+
+      const result = orderAppearance(series);
+      // Series B peaks at index 0 (value=10), Series A peaks at index 1 (value=5)
+      expect(result).to.deep.equal([1, 0]);
+    });
   });
 
   describe('orderAscending', () => {
@@ -119,6 +140,31 @@ describe('order functions', () => {
       const result = orderAscending(series);
       // Series A (sum=10), Series B (sum=10) - stable sort
       expect(result).to.deep.equal([0, 1]);
+    });
+
+    it('should handle null values in sum calculation', () => {
+      const series: any = [
+        [
+          { data: { A: 10 }, 0: 0, 1: 10 },
+          { data: { A: null }, 0: 0, 1: null },
+          { data: { A: 20 }, 0: 0, 1: 20 },
+        ],
+        [
+          { data: { B: 5 }, 0: 0, 1: 5 },
+          { data: { B: 15 }, 0: 0, 1: 15 },
+        ],
+        [
+          { data: { C: null }, 0: 0, 1: null },
+          { data: { C: 40 }, 0: 0, 1: 40 },
+        ],
+      ];
+      series[0].key = 'A';
+      series[1].key = 'B';
+      series[2].key = 'C';
+
+      const result = orderAscending(series);
+      // Series B (sum=20), Series A (sum=30 with null ignored), Series C (sum=40 with null ignored)
+      expect(result).to.deep.equal([1, 0, 2]);
     });
   });
 

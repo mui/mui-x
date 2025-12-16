@@ -279,4 +279,71 @@ describe('offsetDiverging', () => {
     expect(series[2][2][0]).to.equal(5);
     expect(series[2][2][1]).to.equal(15);
   });
+
+  it('should handle null values in series', () => {
+    const series: any = [
+      [
+        { data: { A: 10 }, 0: 0, 1: 10 },
+        { data: { A: null }, 0: 0, 1: null },
+        { data: { A: 5 }, 0: 0, 1: 5 },
+      ],
+      [
+        { data: { B: null }, 0: 0, 1: null },
+        { data: { B: 15 }, 0: 0, 1: 15 },
+        { data: { B: -5 }, 0: 0, 1: -5 },
+      ],
+    ];
+    series[0].key = 'A';
+    series[1].key = 'B';
+    const order = [0, 1];
+
+    offsetDiverging(series, order);
+
+    // Point 0: A=10, B=null (difference=0)
+    expect(series[0][0][0]).to.equal(0);
+    expect(series[0][0][1]).to.equal(10);
+    // B has null, difference = null - 0 = NaN, which is treated as 0
+    expect(series[1][0][0]).to.be.a('number');
+    expect(series[1][0][1]).to.be.a('number');
+
+    // Point 1: A=null (difference=0), B=15
+    expect(series[0][1][0]).to.be.a('number');
+    expect(series[0][1][1]).to.be.a('number');
+    expect(series[1][1][0]).to.be.a('number');
+    expect(series[1][1][1]).to.be.a('number');
+
+    // Point 2: A=5, B=-5
+    expect(series[0][2][0]).to.be.a('number');
+    expect(series[0][2][1]).to.be.a('number');
+    expect(series[1][2][1]).to.be.a('number');
+    expect(series[1][2][0]).to.be.a('number');
+  });
+
+  it('should handle null values without breaking stacking order', () => {
+    const series: any = [
+      [
+        { data: { A: 10 }, 0: 0, 1: 10 },
+        { data: { A: 20 }, 0: 0, 1: 20 },
+      ],
+      [
+        { data: { B: null }, 0: 0, 1: null },
+        { data: { B: 5 }, 0: 0, 1: 5 },
+      ],
+    ];
+    series[0].key = 'A';
+    series[1].key = 'B';
+    const order = [0, 1];
+
+    offsetDiverging(series, order);
+
+    // First point: A=10, B=null
+    expect(series[0][0][0]).to.equal(0);
+    expect(series[0][0][1]).to.equal(10);
+
+    // Second point: A=20, B=5
+    expect(series[0][1][0]).to.equal(0);
+    expect(series[0][1][1]).to.equal(20);
+    expect(series[1][1][0]).to.equal(20);
+    expect(series[1][1][1]).to.equal(25);
+  });
 });
