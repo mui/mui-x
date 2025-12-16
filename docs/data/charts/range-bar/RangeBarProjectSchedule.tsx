@@ -1,3 +1,5 @@
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { RangeBarPlot, RangeBarSeries } from '@mui/x-charts-premium/BarChartPremium';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
@@ -13,12 +15,10 @@ import {
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ScatterValueType, XAxis, YAxis } from '@mui/x-charts/models';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
-import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import { ScatterPlot, ScatterSeries } from '@mui/x-charts/ScatterChart';
+import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';
 
 const importantHappeningsLabels = [
   'Exploratory archaeology digs begin.',
@@ -213,7 +213,7 @@ export default function RangeBarProjectSchedule() {
   ];
 
   return (
-    <ChartDataProviderPro
+    <ChartDataProviderPremium
       dataset={bigDigDataset}
       xAxis={xAxis}
       yAxis={yAxis}
@@ -251,7 +251,7 @@ export default function RangeBarProjectSchedule() {
           ]}
         />
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </ChartDataProviderPremium>
   );
 }
 
