@@ -128,6 +128,9 @@ FunnelChart.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      hideItem: PropTypes.func.isRequired,
+      showItem: PropTypes.func.isRequired,
+      toggleItem: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -319,6 +322,11 @@ FunnelChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * Callback fired when the visible series change.
+   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   */
+  onVisibilityChange: PropTypes.func,
+  /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeries]] objects.
    */
@@ -345,6 +353,22 @@ FunnelChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * Map of the visibility status of series and/or items.
+   *
+   * Different chart types use different strategies to generate these keys.
+   *
+   * Generally, the key format is:
+   * - For series-level visibility: `${seriesId}`
+   * - For item-level visibility: `${seriesId}-${itemId}`
+   *
+   * @example
+   * {
+   *   "series1": false, // series-level hidden
+   *   "series2-itemA": false // item-level hidden
+   * }
+   */
+  visibilityMap: PropTypes.object,
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

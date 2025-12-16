@@ -14,9 +14,13 @@
       }
     },
     "slotProps": { "description": "The props used for each component slot." },
-    "slots": { "description": "Overridable component slots." }
+    "slots": { "description": "Overridable component slots." },
+    "toggleVisibilityOnClick": {
+      "description": "If <code>true</code>, clicking on a legend item will toggle the visibility of the corresponding series."
+    }
   },
   "classDescriptions": {
+    "hidden": { "description": "Styles applied to {{nodeName}}.", "nodeName": "hidden items" },
     "horizontal": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the legend in row layout"

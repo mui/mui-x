@@ -326,7 +326,11 @@ SparkLineChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.object,
+    current: PropTypes.shape({
+      hideItem: PropTypes.func.isRequired,
+      showItem: PropTypes.func.isRequired,
+      toggleItem: PropTypes.func.isRequired,
+    }),
   }),
   /**
    * Set to `true` to fill spark line area.
@@ -493,6 +497,11 @@ SparkLineChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * Callback fired when the visible series change.
+   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   */
+  onVisibilityChange: PropTypes.func,
+  /**
    * Type of plot used.
    * @default 'line'
    */
@@ -538,6 +547,22 @@ SparkLineChart.propTypes = {
    * @default (value: number | null) => (value === null ? '' : value.toString())
    */
   valueFormatter: PropTypes.func,
+  /**
+   * Map of the visibility status of series and/or items.
+   *
+   * Different chart types use different strategies to generate these keys.
+   *
+   * Generally, the key format is:
+   * - For series-level visibility: `${seriesId}`
+   * - For item-level visibility: `${seriesId}-${itemId}`
+   *
+   * @example
+   * {
+   *   "series1": false, // series-level hidden
+   *   "series2-itemA": false // item-level hidden
+   * }
+   */
+  visibilityMap: PropTypes.object,
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.

@@ -83,6 +83,7 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "onVisibilityChange": { "type": { "name": "func" } },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
@@ -105,6 +106,7 @@
         "returned": "string"
       }
     },
+    "visibilityMap": { "type": { "name": "object" } },
     "voronoiMaxRadius": {
       "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
     },

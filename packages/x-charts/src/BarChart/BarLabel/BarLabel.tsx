@@ -154,6 +154,10 @@ BarLabel.propTypes = {
    * Height of the bar this label belongs to.
    */
   height: PropTypes.number.isRequired,
+  /**
+   * If true, the bar label is hidden.
+   */
+  hidden: PropTypes.bool,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,

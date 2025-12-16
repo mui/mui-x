@@ -152,6 +152,8 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
+  /** If `true`, the line is hidden. */
+  hidden: PropTypes.bool,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, animations are skipped.

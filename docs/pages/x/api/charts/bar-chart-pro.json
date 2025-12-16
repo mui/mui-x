@@ -91,6 +91,7 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
+    "onVisibilityChange": { "type": { "name": "func" } },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {
@@ -106,6 +107,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "visibilityMap": { "type": { "name": "object" } },
     "width": { "type": { "name": "number" } },
     "xAxis": {
       "type": {

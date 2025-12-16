@@ -75,6 +75,7 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "onVisibilityChange": { "type": { "name": "func" } },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {
@@ -94,6 +95,7 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "visibilityMap": { "type": { "name": "object" } },
     "voronoiMaxRadius": {
       "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
     },

@@ -69,6 +69,7 @@
         "describedArgs": ["event", "radarItemIdentifier"]
       }
     },
+    "onVisibilityChange": { "type": { "name": "func" } },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
@@ -90,6 +91,7 @@
         "returned": "string"
       }
     },
+    "visibilityMap": { "type": { "name": "object" } },
     "width": { "type": { "name": "number" } }
   },
   "name": "RadarChartPro",

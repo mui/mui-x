@@ -187,7 +187,11 @@ ScatterChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.object,
+    current: PropTypes.shape({
+      hideItem: PropTypes.func.isRequired,
+      showItem: PropTypes.func.isRequired,
+      toggleItem: PropTypes.func.isRequired,
+    }),
   }),
   /**
    * The configuration of axes highlight.
@@ -302,6 +306,11 @@ ScatterChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * Callback fired when the visible series change.
+   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   */
+  onVisibilityChange: PropTypes.func,
+  /**
    * The type of renderer to use for the scatter plot.
    * - `svg-single`: Renders every scatter item in a `<circle />` element.
    * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
@@ -342,6 +351,22 @@ ScatterChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * Map of the visibility status of series and/or items.
+   *
+   * Different chart types use different strategies to generate these keys.
+   *
+   * Generally, the key format is:
+   * - For series-level visibility: `${seriesId}`
+   * - For item-level visibility: `${seriesId}-${itemId}`
+   *
+   * @example
+   * {
+   *   "series1": false, // series-level hidden
+   *   "series2-itemA": false // item-level hidden
+   * }
+   */
+  visibilityMap: PropTypes.object,
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.

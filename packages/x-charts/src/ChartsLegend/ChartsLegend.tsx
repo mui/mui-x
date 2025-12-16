@@ -87,7 +87,6 @@ const RootElement = styled('ul', {
     alignItems: 'center',
     gap: theme.spacing(1),
     cursor: ownerState.onItemClick || ownerState.toggleVisibilityOnClick ? 'pointer' : 'default',
-
     [`&.${legendClasses.hidden}`]: {
       opacity: 0.5,
     },
@@ -206,6 +205,11 @@ ChartsLegend.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * If `true`, clicking on a legend item will toggle the visibility of the corresponding series.
+   * @default false
+   */
+  toggleVisibilityOnClick: PropTypes.bool,
 } as any;
 
 export { ChartsLegend };

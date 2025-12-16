@@ -75,6 +75,7 @@
         }
       }
     },
+    "onVisibilityChange": { "description": "Callback fired when the visible series change." },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": {
@@ -90,6 +91,9 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "visibilityMap": {
+      "description": "Map of the visibility status of series and/or items.<br>Different chart types use different strategies to generate these keys.<br>Generally, the key format is: - For series-level visibility: <code>${seriesId}</code> - For item-level visibility: <code>${seriesId}-${itemId}</code>"
+    },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },

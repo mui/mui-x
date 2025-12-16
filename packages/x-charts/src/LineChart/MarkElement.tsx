@@ -128,6 +128,11 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
+  /**
+   * If `true`, the marker is hidden.
+   * @default false
+   */
+  hidden: PropTypes.bool,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, the marker is faded.
