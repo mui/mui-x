@@ -4,12 +4,10 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { type ChartPlugin, type ChartState } from '../../models';
 import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
-import {
-  getNextSeriesWithData,
-  getPreviousSeriesWithData,
-  seriesHasData,
-} from './useChartKeyboardNavigation.helpers';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
+import { seriesHasData } from '../../../seriesHasData';
+import { getNextSeriesWithData } from '../../../getNextSeriesWithData';
+import { getPreviousSeriesWithData } from '../../../getPreviousSeriesWithData';
 
 function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
   const processedSeries = selectorChartSeriesProcessed(state);
