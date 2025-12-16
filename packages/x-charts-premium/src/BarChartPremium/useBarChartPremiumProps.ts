@@ -4,6 +4,8 @@ import { type ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { type BarChartPremiumProps } from './BarChartPremium';
 import { type RangeBarPlotProps } from './RangeBar/RangeBarPlot';
 
+import type {} from '../typeOverloads';
+
 /**
  * A helper function that extracts BarChartPremiumProps from the input props
  * and returns an object with props for the children components of BarChartPremium.
