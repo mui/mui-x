@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 /**
  * HACK: Minimal shim to get jsdom to work.
  */
@@ -8,7 +6,9 @@ export const ResizeObserver = (
     ? globalThis.ResizeObserver
     : class ResizeObserver {
         observe() {}
+
         unobserve() {}
+
         disconnect() {}
       }
 ) as typeof globalThis.ResizeObserver;

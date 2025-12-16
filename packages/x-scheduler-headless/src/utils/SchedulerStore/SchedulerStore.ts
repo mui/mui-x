@@ -70,19 +70,19 @@ export class SchedulerStore<
 
     const schedulerInitialState: SchedulerState<TEvent> = {
       ...stateFromParameters,
-      ...buildEventsState(parameters, adapter, stateFromParameters.timezone),
+      ...buildEventsState(parameters, adapter, stateFromParameters.displayTimezone),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
       copiedEvent: null,
-      nowUpdatedEveryMinute: adapter.now(stateFromParameters.timezone),
+      nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingUpdateRecurringEventParameters: null,
       visibleResources: parameters.visibleResources ?? parameters.defaultVisibleResources ?? {},
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now(stateFromParameters.timezone)),
+        adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -97,9 +97,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
+      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
+        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
       });
     });
 
@@ -126,7 +126,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      timezone: parameters.timezone ?? 'default',
+      displayTimezone: parameters.displayTimezone ?? 'default',
     };
   }
 
@@ -180,11 +180,11 @@ export class SchedulerStore<
     ) {
       Object.assign(
         newSchedulerState,
-        buildEventsState(parameters, adapter, newSchedulerState.timezone!),
+        buildEventsState(parameters, adapter, newSchedulerState.displayTimezone!),
       );
     }
 
-    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.timezone!);
+    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -298,7 +298,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.timezone)), event);
+    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.displayTimezone)), event);
   };
 
   /**
