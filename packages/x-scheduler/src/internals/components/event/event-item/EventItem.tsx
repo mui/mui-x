@@ -53,12 +53,11 @@ export const EventItem = React.forwardRef(function EventItem(
     occurrence.resource,
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
 
   const content = React.useMemo(() => {
-    const isRecurring = Boolean(occurrence.displayTimezone.rrule);
-
     switch (variant) {
       case 'compact':
         return (
@@ -144,7 +143,7 @@ export const EventItem = React.forwardRef(function EventItem(
       default:
         throw new Error('Unsupported variant provided to EventItem component.');
     }
-  }, [variant, occurrence, resource?.title, translations, formatTime]);
+  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring]);
 
   return (
     // TODO: Use button

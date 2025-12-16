@@ -66,6 +66,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
   const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
+
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
@@ -75,7 +77,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   // Feature hooks
   const formatTime = useFormatTime();
-  const isRecurring = Boolean(occurrence.displayTimezone.rrule);
 
   const content = React.useMemo(() => {
     switch (variant) {
