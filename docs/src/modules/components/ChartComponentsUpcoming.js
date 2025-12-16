@@ -18,7 +18,7 @@ function getComponents() {
     },
     {
       title: 'Range Bar',
-      href: '/x/react-charts/range-bar/',
+      href: 'https://github.com/mui/mui-x/issues/20350',
       premium: true,
     },
     {
