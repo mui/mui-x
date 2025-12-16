@@ -1,8 +1,4 @@
 import {
-  stackOrderAppearance as d3StackOrderAppearance,
-  stackOrderAscending as d3StackOrderAscending,
-  stackOrderDescending as d3StackOrderDescending,
-  stackOrderInsideOut as d3StackOrderInsideOut,
   stackOrderNone as d3StackOrderNone,
   stackOrderReverse as d3StackOrderReverse,
   stackOffsetExpand as d3StackOffsetExpand,
@@ -11,8 +7,10 @@ import {
   stackOffsetWiggle as d3StackOffsetWiggle,
   type Series,
 } from '@mui/x-charts-vendor/d3-shape';
-import type { StackOffsetType, StackOrderType } from '../models/stacking';
-import { type SeriesId, type StackableSeriesType } from '../models/seriesType/common';
+import type { StackOffsetType, StackOrderType } from '../../models/stacking';
+import { type SeriesId, type StackableSeriesType } from '../../models/seriesType/common';
+import { offsetDiverging } from './offsetDiverging';
+import { orderAppearance, orderAscending, orderDescending, orderInsideOut } from './order';
 
 type FormatterParams<T> = {
   series: Record<SeriesId, T>;
@@ -29,62 +27,23 @@ export type StackingGroupsType = {
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
 
-function offsetDiverging(series: any[], order: Iterable<number>) {
-  if (series.length === 0) {
-    return;
-  }
-
-  const seriesCount = series.length;
-  const numericOrder = order as number[];
-  const pointCount = series[numericOrder[0]].length;
-
-  for (let pointIndex = 0; pointIndex < pointCount; pointIndex += 1) {
-    let positiveSum = 0;
-    let negativeSum = 0;
-
-    for (let seriesIndex = 0; seriesIndex < seriesCount; seriesIndex += 1) {
-      const dataPoint = series[numericOrder[seriesIndex]][pointIndex];
-      const difference = dataPoint[1] - dataPoint[0];
-
-      if (difference > 0) {
-        dataPoint[0] = positiveSum;
-        positiveSum += difference;
-        dataPoint[1] = positiveSum;
-      } else if (difference < 0) {
-        dataPoint[1] = negativeSum;
-        negativeSum += difference;
-        dataPoint[0] = negativeSum;
-      } else if (dataPoint.data[series[numericOrder[seriesIndex]].key] > 0) {
-        dataPoint[0] = positiveSum;
-        dataPoint[1] = positiveSum;
-      } else if (dataPoint.data[series[numericOrder[seriesIndex]].key] < 0) {
-        dataPoint[1] = negativeSum;
-        dataPoint[0] = negativeSum;
-      } else {
-        dataPoint[0] = 0;
-        dataPoint[1] = 0;
-      }
-    }
-  }
-}
-
 export const StackOrder = {
   /**
    * Series order such that the earliest series (according to the maximum value) is at the bottom.
    * */
-  appearance: d3StackOrderAppearance,
+  appearance: orderAppearance,
   /**
    *  Series order such that the smallest series (according to the sum of values) is at the bottom.
    * */
-  ascending: d3StackOrderAscending,
+  ascending: orderAscending,
   /**
    * Series order such that the largest series (according to the sum of values) is at the bottom.
    */
-  descending: d3StackOrderDescending,
+  descending: orderDescending,
   /**
    * Series order such that the earliest series (according to the maximum value) are on the inside and the later series are on the outside. This order is recommended for streamgraphs in conjunction with the wiggle offset. See Stacked Graphs—Geometry & Aesthetics by Byron & Wattenberg for more information.
    */
-  insideOut: d3StackOrderInsideOut,
+  insideOut: orderInsideOut,
   /**
    * Given series order [0, 1, … n - 1] where n is the number of elements in series. Thus, the stack order is given by the key accessor.
    */

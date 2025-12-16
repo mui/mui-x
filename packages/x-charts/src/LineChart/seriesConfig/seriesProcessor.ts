@@ -1,6 +1,6 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import { getStackingGroups } from '../../internals/stackSeries';
+import { getStackingGroups } from '../../internals/stacking';
 import {
   type ChartSeriesDefaultized,
   type DatasetElementType,
