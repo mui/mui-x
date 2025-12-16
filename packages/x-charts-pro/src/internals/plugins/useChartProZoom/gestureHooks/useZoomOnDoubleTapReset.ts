@@ -17,8 +17,8 @@ export const useZoomOnDoubleTapReset = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'doubleTapReset' as const);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'doubleTapReset' as const);
 
   const isZoomOnDoubleTapResetEnabled: boolean =
     Object.keys(optionsLookup).length > 0 && Boolean(config);

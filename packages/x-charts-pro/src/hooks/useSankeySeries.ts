@@ -62,7 +62,7 @@ export function useSankeyLayout(): SankeyLayout | undefined {
 
   const seriesContext = useSankeySeriesContext();
   const seriesId = seriesContext?.seriesOrder?.[0];
-  const layout = useSelector(store, selectorChartSeriesLayout);
+  const layout = store.use(selectorChartSeriesLayout);
 
   if (!seriesId) {
     return undefined;

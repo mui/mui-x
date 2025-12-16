@@ -59,8 +59,8 @@ function PreviewLineElement({ id, color, gradientId, onClick, ...other }: Previe
 function useLinePreviewData(axisId: AxisId) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useLinePlotData(xAxes, yAxes);
 }

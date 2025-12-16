@@ -65,8 +65,8 @@ function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: Previe
 function useAreaPreviewData(axisId: AxisId) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useAreaPlotData(xAxes, yAxes);
 }

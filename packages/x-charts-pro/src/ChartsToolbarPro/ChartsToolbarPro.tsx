@@ -48,7 +48,7 @@ function ChartsToolbarPro({
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
   const exportMenuId = useId();
   const exportMenuTriggerId = useId();
-  const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
+  const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
   const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
 

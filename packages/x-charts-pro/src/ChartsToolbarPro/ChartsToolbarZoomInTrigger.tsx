@@ -33,7 +33,7 @@ const ChartsToolbarZoomInTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const disabled = useSelector(store, selectorChartCanZoomIn);
+  const disabled = store.use(selectorChartCanZoomIn);
 
   const element = useComponentRenderer(slots.baseButton, render, {
     ...slotProps.baseButton,

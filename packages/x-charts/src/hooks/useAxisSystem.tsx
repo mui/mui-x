@@ -4,7 +4,6 @@ import {
   selectorChartRawRotationAxis,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 
 /**
@@ -16,8 +15,8 @@ import { useStore } from '../internals/store/useStore';
  */
 export function useAxisSystem(): 'none' | 'polar' | 'cartesian' {
   const store = useStore<[UseChartPolarAxisSignature]>();
-  const rawRotationAxis = useSelector(store, selectorChartRawRotationAxis);
-  const rawXAxis = useSelector(store, selectorChartRawXAxis);
+  const rawRotationAxis = store.use(selectorChartRawRotationAxis);
+  const rawXAxis = store.use(selectorChartRawXAxis);
 
   if (rawRotationAxis !== undefined) {
     return 'polar';

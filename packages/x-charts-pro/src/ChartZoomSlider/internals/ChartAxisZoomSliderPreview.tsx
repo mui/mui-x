@@ -54,8 +54,8 @@ function PreviewRectangles(props: {
   const { axisId, axisDirection } = props;
   const store = useStore();
 
-  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
-  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, axisId);
+  const zoomData = store.use(selectorChartAxisZoomData, axisId);
+  const zoomOptions = store.use(selectorChartAxisZoomOptionsLookup, axisId);
   const id = useId();
 
   if (!zoomData) {
