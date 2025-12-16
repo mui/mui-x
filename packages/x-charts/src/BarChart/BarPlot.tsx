@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, type BarElementSlotProps, type BarElementSlots } from './BarElement';
-import { type BarItemIdentifier, type BarValueType } from '../models';
+import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
 import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
@@ -13,7 +13,7 @@ import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
-import { type BarItem, type BarLabelContext } from './BarLabel';
+import type { BarItem, BarLabelContext } from './BarLabel';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
@@ -84,6 +84,7 @@ const BarPlotRoot = styled('g', {
  */
 function BarPlot(props: BarPlotProps) {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
@@ -159,7 +160,7 @@ function BarPlot(props: BarPlotProps) {
         );
       })}
       {completedData.map((processedSeries) => (
-        <BarLabelPlot<BarValueType | null>
+        <BarLabelPlot
           key={processedSeries.seriesId}
           className={classes.seriesLabels}
           processedSeries={processedSeries}

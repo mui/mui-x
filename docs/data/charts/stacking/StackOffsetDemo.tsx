@@ -40,9 +40,8 @@ const getSeries = ({ hasNegativeValue, stackOffset }: GetSeriesParams) => [
 ];
 
 export default function StackOffsetDemo() {
-  const [stackOffset, setStackOffset] = React.useState<StackOffsetType>('expand');
-
-  const [hasNegativeValue, setHasNegativeValue] = React.useState(false);
+  const [stackOffset, setStackOffset] = React.useState<StackOffsetType>('diverging');
+  const [hasNegativeValue, setHasNegativeValue] = React.useState(true);
 
   return (
     <Box sx={{ width: '100%', maxWidth: 600 }}>

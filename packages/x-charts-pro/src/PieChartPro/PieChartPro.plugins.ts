@@ -1,6 +1,7 @@
 import {
   type ConvertSignaturesIntoPlugins,
   type UseChartHighlightSignature,
+  type UseChartTooltipSignature,
   type UseChartInteractionSignature,
   PIE_CHART_PLUGINS,
   type UseChartKeyboardNavigationSignature,
@@ -12,6 +13,7 @@ import {
 } from '../internals/plugins/useChartProExport';
 
 export type PieChartProPluginSignatures = [
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVisibilityManagerSignature,

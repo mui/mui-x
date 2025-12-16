@@ -3,6 +3,10 @@ import {
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import {
+  useChartTooltip,
+  type UseChartTooltipSignature,
+} from '../internals/plugins/featurePlugins/useChartTooltip';
+import {
   useChartInteraction,
   type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
@@ -16,6 +20,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export const RADAR_PLUGINS = [
+  useChartTooltip,
   useChartInteraction,
   useChartPolarAxis,
   useChartHighlight,
@@ -23,6 +28,7 @@ export const RADAR_PLUGINS = [
 ] as const;
 
 export type RadarChartPluginSignatures = [
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,

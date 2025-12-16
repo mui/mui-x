@@ -7,6 +7,10 @@ import {
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
+  useChartTooltip,
+  type UseChartTooltipSignature,
+} from '../internals/plugins/featurePlugins/useChartTooltip';
+import {
   useChartInteraction,
   type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
@@ -31,6 +35,7 @@ import {
 export type BarChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'bar'>,
   UseChartHighlightSignature,
@@ -41,6 +46,7 @@ export type BarChartPluginSignatures = [
 export const BAR_CHART_PLUGINS: ConvertSignaturesIntoPlugins<BarChartPluginSignatures> = [
   useChartZAxis,
   useChartBrush,
+  useChartTooltip,
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,

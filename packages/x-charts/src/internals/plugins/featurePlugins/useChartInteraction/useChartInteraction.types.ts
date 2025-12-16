@@ -1,9 +1,4 @@
-import { type ChartPluginSignature } from '../../models';
-import {
-  type ChartItemIdentifier,
-  type ChartSeriesType,
-  type ChartItemIdentifierWithData,
-} from '../../../../models/seriesType/config';
+import type { ChartPluginSignature } from '../../models';
 
 export type Coordinate = { x: number; y: number };
 
@@ -15,33 +10,21 @@ export interface UseChartInteractionInstance {
    */
   cleanInteraction: () => void;
   /**
-   * Setter for the item the user is interacting with.
-   * @param {ChartItemIdentifier} newItem The identifier of the item.
-   * @param {{ interaction: InteractionUpdateSource }} context The context of the interaction.
-   * @param {InteractionUpdateSource} context.interaction The source of the interaction update (pointer or keyboard).
-   */
-  setItemInteraction: (
-    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
-    context: { interaction: InteractionUpdateSource },
-  ) => void;
-  /**
-   * Remove item interaction if the current if the provided item is still the one interacting.
-   * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
-   */
-  removeItemInteraction: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
-  /**
    * Set the new pointer coordinate.
    * @param {Coordinate | null} newCoordinate The new pointer coordinate.
    */
   setPointerCoordinate: (newCoordinate: Coordinate | null) => void;
+  /**
+   * Set the last interaction update source.
+   * Used to determine if tooltip of highlight should use the keyboard or pointer items.
+   * @param {InteractionUpdateSource} interaction The source of the last interaction update (pointer or keyboard)
+   * @returns {void}
+   */
+  setLastUpdateSource: (interaction: InteractionUpdateSource) => void;
 }
 
 export interface UseChartInteractionState {
   interaction: {
-    /**
-     * The item currently interacting.
-     */
-    item: null | ChartItemIdentifierWithData<ChartSeriesType>;
     /**
      * The x/y SVG coordinate of the "main" pointer
      */

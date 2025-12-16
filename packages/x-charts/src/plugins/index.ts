@@ -13,6 +13,10 @@ export {
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 export {
+  useChartTooltip,
+  type UseChartTooltipSignature,
+} from '../internals/plugins/featurePlugins/useChartTooltip';
+export {
   useChartInteraction,
   type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';

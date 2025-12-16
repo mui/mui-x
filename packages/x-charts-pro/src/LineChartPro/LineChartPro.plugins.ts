@@ -3,6 +3,8 @@ import {
   type UseChartZAxisSignature,
   useChartCartesianAxis,
   type UseChartCartesianAxisSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
   type UseChartInteractionSignature,
   useChartHighlight,
@@ -27,6 +29,7 @@ import {
 export type LineChartProPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'line'>,
   UseChartHighlightSignature,
@@ -39,6 +42,7 @@ export type LineChartProPluginSignatures = [
 export const LINE_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<LineChartProPluginSignatures> = [
   useChartZAxis,
   useChartBrush,
+  useChartTooltip,
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,

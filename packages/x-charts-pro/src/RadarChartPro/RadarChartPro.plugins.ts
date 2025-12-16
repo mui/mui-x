@@ -2,6 +2,8 @@ import {
   type ConvertSignaturesIntoPlugins,
   useChartHighlight,
   type UseChartHighlightSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
   type UseChartInteractionSignature,
   useChartPolarAxis,
@@ -15,6 +17,7 @@ import {
 } from '../internals/plugins/useChartProExport';
 
 export type RadarChartProPluginSignatures = [
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
@@ -24,6 +27,7 @@ export type RadarChartProPluginSignatures = [
 
 export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginSignatures> =
   [
+    useChartTooltip,
     useChartInteraction,
     useChartPolarAxis,
     useChartHighlight,

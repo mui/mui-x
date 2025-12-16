@@ -261,6 +261,45 @@ storeClasses.forEach((storeClass) => {
           adapter.date('2025-07-01T12:30:00Z', 'default'),
         );
       });
+
+      it('should convert all updated date fields back to the data timezone and preserve unrelated properties', () => {
+        const onEventsChange = spy();
+
+        const dataTimezone = 'America/New_York';
+        const displayTimezone = 'Europe/Paris';
+
+        const event = EventBuilder.new()
+          .title('Original title')
+          .description('Original description')
+          .span('2025-03-10T09:00:00', '2025-03-10T10:00:00')
+          .withTimezone(dataTimezone)
+          .build();
+
+        const store = new storeClass.Value(
+          { events: [event], onEventsChange, displayTimezone },
+          adapter,
+        );
+
+        const newStartParis = adapter.date('2025-03-10T14:00:00', displayTimezone);
+        const newEndParis = adapter.date('2025-03-10T15:00:00', displayTimezone);
+
+        store.updateEvent({
+          id: event.id,
+          title: 'Updated title',
+          start: newStartParis,
+          end: newEndParis,
+        });
+
+        const updated = onEventsChange.lastCall.firstArg[0];
+
+        expect(updated.title).to.equal('Updated title');
+        expect(updated.description).to.equal(event.description);
+
+        expect(updated.start).toEqualDateTime(adapter.date('2025-03-10T09:00:00', dataTimezone));
+        expect(updated.end).toEqualDateTime(adapter.date('2025-03-10T10:00:00', dataTimezone));
+        expect(adapter.getTimezone(updated.start)).to.equal(dataTimezone);
+        expect(adapter.getTimezone(updated.end)).to.equal(dataTimezone);
+      });
     });
 
     describe('Method: deleteEvent', () => {

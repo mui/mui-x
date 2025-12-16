@@ -79,9 +79,7 @@ export type BarLabelItemProps<V extends BarValueType | null> = Omit<
      * @param {BarLabelContext} context data about the bar.
      * @returns {string} The formatted label.
      */
-    barLabel?:
-      | 'value'
-      | ((item: BarItem<V>, context: BarLabelContext) => string | null | undefined);
+    barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
     /**
      * The placement of the bar label.
      * It controls whether the label is rendered in the center or outside the bar.

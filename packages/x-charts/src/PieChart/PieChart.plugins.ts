@@ -3,6 +3,10 @@ import {
   type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
+  useChartTooltip,
+  type UseChartTooltipSignature,
+} from '../internals/plugins/featurePlugins/useChartTooltip';
+import {
   useChartHighlight,
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
@@ -17,12 +21,14 @@ import {
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export type PieChartPluginSignatures = [
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVisibilityManagerSignature,
   UseChartKeyboardNavigationSignature,
 ];
 export const PIE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<PieChartPluginSignatures> = [
+  useChartTooltip,
   useChartInteraction,
   useChartHighlight,
   useChartVisibilityManager,

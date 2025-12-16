@@ -16,12 +16,13 @@ import { type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import { type ChartsTextProps } from '../ChartsText';
-import {
-  type ContinuousColorConfig,
-  type OrdinalColorConfig,
-  type PiecewiseColorConfig,
+import type { ChartsTextProps } from '../ChartsText';
+import type {
+  ContinuousColorConfig,
+  OrdinalColorConfig,
+  PiecewiseColorConfig,
 } from './colorMapping';
+import type { OrdinalTimeTicks } from './timeTicks';
 
 export type AxisId = string | number;
 
@@ -275,6 +276,10 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
+    /**
+     * Definition of the tick placements with date data.
+     */
+    ordinalTimeTicks?: OrdinalTimeTicks;
     scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
@@ -293,6 +298,10 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
+    /**
+     * Definition of the tick placements with date data.
+     */
+    ordinalTimeTicks?: OrdinalTimeTicks;
     scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
@@ -686,11 +695,9 @@ export type DefaultedAxis<
 /**
  * The x-axis configuration with missing values filled with default values.
  */
-export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
-  S,
-  V,
-  ChartsXAxisProps
->;
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? DefaultedAxis<S, V, ChartsXAxisProps>
+  : never;
 
 /**
  * The y-axis configuration with missing values filled with default values.
