@@ -22,7 +22,6 @@
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@playwright/test": "catalog:",
     "@react-spring/web": "catalog:",
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
