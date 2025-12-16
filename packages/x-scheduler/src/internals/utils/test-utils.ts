@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@mui/internal-test-utils';
+import { screen } from '@mui/internal-test-utils';
 
 export function getPreferencesMenu() {
   return screen.queryByRole('button', { name: /settings/i });
