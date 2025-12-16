@@ -313,7 +313,7 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (original?.dataTimezone.rrule) {
+    if (original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
       );
