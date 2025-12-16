@@ -30,11 +30,24 @@ export function processEvent(
     id: model.id,
     title: model.title,
     description: model.description,
-    start: processDate(startInDisplayTz, adapter),
-    end: processDate(endInDisplayTz, adapter),
+    dataTimezone: {
+      start: model.start,
+      end: model.end,
+      timezone: startTimezone,
+      rrule:
+        typeof model.rrule === 'string'
+          ? parseRRuleString(adapter, model.rrule, startTimezone)
+          : model.rrule,
+      exDates: model.exDates,
+    },
+    displayTimezone: {
+      start: processDate(startInDisplayTz, adapter),
+      end: processDate(endInDisplayTz, adapter),
+      timezone: displayTimezone,
+      rrule: model.rrule ? parseRRuleString(adapter, model.rrule, displayTimezone) : undefined,
+      exDates: exDatesInDisplayTz,
+    },
     resource: model.resource,
-    rrule: model.rrule ? parseRRuleString(adapter, model.rrule, displayTimezone) : undefined,
-    exDates: exDatesInDisplayTz,
     allDay: model.allDay ?? false,
     readOnly: model.readOnly ?? false,
     extractedFromId: model.extractedFromId,
