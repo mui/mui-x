@@ -97,4 +97,18 @@ export const itemsSelectors = {
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
       state.items.disabledItemsFocusable || !isItemDisabled(state.items.itemMetaLookup, itemId),
   ),
+  /**
+   * Checks whether an item is selectable based on the `isItemSelectable` prop.
+   */
+  isItemSelectable: createSelector(
+    (state: TreeViewState<[UseTreeViewItemsSignature]>) => state.items.isItemSelectable,
+    (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
+      state.items.itemModelLookup[itemId],
+    (isItemSelectable, itemModel, _itemId: TreeViewItemId) => {
+      if (!itemModel || isItemSelectable == null) {
+        return true;
+      }
+      return isItemSelectable(itemModel);
+    },
+  ),
 };

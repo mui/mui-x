@@ -105,6 +105,13 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   isItemDisabled?: (item: R) => boolean;
   /**
+   * Used to determine if a given item can be selected.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item can be selected.
+   */
+  isItemSelectable?: (item: R) => boolean;
+  /**
    * Used to determine the string label for a given item.
    *
    * @template R
@@ -183,6 +190,10 @@ export interface UseTreeViewItemsState<R extends {}> {
      * Nested DOM structure is not compatible with collapse / expansion animations.
      */
     domStructure: 'flat' | 'nested';
+    /**
+     * Function to determine if an item is selectable.
+     */
+    isItemSelectable: ((item: R) => boolean) | undefined;
   };
 }
 

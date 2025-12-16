@@ -37,7 +37,7 @@ export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undef
   extends TreeViewCorePluginParameters,
     Omit<
       UseTreeViewItemsParameters<any>,
-      'items' | 'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
+      'items' | 'isItemDisabled' | 'isItemSelectable' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
     >,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,

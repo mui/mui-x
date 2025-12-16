@@ -179,8 +179,12 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       config: itemsConfig,
     });
 
-    store.set('items', { ...store.state.items, ...newState });
-  }, [instance, store, params.items, params.disabledItemsFocusable, itemsConfig]);
+    store.set('items', {
+      ...store.state.items,
+      ...newState,
+      isItemSelectable: params.isItemSelectable,
+    });
+  }, [instance, store, params.items, params.disabledItemsFocusable, params.isItemSelectable, itemsConfig]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
   const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
@@ -219,16 +223,19 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 };
 
 useTreeViewItems.getInitialState = (params) => ({
-  items: buildItemsState({
-    items: params.items,
-    disabledItemsFocusable: params.disabledItemsFocusable,
-    config: {
-      isItemDisabled: params.isItemDisabled,
-      getItemId: params.getItemId,
-      getItemLabel: params.getItemLabel,
-      getItemChildren: params.getItemChildren,
-    },
-  }),
+  items: {
+    ...buildItemsState({
+      items: params.items,
+      disabledItemsFocusable: params.disabledItemsFocusable,
+      config: {
+        isItemDisabled: params.isItemDisabled,
+        getItemId: params.getItemId,
+        getItemLabel: params.getItemLabel,
+        getItemChildren: params.getItemChildren,
+      },
+    }),
+    isItemSelectable: params.isItemSelectable,
+  },
 });
 
 useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
@@ -249,6 +256,7 @@ useTreeViewItems.params = {
   disabledItemsFocusable: true,
   items: true,
   isItemDisabled: true,
+  isItemSelectable: true,
   getItemLabel: true,
   getItemChildren: true,
   getItemId: true,

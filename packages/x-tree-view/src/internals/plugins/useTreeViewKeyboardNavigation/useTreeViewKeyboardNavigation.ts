@@ -114,7 +114,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const canToggleItemSelection = (itemId: string) =>
-    selectionSelectors.enabled(store.state) && !itemsSelectors.isItemDisabled(store.state, itemId);
+    selectionSelectors.canItemBeSelected(store.state, itemId);
 
   const canToggleItemExpansion = (itemId: string) => {
     return (
