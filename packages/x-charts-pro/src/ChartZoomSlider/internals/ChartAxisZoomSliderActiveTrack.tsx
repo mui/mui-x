@@ -9,7 +9,6 @@ import {
   selectorChartAxisZoomOptionsLookup,
   useChartContext,
   useDrawingArea,
-  useSelector,
   useStore,
   type ZoomData,
 } from '@mui/x-charts/internals';

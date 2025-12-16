@@ -2,7 +2,6 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
   type AxisId,
-  useSelector,
   useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,

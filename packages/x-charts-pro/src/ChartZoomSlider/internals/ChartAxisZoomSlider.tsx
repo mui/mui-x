@@ -5,7 +5,6 @@ import {
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   selectorChartAxisZoomOptionsLookup,
   useDrawingArea,
-  useSelector,
   useStore,
   ZOOM_SLIDER_MARGIN,
   ZOOM_SLIDER_PREVIEW_SIZE,

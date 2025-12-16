@@ -4,7 +4,6 @@ import {
   type ChartPlugin,
   type AxisId,
   type ZoomData,
-  useSelector,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,

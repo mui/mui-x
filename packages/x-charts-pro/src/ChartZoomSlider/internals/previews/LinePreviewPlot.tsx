@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   type AxisId,
-  useSelector,
   useStore,
   useLinePlotData,
   selectorChartPreviewComputedXAxis,

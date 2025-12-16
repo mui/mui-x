@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  useSelector,
   useStore,
   type D3Scale,
   type ColorGetter,

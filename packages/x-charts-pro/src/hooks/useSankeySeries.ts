@@ -5,7 +5,6 @@ import {
   type ProcessedSeries,
   type SeriesId,
   type ChartSeriesDefaultized,
-  useSelector,
   useStore,
   type ChartSeriesLayout,
   selectorChartSeriesLayout,

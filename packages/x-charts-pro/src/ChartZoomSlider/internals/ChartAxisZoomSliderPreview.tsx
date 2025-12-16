@@ -1,11 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import {
-  type AxisId,
-  selectorChartAxisZoomOptionsLookup,
-  useSelector,
-  useStore,
-} from '@mui/x-charts/internals';
+import { type AxisId, selectorChartAxisZoomOptionsLookup, useStore } from '@mui/x-charts/internals';
 import { alpha } from '@mui/system';
 import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';

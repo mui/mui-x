@@ -137,10 +137,7 @@ export function useYAxis<T extends keyof AxisScaleConfig>(
  */
 export function useRotationAxes() {
   const store = useStore();
-  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
-    store,
-    selectorChartRotationAxis,
-  );
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
 
   return { rotationAxis, rotationAxisIds };
 }
@@ -190,10 +187,7 @@ export function useRotationAxis(
   axisId?: AxisId,
 ): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
-  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
-    store,
-    selectorChartRotationAxis,
-  );
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
 
   const id = axisId ?? rotationAxisIds[0];
 

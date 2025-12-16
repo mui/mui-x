@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   type AxisId,
   selectorChartSeriesProcessed,
-  useSelector,
   useStore,
 } from '@mui/x-charts/internals';
 import { LinePreviewPlot } from './previews/LinePreviewPlot';

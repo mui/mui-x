@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
-  useSelector,
   useChartsSlots,
   type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';

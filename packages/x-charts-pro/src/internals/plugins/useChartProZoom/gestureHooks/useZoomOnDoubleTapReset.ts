@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  useSelector,
   type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';

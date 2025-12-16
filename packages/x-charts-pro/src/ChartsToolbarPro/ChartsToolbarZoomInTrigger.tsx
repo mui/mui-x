@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {
   useChartContext,
   type ChartsSlotProps,
-  useSelector,
   useChartsSlots,
   type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';

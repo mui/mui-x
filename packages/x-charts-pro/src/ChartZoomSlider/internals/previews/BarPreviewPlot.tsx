@@ -3,7 +3,6 @@ import {
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   useBarPlotData,
-  useSelector,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';

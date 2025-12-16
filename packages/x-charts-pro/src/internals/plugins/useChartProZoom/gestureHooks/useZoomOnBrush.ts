@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
   type ZoomData,
