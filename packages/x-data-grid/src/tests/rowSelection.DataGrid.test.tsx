@@ -388,10 +388,7 @@ describe('<DataGrid /> - Row selection', () => {
 
     it('disabled checkboxes cannot be focused', async () => {
       const { user } = render(
-        <TestDataGridSelection
-          isRowSelectable={(params) => params.id !== 1}
-          checkboxSelection
-        />,
+        <TestDataGridSelection isRowSelectable={(params) => params.id !== 1} checkboxSelection />,
       );
 
       expect(getSelectedRowIds()).to.deep.equal([]);
