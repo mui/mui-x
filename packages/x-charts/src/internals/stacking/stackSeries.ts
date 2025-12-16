@@ -9,7 +9,7 @@ import {
 } from '@mui/x-charts-vendor/d3-shape';
 import type { StackOffsetType, StackOrderType } from '../../models/stacking';
 import { type SeriesId, type StackableSeriesType } from '../../models/seriesType/common';
-import { offsetDiverging } from './offsetDiverging';
+import { offsetDiverging } from './offset';
 import { orderAppearance, orderAscending, orderDescending, orderInsideOut } from './order';
 
 type FormatterParams<T> = {

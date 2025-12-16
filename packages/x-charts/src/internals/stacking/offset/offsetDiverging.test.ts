@@ -4,7 +4,7 @@ import { stackOffsetDiverging as offsetDiverging } from '@mui/x-charts-vendor/d3
 
 describe('offsetDiverging', () => {
   it('should handle empty series array', () => {
-    const series: any[] = [];
+    const series: any = [];
     const order: any[] = [];
     offsetDiverging(series, order);
     expect(series).to.deep.equal([]);

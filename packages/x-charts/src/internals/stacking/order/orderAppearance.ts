@@ -1,0 +1,25 @@
+import type { Series } from '@mui/x-charts-vendor/d3-shape';
+import { stackOrderNone } from '@mui/x-charts-vendor/d3-shape';
+
+function getPeakIndex(series: Series<any, any>): number {
+  let maxValue = -Infinity;
+  let maxIndex = 0;
+
+  for (let i = 0; i < series.length; i += 1) {
+    // Main difference with d3's implementation: we consider the original data value if present
+    // in order to make data with value 0 appear in the correct position
+    const value = series[i].data[series.key] ?? +series[i][1];
+    if (value > maxValue) {
+      maxValue = value;
+      maxIndex = i;
+    }
+  }
+
+  return maxIndex;
+}
+
+export function orderAppearance(series: Series<any, any>) {
+  // @ts-expect-error doesn't seem like the Series.map is properly typed
+  const peaks = series.map(getPeakIndex);
+  return stackOrderNone(series).sort((a, b) => peaks[a] - peaks[b]);
+}
