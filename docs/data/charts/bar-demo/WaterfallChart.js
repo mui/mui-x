@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
 import { useTheme } from '@mui/system';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 
 const dollarFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -18,7 +18,7 @@ export default function WaterfallChart() {
   const green = palette[4];
 
   return (
-    <BarChartPro
+    <BarChartPremium
       xAxis={[
         {
           data: [
