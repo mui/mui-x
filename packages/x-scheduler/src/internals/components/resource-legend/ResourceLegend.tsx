@@ -68,12 +68,11 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
     (value: string[], eventDetails: CheckboxGroup.ChangeEventDetails) => {
       const valueSet = new Set(value);
       const newVisibleResources: Record<string, boolean> = {};
-      schedulerResourceSelectors
-        .processedResourceList(store.state)
-        .filter((resource) => !valueSet.has(resource.id))
-        .forEach((resource) => {
+      for (const resource of schedulerResourceSelectors.processedResourceList(store.state)) {
+        if (!valueSet.has(resource.id)) {
           newVisibleResources[resource.id] = false;
-        });
+        }
+      }
 
       store.setVisibleResources(newVisibleResources, eventDetails.event);
     },
