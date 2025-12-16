@@ -443,6 +443,11 @@ TreeItem.propTypes = {
    */
   onKeyDown: PropTypes.func,
   /**
+   * If `false`, the item cannot be selected.
+   * @default true
+   */
+  selectable: PropTypes.bool,
+  /**
    * The props used for each component slot.
    * @default {}
    */

@@ -9,6 +9,7 @@
     "onBlur": { "type": { "name": "func" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
     "onKeyDown": { "type": { "name": "func" } },
+    "selectable": { "type": { "name": "bool" }, "default": "true" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
