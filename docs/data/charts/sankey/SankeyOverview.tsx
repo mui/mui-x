@@ -3,7 +3,20 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { Unstable_SankeyChart as SankeyChart } from '@mui/x-charts-pro/SankeyChart';
+import {
+  SankeyLinkPlot,
+  SankeyNodePlot,
+  SankeyTooltip,
+} from '@mui/x-charts-pro/SankeyChart';
+import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
+import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
+import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
+import { CustomNodeLabelPlot } from './CustomNodeLabelPlot';
+import { sankeySeriesConfig } from '@mui/x-charts-pro/SankeyChart/seriesConfig';
+import {
+  SANKEY_CHART_PLUGINS,
+  SankeyChartPluginSignatures,
+} from '@mui/x-charts-pro/SankeyChart/SankeyChart.plugins';
 
 const data = {
   nodes: [
@@ -72,6 +85,9 @@ const data = {
   ],
 };
 
+const seriesConfig = {
+  sankey: sankeySeriesConfig,
+};
 const valueFormatter = (value: number, context: { type: string }) => {
   if (context.type === 'link') {
     return `${value}B`;
@@ -104,25 +120,40 @@ export default function SankeyOverview() {
         Flow from Revenue to Net Income (in Billions USD)
       </Typography>
       <Box sx={{ width: '100%', height: 600 }}>
-        <SankeyChart
-          series={{
-            data,
-            valueFormatter,
-            nodeOptions: {
-              sort: 'fixed',
-              padding: 20,
-              width: 9,
-              showLabels: isDesktop,
+        <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
+          series={[
+            {
+              type: 'sankey' as const,
+              data,
+              valueFormatter,
+              nodeOptions: {
+                sort: 'fixed',
+                padding: 20,
+                width: 9,
+                showLabels: isDesktop,
+              },
+              linkOptions: {
+                color: 'target',
+                opacity: 0.6,
+                curveCorrection: 0,
+                showValues: !isDesktop,
+              },
             },
-            linkOptions: {
-              color: 'target',
-              opacity: 0.6,
-              curveCorrection: 0,
-              showValues: !isDesktop,
-            },
-          }}
+          ]}
           margin={{ top: 20 }}
-        />
+          seriesConfig={seriesConfig}
+          plugins={SANKEY_CHART_PLUGINS}
+        >
+          <ChartsWrapper>
+            <ChartsSurface>
+              <SankeyNodePlot />
+              <SankeyLinkPlot />
+              <CustomNodeLabelPlot />
+              <CustomNodeLabelPlot />
+            </ChartsSurface>
+            {<SankeyTooltip trigger="item" />}
+          </ChartsWrapper>
+        </ChartDataProviderPro>
       </Box>
     </Box>
   );

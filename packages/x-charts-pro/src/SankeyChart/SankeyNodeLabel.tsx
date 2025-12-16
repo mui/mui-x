@@ -1,10 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStore, useSelector } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode } from './sankey.types';
-import { selectorIsNodeHighlighted } from './plugins';
-import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
+import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
 
 export interface SankeyNodeLabelProps {
   /**
@@ -20,15 +18,13 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
   function SankeyNodeLabel(props, ref) {
     const { node } = props;
     const theme = useTheme();
-    const store = useStore();
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
     const x1 = node.x1 ?? 0;
     const y1 = node.y1 ?? 0;
-    const depth = node.depth ?? 0;
 
-    const isRightSide = depth <= 3;
+    const isRightSide = node.depth === 0;
 
     // Determine label position
     const labelX = isRightSide
@@ -37,19 +33,12 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
 
     const labelAnchor = isRightSide ? 'start' : 'end';
 
-    const nextNodeX = isRightSide
-      ? Math.min(...node.sourceLinks.map((link) => link.target.x0 ?? Infinity))
-      : Math.max(...node.targetLinks.map((link) => link.source.x1 ?? -Infinity));
-
-    const width = Math.abs(nextNodeX - labelX);
-
-    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, node.id);
-    const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
+    const highlightState = useSankeyNodeHighlightState(node.id);
 
     let opacity = 1;
-    if (isFaded) {
+    if (highlightState === 'faded') {
       opacity = 0.3;
-    } else if (isHighlighted) {
+    } else if (highlightState === 'highlighted') {
       opacity = 1;
     }
 
@@ -58,47 +47,22 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
     }
 
     return (
-      <foreignObject
+      <text
+        ref={ref}
         x={labelX}
         y={(y0 + y1) / 2}
-        width={1}
-        height={1}
-        overflow="visible"
+        textAnchor={labelAnchor}
+        fill={(theme.vars || theme).palette.text.primary}
+        fontSize={theme.typography.caption.fontSize}
+        fontFamily={theme.typography.fontFamily}
+        pointerEvents="none"
+        opacity={opacity}
         data-node={node.id}
-        data-highlighted={isHighlighted || undefined}
-        data-faded={isFaded || undefined}
+        data-highlighted={highlightState === 'highlighted' || undefined}
+        data-faded={highlightState === 'faded' || undefined}
       >
-        <div style={{ position: 'relative', overflow: 'visible' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: isRightSide ? 'flex-start' : 'flex-end',
-              position: 'fixed',
-              textAlign: labelAnchor,
-              fontSize: theme.typography.caption.fontSize,
-              fontFamily: theme.typography.fontFamily,
-              pointerEvents: 'none',
-              transform: 'translateY(-50%)',
-              ...(isRightSide ? { left: 0 } : { right: 0 }),
-              width: 'max-content',
-            }}
-          >
-            <div
-              style={{
-                position: 'absolute',
-                opacity: 0.3,
-                background: node.color,
-                left: -2,
-                right: -2,
-                top: -2,
-                bottom: -2,
-                borderRadius: 4,
-              }}
-            />
-            <span style={{ maxWidth: width }}>{node.label}</span>
-          </div>
-        </div>
-      </foreignObject>
+        {node.label}
+      </text>
     );
   },
 );
