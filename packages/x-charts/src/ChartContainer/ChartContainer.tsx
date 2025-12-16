@@ -55,7 +55,7 @@ const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends 
   props: ChartContainerProps<TSeries> & { ref?: React.ForwardedRef<SVGSVGElement> },
 ) => React.JSX.Element;
 
-// @ts-ignore
+// @ts-expect-error
 
 ChartContainer.propTypes = {
   // ----------------------------- Warning --------------------------------

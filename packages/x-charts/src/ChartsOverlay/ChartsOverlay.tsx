@@ -19,10 +19,7 @@ export function useNoData() {
     return seriesOrder.every((seriesId: SeriesId) => {
       const seriesItem = series[seriesId];
 
-      // These prevent a type error when building the package.
-      // @ts-ignore, sankey type is not declared in the base package
       if (seriesItem.type === 'sankey') {
-        // @ts-ignore, sankey type is not declared in the base package
         return seriesItem.data.links.length === 0;
       }
 

@@ -12,7 +12,6 @@ export const createZoomLookup =
   (axisDirection: 'x' | 'y') =>
   (axes: AxisConfig<ScaleName, any, ChartsXAxisProps | ChartsYAxisProps>[] = []) =>
     axes.reduce<Record<AxisId, DefaultizedZoomOptions>>((acc, v) => {
-      // @ts-ignore
       const { zoom, id: axisId, reverse } = v;
       const defaultizedZoom = defaultizeZoom(zoom, axisId, axisDirection, reverse);
       if (defaultizedZoom) {

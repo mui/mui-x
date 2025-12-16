@@ -16,7 +16,7 @@ function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSi
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
   if (
     type === undefined ||
-    // @ts-ignore sankey is not in MIT version
+    // @ts-expect-error sankey is not in MIT version
     type === 'sankey' ||
     seriesId === undefined ||
     !seriesHasData(processedSeries, type, seriesId)
@@ -42,7 +42,7 @@ function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigati
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
   if (
     type === undefined ||
-    // @ts-ignore sankey is not in MIT version
+    // @ts-expect-error sankey is not in MIT version
     type === 'sankey' ||
     seriesId === undefined ||
     !seriesHasData(processedSeries, type, seriesId)
