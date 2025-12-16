@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
 import { BarElement, type BarElementSlotProps, type BarElementSlots } from './BarElement';
-import { type BarItemIdentifier, type BarValueType } from '../models';
+import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
 import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
@@ -160,7 +160,7 @@ function BarPlot(props: BarPlotProps) {
         );
       })}
       {completedData.map((processedSeries) => (
-        <BarLabelPlot<BarValueType | null>
+        <BarLabelPlot
           key={processedSeries.seriesId}
           className={classes.seriesLabels}
           processedSeries={processedSeries}
