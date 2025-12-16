@@ -357,51 +357,53 @@ describe('<DataGrid /> - Row selection', () => {
       expect(selectAll).to.have.property('checked', false);
     });
 
-    it('should disable the checkbox if isRowSelectable returns false', () => {
-      render(
-        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
-      );
-      expect(getRow(0).querySelector('input')?.getAttribute('aria-disabled')).to.equal(null);
-      expect(getRow(1).querySelector('input')?.getAttribute('aria-disabled')).to.equal('true');
-      expect(getRow(1).querySelector('input')?.getAttribute('disabled')).to.equal(null);
-    });
-
-    it('disabled checkboxes cannot be selected', async () => {
-      render(
-        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
-      );
-
-      const firstCheckbox = getCell(0, 0).querySelector('input');
-      act(() => {
-        firstCheckbox?.click();
+    describe('disabled state', () => {
+      it('should disable the checkbox if isRowSelectable returns false', () => {
+        render(
+          <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+        );
+        expect(getRow(0).querySelector('input')?.getAttribute('aria-disabled')).to.equal(null);
+        expect(getRow(1).querySelector('input')?.getAttribute('aria-disabled')).to.equal('true');
+        expect(getRow(1).querySelector('input')?.getAttribute('disabled')).to.equal(null);
       });
 
-      expect(getSelectedRowIds()).to.deep.equal([0]);
-      // user.click() doesn't work here because of `pointer-events: none`
-      const secondCheckbox = getCell(1, 0).querySelector('input');
-      act(() => {
-        secondCheckbox?.click();
+      it('disabled checkboxes cannot be selected', async () => {
+        render(
+          <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+        );
+
+        const firstCheckbox = getCell(0, 0).querySelector('input');
+        act(() => {
+          firstCheckbox?.click();
+        });
+
+        expect(getSelectedRowIds()).to.deep.equal([0]);
+        // user.click() doesn't work here because of `pointer-events: none`
+        const secondCheckbox = getCell(1, 0).querySelector('input');
+        act(() => {
+          secondCheckbox?.click();
+        });
+
+        expect(getSelectedRowIds()).to.deep.equal([0]);
       });
 
-      expect(getSelectedRowIds()).to.deep.equal([0]);
-    });
+      it('disabled checkboxes can be focused', async () => {
+        const { user } = render(
+          <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+        );
 
-    it('disabled checkboxes can be focused', async () => {
-      const { user } = render(
-        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
-      );
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        const firstCheckbox = getCell(0, 0).querySelector('input');
+        await user.keyboard('{Tab}');
+        await user.keyboard('{ArrowDown}');
+        expect(document.activeElement).to.equal(firstCheckbox);
 
-      expect(getSelectedRowIds()).to.deep.equal([]);
-      const firstCheckbox = getCell(0, 0).querySelector('input');
-      await user.keyboard('{Tab}');
-      await user.keyboard('{ArrowDown}');
-      expect(document.activeElement).to.equal(firstCheckbox);
-
-      const secondCheckbox = getCell(1, 0).querySelector('input');
-      await user.keyboard('{ArrowDown}');
-      await user.keyboard('[Space]');
-      expect(getSelectedRowIds()).to.deep.equal([]);
-      expect(document.activeElement).to.equal(secondCheckbox);
+        const secondCheckbox = getCell(1, 0).querySelector('input');
+        await user.keyboard('{ArrowDown}');
+        await user.keyboard('[Space]');
+        expect(getSelectedRowIds()).to.deep.equal([]);
+        expect(document.activeElement).to.equal(secondCheckbox);
+      });
     });
 
     it('should select a range with shift pressed when clicking the row', async () => {

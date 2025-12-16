@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import useEventCallback from '@mui/utils/useEventCallback';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -56,7 +57,16 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       },
     );
 
-    const disabled = !isSelectable;
+    const [disabled, setDisabled] = React.useState(
+      isSelectable === undefined ? undefined : !isSelectable,
+    );
+
+    useEnhancedEffect(() => {
+      if (isSelectable === undefined) {
+        const selectable = apiRef.current.isRowSelectable(id);
+        setDisabled(!selectable);
+      }
+    }, [isSelectable, id, apiRef]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       if (disabled) {
@@ -66,7 +76,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       apiRef.current.publishEvent('rowSelectionCheckboxChange', params, event);
     };
 
-    React.useLayoutEffect(() => {
+    useEnhancedEffect(() => {
       if (tabIndex === 0) {
         const element = apiRef.current.getCellElement(id, field);
         if (element) {

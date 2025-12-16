@@ -81,7 +81,7 @@ export const checkboxPropsSelector = createSelector(
       columns,
     };
 
-    let isSelectable = true;
+    let isSelectable;
     if (typeof isRowSelectable === 'function') {
       isSelectable = isRowSelectable(rowParams);
     }
