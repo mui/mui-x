@@ -82,8 +82,11 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
     ...firstEventOfSeries,
     id: eventId,
     key: occurrenceKey,
-    start,
-    end,
+    displayTimezone: {
+      ...firstEventOfSeries.displayTimezone,
+      start,
+      end,
+    },
   };
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(

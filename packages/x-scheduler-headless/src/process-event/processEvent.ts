@@ -1,7 +1,7 @@
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
-import { parseRRuleString } from '../utils/recurring-events';
+import { parseRRule, projectRRuleToTimezone } from '../utils/recurring-events';
 import { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(
@@ -26,6 +26,12 @@ export function processEvent(
     ? model.exDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
 
+  const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, startTimezone) : undefined;
+
+  const displayTimezoneRRule = parsedDataRRule
+    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone)
+    : undefined;
+
   return {
     id: model.id,
     title: model.title,
@@ -34,17 +40,14 @@ export function processEvent(
       start: model.start,
       end: model.end,
       timezone: startTimezone,
-      rrule:
-        typeof model.rrule === 'string'
-          ? parseRRuleString(adapter, model.rrule, startTimezone)
-          : model.rrule,
+      rrule: parsedDataRRule,
       exDates: model.exDates,
     },
     displayTimezone: {
       start: processDate(startInDisplayTz, adapter),
       end: processDate(endInDisplayTz, adapter),
       timezone: displayTimezone,
-      rrule: model.rrule ? parseRRuleString(adapter, model.rrule, displayTimezone) : undefined,
+      rrule: displayTimezoneRRule,
       exDates: exDatesInDisplayTz,
     },
     resource: model.resource,

@@ -69,8 +69,11 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
         ...event,
         key: occurrenceKey,
         id: eventId,
-        start,
-        end,
+        displayTimezone: {
+          ...event.displayTimezone,
+          start,
+          end,
+        },
       };
 
       const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
