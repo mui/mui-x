@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  type AxisId,
-  selectorChartSeriesProcessed,
-  useStore,
-} from '@mui/x-charts/internals';
+import { type AxisId, selectorChartSeriesProcessed, useStore } from '@mui/x-charts/internals';
 import { LinePreviewPlot } from './previews/LinePreviewPlot';
 import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
 import { BarPreviewPlot } from './previews/BarPreviewPlot';
