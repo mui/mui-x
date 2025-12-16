@@ -190,10 +190,6 @@ export interface UseTreeViewItemsState<R extends {}> {
      * Nested DOM structure is not compatible with collapse / expansion animations.
      */
     domStructure: 'flat' | 'nested';
-    /**
-     * Function to determine if an item is selectable.
-     */
-    isItemSelectable: ((item: R) => boolean) | undefined;
   };
 }
 

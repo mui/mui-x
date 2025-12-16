@@ -23,11 +23,12 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const itemsConfig: BuildItemsLookupConfig = React.useMemo(
     () => ({
       isItemDisabled: params.isItemDisabled,
+      isItemSelectable: params.isItemSelectable,
       getItemLabel: params.getItemLabel,
       getItemChildren: params.getItemChildren,
       getItemId: params.getItemId,
     }),
-    [params.isItemDisabled, params.getItemLabel, params.getItemChildren, params.getItemId],
+    [params.isItemDisabled, params.isItemSelectable, params.getItemLabel, params.getItemChildren, params.getItemId],
   );
 
   const getItem = React.useCallback(
@@ -182,9 +183,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     store.set('items', {
       ...store.state.items,
       ...newState,
-      isItemSelectable: params.isItemSelectable,
     });
-  }, [instance, store, params.items, params.disabledItemsFocusable, params.isItemSelectable, itemsConfig]);
+  }, [instance, store, params.items, params.disabledItemsFocusable, itemsConfig]);
 
   // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
   const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
@@ -223,19 +223,17 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
 };
 
 useTreeViewItems.getInitialState = (params) => ({
-  items: {
-    ...buildItemsState({
-      items: params.items,
-      disabledItemsFocusable: params.disabledItemsFocusable,
-      config: {
-        isItemDisabled: params.isItemDisabled,
-        getItemId: params.getItemId,
-        getItemLabel: params.getItemLabel,
-        getItemChildren: params.getItemChildren,
-      },
-    }),
-    isItemSelectable: params.isItemSelectable,
-  },
+  items: buildItemsState({
+    items: params.items,
+    disabledItemsFocusable: params.disabledItemsFocusable,
+    config: {
+      isItemDisabled: params.isItemDisabled,
+      isItemSelectable: params.isItemSelectable,
+      getItemId: params.getItemId,
+      getItemLabel: params.getItemLabel,
+      getItemChildren: params.getItemChildren,
+    },
+  }),
 });
 
 useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({

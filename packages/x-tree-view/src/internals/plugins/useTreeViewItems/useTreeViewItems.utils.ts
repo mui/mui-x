@@ -152,6 +152,7 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
       idAttribute: undefined,
       expandable: isItemExpandable(item, children),
       disabled: config.isItemDisabled ? config.isItemDisabled(item) : false,
+      selectable: config.isItemSelectable ? config.isItemSelectable(item) : true,
       depth,
     };
 
@@ -222,5 +223,5 @@ function checkId({
 export interface BuildItemsLookupConfig
   extends Pick<
     UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
-    'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
+    'isItemDisabled' | 'isItemSelectable' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
   > {}
