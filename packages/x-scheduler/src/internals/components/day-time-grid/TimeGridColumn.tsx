@@ -28,8 +28,6 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
     maxSpan: Infinity,
   });
 
-  console.log('TimeGridColumn occurrences:', occurrences);
-
   return (
     <CalendarGrid.TimeColumn
       start={start}
