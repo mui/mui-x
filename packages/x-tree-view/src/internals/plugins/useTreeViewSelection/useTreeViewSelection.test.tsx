@@ -1168,10 +1168,7 @@ describeTreeView<TreeViewAnyStore>(
       describe('isItemSelectable as a function', () => {
         it('should not select an item when clicking if isItemSelectable returns false', () => {
           const view = render({
-            items: [
-              { id: '1', children: [{ id: '1.1' }] },
-              { id: '2' },
-            ],
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
             isItemSelectable: (item: any) => !item.children || item.children.length === 0,
           });
 
@@ -1186,10 +1183,7 @@ describeTreeView<TreeViewAnyStore>(
 
         it('should hide the checkbox when item is not selectable', () => {
           const view = render({
-            items: [
-              { id: '1', children: [{ id: '1.1' }] },
-              { id: '2' },
-            ],
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
             checkboxSelection: true,
             defaultExpandedItems: ['1'],
             isItemSelectable: (item: any) => !item.children || item.children.length === 0,
@@ -1205,10 +1199,7 @@ describeTreeView<TreeViewAnyStore>(
 
         it('should not have aria-checked attribute when item is not selectable', () => {
           const view = render({
-            items: [
-              { id: '1', children: [{ id: '1.1' }] },
-              { id: '2' },
-            ],
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
             defaultExpandedItems: ['1'],
             isItemSelectable: (item: any) => !item.children || item.children.length === 0,
           });
@@ -1221,11 +1212,7 @@ describeTreeView<TreeViewAnyStore>(
       describe('with multi selection', () => {
         it('should not include non-selectable items when selecting a range', () => {
           const view = render({
-            items: [
-              { id: '1' },
-              { id: '2', children: [{ id: '2.1' }] },
-              { id: '3' },
-            ],
+            items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }],
             multiSelect: true,
             isItemSelectable: (item: any) => !item.children || item.children.length === 0,
           });

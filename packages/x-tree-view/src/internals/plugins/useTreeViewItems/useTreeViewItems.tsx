@@ -28,7 +28,13 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
       getItemChildren: params.getItemChildren,
       getItemId: params.getItemId,
     }),
-    [params.isItemDisabled, params.isItemSelectable, params.getItemLabel, params.getItemChildren, params.getItemId],
+    [
+      params.isItemDisabled,
+      params.isItemSelectable,
+      params.getItemLabel,
+      params.getItemChildren,
+      params.getItemId,
+    ],
   );
 
   const getItem = React.useCallback(

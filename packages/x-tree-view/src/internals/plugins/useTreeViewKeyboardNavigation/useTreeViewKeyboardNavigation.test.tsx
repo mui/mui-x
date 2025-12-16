@@ -1438,10 +1438,7 @@ describeTreeView<TreeViewAnyStore>(
     describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectable prop', () => {
       it('should not select item with Space when isItemSelectable returns false', () => {
         const view = render({
-          items: [
-            { id: '1', children: [{ id: '1.1' }] },
-            { id: '2' },
-          ],
+          items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
           isItemSelectable: (item: any) => !item.children || item.children.length === 0,
         });
 
