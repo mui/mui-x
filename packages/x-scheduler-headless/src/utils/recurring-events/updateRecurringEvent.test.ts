@@ -14,7 +14,7 @@ import {
   applyRecurringUpdateOnlyThis,
   decideSplitRRule,
 } from './updateRecurringEvent';
-import { estimateOccurrencesUpTo } from './internal-utils';
+import { getRemainingOccurrences } from './internal-utils';
 
 describe('recurring-events/updateRecurringEvent', () => {
   const defaultEvent = EventBuilder.new()
@@ -60,8 +60,13 @@ describe('recurring-events/updateRecurringEvent', () => {
         const original: RecurringEventRecurrenceRule = { freq: 'DAILY', interval: 1, count: 42 };
 
         const dayBeforeSplit = adapter.addDays(adapter.startOfDay(splitStart), -1);
-        const consumed = estimateOccurrencesUpTo(adapter, original, seriesStart, dayBeforeSplit);
-        const remaining = (original.count as number) - consumed;
+        const remaining = getRemainingOccurrences(
+          adapter,
+          original,
+          seriesStart,
+          dayBeforeSplit,
+          original.count as number,
+        );
 
         const res = call(original, { title: 'New Event Title' });
         expect(res).to.deep.equal({ freq: 'DAILY', interval: 1, count: remaining });

@@ -55,9 +55,9 @@ storeClasses.forEach((storeClass) => {
         expect(onVisibleDateChange.called).to.equal(false);
       });
 
-      it('should use the provided timezone when going to today (uncontrolled)', () => {
+      it('should use the provided display timezone when going to today (uncontrolled)', () => {
         const onVisibleDateChange = spy();
-        const timezone = 'Pacific/Kiritimati';
+        const displayTimezone = 'Pacific/Kiritimati';
 
         const yesterday = adapter.addDays(adapter.startOfDay(adapter.now('default')), -1);
 
@@ -66,17 +66,17 @@ storeClasses.forEach((storeClass) => {
             ...DEFAULT_PARAMS,
             defaultVisibleDate: yesterday,
             onVisibleDateChange,
-            timezone,
+            displayTimezone,
           },
           adapter,
         );
 
         store.goToToday({} as any);
 
-        const expected = adapter.startOfDay(adapter.now(timezone));
+        const expected = adapter.startOfDay(adapter.now(displayTimezone));
 
         expect(store.state.visibleDate).toEqualDateTime(expected);
-        expect(store.state.timezone).to.equal(timezone);
+        expect(store.state.displayTimezone).to.equal(displayTimezone);
         expect(onVisibleDateChange.calledOnce).to.equal(true);
         expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(expected);
       });

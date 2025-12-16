@@ -3,7 +3,7 @@ import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 
 describe('processEvent', () => {
-  it('converts start and end to the UI timezone', () => {
+  it('converts start and end to the display timezone', () => {
     const event = EventBuilder.new(adapter)
       .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
       .build();
@@ -36,7 +36,7 @@ describe('processEvent', () => {
     expect(() => processEvent(event, 'Asia/Tokyo', adapter)).to.throw(/different timezones/);
   });
 
-  it('converts exDates to the UI timezone', () => {
+  it('converts exDates to the display timezone', () => {
     const event = EventBuilder.new(adapter).exDates(['2025-01-05T00:00:00Z']).build();
     const processed = processEvent(event, 'America/New_York', adapter);
 
@@ -44,7 +44,7 @@ describe('processEvent', () => {
     expect(adapter.getTimezone(processed.exDates![0])).to.equal('America/New_York');
   });
 
-  it('converts rrule.until to the UI timezone when rrule is an object', () => {
+  it('converts rrule.until to the display timezone when rrule is an object', () => {
     const event = EventBuilder.new(adapter)
       .rrule({
         freq: 'DAILY',
