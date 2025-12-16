@@ -1163,6 +1163,54 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
+    describe('selectable item property', () => {
+      it('should not select an item when clicking if selectable is false', () => {
+        const view = render({
+          items: [{ id: '1', selectable: false }, { id: '2' }],
+        });
+
+        expect(view.isItemSelected('1')).to.equal(false);
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.isItemSelected('1')).to.equal(false);
+
+        expect(view.isItemSelected('2')).to.equal(false);
+        fireEvent.click(view.getItemContent('2'));
+        expect(view.isItemSelected('2')).to.equal(true);
+      });
+
+      it('should hide the checkbox when selectable is false', () => {
+        const view = render({
+          items: [{ id: '1', selectable: false }, { id: '2' }],
+          checkboxSelection: true,
+        });
+
+        expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
+        expect(view.getItemContent('2').querySelector('input[type="checkbox"]')).not.to.equal(null);
+      });
+
+      it('should not have aria-checked attribute when selectable is false', () => {
+        const view = render({
+          items: [{ id: '1', selectable: false }, { id: '2' }],
+        });
+
+        expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+        expect(view.getItemRoot('2')).to.have.attribute('aria-checked', 'false');
+      });
+
+      it('should not include non-selectable items when selecting a range (multi selection)', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2', selectable: false }, { id: '3' }],
+          multiSelect: true,
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+
+        fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+        expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+      });
+    });
+
     // isItemSelectable is only available on RichTreeView (requires items prop)
     describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectable prop', () => {
       describe('isItemSelectable as a function', () => {
