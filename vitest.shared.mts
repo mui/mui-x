@@ -65,7 +65,6 @@ export default defineConfig({
       VITEST: 'true',
     },
     browser: {
-      isolate: false,
       provider: playwright({
         launchOptions: {
           // Required for tests which use scrollbars.
@@ -79,6 +78,7 @@ export default defineConfig({
             }
           : {}),
       }),
+      viewport: { width: 1280, height: 800 },
       headless: true,
       screenshotFailures: false,
       orchestratorScripts: [

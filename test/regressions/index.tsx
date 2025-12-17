@@ -18,14 +18,20 @@ Globals.assign({
 declare global {
   interface Window {
     muiFixture: {
-      isReady: () => boolean;
+      allTests: { url: string }[];
+      isReady: boolean;
       navigate: (test: string) => void;
     };
   }
 }
 
+const allTests = Object.values(testsBySuite).flatMap((suite) =>
+  suite.map((test) => ({ url: computePath(test) })),
+);
+
 window.muiFixture = {
-  isReady: () => false,
+  allTests,
+  isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
@@ -44,7 +50,7 @@ function Root() {
   const navigate = useNavigate();
   React.useEffect(() => {
     window.muiFixture.navigate = navigate;
-    window.muiFixture.isReady = () => true;
+    window.muiFixture.isReady = true;
   }, [navigate]);
 
   return (
@@ -136,10 +142,7 @@ function computeIsDev(hash: string) {
   if (hash === '#dev') {
     return true;
   }
-  if (hash === '#no-dev') {
-    return false;
-  }
-  return process.env.NODE_ENV === 'development';
+  return false;
 }
 
 function computePath(test: Test) {

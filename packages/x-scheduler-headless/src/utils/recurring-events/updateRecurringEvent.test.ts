@@ -212,7 +212,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         {
           id: defaultEvent.id,
           rrule: {
-            ...defaultEvent.rrule,
+            ...defaultEvent.dataTimezone.rrule,
             until: adapter.addDays(adapter.startOfDay(occurrenceStart), -1),
           },
         },
@@ -224,7 +224,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           id: `${defaultEvent.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
           extractedFromId: defaultEvent.id,
           rrule: {
-            ...defaultEvent.rrule,
+            ...defaultEvent.dataTimezone.rrule,
           },
         },
       ]);
@@ -264,7 +264,7 @@ describe('recurring-events/updateRecurringEvent', () => {
           id: `${original.id}::${adapter.format(changes.start!, 'localizedNumericDate')}`,
           extractedFromId: original.id,
           rrule: {
-            ...original.rrule,
+            ...original.dataTimezone.rrule,
           },
         },
       ]);
@@ -431,7 +431,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should use the rrule provided in changes when present', () => {
-      const occurrenceStart = defaultEvent.start;
+      const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         title: 'Now Weekly',
@@ -443,7 +443,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const updatedEvents = applyRecurringUpdateAll(
         adapter,
         defaultEvent,
-        occurrenceStart.value,
+        occurrenceStart,
         changes,
       );
 
@@ -453,7 +453,7 @@ describe('recurring-events/updateRecurringEvent', () => {
     });
 
     it('should remove recurrence when changes.rrule is explicitly undefined', () => {
-      const occurrenceStart = defaultEvent.start;
+      const occurrenceStart = defaultEvent.dataTimezone.start.value;
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
         title: 'One-off',
@@ -463,7 +463,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const updatedEvents = applyRecurringUpdateAll(
         adapter,
         defaultEvent,
-        occurrenceStart.value,
+        occurrenceStart,
         changes,
       );
 
@@ -497,8 +497,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: mergeDateAndTime(adapter, defaultEvent.start.value, newStart),
-          end: mergeDateAndTime(adapter, defaultEvent.end.value, newEnd),
+          start: mergeDateAndTime(adapter, defaultEvent.dataTimezone.start.value, newStart),
+          end: mergeDateAndTime(adapter, defaultEvent.dataTimezone.end.value, newEnd),
         },
       ]);
     });
@@ -522,8 +522,8 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          start: mergeDateAndTime(adapter, original.start.value, changes.start!),
-          end: mergeDateAndTime(adapter, original.end.value, changes.end!),
+          start: mergeDateAndTime(adapter, original.dataTimezone.start.value, changes.start!),
+          end: mergeDateAndTime(adapter, original.dataTimezone.end.value, changes.end!),
           rrule: { byDay: ['SA'], freq: 'WEEKLY' },
         },
       ]);
@@ -531,7 +531,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
     it('should update the start date of the original event when editing the first occurrence (DTSTART)', () => {
       // DTSTART = 2025-01-01
-      const occurrenceStart = defaultEvent.start;
+      const occurrenceStart = defaultEvent.dataTimezone.start.value;
 
       const changes: SchedulerEventUpdatedProperties = {
         id: defaultEvent.id,
@@ -542,14 +542,14 @@ describe('recurring-events/updateRecurringEvent', () => {
       const updatedEvents = applyRecurringUpdateAll(
         adapter,
         defaultEvent,
-        occurrenceStart.value,
+        occurrenceStart,
         changes,
       );
 
       expect(updatedEvents.updated).to.deep.equal([
         {
           ...changes,
-          rrule: defaultEvent.rrule,
+          rrule: defaultEvent.dataTimezone.rrule,
         },
       ]);
     });
@@ -613,7 +613,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       expect(updatedEvents.updated).to.deep.equal([
         {
           id: original.id,
-          exDates: [...(original.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+          exDates: [...(original.dataTimezone.exDates ?? []), adapter.startOfDay(occurrenceStart)],
         },
       ]);
     });
