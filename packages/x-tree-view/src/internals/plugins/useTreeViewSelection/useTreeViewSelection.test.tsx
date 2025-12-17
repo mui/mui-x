@@ -12,8 +12,6 @@ type TreeViewAnyStore = { parameters: any };
  */
 describeTreeView<TreeViewAnyStore>(
   'TreeViewSelectionPlugin',
-  // TODO #20051: Remove next line
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ render, treeViewComponentName }) => {
     describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
       beforeEach(() => {
