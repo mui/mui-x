@@ -1,5 +1,5 @@
-import { vars } from '@mui/x-data-grid/internals';
-import { GridFooterCell, GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { vars, GridFooterCell } from '@mui/x-data-grid-pro/internals';
 import { SxProps, Theme } from '@mui/system';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 

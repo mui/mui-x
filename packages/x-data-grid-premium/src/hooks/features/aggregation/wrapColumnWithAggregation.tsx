@@ -1,6 +1,6 @@
 import { RefObject } from '@mui/x-internals/types';
-import { GridFooterCell, GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
-import type { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
+import { GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
+import { type GridBaseColDef, GridFooterCell } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium } from '../../../models/gridApiPremium';
 import type {
   GridAggregationCellMeta,
