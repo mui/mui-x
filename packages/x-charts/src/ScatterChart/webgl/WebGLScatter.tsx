@@ -85,6 +85,7 @@ const fragmentShaderSource = `
 function WebGLScatter(props: ScatterProps) {
   const { series, xScale, yScale, colorGetter } = props;
   const drawingArea = useDrawingArea();
+  const [renderKey, rerender] = React.useReducer((s) => s + 1, 0);
 
   const { instance } =
     useChartContext<
@@ -96,6 +97,42 @@ function WebGLScatter(props: ScatterProps) {
   const vertexShaderRef = React.useRef<WebGLShader | null>(null);
   const fragmentShaderRef = React.useRef<WebGLShader | null>(null);
   const programRef = React.useRef<WebGLProgram | null>(null);
+
+  React.useEffect(() => {
+    const canvas = gl?.canvas;
+
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      return;
+    }
+
+    // FIXME: This is broken in Safari, need to find a cross-browser way to handle this
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const width =
+          entry.devicePixelContentBoxSize?.[0].inlineSize ||
+          entry.contentBoxSize[0].inlineSize * devicePixelRatio;
+        const height =
+          entry.devicePixelContentBoxSize?.[0].blockSize ||
+          entry.contentBoxSize[0].blockSize * devicePixelRatio;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // Update WebGL viewport
+        gl?.viewport(0, 0, width, height);
+
+        rerender();
+      }
+    });
+
+    try {
+      // Throws in Safari
+      observer.observe(canvas, { box: 'device-pixel-content-box' });
+    } catch {
+      observer.observe(canvas, { box: 'content-box' });
+    }
+  }, [gl, gl?.canvas]);
 
   React.useEffect(() => {
     if (!gl) {
@@ -126,13 +163,13 @@ function WebGLScatter(props: ScatterProps) {
     gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, quadVertices, gl.STATIC_DRAW);
 
-    const a_position = gl.getAttribLocation(program, 'a_position');
-    gl.enableVertexAttribArray(a_position);
-    gl.vertexAttribPointer(a_position, 2, gl.FLOAT, false, 0, 0);
+    const aPosition = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(aPosition);
+    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 
     // Setup resolution uniform
-    const u_resolution = gl.getUniformLocation(program, 'u_resolution');
-    gl.uniform2f(u_resolution, drawingArea.width, drawingArea.height);
+    const uResolution = gl.getUniformLocation(program, 'u_resolution');
+    gl.uniform2f(uResolution, drawingArea.width, drawingArea.height);
 
     // Enable blending for transparency
     gl.enable(gl.BLEND);
@@ -167,32 +204,32 @@ function WebGLScatter(props: ScatterProps) {
     gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, centers, gl.STATIC_DRAW);
 
-    const a_center = gl.getAttribLocation(program, 'a_center');
-    gl.enableVertexAttribArray(a_center);
-    gl.vertexAttribPointer(a_center, 2, gl.FLOAT, false, 0, 0);
+    const aCenter = gl.getAttribLocation(program, 'a_center');
+    gl.enableVertexAttribArray(aCenter);
+    gl.vertexAttribPointer(aCenter, 2, gl.FLOAT, false, 0, 0);
 
     // This makes the attribute instanced (one value per circle, not per vertex)
-    gl.vertexAttribDivisor(a_center, 1);
+    gl.vertexAttribDivisor(aCenter, 1);
 
     // Upload radii
     const radiusBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, radiusBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, radii, gl.STATIC_DRAW);
 
-    const a_radius = gl.getAttribLocation(program, 'a_radius');
-    gl.enableVertexAttribArray(a_radius);
-    gl.vertexAttribPointer(a_radius, 1, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(a_radius, 1);
+    const aRadius = gl.getAttribLocation(program, 'a_radius');
+    gl.enableVertexAttribArray(aRadius);
+    gl.vertexAttribPointer(aRadius, 1, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(aRadius, 1);
 
     // Upload colors
     const colorBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 
-    const a_color = gl.getAttribLocation(program, 'a_color');
-    gl.enableVertexAttribArray(a_color);
-    gl.vertexAttribPointer(a_color, 3, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(a_color, 1);
+    const aColor = gl.getAttribLocation(program, 'a_color');
+    gl.enableVertexAttribArray(aColor);
+    gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(aColor, 1);
 
     // Clear and draw
     gl.clearColor(1, 1, 1, 1.0);
@@ -200,7 +237,7 @@ function WebGLScatter(props: ScatterProps) {
 
     // Draw all circles with one instanced draw call
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, scatterPlotData.length);
-  }, [gl, colorGetter, scatterPlotData, series.markerSize, drawingArea.left, drawingArea.top]);
+  }, [renderKey, gl, scatterPlotData, drawingArea.left, drawingArea.top, series.markerSize]);
 
   return null;
 }

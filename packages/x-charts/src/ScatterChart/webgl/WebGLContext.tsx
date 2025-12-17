@@ -32,7 +32,7 @@ export const WebGLProvider = React.forwardRef<
 
   return (
     <WebGLContext.Provider value={context}>
-      <canvas ref={handleRef} {...props} />
+      <canvas ref={handleRef} {...props} style={{ width: '100%', height: '100%' }} />
       {children}
     </WebGLContext.Provider>
   );
