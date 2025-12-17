@@ -247,6 +247,7 @@ export const useGridRowSpanning = (
   useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
   useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'rowExpansionChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
     const store = apiRef.current.virtualizer?.store;
