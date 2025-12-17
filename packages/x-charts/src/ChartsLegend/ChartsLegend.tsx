@@ -143,7 +143,7 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
-          const isVisible = isItemVisible(item.seriesId!, item.itemId!);
+          const isVisible = isItemVisible(item.seriesId, item.itemId);
           return (
             <li key={item.id} className={classes?.item} data-series={item.id}>
               <Element

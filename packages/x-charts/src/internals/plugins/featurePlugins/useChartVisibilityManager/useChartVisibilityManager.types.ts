@@ -14,7 +14,7 @@ export type IsItemVisibleFunction = {
    * If more than one parameter is provided, they will be joined using '-' to form the identifier.
    * Number values will be converted to strings.
    *
-   * @param {VisibilityIdentifier} identifier The identifier of the item to check.
+   * @param {VisibilityIdentifier} identifiers The identifier of the item to check.
    * @returns {boolean} Whether the item is visible.
    */
   (...identifiers: VisibilityIdentifier[]): boolean;

@@ -29,7 +29,7 @@ export const selectorVisibilityMap = createSelector(
 export const selectorIsItemVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
   (visibilityMap) => {
-    return (...identifiers: VisibilityIdentifier[]) =>
+    return (...identifiers: (VisibilityIdentifier | undefined)[]) =>
       isIdentifierVisible(visibilityMap, identifiers);
   },
 );

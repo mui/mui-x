@@ -2,7 +2,7 @@ import type { VisibilityIdentifier, VisibilityMap } from './useChartVisibilityMa
 
 export const VISIBILITY_SEPARATOR = '-';
 
-export const buildIdentifier = (ids: VisibilityIdentifier[]): string => {
+export const buildIdentifier = (ids: (VisibilityIdentifier | undefined)[]): string => {
   if (ids.length === 1 && (typeof ids[0] === 'string' || typeof ids[0] === 'number')) {
     return String(ids[0]);
   }
@@ -11,8 +11,8 @@ export const buildIdentifier = (ids: VisibilityIdentifier[]): string => {
 };
 
 export const isIdentifierVisible = (
-  visibilityMap: VisibilityMap,
-  identifiers: VisibilityIdentifier[],
+  visibilityMap: VisibilityMap | undefined,
+  identifiers: (VisibilityIdentifier | undefined)[],
 ) => {
   const id = buildIdentifier(identifiers);
 
