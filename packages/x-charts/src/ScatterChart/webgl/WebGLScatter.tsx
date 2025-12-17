@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useItemHighlightedGetter } from '@mui/x-charts';
 import { useDrawingArea } from '../../hooks/useDrawingArea';
 import {
   type DefaultizedScatterSeriesType,
@@ -40,9 +41,9 @@ const vertexShaderSource = `
     attribute vec2 a_position;
     attribute vec2 a_center;
     attribute float a_radius;
-    attribute vec3 a_color;
+    attribute vec4 a_color;
     
-    varying vec3 v_color;
+    varying vec4 v_color;
     varying vec2 v_pos;
     
     uniform vec2 u_resolution;
@@ -60,7 +61,7 @@ const vertexShaderSource = `
 
 const fragmentShaderSource = `
     precision mediump float;
-    varying vec3 v_color;
+    varying vec4 v_color;
     varying vec2 v_pos;
     
     void main() {
@@ -68,7 +69,7 @@ const fragmentShaderSource = `
       float dist = length(v_pos);
       float alpha = 1.0 - smoothstep(0.9, 1.0, dist);
       if (alpha < 0.01) discard;
-      gl_FragColor = vec4(v_color, alpha);
+      gl_FragColor = vec4(v_color.rgb, v_color.a * alpha);
     }
   `;
 
@@ -109,6 +110,7 @@ function WebGLScatter(props: ScatterProps) {
   const vertexShaderRef = React.useRef<WebGLShader | null>(null);
   const fragmentShaderRef = React.useRef<WebGLShader | null>(null);
   const programRef = React.useRef<WebGLProgram | null>(null);
+  const { isFaded, isHighlighted } = useItemHighlightedGetter();
 
   React.useEffect(() => {
     const canvas = gl?.canvas;
@@ -198,18 +200,23 @@ function WebGLScatter(props: ScatterProps) {
 
     const centers = new Float32Array(scatterPlotData.length * 2);
     const radii = new Float32Array(scatterPlotData.length);
-    const colors = new Float32Array(scatterPlotData.length * 3);
+    const colors = new Float32Array(scatterPlotData.length * 4);
 
     for (let i = 0; i < scatterPlotData.length; i += 1) {
       const dataPoint = scatterPlotData[i];
       centers[i * 2] = dataPoint.x - drawingArea.left;
       centers[i * 2 + 1] = dataPoint.y - drawingArea.top;
-      radii[i] = series.markerSize;
 
-      const color = hexToRgb01(colorGetter(i));
-      colors[i * 3] = color[0];
-      colors[i * 3 + 1] = color[1];
-      colors[i * 3 + 2] = color[2];
+      const isItemHighlighted = isHighlighted(dataPoint);
+      const isItemFaded = !isItemHighlighted && isFaded(dataPoint);
+
+      radii[i] = (isItemHighlighted ? 1.2 : 1) * series.markerSize;
+
+      const color = hexToRgb01(colorGetter(dataPoint.dataIndex));
+      colors[i * 4] = color[0];
+      colors[i * 4 + 1] = color[1];
+      colors[i * 4 + 2] = color[2];
+      colors[i * 4 + 3] = isItemFaded ? 0.6 : 1.0;
     }
 
     // Upload circle centers
@@ -241,7 +248,7 @@ function WebGLScatter(props: ScatterProps) {
 
     const aColor = gl.getAttribLocation(program, 'a_color');
     gl.enableVertexAttribArray(aColor);
-    gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(aColor, 1);
 
     // Clear and draw
@@ -258,6 +265,8 @@ function WebGLScatter(props: ScatterProps) {
     drawingArea.top,
     series.markerSize,
     colorGetter,
+    isHighlighted,
+    isFaded,
   ]);
 
   return null;
