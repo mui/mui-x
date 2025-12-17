@@ -1,9 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import type {
-  ChartItemIdentifier,
-  ChartSeriesDefaultized,
-  ChartSeriesType,
-} from '../../../../models/seriesType/config';
+import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
   selectorChartSeriesConfig,
@@ -78,7 +75,7 @@ const selectorChartsTooltipAxisConfig = createSelectorMemoized(
   selectorChartRadiusAxis,
   selectorChartSeriesProcessed,
   function selectorChartsTooltipAxisConfig<T extends ChartSeriesType>(
-    identifier: ChartItemIdentifier<T> | null,
+    identifier: SeriesItemIdentifier<T> | null,
     { axis: xAxis, axisIds: xAxisIds }: ComputeResult<ChartsXAxisProps>,
     { axis: yAxis, axisIds: yAxisIds }: ComputeResult<ChartsYAxisProps>,
     rotationAxes: ComputePolarResult<ChartsRotationAxisProps>,
@@ -128,7 +125,7 @@ export const selectorChartsTooltipItemPosition = createSelectorMemoized(
   selectorChartsTooltipAxisConfig,
 
   function selectorChartsTooltipItemPosition<T extends ChartSeriesType>(
-    identifier: ChartItemIdentifier<T> | null,
+    identifier: SeriesItemIdentifier<T> | null,
     drawingArea: ChartDrawingArea,
     seriesConfig: ChartSeriesConfig<T>,
     series: ProcessedSeries<T>,
