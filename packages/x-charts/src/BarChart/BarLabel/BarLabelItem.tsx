@@ -1,13 +1,13 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import PropTypes from 'prop-types';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useUtilityClasses } from './barLabelClasses';
-import { BarLabelOwnerState, BarItem, BarLabelContext } from './BarLabel.types';
+import { type BarLabelOwnerState, type BarItem, type BarLabelContext } from './BarLabel.types';
 import { getBarLabel } from './getBarLabel';
-import { BarLabel, BarLabelProps } from './BarLabel';
+import { BarLabel, type BarLabelProps } from './BarLabel';
 import { useItemHighlighted } from '../../hooks/useItemHighlighted';
-import { BarValueType } from '../../models';
+import { type BarValueType } from '../../models';
 
 export interface BarLabelSlots {
   /**
@@ -79,9 +79,7 @@ export type BarLabelItemProps<V extends BarValueType | null> = Omit<
      * @param {BarLabelContext} context data about the bar.
      * @returns {string} The formatted label.
      */
-    barLabel?:
-      | 'value'
-      | ((item: BarItem<V>, context: BarLabelContext) => string | null | undefined);
+    barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
     /**
      * The placement of the bar label.
      * It controls whether the label is rendered in the center or outside the bar.

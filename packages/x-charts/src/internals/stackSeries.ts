@@ -10,10 +10,10 @@ import {
   stackOffsetNone as d3StackOffsetNone,
   stackOffsetSilhouette as d3StackOffsetSilhouette,
   stackOffsetWiggle as d3StackOffsetWiggle,
-  Series,
+  type Series,
 } from '@mui/x-charts-vendor/d3-shape';
 import type { StackOffsetType, StackOrderType } from '../models/stacking';
-import { SeriesId, StackableSeriesType } from '../models/seriesType/common';
+import { type SeriesId, type StackableSeriesType } from '../models/seriesType/common';
 
 type FormatterParams<T> = {
   series: Record<SeriesId, T>;
@@ -30,9 +30,7 @@ export type StackingGroupsType = {
   stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
 }[];
 
-export const StackOrder: {
-  [key in StackOrderType]: (series: Series<any, any>) => number[];
-} = {
+export const StackOrder = {
   /**
    * Series order such that the earliest series (according to the maximum value) is at the bottom.
    * */
@@ -57,11 +55,11 @@ export const StackOrder: {
    * Reverse of the given series order [n - 1, n - 2, … 0] where n is the number of elements in series. Thus, the stack order is given by the reverse of the key accessor.
    */
   reverse: d3StackOrderReverse,
+} satisfies {
+  [key in StackOrderType]: (series: Series<any, any>) => number[];
 };
 
-export const StackOffset: {
-  [key in StackOffsetType]: (series: Series<any, any>, order: Iterable<number>) => void;
-} = {
+export const StackOffset = {
   /**
    * Applies a zero baseline and normalizes the values for each point such that the topline is always one.
    * */
@@ -82,6 +80,8 @@ export const StackOffset: {
    * Shifts the baseline so as to minimize the weighted wiggle of layers. This offset is recommended for streamgraphs in conjunction with the inside-out order. See Stacked Graphs—Geometry & Aesthetics by Bryon & Wattenberg for more information.
    * */
   wiggle: d3StackOffsetWiggle,
+} satisfies {
+  [key in StackOffsetType]: (series: Series<any, any>, order: Iterable<number>) => void;
 };
 
 /**

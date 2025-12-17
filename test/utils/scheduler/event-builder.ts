@@ -36,7 +36,7 @@ export class EventBuilder {
 
   protected dataTimezone: TemporalTimezone = 'default';
 
-  protected uiTimezone: TemporalTimezone = 'default';
+  protected displayTimezone: TemporalTimezone = 'default';
 
   protected constructor(protected adapter: Adapter) {
     const id = crypto.randomUUID();
@@ -117,7 +117,7 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the DATA timezone: used for all event fields (start, end, rrule, exDates...). */
+  /** Set the data timezone: used for all event fields (start, end, rrule, exDates...). */
   withTimezone(timezone: TemporalTimezone) {
     if (timezone === this.dataTimezone) {
       return this;
@@ -141,9 +141,9 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the UI timezone for processed events. */
-  withUITimezone(timezone: TemporalTimezone) {
-    this.uiTimezone = timezone;
+  /** Set the display timezone for processed events. */
+  withDisplayTimezone(timezone: TemporalTimezone) {
+    this.displayTimezone = timezone;
     return this;
   }
 
@@ -157,6 +157,12 @@ export class EventBuilder {
     return this;
   }
 
+  /** Set a custom class name for the event. */
+  className(className: string) {
+    this.event.className = className;
+    return this;
+  }
+
   // ─────────────────────────────────────────────
   // Time setters
   // ─────────────────────────────────────────────
@@ -165,8 +171,10 @@ export class EventBuilder {
    * Manually sets the start date/time using an ISO-like string.
    * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
    */
-  startAt(startISO: string) {
-    this.event.start = this.adapter.date(startISO, this.dataTimezone);
+  startAt(start: string | TemporalSupportedObject) {
+    const startDate =
+      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
+    this.event.start = startDate;
     return this;
   }
 
@@ -174,8 +182,9 @@ export class EventBuilder {
    * Manually sets the end date/time using an ISO-like string.
    * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
    */
-  endAt(endISO: string) {
-    this.event.end = this.adapter.date(endISO, this.dataTimezone);
+  endAt(end: string | TemporalSupportedObject) {
+    const endDate = typeof end === 'string' ? this.adapter.date(end, this.dataTimezone) : end;
+    this.event.end = endDate;
     return this;
   }
 
@@ -269,7 +278,8 @@ export class EventBuilder {
       : this.event.start;
 
     const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
-    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+    const originalDurationMs =
+      baseProcessed.displayTimezone.end.timestamp - baseProcessed.displayTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
@@ -278,7 +288,7 @@ export class EventBuilder {
       end: rawEnd,
     };
 
-    const processed = processEvent(occurrenceModel, this.uiTimezone, this.adapter);
+    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);
 
     return {
       ...processed,
@@ -290,7 +300,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.uiTimezone, this.adapter);
+    return processEvent(this.event, this.displayTimezone, this.adapter);
   }
 
   /**

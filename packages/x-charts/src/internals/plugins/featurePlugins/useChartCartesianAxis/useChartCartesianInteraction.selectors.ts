@@ -1,13 +1,17 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import {
+  type AxisId,
+  type AxisItemIdentifier,
+  type ChartsAxisProps,
+} from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
 import { getAxisIndex, getAxisValue } from './getAxisValue';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
-import { ComputeResult } from './computeAxisValue';
+import { type ComputeResult } from './computeAxisValue';
 
 /**
  * Get interaction indexes

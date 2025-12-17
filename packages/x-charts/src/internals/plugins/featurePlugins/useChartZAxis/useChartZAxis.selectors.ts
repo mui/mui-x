@@ -1,6 +1,6 @@
 import { createSelector } from '@mui/x-internals/store';
-import { ChartState } from '../../models/chart';
-import { UseChartZAxisSignature } from './useChartZAxis.types';
+import { type ChartState } from '../../models/chart';
+import { type UseChartZAxisSignature } from './useChartZAxis.types';
 
 const selectRootState = (state: ChartState<[UseChartZAxisSignature]>) => state;
 

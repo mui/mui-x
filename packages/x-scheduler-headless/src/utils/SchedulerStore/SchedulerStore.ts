@@ -1,4 +1,5 @@
 import { Store } from '@base-ui-components/utils/store';
+import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
@@ -10,6 +11,8 @@ import {
   RecurringEventUpdateScope,
   SchedulerPreferences,
   SchedulerEventCreationProperties,
+  SchedulerEventPasteProperties,
+  SchedulerEvent,
 } from '../../models';
 import {
   SchedulerState,
@@ -32,6 +35,7 @@ import {
 import { TimeoutManager } from '../TimeoutManager';
 import { SchedulerDataManager } from './utils';
 import { SchedulerDataSourceCacheDefault } from './cache';
+import { applyDataTimezoneToEventUpdate } from '../date-utils';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -83,18 +87,20 @@ export class SchedulerStore<
       ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
       ...(parameters.dataSource
         ? MOCK_EVENT_STATE
-        : buildEventsState(parameters, adapter, stateFromParameters.timezone)),
+        : buildEventsState(parameters, adapter, stateFromParameters.displayTimezone)),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
       occurrencePlaceholder: null,
-      nowUpdatedEveryMinute: adapter.now(stateFromParameters.timezone),
+      copiedEvent: null,
+      nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingUpdateRecurringEventParameters: null,
-      visibleResources: new Map(),
+      visibleResources:
+        parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
-        adapter.startOfDay(adapter.now(stateFromParameters.timezone)),
+        adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -109,9 +115,9 @@ export class SchedulerStore<
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
-      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
+      this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
-        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.timezone));
+        this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
       });
     });
 
@@ -138,7 +144,7 @@ export class SchedulerStore<
       showCurrentTimeIndicator: parameters.showCurrentTimeIndicator ?? true,
       readOnly: parameters.readOnly ?? false,
       eventCreation: parameters.eventCreation ?? true,
-      timezone: parameters.timezone ?? 'default',
+      displayTimezone: parameters.displayTimezone ?? 'default',
     };
   }
 
@@ -159,7 +165,7 @@ export class SchedulerStore<
     end: TemporalSupportedObject;
   }) => {
     const { dataSource } = this.parameters;
-    const { adapter, timezone } = this.state;
+    const { adapter, displayTimezone } = this.state;
 
     if (!dataSource || !this.cache || !this.dataManager) {
       return;
@@ -187,7 +193,7 @@ export class SchedulerStore<
       const eventsState = buildEventsState(
         { ...this.parameters, events: allCachedEvents } as Parameters,
         adapter,
-        timezone,
+        displayTimezone,
       );
 
       this.update({
@@ -214,7 +220,7 @@ export class SchedulerStore<
       const eventsState = buildEventsState(
         { ...this.parameters, events } as Parameters,
         adapter,
-        timezone,
+        displayTimezone,
       );
       this.update({
         ...this.state,
@@ -282,10 +288,10 @@ export class SchedulerStore<
     ) {
       Object.assign(
         newSchedulerState,
-        buildEventsState(parameters, adapter, newSchedulerState.timezone!),
+        buildEventsState(parameters, adapter, newSchedulerState.displayTimezone!),
       );
     }
-    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.timezone!);
+    newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
 
     if (parameters.dataSource) {
       this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
@@ -300,6 +306,7 @@ export class SchedulerStore<
     }
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
+    updateModel(newSchedulerState, 'visibleResources', 'defaultVisibleResources');
 
     const newState = this.mapper.updateStateFromParameters(
       newSchedulerState,
@@ -393,7 +400,7 @@ export class SchedulerStore<
 
     return {
       deleted: deletedParam ?? [],
-      updated: Array.from(updated.keys()),
+      updated: Array.from(updated.keys()) as SchedulerEventId[],
       created: createdIds,
     };
   }
@@ -403,7 +410,7 @@ export class SchedulerStore<
    */
   public goToToday = (event: React.UIEvent) => {
     const { adapter } = this.state;
-    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.timezone)), event);
+    this.setVisibleDate(adapter.startOfDay(adapter.now(this.state.displayTimezone)), event);
   };
 
   /**
@@ -417,20 +424,23 @@ export class SchedulerStore<
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
-    const original = schedulerEventSelectors.processedEvent(this.state, calendarEvent.id);
-
-    if (!original) {
-      throw new Error(
-        `${this.instanceName}: the original event was not found (id="${calendarEvent.id}").`,
-      );
-    }
-    if (original?.rrule) {
+    const { adapter } = this.state;
+    const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
+    if (original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
       );
     }
 
-    this.updateEvents({ updated: [calendarEvent] });
+    const updatedEventInDataTimezone = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent: original,
+      changes: calendarEvent,
+    });
+
+    this.updateEvents({
+      updated: [updatedEventInDataTimezone],
+    });
   };
 
   /**
@@ -456,19 +466,29 @@ export class SchedulerStore<
     }
 
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
-    const original = schedulerEventSelectors.processedEvent(this.state, changes.id);
-    if (!original) {
-      throw new Error(
-        `${this.instanceName}: the original event was not found (id="${changes.id}").`,
-      );
-    }
-    if (!original.rrule) {
+    const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
+    if (!original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
     }
 
-    const updatedEvents = updateRecurringEvent(adapter, original, occurrenceStart, changes, scope);
+    const changesInDataTimezone = applyDataTimezoneToEventUpdate({
+      adapter,
+      originalEvent: original,
+      changes,
+    });
+
+    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat!.start);
+    const occurrenceStartInDataTimezone = adapter.setTimezone(occurrenceStart, originalTz);
+
+    const updatedEvents = updateRecurringEvent(
+      adapter,
+      original,
+      occurrenceStartInDataTimezone,
+      changesInDataTimezone,
+      scope,
+    );
     this.updateEvents(updatedEvents);
 
     const submit = onSubmit;
@@ -495,21 +515,80 @@ export class SchedulerStore<
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
-    const original = schedulerEventSelectors.processedEvent(this.state, eventId);
-    if (!original) {
-      throw new Error(`${this.instanceName}: the original event was not found (id="${eventId}").`);
-    }
-
+    const original = schedulerEventSelectors.processedEventRequired(this.state, eventId);
     const duplicatedEvent = createEventFromRecurringEvent(original, { start, end });
     return this.updateEvents({ created: [duplicatedEvent] }).created[0];
   };
 
   /**
+   * Copies an event to be pasted later.
+   */
+  public copyEvent = (eventId: SchedulerEventId) => {
+    // Asserts that the event exists.
+    schedulerEventSelectors.processedEventRequired(this.state, eventId);
+
+    this.set('copiedEvent', { id: eventId, action: 'copy' });
+  };
+
+  /**
+   * Cuts an event to be pasted later.
+   */
+  public cutEvent = (eventId: SchedulerEventId) => {
+    // Asserts that the event exists.
+    schedulerEventSelectors.processedEventRequired(this.state, eventId);
+
+    this.set('copiedEvent', { id: eventId, action: 'cut' });
+  };
+
+  /**
+   * Pastes the copied or cut event with the provided changes.
+   */
+  public pasteEvent = (changes: SchedulerEventPasteProperties) => {
+    const { adapter, copiedEvent } = this.state;
+    if (!copiedEvent) {
+      return null;
+    }
+
+    const original = schedulerEventSelectors.processedEventRequired(this.state, copiedEvent.id);
+    const cleanChanges: Partial<SchedulerEvent> = { ...changes };
+    if (cleanChanges.start != null) {
+      cleanChanges.end = adapter.addMilliseconds(
+        cleanChanges.start,
+        original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
+      );
+    }
+
+    if (copiedEvent.action === 'cut') {
+      const updatedEvent = { id: copiedEvent.id, ...cleanChanges };
+      return this.updateEvents({ updated: [updatedEvent] }).updated[0];
+    }
+
+    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat!;
+    const createdEvent: SchedulerEventCreationProperties = {
+      ...copiedEventWithoutId,
+      ...cleanChanges,
+      extractedFromId: id,
+    };
+    return this.updateEvents({ created: [createdEvent] }).created[0];
+  };
+
+  /**
    * Updates the visible resources.
    */
-  public setVisibleResources = (visibleResources: Map<SchedulerResourceId, boolean>) => {
-    if (this.state.visibleResources !== visibleResources) {
-      this.set('visibleResources', visibleResources);
+  public setVisibleResources = (
+    visibleResources: Record<SchedulerResourceId, boolean>,
+    event: Event,
+  ) => {
+    const { visibleResources: visibleResourcesProp, onVisibleResourcesChange } = this.parameters;
+    const hasChange = this.state.visibleResources !== visibleResources;
+
+    if (hasChange) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onVisibleResourcesChange?.(visibleResources, eventDetails);
+
+      if (!eventDetails.isCanceled && visibleResourcesProp === undefined) {
+        this.set('visibleResources', visibleResources);
+      }
     }
   };
 

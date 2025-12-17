@@ -72,7 +72,7 @@ export interface SchedulerState<TEvent extends object = any> {
    * Visibility status for each resource.
    * A resource is visible if it is registered in this lookup with `true` value or if it is not registered at all.
    */
-  visibleResources: Map<SchedulerResourceId, boolean>;
+  visibleResources: Record<SchedulerResourceId, boolean>;
   /**
    * Whether the event can be dragged to change its start and end dates without changing the duration.
    */
@@ -132,7 +132,7 @@ export interface SchedulerState<TEvent extends object = any> {
    */
   eventCreation: Partial<SchedulerEventCreationConfig> | boolean;
   /**
-   * The timezone used by the scheduler.
+   * The timezone used to display events in the scheduler.
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
@@ -140,8 +140,14 @@ export interface SchedulerState<TEvent extends object = any> {
    * "default" (use the adapter's default timezone),
    * "locale" (use the user's current locale timezone),
    * or "UTC".
+   *
+   * This timezone only affects rendering, events keep their original data timezone.
    */
-  timezone: TemporalTimezone;
+  displayTimezone: TemporalTimezone;
+  /**
+   * The event that has been copied or cut, if any.
+   */
+  copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {
@@ -173,6 +179,24 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * If not provided, the resource model is assumed to match the `CalendarResource` interface.
    */
   resourceModelStructure?: SchedulerResourceModelStructure<TResource>;
+  /**
+   * The IDs of the resources currently visible.
+   * A resource is visible if it is not included in this object or if it is included with `true` value.
+   */
+  visibleResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * The IDs of the resources initially visible.
+   * To render a controlled scheduler, use the `visibleResources` prop.
+   * @default {} - all resources are visible
+   */
+  defaultVisibleResources?: Record<SchedulerResourceId, boolean>;
+  /**
+   * Event handler called when the visible resources change.
+   */
+  onVisibleResourcesChange?: (
+    visibleResources: Record<SchedulerResourceId, boolean>,
+    eventDetails: SchedulerChangeEventDetails,
+  ) => void;
   /**
    * The date currently used to determine the visible date range in each view.
    */
@@ -246,7 +270,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   eventCreation?: Partial<SchedulerEventCreationConfig> | boolean;
   /**
-   * The timezone used by the scheduler.
+   * The timezone used to display events in the scheduler.
    *
    * Accepts any valid IANA timezone name
    * (for example "America/New_York", "Europe/Paris", "Asia/Tokyo"),
@@ -255,9 +279,10 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * "locale" (use the user's current locale timezone),
    * or "UTC".
    *
+   * This timezone only affects rendering, events keep their original data timezone.
    * @default "default"
    */
-  timezone?: TemporalTimezone;
+  displayTimezone?: TemporalTimezone;
 }
 
 /**

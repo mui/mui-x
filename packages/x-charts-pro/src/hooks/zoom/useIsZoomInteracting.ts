@@ -1,7 +1,7 @@
 'use client';
-import { useSelector, useStore } from '@mui/x-charts/internals';
+import { useStore } from '@mui/x-charts/internals';
 import { selectorChartZoomIsInteracting } from '../../internals/plugins/useChartProZoom';
-import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom/useChartProZoom.types';
 
 /**
  * Get access to the zoom state.
@@ -10,7 +10,7 @@ import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoo
  */
 export function useIsZoomInteracting(): boolean {
   const store = useStore<[UseChartProZoomSignature]>();
-  const isInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const isInteracting = store.use(selectorChartZoomIsInteracting);
 
   return isInteracting;
 }

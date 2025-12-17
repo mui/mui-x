@@ -1,11 +1,15 @@
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { createSelector, createSelectorMemoizedWithOptions } from '@mui/x-internals/store';
-import { AxisId, ChartsAxisProps, AxisItemIdentifier } from '../../../../models/axis';
+import {
+  type AxisId,
+  type ChartsAxisProps,
+  type AxisItemIdentifier,
+} from '../../../../models/axis';
 import {
   selectorChartsInteractionPointerX,
   selectorChartsInteractionPointerY,
 } from '../useChartInteraction/useChartInteraction.selectors';
-import { ComputeResult } from './computeAxisValue';
+import { type ComputeResult } from './computeAxisValue';
 import { generateSvg2rotation } from './coordinateTransformation';
 import { getAxisIndex } from './getAxisIndex';
 import { selectorChartPolarCenter, selectorChartRotationAxis } from './useChartPolarAxis.selectors';

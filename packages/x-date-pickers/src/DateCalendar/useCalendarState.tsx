@@ -150,7 +150,11 @@ export const useCalendarState = (
   const [calendarState, dispatch] = React.useReducer(reducerFn, {
     isMonthSwitchingAnimating: false,
     focusedDay: referenceDate,
-    currentMonth: adapter.startOfMonth(referenceDate),
+    // Keep the time from the reference date when computing the current month anchor.
+    // Using startOfMonth would reset the time to 00:00 which breaks expectations
+    // that month selections preserve the referenceDate time when no value is provided.
+    // See tests: "should use `referenceDate` when no value defined".
+    currentMonth: adapter.setDate(referenceDate, 1),
     slideDirection: 'left',
   });
 

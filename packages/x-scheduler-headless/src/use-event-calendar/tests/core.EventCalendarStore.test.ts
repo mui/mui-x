@@ -24,12 +24,14 @@ describe('Core - EventCalendarStore', () => {
         areEventsResizable: false,
         canDragEventsFromTheOutside: false,
         canDropEventsToTheOutside: false,
+        copiedEvent: null,
         eventColor: 'jade',
         eventCreation: true,
         eventIdList: [],
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
+        displayTimezone: 'default',
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
@@ -42,12 +44,11 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        timezone: 'default',
         view: DEFAULT_VIEW,
         viewConfig: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
-        visibleResources: new Map(),
+        visibleResources: {},
       };
 
       expect(store.state).to.deep.equal(expectedState);

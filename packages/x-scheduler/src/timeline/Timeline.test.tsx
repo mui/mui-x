@@ -1,5 +1,4 @@
 import { screen } from '@mui/internal-test-utils';
-import { diffIn } from '@mui/x-scheduler-headless/use-adapter';
 import { Timeline } from '@mui/x-scheduler/timeline';
 import {
   adapter,
@@ -142,7 +141,7 @@ describe('<Timeline />', () => {
     it('should render events correctly in the weeks view', () => {
       const totalWidth = 64 * 7 * 12; // 64px * 7 days * 12 weeks
       const startOfWeek = adapter.startOfWeek(DEFAULT_TESTING_VISIBLE_DATE);
-      const weekDayNumber = diffIn(adapter, baseEvents[0].start, startOfWeek, 'days');
+      const weekDayNumber = adapter.differenceInDays(baseEvents[0].start, startOfWeek);
       const dayBoundaries = { start: weekDayNumber * 64, end: (weekDayNumber + 1) * 64 };
 
       renderTimeline({ view: 'weeks' });
