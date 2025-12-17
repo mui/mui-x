@@ -141,11 +141,11 @@ describe('Pinch Gesture', () => {
     });
 
     expect(events).toStrictEqual([
-      'pinch: scale: 1.50 | distance: 50 | direction: 1',
+      'pinch: scale: 1.47 | distance: 48 | direction: 1',
+      'pinch: scale: 1.53 | distance: 51 | direction: 1',
       'pinch: scale: 1.60 | distance: 53 | direction: 1',
-      'pinch: scale: 1.70 | distance: 56 | direction: 1',
-      'pinch: scale: 1.80 | distance: 60 | direction: 1',
-      'pinchEnd: scale: 1.80 | distance: 55 | direction: 1',
+      'pinch: scale: 1.67 | distance: 55 | direction: 1',
+      'pinchEnd: scale: 1.67 | distance: 48 | direction: 1',
     ]);
   });
 
@@ -165,11 +165,35 @@ describe('Pinch Gesture', () => {
     });
 
     expect(events).toStrictEqual([
-      'pinchStart: scale: 1.15 | distance: 57 | direction: 1',
-      'pinch: scale: 1.15 | distance: 57 | direction: 1',
-      'pinch: scale: 1.30 | distance: 64 | direction: 1',
-      'pinch: scale: 1.45 | distance: 71 | direction: 1',
-      'pinch: scale: 1.60 | distance: 78 | direction: 1',
+      'pinchStart: scale: 1.04 | distance: 46 | direction: 1',
+      'pinch: scale: 1.04 | distance: 46 | direction: 1',
+      'pinch: scale: 1.08 | distance: 48 | direction: 1',
+      'pinch: scale: 1.13 | distance: 50 | direction: 1',
+      'pinch: scale: 1.17 | distance: 52 | direction: 1',
+      'pinch: scale: 1.21 | distance: 54 | direction: 1',
+      'pinch: scale: 1.25 | distance: 56 | direction: 1',
+    ]);
+
+    // Clear events
+    events = [];
+
+    // Continue pinch with remaining 2 pointers
+    await gesture.pinch({
+      target,
+      distance: 20,
+      steps: 2,
+      pointers: {
+        amount: 2,
+        ids: [2121, 2122],
+      },
+    });
+
+    expect(events).toStrictEqual([
+      'pinch: scale: 1.36 | distance: 64 | direction: 1',
+      'pinch: scale: 1.47 | distance: 69 | direction: 1',
+      'pinch: scale: 1.57 | distance: 74 | direction: 1',
+      'pinch: scale: 1.68 | distance: 79 | direction: 1',
+      'pinchEnd: scale: 1.68 | distance: 79 | direction: 1',
     ]);
   });
 
