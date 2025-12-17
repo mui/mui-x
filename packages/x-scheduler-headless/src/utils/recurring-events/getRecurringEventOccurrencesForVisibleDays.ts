@@ -194,11 +194,13 @@ class RecurringEventExpander {
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
       dataTimezone: {
+        ...this.event.dataTimezone,
         start: processDate(occurrenceStartOriginal, this.adapter),
         end: processDate(occurrenceEndOriginal, this.adapter),
         timezone: this.event.dataTimezone.timezone,
       },
       displayTimezone: {
+        ...this.event.displayTimezone,
         start: processDate(occurrenceStartDisplayTimezone, this.adapter),
         end: processDate(occurrenceEndDisplayTimezone, this.adapter),
         timezone: this.event.displayTimezone.timezone,
