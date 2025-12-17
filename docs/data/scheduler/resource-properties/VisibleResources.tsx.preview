@@ -5,4 +5,5 @@
   resources={resources}
   visibleResources={visibleResources}
   onVisibleResourcesChange={handleVisibleResourcesChange}
+  defaultPreferences={{ isSidePanelOpen: false }}
 />
