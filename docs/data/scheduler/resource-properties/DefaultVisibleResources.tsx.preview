@@ -7,4 +7,5 @@
     holidays: false,
     medical: false,
   }}
+  defaultPreferences={{ isSidePanelOpen: false }}
 />
