@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { useInteractionItemProps, type SeriesId } from '@mui/x-charts/internals';
+import { type SeriesId } from '@mui/x-charts/internals';
 import { type HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
 
 export interface HeatmapItemSlots {
@@ -95,8 +95,6 @@ function HeatmapItem(props: HeatmapItemProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'heatmap', seriesId, dataIndex });
-
   const ownerState = {
     seriesId,
     dataIndex,
@@ -110,7 +108,6 @@ function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   const cellProps = useSlotProps({
     elementType: Cell,
-    additionalProps: interactionProps,
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,

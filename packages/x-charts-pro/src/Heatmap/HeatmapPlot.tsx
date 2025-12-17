@@ -9,6 +9,7 @@ import {
 } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 import { HeatmapItem, type HeatmapItemProps } from './HeatmapItem';
+import { useInteractionItemProps } from './useInteractionItemProps';
 
 export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
 
@@ -21,6 +22,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
 
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
   const isFaded = store.use(selectorChartsIsFadedCallback);
+  const eventHandlers = useInteractionItemProps();
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
@@ -31,7 +33,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
   const seriesToDisplay = series.series[series.seriesOrder[0]];
 
   return (
-    <g>
+    <g {...eventHandlers}>
       {seriesToDisplay.data.map(([xIndex, yIndex, value], dataIndex) => {
         const x = xScale(xDomain[xIndex]);
         const y = yScale(yDomain[yIndex]);
