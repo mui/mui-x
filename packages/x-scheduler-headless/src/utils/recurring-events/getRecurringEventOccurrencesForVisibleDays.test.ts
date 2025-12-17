@@ -551,7 +551,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       // Should appear only on the 11th, 12th and 13th in Europe/Madrid
-      const days = result.map((o) => adapter.format(o.start.value, 'dayOfMonth'));
+      const days = result.map((o) => adapter.format(o.dataTimezone.start.value, 'dayOfMonth'));
       expect(days).to.deep.equal(['11', '12', '13']);
     });
 
@@ -607,11 +607,16 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       result.forEach((occ) => {
-        expect(adapter.isWithinRange(occ.start.value, [visibleStart, visibleEnd])).to.equal(true);
+        expect(
+          adapter.isWithinRange(occ.dataTimezone.start.value, [visibleStart, visibleEnd]),
+        ).to.equal(true);
       });
       // Duration must remain exactly 48h
       result.forEach((occ) => {
-        const hours = adapter.differenceInHours(occ.end.value, occ.start.value);
+        const hours = adapter.differenceInHours(
+          occ.dataTimezone.end.value,
+          occ.dataTimezone.start.value,
+        );
         expect(hours).to.equal(48);
       });
     });
