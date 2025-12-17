@@ -14,18 +14,16 @@ const SUPPORTED_RRULE_KEYS = new Set([
 ]);
 
 /**
- * Parses a string RRULE (e.g. "FREQ=DAILY;COUNT=5;INTERVAL=2")
- * into a RecurringEventRecurrenceRule object.
- * Also validates unsupported or malformed properties.
+ * Parses and validates a RRULE string (RFC5545) into a canonical
+ * `RecurringEventRecurrenceRule`.
  *
- * @param adapter The date adapter used to parse and convert dates.
- * @param input The RRULE value. Can be a string or an RecurringEventRecurrenceRule object.
- * @param displayTimezone The timezone used to display RRULE-related dates (like UNTIL) in the UI.
+ * The resulting rule is expressed in the provided timezone
+ * (typically the event data timezone).
  */
-export function parseRRuleString(
+export function parseRRule(
   adapter: Adapter,
   input: string | RecurringEventRecurrenceRule,
-  displayTimezone: TemporalTimezone,
+  timezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
     if (!input.until) {
@@ -34,7 +32,7 @@ export function parseRRuleString(
 
     return {
       ...input,
-      until: adapter.setTimezone(input.until, displayTimezone),
+      until: adapter.setTimezone(input.until, timezone),
     };
   }
 
@@ -106,11 +104,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(
-      rruleObject.UNTIL,
-      getAdapterCache(adapter).untilFormat,
-      displayTimezone,
-    );
+    const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, timezone);
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);

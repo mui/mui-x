@@ -316,7 +316,7 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (original?.rrule) {
+    if (original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
       );
@@ -357,7 +357,7 @@ export class SchedulerStore<
 
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
-    if (!original.rrule) {
+    if (!original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
@@ -444,7 +444,7 @@ export class SchedulerStore<
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
-        original.end.timestamp - original.start.timestamp,
+        original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
       );
     }
 
