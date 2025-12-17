@@ -209,6 +209,9 @@ export const schedulerEventSelectors = {
       return isResizableFromComponentProperty ?? false;
     },
   ),
+  isRecurring: createSelector(processedEventSelector, (event) =>
+    Boolean(event?.dataTimezone.rrule),
+  ),
 };
 
 function getIsResizableFromProperty(
