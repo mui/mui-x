@@ -6,7 +6,6 @@ import type { PieSeriesLayout } from '../models/seriesType/pie';
 import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartSeriesLayout } from '../internals/plugins/corePlugins/useChartSeries';
-import { useSelector } from '../internals/store/useSelector';
 
 export type UsePieSeriesReturnValue = ChartSeriesDefaultized<'pie'>;
 export type UsePieSeriesContextReturnValue = ProcessedSeries['pie'];
@@ -55,7 +54,7 @@ export function usePieSeriesContext(): UsePieSeriesContextReturnValue {
 export function usePieSeriesLayout(): Record<SeriesId, PieSeriesLayout> {
   const store = useStore();
 
-  const seriesLayout = useSelector(store, selectorChartSeriesLayout);
+  const seriesLayout = store.use(selectorChartSeriesLayout);
 
   return seriesLayout.pie ?? {};
 }
