@@ -31,6 +31,7 @@ The following team members contributed to this release:
 - [data grid] Prevent clear cell selection on edit mode (#20544) @siriwatknp
 - [data grid] Refactor column merge logic to prioritize defined properties only (#20640) @michelengelen
 - [data grid] Reset row spanning on row expansion change (#20661) @siriwatknp
+- [data grid] Resize newly added rows while resize action is happening (#20676)
 - [l10n] Improve Swedish (sv-SE) locale (#20682) @VismaAndreasIvarsson
 
 #### `@mui/x-data-grid-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -60,12 +61,15 @@ Same changes as in `@mui/x-date-pickers@8.22.1`.
 - [charts] Extract `FocusedPieArc` from `PieArcPlot` (#20613) @alexfauquette
 - [charts] Fix regression on the highlight control (#20627) @alexfauquette
 - [charts] Refactor: `useSelector()` => `store.use()` (#20681) @romgrk
+- [charts] Remove duplicated types (#20694) @alexfauquette
 - [charts] Remove unused generics from bar charts (#20642) @bernardobelchior
 - [charts] Simplify tooltip position getter for pie chart (#20625) @alexfauquette
 
 #### `@mui/x-charts-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.22.1`.
+Same changes as in `@mui/x-charts@8.22.1`, plus:
+
+- [charts-pro] Add heatmap performance benchmark (#20695) @bernardobelchior
 
 #### `@mui/x-charts-premium@8.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
