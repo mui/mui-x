@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
@@ -186,63 +186,63 @@ describe('EventCalendar', () => {
       const { user } = render(<EventCalendar events={[]} />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to change the time format using the UI in the month view', async () => {
       const { user } = render(<EventCalendar events={[event1]} defaultView="month" />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to change the time format using the UI in the agenda view', async () => {
       const { user } = render(<EventCalendar events={[event1]} defaultView="agenda" />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
