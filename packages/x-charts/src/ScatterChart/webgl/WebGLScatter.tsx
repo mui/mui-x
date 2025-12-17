@@ -118,7 +118,6 @@ function WebGLScatter(props: ScatterProps) {
     }
 
     // FIXME: This is broken in Safari, need to find a cross-browser way to handle this
-
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const width =
@@ -251,7 +250,15 @@ function WebGLScatter(props: ScatterProps) {
 
     // Draw all circles with one instanced draw call
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, scatterPlotData.length);
-  }, [renderKey, gl, scatterPlotData, drawingArea.left, drawingArea.top, series.markerSize]);
+  }, [
+    renderKey,
+    gl,
+    scatterPlotData,
+    drawingArea.left,
+    drawingArea.top,
+    series.markerSize,
+    colorGetter,
+  ]);
 
   return null;
 }
