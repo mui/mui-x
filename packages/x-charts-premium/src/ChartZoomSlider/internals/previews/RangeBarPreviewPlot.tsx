@@ -2,7 +2,6 @@ import {
   type AxisId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  useSelector,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
@@ -60,8 +59,8 @@ export function RangeBarPreviewPlot(props: RangeBarPreviewPlotProps) {
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useRangeBarPlotData(drawingArea, xAxes, yAxes);
 }

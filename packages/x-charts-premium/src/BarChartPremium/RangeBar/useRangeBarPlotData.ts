@@ -7,7 +7,6 @@ import {
   getBandSize,
   type ScaleName,
   selectorChartSeriesConfig,
-  useSelector,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/models';
@@ -24,7 +23,7 @@ export function useRangeBarPlotData(
   const seriesData = useRangeBarSeriesContext() ?? { series: {}, seriesOrder: [] };
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
-  const getColor = useSelector(store, selectorChartSeriesConfig).rangeBar.colorProcessor;
+  const getColor = store.use(selectorChartSeriesConfig).rangeBar.colorProcessor;
 
   const { series, seriesOrder } = seriesData;
 
