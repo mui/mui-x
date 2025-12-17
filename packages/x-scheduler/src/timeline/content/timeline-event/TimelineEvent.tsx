@@ -35,8 +35,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const sharedProps = {
     id,
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
     className: clsx(className, 'TimelineEvent', getColorClassName(color)),

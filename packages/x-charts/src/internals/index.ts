@@ -43,7 +43,6 @@ export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/
 
 export * from './store/useCharts';
 export * from './store/useStore';
-export * from './store/useSelector';
 
 // plugins configs
 

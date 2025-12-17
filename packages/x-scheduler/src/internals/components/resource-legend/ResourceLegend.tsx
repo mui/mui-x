@@ -65,17 +65,19 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
-  const handleVisibleResourcesChange = useStableCallback((value: string[]) => {
-    const valueSet = new Set(value);
-    const newVisibleResourcesMap = new Map(
-      schedulerResourceSelectors
-        .processedResourceList(store.state)
-        .filter((resource) => !valueSet.has(resource.id))
-        .map((resource) => [resource.id, false]),
-    );
+  const handleVisibleResourcesChange = useStableCallback(
+    (value: string[], eventDetails: CheckboxGroup.ChangeEventDetails) => {
+      const valueSet = new Set(value);
+      const newVisibleResources: Record<string, boolean> = {};
+      for (const resource of schedulerResourceSelectors.processedResourceList(store.state)) {
+        if (!valueSet.has(resource.id)) {
+          newVisibleResources[resource.id] = false;
+        }
+      }
 
-    store.setVisibleResources(newVisibleResourcesMap);
-  });
+      store.setVisibleResources(newVisibleResources, eventDetails.event);
+    },
+  );
 
   if (resources.length === 0) {
     return null;
