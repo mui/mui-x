@@ -47,7 +47,7 @@ export interface UseChartVisibilityManagerPublicAPI {
    *
    * @param {VisibilityIdentifier} identifiers The identifiers of the item to toggle.
    */
-  toggleItem(...identifiers: VisibilityIdentifier[]): void;
+  toggleItemVisibility(...identifiers: VisibilityIdentifier[]): void;
 }
 
 export interface UseChartVisibilityManagerInstance extends UseChartVisibilityManagerPublicAPI {}

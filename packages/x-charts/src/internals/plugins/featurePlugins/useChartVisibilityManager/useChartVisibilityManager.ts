@@ -85,12 +85,12 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     instance: {
       hideItem,
       showItem,
-      toggleItem,
+      toggleItemVisibility: toggleItem,
     },
     publicAPI: {
       hideItem,
       showItem,
-      toggleItem,
+      toggleItemVisibility: toggleItem,
     },
   };
 };

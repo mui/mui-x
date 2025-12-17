@@ -126,7 +126,7 @@ const ChartsLegend = consumeSlots(
           }
 
           if (toggleVisibilityOnClick) {
-            instance.toggleItem(item.seriesId!, item.itemId!);
+            instance.toggleItemVisibility(item.seriesId!, item.itemId!);
           }
         },
     );
