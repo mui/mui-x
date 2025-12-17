@@ -243,6 +243,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     itemId,
     label,
     disabled,
+    selectable,
     children,
     slots = {},
     slotProps = {},
@@ -269,6 +270,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     children,
     label,
     disabled,
+    selectable,
   });
 
   const classes = useUtilityClasses(classesProp);
