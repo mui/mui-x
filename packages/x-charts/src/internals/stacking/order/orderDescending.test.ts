@@ -1,28 +1,69 @@
 import { expect } from 'vitest';
+import { stackOrderDescending as d3OrderDescending } from '@mui/x-charts-vendor/d3-shape';
 import { orderDescending } from './orderDescending';
+import { generateSeries } from './test.helper';
 
 describe('orderDescending', () => {
   it('should order by descending sum', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 5 }, 0: 0, 1: 5 },
-      ],
-      [
-        { data: { C: 15 }, 0: 0, 1: 15 },
-        { data: { C: 20 }, 0: 0, 1: 20 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
-    series[2].key = 'C';
+    const series = generateSeries([
+      [10, 5],
+      [20, 10],
+      [5, 15],
+      [8, 2],
+    ]);
 
     const result = orderDescending(series);
-    // Reverse of ascending: Series C (sum=35), Series A (sum=30), Series B (sum=10)
-    expect(result).to.deep.equal([2, 0, 1]);
+    const d3Result = d3OrderDescending(series);
+
+    // Series 1 (sum=30), Series 2 (sum=20), Series 0 (sum=15), Series 3 (sum=10)
+    expect(result).to.deep.equal([1, 2, 0, 3]);
+    expect(d3Result).to.deep.equal(result);
+  });
+
+  it('should handle empty series', () => {
+    const series: any = [];
+    const result = orderDescending(series);
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should handle single series', () => {
+    const series = generateSeries([[10, 5]]);
+    const result = orderDescending(series);
+    expect(result).to.deep.equal([0]);
+  });
+
+  it('should handle null values', () => {
+    const series = generateSeries([
+      [10, null, 5],
+      [20, 10, null],
+      [null, 15, 5],
+    ]);
+
+    const result = orderDescending(series);
+    const d3Result = d3OrderDescending(series);
+
+    // Series 1 (sum=30), Series 2 (sum=20), Series 0 (sum=15)
+    expect(result).to.deep.equal([1, 2, 0]);
+    expect(d3Result).to.deep.equal(result);
+  });
+
+  it('should handle series where d3 would change output based on zeros', () => {
+    const series = generateSeries(
+      [
+        [20, 5],
+        [10, 10],
+      ],
+      [
+        [0, undefined],
+        [undefined, 0],
+      ],
+    );
+
+    const result = orderDescending(series);
+    const d3Result = d3OrderDescending(series);
+
+    expect(result).to.deep.equal([0, 1]);
+    expect(d3Result).to.deep.equal([1, 0]);
+    expect(result).not.to.deep.equal(d3Result);
   });
 });

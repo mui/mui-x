@@ -1,6 +1,7 @@
 import { expect } from 'vitest';
-// import { offsetDiverging } from './offsetDiverging';
-import { stackOffsetDiverging as offsetDiverging } from '@mui/x-charts-vendor/d3-shape';
+import { stackOffsetDiverging as d3OffsetDiverging } from '@mui/x-charts-vendor/d3-shape';
+import { generateSeries } from '../order/test.helper';
+import { offsetDiverging } from './offsetDiverging';
 
 describe('offsetDiverging', () => {
   it('should handle empty series array', () => {
@@ -9,120 +10,72 @@ describe('offsetDiverging', () => {
     offsetDiverging(series, order);
     expect(series).to.deep.equal([]);
   });
-
   it('should stack positive values above zero', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 15 }, 0: 0, 1: 15 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [10, 20],
+      [5, 15],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // First series starts at 0
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
     expect(series[0][1][0]).to.equal(0);
     expect(series[0][1][1]).to.equal(20);
-
     // Second series stacks on top of first
     expect(series[1][0][0]).to.equal(10);
     expect(series[1][0][1]).to.equal(15);
     expect(series[1][1][0]).to.equal(20);
     expect(series[1][1][1]).to.equal(35);
   });
-
   it('should stack negative values below zero', () => {
-    const series: any = [
-      [
-        { data: { A: -10 }, 0: 0, 1: -10 },
-        { data: { A: -20 }, 0: 0, 1: -20 },
-      ],
-      [
-        { data: { B: -5 }, 0: 0, 1: -5 },
-        { data: { B: -15 }, 0: 0, 1: -15 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [-10, -20],
+      [-5, -15],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // First series starts at 0 and goes negative
     expect(series[0][0][1]).to.equal(0);
     expect(series[0][0][0]).to.equal(-10);
     expect(series[0][1][1]).to.equal(0);
     expect(series[0][1][0]).to.equal(-20);
-
     // Second series stacks below first
     expect(series[1][0][1]).to.equal(-10);
     expect(series[1][0][0]).to.equal(-15);
     expect(series[1][1][1]).to.equal(-20);
     expect(series[1][1][0]).to.equal(-35);
   });
-
   it('should handle mixed positive and negative values', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: -20 }, 0: 0, 1: -20 },
-      ],
-      [
-        { data: { B: -5 }, 0: 0, 1: -5 },
-        { data: { B: 15 }, 0: 0, 1: 15 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [10, -20],
+      [-5, 15],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // First point: A=10 (positive), B=-5 (negative)
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
     expect(series[1][0][1]).to.equal(0);
     expect(series[1][0][0]).to.equal(-5);
-
     // Second point: A=-20 (negative), B=15 (positive)
     expect(series[0][1][1]).to.equal(0);
     expect(series[0][1][0]).to.equal(-20);
     expect(series[1][1][0]).to.equal(0);
     expect(series[1][1][1]).to.equal(15);
   });
-
   it('should handle zero values with positive original data', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 1 }, 0: 0, 1: 1 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 0 }, 0: 0, 1: 0 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [10, 1],
+      [5, 0],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // First point: A=10, B=5
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
     expect(series[1][0][0]).to.equal(10);
     expect(series[1][0][1]).to.equal(15);
-
     // Second point: A=1, B=0 (with positive original data 0 > 0 is false, so uses 0,0)
     expect(series[0][1][0]).to.equal(0);
     expect(series[0][1][1]).to.equal(1);
@@ -130,98 +83,56 @@ describe('offsetDiverging', () => {
     expect(series[1][1][0]).to.equal(0);
     expect(series[1][1][1]).to.equal(0);
   });
-
   it('should handle zero values with negative original data', () => {
-    const series: any = [
-      [
-        { data: { A: -10 }, 0: 0, 1: -10 },
-        { data: { A: -1 }, 0: 0, 1: -1 },
-      ],
-      [
-        { data: { B: -5 }, 0: 0, 1: -5 },
-        { data: { B: 0 }, 0: 0, 1: 0 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [-10, -1],
+      [-5, 0],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // First point: A=-10, B=-5
     expect(series[0][0][1]).to.equal(0);
     expect(series[0][0][0]).to.equal(-10);
     expect(series[1][0][1]).to.equal(-10);
     expect(series[1][0][0]).to.equal(-15);
-
     // Second point: A=-1, B=0 (with 0 original data, falls through to else)
     expect(series[0][1][1]).to.equal(0);
     expect(series[0][1][0]).to.equal(-1);
     expect(series[1][1][0]).to.equal(0);
     expect(series[1][1][1]).to.equal(0);
   });
-
   it('should handle zero values with zero original data', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 0 }, 0: 0, 1: 0 },
-      ],
-    ];
-    series[0].key = 'A';
+    const series = generateSeries([[10, 0]]);
     const order = [0];
-
     offsetDiverging(series, order);
-
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
     expect(series[0][1][0]).to.equal(0);
     expect(series[0][1][1]).to.equal(0);
   });
-
   it('should respect custom order', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 15 }, 0: 0, 1: 15 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [10, 20],
+      [5, 15],
+    ]);
+
     const order = [1, 0]; // Reverse order
-
     offsetDiverging(series, order);
-
     // First series (B) starts at 0
     expect(series[1][0][0]).to.equal(0);
     expect(series[1][0][1]).to.equal(5);
     expect(series[1][1][0]).to.equal(0);
     expect(series[1][1][1]).to.equal(15);
-
     // Second series (A) stacks on top
     expect(series[0][0][0]).to.equal(5);
     expect(series[0][0][1]).to.equal(15);
     expect(series[0][1][0]).to.equal(15);
     expect(series[0][1][1]).to.equal(35);
   });
-
   it('should handle single series', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: -5 }, 0: 0, 1: -5 },
-        { data: { A: 15 }, 0: 0, 1: 15 },
-      ],
-    ];
-    series[0].key = 'A';
+    const series = generateSeries([[10, -5, 15]]);
     const order = [0];
-
     offsetDiverging(series, order);
-
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
     expect(series[0][1][1]).to.equal(0);
@@ -229,32 +140,14 @@ describe('offsetDiverging', () => {
     expect(series[0][2][0]).to.equal(0);
     expect(series[0][2][1]).to.equal(15);
   });
-
   it('should handle multiple series with complex stacking', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: -10 }, 0: 0, 1: -10 },
-        { data: { A: 5 }, 0: 0, 1: 5 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 10 }, 0: 0, 1: 10 },
-        { data: { B: -5 }, 0: 0, 1: -5 },
-      ],
-      [
-        { data: { C: -5 }, 0: 0, 1: -5 },
-        { data: { C: 5 }, 0: 0, 1: 5 },
-        { data: { C: 10 }, 0: 0, 1: 10 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
-    series[2].key = 'C';
+    const series = generateSeries([
+      [10, -10, 5],
+      [5, 10, -5],
+      [-5, 5, 10],
+    ]);
     const order = [0, 1, 2];
-
     offsetDiverging(series, order);
-
     // Point 0: A=10+, B=5+, C=-5
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
@@ -262,7 +155,6 @@ describe('offsetDiverging', () => {
     expect(series[1][0][1]).to.equal(15);
     expect(series[2][0][1]).to.equal(0);
     expect(series[2][0][0]).to.equal(-5);
-
     // Point 1: A=-10, B=10+, C=5+
     expect(series[0][1][1]).to.equal(0);
     expect(series[0][1][0]).to.equal(-10);
@@ -270,7 +162,6 @@ describe('offsetDiverging', () => {
     expect(series[1][1][1]).to.equal(10);
     expect(series[2][1][0]).to.equal(10);
     expect(series[2][1][1]).to.equal(15);
-
     // Point 2: A=5+, B=-5, C=10+
     expect(series[0][2][0]).to.equal(0);
     expect(series[0][2][1]).to.equal(5);
@@ -279,71 +170,90 @@ describe('offsetDiverging', () => {
     expect(series[2][2][0]).to.equal(5);
     expect(series[2][2][1]).to.equal(15);
   });
-
   it('should handle null values in series', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: null }, 0: 0, 1: null },
-        { data: { A: 5 }, 0: 0, 1: 5 },
-      ],
-      [
-        { data: { B: null }, 0: 0, 1: null },
-        { data: { B: 15 }, 0: 0, 1: 15 },
-        { data: { B: -5 }, 0: 0, 1: -5 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [10, null, 5],
+      [null, 15, -5],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // Point 0: A=10, B=null (difference=0)
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
     // B has null, difference = null - 0 = NaN, which is treated as 0
     expect(series[1][0][0]).to.be.a('number');
     expect(series[1][0][1]).to.be.a('number');
-
     // Point 1: A=null (difference=0), B=15
     expect(series[0][1][0]).to.be.a('number');
     expect(series[0][1][1]).to.be.a('number');
     expect(series[1][1][0]).to.be.a('number');
     expect(series[1][1][1]).to.be.a('number');
-
     // Point 2: A=5, B=-5
     expect(series[0][2][0]).to.be.a('number');
     expect(series[0][2][1]).to.be.a('number');
     expect(series[1][2][1]).to.be.a('number');
     expect(series[1][2][0]).to.be.a('number');
   });
-
   it('should handle null values without breaking stacking order', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: null }, 0: 0, 1: null },
-        { data: { B: 5 }, 0: 0, 1: 5 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+    const series = generateSeries([
+      [10, 20],
+      [null, 5],
+    ]);
     const order = [0, 1];
-
     offsetDiverging(series, order);
-
     // First point: A=10, B=null
     expect(series[0][0][0]).to.equal(0);
     expect(series[0][0][1]).to.equal(10);
-
     // Second point: A=20, B=5
     expect(series[0][1][0]).to.equal(0);
     expect(series[0][1][1]).to.equal(20);
     expect(series[1][1][0]).to.equal(20);
     expect(series[1][1][1]).to.equal(25);
+  });
+  it('should handle differently when computed data is 0 but dataset is not', () => {
+    const series = generateSeries(
+      [
+        [10, 20],
+        [5, 30],
+        [10, 10],
+      ],
+      [
+        [0, 0],
+        [undefined, undefined],
+        [undefined, undefined],
+      ],
+    );
+    const d3Series = generateSeries(
+      [
+        [10, 20],
+        [5, 30],
+        [10, 10],
+      ],
+      [
+        [0, 0],
+        [undefined, undefined],
+        [undefined, undefined],
+      ],
+    );
+    const order = [2, 0, 1];
+    offsetDiverging(series, order);
+    d3OffsetDiverging(d3Series, order);
+
+    expect(series).not.to.deep.equal(d3Series);
+
+    // First point: A=10, B=5
+    expect(series[2][0][0]).to.equal(0);
+    expect(series[2][0][1]).to.equal(10);
+    expect(series[0][0][0]).to.equal(10);
+    expect(series[0][0][1]).to.equal(10);
+    expect(series[1][0][0]).to.equal(10);
+    expect(series[1][0][1]).to.equal(15);
+    // Second point: A=20, B=30
+    expect(series[2][1][0]).to.equal(0);
+    expect(series[2][1][1]).to.equal(10);
+    expect(series[0][1][0]).to.equal(10);
+    expect(series[0][1][1]).to.equal(10);
+    expect(series[1][1][0]).to.equal(10);
+    expect(series[1][1][1]).to.equal(40);
   });
 });

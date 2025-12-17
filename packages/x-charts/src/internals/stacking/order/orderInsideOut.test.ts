@@ -1,35 +1,23 @@
 import { expect } from 'vitest';
+import { stackOrderInsideOut as d3OrderInsideOut } from '@mui/x-charts-vendor/d3-shape';
 import { orderInsideOut } from './orderInsideOut';
+import { generateSeries } from './test.helper';
 
 describe('orderInsideOut', () => {
-  it('should order with larger series on outside', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 5 }, 0: 0, 1: 5 },
-      ],
-      [
-        { data: { B: 20 }, 0: 0, 1: 20 },
-        { data: { B: 10 }, 0: 0, 1: 10 },
-      ],
-      [
-        { data: { C: 5 }, 0: 0, 1: 5 },
-        { data: { C: 15 }, 0: 0, 1: 15 },
-      ],
-      [
-        { data: { D: 8 }, 0: 0, 1: 8 },
-        { data: { D: 2 }, 0: 0, 1: 2 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
-    series[2].key = 'C';
-    series[3].key = 'D';
+  it('should order with larger series on inside', () => {
+    const series = generateSeries([
+      [10, 5],
+      [20, 10],
+      [5, 15],
+      [8, 2],
+    ]);
 
     const result = orderInsideOut(series);
-    // Should alternate between top and bottom, placing larger series on outside
-    expect(result).to.have.lengthOf(4);
-    expect(result).to.be.an('array');
+    const d3Result = d3OrderInsideOut(series);
+
+    // Series 2 (sum=20), Series 3 (sum=10), Series 0 (sum=15), Series 1 (sum=30)
+    expect(result).to.deep.equal([2, 3, 0, 1]);
+    expect(d3Result).to.deep.equal(result);
   });
 
   it('should handle empty series', () => {
@@ -39,42 +27,42 @@ describe('orderInsideOut', () => {
   });
 
   it('should handle single series', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 5 }, 0: 0, 1: 5 },
-      ],
-    ];
-    series[0].key = 'A';
-
+    const series = generateSeries([[10, 5]]);
     const result = orderInsideOut(series);
     expect(result).to.deep.equal([0]);
   });
 
-  it('should alternate between tops and bottoms', () => {
-    const series: any = [
-      [
-        { data: { A: 1 }, 0: 0, 1: 1 },
-        { data: { A: 2 }, 0: 0, 1: 2 },
-      ],
-      [
-        { data: { B: 1 }, 0: 0, 1: 1 },
-        { data: { B: 3 }, 0: 0, 1: 3 },
-      ],
-      [
-        { data: { C: 1 }, 0: 0, 1: 1 },
-        { data: { C: 1 }, 0: 0, 1: 1 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
-    series[2].key = 'C';
+  it('should handle null values', () => {
+    const series = generateSeries([
+      [10, null, 5],
+      [20, 10, null],
+      [null, 15, 5],
+    ]);
 
     const result = orderInsideOut(series);
-    // Should have all 3 series in some order
-    expect(result).to.have.lengthOf(3);
-    expect(result).to.include(0);
-    expect(result).to.include(1);
-    expect(result).to.include(2);
+    const d3Result = d3OrderInsideOut(series);
+
+    expect(result).to.deep.equal([2, 0, 1]);
+    expect(d3Result).to.deep.equal(result);
+  });
+
+  it('should handle series where d3 would change output based on zeros', () => {
+    const series = generateSeries(
+      [
+        [10, 5],
+        [10, 10],
+      ],
+      [
+        [0, undefined],
+        [undefined, 0],
+      ],
+    );
+
+    const result = orderInsideOut(series);
+    const d3Result = d3OrderInsideOut(series);
+
+    expect(result).to.deep.equal([0, 1]);
+    expect(d3Result).to.deep.equal([1, 0]);
+    expect(result).not.to.deep.equal(d3Result);
   });
 });

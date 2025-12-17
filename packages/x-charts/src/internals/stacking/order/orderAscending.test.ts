@@ -1,72 +1,69 @@
 import { expect } from 'vitest';
+import { stackOrderAscending as d3OrderAscending } from '@mui/x-charts-vendor/d3-shape';
 import { orderAscending } from './orderAscending';
+import { generateSeries } from './test.helper';
 
 describe('orderAscending', () => {
   it('should order by ascending sum', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 5 }, 0: 0, 1: 5 },
-      ],
-      [
-        { data: { C: 15 }, 0: 0, 1: 15 },
-        { data: { C: 20 }, 0: 0, 1: 20 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
-    series[2].key = 'C';
+    const series = generateSeries([
+      [10, 5],
+      [20, 10],
+      [5, 15],
+      [8, 2],
+    ]);
 
     const result = orderAscending(series);
-    // Series B (sum=10), Series A (sum=30), Series C (sum=35)
-    expect(result).to.deep.equal([1, 0, 2]);
+    const d3Result = d3OrderAscending(series);
+
+    // Series 3 (sum=10), Series 0 (sum=15), Series 2 (sum=20), Series 1 (sum=30)
+    expect(result).to.deep.equal([3, 0, 2, 1]);
+    expect(d3Result).to.deep.equal(result);
   });
 
-  it('should handle negative values', () => {
-    const series: any = [
-      [
-        { data: { A: -10 }, 0: 0, 1: -10 },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 5 }, 0: 0, 1: 5 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
+  it('should handle empty series', () => {
+    const series: any = [];
+    const result = orderAscending(series);
+    expect(result).to.deep.equal([]);
+  });
+
+  it('should handle single series', () => {
+    const series = generateSeries([[10, 5]]);
+    const result = orderAscending(series);
+    expect(result).to.deep.equal([0]);
+  });
+
+  it('should handle null values', () => {
+    const series = generateSeries([
+      [10, null, 5],
+      [20, 10, null],
+      [null, 15, 5],
+    ]);
 
     const result = orderAscending(series);
-    // Series A (sum=10), Series B (sum=10) - stable sort
+    const d3Result = d3OrderAscending(series);
+
+    // Series 0 (sum=15), Series 2 (sum=20), Series 1 (sum=30)
+    expect(result).toStrictEqual([0, 2, 1]);
+    expect(d3Result).to.deep.equal(result);
+  });
+
+  it('should handle series where d3 would change output based on zeros', () => {
+    const series = generateSeries(
+      [
+        [10, 10],
+        [5, 20],
+      ],
+      [
+        [0, undefined],
+        [undefined, 0],
+      ],
+    );
+
+    const result = orderAscending(series);
+    const d3Result = d3OrderAscending(series);
+
     expect(result).to.deep.equal([0, 1]);
-  });
-
-  it('should handle null values in sum calculation', () => {
-    const series: any = [
-      [
-        { data: { A: 10 }, 0: 0, 1: 10 },
-        { data: { A: null }, 0: 0, 1: null },
-        { data: { A: 20 }, 0: 0, 1: 20 },
-      ],
-      [
-        { data: { B: 5 }, 0: 0, 1: 5 },
-        { data: { B: 15 }, 0: 0, 1: 15 },
-      ],
-      [
-        { data: { C: null }, 0: 0, 1: null },
-        { data: { C: 40 }, 0: 0, 1: 40 },
-      ],
-    ];
-    series[0].key = 'A';
-    series[1].key = 'B';
-    series[2].key = 'C';
-
-    const result = orderAscending(series);
-    // Series B (sum=20), Series A (sum=30 with null ignored), Series C (sum=40 with null ignored)
-    expect(result).to.deep.equal([1, 0, 2]);
+    expect(d3Result).to.deep.equal([1, 0]);
+    expect(result).not.to.deep.equal(d3Result);
   });
 });
