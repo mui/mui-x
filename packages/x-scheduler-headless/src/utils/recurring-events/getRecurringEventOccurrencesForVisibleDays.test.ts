@@ -551,7 +551,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
 
       // Should appear only on the 11th, 12th and 13th in Europe/Madrid
-      const days = result.map((o) => adapter.format(o.dataTimezone.start.value, 'dayOfMonth'));
+      const days = result.map((o) => adapter.format(o.displayTimezone.start.value, 'dayOfMonth'));
       expect(days).to.deep.equal(['11', '12', '13']);
     });
 
