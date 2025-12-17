@@ -1,6 +1,6 @@
 import * as React from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { render, cleanup } from '@testing-library/react';
+import { render, cleanup, findAllByPlaceholderText } from '@testing-library/react';
 import { describe } from 'vitest';
 import { Heatmap, HeatmapValueType } from '@mui/x-charts-pro';
 import { options } from '../utils/options';
@@ -22,7 +22,7 @@ describe('Heatmap', () => {
   bench(
     'Heatmap: 100x100 grid',
     async () => {
-      const { findByText } = render(
+      const { findAllByText } = render(
         <Heatmap
           xAxis={[{ data: xData }]}
           yAxis={[{ data: yData }]}
@@ -32,7 +32,7 @@ describe('Heatmap', () => {
         />,
       );
 
-      await findByText('60', { ignore: 'span' });
+      await findAllByText('60', { ignore: 'span' });
 
       cleanup();
     },
