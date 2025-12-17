@@ -11,7 +11,6 @@ _Dec 17, 2025_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-- Introduce a new `BarChartPremium` component
 - 🌎 Improve Swedish (sv-SE) locale on the Data Grid
 - 🐞 Bugfixes
 
