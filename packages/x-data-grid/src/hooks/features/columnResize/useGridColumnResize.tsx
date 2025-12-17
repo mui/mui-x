@@ -864,7 +864,7 @@ export const useGridColumnResize = (
   useGridEvent(apiRef, 'rowsSet', () => {
     // if the user is still resizing the column, update the cell references included in the resize action
     if (gridResizingColumnFieldSelector(apiRef) !== '') {
-      // wait until the rows are rendered
+      // wait until the rows are in the DOM
       requestAnimationFrame(() => {
         setCellElementsRef();
       });
