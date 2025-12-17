@@ -1,7 +1,5 @@
 import { type ProcessedSeries } from './plugins/corePlugins/useChartSeries';
-import {
-  getPreviousSeriesWithData,
-} from './getPreviousSeriesWithData';
+import { getPreviousSeriesWithData } from './getPreviousSeriesWithData';
 
 const barSeries = {
   type: 'bar' as const,
@@ -73,26 +71,31 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
   },
 };
 
-
 describe('getPreviousSeriesWithData', () => {
   it('should return previous series of same type if available', () => {
-    expect(getPreviousSeriesWithData(seriesMultipleTypes, 'line', 'b')).to.deep.equal({
+    expect(
+      getPreviousSeriesWithData(seriesMultipleTypes, new Set(['line']), 'line', 'b'),
+    ).to.deep.equal({
       seriesId: 'a',
       type: 'line',
     });
   });
 
   it('should return different series type if current series is the first one', () => {
-    expect(getPreviousSeriesWithData(seriesMultipleTypes, 'line', 'a')).to.deep.equal({
+    expect(
+      getPreviousSeriesWithData(seriesMultipleTypes, new Set(['line']), 'line', 'a'),
+    ).to.deep.equal({
       seriesId: 'b',
       type: 'bar',
     });
   });
 
   it('should return last series of same type if no other series type are available', () => {
-    expect(getPreviousSeriesWithData(seriesSingleType, 'bar', 'a')).to.deep.equal({
-      seriesId: 'b',
-      type: 'bar',
-    });
+    expect(getPreviousSeriesWithData(seriesSingleType, new Set(['bar']), 'bar', 'a')).to.deep.equal(
+      {
+        seriesId: 'b',
+        type: 'bar',
+      },
+    );
   });
 });

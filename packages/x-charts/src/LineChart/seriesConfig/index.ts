@@ -6,6 +6,7 @@ import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import getNextFocusedItem from './getNextFocusedItem';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
@@ -17,4 +18,5 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  getNextFocusedItem,
 };

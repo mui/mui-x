@@ -3,6 +3,7 @@ import { getExtremumX, getExtremumY } from './bar/extremums';
 import seriesProcessor from './bar/seriesProcessor';
 import legendGetter from './bar/legend';
 import getColor from './bar/getColor';
+import getNextFocusedItem from './bar/getNextFocusedItem';
 import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
 import tooltipItemPositionGetter from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
@@ -17,4 +18,5 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  getNextFocusedItem,
 };
