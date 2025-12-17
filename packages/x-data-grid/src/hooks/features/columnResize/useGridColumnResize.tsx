@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import debounce from '@mui/utils/debounce';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -45,7 +44,7 @@ import {
   createControllablePromise,
 } from '../../../utils/createControllablePromise';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { clamp, runIf } from '../../../utils/utils';
+import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
@@ -315,7 +314,6 @@ export const useGridColumnResize = (
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
-  const isResizing = gridResizingColumnFieldSelector(apiRef) !== '';
   const refs = useLazyRef(createResizeRefs).current;
 
   // To improve accessibility, the separator has padding on both sides.
@@ -863,7 +861,15 @@ export const useGridColumnResize = (
   useGridEvent(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
   useGridEvent(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
 
-  useGridEvent(apiRef, 'rowsSet', runIf(isResizing, debounce(setCellElementsRef, 0)));
+  useGridEvent(apiRef, 'rowsSet', () => {
+    // if the user is still resizing the column, update the cell references included in the resize action
+    if (gridResizingColumnFieldSelector(apiRef) !== '') {
+      // wait until the rows are rendered
+      requestAnimationFrame(() => {
+        setCellElementsRef();
+      });
+    }
+  });
 
   useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
   useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);
