@@ -54,6 +54,7 @@ import type { GridColumnResizeParams } from '../../../models/params/gridColumnRe
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { gridResizingColumnFieldSelector } from './columnResizeSelector';
 
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
@@ -472,6 +473,12 @@ export const useGridColumnResize = (
     });
   };
 
+  const setCellElementsRef = () => {
+    if (refs.columnHeaderElement) {
+      refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
+    }
+  };
+
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
 
@@ -497,7 +504,7 @@ export const useGridColumnResize = (
       colDef.field,
     );
 
-    refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
+    setCellElementsRef();
 
     refs.fillerLeft = findGridElement(
       apiRef.current,
@@ -853,6 +860,16 @@ export const useGridColumnResize = (
   useGridEvent(apiRef, 'columnResizeStart', handleResizeStart);
   useGridEvent(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
   useGridEvent(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
+
+  useGridEvent(apiRef, 'rowsSet', () => {
+    // if the user is still resizing the column, update the cell references included in the resize action
+    if (gridResizingColumnFieldSelector(apiRef) !== '') {
+      // wait until the rows are in the DOM
+      requestAnimationFrame(() => {
+        setCellElementsRef();
+      });
+    }
+  });
 
   useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
   useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);

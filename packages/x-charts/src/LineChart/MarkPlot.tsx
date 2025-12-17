@@ -11,7 +11,6 @@ import {
   selectorChartsHighlightXAxisIndex,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useSelector } from '../internals/store/useSelector';
 import { type AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartContext } from '../context/ChartProvider';
@@ -69,7 +68,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   const { store } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
-  const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const xAxisHighlightIndexes = store.use(selectorChartsHighlightXAxisIndex);
 
   const highlightedItems = React.useMemo(() => {
     const rep: Record<AxisId, Set<number>> = {};

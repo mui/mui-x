@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore, useSelector } from '@mui/x-charts/internals';
+import { useStore } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode } from './sankey.types';
 import { selectorIsNodeHighlighted } from './plugins';
@@ -35,8 +35,8 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
 
     const labelAnchor = node.depth === 0 ? 'start' : 'end';
 
-    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, node.id);
-    const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
+    const isHighlighted = store.use(selectorIsNodeHighlighted, node.id);
+    const isFaded = store.use(selectorIsSankeyItemFaded, isHighlighted);
 
     let opacity = 1;
     if (isFaded) {

@@ -22,6 +22,7 @@ export function createPickerRenderer({
   const { render: clientRender } = createRenderer({
     ...createRendererOptions,
   });
+
   beforeEach(() => {
     if (clockConfig) {
       vi.setSystemTime(clockConfig);
