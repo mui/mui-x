@@ -167,6 +167,112 @@ describe('Rotate Gesture', () => {
     );
   });
 
+  it('should not jump when a new pointer is added during an active gesture', async () => {
+    // Start rotation with 2 pointers
+    const gesture = touchGesture.setup();
+    await gesture.rotate({
+      target,
+      rotationAngle: 90,
+      steps: 2,
+      pointers: {
+        amount: 2,
+        ids: [1120, 1121],
+      },
+      releasePointers: false,
+    });
+
+    // Adjust for Webkit's pixel rounding
+    const isWebkit = server.browser === 'webkit';
+    expect(events).toStrictEqual(
+      isWebkit
+        ? [
+            'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
+            'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
+            'rotate: rotation: 88° | delta: 21° | totalRotation: 88°',
+          ]
+        : [
+            'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
+            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
+            'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
+            'rotate: rotation: 90° | delta: 22° | totalRotation: 90°',
+          ],
+    );
+
+    // Clear events
+    events = [];
+
+    // Add a new pointer in the middle of the rotation
+    await gesture.rotate({
+      target,
+      rotationAngle: 90, // Continue rotating +90 degrees
+      steps: 2,
+      pointers: [
+        { id: 1120 },
+        { id: 1121 },
+        // Gotta position it in a place that makes sense
+        // Default pointers are generally in the same axis
+        { id: 1122, x: 50, y: 50 },
+      ],
+    });
+
+    expect(events).toStrictEqual([
+      'rotate: rotation: 112° | delta: 22° | totalRotation: 112°',
+      'rotate: rotation: 135° | delta: 22° | totalRotation: 135°',
+      'rotate: rotation: 157° | delta: 22° | totalRotation: 157°',
+      'rotate: rotation: 180° | delta: 22° | totalRotation: 180°',
+      'rotateEnd: rotation: 180° | delta: 22° | totalRotation: 180°',
+    ]);
+  });
+
+  it('should not jump when a pointer is removed during an active gesture', async () => {
+    // Start rotation with 3 pointers
+    const gesture = touchGesture.setup();
+    await gesture.rotate({
+      target,
+      rotationAngle: 90,
+      steps: 2,
+      pointers: [
+        { id: 2120, x: 75, y: 25 },
+        { id: 2121, x: 50, y: 50 },
+        { id: 2122, x: 25, y: 10 },
+      ],
+      releasePointers: [2120],
+    });
+
+    expect(events).toStrictEqual([
+      'rotateStart: rotation: 27° | delta: 27° | totalRotation: 27°',
+      'rotate: rotation: 27° | delta: 27° | totalRotation: 27°',
+      'rotate: rotation: 45° | delta: 17° | totalRotation: 45°',
+      'rotate: rotation: 72° | delta: 27° | totalRotation: 72°',
+      'rotate: rotation: 89° | delta: 17° | totalRotation: 89°',
+    ]);
+
+    // Clear events
+    events = [];
+
+    // Continue rotation with remaining 2 pointers
+    await gesture.rotate({
+      target,
+      rotationAngle: 90,
+      steps: 2,
+      pointers: {
+        amount: 2,
+        ids: [2121, 2122],
+      },
+    });
+
+    expect(events).toStrictEqual([
+      'rotate: rotation: 112° | delta: 22° | totalRotation: 112°',
+      'rotate: rotation: 134° | delta: 22° | totalRotation: 134°',
+      'rotate: rotation: 157° | delta: 22° | totalRotation: 157°',
+      'rotate: rotation: 179° | delta: 22° | totalRotation: 179°',
+      'rotateEnd: rotation: 179° | delta: 22° | totalRotation: 179°',
+    ]);
+  });
+
   it('should update options', () => {
     expect(RotateGesture).toUpdateOptions({
       preventDefault: true,
@@ -190,54 +296,5 @@ describe('Rotate Gesture', () => {
       maxPointers: 3,
       preventIf: ['pinch', 'pan'],
     });
-  });
-
-  it('should not jump rotation when a new pointer is added during an active gesture', async () => {
-    const gesture = touchGesture.setup();
-
-    // Start rotation with 2 pointers
-    await gesture.rotate({
-      target,
-      rotationAngle: 45,
-      steps: 2,
-      pointers: { ids: [20, 30] },
-      releasePointers: false,
-    });
-
-    // Get the last totalRotation value before adding a new pointer
-    const lastRotateEvent = events.filter((e) => e.startsWith('rotate:')).pop();
-    const rotationMatch = lastRotateEvent?.match(/totalRotation: (-?\d+)°/);
-    const lastTotalRotation = rotationMatch ? parseInt(rotationMatch[1], 10) : 0;
-
-    events = []; // Clear events
-
-    // Add a third pointer during the active rotate gesture
-    const rect = target.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    gesture.pointerManager.parsePointers({ ids: [40] }, target, { amount: 1, distance: 50 });
-    gesture.pointerManager.pointerDown({ id: 40, x: centerX + 40, y: centerY + 40, target });
-
-    // Continue rotating with all three pointers
-    await gesture.rotate({
-      target,
-      rotationAngle: 30,
-      steps: 1,
-      pointers: { ids: [20, 30, 40] },
-      releasePointers: true,
-    });
-
-    // The rotation should continue smoothly from where it was
-    // Without the fix, the rotation would jump significantly
-    const newRotateEvents = events.filter((e) => e.startsWith('rotate:'));
-    if (newRotateEvents.length > 0) {
-      const firstNewEvent = newRotateEvents[0];
-      const newRotationMatch = firstNewEvent.match(/totalRotation: (-?\d+)°/);
-      const newTotalRotation = newRotationMatch ? parseInt(newRotationMatch[1], 10) : 0;
-
-      // The rotation should not have jumped by more than 45 degrees (a significant jump would be > 90)
-      expect(Math.abs(newTotalRotation - lastTotalRotation)).toBeLessThan(60);
-    }
   });
 });
