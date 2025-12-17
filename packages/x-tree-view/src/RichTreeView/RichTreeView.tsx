@@ -242,6 +242,7 @@ RichTreeView.propTypes = {
    * @template R
    * @param {R} item The item to check.
    * @returns {boolean} `true` if the item can be selected.
+   * @default (item) => item.selectable !== false
    */
   isItemSelectable: PropTypes.func,
   /**
