@@ -5,6 +5,99 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.23.0
+
+<!-- generated comparing v8.22.0..master -->
+
+_Dec 17, 2025_
+
+We'd like to extend a big thank you to the 0 contributors who made this release possible. Here are some highlights ✨:
+
+- Introduce a new `BarChartPremium` component
+- 🌎 Improve Swedish (sv-SE) locale on the Data Grid
+- 🐞 Bugfixes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.23.0`
+
+- [data grid] Fix column menu keyboard shortcut (#20621) @mj12albert
+- [data grid] Fix row checkbox disabled state on first render and keep cell focusable (ARIA) (#20641) @michelengelen
+- [data grid] Fix tree data selection bug (#20528) @michelengelen
+- [data grid] Prevent clear cell selection on edit mode (#20544) @siriwatknp
+- [data grid] Refactor column merge logic to prioritize defined properties only (#20640) @michelengelen
+- [data grid] Reset row spanning on row expansion change (#20661) @siriwatknp
+- [l10n] Improve Swedish (sv-SE) locale (#20682) @VismaAndreasIvarsson
+
+#### `@mui/x-data-grid-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.23.0`.
+
+#### `@mui/x-data-grid-premium@8.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.23.0`, plus:
+
+- [DataGridPremium] Import `useId()` from `@mui/utils` to maintain React 17 compatibility (#20635) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.23.0`
+
+- [pickers] Fix `onAccept()` returning wrong year after selecting year then month (#20639) @michelengelen
+
+#### `@mui/x-date-pickers-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.23.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.23.0`
+
+- [charts] Extract `FocusedPieArc` from `PieArcPlot` (#20613) @alexfauquette
+- [charts] Fix regression on the highlight control (#20627) @alexfauquette
+- [charts] Refactor: `useSelector()` => `store.use()` (#20681) @romgrk
+- [charts] Remove unused generics from bar charts (#20642) @bernardobelchior
+- [charts] Simplify tooltip position getter for pie chart (#20625) @alexfauquette
+
+#### `@mui/x-charts-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.23.0`.
+
+#### `@mui/x-charts-premium@8.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.23.0`, plus:
+
+- [charts-premium] Create `BarChartPremium` (#20643) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.23.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.23.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.23.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add button to GitHub source code for the Data Grid advanced demos (DX-50) (#20633) @alelthomas
+- [docs] Remove `seriesConfig` to prevent future confusion (#20678) @alexfauquette
+- [docs] Revise the Data Grid's API object doc for clarity and style (#20649) @mapache-salvaje
+- [docs] Update list of charts (#20479) @prakhargupta1
+
+### Core
+
+- [code-infra] Regression tests improvements (#20441) @Janpot
+- [code-infra] Test utils upgrade (#20592) @Janpot
+- [code-infra] Try to fix the Tree View flacky tests (#20573) @JCQuintas
+
 ## 8.22.0
 
 _Dec 11, 2025_
