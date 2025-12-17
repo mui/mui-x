@@ -73,8 +73,9 @@ class RecurringEventExpander {
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
-    // Important: We use always the event's data timezone for computing occurrences to avoid
-    // issues when the display timezone has DST changes.
+    // Important:
+    // Occurrences are always computed in dataTimezone to avoid DST issues
+    // DisplayTimezone is applied only for presentation purposes
 
     this.seriesStart = adapter.startOfDay(event.dataTimezone.start.value);
     this.rule = event.dataTimezone.rrule!;
