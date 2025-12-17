@@ -31,6 +31,7 @@ export default function VisibleResources() {
         resources={resources}
         visibleResources={visibleResources}
         onVisibleResourcesChange={handleVisibleResourcesChange}
+      defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );
