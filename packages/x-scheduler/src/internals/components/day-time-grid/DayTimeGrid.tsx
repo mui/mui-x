@@ -94,7 +94,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     return Math.abs(adapter.differenceInMinutes(now, slotCenter)) <= 25;
   };
 
-  const template = new Date(Date.UTC(2020, 0, 1));
+  const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
