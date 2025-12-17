@@ -7,7 +7,6 @@ import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
-import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
@@ -147,10 +146,10 @@ export function BatchScatter(props: BatchScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, series.id);
-  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, series.id);
-  const seriesHighlightedItem = useSelector(store, selectorChartSeriesHighlightedItem, series.id);
-  const seriesUnfadedItem = useSelector(store, selectorChartSeriesUnfadedItem, series.id);
+  const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
+  const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
+  const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);
+  const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
   const classes = useUtilityClasses(inClasses);
