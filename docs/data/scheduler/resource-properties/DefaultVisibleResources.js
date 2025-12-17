@@ -20,6 +20,7 @@ export default function DefaultVisibleResources() {
           holidays: false,
           medical: false,
         }}
+defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );
