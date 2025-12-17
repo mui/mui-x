@@ -4,7 +4,7 @@ import { type SeriesProcessor } from '../../internals/plugins/models';
 const seriesProcessor: SeriesProcessor<'scatter'> = (
   { series, seriesOrder },
   dataset,
-  isIdentifierVisible,
+  isItemVisible,
 ) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
@@ -45,7 +45,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
             ...seriesData?.preview,
           },
           data,
-          hidden: !isIdentifierVisible?.(`${seriesId}`),
+          hidden: !isItemVisible?.(`${seriesId}`),
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
       ];

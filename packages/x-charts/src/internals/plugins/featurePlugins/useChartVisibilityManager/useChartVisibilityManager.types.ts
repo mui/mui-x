@@ -7,7 +7,7 @@ export type VisibilityMap = {
 
 export type VisibilityIdentifier = string | number;
 
-export type IsIdentifierVisibleFunction = {
+export type IsItemVisibleFunction = {
   /**
    * Function to check if an item is visible based on its identifier.
    *

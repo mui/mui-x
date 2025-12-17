@@ -13,7 +13,7 @@ import type { DefaultizedLineSeriesType } from '../../models';
 const lineValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedLineSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierVisible) => {
+const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
 
@@ -89,7 +89,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierV
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
 
-        if (!isIdentifierVisible?.(`${seriesId}`)) {
+        if (!isItemVisible?.(`${seriesId}`)) {
           // For hidden series, return 0 so they don't contribute to the stack
           return 0;
         }
@@ -106,7 +106,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isIdentifierV
             return typeof value === 'number' ? value : null;
           })
         : series[id].data!;
-      const hidden = !isIdentifierVisible?.(`${id}`);
+      const hidden = !isItemVisible?.(`${id}`);
       completedSeries[id] = {
         labelMarkType: 'line',
         ...series[id],

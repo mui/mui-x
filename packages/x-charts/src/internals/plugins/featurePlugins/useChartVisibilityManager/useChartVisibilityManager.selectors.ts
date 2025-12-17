@@ -24,18 +24,9 @@ export const selectorVisibilityMap = createSelector(
 );
 
 /**
- * Selector to check if a specific item identifier is visible.
- */
-export const selectorIsIdentifierVisible = createSelector(
-  selectorVisibilityMap,
-  (visibilityMap, identifiers: VisibilityIdentifier[]) =>
-    isIdentifierVisible(visibilityMap, identifiers),
-);
-
-/**
  * Selector to check if a specific item identifier is hidden.
  */
-export const selectorIsIdentifierVisibleGetter = createSelectorMemoized(
+export const selectorIsItemVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
   (visibilityMap) => {
     return (...identifiers: VisibilityIdentifier[]) =>

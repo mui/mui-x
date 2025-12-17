@@ -11,7 +11,7 @@ type BarDataset = DatasetType<number | null>;
 const barValueFormatter = ((v) =>
   v == null ? '' : v.toLocaleString()) as DefaultizedBarSeriesType['valueFormatter'];
 
-const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVisible) => {
+const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups(params);
 
@@ -92,7 +92,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
 
-        if (!isIdentifierVisible?.(`${seriesId}`)) {
+        if (!isItemVisible?.(`${seriesId}`)) {
           // For hidden series, return 0 so they don't contribute to the stack
           return 0;
         }
@@ -109,7 +109,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isIdentifierVi
             return typeof value === 'number' ? value : null;
           })
         : series[id].data!;
-      const hidden = !isIdentifierVisible?.(`${id}`);
+      const hidden = !isItemVisible?.(`${id}`);
       completedSeries[id] = {
         layout: 'vertical',
         labelMarkType: 'square',

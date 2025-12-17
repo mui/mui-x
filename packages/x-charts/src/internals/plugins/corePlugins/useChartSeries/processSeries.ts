@@ -8,7 +8,7 @@ import {
   type ProcessedSeries,
   type SeriesLayout,
 } from './useChartSeries.types';
-import type { IsIdentifierVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
+import type { IsItemVisibleFunction } from '../../featurePlugins/useChartVisibilityManager';
 
 /**
  * This method groups series by type and adds defaultized values such as the ids and colors.
@@ -65,7 +65,7 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
   defaultizedSeries: DefaultizedSeriesGroups<TSeriesType>,
   seriesConfig: ChartSeriesConfig<TSeriesType>,
   dataset?: Readonly<DatasetType>,
-  isIdentifierVisible?: IsIdentifierVisibleFunction,
+  isItemVisible?: IsItemVisibleFunction,
 ): ProcessedSeries<TSeriesType> => {
   const processedSeries: ProcessedSeries<TSeriesType> = {};
 
@@ -74,7 +74,7 @@ export const applySeriesProcessors = <TSeriesType extends ChartSeriesType>(
     const group = defaultizedSeries[type];
     if (group !== undefined) {
       processedSeries[type] =
-        seriesConfig[type]?.seriesProcessor?.(group, dataset, isIdentifierVisible) ?? group;
+        seriesConfig[type]?.seriesProcessor?.(group, dataset, isItemVisible) ?? group;
     }
   });
 
