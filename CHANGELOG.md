@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.23.0
+## 8.22.1
 
 _Dec 17, 2025_
 
@@ -23,7 +23,7 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.23.0`
+#### `@mui/x-data-grid@8.22.1`
 
 - [data grid] Fix column menu keyboard shortcut (#20621) @mj12albert
 - [data grid] Fix row checkbox disabled state on first render and keep cell focusable (ARIA) (#20641) @michelengelen
@@ -33,29 +33,29 @@ The following team members contributed to this release:
 - [data grid] Reset row spanning on row expansion change (#20661) @siriwatknp
 - [l10n] Improve Swedish (sv-SE) locale (#20682) @VismaAndreasIvarsson
 
-#### `@mui/x-data-grid-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.23.0`.
+Same changes as in `@mui/x-data-grid@8.22.1`.
 
-#### `@mui/x-data-grid-premium@8.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.23.0`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.22.1`, plus:
 
 - [DataGridPremium] Import `useId()` from `@mui/utils` to maintain React 17 compatibility (#20635) @arminmeh
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.23.0`
+#### `@mui/x-date-pickers@8.22.1`
 
 - [pickers] Fix `onAccept()` returning wrong year after selecting year then month (#20639) @michelengelen
 
-#### `@mui/x-date-pickers-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.23.0`.
+Same changes as in `@mui/x-date-pickers@8.22.1`.
 
 ### Charts
 
-#### `@mui/x-charts@8.23.0`
+#### `@mui/x-charts@8.22.1`
 
 - [charts] Extract `FocusedPieArc` from `PieArcPlot` (#20613) @alexfauquette
 - [charts] Fix regression on the highlight control (#20627) @alexfauquette
@@ -63,29 +63,29 @@ Same changes as in `@mui/x-date-pickers@8.23.0`.
 - [charts] Remove unused generics from bar charts (#20642) @bernardobelchior
 - [charts] Simplify tooltip position getter for pie chart (#20625) @alexfauquette
 
-#### `@mui/x-charts-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.23.0`.
+Same changes as in `@mui/x-charts@8.22.1`.
 
-#### `@mui/x-charts-premium@8.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.22.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.23.0`, plus:
+Same changes as in `@mui/x-charts-pro@8.22.1`, plus:
 
 - [charts-premium] Create `BarChartPremium` (#20643) @bernardobelchior
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.23.0`
+#### `@mui/x-tree-view@8.22.1`
 
 Internal changes.
 
-#### `@mui/x-tree-view-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.23.0`.
+Same changes as in `@mui/x-tree-view@8.22.1`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.23.0`
+#### `@mui/x-codemod@8.22.1`
 
 Internal changes.
 
