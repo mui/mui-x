@@ -26,12 +26,12 @@ export function generateOccurrenceFromEvent({
     id: eventId,
     key: occurrenceKey,
     displayTimezone: {
-      ...event.displayTimezone,
+      ...event?.displayTimezone,
       start,
       end,
     },
     dataTimezone: {
-      ...event.dataTimezone,
+      ...event?.dataTimezone,
       start,
       end,
     },
