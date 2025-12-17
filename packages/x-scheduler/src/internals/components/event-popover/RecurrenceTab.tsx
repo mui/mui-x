@@ -52,13 +52,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const monthlyRef = useStore(
     store,
     schedulerRecurringEventSelectors.monthlyReference,
-    occurrence.start,
+    occurrence.displayTimezone.start,
   );
   const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
 
   const handleRecurrenceSelectionChange = (value: RecurringEventPresetKey | null | 'custom') => {
     if (value === 'custom') {
-      const base = occurrence.rrule;
+      const base = occurrence.displayTimezone.rrule;
       setControlled((prev) => ({
         ...prev,
         recurrenceSelection: 'custom',
@@ -174,8 +174,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     controlled.rruleDraft,
   );
 
-  const weekday = adapter.format(occurrence.start.value, 'weekday');
-  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(occurrence.start.value, adapter);
+  const weekday = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
+  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
+    occurrence.displayTimezone.start.value,
+    adapter,
+  );
 
   const recurrenceOptions: {
     label: string;
@@ -188,7 +191,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       value: 'WEEKLY',
     },
     {
-      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start.value))}`,
+      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
       value: 'MONTHLY',
     },
     {
