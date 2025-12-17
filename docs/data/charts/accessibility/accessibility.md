@@ -4,7 +4,7 @@ title: Charts - Accessibility
 packageName: '@mui/x-charts'
 ---
 
-# Accessibility
+# Charts - Accessibility
 
 <p class="description">Learn how the Charts implement accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
