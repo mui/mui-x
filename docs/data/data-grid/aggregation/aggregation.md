@@ -155,13 +155,15 @@ You can find full typing details in the [`GridAggregationFunction` API reference
 
 The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover common use cases:
 
-| Name   | Behavior                                                   | Supported column types       |
-| :----- | :--------------------------------------------------------- | :--------------------------- |
-| `sum`  | Returns the sum of all values in the group                 | `number`                     |
-| `avg`  | Returns the non-rounded average of all values in the group | `number`                     |
-| `min`  | Returns the smallest value of the group                    | `number`, `date`, `dateTime` |
-| `max`  | Returns the largest value of the group                     | `number`, `date`, `dateTime` |
-| `size` | Returns the number of cells in the group                   | all                          |
+| Name          | Behavior                                                   | Supported column types       |
+| :------------ | :--------------------------------------------------------- | :--------------------------- |
+| `sum`         | Returns the sum of all values in the group                 | `number`                     |
+| `avg`         | Returns the non-rounded average of all values in the group | `number`                     |
+| `min`         | Returns the smallest value of the group                    | `number`, `date`, `dateTime` |
+| `max`         | Returns the largest value of the group                     | `number`, `date`, `dateTime` |
+| `size`        | Returns the number of cells in the group                   | all                          |
+| `size(true)`  | Returns the number of cells with value `true`              | `boolean`                    |
+| `size(false)` | Returns the number of cells with value `false`             | `boolean`                    |
 
 ### Removing a built-in function
 
