@@ -580,7 +580,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // Only three occurrences, still belonging to Jan 10
       expect(result).to.have.length(3);
-      expect(adapter.getDate(result[0].modelInBuiltInFormat!.start)).to.equal(10);
+      expect(adapter.getDate(result[0].dataTimezone.start.value)).to.equal(10);
     });
 
     it('preserves multi-day duration when converting occurrences to the display timezone', () => {
