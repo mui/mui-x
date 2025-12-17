@@ -67,8 +67,13 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
-          end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+            timezone: 'default',
+            rrule: undefined,
+            exDates: undefined,
+          },
           allDay: false,
         });
       });

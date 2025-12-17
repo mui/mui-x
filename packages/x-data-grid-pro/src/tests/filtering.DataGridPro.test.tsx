@@ -1114,7 +1114,7 @@ describe('<DataGridPro /> - Filter', () => {
                 type: 'actions',
                 width: 80,
                 filterOperators: undefined,
-                getActions: () => [<React.Fragment>action</React.Fragment>],
+                getActions: () => [<React.Fragment key={1}>action</React.Fragment>],
               },
             ]}
             headerFilters

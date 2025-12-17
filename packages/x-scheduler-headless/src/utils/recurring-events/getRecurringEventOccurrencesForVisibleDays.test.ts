@@ -22,11 +22,16 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       expect(result).to.have.length(5);
       for (let i = 0; i < result.length; i += 1) {
         const occ = result[i];
-        expect(occ.start.key).to.equal(
+        expect(occ.displayTimezone.start.key).to.equal(
           adapter.format(adapter.addDays(visibleStart, i), 'localizedNumericDate'),
         );
-        expect(adapter.differenceInMinutes(occ.end.value, occ.start.value)).to.equal(90);
-        expect(occ.key).to.equal(`${event.id}::${occ.start.key}`);
+        expect(
+          adapter.differenceInMinutes(
+            occ.displayTimezone.end.value,
+            occ.displayTimezone.start.value,
+          ),
+        ).to.equal(90);
+        expect(occ.key).to.equal(`${event.id}::${occ.displayTimezone.start.key}`);
       }
     });
 
@@ -46,7 +51,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan 1..5 inclusive
-      expect(result.map((o) => adapter.getDate(o.start.value))).to.deep.equal([1, 2, 3, 4, 5]);
+      expect(result.map((o) => adapter.getDate(o.displayTimezone.start.value))).to.deep.equal([
+        1, 2, 3, 4, 5,
+      ]);
     });
 
     it('respects "count" end rule (count=3 gives 3 occurrences)', () => {
@@ -64,7 +71,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       expect(result).to.have.length(3);
-      expect(result.map((o) => adapter.getDate(o.start.value))).to.deep.equal([1, 2, 3]);
+      expect(result.map((o) => adapter.getDate(o.displayTimezone.start.value))).to.deep.equal([
+        1, 2, 3,
+      ]);
     });
 
     it('applies weekly interval > 1 (e.g. every 2 weeks)', () => {
@@ -82,7 +91,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Expect Fridays at week 0, 2 and 4
-      const dates = result.map((o) => adapter.getDate(o.start.value));
+      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(dates).to.deep.equal([3, 17, 31]);
     });
 
@@ -104,7 +113,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         adapter,
         'default',
       );
-      const daysOfMonth = result.map((o) => adapter.getDate(o.start.value));
+      const daysOfMonth = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(daysOfMonth).to.deep.equal([10, 10, 10, 10]);
     });
 
@@ -122,7 +131,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         adapter,
         'default',
       );
-      const years = result.map((o) => adapter.getYear(o.start.value));
+      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
       expect(years).to.deep.equal([2025, 2027, 2029]);
     });
 
@@ -143,8 +152,8 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       expect(result).to.have.length(1);
-      expect(adapter.getDate(result[0].start.value)).to.equal(3);
-      expect(adapter.getDate(result[0].end.value)).to.equal(6);
+      expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(3);
+      expect(adapter.getDate(result[0].displayTimezone.end.value)).to.equal(6);
     });
 
     it('does not generate occurrences earlier than DTSTART within the first week even if byDay spans the week', () => {
@@ -166,7 +175,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         adapter,
         'default',
       );
-      const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
+      const dows = result.map((o) => getWeekDayCode(adapter, o.displayTimezone.start.value));
 
       // Only WE, TH, FR in the first week
       expect(dows).to.deep.equal(['WE', 'TH', 'FR']);
@@ -213,7 +222,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       );
       // Should only have occurrences from Jan 10 onwards (6 days: 10,11,12,13,14,15)
       expect(result).to.have.length(6);
-      expect(adapter.getDate(result[0].start.value)).to.equal(10);
+      expect(adapter.getDate(result[0].displayTimezone.start.value)).to.equal(10);
     });
 
     it('respects interval > 1 (every 2 days)', () => {
@@ -231,7 +240,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Days: 1, 3, 5, 7 => 4 occurrences
-      expect(result.map((o) => adapter.getDate(o.start.value))).to.deep.equal([1, 3, 5, 7]);
+      expect(result.map((o) => adapter.getDate(o.displayTimezone.start.value))).to.deep.equal([
+        1, 3, 5, 7,
+      ]);
     });
   });
 
@@ -250,7 +261,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         adapter,
         'default',
       );
-      const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
+      const dows = result.map((o) => getWeekDayCode(adapter, o.displayTimezone.start.value));
       expect(dows).to.deep.equal(['MO', 'WE', 'FR']);
     });
 
@@ -268,7 +279,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         adapter,
         'default',
       );
-      const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
+      const dows = result.map((o) => getWeekDayCode(adapter, o.displayTimezone.start.value));
       // Monday is DTSTART but not in byDay, so Tue(7) and Thu(9) are generated
       expect(dows).to.deep.equal(['TU', 'TH']);
     });
@@ -288,7 +299,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Should only generate Fridays: Jan 10, 17, 24
-      const dows = result.map((o) => getWeekDayCode(adapter, o.start.value));
+      const dows = result.map((o) => getWeekDayCode(adapter, o.displayTimezone.start.value));
       expect(dows).to.deep.equal(['FR', 'FR', 'FR']);
     });
 
@@ -327,7 +338,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan, Mar, May, Jul => 4 occurrences
-      const months = result.map((o) => adapter.getMonth(o.start.value));
+      const months = result.map((o) => adapter.getMonth(o.displayTimezone.start.value));
       expect(months).to.deep.equal([0, 2, 4, 6]); // 0-indexed months
     });
 
@@ -346,7 +357,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Should generate on the 15th: Mar, Apr, May, Jun
-      const days = result.map((o) => adapter.getDate(o.start.value));
+      const days = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(days).to.deep.equal([15, 15, 15, 15]);
     });
 
@@ -365,7 +376,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jan(31), Feb(skip), Mar(31), Apr(skip), May(31), Jun(skip)
-      const months = result.map((o) => adapter.getMonth(o.start.value));
+      const months = result.map((o) => adapter.getMonth(o.displayTimezone.start.value));
       expect(months).to.deep.equal([0, 2, 4]); // Jan, Mar, May
     });
   });
@@ -386,7 +397,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 8, Aug 12, Sep 9, Oct 14
-      const dates = result.map((o) => adapter.getDate(o.start.value));
+      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(dates).to.deep.equal([8, 12, 9, 14]);
     });
 
@@ -407,7 +418,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // July: Wednesdays are 2,9,16,23,30 → 2nd last is 23
       // Aug: Wednesdays are 6,13,20,27 → 2nd last is 20
       // Sep: Wednesdays are 3,10,17,24 → 2nd last is 17
-      const dates = result.map((o) => adapter.getDate(o.start.value));
+      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(dates).to.deep.equal([23, 20, 17]);
     });
 
@@ -426,7 +437,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 4, Sep 5, Nov 7 (every 2 months)
-      const dates = result.map((o) => adapter.getDate(o.start.value));
+      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(dates).to.deep.equal([4, 5, 7]);
     });
 
@@ -447,7 +458,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // July 8 is skipped (before DTSTART), Aug 12, Sep 9
-      const dates = result.map((o) => adapter.getDate(o.start.value));
+      const dates = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(dates).to.deep.equal([12, 9]);
     });
 
@@ -486,9 +497,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Jul 20 each year: 2025, 2026, 2027, 2028
-      const years = result.map((o) => adapter.getYear(o.start.value));
-      const months = result.map((o) => adapter.getMonth(o.start.value));
-      const days = result.map((o) => adapter.getDate(o.start.value));
+      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
+      const months = result.map((o) => adapter.getMonth(o.displayTimezone.start.value));
+      const days = result.map((o) => adapter.getDate(o.displayTimezone.start.value));
       expect(years).to.deep.equal([2025, 2026, 2027, 2028]);
       expect(months).to.deep.equal([6, 6, 6, 6]); // July (0-indexed)
       expect(days).to.deep.equal([20, 20, 20, 20]);
@@ -509,7 +520,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         'default',
       );
       // Only leap years: 2024, 2028, 2032
-      const years = result.map((o) => adapter.getYear(o.start.value));
+      const years = result.map((o) => adapter.getYear(o.displayTimezone.start.value));
       expect(years).to.deep.equal([2024, 2028, 2032]);
     });
   });

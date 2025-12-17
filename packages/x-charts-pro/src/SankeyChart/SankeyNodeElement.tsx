@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import { useInteractionItemProps, useStore, useSelector } from '@mui/x-charts/internals';
+import { useInteractionItemProps, useStore } from '@mui/x-charts/internals';
 import type { SankeyLayoutNode, SankeyNodeIdentifierWithData } from './sankey.types';
 import { selectorIsNodeHighlighted } from './plugins';
 import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
@@ -51,8 +51,8 @@ export const SankeyNodeElement = React.forwardRef<SVGGElement, SankeyNodeElement
       node,
     };
 
-    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, node.id);
-    const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
+    const isHighlighted = store.use(selectorIsNodeHighlighted, node.id);
+    const isFaded = store.use(selectorIsSankeyItemFaded, isHighlighted);
 
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
