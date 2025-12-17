@@ -109,13 +109,10 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
           interactions.handleCheckboxSelection(event);
         };
 
-        // Hide checkbox when item is not selectable
-        const isCheckboxVisible = isCheckboxSelectionEnabled && isItemSelectable;
-
         return {
           tabIndex: -1,
           onChange: handleChange,
-          visible: isCheckboxVisible,
+          visible: isCheckboxSelectionEnabled && isItemSelectable,
           disabled: !canItemBeSelected,
           checked: selectionStatus === 'checked',
           indeterminate: selectionStatus === 'indeterminate',
