@@ -15,6 +15,12 @@ We'd like to extend a big thank you to the 0 contributors who made this release 
 - 🌎 Improve Swedish (sv-SE) locale on the Data Grid
 - 🐞 Bugfixes
 
+Special thanks go out to this community member for their valuable contributions:
+@VismaAndreasIvarsson
+
+The following team members contributed to this release:
+@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @prakhargupta1, @romgrk, @siriwatknp
+
 ### Data Grid
 
 #### `@mui/x-data-grid@8.23.0`
