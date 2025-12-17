@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui-components/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
+import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { useEvent } from '../../utils/useEvent';
 import { TimelineEventPlaceholderCssVars } from './TimelineEventPlaceholderCssVars';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
+import { timelineViewSelectors } from '../../timeline-selectors';
 
 export const TimelineEventPlaceholder = React.forwardRef(function TimelineEventPlaceholder(
   componentProps: TimelineEventPlaceholder.Props,
@@ -23,14 +25,17 @@ export const TimelineEventPlaceholder = React.forwardRef(function TimelineEventP
   } = componentProps;
 
   // Context hooks
-  const { start: rowStart, end: rowEnd } = useTimelineEventRowContext();
+  const store = useTimelineStoreContext();
+
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
 
   // Feature hooks
   const { position, duration } = useElementPositionInCollection({
     start,
     end,
-    collectionStart: rowStart,
-    collectionEnd: rowEnd,
+    collectionStart: viewConfig.start,
+    collectionEnd: viewConfig.end,
   });
 
   // Rendering hooks

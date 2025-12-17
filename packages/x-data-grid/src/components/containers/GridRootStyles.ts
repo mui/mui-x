@@ -172,25 +172,62 @@ export const GridRootStyles = styled('div', {
   const selectedHoverColor = selectedColor;
   const selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`;
 
-  const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity);
-  const selectedBackground = mix(baseBackground, selectedColor, selectedOpacity);
-  const selectedHoverBackground = mix(baseBackground, selectedHoverColor, selectedHoverOpacity);
+  const fallbackColors = {
+    hover: vars.colors.interactive.hover,
+    selected: selectedColor,
+    selectedHover: selectedColor,
+  };
 
-  const pinnedHoverBackground = mix(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedSelectedBackground = mix(pinnedBackground, selectedColor, selectedOpacity);
+  const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity, fallbackColors.hover);
+  const selectedBackground = mix(
+    baseBackground,
+    selectedColor,
+    selectedOpacity,
+    fallbackColors.selected,
+  );
+  const selectedHoverBackground = mix(
+    baseBackground,
+    selectedHoverColor,
+    selectedHoverOpacity,
+    fallbackColors.selectedHover,
+  );
+
+  const pinnedHoverBackground = mix(
+    pinnedBackground,
+    hoverColor,
+    hoverOpacity,
+    fallbackColors.hover,
+  );
+  const pinnedSelectedBackground = mix(
+    pinnedBackground,
+    selectedColor,
+    selectedOpacity,
+    fallbackColors.selected,
+  );
   const pinnedSelectedHoverBackground = mix(
     pinnedBackground,
     selectedHoverColor,
     selectedHoverOpacity,
+    fallbackColors.selectedHover,
   );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity),
+        backgroundColor: mix(
+          backgroundColor,
+          selectedBackground,
+          selectedOpacity,
+          fallbackColors.selected,
+        ),
         '&:hover': {
-          backgroundColor: mix(backgroundColor, selectedHoverBackground, selectedHoverOpacity),
+          backgroundColor: mix(
+            backgroundColor,
+            selectedHoverBackground,
+            selectedHoverOpacity,
+            fallbackColors.selectedHover,
+          ),
         },
       },
     },
@@ -843,6 +880,21 @@ function removeOpacity(color: string) {
   return setOpacity(color, 1);
 }
 
-function mix(background: string, overlay: string, opacity: number | string) {
-  return `color-mix(in srgb,${background}, ${overlay} calc(${opacity} * 100%))`;
+export const supportsColorMix =
+  typeof CSS !== 'undefined' &&
+  typeof CSS.supports === 'function' &&
+  CSS.supports('color', 'color-mix(in srgb, red 50%, blue 50%)');
+
+export const colorMixIfSupported = (colorMixValue: string, fallback: string) => {
+  if (!supportsColorMix) {
+    return fallback;
+  }
+  return colorMixValue;
+};
+
+function mix(background: string, overlay: string, opacity: number | string, fallback: string) {
+  return colorMixIfSupported(
+    `color-mix(in srgb,${background}, ${overlay} calc(${opacity} * 100%))`,
+    fallback,
+  );
 }

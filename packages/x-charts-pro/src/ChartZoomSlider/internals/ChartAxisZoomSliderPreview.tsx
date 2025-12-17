@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  AxisId,
+  type AxisId,
   selectorChartAxisZoomOptionsLookup,
   useSelector,
   useStore,

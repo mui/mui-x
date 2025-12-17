@@ -4,8 +4,8 @@ import {
   selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
-import { UseChartPolarAxisSignature } from './useChartPolarAxis.types';
-import { ChartState } from '../../models/chart';
+import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
+import { type ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 
@@ -62,7 +62,7 @@ export function getDrawingAreaCenter(drawingArea: ChartDrawingArea) {
     cy: drawingArea.top + drawingArea.height / 2,
   };
 }
-export const selectorChartPolarCenter = createSelector(
+export const selectorChartPolarCenter = createSelectorMemoized(
   selectorChartDrawingArea,
   getDrawingAreaCenter,
 );

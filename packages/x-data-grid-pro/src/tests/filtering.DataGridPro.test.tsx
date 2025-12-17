@@ -381,7 +381,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(getColumnValues(0)).to.deep.equal(['Adidas']);
   });
 
-  it('should work as expected with "Add filter" and "Remove all" buttons ', () => {
+  it('should work as expected with "Add filter" and "Remove all" buttons', () => {
     render(
       <TestCase
         initialState={{
@@ -1114,7 +1114,7 @@ describe('<DataGridPro /> - Filter', () => {
                 type: 'actions',
                 width: 80,
                 filterOperators: undefined,
-                getActions: () => [<React.Fragment>action</React.Fragment>],
+                getActions: () => [<React.Fragment key={1}>action</React.Fragment>],
               },
             ]}
             headerFilters

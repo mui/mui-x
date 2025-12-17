@@ -1,14 +1,15 @@
-import { SeriesId } from '../../models/seriesType/common';
-import { BarLabelFunction } from './BarLabel.types';
+import { type SeriesId } from '../../models/seriesType/common';
+import { type BarLabelFunction } from './BarLabel.types';
+import { type BarValueType } from '../../models/seriesType/bar';
 
-export const getBarLabel = (options: {
+export function getBarLabel(options: {
   barLabel: 'value' | BarLabelFunction;
-  value: number | null;
+  value: BarValueType | null;
   dataIndex: number;
   seriesId: SeriesId;
   height: number;
   width: number;
-}): string | null | undefined => {
+}): string | null | undefined {
   const { barLabel, value, dataIndex, seriesId, height, width } = options;
 
   if (barLabel === 'value') {
@@ -17,4 +18,4 @@ export const getBarLabel = (options: {
   }
 
   return barLabel({ seriesId, dataIndex, value }, { bar: { height, width } });
-};
+}

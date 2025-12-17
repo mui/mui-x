@@ -3,17 +3,18 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { barElementClasses } from './barElementClasses';
-import { BarElement, BarElementSlotProps, BarElementSlots } from './BarElement';
-import { BarItemIdentifier } from '../models';
+import { BarElement, type BarElementSlotProps, type BarElementSlots } from './BarElement';
+import { type BarItemIdentifier } from '../models';
 import { useDrawingArea, useXAxes, useYAxes } from '../hooks';
 import { BarClipPath } from './BarClipPath';
-import { BarLabelSlotProps, BarLabelSlots } from './BarLabel/BarLabelItem';
+import { type BarLabelSlotProps, type BarLabelSlots } from './BarLabel/BarLabelItem';
 import { BarLabelPlot } from './BarLabel/BarLabelPlot';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useBarPlotData } from './useBarPlotData';
 import { useUtilityClasses } from './barClasses';
-import { BarItem, BarLabelContext } from './BarLabel';
+import type { BarItem, BarLabelContext } from './BarLabel';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 
 export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
@@ -64,7 +65,9 @@ const BarPlotRoot = styled('g', {
   slot: 'Root',
 })({
   [`& .${barElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    transitionProperty: 'opacity, fill',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
 
@@ -81,6 +84,7 @@ const BarPlotRoot = styled('g', {
  */
 function BarPlot(props: BarPlotProps) {
   const { skipAnimation: inSkipAnimation, onItemClick, borderRadius, barLabel, ...other } = props;
+
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
@@ -158,6 +162,7 @@ function BarPlot(props: BarPlotProps) {
       {completedData.map((processedSeries) => (
         <BarLabelPlot
           key={processedSeries.seriesId}
+          className={classes.seriesLabels}
           processedSeries={processedSeries}
           skipAnimation={skipAnimation}
           barLabel={barLabel}

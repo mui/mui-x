@@ -193,11 +193,42 @@ export default defineConfig(
       // matching the pattern of the test runner
       `**/*${EXTENSION_TEST_FILE}`,
     ],
-    extends: createTestConfig({ useMocha: false }),
+    extends: createTestConfig({ useMocha: false, useVitest: true }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
+    rules: {
+      // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
+      'vitest/valid-expect': 'off',
+      // Annoying auto-fix
+      'vitest/no-focused-tests': 'off',
+    },
+  },
+  {
+    files: [
+      // TODO: Fix one-by-one
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-internals{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TEST_FILE}`,
+    ],
+    rules: {
+      // Can't unambiguously detect all patterns of adding expects
+      'vitest/expect-expect': 'off',
+      'vitest/no-standalone-expect': 'off',
+    },
   },
   baseSpecRules,
-
+  {
+    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      'import/no-cycle': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+    },
+  },
   {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {

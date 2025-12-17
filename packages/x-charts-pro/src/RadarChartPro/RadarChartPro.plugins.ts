@@ -1,18 +1,21 @@
 import {
-  ConvertSignaturesIntoPlugins,
+  type ConvertSignaturesIntoPlugins,
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
   useChartPolarAxis,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
 export type RadarChartProPluginSignatures = [
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
@@ -20,4 +23,4 @@ export type RadarChartProPluginSignatures = [
 ];
 
 export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginSignatures> =
-  [useChartInteraction, useChartPolarAxis, useChartHighlight, useChartProExport];
+  [useChartTooltip, useChartInteraction, useChartPolarAxis, useChartHighlight, useChartProExport];

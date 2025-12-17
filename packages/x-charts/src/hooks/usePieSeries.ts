@@ -1,8 +1,12 @@
 'use client';
-import { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
-import { SeriesId } from '../models/seriesType/common';
-import { ChartSeriesDefaultized } from '../models/seriesType/config';
+import type { ProcessedSeries } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.types';
+import type { SeriesId } from '../models/seriesType/common';
+import type { ChartSeriesDefaultized } from '../models/seriesType/config';
+import type { PieSeriesLayout } from '../models/seriesType/pie';
 import { useSeriesOfType, useAllSeriesOfType } from '../internals/seriesSelectorOfType';
+import { useStore } from '../internals/store/useStore';
+import { selectorChartSeriesLayout } from '../internals/plugins/corePlugins/useChartSeries';
+import { useSelector } from '../internals/store/useSelector';
 
 export type UsePieSeriesReturnValue = ChartSeriesDefaultized<'pie'>;
 export type UsePieSeriesContextReturnValue = ProcessedSeries['pie'];
@@ -42,4 +46,16 @@ export function usePieSeries(seriesIds?: SeriesId | SeriesId[]) {
  */
 export function usePieSeriesContext(): UsePieSeriesContextReturnValue {
   return useAllSeriesOfType('pie');
+}
+
+/**
+ * Get access to the pie layout.
+ * @returns {Record<SeriesId, PieSeriesLayout>} the pie layout
+ */
+export function usePieSeriesLayout(): Record<SeriesId, PieSeriesLayout> {
+  const store = useStore();
+
+  const seriesLayout = useSelector(store, selectorChartSeriesLayout);
+
+  return seriesLayout.pie ?? {};
 }

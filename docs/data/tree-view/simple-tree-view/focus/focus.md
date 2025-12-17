@@ -14,15 +14,15 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ## Imperative API
 
 :::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+const apiRef = useSimpleTreeViewApiRef();
 
-return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+return <SimpleTreeView apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
+When your component first renders, `apiRef.current` will be `undefined`.
 After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 :::
 

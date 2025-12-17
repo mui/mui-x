@@ -210,8 +210,40 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    // Use case yet to be supported
-    describe.skip('prop: keepNonExistentRowsSelected', () => {
+    // Regression for bugfix/20525: parent checkbox state and auto-select parents should ignore non-selectable rows
+    it('should auto-select parent when all selectable siblings are selected, ignoring non-selectable ones', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={-1}
+          density="compact"
+          isRowSelectable={({ id }) =>
+            id === 'auto-generated-row-category1/Cat A' || id === 0 || id === 2
+          }
+        />,
+      );
+
+      // Select only the first selectable sibling (row 1)
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+
+      // Check if parent checkbox is indeterminate
+      const parentCheckboxAfter = getCell(0, 0).querySelector('input')!;
+      expect(parentCheckboxAfter).to.have.attr('data-indeterminate', 'true');
+
+      // Select the other selectable sibling (row 3)
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+
+      // Parent should be auto-selected because all selectable children are selected
+      expect(parentCheckboxAfter).to.have.property('checked', true);
+      expect(parentCheckboxAfter).to.have.attr('data-indeterminate', 'false');
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
+        'auto-generated-row-category1/Cat A',
+        0,
+        2,
+      ]);
+    });
+
+    // TODO: Use case yet to be supported
+    describe.todo('prop: keepNonExistentRowsSelected', () => {
       it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
         const onRowSelectionModelChange = spy();
         const { setProps } = render(

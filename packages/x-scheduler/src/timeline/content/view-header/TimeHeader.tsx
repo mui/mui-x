@@ -3,35 +3,30 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui-components/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { HeaderProps } from './Headers.types';
-import { TIME_UNITS_COUNT } from '../../constants';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 import './Headers.css';
 
-export function TimeHeader(props: HeaderProps) {
-  const { className, amount, ...other } = props;
-
+export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
+  // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
 
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
+
+  // Feature hooks
   const formatTime = useFormatTime();
 
   const days = React.useMemo(
-    () =>
-      getDayList({
-        adapter,
-        start: visibleDate,
-        end: adapter.addDays(visibleDate, (amount || TIME_UNITS_COUNT) - 1),
-      }),
-    [adapter, visibleDate, amount],
+    () => getDayList({ adapter, start: viewConfig.start, end: viewConfig.end }),
+    [adapter, viewConfig],
   );
 
   return (
-    <div className={clsx('TimeHeader', className)} {...other}>
+    <div className={clsx('TimeHeader', props.className)} {...props}>
       {days.map((day) => (
         <div key={day.key} className="TimeHeaderCell">
           <time dateTime={day.key} className="DayLabel">

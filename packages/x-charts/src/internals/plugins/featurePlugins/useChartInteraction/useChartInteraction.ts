@@ -1,59 +1,23 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import {
-  Coordinate,
-  InteractionUpdateSource,
-  UseChartInteractionSignature,
+  type Coordinate,
+  type InteractionUpdateSource,
+  type UseChartInteractionSignature,
 } from './useChartInteraction.types';
-import {
-  ChartItemIdentifier,
-  ChartSeriesType,
-  type ChartItemIdentifierWithData,
-} from '../../../../models/seriesType/config';
 
 export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({ store }) => {
   const cleanInteraction = useEventCallback(function cleanInteraction() {
-    store.set('interaction', { ...store.state.interaction, pointer: null, item: null });
+    store.update({
+      interaction: { ...store.state.interaction, pointer: null },
+    });
   });
 
-  const removeItemInteraction = useEventCallback(function removeItemInteraction(
-    itemToRemove?: ChartItemIdentifier<ChartSeriesType>,
+  const setLastUpdateSource = useEventCallback(function setLastUpdateSource(
+    interaction: InteractionUpdateSource,
   ) {
-    const prevItem = store.state.interaction.item;
-
-    if (!itemToRemove) {
-      // Remove without taking care of the current item
-      if (prevItem !== null) {
-        store.set('interaction', { ...store.state.interaction, item: null });
-      }
-      return;
-    }
-
-    if (
-      prevItem === null ||
-      Object.keys(itemToRemove).some(
-        (key) =>
-          itemToRemove[key as keyof typeof itemToRemove] !== prevItem[key as keyof typeof prevItem],
-      )
-    ) {
-      // The current item is already different from the one to remove. No need to clean it.
-      return;
-    }
-
-    store.set('interaction', { ...store.state.interaction, item: null });
-  });
-
-  const setItemInteraction = useEventCallback(function setItemInteraction(
-    newItem: ChartItemIdentifierWithData<ChartSeriesType>,
-    context: { interaction: InteractionUpdateSource },
-  ) {
-    if (!fastObjectShallowCompare(store.state.interaction.item, newItem)) {
-      store.set('interaction', {
-        ...store.state.interaction,
-        lastUpdate: context.interaction,
-        item: newItem,
-      });
+    if (store.state.interaction.lastUpdate !== interaction) {
+      store.set('interaction', { ...store.state.interaction, lastUpdate: interaction });
     }
   });
 
@@ -70,8 +34,7 @@ export const useChartInteraction: ChartPlugin<UseChartInteractionSignature> = ({
   return {
     instance: {
       cleanInteraction,
-      setItemInteraction,
-      removeItemInteraction,
+      setLastUpdateSource,
       setPointerCoordinate,
     },
   };

@@ -2,15 +2,15 @@
 import {
   useSeriesOfType,
   useAllSeriesOfType,
-  ProcessedSeries,
-  SeriesId,
-  ChartSeriesDefaultized,
+  type ProcessedSeries,
+  type SeriesId,
+  type ChartSeriesDefaultized,
   useSelector,
   useStore,
-  ChartSeriesLayout,
+  type ChartSeriesLayout,
   selectorChartSeriesLayout,
 } from '@mui/x-charts/internals';
-import { SankeyLayout } from '../SankeyChart';
+import { type SankeyLayout } from '../SankeyChart';
 
 export type UseSankeySeriesReturnValue = ChartSeriesDefaultized<'sankey'>;
 export type UseSankeySeriesContextReturnValue = ProcessedSeries['sankey'];
@@ -52,6 +52,7 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
   return useAllSeriesOfType('sankey');
 }
+
 /**
  * Get access to the sankey layout.
  * @returns {SankeyLayout | undefined} the sankey layout
