@@ -13,10 +13,10 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     processDate(adapter.date(day2Str, 'default'), adapter),
   ];
 
-  const visible = new Map<string, boolean>([
-    ['Resource A', true],
-    ['Resource B', true],
-  ]);
+  const visible: Record<string, boolean> = {
+    'Resource A': true,
+    'Resource B': true,
+  };
 
   const noParents = new Map<string, string | null>();
 
@@ -61,8 +61,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should exclude events whose resource is not visible', () => {
-    const visibilityWithHidden = new Map(visible);
-    visibilityWithHidden.set('Resource X', false);
+    const visibilityWithHidden: Record<string, boolean> = { ...visible, 'Resource X': false };
 
     const visibleEvent = EventBuilder.new(adapter)
       .resource('Resource A')

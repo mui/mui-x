@@ -67,8 +67,13 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
-          end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+            timezone: 'default',
+            rrule: undefined,
+            exDates: undefined,
+          },
           allDay: false,
         });
       });
@@ -266,7 +271,7 @@ storeClasses.forEach((storeClass) => {
         const onEventsChange = spy();
 
         const dataTimezone = 'America/New_York';
-        const uiTimezone = 'Europe/Paris';
+        const displayTimezone = 'Europe/Paris';
 
         const event = EventBuilder.new()
           .title('Original title')
@@ -276,12 +281,12 @@ storeClasses.forEach((storeClass) => {
           .build();
 
         const store = new storeClass.Value(
-          { events: [event], onEventsChange, timezone: uiTimezone },
+          { events: [event], onEventsChange, displayTimezone },
           adapter,
         );
 
-        const newStartParis = adapter.date('2025-03-10T14:00:00', uiTimezone);
-        const newEndParis = adapter.date('2025-03-10T15:00:00', uiTimezone);
+        const newStartParis = adapter.date('2025-03-10T14:00:00', displayTimezone);
+        const newEndParis = adapter.date('2025-03-10T15:00:00', displayTimezone);
 
         store.updateEvent({
           id: event.id,
