@@ -86,7 +86,7 @@ export function applyRecurringUpdateFollowing(
     ...changes,
     id: newEventId,
     rrule: newRRule,
-    extractedFromId: originalEvent.modelInBuiltInFormat!.id,
+    extractedFromId: originalEvent.id,
   };
 
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
