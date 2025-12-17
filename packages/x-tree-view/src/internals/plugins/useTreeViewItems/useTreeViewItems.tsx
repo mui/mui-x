@@ -15,6 +15,8 @@ import { itemsSelectors } from './useTreeViewItems.selectors';
 import { idSelectors } from '../../corePlugins/useTreeViewId';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
+const defaultIsItemSelectable = (item: { selectable?: boolean }) => item.selectable !== false;
+
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
   params,
@@ -246,6 +248,7 @@ useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
+  isItemSelectable: params.isItemSelectable ?? defaultIsItemSelectable,
 });
 
 useTreeViewItems.wrapRoot = ({ children }) => {

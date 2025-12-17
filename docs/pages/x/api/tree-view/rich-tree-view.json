@@ -62,6 +62,7 @@
     },
     "isItemSelectable": {
       "type": { "name": "func" },
+      "default": "(item) => item.selectable !== false",
       "signature": {
         "type": "function(item: R) => boolean",
         "describedArgs": ["item"],

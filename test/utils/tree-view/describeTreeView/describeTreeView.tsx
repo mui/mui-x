@@ -158,8 +158,6 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
           }}
           // TODO #20051: Remove any
           isItemDisabled={(item: any) => !!item.disabled}
-          // TODO #20051: Remove any
-          isItemSelectable={(item: any) => item.selectable !== false}
           {...other}
         />
       );
