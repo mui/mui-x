@@ -135,6 +135,10 @@ export interface GridAggregationCellMeta {
    * Name of the aggregation function currently applied on this cell.
    */
   aggregationFunctionName: string;
+  /**
+   * Position of the aggregated value.
+   */
+  position: GridAggregationPosition;
 }
 
 export interface GridAggregationHeaderMeta {
