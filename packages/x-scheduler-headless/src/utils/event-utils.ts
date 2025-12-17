@@ -3,9 +3,40 @@ import {
   SchedulerProcessedEvent,
   SchedulerProcessedDate,
   SchedulerEventOccurrence,
+  SchedulerEventId,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 import { getRecurringEventOccurrencesForVisibleDays } from './recurring-events';
+
+export function generateOccurrenceFromEvent({
+  event,
+  eventId,
+  occurrenceKey,
+  start,
+  end,
+}: {
+  event: SchedulerProcessedEvent;
+  eventId: SchedulerEventId;
+  occurrenceKey: string;
+  start: SchedulerProcessedDate;
+  end: SchedulerProcessedDate;
+}): SchedulerEventOccurrence {
+  return {
+    ...event,
+    id: eventId,
+    key: occurrenceKey,
+    displayTimezone: {
+      ...event.displayTimezone,
+      start,
+      end,
+    },
+    dataTimezone: {
+      ...event.dataTimezone,
+      start,
+      end,
+    },
+  };
+}
 
 /**
  *  Returns the key of the days an event occurrence should be visible on.
