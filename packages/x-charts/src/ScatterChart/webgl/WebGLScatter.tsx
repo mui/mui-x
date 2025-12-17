@@ -72,6 +72,18 @@ const fragmentShaderSource = `
     }
   `;
 
+function hexToRgb01(hex: string) {
+  // Remove # if present
+  hex = hex.replace(/^#/, '');
+
+  // Parse the hex values
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  return [r, g, b];
+}
+
 /**
  * Demos:
  *
@@ -194,9 +206,11 @@ function WebGLScatter(props: ScatterProps) {
       centers[i * 2] = dataPoint.x - drawingArea.left;
       centers[i * 2 + 1] = dataPoint.y - drawingArea.top;
       radii[i] = series.markerSize;
-      colors[i * 3] = 0;
-      colors[i * 3 + 1] = 0;
-      colors[i * 3 + 2] = 1;
+
+      const color = hexToRgb01(colorGetter(i));
+      colors[i * 3] = color[0];
+      colors[i * 3 + 1] = color[1];
+      colors[i * 3 + 2] = color[2];
     }
 
     // Upload circle centers
