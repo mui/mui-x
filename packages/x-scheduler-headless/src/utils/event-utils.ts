@@ -1,3 +1,4 @@
+import { TemporalTimezone } from '../base-ui-copy/types/temporal';
 import {
   TemporalSupportedObject,
   SchedulerProcessedEvent,
@@ -91,7 +92,8 @@ const checkResourceVisibility = (
  * Returns the occurrences to render in the given date range, expanding recurring events.
  */
 export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsParameters) {
-  const { adapter, start, end, events, visibleResources, resourceParentIds } = parameters;
+  const { adapter, start, end, events, visibleResources, resourceParentIds, displayTimezone } =
+    parameters;
   const occurrences: SchedulerEventOccurrence[] = [];
 
   for (const event of events) {
@@ -106,7 +108,9 @@ export function getOccurrencesFromEvents(parameters: GetOccurrencesFromEventsPar
     // STEP 2-A: Recurrent event processing, if it is recurrent expand it for the visible days
     if (event.displayTimezone.rrule) {
       // TODO: Check how this behave when the occurrence is between start and end but not in the visible days (e.g: hidden week end).
-      occurrences.push(...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter));
+      occurrences.push(
+        ...getRecurringEventOccurrencesForVisibleDays(event, start, end, adapter, displayTimezone),
+      );
       continue;
     }
 
@@ -131,4 +135,5 @@ export interface GetOccurrencesFromEventsParameters {
   events: SchedulerProcessedEvent[];
   visibleResources: Record<string, boolean>;
   resourceParentIds: Map<string, string | null>;
+  displayTimezone: TemporalTimezone;
 }
