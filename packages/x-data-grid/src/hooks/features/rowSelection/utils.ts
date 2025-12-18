@@ -82,7 +82,7 @@ export const checkboxPropsSelector = createSelector(
     };
 
     let isSelectable = true;
-    if (typeof isRowSelectable === 'function') {
+    if (typeof isRowSelectable === 'function' && rowsLookup[groupId]) {
       isSelectable = isRowSelectable(rowParams);
     }
 
@@ -117,7 +117,9 @@ export const checkboxPropsSelector = createSelector(
         columns,
       };
       const rowIsSelectable =
-        typeof isRowSelectable === 'function' ? isRowSelectable(descendantRowParams) : true;
+        typeof isRowSelectable === 'function' && rowsLookup[itemToTraverseId]
+          ? isRowSelectable(descendantRowParams)
+          : true;
 
       // Only consider selectable rows when determining parent selection state
       if (rowIsSelectable) {
