@@ -39,8 +39,10 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, a
   hideDescendantCount?: boolean;
 }
 
-interface GridGroupingCriteriaCellIconProps
-  extends Pick<GridGroupingCriteriaCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
+interface GridGroupingCriteriaCellIconProps extends Pick<
+  GridGroupingCriteriaCellProps,
+  'id' | 'field' | 'rowNode' | 'row'
+> {
   descendantCount: number;
 }
 

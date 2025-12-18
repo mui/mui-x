@@ -19,5 +19,4 @@ export interface PickersRangeCalendarHeaderProps extends PickersCalendarHeaderPr
   monthIndex: number;
 }
 
-export interface ExportedPickersRangeCalendarHeaderProps
-  extends ExportedPickersCalendarHeaderProps {}
+export interface ExportedPickersRangeCalendarHeaderProps extends ExportedPickersCalendarHeaderProps {}

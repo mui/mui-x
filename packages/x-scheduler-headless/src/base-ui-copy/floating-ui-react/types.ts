@@ -202,8 +202,10 @@ export type UseFloatingReturn<RT extends ReferenceType = ReferenceType> = Pretti
   }
 >;
 
-export interface UseFloatingOptions<RT extends ReferenceType = ReferenceType>
-  extends Omit<UsePositionOptions<RT>, 'elements'> {
+export interface UseFloatingOptions<RT extends ReferenceType = ReferenceType> extends Omit<
+  UsePositionOptions<RT>,
+  'elements'
+> {
   rootContext?: FloatingRootContext<RT>;
   /**
    * Object of external elements as an alternative to the `refs` object setters.

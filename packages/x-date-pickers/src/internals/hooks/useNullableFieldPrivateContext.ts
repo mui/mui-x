@@ -12,13 +12,12 @@ export function useNullableFieldPrivateContext() {
   return React.useContext(PickerFieldPrivateContext);
 }
 
-export interface PickerFieldPrivateContextValue
-  extends Pick<
-    UseFieldInternalProps<any, any, any>,
-    | 'formatDensity'
-    | 'enableAccessibleFieldDOMStructure'
-    | 'selectedSections'
-    | 'onSelectedSectionsChange'
-  > {
+export interface PickerFieldPrivateContextValue extends Pick<
+  UseFieldInternalProps<any, any, any>,
+  | 'formatDensity'
+  | 'enableAccessibleFieldDOMStructure'
+  | 'selectedSections'
+  | 'onSelectedSectionsChange'
+> {
   fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
 }
