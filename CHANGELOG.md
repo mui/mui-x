@@ -14,8 +14,8 @@ We'd like to extend a big thank you to the 13 contributors who made this release
 - 🌎 Improve Swedish (sv-SE) locale on the Data Grid
 - 🐞 Bugfixes
 
-Special thanks go out to this community member for their valuable contributions:
-@VismaAndreasIvarsson
+Special thanks go out to the community members for their valuable contributions:
+@KyeongJooni, @VismaAndreasIvarsson
 
 The following team members contributed to this release:
 @alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @Janpot, @JCQuintas, @mapache-salvaje, @michelengelen, @mj12albert, @prakhargupta1, @romgrk, @siriwatknp
@@ -32,7 +32,6 @@ The following team members contributed to this release:
 - [data grid] Reset row spanning on row expansion change (#20661) @siriwatknp
 - [data grid] Resize newly added rows while resize action is happening (#20676)
 - [l10n] Improve Swedish (sv-SE) locale (#20682) @VismaAndreasIvarsson
-  TEST
 
 #### `@mui/x-data-grid-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -48,6 +47,7 @@ Same changes as in `@mui/x-data-grid-pro@8.22.1`, plus:
 
 #### `@mui/x-date-pickers@8.22.1`
 
+- [pickers] Add minutesStep validation test (#20672) @KyeongJooni
 - [pickers] Fix `onAccept()` returning wrong year after selecting year then month (#20639) @michelengelen
 
 #### `@mui/x-date-pickers-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
