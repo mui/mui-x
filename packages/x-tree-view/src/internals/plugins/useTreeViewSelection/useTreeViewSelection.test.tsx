@@ -1210,66 +1210,69 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     // isItemSelectionEnabled is only available on RichTreeView (requires items prop)
-    describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectionEnabled prop', () => {
-      describe('isItemSelectionEnabled as a function', () => {
-        it('should not select an item when clicking if isItemSelectionEnabled returns false', () => {
-          const view = render({
-            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+    describe.skipIf(treeViewComponentName === 'SimpleTreeView')(
+      'isItemSelectionEnabled prop',
+      () => {
+        describe('isItemSelectionEnabled as a function', () => {
+          it('should not select an item when clicking if isItemSelectionEnabled returns false', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+            });
+
+            expect(view.isItemSelected('1')).to.equal(false);
+            fireEvent.click(view.getItemContent('1'));
+            expect(view.isItemSelected('1')).to.equal(false);
+
+            expect(view.isItemSelected('1.1')).to.equal(false);
+            fireEvent.click(view.getItemContent('1.1'));
+            expect(view.isItemSelected('1.1')).to.equal(true);
           });
 
-          expect(view.isItemSelected('1')).to.equal(false);
-          fireEvent.click(view.getItemContent('1'));
-          expect(view.isItemSelected('1')).to.equal(false);
+          it('should hide the checkbox when item is not selectable', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              checkboxSelection: true,
+              defaultExpandedItems: ['1'],
+              isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+            });
 
-          expect(view.isItemSelected('1.1')).to.equal(false);
-          fireEvent.click(view.getItemContent('1.1'));
-          expect(view.isItemSelected('1.1')).to.equal(true);
-        });
-
-        it('should hide the checkbox when item is not selectable', () => {
-          const view = render({
-            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-            checkboxSelection: true,
-            defaultExpandedItems: ['1'],
-            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+            // Parent item should not have a checkbox input
+            expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
+            // Leaf item should have a checkbox input
+            expect(view.getItemContent('1.1').querySelector('input[type="checkbox"]')).not.to.equal(
+              null,
+            );
           });
 
-          // Parent item should not have a checkbox input
-          expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
-          // Leaf item should have a checkbox input
-          expect(view.getItemContent('1.1').querySelector('input[type="checkbox"]')).not.to.equal(
-            null,
-          );
-        });
+          it('should not have aria-checked attribute when item is not selectable', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              defaultExpandedItems: ['1'],
+              isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+            });
 
-        it('should not have aria-checked attribute when item is not selectable', () => {
-          const view = render({
-            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-            defaultExpandedItems: ['1'],
-            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+            expect(view.getItemRoot('1.1')).to.have.attribute('aria-checked', 'false');
           });
-
-          expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
-          expect(view.getItemRoot('1.1')).to.have.attribute('aria-checked', 'false');
         });
-      });
 
-      describe('with multi selection', () => {
-        it('should not include non-selectable items when selecting a range', () => {
-          const view = render({
-            items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }],
-            multiSelect: true,
-            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+        describe('with multi selection', () => {
+          it('should not include non-selectable items when selecting a range', () => {
+            const view = render({
+              items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }],
+              multiSelect: true,
+              isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+            });
+
+            fireEvent.click(view.getItemContent('1'));
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+
+            fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
           });
-
-          fireEvent.click(view.getItemContent('1'));
-          expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
-
-          fireEvent.click(view.getItemContent('3'), { shiftKey: true });
-          expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
         });
-      });
-    });
+      },
+    );
   },
 );

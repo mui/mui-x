@@ -1503,76 +1503,79 @@ describeTreeView<TreeViewAnyStore>(
     });
 
     // isItemSelectionEnabled is only available on RichTreeView (requires items prop)
-    describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectionEnabled prop', () => {
-      it('should not select item with Space when isItemSelectionEnabled returns false', () => {
-        const view = render({
-          items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-          isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+    describe.skipIf(treeViewComponentName === 'SimpleTreeView')(
+      'isItemSelectionEnabled prop',
+      () => {
+        it('should not select item with Space when isItemSelectionEnabled returns false', () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
+          });
+
+          act(() => {
+            view.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(view.getItemRoot('1'), { key: ' ' });
+          expect(view.isItemSelected('1')).to.equal(false);
+
+          act(() => {
+            view.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(view.getItemRoot('2'), { key: ' ' });
+          expect(view.isItemSelected('2')).to.equal(true);
         });
 
-        act(() => {
-          view.getItemRoot('1').focus();
-        });
-        fireEvent.keyDown(view.getItemRoot('1'), { key: ' ' });
-        expect(view.isItemSelected('1')).to.equal(false);
+        it('should not select item with Enter when isItemSelectionEnabled returns false (single selection, leaf item)', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }],
+            isItemSelectionEnabled: (item: any) => item.id !== '1',
+          });
 
-        act(() => {
-          view.getItemRoot('2').focus();
-        });
-        fireEvent.keyDown(view.getItemRoot('2'), { key: ' ' });
-        expect(view.isItemSelected('2')).to.equal(true);
-      });
+          act(() => {
+            view.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(view.getItemRoot('1'), { key: 'Enter' });
+          expect(view.isItemSelected('1')).to.equal(false);
 
-      it('should not select item with Enter when isItemSelectionEnabled returns false (single selection, leaf item)', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }],
-          isItemSelectionEnabled: (item: any) => item.id !== '1',
-        });
-
-        act(() => {
-          view.getItemRoot('1').focus();
-        });
-        fireEvent.keyDown(view.getItemRoot('1'), { key: 'Enter' });
-        expect(view.isItemSelected('1')).to.equal(false);
-
-        act(() => {
-          view.getItemRoot('2').focus();
-        });
-        fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
-        expect(view.isItemSelected('2')).to.equal(true);
-      });
-
-      it('should not select non-selectable items with Shift+ArrowDown in multi selection', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          multiSelect: true,
-          defaultSelectedItems: ['1'],
-          isItemSelectionEnabled: (item: any) => item.id !== '2',
+          act(() => {
+            view.getItemRoot('2').focus();
+          });
+          fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
+          expect(view.isItemSelected('2')).to.equal(true);
         });
 
-        act(() => {
-          view.getItemRoot('1').focus();
-        });
-        fireEvent.keyDown(view.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
-        expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
-        expect(view.getFocusedItemId()).to.equal('2');
-      });
+        it('should not select non-selectable items with Shift+ArrowDown in multi selection', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            multiSelect: true,
+            defaultSelectedItems: ['1'],
+            isItemSelectionEnabled: (item: any) => item.id !== '2',
+          });
 
-      it('should not select non-selectable items with Shift+ArrowUp in multi selection', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          multiSelect: true,
-          defaultSelectedItems: ['3'],
-          isItemSelectionEnabled: (item: any) => item.id !== '2',
+          act(() => {
+            view.getItemRoot('1').focus();
+          });
+          fireEvent.keyDown(view.getItemRoot('1'), { key: 'ArrowDown', shiftKey: true });
+          expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+          expect(view.getFocusedItemId()).to.equal('2');
         });
 
-        act(() => {
-          view.getItemRoot('3').focus();
+        it('should not select non-selectable items with Shift+ArrowUp in multi selection', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            multiSelect: true,
+            defaultSelectedItems: ['3'],
+            isItemSelectionEnabled: (item: any) => item.id !== '2',
+          });
+
+          act(() => {
+            view.getItemRoot('3').focus();
+          });
+          fireEvent.keyDown(view.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
+          expect(view.getSelectedTreeItems()).to.deep.equal(['3']);
+          expect(view.getFocusedItemId()).to.equal('2');
         });
-        fireEvent.keyDown(view.getItemRoot('3'), { key: 'ArrowUp', shiftKey: true });
-        expect(view.getSelectedTreeItems()).to.deep.equal(['3']);
-        expect(view.getFocusedItemId()).to.equal('2');
-      });
-    });
+      },
+    );
   },
 );

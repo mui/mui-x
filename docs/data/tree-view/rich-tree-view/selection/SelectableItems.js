@@ -31,7 +31,8 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-const isItemSelectionEnabled = (item) => !item.children || item.children.length === 0;
+const isItemSelectionEnabled = (item) =>
+  !item.children || item.children.length === 0;
 
 export default function SelectableItems() {
   return (
