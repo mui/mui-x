@@ -353,10 +353,10 @@ export const createColumnsState = ({
     }
   }
 
-  const columnsToUpsertLookup: Record<string, true> = {};
+  const columnsToUpsertLookup: Record<string, GridColDef> = {};
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
-    columnsToUpsertLookup[field] = true;
+    columnsToUpsertLookup[field] = newColumn;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
 
@@ -410,6 +410,8 @@ export const createColumnsState = ({
     Object.keys(columnsState.lookup).forEach((field) => {
       if (!columnsToKeep[field]) {
         delete columnsState.lookup[field];
+      } else {
+        columnsState.lookup[field] = columnsToUpsertLookup[field];
       }
     });
   }
