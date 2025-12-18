@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  type AxisId,
-  selectorChartSeriesProcessed,
-  useSelector,
-  useStore,
-} from '@mui/x-charts/internals';
+import { type AxisId, selectorChartSeriesProcessed, useStore } from '@mui/x-charts/internals';
 import { LinePreviewPlot } from './previews/LinePreviewPlot';
 import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
 import { BarPreviewPlot } from './previews/BarPreviewPlot';
@@ -22,7 +17,7 @@ export function ChartAxisZoomSliderPreviewContent(props: ChartAxisZoomSliderPrev
   const { axisId, x, y, width, height } = props;
 
   const store = useStore();
-  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
+  const processedSeries = store.use(selectorChartSeriesProcessed);
 
   const children: React.JSX.Element[] = [];
   const clipId = `zoom-preview-mask-${axisId}`;

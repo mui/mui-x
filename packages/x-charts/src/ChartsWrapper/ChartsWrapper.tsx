@@ -6,7 +6,6 @@ import { useChartRootRef } from '../hooks/useChartRootRef';
 import { type Direction } from '../ChartsLegend';
 import { type Position } from '../models';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartPropsHeight,
   selectorChartPropsWidth,
@@ -186,8 +185,8 @@ function ChartsWrapper(props: ChartsWrapperProps) {
 
   const store = useStore();
 
-  const propsWidth = useSelector(store, selectorChartPropsWidth);
-  const propsHeight = useSelector(store, selectorChartPropsHeight);
+  const propsWidth = store.use(selectorChartPropsWidth);
+  const propsHeight = store.use(selectorChartPropsHeight);
 
   return (
     <Root

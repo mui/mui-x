@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
+import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
 import { type FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -34,9 +34,9 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
 const useAggregatedData = () => {
   const seriesData = useFunnelSeriesContext();
   const store = useStore();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const gap = useSelector(store, selectorFunnelGap);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
+  const gap = store.use(selectorFunnelGap);
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
