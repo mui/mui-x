@@ -32,6 +32,7 @@ The following team members contributed to this release:
 - [data grid] Reset row spanning on row expansion change (#20661) @siriwatknp
 - [data grid] Resize newly added rows while resize action is happening (#20676)
 - [l10n] Improve Swedish (sv-SE) locale (#20682) @VismaAndreasIvarsson
+  TEST
 
 #### `@mui/x-data-grid-pro@8.22.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
