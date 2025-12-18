@@ -1209,13 +1209,13 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
-    // isItemSelectable is only available on RichTreeView (requires items prop)
-    describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectable prop', () => {
-      describe('isItemSelectable as a function', () => {
-        it('should not select an item when clicking if isItemSelectable returns false', () => {
+    // isItemSelectionEnabled is only available on RichTreeView (requires items prop)
+    describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectionEnabled prop', () => {
+      describe('isItemSelectionEnabled as a function', () => {
+        it('should not select an item when clicking if isItemSelectionEnabled returns false', () => {
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-            isItemSelectable: (item: any) => !item.children || item.children.length === 0,
+            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
@@ -1232,7 +1232,7 @@ describeTreeView<TreeViewAnyStore>(
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
             checkboxSelection: true,
             defaultExpandedItems: ['1'],
-            isItemSelectable: (item: any) => !item.children || item.children.length === 0,
+            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
           });
 
           // Parent item should not have a checkbox input
@@ -1247,7 +1247,7 @@ describeTreeView<TreeViewAnyStore>(
           const view = render({
             items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
             defaultExpandedItems: ['1'],
-            isItemSelectable: (item: any) => !item.children || item.children.length === 0,
+            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
           });
 
           expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
@@ -1260,7 +1260,7 @@ describeTreeView<TreeViewAnyStore>(
           const view = render({
             items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }],
             multiSelect: true,
-            isItemSelectable: (item: any) => !item.children || item.children.length === 0,
+            isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
           });
 
           fireEvent.click(view.getItemContent('1'));

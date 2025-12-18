@@ -111,7 +111,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    * @returns {boolean} `true` if the item can be selected.
    * @default (item) => item.selectable !== false
    */
-  isItemSelectable?: (item: R) => boolean;
+  isItemSelectionEnabled?: (item: R) => boolean;
   /**
    * Used to determine the string label for a given item.
    *

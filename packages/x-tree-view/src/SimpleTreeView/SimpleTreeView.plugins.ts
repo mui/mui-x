@@ -39,7 +39,7 @@ export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undef
       UseTreeViewItemsParameters<any>,
       | 'items'
       | 'isItemDisabled'
-      | 'isItemSelectable'
+      | 'isItemSelectionEnabled'
       | 'getItemLabel'
       | 'getItemChildren'
       | 'getItemId'

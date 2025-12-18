@@ -60,7 +60,7 @@
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
       "default": "() => false"
     },
-    "isItemSelectable": {
+    "isItemSelectionEnabled": {
       "type": { "name": "func" },
       "default": "(item) => item.selectable !== false",
       "signature": {

@@ -15,7 +15,7 @@ import { itemsSelectors } from './useTreeViewItems.selectors';
 import { idSelectors } from '../../corePlugins/useTreeViewId';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
-const defaultIsItemSelectable = (item: { selectable?: boolean }) => item.selectable !== false;
+const defaultIsItemSelectionEnabled = (item: { selectable?: boolean }) => item.selectable !== false;
 
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,
@@ -25,14 +25,14 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   const itemsConfig: BuildItemsLookupConfig = React.useMemo(
     () => ({
       isItemDisabled: params.isItemDisabled,
-      isItemSelectable: params.isItemSelectable,
+      isItemSelectionEnabled: params.isItemSelectionEnabled,
       getItemLabel: params.getItemLabel,
       getItemChildren: params.getItemChildren,
       getItemId: params.getItemId,
     }),
     [
       params.isItemDisabled,
-      params.isItemSelectable,
+      params.isItemSelectionEnabled,
       params.getItemLabel,
       params.getItemChildren,
       params.getItemId,
@@ -236,7 +236,7 @@ useTreeViewItems.getInitialState = (params) => ({
     disabledItemsFocusable: params.disabledItemsFocusable,
     config: {
       isItemDisabled: params.isItemDisabled,
-      isItemSelectable: params.isItemSelectable,
+      isItemSelectionEnabled: params.isItemSelectionEnabled,
       getItemId: params.getItemId,
       getItemLabel: params.getItemLabel,
       getItemChildren: params.getItemChildren,
@@ -248,7 +248,7 @@ useTreeViewItems.applyDefaultValuesToParams = ({ params }) => ({
   ...params,
   disabledItemsFocusable: params.disabledItemsFocusable ?? false,
   itemChildrenIndentation: params.itemChildrenIndentation ?? '12px',
-  isItemSelectable: params.isItemSelectable ?? defaultIsItemSelectable,
+  isItemSelectionEnabled: params.isItemSelectionEnabled ?? defaultIsItemSelectionEnabled,
 });
 
 useTreeViewItems.wrapRoot = ({ children }) => {
@@ -263,7 +263,7 @@ useTreeViewItems.params = {
   disabledItemsFocusable: true,
   items: true,
   isItemDisabled: true,
-  isItemSelectable: true,
+  isItemSelectionEnabled: true,
   getItemLabel: true,
   getItemChildren: true,
   getItemId: true,

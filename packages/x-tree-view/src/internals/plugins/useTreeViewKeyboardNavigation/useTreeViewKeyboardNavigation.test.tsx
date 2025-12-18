@@ -1502,12 +1502,12 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
-    // isItemSelectable is only available on RichTreeView (requires items prop)
-    describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectable prop', () => {
-      it('should not select item with Space when isItemSelectable returns false', () => {
+    // isItemSelectionEnabled is only available on RichTreeView (requires items prop)
+    describe.skipIf(treeViewComponentName === 'SimpleTreeView')('isItemSelectionEnabled prop', () => {
+      it('should not select item with Space when isItemSelectionEnabled returns false', () => {
         const view = render({
           items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-          isItemSelectable: (item: any) => !item.children || item.children.length === 0,
+          isItemSelectionEnabled: (item: any) => !item.children || item.children.length === 0,
         });
 
         act(() => {
@@ -1523,10 +1523,10 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.isItemSelected('2')).to.equal(true);
       });
 
-      it('should not select item with Enter when isItemSelectable returns false (single selection, leaf item)', () => {
+      it('should not select item with Enter when isItemSelectionEnabled returns false (single selection, leaf item)', () => {
         const view = render({
           items: [{ id: '1' }, { id: '2' }],
-          isItemSelectable: (item: any) => item.id !== '1',
+          isItemSelectionEnabled: (item: any) => item.id !== '1',
         });
 
         act(() => {
@@ -1547,7 +1547,7 @@ describeTreeView<TreeViewAnyStore>(
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           multiSelect: true,
           defaultSelectedItems: ['1'],
-          isItemSelectable: (item: any) => item.id !== '2',
+          isItemSelectionEnabled: (item: any) => item.id !== '2',
         });
 
         act(() => {
@@ -1563,7 +1563,7 @@ describeTreeView<TreeViewAnyStore>(
           items: [{ id: '1' }, { id: '2' }, { id: '3' }],
           multiSelect: true,
           defaultSelectedItems: ['3'],
-          isItemSelectable: (item: any) => item.id !== '2',
+          isItemSelectionEnabled: (item: any) => item.id !== '2',
         });
 
         act(() => {

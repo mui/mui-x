@@ -96,7 +96,7 @@
         }
       }
     },
-    "isItemSelectable": {
+    "isItemSelectionEnabled": {
       "description": "Used to determine if a given item can be selected.",
       "typeDescriptions": {
         "item": { "name": "item", "description": "The item to check." },

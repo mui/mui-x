@@ -79,9 +79,9 @@ export const selectionSelectors = {
    */
   canItemBeSelected: createSelector(
     itemsSelectors.isItemDisabled,
-    itemsSelectors.isItemSelectable,
+    itemsSelectors.isItemSelectionEnabled,
     (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.isEnabled,
-    (isItemDisabled, isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
-      isSelectionEnabled && !isItemDisabled && isItemSelectable,
+    (isItemDisabled, isItemSelectionEnabled, isSelectionEnabled, _itemId: TreeViewItemId) =>
+      isSelectionEnabled && !isItemDisabled && isItemSelectionEnabled,
   ),
 };

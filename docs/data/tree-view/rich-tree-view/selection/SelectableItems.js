@@ -31,7 +31,7 @@ const MUI_X_PRODUCTS = [
   },
 ];
 
-const isItemSelectable = (item) => !item.children || item.children.length === 0;
+const isItemSelectionEnabled = (item) => !item.children || item.children.length === 0;
 
 export default function SelectableItems() {
   return (
@@ -40,7 +40,7 @@ export default function SelectableItems() {
         items={MUI_X_PRODUCTS}
         defaultExpandedItems={['grid']}
         checkboxSelection
-        isItemSelectable={isItemSelectable}
+        isItemSelectionEnabled={isItemSelectionEnabled}
       />
     </Box>
   );

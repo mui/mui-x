@@ -244,7 +244,7 @@ RichTreeView.propTypes = {
    * @returns {boolean} `true` if the item can be selected.
    * @default (item) => item.selectable !== false
    */
-  isItemSelectable: PropTypes.func,
+  isItemSelectionEnabled: PropTypes.func,
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".

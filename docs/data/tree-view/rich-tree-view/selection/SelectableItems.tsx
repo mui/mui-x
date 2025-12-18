@@ -32,7 +32,7 @@ const MUI_X_PRODUCTS: TreeViewBaseItem[] = [
   },
 ];
 
-const isItemSelectable = (item: TreeViewBaseItem) =>
+const isItemSelectionEnabled = (item: TreeViewBaseItem) =>
   !item.children || item.children.length === 0;
 
 export default function SelectableItems() {
@@ -42,7 +42,7 @@ export default function SelectableItems() {
         items={MUI_X_PRODUCTS}
         defaultExpandedItems={['grid']}
         checkboxSelection
-        isItemSelectable={isItemSelectable}
+        isItemSelectionEnabled={isItemSelectionEnabled}
       />
     </Box>
   );

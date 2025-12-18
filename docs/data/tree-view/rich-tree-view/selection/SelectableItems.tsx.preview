@@ -2,5 +2,5 @@
   items={MUI_X_PRODUCTS}
   defaultExpandedItems={['grid']}
   checkboxSelection
-  isItemSelectable={isItemSelectable}
+  isItemSelectionEnabled={isItemSelectionEnabled}
 />
