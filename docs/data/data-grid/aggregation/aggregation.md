@@ -70,7 +70,7 @@ In the following demo, even though the **Year** column is not aggregable, it's s
 
 When [row grouping](/x/react-data-grid/row-grouping/) is enabled, aggregated values can be displayed in the grouping rows as well as the top-level footer.
 
-In the example below, each row group's sum is aggregated and displayed in its grouping row, and the total sum for all rows is displayed in the footer.
+In the example below, the sum and the count of `true` values for each row group are aggregated and displayed in that group's row, while the total sum and count of `true` values for all rows are displayed in the footer.
 
 {{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
