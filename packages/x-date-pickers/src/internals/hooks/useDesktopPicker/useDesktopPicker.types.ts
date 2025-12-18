@@ -20,10 +20,8 @@ import {
 import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseDesktopPickerSlots
-  extends Pick<
-      PickerPopperSlots,
-      'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'
-    >,
+  extends
+    Pick<PickerPopperSlots, 'desktopPaper' | 'desktopTransition' | 'desktopTrapFocus' | 'popper'>,
     ExportedPickersLayoutSlots<PickerValue>,
     PickerFieldUISlotsFromContext {
   /**
@@ -34,7 +32,9 @@ export interface UseDesktopPickerSlots
 
 export interface ExportedUseDesktopPickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends PickerPopperSlotProps,
+>
+  extends
+    PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
@@ -45,7 +45,8 @@ export interface ExportedUseDesktopPickerSlotProps<
 }
 
 export interface UseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface DesktopOnlyPickerProps extends UsePickerNonStaticProps {
@@ -61,7 +62,9 @@ export interface UseDesktopPickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
-> extends BasePickerProps<PickerValue, any, TError, TExternalProps>,
+>
+  extends
+    BasePickerProps<PickerValue, any, TError, TExternalProps>,
     MakeRequired<DesktopOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
@@ -85,9 +88,9 @@ export interface UseDesktopPickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParameters<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
-  > {
+  UsePickerParameters<PickerValue, TView, TExternalProps>,
+  'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
+> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

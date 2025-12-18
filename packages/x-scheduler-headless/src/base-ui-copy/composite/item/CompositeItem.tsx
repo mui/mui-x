@@ -35,8 +35,10 @@ export function CompositeItem<Metadata, State extends Record<string, any>>(
 }
 
 export namespace CompositeItem {
-  export interface Props<Metadata, State extends Record<string, any>>
-    extends Pick<BaseUIComponentProps<any, State>, 'render' | 'className'> {
+  export interface Props<Metadata, State extends Record<string, any>> extends Pick<
+    BaseUIComponentProps<any, State>,
+    'render' | 'className'
+  > {
     children?: React.ReactNode;
     metadata?: Metadata;
     refs?: React.Ref<HTMLElement | null>[];

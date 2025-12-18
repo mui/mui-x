@@ -23,7 +23,8 @@ import type { DataGridProProcessedProps } from './dataGridProProps';
  * The api of Data Grid Pro.
  */
 export interface GridApiPro
-  extends GridApiCommon<GridStatePro, GridInitialStatePro>,
+  extends
+    GridApiCommon<GridStatePro, GridInitialStatePro>,
     GridRowProApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
@@ -34,7 +35,8 @@ export interface GridApiPro
     GridColumnReorderApi {}
 
 export interface GridPrivateApiPro
-  extends GridApiPro,
+  extends
+    GridApiPro,
     GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,

@@ -24,8 +24,7 @@ export interface DigitalClockSlotProps {
 }
 
 export interface DigitalClockProps
-  extends ExportedDigitalClockProps,
-    BaseClockProps<Extract<TimeView, 'hours'>> {
+  extends ExportedDigitalClockProps, BaseClockProps<Extract<TimeView, 'hours'>> {
   /**
    * Available views.
    * @default ['hours']

@@ -8,8 +8,10 @@ export type RenderDragPreviewParameters =
   | { type: 'standalone-event'; data: SchedulerOccurrencePlaceholderExternalDragData };
 
 // TODO: Add support for eventModelStructure.
-export interface SchedulerOccurrencePlaceholderExternalDragData
-  extends Omit<SchedulerEvent, 'start' | 'end'> {
+export interface SchedulerOccurrencePlaceholderExternalDragData extends Omit<
+  SchedulerEvent,
+  'start' | 'end'
+> {
   /**
    * The default duration of the event in minutes.
    * Will be ignored if the event is dropped on a UI that only handles multi-day events.

@@ -198,6 +198,90 @@ describe('Pan Gesture', () => {
     expect(events.length).toBeGreaterThan(0);
   });
 
+  it('should not jump when a new pointer is added during an active gesture', async () => {
+    const gesture = touchGesture.setup();
+
+    await gesture.pan({
+      target,
+      distance: 50,
+      steps: 2,
+      pointers: {
+        amount: 1,
+        ids: [1230],
+      },
+      releasePointers: false,
+    });
+
+    expect(events).toStrictEqual([
+      `panStart: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 25 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+    ]);
+
+    events = []; // Clear events for next test
+
+    await gesture.pan({
+      target,
+      distance: 50,
+      steps: 2,
+      pointers: {
+        amount: 2, // Add a new pointer
+        ids: [1230, 4560],
+      },
+      releasePointers: true,
+    });
+
+    expect(events).toStrictEqual([
+      `pan: deltaX: 62 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `pan: deltaX: 75 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `pan: deltaX: 87 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `pan: deltaX: 100 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `panEnd: deltaX: 100 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+    ]);
+  });
+
+  it('should not jump when a pointer is removed during an active gesture', async () => {
+    const gesture = touchGesture.setup();
+
+    await gesture.pan({
+      target,
+      distance: 50,
+      steps: 2,
+      pointers: {
+        amount: 2,
+        ids: [7890, 1011],
+      },
+      releasePointers: [7890],
+    });
+
+    expect(events).toStrictEqual([
+      `panStart: deltaX: 12 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 12 | deltaY: 0 | direction: null | mainAxis: null`,
+      `pan: deltaX: 25 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `pan: deltaX: 37 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `pan: deltaX: 50 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+    ]);
+
+    events = []; // Clear events for next test
+
+    await gesture.pan({
+      target,
+      distance: 50,
+      steps: 2,
+      pointers: {
+        amount: 1, // Remove one pointer
+        ids: [1011],
+      },
+      releasePointers: true,
+    });
+
+    expect(events).toStrictEqual([
+      `pan: deltaX: 75 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `pan: deltaX: 100 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+      `panEnd: deltaX: 100 | deltaY: 0 | direction: right | mainAxis: horizontal`,
+    ]);
+  });
+
   it('should update options', () => {
     expect(PanGesture).toUpdateOptions({
       preventDefault: true,
