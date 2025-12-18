@@ -302,6 +302,14 @@ export default defineConfig(
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
+      'react/jsx-filename-extension': 'off',
+    },
+  },
+
+  {
+    files: [`test/regressions/**/*${EXTENSION_TS}`],
+    rules: {
+      'react/jsx-filename-extension': 'off',
     },
   },
 
