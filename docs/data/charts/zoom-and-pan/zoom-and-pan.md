@@ -35,6 +35,7 @@ If you want to customize the touch-action behavior, you can override it by targe
 {{"demo": "ZoomScatterChart.js"}}
 {{"demo": "ZoomBarChart.js"}}
 {{"demo": "ZoomLineChart.js"}}
+{{"demo": "ZoomHeatmap.js"}}
 
 ## Zooming options
 
