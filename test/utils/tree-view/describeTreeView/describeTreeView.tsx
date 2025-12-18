@@ -195,7 +195,7 @@ const innerDescribeTreeView = <TStore extends TreeViewAnyStore>(
           itemId={item.id}
           label={item.label ?? item.id}
           disabled={item.disabled}
-          selectable={item.selectable}
+          selectionDisabled={item.selectionDisabled}
           data-testid={item.id}
           key={item.id}
           {...slotProps?.item}

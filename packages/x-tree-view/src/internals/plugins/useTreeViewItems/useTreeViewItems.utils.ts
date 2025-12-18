@@ -152,7 +152,9 @@ export function buildItemsLookups(parameters: BuildItemsLookupsParameters) {
       idAttribute: undefined,
       expandable: isItemExpandable(item, children),
       disabled: config.isItemDisabled ? config.isItemDisabled(item) : false,
-      selectable: config.isItemSelectionEnabled ? config.isItemSelectionEnabled(item) : true,
+      selectionDisabled: config.isItemSelectionEnabled
+        ? !config.isItemSelectionEnabled(item)
+        : false,
       depth,
     };
 

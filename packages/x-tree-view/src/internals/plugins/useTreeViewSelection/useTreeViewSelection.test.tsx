@@ -1161,10 +1161,10 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
-    describe('selectable item property', () => {
-      it('should not select an item when clicking if selectable is false', () => {
+    describe('selectionDisabled item property', () => {
+      it('should not select an item when clicking if selectionDisabled is true', () => {
         const view = render({
-          items: [{ id: '1', selectable: false }, { id: '2' }],
+          items: [{ id: '1', selectionDisabled: true }, { id: '2' }],
         });
 
         expect(view.isItemSelected('1')).to.equal(false);
@@ -1176,9 +1176,9 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.isItemSelected('2')).to.equal(true);
       });
 
-      it('should hide the checkbox when selectable is false', () => {
+      it('should hide the checkbox when selectionDisabled is true', () => {
         const view = render({
-          items: [{ id: '1', selectable: false }, { id: '2' }],
+          items: [{ id: '1', selectionDisabled: true }, { id: '2' }],
           checkboxSelection: true,
         });
 
@@ -1186,18 +1186,18 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.getItemContent('2').querySelector('input[type="checkbox"]')).not.to.equal(null);
       });
 
-      it('should not have aria-checked attribute when selectable is false', () => {
+      it('should not have aria-checked attribute when selectionDisabled is true', () => {
         const view = render({
-          items: [{ id: '1', selectable: false }, { id: '2' }],
+          items: [{ id: '1', selectionDisabled: true }, { id: '2' }],
         });
 
         expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
         expect(view.getItemRoot('2')).to.have.attribute('aria-checked', 'false');
       });
 
-      it('should not include non-selectable items when selecting a range (multi selection)', () => {
+      it('should not include items with selectionDisabled when selecting a range (multi selection)', () => {
         const view = render({
-          items: [{ id: '1' }, { id: '2', selectable: false }, { id: '3' }],
+          items: [{ id: '1' }, { id: '2', selectionDisabled: true }, { id: '3' }],
           multiSelect: true,
         });
 

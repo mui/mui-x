@@ -9,7 +9,7 @@ export interface TreeViewItemMeta {
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;
-  selectable: boolean;
+  selectionDisabled: boolean;
   /**
    * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
    */

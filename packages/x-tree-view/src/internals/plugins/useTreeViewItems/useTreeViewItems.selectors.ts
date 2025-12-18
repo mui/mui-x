@@ -102,6 +102,6 @@ export const itemsSelectors = {
    */
   isItemSelectionEnabled: createSelector(
     (state: TreeViewState<[UseTreeViewItemsSignature]>, itemId: TreeViewItemId) =>
-      state.items.itemMetaLookup[itemId]?.selectable ?? true,
+      !(state.items.itemMetaLookup[itemId]?.selectionDisabled ?? false),
   ),
 };

@@ -20,10 +20,10 @@ export interface UseTreeItemParameters {
    */
   disabled?: boolean;
   /**
-   * If `false`, the item cannot be selected.
-   * @default true
+   * If `true`, the item cannot be selected.
+   * @default false
    */
-  selectable?: boolean;
+  selectionDisabled?: boolean;
   /**
    * The id of the item.
    * Must be unique.

@@ -243,7 +243,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     itemId,
     label,
     disabled,
-    selectable,
+    selectionDisabled,
     children,
     slots = {},
     slotProps = {},
@@ -270,7 +270,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     children,
     label,
     disabled,
-    selectable,
+    selectionDisabled,
   });
 
   const classes = useUtilityClasses(classesProp);
@@ -445,10 +445,10 @@ TreeItem.propTypes = {
    */
   onKeyDown: PropTypes.func,
   /**
-   * If `false`, the item cannot be selected.
-   * @default true
+   * If `true`, the item cannot be selected.
+   * @default false
    */
-  selectable: PropTypes.bool,
+  selectionDisabled: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

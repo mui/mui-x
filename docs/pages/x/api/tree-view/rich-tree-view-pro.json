@@ -90,7 +90,7 @@
     },
     "isItemSelectionEnabled": {
       "type": { "name": "func" },
-      "default": "(item) => item.selectable !== false",
+      "default": "(item) => item.selectionDisabled !== true",
       "signature": {
         "type": "function(item: R) => boolean",
         "describedArgs": ["item"],

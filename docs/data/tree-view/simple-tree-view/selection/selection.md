@@ -55,7 +55,7 @@ This is also compatible with multi selection:
 
 ## Selectable items
 
-Use the `selectable` prop on the Tree Item component to disable selection on specific items.
+Use the `selectionDisabled` prop on the Tree Item component to disable selection on specific items.
 When an item is not selectable, the checkbox is hidden regardless of [`checkboxSelection`](#checkbox-selection) prop.
 
 In the example below, only leaf items (items without children) are selectable.
