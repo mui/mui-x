@@ -4,11 +4,10 @@ import { MuiEvent } from '@mui/x-internals/types';
 import { PickersSectionListProps } from '../../PickersSectionList';
 import { PickerTextFieldOwnerState } from '../../models/fields';
 
-export interface PickersInputPropsUsedByField
-  extends Pick<
-    PickersSectionListProps,
-    'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
-  > {
+export interface PickersInputPropsUsedByField extends Pick<
+  PickersSectionListProps,
+  'elements' | 'sectionListRef' | 'contentEditable' | 'tabIndex'
+> {
   /**
    * Is `true` if the current values equals the empty value.
    * For a single item value, it means that `value === null`
@@ -38,8 +37,7 @@ export interface PickersInputPropsUsedByField
 }
 
 export interface PickersInputBaseProps
-  extends Omit<BoxProps, keyof PickersInputPropsUsedByField>,
-    PickersInputPropsUsedByField {
+  extends Omit<BoxProps, keyof PickersInputPropsUsedByField>, PickersInputPropsUsedByField {
   ownerState?: PickerTextFieldOwnerState;
   margin?: 'dense' | 'none' | 'normal';
   renderSuffix?: (state: {
