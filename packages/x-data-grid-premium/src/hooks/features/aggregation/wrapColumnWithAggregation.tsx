@@ -1,13 +1,13 @@
 import { RefObject } from '@mui/x-internals/types';
 import { GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
-import { type GridBaseColDef, GridFooterCell } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
-import type {
+import {
+  GridBaseColDef,
   GridAggregationCellMeta,
-  GridAggregationLookup,
   GridAggregationPosition,
-  GridAggregationRule,
-} from './gridAggregationInterfaces';
+  GridFooterCell,
+} from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridAggregationLookup, GridAggregationRule } from './gridAggregationInterfaces';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';

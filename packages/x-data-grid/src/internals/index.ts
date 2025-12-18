@@ -172,6 +172,7 @@ export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState
 export type * as BaseSlots from '../models/gridBaseSlots';
 
 export type * from '../models/props/DataGridProps';
+export type { GridAggregationPosition, GridAggregationCellMeta } from '../models/gridAggregation';
 export type {
   GridDataSourceApiBase,
   GridDataSourceApi,
