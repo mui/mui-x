@@ -78,7 +78,8 @@ export interface ExportedDayCalendarProps extends ExportedPickersDayProps {
 }
 
 export interface DayCalendarProps
-  extends ExportedDayCalendarProps,
+  extends
+    ExportedDayCalendarProps,
     DayValidationProps,
     MonthValidationProps,
     YearValidationProps,

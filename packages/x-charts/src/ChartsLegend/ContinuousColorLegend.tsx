@@ -25,7 +25,8 @@ import { type ZAxisDefaultized } from '../models/z-axis';
 type LabelFormatter = (params: { value: number | Date; formattedValue: string }) => string;
 
 export interface ContinuousColorLegendProps
-  extends ColorLegendSelector,
+  extends
+    ColorLegendSelector,
     AppendKeys<Pick<ChartsLabelGradientProps, 'rotate'>, 'gradient'>,
     Pick<ChartsLabelGradientProps, 'thickness'> {
   /**

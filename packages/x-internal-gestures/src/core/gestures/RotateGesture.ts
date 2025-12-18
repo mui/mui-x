@@ -182,6 +182,14 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
 
           // Store the original target element
           this.originalTarget = targetElement;
+        } else if (this.isActive && relevantPointers.length >= 2) {
+          // A new pointer was added during an active gesture
+          // Adjust the start angle to prevent jumping (similar to pointer removal logic)
+          const newAngle = calculateRotationAngle(relevantPointers);
+          // Adjust startAngle so that the total rotation is preserved
+          this.state.startAngle = newAngle - this.state.totalRotation;
+          this.state.lastAngle = newAngle;
+          this.state.lastTime = event.timeStamp;
         }
         break;
 
@@ -201,9 +209,14 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
             delta += 360;
           }
 
+          // Emit ongoing event if there's an actual rotation
+          // We don't want to emit events for tiny movements that might be just noise
+          if (Math.abs(delta) <= 0.1) {
+            return;
+          }
+
           // Store the delta for use in emitRotateEvent
           this.state.lastDelta = delta;
-
           // Update rotation value (cumulative)
           this.state.totalRotation += delta;
 
@@ -216,12 +229,6 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
           // Update state
           this.state.lastAngle = currentAngle;
           this.state.lastTime = event.timeStamp;
-
-          // Emit ongoing event if there's an actual rotation
-          // We don't want to emit events for tiny movements that might be just noise
-          if (Math.abs(delta) <= 0.1) {
-            return;
-          }
 
           if (!this.isActive) {
             this.isActive = true;

@@ -71,7 +71,8 @@ export interface LineElementSlotProps {
 }
 
 export interface LineElementProps
-  extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;

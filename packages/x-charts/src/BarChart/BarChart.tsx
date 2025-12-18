@@ -34,7 +34,8 @@ import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
 
 export interface BarChartSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
@@ -42,7 +43,8 @@ export interface BarChartSlots
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 export interface BarChartSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
@@ -53,7 +55,8 @@ export interface BarChartSlotProps
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 
 export interface BarChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,

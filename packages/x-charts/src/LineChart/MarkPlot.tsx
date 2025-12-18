@@ -25,8 +25,7 @@ export interface MarkPlotSlotProps {
 }
 
 export interface MarkPlotProps
-  extends React.SVGAttributes<SVGSVGElement>,
-    Pick<MarkElementProps, 'skipAnimation'> {
+  extends React.SVGAttributes<SVGSVGElement>, Pick<MarkElementProps, 'skipAnimation'> {
   /**
    * Overridable component slots.
    * @default {}

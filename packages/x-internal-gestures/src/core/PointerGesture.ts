@@ -37,8 +37,10 @@ export type BasePointerGestureOptions = BaseGestureOptions & {
  * These options provide fine-grained control over how pointer events are interpreted
  * and when the gesture should be recognized.
  */
-export interface PointerGestureOptions<GestureName extends string>
-  extends GestureOptions<GestureName, BasePointerGestureOptions> {}
+export interface PointerGestureOptions<GestureName extends string> extends GestureOptions<
+  GestureName,
+  BasePointerGestureOptions
+> {}
 
 export type PointerGestureEventData<
   CustomData extends Record<string, unknown> = Record<string, unknown>,

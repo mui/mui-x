@@ -133,12 +133,6 @@ export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T]
   ? ChartsSeriesConfig[T]['seriesLayout']
   : never;
 
-export type ChartItemIdentifier<T extends ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifier'];
-
-export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifierWithData'];
-
 export type DatasetElementType<T> = {
   [key: string]: T;
 };

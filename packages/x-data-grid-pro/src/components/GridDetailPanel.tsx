@@ -20,8 +20,10 @@ const DetailPanel = styled('div', {
   overflow: 'auto',
 });
 
-interface GridDetailPanelProps
-  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'className' | 'children'> {
+interface GridDetailPanelProps extends Pick<
+  React.HTMLAttributes<HTMLDivElement>,
+  'className' | 'children'
+> {
   /**
    * The row ID that this panel belongs to.
    */

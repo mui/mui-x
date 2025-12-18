@@ -62,6 +62,4 @@ export interface GridPaginationMetaApi {
  * The pagination API interface that is available in the grid `apiRef`.
  */
 export interface GridPaginationApi
-  extends GridPaginationModelApi,
-    GridPaginationRowCountApi,
-    GridPaginationMetaApi {}
+  extends GridPaginationModelApi, GridPaginationRowCountApi, GridPaginationMetaApi {}

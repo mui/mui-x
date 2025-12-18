@@ -39,7 +39,8 @@ import type { ScatterChartPluginSignatures } from './ScatterChart.plugins';
 import { FocusedScatterMark } from './FocusedScatterMark';
 
 export interface ScatterChartSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
@@ -47,7 +48,8 @@ export interface ScatterChartSlots
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 export interface ScatterChartSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
@@ -63,7 +65,8 @@ export interface ScatterChartSlotProps
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
       | 'series'
       | 'plugins'

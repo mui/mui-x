@@ -31,7 +31,8 @@ import { defaultizeMargin } from '../internals/defaultizeMargin';
 import { FocusedPieArc } from './FocusedPieArc';
 
 export interface PieChartSlots
-  extends PiePlotSlots,
+  extends
+    PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
@@ -39,7 +40,8 @@ export interface PieChartSlots
     Partial<ChartsSlots> {}
 
 export interface PieChartSlotProps
-  extends PiePlotSlotProps,
+  extends
+    PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
@@ -48,7 +50,8 @@ export interface PieChartSlotProps
 
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,

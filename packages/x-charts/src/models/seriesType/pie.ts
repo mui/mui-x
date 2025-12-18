@@ -153,8 +153,10 @@ export type PieItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedPieSeriesType
-  extends DefaultizedProps<PieSeriesType, CommonDefaultizedProps> {
+export interface DefaultizedPieSeriesType extends DefaultizedProps<
+  PieSeriesType,
+  CommonDefaultizedProps
+> {
   data: DefaultizedPieValueType[];
 }
 

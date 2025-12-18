@@ -30,36 +30,37 @@ import type { ChartMargin } from '../internals/plugins/corePlugins/useChartDimen
 import { FocusedLineMark } from '../LineChart/FocusedLineMark';
 
 export interface SparkLineChartSlots
-  extends AreaPlotSlots,
+  extends
+    AreaPlotSlots,
     LinePlotSlots,
     MarkPlotSlots,
     LineHighlightPlotSlots,
     Omit<BarPlotSlots, 'barLabel'>,
     ChartsTooltipSlots {}
 export interface SparkLineChartSlotProps
-  extends AreaPlotSlotProps,
+  extends
+    AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     BarPlotSlotProps,
     ChartsTooltipSlotProps {}
 
-export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'>
-  extends Omit<
-    ChartContainerProps,
-    | 'series'
-    | 'xAxis'
-    | 'yAxis'
-    | 'zAxis'
-    | 'radiusAxis'
-    | 'rotationAxis'
-    | 'margin'
-    | 'plugins'
-    | 'colors'
-    | 'slots'
-    | 'slotProps'
-    | 'experimentalFeatures'
-  > {
+export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'> extends Omit<
+  ChartContainerProps,
+  | 'series'
+  | 'xAxis'
+  | 'yAxis'
+  | 'zAxis'
+  | 'radiusAxis'
+  | 'rotationAxis'
+  | 'margin'
+  | 'plugins'
+  | 'colors'
+  | 'slots'
+  | 'slotProps'
+  | 'experimentalFeatures'
+> {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
