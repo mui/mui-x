@@ -1,5 +1,4 @@
 import { expect } from 'vitest';
-import { stackOrderAppearance as d3OrderAppearance } from '@mui/x-charts-vendor/d3-shape';
 import { orderAppearance } from './orderAppearance';
 import { generateSeries } from './test.helper';
 
@@ -13,11 +12,9 @@ describe('orderAppearance', () => {
     ]);
 
     const result = orderAppearance(series);
-    const d3Result = d3OrderAppearance(series);
 
     // Series 0 (peak at index 0), Series 1 (peak at index 0), Series 2 (peak at index 1), Series 3 (peak at index 0)
     expect(result).to.deep.equal([0, 1, 3, 2]);
-    expect(d3Result).to.deep.equal(result);
   });
 
   it('should handle empty series', () => {
@@ -40,11 +37,9 @@ describe('orderAppearance', () => {
     ]);
 
     const result = orderAppearance(series);
-    const d3Result = d3OrderAppearance(series);
 
     // Series 0 (peak at index 0), Series 1 (peak at index 0), Series 2 (peak at index 1)
     expect(result).to.deep.equal([0, 1, 2]);
-    expect(d3Result).to.deep.equal(result);
   });
 
   it('should handle series where d3 would change output based on zeros', () => {
@@ -60,10 +55,7 @@ describe('orderAppearance', () => {
     );
 
     const result = orderAppearance(series);
-    const d3Result = d3OrderAppearance(series);
 
     expect(result).to.deep.equal([0, 1]);
-    expect(d3Result).to.deep.equal([1, 0]);
-    expect(result).not.to.deep.equal(d3Result);
   });
 });

@@ -1,5 +1,4 @@
 import { expect } from 'vitest';
-import { stackOffsetDiverging as d3OffsetDiverging } from '@mui/x-charts-vendor/d3-shape';
 import { generateSeries } from '../order/test.helper';
 import { offsetDiverging } from './offsetDiverging';
 
@@ -223,23 +222,8 @@ describe('offsetDiverging', () => {
         [undefined, undefined],
       ],
     );
-    const d3Series = generateSeries(
-      [
-        [10, 20],
-        [5, 30],
-        [10, 10],
-      ],
-      [
-        [0, 0],
-        [undefined, undefined],
-        [undefined, undefined],
-      ],
-    );
     const order = [2, 0, 1];
     offsetDiverging(series, order);
-    d3OffsetDiverging(d3Series, order);
-
-    expect(series).not.to.deep.equal(d3Series);
 
     // First point: A=10, B=5
     expect(series[2][0][0]).to.equal(0);

@@ -1,5 +1,4 @@
 import { expect } from 'vitest';
-import { stackOrderInsideOut as d3OrderInsideOut } from '@mui/x-charts-vendor/d3-shape';
 import { orderInsideOut } from './orderInsideOut';
 import { generateSeries } from './test.helper';
 
@@ -13,11 +12,9 @@ describe('orderInsideOut', () => {
     ]);
 
     const result = orderInsideOut(series);
-    const d3Result = d3OrderInsideOut(series);
 
     // Series 2 (sum=20), Series 3 (sum=10), Series 0 (sum=15), Series 1 (sum=30)
     expect(result).to.deep.equal([2, 3, 0, 1]);
-    expect(d3Result).to.deep.equal(result);
   });
 
   it('should handle empty series', () => {
@@ -40,10 +37,8 @@ describe('orderInsideOut', () => {
     ]);
 
     const result = orderInsideOut(series);
-    const d3Result = d3OrderInsideOut(series);
 
     expect(result).to.deep.equal([2, 0, 1]);
-    expect(d3Result).to.deep.equal(result);
   });
 
   it('should handle series where d3 would change output based on zeros', () => {
@@ -59,10 +54,7 @@ describe('orderInsideOut', () => {
     );
 
     const result = orderInsideOut(series);
-    const d3Result = d3OrderInsideOut(series);
 
     expect(result).to.deep.equal([0, 1]);
-    expect(d3Result).to.deep.equal([1, 0]);
-    expect(result).not.to.deep.equal(d3Result);
   });
 });
