@@ -53,13 +53,13 @@ export function FormContent(props: FormContentProps) {
   const recurrencePresets = useStore(
     store,
     schedulerRecurringEventSelectors.presets,
-    occurrence.start,
+    occurrence.displayTimezone.start,
   );
   const defaultRecurrencePresetKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.rrule,
-    occurrence.start,
+    occurrence.displayTimezone.rrule,
+    occurrence.displayTimezone.start,
   );
 
   // State hooks
@@ -68,13 +68,14 @@ export function FormContent(props: FormContentProps) {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
 
-    const base = defaultRecurrencePresetKey === 'custom' ? occurrence.rrule : undefined;
+    const base =
+      defaultRecurrencePresetKey === 'custom' ? occurrence.displayTimezone.rrule : undefined;
 
     return {
-      startDate: fmtDate(occurrence.start),
-      endDate: fmtDate(occurrence.end),
-      startTime: fmtTime(occurrence.start),
-      endTime: fmtTime(occurrence.end),
+      startDate: fmtDate(occurrence.displayTimezone.start),
+      endDate: fmtDate(occurrence.displayTimezone.end),
+      startTime: fmtTime(occurrence.displayTimezone.start),
+      endTime: fmtTime(occurrence.displayTimezone.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
       color: occurrence.color ?? null,
@@ -162,10 +163,10 @@ export function FormContent(props: FormContentProps) {
         end,
         rrule: rruleToSubmit,
       });
-    } else if (occurrence.rrule) {
+    } else if (occurrence.displayTimezone.rrule) {
       const recurrenceModified = !schedulerRecurringEventSelectors.isSameRRule(
         store.state,
-        occurrence.rrule,
+        occurrence.displayTimezone.rrule,
         rruleToSubmit,
       );
 
@@ -178,7 +179,7 @@ export function FormContent(props: FormContentProps) {
       };
 
       await store.updateRecurringEvent({
-        occurrenceStart: occurrence.start.value,
+        occurrenceStart: occurrence.displayTimezone.start.value,
         changes,
         onSubmit: onClose,
       });

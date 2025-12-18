@@ -2,7 +2,6 @@ import {
   selectorBrushState,
   type UseChartBrushSignature,
 } from '../internals/plugins/featurePlugins/useChartBrush';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 
 /**
@@ -16,5 +15,5 @@ import { useStore } from '../internals/store/useStore';
 export function useBrush() {
   const store = useStore<[UseChartBrushSignature]>();
 
-  return useSelector(store, selectorBrushState);
+  return store.use(selectorBrushState);
 }

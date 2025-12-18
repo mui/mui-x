@@ -26,6 +26,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the links container"
     },
+    "nodeLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the node label container"
+    },
     "nodes": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the nodes container"

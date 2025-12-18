@@ -1,4 +1,4 @@
-import { act, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { RichTreeViewProStore } from '../../RichTreeViewProStore';
 
@@ -128,6 +128,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
+        await screen.findByText('1-1');
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
@@ -143,6 +144,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
+        await screen.findByText('1-1-1-1');
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1', '1-1-1-1']);
       });

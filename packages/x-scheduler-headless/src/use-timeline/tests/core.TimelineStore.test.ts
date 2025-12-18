@@ -25,6 +25,7 @@ describe('Core - TimelineStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
+        displayTimezone: 'default',
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
@@ -36,11 +37,10 @@ describe('Core - TimelineStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        timezone: 'default',
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
-        visibleResources: new Map(),
+        visibleResources: {},
       };
 
       expect(store.state).to.deep.equal(expectedState);

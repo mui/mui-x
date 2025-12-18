@@ -1,12 +1,12 @@
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
-import { parseRRuleString } from '../utils/recurring-events';
+import { parseRRule, projectRRuleToTimezone } from '../utils/recurring-events';
 import { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(
   model: SchedulerEvent,
-  uiTimezone: TemporalTimezone,
+  displayTimezone: TemporalTimezone,
   adapter: Adapter,
 ): SchedulerProcessedEvent {
   const startTimezone = adapter.getTimezone(model.start);
@@ -19,22 +19,38 @@ export function processEvent(
     );
   }
 
-  const startInUITz = adapter.setTimezone(model.start, uiTimezone);
-  const endInUITz = adapter.setTimezone(model.end, uiTimezone);
+  const startInDisplayTz = adapter.setTimezone(model.start, displayTimezone);
+  const endInDisplayTz = adapter.setTimezone(model.end, displayTimezone);
 
-  const processededExDates: TemporalSupportedObject[] | undefined = model.exDates
-    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, uiTimezone))
+  const exDatesInDisplayTz: TemporalSupportedObject[] | undefined = model.exDates
+    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
+    : undefined;
+
+  const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, startTimezone) : undefined;
+
+  const displayTimezoneRRule = parsedDataRRule
+    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone)
     : undefined;
 
   return {
     id: model.id,
     title: model.title,
     description: model.description,
-    start: processDate(startInUITz, adapter),
-    end: processDate(endInUITz, adapter),
+    dataTimezone: {
+      start: processDate(model.start, adapter),
+      end: processDate(model.end, adapter),
+      timezone: startTimezone,
+      rrule: parsedDataRRule,
+      exDates: model.exDates,
+    },
+    displayTimezone: {
+      start: processDate(startInDisplayTz, adapter),
+      end: processDate(endInDisplayTz, adapter),
+      timezone: displayTimezone,
+      rrule: displayTimezoneRRule,
+      exDates: exDatesInDisplayTz,
+    },
     resource: model.resource,
-    rrule: model.rrule ? parseRRuleString(adapter, model.rrule, uiTimezone) : undefined,
-    exDates: processededExDates,
     allDay: model.allDay ?? false,
     readOnly: model.readOnly ?? false,
     extractedFromId: model.extractedFromId,

@@ -109,7 +109,7 @@ export default function ElementHighlights() {
           fullWidth
         >
           {['bar', 'line', 'scatter', 'pie'].map((type) => (
-            <ToggleButton key={type} value={type} aria-label="left aligned">
+            <ToggleButton key={type} value={type}>
               {type}
             </ToggleButton>
           ))}

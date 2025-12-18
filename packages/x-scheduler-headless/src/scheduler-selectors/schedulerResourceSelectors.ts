@@ -7,7 +7,7 @@ export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
     (processedResourceLookup, resourceId: string | null | undefined) =>
-      resourceId == null ? null : processedResourceLookup.get(resourceId),
+      resourceId == null ? null : (processedResourceLookup.get(resourceId) ?? null),
   ),
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
@@ -84,10 +84,7 @@ export const schedulerResourceSelectors = {
     (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
-        .filter(
-          (resourceId) =>
-            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
-        )
+        .filter((resourceId) => visibleResources[resourceId] !== false)
         .map((resourceId) => resourceId),
   ),
   /**
@@ -102,4 +99,5 @@ export const schedulerResourceSelectors = {
       return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
     },
   ),
+  resourcesCount: createSelector((state: State) => state.resourceIdList.length),
 };

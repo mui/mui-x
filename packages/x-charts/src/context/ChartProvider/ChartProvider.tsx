@@ -9,6 +9,7 @@ import {
 } from '../../internals/plugins/models';
 import { type ChartSeriesConfig } from '../../internals/plugins/models/seriesConfig';
 import { useChartCartesianAxis } from '../../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { useChartTooltip } from '../../internals/plugins/featurePlugins/useChartTooltip';
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
 import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
@@ -29,6 +30,7 @@ export const defaultSeriesConfig: ChartSeriesConfig<'bar' | 'scatter' | 'line' |
 // To remove them, you can provide a `plugins` props.
 const defaultPlugins = [
   useChartZAxis,
+  useChartTooltip,
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,
