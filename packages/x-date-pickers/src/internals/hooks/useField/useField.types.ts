@@ -38,9 +38,8 @@ export interface UseFieldInternalProps<
   TValue extends PickerValidValue,
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
-> extends TimezoneProps,
-    FormProps,
-    OnErrorProps<TValue, TError> {
+>
+  extends TimezoneProps, FormProps, OnErrorProps<TValue, TError> {
   /**
    * The selected value.
    * Used when the component is controlled.

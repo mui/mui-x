@@ -36,8 +36,10 @@ export interface PickersSectionElement {
 
 export interface PickersSectionListRef extends Omit<UseFieldDOMGetters, 'isReady'> {}
 
-export interface ExportedPickersSectionListProps
-  extends Pick<React.HTMLAttributes<HTMLDivElement>, 'tabIndex'> {
+export interface ExportedPickersSectionListProps extends Pick<
+  React.HTMLAttributes<HTMLDivElement>,
+  'tabIndex'
+> {
   /**
    * The elements to render.
    * Each element contains the prop to edit a section of the value.
@@ -52,7 +54,8 @@ export interface ExportedPickersSectionListProps
 }
 
 export interface PickersSectionListProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'contentEditable'>,
+  extends
+    Omit<React.HTMLAttributes<HTMLDivElement>, 'contentEditable'>,
     ExportedPickersSectionListProps {
   /**
    * Overridable component slots.

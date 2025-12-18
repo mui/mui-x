@@ -36,8 +36,7 @@ const useUtilityClasses = (classes: Partial<DateRangePickerToolbarClasses> | und
 };
 
 export interface DateRangePickerToolbarProps
-  extends ExportedDateRangePickerToolbarProps,
-    Omit<BaseToolbarProps, 'onChange' | 'isLandscape'> {}
+  extends ExportedDateRangePickerToolbarProps, Omit<BaseToolbarProps, 'onChange' | 'isLandscape'> {}
 
 export interface ExportedDateRangePickerToolbarProps extends ExportedBaseToolbarProps {
   /**
