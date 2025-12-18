@@ -34,7 +34,8 @@ export type SimpleTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface SimpleTreeViewPluginParameters<Multiple extends boolean | undefined>
-  extends TreeViewCorePluginParameters,
+  extends
+    TreeViewCorePluginParameters,
     Omit<
       UseTreeViewItemsParameters<any>,
       | 'items'

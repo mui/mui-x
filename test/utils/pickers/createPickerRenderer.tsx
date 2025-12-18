@@ -4,8 +4,10 @@ import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/inter
 import { vi } from 'vitest';
 import { AdapterClassToUse, AdapterName, adapterToUse, availableAdapters } from './adapters';
 
-interface CreatePickerRendererOptions
-  extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {
+interface CreatePickerRendererOptions extends Omit<
+  CreateRendererOptions,
+  'clock' | 'clockOptions'
+> {
   // Set-up locale with date-fns object. Other are deduced from `locale.code`
   locale?: { code: string } | any;
   adapterName?: AdapterName;

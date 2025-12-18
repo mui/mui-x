@@ -23,8 +23,8 @@ import { type ProPluginsPerSeriesType, type ChartProApi } from '../context/Chart
  */
 export const useChartProApiRef = <
   ChartType extends keyof ProPluginsPerSeriesType = never,
-  Signatures extends
-    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
-    ? ProPluginsPerSeriesType[ChartType]
-    : AllPluginSignatures,
+  Signatures extends readonly ChartAnyPluginSignature[] =
+    ChartType extends keyof ProPluginsPerSeriesType
+      ? ProPluginsPerSeriesType[ChartType]
+      : AllPluginSignatures,
 >() => React.useRef<ChartProApi<ChartType, Signatures> | undefined>(undefined);

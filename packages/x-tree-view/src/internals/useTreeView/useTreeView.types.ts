@@ -20,11 +20,10 @@ export interface UseTreeViewBaseProps<TSignatures extends readonly TreeViewAnyPl
   apiRef: React.RefObject<Partial<TreeViewPublicAPI<TSignatures>> | undefined> | undefined;
 }
 
-export interface UseTreeViewRootSlotProps
-  extends Pick<
-    React.HTMLAttributes<HTMLUListElement>,
-    'onFocus' | 'onBlur' | 'onKeyDown' | 'id' | 'aria-multiselectable' | 'role' | 'tabIndex'
-  > {
+export interface UseTreeViewRootSlotProps extends Pick<
+  React.HTMLAttributes<HTMLUListElement>,
+  'onFocus' | 'onBlur' | 'onKeyDown' | 'id' | 'aria-multiselectable' | 'role' | 'tabIndex'
+> {
   ref: React.Ref<HTMLUListElement>;
 }
 

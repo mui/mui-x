@@ -93,8 +93,8 @@ export interface GridRenderEditCellParams<
   V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<R, V, F, N>,
-    GridEditCellProps<V> {
+>
+  extends GridCellParams<R, V, F, N>, GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
    */

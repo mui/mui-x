@@ -54,8 +54,10 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
 }
 
-export interface UseTreeViewItemsInstance<R extends {}>
-  extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
+export interface UseTreeViewItemsInstance<R extends {}> extends Pick<
+  UseTreeViewItemsPublicAPI<R>,
+  'getItemDOMElement'
+> {
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
