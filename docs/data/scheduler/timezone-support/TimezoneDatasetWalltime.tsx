@@ -6,27 +6,25 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-  TimezoneEvent,
-} from '../datasets/timezone-events';
+  WallTimeEvent,
+} from '../datasets/timezone-walltime-events';
 
-export default function TimezoneDataset() {
-  // Temporary DX workaround.
-  // We plan to support `event.timezone` out of the box (Issue #20598).
-  const eventModelStructure: SchedulerEventModelStructure<TimezoneEvent> = {
+export default function TimezoneDatasetWalltime() {
+  const eventModelStructure: SchedulerEventModelStructure<WallTimeEvent> = {
     start: {
-      getter: (event) => new TZDate(event.startUtc, event.timezone),
+      getter: (event) => new TZDate(event.start, event.timezone),
       setter: (event, newValue) => {
         const tz = (newValue as any).timeZone;
-        event.startUtc = newValue.toISOString();
+        event.start = newValue.toISOString();
         event.timezone = tz;
         return event;
       },
     },
     end: {
-      getter: (event) => new TZDate(event.endUtc, event.timezone),
+      getter: (event) => new TZDate(event.end, event.timezone),
       setter: (event, newValue) => {
         const tz = (newValue as any).timeZone;
-        event.endUtc = newValue.toISOString();
+        event.end = newValue.toISOString();
         event.timezone = tz;
         return event;
       },

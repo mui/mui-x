@@ -1,7 +1,9 @@
-// Timezone Events Dataset
-// Non-realistic set focused on edge cases of timezone handling.
+// Timezone Events Dataset Wall-Time
+// Same scenarios as instant-based, but using local wall time + explicit timezone.
 
-export const resources = [
+import { RecurringEventRecurrenceRule, SchedulerResource } from '@mui/x-scheduler/models';
+
+export const resources: SchedulerResource[] = [
   { id: 'ny', title: 'New York', eventColor: 'violet' },
   { id: 'paris', title: 'Paris', eventColor: 'jade' },
   { id: 'tokyo', title: 'Tokyo', eventColor: 'cyan' },
@@ -11,93 +13,103 @@ export const resources = [
 
 export const defaultVisibleDate = new Date('2025-03-10T00:00:00Z');
 
-export const initialEvents = [
+export interface WallTimeEvent {
+  id: string;
+  title: string;
+  start: string; // no TZ info
+  end: string;
+  timezone: string;
+  resource: string;
+  rrule?: RecurringEventRecurrenceRule;
+  exDates?: string[];
+}
+
+export const initialEvents: WallTimeEvent[] = [
   // ----------------------------
   // SIMPLE EVENTS
   // ----------------------------
+
   {
     id: 'ny-simple',
     title: 'NY event',
-    startUtc: '2025-03-10T13:00:00Z', // 09:00 NY → UTC+4
-    endUtc: '2025-03-10T14:00:00Z',
+    start: '2025-03-10T09:00:00',
+    end: '2025-03-10T10:00:00',
     timezone: 'America/New_York',
     resource: 'ny',
   },
   {
     id: 'paris-simple',
     title: 'Paris event',
-    startUtc: '2025-03-11T13:00:00Z', // 14:00 París → UTC+1
-    endUtc: '2025-03-11T14:00:00Z',
+    start: '2025-03-11T14:00:00',
+    end: '2025-03-11T15:00:00',
     timezone: 'Europe/Paris',
     resource: 'paris',
   },
   {
     id: 'tokyo-simple',
     title: 'Tokyo event',
-    startUtc: '2025-03-11T21:00:00Z', // 06:00 Tokio → UTC+9
-    endUtc: '2025-03-11T21:30:00Z',
+    start: '2025-03-12T06:00:00',
+    end: '2025-03-12T06:30:00',
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
   },
   {
     id: 'la-simple',
     title: 'LA event',
-    startUtc: '2025-03-13T17:00:00Z', // 10:00 LA → UTC-7
-    endUtc: '2025-03-13T18:00:00Z',
+    start: '2025-03-13T10:00:00',
+    end: '2025-03-13T11:00:00',
     timezone: 'America/Los_Angeles',
     resource: 'la',
   },
+
   // -----------------------------------------------------
   // RECURRING EVENTS
   // -----------------------------------------------------
 
   // NY weekly — crosses US DST (Mar 9)
-  // First occurrence BEFORE DST: Wed Mar 05 → 12:00 NY = 17:00Z
+  // First occurrence BEFORE DST: Wed Mar 05 → 12:00 NY
   {
     id: 'ny-weekly',
     title: 'NY Weekly',
-    startUtc: '2025-03-05T17:00:00Z',
-    endUtc: '2025-03-05T18:00:00Z',
+    start: '2025-03-05T12:00:00',
+    end: '2025-03-05T13:00:00',
     timezone: 'America/New_York',
     resource: 'ny',
     rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE'] },
   },
-  // Paris monthly 15th UNTIL — 18:00 Paris → DST change on Mar 30
-  // Mar 15 → UTC+1 → 17:00Z
+
+  // Paris monthly 15th UNTIL — 18:00 Paris
   {
     id: 'monthly-paris-until',
     title: 'Paris Monthly Evening',
-    startUtc: '2025-03-15T17:00:00Z',
-    endUtc: '2025-03-15T18:00:00Z',
+    start: '2025-03-15T18:00:00',
+    end: '2025-03-15T19:00:00',
     timezone: 'Europe/Paris',
     resource: 'paris',
     rrule: {
       freq: 'MONTHLY',
       byMonthDay: [15],
-      until: new Date('2025-06-30T21:59:00Z'), // 23:59 Paris → 21:59Z (after DST adjust)
+      until: new Date('2025-06-30T23:59:00'), // wall time Paris
     },
   },
-  // Tokyo daily — 07:00 JST → always UTC+9 (Tokyo has no DST)
-  // Mar 1 → 22:00Z previous day
-  // When viewed in Europe/Paris, this shifts from 23:00 to 00:00 after DST.
+
+  // Tokyo daily — 07:00 JST (no DST ever)
   {
     id: 'daily-tokyo',
     title: 'Tokyo Sunrise Daily',
-    startUtc: '2025-02-28T22:00:00Z',
-    endUtc: '2025-02-28T22:45:00Z',
+    start: '2025-03-01T07:00:00',
+    end: '2025-03-01T07:45:00',
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
     rrule: { freq: 'DAILY' },
   },
+
   // LA weekly COUNT — 16:00 LA
-  // 1st: Mar 02 → UTC-8 → 00:00Z (Mar 03) → shows 01:00 Paris
-  // 2nd: Mar 09 → UTC-7 → 23:00Z       → shows 00:00 Paris
-  // 5th: Mar 30 → UTC-7 → 23:00Z       → shows 01:00 Paris (DST in Paris)
   {
     id: 'weekly-la-count',
     title: 'LA Weekly Afternoon',
-    startUtc: '2025-03-03T00:00:00Z',
-    endUtc: '2025-03-03T01:00:00Z',
+    start: '2025-03-02T16:00:00',
+    end: '2025-03-02T17:00:00',
     timezone: 'America/Los_Angeles',
     resource: 'la',
     rrule: {
@@ -106,17 +118,16 @@ export const initialEvents = [
       count: 5,
     },
   },
-  // Sydney exDates — 13:00 Sydney (local time)
-  // Mar 14 → UTC+11 → 02:00Z → shows 03:00 Paris
-  // Mar 21 → excluded (should NOT appear in Paris UI)
+
+  // Sydney exDates — 13:00 Sydney
   {
     id: 'syd-exdates',
     title: 'Sydney Weekly Skip One',
-    startUtc: '2025-03-14T02:00:00Z',
-    endUtc: '2025-03-14T03:00:00Z',
+    start: '2025-03-14T13:00:00',
+    end: '2025-03-14T14:00:00',
     timezone: 'Australia/Sydney',
     resource: 'sydney',
     rrule: { freq: 'WEEKLY', byDay: ['FR'] },
-    exDates: ['2025-03-21T02:00:00Z'],
+    exDates: ['2025-03-21T13:00:00'],
   },
 ];

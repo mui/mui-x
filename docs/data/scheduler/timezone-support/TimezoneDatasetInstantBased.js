@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-
 import { TZDate } from '@date-fns/tz';
+
 import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timezone-events';
+} from '../datasets/timezone-instant-based-events';
 
-export default function TimezoneDataset() {
-  // Temporary DX workaround.
-  // We plan to support `event.timezone` out of the box (Issue #20598).
+export default function TimezoneDatasetInstantBased() {
   const eventModelStructure = {
     start: {
       getter: (event) => new TZDate(event.startUtc, event.timezone),
@@ -31,7 +29,6 @@ export default function TimezoneDataset() {
       },
     },
   };
-
   const [events, setEvents] = React.useState(initialEvents);
 
   return (

@@ -1,0 +1,120 @@
+// Timezone Events Dataset Wall-Time
+// Same scenarios as instant-based, but using local wall time + explicit timezone.
+
+export const resources = [
+  { id: 'ny', title: 'New York', eventColor: 'violet' },
+  { id: 'paris', title: 'Paris', eventColor: 'jade' },
+  { id: 'tokyo', title: 'Tokyo', eventColor: 'cyan' },
+  { id: 'la', title: 'Los Angeles', eventColor: 'orange' },
+  { id: 'sydney', title: 'Sydney', eventColor: 'pink' },
+];
+
+export const defaultVisibleDate = new Date('2025-03-10T00:00:00Z');
+
+export const initialEvents = [
+  // ----------------------------
+  // SIMPLE EVENTS
+  // ----------------------------
+
+  {
+    id: 'ny-simple',
+    title: 'NY event',
+    start: '2025-03-10T09:00:00',
+    end: '2025-03-10T10:00:00',
+    timezone: 'America/New_York',
+    resource: 'ny',
+  },
+  {
+    id: 'paris-simple',
+    title: 'Paris event',
+    start: '2025-03-11T14:00:00',
+    end: '2025-03-11T15:00:00',
+    timezone: 'Europe/Paris',
+    resource: 'paris',
+  },
+  {
+    id: 'tokyo-simple',
+    title: 'Tokyo event',
+    start: '2025-03-12T06:00:00',
+    end: '2025-03-12T06:30:00',
+    timezone: 'Asia/Tokyo',
+    resource: 'tokyo',
+  },
+  {
+    id: 'la-simple',
+    title: 'LA event',
+    start: '2025-03-13T10:00:00',
+    end: '2025-03-13T11:00:00',
+    timezone: 'America/Los_Angeles',
+    resource: 'la',
+  },
+
+  // -----------------------------------------------------
+  // RECURRING EVENTS
+  // -----------------------------------------------------
+
+  // NY weekly — crosses US DST (Mar 9)
+  // First occurrence BEFORE DST: Wed Mar 05 → 12:00 NY
+  {
+    id: 'ny-weekly',
+    title: 'NY Weekly',
+    start: '2025-03-05T12:00:00',
+    end: '2025-03-05T13:00:00',
+    timezone: 'America/New_York',
+    resource: 'ny',
+    rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE'] },
+  },
+
+  // Paris monthly 15th UNTIL — 18:00 Paris
+  {
+    id: 'monthly-paris-until',
+    title: 'Paris Monthly Evening',
+    start: '2025-03-15T18:00:00',
+    end: '2025-03-15T19:00:00',
+    timezone: 'Europe/Paris',
+    resource: 'paris',
+    rrule: {
+      freq: 'MONTHLY',
+      byMonthDay: [15],
+      until: new Date('2025-06-30T23:59:00'), // wall time Paris
+    },
+  },
+
+  // Tokyo daily — 07:00 JST (no DST ever)
+  {
+    id: 'daily-tokyo',
+    title: 'Tokyo Sunrise Daily',
+    start: '2025-03-01T07:00:00',
+    end: '2025-03-01T07:45:00',
+    timezone: 'Asia/Tokyo',
+    resource: 'tokyo',
+    rrule: { freq: 'DAILY' },
+  },
+
+  // LA weekly COUNT — 16:00 LA
+  {
+    id: 'weekly-la-count',
+    title: 'LA Weekly Afternoon',
+    start: '2025-03-02T16:00:00',
+    end: '2025-03-02T17:00:00',
+    timezone: 'America/Los_Angeles',
+    resource: 'la',
+    rrule: {
+      freq: 'WEEKLY',
+      byDay: ['SU'],
+      count: 5,
+    },
+  },
+
+  // Sydney exDates — 13:00 Sydney
+  {
+    id: 'syd-exdates',
+    title: 'Sydney Weekly Skip One',
+    start: '2025-03-14T13:00:00',
+    end: '2025-03-14T14:00:00',
+    timezone: 'Australia/Sydney',
+    resource: 'sydney',
+    rrule: { freq: 'WEEKLY', byDay: ['FR'] },
+    exDates: ['2025-03-21T13:00:00'],
+  },
+];

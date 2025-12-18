@@ -2,31 +2,26 @@ import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
 import { parseRRule, projectRRuleToTimezone } from '../utils/recurring-events';
-import { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
+import { TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(
   model: SchedulerEvent,
   displayTimezone: TemporalTimezone,
   adapter: Adapter,
 ): SchedulerProcessedEvent {
-  const startTimezone = adapter.getTimezone(model.start);
-  const endTimezone = adapter.getTimezone(model.end);
+  const dataTimezone = model.timezone ?? 'default';
 
-  if (startTimezone !== endTimezone) {
-    throw new Error(
-      `Scheduler: The event with id "${model.id}" has different timezones for its start ("${startTimezone}") and end ("${endTimezone}") dates. ` +
-        `This is not supported and may lead to unexpected behaviors.`,
-    );
-  }
+  const startInDataTz = model.start;
+  const endInDataTz = model.end;
 
-  const startInDisplayTz = adapter.setTimezone(model.start, displayTimezone);
-  const endInDisplayTz = adapter.setTimezone(model.end, displayTimezone);
+  const startInDisplayTz = adapter.setTimezone(startInDataTz, displayTimezone);
+  const endInDisplayTz = adapter.setTimezone(endInDataTz, displayTimezone);
 
-  const exDatesInDisplayTz: TemporalSupportedObject[] | undefined = model.exDates
-    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
+  const exDatesInDisplayTz = model.exDates
+    ? model.exDates.map((d) => adapter.setTimezone(d, displayTimezone))
     : undefined;
 
-  const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, startTimezone) : undefined;
+  const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, dataTimezone) : undefined;
 
   const displayTimezoneRRule = parsedDataRRule
     ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone)
@@ -37,9 +32,9 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(model.start, adapter),
-      end: processDate(model.end, adapter),
-      timezone: startTimezone,
+      start: processDate(startInDataTz, adapter),
+      end: processDate(endInDataTz, adapter),
+      timezone: dataTimezone,
       rrule: parsedDataRRule,
       exDates: model.exDates,
     },
