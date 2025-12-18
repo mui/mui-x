@@ -6,7 +6,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartPropsHeight,
@@ -21,11 +20,10 @@ import {
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { selectorChartHasZoom } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 
-export interface ChartsSurfaceProps
-  extends Omit<
-    React.SVGProps<SVGSVGElement>,
-    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-  > {
+export interface ChartsSurfaceProps extends Omit<
+  React.SVGProps<SVGSVGElement>,
+  'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
+> {
   className?: string;
   title?: string;
   desc?: string;
@@ -75,14 +73,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 ) {
   const store = useStore();
 
-  const svgWidth = useSelector(store, selectorChartSvgWidth);
-  const svgHeight = useSelector(store, selectorChartSvgHeight);
+  const svgWidth = store.use(selectorChartSvgWidth);
+  const svgHeight = store.use(selectorChartSvgHeight);
 
-  const propsWidth = useSelector(store, selectorChartPropsWidth);
-  const propsHeight = useSelector(store, selectorChartPropsHeight);
-  const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
-  const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
-  const hasZoom = useSelector(store, selectorChartHasZoom);
+  const propsWidth = store.use(selectorChartPropsWidth);
+  const propsHeight = store.use(selectorChartPropsHeight);
+  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
+  const hasFocusedItem = store.use(selectorChartsHasFocusedItem);
+  const hasZoom = store.use(selectorChartHasZoom);
 
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);

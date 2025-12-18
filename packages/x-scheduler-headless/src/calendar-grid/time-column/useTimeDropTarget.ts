@@ -153,6 +153,8 @@ export namespace useTimeDropTarget {
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
-  export interface ReturnValue
-    extends Pick<CalendarGridTimeColumnContext, 'getCursorPositionInElementMs'> {}
+  export interface ReturnValue extends Pick<
+    CalendarGridTimeColumnContext,
+    'getCursorPositionInElementMs'
+  > {}
 }

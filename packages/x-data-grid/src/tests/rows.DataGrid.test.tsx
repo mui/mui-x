@@ -266,8 +266,8 @@ describe('<DataGrid /> - Rows', () => {
         render(
           <TestCase
             getActions={() => [
-              <GridActionsCellItem icon={<span />} label="delete" />,
-              <GridActionsCellItem label="print" showInMenu />,
+              <GridActionsCellItem key={1} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={2} label="print" showInMenu />,
             ]}
           />,
         );
@@ -277,7 +277,9 @@ describe('<DataGrid /> - Rows', () => {
 
       it('should show in a menu the actions marked as showInMenu', async () => {
         const { user } = render(
-          <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
+          />,
         );
         expect(screen.queryByText('print')).to.equal(null);
         await user.click(screen.getByRole('menuitem', { name: 'more' }));
@@ -477,7 +479,9 @@ describe('<DataGrid /> - Rows', () => {
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-        setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        await act(async () => {
+          setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
     });
@@ -760,13 +764,15 @@ describe('<DataGrid /> - Rows', () => {
         );
         await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
         expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-        setProps({
-          renderCell: (params: GridRenderCellParams) => (
-            <GridActionsCell {...params}>
-              <GridActionsCellItem icon={<span />} label="print" />
-            </GridActionsCell>
-          ),
-        }); // Sets focusedButtonIndex=0
+        await act(async () => {
+          setProps({
+            renderCell: (params: GridRenderCellParams) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            ),
+          }); // Sets focusedButtonIndex=0
+        });
         expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
       });
 

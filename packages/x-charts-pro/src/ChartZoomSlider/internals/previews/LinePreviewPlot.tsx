@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   type AxisId,
-  useSelector,
   useStore,
   useLinePlotData,
   selectorChartPreviewComputedXAxis,
@@ -31,8 +30,10 @@ export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
   );
 }
 
-export interface PreviewLineElementProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+export interface PreviewLineElementProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'color' | 'id'
+> {
   id: SeriesId;
   gradientId?: string;
   color: string;
@@ -59,8 +60,8 @@ function PreviewLineElement({ id, color, gradientId, onClick, ...other }: Previe
 function useLinePreviewData(axisId: AxisId) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useLinePlotData(xAxes, yAxes);
 }

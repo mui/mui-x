@@ -28,6 +28,7 @@ import {
   GRID_REORDER_COL_DEF,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
+  GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
 import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
@@ -415,6 +416,10 @@ export const useGridCellSelection = (
     void
   >((params, event) => {
     if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
+      return;
+    }
+
+    if (event.key === ' ' && params.cellMode === GridCellModes.Edit) {
       return;
     }
 

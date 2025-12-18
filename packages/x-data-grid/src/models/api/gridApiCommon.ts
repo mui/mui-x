@@ -44,7 +44,9 @@ import type { GridPivotingPrivateApiCommunity } from '../../hooks/features/pivot
 export interface GridApiCommon<
   GridState extends GridStateCommunity = GridStateCommunity,
   GridInitialState extends GridInitialStateCommunity = GridInitialStateCommunity,
-> extends GridCoreApi,
+>
+  extends
+    GridCoreApi,
     GridPipeProcessingApi,
     GridDensityApi,
     GridDimensionsApi,
@@ -76,7 +78,9 @@ export interface GridPrivateOnlyApiCommon<
   Api extends GridApiCommon,
   PrivateApi extends GridPrivateApiCommon,
   Props extends DataGridProcessedProps,
-> extends GridCorePrivateApi<Api, PrivateApi, Props>,
+>
+  extends
+    GridCorePrivateApi<Api, PrivateApi, Props>,
     GridStatePrivateApi<PrivateApi['state']>,
     GridPipeProcessingPrivateApi,
     GridStrategyProcessingApi,
@@ -95,5 +99,6 @@ export interface GridPrivateOnlyApiCommon<
 }
 
 export interface GridPrivateApiCommon
-  extends GridApiCommon,
+  extends
+    GridApiCommon,
     GridPrivateOnlyApiCommon<GridApiCommon, GridPrivateApiCommon, DataGridProcessedProps> {}

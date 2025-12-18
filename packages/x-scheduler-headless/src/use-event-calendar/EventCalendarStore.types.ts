@@ -35,8 +35,10 @@ export interface EventCalendarState extends SchedulerState {
   viewConfig: EventCalendarViewConfig | null;
 }
 
-export interface EventCalendarParameters<TEvent extends object, TResource extends object>
-  extends SchedulerParameters<TEvent, TResource> {
+export interface EventCalendarParameters<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerParameters<TEvent, TResource> {
   /**
    * The view currently displayed in the calendar.
    */

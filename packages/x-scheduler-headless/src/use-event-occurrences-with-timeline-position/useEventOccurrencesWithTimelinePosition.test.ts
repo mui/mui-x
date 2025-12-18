@@ -15,7 +15,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         start: collectionStart,
         end: collectionEnd,
         events,
-        visibleResources: new Map(),
+        displayTimezone: 'default',
+        visibleResources: {},
         resourceParentIds: new Map(),
       });
       return useEventOccurrencesWithTimelinePosition({ occurrences, maxSpan });
