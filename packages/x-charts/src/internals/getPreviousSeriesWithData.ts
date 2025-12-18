@@ -18,7 +18,6 @@ export function getPreviousSeriesWithData<
   seriesId: SeriesId;
 } | null {
   const seriesType = Object.keys(series) as Array<ChartSeriesType>;
-  const startingTypeIndex = type !== undefined && series[type] ? seriesType.indexOf(type) : 0;
   const startingSeriesIndex =
     type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
       ? series[type].seriesOrder.indexOf(seriesId)
@@ -27,6 +26,8 @@ export function getPreviousSeriesWithData<
   const typesAvailable = seriesType.filter((t): t is OutSeriesType =>
     availableSeriesTypes?.has(t as OutSeriesType),
   );
+  const startingTypeIndex =
+    type !== undefined && series[type] ? typesAvailable.indexOf(type as OutSeriesType) : 0;
 
   // Loop over all series types starting with the current seriesType
   for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {

@@ -83,7 +83,7 @@ describe('getNextSeriesWithData', () => {
 
   it('should return different series type if current series is the last one', () => {
     expect(
-      getNextSeriesWithData(seriesMultipleTypes, new Set(['line']), 'line', 'b'),
+      getNextSeriesWithData(seriesMultipleTypes, new Set(['line', 'bar']), 'line', 'b'),
     ).to.deep.equal({
       seriesId: 'a',
       type: 'bar',
