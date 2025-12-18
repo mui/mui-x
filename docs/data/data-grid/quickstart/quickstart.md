@@ -231,7 +231,6 @@ moduleNameMapper: {
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
 
-
 ## Using this documentation
 
 ### Feature availability
