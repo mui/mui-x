@@ -43,8 +43,7 @@ interface GridRowVisibilityParams {
  *   - [Styling rows](/x/react-data-grid/style/#styling-rows)
  */
 export interface GridRowClassNameParams<R extends GridValidRowModel = any>
-  extends GridRowParams<R>,
-    GridRowVisibilityParams {}
+  extends GridRowParams<R>, GridRowVisibilityParams {}
 
 /**
  * Object passed as parameter in the row `getRowHeight` callback prop.
@@ -71,8 +70,9 @@ enum GridRowEditStartReasons {
 /**
  * Params passed to the `rowEditStart` event.
  */
-export interface GridRowEditStartParams<R extends GridValidRowModel = any>
-  extends GridRowParams<R> {
+export interface GridRowEditStartParams<
+  R extends GridValidRowModel = any,
+> extends GridRowParams<R> {
   /**
    * Which field triggered this event.
    */

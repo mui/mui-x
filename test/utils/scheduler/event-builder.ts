@@ -278,7 +278,8 @@ export class EventBuilder {
       : this.event.start;
 
     const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
-    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+    const originalDurationMs =
+      baseProcessed.displayTimezone.end.timestamp - baseProcessed.displayTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {

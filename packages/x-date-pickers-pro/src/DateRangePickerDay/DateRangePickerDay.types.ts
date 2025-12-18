@@ -1,8 +1,10 @@
 import { PickerDayOwnerState, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
 import { DateRangePickerDayClasses } from './dateRangePickerDayClasses';
 
-export interface DateRangePickerDayProps
-  extends Omit<PickersDayProps, 'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'> {
+export interface DateRangePickerDayProps extends Omit<
+  PickersDayProps,
+  'classes' | 'onBlur' | 'onFocus' | 'onKeyDown'
+> {
   /**
    * Set to `true` if the `day` is in a highlighted date range.
    */

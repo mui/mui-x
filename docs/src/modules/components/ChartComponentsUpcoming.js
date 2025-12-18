@@ -17,6 +17,16 @@ function getComponents() {
       href: 'https://github.com/mui/mui-x/issues/17275',
     },
     {
+      title: 'Range Bar',
+      href: 'https://github.com/mui/mui-x/issues/20350',
+      premium: true,
+    },
+    {
+      title: 'Range Area',
+      href: 'https://github.com/mui/mui-x/issues/13988',
+      premium: true,
+    },
+    {
       title: 'Treemap',
       href: '/x/react-charts/treemap/',
       pro: true,
@@ -37,13 +47,13 @@ function getComponents() {
       pro: true,
     },
     {
-      title: 'Gantt Chart',
-      href: '/x/react-charts/gantt/',
+      title: 'Waterfall Chart',
+      href: 'https://github.com/mui/mui-x/issues/11318',
       premium: true,
     },
     {
-      title: 'Waterfall Chart',
-      href: 'https://github.com/mui/mui-x/issues/11318',
+      title: 'Gantt Chart',
+      href: '/x/react-charts/gantt/',
       premium: true,
     },
     {

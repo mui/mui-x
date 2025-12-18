@@ -1,5 +1,5 @@
 {
-  "version": "8.22.0",
+  "version": "8.22.1",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -38,11 +38,10 @@
     "test:unit:jsdom": "cross-env NODE_ENV=test TZ=UTC vitest",
     "test:browser": "pnpm test:unit:browser",
     "test:unit:browser": "cross-env NODE_ENV=test TZ=UTC BROWSER=true vitest",
-    "test:e2e": "pnpm run release:build && cd test/e2e && pnpm run start",
+    "test:e2e": "pnpm -F ./test/e2e start",
     "test:e2e-website": "npx playwright test test/e2e-website --config test/e2e-website/playwright.config.ts",
     "test:e2e-website:dev": "PLAYWRIGHT_TEST_BASE_URL=http://localhost:3001 npx playwright test test/e2e-website --config test/e2e-website/playwright.config.ts",
-    "test:regressions": "pnpm run release:build && cd test/regressions && pnpm run start",
-    "test:regressions:dev": "cd test/regressions && pnpm run start",
+    "test:regressions": "pnpm -F ./test/regressions start",
     "test:argos": "code-infra argos-push --folder test/regressions/screenshots/chrome",
     "typescript": "lerna run --no-bail --parallel typescript",
     "typescript:ci": "lerna run --concurrency 1 --no-bail --no-sort typescript",
@@ -71,8 +70,8 @@
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "^7.10.1",
     "@mui/internal-babel-plugin-display-name": "^1.0.4-canary.8",
-    "@mui/internal-bundle-size-checker": "^1.0.9-canary.56",
-    "@mui/internal-code-infra": "^0.0.3-canary.55",
+    "@mui/internal-bundle-size-checker": "^1.0.9-canary.57",
+    "@mui/internal-code-infra": "^0.0.3-canary.61",
     "@mui/internal-markdown": "^2.0.13",
     "@mui/internal-netlify-cache": "^0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
@@ -127,7 +126,8 @@
     "moment-timezone": "catalog:",
     "null-loader": "^4.0.1",
     "nyc": "^17.1.0",
-    "prettier": "^3.6.2",
+    "playwright": "catalog:",
+    "prettier": "^3.7.4",
     "pretty-quick": "^4.2.2",
     "process": "^0.11.10",
     "react": "catalog:",
@@ -147,7 +147,6 @@
     "util": "^0.12.5",
     "vite": "catalog:",
     "vitest": "catalog:",
-    "vitest-fail-on-console": "^0.10.1",
     "yargs": "catalog:"
   },
   "resolutions": {
@@ -159,13 +158,6 @@
     "node": ">=22.18"
   },
   "pnpm": {
-    "packageExtensions": {
-      "@mui/internal-test-utils": {
-        "dependencies": {
-          "lodash.kebabcase": "^4.1.1"
-        }
-      }
-    },
     "patchedDependencies": {
       "@base-ui-components/react": "patches/@base-ui-components__react.patch"
     }

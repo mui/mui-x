@@ -99,7 +99,8 @@ interface SankeyNodePosition {
  * SankeyLinkMinimal interface.
  */
 export interface SankeyNodeMinimal<N extends SankeyExtraProperties, L extends SankeyExtraProperties>
-  extends SankeyNodeStrictMinimal<N & SankeyNode<true, N, L>, L & SankeyLink<true, N, L>>,
+  extends
+    SankeyNodeStrictMinimal<N & SankeyNode<true, N, L>, L & SankeyLink<true, N, L>>,
     SankeyNodePosition {}
 
 /**
@@ -196,7 +197,8 @@ interface SankeyLinkPosition {
  * SankeyLinkMinimal interface.
  */
 export interface SankeyLinkMinimal<N extends SankeyExtraProperties, L extends SankeyExtraProperties>
-  extends SankeyLinkStrictMinimal<N & SankeyNode<true, N, L>, L & SankeyLink<true, N, L>>,
+  extends
+    SankeyLinkStrictMinimal<N & SankeyNode<true, N, L>, L & SankeyLink<true, N, L>>,
     SankeyLinkPosition {}
 
 /**
