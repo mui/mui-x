@@ -2,11 +2,12 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPlugin } from '../../models';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import type { ChartItemIdentifier, ChartSeriesType } from '../../../../models/seriesType/config';
+import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }) => {
   const removeTooltipItem = useEventCallback(function removeTooltipItem(
-    itemToRemove?: ChartItemIdentifier<ChartSeriesType>,
+    itemToRemove?: SeriesItemIdentifier<ChartSeriesType>,
   ) {
     const prevItem = store.state.tooltip.item;
 
@@ -27,7 +28,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }
   });
 
   const setTooltipItem = useEventCallback(function setTooltipItem(
-    newItem: ChartItemIdentifier<ChartSeriesType>,
+    newItem: SeriesItemIdentifier<ChartSeriesType>,
   ) {
     if (!fastObjectShallowCompare(store.state.tooltip.item, newItem)) {
       store.set('tooltip', { item: newItem });

@@ -84,10 +84,7 @@ export const schedulerResourceSelectors = {
     (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
-        .filter(
-          (resourceId) =>
-            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
-        )
+        .filter((resourceId) => visibleResources[resourceId] !== false)
         .map((resourceId) => resourceId),
   ),
   /**
