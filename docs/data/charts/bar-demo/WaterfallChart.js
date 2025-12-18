@@ -43,25 +43,25 @@ export default function WaterfallChart() {
         {
           type: 'rangeBar',
           data: [
-            { start: 0, end: 500_000 },
-            { start: 500_000, end: 650_000 },
-            { start: 650_000, end: 730_000 },
-            { start: 730_000, end: 530_000 },
-            { start: 530_000, end: 455_000 },
-            { start: 455_000, end: 335_000 },
-            { start: 335_000, end: 280_000 },
-            { start: 0, end: 280_000 },
+            [0, 500_000],
+            [500_000, 650_000],
+            [650_000, 730_000],
+            [730_000, 530_000],
+            [530_000, 455_000],
+            [455_000, 335_000],
+            [335_000, 280_000],
+            [0, 280_000],
           ],
           valueFormatter: (value) =>
-            value === null ? null : dollarFormatter.format(value.end - value.start),
+            value === null ? null : dollarFormatter.format(value[1] - value[0]),
           colorGetter: (data) => {
             const value = data?.value;
 
-            if (value == null || value.start === 0) {
+            if (value == null || value[0] === 0) {
               return blue;
             }
 
-            return value.end - value.start >= 0 ? green : red;
+            return value[1] - value[0] >= 0 ? green : red;
           },
         },
       ]}

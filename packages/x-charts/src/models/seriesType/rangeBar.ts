@@ -6,10 +6,8 @@ import {
   type SeriesId,
 } from './common';
 
-export type RangeBarValueType = {
-  start: number;
-  end: number;
-};
+/** [start, end] */
+export type RangeBarValueType = [number, number];
 
 export interface RangeBarSeriesType
   extends CommonSeriesType<RangeBarValueType | null>, CartesianSeriesType {

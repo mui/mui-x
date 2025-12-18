@@ -13,11 +13,11 @@ const barChartsParams = {
       type: 'rangeBar',
       id: 'series-1',
       data: [
-        { start: 3, end: 5 },
-        { start: 4, end: 6 },
-        { start: 1, end: 4 },
-        { start: 6, end: 8 },
-        { start: 5, end: 6 },
+        [3, 5],
+        [4, 6],
+        [1, 4],
+        [6, 8],
+        [5, 6],
       ],
       label: 'A',
       highlightScope: {
@@ -28,11 +28,11 @@ const barChartsParams = {
       type: 'rangeBar',
       id: 'series-2',
       data: [
-        { start: 4, end: 6 },
-        { start: 1, end: 4 },
-        { start: 6, end: 8 },
-        { start: 5, end: 6 },
-        { start: 3, end: 5 },
+        [4, 6],
+        [1, 4],
+        [6, 8],
+        [5, 6],
+        [3, 5],
       ],
       label: 'B',
       highlightScope: {

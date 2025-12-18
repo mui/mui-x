@@ -81,9 +81,7 @@ export function useRangeBarPlotData(
         continue;
       }
 
-      const valueCoordinates = [seriesValue.start, seriesValue.end].map((v) =>
-        verticalLayout ? yScale(v)! : xScale(v)!,
-      );
+      const valueCoordinates = seriesValue.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
       const minValueCoord = Math.round(Math.min(...valueCoordinates));
       const maxValueCoord = Math.round(Math.max(...valueCoordinates));
@@ -153,9 +151,7 @@ export function getRangeBarDimensions(
     return null;
   }
 
-  const valueCoordinates = [seriesValue.start, seriesValue.end].map((v) =>
-    verticalLayout ? yScale(v)! : xScale(v)!,
-  );
+  const valueCoordinates = seriesValue.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
   const minValueCoord = Math.round(Math.min(...valueCoordinates));
   const maxValueCoord = Math.round(Math.max(...valueCoordinates));

@@ -3,6 +3,7 @@ import { barElementClasses } from '@mui/x-charts/BarChart';
 import {
   BarChartPremium,
   rangeBarClasses,
+  RangeBarSeries,
 } from '@mui/x-charts-premium/BarChartPremium';
 
 const settings = {
@@ -12,30 +13,30 @@ const settings = {
       type: 'rangeBar',
       id: '1',
       data: [
-        { start: 4, end: 3 },
-        { start: 5, end: 8 },
-        { start: 2, end: 4 },
+        [4, 3],
+        [5, 8],
+        [2, 4],
       ],
     },
     {
       type: 'rangeBar',
       id: '2',
       data: [
-        { start: 1, end: 6 },
-        { start: 5, end: 6 },
-        { start: 3, end: 9 },
+        [1, 6],
+        [5, 6],
+        [3, 9],
       ],
     },
     {
       type: 'rangeBar',
       id: '3',
       data: [
-        { start: 1, end: 5 },
-        { start: 2, end: 4 },
-        { start: 3, end: 8 },
+        [1, 5],
+        [2, 4],
+        [3, 8],
       ],
     },
-  ],
+  ] satisfies RangeBarSeries[],
   height: 300,
   margin: { left: 0 },
 } as const;

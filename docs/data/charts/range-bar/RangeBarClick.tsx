@@ -4,7 +4,10 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
+import {
+  BarChartPremium,
+  RangeBarSeries,
+} from '@mui/x-charts-premium/BarChartPremium';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { BarItemIdentifier, ChartsAxisData } from '@mui/x-charts/models';
 import { RangeBarItemIdentifier } from '@mui/x-charts-premium/models';
@@ -17,11 +20,11 @@ const barChartsParams = {
       type: 'rangeBar',
       id: 'series-1',
       data: [
-        { start: 3, end: 5 },
-        { start: 4, end: 6 },
-        { start: 1, end: 4 },
-        { start: 6, end: 8 },
-        { start: 5, end: 6 },
+        [3, 5],
+        [4, 6],
+        [1, 4],
+        [6, 8],
+        [5, 6],
       ],
       label: 'A',
       highlightScope: {
@@ -32,18 +35,18 @@ const barChartsParams = {
       type: 'rangeBar',
       id: 'series-2',
       data: [
-        { start: 4, end: 6 },
-        { start: 1, end: 4 },
-        { start: 6, end: 8 },
-        { start: 5, end: 6 },
-        { start: 3, end: 5 },
+        [4, 6],
+        [1, 4],
+        [6, 8],
+        [5, 6],
+        [3, 5],
       ],
       label: 'B',
       highlightScope: {
         highlight: 'item',
       },
     },
-  ],
+  ] satisfies RangeBarSeries[],
   xAxis: [{ data: ['0', '3', '6', '9', '12'], id: 'axis1' }],
   height: 400,
   margin: { left: 0 },

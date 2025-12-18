@@ -7,7 +7,7 @@ import {
 } from '@mui/x-charts/internals';
 
 const rangeBarValueFormatter = (v: RangeBarValueType | null) =>
-  v == null ? '' : `[${v.start}, ${v.end}]`;
+  v == null ? '' : `[${v[0]}, ${v[1]}]`;
 
 const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
   const { seriesOrder, series } = params;
@@ -72,7 +72,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
               return null;
             }
 
-            return { start, end };
+            return [start, end];
           })
         : series[id].data!,
     } satisfies DefaultizedRangeBarSeriesType;

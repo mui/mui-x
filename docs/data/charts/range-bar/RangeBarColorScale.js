@@ -9,12 +9,12 @@ const series = [
   {
     type: 'rangeBar',
     data: [
-      { start: -2, end: 4 },
-      { start: 4, end: 10 },
-      { start: -1, end: 3 },
-      { start: 2, end: 13 },
-      { start: 6, end: 7 },
-      { start: 8, end: 12 },
+      [-2, 4],
+      [4, 10],
+      [-1, 3],
+      [2, 13],
+      [6, 7],
+      [8, 12],
     ],
   },
 ];

@@ -1,3 +1,5 @@
+import { RangeBarValueType } from '@mui/x-charts-premium/models';
+
 export const months = [
   'January',
   'February',
@@ -14,32 +16,32 @@ export const months = [
 ];
 
 const berlin = [
-  { start: -1.9, end: 2.8 },
-  { start: -1.4, end: 4.4 },
-  { start: 0.6, end: 8.4 },
-  { start: 4.6, end: 14.4 },
-  { start: 9.4, end: 18.9 },
-  { start: 12.9, end: 22.1 },
-  { start: 15.2, end: 24.0 },
-  { start: 14.9, end: 23.9 },
-  { start: 11.4, end: 19.6 },
-  { start: 7.3, end: 13.8 },
-  { start: 3.2, end: 8.0 },
-  { start: 0.1, end: 4.2 },
-];
+  [-1.9, 2.8],
+  [-1.4, 4.4],
+  [0.6, 8.4],
+  [4.6, 14.4],
+  [9.4, 18.9],
+  [12.9, 22.1],
+  [15.2, 24.0],
+  [14.9, 23.9],
+  [11.4, 19.6],
+  [7.3, 13.8],
+  [3.2, 8.0],
+  [0.1, 4.2],
+] satisfies RangeBarValueType[];
 
 const porto = [
-  { start: 6.4, end: 14.0 },
-  { start: 6.8, end: 15.0 },
-  { start: 8.8, end: 17.0 },
-  { start: 10.1, end: 18.1 },
-  { start: 12.3, end: 20.3 },
-  { start: 14.5, end: 22.7 },
-  { start: 15.5, end: 24.3 },
-  { start: 15.7, end: 24.8 },
-  { start: 14.8, end: 23.5 },
-  { start: 12.9, end: 20.7 },
-  { start: 9.4, end: 16.8 },
-  { start: 7.6, end: 14.7 },
-];
+  [6.4, 14.0],
+  [6.8, 15.0],
+  [8.8, 17.0],
+  [10.1, 18.1],
+  [12.3, 20.3],
+  [14.5, 22.7],
+  [15.5, 24.3],
+  [15.7, 24.8],
+  [14.8, 23.5],
+  [12.9, 20.7],
+  [9.4, 16.8],
+  [7.6, 14.7],
+] satisfies RangeBarValueType[];
 export const temperatureBerlinPorto = { months, berlin, porto };

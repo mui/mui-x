@@ -156,7 +156,7 @@ const rangeBarSettings = {
       type: 'rangeBar',
       label: 'Porto, Portugal',
       valueFormatter: (value) =>
-        value === null ? null : `${value.start}°C - ${value.end}°C`,
+        value === null ? null : `${value[0]}°C - ${value[1]}°C`,
       data: temperatureBerlinPorto.porto,
     },
     {
@@ -164,7 +164,7 @@ const rangeBarSettings = {
       type: 'rangeBar',
       label: 'Berlin, Germany',
       valueFormatter: (value) =>
-        value === null ? null : `${value.start}°C - ${value.end}°C`,
+        value === null ? null : `${value[0]}°C - ${value[1]}°C`,
       data: temperatureBerlinPorto.berlin,
     },
   ],
