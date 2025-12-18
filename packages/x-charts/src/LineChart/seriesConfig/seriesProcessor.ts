@@ -82,6 +82,9 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
       .order(stackingOrder)
       .offset(stackingOffset)(d3Dataset);
 
+    const idOrder = stackedData.map((s) => s.index);
+    const fixedOrder = () => idOrder;
+
     // Compute visible stacked data
     const visibleStackedData = d3Stack<any, DatasetElementType<number | null>, SeriesId>()
       .keys(keys)
@@ -95,7 +98,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset, isItemVisible
         }
         return d[key] ?? 0;
       })
-      .order(stackingOrder)
+      .order(fixedOrder)
       .offset(stackingOffset)(d3Dataset);
 
     ids.forEach((id, index) => {

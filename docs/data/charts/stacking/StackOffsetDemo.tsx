@@ -72,6 +72,11 @@ export default function StackOffsetDemo() {
         height={300}
         series={getSeries({ hasNegativeValue, stackOffset })}
         layout="horizontal"
+        slotProps={{
+          legend: {
+            toggleVisibilityOnClick: true,
+          },
+        }}
       />
     </Box>
   );
