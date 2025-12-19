@@ -714,6 +714,26 @@ describe('<DataGridPro /> - Columns', () => {
         // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
         await autosize({ expand: true }, [142, 155]);
       });
+
+      it('.includeHeaderFilters works', async () => {
+        render(
+          <Test
+            rows={rows}
+            columns={[
+              {
+                field: 'id',
+                headerName: 'ID',
+                maxWidth: 200, // the `maxWidth` is to prevent flaky test due to different input widths between local and CI.
+              },
+            ]}
+            headerFilters
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaderFilters: true }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.deep.equal(200);
+        });
+      });
     });
   });
 
