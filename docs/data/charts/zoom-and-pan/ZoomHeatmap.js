@@ -8,7 +8,7 @@ import data from '../dataset/muiXCommits2024.json';
 
 const seriesData = [];
 
-let max = 0;
+let maxContributions = 0;
 
 const firstWeekDay = new Date('2023-12-31').getTime();
 for (const datum of data) {
@@ -20,7 +20,7 @@ for (const datum of data) {
   const value = datum.count;
   seriesData.push([weekNumber, weekDay, value]);
 
-  max = Math.max(max, value);
+  maxContributions = Math.max(maxContributions, value);
 }
 
 const weeks = Array.from({ length: 53 }).map(
@@ -68,10 +68,10 @@ export default function ZoomHeatmap() {
         zAxis={[
           {
             min: 0,
-            max,
+            max: maxContributions,
             colorMap: {
               type: 'piecewise',
-              thresholds: [0.01, 0.33, 0.66, 1].map((v) => v * max),
+              thresholds: [0.01, 0.33, 0.66, 1].map((v) => v * maxContributions),
               colors:
                 theme.palette.mode === 'light' ? lightThemeColors : darkThemeColors,
             },

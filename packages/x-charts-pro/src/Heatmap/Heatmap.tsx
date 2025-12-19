@@ -30,6 +30,7 @@ import {
   type ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -279,6 +280,7 @@ const Heatmap = React.forwardRef(function Heatmap(
           </g>
           <ChartsAxis slots={slots} slotProps={slotProps} />
           <ChartsClipPath id={clipPathId} />
+          <ChartsBrushOverlay />
           {children}
         </ChartsSurface>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
