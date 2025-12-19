@@ -1,4 +1,4 @@
-// Timezone Events Dataset
+// Timezone Events Dataset Instant-Based
 // Non-realistic set focused on edge cases of timezone handling.
 
 import { RecurringEventRecurrenceRule, SchedulerResource } from '@mui/x-scheduler/models';
