@@ -28,7 +28,6 @@ export const initialEvents: WallTimeEvent[] = [
   // ----------------------------
   // SIMPLE EVENTS
   // ----------------------------
-
   {
     id: 'ny-simple',
     title: 'NY event',
@@ -66,8 +65,6 @@ export const initialEvents: WallTimeEvent[] = [
   // RECURRING EVENTS
   // -----------------------------------------------------
 
-  // NY weekly — crosses US DST (Mar 9)
-  // First occurrence BEFORE DST: Wed Mar 05 → 12:00 NY
   {
     id: 'ny-weekly',
     title: 'NY Weekly',
@@ -78,7 +75,6 @@ export const initialEvents: WallTimeEvent[] = [
     rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE'] },
   },
 
-  // Paris monthly 15th UNTIL — 18:00 Paris
   {
     id: 'monthly-paris-until',
     title: 'Paris Monthly Evening',
@@ -89,11 +85,10 @@ export const initialEvents: WallTimeEvent[] = [
     rrule: {
       freq: 'MONTHLY',
       byMonthDay: [15],
-      until: new Date('2025-06-30T23:59:00'), // wall time Paris
+      until: new Date('2025-06-30T23:59:00'),
     },
   },
 
-  // Tokyo daily — 07:00 JST (no DST ever)
   {
     id: 'daily-tokyo',
     title: 'Tokyo Sunrise Daily',
@@ -104,7 +99,6 @@ export const initialEvents: WallTimeEvent[] = [
     rrule: { freq: 'DAILY' },
   },
 
-  // LA weekly COUNT — 16:00 LA
   {
     id: 'weekly-la-count',
     title: 'LA Weekly Afternoon',
@@ -119,7 +113,6 @@ export const initialEvents: WallTimeEvent[] = [
     },
   },
 
-  // Sydney exDates — 13:00 Sydney
   {
     id: 'syd-exdates',
     title: 'Sydney Weekly Skip One',
