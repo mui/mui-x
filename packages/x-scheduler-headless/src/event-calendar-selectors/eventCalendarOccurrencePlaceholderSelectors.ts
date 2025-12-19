@@ -1,4 +1,4 @@
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelector } from '@base-ui/utils/store';
 import { EventCalendarState as State } from '../use-event-calendar';
 import { TemporalSupportedObject } from '../models';
 

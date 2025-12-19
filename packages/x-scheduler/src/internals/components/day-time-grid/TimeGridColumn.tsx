@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';

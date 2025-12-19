@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { Popover } from '@base-ui-components/react/popover';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { Popover } from '@base-ui/react/popover';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
   ContextValue,
   CreatePopoverConfig,

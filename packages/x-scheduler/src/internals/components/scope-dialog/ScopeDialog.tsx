@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { Dialog } from '@base-ui-components/react/dialog';
-import { Radio } from '@base-ui-components/react/radio';
-import { Form } from '@base-ui-components/react/form';
-import { Field } from '@base-ui-components/react/field';
-import { RadioGroup } from '@base-ui-components/react/radio-group';
+import { useStore } from '@base-ui/utils/store';
+import { Dialog } from '@base-ui/react/dialog';
+import { Radio } from '@base-ui/react/radio';
+import { Form } from '@base-ui/react/form';
+import { Field } from '@base-ui/react/field';
+import { RadioGroup } from '@base-ui/react/radio-group';
 import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
