@@ -14,16 +14,15 @@ import { PickerValue } from '../internals/models';
  * Validation props used by the Date Picker, Date Field and Date Calendar components.
  */
 export interface ExportedValidateDateProps
-  extends DayValidationProps,
-    MonthValidationProps,
-    YearValidationProps,
-    BaseDateValidationProps {}
+  extends DayValidationProps, MonthValidationProps, YearValidationProps, BaseDateValidationProps {}
 
 /**
  * Validation props as received by the validateDate method.
  */
-export interface ValidateDateProps
-  extends MakeRequired<ExportedValidateDateProps, ValidateDatePropsToDefault> {}
+export interface ValidateDateProps extends MakeRequired<
+  ExportedValidateDateProps,
+  ValidateDatePropsToDefault
+> {}
 
 /**
  * Name of the props that should be defaulted before being passed to the validateDate method.

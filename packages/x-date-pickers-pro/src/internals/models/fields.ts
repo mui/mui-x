@@ -13,7 +13,8 @@ import type {
  * Only contains what the MUI components are passing to the field, not what users can pass using the `props.slotProps.field`.
  */
 export interface BaseMultiInputFieldProps
-  extends Pick<UseFieldInternalProps<PickerRangeValue, boolean, unknown>, 'readOnly' | 'autoFocus'>,
+  extends
+    Pick<UseFieldInternalProps<PickerRangeValue, boolean, unknown>, 'readOnly' | 'autoFocus'>,
     MultiInputFieldRefs {
   slots?: {
     root?: React.ElementType;

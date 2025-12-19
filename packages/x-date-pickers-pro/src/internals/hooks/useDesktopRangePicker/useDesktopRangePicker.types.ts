@@ -20,7 +20,8 @@ import {
 } from '../../models';
 
 export interface UseDesktopRangePickerSlots
-  extends PickerPopperSlots,
+  extends
+    PickerPopperSlots,
     ExportedPickersLayoutSlots<PickerRangeValue>,
     PickerFieldUISlotsFromContext {
   /**
@@ -30,7 +31,8 @@ export interface UseDesktopRangePickerSlots
 }
 
 export interface UseDesktopRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends PickerPopperSlotProps,
+  extends
+    PickerPopperSlotProps,
     ExportedPickersLayoutSlotProps<PickerRangeValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<

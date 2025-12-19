@@ -12,15 +12,16 @@ import {
 import type { ValidateDateTimeRangeProps } from '../validation';
 
 export interface DateTimeRangePickerSlots
-  extends DesktopDateTimeRangePickerSlots,
-    MobileDateTimeRangePickerSlots {}
+  extends DesktopDateTimeRangePickerSlots, MobileDateTimeRangePickerSlots {}
 
 export interface DateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    DesktopDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     MobileDateTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    DesktopDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
     MobileDateTimeRangePickerProps<TEnableAccessibleFieldDOMStructure> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.

@@ -3,8 +3,10 @@ import { DateView } from '../models';
 import { DateOrTimeViewWithMeridiem } from '../internals/models';
 import { isDatePickerView } from '../internals/utils/date-utils';
 
-export interface DateViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
-  extends Omit<DateCalendarProps, 'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView'> {
+export interface DateViewRendererProps<TView extends DateOrTimeViewWithMeridiem> extends Omit<
+  DateCalendarProps,
+  'views' | 'openTo' | 'view' | 'onViewChange' | 'focusedView'
+> {
   view: TView;
   onViewChange?: (view: TView) => void;
   views: readonly TView[];

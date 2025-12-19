@@ -78,6 +78,7 @@ const availableStackOrder = [
   'appearance',
   'ascending',
   'descending',
+  'insideOut',
 ] as const;
 
 export default function StackOrderDemo() {

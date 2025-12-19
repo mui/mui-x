@@ -10,7 +10,8 @@ import {
 } from '../internals/components/PickerFieldUI';
 
 export interface UseDateFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+  extends
+    MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, DateValidationError>,
       'format'
     >,

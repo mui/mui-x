@@ -55,22 +55,33 @@ export const pinch = async (
   const isPinchOut = distance > 0;
   const absDistance = Math.abs(distance);
 
+  // Calculate the centroid of all pointers
+  const centroid = {
+    x: pointersArray.reduce((sum, p) => sum + p.x, 0) / pointersArray.length,
+    y: pointersArray.reduce((sum, p) => sum + p.y, 0) / pointersArray.length,
+  };
+
   // Calculate movement vectors for each pointer
-  const movementVectors = pointersArray.map((pointer, index) => {
-    // Calculate polar coordinates (r, theta) for each pointer
-    // where r is the distance from the center and theta is the angle
-    const isEven = index % 2 === 0; // Alternate direction for each pointer
-    const movementDirection = isEven ? 0 : Math.PI; // 0 or 180 degrees in radians
-    const adjustedAngle = rad + movementDirection;
+  // Each pointer moves radially from/toward the centroid
+  const movementVectors = pointersArray.map((pointer) => {
+    // Calculate the angle from centroid to this pointer
+    const dx = pointer.x - centroid.x;
+    const dy = pointer.y - centroid.y;
+    const pointerAngle = Math.atan2(dy, dx);
+
+    // Apply the optional rotation angle
+    const adjustedAngle = pointerAngle + rad;
 
     // Calculate x and y components of movement
+    // Divide by number of pointers to distribute the total distance
+    const perPointerDistance = absDistance / pointersArray.length;
     return {
       id: pointer.id,
       target: pointer.target,
       startX: pointer.x,
       startY: pointer.y,
-      deltaX: Math.cos(adjustedAngle) * (absDistance / 2) * (isPinchOut ? 1 : -1),
-      deltaY: Math.sin(adjustedAngle) * (absDistance / 2) * (isPinchOut ? 1 : -1),
+      deltaX: Math.cos(adjustedAngle) * perPointerDistance * (isPinchOut ? 1 : -1),
+      deltaY: Math.sin(adjustedAngle) * perPointerDistance * (isPinchOut ? 1 : -1),
     };
   });
 
