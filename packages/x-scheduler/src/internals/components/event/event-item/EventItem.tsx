@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/utils/useId';
-import { useStore } from '@base-ui-components/utils/store';
+import { useId } from '@base-ui/utils/useId';
+import { useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import {
   schedulerEventSelectors,

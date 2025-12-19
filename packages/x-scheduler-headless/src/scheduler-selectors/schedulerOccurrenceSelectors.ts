@@ -1,5 +1,5 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,

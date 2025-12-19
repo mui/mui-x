@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useStore } from '@base-ui/utils/store';
 import { generateOccurrenceFromEvent } from '../../utils/event-utils';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
@@ -147,8 +147,7 @@ export namespace TimelineEvent {
   export interface State extends useDraggableEvent.State {}
 
   export interface Props
-    extends
-      BaseUIComponentProps<'div', State>,
+    extends BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {}
 

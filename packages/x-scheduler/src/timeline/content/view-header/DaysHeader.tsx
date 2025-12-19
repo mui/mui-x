@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store/useStore';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';

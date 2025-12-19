@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { Field } from '@base-ui-components/react/field';
-import { Form } from '@base-ui-components/react/form';
-import { Input } from '@base-ui-components/react/input';
-import { Separator } from '@base-ui-components/react/separator';
+import { useStore } from '@base-ui/utils/store';
+import { Field } from '@base-ui/react/field';
+import { Form } from '@base-ui/react/form';
+import { Input } from '@base-ui/react/input';
+import { Separator } from '@base-ui/react/separator';
 import {
   SchedulerEventColor,
   SchedulerEventOccurrence,
@@ -22,7 +22,7 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { Tabs } from '@base-ui-components/react/tabs';
+import { Tabs } from '@base-ui/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useStore } from '@base-ui-components/utils/store';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStore } from '@base-ui/utils/store';
 import { CheckIcon, ChevronRight, Settings } from 'lucide-react';
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import {
   CalendarView,
   EventCalendarPreferences,

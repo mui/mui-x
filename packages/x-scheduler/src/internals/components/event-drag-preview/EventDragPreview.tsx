@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Store, useStore } from '@base-ui-components/utils/store';
+import { Store, useStore } from '@base-ui/utils/store';
 import './EventDragPreview.css';
 import { RenderDragPreviewParameters } from '@mui/x-scheduler-headless/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';

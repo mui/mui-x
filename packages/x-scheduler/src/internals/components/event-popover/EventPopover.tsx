@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { Popover } from '@base-ui-components/react/popover';
+import { useStore } from '@base-ui/utils/store';
+import { Popover } from '@base-ui/react/popover';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
