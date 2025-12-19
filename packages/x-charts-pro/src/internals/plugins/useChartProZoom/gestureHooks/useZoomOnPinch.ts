@@ -1,16 +1,15 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
+  type ChartPlugin,
   getSVGPoint,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { PinchEvent } from '@mui/x-internal-gestures/core';
+import { type PinchEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
   getVerticalCenterRatio,
@@ -27,9 +26,9 @@ export const useZoomOnPinch = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'pinch' as const);
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'pinch' as const);
 
   const isZoomOnPinchEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

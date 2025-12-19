@@ -2,20 +2,16 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { act, fireEvent } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
-import {
-  UseTreeViewFocusSignature,
-  UseTreeViewItemsSignature,
-  UseTreeViewSelectionSignature,
-} from '@mui/x-tree-view/internals';
+
+// TODO #20051: Replace with imported type
+type TreeViewAnyStore = { parameters: any };
 
 /**
  * All tests related to keyboard navigation (e.g.: type-ahead when using `props.disabledItemsFocusable`)
  * are located in the `useTreeViewKeyboardNavigation.test.tsx` file.
  */
-describeTreeView<
-  [UseTreeViewFocusSignature, UseTreeViewSelectionSignature, UseTreeViewItemsSignature]
->(
-  'useTreeViewFocus plugin',
+describeTreeView<TreeViewAnyStore>(
+  'TreeViewFocusPlugin',
   ({ render, renderFromJSX, TreeItemComponent, treeViewComponentName, TreeViewComponent }) => {
     describe('basic behavior', () => {
       it('should allow to focus an item', () => {

@@ -1,19 +1,18 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
-import { D3Scale } from '../models/axis';
-import { ScatterClasses, useUtilityClasses } from './scatterClasses';
+import { type DefaultizedScatterSeriesType } from '../models/seriesType/scatter';
+import { type D3Scale } from '../models/axis';
+import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { ColorGetter } from '../internals/plugins/models/seriesConfig';
-import { useSelector } from '../internals/store/useSelector';
+import { type ColorGetter } from '../internals/plugins/models/seriesConfig';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
   selectorChartSeriesUnfadedItem,
   selectorChartSeriesHighlightedItem,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 
 export interface BatchScatterProps {
@@ -147,10 +146,10 @@ export function BatchScatter(props: BatchScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
   const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, series.id);
-  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, series.id);
-  const seriesHighlightedItem = useSelector(store, selectorChartSeriesHighlightedItem, series.id);
-  const seriesUnfadedItem = useSelector(store, selectorChartSeriesUnfadedItem, series.id);
+  const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
+  const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
+  const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);
+  const seriesUnfadedItem = store.use(selectorChartSeriesUnfadedItem, series.id);
   const highlightedModifier = 1.2;
   const markerSize = series.markerSize * (isSeriesHighlighted ? highlightedModifier : 1);
   const classes = useUtilityClasses(inClasses);

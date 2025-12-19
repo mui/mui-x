@@ -404,7 +404,8 @@ export interface GridControlledStateReasonLookup {
 }
 
 export interface GridEventLookup
-  extends GridRowEventLookup,
+  extends
+    GridRowEventLookup,
     GridColumnHeaderEventLookup,
     GridHeaderFilterEventLookup,
     GridColumnGroupHeaderEventLookup,
@@ -492,6 +493,11 @@ export interface GridEventLookup
    * @ignore - do not document
    */
   sortedRowsSet: {};
+  /**
+   * Fired when the aggregations are done
+   * @ignore - do not document
+   */
+  aggregationLookupSet: {};
   /**
    * Fired when the expansion of a row is changed. Called with a [[GridGroupNode]] object.
    */

@@ -111,13 +111,11 @@ export interface DataGridPropsWithComplexDefaultValueBeforeProcessing {
  */
 export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = any> {
   /**
-   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
+   * Use it instead of a flex parent container approach, if:
+   * - you don't need to set a minimum or maximum height for the Data Grid
+   * - you want to avoid the scrollbar flickering when the content changes
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
-   * @example
-   * <div style={{ display: 'flex', flexDirection: 'column' }}>
-   *   <DataGrid />
-   * </div>
    */
   autoHeight: boolean;
   /**
@@ -412,13 +410,23 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
    * @default false
    */
   virtualizeColumnsWithAutoRowHeight: boolean;
+  /**
+   * Sets the tab navigation behavior for the Data Grid.
+   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabNavigation: 'none' | 'content' | 'header' | 'all';
 }
 
 /**
  * The Data Grid props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<
+  R extends GridValidRowModel = any,
+> extends CommonProps {
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -938,7 +946,8 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
  * The props of the Data Grid component after the pre-processing phase.
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues,
+  extends
+    DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
     DataGridPropsWithoutDefaultValue<R>,
     DataGridProSharedPropsWithoutDefaultValue,

@@ -105,7 +105,7 @@ The same import works for Charts Pro as it's an extension of Charts.
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { frFR } from '@mui/x-charts/locales';
-import { frFR as dataGridFrFR } from '@mui/x-date-pickers/locales';
+import { frFR as dataGridFrFR } from '@mui/x-data-grid/locales';
 import { frFR as pickersFrFR } from '@mui/x-date-pickers/locales';
 import { frFR as coreFrFR } from '@mui/material/locale';
 

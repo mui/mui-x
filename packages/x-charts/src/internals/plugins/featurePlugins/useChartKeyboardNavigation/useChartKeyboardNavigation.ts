@@ -2,24 +2,26 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { ChartPlugin, ChartState } from '../../models';
-import { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
+import { type ChartPlugin, type ChartState } from '../../models';
+import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import {
   getNextSeriesWithData,
   getPreviousSeriesWithData,
   seriesHasData,
 } from './useChartKeyboardNavigation.helpers';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 
 function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
   if (
     type === undefined ||
     // @ts-ignore sankey is not in MIT version
     type === 'sankey' ||
     seriesId === undefined ||
-    !seriesHasData(state.series.processedSeries, type, seriesId)
+    !seriesHasData(processedSeries, type, seriesId)
   ) {
-    const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
+    const nextSeries = getNextSeriesWithData(processedSeries, type, seriesId);
     if (nextSeries === null) {
       return null;
     }
@@ -27,7 +29,7 @@ function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSi
     seriesId = nextSeries.seriesId;
   }
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
   return {
     type,
     seriesId,
@@ -36,15 +38,16 @@ function getNextIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSi
 }
 
 function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
   if (
     type === undefined ||
     // @ts-ignore sankey is not in MIT version
     type === 'sankey' ||
     seriesId === undefined ||
-    !seriesHasData(state.series.processedSeries, type, seriesId)
+    !seriesHasData(processedSeries, type, seriesId)
   ) {
-    const previousSeries = getPreviousSeriesWithData(state.series.processedSeries, type, seriesId);
+    const previousSeries = getPreviousSeriesWithData(processedSeries, type, seriesId);
     if (previousSeries === null) {
       return null;
     }
@@ -52,7 +55,7 @@ function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigati
     seriesId = previousSeries.seriesId;
   }
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
   return {
     type,
     seriesId,
@@ -61,9 +64,10 @@ function getPreviousIndexFocusedItem(state: ChartState<[UseChartKeyboardNavigati
 }
 
 function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationSignature], []>) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
 
-  const nextSeries = getNextSeriesWithData(state.series.processedSeries, type, seriesId);
+  const nextSeries = getNextSeriesWithData(processedSeries, type, seriesId);
 
   if (nextSeries === null) {
     return null; // No series to move the focus to.
@@ -71,7 +75,7 @@ function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationS
   type = nextSeries.type;
   seriesId = nextSeries.seriesId;
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
 
   return {
     type,
@@ -83,16 +87,17 @@ function getNextSeriesFocusedItem(state: ChartState<[UseChartKeyboardNavigationS
 function getPreviousSeriesFocusedItem(
   state: ChartState<[UseChartKeyboardNavigationSignature], []>,
 ) {
+  const processedSeries = selectorChartSeriesProcessed(state);
   let { type, seriesId } = state.keyboardNavigation.item ?? {};
 
-  const previousSeries = getPreviousSeriesWithData(state.series.processedSeries, type, seriesId);
+  const previousSeries = getPreviousSeriesWithData(processedSeries, type, seriesId);
   if (previousSeries === null) {
     return null; // No series to move the focus to.
   }
   type = previousSeries.type;
   seriesId = previousSeries.seriesId;
 
-  const dataLength = state.series.processedSeries[type]!.series[seriesId].data.length;
+  const dataLength = processedSeries[type]!.series[seriesId].data.length;
 
   return {
     type,

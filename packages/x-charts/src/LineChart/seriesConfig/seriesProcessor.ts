@@ -1,13 +1,14 @@
 import { stack as d3Stack } from '@mui/x-charts-vendor/d3-shape';
 import { warnOnce } from '@mui/x-internals/warning';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { getStackingGroups } from '../../internals/stackSeries';
-import { ChartSeries, DatasetElementType, DatasetType } from '../../models/seriesType/config';
-import { defaultizeValueFormatter } from '../../internals/defaultizeValueFormatter';
-import { SeriesId } from '../../models/seriesType/common';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { getStackingGroups } from '../../internals/stacking';
+import {
+  type ChartSeriesDefaultized,
+  type DatasetElementType,
+  type DatasetType,
+} from '../../models/seriesType/config';
+import { type SeriesId } from '../../models/seriesType/common';
+import { type SeriesProcessor } from '../../internals/plugins/models';
 
-// For now it's a copy past of bar charts formatter, but maybe will diverge later
 const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
   const { seriesOrder, series } = params;
   const stackingGroups = getStackingGroups({ ...params, defaultStrategy: { stackOffset: 'none' } });
@@ -32,12 +33,36 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
         ].join('\n'),
       );
     }
+
+    if (process.env.NODE_ENV !== 'production') {
+      if (!data && dataset) {
+        const dataKey = series[id].dataKey;
+
+        if (!dataKey) {
+          throw new Error(
+            [
+              `MUI X Charts: line series with id='${id}' has no data and no dataKey.`,
+              'You must provide a dataKey when using the dataset prop.',
+            ].join('\n'),
+          );
+        }
+
+        dataset.forEach((entry, index) => {
+          const value = entry[dataKey];
+          if (value != null && typeof value !== 'number') {
+            warnOnce(
+              [
+                `MUI X Charts: your dataset key "${dataKey}" is used for plotting lines, but the dataset contains the non-null non-numerical element "${value}" at index ${index}.`,
+                'Line plots only support numeric and null values.',
+              ].join('\n'),
+            );
+          }
+        });
+      }
+    }
   });
 
-  const completedSeries: Record<
-    SeriesId,
-    DefaultizedProps<ChartSeries<'line'>, 'data'> & { stackedData: [number, number][] }
-  > = {};
+  const completedSeries: Record<SeriesId, ChartSeriesDefaultized<'line'>> = {};
 
   stackingGroups.forEach((stackingGroup) => {
     // Get stacked values, and derive the domain
@@ -62,21 +87,14 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
         data: dataKey
           ? dataset!.map((data) => {
               const value = data[dataKey];
-              if (typeof value !== 'number') {
-                if (process.env.NODE_ENV !== 'production') {
-                  if (value !== null) {
-                    warnOnce([
-                      `MUI X Charts: Your dataset key "${dataKey}" is used for plotting line, but contains nonnumerical elements.`,
-                      'Line plots only support numbers and null values.',
-                    ]);
-                  }
-                }
-                return null;
-              }
-              return value;
+
+              return typeof value === 'number' ? value : null;
             })
           : series[id].data!,
         stackedData: stackedSeries[index].map(([a, b]) => [a, b]),
+        valueFormatter:
+          series[id]?.valueFormatter ??
+          ((v: number | null) => (v == null ? '' : v.toLocaleString())),
       };
     });
   });
@@ -84,7 +102,7 @@ const seriesProcessor: SeriesProcessor<'line'> = (params, dataset) => {
   return {
     seriesOrder,
     stackingGroups,
-    series: defaultizeValueFormatter(completedSeries, (v) => (v == null ? '' : v.toLocaleString())),
+    series: completedSeries,
   };
 };
 

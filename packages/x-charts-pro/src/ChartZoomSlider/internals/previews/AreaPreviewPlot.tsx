@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  AxisId,
-  useSelector,
+  type AxisId,
   useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  SeriesId,
+  type SeriesId,
 } from '@mui/x-charts/internals';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
-})();
+})({});
 
 interface AreaPreviewPlotProps extends PreviewPlotProps {}
 
@@ -39,8 +38,10 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   );
 }
 
-export interface PreviewAreaElementProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+export interface PreviewAreaElementProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'color' | 'id'
+> {
   id: SeriesId;
   gradientId?: string;
   color: string;
@@ -65,8 +66,8 @@ function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: Previe
 function useAreaPreviewData(axisId: AxisId) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useAreaPlotData(xAxes, yAxes);
 }

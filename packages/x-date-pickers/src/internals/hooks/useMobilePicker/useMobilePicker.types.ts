@@ -20,7 +20,8 @@ import {
 import { PickerStep } from '../../utils/createNonRangePickerStepNavigation';
 
 export interface UseMobilePickerSlots
-  extends PickersModalDialogSlots,
+  extends
+    PickersModalDialogSlots,
     ExportedPickersLayoutSlots<PickerValue>,
     PickerFieldUISlotsFromContext {
   /**
@@ -31,7 +32,9 @@ export interface UseMobilePickerSlots
 
 export interface ExportedUseMobilePickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends PickersModalDialogSlotProps,
+>
+  extends
+    PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<PickerValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
@@ -42,7 +45,8 @@ export interface ExportedUseMobilePickerSlotProps<
 }
 
 export interface UseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerValue>, 'toolbar'> {}
 
 export interface MobileOnlyPickerProps extends UsePickerNonStaticProps {}
@@ -52,7 +56,9 @@ export interface UseMobilePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
   TError,
   TExternalProps extends UsePickerProps<PickerValue, TView, TError, any>,
-> extends BasePickerProps<PickerValue, TView, TError, TExternalProps>,
+>
+  extends
+    BasePickerProps<PickerValue, TView, TError, TExternalProps>,
     MakeRequired<MobileOnlyPickerProps, 'format'> {
   /**
    * Overridable component slots.
@@ -76,9 +82,9 @@ export interface UseMobilePickerParams<
     TExternalProps
   >,
 > extends Pick<
-    UsePickerParameters<PickerValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'ref'
-  > {
+  UsePickerParameters<PickerValue, TView, TExternalProps>,
+  'valueManager' | 'valueType' | 'validator' | 'ref'
+> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

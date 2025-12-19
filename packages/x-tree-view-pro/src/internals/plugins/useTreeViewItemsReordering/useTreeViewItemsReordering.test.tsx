@@ -1,14 +1,13 @@
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 import { spy } from 'sinon';
 import { fireEvent, createEvent } from '@mui/internal-test-utils';
-import { UseTreeViewItemsReorderingSignature } from '@mui/x-tree-view-pro/internals';
 import { DragEventTypes, MockedDataTransfer } from 'test/utils/dragAndDrop';
-import {
-  UseTreeViewExpansionSignature,
-  UseTreeViewItemsSignature,
-} from '@mui/x-tree-view/internals';
 import { chooseActionToApply } from './useTreeViewItemsReordering.utils';
 import { TreeViewItemItemReorderingValidActions } from './useTreeViewItemsReordering.types';
+
+// TODO #20051: Replace with imported type
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type RichTreeViewProStore<A, B> = any;
 
 interface DragEventOptions {
   /**
@@ -62,202 +61,213 @@ const buildTreeViewDragInteractions = (dataTransfer: DataTransfer) => {
   };
 };
 
-describeTreeView<
-  [UseTreeViewItemsReorderingSignature, UseTreeViewItemsSignature, UseTreeViewExpansionSignature]
->('useTreeViewItemsReordering', ({ render, treeViewComponentName }) => {
-  describe.skipIf(
-    treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView',
-  )('reordering', () => {
-    let dragEvents: ReturnType<typeof buildTreeViewDragInteractions>;
-    beforeEach(() => {
-      const dataTransfer = new MockedDataTransfer();
-      dataTransfer.dropEffect = 'move';
-      dragEvents = buildTreeViewDragInteractions(dataTransfer);
+describeTreeView<RichTreeViewProStore<any, any>>(
+  'TreeViewItemsReorderingPlugin',
+  ({ render, treeViewComponentName }) => {
+    describe.skipIf(
+      treeViewComponentName === 'SimpleTreeView' || treeViewComponentName === 'RichTreeView',
+    )('reordering', () => {
+      let dragEvents: ReturnType<typeof buildTreeViewDragInteractions>;
+      beforeEach(() => {
+        const dataTransfer = new MockedDataTransfer();
+        dataTransfer.dropEffect = 'move';
+        dragEvents = buildTreeViewDragInteractions(dataTransfer);
+      });
+
+      afterEach(() => {
+        dragEvents = {} as typeof dragEvents;
+      });
+
+      describe('itemReordering prop', () => {
+        it('should not move the item when dropping on itself', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('2'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
+        it('should allow to drag and drop items when props.itemsReordering={true}', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([
+            { id: '2', children: [{ id: '1' }] },
+            { id: '3' },
+          ]);
+        });
+
+        it('should not allow to drag and drop items when props.itemsReordering={false}', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: false,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
+        it('should not allow to drag and drop items when props.itemsReordering is not defined', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
+        it('should allow to expand the new parent of the dragged item when it was not expandable before', () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+            itemsReordering: true,
+            defaultExpandedItems: ['1'],
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1.1'), view.getItemContent('2'));
+
+          fireEvent.focus(view.getItemRoot('2'));
+          fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
+
+          expect(view.getItemIdTree()).to.deep.equal([
+            { id: '1' },
+            { id: '2', children: [{ id: '1.1' }] },
+          ]);
+        });
+      });
+
+      describe('onItemPositionChange prop', () => {
+        it('should call onItemPositionChange when an item is moved', () => {
+          const onItemPositionChange = spy();
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+            onItemPositionChange,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(onItemPositionChange.callCount).to.equal(1);
+          expect(onItemPositionChange.lastCall.firstArg).to.deep.equal({
+            itemId: '1',
+            oldPosition: { parentId: null, index: 0 },
+            newPosition: { parentId: '2', index: 0 },
+          });
+        });
+      });
+
+      describe('isItemReorderable prop', () => {
+        it('should not allow to drag an item when isItemReorderable returns false', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+            isItemReorderable: () => false,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
+        it('should allow to drag an item when isItemReorderable returns true', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+            isItemReorderable: () => true,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([
+            { id: '2', children: [{ id: '1' }] },
+            { id: '3' },
+          ]);
+        });
+      });
+
+      describe('canMoveItemToNewPosition prop', () => {
+        it('should call canMoveItemToNewPosition with the correct parameters', () => {
+          const canMoveItemToNewPosition = spy();
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+            canMoveItemToNewPosition,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
+            itemId: '1',
+            oldPosition: { parentId: null, index: 0 },
+            newPosition: { parentId: null, index: 1 },
+          });
+        });
+
+        it('should not allow to drop an item when canMoveItemToNewPosition returns false', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+            canMoveItemToNewPosition: () => false,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
+        it('should allow to drop an item when canMoveItemToNewPosition returns true', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+            canMoveItemToNewPosition: () => true,
+          });
+
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
+          expect(view.getItemIdTree()).to.deep.equal([
+            { id: '2', children: [{ id: '1' }] },
+            { id: '3' },
+          ]);
+        });
+      });
+
+      describe('dragend behavior', () => {
+        it('should reset the drag-and-drop state when Escape is pressed', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+          });
+
+          // Simulate the drag-and-drop sequence with Escape (dropEffect is "none")
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'), {
+            beforeDragEnd: (dataTransfer) => {
+              dataTransfer.dropEffect = 'none';
+            },
+          });
+
+          expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
+        });
+
+        it('should not reset the drag-and-drop state when the item is dropped successfully', () => {
+          const view = render({
+            items: [{ id: '1' }, { id: '2' }, { id: '3' }],
+            itemsReordering: true,
+          });
+
+          // Set dropEffect to "move" to simulate a successful drop
+          dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'), {
+            beforeDragEnd: (dataTransfer) => {
+              dataTransfer.dropEffect = 'move';
+            },
+          });
+
+          expect(view.getItemIdTree()).to.deep.equal([
+            { id: '2', children: [{ id: '1' }] },
+            { id: '3' },
+          ]);
+        });
+      });
     });
-
-    afterEach(() => {
-      dragEvents = {} as typeof dragEvents;
-    });
-
-    describe('itemReordering prop', () => {
-      it('should allow to drag and drop items when props.itemsReordering={true}', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([
-          { id: '2', children: [{ id: '1' }] },
-          { id: '3' },
-        ]);
-      });
-
-      it('should not allow to drag and drop items when props.itemsReordering={false}', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: false,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
-      });
-
-      it('should not allow to drag and drop items when props.itemsReordering is not defined', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
-      });
-
-      it('should allow to expand the new parent of the dragged item when it was not expandable before', () => {
-        const view = render({
-          items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
-          itemsReordering: true,
-          defaultExpandedItems: ['1'],
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1.1'), view.getItemContent('2'));
-
-        fireEvent.focus(view.getItemRoot('2'));
-        fireEvent.keyDown(view.getItemRoot('2'), { key: 'Enter' });
-
-        expect(view.getItemIdTree()).to.deep.equal([
-          { id: '1' },
-          { id: '2', children: [{ id: '1.1' }] },
-        ]);
-      });
-    });
-
-    describe('onItemPositionChange prop', () => {
-      it('should call onItemPositionChange when an item is moved', () => {
-        const onItemPositionChange = spy();
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-          onItemPositionChange,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(onItemPositionChange.callCount).to.equal(1);
-        expect(onItemPositionChange.lastCall.firstArg).to.deep.equal({
-          itemId: '1',
-          oldPosition: { parentId: null, index: 0 },
-          newPosition: { parentId: '2', index: 0 },
-        });
-      });
-    });
-
-    describe('isItemReorderable prop', () => {
-      it('should not allow to drag an item when isItemReorderable returns false', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-          isItemReorderable: () => false,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
-      });
-
-      it('should allow to drag an item when isItemReorderable returns true', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-          isItemReorderable: () => true,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([
-          { id: '2', children: [{ id: '1' }] },
-          { id: '3' },
-        ]);
-      });
-    });
-
-    describe('canMoveItemToNewPosition prop', () => {
-      it('should call canMoveItemToNewPosition with the correct parameters', () => {
-        const canMoveItemToNewPosition = spy();
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-          canMoveItemToNewPosition,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(canMoveItemToNewPosition.lastCall.firstArg).to.deep.equal({
-          itemId: '1',
-          oldPosition: { parentId: null, index: 0 },
-          newPosition: { parentId: null, index: 1 },
-        });
-      });
-
-      it('should not allow to drop an item when canMoveItemToNewPosition returns false', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-          canMoveItemToNewPosition: () => false,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
-      });
-
-      it('should allow to drop an item when canMoveItemToNewPosition returns true', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-          canMoveItemToNewPosition: () => true,
-        });
-
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'));
-        expect(view.getItemIdTree()).to.deep.equal([
-          { id: '2', children: [{ id: '1' }] },
-          { id: '3' },
-        ]);
-      });
-    });
-
-    describe('dragend behavior', () => {
-      it('should reset the drag-and-drop state when Escape is pressed', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-        });
-
-        // Simulate the drag-and-drop sequence with Escape (dropEffect is "none")
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'), {
-          beforeDragEnd: (dataTransfer) => {
-            dataTransfer.dropEffect = 'none';
-          },
-        });
-
-        expect(view.getItemIdTree()).to.deep.equal([{ id: '1' }, { id: '2' }, { id: '3' }]);
-      });
-
-      it('should not reset the drag-and-drop state when the item is dropped successfully', () => {
-        const view = render({
-          items: [{ id: '1' }, { id: '2' }, { id: '3' }],
-          itemsReordering: true,
-        });
-
-        // Set dropEffect to "move" to simulate a successful drop
-        dragEvents.fullDragSequence(view.getItemRoot('1'), view.getItemContent('2'), {
-          beforeDragEnd: (dataTransfer) => {
-            dataTransfer.dropEffect = 'move';
-          },
-        });
-
-        expect(view.getItemIdTree()).to.deep.equal([
-          { id: '2', children: [{ id: '1' }] },
-          { id: '3' },
-        ]);
-      });
-    });
-  });
-});
+  },
+);
 
 describe('getNewPosition util', () => {
   // The actions use the following tree when dropping "1.1" on "1.2":

@@ -1,10 +1,11 @@
-import type { SchedulerValidDate } from './date';
+import type { TemporalSupportedObject } from '../base-ui-copy/types';
 
+export type RecurringEventFrequency = 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
 /**
  * The preset recurrence options available in the UI.
  * Only recurring events created from a preset can be edited with the "this-and-following" and "all" scopes.
  */
-export type RecurringEventPresetKey = 'daily' | 'weekly' | 'monthly' | 'yearly';
+export type RecurringEventPresetKey = RecurringEventFrequency;
 
 /**
  * The scope of a recurring event update.
@@ -47,7 +48,7 @@ export interface RecurringEventRecurrenceRule {
    * Base frequency of the rule.
    * Corresponds to the FREQ property of the string-based RRULE.
    */
-  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+  freq: RecurringEventFrequency;
   /**
    * Positive integer representing at which intervals the recurrence rule repeats.
    * For example, within a DAILY rule, a value of "8" means every eight days.
@@ -78,7 +79,7 @@ export interface RecurringEventRecurrenceRule {
    * Must not be specified when the count property is set.
    * Corresponds to the UNTIL property of the string-based RRULE.
    */
-  until?: SchedulerValidDate;
+  until?: TemporalSupportedObject;
   /**
    * The number of occurrences at which to range-bound the recurrence.
    * Must not be specified when the until property is set.

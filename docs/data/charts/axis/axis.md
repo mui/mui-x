@@ -147,6 +147,16 @@ In the demo below, the top axis has a `tickMinStep` of half a day, and the botto
 
 {{"demo": "TickNumber.js"}}
 
+### Tick spacing
+
+Use the `tickSpacing` property to define the minimum spacing in pixels between two ticks.
+
+Having a minimum space between ticks improves the readability of the axis and can also improve the chart's performance.
+
+This property defaults to 0 and is only available for ordinal axes, that is, axes with a band or point scale.
+
+{{"demo": "TickSpacing.js"}}
+
 ### Fixed tick position
 
 If you want more control over the tick position, you can use the `tickInterval` property.
@@ -177,6 +187,36 @@ In the example below, the top axis is a reference for the default behavior: tick
 At the bottom, you can see one tick for the beginning and the middle of the day, but the tick label is only displayed for the beginning of the day.
 
 {{"demo": "TickLabelPosition.js"}}
+
+### Ordinal tick management
+
+Ordinal scales (`'band'` and `'point'`) display one tick per item by default.
+If you have a date axis, you can use the `ordinalTimeTicks` property to configure which ticks to show.
+
+It takes an array of frequencies at which ticks can be placed.
+Those frequencies must be sorted from the largest to the smallest.
+For example `['years', 'months', 'days']`.
+Visible ticks are selected according to those frequencies and the `tickNumber`.
+
+The `ordinalTimeTicks` property can either be an implementation of the `TickFrequencyDefinition` type or a subset of the built-in frequencies: `'years'`, `'quarterly'`, `'months'`, `'biweekly'`, `'weeks'`, `'days'`, `'hours'`.
+
+When using `ordinalTimeTicks` the property `tickPlacement` is ignored, and computation are done as if set to `'middle'`.
+
+In the following demo, you can modify the `ordinalTimeTicks` based on built-in frequencies and see how it impacts zoom behavior.
+
+{{"demo": "OrdinalTickPlacement.js"}}
+
+The `TickFrequencyDefinition` is an object made of following properties:
+
+- `getTickNumber: (from: Date, to: Date) => number` Returns the number of ticks that will be displayed between `from` and `to` dates.
+- `isTick: (prev: Date, value: Date) => boolean` Returns `true` is a tick should be placed on `value`. For example if it's the beginning of a new month.
+- `format: (d: Date) => string` Returns for tick label.
+
+The built-in frequency definitions are exported as `tickFrequencies` from `'@mui/x-charts/utils'`.
+
+In the following demo, we use the `tickFrequencies` to display quarters and weeks with different labels.
+
+{{"demo": "CustomTickFrequency.js"}}
 
 ## Position
 
@@ -276,7 +316,7 @@ A `foreignObject` element can be used to render non-SVG elements inside SVGs. Yo
 
 Bear in mind that using `foreignObject` might prevent charts from being [exported](/x/react-charts/export/).
 
-{{"demo": "TickLabelSVG.js"}}
+{{"demo": "TickLabelImage.js"}}
 
 ## Symlog scale
 

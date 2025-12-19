@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Toolbar, ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
+import { Toolbar, type ChartsToolbarProps, ToolbarButton } from '@mui/x-charts/Toolbar';
 import {
   useChartContext,
-  useSelector,
   useChartsSlots,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
 import { useChartsLocalization } from '@mui/x-charts/hooks';
 import useId from '@mui/utils/useId';
@@ -16,13 +15,13 @@ import { ChartsMenu } from './internals/ChartsMenu';
 import { selectorChartZoomIsEnabled } from '../internals/plugins/useChartProZoom';
 import { ChartsToolbarZoomInTrigger } from './ChartsToolbarZoomInTrigger';
 import { ChartsToolbarZoomOutTrigger } from './ChartsToolbarZoomOutTrigger';
-import { ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotsPro } from '../internals/material';
 import {
-  ChartsToolbarPrintExportOptions,
+  type ChartsToolbarPrintExportOptions,
   ChartsToolbarPrintExportTrigger,
 } from './ChartsToolbarPrintExportTrigger';
 import {
-  ChartsToolbarImageExportOptions,
+  type ChartsToolbarImageExportOptions,
   ChartsToolbarImageExportTrigger,
 } from './ChartsToolbarImageExportTrigger';
 
@@ -48,7 +47,7 @@ function ChartsToolbarPro({
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
   const exportMenuId = useId();
   const exportMenuTriggerId = useId();
-  const isZoomEnabled = useSelector(store, selectorChartZoomIsEnabled);
+  const isZoomEnabled = store.use(selectorChartZoomIsEnabled);
   const imageExportOptionList = rawImageExportOptions ?? DEFAULT_IMAGE_EXPORT_OPTIONS;
   const showExportMenu = !printOptions?.disableToolbarButton || imageExportOptionList.length > 0;
 
@@ -167,6 +166,7 @@ ChartsToolbarPro.propTypes = {
     PropTypes.shape({
       copyStyles: PropTypes.bool,
       fileName: PropTypes.string,
+      nonce: PropTypes.string,
       onBeforeExport: PropTypes.func,
       quality: PropTypes.number,
       type: PropTypes.string.isRequired,

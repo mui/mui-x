@@ -2,15 +2,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { GaugeProvider, GaugeProviderProps } from './GaugeProvider';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
-import { MergeSignaturesProperty } from '../internals/plugins/models';
-import { ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
+import { type MergeSignaturesProperty } from '../internals/plugins/models';
+import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
-  extends Omit<ChartsSurfaceProps, 'children'>,
+  extends
+    Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
       'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures'

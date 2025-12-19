@@ -1,24 +1,18 @@
 import { RefObject } from '@mui/x-internals/types';
 import { GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
-import type { GridBaseColDef } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
-import type {
+import {
+  GridBaseColDef,
   GridAggregationCellMeta,
-  GridAggregationLookup,
   GridAggregationPosition,
-  GridAggregationRule,
-} from './gridAggregationInterfaces';
+  GridFooterCell,
+} from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridAggregationLookup, GridAggregationRule } from './gridAggregationInterfaces';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
-import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 
-type WrappableColumnProperty =
-  | 'valueGetter'
-  | 'valueFormatter'
-  | 'renderCell'
-  | 'renderHeader'
-  | 'filterOperators';
+type WrappableColumnProperty = 'renderCell' | 'renderHeader';
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties: {
@@ -68,6 +62,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
       const aggregationMeta: GridAggregationCellMeta = {
         hasCellUnit: aggregationRule!.aggregationFunction.hasCellUnit ?? true,
         aggregationFunctionName: aggregationRule!.aggregationFunctionName,
+        position: cellAggregationResult.position,
       };
 
       return renderCell({ ...params, aggregation: aggregationMeta });

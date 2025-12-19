@@ -1,12 +1,11 @@
 'use client';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartPropsHeight,
@@ -19,12 +18,12 @@ import {
   selectorChartsIsKeyboardNavigationEnabled,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
+import { selectorChartHasZoom } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 
-export interface ChartsSurfaceProps
-  extends Omit<
-    React.SVGProps<SVGSVGElement>,
-    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-  > {
+export interface ChartsSurfaceProps extends Omit<
+  React.SVGProps<SVGSVGElement>,
+  'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
+> {
   className?: string;
   title?: string;
   desc?: string;
@@ -35,7 +34,7 @@ export interface ChartsSurfaceProps
 const ChartsSurfaceStyles = styled('svg', {
   name: 'MuiChartsSurface',
   slot: 'Root',
-})<{ ownerState: { width?: number; height?: number } }>(({ ownerState, theme }) => ({
+})<{ ownerState: { width?: number; height?: number; hasZoom: boolean } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
   display: 'flex',
@@ -46,22 +45,11 @@ const ChartsSurfaceStyles = styled('svg', {
   overflow: 'hidden',
   // This prevents default touch actions when using the svg on mobile devices.
   // For example, prevent page scroll & zoom.
-  touchAction: 'pan-y',
+  touchAction: ownerState.hasZoom ? 'pan-y' : undefined,
   userSelect: 'none',
   gridArea: 'chart',
   '&:focus': {
     outline: 'none', // By default don't show focus on the SVG container
-  },
-  '&:focus-visible': {
-    // Show focus outline on the SVG container only when using keyboard navigation
-    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
-    '&[data-has-focused-item=true]': {
-      // But not if the chart has a focused children item
-      outline: 'none',
-    },
-  },
-  '& [data-focused=true]': {
-    outline: `${(theme.vars ?? theme).palette.text.primary} solid 2px`,
   },
 }));
 
@@ -85,13 +73,15 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 ) {
   const store = useStore();
 
-  const svgWidth = useSelector(store, selectorChartSvgWidth);
-  const svgHeight = useSelector(store, selectorChartSvgHeight);
+  const svgWidth = store.use(selectorChartSvgWidth);
+  const svgHeight = store.use(selectorChartSvgHeight);
 
-  const propsWidth = useSelector(store, selectorChartPropsWidth);
-  const propsHeight = useSelector(store, selectorChartPropsHeight);
-  const isKeyboardNavigationEnabled = useSelector(store, selectorChartsIsKeyboardNavigationEnabled);
-  const hasFocusedItem = useSelector(store, selectorChartsHasFocusedItem);
+  const propsWidth = store.use(selectorChartPropsWidth);
+  const propsHeight = store.use(selectorChartPropsHeight);
+  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
+  const hasFocusedItem = store.use(selectorChartsHasFocusedItem);
+  const hasZoom = store.use(selectorChartHasZoom);
+
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
@@ -103,7 +93,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
-      ownerState={{ width: propsWidth, height: propsHeight }}
+      ownerState={{ width: propsWidth, height: propsHeight, hasZoom }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={clsx(classes.root, className)}
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridCellMode } from '../gridCell';
 import {
   GridRowId,
@@ -71,10 +70,6 @@ export interface GridCellParams<
   api: GridApiCommunity;
 }
 
-export interface FocusElement {
-  focus(): void;
-}
-
 /**
  * GridCellParams containing api.
  */
@@ -88,12 +83,6 @@ export interface GridRenderCellParams<
    * GridApi that let you manipulate the grid.
    */
   api: GridApiCommunity;
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef?: React.Ref<FocusElement>;
 }
 
 /**
@@ -104,8 +93,8 @@ export interface GridRenderEditCellParams<
   V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<R, V, F, N>,
-    GridEditCellProps<V> {
+>
+  extends GridCellParams<R, V, F, N>, GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
    */

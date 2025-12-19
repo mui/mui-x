@@ -127,37 +127,6 @@ const theme = createTheme({
 });
 ```
 
-## Using this documentation
-
-### @mui/x-data-grid-generator
-
-**The `@mui/x-data-grid-generator` is a development-only package and should not be used in production.**
-You can use it to create a reproduction of a bug or generate demo data in your development environment.
-You should not rely on its API—it doesn't follow semver.
-
-### useDemoData hook
-
-The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package, used in demos throughout this documentation to provide realistic data without polluting the code with data generation logic.
-It contains column definitions and generates random data for the Data Grid.
-For more details on these definitions and the custom cell renderers available, see the [custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
-
-Here's how it's used:
-
-```tsx
-import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { useDemoData } from '@mui/x-data-grid-generator';
-
-export default function Demo() {
-  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
-
-  return <DataGrid {...data} />;
-}
-```
-
-It comes with two datasets: `Commodity` and `Employee`.
-You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).
-
 ## Bundling
 
 The Data Grid requires a bundler that can handle CSS imports.
@@ -261,3 +230,45 @@ moduleNameMapper: {
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+
+## Using this documentation
+
+### Feature availability
+
+:::info
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+See [Licensing](/x/introduction/licensing/) for details.
+:::
+
+Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.
+
+All documentation for Community components and features also applies to their Pro and Premium counterparts.
+
+### @mui/x-data-grid-generator
+
+**The `@mui/x-data-grid-generator` is a development-only package and should not be used in production.**
+You can use it to create a reproduction of a bug or generate demo data in your development environment.
+You should not rely on its API—it doesn't follow semver.
+
+### useDemoData hook
+
+The `useDemoData` hook is a utility hook from the `@mui/x-data-grid-generator` package, used in demos throughout this documentation to provide realistic data without polluting the code with data generation logic.
+It contains column definitions and generates random data for the Data Grid.
+For more details on these definitions and the custom cell renderers available, see the [custom columns demo](/x/react-data-grid/custom-columns/#full-example) where you can copy them from the demo source code.
+
+Here's how it's used:
+
+```tsx
+import * as React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { useDemoData } from '@mui/x-data-grid-generator';
+
+export default function Demo() {
+  const { data } = useDemoData({ dataSet: 'Commodity', rowLength: 100 });
+
+  return <DataGrid {...data} />;
+}
+```
+
+It comes with two datasets: `Commodity` and `Employee`.
+You can customize the data generation by passing the custom options of type [`UseDemoDataOptions`](https://github.com/mui/mui-x/blob/6aad22644ee710690b90dc2ac6bbafceb91fecf0/packages/x-data-grid-generator/src/hooks/useDemoData.ts#L29-L36).

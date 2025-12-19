@@ -1,16 +1,26 @@
 'use client';
 import PropTypes from 'prop-types';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
+import {
+  type HighlightItemData,
+  selectorChartsIsFadedCallback,
+  selectorChartsIsHighlightedCallback,
+  useStore,
+} from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
-import { HeatmapItem, HeatmapItemProps } from './HeatmapItem';
+import { HeatmapItem, type HeatmapItemProps } from './HeatmapItem';
 
 export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
 
 function HeatmapPlot(props: HeatmapPlotProps) {
+  const store = useStore();
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
   const colorScale = useZColorScale()!;
   const series = useHeatmapSeriesContext();
+
+  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
+  const isFaded = store.use(selectorChartsIsFadedCallback);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
@@ -26,9 +36,16 @@ function HeatmapPlot(props: HeatmapPlotProps) {
         const x = xScale(xDomain[xIndex]);
         const y = yScale(yDomain[yIndex]);
         const color = colorScale?.(value);
+
         if (x === undefined || y === undefined || !color) {
           return null;
         }
+
+        const item: HighlightItemData = {
+          seriesId: seriesToDisplay.id,
+          dataIndex,
+        };
+
         return (
           <HeatmapItem
             key={`${xIndex}_${yIndex}`}
@@ -42,6 +59,8 @@ function HeatmapPlot(props: HeatmapPlotProps) {
             value={value}
             slots={props.slots}
             slotProps={props.slotProps}
+            isHighlighted={isHighlighted(item)}
+            isFaded={isFaded(item)}
           />
         );
       })}

@@ -90,7 +90,8 @@ export interface CreateStepNavigationReturnValueParameters {
   setView: (view: any) => void;
 }
 
-interface UseRangePickerStepNavigationOnStepChangeParameters<TStep extends {}>
-  extends CreateStepNavigationReturnValueParameters {
+interface UseRangePickerStepNavigationOnStepChangeParameters<
+  TStep extends {},
+> extends CreateStepNavigationReturnValueParameters {
   step: TStep;
 }

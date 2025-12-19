@@ -1,5 +1,6 @@
-import { SeriesId } from '../../models/seriesType/common';
+import { type SeriesId } from '../../models/seriesType/common';
 import type { BarLabelClasses } from './barLabelClasses';
+import { type BarValueType } from '../../models';
 
 export interface BarLabelOwnerState {
   seriesId: SeriesId;
@@ -24,7 +25,7 @@ export type BarItem = {
   /**
    * The value of the data point.
    */
-  value: number | null;
+  value: BarValueType | null;
 };
 
 export type BarLabelContext = {
