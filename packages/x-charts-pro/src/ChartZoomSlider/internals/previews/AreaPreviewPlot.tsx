@@ -15,7 +15,7 @@ const AreaPlotRoot = styled('g', {
   slot: 'Root',
 })({});
 
-interface AreaPreviewPlotProps extends PreviewPlotProps {}
+interface AreaPreviewPlotProps extends Pick<PreviewPlotProps, 'axisId'> {}
 
 export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   const completedData = useAreaPreviewData(axisId);
@@ -38,10 +38,8 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   );
 }
 
-export interface PreviewAreaElementProps extends Omit<
-  React.SVGProps<SVGPathElement>,
-  'ref' | 'color' | 'id'
-> {
+export interface PreviewAreaElementProps
+  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   id: SeriesId;
   gradientId?: string;
   color: string;
