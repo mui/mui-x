@@ -7,7 +7,8 @@ const ptPTGrid: Partial<GridLocaleText> = {
   noResultsOverlayLabel: 'Nenhum resultado encontrado.',
   noColumnsOverlayLabel: 'Sem colunas',
   noColumnsOverlayManageColumns: 'Gerir colunas',
-  emptyPivotOverlayLabel: 'Adicione campos às linhas, colunas e valores para criar uma tabela dinâmica',
+  emptyPivotOverlayLabel:
+    'Adicione campos às linhas, colunas e valores para criar uma tabela dinâmica',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidade',
@@ -188,16 +189,12 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Linhas por página:',
-  paginationDisplayedRows: ({
-    from,
-    to,
-    count,
-    estimated
-  }) => {
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
       return `${from}–${to} de ${count !== -1 ? count : `mais do que ${to}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `cerca de ${estimated}` : `mais do que ${to}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `cerca de ${estimated}` : `mais do que ${to}`;
     return `${from}–${to} de ${count !== -1 ? count : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
@@ -278,15 +275,17 @@ const ptPTGrid: Partial<GridLocaleText> = {
   chartsMenuMoveToBottom: 'Mover para o fundo',
   chartsMenuOptions: 'Opções do campo',
   chartsMenuRemove: 'Remover',
-  chartsDragToDimensions: (dimensionLabel: string) => `Arraste para aqui para usar a coluna como ${dimensionLabel}`,
-  chartsDragToValues: (valuesLabel: string) => `Arraste para aqui para usar a coluna como ${valuesLabel}`,
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Arraste para aqui para usar a coluna como ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Arraste para aqui para usar a coluna como ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'Assistente de IA',
   aiAssistantPanelClose: 'Fechar Assistente de IA',
   aiAssistantPanelNewConversation: 'Nova conversa',
   aiAssistantPanelConversationHistory: 'Histórico de conversas',
-  aiAssistantPanelEmptyConversation: 'Nenhum histórico de comandos',
+  aiAssistantPanelEmptyConversation: 'Nenhum histórico de prompts',
   aiAssistantSuggestions: 'Sugestões',
 
   // Prompt field
@@ -306,8 +305,10 @@ const ptPTGrid: Partial<GridLocaleText> = {
 
   // Prompt changes
   promptChangeGroupDescription: (column: string) => `Agrupar por ${column}`,
-  promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  promptChangeAggregationDescription: (column: string, aggregation: string) => `Agregar ${column} (${aggregation})`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `Agregar ${column} (${aggregation})`,
   promptChangeFilterLabel: (column: string, operator: string, value: string) => {
     if (operator === 'is any of') {
       return `${column} é um de: ${value}`;
@@ -320,15 +321,19 @@ const ptPTGrid: Partial<GridLocaleText> = {
     }
     return `Filtrar onde ${column} ${operator} ${value}`;
   },
-  promptChangeSortDescription: (column: string, direction: string) => `Ordenar por ${column} (${direction})`,
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `Ordenar por ${column} (${direction})`,
   promptChangePivotEnableLabel: 'Pivot',
   promptChangePivotEnableDescription: 'Ativar pivot',
   promptChangePivotColumnsLabel: (count: number) => `Colunas (${count})`,
-  promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
   promptChangePivotRowsLabel: (count: number) => `Linhas (${count})`,
   promptChangePivotValuesLabel: (count: number) => `Valores (${count})`,
-  promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensões (${dimensionsCount}), Valores (${valuesCount})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensões (${dimensionsCount}), Valores (${valuesCount})`,
 };
 
 export const ptPT: Localization = getGridLocalization(ptPTGrid);
