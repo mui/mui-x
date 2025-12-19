@@ -1,4 +1,5 @@
-import { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
+import type { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
+import type { GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
 import type {
   GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
@@ -13,7 +14,6 @@ import type {
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
-  GridAggregationCellMeta,
   GridAggregationHeaderMeta,
   GridCellSelectionModel,
   Conversation,
