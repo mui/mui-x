@@ -139,8 +139,9 @@ type CalendarHeaderProps = PropsFromSlot<DateCalendarSlots['calendarHeader']>;
 If you are passing additional props to your slot, you can add them to the props your custom component receives:
 
 ```ts
-interface CustomCalendarHeaderProps
-  extends PropsFromSlot<DateCalendarSlots['calendarHeader']> {
+interface CustomCalendarHeaderProps extends PropsFromSlot<
+  DateCalendarSlots['calendarHeader']
+> {
   displayWeekNumber: boolean;
   setDisplayWeekNumber: (displayWeekNumber: boolean) => void;
 }

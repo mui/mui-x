@@ -5,7 +5,7 @@ import type {
   DatasetType,
 } from '../../../../models/seriesType/config';
 import type { SeriesId } from '../../../../models/seriesType/common';
-import type { StackingGroupsType } from '../../../stackSeries';
+import type { StackingGroupsType } from '../../../stacking';
 
 export type SeriesProcessorParams<TSeriesType extends ChartSeriesType> = {
   series: Record<SeriesId, ChartsSeriesConfig[TSeriesType]['seriesInput']>;

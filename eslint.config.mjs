@@ -198,6 +198,8 @@ export default defineConfig(
     rules: {
       // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
       'vitest/valid-expect': 'off',
+      // Annoying auto-fix
+      'vitest/no-focused-tests': 'off',
     },
   },
   {
@@ -300,6 +302,14 @@ export default defineConfig(
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
+      'react/jsx-filename-extension': 'off',
+    },
+  },
+
+  {
+    files: [`test/regressions/**/*${EXTENSION_TS}`],
+    rules: {
+      'react/jsx-filename-extension': 'off',
     },
   },
 

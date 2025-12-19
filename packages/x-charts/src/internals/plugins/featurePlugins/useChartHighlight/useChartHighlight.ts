@@ -48,11 +48,15 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
     const prevHighlight = store.state.highlight;
 
-    if (prevHighlight.isControlled || fastObjectShallowCompare(prevHighlight.item, newItem)) {
+    if (fastObjectShallowCompare(prevHighlight.item, newItem)) {
       return;
     }
 
     params.onHighlightChange?.(newItem);
+    if (prevHighlight.isControlled) {
+      return;
+    }
+
     store.set('highlight', {
       item: newItem,
       lastUpdate: 'pointer',

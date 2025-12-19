@@ -43,7 +43,6 @@ export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/
 
 export * from './store/useCharts';
 export * from './store/useStore';
-export * from './store/useSelector';
 
 // plugins configs
 
@@ -59,7 +58,7 @@ export * from './getLabel';
 export * from './getSVGPoint';
 export * from './isDefined';
 export * from './getScale';
-export * from './stackSeries';
+export * from './stacking';
 export * from './getCurve';
 export * from './consumeSlots';
 export * from './consumeThemeProps';

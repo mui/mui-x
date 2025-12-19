@@ -142,6 +142,8 @@ export namespace useEventRowDropTarget {
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
-  export interface ReturnValue
-    extends Pick<TimelineEventRowContext, 'getCursorPositionInElementMs'> {}
+  export interface ReturnValue extends Pick<
+    TimelineEventRowContext,
+    'getCursorPositionInElementMs'
+  > {}
 }

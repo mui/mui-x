@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartsFocusedSeriesType,
   selectorChartsFocusedSeriesId,
@@ -21,9 +20,9 @@ export type FocusedItemData = {
  */
 export function useFocusedItem() {
   const store = useStore();
-  const focusedSeriesType = useSelector(store, selectorChartsFocusedSeriesType);
-  const focusedSeriesId = useSelector(store, selectorChartsFocusedSeriesId);
-  const focusedDataIndex = useSelector(store, selectorChartsFocusedDataIndex);
+  const focusedSeriesType = store.use(selectorChartsFocusedSeriesType);
+  const focusedSeriesId = store.use(selectorChartsFocusedSeriesId);
+  const focusedDataIndex = store.use(selectorChartsFocusedDataIndex);
 
   return React.useMemo(
     () =>
