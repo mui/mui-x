@@ -290,10 +290,10 @@ const ptPTGrid: Partial<GridLocaleText> = {
   aiAssistantSuggestions: 'Sugestões',
 
   // Prompt field
-  promptFieldLabel: 'Comando',
-  promptFieldPlaceholder: 'Digite um comando',
-  promptFieldPlaceholderWithRecording: 'Digite ou grave um comando',
-  promptFieldPlaceholderListening: 'Ouvindo o comando',
+  promptFieldLabel: 'Prompt',
+  promptFieldPlaceholder: 'Digite um prompt',
+  promptFieldPlaceholderWithRecording: 'Digite ou grave um prompt',
+  promptFieldPlaceholderListening: 'Ouvindo o prompt',
   promptFieldSpeechRecognitionNotSupported: 'Reconhecimento de voz não é suportado neste navegador',
   promptFieldSend: 'Enviar',
   promptFieldRecord: 'Gravar',
