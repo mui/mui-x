@@ -1,4 +1,4 @@
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TimelinePreferences, TimelineView } from '../models';
 import { Adapter } from '../use-adapter';
 import {

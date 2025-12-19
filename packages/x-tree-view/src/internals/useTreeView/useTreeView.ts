@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@mui/x-internals/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventHandlers } from '@mui/utils/types';
 import {
   TreeViewAnyPluginSignature,
