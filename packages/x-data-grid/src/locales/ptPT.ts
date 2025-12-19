@@ -307,7 +307,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Prompt changes
   promptChangeGroupDescription: (column: string) => `Agrupar por ${column}`,
   promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  promptChangeAggregationDescription: (column: string, aggregation: string) => `Agregue ${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) => `Agregar ${column} (${aggregation})`,
   promptChangeFilterLabel: (column: string, operator: string, value: string) => {
     if (operator === 'is any of') {
       return `${column} é qualquer um de: ${value}`;
