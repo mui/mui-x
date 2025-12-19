@@ -66,7 +66,8 @@ export interface ExportedPickersDayProps {
 }
 
 export interface PickersDayProps
-  extends ExportedPickersDayProps,
+  extends
+    ExportedPickersDayProps,
     Omit<
       ExtendMui<ButtonBaseProps>,
       'onKeyDown' | 'onFocus' | 'onBlur' | 'onMouseEnter' | 'LinkComponent'

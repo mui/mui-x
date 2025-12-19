@@ -38,8 +38,10 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   );
 }
 
-export interface PreviewAreaElementProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+export interface PreviewAreaElementProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'color' | 'id'
+> {
   id: SeriesId;
   gradientId?: string;
   color: string;

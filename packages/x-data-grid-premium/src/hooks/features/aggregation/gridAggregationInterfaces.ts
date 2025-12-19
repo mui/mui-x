@@ -99,8 +99,10 @@ export interface GridAggregationFunction<V = any, AV = V> {
  * @demos
  *   - [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/)
  */
-export interface GridAggregationFunctionDataSource
-  extends Omit<GridAggregationFunction, 'apply' | 'getCellValue'> {}
+export interface GridAggregationFunctionDataSource extends Omit<
+  GridAggregationFunction,
+  'apply' | 'getCellValue'
+> {}
 
 export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];

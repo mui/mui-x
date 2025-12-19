@@ -11,16 +11,15 @@ import {
 } from '../DatePicker/shared';
 
 export interface MobileDatePickerSlots
-  extends BaseDatePickerSlots,
-    MakeOptional<UseMobilePickerSlots, 'field'> {}
+  extends BaseDatePickerSlots, MakeOptional<UseMobilePickerSlots, 'field'> {}
 
 export interface MobileDatePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseDatePickerSlotProps,
+  extends
+    BaseDatePickerSlotProps,
     ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDatePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends BaseDatePickerProps,
-    MobileOnlyPickerProps {
+  extends BaseDatePickerProps, MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}

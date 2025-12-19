@@ -215,6 +215,14 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
 
           // Store the original target element
           this.originalTarget = targetElement;
+        } else if (this.isActive && relevantPointers.length >= 2) {
+          // A new pointer was added during an active gesture
+          // Adjust the start distance to prevent jumping (similar to pointer removal logic)
+          const newDistance = calculateAverageDistance(relevantPointers);
+          // Adjust startDistance so that the current scale is preserved
+          this.state.startDistance = newDistance / this.state.lastScale;
+          this.state.lastDistance = newDistance;
+          this.state.lastTime = event.timeStamp;
         }
         break;
 
@@ -289,6 +297,8 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
             // to prevent jumping when a finger is lifted
             const newDistance = calculateAverageDistance(remainingPointers);
             this.state.startDistance = newDistance / this.state.lastScale;
+            this.state.lastDistance = newDistance;
+            this.state.lastTime = event.timeStamp;
           }
         }
         break;

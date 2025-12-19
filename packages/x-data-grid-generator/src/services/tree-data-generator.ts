@@ -21,7 +21,8 @@ export interface AddPathToDemoDataOptions {
 }
 
 export interface DemoTreeDataValue
-  extends Pick<DataGridPremiumProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
+  extends
+    Pick<DataGridPremiumProps, 'getTreeDataPath' | 'treeData' | 'groupingColDef'>,
     GridDemoData {}
 
 interface RowWithParentIndex {
