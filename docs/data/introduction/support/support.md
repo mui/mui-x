@@ -54,6 +54,19 @@ You can use a starter template to build a reproduction case with:
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
 
+## Stack Overflow
+
+We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
+
+You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
+
+- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
+- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
+- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
+- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
+
+If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
+
 ## Technical support
 
 MUI offers two support plans, Standard(free) and Priority(paid).
@@ -131,19 +144,6 @@ This includes issues introduced by external sources, like browser upgrades or ch
 |        ^4.0.0 | 2021-09-28 | ❌                                                                              |
 
 ## Community
-
-### Stack Overflow
-
-We use Stack Overflow for how-to questions. Answers are crowdsourced from expert developers in the MUI X community as well as MUI X maintainers.
-
-You can search through existing questions and answers to see if someone has asked a similar question using one of these tags:
-
-- [mui-x-data-grid](https://stackoverflow.com/questions/tagged/mui-x-data-grid)
-- [mui-x-date-picker](https://stackoverflow.com/questions/tagged/mui-x-date-picker)
-- [mui-x-charts](https://stackoverflow.com/questions/tagged/mui-x-charts)
-- [mui-x-tree-view](https://stackoverflow.com/questions/tagged/mui-x-tree-view)
-
-If you cannot find your answer, [ask a new question](https://stackoverflow.com/questions/ask?tags=reactjs) using the relevant tags.
 
 ### Social media
 
