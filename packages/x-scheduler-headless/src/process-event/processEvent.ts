@@ -11,8 +11,13 @@ export function processEvent(
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
-  const startInDataTz = model.start;
-  const endInDataTz = model.end;
+  const startHasTzInfo = adapter.getTimezone(model.start) !== 'default';
+  const endHasTzInfo = adapter.getTimezone(model.end) !== 'default';
+
+  const startInDataTz = startHasTzInfo
+    ? model.start
+    : adapter.setTimezone(model.start, dataTimezone);
+  const endInDataTz = endHasTzInfo ? model.end : adapter.setTimezone(model.end, dataTimezone);
 
   const startInDisplayTz = adapter.setTimezone(startInDataTz, displayTimezone);
   const endInDisplayTz = adapter.setTimezone(endInDataTz, displayTimezone);
