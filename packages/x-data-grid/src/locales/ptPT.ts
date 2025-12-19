@@ -1,5 +1,5 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization } from '../utils/getGridLocalization';
 
 const ptPTGrid: Partial<GridLocaleText> = {
   // Root
@@ -331,4 +331,4 @@ const ptPTGrid: Partial<GridLocaleText> = {
   promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensões (${dimensionsCount}), Valores (${valuesCount})`,
 };
 
-export const ptPT = getGridLocalization(ptPTGrid);
+export const ptPT: Localization = getGridLocalization(ptPTGrid);
