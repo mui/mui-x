@@ -19,6 +19,7 @@ import { CalendarGridDayEventContext } from './CalendarGridDayEventContext';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayCellContext } from '../day-cell/CalendarGridDayCellContext';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
+import { generateOccurrenceFromEvent } from '../../utils/event-utils';
 
 export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEvent(
   componentProps: CalendarGridDayEvent.Props,
@@ -78,13 +79,14 @@ export const CalendarGridDayEvent = React.forwardRef(function CalendarGridDayEve
   });
 
   const firstEventOfSeries = schedulerEventSelectors.processedEvent(store.state, eventId)!;
-  const originalOccurrence: SchedulerEventOccurrence = {
-    ...firstEventOfSeries,
-    id: eventId,
-    key: occurrenceKey,
+
+  const originalOccurrence = generateOccurrenceFromEvent({
+    event: firstEventOfSeries,
+    eventId,
+    occurrenceKey,
     start,
     end,
-  };
+  });
 
   const getSharedDragData: CalendarGridDayEventContext['getSharedDragData'] = useStableCallback(
     () => ({
@@ -157,7 +159,8 @@ export namespace CalendarGridDayEvent {
   export interface State extends useDraggableEvent.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
+    extends
+      BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {}
 

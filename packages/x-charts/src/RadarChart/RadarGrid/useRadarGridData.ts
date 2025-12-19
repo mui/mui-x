@@ -5,14 +5,13 @@ import {
   type UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
-import { useSelector } from '../../internals/store/useSelector';
 
 export function useRadarGridData() {
   const { instance, store } = useChartContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 
-  const { cx, cy } = useSelector(store, selectorChartPolarCenter);
+  const { cx, cy } = store.use(selectorChartPolarCenter);
 
   if (!rotationScale || rotationScale.domain().length === 0) {
     return null;

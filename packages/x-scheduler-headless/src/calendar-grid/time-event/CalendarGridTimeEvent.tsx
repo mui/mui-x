@@ -16,6 +16,7 @@ import { useEventCalendarStoreContext } from '../../use-event-calendar-store-con
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
+import { generateOccurrenceFromEvent } from '../../utils/event-utils';
 
 export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeEvent(
   componentProps: CalendarGridTimeEvent.Props,
@@ -65,13 +66,13 @@ export const CalendarGridTimeEvent = React.forwardRef(function CalendarGridTimeE
       const offsetBeforeColumnStart = Math.max(adapter.getTime(columnStart) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
-      const originalOccurrence: SchedulerEventOccurrence = {
-        ...event,
-        key: occurrenceKey,
-        id: eventId,
+      const originalOccurrence = generateOccurrenceFromEvent({
+        event,
+        eventId,
+        occurrenceKey,
         start,
         end,
-      };
+      });
 
       const offsetInsideColumn = getCursorPositionInElementMs({ input, elementRef: ref });
       return {
@@ -156,7 +157,8 @@ export namespace CalendarGridTimeEvent {
   export interface State extends useDraggableEvent.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
+    extends
+      BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {}
 

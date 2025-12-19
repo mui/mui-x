@@ -8,8 +8,7 @@ import {
 export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
-  extends Omit<CommonSeriesType<HeatmapValueType>, 'color' | 'colorGetter'>,
-    CartesianSeriesType {
+  extends Omit<CommonSeriesType<HeatmapValueType>, 'color' | 'colorGetter'>, CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each bar.
@@ -35,5 +34,7 @@ export type HeatmapItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedHeatmapSeriesType
-  extends DefaultizedProps<HeatmapSeriesType, CommonDefaultizedProps> {}
+export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
+  HeatmapSeriesType,
+  CommonDefaultizedProps
+> {}

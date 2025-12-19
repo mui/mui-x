@@ -20,8 +20,7 @@ export interface TimeClockSlots extends PickersArrowSwitcherSlots {}
 export interface TimeClockSlotProps extends PickersArrowSwitcherSlotProps {}
 
 export interface TimeClockProps<TView extends TimeViewWithMeridiem = TimeView>
-  extends ExportedTimeClockProps,
-    BaseClockProps<TView> {
+  extends ExportedTimeClockProps, BaseClockProps<TView> {
   /**
    * Available views.
    * @default ['hours', 'minutes']

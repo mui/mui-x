@@ -78,19 +78,18 @@ const createCalendarStateReducer =
     }
   };
 
-interface UseCalendarStateParameters
-  extends Pick<
-    DateCalendarDefaultizedProps,
-    | 'referenceDate'
-    | 'disableFuture'
-    | 'disablePast'
-    | 'minDate'
-    | 'maxDate'
-    | 'onMonthChange'
-    | 'onYearChange'
-    | 'reduceAnimations'
-    | 'shouldDisableDate'
-  > {
+interface UseCalendarStateParameters extends Pick<
+  DateCalendarDefaultizedProps,
+  | 'referenceDate'
+  | 'disableFuture'
+  | 'disablePast'
+  | 'minDate'
+  | 'maxDate'
+  | 'onMonthChange'
+  | 'onYearChange'
+  | 'reduceAnimations'
+  | 'shouldDisableDate'
+> {
   value: PickerValidDate | null;
   timezone: PickersTimezone;
   getCurrentMonthFromVisibleDate: (

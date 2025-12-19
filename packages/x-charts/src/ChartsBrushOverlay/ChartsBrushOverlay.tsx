@@ -14,7 +14,6 @@ import {
   selectorBrushCurrentY,
   selectorBrushConfig,
 } from '../internals/plugins/featurePlugins/useChartBrush';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 
 function BrushRect(props: React.SVGProps<SVGRectElement>) {
@@ -36,15 +35,15 @@ export interface ChartsBrushOverlayProps {}
  */
 export function ChartsBrushOverlay(props: ChartsBrushOverlayProps) {
   const store = useStore<[UseChartBrushSignature]>();
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
 
   const theme = useTheme();
 
-  const brushStartX = useSelector(store, selectorBrushStartX);
-  const brushStartY = useSelector(store, selectorBrushStartY);
-  const brushCurrentX = useSelector(store, selectorBrushCurrentX);
-  const brushCurrentY = useSelector(store, selectorBrushCurrentY);
-  const brushConfig = useSelector(store, selectorBrushConfig);
+  const brushStartX = store.use(selectorBrushStartX);
+  const brushStartY = store.use(selectorBrushStartY);
+  const brushCurrentX = store.use(selectorBrushCurrentX);
+  const brushCurrentY = store.use(selectorBrushCurrentY);
+  const brushConfig = store.use(selectorBrushConfig);
 
   if (
     brushStartX === null ||
