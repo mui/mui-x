@@ -278,11 +278,12 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 Bar charts can display many bars, which can impact performance. The default rendering of bars use SVG `rect` elements, which can be slow for a large number of bars.
 
 To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
-However, this comes with the following limitations:
+However, this comes with the following trade-offs:
 
-- CSS styling of single bars is no longer possible. For this reason, when `onItemClick` is set, `cursor: pointer` is not applied to bars.
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible.
-- No animation when highlighting or fading bars.
+- CSS styling of single bars is no longer possible;
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
+- No animation when highlighting or fading bars;
+- The `onItemClick` event is a `MouseEvent` instead of a `React.MouseEvent`.
 
 The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
 

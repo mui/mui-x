@@ -168,7 +168,8 @@ BarPlot.propTypes = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
