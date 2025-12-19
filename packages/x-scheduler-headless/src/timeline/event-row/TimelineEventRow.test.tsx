@@ -1,19 +1,16 @@
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { TimelineProvider } from '@mui/x-scheduler-headless/timeline-provider';
-import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
+import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
 describe('<Timeline.EventRow />', () => {
   const { render } = createSchedulerRenderer();
 
-  const start = adapter.startOfDay(adapter.date());
-  const end = adapter.endOfDay(adapter.date());
-
-  describeConformance(<Timeline.EventRow start={start} end={end} resourceId={null} />, () => ({
+  describeConformance(<Timeline.EventRow resourceId="r1">{() => null}</Timeline.EventRow>, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
         <TimelineProvider events={[]}>
-          <Timeline.Root items={[]}>{node}</Timeline.Root>
+          <Timeline.Root>{node}</Timeline.Root>
         </TimelineProvider>,
       );
     },

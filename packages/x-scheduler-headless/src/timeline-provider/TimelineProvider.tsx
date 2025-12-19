@@ -19,8 +19,10 @@ export function TimelineProvider<TEvent extends object, TResource extends object
 }
 
 export namespace TimelineProvider {
-  export interface Props<TEvent extends object, TResource extends object>
-    extends TimelineParameters<TEvent, TResource> {
+  export interface Props<
+    TEvent extends object,
+    TResource extends object,
+  > extends TimelineParameters<TEvent, TResource> {
     children: React.ReactNode;
   }
 }

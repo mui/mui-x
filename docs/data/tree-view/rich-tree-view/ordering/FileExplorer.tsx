@@ -19,18 +19,19 @@ import {
 import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeItemDragAndDropOverlay } from '@mui/x-tree-view/TreeItemDragAndDropOverlay';
-import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks';
-import { TreeViewBaseItem } from '@mui/x-tree-view/models';
+import { useTreeItemModel } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewProApiRef } from '@mui/x-tree-view-pro/hooks';
 
 type FileType = 'image' | 'pdf' | 'doc' | 'video' | 'folder' | 'pinned' | 'trash';
 
-type ExtendedTreeItemProps = {
+type FileItem = {
   fileType: FileType;
   id: string;
   label: string;
+  children?: FileItem[];
 };
 
-const ITEMS: TreeViewBaseItem<ExtendedTreeItemProps>[] = [
+const ITEMS: FileItem[] = [
   {
     id: '1',
     label: 'Documents',
@@ -214,7 +215,8 @@ const getIconFromFileType = (fileType: FileType) => {
 };
 
 interface CustomTreeItemProps
-  extends Omit<UseTreeItemParameters, 'rootRef'>,
+  extends
+    Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {}
 
 const CustomTreeItem = React.forwardRef(function CustomTreeItem(
@@ -235,7 +237,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
     status,
   } = useTreeItem({ id, itemId, children, label, disabled, rootRef: ref });
 
-  const item = useTreeItemModel<ExtendedTreeItemProps>(itemId)!;
+  const item = useTreeItemModel<FileItem>(itemId)!;
 
   let icon;
   if (status.expandable) {
@@ -267,7 +269,7 @@ const CustomTreeItem = React.forwardRef(function CustomTreeItem(
 });
 
 export default function FileExplorer() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewProApiRef<FileItem>();
 
   return (
     <RichTreeViewPro

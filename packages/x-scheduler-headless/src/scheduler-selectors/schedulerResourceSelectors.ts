@@ -1,13 +1,13 @@
 import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { CalendarResource, CalendarResourceId } from '../models';
+import { SchedulerResource, SchedulerResourceId } from '../models';
 
 export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
     (processedResourceLookup, resourceId: string | null | undefined) =>
-      resourceId == null ? null : processedResourceLookup.get(resourceId),
+      resourceId == null ? null : (processedResourceLookup.get(resourceId) ?? null),
   ),
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
@@ -20,7 +20,7 @@ export const schedulerResourceSelectors = {
     (state: State) => state.processedResourceLookup,
     (state: State) => state.resourceChildrenIdLookup,
     (resourceIds, processedResourceLookup, resourceChildrenIdLookup) => {
-      const flatList: CalendarResource[] = [];
+      const flatList: SchedulerResource[] = [];
 
       const addResourceAndChildren = (resourceId: string) => {
         const resource = processedResourceLookup.get(resourceId);
@@ -48,7 +48,7 @@ export const schedulerResourceSelectors = {
     (state: State) => state.processedResourceLookup,
     (state: State) => state.resourceChildrenIdLookup,
     (processedResourceLookup, resourceChildrenIdLookup) => {
-      const result: Map<CalendarResourceId, CalendarResource[]> = new Map();
+      const result: Map<SchedulerResourceId, SchedulerResource[]> = new Map();
 
       for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
         const children = childrenIds.map((id) => processedResourceLookup.get(id)!);
@@ -60,13 +60,13 @@ export const schedulerResourceSelectors = {
   ),
   childrenIdLookup: (state: State) => state.resourceChildrenIdLookup,
   resourceChildrenIds: createSelector(
-    (state: State, resourceId: CalendarResourceId) =>
+    (state: State, resourceId: SchedulerResourceId) =>
       state.resourceChildrenIdLookup.get(resourceId) ?? EMPTY_ARRAY,
   ),
   resourceParentIdLookup: createSelectorMemoized(
     (state: State) => state.resourceChildrenIdLookup,
     (resourceChildrenIdLookup) => {
-      const result: Map<CalendarResourceId, CalendarResourceId | null> = new Map();
+      const result: Map<SchedulerResourceId, SchedulerResourceId | null> = new Map();
 
       for (const [resourceId, childrenIds] of Array.from(resourceChildrenIdLookup.entries())) {
         for (const childId of childrenIds) {
@@ -84,10 +84,20 @@ export const schedulerResourceSelectors = {
     (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
-        .filter(
-          (resourceId) =>
-            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
-        )
+        .filter((resourceId) => visibleResources[resourceId] !== false)
         .map((resourceId) => resourceId),
   ),
+  /**
+   * Gets the default event color used when no color is specified on the event.
+   */
+  defaultEventColor: createSelector(
+    (state: State, resourceId: SchedulerResourceId | null | undefined) => {
+      if (resourceId == null) {
+        return state.eventColor;
+      }
+
+      return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
+    },
+  ),
+  resourcesCount: createSelector((state: State) => state.resourceIdList.length),
 };

@@ -76,9 +76,9 @@ export interface ExportedUseViewsOptions<
   TValue extends PickerValidValue,
   TView extends DateOrTimeViewWithMeridiem,
 > extends Omit<
-    MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'>,
-    'getStepNavigation'
-  > {}
+  MakeOptional<UseViewsOptions<TValue, TView>, 'onChange' | 'openTo' | 'views'>,
+  'getStepNavigation'
+> {}
 
 let warnedOnceNotValidView = false;
 

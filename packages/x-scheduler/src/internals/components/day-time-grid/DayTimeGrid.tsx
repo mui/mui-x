@@ -7,15 +7,11 @@ import { useStore } from '@base-ui-components/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { CalendarProcessedDate } from '@mui/x-scheduler-headless/models';
-import { useAdapter, diffIn, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
+import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
+import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import {
-  schedulerEventSelectors,
-  schedulerNowSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../event-popover';
@@ -23,6 +19,7 @@ import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import './DayTimeGrid.css';
 import { useFormatTime } from '../../hooks/useFormatTime';
+import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
@@ -42,10 +39,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const handleRef = useMergedRefs(forwardedRef, containerRef);
 
   // Selector hooks
-  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-  const isMultiDayEvent = useStore(store, schedulerEventSelectors.isMultiDayEvent);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
 
   // Feature hooks
@@ -53,7 +48,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const occurrences = useEventOccurrencesWithDayGridPosition({
     days,
     occurrencesMap,
-    shouldAddPosition: isMultiDayEvent,
+    shouldAddPosition: React.useCallback(
+      (occurrence: SchedulerEventOccurrence) =>
+        isOccurrenceAllDayOrMultipleDay(occurrence, adapter),
+      [adapter],
+    ),
   });
 
   const formatTime = useFormatTime();
@@ -68,8 +67,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const isTodayInView = React.useMemo(
     () =>
-      !adapter.isBeforeDay(now, days[0].value) &&
-      !adapter.isAfterDay(now, days[days.length - 1].value),
+      adapter.isWithinRange(now, [
+        adapter.startOfDay(days[0].value),
+        adapter.endOfDay(days[days.length - 1].value),
+      ]),
     [adapter, days, now],
   );
 
@@ -90,10 +91,12 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       return false;
     }
     const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
-    return Math.abs(diffIn(adapter, now, slotCenter, 'minutes')) <= 25;
+    return Math.abs(adapter.differenceInMinutes(now, slotCenter)) <= 25;
   };
 
-  const renderHeaderContent = (day: CalendarProcessedDate) => (
+  const template = adapter.date('2020-01-01T00:00:00', 'default');
+
+  const renderHeaderContent = (day: SchedulerProcessedDate) => (
     <span className="DayTimeGridHeaderContent">
       {/* TODO: Add the 3 letter week day format to the adapter */}
       <span className="DayTimeGridHeaderDayName">{adapter.formatByString(day.value, 'ccc')}</span>
@@ -176,7 +179,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                         shouldHideHour(hour) ? 'HiddenHourLabel' : undefined,
                       )}
                     >
-                      {hour === 0 ? null : formatTime(adapter.setHours(visibleDate, hour))}
+                      {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
                     </time>
                   </div>
                 ))}

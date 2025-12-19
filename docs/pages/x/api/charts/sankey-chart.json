@@ -101,6 +101,12 @@
       "isGlobal": false
     },
     {
+      "key": "nodeLabels",
+      "className": "MuiSankeyChart-nodeLabels",
+      "description": "Styles applied to the node label container.",
+      "isGlobal": false
+    },
+    {
       "key": "nodes",
       "className": "MuiSankeyChart-nodes",
       "description": "Styles applied to the nodes container.",

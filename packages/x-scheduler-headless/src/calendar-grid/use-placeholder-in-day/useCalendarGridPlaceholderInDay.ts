@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { useStore } from '@base-ui-components/utils/store/useStore';
-import { CalendarEventOccurrenceWithDayGridPosition, SchedulerValidDate } from '../../models';
+import { TemporalSupportedObject } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { useCalendarGridDayRowContext } from '../day-row/CalendarGridDayRowContext';
 import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occurrences-with-day-grid-position';
-import { useAdapter, diffIn } from '../../use-adapter/useAdapter';
+import { useAdapter } from '../../use-adapter/useAdapter';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
-  day: SchedulerValidDate,
+  day: TemporalSupportedObject,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
-): CalendarEventOccurrenceWithDayGridPosition | null {
+): useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition | null {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
@@ -42,33 +42,58 @@ export function useCalendarGridPlaceholderInDay(
 
     // Creation mode
     if (rawPlaceholder.type === 'creation') {
+      const startProcessed = processDate(day, adapter);
+      const endProcessed = processDate(
+        adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
+        adapter,
+      );
+      const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
         id: 'occurrence-placeholder',
         title: '',
         allDay: true,
-        start: processDate(day, adapter),
-        end: processDate(
-          adapter.isAfter(rawPlaceholder.end, rowEnd) ? rowEnd : rawPlaceholder.end,
-          adapter,
-        ),
+        // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
+        dataTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone,
+        },
+        displayTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone,
+        },
         position: {
           index: 1,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
     }
 
     if (rawPlaceholder.type === 'external-drag') {
+      const startProcessed = processDate(rawPlaceholder.start, adapter);
+      const endProcessed = processDate(rawPlaceholder.end, adapter);
+      const timezone = adapter.getTimezone(rawPlaceholder.start);
+
       return {
         ...sharedProperties,
         id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
-        start: processDate(rawPlaceholder.start, adapter),
-        end: processDate(rawPlaceholder.end, adapter),
+        dataTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone,
+        },
+        // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
+        displayTimezone: {
+          start: startProcessed,
+          end: endProcessed,
+          timezone,
+        },
         position: {
           index: 1,
-          daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+          daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
         },
       };
     }
@@ -91,7 +116,7 @@ export function useCalendarGridPlaceholderInDay(
       end: processDate(rawPlaceholder.end, adapter),
       position: {
         index: positionIndex,
-        daySpan: diffIn(adapter, rawPlaceholder.end, day, 'days') + 1,
+        daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
       },
     };
   }, [adapter, day, originalEvent, rawPlaceholder, row.days, rowEnd]);

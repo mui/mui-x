@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { DateTime } from 'luxon';
+import { parseISO } from 'date-fns/parseISO';
+import { formatISO } from 'date-fns/formatISO';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
@@ -23,16 +24,16 @@ const initialEvents = [
 
 const eventModelStructure = {
   start: {
-    getter: (event) => DateTime.fromISO(event.start),
+    getter: (event) => parseISO(event.start),
     setter: (event, newValue) => {
-      event.start = newValue.toISO();
+      event.start = formatISO(newValue);
       return event;
     },
   },
   end: {
-    getter: (event) => DateTime.fromISO(event.end),
+    getter: (event) => parseISO(event.end),
     setter: (event, newValue) => {
-      event.end = newValue.toISO();
+      event.end = formatISO(newValue);
       return event;
     },
   },
@@ -48,7 +49,7 @@ export default function StartEndProperties() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         eventModelStructure={eventModelStructure}
-        preferences={{ isSidePanelOpen: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

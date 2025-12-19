@@ -1,9 +1,8 @@
 import * as React from 'react';
 import {
-  useSelector,
   useStore,
-  D3Scale,
-  ColorGetter,
+  type D3Scale,
+  type ColorGetter,
   useScatterPlotData,
   scatterSeriesConfig,
   selectorChartPreviewComputedXAxis,
@@ -11,8 +10,8 @@ import {
 } from '@mui/x-charts/internals';
 import { useScatterSeriesContext, useXAxes, useYAxes, useZAxes } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
-import { DefaultizedScatterSeriesType } from '@mui/x-charts/models';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { type DefaultizedScatterSeriesType } from '@mui/x-charts/models';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 interface ScatterPreviewPlotProps extends PreviewPlotProps {
   x: number;
@@ -24,8 +23,8 @@ interface ScatterPreviewPlotProps extends PreviewPlotProps {
 export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPreviewPlotProps) {
   const store = useStore();
   const seriesData = useScatterSeriesContext();
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const { zAxis: zAxes, zAxisIds } = useZAxes();

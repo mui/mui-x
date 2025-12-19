@@ -213,18 +213,17 @@ export interface UseTextFieldBaseForwardedProps {
   [key: string]: any;
 }
 
-interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager>
-  extends Pick<
-    UseFieldInternalProps<
-      PickerValue,
-      PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
-      PickerManagerError<TManager>
-    >,
-    | 'enableAccessibleFieldDOMStructure'
-    | 'disabled'
-    | 'readOnly'
-    | 'timezone'
-    | 'format'
-    | 'formatDensity'
-    | 'shouldRespectLeadingZeros'
-  > {}
+interface UseTextFieldSharedInternalProps<TManager extends PickerAnyRangeManager> extends Pick<
+  UseFieldInternalProps<
+    PickerValue,
+    PickerManagerEnableAccessibleFieldDOMStructure<TManager>,
+    PickerManagerError<TManager>
+  >,
+  | 'enableAccessibleFieldDOMStructure'
+  | 'disabled'
+  | 'readOnly'
+  | 'timezone'
+  | 'format'
+  | 'formatDensity'
+  | 'shouldRespectLeadingZeros'
+> {}

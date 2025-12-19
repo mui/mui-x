@@ -219,8 +219,7 @@ function checkId({
   }
 }
 
-export interface BuildItemsLookupConfig
-  extends Pick<
-    UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
-    'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
-  > {}
+export interface BuildItemsLookupConfig extends Pick<
+  UseTreeViewItemsParametersWithDefaults<TreeViewBaseItem>,
+  'isItemDisabled' | 'getItemLabel' | 'getItemChildren' | 'getItemId'
+> {}

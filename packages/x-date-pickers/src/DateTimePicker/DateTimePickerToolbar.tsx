@@ -37,8 +37,7 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 }
 
 export interface DateTimePickerToolbarProps
-  extends ExportedDateTimePickerToolbarProps,
-    BaseToolbarProps {
+  extends ExportedDateTimePickerToolbarProps, BaseToolbarProps {
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */
@@ -281,7 +280,7 @@ function DateTimePickerToolbar(inProps: DateTimePickerToolbarProps) {
   const setView = overrides ? overrides.setView : setViewContext;
 
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
-    setValue(newValue, { changeImportance: 'set' }),
+    setValue(newValue, { changeImportance: 'set', source: 'view' }),
   );
 
   const toolbarVariant = overrides?.forceDesktopVariant ? 'desktop' : variant;

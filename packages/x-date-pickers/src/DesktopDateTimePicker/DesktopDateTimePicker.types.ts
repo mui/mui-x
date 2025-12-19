@@ -14,16 +14,20 @@ import { DigitalTimePickerProps } from '../internals/models/props/time';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DesktopDateTimePickerSlots
-  extends BaseDateTimePickerSlots,
+  extends
+    BaseDateTimePickerSlots,
     MakeOptional<UseDesktopPickerSlots, 'field' | 'openPickerIcon'> {}
 
 export interface DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseDateTimePickerSlotProps,
+  extends
+    BaseDateTimePickerSlotProps,
     ExportedUseDesktopPickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DesktopDateTimePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimePickerProps,
+>
+  extends
+    BaseDateTimePickerProps,
     DesktopOnlyPickerProps,
     DigitalTimePickerProps,
     ExportedYearCalendarProps {

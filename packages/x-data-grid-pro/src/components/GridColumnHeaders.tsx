@@ -11,8 +11,7 @@ const Filler = styled('div')({
 });
 
 export interface GridColumnHeadersProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    UseGridColumnHeadersProps {}
+  extends React.HTMLAttributes<HTMLDivElement>, UseGridColumnHeadersProps {}
 
 const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {

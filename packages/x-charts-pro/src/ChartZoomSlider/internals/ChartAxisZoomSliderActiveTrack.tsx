@@ -1,25 +1,24 @@
 'use client';
 import { styled } from '@mui/material/styles';
 import {
-  AxisId,
-  ComputedAxis,
+  type AxisId,
+  type ComputedAxis,
   getSVGPoint,
   invertScale,
   selectorChartAxis,
   selectorChartAxisZoomOptionsLookup,
   useChartContext,
   useDrawingArea,
-  useSelector,
   useStore,
-  ZoomData,
+  type ZoomData,
 } from '@mui/x-charts/internals';
 import * as React from 'react';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
+import { type ChartDrawingArea } from '@mui/x-charts/hooks';
 import { shouldForwardProp } from '@mui/system';
 import {
   selectorChartAxisZoomData,
-  UseChartProZoomSignature,
+  type UseChartProZoomSignature,
 } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderThumb } from './ChartAxisZoomSliderThumb';
 import { ChartsTooltipZoomSliderValue } from './ChartsTooltipZoomSliderValue';
@@ -40,6 +39,10 @@ const ZoomSliderActiveTrackRect = styled('rect', {
       props: { preview: true },
       style: {
         fill: 'transparent',
+        // Increases the specificity to override the default fill
+        ...theme.applyStyles('dark', {
+          fill: 'transparent',
+        }),
         rx: 4,
         ry: 4,
         stroke: theme.palette.grey[500],
@@ -75,7 +78,7 @@ export function ChartAxisZoomSliderActiveTrack({
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
-  const axis = useSelector(store, selectorChartAxis, axisId);
+  const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);
@@ -105,7 +108,7 @@ export function ChartAxisZoomSliderActiveTrack({
       }
 
       const point = getSVGPoint(element, event);
-      const pointerZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+      const pointerZoom = calculateZoomFromPoint(store.state, axisId, point);
 
       if (pointerZoom === null) {
         return;
@@ -127,7 +130,7 @@ export function ChartAxisZoomSliderActiveTrack({
       event.preventDefault();
       activePreviewRect.setPointerCapture(event.pointerId);
 
-      const axisZoomData = selectorChartAxisZoomData(store.getSnapshot(), axisId);
+      const axisZoomData = selectorChartAxisZoomData(store.state, axisId);
       const element = svgRef.current;
 
       if (!axisZoomData || !element) {
@@ -135,7 +138,7 @@ export function ChartAxisZoomSliderActiveTrack({
       }
 
       const point = getSVGPoint(element, event);
-      const pointerDownZoom = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+      const pointerDownZoom = calculateZoomFromPoint(store.state, axisId, point);
 
       if (pointerDownZoom === null) {
         return;
@@ -166,11 +169,11 @@ export function ChartAxisZoomSliderActiveTrack({
     const point = getSVGPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
 
       return prevZoomData.map((zoom) => {
         if (zoom.axisId === axisId) {
-          const newStart = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+          const newStart = calculateZoomFromPoint(store.state, axisId, point);
 
           if (newStart === null) {
             return zoom;
@@ -197,11 +200,11 @@ export function ChartAxisZoomSliderActiveTrack({
     const point = getSVGPoint(element, event);
 
     instance.setZoomData((prevZoomData) => {
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
 
       return prevZoomData.map((zoom) => {
         if (zoom.axisId === axisId) {
-          const newEnd = calculateZoomFromPoint(store.getSnapshot(), axisId, point);
+          const newEnd = calculateZoomFromPoint(store.state, axisId, point);
 
           if (newEnd === null) {
             return zoom;
@@ -227,7 +230,7 @@ export function ChartAxisZoomSliderActiveTrack({
   let endThumbX: number;
   let endThumbY: number;
 
-  const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+  const { minStart, maxEnd } = selectorChartAxisZoomOptionsLookup(store.state, axisId);
   const range = maxEnd - minStart;
   const zoomStart = Math.max(minStart, zoomData.start);
   const zoomEnd = Math.min(zoomData.end, maxEnd);

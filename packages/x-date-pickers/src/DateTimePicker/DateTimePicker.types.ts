@@ -13,15 +13,16 @@ import { ValidateDateTimeProps } from '../validation';
 import { ExportedYearCalendarProps } from '../YearCalendar/YearCalendar.types';
 
 export interface DateTimePickerSlots
-  extends DesktopDateTimePickerSlots,
-    MobileDateTimePickerSlots {}
+  extends DesktopDateTimePickerSlots, MobileDateTimePickerSlots {}
 
 export interface DateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    DesktopDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface DateTimePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    DesktopDateTimePickerProps<TEnableAccessibleFieldDOMStructure>,
     ExportedYearCalendarProps,
     Omit<MobileDateTimePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
   /**

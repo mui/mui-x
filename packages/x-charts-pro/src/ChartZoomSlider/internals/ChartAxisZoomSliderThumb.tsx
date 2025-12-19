@@ -35,8 +35,11 @@ export interface ChartZoomSliderThumbOwnerState {
 }
 
 export interface ChartZoomSliderThumbProps
-  extends Omit<React.ComponentProps<'rect'>, 'orientation'>,
-    ChartZoomSliderThumbOwnerState {}
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartZoomSliderThumbOwnerState {}
+
+function preventDefault(event: Event) {
+  event.preventDefault();
+}
 
 /**
  * Renders the zoom slider thumb, which is responsible for resizing the zoom range.
@@ -58,16 +61,21 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
       const thumb = thumbRef.current;
 
       if (!thumb) {
-        return;
+        return () => {};
       }
+
+      // Prevent scrolling on touch devices when dragging the thumb
+      thumb.addEventListener('touchmove', preventDefault, { passive: false });
 
       const onPointerMove = rafThrottle((event: PointerEvent) => {
         onMoveEvent(event);
       });
 
-      const onPointerUp = () => {
+      const onPointerEnd = (event: PointerEvent) => {
         thumb.removeEventListener('pointermove', onPointerMove);
-        thumb.removeEventListener('pointerup', onPointerUp);
+        thumb.removeEventListener('pointerup', onPointerEnd);
+        thumb.removeEventListener('pointercancel', onPointerEnd);
+        thumb.releasePointerCapture(event.pointerId);
       };
 
       const onPointerDown = (event: PointerEvent) => {
@@ -75,15 +83,20 @@ export const ChartAxisZoomSliderThumb = React.forwardRef<SVGRectElement, ChartZo
         event.preventDefault();
         event.stopPropagation();
         thumb.setPointerCapture(event.pointerId);
-        thumb.addEventListener('pointerup', onPointerUp);
+
         thumb.addEventListener('pointermove', onPointerMove);
+        thumb.addEventListener('pointercancel', onPointerEnd);
+        thumb.addEventListener('pointerup', onPointerEnd);
       };
 
       thumb.addEventListener('pointerdown', onPointerDown);
 
-      // eslint-disable-next-line consistent-return
       return () => {
         thumb.removeEventListener('pointerdown', onPointerDown);
+        thumb.removeEventListener('pointermove', onPointerMove);
+        thumb.removeEventListener('pointercancel', onPointerEnd);
+        thumb.removeEventListener('pointerup', onPointerEnd);
+        thumb.removeEventListener('touchmove', preventDefault);
         onPointerMove.clear();
       };
     }, [onMoveEvent, orientation]);

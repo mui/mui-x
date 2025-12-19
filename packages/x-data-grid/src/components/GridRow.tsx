@@ -30,6 +30,7 @@ import {
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
 import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+import { GridRowDragAndDropOverlay } from './GridRowDragAndDropOverlay';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -278,7 +279,14 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
+  }, [
+    isNotVisible,
+    rowHeight,
+    styleProp,
+    heightEntry.spacingTop,
+    heightEntry.spacingBottom,
+    rootProps.rowSpacingType,
+  ]);
 
   // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
   if (!rowNode) {
@@ -486,6 +494,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
+      <GridRowDragAndDropOverlay rowId={rowId} />
     </div>
   );
 });

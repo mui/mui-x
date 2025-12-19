@@ -91,8 +91,10 @@ export const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
-export interface ColumnsOptions
-  extends Pick<UseDemoDataOptions, 'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'> {}
+export interface ColumnsOptions extends Pick<
+  UseDemoDataOptions,
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'
+> {}
 
 export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] => {
   let columns =
@@ -149,7 +151,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   });
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${(options.treeData?.maxDepth || 1) > 1 ? 'true' : 'false'}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.

@@ -8,7 +8,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
-import { CalendarEventId, SchedulerValidDate } from '../models';
+import { SchedulerEventId, TemporalSupportedObject } from '../models';
 import { useDragPreview } from './useDragPreview';
 import { useEvent } from './useEvent';
 import { useAdapter } from '../use-adapter';
@@ -109,8 +109,7 @@ export namespace useDraggableEvent {
   }
 
   export interface PublicParameters
-    extends useEvent.Parameters,
-      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    extends useEvent.Parameters, Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false
@@ -119,7 +118,7 @@ export namespace useDraggableEvent {
     /**
      * The unique identifier of the event.
      */
-    eventId: CalendarEventId;
+    eventId: SchedulerEventId;
     /**
      * The unique identifier of the event occurrence.
      */
@@ -140,11 +139,11 @@ export namespace useDraggableEvent {
     /**
      * The start date of the collection the event belongs to.
      */
-    collectionStart: SchedulerValidDate;
+    collectionStart: TemporalSupportedObject;
     /**
      * The end date of the collection the event belongs to.
      */
-    collectionEnd: SchedulerValidDate;
+    collectionEnd: TemporalSupportedObject;
   }
 
   export interface ReturnValue {

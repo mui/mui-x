@@ -1,6 +1,6 @@
-import { ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { PieItemId } from '../models';
-import { SeriesId } from '../models/seriesType/common';
+import { type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import { type PieItemId } from '../models';
+import { type SeriesId } from '../models/seriesType/common';
 
 interface LegendItemContextBase {
   /**
@@ -14,7 +14,8 @@ interface LegendItemContextBase {
 }
 
 export interface LegendItemParams
-  extends Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
+  extends
+    Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
   /**

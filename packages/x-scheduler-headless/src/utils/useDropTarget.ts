@@ -3,13 +3,13 @@ import * as React from 'react';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import {
   SchedulerEvent,
-  CalendarOccurrencePlaceholder,
-  CalendarOccurrencePlaceholderExternalDrag,
-  CalendarOccurrencePlaceholderInternalDragOrResize,
+  SchedulerOccurrencePlaceholder,
+  SchedulerOccurrencePlaceholderExternalDrag,
+  SchedulerOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
-  CalendarEventUpdatedProperties,
-  SchedulerValidDate,
-  CalendarResourceId,
+  SchedulerEventUpdatedProperties,
+  TemporalSupportedObject,
+  SchedulerResourceId,
 } from '../models';
 import {
   EventDropData,
@@ -21,6 +21,8 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '../scheduler-selectors';
 import { isInternalDragOrResizePlaceholder } from './drag-utils';
+import { StandaloneEvent } from '../standalone-event';
+import { useAdapter } from '../use-adapter';
 
 export function useDropTarget<Targets extends keyof EventDropDataLookup>(
   parameters: useDropTarget.Parameters<Targets>,
@@ -33,6 +35,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     isValidDropTarget,
     addPropertiesToDroppedEvent,
   } = parameters;
+
+  const adapter = useAdapter();
   const store = useSchedulerStoreContext();
 
   React.useEffect(() => {
@@ -40,19 +44,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       return undefined;
     }
 
-    const createDropData: useDropTarget.CreateDropData = (data, newStart, newEnd) => {
-      if (data.source === 'StandaloneEvent') {
-        return {
-          type: 'external-drag',
-          surfaceType,
-          start: newStart,
-          end: newEnd,
-          eventData: data.eventData,
-          onEventDrop: data.onEventDrop,
-          resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
-        };
-      }
-
+    const getDataFromInside: useDropTarget.GetDataFromInside = (data, newStart, newEnd) => {
       const type =
         data.source === 'CalendarGridDayEventResizeHandler' ||
         data.source === 'CalendarGridTimeEventResizeHandler'
@@ -69,6 +61,24 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
         originalOccurrence: data.originalOccurrence,
         resourceId:
           resourceId === undefined ? (data.originalOccurrence.resource ?? null) : resourceId,
+      };
+    };
+
+    const getDataFromOutside: useDropTarget.GetDataFromOutside = (data, start) => {
+      const eventCreationConfig = schedulerEventSelectors.creationConfig(store.state);
+      if (eventCreationConfig === false) {
+        return undefined;
+      }
+
+      return {
+        type: 'external-drag',
+        surfaceType,
+        start,
+        // TODO: Improve the start and end time of a non all-day event dropped in the Month View.
+        end: adapter.addMinutes(start, data.eventData.duration ?? eventCreationConfig.duration),
+        eventData: data.eventData,
+        onEventDrop: data.onEventDrop,
+        resourceId: resourceId === undefined ? (data.eventData.resource ?? null) : resourceId,
       };
     };
 
@@ -92,7 +102,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       onDrag: ({ source, location }) => {
         const newPlaceholder = getEventDropData({
           data: source.data,
-          createDropData,
+          getDataFromInside,
+          getDataFromOutside,
           input: location.current.input,
         });
         if (newPlaceholder) {
@@ -102,7 +113,8 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
       onDrop: ({ source, location }) => {
         const dropData = getEventDropData({
           data: source.data,
-          createDropData,
+          getDataFromInside,
+          getDataFromOutside,
           input: location.current.input,
         });
 
@@ -142,6 +154,7 @@ export function useDropTarget<Targets extends keyof EventDropDataLookup>(
     getEventDropData,
     isValidDropTarget,
     addPropertiesToDroppedEvent,
+    adapter,
     store,
   ]);
 }
@@ -161,20 +174,26 @@ export namespace useDropTarget {
      * If null, the event will be dropped outside of any resource.
      * If not defined, the event will be dropped onto the resource it was originally in (if any).
      */
-    resourceId?: CalendarResourceId | null;
+    resourceId?: SchedulerResourceId | null;
   }
 
-  export type CreateDropData = (
-    data: EventDropData,
-    newStart: SchedulerValidDate,
-    newEnd: SchedulerValidDate,
-  ) => CalendarOccurrencePlaceholder;
+  export type GetDataFromInside = (
+    data: Exclude<EventDropData, StandaloneEvent.DragData>,
+    newStart: TemporalSupportedObject,
+    newEnd: TemporalSupportedObject,
+  ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
+
+  export type GetDataFromOutside = (
+    data: StandaloneEvent.DragData,
+    start: TemporalSupportedObject,
+  ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
   export type GetEventDropData = (parameters: {
     data: any;
     input: { clientX: number; clientY: number };
-    createDropData: CreateDropData;
-  }) => CalendarOccurrencePlaceholder | undefined;
+    getDataFromInside: GetDataFromInside;
+    getDataFromOutside: GetDataFromOutside;
+  }) => SchedulerOccurrencePlaceholder | undefined;
 }
 
 /**
@@ -182,7 +201,7 @@ export namespace useDropTarget {
  */
 async function applyInternalDragOrResizeOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
-  placeholder: CalendarOccurrencePlaceholderInternalDragOrResize,
+  placeholder: SchedulerOccurrencePlaceholderInternalDragOrResize,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ): Promise<void> {
   // TODO: Try to do a single state update.
@@ -190,12 +209,15 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const original = schedulerEventSelectors.processedEvent(store.state, eventId);
-  if (!original) {
-    throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+  const adapter = store.state.adapter;
+  if (
+    adapter.isEqual(originalOccurrence.displayTimezone.start.value, start) &&
+    adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)
+  ) {
+    return;
   }
 
-  const changes: CalendarEventUpdatedProperties = { id: eventId, start, end };
+  const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
 
   // If `undefined`, we want to set the event resource to `undefined` (no resource).
   // If `null`, we want to keep the original event resource.
@@ -207,9 +229,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     Object.assign(changes, addPropertiesToDroppedEvent());
   }
 
-  if (original.rrule) {
+  if (originalOccurrence.displayTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.start.value,
+      occurrenceStart: originalOccurrence.displayTimezone.start.value,
       changes,
     });
     return;
@@ -220,7 +242,7 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
 function applyExternalDragOccurrencePlaceholder(
   store: SchedulerStoreInContext<any, any>,
-  placeholder: CalendarOccurrencePlaceholderExternalDrag,
+  placeholder: SchedulerOccurrencePlaceholderExternalDrag,
   addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>,
 ) {
   const event: SchedulerEvent = {

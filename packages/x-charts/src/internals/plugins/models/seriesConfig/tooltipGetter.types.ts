@@ -1,26 +1,26 @@
+import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import type {
-  ChartItemIdentifierWithData,
   ChartSeriesDefaultized,
   ChartSeriesType,
   ChartsSeriesConfig,
 } from '../../../../models/seriesType/config';
-import { SeriesId } from '../../../../models/seriesType/common';
+import { type SeriesId } from '../../../../models/seriesType/common';
 import {
-  AxisId,
-  ChartsRotationAxisProps,
-  ChartsRadiusAxisProps,
-  PolarAxisDefaultized,
-  ComputedXAxis,
-  ComputedYAxis,
+  type AxisId,
+  type ChartsRotationAxisProps,
+  type ChartsRadiusAxisProps,
+  type PolarAxisDefaultized,
+  type ComputedXAxis,
+  type ComputedYAxis,
 } from '../../../../models/axis';
-import { ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
-import { ColorGetter } from './colorProcessor.types';
+import { type ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
+import { type ColorGetter } from './colorProcessor.types';
 
 export interface ItemTooltip<T extends ChartSeriesType> {
   /**
    * An object that identifies the item to display.
    */
-  identifier: ChartItemIdentifierWithData<T>;
+  identifier: SeriesItemIdentifier<T>;
   /**
    * The color associated with the item.
    */
@@ -78,7 +78,7 @@ export type TooltipGetter<TSeriesType extends ChartSeriesType> = (params: {
   series: ChartSeriesDefaultized<TSeriesType>;
   axesConfig: TooltipGetterAxesConfig;
   getColor: ColorGetter<TSeriesType>;
-  identifier: ChartItemIdentifierWithData<TSeriesType> | null;
+  identifier: SeriesItemIdentifier<TSeriesType> | null;
 }) =>
   | (TSeriesType extends 'radar'
       ? ItemTooltipWithMultipleValues<TSeriesType>

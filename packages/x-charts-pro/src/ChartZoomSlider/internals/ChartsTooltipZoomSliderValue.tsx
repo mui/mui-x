@@ -1,6 +1,6 @@
 import * as React from 'react';
 import NoSsr from '@mui/material/NoSsr';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import Popper, { type PopperProps } from '@mui/material/Popper';
 import { ChartsTooltipPaper } from '@mui/x-charts/ChartsTooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
@@ -25,7 +25,8 @@ const MODIFIERS = [
 ];
 
 interface ChartsTooltipZoomSliderValueProps
-  extends Pick<PopperProps, 'anchorEl' | 'open' | 'modifiers' | 'placement'>,
+  extends
+    Pick<PopperProps, 'anchorEl' | 'open' | 'modifiers' | 'placement'>,
     React.PropsWithChildren {}
 
 export function ChartsTooltipZoomSliderValue({

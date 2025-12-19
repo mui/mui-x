@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  AxisId,
-  ZoomData,
-  useSelector,
+  type ChartPlugin,
+  type AxisId,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
@@ -12,11 +11,13 @@ import {
 import debounce from '@mui/utils/debounce';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
-import { UseChartProZoomSignature } from './useChartProZoom.types';
+import { type UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
+import { usePanOnWheel } from './gestureHooks/usePanOnWheel';
 import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
 import { usePanOnPressAndDrag } from './gestureHooks/usePanOnPressAndDrag';
 import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
@@ -33,14 +34,14 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
     store.set('zoom', {
       ...store.state.zoom,
-      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig),
+      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig, optionsLookup),
     });
-  }, [store, zoomInteractionConfig]);
+  }, [store, zoomInteractionConfig, optionsLookup]);
 
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
@@ -85,6 +86,10 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
       const newZoomData =
         typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
+
+      if (isDeepEqual(store.state.zoom.zoomData, newZoomData)) {
+        return;
+      }
 
       onZoomChange(newZoomData);
       if (store.state.zoom.isControlled) {
@@ -164,6 +169,8 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
 
   usePanOnPressAndDrag(pluginData, setZoomDataCallback);
 
+  usePanOnWheel(pluginData, setZoomDataCallback);
+
   useZoomOnWheel(pluginData, setZoomDataCallback);
 
   useZoomOnPinch(pluginData, setZoomDataCallback);
@@ -178,10 +185,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     (step: number) => {
       setZoomDataCallback((prev) =>
         prev.map((zoomData) => {
-          const zoomOptions = selectorChartAxisZoomOptionsLookup(
-            store.getSnapshot(),
-            zoomData.axisId,
-          );
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, zoomData.axisId);
 
           return calculateZoom(zoomData, step, zoomOptions);
         }),
@@ -233,7 +237,10 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
-      zoomInteractionConfig: initializeZoomInteractionConfig(params.zoomInteractionConfig),
+      zoomInteractionConfig: initializeZoomInteractionConfig(
+        params.zoomInteractionConfig,
+        optionsLookup,
+      ),
     },
   };
 };
