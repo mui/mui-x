@@ -1,6 +1,79 @@
-import { computeFlexColumnsWidth } from './gridColumnsUtils';
+import * as React from 'react';
+import { computeFlexColumnsWidth, createColumnsState } from './gridColumnsUtils';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridColumnsState } from './gridColumnsInterfaces';
 
 describe('gridColumnsUtils', () => {
+  describe('createColumnsState', () => {
+    it('should sync columns state when column props are removed', () => {
+      const fn = () => null;
+
+      const columns: GridColDef[] = [
+        { field: 'default' },
+        { field: 'number', type: 'number' },
+        { field: 'string', type: 'string' },
+      ];
+
+      const columnsWithMoreProps: GridColDef[] = [
+        { field: 'default', renderHeader: fn, renderCell: fn },
+        { field: 'number', type: 'number', renderHeader: fn, renderCell: fn },
+        { field: 'string', type: 'string', renderHeader: fn, renderCell: fn },
+      ];
+
+      // Add a mock state to simulate that the columns state is already initialized
+      const mockState: { columns: GridColumnsState } = {
+        columns: {
+          orderedFields: [],
+          lookup: {},
+          columnVisibilityModel: {},
+          initialColumnVisibilityModel: {},
+        },
+      };
+      const mockApiRef = {
+        current: {
+          state: mockState,
+          unstable_applyPipeProcessors: (_name: string, state: any) => state,
+        },
+      } as React.RefObject<GridApiCommunity>;
+
+      // Add columns with more props to the state
+      const stateWithMoreProps = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: columnsWithMoreProps,
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: true,
+      });
+
+      // Verify the props are in the state
+      expect(stateWithMoreProps.lookup.default.renderHeader).toBe(fn);
+      expect(stateWithMoreProps.lookup.number.renderHeader).toBe(fn);
+      expect(stateWithMoreProps.lookup.string.renderHeader).toBe(fn);
+      expect(stateWithMoreProps.lookup.default.renderCell).toBe(fn);
+      expect(stateWithMoreProps.lookup.number.renderCell).toBe(fn);
+      expect(stateWithMoreProps.lookup.string.renderCell).toBe(fn);
+
+      // Update mock state
+      mockState.columns = stateWithMoreProps;
+
+      // Update columns by removing the extra props
+      const stateWithRenderHeader = createColumnsState({
+        apiRef: mockApiRef,
+        columnsToUpsert: columns,
+        initialState: undefined,
+        keepOnlyColumnsToUpsert: true,
+      });
+
+      // Verify the props are removed
+      expect(stateWithRenderHeader.lookup.default.renderHeader).toBeUndefined();
+      expect(stateWithRenderHeader.lookup.number.renderHeader).toBeUndefined();
+      expect(stateWithRenderHeader.lookup.string.renderHeader).toBeUndefined();
+      expect(stateWithRenderHeader.lookup.default.renderCell).toBeUndefined();
+      expect(stateWithRenderHeader.lookup.number.renderCell).toBeUndefined();
+      expect(stateWithRenderHeader.lookup.string.renderCell).toBeUndefined();
+    });
+  });
+
   describe('computeFlexColumnsWidth', () => {
     function getTotalFlexUnits(flexColumns: { flex: number }[]) {
       return flexColumns.reduce((acc, column) => acc + column.flex, 0);
