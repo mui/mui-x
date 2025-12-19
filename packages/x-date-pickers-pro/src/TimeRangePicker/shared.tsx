@@ -38,9 +38,7 @@ import {
 } from './TimeRangePickerTabs';
 
 export interface BaseTimeRangePickerSlots
-  extends TimeClockSlots,
-    DigitalClockSlots,
-    MultiSectionDigitalClockSlots {
+  extends TimeClockSlots, DigitalClockSlots, MultiSectionDigitalClockSlots {
   /**
    * Tabs enabling toggling between start and end time.
    * @default TimeRangePickerTabs
@@ -54,9 +52,7 @@ export interface BaseTimeRangePickerSlots
 }
 
 export interface BaseTimeRangePickerSlotProps
-  extends TimeClockSlotProps,
-    DigitalClockSlotProps,
-    MultiSectionDigitalClockSlotProps {
+  extends TimeClockSlotProps, DigitalClockSlotProps, MultiSectionDigitalClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -76,7 +72,8 @@ export type TimeRangePickerRenderers = PickerViewRendererLookup<
 >;
 
 export interface BaseTimeRangePickerProps
-  extends Omit<
+  extends
+    Omit<
       BasePickerInputProps<PickerRangeValue, TimeViewWithMeridiem, TimeRangeValidationError>,
       'orientation' | 'views' | 'openTo'
     >,

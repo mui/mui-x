@@ -113,7 +113,7 @@ function parseTags(commitMessage) {
 
 function resolvePackagesByLabels(labels) {
   const resolvedPackages = [];
-  labels.forEach((label) => {
+  (labels ?? []).forEach((label) => {
     switch (label.name) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');

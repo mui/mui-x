@@ -21,7 +21,8 @@ export interface LinePlotSlots extends LineElementSlots {}
 export interface LinePlotSlotProps extends LineElementSlotProps {}
 
 export interface LinePlotProps
-  extends React.SVGAttributes<SVGSVGElement>,
+  extends
+    React.SVGAttributes<SVGSVGElement>,
     Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line item is clicked.
