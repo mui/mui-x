@@ -21,7 +21,11 @@ import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins'
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
-import { type BarItemIdentifier, type RangeBarSeriesType } from '../models';
+import {
+  type BarItemIdentifier,
+  type RangeBarItemIdentifier,
+  type RangeBarSeriesType,
+} from '../models';
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
@@ -37,7 +41,7 @@ export interface BarChartPremiumProps extends Omit<BarChartProProps, 'series' | 
    */
   onItemClick?(
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    itemIdentifier: BarItemIdentifier,
+    itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
   ): void;
 
   /**

@@ -9,14 +9,7 @@ import { BarElement } from '@mui/x-charts/BarChart';
 import { type PreviewPlotProps } from '@mui/x-charts-pro/internals';
 import { useRangeBarPlotData } from '../../../BarChartPremium/RangeBar/useRangeBarPlotData';
 
-interface RangeBarPreviewPlotProps extends PreviewPlotProps {
-  x: number;
-  y: number;
-  height: number;
-  width: number;
-}
-
-export function RangeBarPreviewPlot(props: RangeBarPreviewPlotProps) {
+export function RangeBarPreviewPlot(props: PreviewPlotProps) {
   const drawingArea: ChartDrawingArea = {
     left: props.x,
     top: props.y,
