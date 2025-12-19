@@ -4,6 +4,7 @@
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
     "disabled": { "description": "If <code>true</code>, the item is disabled." },
+    "disableSelection": { "description": "If <code>true</code>, the item cannot be selected." },
     "id": { "description": "The id attribute of the item. If not provided, it will be generated." },
     "itemId": { "description": "The id of the item. Must be unique." },
     "label": { "description": "The label of the item." },
@@ -14,7 +15,6 @@
     "onKeyDown": {
       "description": "Callback fired when a key is pressed on the keyboard and the tree is in focus."
     },
-    "selectionDisabled": { "description": "If <code>true</code>, the item cannot be selected." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "sx": {

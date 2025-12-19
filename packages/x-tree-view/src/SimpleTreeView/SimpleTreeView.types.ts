@@ -30,7 +30,8 @@ export type SimpleTreeViewApiRef = React.RefObject<
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
-  extends SimpleTreeViewPluginParameters<Multiple>, React.HTMLAttributes<HTMLUListElement> {
+  extends SimpleTreeViewPluginParameters<Multiple>,
+    React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.
    */

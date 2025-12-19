@@ -15,8 +15,8 @@ import { itemsSelectors } from './useTreeViewItems.selectors';
 import { idSelectors } from '../../corePlugins/useTreeViewId';
 import { generateTreeItemIdAttribute } from '../../corePlugins/useTreeViewId/useTreeViewId.utils';
 
-const defaultIsItemSelectionEnabled = (item: { selectionDisabled?: boolean }) =>
-  item.selectionDisabled !== true;
+const defaultIsItemSelectionEnabled = (item: { disableSelection?: boolean }) =>
+  item.disableSelection !== true;
 
 export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
   instance,

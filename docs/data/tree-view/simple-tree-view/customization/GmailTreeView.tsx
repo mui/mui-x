@@ -31,8 +31,7 @@ declare module 'react' {
 }
 
 interface StyledTreeItemProps
-  extends
-    Omit<UseTreeItemParameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     React.HTMLAttributes<HTMLLIElement> {
   bgColor?: string;
   bgColorForDarkMode?: string;

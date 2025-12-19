@@ -4,12 +4,12 @@
     "children": { "type": { "name": "any" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "node" } },
     "onBlur": { "type": { "name": "func" } },
     "onFocus": { "type": { "name": "custom", "description": "unsupportedProp" } },
     "onKeyDown": { "type": { "name": "func" } },
-    "selectionDisabled": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

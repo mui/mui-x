@@ -62,7 +62,7 @@
     },
     "isItemSelectionEnabled": {
       "type": { "name": "func" },
-      "default": "(item) => item.selectionDisabled !== true",
+      "default": "(item) => item.disableSelection !== true",
       "signature": {
         "type": "function(item: R) => boolean",
         "describedArgs": ["item"],

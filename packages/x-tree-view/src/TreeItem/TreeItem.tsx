@@ -243,7 +243,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     itemId,
     label,
     disabled,
-    selectionDisabled,
+    disableSelection,
     children,
     slots = {},
     slotProps = {},
@@ -270,7 +270,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     children,
     label,
     disabled,
-    selectionDisabled,
+    disableSelection,
   });
 
   const classes = useUtilityClasses(classesProp);
@@ -419,6 +419,11 @@ TreeItem.propTypes = {
    */
   disabled: PropTypes.bool,
   /**
+   * If `true`, the item cannot be selected.
+   * @default false
+   */
+  disableSelection: PropTypes.bool,
+  /**
    * The id attribute of the item. If not provided, it will be generated.
    */
   id: PropTypes.string,
@@ -444,11 +449,6 @@ TreeItem.propTypes = {
    * Callback fired when a key is pressed on the keyboard and the tree is in focus.
    */
   onKeyDown: PropTypes.func,
-  /**
-   * If `true`, the item cannot be selected.
-   * @default false
-   */
-  selectionDisabled: PropTypes.bool,
   /**
    * The props used for each component slot.
    * @default {}

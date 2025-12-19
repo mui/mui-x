@@ -64,7 +64,11 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
     useTreeViewContext<[UseTreeViewItemsSignature, UseTreeViewSelectionSignature]>();
 
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const isItemSelectionEnabled = useStore(store, itemsSelectors.isItemSelectionEnabled, itemId);
+  const isFeatureEnabledForItem = useStore(
+    store,
+    selectionSelectors.isFeatureEnabledForItem,
+    itemId,
+  );
   const canItemBeSelected = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const selectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
 
@@ -112,7 +116,7 @@ export const useTreeViewSelectionItemPlugin: TreeViewItemPlugin = ({ props }) =>
         return {
           tabIndex: -1,
           onChange: handleChange,
-          visible: isCheckboxSelectionEnabled && isItemSelectionEnabled,
+          visible: isCheckboxSelectionEnabled && isFeatureEnabledForItem,
           disabled: !canItemBeSelected,
           checked: selectionStatus === 'checked',
           indeterminate: selectionStatus === 'indeterminate',

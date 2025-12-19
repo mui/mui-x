@@ -111,7 +111,7 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    * @template R
    * @param {R} item The item to check.
    * @returns {boolean} `true` if the item can be selected.
-   * @default (item) => item.selectionDisabled !== true
+   * @default (item) => item.disableSelection !== true
    */
   isItemSelectionEnabled?: (item: R) => boolean;
   /**

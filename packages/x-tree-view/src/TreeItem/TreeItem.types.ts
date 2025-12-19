@@ -84,8 +84,7 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
 }
 
 export interface TreeItemProps
-  extends
-    Omit<UseTreeItemParameters, 'rootRef'>,
+  extends Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   className?: string;
   /**

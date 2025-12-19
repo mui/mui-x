@@ -50,10 +50,8 @@ export interface TreeViewItemPluginResponse {
   propsEnhancers?: TreeViewItemPluginSlotPropsEnhancers;
 }
 
-export interface TreeViewItemPluginOptions extends Omit<
-  TreeViewItemPluginResponse,
-  'propsEnhancers'
-> {
+export interface TreeViewItemPluginOptions
+  extends Omit<TreeViewItemPluginResponse, 'propsEnhancers'> {
   props: TreeItemProps;
 }
 

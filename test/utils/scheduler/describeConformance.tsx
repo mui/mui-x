@@ -18,10 +18,8 @@ export type ConformantComponentProps = {
   style?: React.CSSProperties;
 };
 
-export interface SchedulerPrimitivesConformanceTestsOptions extends Omit<
-  Partial<ConformanceOptions>,
-  'render' | 'mount' | 'skip' | 'classes'
-> {
+export interface SchedulerPrimitivesConformanceTestsOptions
+  extends Omit<Partial<ConformanceOptions>, 'render' | 'mount' | 'skip' | 'classes'> {
   render: (
     element: React.ReactElement<
       ConformantComponentProps,
