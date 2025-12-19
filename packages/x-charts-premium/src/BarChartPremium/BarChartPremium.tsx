@@ -29,6 +29,8 @@ import {
 import { RangeBarPlot } from './RangeBar/RangeBarPlot';
 import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
+import type {} from '../typeOverloads/modules';
+
 seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export type RangeBarSeries = RangeBarSeriesType;

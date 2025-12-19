@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { type RangeBarItemIdentifier, useSkipAnimation } from '@mui/x-charts/internals';
+import { useSkipAnimation } from '@mui/x-charts/internals';
 import {
   BarElement,
   type BarElementSlotProps,
@@ -16,6 +16,7 @@ import { useIsZoomInteracting } from '@mui/x-charts-pro/hooks';
 import { useUtilityClasses } from './useUtilityClasses';
 import { useRangeBarPlotData } from './useRangeBarPlotData';
 import { AnimatedRangeBarElement } from './AnimatedRangeBarElement';
+import { type RangeBarItemIdentifier } from '../../models';
 
 export interface RangeBarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
