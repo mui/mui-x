@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { TreeViewPlugin } from '../../models';
 import { UseTreeViewItemsSignature, SetItemChildrenParameters } from './useTreeViewItems.types';
 import { TreeViewBaseItem, TreeViewItemId } from '../../../models';
@@ -42,7 +42,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     [store],
   );
 
-  const setIsItemDisabled = useEventCallback(
+  const setIsItemDisabled = useStableCallback(
     ({ itemId, shouldBeDisabled }: { itemId: string; shouldBeDisabled?: boolean }) => {
       if (!store.state.items.itemMetaLookup[itemId]) {
         return;
@@ -134,7 +134,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     store.set('items', { ...store.state.items, ...lookups });
   };
 
-  const removeChildren = useEventCallback((parentId: string | null) => {
+  const removeChildren = useStableCallback((parentId: string | null) => {
     const newMetaMap = Object.keys(store.state.items.itemMetaLookup).reduce((acc, key) => {
       const item = store.state.items.itemMetaLookup[key];
       if (item.parentId === parentId) {
@@ -157,7 +157,7 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     });
   });
 
-  const addExpandableItems = useEventCallback((items: TreeViewItemId[]) => {
+  const addExpandableItems = useStableCallback((items: TreeViewItemId[]) => {
     const newItemMetaLookup = { ...store.state.items.itemMetaLookup };
     for (const itemId of items) {
       newItemMetaLookup[itemId] = { ...newItemMetaLookup[itemId], expandable: true };
@@ -182,8 +182,8 @@ export const useTreeViewItems: TreeViewPlugin<UseTreeViewItemsSignature> = ({
     store.set('items', { ...store.state.items, ...newState });
   }, [instance, store, params.items, params.disabledItemsFocusable, itemsConfig]);
 
-  // Wrap `props.onItemClick` with `useEventCallback` to prevent unneeded context updates.
-  const handleItemClick = useEventCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
+  // Wrap `props.onItemClick` with `useStableCallback` to prevent unneeded context updates.
+  const handleItemClick = useStableCallback((event: React.MouseEvent, itemId: TreeViewItemId) => {
     if (params.onItemClick) {
       params.onItemClick(event, itemId);
     }

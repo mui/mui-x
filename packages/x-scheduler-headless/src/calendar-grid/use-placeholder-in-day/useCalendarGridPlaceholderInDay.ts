@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store/useStore';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { TemporalSupportedObject } from '../../models';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';

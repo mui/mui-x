@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui/utils/store';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
