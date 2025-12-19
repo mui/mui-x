@@ -97,7 +97,8 @@ export namespace StandaloneEvent {
   }
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
+    extends
+      BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       Pick<useDragPreview.Parameters, 'renderDragPreview' | 'data'> {
     /**

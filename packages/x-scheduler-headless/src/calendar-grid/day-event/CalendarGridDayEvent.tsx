@@ -159,7 +159,8 @@ export namespace CalendarGridDayEvent {
   export interface State extends useDraggableEvent.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
+    extends
+      BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {}
 

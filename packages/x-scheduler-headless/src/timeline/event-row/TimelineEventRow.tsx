@@ -86,8 +86,7 @@ export namespace TimelineEventRow {
   export interface State {}
 
   export interface Props
-    extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useEventRowDropTarget.Parameters {
+    extends Omit<BaseUIComponentProps<'div', State>, 'children'>, useEventRowDropTarget.Parameters {
     children: (parameters: ChildrenParameters) => React.ReactNode;
   }
 
