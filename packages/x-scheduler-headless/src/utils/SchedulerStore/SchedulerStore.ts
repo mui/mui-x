@@ -148,12 +148,19 @@ export class SchedulerStore<
     };
   }
 
-  public queueDataFetchForRange = async (range: {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-  }) => {
+  public queueDataFetchForRange = async (
+    range: {
+      start: TemporalSupportedObject;
+      end: TemporalSupportedObject;
+    },
+    immediate = false,
+  ) => {
     if (this.dataManager) {
-      await this.dataManager.queue([range]);
+      if (immediate) {
+        await this.dataManager.queueImmediate([range]);
+      } else {
+        await this.dataManager.queue([range]);
+      }
     }
   };
 
@@ -170,7 +177,6 @@ export class SchedulerStore<
     if (!dataSource || !this.cache || !this.dataManager) {
       return;
     }
-
     if (
       this.cache.hasCoverage(
         adapter.getTime(range.start),
@@ -178,17 +184,7 @@ export class SchedulerStore<
       )
     ) {
       const allCachedEvents = this.cache?.getAll() || [];
-      console.log(
-        'SchedulerStore: CACHE hit for range',
-        range,
-        'loaded ranges timestamps: ',
-        this.cache.getLoadedRangesInfo(),
-        'loaded ranges: ',
-        this.cache.getLoadedRangesInfo()?.map((r) => ({
-          start: new Date(r.start),
-          end: new Date(r.end),
-        })),
-      );
+      console.log('SchedulerStore: CACHE hit for range');
 
       const eventsState = buildEventsState(
         { ...this.parameters, events: allCachedEvents } as Parameters,
@@ -206,7 +202,6 @@ export class SchedulerStore<
       return;
 
       // TODO: Unset loading state
-      // TODO: Handle partial cache hits
     }
 
     try {

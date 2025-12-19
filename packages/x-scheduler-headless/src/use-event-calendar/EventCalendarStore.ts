@@ -122,7 +122,7 @@ export class EventCalendarStore<
           end: visibleDays[visibleDays.length - 1].value,
         };
 
-        queueMicrotask(() => this.queueDataFetchForRange(range));
+        queueMicrotask(() => this.queueDataFetchForRange(range), false);
       },
     );
   }
