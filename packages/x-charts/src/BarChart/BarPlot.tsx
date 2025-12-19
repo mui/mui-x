@@ -102,11 +102,12 @@ function BarPlot<Renderer extends RendererType = 'svg-single'>(
     onItemClick,
     borderRadius,
     barLabel,
-    renderer,
+    renderer = 'svg-batch',
     ...other
   } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
   const skipAnimation = useSkipAnimation(isZoomInteracting || inSkipAnimation);
+  const batchSkipAnimation = useSkipAnimation(inSkipAnimation);
   const { xAxis: xAxes } = useXAxes();
   const { yAxis: yAxes } = useYAxes();
   const { completedData, masksData } = useBarPlotData(useDrawingArea(), xAxes, yAxes);
@@ -122,7 +123,7 @@ function BarPlot<Renderer extends RendererType = 'svg-single'>(
         masksData={masksData}
         /* The batch renderer doesn't animate bars after the initial mount. Providing skipAnimation was causing an issue
          * where bars would animate again after a zoom interaction because skipAnimation would change from true to false. */
-        skipAnimation={renderer === 'svg-batch' ? inSkipAnimation : skipAnimation}
+        skipAnimation={renderer === 'svg-batch' ? batchSkipAnimation : skipAnimation}
         onItemClick={
           /* `onItemClick` accepts a `MouseEvent` when the renderer is "svg-batch" and a `React.MouseEvent` otherwise,
            * so we need this cast to prevent TypeScript from complaining. */
