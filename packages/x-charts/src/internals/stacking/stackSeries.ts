@@ -13,7 +13,7 @@ import {
 } from '@mui/x-charts-vendor/d3-shape';
 import type { StackOffsetType, StackOrderType } from '../../models/stacking';
 import { type SeriesId, type StackableSeriesType } from '../../models/seriesType/common';
-import { offsetDiverging } from './offsetDiverging';
+import { offsetDiverging } from './offset';
 
 type FormatterParams<T> = {
   series: Record<SeriesId, T>;
@@ -67,7 +67,8 @@ export const StackOffset = {
   /**
    * Positive values are stacked above zero, negative values are stacked below zero, and zero values are stacked at zero.
    * */
-  diverging: offsetDiverging,
+  // @ts-expect-error, d3 types are wrong, our custom function implements the correct signature
+  diverging: offsetDiverging as (series: Series<any, any>, order: Iterable<number>) => void,
   /**
    * Applies a zero baseline.
    * */
