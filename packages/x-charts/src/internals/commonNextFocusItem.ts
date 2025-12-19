@@ -4,7 +4,8 @@ import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugi
 import { getNextSeriesWithData } from './getNextSeriesWithData';
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
-import type { ChartItemIdentifier, ChartSeriesType } from '../models/seriesType/config';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import type { SeriesItemIdentifier } from '../models/seriesType';
 import type { SeriesId } from '../models/seriesType/common';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
@@ -17,7 +18,7 @@ export function getNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
 >(
-  currentItem: ChartItemIdentifier<InSeriesType> | null,
+  currentItem: SeriesItemIdentifier<InSeriesType> | null,
   compatibleSeriesTypes: Set<OutSeriesType>,
   state: ChartState<[UseChartKeyboardNavigationSignature], []>,
 ): ReturnedItem<OutSeriesType> {
@@ -50,7 +51,7 @@ export function getPreviousIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends InSeriesType | Exclude<ChartSeriesType, 'sankey'>,
 >(
-  currentItem: ChartItemIdentifier<InSeriesType> | null,
+  currentItem: SeriesItemIdentifier<InSeriesType> | null,
   compatibleSeriesTypes: Set<OutSeriesType>,
   state: ChartState<[UseChartKeyboardNavigationSignature], []>,
 ): ReturnedItem<OutSeriesType> {
@@ -83,7 +84,7 @@ export function getNextSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends InSeriesType | Exclude<ChartSeriesType, 'sankey'>,
 >(
-  currentItem: ChartItemIdentifier<InSeriesType> | null,
+  currentItem: SeriesItemIdentifier<InSeriesType> | null,
   compatibleSeriesTypes: Set<OutSeriesType>,
   state: ChartState<[UseChartKeyboardNavigationSignature], []>,
 ): ReturnedItem<OutSeriesType> {
@@ -117,7 +118,7 @@ export function getPreviousSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends InSeriesType | Exclude<ChartSeriesType, 'sankey'>,
 >(
-  currentItem: ChartItemIdentifier<InSeriesType> | null,
+  currentItem: SeriesItemIdentifier<InSeriesType> | null,
   compatibleSeriesTypes: Set<OutSeriesType>,
   state: ChartState<[UseChartKeyboardNavigationSignature], []>,
 ): ReturnedItem<OutSeriesType> {
