@@ -19,8 +19,10 @@ export function EventCalendarProvider<TEvent extends object, TResource extends o
 }
 
 export namespace EventCalendarProvider {
-  export interface Props<TEvent extends object, TResource extends object>
-    extends EventCalendarParameters<TEvent, TResource> {
+  export interface Props<
+    TEvent extends object,
+    TResource extends object,
+  > extends EventCalendarParameters<TEvent, TResource> {
     children: React.ReactNode;
   }
 }

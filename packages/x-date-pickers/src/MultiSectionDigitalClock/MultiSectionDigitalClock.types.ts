@@ -20,11 +20,11 @@ export interface MultiSectionDigitalClockOption<TSectionValue extends number | s
 }
 
 export interface ExportedMultiSectionDigitalClockProps
-  extends ExportedBaseClockProps,
-    MultiSectionDigitalClockOnlyProps {}
+  extends ExportedBaseClockProps, MultiSectionDigitalClockOnlyProps {}
 
-export interface MultiSectionDigitalClockViewProps<TSectionValue extends number | string>
-  extends Pick<MultiSectionDigitalClockSectionProps<TSectionValue>, 'onChange' | 'items'> {}
+export interface MultiSectionDigitalClockViewProps<
+  TSectionValue extends number | string,
+> extends Pick<MultiSectionDigitalClockSectionProps<TSectionValue>, 'onChange' | 'items'> {}
 
 export interface MultiSectionDigitalClockSlots {
   /**
@@ -39,8 +39,7 @@ export interface MultiSectionDigitalClockSlotProps {
 }
 
 export interface MultiSectionDigitalClockProps
-  extends ExportedMultiSectionDigitalClockProps,
-    BaseClockProps<TimeViewWithMeridiem> {
+  extends ExportedMultiSectionDigitalClockProps, BaseClockProps<TimeViewWithMeridiem> {
   /**
    * Available views.
    * @default ['hours', 'minutes']

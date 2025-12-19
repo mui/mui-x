@@ -424,8 +424,9 @@ export interface DataGridPropsWithDefaultValues<R extends GridValidRowModel = an
 /**
  * The Data Grid props with no default value.
  */
-export interface DataGridPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends CommonProps {
+export interface DataGridPropsWithoutDefaultValue<
+  R extends GridValidRowModel = any,
+> extends CommonProps {
   /**
    * The ref object that allows Data Grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -945,7 +946,8 @@ export interface DataGridPremiumSharedPropsWithDefaultValue {
  * The props of the Data Grid component after the pre-processing phase.
  */
 export interface DataGridProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues,
+  extends
+    DataGridPropsWithDefaultValues,
     DataGridPropsWithComplexDefaultValueAfterProcessing,
     DataGridPropsWithoutDefaultValue<R>,
     DataGridProSharedPropsWithoutDefaultValue,

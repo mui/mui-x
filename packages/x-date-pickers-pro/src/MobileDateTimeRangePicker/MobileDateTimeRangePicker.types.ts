@@ -11,18 +11,19 @@ import {
 } from '../DateTimeRangePicker/shared';
 
 export interface MobileDateTimeRangePickerSlots
-  extends BaseDateTimeRangePickerSlots,
-    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
+  extends BaseDateTimeRangePickerSlots, MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
 export interface MobileDateTimeRangePickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends BaseDateTimeRangePickerSlotProps,
+>
+  extends
+    BaseDateTimeRangePickerSlotProps,
     Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface MobileDateTimeRangePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimeRangePickerProps,
-    MobileRangeOnlyPickerProps {
+>
+  extends BaseDateTimeRangePickerProps, MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}

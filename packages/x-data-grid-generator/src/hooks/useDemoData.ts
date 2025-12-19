@@ -91,8 +91,10 @@ export const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
-export interface ColumnsOptions
-  extends Pick<UseDemoDataOptions, 'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'> {}
+export interface ColumnsOptions extends Pick<
+  UseDemoDataOptions,
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'
+> {}
 
 export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] => {
   let columns =

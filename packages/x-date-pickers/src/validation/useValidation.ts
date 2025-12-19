@@ -16,8 +16,11 @@ export type Validator<TValue extends PickerValidValue, TError, TValidationProps>
   valueManager: PickerValueManager<TValue, any>;
 };
 
-interface UseValidationOptions<TValue extends PickerValidValue, TError, TValidationProps extends {}>
-  extends OnErrorProps<TValue, TError> {
+interface UseValidationOptions<
+  TValue extends PickerValidValue,
+  TError,
+  TValidationProps extends {},
+> extends OnErrorProps<TValue, TError> {
   /**
    * The value to validate.
    */

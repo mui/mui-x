@@ -30,8 +30,10 @@ export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
   );
 }
 
-export interface PreviewLineElementProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+export interface PreviewLineElementProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'color' | 'id'
+> {
   id: SeriesId;
   gradientId?: string;
   color: string;

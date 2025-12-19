@@ -112,8 +112,7 @@ export interface PickersComponentAgnosticLocaleText {
 }
 
 export interface PickersLocaleText
-  extends PickersComponentAgnosticLocaleText,
-    PickersComponentSpecificLocaleText {}
+  extends PickersComponentAgnosticLocaleText, PickersComponentSpecificLocaleText {}
 
 export type PickersInputLocaleText = Partial<PickersLocaleText>;
 
@@ -122,8 +121,7 @@ export type PickersInputLocaleText = Partial<PickersLocaleText>;
  * It contains some generic translations like `toolbarTitle`
  * which will be dispatched to various translations keys in `PickersLocaleText`, depending on the pickers received them.
  */
-export interface PickersInputComponentLocaleText
-  extends Partial<PickersComponentAgnosticLocaleText> {
+export interface PickersInputComponentLocaleText extends Partial<PickersComponentAgnosticLocaleText> {
   /**
    * Title displayed in the toolbar of this Picker.
    * Will override the global translation keys like `datePickerToolbarTitle` passed to the `LocalizationProvider`.
