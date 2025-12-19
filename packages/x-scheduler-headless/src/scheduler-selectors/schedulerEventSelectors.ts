@@ -84,7 +84,7 @@ export const schedulerEventSelectors = {
 
     return state.eventColor;
   }),
-  isPropertyReadOnly: createSelector(
+  isPropertyReadOnly: createSelectorMemoized(
     isEventReadOnlySelector,
     (state: State) => state.eventModelStructure,
     (isEventReadOnly, eventModelStructure, _eventId: SchedulerEventId) => {

@@ -109,7 +109,8 @@ export namespace useDraggableEvent {
   }
 
   export interface PublicParameters
-    extends useEvent.Parameters, Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    extends useEvent.Parameters,
+      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false

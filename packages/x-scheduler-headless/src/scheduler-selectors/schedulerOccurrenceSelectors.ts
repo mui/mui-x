@@ -94,7 +94,7 @@ const occurrencesGroupedByResourceMapSelector = createSelectorMemoized(
 
 export const schedulerOccurrenceSelectors = {
   // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
-  isStartedOrEnded: createSelector(
+  isStartedOrEnded: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
     (adapter, now, start: SchedulerProcessedDate, end: SchedulerProcessedDate) => {
