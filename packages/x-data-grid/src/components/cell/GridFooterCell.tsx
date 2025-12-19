@@ -1,10 +1,12 @@
-import { getDataGridUtilityClass, GridRenderCellParams } from '@mui/x-data-grid';
-import { vars } from '@mui/x-data-grid/internals';
-import { styled, Theme } from '@mui/material/styles';
-import { SxProps } from '@mui/system';
+'use client';
+import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
-import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import { styled, SxProps, Theme } from '@mui/material/styles';
+import { vars } from '../../constants/cssVariables';
+import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
+import { getDataGridUtilityClass } from '../../constants/gridClasses';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 
 const GridFooterCellRoot = styled('div', {
   name: 'MuiDataGrid',
@@ -18,7 +20,7 @@ interface GridFooterCellProps extends GridRenderCellParams {
   sx?: SxProps<Theme>;
 }
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -30,7 +32,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-function GridFooterCell(props: GridFooterCellProps) {
+function GridFooterCellRaw(props: GridFooterCellProps) {
   const {
     formattedValue,
     colDef,
@@ -48,7 +50,7 @@ function GridFooterCell(props: GridFooterCellProps) {
   } = props;
   const rootProps = useGridRootProps();
 
-  const ownerState = rootProps;
+  const ownerState = { classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
 
   return (
@@ -57,5 +59,7 @@ function GridFooterCell(props: GridFooterCellProps) {
     </GridFooterCellRoot>
   );
 }
+
+const GridFooterCell = React.memo(GridFooterCellRaw);
 
 export { GridFooterCell };
