@@ -1,23 +1,21 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { interpolateGreens } from 'd3-scale-chromatic';
-import {
-  Heatmap,
-  HeatmapCellProps,
-  HeatmapCellProps,
-} from '@mui/x-charts-pro/Heatmap';
+import { Heatmap, HeatmapCellProps } from '@mui/x-charts-pro/Heatmap';
 import {
   AxisValueFormatterContext,
   HeatmapValueType,
+  XAxis,
+  YAxis,
 } from '@mui/x-charts-pro/models';
+import { useTheme } from '@mui/system';
+import { ChartsTooltipContainer, useItemTooltip } from '@mui/x-charts/ChartsTooltip';
 import data from '../dataset/muiXCommits2024.json';
 
 const seriesData: HeatmapValueType[] = [];
 
-let min = Infinity;
 let max = 0;
 
-const firstWeekDay = new Date('2024-01-01').getTime();
+const firstWeekDay = new Date('2023-12-31').getTime();
 for (const datum of data) {
   const date = new Date(datum.date);
   const weekNumber = Math.floor(
@@ -27,56 +25,65 @@ for (const datum of data) {
   const value = datum.count;
   seriesData.push([weekNumber, weekDay, value]);
 
-  min = Math.min(min, value);
   max = Math.max(max, value);
 }
 
-const weeks = Array.from({ length: 53 }).map((_, i) => new Date(2024, 0, 1 + i * 7));
+const weeks = Array.from({ length: 53 }).map(
+  (_, i) => new Date(2023, 11, 31 + i * 7),
+);
 const weekDays = Array.from({ length: 7 }).map((_, i) => i);
 
+const darkThemeColors = ['#151b23', '#033a16', '#196c2e', '#2ea043', '#56d364'];
+const lightThemeColors = ['#eff2f5', '#aceebb', '#4ac26b', '#2da44e', '#116329'];
+
+const xAxis = {
+  data: weeks,
+  valueFormatter: (date) => {
+    if (date.getDate() < 8) {
+      return date.toLocaleString('en-US', { month: 'short' });
+    }
+
+    return '';
+  },
+  tickSize: 0,
+  ordinalTimeTicks: ['months', 'weeks'],
+  position: 'top',
+  disableLine: true,
+} satisfies XAxis<'band'>;
+
+const yAxis = {
+  data: weekDays,
+  tickSize: 0,
+  valueFormatter: formatWeekDay,
+  disableLine: true,
+} satisfies YAxis<'band'>;
+
 export default function ZoomHeatmap() {
+  const theme = useTheme();
+
   return (
     <Stack width="100%">
-      <Typography variant="h6" align="center" gutterBottom>
+      <Typography variant="h6" align="center">
         Daily Commit Count to MUI X Repo (2024)
       </Typography>
       <Heatmap
         height={160}
-        xAxis={[
-          {
-            data: weeks,
-            valueFormatter: (date) => {
-              if (date.getDate() < 8) {
-                return date.toLocaleString('en-US', { month: 'short' });
-              }
-
-              return '';
-            },
-            tickSize: 0,
-            ordinalTimeTicks: ['months', 'weeks'],
-            position: 'top',
-            zoom: true,
-            disableLine: true,
-          },
-        ]}
-        yAxis={[
-          {
-            data: weekDays,
-            tickSize: 0,
-            valueFormatter: formatWeekDay,
-            disableLine: true,
-          },
-        ]}
+        xAxis={[{ ...xAxis, zoom: true }]}
+        yAxis={[yAxis]}
         zAxis={[
           {
-            min,
+            min: 0,
             max,
-            colorMap: { min, max, type: 'continuous', color: interpolateGreens },
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [0.01, 0.33, 0.66, 1].map((v) => v * max),
+              colors:
+                theme.palette.mode === 'light' ? lightThemeColors : darkThemeColors,
+            },
           },
         ]}
         series={[{ data: seriesData }]}
-        hideLegend={false}
-        slots={{ cell: HeatmapCell }}
+        slots={{ cell: HeatmapCell, tooltip: Tooltip }}
       />
       <Typography variant="caption">Source: GitHub</Typography>
     </Stack>
@@ -98,6 +105,42 @@ function formatWeekDay(value: number, context: AxisValueFormatterContext): strin
   }
 
   return formattedWeekDays[value];
+}
+
+function Tooltip() {
+  return (
+    <ChartsTooltipContainer trigger="item" position="top">
+      <TooltipContent />
+    </ChartsTooltipContainer>
+  );
+}
+
+function TooltipContent() {
+  const tooltipData = useItemTooltip<'heatmap'>();
+
+  if (!tooltipData) {
+    return null;
+  }
+
+  const { value } = tooltipData;
+
+  const date = new Date(2023, 11, 31 + value[0] * 7 + value[1]);
+
+  return (
+    <Stack
+      sx={(theme) => ({
+        background: theme.palette.background.paper,
+        borderRadius: 2,
+        paddingX: 1,
+        paddingY: 0.5,
+      })}
+    >
+      <Typography>
+        {value[2]} contribution{value[2] === 1 ? '' : 's'} on{' '}
+        {date.toLocaleString('en-US', { month: 'long', day: 'numeric' })}
+      </Typography>
+    </Stack>
+  );
 }
 
 function HeatmapCell({

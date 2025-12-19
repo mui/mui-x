@@ -280,6 +280,7 @@
   { "name": "GridChartsConfigurationSection", "kind": "Interface" },
   { "name": "Heatmap", "kind": "Variable" },
   { "name": "HEATMAP_PLUGINS", "kind": "Variable" },
+  { "name": "HeatmapCellProps", "kind": "Interface" },
   { "name": "heatmapClasses", "kind": "Variable" },
   { "name": "HeatmapClasses", "kind": "Interface" },
   { "name": "HeatmapClassKey", "kind": "TypeAlias" },
