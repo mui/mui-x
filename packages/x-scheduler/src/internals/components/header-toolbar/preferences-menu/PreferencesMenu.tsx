@@ -124,7 +124,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               ))}
               {showTimeFormatSubmenu && (
                 <Menu.SubmenuRoot>
-                  <Menu.SubmenuTrigger className="SubmenuTrigger">
+                  <Menu.SubmenuTrigger className="SubmenuTrigger" openOnHover={false}>
                     <span>{translations.timeFormat}</span>
                     <ChevronRight size={14} strokeWidth={1.5} />
                   </Menu.SubmenuTrigger>
