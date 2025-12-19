@@ -22,7 +22,7 @@ export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps {
+export interface BarPlotProps<Renderer extends RendererType = 'svg-single'> {
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -30,11 +30,12 @@ export interface BarPlotProps {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick?: (
-    event: React.MouseEvent<SVGElement, MouseEvent>,
+    event: Renderer extends 'svg-batch' ? MouseEvent : React.MouseEvent<SVGElement, MouseEvent>,
     barItemIdentifier: BarItemIdentifier,
   ) => void;
   /**
@@ -58,7 +59,7 @@ export interface BarPlotProps {
    *
    * @default 'svg-single'
    */
-  renderer?: RendererType;
+  renderer?: Renderer;
   /**
    * The props used for each component slot.
    * @default {}
@@ -93,7 +94,9 @@ const BarPlotRoot = styled('g', {
  *
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
-function BarPlot(props: BarPlotProps): React.JSX.Element {
+function BarPlot<Renderer extends RendererType = 'svg-single'>(
+  props: BarPlotProps<Renderer>,
+): React.JSX.Element {
   const {
     skipAnimation: inSkipAnimation,
     onItemClick,
@@ -120,7 +123,14 @@ function BarPlot(props: BarPlotProps): React.JSX.Element {
         /* The batch renderer doesn't animate bars after the initial mount. Providing skipAnimation was causing an issue
          * where bars would animate again after a zoom interaction because skipAnimation would change from true to false. */
         skipAnimation={renderer === 'svg-batch' ? inSkipAnimation : skipAnimation}
-        onItemClick={onItemClick}
+        onItemClick={
+          /* `onItemClick` accepts a `MouseEvent` when the renderer is "svg-batch" and a `React.MouseEvent` otherwise,
+           * so we need this cast to prevent TypeScript from complaining. */
+          onItemClick as (
+            event: MouseEvent | React.MouseEvent<SVGElement, MouseEvent>,
+            barItemIdentifier: BarItemIdentifier,
+          ) => void
+        }
         borderRadius={borderRadius}
         {...other}
       />

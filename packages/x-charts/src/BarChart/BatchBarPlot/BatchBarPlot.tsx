@@ -1,10 +1,10 @@
 import * as React from 'react';
+import type { BarItemIdentifier } from '../../models';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
 import { type IndividualBarPlotProps } from '../IndividualBarPlot';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import { useSelector } from '../../internals/store/useSelector';
-import { selectorChartDrawingArea } from '../../internals/plugins/corePlugins/useChartDimensions';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
@@ -12,13 +12,13 @@ import {
   selectorChartSeriesUnfadedItem,
   type UseChartHighlightSignature,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
-import { useStore } from '../../internals/store/useStore';
-import { useOnItemClick } from '../useOnItemClick';
-import { useInteractionItemProps } from '../useItemInteractionProps';
+import { useRegisterPointerEventHandlers } from '../useRegisterPointerEventHandlers';
 import { createPath, useCreateBarPaths } from './useCreateBarPaths';
 import { BarGroup } from './BarGroup';
 
-interface BatchBarPlotProps extends IndividualBarPlotProps {}
+interface BatchBarPlotProps extends Omit<IndividualBarPlotProps, 'onItemClick'> {
+  onItemClick?: (event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void;
+}
 
 export function BatchBarPlot({
   completedData,
@@ -26,8 +26,7 @@ export function BatchBarPlot({
   onItemClick,
   skipAnimation = false,
 }: BatchBarPlotProps) {
-  const { onClick, onPointerUp } = useOnItemClick(onItemClick);
-  const interactionItemProps = useInteractionItemProps(onItemClick != null);
+  useRegisterPointerEventHandlers(onItemClick);
 
   return (
     <React.Fragment>
@@ -39,7 +38,6 @@ export function BatchBarPlot({
           skipAnimation={skipAnimation}
         />
       ))}
-      <DrawingAreaRect onClick={onClick} onPointerUp={onPointerUp} {...interactionItemProps} />
     </React.Fragment>
   );
 }
@@ -76,25 +74,6 @@ function SeriesBatchPlot({
       </BarGroup>
       <MemoFadedHighlightedBars processedSeries={series} borderRadius={borderRadius} />
     </React.Fragment>
-  );
-}
-
-/**
- * A transparent rectangle that covers the drawing area of the chart to capture clicks.
- */
-function DrawingAreaRect(props: React.HTMLAttributes<SVGRectElement>) {
-  const store = useStore();
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-
-  return (
-    <rect
-      x={drawingArea.left}
-      y={drawingArea.top}
-      width={drawingArea.width}
-      height={drawingArea.height}
-      fill="transparent"
-      {...props}
-    />
   );
 }
 
