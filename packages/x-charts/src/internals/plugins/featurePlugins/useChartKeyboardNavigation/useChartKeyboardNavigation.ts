@@ -6,7 +6,7 @@ import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries
 import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import type { GetNextFocusedItem } from '../../models/seriesConfig/getNextFocusedItem.types';
+import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
 
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
@@ -43,14 +43,15 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         }
       }
 
-      const newItemGetter = store.state.series.seriesConfig[seriesType]?.getNextFocusedItem as
-        | GetNextFocusedItem<typeof seriesType>
-        | undefined;
-      if (!newItemGetter) {
+      const focusedItemUpdater = store.state.series.seriesConfig[
+        seriesType
+      ]?.keyboardFocusHandler?.(event) as FocusedItemUpdater<typeof seriesType> | undefined;
+
+      if (!focusedItemUpdater) {
         return;
       }
 
-      newFocusedItem = newItemGetter(newFocusedItem, event, store.state);
+      newFocusedItem = focusedItemUpdater(newFocusedItem, store.state);
 
       if (newFocusedItem !== store.state.keyboardNavigation.item) {
         event.preventDefault();

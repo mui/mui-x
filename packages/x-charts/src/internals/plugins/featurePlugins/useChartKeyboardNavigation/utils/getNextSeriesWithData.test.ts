@@ -1,4 +1,4 @@
-import { type ProcessedSeries } from './plugins/corePlugins/useChartSeries';
+import { type ProcessedSeries } from '../../../corePlugins/useChartSeries';
 import { getNextSeriesWithData } from './getNextSeriesWithData';
 
 const barSeries = {
