@@ -4,6 +4,7 @@ import {
   GridRowId,
   GridValidRowModel,
 } from '@mui/x-data-grid-pro';
+import type { GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
 import type {
   GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
@@ -18,7 +19,6 @@ import type {
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
-  GridAggregationCellMeta,
   GridAggregationHeaderMeta,
   GridCellSelectionModel,
   Conversation,
@@ -175,10 +175,12 @@ declare module '@mui/x-data-grid-pro' {
   interface GridEventLookup extends GridEventLookupPremium {}
 
   interface GridPipeProcessingLookup
-    extends GridPipeProcessingLookupPro, GridPipeProcessingLookupPremium {}
+    extends GridPipeProcessingLookupPro,
+      GridPipeProcessingLookupPremium {}
 
   interface GridControlledStateEventLookup
-    extends GridControlledStateEventLookupPro, GridControlledStateEventLookupPremium {}
+    extends GridControlledStateEventLookupPro,
+      GridControlledStateEventLookupPremium {}
 
   interface GridRenderCellParams<R, V, F> extends GridRenderCellParamsPremium<R, V, F> {}
 
