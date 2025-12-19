@@ -195,9 +195,9 @@ const ptPTGrid: Partial<GridLocaleText> = {
     estimated
   }) => {
     if (!estimated) {
-      return `${from}–${to} de ${count !== -1 ? count : `mais que ${to}`}`;
+      return `${from}–${to} de ${count !== -1 ? count : `mais do que ${to}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `algures ${estimated}` : `mais que ${to}`;
+    const estimatedLabel = estimated && estimated > to ? `cerca de ${estimated}` : `mais do que ${to}`;
     return `${from}–${to} de ${count !== -1 ? count : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
@@ -249,15 +249,15 @@ const ptPTGrid: Partial<GridLocaleText> = {
   pivotMenuAddToColumns: 'Adicionar às Colunas',
   pivotMenuAddToValues: 'Adicionar aos Valores',
   pivotMenuRemove: 'Remover',
-  pivotDragToRows: 'Arraste aqui para criar linhas',
-  pivotDragToColumns: 'Arraste aqui para criar colunas',
-  pivotDragToValues: 'Arraste aqui para criar valores',
+  pivotDragToRows: 'Arraste para aqui para criar linhas',
+  pivotDragToColumns: 'Arraste para aqui para criar colunas',
+  pivotDragToValues: 'Arraste para aqui para criar valores',
   pivotYearColumnHeaderName: '(Ano)',
   pivotQuarterColumnHeaderName: '(Trimestre)',
 
   // Charts configuration panel
   chartsNoCharts: 'Não há gráficos disponíveis',
-  chartsChartNotSelected: 'Selecione um tipo de gráfico para configurar suas opções',
+  chartsChartNotSelected: 'Selecione um tipo de gráfico para configurar as suas opções',
   chartsTabChart: 'Gráfico',
   chartsTabFields: 'Campos',
   chartsTabCustomize: 'Personalizar',
@@ -267,7 +267,7 @@ const ptPTGrid: Partial<GridLocaleText> = {
   chartsSearchLabel: 'Pesquisar campos',
   chartsSearchClear: 'Limpar pesquisa',
   chartsNoFields: 'Nenhum campo',
-  chartsFieldBlocked: 'Este campo não pode ser adicionado a nenhuma seção',
+  chartsFieldBlocked: 'Este campo não pode ser adicionado a nenhuma secção',
   chartsCategories: 'Categorias',
   chartsSeries: 'Séries',
   chartsMenuAddToDimensions: (dimensionLabel: string) => `Adicionar a ${dimensionLabel}`,
@@ -278,8 +278,8 @@ const ptPTGrid: Partial<GridLocaleText> = {
   chartsMenuMoveToBottom: 'Mover para o fundo',
   chartsMenuOptions: 'Opções do campo',
   chartsMenuRemove: 'Remover',
-  chartsDragToDimensions: (dimensionLabel: string) => `Arraste aqui para usar a coluna como ${dimensionLabel}`,
-  chartsDragToValues: (valuesLabel: string) => `Arraste aqui para usar a coluna como ${valuesLabel}`,
+  chartsDragToDimensions: (dimensionLabel: string) => `Arraste para aqui para usar a coluna como ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) => `Arraste para aqui para usar a coluna como ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'Assistente de IA',
@@ -310,13 +310,13 @@ const ptPTGrid: Partial<GridLocaleText> = {
   promptChangeAggregationDescription: (column: string, aggregation: string) => `Agregar ${column} (${aggregation})`,
   promptChangeFilterLabel: (column: string, operator: string, value: string) => {
     if (operator === 'is any of') {
-      return `${column} é qualquer um de: ${value}`;
+      return `${column} é um de: ${value}`;
     }
     return `${column} ${operator} ${value}`;
   },
   promptChangeFilterDescription: (column: string, operator: string, value: string) => {
     if (operator === 'is any of') {
-      return `Filtrar onde ${column} é qualquer um de: ${value}`;
+      return `Filtrar onde ${column} é um de: ${value}`;
     }
     return `Filtrar onde ${column} ${operator} ${value}`;
   },
