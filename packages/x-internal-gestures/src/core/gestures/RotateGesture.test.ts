@@ -139,25 +139,13 @@ describe('Rotate Gesture', () => {
       releasePointers: false,
     });
 
-    // Adjust for Webkit's pixel rounding
-    const isWebkit = server.browser === 'webkit';
-    expect(events).toStrictEqual(
-      isWebkit
-        ? [
-            'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
-            'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
-            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
-            'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
-            'rotate: rotation: 88° | delta: 21° | totalRotation: 88°',
-          ]
-        : [
-            'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
-            'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
-            'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
-            'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
-            'rotate: rotation: 90° | delta: 22° | totalRotation: 90°',
-          ],
-    );
+    expect(events).toStrictEqual([
+      'rotateStart: rotation: 22° | delta: 22° | totalRotation: 22°',
+      'rotate: rotation: 22° | delta: 22° | totalRotation: 22°',
+      'rotate: rotation: 45° | delta: 22° | totalRotation: 45°',
+      'rotate: rotation: 67° | delta: 22° | totalRotation: 67°',
+      'rotate: rotation: 90° | delta: 22° | totalRotation: 90°',
+    ]);
 
     // Clear events
     events = [];
