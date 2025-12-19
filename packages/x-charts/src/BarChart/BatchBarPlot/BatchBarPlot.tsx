@@ -4,7 +4,6 @@ import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
 import { type IndividualBarPlotProps } from '../IndividualBarPlot';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
-import { useSelector } from '../../internals/store/useSelector';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,
@@ -55,8 +54,8 @@ function SeriesBatchPlot({
 }) {
   const classes = useUtilityClasses();
   const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const isSeriesHighlighted = useSelector(store, selectorChartIsSeriesHighlighted, series.seriesId);
-  const isSeriesFaded = useSelector(store, selectorChartIsSeriesFaded, series.seriesId);
+  const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.seriesId);
+  const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.seriesId);
 
   return (
     <React.Fragment>
@@ -106,13 +105,11 @@ function FadedHighlightedBars({
   borderRadius: number;
 }) {
   const { store } = useChartContext<[UseChartHighlightSignature]>();
-  const seriesHighlightedDataIndex = useSelector(
-    store,
+  const seriesHighlightedDataIndex = store.use(
     selectorChartSeriesHighlightedItem,
     processedSeries.seriesId,
   );
-  const seriesUnfadedDataIndex = useSelector(
-    store,
+  const seriesUnfadedDataIndex = store.use(
     selectorChartSeriesUnfadedItem,
     processedSeries.seriesId,
   );

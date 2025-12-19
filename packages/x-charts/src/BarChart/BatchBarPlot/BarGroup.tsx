@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { useStore } from '../../internals/store/useStore';
-import { useSelector } from '../../internals/store/useSelector';
 import { selectorChartDrawingArea } from '../../internals/plugins/corePlugins/useChartDimensions';
 import { ANIMATION_DURATION_MS } from '../../internals/animation/animation';
 
@@ -71,7 +70,7 @@ const AnimatedRect = styled('rect')({
 
 function AnimatedGroup({ children, layout, xOrigin, yOrigin, ...props }: AnimatedGroupProps) {
   const store = useStore();
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
   const clipPathId = useId();
 
   const animateChildren: React.ReactNode[] = [];
