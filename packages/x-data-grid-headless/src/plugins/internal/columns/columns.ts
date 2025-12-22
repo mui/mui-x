@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type Store } from '@base-ui/utils/store';
+import { type Store, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { type Plugin } from '../../core/plugin';
 import {
   type ColumnsState,
@@ -23,6 +23,39 @@ export interface ColumnsPluginOptions<TData = any> extends ColumnsOptions<TData>
     columns?: Partial<ColumnsState>;
   };
 }
+
+const selectOrderedFields = createSelector(
+  (state: ColumnsPluginState) => state.columns.orderedFields,
+);
+
+const selectLookup = createSelector((state: ColumnsPluginState) => state.columns.lookup);
+
+const selectColumnVisibilityModel = createSelector(
+  (state: ColumnsPluginState) => state.columns.columnVisibilityModel,
+);
+
+const selectInitialColumnVisibilityModel = createSelector(
+  (state: ColumnsPluginState) => state.columns.initialColumnVisibilityModel,
+);
+
+const selectAllColumns = createSelectorMemoized(
+  selectOrderedFields,
+  selectLookup,
+  (orderedFields, lookup) => orderedFields.map((field) => lookup[field]).filter(Boolean),
+);
+
+const selectVisibleColumns = createSelectorMemoized(
+  selectOrderedFields,
+  selectLookup,
+  selectColumnVisibilityModel,
+  (orderedFields, lookup, columnVisibilityModel) =>
+    orderedFields
+      .filter((field) => columnVisibilityModel[field] !== false)
+      .map((field) => lookup[field])
+      .filter(Boolean),
+);
+
+const selectColumn = createSelector(selectLookup, (lookup, field: string) => lookup[field]);
 
 const columnsPlugin = {
   name: 'columns',
@@ -69,22 +102,13 @@ const columnsPlugin = {
   },
   selectors: {
     columns: {
-      orderedFields: (state) => state.columns.orderedFields,
-      lookup: (state) => state.columns.lookup,
-      columnVisibilityModel: (state) => state.columns.columnVisibilityModel,
-      initialColumnVisibilityModel: (state) => state.columns.initialColumnVisibilityModel,
-      allColumns: (state) => {
-        const { orderedFields, lookup } = state.columns;
-        return orderedFields.map((field) => lookup[field]).filter(Boolean);
-      },
-      visibleColumns: (state) => {
-        const { orderedFields, lookup, columnVisibilityModel } = state.columns;
-        return orderedFields
-          .filter((field) => columnVisibilityModel[field] !== false)
-          .map((field) => lookup[field])
-          .filter(Boolean);
-      },
-      column: (state, field: string) => state.columns.lookup[field],
+      orderedFields: selectOrderedFields,
+      lookup: selectLookup,
+      columnVisibilityModel: selectColumnVisibilityModel,
+      initialColumnVisibilityModel: selectInitialColumnVisibilityModel,
+      allColumns: selectAllColumns,
+      visibleColumns: selectVisibleColumns,
+      column: selectColumn,
     },
   },
 } satisfies Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
