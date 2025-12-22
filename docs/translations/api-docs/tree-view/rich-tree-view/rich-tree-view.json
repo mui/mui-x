@@ -59,6 +59,16 @@
       }
     },
     "isItemEditable": { "description": "Determine if a given item can be edited." },
+    "isItemSelectionDisabled": {
+      "description": "Used to determine if a given item should have selection disabled.",
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> if the item should have selection disabled."
+        }
+      }
+    },
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },

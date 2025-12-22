@@ -1,4 +1,4 @@
-import { BaseUIChangeEventDetails } from '@base-ui-components/react';
+import { BaseUIChangeEventDetails } from '@base-ui/react';
 import { TemporalTimezone } from '../../base-ui-copy/types/temporal';
 import {
   SchedulerEventColor,

@@ -1,4 +1,4 @@
-import { Store } from '@base-ui-components/utils/store';
+import { Store } from '@base-ui/utils/store';
 import { TreeViewContextValue } from '@mui/x-tree-view/internals/TreeViewProvider';
 import { SimpleTreeViewPluginSignatures } from '@mui/x-tree-view/SimpleTreeView/SimpleTreeView.plugins';
 

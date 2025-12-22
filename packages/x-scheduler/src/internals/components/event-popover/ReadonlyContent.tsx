@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Calendar } from 'lucide-react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {

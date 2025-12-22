@@ -37,7 +37,8 @@ export type RichTreeViewPluginSignatures = ConvertPluginsIntoSignatures<
 
 // We can't infer this type from the plugin, otherwise we would lose the generics.
 export interface RichTreeViewPluginParameters<R extends {}, Multiple extends boolean | undefined>
-  extends TreeViewCorePluginParameters,
+  extends
+    TreeViewCorePluginParameters,
     UseTreeViewItemsParameters<R>,
     UseTreeViewExpansionParameters,
     UseTreeViewFocusParameters,

@@ -11,14 +11,12 @@ interface DescribeRangeValidationKeyboardOptions {
 }
 
 export interface DescribeRangeValidationInputOptions
-  extends DescribeValidationInputOptions,
-    DescribeRangeValidationKeyboardOptions {
+  extends DescribeValidationInputOptions, DescribeRangeValidationKeyboardOptions {
   fieldType: 'single-input' | 'multi-input' | 'no-input';
 }
 
 export interface DescribeRangeValidationOptions
-  extends DescribeValidationOptions,
-    DescribeRangeValidationKeyboardOptions {
+  extends DescribeValidationOptions, DescribeRangeValidationKeyboardOptions {
   fieldType: 'single-input' | 'multi-input' | 'no-input';
 }
 

@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { useRtl } from '@mui/system/RtlProvider';
-import { useTimeout } from '@base-ui-components/utils/useTimeout';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useTimeout } from '@base-ui/utils/useTimeout';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { TreeViewCancellableEvent } from '../../../models';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import {
@@ -39,7 +39,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   const typeaheadQueryRef = React.useRef<string>('');
   const typeaheadTimeout = useTimeout();
 
-  const updateLabelMap = useEventCallback(
+  const updateLabelMap = useStableCallback(
     (callback: (labelMap: TreeViewLabelMap) => TreeViewLabelMap) => {
       labelMap.current = callback(labelMap.current);
     },
@@ -114,7 +114,7 @@ export const useTreeViewKeyboardNavigation: TreeViewPlugin<
   };
 
   const canToggleItemSelection = (itemId: string) =>
-    selectionSelectors.enabled(store.state) && !itemsSelectors.isItemDisabled(store.state, itemId);
+    selectionSelectors.canItemBeSelected(store.state, itemId);
 
   const canToggleItemExpansion = (itemId: string) => {
     return (
