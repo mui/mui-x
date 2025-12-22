@@ -11,12 +11,11 @@ export function processEvent(
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
-  const startInDataTz = model.start;
-  const endInDataTz = model.end;
+  const startInstant = model.start;
+  const endInstant = model.end;
 
-  const startInDisplayTz = adapter.setTimezone(startInDataTz, displayTimezone);
-  const endInDisplayTz = adapter.setTimezone(endInDataTz, displayTimezone);
-
+  const startInDisplayTz = adapter.setTimezone(startInstant, displayTimezone);
+  const endInDisplayTz = adapter.setTimezone(endInstant, displayTimezone);
   const exDatesInDisplayTz = model.exDates
     ? model.exDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
@@ -32,8 +31,8 @@ export function processEvent(
     title: model.title,
     description: model.description,
     dataTimezone: {
-      start: processDate(startInDataTz, adapter),
-      end: processDate(endInDataTz, adapter),
+      start: processDate(startInstant, adapter),
+      end: processDate(endInstant, adapter),
       timezone: dataTimezone,
       rrule: parsedDataRRule,
       exDates: model.exDates,
