@@ -11,6 +11,7 @@ export function processEvent(
 ): SchedulerProcessedEvent {
   const dataTimezone = model.timezone ?? 'default';
 
+  // TODO: Support wall-time events by reinterpreting instants in `dataTimezone`.
   const startInstant = model.start;
   const endInstant = model.end;
 
