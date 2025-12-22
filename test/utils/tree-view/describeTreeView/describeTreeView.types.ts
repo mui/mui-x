@@ -190,5 +190,6 @@ export interface DescribeTreeViewItem {
   id: string;
   label?: React.ReactNode;
   disabled?: boolean;
+  disableSelection?: boolean;
   children?: readonly DescribeTreeViewItem[];
 }

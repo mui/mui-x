@@ -51,6 +51,15 @@ This is also compatible with multi-selection:
 
 {{"demo": "CheckboxMultiSelection.js"}}
 
+## Selectable items
+
+Use the `isItemSelectionDisabled` prop to disable selection on specific items.
+When an item is not selectable, the checkbox is hidden regardless of [`checkboxSelection`](#checkbox-selection) prop.
+
+In the example below, only leaf items (items without children) are selectable.
+
+{{"demo": "SelectableItems.js"}}
+
 ## Controlled selection
 
 Use the `selectedItems` prop to control selected `TreeItem` components.

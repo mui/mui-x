@@ -12,8 +12,6 @@ type TreeViewAnyStore = { parameters: any };
  */
 describeTreeView<TreeViewAnyStore>(
   'TreeViewSelectionPlugin',
-  // TODO #20051: Remove next line
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ({ render, treeViewComponentName }) => {
     describe('model props (selectedItems, defaultSelectedItems, onSelectedItemsChange)', () => {
       beforeEach(() => {
@@ -502,7 +500,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should not select an item when click and disableSelection', () => {
+        it('should hide checkbox and not select when disableSelection is true on TreeView', () => {
           const view = render({
             items: [{ id: '1' }, { id: '2' }],
             disableSelection: true,
@@ -510,8 +508,10 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
-
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          // Checkbox should be hidden when selection is disabled
+          expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
+          // Clicking content should not select
+          fireEvent.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
@@ -569,7 +569,7 @@ describeTreeView<TreeViewAnyStore>(
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
-        it('should not select an item when click and disableSelection', () => {
+        it('should hide checkbox and not select when disableSelection is true on TreeView', () => {
           const view = render({
             multiSelect: true,
             checkboxSelection: true,
@@ -578,8 +578,10 @@ describeTreeView<TreeViewAnyStore>(
           });
 
           expect(view.isItemSelected('1')).to.equal(false);
-
-          fireEvent.click(view.getItemCheckboxInput('1'));
+          // Checkbox should be hidden when selection is disabled
+          expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
+          // Clicking content should not select
+          fireEvent.click(view.getItemContent('1'));
           expect(view.isItemSelected('1')).to.equal(false);
         });
 
@@ -1162,5 +1164,119 @@ describeTreeView<TreeViewAnyStore>(
         });
       });
     });
+
+    describe('disableSelection item property', () => {
+      it('should not select an item when clicking if disableSelection is true', () => {
+        const view = render({
+          items: [{ id: '1', disableSelection: true }, { id: '2' }],
+        });
+
+        expect(view.isItemSelected('1')).to.equal(false);
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.isItemSelected('1')).to.equal(false);
+
+        expect(view.isItemSelected('2')).to.equal(false);
+        fireEvent.click(view.getItemContent('2'));
+        expect(view.isItemSelected('2')).to.equal(true);
+      });
+
+      it('should hide the checkbox when disableSelection is true', () => {
+        const view = render({
+          items: [{ id: '1', disableSelection: true }, { id: '2' }],
+          checkboxSelection: true,
+        });
+
+        expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
+        expect(view.getItemContent('2').querySelector('input[type="checkbox"]')).not.to.equal(null);
+      });
+
+      it('should not have aria-checked attribute when disableSelection is true', () => {
+        const view = render({
+          items: [{ id: '1', disableSelection: true }, { id: '2' }],
+        });
+
+        expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+        expect(view.getItemRoot('2')).to.have.attribute('aria-checked', 'false');
+      });
+
+      it('should not include items with disableSelection when selecting a range (multi selection)', () => {
+        const view = render({
+          items: [{ id: '1' }, { id: '2', disableSelection: true }, { id: '3' }],
+          multiSelect: true,
+        });
+
+        fireEvent.click(view.getItemContent('1'));
+        expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+
+        fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+        expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+      });
+    });
+
+    // isItemSelectionDisabled is only available on RichTreeView (requires items prop)
+    describe.skipIf(treeViewComponentName === 'SimpleTreeView')(
+      'isItemSelectionDisabled prop',
+      () => {
+        describe('isItemSelectionDisabled as a function', () => {
+          it('should not select an item when clicking if isItemSelectionDisabled returns true', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
+            });
+
+            expect(view.isItemSelected('1')).to.equal(false);
+            fireEvent.click(view.getItemContent('1'));
+            expect(view.isItemSelected('1')).to.equal(false);
+
+            expect(view.isItemSelected('1.1')).to.equal(false);
+            fireEvent.click(view.getItemContent('1.1'));
+            expect(view.isItemSelected('1.1')).to.equal(true);
+          });
+
+          it('should hide the checkbox when item is not selectable', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              checkboxSelection: true,
+              defaultExpandedItems: ['1'],
+              isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
+            });
+
+            // Parent item should not have a checkbox input
+            expect(view.getItemContent('1').querySelector('input[type="checkbox"]')).to.equal(null);
+            // Leaf item should have a checkbox input
+            expect(view.getItemContent('1.1').querySelector('input[type="checkbox"]')).not.to.equal(
+              null,
+            );
+          });
+
+          it('should not have aria-checked attribute when item is not selectable', () => {
+            const view = render({
+              items: [{ id: '1', children: [{ id: '1.1' }] }, { id: '2' }],
+              defaultExpandedItems: ['1'],
+              isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
+            });
+
+            expect(view.getItemRoot('1')).not.to.have.attribute('aria-checked');
+            expect(view.getItemRoot('1.1')).to.have.attribute('aria-checked', 'false');
+          });
+        });
+
+        describe('with multi selection', () => {
+          it('should not include non-selectable items when selecting a range', () => {
+            const view = render({
+              items: [{ id: '1' }, { id: '2', children: [{ id: '2.1' }] }, { id: '3' }],
+              multiSelect: true,
+              isItemSelectionDisabled: (item: any) => !!item.children && item.children.length > 0,
+            });
+
+            fireEvent.click(view.getItemContent('1'));
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1']);
+
+            fireEvent.click(view.getItemContent('3'), { shiftKey: true });
+            expect(view.getSelectedTreeItems()).to.deep.equal(['1', '3']);
+          });
+        });
+      },
+    );
   },
 );

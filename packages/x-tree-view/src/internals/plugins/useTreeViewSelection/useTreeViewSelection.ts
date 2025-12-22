@@ -22,6 +22,7 @@ import {
   getLookupFromArray,
 } from './useTreeViewSelection.utils';
 import { selectionSelectors } from './useTreeViewSelection.selectors';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
 import { useTreeViewSelectionItemPlugin } from './itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
@@ -157,7 +158,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     // Add to the model the items that are part of the new range and not already part of the model.
     const selectedItemsLookup = getLookupFromArray(newSelectedItems);
-    const range = getNonDisabledItemsInRange(store.state, start, end);
+    const range = getNonDisabledItemsInRange(store.state, start, end).filter((id) =>
+      itemsSelectors.isItemSelectable(store.state, id),
+    );
     const itemsToAddToModel = range.filter((id) => !selectedItemsLookup[id]);
     newSelectedItems = newSelectedItems.concat(itemsToAddToModel);
 

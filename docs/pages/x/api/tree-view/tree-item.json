@@ -4,6 +4,7 @@
     "children": { "type": { "name": "any" } },
     "classes": { "type": { "name": "object" }, "additionalInfo": { "cssApi": true } },
     "disabled": { "type": { "name": "bool" }, "default": "false" },
+    "disableSelection": { "type": { "name": "bool" }, "default": "false" },
     "id": { "type": { "name": "string" } },
     "label": { "type": { "name": "node" } },
     "onBlur": { "type": { "name": "func" } },
