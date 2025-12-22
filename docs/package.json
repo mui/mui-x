@@ -101,8 +101,8 @@
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "catalog:",
     "@babel/preset-typescript": "catalog:",
-    "@mui/internal-docs-utils": "^2.0.5",
-    "@mui/internal-scripts": "^2.0.16",
+    "@mui/internal-docs-utils": "2.0.5",
+    "@mui/internal-scripts": "2.0.16",
     "@types/chance": "catalog:",
     "@types/d3-scale-chromatic": "3.1.0",
     "@types/doctrine": "0.0.9",
