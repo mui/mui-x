@@ -17,7 +17,7 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
   contentRef,
 }) => {
   const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
-  const { children, disabled = false, label, itemId, id } = props;
+  const { children, disabled = false, disableSelection = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   if (parentContext == null) {
@@ -54,8 +54,9 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
       parentId,
       expandable,
       disabled,
+      selectable: !disableSelection,
     });
-  }, [instance, parentId, itemId, expandable, disabled, id]);
+  }, [instance, parentId, itemId, expandable, disabled, disableSelection, id]);
 
   React.useEffect(() => {
     if (label) {
