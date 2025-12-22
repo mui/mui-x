@@ -2,4 +2,6 @@
 export * from '@mui/x-charts-pro/models';
 // End of re-export-block
 
+export type { RangeBarValueType } from '@mui/x-charts/internals';
+
 export * from './seriesType';
