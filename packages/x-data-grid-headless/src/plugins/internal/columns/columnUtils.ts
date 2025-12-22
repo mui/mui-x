@@ -42,15 +42,15 @@ export interface ColumnsOptions<TData = any> {
 // ================================
 
 export interface ColumnsApi {
-  getColumn: (field: string) => ColumnState | undefined;
-  getAllColumns: () => ColumnState[];
-  getVisibleColumns: () => ColumnState[];
-  getColumnIndex: (field: string, useVisibleColumns?: boolean) => number;
-  updateColumns: (columns: ColumnDef<any>[]) => void;
-  setColumnVisibilityModel: (model: ColumnVisibilityModel) => void;
-  setColumnVisibility: (field: string, isVisible: boolean) => void;
-  setColumnWidth: (field: string, width: number) => void;
-  setColumnIndex: (field: string, targetIndex: number) => void;
+  get: (field: string) => ColumnState | undefined;
+  getAll: () => ColumnState[];
+  getVisible: () => ColumnState[];
+  getIndex: (field: string, useVisibleColumns?: boolean) => number;
+  update: (columns: ColumnDef<any>[]) => void;
+  setVisibilityModel: (model: ColumnVisibilityModel) => void;
+  setVisibility: (field: string, isVisible: boolean) => void;
+  setWidth: (field: string, width: number) => void;
+  setIndex: (field: string, targetIndex: number) => void;
 }
 
 // ================================
@@ -260,14 +260,14 @@ export function createColumnsApi<TData>(
   };
 
   return {
-    getColumn,
-    getAllColumns,
-    getVisibleColumns,
-    getColumnIndex,
-    updateColumns,
-    setColumnVisibilityModel,
-    setColumnVisibility,
-    setColumnWidth,
-    setColumnIndex,
+    get: getColumn,
+    getAll: getAllColumns,
+    getVisible: getVisibleColumns,
+    getIndex: getColumnIndex,
+    update: updateColumns,
+    setVisibilityModel: setColumnVisibilityModel,
+    setVisibility: setColumnVisibility,
+    setWidth: setColumnWidth,
+    setIndex: setColumnIndex,
   };
 }
