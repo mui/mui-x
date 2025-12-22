@@ -10,15 +10,16 @@ import {
 } from '../MobileTimeRangePicker';
 
 export interface TimeRangePickerSlots
-  extends DesktopTimeRangePickerSlots,
-    MobileTimeRangePickerSlots {}
+  extends DesktopTimeRangePickerSlots, MobileTimeRangePickerSlots {}
 
 export interface TimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends DesktopTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    DesktopTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     MobileTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface TimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean = true>
-  extends DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    DesktopTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>,
     Omit<MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure>, 'views'> {
   /**
    * CSS media query when `Mobile` mode will be changed to `Desktop`.

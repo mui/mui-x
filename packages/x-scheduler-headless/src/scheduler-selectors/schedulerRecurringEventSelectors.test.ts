@@ -5,8 +5,9 @@ import { storeClasses } from '../utils/SchedulerStore/tests/utils';
 import { schedulerRecurringEventSelectors } from './schedulerRecurringEventSelectors';
 import { getWeekDayCode } from '../utils/recurring-events';
 
-storeClasses.forEach((storeClass) => {
-  describe(`Recurring event - ${storeClass.name}`, () => {
+describe.for(storeClasses.map((storeClass) => [storeClass.name, storeClass] as const))(
+  `Recurring event - %s`,
+  ([, storeClass]) => {
     describe('Selector: recurrencePresets', () => {
       const state = new storeClass.Value({ events: [] }, adapter).state;
 
@@ -102,5 +103,5 @@ storeClasses.forEach((storeClass) => {
         );
       });
     });
-  });
-});
+  },
+);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { ScaleLinear } from 'd3-scale';
+import { ScaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { LinePlot } from '@mui/x-charts/LineChart';
 import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';

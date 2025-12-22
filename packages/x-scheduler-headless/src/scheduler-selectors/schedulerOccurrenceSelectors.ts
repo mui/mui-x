@@ -1,5 +1,5 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
@@ -10,6 +10,7 @@ import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { getOccurrencesFromEvents } from '../utils/event-utils';
+import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   (state: State) => state.adapter,
@@ -18,6 +19,8 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
   schedulerResourceSelectors.processedResourceList,
   schedulerResourceSelectors.processedResourceChildrenLookup,
   schedulerResourceSelectors.resourceParentIdLookup,
+  schedulerOtherSelectors.displayTimezone,
+
   (
     adapter,
     events,
@@ -25,6 +28,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
     resources,
     resourcesChildrenMap,
     resourceParentIds,
+    displayTimezone,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) => {
@@ -37,6 +41,7 @@ const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
       events,
       visibleResources,
       resourceParentIds,
+      displayTimezone,
     });
 
     for (const occurrence of occurrences) {
@@ -89,7 +94,7 @@ const occurrencesGroupedByResourceMapSelector = createSelectorMemoized(
 
 export const schedulerOccurrenceSelectors = {
   // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
-  isStartedOrEnded: createSelector(
+  isStartedOrEnded: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
     (adapter, now, start: SchedulerProcessedDate, end: SchedulerProcessedDate) => {

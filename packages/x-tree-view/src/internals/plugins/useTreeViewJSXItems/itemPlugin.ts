@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewItemPlugin } from '../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewChildrenItemContext } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
@@ -17,7 +17,7 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
   contentRef,
 }) => {
   const { instance, store } = useTreeViewContext<[UseTreeViewJSXItemsSignature]>();
-  const { children, disabled = false, label, itemId, id } = props;
+  const { children, disabled = false, disableSelection = false, label, itemId, id } = props;
 
   const parentContext = React.useContext(TreeViewChildrenItemContext);
   if (parentContext == null) {
@@ -54,8 +54,9 @@ export const useTreeViewJSXItemsItemPlugin: TreeViewItemPlugin = ({
       parentId,
       expandable,
       disabled,
+      selectable: !disableSelection,
     });
-  }, [instance, parentId, itemId, expandable, disabled, id]);
+  }, [instance, parentId, itemId, expandable, disabled, disableSelection, id]);
 
   React.useEffect(() => {
     if (label) {

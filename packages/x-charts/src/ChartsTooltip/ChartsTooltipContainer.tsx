@@ -9,7 +9,6 @@ import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { type TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
 import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { selectorChartsLastInteraction } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
@@ -48,8 +47,9 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
-export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
-  extends Partial<PopperProps> {
+export interface ChartsTooltipContainerProps<
+  T extends TriggerOptions = TriggerOptions,
+> extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
@@ -118,17 +118,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
-  const isOpen = useSelector(
-    store,
-    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
-  );
+  const shouldPreventBecauseOfBrush = store.use(selectorBrushShouldPreventTooltip);
+  const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
-  const lastInteraction = useSelector(store, selectorChartsLastInteraction);
+  const lastInteraction = store.use(selectorChartsLastInteraction);
   const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
 
-  const itemPosition = useSelector(
-    store,
+  const itemPosition = store.use(
     trigger === 'item' && computedAnchor === 'node'
       ? selectorChartsTooltipItemPosition
       : selectorReturnNull,

@@ -252,5 +252,4 @@ export interface GridEditingApi extends GridCellEditingApi, GridRowEditingApi {}
  * The private editing API interface that is available in the grid `privateApiRef`.
  */
 export interface GridEditingPrivateApi
-  extends GridCellEditingPrivateApi,
-    GridRowEditingPrivateApi {}
+  extends GridCellEditingPrivateApi, GridRowEditingPrivateApi {}

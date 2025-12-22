@@ -111,9 +111,9 @@ function parseTags(commitMessage) {
     .join(',');
 }
 
-function resolvePackagesByLabels(labels) {
+function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
-  labels.forEach((label) => {
+  for (const label of labels) {
     switch (label.name) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
@@ -133,8 +133,30 @@ function resolvePackagesByLabels(labels) {
       default:
         break;
     }
-  });
+  }
   return resolvedPackages;
+}
+
+function getContributors(commits = []) {
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+    team: new Set(),
+  };
+  for (const { author } of commits) {
+    if (!author || author.login.endsWith('[bot]')) {
+      break;
+    }
+    const username = `@${author.login}`;
+    if (author.association === 'team') {
+      community.team.add(username);
+    } else if (author.association === 'first_timer') {
+      community.firstTimers.add(username);
+    } else {
+      community.contributors.add(username);
+    }
+  }
+  return community;
 }
 
 /**
@@ -171,20 +193,18 @@ async function generateChangelog({
       lastRelease,
       release,
     })
-  ).map((commit) => ({
-    ...commit,
-    commit: {
-      message: commit.message,
-    },
-  }));
+  )
+    .filter((commit) => !commit.author?.login.endsWith('[bot]'))
+    .map((commit) => ({
+      ...commit,
+      commit: {
+        message: commit.message,
+      },
+    }));
 
   const changeLogMessages = {};
   const prsLabelsMap = {};
-  const community = {
-    firstTimers: new Set(),
-    contributors: new Set(),
-    team: new Set(),
-  };
+  const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
   const dataGridCommits = [];
