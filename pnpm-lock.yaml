@@ -441,7 +441,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(react@19.2.3)
       remark:
-        specifier: ^15.0.1
+        specifier: 15.0.1
         version: 15.0.1
       rimraf:
         specifier: 'catalog:'
