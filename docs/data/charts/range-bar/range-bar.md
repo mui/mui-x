@@ -72,7 +72,7 @@ You read more about it in bar chart's [Click event](/x/react-charts/bars/#click-
 :::info
 If you use `onAxisClick`, the `seriesValues` type will be missing `RangeBarValueType`.
 
-If you use `onItemClick`, the `itemIdentifier` type will be missing `RangeBarItemIdentifier`.
+In case you use `onItemClick`, the `itemIdentifier` type will be missing `RangeBarItemIdentifier`.
 
 To correct both these types, you need to import the following file:
 
