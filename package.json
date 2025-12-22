@@ -132,7 +132,7 @@
     "process": "^0.11.10",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "remark": "^15.0.1",
+    "remark": "15.0.1",
     "rimraf": "catalog:",
     "serve": "catalog:",
     "sinon": "^21.0.0",
