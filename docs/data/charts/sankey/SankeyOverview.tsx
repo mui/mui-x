@@ -7,16 +7,11 @@ import {
   SankeyLinkPlot,
   SankeyNodePlot,
   SankeyTooltip,
+  SankeyDataProvider,
 } from '@mui/x-charts-pro/SankeyChart';
-import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 import { ChartsWrapper } from '@mui/x-charts-pro/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts-pro/ChartsSurface';
 import { CustomNodeLabelPlot } from './CustomNodeLabelPlot';
-import { sankeySeriesConfig } from '@mui/x-charts-pro/SankeyChart/seriesConfig';
-import {
-  SANKEY_CHART_PLUGINS,
-  SankeyChartPluginSignatures,
-} from '@mui/x-charts-pro/SankeyChart/SankeyChart.plugins';
 
 const data = {
   nodes: [
@@ -85,9 +80,6 @@ const data = {
   ],
 };
 
-const seriesConfig = {
-  sankey: sankeySeriesConfig,
-};
 const valueFormatter = (value: number, context: { type: string }) => {
   if (context.type === 'link') {
     return `${value}B`;
@@ -120,7 +112,7 @@ export default function SankeyOverview() {
         Flow from Revenue to Net Income (in Billions USD)
       </Typography>
       <Box sx={{ width: '100%', height: 600 }}>
-        <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
+        <SankeyDataProvider
           series={[
             {
               type: 'sankey' as const,
@@ -141,8 +133,6 @@ export default function SankeyOverview() {
             },
           ]}
           margin={{ top: 20 }}
-          seriesConfig={seriesConfig}
-          plugins={SANKEY_CHART_PLUGINS}
         >
           <ChartsWrapper>
             <ChartsSurface>
@@ -153,7 +143,7 @@ export default function SankeyOverview() {
             </ChartsSurface>
             {<SankeyTooltip trigger="item" />}
           </ChartsWrapper>
-        </ChartDataProviderPro>
+        </SankeyDataProvider>
       </Box>
     </Box>
   );

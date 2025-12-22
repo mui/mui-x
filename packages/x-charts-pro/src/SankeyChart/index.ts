@@ -1,11 +1,11 @@
 export { SankeyChart as Unstable_SankeyChart } from './SankeyChart';
 export type { SankeyChartProps, SankeySeries } from './SankeyChart';
-export { SankeyPlot } from './SankeyPlot';
-export { SankeyLinkPlot } from './SankeyLinkPlot';
-export { SankeyNodePlot } from './SankeyNodePlot';
-export { SankeyLinkLabelPlot } from './SankeyLinkLabelPlot';
-export { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
-export type { SankeyPlotProps } from './SankeyPlot';
+export * from './SankeyPlot';
+export * from './SankeyDataProvider';
+export * from './SankeyLinkPlot';
+export * from './SankeyNodePlot';
+export * from './SankeyLinkLabelPlot';
+export * from './SankeyNodeLabelPlot';
 export * from './sankey.types';
 export * from './sankeySlots.types';
 export * from './sankeyHighlightHooks';
