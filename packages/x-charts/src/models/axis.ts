@@ -23,7 +23,6 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
-import { type RangeBarValueType } from './seriesType/rangeBar';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
 
 export type AxisId = string | number;
@@ -653,8 +652,9 @@ export interface ChartsAxisData {
    */
   seriesValues: Record<
     string,
-    HasProperty<ChartsTypeFeatureFlags, 'rangeBarOnClick'> extends true
-      ? RangeBarValueType | number | null | undefined
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+      ? // @ts-ignore this property is added through module augmentation
+        ChartsTypeFeatureFlags['seriesValuesOverride']
       : number | null | undefined
   >;
 }

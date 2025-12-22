@@ -2,10 +2,12 @@ import {
   type CartesianSeriesType,
   type CommonDefaultizedProps,
   type CommonSeriesType,
-  type RangeBarValueType,
   type SeriesId,
 } from '@mui/x-charts/internals';
 import { type DefaultizedProps } from '@mui/x-internals/types';
+
+/** [start, end] */
+export type RangeBarValueType = [number, number];
 
 export interface RangeBarSeriesType
   extends CommonSeriesType<RangeBarValueType | null>, CartesianSeriesType {

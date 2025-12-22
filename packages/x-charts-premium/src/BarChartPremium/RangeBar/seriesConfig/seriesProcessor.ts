@@ -1,7 +1,7 @@
 import { warnOnce } from '@mui/x-internals/warning';
 import { type SeriesId } from '@mui/x-charts/models';
-import { type RangeBarValueType, type SeriesProcessor } from '@mui/x-charts/internals';
-import { type DefaultizedRangeBarSeriesType } from '../../../models';
+import { type SeriesProcessor } from '@mui/x-charts/internals';
+import { type DefaultizedRangeBarSeriesType, type RangeBarValueType } from '../../../models';
 
 const rangeBarValueFormatter = (v: RangeBarValueType | null) =>
   v == null ? '' : `[${v[0]}, ${v[1]}]`;

@@ -1,6 +1,8 @@
+import { type RangeBarValueType } from '../models';
+
 declare module '@mui/x-charts/models' {
   interface ChartsTypeFeatureFlags {
-    rangeBarOnClick: true;
+    seriesValuesOverride: RangeBarValueType | number | null | undefined;
   }
 }
 

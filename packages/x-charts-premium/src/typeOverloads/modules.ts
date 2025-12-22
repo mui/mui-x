@@ -1,10 +1,10 @@
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import type { SeriesColor, RangeBarValueType } from '@mui/x-charts/internals';
+import type { SeriesColor } from '@mui/x-charts/internals';
+import type { RangeBarValueType, RangeBarSeriesType } from '../models';
 import type {
   DefaultizedRangeBarSeriesType,
   RangeBarItemIdentifier,
 } from '../models/seriesType/rangeBar';
-import type { RangeBarSeriesType } from '../models';
 import type { BarSeries } from '../BarChart';
 
 declare module '@mui/x-charts/internals' {
