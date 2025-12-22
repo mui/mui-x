@@ -314,8 +314,7 @@ BarChart.propTypes = {
   onHighlightedAxisChange: PropTypes.func,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
@@ -327,7 +326,7 @@ BarChart.propTypes = {
    *
    * @default 'svg-single'
    */
-  renderer: PropTypes.oneOf(['svg-single']),
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.

@@ -22,7 +22,7 @@ export interface BarPlotSlots extends BarElementSlots, BarLabelSlots {}
 
 export interface BarPlotSlotProps extends BarElementSlotProps, BarLabelSlotProps {}
 
-export interface BarPlotProps<Renderer extends RendererType = 'svg-single'> {
+export interface BarPlotProps {
   /**
    * If `true`, animations are skipped.
    * @default undefined
@@ -30,14 +30,13 @@ export interface BarPlotProps<Renderer extends RendererType = 'svg-single'> {
   skipAnimation?: boolean;
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
-  onItemClick?: (
-    event: Renderer extends 'svg-batch' ? MouseEvent : React.MouseEvent<SVGElement, MouseEvent>,
+  onItemClick?(
+    event: React.MouseEvent<SVGElement, MouseEvent>,
     barItemIdentifier: BarItemIdentifier,
-  ) => void;
+  ): void;
   /**
    * Defines the border radius of the bar element.
    */
@@ -59,7 +58,7 @@ export interface BarPlotProps<Renderer extends RendererType = 'svg-single'> {
    *
    * @default 'svg-single'
    */
-  renderer?: Renderer;
+  renderer?: RendererType;
   /**
    * The props used for each component slot.
    * @default {}
@@ -94,15 +93,13 @@ const BarPlotRoot = styled('g', {
  *
  * - [BarPlot API](https://mui.com/x/api/charts/bar-plot/)
  */
-function BarPlot<Renderer extends RendererType = 'svg-single'>(
-  props: BarPlotProps<Renderer>,
-): React.JSX.Element {
+function BarPlot(props: BarPlotProps): React.JSX.Element {
   const {
     skipAnimation: inSkipAnimation,
     onItemClick,
     borderRadius,
     barLabel,
-    renderer = 'svg-batch',
+    renderer,
     ...other
   } = props;
   const isZoomInteracting = useInternalIsZoomInteracting();
@@ -169,8 +166,7 @@ BarPlot.propTypes = {
   borderRadius: PropTypes.number,
   /**
    * Callback fired when a bar item is clicked.
-   * @param {MouseEvent | React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
-   *        It is a native MouseEvent for `svg-batch` renderer and a React MouseEvent for `svg-single` renderer.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
