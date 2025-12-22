@@ -60,9 +60,8 @@
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;bool" },
       "default": "() => false"
     },
-    "isItemSelectionEnabled": {
+    "isItemSelectionDisabled": {
       "type": { "name": "func" },
-      "default": "(item) => item.disableSelection !== true",
       "signature": {
         "type": "function(item: R) => boolean",
         "describedArgs": ["item"],

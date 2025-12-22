@@ -59,13 +59,13 @@
       }
     },
     "isItemEditable": { "description": "Determine if a given item can be edited." },
-    "isItemSelectionEnabled": {
-      "description": "Used to determine if a given item can be selected.",
+    "isItemSelectionDisabled": {
+      "description": "Used to determine if a given item should have selection disabled.",
       "typeDescriptions": {
         "item": { "name": "item", "description": "The item to check." },
         "boolean": {
           "name": "boolean",
-          "description": "<code>true</code> if the item can be selected."
+          "description": "<code>true</code> if the item should have selection disabled."
         }
       }
     },
