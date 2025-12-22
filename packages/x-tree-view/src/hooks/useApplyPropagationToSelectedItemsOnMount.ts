@@ -1,4 +1,4 @@
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../models';
 import { getLookupFromArray } from '../internals/plugins/useTreeViewSelection/useTreeViewSelection.utils';
 

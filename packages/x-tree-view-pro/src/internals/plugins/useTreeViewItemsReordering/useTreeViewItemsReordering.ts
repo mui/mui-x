@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewPlugin, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {

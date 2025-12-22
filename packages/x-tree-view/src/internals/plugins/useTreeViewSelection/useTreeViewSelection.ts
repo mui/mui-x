@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import {

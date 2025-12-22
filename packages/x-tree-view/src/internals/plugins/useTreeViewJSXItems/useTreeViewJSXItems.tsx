@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { TreeViewItemMeta, TreeViewPlugin } from '../../models';
 import { UseTreeViewJSXItemsSignature } from './useTreeViewJSXItems.types';
 import { TreeViewChildrenItemProvider } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
@@ -17,7 +17,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
 }) => {
   instance.preventItemUpdates();
 
-  const insertJSXItem = useEventCallback((item: TreeViewItemMeta) => {
+  const insertJSXItem = useStableCallback((item: TreeViewItemMeta) => {
     if (store.state.items.itemMetaLookup[item.id] != null) {
       throw new Error(
         [
@@ -68,7 +68,7 @@ export const useTreeViewJSXItems: TreeViewPlugin<UseTreeViewJSXItemsSignature> =
     });
   };
 
-  const mapLabelFromJSX = useEventCallback((itemId: string, label: string) => {
+  const mapLabelFromJSX = useStableCallback((itemId: string, label: string) => {
     instance.updateLabelMap((labelMap) => {
       labelMap[itemId] = label;
       return labelMap;

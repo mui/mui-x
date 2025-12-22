@@ -156,10 +156,5 @@
   "engines": {
     "pnpm": "10.24.0",
     "node": ">=22.18"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@base-ui-components/react": "patches/@base-ui-components__react.patch"
-    }
   }
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { useId } from '@base-ui-components/utils/useId';
+import { useStore } from '@base-ui/utils/store';
+import { useId } from '@base-ui/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';

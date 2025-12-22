@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { useStore } from '@base-ui-components/utils/store';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useStore } from '@base-ui/utils/store';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';

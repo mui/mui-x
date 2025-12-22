@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewItemPlugin } from '../../models';
 import { useTreeViewContext } from '../../TreeViewProvider';
 import { TreeViewChildrenItemContext } from '../../TreeViewProvider/TreeViewChildrenItemProvider';
