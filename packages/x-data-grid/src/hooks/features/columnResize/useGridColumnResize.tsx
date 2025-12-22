@@ -15,6 +15,7 @@ import {
   getFieldsFromGroupHeaderElem,
   findGroupHeaderElementsFromField,
   findGridHeader,
+  findGridHeaderFilter,
   findGridCells,
   findParentElementFromClassName,
   findLeftPinnedHeadersAfterCol,
@@ -49,11 +50,13 @@ import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
 import { gridDimensionsSelector } from '../dimensions';
+import { gridHeaderFilteringEnabledSelector } from '../headerFiltering';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { gridResizingColumnFieldSelector } from './columnResizeSelector';
 
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
@@ -208,6 +211,9 @@ function extractColumnWidths(
   const root = apiRef.current.rootElementRef!.current!;
   root.classList.add(gridClasses.autosizing);
 
+  const includeHeaderFilters =
+    options.includeHeaderFilters && gridHeaderFilteringEnabledSelector(apiRef);
+
   columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
 
@@ -250,6 +256,18 @@ function extractColumnWidths(
           gap * (totalChildren - 1) +
           paddingWidth +
           (menuContainer?.clientWidth ?? 0);
+
+        filteredWidths.push(width);
+      }
+    }
+
+    if (includeHeaderFilters) {
+      const headerFilter = findGridHeaderFilter(apiRef.current, column.field);
+      if (headerFilter) {
+        const style = window.getComputedStyle(headerFilter, null);
+        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
+        const contentWidth = headerFilter.scrollWidth;
+        const width = contentWidth + paddingWidth;
 
         filteredWidths.push(width);
       }
@@ -472,6 +490,12 @@ export const useGridColumnResize = (
     });
   };
 
+  const setCellElementsRef = () => {
+    if (refs.columnHeaderElement) {
+      refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
+    }
+  };
+
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
 
@@ -497,7 +521,7 @@ export const useGridColumnResize = (
       colDef.field,
     );
 
-    refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
+    setCellElementsRef();
 
     refs.fillerLeft = findGridElement(
       apiRef.current,
@@ -853,6 +877,16 @@ export const useGridColumnResize = (
   useGridEvent(apiRef, 'columnResizeStart', handleResizeStart);
   useGridEvent(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
   useGridEvent(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
+
+  useGridEvent(apiRef, 'rowsSet', () => {
+    // if the user is still resizing the column, update the cell references included in the resize action
+    if (gridResizingColumnFieldSelector(apiRef) !== '') {
+      // wait until the rows are in the DOM
+      requestAnimationFrame(() => {
+        setCellElementsRef();
+      });
+    }
+  });
 
   useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
   useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);

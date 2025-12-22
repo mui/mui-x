@@ -54,8 +54,10 @@ export interface UseTreeViewItemsPublicAPI<R extends {}> {
   getParentId: (itemId: TreeViewItemId) => TreeViewItemId | null;
 }
 
-export interface UseTreeViewItemsInstance<R extends {}>
-  extends Pick<UseTreeViewItemsPublicAPI<R>, 'getItemDOMElement'> {
+export interface UseTreeViewItemsInstance<R extends {}> extends Pick<
+  UseTreeViewItemsPublicAPI<R>,
+  'getItemDOMElement'
+> {
   /**
    * Freeze any future update to the state based on the `items` prop.
    * This is useful when `useTreeViewJSXItems` is used to avoid having conflicting sources of truth.
@@ -104,6 +106,13 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    * @returns {boolean} `true` if the item should be disabled.
    */
   isItemDisabled?: (item: R) => boolean;
+  /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled?: (item: R) => boolean;
   /**
    * Used to determine the string label for a given item.
    *

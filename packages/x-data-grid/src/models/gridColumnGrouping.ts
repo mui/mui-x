@@ -23,8 +23,10 @@ export type GridColumnGroupHeaderClassFn = (params: GridColumnGroupHeaderParams)
  */
 export type GridColumnGroupHeaderClassNamePropType = string | GridColumnGroupHeaderClassFn;
 
-export interface GridColumnGroup
-  extends Pick<GridColDef, 'headerName' | 'description' | 'headerAlign'> {
+export interface GridColumnGroup extends Pick<
+  GridColDef,
+  'headerName' | 'description' | 'headerAlign'
+> {
   /**
    * A unique string identifying the group.
    */

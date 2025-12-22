@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Tooltip as BaseTooltip } from '@base-ui-components/react/tooltip';
+import { Tooltip as BaseTooltip } from '@base-ui/react/tooltip';
 import './Tooltip.css';
 
 type TooltipPopupProps = { message: string };

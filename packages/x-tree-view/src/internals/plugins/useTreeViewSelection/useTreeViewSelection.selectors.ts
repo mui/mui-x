@@ -75,12 +75,23 @@ export const selectionSelectors = {
     (selectedItemsMap, itemId: TreeViewItemId) => selectedItemsMap.has(itemId),
   ),
   /**
-   * Checks whether an item can be selected (if selection is enabled and if the item is not disabled).
+   * Checks whether the selection feature is enabled for an item.
+   * Returns `true` when selection is enabled on the Tree View and the item is selectable (even if the item is disabled).
+   */
+  isFeatureEnabledForItem: createSelector(
+    itemsSelectors.isItemSelectable,
+    (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.isEnabled,
+    (isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
+      isSelectionEnabled && isItemSelectable,
+  ),
+  /**
+   * Checks whether an item can be selected (if selection is enabled, if the item is not disabled, and if the item is selectable).
    */
   canItemBeSelected: createSelector(
     itemsSelectors.isItemDisabled,
+    itemsSelectors.isItemSelectable,
     (state: TreeViewState<[UseTreeViewSelectionSignature]>) => state.selection.isEnabled,
-    (isItemDisabled, isSelectionEnabled, _itemId: TreeViewItemId) =>
-      isSelectionEnabled && !isItemDisabled,
+    (isItemDisabled, isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
+      isSelectionEnabled && !isItemDisabled && isItemSelectable,
   ),
 };

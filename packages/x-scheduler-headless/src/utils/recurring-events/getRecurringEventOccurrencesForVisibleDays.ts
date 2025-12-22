@@ -1,3 +1,4 @@
+import { TemporalTimezone } from '../../base-ui-copy/types';
 import { processDate } from '../../process-date';
 import {
   RecurringEventRecurrenceRule,
@@ -35,6 +36,8 @@ const YEARLY_MAX_ATTEMPTS = 4;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
+  private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
+
   private readonly rule: RecurringEventRecurrenceRule;
 
   private readonly seriesStart: TemporalSupportedObject;
@@ -68,20 +71,30 @@ class RecurringEventExpander {
   constructor(
     private readonly adapter: Adapter,
     private readonly event: SchedulerProcessedEvent,
+    private readonly displayTimezone: TemporalTimezone,
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
-    this.rule = event.rrule!;
-    this.seriesStart = adapter.startOfDay(event.start.value);
+    // Important:
+    // Occurrences are always computed in dataTimezone to avoid DST issues
+    // DisplayTimezone is applied only for presentation purposes
+
+    this.dataTimezone = event.dataTimezone;
+    this.rule = this.dataTimezone.rrule!;
+    this.seriesStart = adapter.startOfDay(this.dataTimezone.start.value);
     this.interval = Math.max(1, this.rule.interval ?? 1);
+
+    const dataTz = this.dataTimezone.timezone;
+    const visibleStartDataTz = adapter.startOfDay(adapter.setTimezone(start, dataTz));
+    const visibleEndDataTz = adapter.startOfDay(adapter.setTimezone(end, dataTz));
 
     // Adjust scan range to catch multi-day events starting before visible range
     const eventDuration = getEventDurationInDays(adapter, event);
-    this.scanFirstDay = adapter.startOfDay(adapter.addDays(start, 1 - eventDuration));
-    this.scanLastDay = adapter.startOfDay(end);
+    this.scanFirstDay = adapter.startOfDay(adapter.addDays(visibleStartDataTz, 1 - eventDuration));
+    this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
     // Pre-compute boundaries and exclusions
-    this.exDateKeys = new Set(event.exDates?.map((d) => getDateKey(d, adapter)));
+    this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStart, this.scanFirstDay)
       ? this.scanFirstDay
@@ -158,15 +171,40 @@ class RecurringEventExpander {
       return;
     }
 
-    const occurrenceStart = mergeDateAndTime(this.adapter, day, this.event.start.value);
+    const occurrenceStartOriginal = mergeDateAndTime(
+      this.adapter,
+      day,
+      this.dataTimezone.start.value,
+    );
+    const occurrenceEndOriginal = getOccurrenceEnd({
+      adapter: this.adapter,
+      event: this.event,
+      occurrenceStart: occurrenceStartOriginal,
+    });
+
+    const occurrenceStartDisplayTimezone = this.adapter.setTimezone(
+      occurrenceStartOriginal,
+      this.displayTimezone,
+    );
+    const occurrenceEndDisplayTimezone = this.adapter.setTimezone(
+      occurrenceEndOriginal,
+      this.displayTimezone,
+    );
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
-      start: processDate(occurrenceStart, this.adapter),
-      end: processDate(
-        getOccurrenceEnd({ adapter: this.adapter, event: this.event, occurrenceStart }),
-        this.adapter,
-      ),
+      dataTimezone: {
+        ...this.event.dataTimezone,
+        start: processDate(occurrenceStartOriginal, this.adapter),
+        end: processDate(occurrenceEndOriginal, this.adapter),
+        timezone: this.event.dataTimezone.timezone,
+      },
+      displayTimezone: {
+        ...this.event.displayTimezone,
+        start: processDate(occurrenceStartDisplayTimezone, this.adapter),
+        end: processDate(occurrenceEndDisplayTimezone, this.adapter),
+        timezone: this.event.displayTimezone.timezone,
+      },
     });
   }
 
@@ -398,6 +436,7 @@ export function getRecurringEventOccurrencesForVisibleDays(
   start: TemporalSupportedObject,
   end: TemporalSupportedObject,
   adapter: Adapter,
+  displayTimezone: TemporalTimezone,
 ): SchedulerEventOccurrence[] {
-  return new RecurringEventExpander(adapter, event, start, end).expand();
+  return new RecurringEventExpander(adapter, event, displayTimezone, start, end).expand();
 }

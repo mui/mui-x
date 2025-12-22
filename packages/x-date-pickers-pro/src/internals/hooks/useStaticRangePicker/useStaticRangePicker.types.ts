@@ -15,8 +15,7 @@ import { PickerRangeStep } from '../../utils/createRangePickerStepNavigation';
 
 export interface UseStaticRangePickerSlots extends ExportedPickersLayoutSlots<PickerRangeValue> {}
 
-export interface UseStaticRangePickerSlotProps
-  extends ExportedPickersLayoutSlotProps<PickerRangeValue> {
+export interface UseStaticRangePickerSlotProps extends ExportedPickersLayoutSlotProps<PickerRangeValue> {
   toolbar?: ExportedBaseToolbarProps;
 }
 
@@ -26,7 +25,9 @@ export interface UseStaticRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
-> extends BasePickerProps<PickerRangeValue, TView, TError, TExternalProps>,
+>
+  extends
+    BasePickerProps<PickerRangeValue, TView, TError, TExternalProps>,
     StaticRangeOnlyPickerProps {
   /**
    * Overridable components.
@@ -44,9 +45,9 @@ export interface UseStaticRangePickerParams<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseStaticRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'ref'
-  > {
+  UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
+  'valueManager' | 'valueType' | 'validator' | 'ref'
+> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

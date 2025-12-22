@@ -43,8 +43,7 @@ export interface PickersCalendarHeaderSlotProps extends PickersArrowSwitcherSlot
 }
 
 export interface PickersCalendarHeaderProps
-  extends ExportedPickersArrowSwitcherProps,
-    MonthValidationOptions {
+  extends ExportedPickersArrowSwitcherProps, MonthValidationOptions {
   /**
    * Overridable component slots.
    * @default {}
