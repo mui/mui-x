@@ -18,7 +18,7 @@ export function processEvent(
   const endInDisplayTz = adapter.setTimezone(endInDataTz, displayTimezone);
 
   const exDatesInDisplayTz = model.exDates
-    ? model.exDates.map((d) => adapter.setTimezone(d, displayTimezone))
+    ? model.exDates.map((exDate) => adapter.setTimezone(exDate, displayTimezone))
     : undefined;
 
   const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, dataTimezone) : undefined;
