@@ -15,12 +15,12 @@ describe('EventCalendar', () => {
 
   const event1 = EventBuilder.new()
     .title('Running')
-    .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+    .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
     .build();
 
   const event2 = EventBuilder.new()
     .title('Weekly')
-    .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
+    .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
     .build();
 
   // TODO: Move in a test file specific to the TimeGrid component.
@@ -46,13 +46,13 @@ describe('EventCalendar', () => {
   it('should allow to show / hide resources using the UI', async () => {
     const event1WithResource = EventBuilder.new()
       .title('Running')
-      .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
       .resource('1')
       .build();
 
     const event2WithResource = EventBuilder.new()
       .title('Weekly')
-      .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
+      .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
       .resource('2')
       .build();
 
@@ -246,8 +246,8 @@ describe('EventCalendar', () => {
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
-      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00').build();
-      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00').build();
+      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00Z').build();
+      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00Z').build();
 
       const { user } = render(
         <EventCalendar events={[saturdayEvent, sundayEvent]} defaultView="agenda" />,
@@ -276,7 +276,7 @@ describe('EventCalendar', () => {
     it('should apply className to event elements in week view', () => {
       const eventWithClassName = EventBuilder.new()
         .title('Important Meeting')
-        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .span('2025-05-26T10:00:00Z', '2025-05-26T11:00:00Z')
         .className('custom-event-class')
         .build();
 
@@ -289,7 +289,7 @@ describe('EventCalendar', () => {
     it('should apply className to event elements in month view', () => {
       const eventWithClassName = EventBuilder.new()
         .title('Monthly Event')
-        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .span('2025-05-26T10:00:00Z', '2025-05-26T11:00:00Z')
         .className('monthly-class')
         .build();
 
@@ -302,7 +302,7 @@ describe('EventCalendar', () => {
     it('should apply className to event elements in agenda view', () => {
       const eventWithClassName = EventBuilder.new()
         .title('Agenda Event')
-        .span('2025-05-26T14:00:00', '2025-05-26T15:00:00')
+        .span('2025-05-26T14:00:00Z', '2025-05-26T15:00:00Z')
         .className('agenda-class')
         .build();
 
