@@ -6,7 +6,7 @@ import type { ProcessedSeries } from '../../../corePlugins/useChartSeries';
  * Returns the previous series type and id that contains some data.
  * Returns `null` if no other series have data.
  */
-export function getPreviousSeriesWithData<
+export function getPreviousNonEmptySeries<
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = Exclude<ChartSeriesType, 'sankey'>,
 >(
   series: ProcessedSeries<ChartSeriesType>,

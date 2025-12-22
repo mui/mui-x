@@ -10,7 +10,7 @@ import type { ProcessedSeries } from '../../../corePlugins/useChartSeries';
  * @param type - The current series type.
  * @param seriesId - The current series id.
  */
-export function getNextSeriesWithData<
+export function getNextNonEmptySeries<
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = Exclude<ChartSeriesType, 'sankey'>,
 >(
   series: ProcessedSeries<ChartSeriesType>,
