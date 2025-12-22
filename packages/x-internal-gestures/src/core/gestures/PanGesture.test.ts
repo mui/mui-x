@@ -1,4 +1,3 @@
-import { server } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { touchGesture } from '../../testing';
 import { GestureManager } from '../GestureManager';
@@ -108,23 +107,12 @@ describe('Pan Gesture', () => {
     // cos(-135°) = -0.70, sin(-135°) = -0.70
     // Expecting approximately -35 total for both deltaX and deltaY
 
-    // Adjust for Webkit's pixel rounding
-    const isWebkit = server.browser === 'webkit';
-    expect(events).toStrictEqual(
-      isWebkit
-        ? [
-            `panStart: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
-            `pan: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
-            `pan: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
-            `panEnd: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
-          ]
-        : [
-            `panStart: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
-            `pan: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
-            `pan: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
-            `panEnd: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
-          ],
-    );
+    expect(events).toStrictEqual([
+      `panStart: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
+      `pan: deltaX: -18 | deltaY: -18 | direction: null | mainAxis: null`,
+      `pan: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
+      `panEnd: deltaX: -36 | deltaY: -36 | direction: left up | mainAxis: diagonal`,
+    ]);
   });
 
   it('should properly change direction if the gesture changes', async () => {
@@ -175,21 +163,11 @@ describe('Pan Gesture', () => {
     // cos(-166°) = -0.97, sin(-166°) = 0.24
     // Expecting approximately -48.5 total for deltaX and -12.94 for deltaY
 
-    // Adjust for Webkit's pixel rounding
-    const isWebkit = server.browser === 'webkit';
-    expect(events).toStrictEqual(
-      isWebkit
-        ? [
-            `pan: deltaX: 25 | deltaY: 43 | direction: down | mainAxis: vertical`,
-            `pan: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
-            `panEnd: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
-          ]
-        : [
-            `pan: deltaX: 25 | deltaY: 43 | direction: down | mainAxis: vertical`,
-            `pan: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
-            `panEnd: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
-          ],
-    );
+    expect(events).toStrictEqual([
+      `pan: deltaX: 25 | deltaY: 43 | direction: down | mainAxis: vertical`,
+      `pan: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
+      `panEnd: deltaX: 1 | deltaY: 37 | direction: left up | mainAxis: horizontal`,
+    ]);
   });
 
   it('should respect direction constraints', async () => {

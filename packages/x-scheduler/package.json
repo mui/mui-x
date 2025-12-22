@@ -52,8 +52,8 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "^1.0.0-beta.6",
-    "@base-ui-components/utils": "^0.2.0",
+    "@base-ui/react": "^1.0.0",
+    "@base-ui/utils": "^0.2.3",
     "@mui/x-scheduler-headless": "workspace:*",
     "@floating-ui/react": "^0.27.16",
     "@mui/x-internals": "workspace:*",
