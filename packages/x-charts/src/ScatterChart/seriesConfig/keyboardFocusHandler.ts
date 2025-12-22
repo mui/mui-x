@@ -2,6 +2,7 @@ import {
   createGetNextIndexFocusedItem,
   createGetPreviousIndexFocusedItem,
   createGetNextSeriesFocusedItem,
+  createGetPreviousSeriesFocusedItem,
 } from '../../internals/commonNextFocusItem';
 import type { KeyboardFocusHandler } from '../../internals/plugins/featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 
@@ -16,7 +17,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'scatter', 'bar' | 'line' | 'sc
     case 'ArrowLeft':
       return createGetPreviousIndexFocusedItem(outSeriesTypes);
     case 'ArrowDown':
-      return createGetPreviousIndexFocusedItem(outSeriesTypes);
+      return createGetPreviousSeriesFocusedItem(outSeriesTypes);
     case 'ArrowUp':
       return createGetNextSeriesFocusedItem(outSeriesTypes);
     default:
