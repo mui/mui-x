@@ -27,13 +27,15 @@ Scheduler supports displaying events across different timezones by combining:
 - An optional `timezone` field on the event model
 - A `displayTimezone` used for rendering
 
+The `timezone` field describes the conceptual timezone of the event data and does not reinterpret date values.
+
 This behavior is aligned with common calendar applications such as Google Calendar, Outlook, and Apple Calendar.
 
 ## Supported date values
 
 Scheduler currently expects date values to represent a fixed instant in time.
 
-The exact date object depends on the active adapter (for example `Date` or `TZDate`), but values must be instant-based and timezone-aware.
+Values must be instant-based and can be projected to different timezones.
 
 Wall-time values such as date strings without timezone information are not supported.
 
