@@ -144,9 +144,6 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       (row) => row.id === topLevelFirstRow.id,
     );
 
-    if (firstRowIndex === -1) {
-      return null;
-    }
     let lastRowIndex = firstRowIndex;
     let topLevelRowAdded = 0;
 
