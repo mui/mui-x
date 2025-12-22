@@ -300,7 +300,7 @@ importers:
         specifier: ^1.11.3
         version: 1.11.3
       '@types/node':
-        specifier: ^22.18.13
+        specifier: 22.19.3
         version: 22.19.3
       '@types/react':
         specifier: 'catalog:'
