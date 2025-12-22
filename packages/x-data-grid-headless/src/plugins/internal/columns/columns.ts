@@ -51,7 +51,7 @@ const columnsPlugin = {
     React.useEffect(() => {
       if (prevColumnsRef.current !== params.columns) {
         prevColumnsRef.current = params.columns;
-        columnsApi.updateColumns(params.columns);
+        columnsApi.update(params.columns);
       }
     }, [params.columns, columnsApi]);
 
@@ -60,7 +60,7 @@ const columnsPlugin = {
       if (prevColumnVisibilityModelRef.current !== params.columnVisibilityModel) {
         prevColumnVisibilityModelRef.current = params.columnVisibilityModel;
         if (params.columnVisibilityModel !== undefined) {
-          columnsApi.setColumnVisibilityModel(params.columnVisibilityModel);
+          columnsApi.setVisibilityModel(params.columnVisibilityModel);
         }
       }
     }, [params.columnVisibilityModel, columnsApi]);
