@@ -109,19 +109,9 @@ function DataGrid() {
     plugins: [sortingPlugin, paginationPlugin],
   });
 
-  const orderedFields = useStore(grid.store, grid.selectors.columns.orderedFields);
-  const columnsLookup = useStore(grid.store, grid.selectors.columns.lookup);
-  const columnVisibilityModel = useStore(grid.store, grid.selectors.columns.columnVisibilityModel);
   const rowIds = useStore(grid.store, grid.selectors.rows.dataRowIds);
   const rowsData = useStore(grid.store, grid.selectors.rows.dataRowIdToModelLookup);
-
-  // Derive visible columns from state
-  const visibleColumns = React.useMemo(() => {
-    return orderedFields
-      .filter((field: string) => columnVisibilityModel[field] !== false)
-      .map((field: string) => columnsLookup[field])
-      .filter(Boolean);
-  }, [orderedFields, columnsLookup, columnVisibilityModel]);
+  const visibleColumns = useStore(grid.store, grid.selectors.columns.visibleColumns);
 
   const handleRefreshRows = () => {
     setData(generateSampleData(30));
