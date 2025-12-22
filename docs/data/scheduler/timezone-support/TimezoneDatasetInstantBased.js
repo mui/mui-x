@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+
 import { TZDate } from '@date-fns/tz';
 import {
   defaultVisibleDate,
@@ -28,6 +29,7 @@ export default function TimezoneDatasetInstantBased() {
       },
     },
   };
+
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
