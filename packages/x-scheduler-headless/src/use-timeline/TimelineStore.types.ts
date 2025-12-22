@@ -1,6 +1,10 @@
 import { TimelineView } from '../models';
 import { TimelinePreferences } from '../models/preferences';
-import { SchedulerState, SchedulerParameters } from '../utils/SchedulerStore';
+import {
+  SchedulerState,
+  SchedulerParameters,
+  SchedulerChangeEventDetails,
+} from '../utils/SchedulerStore';
 
 export interface TimelineState extends SchedulerState {
   /**
@@ -14,11 +18,13 @@ export interface TimelineState extends SchedulerState {
   /**
    * Preferences for the timeline.
    */
-  preferences: TimelinePreferences;
+  preferences: Partial<TimelinePreferences>;
 }
 
-export interface TimelineParameters<TEvent extends object, TResource extends object>
-  extends SchedulerParameters<TEvent, TResource> {
+export interface TimelineParameters<
+  TEvent extends object,
+  TResource extends object,
+> extends SchedulerParameters<TEvent, TResource> {
   /**
    * The view currently displayed in the timeline.
    */
@@ -37,10 +43,22 @@ export interface TimelineParameters<TEvent extends object, TResource extends obj
   /**
    * Event handler called when the view changes.
    */
-  onViewChange?: (view: TimelineView, event: React.UIEvent | Event) => void;
+  onViewChange?: (view: TimelineView, eventDetails: SchedulerChangeEventDetails) => void;
   /**
-   * Preferences for the timeline.
+   * The default preferences for the timeline.
+   * To use controlled preferences, use the `preferences` prop.
    * @default { ampm: true }
    */
+  defaultPreferences?: Partial<TimelinePreferences>;
+  /**
+   * Preferences currently displayed in the timeline.
+   */
   preferences?: Partial<TimelinePreferences>;
+  /**
+   * Event handler called when the preferences change.
+   */
+  onPreferencesChange?: (
+    preferences: Partial<TimelinePreferences>,
+    event: React.UIEvent | Event,
+  ) => void;
 }

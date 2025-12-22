@@ -1,14 +1,16 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/utils/useId';
-import { useStore } from '@base-ui-components/utils/store';
+import { useId } from '@base-ui/utils/useId';
+import { useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
 import { getColorClassName } from '../../../utils/color-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
@@ -28,6 +30,7 @@ export const EventItem = React.forwardRef(function EventItem(
 ) {
   const {
     occurrence,
+    date,
     ariaLabelledBy,
     className,
     id: idProp,
@@ -50,9 +53,9 @@ export const EventItem = React.forwardRef(function EventItem(
     occurrence.resource,
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
-  const isRecurring = Boolean(occurrence.rrule);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -73,7 +76,7 @@ export const EventItem = React.forwardRef(function EventItem(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="EventItemTime EventItemTime--compact">
-                <span>{formatTime(occurrence.start)}</span>
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
               </time>
 
               <span className="EventItemTitle">{occurrence.title}</span>
@@ -89,7 +92,7 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
 
-      case 'allDay':
+      case 'filled':
         return (
           <React.Fragment>
             <p
@@ -109,7 +112,6 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       case 'regular':
-      default:
         return (
           <div className="EventItemCardWrapper">
             <span
@@ -125,15 +127,7 @@ export const EventItem = React.forwardRef(function EventItem(
               className={clsx('EventItemCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {occurrence?.allDay ? (
-                <span className="EventItemTime">{translations.allDay}</span>
-              ) : (
-                <time className="EventItemTime">
-                  <span>{formatTime(occurrence.start)}</span>
-                  <span> - {formatTime(occurrence.end)}</span>
-                </time>
-              )}
-
+              <MultiDayDateLabel occurrence={occurrence} />
               <span className="EventItemTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
@@ -146,18 +140,10 @@ export const EventItem = React.forwardRef(function EventItem(
             )}
           </div>
         );
+      default:
+        throw new Error('Unsupported variant provided to EventItem component.');
     }
-  }, [
-    variant,
-    occurrence.title,
-    occurrence?.allDay,
-    occurrence.start,
-    occurrence.end,
-    isRecurring,
-    resource?.title,
-    translations,
-    formatTime,
-  ]);
+  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring]);
 
   return (
     // TODO: Use button
@@ -171,6 +157,7 @@ export const EventItem = React.forwardRef(function EventItem(
         'EventItemCard',
         `EventItemCard--${variant}`,
         getColorClassName(color),
+        occurrence.className,
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
@@ -181,3 +168,35 @@ export const EventItem = React.forwardRef(function EventItem(
     </div>
   );
 });
+
+function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
+  const { occurrence } = props;
+
+  const adapter = useAdapter();
+  const translations = useTranslations();
+  const formatTime = useFormatTime();
+
+  if (
+    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
+  ) {
+    const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
+    return (
+      <time className="EventItemTime">
+        <span>
+          {translations.eventItemMultiDayLabel(
+            adapter.formatByString(occurrence.displayTimezone.end.value, format),
+          )}
+        </span>
+      </time>
+    );
+  }
+  if (occurrence.allDay) {
+    return <span className="EventItemTime">{translations.allDay}</span>;
+  }
+  return (
+    <time className="EventItemTime">
+      <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+      <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+    </time>
+  );
+}

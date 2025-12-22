@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { Dialog } from '@base-ui-components/react/dialog';
-import { Radio } from '@base-ui-components/react/radio';
-import { Form } from '@base-ui-components/react/form';
-import { Field } from '@base-ui-components/react/field';
-import { RadioGroup } from '@base-ui-components/react/radio-group';
+import { useStore } from '@base-ui/utils/store';
+import { Dialog } from '@base-ui/react/dialog';
+import { Radio } from '@base-ui/react/radio';
+import { Form } from '@base-ui/react/form';
+import { Field } from '@base-ui/react/field';
+import { RadioGroup } from '@base-ui/react/radio-group';
 import { RecurringEventUpdateScope } from '@mui/x-scheduler-headless/models';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -17,10 +17,15 @@ import './ScopeDialog.css';
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
     const { className, containerRef, ...other } = props;
+
+    // Context hooks
     const translations = useTranslations();
     const store = useSchedulerStoreContext();
+
+    // Selector hooks
     const open = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
+    // Feature hooks
     const handleOpenChange = React.useCallback(
       (next: boolean) => {
         if (!next) {
@@ -50,21 +55,21 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
                     aria-label={translations.radioGroupAriaLabel}
                     defaultValue={'only-this'}
                   >
-                    <Field.Label className="RadioItem">
-                      {translations.onlyThis}
-                      <Radio.Root value="only-this">
+                    <Field.Label htmlFor="scope-only-this" className="RadioItem">
+                      <Radio.Root value="only-this" id="scope-only-this">
+                        <span>{translations.onlyThis}</span>
                         <Radio.Indicator className="RadioItemIndicator" />
                       </Radio.Root>
                     </Field.Label>
-                    <Field.Label className="RadioItem">
-                      {translations.thisAndFollowing}
-                      <Radio.Root value="this-and-following">
+                    <Field.Label htmlFor="scope-this-and-following" className="RadioItem">
+                      <Radio.Root value="this-and-following" id="scope-this-and-following">
+                        <span>{translations.thisAndFollowing}</span>
                         <Radio.Indicator className="RadioItemIndicator" />
                       </Radio.Root>
                     </Field.Label>
-                    <Field.Label className="RadioItem">
-                      {translations.all}
-                      <Radio.Root value="all">
+                    <Field.Label htmlFor="scope-all" className="RadioItem">
+                      <Radio.Root value="all" id="scope-all">
+                        <span>{translations.all}</span>
                         <Radio.Indicator className="RadioItemIndicator" />
                       </Radio.Root>
                     </Field.Label>

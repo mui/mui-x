@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   itemsSelectors,
@@ -38,7 +38,7 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
   ).current;
 
   const setDataSourceLoading: UseTreeViewLazyLoadingInstance['setDataSourceLoading'] =
-    useEventCallback((itemId, isLoading) => {
+    useStableCallback((itemId, isLoading) => {
       if (!params.dataSource) {
         return;
       }
@@ -61,8 +61,8 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
       });
     });
 
-  const setDataSourceError: UseTreeViewLazyLoadingInstance['setDataSourceError'] = useEventCallback(
-    (itemId, error) => {
+  const setDataSourceError: UseTreeViewLazyLoadingInstance['setDataSourceError'] =
+    useStableCallback((itemId, error) => {
       if (!params.dataSource) {
         return;
       }
@@ -83,14 +83,13 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
         ...store.state.lazyLoading,
         dataSource: { ...store.state.lazyLoading.dataSource, errors },
       });
-    },
-  );
+    });
 
-  const fetchItems: UseTreeViewLazyLoadingInstance['fetchItems'] = useEventCallback(
+  const fetchItems: UseTreeViewLazyLoadingInstance['fetchItems'] = useStableCallback(
     async (parentIds) => nestedDataManager.queue(parentIds),
   );
 
-  const fetchItemChildren: UseTreeViewLazyLoadingInstance['fetchItemChildren'] = useEventCallback(
+  const fetchItemChildren: UseTreeViewLazyLoadingInstance['fetchItemChildren'] = useStableCallback(
     async ({ itemId, forceRefresh }) => {
       if (!params.dataSource) {
         return;
@@ -166,11 +165,10 @@ export const useTreeViewLazyLoading: TreeViewPlugin<UseTreeViewLazyLoadingSignat
     },
   );
 
-  const updateItemChildren: UseTreeViewLazyLoadingInstance['updateItemChildren'] = useEventCallback(
-    (itemId) => {
+  const updateItemChildren: UseTreeViewLazyLoadingInstance['updateItemChildren'] =
+    useStableCallback((itemId) => {
       return instance.fetchItemChildren({ itemId, forceRefresh: true });
-    },
-  );
+    });
 
   useInstanceEventHandler(instance, 'beforeItemToggleExpansion', async (eventParameters) => {
     if (!params.dataSource || !eventParameters.shouldBeExpanded) {
@@ -292,7 +290,7 @@ function getExpandableItemsFromDataSource(
     .filter(
       (itemMeta) =>
         !itemMeta.expandable &&
-        dataSource.getChildrenCount(store.state.items.itemModelLookup[itemMeta.id]) > 0,
+        dataSource.getChildrenCount(store.state.items.itemModelLookup[itemMeta.id]) !== 0,
     )
     .map((item) => item.id);
 }

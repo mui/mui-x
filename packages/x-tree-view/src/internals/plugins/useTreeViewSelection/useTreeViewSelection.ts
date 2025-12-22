@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import {
@@ -22,7 +22,8 @@ import {
   getLookupFromArray,
 } from './useTreeViewSelection.utils';
 import { selectionSelectors } from './useTreeViewSelection.selectors';
-import { useTreeViewSelectionItemPlugin } from './useTreeViewSelection.itemPlugin';
+import { itemsSelectors } from '../useTreeViewItems/useTreeViewItems.selectors';
+import { useTreeViewSelectionItemPlugin } from './itemPlugin';
 
 export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature> = ({
   store,
@@ -157,7 +158,9 @@ export const useTreeViewSelection: TreeViewPlugin<UseTreeViewSelectionSignature>
 
     // Add to the model the items that are part of the new range and not already part of the model.
     const selectedItemsLookup = getLookupFromArray(newSelectedItems);
-    const range = getNonDisabledItemsInRange(store.state, start, end);
+    const range = getNonDisabledItemsInRange(store.state, start, end).filter((id) =>
+      itemsSelectors.isItemSelectable(store.state, id),
+    );
     const itemsToAddToModel = range.filter((id) => !selectedItemsLookup[id]);
     newSelectedItems = newSelectedItems.concat(itemsToAddToModel);
 

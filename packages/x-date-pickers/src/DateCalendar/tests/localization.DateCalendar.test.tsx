@@ -20,7 +20,7 @@ describe('<DateCalendar /> - localization', () => {
           adapterName,
         });
 
-        it('should display correct week day labels in Hebrew locale ', () => {
+        it('should display correct week day labels in Hebrew locale', () => {
           render(<DateCalendar reduceAnimations />);
 
           expect(screen.getByText('א')).toBeVisible();

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewPlugin, itemsSelectors, labelSelectors } from '@mui/x-tree-view/internals';
 import { TreeViewItemsReorderingAction } from '@mui/x-tree-view/models';
 import {
@@ -13,29 +13,13 @@ import {
   isAncestor,
   moveItemInTree,
 } from './useTreeViewItemsReordering.utils';
-import { useTreeViewItemsReorderingItemPlugin } from './useTreeViewItemsReordering.itemPlugin';
+import { useTreeViewItemsReorderingItemPlugin } from './itemPlugin';
 import { itemsReorderingSelectors } from './useTreeViewItemsReordering.selectors';
 
 export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderingSignature> = ({
   params,
   store,
 }) => {
-  const canItemBeDragged = React.useCallback(
-    (itemId: string) => {
-      if (!params.itemsReordering) {
-        return false;
-      }
-
-      const isItemReorderable = params.isItemReorderable;
-      if (isItemReorderable) {
-        return isItemReorderable(itemId);
-      }
-
-      return true;
-    },
-    [params.itemsReordering, params.isItemReorderable],
-  );
-
   const getDroppingTargetValidActions = React.useCallback(
     (itemId: string) => {
       const currentReorder = itemsReorderingSelectors.currentReorder(store.state);
@@ -260,7 +244,6 @@ export const useTreeViewItemsReordering: TreeViewPlugin<UseTreeViewItemsReorderi
 
   return {
     instance: {
-      canItemBeDragged,
       getDroppingTargetValidActions,
       startDraggingItem,
       cancelDraggingItem,

@@ -1,5 +1,5 @@
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
-import { createSelector } from '../../utils/selectors';
 import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
@@ -17,13 +17,13 @@ import {
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
 import {
-  AxisId,
-  ChartsAxisProps,
-  D3Scale,
-  DefaultedAxis,
-  ScaleName,
+  type AxisId,
+  type ChartsAxisProps,
+  type D3Scale,
+  type DefaultedAxis,
+  type ScaleName,
 } from '../../../../models/axis';
-import { ZoomData } from './zoom.types';
+import { type ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { getRange } from './getAxisScale';
@@ -53,13 +53,11 @@ function createPreviewDrawingArea(
       };
 }
 
-export const selectorChartPreviewXScales = createSelector(
-  [
-    selectorChartRawXAxis,
-    selectorChartDrawingArea,
-    selectorChartZoomOptionsLookup,
-    selectorChartNormalizedXScales,
-  ],
+export const selectorChartPreviewXScales = createSelectorMemoized(
+  selectorChartRawXAxis,
+  selectorChartDrawingArea,
+  selectorChartZoomOptionsLookup,
+  selectorChartNormalizedXScales,
   function selectorChartPreviewXScales(
     xAxes,
     chartDrawingArea,
@@ -89,16 +87,13 @@ export const selectorChartPreviewXScales = createSelector(
   },
 );
 
-export const selectorChartPreviewComputedXAxis = createSelector(
-  [
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomOptionsLookup,
-    selectorChartDrawingArea,
-    selectorChartPreviewXScales,
-    selectorChartXAxisWithDomains,
-  ],
-
+export const selectorChartPreviewComputedXAxis = createSelectorMemoized(
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorChartZoomOptionsLookup,
+  selectorChartDrawingArea,
+  selectorChartPreviewXScales,
+  selectorChartXAxisWithDomains,
   (
     formattedSeries,
     seriesConfig,
@@ -135,13 +130,11 @@ export const selectorChartPreviewComputedXAxis = createSelector(
   },
 );
 
-export const selectorChartPreviewYScales = createSelector(
-  [
-    selectorChartRawYAxis,
-    selectorChartDrawingArea,
-    selectorChartZoomOptionsLookup,
-    selectorChartNormalizedYScales,
-  ],
+export const selectorChartPreviewYScales = createSelectorMemoized(
+  selectorChartRawYAxis,
+  selectorChartDrawingArea,
+  selectorChartZoomOptionsLookup,
+  selectorChartNormalizedYScales,
   function selectorChartPreviewYScales(
     yAxes,
     chartDrawingArea,
@@ -176,15 +169,13 @@ export const selectorChartPreviewYScales = createSelector(
   },
 );
 
-export const selectorChartPreviewComputedYAxis = createSelector(
-  [
-    selectorChartSeriesProcessed,
-    selectorChartSeriesConfig,
-    selectorChartZoomOptionsLookup,
-    selectorChartDrawingArea,
-    selectorChartPreviewYScales,
-    selectorChartYAxisWithDomains,
-  ],
+export const selectorChartPreviewComputedYAxis = createSelectorMemoized(
+  selectorChartSeriesProcessed,
+  selectorChartSeriesConfig,
+  selectorChartZoomOptionsLookup,
+  selectorChartDrawingArea,
+  selectorChartPreviewYScales,
+  selectorChartYAxisWithDomains,
   (
     formattedSeries,
     seriesConfig,

@@ -1,8 +1,8 @@
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import { TreeViewItemId } from '../../../models';
 import { UseTreeViewLabelSignature } from './useTreeViewLabel.types';
-import { useTreeViewLabelItemPlugin } from './useTreeViewLabel.itemPlugin';
+import { useTreeViewLabelItemPlugin } from './itemPlugin';
 import { labelSelectors } from './useTreeViewLabel.selectors';
 
 export const useTreeViewLabel: TreeViewPlugin<UseTreeViewLabelSignature> = ({ store, params }) => {

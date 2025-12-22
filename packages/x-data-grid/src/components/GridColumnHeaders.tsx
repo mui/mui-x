@@ -9,8 +9,7 @@ import {
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 
 export interface GridColumnHeadersProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    UseGridColumnHeadersProps {
+  extends React.HTMLAttributes<HTMLDivElement>, UseGridColumnHeadersProps {
   ref?: React.Ref<HTMLDivElement>;
 }
 

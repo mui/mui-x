@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { isElementDisabled } from '@base-ui-components/utils/isElementDisabled';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { isElementDisabled } from '@base-ui/utils/isElementDisabled';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   ALL_KEYS,
   ARROW_DOWN,
@@ -100,7 +100,7 @@ export function useCompositeRoot(params: UseCompositeRootParameters) {
   const hasSetDefaultIndexRef = React.useRef(false);
 
   const highlightedIndex = externalHighlightedIndex ?? internalHighlightedIndex;
-  const onHighlightedIndexChange = useEventCallback((index, shouldScrollIntoView = false) => {
+  const onHighlightedIndexChange = useStableCallback((index, shouldScrollIntoView = false) => {
     (externalSetHighlightedIndex ?? internalSetHighlightedIndex)(index);
     if (shouldScrollIntoView) {
       const newActiveItem = elementsRef.current[index];
@@ -108,7 +108,7 @@ export function useCompositeRoot(params: UseCompositeRootParameters) {
     }
   });
 
-  const onMapChange = useEventCallback((map: Map<Element, CompositeMetadata<any>>) => {
+  const onMapChange = useStableCallback((map: Map<Element, CompositeMetadata<any>>) => {
     if (map.size === 0 || hasSetDefaultIndexRef.current) {
       return;
     }

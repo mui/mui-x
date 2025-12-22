@@ -1,5 +1,5 @@
 import { calculateZoomEnd, calculateZoomStart, calculateZoomFromPointImpl } from './zoom-utils';
-import { ZoomData } from '../../models';
+import { type ZoomData } from '../../models';
 
 describe('Zoom Utils', () => {
   describe('calculateZoomStart', () => {

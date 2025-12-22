@@ -1,15 +1,21 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { createSelector, useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompositeListItem';
 import { useAdapter } from '../../use-adapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
-import { CalendarProcessedDate } from '../../models';
+import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
 import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
+import { EventCalendarState as State } from '../../use-event-calendar';
+
+const selectorIsCurrentDate = createSelector(
+  (state: State, date: TemporalSupportedObject, skipDataCurrent: boolean | undefined) =>
+    !skipDataCurrent && schedulerNowSelectors.isCurrentDay(state, date),
+);
 
 export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHeaderCell(
   componentProps: CalendarGridHeaderCell.Props,
@@ -31,11 +37,7 @@ export const CalendarGridHeaderCell = React.forwardRef(function CalendarGridHead
 
   const store = useEventCalendarStoreContext();
   const { id: rootId } = useCalendarGridRootContext();
-  const isCurrentDay = useStore(
-    store,
-    skipDataCurrent ? () => false : schedulerNowSelectors.isCurrentDay,
-    date.value,
-  );
+  const isCurrentDay = useStore(store, selectorIsCurrentDate, date.value, skipDataCurrent);
 
   const { ref: listItemRef, index } = useCompositeListItem();
   const id = getCalendarGridHeaderCellId(rootId, index);
@@ -72,7 +74,7 @@ export namespace CalendarGridHeaderCell {
     /**
      * The date of the events rendered in the same column as this header cell.
      */
-    date: CalendarProcessedDate;
+    date: SchedulerProcessedDate;
     /**
      * The format used for the `aria-label` attribute.
      * @default adapter.formats.weekday

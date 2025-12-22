@@ -4,12 +4,11 @@ import { useRotationScale } from '../../hooks/useScale';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { isOrdinalScale } from '../../internals/scaleGuards';
 import { degToRad } from '../../internals/degToRad';
 import { clampAngle } from '../../internals/clampAngle';
-import { useSelector } from '../../internals/store/useSelector';
 import { rad2deg } from '../../internals/angleConversion';
 
 export interface UseRadarAxisParams {
@@ -40,7 +39,7 @@ export function useRadarAxis(params: UseRadarAxisParams) {
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
 
-  const { cx, cy } = useSelector(store, selectorChartPolarCenter);
+  const { cx, cy } = store.use(selectorChartPolarCenter);
 
   if (metric === undefined || !rotationScale || rotationScale.domain().length === 0) {
     return null;

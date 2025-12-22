@@ -5,10 +5,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
-import { SeriesId } from '../models/seriesType/common';
+import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
+import { type SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 
 export interface LineElementClasses {
@@ -69,7 +69,8 @@ export interface LineElementSlotProps {
 }
 
 export interface LineElementProps
-  extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;

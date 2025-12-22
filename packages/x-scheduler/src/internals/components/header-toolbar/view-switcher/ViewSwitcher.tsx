@@ -2,16 +2,16 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { ChevronDown } from 'lucide-react';
-import { Menu } from '@base-ui-components/react/menu';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { Menubar } from '@base-ui-components/react/menubar';
+import { Menu } from '@base-ui/react/menu';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { Menubar } from '@base-ui/react/menubar';
 import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 
 export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   views: T[];
   view: T;
-  onViewChange: (view: T, event: Event | React.MouseEvent<HTMLElement>) => void;
+  onViewChange: (view: T, event: Event) => void;
 }
 
 type ViewSwitcherComponent = <T extends string>(
@@ -33,7 +33,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
       const newView = (event.currentTarget as HTMLElement).getAttribute('data-view') as T;
       if (newView) {
-        onViewChange(newView, event);
+        onViewChange(newView, event.nativeEvent);
       }
     },
     [onViewChange],

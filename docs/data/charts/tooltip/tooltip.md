@@ -100,7 +100,7 @@ To display the series with a blank space, return an empty string.
 ## Position
 
 By default the tooltip is placed relative to the pointer position.
-If the pointer is not available, it is placed relative to the node instead (e.g., the bar in a bar chart).
+If the pointer is not available, it is placed relative to the node instead (for example, the bar in a bar chart).
 
 This behavior can be modified with the `anchor`, `position`, and `placement` props.
 

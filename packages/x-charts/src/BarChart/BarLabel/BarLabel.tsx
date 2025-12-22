@@ -4,7 +4,11 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { useAnimateBarLabel } from '../../hooks/animation/useAnimateBarLabel';
 import { barLabelClasses } from './barLabelClasses';
-import { BarLabelOwnerState } from './BarLabel.types';
+import { type BarLabelOwnerState } from './BarLabel.types';
+import {
+  ANIMATION_DURATION_MS,
+  ANIMATION_TIMING_FUNCTION,
+} from '../../internals/animation/animation';
 
 export const BarLabelComponent = styled('text', {
   name: 'MuiBarLabel',
@@ -18,14 +22,10 @@ export const BarLabelComponent = styled('text', {
   ...theme?.typography?.body2,
   stroke: 'none',
   fill: (theme.vars || theme)?.palette?.text?.primary,
-  transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
-  textAnchor: 'middle',
-  dominantBaseline: 'central',
+  transitionProperty: 'opacity, fill',
+  transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+  transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   pointerEvents: 'none',
-  opacity: 1,
-  [`&.${barLabelClasses.faded}`]: {
-    opacity: 0.3,
-  },
 }));
 
 export type BarLabelProps = Omit<
@@ -57,9 +57,15 @@ export type BarLabelProps = Omit<
      * Height of the bar this label belongs to.
      */
     height: number;
+    /**
+     * The placement of the bar label.
+     * It controls whether the label is rendered in the center or outside the bar.
+     * @default 'center'
+     */
+    placement?: 'center' | 'outside';
   };
 
-function BarLabel(inProps: BarLabelProps) {
+function BarLabel(inProps: BarLabelProps): React.JSX.Element {
   const props = useThemeProps({ props: inProps, name: 'MuiBarLabel' });
 
   const {
@@ -73,12 +79,65 @@ function BarLabel(inProps: BarLabelProps) {
     layout,
     xOrigin,
     yOrigin,
+    placement,
     ...otherProps
   } = props;
 
   const animatedProps = useAnimateBarLabel(props);
+  const textAnchor = getTextAnchor(props);
+  const dominantBaseline = getDominantBaseline(props);
 
-  return <BarLabelComponent {...otherProps} {...animatedProps} />;
+  const fadedOpacity = isFaded ? 0.3 : 1;
+
+  return (
+    <BarLabelComponent
+      textAnchor={textAnchor}
+      dominantBaseline={dominantBaseline}
+      opacity={fadedOpacity}
+      {...otherProps}
+      {...animatedProps}
+    />
+  );
+}
+
+function getTextAnchor({
+  placement,
+  layout,
+  xOrigin,
+  x,
+}: Pick<
+  BarLabelProps,
+  'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
+>): React.SVGAttributes<SVGTextElement>['textAnchor'] {
+  if (placement === 'outside') {
+    if (layout === 'horizontal') {
+      return x < xOrigin ? 'end' : 'start';
+    }
+
+    return 'middle';
+  }
+
+  return 'middle';
+}
+
+function getDominantBaseline({
+  placement,
+  layout,
+  yOrigin,
+  y,
+}: Pick<
+  BarLabelProps,
+  'layout' | 'placement' | 'x' | 'y' | 'xOrigin' | 'yOrigin'
+>): React.SVGAttributes<SVGTextElement>['dominantBaseline'] {
+  if (placement === 'outside') {
+    if (layout === 'horizontal') {
+      return 'central';
+    }
+
+    return y < yOrigin ? 'auto' : 'hanging';
+  }
+
+  return 'central';
 }
 
 BarLabel.propTypes = {
@@ -95,6 +154,12 @@ BarLabel.propTypes = {
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  /**
+   * The placement of the bar label.
+   * It controls whether the label is rendered in the center or outside the bar.
+   * @default 'center'
+   */
+  placement: PropTypes.oneOf(['center', 'outside']),
   seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**

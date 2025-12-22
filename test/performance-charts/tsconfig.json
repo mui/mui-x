@@ -3,6 +3,6 @@
   "include": ["tests/**/*", "utils/**/*"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "types": ["@vitest/browser/providers/playwright", "vite/client"]
+    "types": ["vite/client"]
   }
 }

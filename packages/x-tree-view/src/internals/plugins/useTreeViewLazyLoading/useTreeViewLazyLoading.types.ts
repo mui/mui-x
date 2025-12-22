@@ -32,10 +32,10 @@ export interface UseTreeViewLazyLoadingPublicAPI {
    * Method used for updating an item's children.
    * Only relevant for lazy-loaded tree views.
    *
-   * @param {TreeViewItemId} itemId The The id of the item to update the children of.
+   * @param {TreeViewItemId | null} itemId The id of the item to update the children of. If null is passed, it will update the root's children.
    * @returns {Promise<void>} The promise resolved when the items are fetched.
    */
-  updateItemChildren: (itemId: TreeViewItemId) => Promise<void>;
+  updateItemChildren: (itemId: TreeViewItemId | null) => Promise<void>;
 }
 
 export interface UseTreeViewLazyLoadingInstance extends UseTreeViewLazyLoadingPublicAPI {

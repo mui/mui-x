@@ -23,8 +23,10 @@ export interface GetColumnForNewFilterArgs {
   columns: GridStateColDef[];
 }
 
-export interface GridFilterPanelProps
-  extends Pick<GridFilterFormProps, 'logicOperators' | 'columnsSort'> {
+export interface GridFilterPanelProps extends Pick<
+  GridFilterFormProps,
+  'logicOperators' | 'columnsSort'
+> {
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
    */

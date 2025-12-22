@@ -1,4 +1,4 @@
-import { ComponentsProps, ComponentsOverrides } from '@mui/material/styles';
+import { type ComponentsProps, type ComponentsOverrides } from '@mui/material/styles';
 
 export interface ChartsProComponents<Theme = unknown> {
   // BarChartPro components

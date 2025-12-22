@@ -1,15 +1,14 @@
 'use client';
 import { useSeries } from '../hooks/useSeries';
 import { useColorProcessor } from '../internals/plugins/corePlugins/useChartSeries/useColorProcessor';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 import {
-  CartesianChartSeriesType,
-  ChartsSeriesConfig,
-  PolarChartSeriesType,
+  type CartesianChartSeriesType,
+  type ChartsSeriesConfig,
+  type PolarChartSeriesType,
 } from '../models/seriesType/config';
-import { ComputedAxis, PolarAxisDefaultized, AxisId } from '../models/axis';
+import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
@@ -25,9 +24,9 @@ import { useZAxes } from '../hooks/useZAxis';
 import {
   selectorChartsInteractionTooltipXAxes,
   selectorChartsInteractionTooltipYAxes,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { ChartsLabelMarkProps } from '../ChartsLabel';
+import { type ChartsLabelMarkProps } from '../ChartsLabel';
 import { selectorChartsInteractionTooltipRotationAxes } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { isPolarSeriesType } from '../internals/isPolar';
 
@@ -115,10 +114,10 @@ export function useAxisTooltip(
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const tooltipXAxes = useSelector(store, selectorChartsInteractionTooltipXAxes);
-  const tooltipYAxes = useSelector(store, selectorChartsInteractionTooltipYAxes);
+  const tooltipXAxes = store.use(selectorChartsInteractionTooltipXAxes);
+  const tooltipYAxes = store.use(selectorChartsInteractionTooltipYAxes);
 
-  const tooltipRotationAxes = useSelector(store, selectorChartsInteractionTooltipRotationAxes);
+  const tooltipRotationAxes = store.use(selectorChartsInteractionTooltipRotationAxes);
 
   const series = useSeries();
 

@@ -1,10 +1,10 @@
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelector } from '@base-ui/utils/store';
 import { EventCalendarState as State } from '../use-event-calendar';
-import { SchedulerValidDate } from '../models';
+import { TemporalSupportedObject } from '../models';
 
 export const eventCalendarOccurrencePlaceholderSelectors = {
   placeholderInDayCell: createSelector(
-    (state: State, day: SchedulerValidDate, rowStart: SchedulerValidDate) => {
+    (state: State, day: TemporalSupportedObject, rowStart: TemporalSupportedObject) => {
       if (
         state.occurrencePlaceholder === null ||
         state.occurrencePlaceholder.surfaceType !== 'day-grid' ||
@@ -31,7 +31,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     },
   ),
   placeholderInTimeRange: createSelector(
-    (state: State, start: SchedulerValidDate, end: SchedulerValidDate) => {
+    (state: State, start: TemporalSupportedObject, end: TemporalSupportedObject) => {
       if (
         state.occurrencePlaceholder === null ||
         state.occurrencePlaceholder.surfaceType !== 'time-grid' ||
@@ -50,7 +50,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
       return state.occurrencePlaceholder;
     },
   ),
-  isCreatingInDayCell: createSelector((state: State, day: SchedulerValidDate) => {
+  isCreatingInDayCell: createSelector((state: State, day: TemporalSupportedObject) => {
     const placeholder = state.occurrencePlaceholder;
     if (placeholder?.surfaceType !== 'day-grid' || placeholder.type !== 'creation') {
       return false;
@@ -58,7 +58,7 @@ export const eventCalendarOccurrencePlaceholderSelectors = {
     return state.adapter.isSameDay(day, placeholder.start);
   }),
   isCreatingInTimeRange: createSelector(
-    (state: State, dayStart: SchedulerValidDate, dayEnd: SchedulerValidDate) => {
+    (state: State, dayStart: TemporalSupportedObject, dayEnd: TemporalSupportedObject) => {
       const placeholder = state.occurrencePlaceholder;
       if (placeholder?.surfaceType !== 'time-grid' || placeholder.type !== 'creation') {
         return false;

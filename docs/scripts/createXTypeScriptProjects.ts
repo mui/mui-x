@@ -44,7 +44,8 @@ export type XProjectNames =
 export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
 interface CreateXTypeScriptProjectOptions
-  extends Omit<CreateTypeScriptProjectOptions, 'name'>,
+  extends
+    Omit<CreateTypeScriptProjectOptions, 'name'>,
     Pick<
       XTypeScriptProject,
       'name' | 'documentationFolderName' | 'getComponentsWithPropTypes' | 'getComponentsWithApiDoc'
@@ -135,6 +136,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'GridRowClassNameParams',
       'GridRowSpacingParams',
       'GridExportStateParams',
+      'GridRowOrderChangeParams',
 
       // Others
       'GridColDef',

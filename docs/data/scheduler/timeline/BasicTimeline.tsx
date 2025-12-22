@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/models';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { Timeline } from '@mui/x-scheduler/timeline';
 import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timeline-events';
+} from '../datasets/company-roadmap';
 
 export default function BasicTimeline() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '500px', width: '100%' }}>

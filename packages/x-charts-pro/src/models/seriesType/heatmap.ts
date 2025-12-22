@@ -1,15 +1,14 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import {
-  CommonDefaultizedProps,
-  CommonSeriesType,
-  CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type CartesianSeriesType,
 } from '@mui/x-charts/internals';
 
 export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
-  extends Omit<CommonSeriesType<HeatmapValueType>, 'color' | 'colorGetter'>,
-    CartesianSeriesType {
+  extends Omit<CommonSeriesType<HeatmapValueType>, 'color' | 'colorGetter'>, CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each bar.
@@ -35,5 +34,7 @@ export type HeatmapItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedHeatmapSeriesType
-  extends DefaultizedProps<HeatmapSeriesType, CommonDefaultizedProps> {}
+export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
+  HeatmapSeriesType,
+  CommonDefaultizedProps
+> {}

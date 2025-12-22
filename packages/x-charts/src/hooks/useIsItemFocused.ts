@@ -1,7 +1,6 @@
 'use client';
-import { FocusedItemData } from './useFocusedItem';
+import { type FocusedItemData } from './useFocusedItem';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { selectorChartsItemIsFocused } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 
 type UseItemFocusedParams = FocusedItemData;
@@ -16,5 +15,5 @@ type UseItemFocusedParams = FocusedItemData;
  */
 export function useIsItemFocused(item: UseItemFocusedParams): boolean {
   const store = useStore();
-  return useSelector(store, selectorChartsItemIsFocused, item);
+  return store.use(selectorChartsItemIsFocused, item);
 }

@@ -1,17 +1,20 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
+import { createSelector, useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
+import { SchedulerEventOccurrence, SchedulerEventSide } from '@mui/x-scheduler-headless/models';
+import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEventProps } from './DayGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
+import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
@@ -19,6 +22,28 @@ import './DayGridEvent.css';
 // TODO: Create a standalone component for the resource color pin instead of re-using another component's CSS classes
 import '../../resource-legend/ResourceLegend.css';
 import '../index.css';
+
+const isResizableSelector = createSelector(
+  (state: EventCalendarState, side: SchedulerEventSide, occurrence: SchedulerEventOccurrence) => {
+    if (!schedulerEventSelectors.isResizable(state, occurrence.id, side)) {
+      return false;
+    }
+
+    const view = eventCalendarViewSelectors.view(state);
+
+    // There is only one day cell in the day view
+    if (view === 'day') {
+      return false;
+    }
+
+    // In month view, only multi-day and all-day events can be resized
+    if (view === 'month') {
+      return isOccurrenceAllDayOrMultipleDay(occurrence, state.adapter);
+    }
+
+    return true;
+  },
+);
 
 export const DayGridEvent = React.forwardRef(function DayGridEvent(
   props: DayGridEventProps,
@@ -33,28 +58,32 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     ...other
   } = props;
 
+  // Context hooks
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
-  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(
-    store,
-    eventCalendarEventSelectors.isResizable,
-    occurrence.id,
-    'day-grid',
-  );
+
+  // Selector hooks
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
+  const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
+  const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
+
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
     occurrence.resource,
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
-  const isRecurring = Boolean(occurrence.rrule);
+
+  // Feature hooks
   const formatTime = useFormatTime();
 
   const content = React.useMemo(() => {
     switch (variant) {
-      case 'allDay':
-      case 'invisible':
+      case 'invisible': {
+        return null;
+      }
+      case 'filled':
       case 'placeholder':
         return (
           <React.Fragment>
@@ -76,7 +105,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         );
 
       case 'compact':
-      default:
         return (
           <div className="DayGridEventCardWrapper">
             <span
@@ -92,15 +120,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               className={clsx('DayGridEventCardContent', 'LinesClamp')}
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
-              {occurrence?.allDay ? (
-                <span className="DayGridEventTime">{translations.allDay}</span>
-              ) : (
-                <time className="DayGridEventTime">
-                  <span>{formatTime(occurrence.start)}</span>
-                  <span> - {formatTime(occurrence.end)}</span>
-                </time>
-              )}
-
+              <time className="DayGridEventTime">
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
+              </time>
               <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>
             {isRecurring && (
@@ -113,22 +136,23 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             )}
           </div>
         );
+      default:
+        throw new Error('Unsupported variant provided to EventItem component.');
     }
   }, [
-    formatTime,
     variant,
     occurrence.title,
-    occurrence?.allDay,
-    occurrence.start,
-    occurrence.end,
+    occurrence.displayTimezone.start.value,
+    occurrence.displayTimezone.end.value,
     isRecurring,
     resource?.title,
     translations,
+    formatTime,
   ]);
 
   const sharedProps = {
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     className: clsx(
       classNameProp,
@@ -136,6 +160,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       'EventCard',
       `EventCard--${variant}`,
       getColorClassName(color),
+      occurrence.className,
     ),
     style: {
       '--grid-row': occurrence.position.index,
@@ -162,11 +187,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <CalendarGrid.DayEventResizeHandler side="start" className="DayGridEventResizeHandler" />
       )}
       {content}
-      {isResizable && (
+      {isEndResizable && (
         <CalendarGrid.DayEventResizeHandler side="end" className="DayGridEventResizeHandler" />
       )}
     </CalendarGrid.DayEvent>

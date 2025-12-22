@@ -12,26 +12,30 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Imperative API
 
-:::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef()` or `useRichTreeViewProApiRef()` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+// Community package
+const apiRef = useRichTreeViewApiRef();
 
-return <RichTreeView apiRef={apiRef} items={ITEMS}>;
+return <RichTreeView apiRef={apiRef} items={ITEMS} />;
+
+// Pro package
+const apiRef = useRichTreeViewProApiRef();
+
+return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with `RichTreeView`.
 
 ### Focus a specific item
 
-Use the `focusItem` API method to focus a specific item.
+Use the `focusItem()` API method to focus a specific item.
 
 ```ts
 apiRef.current.focusItem(
-  // The DOM event that triggered the change
+  // The DOM event that triggers the change
   event,
   // The id of the item to focus
   itemId,
@@ -40,7 +44,7 @@ apiRef.current.focusItem(
 
 :::info
 This method only works with items that are currently visible.
-Calling `apiRef.focusItem()` on an item whose parent is collapsed does nothing.
+Calling `apiRef.focusItem()` on an item with a collapsed parent has no effect.
 :::
 
 {{"demo": "ApiMethodFocusItem.js"}}

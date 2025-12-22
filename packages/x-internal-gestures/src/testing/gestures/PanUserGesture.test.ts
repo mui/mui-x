@@ -1,4 +1,3 @@
-import { server } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { PointerManager } from '../PointerManager';
 import { pan } from './PanUserGesture';
@@ -108,12 +107,10 @@ describe('PanUserGesture', () => {
     expect(down.mock.lastCall?.[0].x).toBeCloseTo(50);
     expect(down.mock.lastCall?.[0].y).toBeCloseTo(50);
     // 50 * cos(45) = ~35.36
-    // Webkit does not support fractional pixels
-    const isWebkit = server.browser === 'webkit';
-    expect(move.mock.lastCall?.[0].x).toBeCloseTo(isWebkit ? 85 : 85.36);
-    expect(move.mock.lastCall?.[0].y).toBeCloseTo(isWebkit ? 85 : 85.36);
-    expect(up.mock.lastCall?.[0].x).toBeCloseTo(isWebkit ? 85 : 85.36);
-    expect(up.mock.lastCall?.[0].y).toBeCloseTo(isWebkit ? 85 : 85.36);
+    expect(move.mock.lastCall?.[0].x).toBeCloseTo(85.36);
+    expect(move.mock.lastCall?.[0].y).toBeCloseTo(85.36);
+    expect(up.mock.lastCall?.[0].x).toBeCloseTo(85.36);
+    expect(up.mock.lastCall?.[0].y).toBeCloseTo(85.36);
   });
 
   it('should perform a pan gesture using a custom starting point', async () => {
