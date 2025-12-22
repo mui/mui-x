@@ -12,5 +12,5 @@ export function seriesHasData(
     return false;
   }
   const data = series[type]?.series[seriesId]?.data;
-  return data && data.length > 0;
+  return data != null && data.length > 0;
 }

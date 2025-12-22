@@ -123,7 +123,6 @@ export function createGetPreviousSeriesFocusedItem<
 >(compatibleSeriesTypes: Set<OutSeriesType>) {
   return function getPreviousSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-
     state: ChartState<[UseChartKeyboardNavigationSignature], []>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(state);
