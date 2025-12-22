@@ -2,9 +2,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { ChevronDown } from 'lucide-react';
-import { Menu } from '@base-ui-components/react/menu';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
-import { Menubar } from '@base-ui-components/react/menubar';
+import { Menu } from '@base-ui/react/menu';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { Menubar } from '@base-ui/react/menubar';
 import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 

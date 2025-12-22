@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
-import { Checkbox } from '@base-ui-components/react/checkbox';
-import { Field } from '@base-ui-components/react/field';
-import { Form } from '@base-ui-components/react/form';
-import { Input } from '@base-ui-components/react/input';
-import { Separator } from '@base-ui-components/react/separator';
+import { useStore } from '@base-ui/utils/store';
+import { Checkbox } from '@base-ui/react/checkbox';
+import { Field } from '@base-ui/react/field';
+import { Form } from '@base-ui/react/form';
+import { Input } from '@base-ui/react/input';
+import { Separator } from '@base-ui/react/separator';
 import { CheckIcon } from 'lucide-react';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -14,7 +14,7 @@ import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { Tabs } from '@base-ui-components/react/tabs';
+import { Tabs } from '@base-ui/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue } from './utils';
 
