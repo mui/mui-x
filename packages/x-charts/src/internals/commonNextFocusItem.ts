@@ -23,7 +23,7 @@ export function createGetNextIndexFocusedItem<
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(state);
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType;
+    let type = currentItem?.type as OutSeriesType | undefined;
     if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
       const nextSeries = getNextSeriesWithData<OutSeriesType>(
         processedSeries,
@@ -57,7 +57,7 @@ export function createGetPreviousIndexFocusedItem<
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(state);
     let seriesId = currentItem?.seriesId;
-    let type = currentItem?.type as OutSeriesType;
+    let type = currentItem?.type as OutSeriesType | undefined;
     if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
       const previousSeries = getPreviousSeriesWithData<OutSeriesType>(
         processedSeries,
@@ -117,7 +117,7 @@ export function createGetNextSeriesFocusedItem<
   };
 }
 
-export function createPreviousSeriesFocusedItem<
+export function createGetPreviousSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
 >(compatibleSeriesTypes: Set<OutSeriesType>) {

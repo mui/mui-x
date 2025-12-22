@@ -15,7 +15,7 @@ export type FocusedItemUpdater<
  * Get the next focusable item in the chart.
  * @param {SeriesItemIdentifier<TSeriesType> | null} currentItem The current focused item.
  * @param {KeyboardEvent} event The keyboard event that triggered the navigation.
- * @param {ChartState<[UseChartKeyboardNavigationSignature], []>}state The current chart state.
+ * @param {ChartState<[UseChartKeyboardNavigationSignature], []>} state The current chart state.
  * @returns {SeriesItemIdentifier<ChartSeriesType> | null} The next focusable item or null if none found.
  */
 export type KeyboardFocusHandler<

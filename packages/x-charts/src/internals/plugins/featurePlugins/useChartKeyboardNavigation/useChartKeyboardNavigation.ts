@@ -43,15 +43,15 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
         }
       }
 
-      const focusedItemUpdater = store.state.series.seriesConfig[
+      const calculateFocusedItem = store.state.series.seriesConfig[
         seriesType
       ]?.keyboardFocusHandler?.(event) as FocusedItemUpdater<typeof seriesType> | undefined;
 
-      if (!focusedItemUpdater) {
+      if (!calculateFocusedItem) {
         return;
       }
 
-      newFocusedItem = focusedItemUpdater(newFocusedItem, store.state);
+      newFocusedItem = calculateFocusedItem(newFocusedItem, store.state);
 
       if (newFocusedItem !== store.state.keyboardNavigation.item) {
         event.preventDefault();
