@@ -107,6 +107,13 @@ export interface UseTreeViewItemsParameters<R extends { children?: R[] }> {
    */
   isItemDisabled?: (item: R) => boolean;
   /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled?: (item: R) => boolean;
+  /**
    * Used to determine the string label for a given item.
    *
    * @template R

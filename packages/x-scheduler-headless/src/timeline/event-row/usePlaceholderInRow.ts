@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store/useStore';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';

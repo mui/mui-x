@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { CheckIcon, ChevronDown } from 'lucide-react';
-import { Menu } from '@base-ui-components/react/menu';
+import { Menu } from '@base-ui/react/menu';
 import { EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
@@ -10,7 +10,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 

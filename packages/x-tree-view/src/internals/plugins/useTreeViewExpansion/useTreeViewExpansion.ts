@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
-import { useEventCallback } from '@base-ui-components/utils/useEventCallback';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { TreeViewPlugin } from '../../models';
 import {
   UseTreeViewExpansionInstance,
@@ -51,11 +51,11 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     params.onExpandedItemsChange?.(event, value);
   };
 
-  const resetItemExpansion = useEventCallback(() => {
+  const resetItemExpansion = useStableCallback(() => {
     setExpandedItems(null, []);
   });
 
-  const applyItemExpansion: UseTreeViewExpansionInstance['applyItemExpansion'] = useEventCallback(
+  const applyItemExpansion: UseTreeViewExpansionInstance['applyItemExpansion'] = useStableCallback(
     ({ itemId, event, shouldBeExpanded }) => {
       const oldExpanded = expansionSelectors.expandedItemsRaw(store.state);
       let newExpanded: string[];
@@ -73,7 +73,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
-  const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useEventCallback(
+  const setItemExpansion: UseTreeViewExpansionInstance['setItemExpansion'] = useStableCallback(
     ({ itemId, event = null, shouldBeExpanded }) => {
       const isExpandedBefore = expansionSelectors.isItemExpanded(store.state, itemId);
       const cleanShouldBeExpanded = shouldBeExpanded ?? !isExpandedBefore;
@@ -96,7 +96,7 @@ export const useTreeViewExpansion: TreeViewPlugin<UseTreeViewExpansionSignature>
     },
   );
 
-  const isItemExpanded: UseTreeViewExpansionPublicAPI['isItemExpanded'] = useEventCallback(
+  const isItemExpanded: UseTreeViewExpansionPublicAPI['isItemExpanded'] = useStableCallback(
     (itemId) => {
       return expansionSelectors.isItemExpanded(store.state, itemId);
     },

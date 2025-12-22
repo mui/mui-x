@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useExtractTimelineParameters, useTimeline } from '@mui/x-scheduler-headless/use-timeline';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { TimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
