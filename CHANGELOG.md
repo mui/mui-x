@@ -9,15 +9,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Dec 23, 2025_
 
-We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- Add aggregation for `'boolean'` column type
+- Data Grid supports aggregation for `'boolean'` column type
 
 Special thanks go out to these community members for their valuable contributions:
-@henkerik
+@henkerik, @sai6855
 
 The following team members contributed to this release:
-@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @mapache-salvaje, @MBilalShafi, @sai6855, @siriwatknp
+@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @flaviendelangle, @JCQuintas, @mapache-salvaje, @MBilalShafi, @siriwatknp
 
 ### Data Grid
 
@@ -26,7 +26,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix columns state and columns prop sync issue (#20703) @arminmeh
 - [DataGrid] Fix filter datetime with seconds (#20557) @siriwatknp
 - [DataGrid] Add new `includeHeaderFilters` flag to include header filters when autosizing columns (#20510) @siriwatknp
-- [DataGrid] Prevent default on `Enter` key down (#20751) @siriwatknp
+- [DataGrid] Prevent default on `Enter` key down when starting editing (#20751) @siriwatknp
 
 #### `@mui/x-data-grid-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -59,7 +59,7 @@ Same changes as in `@mui/x-date-pickers@8.23.0`.
 - [charts] Custom stack functions implementation (#20679) @JCQuintas
 - [charts] Extract keyboard focus navigation to the series config (#20693) @alexfauquette
 - [charts] Fix demo not wrapping in mobile (#20713) @JCQuintas
-- [charts] Fix missing dependencies in x-charts-vendor (#20685) @henkerik
+- [charts] Fix missing dependencies in `x-charts-vendor` (#20685) @henkerik
 - [charts] Remove webkit test differences (#20707) @JCQuintas
 
 #### `@mui/x-charts-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
