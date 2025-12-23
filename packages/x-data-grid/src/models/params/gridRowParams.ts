@@ -83,7 +83,6 @@ export interface GridRowEditStartParams<
   reason?: GridRowEditStartReasons;
   /**
    * If the reason is related to a keyboard event, it contains which key was pressed.
-   * @deprecated No longer needed.
    */
   key?: string;
 }
