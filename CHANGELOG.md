@@ -106,7 +106,6 @@ Internal changes.
 - [code-infra] Bump prettier to 3.7.4 (#20709) @JCQuintas
 - [code-infra] Fix contributor generation logic in changelog script (#20705) @brijeshb42
 
-
 ## 8.22.1
 
 _Dec 17, 2025_
