@@ -3,8 +3,7 @@ import { GridHeaderCheckbox } from '../components/columnSelection/GridHeaderChec
 import { GridColDef } from '../models/colDef/gridColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
-
-export const GRID_CHECKBOX_SELECTION_FIELD = '__check__';
+import { GRID_CHECKBOX_SELECTION_FIELD } from './gridColDef.constants';
 
 export const GRID_CHECKBOX_SELECTION_COL_DEF: GridColDef = {
   ...GRID_BOOLEAN_COL_DEF,

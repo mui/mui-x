@@ -128,11 +128,11 @@ export const gridVisiblePinnedColumnDefinitionsSelector = createSelectorMemoized
       return EMPTY_PINNED_COLUMN_FIELDS;
     }
     const visiblePinnedFields = filterMissingColumns(model, visibleColumnFields, isRtl);
-    const visiblePinnedColumns = {
+
+    return {
       left: visiblePinnedFields.left.map((field) => columnsState.lookup[field]),
       right: visiblePinnedFields.right.map((field) => columnsState.lookup[field]),
     };
-    return visiblePinnedColumns;
   },
 );
 
