@@ -1,11 +1,12 @@
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { type SeriesItemIdentifier } from '../../../../models';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
-export type VisibilityMap = {
-  [key: string]: boolean;
-};
+export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> =
+  SeriesItemIdentifier<T>;
 
-export type VisibilityIdentifier = string | number;
+export type VisibilityMap = Map<string, VisibilityIdentifier>;
 
 export type IsItemVisibleFunction = {
   /**
@@ -61,21 +62,24 @@ export interface UseChartVisibilityManagerParameters {
   /**
    * Map of the visibility status of series and/or items.
    *
-   * Different chart types use different strategies to generate these keys.
-   *
-   * Generally, the key format is:
-   * - For series-level visibility: `${seriesId}`
-   * - For item-level visibility: `${seriesId}-${itemId}`
+   * Different chart types use different keys.
    *
    * @example
-   * {
-   *   "series1": false, // series-level hidden
-   *   "series2-itemA": false // item-level hidden
-   * }
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
    */
-  visibilityMap?: {
-    [key: string]: boolean;
-  };
+  visibilityMap?: VisibilityIdentifier[];
 }
 
 export type UseChartVisibilityManagerDefaultizedParameters = UseChartVisibilityManagerParameters;
@@ -86,6 +90,7 @@ export interface UseChartVisibilityManagerState {
      * Map of identifiers visibility status.
      */
     visibilityMap: VisibilityMap;
+    computedOutput: VisibilityIdentifier[];
     /**
      * Internal information to know if the user controls the state or not.
      */
