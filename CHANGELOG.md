@@ -11,7 +11,8 @@ _Dec 23, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- Data Grid supports aggregation for `'boolean'` column type
+- 🧮 Data Grid supports aggregation for `'boolean'` column type
+- 🔎 Allow zooming a heatmap
 
 Special thanks go out to these community members for their valuable contributions:
 @henkerik, @sai6855
@@ -70,6 +71,7 @@ Same changes as in `@mui/x-charts@8.23.0`, plus:
 - [charts-pro] Allow registering preview plots from higher tier packages (#20716) @bernardobelchior
 - [charts-pro] Fix erroneous behavior when adding/removing pointers from zoom&pan gestures (#20698) @JCQuintas
 - [charts-pro] Move heatmap highlight handling to plot component (#20701) @bernardobelchior
+- [charts-pro] Add zoom to heatmap (#20708) @bernardobelchior
 
 #### `@mui/x-charts-premium@8.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
