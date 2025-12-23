@@ -104,9 +104,6 @@ Internal changes.
 - [code-infra] Bump prettier to 3.7.4 (#20709) @JCQuintas
 - [code-infra] Fix contributor generation logic in changelog script (#20705) @brijeshb42
 
-### Miscellaneous
-
-- [l10n] Improve Portuguese from Portugal (pt-PT) locale (#20722) @Copilot
 
 ## 8.22.1
 
