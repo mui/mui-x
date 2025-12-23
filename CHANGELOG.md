@@ -11,7 +11,7 @@ _Dec 23, 2025_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-- 🧮 Data Grid supports aggregation for `'boolean'` column type
+- 🧮 Support Data Grid `size`, `size(true)`, and `size(false)` [aggregations for `'boolean'` column type](https://mui.com/x/react-data-grid/aggregation/#usage-with-row-grouping)
 - 🔎 Allow zooming a heatmap
 
 Special thanks go out to these community members for their valuable contributions:
