@@ -27,6 +27,7 @@ The following team members contributed to this release:
 - [DataGrid] Fix filter datetime with seconds (#20557) @siriwatknp
 - [DataGrid] Add new `includeHeaderFilters` flag to include header filters when autosizing columns (#20510) @siriwatknp
 - [DataGrid] Prevent default on `Enter` key down when starting editing (#20751) @siriwatknp
+- [l10n] Improve Portuguese from Portugal (pt-PT) locale (#20722) @Copilot
 
 #### `@mui/x-data-grid-pro@8.23.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
