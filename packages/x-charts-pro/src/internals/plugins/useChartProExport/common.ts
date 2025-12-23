@@ -26,3 +26,49 @@ export function applyStyles(
 
   return previousStyles;
 }
+
+/**
+ * Copies the content of all canvases from the original element to the cloned element.
+ */
+export function copyCanvasesContent(
+  original: HTMLElement | SVGElement,
+  clone: HTMLElement | SVGElement,
+) {
+  const originalCanvases = original.querySelectorAll('canvas');
+  const cloneCanvases = clone.querySelectorAll('canvas');
+
+  const promises = Array.from(originalCanvases).map(async (originalCanvas, index) => {
+    return new Promise<void>((resolve, reject) => {
+      const cloneCanvas = cloneCanvases[index];
+      if (cloneCanvas) {
+        const dataURL = originalCanvas.toDataURL();
+
+        const img = cloneCanvas.ownerDocument.createElement('img');
+        img.src = dataURL;
+        img.width = cloneCanvas.width;
+        img.height = cloneCanvas.height;
+
+        for (const styleKey in cloneCanvas.style) {
+          if (!Object.hasOwn(img.style, styleKey) || !Object.hasOwn(cloneCanvas.style, styleKey)) {
+            continue;
+          }
+
+          img.style[styleKey] = cloneCanvas.style[styleKey];
+        }
+
+        cloneCanvas.replaceWith(img);
+
+        img.onload = () => {
+          resolve();
+        };
+        img.onerror = (event) => {
+          reject(event);
+        };
+      } else {
+        resolve();
+      }
+    });
+  });
+
+  return Promise.all(promises);
+}
