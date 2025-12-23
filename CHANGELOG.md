@@ -67,7 +67,7 @@ Same changes as in `@mui/x-date-pickers@8.23.0`.
 Same changes as in `@mui/x-charts@8.23.0`, plus:
 
 - [charts-pro] Allow registering preview plots from higher tier packages (#20716) @bernardobelchior
-- [charts-pro] Fix erroneous behaviour when adding/removing pointers from zoom&pan gestures (#20698) @JCQuintas
+- [charts-pro] Fix erroneous behavior when adding/removing pointers from zoom&pan gestures (#20698) @JCQuintas
 - [charts-pro] Move heatmap highlight handling to plot component (#20701) @bernardobelchior
 
 #### `@mui/x-charts-premium@8.23.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
