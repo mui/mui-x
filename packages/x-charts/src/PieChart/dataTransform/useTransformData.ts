@@ -47,7 +47,7 @@ export function useTransformData(
         };
         const isHighlighted = isItemHighlighted(currentItem);
         const isFaded = !isHighlighted && isItemFaded(currentItem);
-        const isFocused = isItemFocused({ seriesType: 'pie', seriesId, dataIndex: itemIndex });
+        const isFocused = isItemFocused({ type: 'pie', seriesId, dataIndex: itemIndex });
 
         // TODO v9: Replace the second argument with the result of useSeriesLayout
         const arcSizes = getModifiedArcProperties(
