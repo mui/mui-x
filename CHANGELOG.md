@@ -11,7 +11,7 @@ _Dec 23, 2025_
 
 We'd like to extend a big thank you to the 13 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- Add aggregation for `'boolean'` column type
 
 Special thanks go out to these community members for their valuable contributions:
 @henkerik
