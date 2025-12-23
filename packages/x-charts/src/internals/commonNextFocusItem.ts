@@ -13,6 +13,22 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   dataIndex: number;
 } | null;
 
+function getNonNullIndex(data: readonly unknown[], step: 1 | -1, startIndex: number): number {
+  // Edge case if we arrive on a series with a smaller length than the startIndex
+  const clampedStartIndex = Math.min(data.length - 1, startIndex);
+
+  if (data[clampedStartIndex] != null) {
+    return clampedStartIndex;
+  }
+
+  let nextDataIndex = (data.length + clampedStartIndex + step) % data.length;
+
+  while (data[nextDataIndex] == null && nextDataIndex !== clampedStartIndex) {
+    nextDataIndex = (data.length + nextDataIndex + step) % data.length;
+  }
+  return nextDataIndex;
+}
+
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
@@ -38,11 +54,13 @@ export function createGetNextIndexFocusedItem<
       seriesId = nextSeries.seriesId;
     }
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const data = processedSeries[type]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null ? 0 : (currentItem.dataIndex + 1) % data.length;
     return {
       type,
       seriesId,
-      dataIndex: ((currentItem?.dataIndex ?? -1) + 1) % dataLength,
+      dataIndex: getNonNullIndex(data, 1, startIndex),
     };
   };
 }
@@ -72,11 +90,16 @@ export function createGetPreviousIndexFocusedItem<
       seriesId = previousSeries.seriesId;
     }
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const data = processedSeries[type]!.series[seriesId].data;
+    const startIndex =
+      currentItem?.dataIndex == null
+        ? data.length - 1
+        : (data.length + currentItem.dataIndex - 1) % data.length;
+
     return {
       type,
       seriesId,
-      dataIndex: (dataLength + (currentItem?.dataIndex ?? 1) - 1) % dataLength,
+      dataIndex: getNonNullIndex(data, -1, startIndex),
     };
   };
 }
@@ -107,12 +130,13 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const data = processedSeries[type]!.series[seriesId].data;
+    const startIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: Math.min(dataLength - 1, currentItem?.dataIndex ?? 0),
+      dataIndex: getNonNullIndex(data, 1, startIndex),
     };
   };
 }
@@ -141,12 +165,13 @@ export function createGetPreviousSeriesFocusedItem<
     type = previousSeries.type;
     seriesId = previousSeries.seriesId;
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const data = processedSeries[type]!.series[seriesId].data;
+    const startIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: Math.min(dataLength - 1, currentItem?.dataIndex ?? 0),
+      dataIndex: getNonNullIndex(data, -1, startIndex),
     };
   };
 }
