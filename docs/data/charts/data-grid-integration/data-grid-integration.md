@@ -2,7 +2,7 @@
 title: Charts and Data Grid integration
 ---
 
-# Data Grid integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
+# Charts - Data Grid integration [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') 🧪
 
 <p class="description">Learn how to integrate the MUI X Charts and Data Grid for better data visualization.</p>
 

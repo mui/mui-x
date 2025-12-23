@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  AxisId,
-  ZoomData,
-  useSelector,
+  type ChartPlugin,
+  type AxisId,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
@@ -14,7 +13,7 @@ import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstR
 import { useEventCallback } from '@mui/material/utils';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
-import { UseChartProZoomSignature } from './useChartProZoom.types';
+import { type UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
@@ -35,7 +34,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
     store.set('zoom', {
@@ -186,10 +185,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     (step: number) => {
       setZoomDataCallback((prev) =>
         prev.map((zoomData) => {
-          const zoomOptions = selectorChartAxisZoomOptionsLookup(
-            store.getSnapshot(),
-            zoomData.axisId,
-          );
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, zoomData.axisId);
 
           return calculateZoom(zoomData, step, zoomOptions);
         }),

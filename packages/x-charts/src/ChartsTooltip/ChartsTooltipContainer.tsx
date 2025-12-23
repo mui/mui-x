@@ -4,21 +4,20 @@ import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { styled, useThemeProps } from '@mui/material/styles';
-import Popper, { PopperProps } from '@mui/material/Popper';
+import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
-import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
-import { useSelector } from '../internals/store/useSelector';
+import { type TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
+import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useStore } from '../internals/store/useStore';
+import { selectorChartsLastInteraction } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
-  selectorChartsLastInteraction,
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
-} from '../internals/plugins/featurePlugins/useChartInteraction';
+} from '../internals/plugins/featurePlugins/useChartTooltip';
 import {
   selectorChartsInteractionAxisTooltip,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/featurePlugins/useChartPolarAxis/useChartPolarInteraction.selectors';
 import { useAxisSystem } from '../hooks/useAxisSystem';
@@ -26,6 +25,7 @@ import { useSvgRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
 
 const selectorReturnFalse = () => false;
+const selectorReturnNull = () => null;
 
 function getIsOpenSelector(
   trigger: TriggerOptions,
@@ -47,8 +47,9 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
-export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
-  extends Partial<PopperProps> {
+export interface ChartsTooltipContainerProps<
+  T extends TriggerOptions = TriggerOptions,
+> extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
@@ -117,21 +118,17 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
-  const isOpen = useSelector(
-    store,
-    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
-  );
+  const shouldPreventBecauseOfBrush = store.use(selectorBrushShouldPreventTooltip);
+  const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
-  const lastInteraction = useSelector(store, selectorChartsLastInteraction);
+  const lastInteraction = store.use(selectorChartsLastInteraction);
   const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
 
-  const itemPosition = useSelector(
-    store,
+  const itemPosition = store.use(
     trigger === 'item' && computedAnchor === 'node'
       ? selectorChartsTooltipItemPosition
-      : () => null,
-    [position],
+      : selectorReturnNull,
+    position,
   );
 
   React.useEffect(() => {

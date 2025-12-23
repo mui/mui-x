@@ -111,6 +111,10 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       return null;
     }
 
+    if (!visibleSortedRowEntries || visibleSortedRowEntries.length === 0) {
+      return null;
+    }
+
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
       paginationModel.pageSize * paginationModel.page,
@@ -139,6 +143,7 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
     const firstRowIndex = visibleSortedRowEntries.findIndex(
       (row) => row.id === topLevelFirstRow.id,
     );
+
     let lastRowIndex = firstRowIndex;
     let topLevelRowAdded = 0;
 

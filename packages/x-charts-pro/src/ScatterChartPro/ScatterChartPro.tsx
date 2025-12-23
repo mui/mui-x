@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import {
-  ScatterChartProps,
-  ScatterChartSlotProps,
-  ScatterChartSlots,
+  type ScatterChartProps,
+  type ScatterChartSlotProps,
+  type ScatterChartSlots,
   ScatterPlot,
 } from '@mui/x-charts/ScatterChart';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
@@ -14,31 +14,30 @@ import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
-import { ChartsTooltip, ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
+import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
-import { ChartsSlotPropsPro, ChartsSlotsPro } from '../internals/material';
+import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { ChartZoomSlider } from '../ChartZoomSlider';
 import { ChartsToolbarPro } from '../ChartsToolbarPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
-import { ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro/ChartContainerPro';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import {
   SCATTER_CHART_PRO_PLUGINS,
-  ScatterChartProPluginSignatures,
+  type ScatterChartProPluginSignatures,
 } from './ScatterChartPro.plugins';
 import {
-  ChartsToolbarProSlots,
-  ChartsToolbarProSlotProps,
+  type ChartsToolbarProSlots,
+  type ChartsToolbarProSlotProps,
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface ScatterChartProSlots
-  extends Omit<ScatterChartSlots, 'toolbar'>,
-    ChartsToolbarProSlots,
-    Partial<ChartsSlotsPro> {}
+  extends Omit<ScatterChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
 export interface ScatterChartProSlotProps
-  extends Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
+  extends
+    Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
   /**
@@ -49,7 +48,8 @@ export interface ScatterChartProSlotProps
 }
 
 export interface ScatterChartProProps
-  extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+  extends
+    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
@@ -394,6 +394,16 @@ ScatterChartPro.propTypes = {
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
@@ -420,6 +430,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -489,6 +500,16 @@ ScatterChartPro.propTypes = {
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
@@ -515,6 +536,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -596,6 +618,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -678,6 +701,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -759,6 +783,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -840,6 +865,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -931,6 +957,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1022,6 +1049,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1103,6 +1131,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         zoom: PropTypes.oneOfType([
           PropTypes.shape({
@@ -1182,6 +1211,16 @@ ScatterChartPro.propTypes = {
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
@@ -1207,6 +1246,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1276,6 +1316,16 @@ ScatterChartPro.propTypes = {
         label: PropTypes.string,
         labelStyle: PropTypes.object,
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
@@ -1301,6 +1351,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1381,6 +1432,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1462,6 +1514,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1542,6 +1595,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1622,6 +1676,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1712,6 +1767,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1802,6 +1858,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([
@@ -1882,6 +1939,7 @@ ScatterChartPro.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
         zoom: PropTypes.oneOfType([

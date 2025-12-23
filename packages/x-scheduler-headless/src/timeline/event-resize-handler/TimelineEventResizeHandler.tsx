@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventResizeHandler } from '../../utils/useEventResizeHandler';
 import { useTimelineEventContext } from '../event/TimelineEventContext';
 import type { TimelineEvent } from '../event/TimelineEvent';
+import { SchedulerEventSide } from '../../models';
 
 export const TimelineEventResizeHandler = React.forwardRef(function TimelineEventResizeHandler(
   componentProps: TimelineEventResizeHandler.Props,
@@ -53,11 +54,10 @@ export namespace TimelineEventResizeHandler {
   export interface State extends useEventResizeHandler.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
-      useEventResizeHandler.PublicParameters {}
+    extends BaseUIComponentProps<'div', State>, useEventResizeHandler.PublicParameters {}
 
   export interface DragData extends TimelineEvent.SharedDragData {
     source: 'TimelineEventResizeHandler';
-    side: 'start' | 'end';
+    side: SchedulerEventSide;
   }
 }

@@ -2,6 +2,8 @@
 export * from './components/ChartsAxesGradients';
 export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
+export * from '../BarChart/BarLabel/BarLabelPlot';
+export * from '../BarChart/BarClipPath';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -19,6 +21,7 @@ export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
+export { useSkipAnimation } from '../hooks/useSkipAnimation';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -28,6 +31,7 @@ export * from './plugins/corePlugins/useChartInteractionListener';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
+export * from './plugins/featurePlugins/useChartTooltip';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
@@ -39,7 +43,6 @@ export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/
 
 export * from './store/useCharts';
 export * from './store/useStore';
-export * from './store/useSelector';
 
 // plugins configs
 
@@ -50,13 +53,12 @@ export * from '../RadarChart/RadarChart.plugins';
 export * from '../PieChart/PieChart.plugins';
 
 // utils
-export * from './defaultizeValueFormatter';
 export * from './configInit';
 export * from './getLabel';
 export * from './getSVGPoint';
 export * from './isDefined';
 export * from './getScale';
-export * from './stackSeries';
+export * from './stacking';
 export * from './getCurve';
 export * from './consumeSlots';
 export * from './consumeThemeProps';
@@ -67,6 +69,8 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
+export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
+export { getBandSize } from './getBandSize';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';

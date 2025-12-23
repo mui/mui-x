@@ -1,5 +1,5 @@
-import { createSelector } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '../models';
+import { createSelector } from '@base-ui/utils/store';
+import { TemporalSupportedObject } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 
 export const schedulerNowSelectors = {
@@ -8,6 +8,6 @@ export const schedulerNowSelectors = {
   isCurrentDay: createSelector(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
-    (adapter, now, date: SchedulerValidDate) => adapter.isSameDay(date, now),
+    (adapter, now, date: TemporalSupportedObject) => adapter.isSameDay(date, now),
   ),
 };

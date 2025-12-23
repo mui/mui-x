@@ -1,16 +1,7 @@
 'use client';
 import * as React from 'react';
-import { SchedulerValidDate } from '../../models';
 
 export interface TimelineEventRowContext {
-  /**
-   * The start date and time of the row.
-   */
-  start: SchedulerValidDate;
-  /**
-   * The end date and time of the row.
-   */
-  end: SchedulerValidDate;
   /**
    * Gets the cursor position in the element in milliseconds.
    * @param {Object} parameters The parameters of the method.

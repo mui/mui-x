@@ -3,7 +3,7 @@ title: Content Security Policy (CSP)
 productId: x-charts
 ---
 
-# Content Security Policy (CSP)
+# Charts - Content Security Policy (CSP)
 
 <p class="description">This section covers the details of setting up a Content Security Policy.</p>
 

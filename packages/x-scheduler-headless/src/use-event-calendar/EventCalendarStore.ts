@@ -1,10 +1,10 @@
-import { warn } from '@base-ui-components/utils/warn';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { warn } from '@base-ui/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,
   EventCalendarViewConfig,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   EventCalendarPreferencesMenuConfig,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
@@ -14,6 +14,7 @@ import {
   SchedulerStore,
 } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
+import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -102,7 +103,7 @@ export class EventCalendarStore<
   }
 
   private setVisibleDateAndView = (
-    visibleDate: SchedulerValidDate,
+    visibleDate: TemporalSupportedObject,
     view: CalendarView,
     event: React.UIEvent,
   ) => {
@@ -120,22 +121,26 @@ export class EventCalendarStore<
     }
 
     this.assertViewValidity(view);
+    const eventDetails = createChangeEventDetails('none', event.nativeEvent);
+
+    if (hasVisibleDateChange) {
+      onVisibleDateChange?.(visibleDate, eventDetails);
+    }
+    if (hasViewChange) {
+      onViewChange?.(view, eventDetails);
+    }
+
+    if (eventDetails.isCanceled) {
+      return;
+    }
 
     const canSetVisibleDate = visibleDateProp === undefined && hasVisibleDateChange;
     const canSetView = viewProp === undefined && hasViewChange;
-
     if (canSetVisibleDate || canSetView) {
       this.update({
         ...(canSetVisibleDate ? { visibleDate } : undefined),
         ...(canSetView ? { view } : undefined),
       });
-    }
-
-    if (hasVisibleDateChange) {
-      onVisibleDateChange?.(visibleDate, event);
-    }
-    if (hasViewChange) {
-      onViewChange?.(view, event);
     }
   };
 
@@ -154,14 +159,17 @@ export class EventCalendarStore<
   /**
    * Sets the view of the calendar.
    */
-  public setView = (view: CalendarView, event: React.UIEvent | Event) => {
+  public setView = (view: CalendarView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
     if (view !== this.state.view) {
       this.assertViewValidity(view);
-      if (viewProp === undefined) {
+
+      const eventDetails = createChangeEventDetails('none', event);
+      onViewChange?.(view, eventDetails);
+
+      if (!eventDetails.isCanceled && viewProp === undefined) {
         this.set('view', view);
       }
-      onViewChange?.(view, event);
     }
   };
 
@@ -178,17 +186,14 @@ export class EventCalendarStore<
   /**
    * Goes to a specific day and set the view to 'day'.
    */
-  public switchToDay = (visibleDate: SchedulerValidDate, event: React.UIEvent) => {
+  public switchToDay = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     this.setVisibleDateAndView(visibleDate, 'day', event);
   };
 
   /**
    * Updates some preferences of the calendar.
    */
-  public setPreferences = (
-    partialPreferences: Partial<EventCalendarPreferences>,
-    event: React.UIEvent | Event,
-  ) => {
+  public setPreferences = (partialPreferences: Partial<EventCalendarPreferences>, event: Event) => {
     const { preferences: preferencesProp, onPreferencesChange } = this.parameters;
 
     const updated = {
@@ -196,11 +201,12 @@ export class EventCalendarStore<
       ...partialPreferences,
     };
 
-    if (preferencesProp === undefined) {
+    const eventDetails = createChangeEventDetails('none', event);
+    onPreferencesChange?.(updated, eventDetails);
+
+    if (!eventDetails.isCanceled && preferencesProp === undefined) {
       this.set('preferences', updated);
     }
-
-    onPreferencesChange?.(updated, event);
   };
 
   /**

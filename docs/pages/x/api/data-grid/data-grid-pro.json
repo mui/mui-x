@@ -13,7 +13,7 @@
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -182,11 +182,27 @@
         "returned": "boolean"
       }
     },
+    "isRowReorderable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object, params.row: R, params.rowNode: GridTreeNode) => boolean",
+        "describedArgs": ["params", "params.row", "params.rowNode"],
+        "returned": "boolean"
+      }
+    },
     "isRowSelectable": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(params: GridRowParams) => boolean",
         "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "isValidRowReorder": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(context: ReorderValidationContext) => boolean",
+        "describedArgs": ["context"],
         "returned": "boolean"
       }
     },
@@ -588,6 +604,14 @@
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
+    "setTreeDataPath": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(path: Array<string>, row: R) => R",
+        "describedArgs": ["path", "row"],
+        "returned": "R"
+      }
+    },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -2113,18 +2137,6 @@
       "key": "row--dragging",
       "className": "MuiDataGridPro-row--dragging",
       "description": "Styles applied to the floating special row reorder cell element when it is dragged.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropAbove",
-      "className": "MuiDataGridPro-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGridPro-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
       "isGlobal": false
     },
     {

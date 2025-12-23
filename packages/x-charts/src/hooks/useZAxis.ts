@@ -2,13 +2,12 @@
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartZAxis';
-import { useSelector } from '../internals/store/useSelector';
 
 export function useZAxes() {
   const store = useStore<[UseChartZAxisSignature]>();
-  const { axis: zAxis, axisIds: zAxisIds } = useSelector(store, selectorChartZAxis) ?? {
+  const { axis: zAxis, axisIds: zAxisIds } = store.use(selectorChartZAxis) ?? {
     axis: {},
     axisIds: [],
   };

@@ -405,7 +405,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
         // get the sort button in column header 1
         const columnMenuButton =
-          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
+          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[aria-label="Sort"]`)!;
 
         // Simulate click on this button
         await user.click(columnMenuButton);
@@ -741,8 +741,14 @@ describe('<DataGrid /> - Keyboard', () => {
         field: 'actions',
         type: 'actions',
         getActions: () => [
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} />,
+          <GridActionsCellItem
+            key={1}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_1'}
+            disabled
+          />,
+          <GridActionsCellItem key={2} label="Test" icon={<RestoreIcon />} id={'action_2'} />,
         ],
       },
       { field: 'id', width: 400 },

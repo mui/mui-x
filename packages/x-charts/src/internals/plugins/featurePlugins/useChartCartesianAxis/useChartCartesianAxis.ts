@@ -4,11 +4,10 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type ChartPlugin } from '../../models';
+import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
-import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
@@ -44,12 +43,12 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const processedSeries = store.use(selectorChartSeriesProcessed);
 
-  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
-  const { axis: xAxisWithScale, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxisWithScale, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
+  const { axis: xAxisWithScale, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxisWithScale, axisIds: yAxisIds } = store.use(selectorChartYAxis);
 
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',

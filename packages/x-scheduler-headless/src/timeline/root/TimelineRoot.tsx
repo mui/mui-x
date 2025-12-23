@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { Store } from '@base-ui-components/utils/store';
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
+import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { State } from './store';
-import { TimelineRootContext } from './TimelineRootContext';
+import { useTimelineStoreContext } from '../../use-timeline-store-context';
+import { timelineViewSelectors } from '../../timeline-selectors';
+import { TimelineRootCssVars } from './TimelineRootCssVars';
+import { schedulerResourceSelectors } from '../../scheduler-selectors';
 
 export const TimelineRoot = React.forwardRef(function TimelineRoot(
   componentProps: TimelineRoot.Props,
@@ -16,40 +16,33 @@ export const TimelineRoot = React.forwardRef(function TimelineRoot(
     // Rendering props
     className,
     render,
-    // Internal props
-    items: itemsProp,
     // Props forwarded to the DOM element
     ...elementProps
   } = componentProps;
 
-  const props = { role: 'grid' };
+  // Context hooks
+  const store = useTimelineStoreContext();
 
-  const store = useRefWithInit(() => new Store<State>({ items: itemsProp })).current;
+  // Selector hooks
+  const resourcesCount = useStore(store, schedulerResourceSelectors.resourcesCount);
+  const viewConfig = useStore(store, timelineViewSelectors.config);
 
-  const contextValue = React.useMemo(() => ({ store }), [store]);
+  const props = {
+    role: 'grid',
+    style: {
+      [TimelineRootCssVars.unitCount]: viewConfig.unitCount,
+      [TimelineRootCssVars.rowCount]: resourcesCount,
+    } as React.CSSProperties,
+  };
 
-  useIsoLayoutEffect(() => {
-    store.set('items', itemsProp);
-  }, [store, itemsProp]);
-
-  const element = useRenderElement('div', componentProps, {
+  return useRenderElement('div', componentProps, {
     ref: [forwardedRef],
     props: [props, elementProps],
   });
-
-  return (
-    <TimelineRootContext.Provider value={contextValue}>{element}</TimelineRootContext.Provider>
-  );
-}) as TimelineRoot.Component;
+});
 
 export namespace TimelineRoot {
   export interface State {}
 
-  export interface Props<Item = any> extends BaseUIComponentProps<'div', State> {
-    items: Item[];
-  }
-
-  export type Component = <Item = any>(
-    props: Props<Item> & React.RefAttributes<HTMLDivElement>,
-  ) => React.ReactElement;
+  export interface Props extends BaseUIComponentProps<'div', State> {}
 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SchedulerEventOccurrence, SchedulerProcessedDate } from '../models';
 import { useEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
-import { useAdapter, diffIn } from '../use-adapter/useAdapter';
-import { sortEventOccurrences } from '../utils/event-utils';
+import { useAdapter } from '../use-adapter/useAdapter';
+import { sortEventOccurrences } from '../sort-event-occurrences';
 
 /**
  * Places event occurrences for a list of days, where if an event is rendered in a day, it fills the entire day cell (no notion of time).
@@ -62,7 +62,8 @@ export function useEventOccurrencesWithDayGridPosition(
             i += 1;
           }
 
-          const durationInDays = diffIn(adapter, occurrence.end.value, day.value, 'days') + 1;
+          const durationInDays =
+            adapter.differenceInDays(occurrence.displayTimezone.end.value, day.value) + 1;
           position = {
             index: i,
             daySpan: Math.min(durationInDays, dayListSize - dayIndex), // Don't go past the day list end

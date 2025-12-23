@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
@@ -186,63 +186,63 @@ describe('EventCalendar', () => {
       const { user } = render(<EventCalendar events={[]} />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to change the time format using the UI in the month view', async () => {
       const { user } = render(<EventCalendar events={[event1]} defaultView="month" />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to change the time format using the UI in the agenda view', async () => {
       const { user } = render(<EventCalendar events={[event1]} defaultView="agenda" />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
@@ -269,6 +269,48 @@ describe('EventCalendar', () => {
       await user.click(document.body);
 
       expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
+    });
+  });
+
+  describe('className property', () => {
+    it('should apply className to event elements in week view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Important Meeting')
+        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .className('custom-event-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} />);
+
+      const eventElement = screen.getByRole('button', { name: /Important Meeting/i });
+      expect(eventElement.classList.contains('custom-event-class')).to.equal(true);
+    });
+
+    it('should apply className to event elements in month view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Monthly Event')
+        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .className('monthly-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} defaultView="month" />);
+
+      const eventElement = screen.getByLabelText(/Monthly Event/i);
+      expect(eventElement.classList.contains('monthly-class')).to.equal(true);
+    });
+
+    it('should apply className to event elements in agenda view', () => {
+      const eventWithClassName = EventBuilder.new()
+        .title('Agenda Event')
+        .span('2025-05-26T14:00:00', '2025-05-26T15:00:00')
+        .className('agenda-class')
+        .build();
+
+      render(<EventCalendar events={[eventWithClassName]} defaultView="agenda" />);
+
+      const eventElement = document.querySelector('.agenda-class');
+      expect(eventElement).not.to.equal(null);
+      expect(eventElement?.textContent).to.include('Agenda Event');
     });
   });
 });

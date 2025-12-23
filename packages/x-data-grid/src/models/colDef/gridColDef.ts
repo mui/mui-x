@@ -295,8 +295,11 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridActionsColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'actions'
@@ -329,8 +332,11 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridSingleSelectColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'singleSelect'

@@ -1,11 +1,10 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarEventSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { getColorClassName } from '../../../utils/color-utils';
@@ -24,15 +23,22 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const store = useEventCalendarStoreContext();
 
   // Selector hooks
-  const isRecurring = Boolean(occurrence.rrule);
-  const isDraggable = useStore(store, eventCalendarEventSelectors.isDraggable, occurrence.id);
-  const isResizable = useStore(store, eventCalendarEventSelectors.isResizable, occurrence.id);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
+  const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
+  const isStartResizable = useStore(
+    store,
+    schedulerEventSelectors.isResizable,
+    occurrence.id,
+    'start',
+  );
+  const isEndResizable = useStore(store, schedulerEventSelectors.isResizable, occurrence.id, 'end');
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
 
   // Feature hooks
   const formatTime = useFormatTime();
 
-  const durationMs = occurrence.end.timestamp - occurrence.start.timestamp;
+  const durationMs =
+    occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -51,7 +57,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
           <span className="EventTitle">{occurrence.title}</span>
-          <time className="EventTime">{formatTime(occurrence.start.value)}</time>
+          <time className="EventTime">{formatTime(occurrence.displayTimezone.start.value)}</time>
           {isRecurring && (
             <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
           )}
@@ -70,7 +76,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           className={clsx('EventTime', 'LinesClamp')}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          {formatTime(occurrence.start.value)} - {formatTime(occurrence.end.value)}
+          {formatTime(occurrence.displayTimezone.start.value)} -{' '}
+          {formatTime(occurrence.displayTimezone.end.value)}
         </time>
         {isRecurring && (
           <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
@@ -82,15 +89,15 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     isLessThan30Minutes,
     titleLineCountRegularVariant,
     occurrence.title,
-    occurrence.start,
-    occurrence.end,
+    occurrence.displayTimezone.start.value,
+    occurrence.displayTimezone.end.value,
     formatTime,
     isRecurring,
   ]);
 
   const sharedProps = {
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     className: clsx(
       className,
@@ -103,6 +110,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       isDraggable && 'Draggable',
       isRecurring && 'Recurrent',
       getColorClassName(color),
+      occurrence.className,
     ),
     style: {
       '--first-index': occurrence.position.firstIndex,
@@ -127,11 +135,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       {...sharedProps}
     >
-      {isResizable && (
+      {isStartResizable && (
         <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
       )}
       {content}
-      {isResizable && (
+      {isEndResizable && (
         <CalendarGrid.TimeEventResizeHandler side="end" className="TimeGridEventResizeHandler" />
       )}
     </CalendarGrid.TimeEvent>

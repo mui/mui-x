@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
+  type ChartPlugin,
   getSVGPoint,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import { translateZoom } from './useZoom.utils';
 import { selectorPanInteractionConfig } from '../ZoomInteractionConfig.selectors';
 
@@ -21,11 +20,11 @@ export const usePanOnWheel = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const config = useSelector(store, selectorPanInteractionConfig, 'wheel' as const);
+  const config = store.use(selectorPanInteractionConfig, 'wheel' as const);
 
   const isPanOnWheelEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

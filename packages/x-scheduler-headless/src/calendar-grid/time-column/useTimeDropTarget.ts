@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerEvent, SchedulerValidDate } from '../../models';
+import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
 import { useDropTarget } from '../../utils/useDropTarget';
@@ -27,10 +27,8 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
-  // TODO: Avoid JS date conversion
-  const getTimestamp = (date: SchedulerValidDate) => adapter.toJsDate(date).getTime();
-  const collectionStartTimestamp = getTimestamp(start);
-  const collectionEndTimestamp = getTimestamp(end);
+  const collectionStartTimestamp = adapter.getTime(start);
+  const collectionEndTimestamp = adapter.getTime(end);
   const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
 
   const getCursorPositionInElementMs: CalendarGridTimeColumnContext['getCursorPositionInElementMs'] =
@@ -54,27 +52,23 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
 
       const cursorOffsetMs = getCursorPositionInElementMs({ input, elementRef: ref });
 
-      const addOffsetToDate = (date: SchedulerValidDate, offsetMs: number) => {
+      const addOffsetToDate = (date: TemporalSupportedObject, offsetMs: number) => {
         const roundedOffset =
           Math.round(offsetMs / EVENT_DRAG_PRECISION_MS) * EVENT_DRAG_PRECISION_MS;
 
-        // TODO: Use "addMilliseconds" instead of "addSeconds" when available in the adapter
-        return adapter.addSeconds(date, roundedOffset / 1000);
+        return adapter.addMilliseconds(date, roundedOffset);
       };
 
       // Move a Time Grid Event within the Time Grid
       if (data.source === 'CalendarGridTimeEvent') {
-        // TODO: Avoid JS Date conversion
-        const eventDurationMinute =
-          (adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime()) /
-          (60 * 1000);
+        const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
         const newStartDate = addOffsetToDate(
           start,
           cursorOffsetMs - data.initialCursorPositionInEventMs,
         );
 
-        const newEndDate = adapter.addMinutes(newStartDate, eventDurationMinute);
+        const newEndDate = adapter.addMilliseconds(newStartDate, eventDurationMs);
 
         return getDataFromInside(data, newStartDate, newEndDate);
       }
@@ -97,9 +91,7 @@ export function useTimeDropTarget(parameters: useTimeDropTarget.Parameters) {
         }
 
         if (data.side === 'end') {
-          // TODO: Avoid JS Date conversion
-          const eventDurationMs =
-            adapter.toJsDate(data.end).getTime() - adapter.toJsDate(data.start).getTime();
+          const eventDurationMs = adapter.getTime(data.end) - adapter.getTime(data.start);
 
           const cursorDate = addOffsetToDate(
             start,
@@ -150,17 +142,19 @@ export namespace useTimeDropTarget {
     /**
      * The data and time at which the column starts.
      */
-    start: SchedulerValidDate;
+    start: TemporalSupportedObject;
     /**
      * The data and time at which the column ends.
      */
-    end: SchedulerValidDate;
+    end: TemporalSupportedObject;
     /**
      * Add properties to the event dropped in the column before storing it in the store.
      */
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
-  export interface ReturnValue
-    extends Pick<CalendarGridTimeColumnContext, 'getCursorPositionInElementMs'> {}
+  export interface ReturnValue extends Pick<
+    CalendarGridTimeColumnContext,
+    'getCursorPositionInElementMs'
+  > {}
 }

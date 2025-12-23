@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
-import { Field } from '@base-ui-components/react/field';
-import { Fieldset } from '@base-ui-components/react/fieldset';
-import { Input } from '@base-ui-components/react/input';
-import { Select } from '@base-ui-components/react/select';
-import { RadioGroup } from '@base-ui-components/react/radio-group';
-import { Radio } from '@base-ui-components/react/radio';
+import { useStore } from '@base-ui/utils/store';
+import { Field } from '@base-ui/react/field';
+import { Fieldset } from '@base-ui/react/fieldset';
+import { Input } from '@base-ui/react/input';
+import { Select } from '@base-ui/react/select';
+import { RadioGroup } from '@base-ui/react/radio-group';
+import { Radio } from '@base-ui/react/radio';
 import { ChevronDown } from 'lucide-react';
-import { Toggle } from '@base-ui-components/react/toggle';
-import { ToggleGroup } from '@base-ui-components/react/toggle-group';
+import { Toggle } from '@base-ui/react/toggle';
+import { ToggleGroup } from '@base-ui/react/toggle-group';
 import {
   SchedulerEventOccurrence,
   RecurringEventFrequency,
@@ -23,7 +23,7 @@ import {
   schedulerEventSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { Tabs } from '@base-ui-components/react/tabs';
+import { Tabs } from '@base-ui/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
@@ -52,13 +52,13 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
   const monthlyRef = useStore(
     store,
     schedulerRecurringEventSelectors.monthlyReference,
-    occurrence.start,
+    occurrence.displayTimezone.start,
   );
   const weeklyDays = useStore(store, schedulerRecurringEventSelectors.weeklyDays);
 
   const handleRecurrenceSelectionChange = (value: RecurringEventPresetKey | null | 'custom') => {
     if (value === 'custom') {
-      const base = occurrence.rrule;
+      const base = occurrence.displayTimezone.rrule;
       setControlled((prev) => ({
         ...prev,
         recurrenceSelection: 'custom',
@@ -88,7 +88,10 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }));
   };
 
-  const handleChangeFrequency = (value: RecurringEventFrequency) => {
+  const handleChangeFrequency = (value: RecurringEventFrequency | null) => {
+    if (value == null) {
+      return;
+    }
     setControlled((prev) => ({
       ...prev,
       rruleDraft: { ...prev.rruleDraft, freq: value },
@@ -174,8 +177,11 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     controlled.rruleDraft,
   );
 
-  const weekday = adapter.format(occurrence.start.value, 'weekday');
-  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(occurrence.start.value, adapter);
+  const weekday = adapter.format(occurrence.displayTimezone.start.value, 'weekday');
+  const dateForYearlyOption = formatDayOfMonthAndMonthFullLetter(
+    occurrence.displayTimezone.start.value,
+    adapter,
+  );
 
   const recurrenceOptions: {
     label: string;
@@ -188,7 +194,7 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
       value: 'WEEKLY',
     },
     {
-      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.start.value))}`,
+      label: `${translations.recurrenceMonthlyPresetLabel(adapter.getDate(occurrence.displayTimezone.start.value))}`,
       value: 'MONTHLY',
     },
     {
@@ -455,8 +461,9 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
                 <Input
                   type="date"
                   value={
-                    customEndsValue === 'until' && adapter.isValid(controlled.rruleDraft.until)
-                      ? adapter.formatByString(controlled.rruleDraft.until, 'yyyy-MM-dd')
+                    customEndsValue === 'until' &&
+                    adapter.isValid(controlled.rruleDraft.until ?? null)
+                      ? adapter.formatByString(controlled.rruleDraft.until!, 'yyyy-MM-dd')
                       : ''
                   }
                   onChange={handleChangeUntil}

@@ -1,4 +1,4 @@
-import { createSelector } from '@mui/x-internals/store';
+import { createSelectorMemoized } from '@mui/x-internals/store';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
 import {
   selectorChartRawXAxis,
@@ -17,13 +17,13 @@ import {
   selectorChartZoomOptionsLookup,
 } from './useChartCartesianAxisRendering.selectors';
 import {
-  AxisId,
-  ChartsAxisProps,
-  D3Scale,
-  DefaultedAxis,
-  ScaleName,
+  type AxisId,
+  type ChartsAxisProps,
+  type D3Scale,
+  type DefaultedAxis,
+  type ScaleName,
 } from '../../../../models/axis';
-import { ZoomData } from './zoom.types';
+import { type ZoomData } from './zoom.types';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
 import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { getRange } from './getAxisScale';
@@ -53,7 +53,7 @@ function createPreviewDrawingArea(
       };
 }
 
-export const selectorChartPreviewXScales = createSelector(
+export const selectorChartPreviewXScales = createSelectorMemoized(
   selectorChartRawXAxis,
   selectorChartDrawingArea,
   selectorChartZoomOptionsLookup,
@@ -87,7 +87,7 @@ export const selectorChartPreviewXScales = createSelector(
   },
 );
 
-export const selectorChartPreviewComputedXAxis = createSelector(
+export const selectorChartPreviewComputedXAxis = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartSeriesConfig,
   selectorChartZoomOptionsLookup,
@@ -130,7 +130,7 @@ export const selectorChartPreviewComputedXAxis = createSelector(
   },
 );
 
-export const selectorChartPreviewYScales = createSelector(
+export const selectorChartPreviewYScales = createSelectorMemoized(
   selectorChartRawYAxis,
   selectorChartDrawingArea,
   selectorChartZoomOptionsLookup,
@@ -169,7 +169,7 @@ export const selectorChartPreviewYScales = createSelector(
   },
 );
 
-export const selectorChartPreviewComputedYAxis = createSelector(
+export const selectorChartPreviewComputedYAxis = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartSeriesConfig,
   selectorChartZoomOptionsLookup,

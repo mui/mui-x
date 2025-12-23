@@ -1,4 +1,4 @@
-import { act, fireEvent } from '@mui/internal-test-utils';
+import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { describeTreeView } from 'test/utils/tree-view/describeTreeView';
 
 // TODO #20051: Replace with imported type
@@ -131,6 +131,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
+        await screen.findByText('1-1');
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
@@ -146,6 +147,7 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         });
 
         await awaitMockFetch();
+        await screen.findByText('1-1-1-1');
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '1-1-1', '1-1-1-1']);
       });
@@ -185,6 +187,45 @@ describeTreeView<RichTreeViewProStore<any, any>>(
         expect(view.isItemExpanded('1')).to.equal(true);
         expect(view.isItemExpanded('2')).to.equal(true);
         expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1', '2', '2-1']);
+      });
+    });
+    describe('updateItemChildren', () => {
+      it('should refresh root children when updateItemChildren is called with null', async () => {
+        const view = render({
+          items: [{ id: 'initial', childrenCount: 0 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['initial']);
+
+        await act(async () => {
+          await view.apiRef.current.updateItemChildren(null);
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+      });
+      it('should refresh specific item children when updateItemChildren is called with an id', async () => {
+        const view = render({
+          items: [{ id: '1', childrenCount: 1 }],
+          dataSource: {
+            getChildrenCount: (item) => item?.childrenCount as number,
+            getTreeItems: mockFetchData,
+          },
+        });
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1']);
+
+        await act(async () => {
+          await view.apiRef.current.updateItemChildren('1');
+        });
+        await awaitMockFetch();
+        fireEvent.click(view.getItemContent('1'));
+        await awaitMockFetch();
+
+        expect(view.getAllTreeItemIds()).to.deep.equal(['1', '1-1']);
       });
     });
   },

@@ -1,5 +1,5 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { SchedulerEvent, SchedulerEventId } from '../models';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { SchedulerEvent, SchedulerEventId, SchedulerEventSide } from '../models';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
 import { DEFAULT_EVENT_CREATION_CONFIG } from '../constants';
@@ -19,7 +19,7 @@ const isEventReadOnlySelector = createSelector(
 );
 
 export const schedulerEventSelectors = {
-  creationConfig: createSelector(
+  creationConfig: createSelectorMemoized(
     (state: State) => state.readOnly,
     (state: State) => state.eventCreation,
     (isSchedulerReadOnly, creationConfig) => {
@@ -53,6 +53,16 @@ export const schedulerEventSelectors = {
     },
   ),
   processedEvent: processedEventSelector,
+  processedEventRequired: createSelector(
+    processedEventSelector,
+    (event, eventId: SchedulerEventId) => {
+      if (!event) {
+        throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+      }
+
+      return event;
+    },
+  ),
   isReadOnly: isEventReadOnlySelector,
   color: createSelector((state: State, eventId: SchedulerEventId) => {
     const event = processedEventSelector(state, eventId);
@@ -74,7 +84,7 @@ export const schedulerEventSelectors = {
 
     return state.eventColor;
   }),
-  isPropertyReadOnly: createSelector(
+  isPropertyReadOnly: createSelectorMemoized(
     isEventReadOnlySelector,
     (state: State) => state.eventModelStructure,
     (isEventReadOnly, eventModelStructure, _eventId: SchedulerEventId) => {
@@ -105,4 +115,126 @@ export const schedulerEventSelectors = {
   canDropEventsToTheOutside: createSelector(
     (state: State) => state.canDropEventsToTheOutside && !state.readOnly,
   ),
+  isDraggable: createSelector((state: State, eventId: SchedulerEventId) => {
+    if (isEventReadOnlySelector(state, eventId)) {
+      return false;
+    }
+
+    const eventModelStructure = state.eventModelStructure;
+    if (eventModelStructure?.start && !eventModelStructure?.start.setter) {
+      return false;
+    }
+
+    if (eventModelStructure?.end && !eventModelStructure?.end.setter) {
+      return false;
+    }
+
+    const processedEvent = processedEventSelector(state, eventId);
+    if (!processedEvent) {
+      return false;
+    }
+
+    // If the `draggable` property is defined on the event, it takes precedence
+    if (processedEvent.draggable !== undefined) {
+      return processedEvent.draggable;
+    }
+
+    // Then check if the resource or any ancestor has the `areEventsDraggable` property defined
+    const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+    let currentResourceId = processedEvent.resource;
+    while (currentResourceId != null) {
+      const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+      if (resource?.areEventsDraggable !== undefined) {
+        return resource.areEventsDraggable;
+      }
+      currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
+    }
+
+    // Otherwise, fall back to the component-level setting
+    return state.areEventsDraggable;
+  }),
+  isResizable: createSelector(
+    (state: State, eventId: SchedulerEventId, side: SchedulerEventSide) => {
+      if (isEventReadOnlySelector(state, eventId)) {
+        return false;
+      }
+
+      const eventModelStructure = state.eventModelStructure;
+      if (side === 'start' && eventModelStructure?.start && !eventModelStructure?.start.setter) {
+        return false;
+      }
+
+      if (side === 'end' && eventModelStructure?.end && !eventModelStructure?.end.setter) {
+        return false;
+      }
+
+      const processedEvent = processedEventSelector(state, eventId);
+      if (!processedEvent) {
+        return false;
+      }
+
+      // If the `resizable` property is defined on the event, it takes precedence
+      const isResizableFromEventProperty = getIsResizableFromProperty(
+        processedEvent.resizable,
+        side,
+      );
+
+      if (isResizableFromEventProperty !== null) {
+        return isResizableFromEventProperty;
+      }
+
+      // TODO: Pre-process the resource, like we do for the event. That way we can compute this information only once.
+      // Then check if the resource or any ancestor has the `areEventsResizable` property defined
+      const resourceParentIdLookup = schedulerResourceSelectors.resourceParentIdLookup(state);
+      let currentResourceId = processedEvent.resource;
+      while (currentResourceId != null) {
+        const resource = schedulerResourceSelectors.processedResource(state, currentResourceId);
+        const isResizableFromResourceProperty = getIsResizableFromProperty(
+          resource?.areEventsResizable,
+          side,
+        );
+
+        if (isResizableFromResourceProperty !== null) {
+          return isResizableFromResourceProperty;
+        }
+        currentResourceId = resourceParentIdLookup.get(currentResourceId) ?? null;
+      }
+
+      // Otherwise, fall back to the component-level setting
+      const isResizableFromComponentProperty = getIsResizableFromProperty(
+        state.areEventsResizable,
+        side,
+      );
+
+      return isResizableFromComponentProperty ?? false;
+    },
+  ),
+  isRecurring: createSelector(processedEventSelector, (event) =>
+    Boolean(event?.dataTimezone.rrule),
+  ),
 };
+
+function getIsResizableFromProperty(
+  propertyValue: boolean | SchedulerEventSide | undefined,
+  side: SchedulerEventSide,
+): boolean | null {
+  if (propertyValue === undefined) {
+    return null;
+  }
+
+  if (propertyValue === true) {
+    return true;
+  }
+
+  if (propertyValue === false) {
+    return false;
+  }
+
+  if (propertyValue === side) {
+    return true;
+  }
+
+  // If the property is a specific side (e.g., 'start' or 'end') but doesn't match the current side,
+  // return false because the property explicitly restricts resizing to a specific side.
+  return false;
+}

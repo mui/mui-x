@@ -5,6 +5,7 @@ import { RichTreeViewPluginSignatures } from '../RichTreeView/RichTreeView.plugi
 
 /**
  * Hook that instantiates a [[TreeViewApiRef]].
+ * @deprecated Use `useRichTreeViewApiRef()`, `useRichTreeViewProApiRef()` or `useSimpleTreeViewApiRef()` instead.
  */
 export const useTreeViewApiRef = <
   TSignatures extends readonly TreeViewAnyPluginSignature[] = RichTreeViewPluginSignatures,

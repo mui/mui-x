@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SchedulerEventOccurrence } from '../models';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { Adapter } from '../use-adapter/useAdapter.types';
-import { sortEventOccurrences } from '../utils/event-utils';
+import { sortEventOccurrences } from '../sort-event-occurrences';
 
 /**
  * Places event occurrences for a timeline UI.
@@ -38,7 +38,7 @@ export namespace useEventOccurrencesWithTimelinePosition {
     /**
      * The occurrences without the position information
      */
-    occurrences: SchedulerEventOccurrence[];
+    occurrences: readonly SchedulerEventOccurrence[];
     /**
      * Maximum amount of columns an event can span across.
      */
@@ -89,9 +89,8 @@ function buildOccurrenceConflicts(
   // Group occurrences in non-overlapping blocks to reduce the number of comparisons when looking for conflicts.
   // Computes the properties needed for each occurrence.
   for (const occurrence of occurrences) {
-    // TODO: Avoid JS Date conversion
-    const startTimestamp = occurrence.start.timestamp;
-    const endTimestamp = occurrence.end.timestamp;
+    const startTimestamp = occurrence.displayTimezone.start.timestamp;
+    const endTimestamp = occurrence.displayTimezone.end.timestamp;
     const occurrenceDurationMs = endTimestamp - startTimestamp;
 
     if (startTimestamp >= lastEndTimestamp) {

@@ -14,7 +14,8 @@ import NestedPaginationGroupingCell from './NestedPaginationGroupingCell';
 type Depth = number;
 
 interface UseNestedPaginationReturnType
-  extends Pick<
+  extends
+    Pick<
       DataGridProProps,
       | 'paginationModel'
       | 'onPaginationModelChange'

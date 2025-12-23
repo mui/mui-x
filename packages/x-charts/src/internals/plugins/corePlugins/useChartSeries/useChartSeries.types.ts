@@ -1,10 +1,14 @@
-import { AllSeriesType } from '../../../../models/seriesType';
-import { ChartsColorPalette } from '../../../../colorPalettes';
-import { ChartPluginSignature, ChartSeriesConfig } from '../../models';
-import { ChartSeriesType, DatasetType } from '../../../../models/seriesType/config';
+import { type AllSeriesType } from '../../../../models/seriesType';
+import { type ChartsColorPalette } from '../../../../colorPalettes';
 import {
-  SeriesProcessorParams,
-  SeriesProcessorResult,
+  type ChartPluginSignature,
+  type ChartSeriesConfig,
+  type SeriesLayoutGetterResult,
+} from '../../models';
+import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
+import {
+  type SeriesProcessorParams,
+  type SeriesProcessorResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
@@ -44,6 +48,10 @@ export type UseChartSeriesDefaultizedParameters<T extends ChartSeriesType = Char
 
 export type ProcessedSeries<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
   [type in TSeriesTypes]?: SeriesProcessorResult<type>;
+};
+
+export type SeriesLayout<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {
+  [type in TSeriesTypes]?: SeriesLayoutGetterResult<type>;
 };
 
 export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = ChartSeriesType> = {

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ChartAnyPluginSignature } from '@mui/x-charts/internals';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ProPluginsPerSeriesType, type ChartProApi } from '../context/ChartProApi';
+import { type ChartAnyPluginSignature } from '@mui/x-charts/internals';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { type ProPluginsPerSeriesType, type ChartProApi } from '../context/ChartProApi';
 
 /**
  * Hook that instantiates a [[ChartProApiRef]].
@@ -23,8 +23,8 @@ import { ProPluginsPerSeriesType, type ChartProApi } from '../context/ChartProAp
  */
 export const useChartProApiRef = <
   ChartType extends keyof ProPluginsPerSeriesType = never,
-  Signatures extends
-    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
-    ? ProPluginsPerSeriesType[ChartType]
-    : AllPluginSignatures,
+  Signatures extends readonly ChartAnyPluginSignature[] =
+    ChartType extends keyof ProPluginsPerSeriesType
+      ? ProPluginsPerSeriesType[ChartType]
+      : AllPluginSignatures,
 >() => React.useRef<ChartProApi<ChartType, Signatures> | undefined>(undefined);

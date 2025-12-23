@@ -1,16 +1,15 @@
 import { useRadiusAxes } from '../../hooks/useAxis';
 import { useRadarSeries } from '../../hooks/useRadarSeries';
 import { useRotationScale } from '../../hooks/useScale';
-import { useSelector } from '../../internals/store/useSelector';
 import { useStore } from '../../internals/store/useStore';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 import {
   selectorChartPolarCenter,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
-import { AxisId } from '../../models/axis';
-import { DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
-import { ChartInstance } from '../../internals/plugins/models';
+import { type AxisId } from '../../models/axis';
+import { type DefaultizedRadarSeriesType } from '../../models/seriesType/radar';
+import { type ChartInstance } from '../../internals/plugins/models';
 import {
   selectorChartsInteractionRotationAxisIndex,
   selectorChartsInteractionRotationAxisValue,
@@ -69,10 +68,10 @@ export function useRadarAxisHighlight(): UseRadarAxisHighlightReturnValue | null
   const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
 
   const store = useStore<[UseChartPolarAxisSignature]>();
-  const rotationAxisIndex = useSelector(store, selectorChartsInteractionRotationAxisIndex);
-  const rotationAxisValue = useSelector(store, selectorChartsInteractionRotationAxisValue);
+  const rotationAxisIndex = store.use(selectorChartsInteractionRotationAxisIndex);
+  const rotationAxisValue = store.use(selectorChartsInteractionRotationAxisValue);
 
-  const center = useSelector(store, selectorChartPolarCenter);
+  const center = store.use(selectorChartPolarCenter);
 
   const highlightedIndex = rotationAxisIndex;
 

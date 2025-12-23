@@ -1,6 +1,6 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
-import { storeClasses, buildEvent } from './utils';
+import { storeClasses } from './utils';
 import { schedulerEventSelectors, schedulerResourceSelectors } from '../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] as SchedulerEvent[] };
@@ -9,43 +9,40 @@ storeClasses.forEach((storeClass) => {
   describe(`Core - ${storeClass.name}`, () => {
     describe('create', () => {
       it('should keep provided events array', () => {
-        const events = [
-          buildEvent(
-            '1',
-            'Event 1',
-            adapter.date('2025-08-01T08:00:00Z', 'default'),
-            adapter.date('2025-08-01T09:00:00Z', 'default'),
-          ),
-          buildEvent(
-            '2',
-            'Event 2',
-            adapter.date('2025-09-01T08:00:00Z', 'default'),
-            adapter.date('2025-09-01T09:00:00Z', 'default'),
-          ),
-        ];
+        const event1 = EventBuilder.new().build();
+        const event2 = EventBuilder.new().build();
+        const events = [event1, event2];
 
         const store = new storeClass.Value({ events }, adapter);
 
-        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal(['1', '2']);
-        expect(schedulerEventSelectors.processedEvent(store.state, '1')!.title).to.equal('Event 1');
-        expect(schedulerEventSelectors.processedEvent(store.state, '2')!.title).to.equal('Event 2');
+        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([event1.id, event2.id]);
+        expect(schedulerEventSelectors.processedEvent(store.state, event1.id)!.title).to.equal(
+          event1.title,
+        );
+        expect(schedulerEventSelectors.processedEvent(store.state, event2.id)!.title).to.equal(
+          event2.title,
+        );
         expect(schedulerEventSelectors.modelList(store.state)).to.equal(events);
+      });
+
+      it('should set visibleDate to today in the display timezone when defaultVisibleDate is not provided', () => {
+        const displayTimezone = 'Pacific/Kiritimati';
+        const store = new storeClass.Value({ ...DEFAULT_PARAMS, displayTimezone }, adapter);
+
+        const expectedToday = adapter.startOfDay(adapter.now(displayTimezone));
+
+        expect(store.state.visibleDate).toEqualDateTime(expectedToday);
+        expect(adapter.getTimezone(store.state.visibleDate)).to.equal(displayTimezone);
       });
     });
 
     describe('updater', () => {
       it('should sync partial state from new parameters (events/resources/flags/ampm/indicator)', () => {
         const store = new storeClass.Value(DEFAULT_PARAMS, adapter);
+        const event = EventBuilder.new().build();
 
         const newParams = {
-          events: [
-            buildEvent(
-              '1',
-              'Test Event',
-              adapter.date('2025-07-01T10:00:00Z', 'default'),
-              adapter.date('2025-07-01T11:00:00Z', 'default'),
-            ),
-          ],
+          events: [event],
           resources: [
             { id: 'r1', title: 'Resource 1' },
             { id: 'r2', title: 'Resource 2' },
@@ -57,7 +54,7 @@ storeClasses.forEach((storeClass) => {
 
         store.updateStateFromParameters(newParams, adapter);
 
-        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal(['1']);
+        expect(schedulerEventSelectors.idList(store.state)).to.deep.equal([event.id]);
         expect(schedulerResourceSelectors.idList(store.state)).to.deep.equal(['r1', 'r2']);
 
         expect(store.state.areEventsDraggable).to.equal(true);

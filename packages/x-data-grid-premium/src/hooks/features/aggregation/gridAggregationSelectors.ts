@@ -1,7 +1,10 @@
-import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
-import { GridRowId, gridRowTreeSelector } from '@mui/x-data-grid';
+import {
+  createSelector,
+  createRootSelector,
+  GridAggregationPosition,
+} from '@mui/x-data-grid-pro/internals';
+import { GridRowId, gridRowTreeSelector } from '@mui/x-data-grid-pro';
 import { GridStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationPosition } from './gridAggregationInterfaces';
 
 export const gridAggregationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.aggregation,
