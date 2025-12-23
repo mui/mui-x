@@ -71,6 +71,19 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
   },
 };
 
+const nullifySeries = (series: ProcessedSeries<any>, type: string, id: string) => {
+  return {
+    ...series,
+    [type]: {
+      ...series[type],
+      series: {
+        ...series[type]?.series,
+        [id]: { ...series[type]?.series[id], data: series[type]?.series[id].data.map(() => null) },
+      },
+    },
+  };
+};
+
 describe('getNextNonEmptySeries', () => {
   it('should return next series of same type if available', () => {
     expect(
@@ -93,6 +106,20 @@ describe('getNextNonEmptySeries', () => {
   it('should return first series of same type if no other series type are available', () => {
     expect(getNextNonEmptySeries(seriesSingleType, new Set(['bar']), 'bar', 'b')).to.deep.equal({
       seriesId: 'a',
+      type: 'bar',
+    });
+  });
+
+  it('should not return first series of same type if the series is full of null values', () => {
+    expect(
+      getNextNonEmptySeries(
+        nullifySeries(seriesSingleType, 'bar', 'a'),
+        new Set(['bar']),
+        'bar',
+        'b',
+      ),
+    ).to.deep.equal({
+      seriesId: 'b',
       type: 'bar',
     });
   });
