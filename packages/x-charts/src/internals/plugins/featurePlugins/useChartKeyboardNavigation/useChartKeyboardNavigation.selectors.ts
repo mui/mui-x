@@ -1,4 +1,5 @@
 import { createSelector } from '@mui/x-internals/store';
+import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import {
@@ -9,15 +10,14 @@ import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
-import { type ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type { ComputeResult } from '../useChartCartesianAxis/computeAxisValue';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import {
   type AxisId,
   type AxisItemIdentifier,
   type ChartsAxisProps,
 } from '../../../../models/axis';
-import { type FocusedItemData } from '../../../../hooks/useFocusedItem';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
@@ -25,14 +25,9 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 
 export const selectorChartsItemIsFocused = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState, item: FocusedItemData) => {
-    return (
-      keyboardNavigationState?.item != null &&
-      keyboardNavigationState.item.type === item.seriesType &&
-      keyboardNavigationState.item.seriesId === item.seriesId &&
-      keyboardNavigationState.item.dataIndex === item.dataIndex
-    );
-  },
+  (keyboardNavigationState, item: FocusedItemIdentifier<ChartSeriesType>) =>
+    keyboardNavigationState?.item != null &&
+    fastObjectShallowCompare(keyboardNavigationState.item, item),
 );
 
 export const selectorChartsHasFocusedItem = createSelector(
@@ -40,19 +35,9 @@ export const selectorChartsHasFocusedItem = createSelector(
   (keyboardNavigationState) => keyboardNavigationState?.item != null,
 );
 
-export const selectorChartsFocusedSeriesType = createSelector(
+export const selectorChartsFocusedItem = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState) => keyboardNavigationState?.item?.type,
-);
-
-export const selectorChartsFocusedSeriesId = createSelector(
-  selectKeyboardNavigation,
-  (keyboardNavigationState) => keyboardNavigationState?.item?.seriesId,
-);
-
-export const selectorChartsFocusedDataIndex = createSelector(
-  selectKeyboardNavigation,
-  (keyboardNavigationState) => keyboardNavigationState?.item?.dataIndex,
+  (keyboardNavigationState) => keyboardNavigationState?.item ?? null,
 );
 
 export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
@@ -67,17 +52,15 @@ export const selectorChartsIsKeyboardNavigationEnabled = createSelector(
 const createSelectAxisHighlight =
   (direction: 'x' | 'y') =>
   <T extends ChartSeriesType>(
-    type: T | undefined,
-    seriesId: SeriesId | undefined,
-    dataIndex: number | undefined,
+    item: FocusedItemIdentifier<T> | null,
     axis: ComputeResult<ChartsAxisProps>,
     series: ProcessedSeries<T>,
   ): AxisItemIdentifier | undefined => {
-    if (type === undefined || seriesId === undefined || dataIndex === undefined) {
+    if (item == null || !('dataIndex' in item) || item.dataIndex === undefined) {
       return undefined;
     }
 
-    const seriesConfig = series[type]?.series[seriesId];
+    const seriesConfig = series[item.type as T]?.series[item.seriesId];
     if (!seriesConfig) {
       return undefined;
     }
@@ -91,22 +74,18 @@ const createSelectAxisHighlight =
       axisId = axis.axisIds[0];
     }
 
-    return { axisId, dataIndex };
+    return { axisId, dataIndex: item.dataIndex };
   };
 
 export const selectorChartsKeyboardXAxisIndex = createSelector(
-  selectorChartsFocusedSeriesType,
-  selectorChartsFocusedSeriesId,
-  selectorChartsFocusedDataIndex,
+  selectorChartsFocusedItem,
   selectorChartXAxis,
   selectorChartSeriesProcessed,
   createSelectAxisHighlight('x'),
 );
 
 export const selectorChartsKeyboardYAxisIndex = createSelector(
-  selectorChartsFocusedSeriesType,
-  selectorChartsFocusedSeriesId,
-  selectorChartsFocusedDataIndex,
+  selectorChartsFocusedItem,
   selectorChartYAxis,
   selectorChartSeriesProcessed,
   createSelectAxisHighlight('y'),
@@ -124,14 +103,5 @@ export const selectorChartsKeyboardItem = createSelector(
       return null;
     }
     return keyboardState.item;
-  },
-);
-
-export const selectorChartsKeyboardItemIsDefined = createSelector(
-  selectorChartsFocusedSeriesType,
-  selectorChartsFocusedSeriesId,
-  selectorChartsFocusedDataIndex,
-  function selectorChartsKeyboardItemIsDefined(seriesType, seriesId, dataIndex) {
-    return seriesId !== undefined && dataIndex !== undefined;
   },
 );
