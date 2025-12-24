@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { type SeriesId } from '@mui/x-charts/internals';
@@ -49,6 +50,27 @@ export interface HeatmapItemOwnerState {
   classes?: Partial<HeatmapClasses>;
 }
 
+export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  ownerState: HeatmapItemOwnerState;
+}
+
+const HeatmapCell = styled('rect', {
+  name: 'MuiHeatmap',
+  slot: 'Cell',
+  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
+})<{ ownerState: HeatmapItemOwnerState }>(({ ownerState }) => ({
+  filter:
+    (ownerState.isHighlighted && 'saturate(120%)') ||
+    (ownerState.isFaded && 'saturate(80%)') ||
+    undefined,
+  fill: ownerState.color,
+  shapeRendering: 'crispEdges',
+}));
+
 const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
@@ -56,28 +78,6 @@ const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
   };
   return composeClasses(slots, getHeatmapUtilityClass, classes);
 };
-
-interface HeatmapCellProps extends React.SVGAttributes<SVGRectElement> {
-  ownerState: {
-    isHighlighted: boolean;
-    isFaded: boolean;
-    color: string;
-  };
-}
-
-function HeatmapCell({ ownerState, ...props }: HeatmapCellProps) {
-  const { isHighlighted, isFaded, color } = ownerState;
-
-  let filter: React.CSSProperties['filter'] = undefined;
-
-  if (isHighlighted) {
-    filter = 'saturate(120%)';
-  } else if (isFaded) {
-    filter = 'saturate(80%)';
-  }
-
-  return <rect filter={filter} fill={color} shapeRendering="crispEdges" {...props} />;
-}
 
 /**
  * @ignore - internal component.
