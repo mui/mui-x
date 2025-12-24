@@ -42,6 +42,20 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'radar'> = (params) =
     return null;
   }
 
+  if (identifier.dataIndex != null) {
+    const point = points[identifier.dataIndex];
+    switch (placement) {
+      case 'right':
+        return { x: point[0] + 4, y: point[1] };
+      case 'bottom':
+        return { x: point[0], y: point[1] + 4 };
+      case 'left':
+        return { x: point[0] - 4, y: point[1] };
+      case 'top':
+      default:
+        return { x: point[0], y: point[1] - 4 };
+    }
+  }
   const [top, right, bottom, left] = points.reduce(
     (acc, [x, y]) => {
       return [Math.min(y, acc[0]), Math.max(x, acc[1]), Math.max(y, acc[2]), Math.min(x, acc[3])];
