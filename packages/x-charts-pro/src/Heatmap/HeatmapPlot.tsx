@@ -23,7 +23,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
 
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
   const isFaded = store.use(selectorChartsIsFadedCallback);
-  const eventHandlers = useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
+  useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();
@@ -34,7 +34,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
   const seriesToDisplay = series.series[series.seriesOrder[0]];
 
   return (
-    <g {...eventHandlers}>
+    <g>
       {seriesToDisplay.data.map(([xIndex, yIndex, value], dataIndex) => {
         const x = xScale(xDomain[xIndex]);
         const y = yScale(yDomain[yIndex]);
