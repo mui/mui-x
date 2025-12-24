@@ -438,7 +438,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     afterEach(() => {
-      (window.requestAnimationFrame as SinonStub)vi.restoreAllMocks();
+      vi.restoreAllMocks();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {

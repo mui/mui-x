@@ -292,7 +292,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should handle correctly dates with partial years', async () => {
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as MockInstance<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -442,7 +442,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should handle correctly dates with partial years', async () => {
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as MockInstance<
         [GridEditCellValueParams & { value: Date }]
       >;
 
