@@ -88,6 +88,7 @@ export function applyDataTimezoneToEventUpdate({
 
   return result;
 }
+
 export function projectRRuleFromDisplayToData(
   adapter: Adapter,
   displayRRule: RecurringEventRecurrenceRule,
@@ -100,13 +101,10 @@ export function projectRRuleFromDisplayToData(
   const displayTz = originalEvent.displayTimezone.timezone;
   const dataTz = originalEvent.dataTimezone.timezone;
 
-  const dtStartData = originalEvent.dataTimezone.start.value;
-  const dtStartDisplay = adapter.setTimezone(dtStartData, displayTz);
+  const dtStartDisplay = adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz);
 
   const startDisplayCode = getWeekDayCode(adapter, dtStartDisplay);
-  const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(
-    startDisplayCode as RecurringEventWeekDayCode,
-  )!;
+  const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(startDisplayCode)!;
 
   const projectedByDay = displayRRule.byDay.map((displayCode) => {
     const targetIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(
