@@ -59,20 +59,20 @@ export function applyDataTimezoneToEventUpdate({
 }): SchedulerEventUpdatedProperties {
   const dataTz = originalEvent.dataTimezone.timezone;
 
-  const convertToDataTz = (date: TemporalSupportedObject): TemporalSupportedObject =>
-    adapter.setTimezone(date, dataTz);
+  const toDataTz = (date: TemporalSupportedObject) => adapter.setTimezone(date, dataTz);
 
   const result: SchedulerEventUpdatedProperties = { ...changes };
 
   if (result.start) {
-    result.start = convertToDataTz(result.start);
-  }
-  if (result.end) {
-    result.end = convertToDataTz(result.end);
+    result.start = toDataTz(result.start);
   }
 
-  if (result.exDates && result.exDates.length > 0) {
-    result.exDates = result.exDates.map((date) => convertToDataTz(date));
+  if (result.end) {
+    result.end = toDataTz(result.end);
+  }
+
+  if (result.exDates?.length) {
+    result.exDates = result.exDates.map(toDataTz);
   }
 
   if (result.rrule && typeof result.rrule === 'object') {
@@ -80,7 +80,7 @@ export function applyDataTimezoneToEventUpdate({
       adapter,
       {
         ...result.rrule,
-        until: result.rrule.until ? convertToDataTz(result.rrule.until) : undefined,
+        until: result.rrule.until ? toDataTz(result.rrule.until) : undefined,
       },
       originalEvent,
     );
@@ -88,25 +88,25 @@ export function applyDataTimezoneToEventUpdate({
 
   return result;
 }
-
 export function projectRRuleFromDisplayToData(
   adapter: Adapter,
   displayRRule: RecurringEventRecurrenceRule,
   originalEvent: SchedulerProcessedEvent,
 ): RecurringEventRecurrenceRule {
-  if (!displayRRule.byDay?.length || displayRRule.freq !== 'WEEKLY') {
+  if (displayRRule.freq !== 'WEEKLY' || !displayRRule.byDay?.length) {
     return displayRRule;
   }
 
   const displayTz = originalEvent.displayTimezone.timezone;
   const dataTz = originalEvent.dataTimezone.timezone;
 
-  const dtStartDisplay = adapter.startOfDay(
-    adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz),
-  );
-  const startDisplayCode = getWeekDayCode(adapter, dtStartDisplay);
+  const dtStartData = originalEvent.dataTimezone.start.value;
+  const dtStartDisplay = adapter.setTimezone(dtStartData, displayTz);
 
-  const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(startDisplayCode)!;
+  const startDisplayCode = getWeekDayCode(adapter, dtStartDisplay);
+  const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(
+    startDisplayCode as RecurringEventWeekDayCode,
+  )!;
 
   const projectedByDay = displayRRule.byDay.map((displayCode) => {
     const targetIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(
@@ -116,7 +116,6 @@ export function projectRRuleFromDisplayToData(
     const delta = (((targetIndex - startDisplayIndex) % 7) + 7) % 7;
 
     const occurrenceDisplay = adapter.addDays(dtStartDisplay, delta);
-
     const occurrenceData = adapter.setTimezone(occurrenceDisplay, dataTz);
 
     return getWeekDayCode(adapter, occurrenceData);
