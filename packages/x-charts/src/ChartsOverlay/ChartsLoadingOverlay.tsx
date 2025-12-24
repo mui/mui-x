@@ -6,7 +6,7 @@ import { useChartsLocalization } from '../hooks/useChartsLocalization';
 
 const StyledText = styled('text', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   ...theme.typography.body2,
   stroke: 'none',

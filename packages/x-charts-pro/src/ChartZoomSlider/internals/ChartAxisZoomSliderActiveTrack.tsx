@@ -28,7 +28,7 @@ import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderActiveTrackRect = styled('rect', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
 })<{ preview: boolean }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.grey[600],

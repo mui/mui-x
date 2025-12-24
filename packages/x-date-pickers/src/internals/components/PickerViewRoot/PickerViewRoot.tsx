@@ -3,7 +3,7 @@ import { DIALOG_WIDTH, VIEW_HEIGHT } from '../../constants/dimensions';
 
 export const PickerViewRoot = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   overflow: 'hidden',
   width: DIALOG_WIDTH,

@@ -8,7 +8,7 @@ import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewC
 
 const PreviewBackgroundRect = styled('rect', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   rx: 4,
   ry: 4,

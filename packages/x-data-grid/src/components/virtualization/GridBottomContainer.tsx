@@ -15,7 +15,7 @@ export type GridBottomContainerProps = React.PropsWithChildren;
 
 const Element = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   position: 'sticky',
   zIndex: 40,

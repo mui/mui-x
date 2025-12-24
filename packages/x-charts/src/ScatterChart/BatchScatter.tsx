@@ -119,7 +119,7 @@ const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
 const Group = styled('g', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   '&[data-faded="true"]': {
     opacity: 0.3,

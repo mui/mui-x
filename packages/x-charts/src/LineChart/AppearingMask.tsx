@@ -25,7 +25,7 @@ export const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses
 
 const AnimatedRect = styled('rect', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   animationName: 'animate-width',
   animationTimingFunction: ANIMATION_TIMING_FUNCTION,

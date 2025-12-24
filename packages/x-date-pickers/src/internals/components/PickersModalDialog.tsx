@@ -57,7 +57,7 @@ export interface PickersModalDialogProps {
 
 const PickersModalDialogRoot = styled(MuiDialog, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   [`& .${dialogClasses.container}`]: {
     outline: 0,
@@ -70,7 +70,7 @@ const PickersModalDialogRoot = styled(MuiDialog, {
 
 const PickersModalDialogContent = styled(DialogContent, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   '&:first-of-type': {
     padding: 0,

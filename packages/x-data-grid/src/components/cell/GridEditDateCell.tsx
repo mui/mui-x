@@ -16,7 +16,7 @@ type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const StyledInputBase = styled(NotRendered<GridSlotProps['baseInput']>, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   fontSize: 'inherit',
 });

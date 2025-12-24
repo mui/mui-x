@@ -39,7 +39,7 @@ const OutlineRoot = styled('fieldset', {
 
 const OutlineLabel = styled('span', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
@@ -47,7 +47,7 @@ const OutlineLabel = styled('span', {
 
 const OutlineLegend = styled('legend', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'notched',
 })<{ ownerState: PickerTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap

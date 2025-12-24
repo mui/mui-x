@@ -17,7 +17,7 @@ type PickersRangeCalendarHeaderComponent = ((
 
 const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   padding: '12px 16px 4px 16px',
   display: 'flex',

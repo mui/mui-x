@@ -35,7 +35,7 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
 
 const Circle = styled('circle', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,

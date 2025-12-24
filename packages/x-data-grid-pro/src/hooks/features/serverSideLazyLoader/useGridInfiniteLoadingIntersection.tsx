@@ -14,7 +14,7 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 const InfiniteLoadingTriggerElement = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   position: 'sticky',
   left: 0,

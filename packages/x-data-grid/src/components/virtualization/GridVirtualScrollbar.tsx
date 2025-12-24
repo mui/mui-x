@@ -41,7 +41,7 @@ export const scrollbarSizeCssExpression = 'calc(max(var(--DataGrid-scrollbarSize
 
 const Scrollbar = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   position: 'absolute',
   display: 'inline-block',
@@ -54,7 +54,7 @@ const Scrollbar = styled('div', {
 
 const ScrollbarVertical = styled(Scrollbar, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   width: 'var(--size)',
   height:
@@ -72,7 +72,7 @@ const ScrollbarVertical = styled(Scrollbar, {
 
 const ScrollbarHorizontal = styled(Scrollbar, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   width:
     'calc(var(--DataGrid-hasScrollX) * (100% - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize)))',
@@ -89,7 +89,7 @@ const ScrollbarHorizontal = styled(Scrollbar, {
 
 export const ScrollbarCorner = styled(Scrollbar, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   width: 'var(--size)',
   height: 'var(--size)',

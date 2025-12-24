@@ -23,7 +23,7 @@ export interface GaugeContainerProps
 
 const GStyled = styled('g', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,

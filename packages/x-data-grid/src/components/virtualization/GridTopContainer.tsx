@@ -13,7 +13,7 @@ const useUtilityClasses = () => {
 
 const Element = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   position: 'sticky',
   zIndex: 40,

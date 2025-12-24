@@ -13,7 +13,7 @@ import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 
 const StyledMenuList = styled(NotRendered<GridSlotProps['baseMenuList']>, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(() => ({
   minWidth: 248,
 }));

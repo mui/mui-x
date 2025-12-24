@@ -9,7 +9,7 @@ import { gridClasses } from '../../constants';
 
 const Filler = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   display: 'flex',
   flexDirection: 'row',
@@ -19,7 +19,7 @@ const Filler = styled('div', {
 
 const Pinned = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   position: 'sticky',
   height: '100%',
@@ -29,20 +29,20 @@ const Pinned = styled('div', {
 });
 const PinnedLeft = styled(Pinned, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   left: 0,
 });
 const PinnedRight = styled(Pinned, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   right: 0,
 });
 
 const Main = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   flexGrow: 1,
   borderTop: '1px solid var(--rowBorderColor)',

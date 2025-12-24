@@ -17,7 +17,7 @@ import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderTrack = styled('rect', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'axisDirection' && prop !== 'isSelecting',
 })<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({

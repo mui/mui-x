@@ -13,7 +13,7 @@ import {
 
 const Rect = styled('rect', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
     fill: (theme.vars || theme).palette.common.white,

@@ -81,7 +81,7 @@ export { useMaterialCSSVariables } from './variables';
 
 const InputAdornment = styled(MUIInputAdornment, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: theme.spacing(-0.75),
@@ -90,7 +90,7 @@ const InputAdornment = styled(MUIInputAdornment, {
 
 const FormControlLabel = styled(MUIFormControlLabel, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -114,7 +114,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 
 const Checkbox = styled(MUICheckbox, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
@@ -129,7 +129,7 @@ const Checkbox = styled(MUICheckbox, {
 
 const ListItemText = styled(MUIListItemText, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   [`& .${listItemTextClasses.primary}`]: {
     overflowX: 'clip',
@@ -201,7 +201,7 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
 
 const StyledPagination = styled(MUIPagination, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
@@ -337,7 +337,7 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
 
 const StyledToggleButton = styled(MUIToggleButton, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   gap: theme.spacing(1),
   border: 0,

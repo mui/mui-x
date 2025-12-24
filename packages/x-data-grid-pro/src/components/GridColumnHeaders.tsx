@@ -7,7 +7,7 @@ import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGrid
 
 const Filler = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   flex: 1,
   backgroundColor: vars.header.background.base,

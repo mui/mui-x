@@ -11,7 +11,7 @@ import type {
 
 const GridPanelAnchor = styled('div', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,

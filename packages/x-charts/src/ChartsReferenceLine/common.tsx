@@ -46,7 +46,7 @@ export type CommonChartsReferenceLineProps = {
 
 export const ReferenceLineRoot = styled('g', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })(({ theme }) => ({
   [`& .${referenceLineClasses.line}`]: {
     fill: 'none',

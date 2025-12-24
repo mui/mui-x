@@ -42,7 +42,7 @@ export interface SankeyPlotProps {
 
 const SankeyPlotRoot = styled('g', {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   [`.${sankeyPlotClasses.links} path, .${sankeyPlotClasses.nodes} rect`]: {
     transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',

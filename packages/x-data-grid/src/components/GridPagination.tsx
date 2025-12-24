@@ -16,7 +16,7 @@ type PaginationProps = GridSlotProps['basePagination'];
 
 const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, {
   slot: 'internal',
-  slotShouldForwardProp: null,
+  shouldForwardProp: undefined,
 })({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
