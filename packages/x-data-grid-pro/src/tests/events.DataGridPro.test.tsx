@@ -388,6 +388,6 @@ describe('<DataGridPro /> - Events params', () => {
 
     act(() => apiRef.current?.subscribeEvent('unmount', onUnmount));
     unmount();
-    expect(onUnmount.calledOnce).to.equal(true);
+    expect(onUnmount.mock.calls.length === 1).to.equal(true);
   });
 });

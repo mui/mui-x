@@ -700,7 +700,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     it('should intercept rendering with custom renderer', async () => {
       render(<Test initialState={baseInitialState} />);
 
-      expect(renderSpy.called).to.equal(true);
+      expect(renderSpy.mock.calls.length > 0).to.equal(true);
       await waitFor(() => {
         expect(renderSpy.mock.lastCall![0].chartStateLookup.test.dimensions[0].id).to.equal(
           'category1',

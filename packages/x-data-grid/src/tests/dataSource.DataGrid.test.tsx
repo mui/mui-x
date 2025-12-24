@@ -336,12 +336,12 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         </div>,
       );
       await waitFor(() => {
-        expect(getRows.called).to.equal(true);
+        expect(getRows.mock.calls.length > 0).to.equal(true);
       });
       unmount();
       reject();
       await promise.catch(() => 'rejected');
-      expect(onDataSourceError.notCalled).to.equal(true);
+      expect(onDataSourceError.mock.calls.length === 0).to.equal(true);
     });
   });
 
