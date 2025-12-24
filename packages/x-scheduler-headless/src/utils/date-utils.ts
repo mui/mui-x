@@ -1,9 +1,12 @@
 import {
+  RecurringEventRecurrenceRule,
+  RecurringEventWeekDayCode,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
 } from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
+import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES } from './recurring-events/internal-utils';
 
 export function mergeDateAndTime(
   adapter: Adapter,
@@ -54,31 +57,73 @@ export function applyDataTimezoneToEventUpdate({
   originalEvent: SchedulerProcessedEvent;
   changes: SchedulerEventUpdatedProperties;
 }): SchedulerEventUpdatedProperties {
-  const originalTz = adapter.getTimezone(originalEvent.modelInBuiltInFormat!.start);
+  const dataTz = originalEvent.dataTimezone.timezone;
 
-  const convertToOriginalTz = (date: TemporalSupportedObject): TemporalSupportedObject =>
-    adapter.setTimezone(date, originalTz);
+  const convertToDataTz = (date: TemporalSupportedObject): TemporalSupportedObject =>
+    adapter.setTimezone(date, dataTz);
 
   const result: SchedulerEventUpdatedProperties = { ...changes };
 
   if (result.start) {
-    result.start = convertToOriginalTz(result.start);
+    result.start = convertToDataTz(result.start);
   }
   if (result.end) {
-    result.end = convertToOriginalTz(result.end);
+    result.end = convertToDataTz(result.end);
   }
 
   if (result.exDates && result.exDates.length > 0) {
-    result.exDates = result.exDates.map((date) => convertToOriginalTz(date));
+    result.exDates = result.exDates.map((date) => convertToDataTz(date));
   }
 
-  if (result.rrule && typeof result.rrule === 'object' && result.rrule.until) {
-    const resultRrule = {
-      ...result.rrule,
-      until: convertToOriginalTz(result.rrule.until),
-    };
-    result.rrule = resultRrule;
+  if (result.rrule && typeof result.rrule === 'object') {
+    result.rrule = projectRRuleFromDisplayToData(
+      adapter,
+      {
+        ...result.rrule,
+        until: result.rrule.until ? convertToDataTz(result.rrule.until) : undefined,
+      },
+      originalEvent,
+    );
   }
 
   return result;
+}
+
+export function projectRRuleFromDisplayToData(
+  adapter: Adapter,
+  displayRRule: RecurringEventRecurrenceRule,
+  originalEvent: SchedulerProcessedEvent,
+): RecurringEventRecurrenceRule {
+  if (!displayRRule.byDay?.length || displayRRule.freq !== 'WEEKLY') {
+    return displayRRule;
+  }
+
+  const displayTz = originalEvent.displayTimezone.timezone;
+  const dataTz = originalEvent.dataTimezone.timezone;
+
+  const dtStartDisplay = adapter.startOfDay(
+    adapter.setTimezone(originalEvent.dataTimezone.start.value, displayTz),
+  );
+  const startDisplayCode = getWeekDayCode(adapter, dtStartDisplay);
+
+  const startDisplayIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(startDisplayCode)!;
+
+  const projectedByDay = displayRRule.byDay.map((displayCode) => {
+    const targetIndex = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(
+      displayCode as RecurringEventWeekDayCode,
+    )!;
+
+    const delta = (((targetIndex - startDisplayIndex) % 7) + 7) % 7;
+
+    const occurrenceDisplay = adapter.addDays(dtStartDisplay, delta);
+
+    const occurrenceData = adapter.setTimezone(occurrenceDisplay, dataTz);
+
+    return getWeekDayCode(adapter, occurrenceData);
+  });
+
+  return {
+    ...displayRRule,
+    byDay: Array.from(new Set(projectedByDay)),
+  };
 }

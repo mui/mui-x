@@ -13,6 +13,7 @@ import {
   SchedulerEventCreationProperties,
   SchedulerEventPasteProperties,
   SchedulerEvent,
+  RecurringEventRecurrenceRule,
 } from '../../models';
 import {
   SchedulerState,
@@ -33,7 +34,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { applyDataTimezoneToEventUpdate } from '../date-utils';
+import { applyDataTimezoneToEventUpdate, projectRRuleFromDisplayToData } from '../date-utils';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -369,14 +370,25 @@ export class SchedulerStore<
       changes,
     });
 
-    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat!.start);
+    const originalTz = original.dataTimezone.timezone;
     const occurrenceStartInDataTimezone = adapter.setTimezone(occurrenceStart, originalTz);
+
+    const normalizedChanges = {
+      ...changesInDataTimezone,
+      rrule: changesInDataTimezone.rrule
+        ? projectRRuleFromDisplayToData(
+            adapter,
+            changesInDataTimezone.rrule as RecurringEventRecurrenceRule,
+            original,
+          )
+        : undefined,
+    };
 
     const updatedEvents = updateRecurringEvent(
       adapter,
       original,
       occurrenceStartInDataTimezone,
-      changesInDataTimezone,
+      normalizedChanges,
       scope,
     );
     this.updateEvents(updatedEvents);

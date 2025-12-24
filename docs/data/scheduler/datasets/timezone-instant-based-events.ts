@@ -119,7 +119,7 @@ export const initialEvents: TimezoneEvent[] = [
     resource: 'la',
     rrule: {
       freq: 'WEEKLY',
-      byDay: ['SU'],
+      byDay: ['SU', 'TU'],
       count: 5,
     },
   },
