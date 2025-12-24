@@ -7,28 +7,43 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { gridClasses } from '../../constants';
 
-const Filler = styled('div')({
+const Filler = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   display: 'flex',
   flexDirection: 'row',
   width: 'var(--DataGrid-rowWidth)',
   boxSizing: 'border-box',
 });
 
-const Pinned = styled('div')({
+const Pinned = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   position: 'sticky',
   height: '100%',
   boxSizing: 'border-box',
   borderTop: '1px solid var(--rowBorderColor)',
   backgroundColor: vars.cell.background.pinned,
 });
-const PinnedLeft = styled(Pinned)({
+const PinnedLeft = styled(Pinned, {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   left: 0,
 });
-const PinnedRight = styled(Pinned)({
+const PinnedRight = styled(Pinned, {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   right: 0,
 });
 
-const Main = styled('div')({
+const Main = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   flexGrow: 1,
   borderTop: '1px solid var(--rowBorderColor)',
 });

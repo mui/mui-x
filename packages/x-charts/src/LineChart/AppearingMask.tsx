@@ -23,7 +23,10 @@ export const appearingMaskClasses: AppearingMaskClasses = generateUtilityClasses
   ['animate'],
 );
 
-const AnimatedRect = styled('rect')({
+const AnimatedRect = styled('rect', {
+  name: 'MuiLineChart',
+  slot: 'internal',
+})({
   animationName: 'animate-width',
   animationTimingFunction: ANIMATION_TIMING_FUNCTION,
   animationDuration: '0s',

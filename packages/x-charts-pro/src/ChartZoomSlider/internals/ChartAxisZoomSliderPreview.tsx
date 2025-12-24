@@ -6,7 +6,10 @@ import useId from '@mui/utils/useId';
 import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZoom';
 import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewContent';
 
-const PreviewBackgroundRect = styled('rect')(({ theme }) => ({
+const PreviewBackgroundRect = styled('rect', {
+  name: 'MuiChartZoomSlider',
+  slot: 'internal',
+})(({ theme }) => ({
   rx: 4,
   ry: 4,
   stroke: theme.palette.grey[700],

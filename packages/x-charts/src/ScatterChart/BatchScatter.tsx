@@ -117,7 +117,10 @@ function BatchScatterPaths(props: BatchScatterPathsProps) {
 
 const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
-const Group = styled('g')({
+const Group = styled('g', {
+  name: 'MuiScatterChart',
+  slot: 'internal',
+})({
   '&[data-faded="true"]': {
     opacity: 0.3,
   },

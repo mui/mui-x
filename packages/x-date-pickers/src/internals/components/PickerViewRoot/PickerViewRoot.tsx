@@ -1,7 +1,10 @@
 import { styled } from '@mui/material/styles';
 import { DIALOG_WIDTH, VIEW_HEIGHT } from '../../constants/dimensions';
 
-export const PickerViewRoot = styled('div')({
+export const PickerViewRoot = styled('div', {
+  name: 'MuiPickerViewRoot',
+  slot: 'internal',
+})({
   overflow: 'hidden',
   width: DIALOG_WIDTH,
   maxHeight: VIEW_HEIGHT,

@@ -9,7 +9,10 @@ import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { mergeSx } from '../../utils/utils';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
-const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout, {
+  name: 'MuiPickersLayout',
+  slot: 'internal',
+})(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,

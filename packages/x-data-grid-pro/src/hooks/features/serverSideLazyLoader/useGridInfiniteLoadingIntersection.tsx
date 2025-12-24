@@ -12,7 +12,10 @@ import { styled } from '@mui/system';
 import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-const InfiniteLoadingTriggerElement = styled('div')({
+const InfiniteLoadingTriggerElement = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   position: 'sticky',
   left: 0,
   width: 0,

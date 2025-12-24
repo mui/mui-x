@@ -25,7 +25,10 @@ const useUtilityClasses = () => {
 
 export type GridBottomContainerProps = React.PropsWithChildren;
 
-const Element = styled('div')({
+const Element = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   position: 'sticky',
   zIndex: 40,
   bottom: 'calc(var(--DataGrid-hasScrollX) * var(--DataGrid-scrollbarSize))',

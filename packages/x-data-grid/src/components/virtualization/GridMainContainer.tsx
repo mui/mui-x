@@ -9,7 +9,10 @@ import type {
   GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
-const GridPanelAnchor = styled('div')({
+const GridPanelAnchor = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'internal',
+})({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,
   left: 0,

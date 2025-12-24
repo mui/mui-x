@@ -21,7 +21,10 @@ export interface GaugeContainerProps
   children?: React.ReactNode;
 }
 
-const GStyled = styled('g')(({ theme }) => ({
+const GStyled = styled('g', {
+  name: 'MuiGauge',
+  slot: 'internal',
+})(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },
