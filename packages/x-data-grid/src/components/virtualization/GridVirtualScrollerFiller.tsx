@@ -8,8 +8,8 @@ import { gridDimensionsSelector } from '../../hooks/features/dimensions';
 import { gridClasses } from '../../constants';
 
 const Filler = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   display: 'flex',
   flexDirection: 'row',
@@ -18,8 +18,8 @@ const Filler = styled('div', {
 });
 
 const Pinned = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   position: 'sticky',
   height: '100%',
@@ -28,21 +28,21 @@ const Pinned = styled('div', {
   backgroundColor: vars.cell.background.pinned,
 });
 const PinnedLeft = styled(Pinned, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   left: 0,
 });
 const PinnedRight = styled(Pinned, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   right: 0,
 });
 
 const Main = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   flexGrow: 1,
   borderTop: '1px solid var(--rowBorderColor)',

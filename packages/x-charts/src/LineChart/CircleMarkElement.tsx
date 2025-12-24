@@ -34,8 +34,8 @@ export type CircleMarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'is
   };
 
 const Circle = styled('circle', {
-  name: 'MuiLineChart',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,

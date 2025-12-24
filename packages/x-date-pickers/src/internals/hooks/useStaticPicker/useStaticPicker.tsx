@@ -10,8 +10,8 @@ import { mergeSx } from '../../utils/utils';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout, {
-  name: 'MuiPickersLayout',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,

@@ -86,8 +86,8 @@ const DateRangeCalendarMonthContainer = styled('div', {
 const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const InnerDayCalendarForRange = styled(DayCalendar, {
-  name: 'MuiDateRangeCalendar',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,

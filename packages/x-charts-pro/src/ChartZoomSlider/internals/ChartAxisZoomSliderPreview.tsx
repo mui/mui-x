@@ -7,8 +7,8 @@ import { selectorChartAxisZoomData } from '../../internals/plugins/useChartProZo
 import { ChartAxisZoomSliderPreviewContent } from './ChartAxisZoomSliderPreviewContent';
 
 const PreviewBackgroundRect = styled('rect', {
-  name: 'MuiChartZoomSlider',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   rx: 4,
   ry: 4,

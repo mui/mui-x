@@ -40,8 +40,8 @@ const useUtilityClasses = (ownerState: OwnerState, position: Position) => {
 export const scrollbarSizeCssExpression = 'calc(max(var(--DataGrid-scrollbarSize), 14px))';
 
 const Scrollbar = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   position: 'absolute',
   display: 'inline-block',
@@ -53,8 +53,8 @@ const Scrollbar = styled('div', {
 });
 
 const ScrollbarVertical = styled(Scrollbar, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   width: 'var(--size)',
   height:
@@ -71,8 +71,8 @@ const ScrollbarVertical = styled(Scrollbar, {
 });
 
 const ScrollbarHorizontal = styled(Scrollbar, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   width:
     'calc(var(--DataGrid-hasScrollX) * (100% - var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize)))',
@@ -88,8 +88,8 @@ const ScrollbarHorizontal = styled(Scrollbar, {
 });
 
 export const ScrollbarCorner = styled(Scrollbar, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   width: 'var(--size)',
   height: 'var(--size)',

@@ -10,8 +10,8 @@ import type {
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
 const GridPanelAnchor = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,

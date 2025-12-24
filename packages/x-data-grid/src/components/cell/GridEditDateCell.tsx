@@ -15,8 +15,8 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
 
 const StyledInputBase = styled(NotRendered<GridSlotProps['baseInput']>, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   fontSize: 'inherit',
 });

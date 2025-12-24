@@ -5,8 +5,8 @@ import type { CommonOverlayProps } from './ChartsOverlay';
 import { useChartsLocalization } from '../hooks/useChartsLocalization';
 
 const StyledText = styled('text', {
-  name: 'MuiChartsLoadingOverlay',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   ...theme.typography.body2,
   stroke: 'none',

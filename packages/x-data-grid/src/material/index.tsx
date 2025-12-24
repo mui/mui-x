@@ -80,8 +80,8 @@ export { useMaterialCSSVariables } from './variables';
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
 const InputAdornment = styled(MUIInputAdornment, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: theme.spacing(-0.75),
@@ -89,8 +89,8 @@ const InputAdornment = styled(MUIInputAdornment, {
 }));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -113,8 +113,8 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 }));
 
 const Checkbox = styled(MUICheckbox, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
@@ -128,8 +128,8 @@ const Checkbox = styled(MUICheckbox, {
 }));
 
 const ListItemText = styled(MUIListItemText, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   [`& .${listItemTextClasses.primary}`]: {
     overflowX: 'clip',
@@ -200,8 +200,8 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
 });
 
 const StyledPagination = styled(MUIPagination, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
@@ -336,8 +336,8 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
 });
 
 const StyledToggleButton = styled(MUIToggleButton, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   gap: theme.spacing(1),
   border: 0,

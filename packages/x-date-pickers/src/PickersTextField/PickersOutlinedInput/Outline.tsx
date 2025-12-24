@@ -38,16 +38,16 @@ const OutlineRoot = styled('fieldset', {
 });
 
 const OutlineLabel = styled('span', {
-  name: 'MuiPickersOutlinedInput',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
   fontSize: 'inherit',
 }));
 
 const OutlineLegend = styled('legend', {
-  name: 'MuiPickersOutlinedInput',
   slot: 'internal',
+  slotShouldForwardProp: null,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'notched',
 })<{ ownerState: PickerTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap

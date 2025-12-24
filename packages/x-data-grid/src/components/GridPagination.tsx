@@ -15,8 +15,8 @@ import {
 type PaginationProps = GridSlotProps['basePagination'];
 
 const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,

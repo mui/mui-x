@@ -12,8 +12,8 @@ import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { GridColumnMenuContainerProps } from './GridColumnMenuProps';
 
 const StyledMenuList = styled(NotRendered<GridSlotProps['baseMenuList']>, {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(() => ({
   minWidth: 248,
 }));

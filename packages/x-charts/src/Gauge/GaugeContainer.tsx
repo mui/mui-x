@@ -22,8 +22,8 @@ export interface GaugeContainerProps
 }
 
 const GStyled = styled('g', {
-  name: 'MuiGauge',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,

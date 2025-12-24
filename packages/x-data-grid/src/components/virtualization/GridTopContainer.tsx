@@ -12,8 +12,8 @@ const useUtilityClasses = () => {
 };
 
 const Element = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   position: 'sticky',
   zIndex: 40,

@@ -16,8 +16,8 @@ import { type UseChartProZoomSignature } from '../../internals/plugins/useChartP
 import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderTrack = styled('rect', {
-  name: 'MuiChartZoomSlider',
   slot: 'internal',
+  slotShouldForwardProp: null,
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'axisDirection' && prop !== 'isSelecting',
 })<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({

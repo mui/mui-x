@@ -45,8 +45,8 @@ export type CommonChartsReferenceLineProps = {
 };
 
 export const ReferenceLineRoot = styled('g', {
-  name: 'MuiChartsReferenceLine',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   [`& .${referenceLineClasses.line}`]: {
     fill: 'none',

@@ -13,8 +13,8 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 const InfiniteLoadingTriggerElement = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   position: 'sticky',
   left: 0,

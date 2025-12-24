@@ -16,8 +16,8 @@ type PickersRangeCalendarHeaderComponent = ((
 ) => React.JSX.Element) & { propTypes?: any };
 
 const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher, {
-  name: 'MuiPickersRangeCalendarHeader',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   padding: '12px 16px 4px 16px',
   display: 'flex',

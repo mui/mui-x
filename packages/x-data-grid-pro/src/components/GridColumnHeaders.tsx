@@ -6,8 +6,8 @@ import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-d
 import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div', {
-  name: 'MuiDataGrid',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })({
   flex: 1,
   backgroundColor: vars.header.background.base,

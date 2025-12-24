@@ -18,8 +18,8 @@ import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositio
 import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
 const PickerStaticLayout = styled(PickersLayout, {
-  name: 'MuiPickersLayout',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,

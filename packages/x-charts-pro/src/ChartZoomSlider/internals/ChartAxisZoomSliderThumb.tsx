@@ -12,8 +12,8 @@ import {
 } from './chartAxisZoomSliderThumbClasses';
 
 const Rect = styled('rect', {
-  name: 'MuiChartZoomSlider',
   slot: 'internal',
+  slotShouldForwardProp: null,
 })(({ theme }) => ({
   [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
     fill: (theme.vars || theme).palette.common.white,
