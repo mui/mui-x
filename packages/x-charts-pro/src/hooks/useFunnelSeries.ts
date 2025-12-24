@@ -24,7 +24,7 @@ export function useFunnelSeries(seriesId: SeriesId): UseFunnelSeriesReturnValue 
  *
  * @returns {UseFunnelSeriesReturnValue[]} the funnel series
  */
-export function useFunnelSeries(): UseFunnelSeriesReturnValue[];
+export function useFunnelSeries(seriesId?: undefined): UseFunnelSeriesReturnValue[];
 /**
  * Get access to the internal state of funnel series.
  *
@@ -32,7 +32,7 @@ export function useFunnelSeries(): UseFunnelSeriesReturnValue[];
  * @returns {UseFunnelSeriesReturnValue[]} the funnel series
  */
 export function useFunnelSeries(seriesIds: SeriesId[]): UseFunnelSeriesReturnValue[];
-export function useFunnelSeries(seriesIds?: SeriesId | SeriesId[]) {
+export function useFunnelSeries(seriesIds?: SeriesId | SeriesId[] | undefined) {
   return useSeriesOfType('funnel', seriesIds);
 }
 
