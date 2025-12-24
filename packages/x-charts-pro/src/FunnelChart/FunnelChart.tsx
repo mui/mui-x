@@ -251,6 +251,7 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
