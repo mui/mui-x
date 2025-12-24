@@ -47,7 +47,6 @@ const OutlineLabel = styled('span', {
 
 const OutlineLegend = styled('legend', {
   slot: 'internal',
-  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'notched',
 })<{ ownerState: PickerTextFieldOwnerState; notched: boolean }>(({ theme }) => ({
   float: 'unset', // Fix conflict with bootstrap

@@ -90,7 +90,6 @@ const InputAdornment = styled(MUIInputAdornment, {
 
 const FormControlLabel = styled(MUIFormControlLabel, {
   slot: 'internal',
-  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -114,7 +113,6 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 
 const Checkbox = styled(MUICheckbox, {
   slot: 'internal',
-  shouldForwardProp: undefined,
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
