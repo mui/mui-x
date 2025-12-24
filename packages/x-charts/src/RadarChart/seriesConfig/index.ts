@@ -6,6 +6,7 @@ import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
 
 export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   colorProcessor: getColor,
@@ -17,4 +18,5 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   getSeriesWithDefaultValues,
   radiusExtremumGetter,
   rotationExtremumGetter,
+  keyboardFocusHandler,
 };
