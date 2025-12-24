@@ -11,7 +11,6 @@ import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePi
 
 const PickerStaticLayout = styled(PickersLayout, {
   slot: 'internal',
-  shouldForwardProp: undefined,
 })(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,

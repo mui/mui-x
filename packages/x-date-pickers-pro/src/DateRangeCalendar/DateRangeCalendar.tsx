@@ -87,7 +87,6 @@ const weeksContainerHeight = (DAY_RANGE_SIZE + DAY_MARGIN * 2) * 6;
 
 const InnerDayCalendarForRange = styled(DayCalendar, {
   slot: 'internal',
-  shouldForwardProp: undefined,
 })(({ theme }) => ({
   minWidth: 312,
   minHeight: weeksContainerHeight,

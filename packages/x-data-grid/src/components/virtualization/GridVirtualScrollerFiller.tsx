@@ -29,13 +29,11 @@ const Pinned = styled('div', {
 });
 const PinnedLeft = styled(Pinned, {
   slot: 'internal',
-  shouldForwardProp: undefined,
 })({
   left: 0,
 });
 const PinnedRight = styled(Pinned, {
   slot: 'internal',
-  shouldForwardProp: undefined,
 })({
   right: 0,
 });
