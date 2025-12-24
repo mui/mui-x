@@ -345,7 +345,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           render(<TestCase columnProps={{ renderEditCell }} />);
           act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
           expect(renderEditCell.lastCall.args[0].value).to.equal('USDGBP');
-          renderEditCell.resetHistory();
+          renderEditCell.mockClear();
           apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
@@ -1353,7 +1353,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       const onCellModesModelChange = vi.fn();
       render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
       act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-      onCellModesModelChange.resetHistory();
+      onCellModesModelChange.mockClear();
       act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
       expect(onCellModesModelChange.mock.calls[0][0]).to.deep.equal({
         0: { currencyPair: { mode: 'view' } },

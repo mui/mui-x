@@ -1349,7 +1349,7 @@ describe('<DataGrid /> - Rows', () => {
         model: rows[1],
       });
 
-      getRowSpacing.resetHistory();
+      getRowSpacing.mockClear();
       await user.click(screen.getByRole('button', { name: /next page/i }));
 
       expect(getRowSpacing.mock.calls[0][0]).to.deep.equal({

@@ -40,7 +40,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -183,7 +183,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // reset the spy call count
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
 
       await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
 
@@ -276,7 +276,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // reset the spy call count
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
 
       // make one small and one big scroll that makes sure that the bottom of the grid window is reached
       await act(async () => {
@@ -426,7 +426,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // reset the spy call count
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
 
       // reduce the rowCount to be more than the number of rows
       await act(async () => {
@@ -471,8 +471,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         expect(cacheGetSpy.mock.calls.length > 0).to.equal(true);
       });
 
-      cacheGetSpy.resetHistory();
-      fetchRowsSpy.resetHistory();
+      cacheGetSpy.mockClear();
+      fetchRowsSpy.mockClear();
 
       act(() => {
         apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {

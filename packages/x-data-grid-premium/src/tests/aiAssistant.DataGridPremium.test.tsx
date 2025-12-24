@@ -46,7 +46,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
-  const promptSpy = vi.fn().resolves({});
+  const promptSpy = vi.fn().mockResolvedValue({});
 
   function Test(props: Partial<DataGridPremiumProps & { allowAiAssistantDataSampling: boolean }>) {
     apiRef = useGridApiRef();
@@ -69,7 +69,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
   }
 
   beforeEach(() => {
-    promptSpy.reset();
+    promptSpy.mockClear();
   });
 
   describe.skipIf(isJSDOM)('data sampling', () => {
@@ -113,7 +113,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
     it('should not do anything if the feature is disabled', async () => {
       const sortChangeSpy = vi.fn();
 
-      promptSpy.resolves({
+      promptSpy.mockResolvedValue({
         select: -1,
         filters: [],
         aggregation: {},
@@ -141,7 +141,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       const rowSelectionChangeSpy = vi.fn();
       const rowGroupingChangeSpy = vi.fn();
 
-      promptSpy.resolves({
+      promptSpy.mockResolvedValue({
         select: 1,
         filters: [
           {
@@ -188,7 +188,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
 
     it('should return the prompt processing error', async () => {
       const errorMsg = 'Prompt processing error';
-      promptSpy.rejects(new Error(errorMsg));
+      promptSpy.mockRejectedValue(new Error(errorMsg));
 
       render(<Test />);
       const response = (await act(() =>

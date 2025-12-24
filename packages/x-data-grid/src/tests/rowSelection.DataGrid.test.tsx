@@ -318,7 +318,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(selectAllCheckbox);
 
       // Reset the spy to check the next call
-      onRowSelectionModelChange.resetHistory();
+      onRowSelectionModelChange.mockClear();
 
       // Deselect one row
       await user.click(getCell(1, 0).querySelector('input')!);
