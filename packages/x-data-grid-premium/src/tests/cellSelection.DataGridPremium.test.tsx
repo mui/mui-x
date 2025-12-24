@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { stub, SinonStub, spy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
@@ -302,7 +302,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   describe('onCellSelectionModelChange', () => {
     it('should update the selection state when a cell is selected', async () => {
-      const onCellSelectionModelChange = spy();
+      const onCellSelectionModelChange = vi.fn();
       const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{}}
@@ -311,13 +311,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
       await user.click(getCell(0, 0));
 
-      expect(onCellSelectionModelChange.callCount).to.equal(1);
+      expect(onCellSelectionModelChange.mock.calls.length).to.equal(1);
       expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({ '0': { id: true } });
     });
 
     // Context: https://github.com/mui/mui-x/issues/14184
     it('should add the new cell selection range to the existing state', async () => {
-      const onCellSelectionModelChange = spy();
+      const onCellSelectionModelChange = vi.fn();
       const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{ '0': { id: true } }}
@@ -438,7 +438,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     afterEach(() => {
-      (window.requestAnimationFrame as SinonStub).restore();
+      (window.requestAnimationFrame as SinonStub)vi.restoreAllMocks();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {

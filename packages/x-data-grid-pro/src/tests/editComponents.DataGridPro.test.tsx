@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
-import { spy, SinonSpy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 
 /**
  * Creates a date that is compatible with years before 1901
@@ -124,7 +124,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditInputCell({ ...params, onValueChange });
@@ -137,7 +137,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       await user.type(input, '[Backspace>4]Puma');
 
-      expect(onValueChange.callCount).to.equal(8);
+      expect(onValueChange.mock.calls.length).to.equal(8);
       expect(onValueChange.lastCall.args[1]).to.equal('Puma');
     });
   });
@@ -358,7 +358,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditDateCell({ ...params, onValueChange });
@@ -374,7 +374,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionEnd: 10,
       });
 
-      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.mock.calls.length).to.equal(1);
       expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
@@ -622,7 +622,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditSingleSelectCell({ ...params, onValueChange });
@@ -633,12 +633,12 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.mock.calls.length).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
     });
 
     it('should call onCellEditStop', async () => {
-      const onCellEditStop = spy();
+      const onCellEditStop = vi.fn();
 
       const { user } = render(
         <div>
@@ -651,7 +651,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(document.getElementById('outside-grid')!);
 
-      expect(onCellEditStop.callCount).to.equal(1);
+      expect(onCellEditStop.mock.calls.length).to.equal(1);
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
@@ -696,7 +696,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditBooleanCell({ ...params, onValueChange });
@@ -709,7 +709,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      expect(onValueChange.callCount).to.equal(1);
+      expect(onValueChange.mock.calls.length).to.equal(1);
       expect(onValueChange.lastCall.args[1]).to.equal(true);
     });
   });

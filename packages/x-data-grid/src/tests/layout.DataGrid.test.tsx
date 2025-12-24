@@ -8,7 +8,7 @@ import {
   reactMajor,
   act,
 } from '@mui/internal-test-utils';
-import { stub, spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   DataGrid,
   DataGridProps,
@@ -230,7 +230,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
       afterEach(() => {
         // @ts-expect-error beforeEach side effect
-        console.error.restore();
+        console.errorvi.restoreAllMocks();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {
@@ -1105,9 +1105,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       );
     }
     const { setProps } = render(<TestCase rows={[]} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
   });
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
@@ -1121,9 +1121,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
-    expect(NoRowsOverlay.callCount).to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
     setProps({ loading: false });
-    expect(NoRowsOverlay.callCount).not.to.equal(0);
+    expect(NoRowsOverlay.mock.calls.length).not.to.equal(0);
   });
 
   // Doesn't work with mocked window.getComputedStyle

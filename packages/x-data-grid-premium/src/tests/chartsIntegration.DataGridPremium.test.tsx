@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
@@ -115,7 +115,7 @@ const configurationOptions: GridChartsConfigurationOptions = {
 
 describe('<DataGridPremium /> - Charts Integration', () => {
   const { render } = createRenderer();
-  const renderSpy = spy();
+  const renderSpy = vi.fn();
 
   let apiRef: RefObject<GridApiPremium | null>;
   let integrationContext: GridChartsIntegrationContextValue | null = null;
@@ -702,7 +702,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
 
       expect(renderSpy.called).to.equal(true);
       await waitFor(() => {
-        expect(renderSpy.lastCall.firstArg.chartStateLookup.test.dimensions[0].id).to.equal(
+        expect(renderSpy.mock.lastCall![0].chartStateLookup.test.dimensions[0].id).to.equal(
           'category1',
         );
       });
@@ -712,14 +712,14 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       render(<Test initialState={baseInitialState} />);
 
       renderSpy.resetHistory();
-      expect(renderSpy.callCount).to.equal(0);
+      expect(renderSpy.mock.calls.length).to.equal(0);
 
       act(() => {
         apiRef!.current?.sortColumn('amount', 'desc');
       });
 
       await waitFor(() => {
-        expect(renderSpy.callCount).to.be.greaterThan(0);
+        expect(renderSpy.mock.calls.length).to.be.greaterThan(0);
       });
     });
   });

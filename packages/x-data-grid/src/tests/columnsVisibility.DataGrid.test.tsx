@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import {
   DataGrid,
@@ -58,7 +58,7 @@ describe('<DataGrid /> - Columns visibility', () => {
     });
 
     it('should call onColumnVisibilityModelChange and update the visible columns when props.columnVisibilityModel is not defined', async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
       const { user } = render(
         <TestDataGrid showToolbar onColumnVisibilityModelChange={onColumnVisibilityModelChange} />,
       );
@@ -67,14 +67,14 @@ describe('<DataGrid /> - Columns visibility', () => {
       await user.click(screen.getByRole('button', { name: 'Columns' }));
       await user.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['idBis']);
-      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         id: false,
       });
     });
 
     it('should call onColumnVisibilityModelChange with the new model when columnVisibilityModel is controlled', () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
       render(
         <TestDataGrid
           showToolbar
@@ -87,15 +87,15 @@ describe('<DataGrid /> - Columns visibility', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Columns' }));
       fireEvent.click(screen.getByRole('checkbox', { name: 'id' }));
       expect(getColumnHeadersTextContent()).to.deep.equal(['id']);
-      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         id: false,
         idBis: false,
       });
     });
 
     it('should call onColumnVisibilityModelChange with the new model when toggling all columns', async () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
       function ControlledTest() {
         const [model, setModel] = React.useState<GridColumnVisibilityModel>({ idBis: false });
         return (
@@ -118,13 +118,13 @@ describe('<DataGrid /> - Columns visibility', () => {
 
       // Hide all
       await user.click(showHideAllCheckbox);
-      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({});
 
       // Show all
       await user.click(showHideAllCheckbox);
-      expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         id: false,
         idBis: false,
       });

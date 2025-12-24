@@ -1,7 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -70,7 +70,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     }
 
     it('should auto select parents when controlling row selection model', () => {
-      const onRowSelectionModelChange = spy();
+      const onRowSelectionModelChange = vi.fn();
       render(
         <Test
           rowSelectionModel={includeRowSelection([3, 4])}
@@ -84,7 +84,7 @@ describe('<DataGridPremium /> - Row selection', () => {
     });
 
     it('should auto select the parent when updating the controlled row selection model', async () => {
-      const onRowSelectionModelChange = spy();
+      const onRowSelectionModelChange = vi.fn();
       const { setProps } = render(
         <Test
           rowSelectionModel={includeRowSelection([])}
@@ -92,18 +92,18 @@ describe('<DataGridPremium /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([3, 4]) });
       });
-      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
     });
 
     it('should auto select descendants when updating the controlled row selection model', async () => {
-      const onRowSelectionModelChange = spy();
+      const onRowSelectionModelChange = vi.fn();
       const { setProps } = render(
         <Test
           rowSelectionModel={includeRowSelection([])}
@@ -111,13 +111,13 @@ describe('<DataGridPremium /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(0);
+      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
       act(() => {
         setProps({
           rowSelectionModel: includeRowSelection(['auto-generated-row-category1/Cat B']),
         });
       });
-      expect(onRowSelectionModelChange.callCount).to.equal(1);
+      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
@@ -277,7 +277,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       it.todo(
         'should auto select the parent of a previously selected non existent rows when it is added back',
         () => {
-          const onRowSelectionModelChange = spy();
+          const onRowSelectionModelChange = vi.fn();
           const { setProps } = render(
             <Test
               keepNonExistentRowsSelected
@@ -287,12 +287,12 @@ describe('<DataGridPremium /> - Row selection', () => {
             />,
           );
 
-          expect(onRowSelectionModelChange.callCount).to.equal(0);
+          expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
 
           act(() => {
             setProps({ rows });
           });
-          expect(onRowSelectionModelChange.callCount).to.equal(1);
+          expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
           expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
             includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
           );
@@ -303,7 +303,7 @@ describe('<DataGridPremium /> - Row selection', () => {
       it.todo(
         'should auto select the children of a previously non existent parent row when it is added back',
         () => {
-          const onRowSelectionModelChange = spy();
+          const onRowSelectionModelChange = vi.fn();
           const { setProps } = render(
             <Test
               keepNonExistentRowsSelected
@@ -313,12 +313,12 @@ describe('<DataGridPremium /> - Row selection', () => {
             />,
           );
 
-          expect(onRowSelectionModelChange.callCount).to.equal(0);
+          expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
 
           act(() => {
             setProps({ rows });
           });
-          expect(onRowSelectionModelChange.callCount).to.equal(1);
+          expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
           expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
             includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4]),
           );

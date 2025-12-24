@@ -9,7 +9,7 @@ import {
   GridColDef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';
@@ -262,12 +262,12 @@ describe('<DataGridPro /> - Sorting', () => {
     });
 
     it('should update the sort state when the model is not set, but the onChange is set', () => {
-      const onModelChange = spy();
+      const onModelChange = vi.fn();
       render(<TestCase onSortModelChange={onModelChange} />);
-      expect(onModelChange.callCount).to.equal(0);
+      expect(onModelChange.mock.calls.length).to.equal(0);
       fireEvent.click(getColumnHeaderCell(0));
-      expect(onModelChange.callCount).to.equal(1);
-      expect(onModelChange.lastCall.firstArg).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
+      expect(onModelChange.mock.calls.length).to.equal(1);
+      expect(onModelChange.mock.lastCall![0]).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
     });
 
     it('should control sort state when the model and the onChange are set', () => {
@@ -301,7 +301,7 @@ describe('<DataGridPro /> - Sorting', () => {
     });
 
     it('should not call onSortModelChange on initialization or on sortModel prop change', () => {
-      const onSortModelChange = spy();
+      const onSortModelChange = vi.fn();
 
       function Test(props: Partial<DataGridProProps>) {
         return (
@@ -326,7 +326,7 @@ describe('<DataGridPro /> - Sorting', () => {
         />,
       );
 
-      expect(onSortModelChange.callCount).to.equal(0);
+      expect(onSortModelChange.mock.calls.length).to.equal(0);
       setProps({
         sortModel: [
           { field: 'year', sort: 'asc' },
@@ -334,7 +334,7 @@ describe('<DataGridPro /> - Sorting', () => {
         ],
       });
 
-      expect(onSortModelChange.callCount).to.equal(0);
+      expect(onSortModelChange.mock.calls.length).to.equal(0);
     });
   });
 });

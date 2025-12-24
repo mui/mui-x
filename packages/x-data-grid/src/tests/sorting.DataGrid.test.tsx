@@ -12,7 +12,7 @@ import {
   GridInitialState,
 } from '@mui/x-data-grid';
 import { getColumnValues, getColumnHeaderCell } from 'test/utils/helperFn';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -153,7 +153,7 @@ describe('<DataGrid /> - Sorting', () => {
   // See https://github.com/mui/mui-x/issues/12271
   it('should not keep the sort item with `item.sort = null`', () => {
     let apiRef: RefObject<GridApi | null>;
-    const onSortModelChange = spy();
+    const onSortModelChange = vi.fn();
     function TestCase() {
       apiRef = useGridApiRef();
       const cols = [{ field: 'id' }];
@@ -178,16 +178,16 @@ describe('<DataGrid /> - Sorting', () => {
     // Trigger a `asc` sort
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
-    expect(onSortModelChange.callCount).to.equal(1);
-    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([{ field: 'id', sort: 'asc' }]);
+    expect(onSortModelChange.mock.calls.length).to.equal(1);
+    expect(onSortModelChange.mock.lastCall![0]).to.deep.equal([{ field: 'id', sort: 'asc' }]);
 
     // Clear the sort using `apiRef`
     act(() => apiRef.current?.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
-    expect(onSortModelChange.callCount).to.equal(2);
+    expect(onSortModelChange.mock.calls.length).to.equal(2);
 
     // Confirm that the sort item is cleared and not passed to `onSortModelChange`
-    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
+    expect(onSortModelChange.mock.lastCall![0]).to.deep.equal([]);
   });
 
   it('should always set correct `aria-sort` attribute', () => {
@@ -693,7 +693,7 @@ describe('<DataGrid /> - Sorting', () => {
       { id: 1, brand: 'Adidas' },
       { id: 2, brand: 'Puma' },
     ];
-    const onSortModelChange = spy();
+    const onSortModelChange = vi.fn();
 
     function Demo(props: Omit<DataGridProps, 'columns'>) {
       return (
@@ -713,8 +713,8 @@ describe('<DataGrid /> - Sorting', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onSortModelChange.callCount).to.equal(2);
-    expect(onSortModelChange.lastCall.firstArg).to.deep.equal([]);
+    expect(onSortModelChange.mock.calls.length).to.equal(2);
+    expect(onSortModelChange.mock.lastCall![0]).to.deep.equal([]);
   });
 
   // See https://github.com/mui/mui-x/issues/9204
@@ -726,7 +726,7 @@ describe('<DataGrid /> - Sorting', () => {
       { id: 2, brand: 'Puma' },
     ];
 
-    const onSortModelChange = spy();
+    const onSortModelChange = vi.fn();
 
     function Demo(props: Omit<DataGridProps, 'columns'>) {
       return (
@@ -746,7 +746,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
     expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
-    expect(onSortModelChange.callCount).to.equal(0);
+    expect(onSortModelChange.mock.calls.length).to.equal(0);
   });
 
   describe('getSortComparator', () => {

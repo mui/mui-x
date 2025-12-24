@@ -13,7 +13,7 @@ import {
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { getColumnHeadersTextContent, getRowValues } from 'test/utils/helperFn';
 import { PivotingColDefCallback } from '../hooks/features/pivoting/gridPivotingInterfaces';
 
@@ -29,7 +29,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
   };
 
   let apiRef: RefObject<GridApi | null>;
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -132,7 +132,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
@@ -156,7 +156,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal({
@@ -227,7 +227,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     expect(fetchRowsSpy.lastCall.args[0].pivotModel).to.deep.equal(pivotModel);
@@ -280,7 +280,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     // Verify that pivot model is passed to getRows
@@ -335,7 +335,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     // Verify that pivot model is passed to getRows
@@ -442,7 +442,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     await waitFor(() => {
@@ -501,7 +501,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     await waitFor(() => {
@@ -562,7 +562,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     // Custom header is being used and the value is picked from the custom field name
@@ -641,7 +641,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       });
 
       await waitFor(() => {
@@ -722,7 +722,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+        expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
       });
 
       await waitFor(() => {

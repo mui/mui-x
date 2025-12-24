@@ -16,7 +16,7 @@ import {
   GridEventListener,
 } from '@mui/x-data-grid-pro';
 import { getCell, getColumnHeaderCell, includeRowSelection } from 'test/utils/helperFn';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Events params', () => {
@@ -210,7 +210,7 @@ describe('<DataGridPro /> - Events params', () => {
       render(<TestEvents onCellDoubleClick={handleCellDoubleClick} />);
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
-      expect(handleCellDoubleClick.callCount).to.equal(1);
+      expect(handleCellDoubleClick.mock.calls.length).to.equal(1);
       expect(cell).not.to.have.class(gridClasses['row--editing']);
     });
 
@@ -226,24 +226,24 @@ describe('<DataGridPro /> - Events params', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.keyDown(input, { key: 'Enter' });
-      expect(handleCellEditStop.callCount).to.equal(1);
+      expect(handleCellEditStop.mock.calls.length).to.equal(1);
       expect(cell).to.have.class(gridClasses['cell--editing']);
     });
 
     it('should select a row by default', () => {
-      const handleRowSelectionModelChange = spy();
+      const handleRowSelectionModelChange = vi.fn();
       render(<TestEvents onRowSelectionModelChange={handleRowSelectionModelChange} />);
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleRowSelectionModelChange.callCount).to.equal(1);
-      expect(handleRowSelectionModelChange.lastCall.firstArg).to.deep.equal(
+      expect(handleRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(handleRowSelectionModelChange.mock.lastCall![0]).to.deep.equal(
         includeRowSelection([2]),
       );
     });
 
     it('should not select a row if props.disableRowSelectionOnClick', () => {
-      const handleRowSelectionModelChange = spy();
+      const handleRowSelectionModelChange = vi.fn();
       render(
         <TestEvents
           onRowSelectionModelChange={handleRowSelectionModelChange}
@@ -252,7 +252,7 @@ describe('<DataGridPro /> - Events params', () => {
       );
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleRowSelectionModelChange.callCount).to.equal(0);
+      expect(handleRowSelectionModelChange.mock.calls.length).to.equal(0);
     });
   });
 
@@ -333,7 +333,7 @@ describe('<DataGridPro /> - Events params', () => {
   it.skipIf(isJSDOM)(
     'lazy loaded grid should load the rest of the rows when mounted when virtualization is disabled',
     () => {
-      const handleFetchRows = spy();
+      const handleFetchRows = vi.fn();
       render(
         <TestEvents
           onFetchRows={handleFetchRows}
@@ -344,8 +344,8 @@ describe('<DataGridPro /> - Events params', () => {
           rowCount={50}
         />,
       );
-      expect(handleFetchRows.callCount).to.equal(1);
-      expect(handleFetchRows.lastCall.firstArg).to.contain({
+      expect(handleFetchRows.mock.calls.length).to.equal(1);
+      expect(handleFetchRows.mock.lastCall![0]).to.contain({
         firstRowToRender: 3,
         lastRowToRender: 50,
       });
@@ -353,7 +353,7 @@ describe('<DataGridPro /> - Events params', () => {
   );
 
   it('publishing renderedRowsIntervalChange should call onFetchRows callback when rows lazy loading is enabled', () => {
-    const handleFetchRows = spy();
+    const handleFetchRows = vi.fn();
     render(
       <TestEvents
         onFetchRows={handleFetchRows}
@@ -365,7 +365,7 @@ describe('<DataGridPro /> - Events params', () => {
       />,
     );
     // Since rowheight < viewport height, onmount calls fetchRows directly
-    expect(handleFetchRows.callCount).to.equal(1);
+    expect(handleFetchRows.mock.calls.length).to.equal(1);
     act(() => {
       apiRef.current?.publishEvent('renderedRowsIntervalChange', {
         firstRowIndex: 3,
@@ -374,15 +374,15 @@ describe('<DataGridPro /> - Events params', () => {
         lastColumnIndex: 0,
       });
     });
-    expect(handleFetchRows.callCount).to.equal(2);
-    expect(handleFetchRows.lastCall.firstArg).to.contain({
+    expect(handleFetchRows.mock.calls.length).to.equal(2);
+    expect(handleFetchRows.mock.lastCall![0]).to.contain({
       firstRowToRender: 3,
       lastRowToRender: 10,
     });
   });
 
   it('should publish "unmount" event when unmounting the Grid', () => {
-    const onUnmount = spy();
+    const onUnmount = vi.fn();
 
     const { unmount } = render(<TestEvents />);
 

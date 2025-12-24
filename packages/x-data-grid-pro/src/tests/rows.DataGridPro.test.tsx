@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
@@ -332,10 +332,10 @@ describe('<DataGridPro /> - Rows', () => {
 
       render(<Test />);
       const initialRendersCount = 2;
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount);
+      expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount);
 
       act(() => apiRef.current?.updateRows([{ id: 1, name: 'John' }]));
-      expect(renderCellSpy.callCount).to.equal(initialRendersCount + 2);
+      expect(renderCellSpy.mock.calls.length).to.equal(initialRendersCount + 2);
     });
   });
 
@@ -871,15 +871,15 @@ describe('<DataGridPro /> - Rows', () => {
     });
 
     it('should publish "cellFocusOut" when clicking outside the focused cell', async () => {
-      const handleCellFocusOut = spy();
+      const handleCellFocusOut = vi.fn();
       const { user } = render(<TestCase rows={baselineProps.rows} />);
       apiRef.current?.subscribeEvent('cellFocusOut', handleCellFocusOut);
       await user.click(getCell(1, 0));
-      expect(handleCellFocusOut.callCount).to.equal(0);
+      expect(handleCellFocusOut.mock.calls.length).to.equal(0);
       await user.click(document.body);
-      expect(handleCellFocusOut.callCount).to.equal(1);
-      expect(handleCellFocusOut.args[0][0].id).to.equal(baselineProps.rows[1].id);
-      expect(handleCellFocusOut.args[0][0].field).to.equal(baselineProps.columns[0].field);
+      expect(handleCellFocusOut.mock.calls.length).to.equal(1);
+      expect(handleCellFocusOut.mock.calls[0][0].id).to.equal(baselineProps.rows[1].id);
+      expect(handleCellFocusOut.mock.calls[0][0].field).to.equal(baselineProps.columns[0].field);
     });
 
     it('should not crash when the row is removed during the click', async () => {

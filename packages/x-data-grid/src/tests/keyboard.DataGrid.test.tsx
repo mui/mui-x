@@ -1,5 +1,5 @@
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   getActiveCell,
   getActiveColumnHeader,
@@ -705,13 +705,13 @@ describe('<DataGrid /> - Keyboard', () => {
         <DataGrid rows={rows} columns={columns} />
       </div>,
     );
-    expect(renderCell.callCount).to.equal(2);
+    expect(renderCell.mock.calls.length).to.equal(2);
     const input = screen.getByTestId('custom-input');
     input.focus();
     fireEvent.keyDown(input, { key: 'a' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.mock.calls.length).to.equal(4);
     fireEvent.keyDown(input, { key: 'b' });
-    expect(renderCell.callCount).to.equal(4);
+    expect(renderCell.mock.calls.length).to.equal(4);
   });
 
   it('should not scroll horizontally when cell is wider than viewport', async () => {

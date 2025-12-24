@@ -1,5 +1,5 @@
 import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   DataGrid,
   DataGridProps,
@@ -69,7 +69,7 @@ describe('<DataGrid /> - Quick filter', () => {
     });
 
     it('should allow to customize input splitting', async () => {
-      const onFilterModelChange = spy();
+      const onFilterModelChange = vi.fn();
 
       const { user } = render(
         <TestCase
@@ -85,13 +85,13 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      expect(onFilterModelChange.callCount).to.equal(0);
+      expect(onFilterModelChange.mock.calls.length).to.equal(0);
 
       await user.click(screen.getByRole('button', { name: 'Search' }));
       await user.type(screen.getByRole('searchbox'), 'adid, nik');
 
       await waitFor(() => {
-        expect(onFilterModelChange.lastCall.firstArg).to.deep.equal({
+        expect(onFilterModelChange.mock.lastCall![0]).to.deep.equal({
           items: [],
           logicOperator: 'and',
           quickFilterValues: ['adid', 'nik'],
@@ -410,15 +410,15 @@ describe('<DataGrid /> - Quick filter', () => {
       const initialCallCount = reactMajor >= 19 ? 1 : 2;
 
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
       expect(getColumnValues(0)).to.deep.equal([]);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 1);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(initialCallCount + 1);
 
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount + 2);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(initialCallCount + 2);
     });
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=true but no quick filter values', () => {
@@ -441,15 +441,15 @@ describe('<DataGrid /> - Quick filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: false } });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(0);
 
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(0);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(0);
     });
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {
@@ -476,15 +476,15 @@ describe('<DataGrid /> - Quick filter', () => {
       const initialCallCount = reactMajor >= 19 ? 1 : 2;
 
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: false } });
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(initialCallCount);
 
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['1']);
-      expect(getApplyQuickFilterFnSpy.callCount).to.equal(initialCallCount);
+      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(initialCallCount);
     });
   });
 

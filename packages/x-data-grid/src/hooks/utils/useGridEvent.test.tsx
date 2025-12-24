@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, reactMajor } from '@mui/internal-test-utils';
 import { sleep } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -6,7 +6,7 @@ import { useGridEvent, internal_registryContainer } from './useGridEvent';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 
-const noop = spy();
+const noop = vi.fn();
 
 describe('useGridEvent', () => {
   const { render } = createRenderer();
@@ -18,9 +18,9 @@ describe('useGridEvent', () => {
     )('should unsubscribe event listeners registered by uncommitted components', async () => {
       internal_registryContainer.current = new FinalizationRegistryBasedCleanupTracking();
 
-      const unsubscribe = spy();
+      const unsubscribe = vi.fn();
       const apiRef = {
-        current: { subscribeEvent: spy(() => unsubscribe) },
+        current: { subscribeEvent: vi.fn(() => unsubscribe) },
       };
 
       function Test() {
@@ -37,14 +37,14 @@ describe('useGridEvent', () => {
       // Since React 19, StrictMode works differently
       // https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
       const expectedCallCount = reactMajor >= 19 ? 1 : 3;
-      expect(apiRef.current.subscribeEvent.callCount).to.equal(expectedCallCount);
+      expect(apiRef.current.subscribeEvent.mock.calls.length).to.equal(expectedCallCount);
 
       unmount();
       global.gc?.(); // Triggers garbage collector
       await sleep(50);
 
       // Ensure that both event listeners were unsubscribed
-      expect(unsubscribe.callCount).to.equal(expectedCallCount);
+      expect(unsubscribe.mock.calls.length).to.equal(expectedCallCount);
     });
   });
 
@@ -52,9 +52,9 @@ describe('useGridEvent', () => {
     it('should unsubscribe event listeners registered by uncommitted components', async () => {
       internal_registryContainer.current = new TimerBasedCleanupTracking(50);
 
-      const unsubscribe = spy();
+      const unsubscribe = vi.fn();
       const apiRef = {
-        current: { subscribeEvent: spy(() => unsubscribe) },
+        current: { subscribeEvent: vi.fn(() => unsubscribe) },
       };
 
       function Test() {
@@ -71,13 +71,13 @@ describe('useGridEvent', () => {
       // Since React 19, StrictMode works differently
       // https://react.dev/blog/2024/04/25/react-19-upgrade-guide#strict-mode-improvements
       const expectedCallCount = reactMajor >= 19 ? 2 : 3;
-      expect(apiRef.current.subscribeEvent.callCount).to.equal(expectedCallCount);
+      expect(apiRef.current.subscribeEvent.mock.calls.length).to.equal(expectedCallCount);
 
       unmount();
       await sleep(60);
 
       // Ensure that all event listeners were unsubscribed
-      expect(unsubscribe.callCount).to.equal(expectedCallCount);
+      expect(unsubscribe.mock.calls.length).to.equal(expectedCallCount);
     });
   });
 });

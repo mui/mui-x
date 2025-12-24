@@ -12,7 +12,7 @@ import {
   GRID_AGGREGATION_ROOT_FOOTER_ROW_ID,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -20,8 +20,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
-  const fetchRowsSpy = spy();
-  const editRowSpy = spy();
+  const fetchRowsSpy = vi.fn();
+  const editRowSpy = vi.fn();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -133,7 +133,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       <TestDataSourceAggregation dataSource={dataSource} columns={[{ field: 'id' }]} />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     // wait for the column menu to be open first
@@ -144,7 +144,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
     const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
@@ -159,7 +159,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.be.greaterThan(0);
+      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
     expect(fetchRowsSpy.lastCall.args[0].aggregationModel).to.deep.equal({ id: 'size' });
@@ -218,7 +218,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       />,
     );
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy.mock.calls.length).to.equal(1);
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.be.greaterThan(1);
     });
@@ -227,7 +227,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
     });
 
     const cell = getCell(1, apiRef.current!.state.columns.orderedFields.indexOf('gross'));
@@ -236,10 +236,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
     await user.keyboard('{Enter}{Delete}1{Enter}');
 
-    expect(editRowSpy.callCount).to.equal(1);
+    expect(editRowSpy.mock.calls.length).to.equal(1);
     // Two additional calls should be made
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(4);
+      expect(fetchRowsSpy.mock.calls.length).to.equal(4);
     });
   });
 });

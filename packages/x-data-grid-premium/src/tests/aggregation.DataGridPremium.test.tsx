@@ -2,7 +2,7 @@ import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, screen, within, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnHeaderCell, getColumnValues, microtasks } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
-import { SinonSpy, spy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 import {
   DataGridPremium,
   DataGridPremiumProps,
@@ -82,7 +82,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
 
     describe('prop: aggregationModel', () => {
       it('should not call onAggregationModelChange on initialisation or on aggregationModel prop change', async () => {
-        const onAggregationModelChange = spy();
+        const onAggregationModelChange = vi.fn();
 
         const { setProps } = await render(
           <Test
@@ -91,10 +91,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
           />,
         );
 
-        expect(onAggregationModelChange.callCount).to.equal(0);
+        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
         setProps({ id: 'min' });
 
-        expect(onAggregationModelChange.callCount).to.equal(0);
+        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
       });
 
       it('should allow to update the aggregation model from the outside', async () => {
@@ -883,7 +883,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property', async () => {
-      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+      const renderCell: MockInstance<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
@@ -910,7 +910,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     });
 
     it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false`', async () => {
-      const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
+      const renderCell: MockInstance<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
 
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',

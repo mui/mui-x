@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import {
@@ -46,7 +46,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
 
   describe('apiRef: updateColumns', () => {
     it('should not call `onColumnVisibilityModelChange` when no column visibility has changed', () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
       render(
         <TestDataGridPro
           columnVisibilityModel={{ idBis: false }}
@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       act(() => apiRef.current?.updateColumns([{ field: 'id', width: 300 }]));
-      expect(onColumnVisibilityModelChange.callCount).to.equal(0);
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
     });
   });
 
@@ -78,7 +78,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
     });
 
     it('should call `onColumnVisibilityModelChange` with the new model', () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <TestDataGridPro
@@ -88,15 +88,15 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       act(() => apiRef.current?.setColumnVisibility('id', false));
-      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         id: false,
         idBis: false,
       });
 
       act(() => apiRef.current?.setColumnVisibility('id', true));
-      expect(onColumnVisibilityModelChange.callCount).to.equal(2);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         idBis: false,
         id: true,
       });
@@ -105,7 +105,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
 
   describe('apiRef: setColumnVisibilityModel', () => {
     it('should update `setColumnVisibilityModel` in state and call `onColumnVisibilityModelChange`', () => {
-      const onColumnVisibilityModelChange = spy();
+      const onColumnVisibilityModelChange = vi.fn();
 
       render(
         <TestDataGridPro
@@ -114,8 +114,8 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
       act(() => apiRef.current?.setColumnVisibilityModel({}));
-      expect(onColumnVisibilityModelChange.callCount).to.equal(1);
-      expect(onColumnVisibilityModelChange.lastCall.firstArg).to.deep.equal({});
+      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({});
     });
   });
 
