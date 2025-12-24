@@ -17,6 +17,7 @@ export const Unstable_RadarDataProvider = RadarDataProvider;
 
 export type { RadarChartProps, RadarChartSlots, RadarChartSlotProps } from './RadarChart';
 export type { RadarDataProviderProps, RadarSeries } from './RadarDataProvider';
+export * from './FocusedRadarMark';
 export * from './RadarGrid';
 export * from './RadarAxis';
 export * from './RadarAxisHighlight';

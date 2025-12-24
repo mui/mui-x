@@ -159,6 +159,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/focused-radar-mark',
+    title: 'FocusedRadarMark',
+  },
+  {
     pathname: '/x/api/charts/funnel-chart',
     title: 'FunnelChart',
     plan: 'pro',
