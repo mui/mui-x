@@ -12,20 +12,16 @@ import {
 export default function TimezoneDatasetInstantBased() {
   const eventModelStructure: SchedulerEventModelStructure<TimezoneEvent> = {
     start: {
-      getter: (event) => new TZDate(event.startUtc, event.timezone),
+      getter: (event) => new TZDate(event.start, event.timezone),
       setter: (event, newValue) => {
-        const tz = (newValue as any).timeZone;
-        event.startUtc = newValue.toISOString();
-        event.timezone = tz;
+        event.start = newValue.toISOString();
         return event;
       },
     },
     end: {
-      getter: (event) => new TZDate(event.endUtc, event.timezone),
+      getter: (event) => new TZDate(event.end, event.timezone),
       setter: (event, newValue) => {
-        const tz = (newValue as any).timeZone;
-        event.endUtc = newValue.toISOString();
-        event.timezone = tz;
+        event.end = newValue.toISOString();
         return event;
       },
     },
