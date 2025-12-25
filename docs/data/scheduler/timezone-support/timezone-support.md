@@ -31,7 +31,6 @@ In addition to instant-based date values, events may define an optional `timezon
 This field represents the **conceptual timezone of the event**, and is used for:
 
 - Recurring event rules (RRULE)
-- Day and hour semantics (for example "every Wednesday at 6pm")
 - Daylight Saving Time calculations
 
 The `timezone` field does **not** reinterpret or shift date values by itself.
