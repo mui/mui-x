@@ -57,7 +57,7 @@ only how that instant is presented to the user. The underlying event data remain
 While single events are updated using pure instants, recurring events define
 a **pattern** that is evaluated in a specific timezone.
 
-When updating all occurrences of a recurring event, Scheduler interprets the edited
+When updating occurrences of a recurring event, Scheduler interprets the edited
 occurrence in the event's `timezone` in order to update the recurring rule correctly.
 
 This is the only case where Scheduler intentionally operates on day/hour semantics
