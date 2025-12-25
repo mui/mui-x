@@ -34,6 +34,7 @@ export function projectRRuleToTimezone(
       };
     }
 
+    // TODO add support for MONTHLY byDay projection
     // if (rrule.freq === 'MONTHLY') {
     //   nextRule = {
     //     ...nextRule,
@@ -45,6 +46,9 @@ export function projectRRuleToTimezone(
   return nextRule;
 }
 
+// Project weekly byDay values using a real occurrence anchored to the series start.
+// We build an actual date in the event dataTimezone and then project it to the target
+// timezone to determine the correct weekday, preserving DST and day-crossing behavior.
 function projectWeeklyByDay(
   adapter: Adapter,
   byDay: RecurringEventByDayValue[],

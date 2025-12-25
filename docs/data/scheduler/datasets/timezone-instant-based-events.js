@@ -102,7 +102,7 @@ export const initialEvents = [
     resource: 'la',
     rrule: {
       freq: 'WEEKLY',
-      byDay: ['SU', 'TU'],
+      byDay: ['SU'],
       count: 5,
     },
   },
