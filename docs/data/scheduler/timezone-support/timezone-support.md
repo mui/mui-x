@@ -21,26 +21,51 @@ TODO: Issue #20394 - Create documentation and demos
 
 ## Overview
 
-Scheduler supports displaying events across different timezones by combining:
+Scheduler supports displaying and editing events across different timezones using an
+**instant-based model**.
 
-- Instant-based date values
-- An optional `timezone` field on the event model
-- A `displayTimezone` used for rendering
+Each event occurrence represents a fixed moment in time (an instant), which can be rendered
+in different timezones without changing when the event actually happens.
 
-The `timezone` field describes the conceptual timezone of the event data and does not reinterpret date values.
+In addition to instant-based date values, events may define an optional `timezone` field.
+This field represents the **conceptual timezone of the event**, and is used for:
 
-This behavior is aligned with common calendar applications such as Google Calendar, Outlook, and Apple Calendar.
+- Recurring event rules (RRULE)
+- Day and hour semantics (for example "every Wednesday at 6pm")
+- Daylight Saving Time calculations
+
+The `timezone` field does **not** reinterpret or shift date values by itself.
 
 ## Supported date values
 
-Scheduler currently expects date values to represent a fixed instant in time.
+Scheduler works with **adapter-defined temporal objects**.
 
-Values must be instant-based and can be projected to different timezones.
+All date values (`start`, `end`, etc.) are instances of
+`TemporalSupportedObject`, whose concrete type depends on the active date adapter.
 
-Wall-time values such as date strings without timezone information are not supported.
+These objects are expected to represent **fixed instants in time**, independently
+of how they are rendered or serialized.
 
 ## Rendering behavior
 
 Scheduler always renders events using the `displayTimezone` prop.
 
-Changing the display timezone does not change when the event occurs, only how it is displayed.
+Changing the display timezone does not change when an event occurs,
+only how that instant is presented to the user. The underlying event data remains unchanged.
+
+## Recurring events and timezones
+
+While single events are updated using pure instants, recurring events define
+a **pattern** that is evaluated in a specific timezone.
+
+When updating all occurrences of a recurring event, Scheduler interprets the edited
+occurrence in the event's `timezone` in order to update the recurring rule correctly.
+
+This is the only case where Scheduler intentionally operates on day/hour semantics
+instead of pure instants.
+
+:::info
+Recurring event updates are pattern-based.
+This is the only case where Scheduler intentionally operates on wall-time semantics
+instead of pure instants.
+:::
