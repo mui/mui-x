@@ -26,14 +26,7 @@ export function parseRRule(
   timezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
-    if (!input.until) {
-      return input;
-    }
-
-    return {
-      ...input,
-      until: adapter.setTimezone(input.until, timezone),
-    };
+    return input;
   }
 
   const rruleObject: Record<string, string> = {};
