@@ -54,6 +54,9 @@ export function projectRRuleFromDisplayToData(
   displayRRule: RecurringEventRecurrenceRule,
   originalEvent: SchedulerProcessedEvent,
 ): RecurringEventRecurrenceRule {
+  // Only WEEKLY BYDAY values are projected back from display to data timezone.
+  // MONTHLY ordinals are intentionally preserved as-is, since projecting them
+  // would result in unstable or misleading rules.
   if (displayRRule.freq !== 'WEEKLY' || !displayRRule.byDay?.length) {
     return displayRRule;
   }
