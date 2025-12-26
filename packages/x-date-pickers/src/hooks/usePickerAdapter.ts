@@ -43,8 +43,10 @@ export const useLocalizationContext = () => {
   );
 };
 
-export interface UseLocalizationContextReturnValue
-  extends Omit<PickersAdapterContextValue, 'localeText'> {
+export interface UseLocalizationContextReturnValue extends Omit<
+  PickersAdapterContextValue,
+  'localeText'
+> {
   localeText: PickersLocaleText;
 }
 

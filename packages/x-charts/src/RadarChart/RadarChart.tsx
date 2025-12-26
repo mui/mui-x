@@ -30,21 +30,24 @@ import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
 
 export interface RadarChartSlots
-  extends ChartsTooltipSlots,
+  extends
+    ChartsTooltipSlots,
     ChartsOverlaySlots,
     ChartsLegendSlots,
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 
 export interface RadarChartSlotProps
-  extends ChartsTooltipSlotProps,
+  extends
+    ChartsTooltipSlotProps,
     ChartsOverlaySlotProps,
     ChartsLegendSlotProps,
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
 export interface RadarChartProps
-  extends RadarDataProviderProps,
+  extends
+    RadarDataProviderProps,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,

@@ -90,8 +90,7 @@ export interface UseTreeItemLabelSlotPropsFromLabelEditing {
 }
 
 declare module '@mui/x-tree-view/useTreeItem' {
-  interface UseTreeItemLabelInputSlotOwnProps
-    extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
+  interface UseTreeItemLabelInputSlotOwnProps extends UseTreeItemLabelInputSlotPropsFromLabelEditing {}
 
   interface UseTreeItemLabelSlotOwnProps extends UseTreeItemLabelSlotPropsFromLabelEditing {}
 }

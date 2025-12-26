@@ -7,9 +7,9 @@ import {
   selectorChartPreviewComputedYAxis,
   type SeriesId,
 } from '@mui/x-charts/internals';
-import { type PreviewPlotProps } from './PreviewPlot.types';
+import type { PreviewPlotProps } from './PreviewPlot.types';
 
-interface LinePreviewPlotProps extends PreviewPlotProps {}
+interface LinePreviewPlotProps extends Pick<PreviewPlotProps, 'axisId'> {}
 
 export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
   const completedData = useLinePreviewData(axisId);
@@ -30,8 +30,10 @@ export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
   );
 }
 
-export interface PreviewLineElementProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+export interface PreviewLineElementProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'color' | 'id'
+> {
   id: SeriesId;
   gradientId?: string;
   color: string;

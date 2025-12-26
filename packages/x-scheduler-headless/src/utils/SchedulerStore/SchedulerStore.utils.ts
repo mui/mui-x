@@ -1,4 +1,4 @@
-import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { TemporalTimezone } from '../../base-ui-copy/types';
 import {
   SchedulerProcessedEvent,

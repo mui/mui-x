@@ -1,5 +1,5 @@
-import { warn } from '@base-ui-components/utils/warn';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { warn } from '@base-ui/utils/warn';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   EventCalendarPreferences,
   CalendarView,

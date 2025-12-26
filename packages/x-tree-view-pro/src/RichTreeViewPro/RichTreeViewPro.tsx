@@ -265,6 +265,13 @@ RichTreeViewPro.propTypes = {
    */
   isItemReorderable: PropTypes.func,
   /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled: PropTypes.func,
+  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
