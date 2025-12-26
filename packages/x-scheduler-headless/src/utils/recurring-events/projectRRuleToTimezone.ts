@@ -5,7 +5,14 @@ import {
   RecurringEventRecurrenceRule,
   RecurringEventWeekDayCode,
 } from '../../models';
-import { getWeekDayCode, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
+import {
+  getWeekDayCode,
+  NOT_LOCALIZED_WEEK_DAYS_INDEXES,
+  nthWeekdayOfMonth,
+  parsesByDayForMonthlyFrequency,
+  tokenizeByDay,
+} from './internal-utils';
+import { computeMonthlyOrdinal } from './computeMonthlyOrdinal';
 
 /**
  * Projects a recurrence rule to a different timezone.
@@ -34,13 +41,12 @@ export function projectRRuleToTimezone(
       };
     }
 
-    // TODO add support for MONTHLY byDay projection
-    // if (rrule.freq === 'MONTHLY') {
-    //   nextRule = {
-    //     ...nextRule,
-    //     byDay: projectMonthlyByDay(adapter, rrule.byDay, seriesStartDataTimezone, targetTimezone),
-    //   };
-    // }
+    if (rrule.freq === 'MONTHLY') {
+      nextRule = {
+        ...nextRule,
+        byDay: projectMonthlyByDay(adapter, rrule.byDay, seriesStartDataTimezone, targetTimezone),
+      };
+    }
   }
 
   return nextRule;
@@ -74,24 +80,25 @@ function projectWeeklyByDay(
   return Array.from(new Set(projected));
 }
 
-// function projectMonthlyByDay(
-//   adapter: Adapter,
-//   byDay: RecurringEventByDayValue[],
-//   seriesStart: TemporalSupportedObject,
-//   targetTimezone: TemporalTimezone,
-// ): RecurringEventByDayValue[] {
-//   const { ord, code } = parsesByDayForMonthlyFrequency(byDay);
+function projectMonthlyByDay(
+  adapter: Adapter,
+  byDay: RecurringEventByDayValue[],
+  seriesStart: TemporalSupportedObject,
+  targetTimezone: TemporalTimezone,
+): RecurringEventByDayValue[] {
+  // MONTHLY BYDAY currently supports a single ordinal weekday (e.g. 1MO, -1FR)
+  const { ord, code } = parsesByDayForMonthlyFrequency(byDay);
 
-//   const monthStart = adapter.startOfMonth(seriesStart);
-//   const occurrence = nthWeekdayOfMonth(adapter, monthStart, code, ord);
+  const monthStart = adapter.startOfMonth(seriesStart);
+  const occurrence = nthWeekdayOfMonth(adapter, monthStart, code, ord);
 
-//   if (!occurrence) {
-//     return byDay; // fallback defensivo
-//   }
+  if (!occurrence) {
+    return byDay; // fallback to original values if we can't compute the occurrence
+  }
 
-//   const projected = adapter.setTimezone(occurrence, targetTimezone);
-//   const projectedCode = getWeekDayCode(adapter, projected);
-//   const projectedOrdinal = computeMonthlyOrdinal(adapter, projected);
+  const projected = adapter.setTimezone(occurrence, targetTimezone);
+  const projectedCode = getWeekDayCode(adapter, projected);
+  const projectedOrdinal = computeMonthlyOrdinal(adapter, projected);
 
-//   return [`${projectedOrdinal}${projectedCode}` as RecurringEventByDayValue];
-// }
+  return [`${projectedOrdinal}${projectedCode}` as RecurringEventByDayValue];
+}
