@@ -562,6 +562,7 @@
   { "name": "useChartsLocalization", "kind": "Variable" },
   { "name": "useDataset", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
+  { "name": "useFocusedItem", "kind": "Function" },
   { "name": "useFunnelSeries", "kind": "Function" },
   { "name": "useFunnelSeriesContext", "kind": "Function" },
   { "name": "UseFunnelSeriesContextReturnValue", "kind": "TypeAlias" },
