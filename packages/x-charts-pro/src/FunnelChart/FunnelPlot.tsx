@@ -64,36 +64,38 @@ const useAggregatedData = () => {
       const xPosition = createPositionGetter(xScale, isHorizontal, gap);
       const yPosition = createPositionGetter(yScale, !isHorizontal, gap);
 
-      const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          yPosition(
-            v.y,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          xPosition(
+      const minPoint = {
+        x: Infinity,
+        y: Infinity,
+      };
+      const maxPoint = {
+        x: -Infinity,
+        y: -Infinity,
+      };
+
+      currentSeries.dataPoints.forEach((section, dataIndex) => {
+        section.forEach((v) => {
+          const x = xPosition(
             v.x,
             dataIndex,
             baseScaleConfig.data?.[dataIndex],
             v.stackOffset,
             v.useBandWidth,
-          ),
-        ),
-      );
-      const minPoint = {
-        x: Math.min(...allX),
-        y: Math.min(...allY),
-      };
-      const maxPoint = {
-        x: Math.max(...allX),
-        y: Math.max(...allY),
-      };
+          );
+          const y = yPosition(
+            v.y,
+            dataIndex,
+            baseScaleConfig.data?.[dataIndex],
+            v.stackOffset,
+            v.useBandWidth,
+          );
+
+          minPoint.x = Math.min(minPoint.x, x);
+          minPoint.y = Math.min(minPoint.y, y);
+          maxPoint.x = Math.max(minPoint.x, x);
+          maxPoint.y = Math.max(minPoint.y, y);
+        });
+      });
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;

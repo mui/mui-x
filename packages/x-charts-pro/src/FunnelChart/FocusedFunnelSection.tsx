@@ -33,37 +33,38 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
 
   const isIncreasing = funnelSeries.funnelDirection === 'increasing';
 
-  const allY = funnelSeries.dataPoints.flatMap((section) =>
-    section.map((v) =>
-      yPosition(
-        v.y,
-        focusedItem.dataIndex,
-        baseScaleConfig.data?.[focusedItem.dataIndex],
-        v.stackOffset,
-        v.useBandWidth,
-      ),
-    ),
-  );
-  const allX = funnelSeries.dataPoints.flatMap((section) =>
-    section.map((v) =>
-      xPosition(
+  const minPoint = {
+    x: Infinity,
+    y: Infinity,
+  };
+  const maxPoint = {
+    x: -Infinity,
+    y: -Infinity,
+  };
+
+  funnelSeries.dataPoints.forEach((section) => {
+    section.forEach((v) => {
+      const x = xPosition(
         v.x,
         focusedItem.dataIndex,
         baseScaleConfig.data?.[focusedItem.dataIndex],
         v.stackOffset,
         v.useBandWidth,
-      ),
-    ),
-  );
+      );
+      const y = yPosition(
+        v.y,
+        focusedItem.dataIndex,
+        baseScaleConfig.data?.[focusedItem.dataIndex],
+        v.stackOffset,
+        v.useBandWidth,
+      );
 
-  const minPoint = {
-    x: Math.min(...allX),
-    y: Math.min(...allY),
-  };
-  const maxPoint = {
-    x: Math.max(...allX),
-    y: Math.max(...allY),
-  };
+      minPoint.x = Math.min(minPoint.x, x);
+      minPoint.y = Math.min(minPoint.y, y);
+      maxPoint.x = Math.max(minPoint.x, x);
+      maxPoint.y = Math.max(minPoint.y, y);
+    });
+  });
 
   const curve = getFunnelCurve(funnelSeries.curve, {
     isHorizontal,
