@@ -5,11 +5,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
-import { SeriesId } from '../models/seriesType/common';
+import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
+import { type SeriesId } from '../models/seriesType/common';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -69,7 +69,8 @@ export interface AreaElementSlotProps {
 }
 
 export interface AreaElementProps
-  extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;

@@ -11,7 +11,7 @@ import {
   defaultVisibleDate,
   initialEvents,
   resources,
-} from '../datasets/timeline-events';
+} from '../datasets/company-roadmap';
 import classes from './TimelineExternalDragAndDrop.module.css';
 
 const isValidDropTarget = buildIsValidDropTarget(['TimelineEvent']);
@@ -70,7 +70,10 @@ export default function TimelineExternalDragAndDrop() {
           return;
         }
 
-        const { start, end, ...eventData } = data.originalOccurrence;
+        const {
+          displayTimezone: { start, end },
+          ...eventData
+        } = data.originalOccurrence;
 
         setPlaceholder({
           ...eventData,

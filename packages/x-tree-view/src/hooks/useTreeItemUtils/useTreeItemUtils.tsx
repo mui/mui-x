@@ -128,7 +128,7 @@ export const useTreeItemUtils = <
   };
 
   const handleSelection = (event: React.MouseEvent) => {
-    if (status.disabled) {
+    if (!selectionSelectors.canItemBeSelected(store.state, itemId)) {
       return;
     }
 

@@ -4,9 +4,8 @@ import type { PanEvent } from '@mui/x-internal-gestures/core';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { ChartPlugin } from '../../models';
-import { UseChartBrushSignature, type Point } from './useChartBrush.types';
-import { useSelector } from '../../../store/useSelector';
+import { type ChartPlugin } from '../../models';
+import { type UseChartBrushSignature, type Point } from './useChartBrush.types';
 import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
 export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
@@ -15,7 +14,7 @@ export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   instance,
   params,
 }) => {
-  const isEnabled = useSelector(store, selectorIsBrushEnabled);
+  const isEnabled = store.use(selectorIsBrushEnabled);
 
   useEnhancedEffect(() => {
     store.set('brush', {

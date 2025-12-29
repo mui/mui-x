@@ -1,8 +1,9 @@
+import { TemporalTimezone } from '../../base-ui-copy/types';
 import { Adapter } from '../../use-adapter/useAdapter.types';
 import { RecurringEventByDayValue, RecurringEventRecurrenceRule } from '../../models';
-import { NOT_LOCALIZED_WEEK_DAYS, tokenizeByDay } from './internal-utils';
+import { getAdapterCache, NOT_LOCALIZED_WEEK_DAYS_INDEXES, tokenizeByDay } from './internal-utils';
 
-const SUPPORTED_RRULE_KEYS = [
+const SUPPORTED_RRULE_KEYS = new Set([
   'FREQ',
   'INTERVAL',
   'BYDAY',
@@ -10,19 +11,29 @@ const SUPPORTED_RRULE_KEYS = [
   'BYMONTH',
   'UNTIL',
   'COUNT',
-] as const;
+]);
 
 /**
- * Parses a string RRULE (e.g. "FREQ=DAILY;COUNT=5;INTERVAL=2")
- * into a RecurringEventRecurrenceRule object.
- * Also validates unsupported or malformed properties.
+ * Parses and validates a RRULE string (RFC5545) into a canonical
+ * `RecurringEventRecurrenceRule`.
+ *
+ * The resulting rule is expressed in the provided timezone
+ * (typically the event data timezone).
  */
-export function parseRRuleString(
+export function parseRRule(
   adapter: Adapter,
   input: string | RecurringEventRecurrenceRule,
+  timezone: TemporalTimezone,
 ): RecurringEventRecurrenceRule {
   if (typeof input === 'object') {
-    return input;
+    if (!input.until) {
+      return input;
+    }
+
+    return {
+      ...input,
+      until: adapter.setTimezone(input.until, timezone),
+    };
   }
 
   const rruleObject: Record<string, string> = {};
@@ -40,7 +51,7 @@ export function parseRRuleString(
       throw new Error(`Scheduler: Invalid RRULE part: "${part}"`);
     }
 
-    if (!SUPPORTED_RRULE_KEYS.includes(key as any)) {
+    if (!SUPPORTED_RRULE_KEYS.has(key)) {
       throw new Error(`Scheduler: Unsupported RRULE property: "${key}"`);
     }
 
@@ -64,17 +75,8 @@ export function parseRRuleString(
   }
 
   if (rruleObject.BYDAY) {
-    rrule.byDay = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
-  }
-
-  if (rruleObject.BYDAY) {
     const tokens = rruleObject.BYDAY.split(',').map((v) => v.trim()) as RecurringEventByDayValue[];
-    rrule.byDay = tokens
-      .map((t) => tokenizeByDay(t))
-      .sort(
-        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
-      )
-      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
+    rrule.byDay = sortByDayValues(tokens);
   }
 
   if (rruleObject.BYMONTHDAY) {
@@ -102,7 +104,7 @@ export function parseRRuleString(
   }
 
   if (rruleObject.UNTIL) {
-    const parsed = adapter.parse(rruleObject.UNTIL, getUntilFormat(adapter), 'default');
+    const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, timezone);
 
     if (!adapter.isValid(parsed)) {
       throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
@@ -129,13 +131,7 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
   }
 
   if (rule.byDay?.length) {
-    const normalized = [...rule.byDay]
-      .map((t) => tokenizeByDay(t))
-      .sort(
-        (a, b) => NOT_LOCALIZED_WEEK_DAYS.indexOf(a.code) - NOT_LOCALIZED_WEEK_DAYS.indexOf(b.code),
-      )
-      .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
-    parts.push(`BYDAY=${normalized.join(',')}`);
+    parts.push(`BYDAY=${sortByDayValues(rule.byDay).join(',')}`);
   }
 
   if (rule.byMonthDay?.length) {
@@ -152,7 +148,7 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
 
   if (rule.until) {
     const utcDate = adapter.setTimezone(rule.until, 'UTC');
-    const untilIso = adapter.formatByString(utcDate, getUntilFormat(adapter));
+    const untilIso = adapter.formatByString(utcDate, getAdapterCache(adapter).untilFormat);
 
     parts.push(`UNTIL=${untilIso}`);
   }
@@ -161,13 +157,14 @@ export function serializeRRule(adapter: Adapter, rule: RecurringEventRecurrenceR
 }
 
 /**
- * Builds the date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
+ * Sort the values provided to the BYDAY property of an RRULE by their order in the week.
  */
-function getUntilFormat(adapter: Adapter): string {
-  const f = adapter.formats;
-  const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
-  const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
-  const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
-  const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
-  return `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
+function sortByDayValues(temp: RecurringEventByDayValue[]): RecurringEventByDayValue[] {
+  return temp
+    .map((t) => tokenizeByDay(t))
+    .sort(
+      (a, b) =>
+        NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(a.code)! - NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(b.code)!,
+    )
+    .map((t) => (t.ord != null ? (`${t.ord}${t.code}` as RecurringEventByDayValue) : t.code));
 }

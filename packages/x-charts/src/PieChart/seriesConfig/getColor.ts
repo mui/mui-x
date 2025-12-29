@@ -1,4 +1,4 @@
-import { ColorProcessor } from '../../internals/plugins/models';
+import { type ColorProcessor } from '../../internals/plugins/models';
 
 const getColor: ColorProcessor<'pie'> = (series) => {
   return (dataIndex: number) => {

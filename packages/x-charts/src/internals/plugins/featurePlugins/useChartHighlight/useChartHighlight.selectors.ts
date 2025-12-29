@@ -1,9 +1,9 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { ChartRootSelector } from '../../utils/selectors';
-import { HighlightItemData, UseChartHighlightSignature } from './useChartHighlight.types';
-import { HighlightScope } from './highlightConfig.types';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type ChartRootSelector } from '../../utils/selectors';
+import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
+import { type HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
 import {
@@ -60,13 +60,13 @@ export const selectorChartsHighlightScope = createSelector(
   },
 );
 
-export const selectorChartsIsHighlightedCallback = createSelector(
+export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   createIsHighlighted,
 );
 
-export const selectorChartsIsFadedCallback = createSelector(
+export const selectorChartsIsFadedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   createIsFaded,

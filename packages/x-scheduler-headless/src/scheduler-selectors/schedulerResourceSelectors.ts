@@ -1,5 +1,5 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
 import { SchedulerResource, SchedulerResourceId } from '../models';
 
@@ -7,7 +7,7 @@ export const schedulerResourceSelectors = {
   processedResource: createSelector(
     (state: State) => state.processedResourceLookup,
     (processedResourceLookup, resourceId: string | null | undefined) =>
-      resourceId == null ? null : processedResourceLookup.get(resourceId),
+      resourceId == null ? null : (processedResourceLookup.get(resourceId) ?? null),
   ),
   processedResourceList: createSelectorMemoized(
     (state: State) => state.resourceIdList,
@@ -84,10 +84,20 @@ export const schedulerResourceSelectors = {
     (state: State) => state.visibleResources,
     (resources, visibleResources) =>
       resources
-        .filter(
-          (resourceId) =>
-            !visibleResources.has(resourceId) || visibleResources.get(resourceId) === true,
-        )
+        .filter((resourceId) => visibleResources[resourceId] !== false)
         .map((resourceId) => resourceId),
   ),
+  /**
+   * Gets the default event color used when no color is specified on the event.
+   */
+  defaultEventColor: createSelector(
+    (state: State, resourceId: SchedulerResourceId | null | undefined) => {
+      if (resourceId == null) {
+        return state.eventColor;
+      }
+
+      return state.processedResourceLookup.get(resourceId)?.eventColor ?? state.eventColor;
+    },
+  ),
+  resourcesCount: createSelector((state: State) => state.resourceIdList.length),
 };

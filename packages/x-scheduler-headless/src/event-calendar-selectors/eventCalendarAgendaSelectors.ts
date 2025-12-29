@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EventCalendarState as State } from '../use-event-calendar';
 import {
   schedulerEventSelectors,
@@ -8,7 +8,6 @@ import {
 import { eventCalendarPreferenceSelectors } from './eventCalendarPreferenceSelectors';
 import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-grouped-by-day';
 import { SchedulerProcessedDate } from '../models';
-import { diffIn } from '../use-adapter';
 import { AGENDA_MAX_HORIZON_DAYS, AGENDA_VIEW_DAYS_AMOUNT } from '../constants';
 import { getDayList } from '../get-day-list';
 
@@ -16,6 +15,7 @@ export const eventCalendarAgendaSelectors = {
   visibleDays: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
+    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
     schedulerEventSelectors.processedEventList,
@@ -24,6 +24,7 @@ export const eventCalendarAgendaSelectors = {
     (
       adapter,
       visibleDate,
+      displayTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
       events,
@@ -47,6 +48,7 @@ export const eventCalendarAgendaSelectors = {
         events,
         visibleResources,
         resourceParentIds,
+        displayTimezone,
       });
 
       const hasEvents = (day: SchedulerProcessedDate) =>
@@ -67,7 +69,7 @@ export const eventCalendarAgendaSelectors = {
 
         if (first && last) {
           const spanDays =
-            diffIn(adapter, adapter.startOfDay(last), adapter.startOfDay(first), 'days') + 1;
+            adapter.differenceInDays(adapter.startOfDay(last), adapter.startOfDay(first)) + 1;
 
           // Hard stop to avoid scanning too far into the future
           if (spanDays >= AGENDA_MAX_HORIZON_DAYS) {
@@ -93,6 +95,7 @@ export const eventCalendarAgendaSelectors = {
           events,
           visibleResources,
           resourceParentIds,
+          displayTimezone,
         });
 
         daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);

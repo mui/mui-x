@@ -14,8 +14,10 @@ export interface ExportedValidateTimeProps extends BaseTimeValidationProps, Time
 /**
  * Validation props as received by the validateTime method.
  */
-export interface ValidateTimeProps
-  extends MakeRequired<ExportedValidateTimeProps, ValidateTimePropsToDefault> {}
+export interface ValidateTimeProps extends MakeRequired<
+  ExportedValidateTimeProps,
+  ValidateTimePropsToDefault
+> {}
 
 /**
  * Name of the props that should be defaulted before being passed to the validateTime method.

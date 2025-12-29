@@ -8,7 +8,9 @@ import { TimeRangeManagerFieldInternalProps } from '../managers/useTimeRangeMana
 
 export interface UseSingleInputTimeRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+>
+  extends
+    TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
     // TODO v8: Remove once the range fields open with a button.
     Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
 

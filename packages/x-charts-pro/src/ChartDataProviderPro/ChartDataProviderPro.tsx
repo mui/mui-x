@@ -3,16 +3,22 @@ import PropTypes from 'prop-types';
 import { Watermark } from '@mui/x-license/Watermark';
 import {
   ChartProvider,
-  ChartSeriesType,
-  ChartAnyPluginSignature,
-  ChartProviderProps,
+  type ChartSeriesType,
+  type ChartAnyPluginSignature,
+  type ChartProviderProps,
   ChartsSlotsProvider,
+  type ChartSeriesConfig,
+  defaultSeriesConfig,
 } from '@mui/x-charts/internals';
-import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
-import { ChartsSlotPropsPro, ChartsSlotsPro, defaultSlotsMaterial } from '../internals/material';
-import { AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
+import {
+  type ChartsSlotPropsPro,
+  type ChartsSlotsPro,
+  defaultSlotsMaterial,
+} from '../internals/material';
+import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 
 const releaseInfo = '__RELEASE_INFO__';
@@ -32,6 +38,9 @@ export type ChartDataProviderProProps<
      */
     slotProps?: Partial<ChartsSlotPropsPro>;
   };
+
+export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> =
+  defaultSeriesConfig;
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -67,6 +76,7 @@ function ChartDataProviderPro<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderProProps({
       ...props,
+      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPro,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 

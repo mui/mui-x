@@ -1,6 +1,7 @@
 export * from './seriesType';
 export * from './stacking';
 export * from './slots';
+export * from './featureFlags';
 export type {
   AxisConfig,
   ChartsYAxisProps,
@@ -20,3 +21,4 @@ export type {
 export type { PropsFromSlot } from '@mui/x-internals/slots';
 export type { Position } from './position';
 export type { CurveType } from './curve';
+export type { TickFrequency, OrdinalTimeTicks, TickFrequencyDefinition } from './timeTicks';

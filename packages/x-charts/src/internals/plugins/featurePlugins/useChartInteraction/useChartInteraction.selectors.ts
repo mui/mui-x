@@ -1,6 +1,6 @@
 import { createSelector } from '@mui/x-internals/store';
-import { ChartOptionalRootSelector } from '../../utils/selectors';
-import { UseChartInteractionSignature } from './useChartInteraction.types';
+import { type ChartOptionalRootSelector } from '../../utils/selectors';
+import { type UseChartInteractionSignature } from './useChartInteraction.types';
 
 const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature> = (state) =>
   state.interaction;
@@ -8,11 +8,6 @@ const selectInteraction: ChartOptionalRootSelector<UseChartInteractionSignature>
 export const selectorChartsInteractionIsInitialized = createSelector(
   selectInteraction,
   (interaction) => interaction !== undefined,
-);
-
-export const selectorChartsInteractionItem = createSelector(
-  selectInteraction,
-  (interaction) => interaction?.item ?? null,
 );
 
 export const selectorChartsInteractionPointer = createSelector(
@@ -28,11 +23,6 @@ export const selectorChartsInteractionPointerX = createSelector(
 export const selectorChartsInteractionPointerY = createSelector(
   selectorChartsInteractionPointer,
   (pointer) => pointer && pointer.y,
-);
-
-export const selectorChartsInteractionItemIsDefined = createSelector(
-  selectorChartsInteractionItem,
-  (item) => item !== null,
 );
 
 export const selectorChartsLastInteraction = createSelector(

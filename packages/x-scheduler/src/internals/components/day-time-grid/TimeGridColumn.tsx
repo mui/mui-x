@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
-import { SchedulerValidDate } from '@mui/x-scheduler-headless/models';
+import { useStore } from '@base-ui/utils/store';
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -57,8 +57,8 @@ function ColumnInteractiveLayer({
   occurrences,
   maxIndex,
 }: {
-  start: SchedulerValidDate;
-  end: SchedulerValidDate;
+  start: TemporalSupportedObject;
+  end: TemporalSupportedObject;
   showCurrentTimeIndicator: boolean;
   index: number;
   occurrences: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition[];

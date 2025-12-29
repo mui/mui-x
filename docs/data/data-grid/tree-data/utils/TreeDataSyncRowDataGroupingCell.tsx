@@ -72,8 +72,12 @@ const getFileIcon = (type: string, isDarkMode: boolean) => {
   }
 };
 
-interface GridTreeDataGroupingCellProps
-  extends GridRenderCellParams<any, any, any, GridGroupNode> {}
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<
+  any,
+  any,
+  any,
+  GridGroupNode
+> {}
 
 function TreeDataSyncRowDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const { id, field, formattedValue, rowNode } = props;

@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { consumeSlots, SeriesId } from '@mui/x-charts/internals';
-import { FunnelSectionClasses, useLabelUtilityClasses } from './funnelSectionClasses';
+import { consumeSlots, type SeriesId } from '@mui/x-charts/internals';
+import { type FunnelSectionClasses, useLabelUtilityClasses } from './funnelSectionClasses';
 
 export interface FunnelSectionLabelConfig {
   x: number;
@@ -12,8 +12,10 @@ export interface FunnelSectionLabelConfig {
   dominantBaseline?: React.SVGProps<SVGTextElement>['dominantBaseline'];
 }
 
-export interface FunnelSectionLabelProps
-  extends Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> {
+export interface FunnelSectionLabelProps extends Omit<
+  React.SVGProps<SVGTextElement>,
+  'ref' | 'id'
+> {
   classes?: Partial<FunnelSectionClasses>;
   label: FunnelSectionLabelConfig;
   seriesId: SeriesId;

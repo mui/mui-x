@@ -1,11 +1,15 @@
-import { SchedulerProcessedEvent, SchedulerValidDate } from '../models';
+import {
+  SchedulerEventUpdatedProperties,
+  SchedulerProcessedEvent,
+  TemporalSupportedObject,
+} from '../models';
 import { Adapter } from '../use-adapter/useAdapter.types';
 
 export function mergeDateAndTime(
   adapter: Adapter,
-  dateParam: SchedulerValidDate,
-  timeParam: SchedulerValidDate,
-): SchedulerValidDate {
+  dateParam: TemporalSupportedObject,
+  timeParam: TemporalSupportedObject,
+): TemporalSupportedObject {
   let mergedDate = dateParam;
   mergedDate = adapter.setHours(mergedDate, adapter.getHours(timeParam));
   mergedDate = adapter.setMinutes(mergedDate, adapter.getMinutes(timeParam));
@@ -20,7 +24,7 @@ export function mergeDateAndTime(
  * It can be used as key in Maps or passed to the React `key` property when looping through days.
  * It only contains date information, two dates representing the same day but with different time will have the same key.
  */
-export function getDateKey(day: SchedulerValidDate, adapter: Adapter): string {
+export function getDateKey(day: TemporalSupportedObject, adapter: Adapter): string {
   return adapter.format(day, 'localizedNumericDate');
 }
 
@@ -34,9 +38,47 @@ export function getOccurrenceEnd({
   adapter,
 }: {
   event: SchedulerProcessedEvent;
-  occurrenceStart: SchedulerValidDate;
+  occurrenceStart: TemporalSupportedObject;
   adapter: Adapter;
-}): SchedulerValidDate {
-  const durationMs = adapter.getTime(event.end.value) - adapter.getTime(event.start.value);
+}): TemporalSupportedObject {
+  const durationMs = event.dataTimezone.end.timestamp - event.dataTimezone.start.timestamp;
   return adapter.addMilliseconds(occurrenceStart, durationMs);
+}
+
+export function applyDataTimezoneToEventUpdate({
+  adapter,
+  originalEvent,
+  changes,
+}: {
+  adapter: Adapter;
+  originalEvent: SchedulerProcessedEvent;
+  changes: SchedulerEventUpdatedProperties;
+}): SchedulerEventUpdatedProperties {
+  const originalTz = adapter.getTimezone(originalEvent.modelInBuiltInFormat!.start);
+
+  const convertToOriginalTz = (date: TemporalSupportedObject): TemporalSupportedObject =>
+    adapter.setTimezone(date, originalTz);
+
+  const result: SchedulerEventUpdatedProperties = { ...changes };
+
+  if (result.start) {
+    result.start = convertToOriginalTz(result.start);
+  }
+  if (result.end) {
+    result.end = convertToOriginalTz(result.end);
+  }
+
+  if (result.exDates && result.exDates.length > 0) {
+    result.exDates = result.exDates.map((date) => convertToOriginalTz(date));
+  }
+
+  if (result.rrule && typeof result.rrule === 'object' && result.rrule.until) {
+    const resultRrule = {
+      ...result.rrule,
+      until: convertToOriginalTz(result.rrule.until),
+    };
+    result.rrule = resultRrule;
+  }
+
+  return result;
 }

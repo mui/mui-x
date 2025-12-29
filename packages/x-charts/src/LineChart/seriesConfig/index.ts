@@ -1,4 +1,4 @@
-import { ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
@@ -6,6 +6,7 @@ import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
@@ -17,4 +18,5 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
 };

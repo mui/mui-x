@@ -2,12 +2,15 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { CheckIcon, ChevronDown } from 'lucide-react';
-import { Menu } from '@base-ui-components/react/menu';
-import { DEFAULT_EVENT_COLOR, EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
+import { Menu } from '@base-ui/react/menu';
+import { EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerOtherSelectors,
+  schedulerResourceSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getColorClassName } from '../../utils/color-utils';
 
@@ -27,13 +30,18 @@ interface ResourceMenuTriggerContentProps {
 interface ResourceOptionType {
   label: string;
   value: string | null;
-  eventColor?: SchedulerEventColor;
+  eventColor: SchedulerEventColor;
 }
 
 function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
   const { resource, color } = props;
 
-  const resourceColor = resource?.eventColor || DEFAULT_EVENT_COLOR;
+  const store = useSchedulerStoreContext();
+  const resourceColor = useStore(
+    store,
+    schedulerResourceSelectors.defaultEventColor,
+    resource?.value,
+  );
 
   return (
     <div className="EventPopoverResourceLegendContainer">
@@ -55,17 +63,18 @@ export default function ResourceMenu(props: ResourceSelectProps) {
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
+  const eventDefaultColor = useStore(store, schedulerOtherSelectors.defaultEventColor);
 
   const resourcesOptions = React.useMemo((): ResourceOptionType[] => {
     return [
-      { label: translations.labelNoResource, value: null, eventColor: DEFAULT_EVENT_COLOR },
+      { label: translations.labelNoResource, value: null, eventColor: eventDefaultColor },
       ...resources.map((resource) => ({
         label: resource.title,
         value: resource.id,
-        eventColor: resource.eventColor,
+        eventColor: resource.eventColor ?? eventDefaultColor,
       })),
     ];
-  }, [resources, translations.labelNoResource]);
+  }, [resources, translations.labelNoResource, eventDefaultColor]);
 
   const resource = React.useMemo(
     () =>
@@ -106,7 +115,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                       <span
                         className={clsx(
                           'ResourceLegendColor',
-                          getColorClassName(resourceOption.eventColor ?? DEFAULT_EVENT_COLOR),
+                          getColorClassName(resourceOption.eventColor),
                         )}
                       />
                       <span className="EventPopoverSelectItemText">{resourceOption.label}</span>
@@ -133,12 +142,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                     className="EventPopoverColorMenuItem"
                     aria-label={colorOption}
                   >
-                    <div
-                      className={clsx(
-                        'ColorRadioItemCircle',
-                        getColorClassName(colorOption ?? DEFAULT_EVENT_COLOR),
-                      )}
-                    >
+                    <div className={clsx('ColorRadioItemCircle', getColorClassName(colorOption))}>
                       <Menu.RadioItemIndicator className="CheckboxIndicator">
                         <CheckIcon size={14} strokeWidth={1.5} />
                       </Menu.RadioItemIndicator>

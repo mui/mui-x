@@ -104,8 +104,9 @@ export interface DescribeTreeViewRendererUtils {
   getItemIdTree: () => TreeViewItemIdTreeElement[];
 }
 
-export interface DescribeTreeViewRendererReturnValue<TStore extends TreeViewAnyStore>
-  extends DescribeTreeViewRendererUtils {
+export interface DescribeTreeViewRendererReturnValue<
+  TStore extends TreeViewAnyStore,
+> extends DescribeTreeViewRendererUtils {
   /**
    * The ref object that allows Tree View manipulation.
    */
@@ -189,5 +190,6 @@ export interface DescribeTreeViewItem {
   id: string;
   label?: React.ReactNode;
   disabled?: boolean;
+  disableSelection?: boolean;
   children?: readonly DescribeTreeViewItem[];
 }

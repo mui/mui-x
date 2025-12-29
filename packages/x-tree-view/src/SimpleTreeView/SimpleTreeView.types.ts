@@ -30,8 +30,7 @@ export type SimpleTreeViewApiRef = React.RefObject<
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
-  extends SimpleTreeViewPluginParameters<Multiple>,
-    React.HTMLAttributes<HTMLUListElement> {
+  extends SimpleTreeViewPluginParameters<Multiple>, React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.
    */
@@ -54,7 +53,7 @@ export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
    */
   sx?: SxProps<Theme>;
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useSimpleTreeViewApiRef()`.
    */
   apiRef?: SimpleTreeViewApiRef;
 }

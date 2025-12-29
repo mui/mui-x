@@ -8,7 +8,7 @@ import type { MakeOptional } from '@mui/x-internals/types';
 import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
@@ -23,7 +23,8 @@ export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
 
 export interface SankeyChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
       'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,

@@ -1,4 +1,4 @@
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TimelinePreferences, TimelineView } from '../models';
 import { Adapter } from '../use-adapter';
 import {
@@ -7,6 +7,7 @@ import {
   SchedulerStore,
 } from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
+import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
 export const DEFAULT_VIEW: TimelineView = 'time';
@@ -72,14 +73,16 @@ export class TimelineStore<TEvent extends object, TResource extends object> exte
   /**
    * Sets the view of the timeline.
    */
-  public setView = (view: TimelineView, event: React.UIEvent | Event) => {
+  public setView = (view: TimelineView, event: Event) => {
     const { view: viewProp, onViewChange } = this.parameters;
     if (view !== this.state.view) {
       this.assertViewValidity(view);
-      if (viewProp === undefined) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onViewChange?.(view, eventDetails);
+
+      if (!eventDetails.isCanceled && viewProp === undefined) {
         this.set('view', view);
       }
-      onViewChange?.(view, event);
     }
   };
 }

@@ -130,7 +130,7 @@ RichTreeView.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewApiRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
@@ -237,6 +237,13 @@ RichTreeView.propTypes = {
    * @default () => false
    */
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled: PropTypes.func,
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".

@@ -24,8 +24,7 @@ export interface RichTreeViewProSlots extends TreeViewSlots, RichTreeViewItemsSl
 }
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends TreeViewSlotProps,
-    RichTreeViewItemsSlotProps {
+  extends TreeViewSlotProps, RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProProps<R, Multiple>>;
 }
 
@@ -46,8 +45,7 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
 }
 
 export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewProPluginParameters<R, Multiple>,
-    RichTreeViewProPropsBase {
+  extends RichTreeViewProPluginParameters<R, Multiple>, RichTreeViewProPropsBase {
   /**
    * Overridable component slots.
    * @default {}
@@ -59,7 +57,7 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    */
   slotProps?: RichTreeViewProSlotProps<R, Multiple>;
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewProApiRef()`.
    */
   apiRef?: RichTreeViewProApiRef;
 }

@@ -1,10 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useStore } from '@base-ui/utils/store';
+import { generateOccurrenceFromEvent } from '../../utils/event-utils';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
 import { useButton } from '../../base-ui-copy/utils/useButton';
-import { SchedulerEventId, SchedulerEventOccurrence, SchedulerValidDate } from '../../models';
+import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
@@ -13,6 +15,7 @@ import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { TimelineEventContext } from './TimelineEventContext';
+import { timelineViewSelectors } from '../../timeline-selectors';
 
 export const TimelineEvent = React.forwardRef(function TimelineEvent(
   componentProps: TimelineEvent.Props,
@@ -41,28 +44,27 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
-  const {
-    start: rowStart,
-    end: rowEnd,
-    getCursorPositionInElementMs,
-  } = useTimelineEventRowContext();
+  const { getCursorPositionInElementMs } = useTimelineEventRowContext();
 
   // Ref hooks
   const ref = React.useRef<HTMLDivElement>(null);
 
+  // Selector hooks
+  const viewConfig = useStore(store, timelineViewSelectors.config);
+
   // Feature hooks
   const getSharedDragData: TimelineEventContext['getSharedDragData'] = useStableCallback(
     (input) => {
-      const offsetBeforeRowStart = Math.max(adapter.getTime(rowStart) - start.timestamp, 0);
+      const offsetBeforeRowStart = Math.max(adapter.getTime(viewConfig.start) - start.timestamp, 0);
       const event = schedulerEventSelectors.processedEvent(store.state, eventId)!;
 
-      const originalOccurrence: SchedulerEventOccurrence = {
-        ...event,
-        key: occurrenceKey,
-        id: eventId,
+      const originalOccurrence = generateOccurrenceFromEvent({
+        event,
+        eventId,
+        occurrenceKey,
         start,
         end,
-      };
+      });
 
       const offsetInsideRow = getCursorPositionInElementMs({ input, elementRef: ref });
       return {
@@ -94,8 +96,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     isDraggable,
     renderDragPreview,
     getDragData,
-    collectionStart: rowStart,
-    collectionEnd: rowEnd,
+    collectionStart: viewConfig.start,
+    collectionEnd: viewConfig.end,
   });
 
   const { getButtonProps, buttonRef } = useButton({
@@ -106,8 +108,8 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   const { position, duration } = useElementPositionInCollection({
     start,
     end,
-    collectionStart: rowStart,
-    collectionEnd: rowEnd,
+    collectionStart: viewConfig.start,
+    collectionEnd: viewConfig.end,
   });
 
   // Rendering hooks
@@ -145,7 +147,8 @@ export namespace TimelineEvent {
   export interface State extends useDraggableEvent.State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
+    extends
+      BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       useDraggableEvent.PublicParameters {}
 
@@ -153,8 +156,8 @@ export namespace TimelineEvent {
     eventId: SchedulerEventId;
     occurrenceKey: string;
     originalOccurrence: SchedulerEventOccurrence;
-    start: SchedulerValidDate;
-    end: SchedulerValidDate;
+    start: TemporalSupportedObject;
+    end: TemporalSupportedObject;
     initialCursorPositionInEventMs: number;
   }
 

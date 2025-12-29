@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useId } from '@base-ui-components/utils/useId';
-import { useStore } from '@base-ui-components/utils/store';
+import { useId } from '@base-ui/utils/useId';
+import { useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import {
   schedulerEventSelectors,
@@ -53,12 +53,11 @@ export const EventItem = React.forwardRef(function EventItem(
     occurrence.resource,
   );
   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
 
   const formatTime = useFormatTime();
 
   const content = React.useMemo(() => {
-    const isRecurring = Boolean(occurrence.rrule);
-
     switch (variant) {
       case 'compact':
         return (
@@ -77,7 +76,7 @@ export const EventItem = React.forwardRef(function EventItem(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="EventItemTime EventItemTime--compact">
-                <span>{formatTime(occurrence.start.value)}</span>
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
               </time>
 
               <span className="EventItemTitle">{occurrence.title}</span>
@@ -144,7 +143,7 @@ export const EventItem = React.forwardRef(function EventItem(
       default:
         throw new Error('Unsupported variant provided to EventItem component.');
     }
-  }, [variant, occurrence, resource?.title, translations, formatTime]);
+  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring]);
 
   return (
     // TODO: Use button
@@ -158,6 +157,7 @@ export const EventItem = React.forwardRef(function EventItem(
         'EventItemCard',
         `EventItemCard--${variant}`,
         getColorClassName(color),
+        occurrence.className,
       )}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
@@ -176,13 +176,15 @@ function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
   const translations = useTranslations();
   const formatTime = useFormatTime();
 
-  if (!adapter.isSameDay(occurrence.start.value, occurrence.end.value)) {
+  if (
+    !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
+  ) {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
       <time className="EventItemTime">
         <span>
           {translations.eventItemMultiDayLabel(
-            adapter.formatByString(occurrence.end.value, format),
+            adapter.formatByString(occurrence.displayTimezone.end.value, format),
           )}
         </span>
       </time>
@@ -193,8 +195,8 @@ function MultiDayDateLabel(props: { occurrence: SchedulerEventOccurrence }) {
   }
   return (
     <time className="EventItemTime">
-      <span>{formatTime(occurrence.start.value)}</span>
-      <span> - {formatTime(occurrence.end.value)}</span>
+      <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+      <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
     </time>
   );
 }

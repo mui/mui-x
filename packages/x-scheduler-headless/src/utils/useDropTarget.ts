@@ -8,7 +8,7 @@ import {
   SchedulerOccurrencePlaceholderInternalDragOrResize,
   EventSurfaceType,
   SchedulerEventUpdatedProperties,
-  SchedulerValidDate,
+  TemporalSupportedObject,
   SchedulerResourceId,
 } from '../models';
 import {
@@ -179,13 +179,13 @@ export namespace useDropTarget {
 
   export type GetDataFromInside = (
     data: Exclude<EventDropData, StandaloneEvent.DragData>,
-    newStart: SchedulerValidDate,
-    newEnd: SchedulerValidDate,
+    newStart: TemporalSupportedObject,
+    newEnd: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderInternalDragOrResize;
 
   export type GetDataFromOutside = (
     data: StandaloneEvent.DragData,
-    start: SchedulerValidDate,
+    start: TemporalSupportedObject,
   ) => SchedulerOccurrencePlaceholderExternalDrag | undefined;
 
   export type GetEventDropData = (parameters: {
@@ -209,9 +209,12 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const { eventId, start, end, originalOccurrence } = placeholder;
 
-  const original = schedulerEventSelectors.processedEvent(store.state, eventId);
-  if (!original) {
-    throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+  const adapter = store.state.adapter;
+  if (
+    adapter.isEqual(originalOccurrence.displayTimezone.start.value, start) &&
+    adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)
+  ) {
+    return;
   }
 
   const changes: SchedulerEventUpdatedProperties = { id: eventId, start, end };
@@ -226,9 +229,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     Object.assign(changes, addPropertiesToDroppedEvent());
   }
 
-  if (original.rrule) {
+  if (originalOccurrence.displayTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.start.value,
+      occurrenceStart: originalOccurrence.displayTimezone.start.value,
       changes,
     });
     return;

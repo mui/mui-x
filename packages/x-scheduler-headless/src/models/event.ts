@@ -1,4 +1,4 @@
-import type { SchedulerValidDate } from './date';
+import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
 import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
@@ -16,28 +16,71 @@ export interface SchedulerProcessedEvent {
    * The description of the event.
    */
   description?: string;
+
   /**
-   * The start date and time of the event.
+   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
+   * Always expressed in the event data timezone.
    */
-  start: SchedulerProcessedDate;
+  dataTimezone: {
+    /**
+     * The start date and time of the event.
+     */
+    start: SchedulerProcessedDate;
+    /**
+     * The end date and time of the event.
+     */
+    end: SchedulerProcessedDate;
+    /**
+     * The timezone of the event dates.
+     * */
+    timezone: TemporalTimezone;
+    /**
+     * The recurrence rule for the event.
+     * If not defined, the event will have only one occurrence.
+     */
+    rrule?: RecurringEventRecurrenceRule;
+    /**
+     * Exception dates for the event.
+     * These dates will be excluded from the recurrence.
+     */
+    exDates?: TemporalSupportedObject[];
+  };
+
   /**
-   * The end date and time of the event.
+   * Values prepared for rendering and user interaction.
+   * Always expressed in the display timezone.
    */
-  end: SchedulerProcessedDate;
+  displayTimezone: {
+    /**
+     * The start date and time of the event.
+     */
+    start: SchedulerProcessedDate;
+    /**
+     * The end date and time of the event.
+     */
+    end: SchedulerProcessedDate;
+    /**
+     * The timezone of the event dates.
+     * */
+    timezone: TemporalTimezone;
+    /**
+     * Recurrence projected to the display timezone so the UI reflects
+     * what the user actually experiences (e.g. displayed weekdays).
+     * Must be converted back to the dataTimezone representation when persisted.
+     */
+    rrule?: RecurringEventRecurrenceRule;
+    /**
+     * Exception dates projected to the display timezone for UI purposes.
+     * Must be converted back to the dataTimezone representation when persisted.
+     */
+    exDates?: TemporalSupportedObject[];
+  };
+
   /**
    * The id of the resource this event is associated with.
    */
   resource?: SchedulerResourceId | null;
-  /**
-   * The recurrence rule for the event.
-   * If not defined, the event will have only one occurrence.
-   */
-  rrule?: RecurringEventRecurrenceRule;
-  /**
-   * Exception dates for the event.
-   * These dates will be excluded from the recurrence.
-   */
-  exDates?: SchedulerValidDate[];
+
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -79,6 +122,10 @@ export interface SchedulerProcessedEvent {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
+  /**
+   * A custom class name to apply to the event element.
+   */
+  className?: string;
 }
 
 export interface SchedulerEvent {
@@ -97,11 +144,11 @@ export interface SchedulerEvent {
   /**
    * The start date and time of the event.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The end date and time of the event.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * The id of the resource this event is associated with.
    * @default null
@@ -118,7 +165,7 @@ export interface SchedulerEvent {
    * Exception dates for the event.
    * These dates will be excluded from the recurrence.
    */
-  exDates?: SchedulerValidDate[];
+  exDates?: TemporalSupportedObject[];
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -152,6 +199,10 @@ export interface SchedulerEvent {
    * If not defined, the event is resizable if the `areEventsResizable` property is true.
    */
   resizable?: boolean | SchedulerEventSide;
+  /**
+   * A custom class name to apply to the event element.
+   */
+  className?: string;
 }
 
 /**
@@ -191,11 +242,11 @@ interface SchedulerOccurrencePlaceholderBase {
   /**
    * The new start date and time of the event occurrence.
    */
-  start: SchedulerValidDate;
+  start: TemporalSupportedObject;
   /**
    * The new end date and time of the event occurrence.
    */
-  end: SchedulerValidDate;
+  end: TemporalSupportedObject;
   /**
    * The id of the resource onto which to drop the event.
    * If null, the event will be dropped outside of any resource.
@@ -220,8 +271,7 @@ export interface SchedulerOccurrencePlaceholderCreation extends SchedulerOccurre
   lockSurfaceType?: boolean;
 }
 
-export interface SchedulerOccurrencePlaceholderInternalDragOrResize
-  extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -240,8 +290,7 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize
   originalOccurrence: SchedulerEventOccurrence;
 }
 
-export interface SchedulerOccurrencePlaceholderExternalDrag
-  extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -269,7 +318,7 @@ export interface SchedulerProcessedDate {
   /**
    * The date object.
    */
-  value: SchedulerValidDate;
+  value: TemporalSupportedObject;
   /**
    * String representation of the date.
    * It can be used as key in Maps or passed to the React `key` property when looping through days.
@@ -296,6 +345,13 @@ export type SchedulerEventUpdatedProperties = Partial<SchedulerEvent> & {
  * The `id` property is omitted as it will be generated by the store.
  */
 export type SchedulerEventCreationProperties = Omit<SchedulerEvent, 'id'>;
+
+/**
+ * Properties to pass to the methods that paste an event.
+ */
+export type SchedulerEventPasteProperties = Partial<
+  Pick<SchedulerEvent, 'start' | 'resource' | 'allDay'>
+>;
 
 // TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline.
 /**

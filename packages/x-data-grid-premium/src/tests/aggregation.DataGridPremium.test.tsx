@@ -824,7 +824,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
     it('should use the aggregation function valueFormatter if defined', async () => {
       const customAggregationFunction: GridAggregationFunction = {
         apply: () => 'Agg value',
-        valueFormatter: (value) => `+ ${value}`,
+        valueFormatter: (value, row, column) => `+ ${value} + ${row.id} + ${column.field}`,
       };
 
       await render(
@@ -835,19 +835,19 @@ describe('<DataGridPremium /> - Aggregation', () => {
             {
               field: 'id',
               type: 'number',
-              valueFormatter: (value) => `- ${value}`,
+              valueFormatter: (value, row, column) => `- ${value} - ${row.id} - ${column.field}`,
             },
           ]}
         />,
       );
       expect(getColumnValues(0)).to.deep.equal([
-        '- 0',
-        '- 1',
-        '- 2',
-        '- 3',
-        '- 4',
-        '- 5',
-        '+ Agg value' /* Agg */,
+        '- 0 - 0 - id',
+        '- 1 - 1 - id',
+        '- 2 - 2 - id',
+        '- 3 - 3 - id',
+        '- 4 - 4 - id',
+        '- 5 - 5 - id',
+        '+ Agg value + Agg value + id' /* Agg */,
       ]);
     });
   });
@@ -882,7 +882,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       ]);
     });
 
-    it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property ', async () => {
+    it('should pass aggregation meta with `hasCellUnit: true` if the aggregation function have no hasCellUnit property', async () => {
       const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
 
       const customAggregationFunction: GridAggregationFunction = {
@@ -909,7 +909,7 @@ describe('<DataGridPremium /> - Aggregation', () => {
       expect(callForAggCell!.firstArg.aggregation.hasCellUnit).to.equal(true);
     });
 
-    it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false` ', async () => {
+    it('should pass aggregation meta with `hasCellUnit: false` if the aggregation function have `hasCellUnit: false`', async () => {
       const renderCell: SinonSpy<[GridRenderCellParams]> = spy((params) => `- ${params.value}`);
 
       const customAggregationFunction: GridAggregationFunction = {
@@ -1084,6 +1084,62 @@ describe('<DataGridPremium /> - Aggregation', () => {
             apiRef.current!,
           ),
         ).to.equal(7);
+      });
+    });
+
+    describe('`sizeTrue`', () => {
+      it('should count true values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeTrue.apply(
+            {
+              values: [true, false, true, true, false],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+
+      it('should ignore all other values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeTrue.apply(
+            {
+              values: [true, false, true, 'a', 1, null, undefined, {}, true],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+    });
+
+    describe('`sizeFalse`', () => {
+      it('should count false values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeFalse.apply(
+            {
+              values: [true, false, true, false, false],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+
+      it('should ignore all other values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeFalse.apply(
+            {
+              values: [true, false, false, 'a', 1, null, undefined, {}, false],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
       });
     });
   });
