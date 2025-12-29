@@ -28,26 +28,26 @@ export interface RowsPluginOptions<TData = any> extends RowsOptions<TData> {
 const rowsPlugin = {
   name: 'rows',
   initialize: (params) => ({
-    rows: createRowsState(params.data, params.getRowId, params.loading ?? false, params.rowCount),
+    rows: createRowsState(params.rows, params.getRowId, params.loading ?? false, params.rowCount),
   }),
   use: (store, params, _api) => {
     const rowsApi = createRowsApi(store as Store<{ rows: RowsState }>, {
-      data: params.data,
+      rows: params.rows,
       getRowId: params.getRowId,
       loading: params.loading,
       rowCount: params.rowCount,
     });
 
-    const prevDataRef = React.useRef(params.data);
+    const prevDataRef = React.useRef(params.rows);
     const prevLoadingRef = React.useRef(params.loading);
     const prevRowCountRef = React.useRef(params.rowCount);
 
     React.useEffect(() => {
-      if (prevDataRef.current !== params.data) {
-        prevDataRef.current = params.data;
-        rowsApi.setRows(params.data);
+      if (prevDataRef.current !== params.rows) {
+        prevDataRef.current = params.rows;
+        rowsApi.setRows(params.rows);
       }
-    }, [params.data, rowsApi]);
+    }, [params.rows, rowsApi]);
 
     React.useEffect(() => {
       if (prevLoadingRef.current !== params.loading) {

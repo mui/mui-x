@@ -57,7 +57,7 @@ export interface RowsState {
 }
 
 export interface RowsOptions<TData = any> {
-  data: TData[];
+  rows: TData[];
   getRowId?: (row: TData) => GridRowId;
   loading?: boolean;
   rowCount?: number;

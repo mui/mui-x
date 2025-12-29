@@ -12,12 +12,12 @@ interface User {
 export function Example() {
   // With sorting plugin only
   const grid1 = useDataGrid({
-    data: [] as User[],
+    rows: [] as User[],
     columns: [
       { id: 'name', field: 'name', sortable: true },
       { id: 'email', field: 'email' },
     ],
-    getRowId: (row) => row.rowId, // Internal plugin options are available
+    getRowId: (row) => row.id, // Internal plugin options are available
     plugins: [sortingPlugin],
 
     // ✓ These properties are available (from sortingPlugin)
@@ -54,7 +54,7 @@ export function Example() {
 
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
-    data: [] as User[],
+    rows: [] as User[],
     columns: [
       { id: 'name', field: 'name', sortable: true },
       { id: 'email', field: 'email' },

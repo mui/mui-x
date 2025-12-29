@@ -98,13 +98,13 @@ function generateColumns() {
 }
 
 function DataGrid() {
-  const [data, setData] = React.useState<RowData[]>(() => generateSampleData(30));
+  const [rows, setRows] = React.useState<RowData[]>(() => generateSampleData(30));
   const [columns, setColumns] = React.useState(() => generateColumns());
 
   const [, setCounter] = React.useState(0);
 
   const grid = useDataGrid({
-    data,
+    rows,
     columns,
     plugins: [sortingPlugin, paginationPlugin],
   });
@@ -114,7 +114,7 @@ function DataGrid() {
   const visibleColumns = useStore(grid.store, grid.selectors.columns.visibleColumns);
 
   const handleRefreshRows = () => {
-    setData(generateSampleData(30));
+    setRows(generateSampleData(30));
   };
 
   const handleRefreshColumns = () => {

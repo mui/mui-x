@@ -2,7 +2,6 @@
 import type { UnionToIntersection } from 'type-fest';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@base-ui/utils/store';
-import { ColumnDef } from '../columnDef/columnDef';
 import { BaseApi, Plugin } from '../plugins/core/plugin';
 import { PluginsApi, PluginsOptions, PluginsState } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
@@ -14,24 +13,10 @@ import {
 } from '../plugins/internal';
 
 // ================================
-// Core Options
-// ================================
-
-interface CoreDataGridOptions<TData> {
-  data: TData[];
-  columns: ColumnDef<TData>[];
-  loading?: boolean;
-  rowCount?: number;
-}
-
-// ================================
 // Combined Types
 // ================================
 
-type UseDataGridOptions<
-  TData,
-  TPlugins extends readonly Plugin<any, any, any, any, any>[],
-> = CoreDataGridOptions<TData> &
+type UseDataGridOptions<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
   PluginsOptions<TPlugins> & {
     plugins: TPlugins;
     initialState?: Partial<PluginsState<TPlugins>>;
@@ -62,8 +47,8 @@ type DataGridSelectors<TPlugins extends readonly Plugin<any, any, any, any, any>
 // Instance
 // ================================
 
-interface DataGridInstance<TData, TPlugins extends readonly Plugin<any, any, any, any, any>[]> {
-  options: UseDataGridOptions<TData, TPlugins>;
+interface DataGridInstance<TPlugins extends readonly Plugin<any, any, any, any, any>[]> {
+  options: UseDataGridOptions<TPlugins>;
   state: DataGridState<TPlugins>;
   store: Store<DataGridState<TPlugins>>;
   api: DataGridApi<TPlugins>;
@@ -74,12 +59,9 @@ interface DataGridInstance<TData, TPlugins extends readonly Plugin<any, any, any
 // Hook
 // ================================
 
-export const useDataGrid = <
-  TData,
-  const TPlugins extends readonly Plugin<any, any, any, any, any>[],
->(
-  options: UseDataGridOptions<TData, TPlugins>,
-): DataGridInstance<TData, TPlugins> => {
+export const useDataGrid = <const TPlugins extends readonly Plugin<any, any, any, any, any>[]>(
+  options: UseDataGridOptions<TPlugins>,
+): DataGridInstance<TPlugins> => {
   const { pluginRegistry, stateStore } = useRefWithInit(() => {
     // 1. Create registry with internal + user plugins (order maintained)
     const registry = new PluginRegistry(internalPlugins, options.plugins);
