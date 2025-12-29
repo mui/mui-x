@@ -265,7 +265,7 @@ export const useGridCellEditing = (
   );
 
   const updateCellModesModel = useEventCallback((newModel: GridCellModesModel) => {
-    const isNewModelDifferentFromProp = newModel !== cellModesModel;
+    const isNewModelDifferentFromProp = newModel !== cellModesModelProp;
 
     if (onCellModesModelChange && isNewModelDifferentFromProp) {
       onCellModesModelChange(newModel, {
@@ -273,7 +273,7 @@ export const useGridCellEditing = (
       });
     }
 
-    if (cellModesModel && isNewModelDifferentFromProp) {
+    if (cellModesModelProp && isNewModelDifferentFromProp) {
       return; // The prop always win
     }
 
