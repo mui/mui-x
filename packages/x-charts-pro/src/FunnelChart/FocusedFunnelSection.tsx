@@ -61,8 +61,8 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
 
       minPoint.x = Math.min(minPoint.x, x);
       minPoint.y = Math.min(minPoint.y, y);
-      maxPoint.x = Math.max(minPoint.x, x);
-      maxPoint.y = Math.max(minPoint.y, y);
+      maxPoint.x = Math.max(maxPoint.x, x);
+      maxPoint.y = Math.max(maxPoint.y, y);
     });
   });
 
