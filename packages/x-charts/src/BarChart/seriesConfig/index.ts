@@ -1,4 +1,5 @@
 import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { identifierCompareSeriesIdDataIndex } from '../../internals/identifierCompare';
 import { getExtremumX, getExtremumY } from './bar/extremums';
 import seriesProcessor from './bar/seriesProcessor';
 import legendGetter from './bar/legend';
@@ -19,4 +20,5 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
+  identifierCompare: identifierCompareSeriesIdDataIndex,
 };
