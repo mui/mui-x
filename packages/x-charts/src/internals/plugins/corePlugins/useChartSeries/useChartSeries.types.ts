@@ -1,3 +1,5 @@
+/* eslint-disable jsdoc/require-returns-type */
+/* eslint-disable jsdoc/require-param-type */
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import {
@@ -66,7 +68,18 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
   };
 }
 
-export interface UseChartSeriesInstance {}
+export interface UseChartSeriesInstance {
+  /**
+   * Compares two series item identifiers.
+   * @param a The first series item identifier to compare.
+   * @param b The second series item identifier to compare.
+   * @returns `true` if the two identifiers are equal, `false` otherwise.
+   */
+  isSameIdentifier: <T extends { type: string }>(
+    a: T | undefined | null,
+    b: T | undefined | null,
+  ) => boolean;
+}
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{

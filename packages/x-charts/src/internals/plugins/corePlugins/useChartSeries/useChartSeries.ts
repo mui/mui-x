@@ -1,5 +1,6 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { type ChartPlugin } from '../../models';
 import { type UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
@@ -26,7 +27,21 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
     });
   }, [colors, dataset, series, theme, seriesConfig, store]);
 
-  return {};
+  const isSameIdentifier = useEventCallback(
+    <T extends { type: string }>(a: T | undefined | null, b: T | undefined | null): boolean => {
+      // Nullish values or different series types are never equal regardless of the series config
+      if (a === null || b === null || a === undefined || b === undefined || a.type !== b.type) {
+        return false;
+      }
+
+      // We already checked that a and b are the same type
+      const seriesType = a.type;
+      const identifierCompare = seriesConfig[seriesType].identifierCompare;
+      return identifierCompare(a, b);
+    },
+  );
+
+  return { instance: { isSameIdentifier } };
 };
 
 useChartSeries.params = {
