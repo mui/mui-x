@@ -49,14 +49,13 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
   } = props;
 
   const apiRef = useGridApiContext();
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  // @ts-expect-error - Access tree data prop
+  const { slots, classes: rootPropsClasses, treeData } = useGridRootProps();
   const ownerState = { classes: rootPropsClasses };
   const classes = useUtilityClasses(ownerState);
 
   const maxDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
-  const isServerSideRowGroupingRow =
-    // @ts-expect-error - Access tree data prop
-    maxDepth > 0 && rowNode.type === 'group' && rootProps.treeData === false;
+  const isServerSideRowGroupingRow = maxDepth > 0 && rowNode.type === 'group' && treeData === false;
 
   const Icon = React.useMemo(
     () => (value ? slots.booleanCellTrueIcon : slots.booleanCellFalseIcon),

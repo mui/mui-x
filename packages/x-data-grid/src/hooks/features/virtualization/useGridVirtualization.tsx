@@ -109,7 +109,7 @@ export function useGridVirtualization(
     if (!apiRef.current.virtualizer) {
       return;
     }
-    setVirtualization(!rootProps.disableVirtualization);
+    setVirtualization(!disableVirtualization);
   }, [apiRef, disableVirtualization, autoHeight]);
   /* eslint-enable react-hooks/exhaustive-deps */
 }
