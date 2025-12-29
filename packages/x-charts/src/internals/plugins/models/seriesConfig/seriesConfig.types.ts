@@ -12,6 +12,7 @@ import { type PolarExtremumGetter } from './polarExtremumGetter.types';
 import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 import { type SeriesLayoutGetter } from './seriesLayout.types';
+import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierCompare.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
@@ -25,6 +26,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   tooltipGetter: TooltipGetter<TSeriesType>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
+  keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
   /**
    * A function to compare two series item identifiers.
    * @return `true` if the two identifiers are equal, `false` otherwise.
