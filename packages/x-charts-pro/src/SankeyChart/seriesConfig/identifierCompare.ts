@@ -1,6 +1,6 @@
-import type { IdentifierSerializer } from '@mui/x-charts/internals';
+import type { IdentifierCompare } from '@mui/x-charts/internals';
 
-const identifierCompare: IdentifierSerializer<'sankey'> = (id1, id2) => {
+const identifierCompare: IdentifierCompare<'sankey'> = (id1, id2) => {
   if (id1.subType === 'node' && id2.subType === 'node') {
     return id1.nodeId === id2.nodeId;
   }
