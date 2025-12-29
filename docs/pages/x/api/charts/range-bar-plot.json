@@ -1,0 +1,44 @@
+{
+  "props": {
+    "borderRadius": { "type": { "name": "number" } },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: RangeBarItemIdentifier) => void",
+        "describedArgs": ["event", "barItemIdentifier"]
+      }
+    },
+    "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    }
+  },
+  "name": "RangeBarPlot",
+  "imports": [
+    "import { RangeBarPlot } from '@mui/x-charts-premium/BarChartPremium';",
+    "import { RangeBarPlot } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiRangeBarPlot",
+  "filename": "/packages/x-charts-premium/src/BarChartPremium/RangeBar/RangeBarPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

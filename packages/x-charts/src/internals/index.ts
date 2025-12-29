@@ -15,7 +15,7 @@ export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seri
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
-export { useBarChartProps } from '../BarChart/useBarChartProps';
+export * from '../BarChart/useBarChartProps';
 export { useBarPlotData } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
@@ -69,6 +69,7 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
+export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
 
