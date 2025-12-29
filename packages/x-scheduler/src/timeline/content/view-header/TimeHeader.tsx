@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store/useStore';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';

@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
@@ -31,6 +31,7 @@ describe('Core - EventCalendarStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
+        displayTimezone: 'default',
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
@@ -43,12 +44,11 @@ describe('Core - EventCalendarStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        timezone: 'default',
         view: DEFAULT_VIEW,
         viewConfig: null,
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
-        visibleResources: new Map(),
+        visibleResources: {},
       };
 
       expect(store.state).to.deep.equal(expectedState);

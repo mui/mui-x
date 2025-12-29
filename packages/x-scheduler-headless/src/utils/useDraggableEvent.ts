@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useSchedulerStoreContext } from '../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -109,8 +109,7 @@ export namespace useDraggableEvent {
   }
 
   export interface PublicParameters
-    extends useEvent.Parameters,
-      Pick<useDragPreview.Parameters, 'renderDragPreview'> {
+    extends useEvent.Parameters, Pick<useDragPreview.Parameters, 'renderDragPreview'> {
     /**
      * Whether the event can be dragged to change its start and end dates or times without changing the duration.
      * @default false

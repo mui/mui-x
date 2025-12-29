@@ -9,7 +9,6 @@ import {
 } from '../models/seriesType/config';
 import { type ComputedAxis, type PolarAxisDefaultized, type AxisId } from '../models/axis';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { getLabel } from '../internals/getLabel';
 import { isCartesianSeriesType } from '../internals/isCartesian';
 import { utcFormatter } from './utils';
@@ -115,10 +114,10 @@ export function useAxisTooltip(
 
   const store = useStore<[UseChartCartesianAxisSignature]>();
 
-  const tooltipXAxes = useSelector(store, selectorChartsInteractionTooltipXAxes);
-  const tooltipYAxes = useSelector(store, selectorChartsInteractionTooltipYAxes);
+  const tooltipXAxes = store.use(selectorChartsInteractionTooltipXAxes);
+  const tooltipYAxes = store.use(selectorChartsInteractionTooltipYAxes);
 
-  const tooltipRotationAxes = useSelector(store, selectorChartsInteractionTooltipRotationAxes);
+  const tooltipRotationAxes = store.use(selectorChartsInteractionTooltipRotationAxes);
 
   const series = useSeries();
 

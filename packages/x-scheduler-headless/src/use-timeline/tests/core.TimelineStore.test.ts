@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TimelineStore } from '../TimelineStore';
 
 const DEFAULT_PARAMS = { events: [] };
@@ -25,6 +25,7 @@ describe('Core - TimelineStore', () => {
         eventModelList: [],
         eventModelLookup: new Map(),
         eventModelStructure: undefined,
+        displayTimezone: 'default',
         nowUpdatedEveryMinute: adapter.now('default'),
         occurrencePlaceholder: null,
         pendingUpdateRecurringEventParameters: null,
@@ -36,11 +37,10 @@ describe('Core - TimelineStore', () => {
         resourceIdList: [],
         resourceModelStructure: undefined,
         showCurrentTimeIndicator: true,
-        timezone: 'default',
         view: 'time',
         views: ['time', 'days', 'weeks', 'months', 'years'],
         visibleDate: adapter.startOfDay(adapter.now('default')),
-        visibleResources: new Map(),
+        visibleResources: {},
       };
 
       expect(store.state).to.deep.equal(expectedState);

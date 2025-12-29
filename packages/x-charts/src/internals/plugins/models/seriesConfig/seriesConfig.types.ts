@@ -12,6 +12,7 @@ import { type PolarExtremumGetter } from './polarExtremumGetter.types';
 import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 import { type SeriesLayoutGetter } from './seriesLayout.types';
+import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
@@ -24,6 +25,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   tooltipGetter: TooltipGetter<TSeriesType>;
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
+  keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;

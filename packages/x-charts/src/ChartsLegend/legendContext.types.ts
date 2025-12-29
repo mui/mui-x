@@ -14,7 +14,8 @@ interface LegendItemContextBase {
 }
 
 export interface LegendItemParams
-  extends Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
+  extends
+    Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
   /**
