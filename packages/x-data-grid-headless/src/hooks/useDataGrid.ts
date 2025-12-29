@@ -16,17 +16,21 @@ import {
 // Combined Types
 // ================================
 
-type UseDataGridOptions<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
-  PluginsOptions<TPlugins> & {
-    plugins: TPlugins;
-    initialState?: Partial<PluginsState<TPlugins>>;
-  };
+type UseDataGridOptions<
+  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TRow = any,
+> = PluginsOptions<TPlugins, TRow> & {
+  plugins: TPlugins;
+  initialState?: Partial<PluginsState<TPlugins>>;
+};
 
 type DataGridState<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
   PluginsState<TPlugins>;
 
-type DataGridApi<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
-  PluginsApi<TPlugins>;
+type DataGridApi<
+  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TRow = any,
+> = PluginsApi<TPlugins, TRow>;
 
 // Helper to extract selectors from a plugin, preserving their shape
 type ExtractPluginSelectors<T> = T extends { selectors?: infer S } ? S : {};
@@ -47,11 +51,14 @@ type DataGridSelectors<TPlugins extends readonly Plugin<any, any, any, any, any>
 // Instance
 // ================================
 
-interface DataGridInstance<TPlugins extends readonly Plugin<any, any, any, any, any>[]> {
-  options: UseDataGridOptions<TPlugins>;
+interface DataGridInstance<
+  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TRow = any,
+> {
+  options: UseDataGridOptions<TPlugins, TRow>;
   state: DataGridState<TPlugins>;
   store: Store<DataGridState<TPlugins>>;
-  api: DataGridApi<TPlugins>;
+  api: DataGridApi<TPlugins, TRow>;
   selectors: DataGridSelectors<TPlugins>;
 }
 
@@ -59,9 +66,12 @@ interface DataGridInstance<TPlugins extends readonly Plugin<any, any, any, any, 
 // Hook
 // ================================
 
-export const useDataGrid = <const TPlugins extends readonly Plugin<any, any, any, any, any>[]>(
-  options: UseDataGridOptions<TPlugins>,
-): DataGridInstance<TPlugins> => {
+export const useDataGrid = <
+  const TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TRow extends object = any,
+>(
+  options: UseDataGridOptions<TPlugins, TRow>,
+): DataGridInstance<TPlugins, TRow> => {
   const { pluginRegistry, stateStore } = useRefWithInit(() => {
     // 1. Create registry with internal + user plugins (order maintained)
     const registry = new PluginRegistry(internalPlugins, options.plugins);
@@ -103,7 +113,7 @@ export const useDataGrid = <const TPlugins extends readonly Plugin<any, any, any
   const baseApi = useRefWithInit(() => {
     return {
       pluginRegistry,
-    } as BaseApi & InternalPluginsApi;
+    } as BaseApi & InternalPluginsApi<TRow>;
   }).current;
 
   // Initialize internal plugin APIs (called on every render so hooks inside work)
@@ -116,7 +126,7 @@ export const useDataGrid = <const TPlugins extends readonly Plugin<any, any, any
   const api = useRefWithInit(() => {
     return {
       ...baseApi,
-    } as DataGridApi<TPlugins>;
+    } as DataGridApi<TPlugins, TRow>;
   }).current;
 
   // Initialize user plugin APIs (called on every render so hooks inside work)

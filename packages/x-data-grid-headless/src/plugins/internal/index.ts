@@ -11,11 +11,11 @@ import columnsPlugin, {
 
 export const internalPlugins = [rowsPlugin, columnsPlugin] as const;
 
-export type InternalPluginsApi = RowsPluginApi & ColumnsPluginApi;
+export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> & ColumnsPluginApi;
 
 export type InternalPluginsState = RowsPluginState & ColumnsPluginState;
 
-export type InternalPluginsOptions = RowsPluginOptions & ColumnsPluginOptions;
+export type InternalPluginsOptions<TRow = any> = RowsPluginOptions<TRow> & ColumnsPluginOptions;
 
 // Extract selectors from internal plugins, preserving their shape
 type ExtractInternalPluginSelectors<T> = T extends { selectors?: infer S } ? S : {};

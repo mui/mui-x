@@ -15,11 +15,11 @@ export interface RowsPluginState {
   rows: RowsState;
 }
 
-export interface RowsPluginApi {
-  rows: RowsApi;
+export interface RowsPluginApi<TRow = any> {
+  rows: RowsApi<TRow>;
 }
 
-export interface RowsPluginOptions<TData = any> extends RowsOptions<TData> {
+export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
   initialState?: {
     rows?: Partial<RowsState>;
   };

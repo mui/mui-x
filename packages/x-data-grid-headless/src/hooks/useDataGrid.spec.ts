@@ -10,14 +10,21 @@ interface User {
 }
 
 export function Example() {
+  const rows: User[] = [];
   // With sorting plugin only
   const grid1 = useDataGrid({
-    rows: [] as User[],
+    rows,
     columns: [
       { id: 'name', field: 'name', sortable: true },
       { id: 'email', field: 'email' },
     ],
-    getRowId: (row) => row.id, // Internal plugin options are available
+    // Internal plugin options are available
+    getRowId: (row) => {
+      row.name;
+      // @ts-expect-error
+      row.nonExistingProperty;
+      return row.id;
+    },
     plugins: [sortingPlugin],
 
     // ✓ These properties are available (from sortingPlugin)
@@ -34,6 +41,12 @@ export function Example() {
 
   // Internal plugins API is available
   grid1.api.rows.getRowNode(1);
+  const row = grid1.api.rows.getRow(1);
+  if (row) {
+    row.name;
+    // @ts-expect-error
+    row.nonExistingProperty;
+  }
 
   // Sorting API is available
   grid1.api.sorting.sortColumn('name', 'asc');

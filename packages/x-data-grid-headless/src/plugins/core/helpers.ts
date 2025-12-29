@@ -14,13 +14,15 @@ export type ExtractPluginState<T> =
 export type ExtractPluginApi<T> = T extends Plugin<any, any, infer TApi, any, any> ? TApi : never;
 
 // Union all plugin options (params)
-export type PluginsOptions<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
-  UnionToIntersection<
-    {
-      [K in keyof TPlugins]: ExtractPluginParams<TPlugins[K]>;
-    }[number]
-  > &
-    InternalPluginsOptions;
+export type PluginsOptions<
+  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TRow = any,
+> = UnionToIntersection<
+  {
+    [K in keyof TPlugins]: ExtractPluginParams<TPlugins[K]>;
+  }[number]
+> &
+  InternalPluginsOptions<TRow>;
 
 // Union all plugin states
 export type PluginsState<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
@@ -32,10 +34,12 @@ export type PluginsState<TPlugins extends readonly Plugin<any, any, any, any, an
     InternalPluginsState;
 
 // Union all plugin APIs
-export type PluginsApi<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
-  UnionToIntersection<
-    {
-      [K in keyof TPlugins]: ExtractPluginApi<TPlugins[K]>;
-    }[number]
-  > &
-    InternalPluginsApi;
+export type PluginsApi<
+  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TRow = any,
+> = UnionToIntersection<
+  {
+    [K in keyof TPlugins]: ExtractPluginApi<TPlugins[K]>;
+  }[number]
+> &
+  InternalPluginsApi<TRow>;

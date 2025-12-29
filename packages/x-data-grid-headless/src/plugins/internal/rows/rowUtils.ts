@@ -56,9 +56,9 @@ export interface RowsState {
   groupingName: string;
 }
 
-export interface RowsOptions<TData = any> {
-  rows: TData[];
-  getRowId?: (row: TData) => GridRowId;
+export interface RowsOptions<TRow> {
+  rows: TRow[];
+  getRowId?: (row: TRow) => GridRowId;
   loading?: boolean;
   rowCount?: number;
 }
@@ -67,14 +67,14 @@ export interface RowsOptions<TData = any> {
 // API
 // ================================
 
-export interface RowsApi {
-  getRow: (id: GridRowId) => GridRowModel | null;
-  getRowId: <TData extends GridRowModel>(row: TData) => GridRowId;
-  getRowModels: () => Map<GridRowId, GridRowModel>;
+export interface RowsApi<TRow = any> {
+  getRow: (id: GridRowId) => TRow | null;
+  getRowId: (row: TRow) => GridRowId;
+  getRowModels: () => Map<GridRowId, TRow>;
   getRowsCount: () => number;
   getAllRowIds: () => GridRowId[];
-  setRows: (rows: GridRowModel[]) => void;
-  updateRows: (updates: GridRowModel[]) => void;
+  setRows: (rows: TRow[]) => void;
+  updateRows: (updates: Partial<TRow>[]) => void;
   getRowNode: (id: GridRowId) => GridTreeNode | null;
   setLoading: (loading: boolean) => void;
 }
@@ -106,9 +106,9 @@ function checkGridRowIdIsValid(
 /**
  * Get the row id from a row model.
  */
-export function getRowIdFromRowModel<TData extends GridRowModel>(
-  rowModel: TData,
-  getRowId?: (row: TData) => GridRowId,
+export function getRowIdFromRowModel<TRow extends GridRowModel>(
+  rowModel: TRow,
+  getRowId?: (row: TRow) => GridRowId,
   detailErrorMessage?: string,
 ): GridRowId {
   const id = getRowId ? getRowId(rowModel) : rowModel.id;
@@ -141,9 +141,9 @@ function buildRootGroup(): GridGroupNode {
 /**
  * Create the initial rows state from options.
  */
-export function createRowsState<TData extends GridRowModel>(
-  data: TData[],
-  getRowId?: (row: TData) => GridRowId,
+export function createRowsState<TRow extends GridRowModel>(
+  data: TRow[],
+  getRowId?: (row: TRow) => GridRowId,
   loading: boolean = false,
   rowCount?: number,
 ): RowsState {
@@ -203,9 +203,9 @@ interface CoreState {
 /**
  * Create the rows API methods.
  */
-export function createRowsApi<TData extends GridRowModel>(
+export function createRowsApi<TRow extends GridRowModel>(
   store: Store<CoreState>,
-  options: RowsOptions<TData>,
+  options: RowsOptions<TRow>,
 ): RowsApi {
   const getRow = (id: GridRowId): GridRowModel | null => {
     const lookup = store.state.rows.dataRowIdToModelLookup;
