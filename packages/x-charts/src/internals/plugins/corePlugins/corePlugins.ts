@@ -10,6 +10,7 @@ import {
   type UseChartInteractionListenerSignature,
   useChartInteractionListener,
 } from './useChartInteractionListener';
+import type { ChartSeriesType } from '../../../models/seriesType/config';
 
 /**
  * Internal plugins that create the tools used by the other plugins.
@@ -24,11 +25,11 @@ export const CHART_CORE_PLUGINS = [
   useChartAnimation,
 ] as const;
 
-export type ChartCorePluginSignatures = [
+export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartIdSignature,
   UseChartExperimentalFeaturesSignature,
   UseChartDimensionsSignature,
-  UseChartSeriesSignature,
+  UseChartSeriesSignature<TSeriesType>,
   UseChartAnimationSignature,
   UseChartInteractionListenerSignature,
 ];

@@ -8,7 +8,7 @@ export type FocusedItemUpdater<
   OutputSeriesType extends ChartSeriesType = ChartSeriesType,
 > = (
   currentItem: (TSeriesType extends any ? FocusedItemIdentifier<TSeriesType> : never) | null,
-  state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+  state: ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
 /**

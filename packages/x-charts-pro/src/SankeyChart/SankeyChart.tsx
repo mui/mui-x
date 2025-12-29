@@ -17,6 +17,8 @@ import type { SankeySeriesType } from './sankey.types';
 import { sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
 import type { SankeyChartSlotExtension } from './sankeySlots.types';
+import { FocusedSankeyNode } from './FocusedSankeyNode';
+import { FocusedSankeyLink } from './FocusedSankeyLink';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 
@@ -77,6 +79,8 @@ const SankeyChart = React.forwardRef(function SankeyChart(
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />
+          <FocusedSankeyNode />
+          <FocusedSankeyLink />
           {children}
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
