@@ -24,7 +24,7 @@ Structural components are used to define a chart's structure and data.
 
 :::info
 Demos in this doc use the `ChartContainer` component.
-To see demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/x/react-charts/components/#html-components).
+For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/x/react-charts/components/#html-components).
 :::
 
 ### Chart Data Provider and Surface usage
