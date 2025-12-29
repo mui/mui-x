@@ -167,14 +167,12 @@ interface UseTreeItemContentSlotPropsFromItemsReordering {
   onDragOver?: TreeViewCancellableEventHandler<React.DragEvent>;
 }
 
-interface UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering
-  extends TreeItemDragAndDropOverlayProps {}
+interface UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering extends TreeItemDragAndDropOverlayProps {}
 
 declare module '@mui/x-tree-view/useTreeItem' {
   interface UseTreeItemRootSlotOwnProps extends UseTreeItemRootSlotPropsFromItemsReordering {}
 
   interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromItemsReordering {}
 
-  interface UseTreeItemDragAndDropOverlaySlotOwnProps
-    extends UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering {}
+  interface UseTreeItemDragAndDropOverlaySlotOwnProps extends UseTreeItemDragAndDropOverlaySlotPropsFromItemsReordering {}
 }

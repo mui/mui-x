@@ -1,4 +1,4 @@
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TreeViewItemId, TreeViewSelectionPropagation } from '../../../models';
 import { TreeViewAnyStore } from '../../models';
 import { itemsSelectors } from '../items';
@@ -109,7 +109,9 @@ export class TreeViewSelectionPlugin<Multiple extends boolean | undefined> {
 
     // Add to the model the items that are part of the new range and not already part of the model.
     const selectedItemsLookup = getLookupFromArray(newSelectedItems);
-    const range = getNonDisabledItemsInRange(this.store.state, start, end);
+    const range = getNonDisabledItemsInRange(this.store.state, start, end).filter((id) =>
+      selectionSelectors.isItemSelectable(this.store.state, id),
+    );
     const itemsToAddToModel = range.filter((id) => !selectedItemsLookup[id]);
     newSelectedItems = newSelectedItems.concat(itemsToAddToModel);
 

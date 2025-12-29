@@ -93,13 +93,20 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   });
 
   const setStrategyAvailability = React.useCallback(() => {
-    const targetStrategy = props.treeData
+    const currentStrategy = props.treeData
       ? DataSourceRowsUpdateStrategy.GroupedData
       : DataSourceRowsUpdateStrategy.Default;
 
+    const prevStrategy =
+      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData
+        ? DataSourceRowsUpdateStrategy.Default
+        : DataSourceRowsUpdateStrategy.GroupedData;
+
+    apiRef.current.setStrategyAvailability(GridStrategyGroup.DataSource, prevStrategy, () => false);
+
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
-      targetStrategy,
+      currentStrategy,
       props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
   }, [apiRef, props.dataSource, props.lazyLoading, props.treeData]);

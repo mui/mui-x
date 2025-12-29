@@ -26,6 +26,11 @@ const selectedItemsMapSelector = createSelectorMemoized(selectedItemsSelector, (
   return selectedItemsMap;
 });
 
+const isItemSelectableSelector = createSelector(
+  (state: MinimalTreeViewState<any, any>, itemId: TreeViewItemId) =>
+    state.itemMetaLookup[itemId]?.selectable ?? true,
+);
+
 export const selectionSelectors = {
   /**
    * Gets the selected items as provided to the component.
@@ -69,12 +74,27 @@ export const selectionSelectors = {
     (selectedItemsMap, itemId: TreeViewItemId) => selectedItemsMap.has(itemId),
   ),
   /**
-   * Checks whether an item can be selected (if selection is enabled and if the item is not disabled).
+   * Checks whether the selection feature is enabled for an item.
+   * Returns `true` when selection is enabled on the Tree View and the item is selectable (even if the item is disabled).
+   */
+  isFeatureEnabledForItem: createSelector(
+    isItemSelectableSelector,
+    (state: MinimalTreeViewState<any, any>) => !state.disableSelection,
+    (isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
+      isSelectionEnabled && isItemSelectable,
+  ),
+  /**
+   * Checks whether an item can be selected (if selection is enabled, if the item is not disabled, and if the item is selectable).
    */
   canItemBeSelected: createSelector(
     itemsSelectors.isItemDisabled,
+    isItemSelectableSelector,
     (state: MinimalTreeViewState<any, any>) => !state.disableSelection,
-    (isItemDisabled, isSelectionEnabled, _itemId: TreeViewItemId) =>
-      isSelectionEnabled && !isItemDisabled,
+    (isItemDisabled, isItemSelectable, isSelectionEnabled, _itemId: TreeViewItemId) =>
+      isSelectionEnabled && !isItemDisabled && isItemSelectable,
   ),
+  /**
+   * Checks whether an item is selectable based on the `isItemSelectionDisabled` prop.
+   */
+  isItemSelectable: isItemSelectableSelector,
 };

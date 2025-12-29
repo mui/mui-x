@@ -47,8 +47,7 @@ export class TreeViewKeyboardNavigationPlugin {
   }
 
   private canToggleItemSelection = (itemId: TreeViewItemId) =>
-    selectionSelectors.enabled(this.store.state) &&
-    !itemsSelectors.isItemDisabled(this.store.state, itemId);
+    selectionSelectors.canItemBeSelected(this.store.state, itemId);
 
   private canToggleItemExpansion = (itemId: TreeViewItemId) => {
     return (

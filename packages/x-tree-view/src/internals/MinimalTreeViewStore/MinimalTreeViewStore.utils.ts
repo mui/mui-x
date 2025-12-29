@@ -1,4 +1,4 @@
-import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { TreeViewValidItem } from '../../models';
 import { getExpansionTrigger } from '../plugins/expansion/utils';
 import {

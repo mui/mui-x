@@ -13,6 +13,11 @@ export interface UseTreeItemParameters {
    */
   disabled?: boolean;
   /**
+   * If `true`, the item cannot be selected.
+   * @default false
+   */
+  disableSelection?: boolean;
+  /**
    * The id of the item.
    * Must be unique.
    */
@@ -67,8 +72,7 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   'data-editable'?: '';
 }
 
-export interface UseTreeItemContentSlotOwnProps
-  extends UseTreeItemContentSlotPropsFromUseTreeItem {}
+export interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromUseTreeItem {}
 
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemContentSlotOwnProps;

@@ -103,6 +103,9 @@ export function buildItemsLookups<R extends TreeViewValidItem<R>>(
       idAttribute: undefined,
       expandable: isItemExpandable(item, children),
       disabled: storeParameters.isItemDisabled ? storeParameters.isItemDisabled(item) : false,
+      selectable: storeParameters.isItemSelectionDisabled
+        ? !storeParameters.isItemSelectionDisabled(item)
+        : true,
       depth,
     };
 
@@ -126,7 +129,7 @@ interface BuildItemsLookupsParameters<R extends TreeViewValidItem<R>> {
   items: readonly R[];
   storeParameters: Pick<
     MinimalTreeViewParameters<R, any>,
-    'getItemId' | 'getItemLabel' | 'getItemChildren' | 'isItemDisabled'
+    'getItemId' | 'getItemLabel' | 'getItemChildren' | 'isItemDisabled' | 'isItemSelectionDisabled'
   >;
   parentId: string | null;
   depth: number;

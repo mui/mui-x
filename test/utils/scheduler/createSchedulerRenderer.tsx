@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { createRenderer, CreateRendererOptions, RenderOptions } from '@mui/internal-test-utils';
 
-interface CreateSchedulerRendererOptions
-  extends Omit<CreateRendererOptions, 'clock' | 'clockOptions'> {}
+interface CreateSchedulerRendererOptions extends Omit<
+  CreateRendererOptions,
+  'clock' | 'clockOptions'
+> {}
 
 export function createSchedulerRenderer({
   clockConfig,

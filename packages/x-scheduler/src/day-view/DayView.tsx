@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import {
   useExtractEventCalendarParameters,

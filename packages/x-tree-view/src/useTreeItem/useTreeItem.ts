@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { EventHandlers } from '@mui/utils/types';
 import extractEventHandlers from '@mui/utils/extractEventHandlers';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { TreeViewCancellableEvent, TreeViewItemId } from '../models';
 import {
   UseTreeItemParameters,

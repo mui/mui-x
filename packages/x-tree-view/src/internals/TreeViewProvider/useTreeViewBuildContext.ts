@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import {
   TreeViewContextValue,
   TreeViewItemPluginsRunner,

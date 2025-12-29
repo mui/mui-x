@@ -1,6 +1,6 @@
-import { useRefWithInit } from '@base-ui-components/utils/useRefWithInit';
-import { useIsoLayoutEffect } from '@base-ui-components/utils/useIsoLayoutEffect';
-import { useOnMount } from '@base-ui-components/utils/useOnMount';
+import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
+import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
+import { useOnMount } from '@base-ui/utils/useOnMount';
 import { useRtl } from '@mui/system/RtlProvider';
 import { TreeViewAnyStore } from '../models';
 

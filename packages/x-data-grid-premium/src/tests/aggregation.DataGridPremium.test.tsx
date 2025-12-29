@@ -1086,6 +1086,62 @@ describe('<DataGridPremium /> - Aggregation', () => {
         ).to.equal(7);
       });
     });
+
+    describe('`sizeTrue`', () => {
+      it('should count true values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeTrue.apply(
+            {
+              values: [true, false, true, true, false],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+
+      it('should ignore all other values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeTrue.apply(
+            {
+              values: [true, false, true, 'a', 1, null, undefined, {}, true],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+    });
+
+    describe('`sizeFalse`', () => {
+      it('should count false values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeFalse.apply(
+            {
+              values: [true, false, true, false, false],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+
+      it('should ignore all other values', () => {
+        expect(
+          GRID_AGGREGATION_FUNCTIONS.sizeFalse.apply(
+            {
+              values: [true, false, false, 'a', 1, null, undefined, {}, false],
+              field: 'value',
+              groupId: 0,
+            },
+            apiRef.current!,
+          ),
+        ).to.equal(3);
+      });
+    });
   });
 
   describe('"no rows" overlay', () => {

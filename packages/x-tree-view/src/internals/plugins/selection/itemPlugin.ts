@@ -59,9 +59,13 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
   const { store } = useTreeViewContext<TreeViewAnyStore>();
 
   const isCheckboxSelectionEnabled = useStore(store, selectionSelectors.isCheckboxSelectionEnabled);
-  const isItemSelectionEnabled = useStore(store, selectionSelectors.canItemBeSelected, itemId);
+  const isFeatureEnabledForItem = useStore(
+    store,
+    selectionSelectors.isFeatureEnabledForItem,
+    itemId,
+  );
+  const canItemBeSelected = useStore(store, selectionSelectors.canItemBeSelected, itemId);
   const selectionStatus = useStore(store, selectorCheckboxSelectionStatus, itemId);
-  const isSelectionEnabledForItem = useStore(store, selectionSelectors.canItemBeSelected, itemId);
 
   return {
     propsEnhancers: {
@@ -73,7 +77,7 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
           ariaChecked = true;
         } else if (selectionStatus === 'indeterminate') {
           ariaChecked = 'mixed';
-        } else if (!isSelectionEnabledForItem) {
+        } else if (!canItemBeSelected) {
           // - if the tree contains nodes that are not selectable, aria-checked is not present on those nodes.
           ariaChecked = undefined;
         } else {
@@ -107,8 +111,8 @@ export const useSelectionItemPlugin: TreeViewItemPlugin = ({ props }) => {
         return {
           tabIndex: -1,
           onChange: handleChange,
-          visible: isCheckboxSelectionEnabled,
-          disabled: !isItemSelectionEnabled,
+          visible: isCheckboxSelectionEnabled && isFeatureEnabledForItem,
+          disabled: !canItemBeSelected,
           checked: selectionStatus === 'checked',
           indeterminate: selectionStatus === 'indeterminate',
         };

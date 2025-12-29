@@ -377,6 +377,9 @@ export default defineConfig(
                 '!@mui/x-date-pickers/internals/demo',
                 // TODO: export this from /ButtonBase in core. This will break after we move to package exports
                 '!@mui/material/ButtonBase/TouchRipple',
+                /* Module augmentation for feature flags in Charts. Users should be able to pick the features they need.
+                 * so it's useful to allow deeper imports */
+                '!@mui/x-charts*/moduleAugmentation/*',
               ],
               message: 'Use less deep import instead',
             },

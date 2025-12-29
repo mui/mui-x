@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { createSelector, useStore } from '@base-ui-components/utils/store';
+import { createSelector, useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { SchedulerEventOccurrence, SchedulerEventSide } from '@mui/x-scheduler-headless/models';

@@ -106,6 +106,13 @@ export interface MinimalTreeViewParameters<
    */
   isItemDisabled?: (item: R) => boolean;
   /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled?: (item: R) => boolean;
+  /**
    * Used to determine the string label for a given item.
    *
    * @template R
@@ -290,7 +297,7 @@ export type TreeViewSelectionReadonlyValue<Multiple extends boolean | undefined>
   Multiple extends true
     ? Multiple extends false
       ? // Multiple === boolean, the type cannot be simplified further
-        TreeViewItemId | null | readonly TreeViewItemId[]
+          TreeViewItemId | null | readonly TreeViewItemId[]
       : // Multiple === true, the selection is multiple
         readonly TreeViewItemId[]
     : // Multiple === false | undefined, the selection is single
@@ -299,7 +306,7 @@ export type TreeViewSelectionReadonlyValue<Multiple extends boolean | undefined>
 export type TreeViewSelectionValue<Multiple extends boolean | undefined> = Multiple extends true
   ? Multiple extends false
     ? // Multiple === boolean, the type cannot be simplified further
-      TreeViewItemId | null | TreeViewItemId[]
+        TreeViewItemId | null | TreeViewItemId[]
     : // Multiple === true, the selection is multiple
       TreeViewItemId[]
   : // Multiple === false | undefined, the selection is single

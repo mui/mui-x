@@ -24,12 +24,17 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
     newParameters: MinimalTreeViewParameters<R2, any>,
     previousParameters: MinimalTreeViewParameters<R2, any>,
   ): boolean => {
-    return ['items', 'isItemDisabled', 'getItemId', 'getItemLabel', 'getItemChildren'].some(
-      (key) => {
-        const typedKey = key as keyof MinimalTreeViewParameters<R2, any>;
-        return newParameters[typedKey] !== previousParameters[typedKey];
-      },
-    );
+    return [
+      'items',
+      'isItemDisabled',
+      'isItemSelectionDisabled',
+      'getItemId',
+      'getItemLabel',
+      'getItemChildren',
+    ].some((key) => {
+      const typedKey = key as keyof MinimalTreeViewParameters<R2, any>;
+      return newParameters[typedKey] !== previousParameters[typedKey];
+    });
   };
 
   /**
@@ -39,7 +44,12 @@ export class TreeViewItemsPlugin<R extends TreeViewValidItem<R>> {
     parameters: Pick<
       MinimalTreeViewParameters<R2, any>,
       // When adding new parameters here, please also update the `shouldRebuildItemsState` method accordingly.
-      'items' | 'isItemDisabled' | 'getItemId' | 'getItemLabel' | 'getItemChildren'
+      | 'items'
+      | 'isItemDisabled'
+      | 'isItemSelectionDisabled'
+      | 'getItemId'
+      | 'getItemLabel'
+      | 'getItemChildren'
     >,
   ) => {
     const itemMetaLookup: MinimalTreeViewState<R2, any>['itemMetaLookup'] = {};
