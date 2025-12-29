@@ -309,11 +309,13 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
   if (typeof getRowClassName === 'function') {
-    const indexRelativeToCurrentPage = index - (currentPageRange?.firstRowIndex || 0);
+    const firstRowIndex = currentPageRange?.firstRowIndex || 0;
+    const lastRowIndex = currentPageRange?.lastRowIndex || 0;
+    const indexRelativeToCurrentPage = index - firstRowIndex;
     const rowParams: GridRowClassNameParams = {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
-      isLastVisible: indexRelativeToCurrentPage === (currentPageRange?.lastRowIndex || 0),
+      isLastVisible: indexRelativeToCurrentPage === lastRowIndex - firstRowIndex,
       indexRelativeToCurrentPage,
     };
 
