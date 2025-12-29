@@ -108,9 +108,7 @@ export const useGridScroll = (
         const page = gridPageSelector(apiRef);
         const pageSize = gridPageSizeSelector(apiRef);
 
-        const elementIndex = !pagination
-          ? params.rowIndex
-          : params.rowIndex - page * pageSize;
+        const elementIndex = !pagination ? params.rowIndex : params.rowIndex - page * pageSize;
 
         const targetOffsetHeight = rowsMeta.positions[elementIndex + 1]
           ? rowsMeta.positions[elementIndex + 1] - rowsMeta.positions[elementIndex]

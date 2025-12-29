@@ -42,12 +42,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     [apiRef, colDef, onClick, sortDirection, multipleColumnsSortingMode],
   );
 
-  if (
-    disableColumnSorting ||
-    !colDef ||
-    !colDef.sortable ||
-    !sortingOrder.some((item) => !!item)
-  ) {
+  if (disableColumnSorting || !colDef || !colDef.sortable || !sortingOrder.some((item) => !!item)) {
     return null;
   }
 
@@ -80,11 +75,7 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
         <slots.baseMenuItem
           onClick={onSortMenuItemClick}
           iconStart={
-            slots.columnMenuUnsortIcon ? (
-              <slots.columnMenuUnsortIcon fontSize="small" />
-            ) : (
-              <span />
-            )
+            slots.columnMenuUnsortIcon ? <slots.columnMenuUnsortIcon fontSize="small" /> : <span />
           }
         >
           {apiRef.current.getLocaleText('columnMenuUnsort')}

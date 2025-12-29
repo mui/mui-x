@@ -73,25 +73,13 @@ function GridFilterInputBoolean(props: GridFilterInputBooleanProps) {
         {...other}
         {...slotProps?.root}
       >
-        <slots.baseSelectOption
-          {...baseSelectOptionProps}
-          native={isSelectNative}
-          value=""
-        >
+        <slots.baseSelectOption {...baseSelectOptionProps} native={isSelectNative} value="">
           {apiRef.current.getLocaleText('filterValueAny')}
         </slots.baseSelectOption>
-        <slots.baseSelectOption
-          {...baseSelectOptionProps}
-          native={isSelectNative}
-          value="true"
-        >
+        <slots.baseSelectOption {...baseSelectOptionProps} native={isSelectNative} value="true">
           {apiRef.current.getLocaleText('filterValueTrue')}
         </slots.baseSelectOption>
-        <slots.baseSelectOption
-          {...baseSelectOptionProps}
-          native={isSelectNative}
-          value="false"
-        >
+        <slots.baseSelectOption {...baseSelectOptionProps} native={isSelectNative} value="false">
           {apiRef.current.getLocaleText('filterValueFalse')}
         </slots.baseSelectOption>
       </slots.baseSelect>
