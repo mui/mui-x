@@ -17,7 +17,7 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   const xAxis = useXAxis(funnelSeries?.xAxisId);
   const yAxis = useYAxis(funnelSeries?.yAxisId);
 
-  if (focusedItem === null || focusedItem.type !== 'funnel' || !funnelSeries) {
+  if (!focusedItem || focusedItem.type !== 'funnel' || !funnelSeries) {
     return null;
   }
 
