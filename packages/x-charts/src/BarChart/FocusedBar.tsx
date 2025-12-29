@@ -13,7 +13,7 @@ export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  if (focusedItem === null || focusedItem.seriesType !== 'bar' || !barSeries) {
+  if (focusedItem === null || focusedItem.type !== 'bar' || !barSeries) {
     return null;
   }
 

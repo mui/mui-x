@@ -1,7 +1,4 @@
-import { ReadonlyStore, Store } from '@mui/x-internals/store';
-import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergeSignaturesProperty } from './helpers';
-import type { TreeViewCorePluginSignatures } from '../corePlugins';
+import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
 
 export interface TreeViewItemMeta {
   id: string;
@@ -20,30 +17,10 @@ export interface TreeViewItemMeta {
   label?: string;
 }
 
-export type TreeViewInstance<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
+export interface TreeViewAnyStore extends MinimalTreeViewStore<any, any, any, any> {
+  itemPluginManager: any;
+}
 
-export type TreeViewPublicAPI<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
-
-export type TreeViewState<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'state'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>>;
-
-export type TreeViewStore<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = Store<TreeViewState<TSignatures, TOptionalSignatures>>;
-
-export type TreeViewReadonlyStore<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = ReadonlyStore<TreeViewState<TSignatures, TOptionalSignatures>>;
+export type TreeViewPublicAPI<TStore extends TreeViewAnyStore> = ReturnType<
+  TStore['buildPublicAPI']
+>;

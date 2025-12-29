@@ -7,6 +7,8 @@ import {
   type ChartAnyPluginSignature,
   type ChartProviderProps,
   ChartsSlotsProvider,
+  type ChartSeriesConfig,
+  defaultSeriesConfig,
 } from '@mui/x-charts/internals';
 import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
@@ -36,6 +38,9 @@ export type ChartDataProviderProProps<
      */
     slotProps?: Partial<ChartsSlotPropsPro>;
   };
+
+export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> =
+  defaultSeriesConfig;
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -71,6 +76,7 @@ function ChartDataProviderPro<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderProProps({
       ...props,
+      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPro,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 
