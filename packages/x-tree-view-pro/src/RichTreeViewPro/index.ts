@@ -7,4 +7,3 @@ export type {
   RichTreeViewProSlotProps,
   RichTreeViewProApiRef,
 } from './RichTreeViewPro.types';
-export type { RichTreeViewProPluginSignatures } from './RichTreeViewPro.plugins';
