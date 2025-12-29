@@ -41,11 +41,13 @@ export function Example() {
 
   // Internal plugins API is available
   grid1.api.rows.getRowNode(1);
-  const row = grid1.api.rows.getRow(1);
-  if (row) {
-    row.name;
-    // @ts-expect-error
-    row.nonExistingProperty;
+  {
+    const row = grid1.api.rows.getRow(1);
+    if (row) {
+      row.name;
+      // @ts-expect-error
+      row.nonExistingProperty;
+    }
   }
 
   // Sorting API is available
@@ -98,5 +100,31 @@ export function Example() {
   grid2.selectors.sorting.sortModel;
   grid2.selectors.pagination.model;
 
+  // Extract grid options type
+  const plugins = [sortingPlugin, paginationPlugin] as const;
+  type GridOptions = Parameters<typeof useDataGrid<typeof plugins, User>>[0];
+
+  const getRowId: GridOptions['getRowId'] = (row) => {
+    {
+      type Test = Expect<Equal<typeof row, User>>;
+    }
+    return row.id;
+  };
+
+  const columns: GridOptions['columns'] = [{ id: 'name', field: 'name', sortable: true }];
+
+  const gridOptions: GridOptions = {
+    rows,
+    columns,
+    getRowId,
+    plugins,
+  };
+
+  const grid3 = useDataGrid(gridOptions);
+
   return;
 }
+
+type Expect<T extends true> = T;
+type Equal<X, Y> =
+  (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
