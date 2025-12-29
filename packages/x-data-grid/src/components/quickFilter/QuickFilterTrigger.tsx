@@ -33,7 +33,7 @@ export type QuickFilterTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
 const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps>(
   function QuickFilterTrigger(props, ref) {
     const { render, className, onClick, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const { state, controlId, onExpandedChange, triggerRef } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
     const handleRef = useForkRef(triggerRef, ref);
@@ -44,10 +44,10 @@ const QuickFilterTrigger = forwardRef<HTMLButtonElement, QuickFilterTriggerProps
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseButton,
+      slots.baseButton,
       render,
       {
-        ...rootProps.slotProps?.baseButton,
+        ...slotProps?.baseButton,
         className: resolvedClassName,
         'aria-controls': controlId,
         'aria-expanded': state.expanded,

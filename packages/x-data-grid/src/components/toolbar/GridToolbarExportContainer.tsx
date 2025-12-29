@@ -30,7 +30,7 @@ const GridToolbarExportContainer = forwardRef<
   const tooltipProps = slotProps.tooltip || {};
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps } = useGridRootProps();
   const exportButtonId = useId();
   const exportMenuId = useId();
 
@@ -51,35 +51,35 @@ const GridToolbarExportContainer = forwardRef<
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseTooltip
+      <slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarExportLabel')}
         enterDelay={1000}
-        {...rootProps.slotProps?.baseTooltip}
+        {...rootPropsSlotProps?.baseTooltip}
         {...tooltipProps}
       >
-        <rootProps.slots.baseButton
+        <slots.baseButton
           size="small"
-          startIcon={<rootProps.slots.exportIcon />}
+          startIcon={<slots.exportIcon />}
           aria-expanded={open}
           aria-label={apiRef.current.getLocaleText('toolbarExportLabel')}
           aria-haspopup="menu"
           aria-controls={open ? exportMenuId : undefined}
           id={exportButtonId}
-          {...rootProps.slotProps?.baseButton}
+          {...rootPropsSlotProps?.baseButton}
           {...buttonProps}
           onClick={handleMenuOpen}
           ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarExport')}
-        </rootProps.slots.baseButton>
-      </rootProps.slots.baseTooltip>
+        </slots.baseButton>
+      </slots.baseTooltip>
       <GridMenu
         open={open}
         target={buttonRef.current}
         onClose={handleMenuClose}
         position="bottom-end"
       >
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={exportMenuId}
           className={gridClasses.menuList}
           aria-labelledby={exportButtonId}
@@ -91,7 +91,7 @@ const GridToolbarExportContainer = forwardRef<
             }
             return React.cloneElement<any>(child, { hideMenu: handleMenuClose });
           })}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );

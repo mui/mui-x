@@ -21,7 +21,7 @@ import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
 import { gridRowGroupingModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,8 +48,8 @@ interface GridGroupingCriteriaCellIconProps extends Pick<
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
   const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPremium>;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const { rowNode, id, field, descendantCount } = props;
 
   const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
@@ -69,19 +69,19 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
   };
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.slots.groupingCriteriaCollapseIcon
-    : rootProps.slots.groupingCriteriaExpandIcon;
+    ? slots.groupingCriteriaCollapseIcon
+    : slots.groupingCriteriaExpandIcon;
 
   if (isDataLoading) {
     return (
       <div className={classes.loadingContainer}>
-        <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
+        <slots.baseCircularProgress size="1rem" color="inherit" />
       </div>
     );
   }
 
   return descendantCount === -1 || descendantCount > 0 ? (
-    <rootProps.slots.baseIconButton
+    <slots.baseIconButton
       size="small"
       onClick={handleClick}
       tabIndex={-1}
@@ -90,33 +90,33 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
           ? apiRef.current.getLocaleText('treeDataCollapse')
           : apiRef.current.getLocaleText('treeDataExpand')
       }
-      {...rootProps?.slotProps?.baseIconButton}
+      {...slotProps?.baseIconButton}
     >
-      <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
+      <slots.baseTooltip title={error?.message ?? null}>
+        <slots.baseBadge variant="dot" color="error" invisible={!error}>
           <Icon fontSize="inherit" />
-        </rootProps.slots.baseBadge>
-      </rootProps.slots.baseTooltip>
-    </rootProps.slots.baseIconButton>
+        </slots.baseBadge>
+      </slots.baseTooltip>
+    </slots.baseIconButton>
   ) : null;
 }
 
 export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
-  const rootProps = useGridRootProps();
+  const { dataSource, rowGroupingColumnMode, classes: rootPropsClasses } = useGridRootProps();
   const apiRef = useGridApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const rowGroupingModelLength = useGridSelector(apiRef, gridRowGroupingModelSelector).length;
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const shouldShowToggleContainer = !pivotActive || rowGroupingModelLength > 1;
   // Do not allow expand/collapse the last grouping criteria cell when in pivot mode
   const shouldShowToggleButton = !pivotActive || rowNode.depth < rowGroupingModelLength - 1;
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
+    descendantCount = dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   let cellContent: React.ReactNode;
@@ -135,7 +135,7 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
       className={classes.root}
       style={{
         marginLeft:
-          rootProps.rowGroupingColumnMode === 'multiple'
+          rowGroupingColumnMode === 'multiple'
             ? 0
             : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}

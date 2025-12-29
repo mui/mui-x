@@ -19,7 +19,7 @@ type GridSelectedRowCountProps = React.HTMLAttributes<HTMLDivElement> &
     sx?: SxProps<Theme>;
   };
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -52,7 +52,8 @@ const GridSelectedRowCount = forwardRef<HTMLDivElement, GridSelectedRowCountProp
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
-    const ownerState = useGridRootProps();
+    const { classes: rootPropsClasses } = useGridRootProps();
+    const ownerState = { classes: rootPropsClasses };
     const classes = useUtilityClasses(ownerState);
     const rowSelectedText = apiRef.current.getLocaleText('footerRowSelected')(selectedRowCount);
 

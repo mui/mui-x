@@ -19,7 +19,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
   const [options, setOptions] = React.useState<string[]>([]);
   const [filterValueState, setFilterValueState] = React.useState(item.value || []);
 
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
 
   React.useEffect(() => {
     const itemValue = item.value ?? [];
@@ -55,7 +55,7 @@ function GridFilterInputMultipleValue(props: GridFilterInputMultipleValueProps) 
     [setOptions],
   );
 
-  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
+  const BaseAutocomplete = slots.baseAutocomplete as React.JSXElementConstructor<
     AutocompleteProps<string, true, false, true>
   >;
 

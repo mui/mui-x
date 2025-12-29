@@ -37,9 +37,9 @@ import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
-> = (state, props) => ({
+> = (state, { cellSelectionModel, initialState }) => ({
   ...state,
-  cellSelection: { ...(props.cellSelectionModel ?? props.initialState?.cellSelection) },
+  cellSelection: { ...(cellSelectionModel ?? initialState?.cellSelection) },
 });
 
 function isKeyboardEvent(event: any): event is React.KeyboardEvent {
@@ -56,31 +56,47 @@ export const useGridCellSelection = (
     | 'cellSelection'
     | 'cellSelectionModel'
     | 'onCellSelectionModelChange'
-    | 'pagination'
-    | 'paginationMode'
     | 'ignoreValueFormatterDuringExport'
     | 'clipboardCopyCellDelimiter'
     | 'columnHeaderHeight'
+    | 'headerFilterHeight'
+    | 'listView'
+    | 'columnGroupHeaderHeight'
   >,
 ) => {
+  const {
+    cellSelection,
+    cellSelectionModel: cellSelectionModelProp,
+    onCellSelectionModelChange,
+    ignoreValueFormatterDuringExport,
+    clipboardCopyCellDelimiter,
+    columnHeaderHeight,
+    headerFilterHeight,
+    listView,
+    columnGroupHeaderHeight,
+  } = props;
   const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates>(null);
   const lastMouseDownCell = React.useRef<GridCellCoordinates>(null);
   const mousePosition = React.useRef<{ x: number; y: number }>(null);
   const autoScrollRAF = React.useRef<number>(null);
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, {
+    columnHeaderHeight,
+    headerFilterHeight,
+    listView,
+    columnGroupHeaderHeight,
+  });
 
-  const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
+  const ignoreValueFormatterProp = ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
     (typeof ignoreValueFormatterProp === 'object'
       ? ignoreValueFormatterProp?.clipboardExport
       : ignoreValueFormatterProp) || false;
-  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
   apiRef.current.registerControlState({
     stateId: 'cellSelection',
-    propModel: props.cellSelectionModel,
-    propOnChange: props.onCellSelectionModelChange,
+    propModel: cellSelectionModelProp,
+    propOnChange: onCellSelectionModelChange,
     stateSelector: gridCellSelectionStateSelector,
     changeEvent: 'cellSelectionChange',
   });
@@ -88,20 +104,20 @@ export const useGridCellSelection = (
   const runIfCellSelectionIsEnabled =
     <Args extends any[]>(callback: (...args: Args) => void) =>
     (...args: Args) => {
-      if (props.cellSelection) {
+      if (cellSelection) {
         callback(...args);
       }
     };
 
   const isCellSelected = React.useCallback<GridCellSelectionApi['isCellSelected']>(
     (id, field) => {
-      if (!props.cellSelection) {
+      if (!cellSelection) {
         return false;
       }
       const cellSelectionModel = gridCellSelectionStateSelector(apiRef);
       return cellSelectionModel[id] ? !!cellSelectionModel[id][field] : false;
     },
-    [apiRef, props.cellSelection],
+    [apiRef, cellSelection],
   );
 
   const getCellSelectionModel = React.useCallback(() => {
@@ -110,12 +126,12 @@ export const useGridCellSelection = (
 
   const setCellSelectionModel = React.useCallback<GridCellSelectionApi['setCellSelectionModel']>(
     (newModel) => {
-      if (!props.cellSelection) {
+      if (!cellSelection) {
         return;
       }
       apiRef.current.setState((prevState) => ({ ...prevState, cellSelection: newModel }));
     },
-    [apiRef, props.cellSelection],
+    [apiRef, cellSelection],
   );
 
   const selectCellRange = React.useCallback<GridCellSelectionApi['selectCellRange']>(
@@ -165,7 +181,7 @@ export const useGridCellSelection = (
     GridCellSelectionApi['getSelectedCellsAsArray']
   >(() => {
     const selectionModel = apiRef.current.getCellSelectionModel();
-    const currentVisibleRows = getVisibleRows(apiRef, props);
+    const currentVisibleRows = getVisibleRows(apiRef);
     const sortedEntries = currentVisibleRows.rows.reduce(
       (result, row) => {
         if (row.id in selectionModel) {
@@ -193,7 +209,7 @@ export const useGridCellSelection = (
       },
       [],
     );
-  }, [apiRef, props]);
+  }, [apiRef]);
 
   const cellSelectionApi: GridCellSelectionApi = {
     isCellSelected,
@@ -470,10 +486,10 @@ export const useGridCellSelection = (
   useGridEvent(apiRef, 'cellMouseOver', runIfCellSelectionIsEnabled(handleCellMouseOver));
 
   React.useEffect(() => {
-    if (props.cellSelectionModel) {
-      apiRef.current.setCellSelectionModel(props.cellSelectionModel);
+    if (cellSelectionModelProp) {
+      apiRef.current.setCellSelectionModel(cellSelectionModelProp);
     }
-  }, [apiRef, props.cellSelectionModel]);
+  }, [apiRef, cellSelectionModelProp]);
 
   React.useEffect(() => {
     const rootRef = apiRef.current.rootElementRef?.current;
@@ -549,7 +565,7 @@ export const useGridCellSelection = (
 
   const canUpdateFocus = React.useCallback<GridPipeProcessor<'canUpdateFocus'>>(
     (initialValue, { event, cell }) => {
-      if (!cell || !props.cellSelection || !event.shiftKey) {
+      if (!cell || !cellSelection || !event.shiftKey) {
         return initialValue;
       }
 
@@ -564,7 +580,7 @@ export const useGridCellSelection = (
 
       return initialValue;
     },
-    [apiRef, props.cellSelection, hasClickedValidCellForRangeSelection],
+    [apiRef, cellSelection, hasClickedValidCellForRangeSelection],
   );
 
   const handleClipboardCopy = React.useCallback<GridPipeProcessor<'clipboardCopy'>>(

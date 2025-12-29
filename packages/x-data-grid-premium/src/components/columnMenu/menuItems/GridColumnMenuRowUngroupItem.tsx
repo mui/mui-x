@@ -13,7 +13,7 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
 
   if (!colDef.groupable) {
     return null;
@@ -33,21 +33,21 @@ export function GridColumnMenuRowUngroupItem(props: GridColumnMenuItemProps) {
 
   if (rowGroupingModel.includes(colDef.field)) {
     return (
-      <rootProps.slots.baseMenuItem
+      <slots.baseMenuItem
         onClick={ungroupColumn}
-        iconStart={<rootProps.slots.columnMenuUngroupIcon fontSize="small" />}
+        iconStart={<slots.columnMenuUngroupIcon fontSize="small" />}
       >
         {apiRef.current.getLocaleText('unGroupColumn')(name)}
-      </rootProps.slots.baseMenuItem>
+      </slots.baseMenuItem>
     );
   }
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={groupColumn}
-      iconStart={<rootProps.slots.columnMenuGroupIcon fontSize="small" />}
+      iconStart={<slots.columnMenuGroupIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('groupColumn')(name)}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }

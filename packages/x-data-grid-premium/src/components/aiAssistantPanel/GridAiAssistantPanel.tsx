@@ -15,7 +15,7 @@ import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';
 import { GridAiAssistantPanelConversationsMenu } from './GridAiAssistantPanelConversationsMenu';
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -37,7 +37,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const AiAssistantPanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanel',
-})<{ ownerState: OwnerState }>({
+})({
   flexDirection: 'column',
   width: 380,
   maxHeight: 'none',
@@ -47,7 +47,7 @@ const AiAssistantPanelRoot = styled('div', {
 const AiAssistantPanelHeader = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelHeader',
-})<{ ownerState: OwnerState }>({
+})({
   flexShrink: 0,
   display: 'flex',
   alignItems: 'center',
@@ -61,7 +61,7 @@ const AiAssistantPanelHeader = styled('div', {
 const AiAssistantPanelTitleContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelTitleContainer',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   flexDirection: 'column',
   flex: 1,
@@ -71,7 +71,7 @@ const AiAssistantPanelTitleContainer = styled('div', {
 const AiAssistantPanelTitle = styled('span', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelTitle',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
   marginTop: vars.spacing(0.25),
@@ -80,7 +80,7 @@ const AiAssistantPanelTitle = styled('span', {
 const AiAssistantPanelConversationTitle = styled('span', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelConversationTitle',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.small,
   color: vars.colors.foreground.muted,
   marginTop: vars.spacing(-0.25),
@@ -92,7 +92,7 @@ const AiAssistantPanelConversationTitle = styled('span', {
 const AiAssistantPanelBody = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelBody',
-})<{ ownerState: OwnerState }>({
+})({
   flexGrow: 0,
   flexShrink: 0,
   height: 260,
@@ -104,7 +104,7 @@ const AiAssistantPanelBody = styled('div', {
 const AiAssistantPanelEmptyText = styled('span', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelEmptyText',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.body,
   color: vars.colors.foreground.muted,
 });
@@ -112,7 +112,7 @@ const AiAssistantPanelEmptyText = styled('span', {
 const AiAssistantPanelFooter = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelFooter',
-})<{ ownerState: OwnerState }>({
+})({
   flexShrink: 0,
   display: 'flex',
   flexDirection: 'column',
@@ -122,9 +122,14 @@ const AiAssistantPanelFooter = styled('div', {
 });
 
 function GridAiAssistantPanel() {
-  const rootProps = useGridRootProps();
+  const {
+    slots,
+    slotProps,
+    classes: rootPropsClasses,
+    aiAssistantSuggestions,
+  } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const conversationTitle =
@@ -147,56 +152,55 @@ function GridAiAssistantPanel() {
   }, [apiRef, conversations]);
 
   return (
-    <AiAssistantPanelRoot className={classes.root} ownerState={rootProps}>
-      <AiAssistantPanelHeader className={classes.header} ownerState={rootProps}>
-        <AiAssistantPanelTitleContainer className={classes.titleContainer} ownerState={rootProps}>
-          <AiAssistantPanelTitle className={classes.title} ownerState={rootProps}>
+    <AiAssistantPanelRoot className={classes.root}>
+      <AiAssistantPanelHeader className={classes.header}>
+        <AiAssistantPanelTitleContainer className={classes.titleContainer}>
+          <AiAssistantPanelTitle className={classes.title}>
             {apiRef.current.getLocaleText('aiAssistantPanelTitle')}
           </AiAssistantPanelTitle>
           <AiAssistantPanelConversationTitle
             className={classes.conversationTitle}
-            ownerState={rootProps}
             title={conversationTitle}
           >
             {conversationTitle}
           </AiAssistantPanelConversationTitle>
         </AiAssistantPanelTitleContainer>
-        <rootProps.slots.baseTooltip
+        <slots.baseTooltip
           title={apiRef.current.getLocaleText('aiAssistantPanelNewConversation')}
           enterDelay={500}
         >
           <span>
-            <rootProps.slots.baseIconButton
-              {...rootProps.slotProps?.baseIconButton}
+            <slots.baseIconButton
+              {...slotProps?.baseIconButton}
               disabled={!conversations.length || !activeConversation?.prompts.length}
               onClick={createConversation}
             >
-              <rootProps.slots.aiAssistantPanelNewConversationIcon fontSize="small" />
-            </rootProps.slots.baseIconButton>
+              <slots.aiAssistantPanelNewConversationIcon fontSize="small" />
+            </slots.baseIconButton>
           </span>
-        </rootProps.slots.baseTooltip>
+        </slots.baseTooltip>
         <GridAiAssistantPanelConversationsMenu />
-        <rootProps.slots.baseIconButton
-          {...rootProps.slotProps?.baseIconButton}
+        <slots.baseIconButton
+          {...slotProps?.baseIconButton}
           aria-label={apiRef.current.getLocaleText('aiAssistantPanelClose')}
           onClick={apiRef.current.hidePreferences}
         >
-          <rootProps.slots.aiAssistantPanelCloseIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
+          <slots.aiAssistantPanelCloseIcon fontSize="small" />
+        </slots.baseIconButton>
       </AiAssistantPanelHeader>
-      <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
+      <AiAssistantPanelBody className={classes.body}>
         {activeConversation && activeConversation.prompts.length > 0 ? (
           <GridAiAssistantPanelConversation conversation={activeConversation} />
         ) : (
-          <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
+          <AiAssistantPanelEmptyText className={classes.emptyText}>
             {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}
           </AiAssistantPanelEmptyText>
         )}
       </AiAssistantPanelBody>
-      <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
+      <AiAssistantPanelFooter className={classes.footer}>
         <GridPromptField onSubmit={apiRef.current.aiAssistant.processPrompt} />
-        {rootProps.aiAssistantSuggestions && rootProps.aiAssistantSuggestions.length > 0 && (
-          <GridAiAssistantPanelSuggestions suggestions={rootProps.aiAssistantSuggestions} />
+        {aiAssistantSuggestions && aiAssistantSuggestions.length > 0 && (
+          <GridAiAssistantPanelSuggestions suggestions={aiAssistantSuggestions} />
         )}
       </AiAssistantPanelFooter>
     </AiAssistantPanelRoot>

@@ -7,7 +7,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { gridAggregationModelSelector } from '../hooks/features/aggregation/gridAggregationSelectors';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -22,8 +22,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function GridAggregationRowOverlay(props, forwardedRef) {
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const classes = useUtilityClasses({ classes: rootProps.classes });
+    const { classes: rootPropsClasses } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: rootPropsClasses });
     const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
     const visibleColumns = new Set(Object.keys(aggregationModel));

@@ -9,12 +9,9 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
 import { useCSSVariablesClass } from '../../utils/css/context';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { NotRendered } from '../../utils/assert';
-
-type OwnerState = DataGridProcessedProps;
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -45,14 +42,14 @@ export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('
 const GridPanelRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'panel',
-})<{ ownerState: OwnerState }>({
+})({
   zIndex: vars.zIndex.panel,
 });
 
 const GridPanelContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'panelContent',
-})<{ ownerState: OwnerState }>({
+})({
   backgroundColor: vars.colors.background.overlay,
   borderRadius: vars.radius.base,
   boxShadow: vars.shadows.overlay,
@@ -64,7 +61,7 @@ const GridPanelContent = styled('div', {
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, onClose, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
   const variablesClass = useCSSVariablesClass();
@@ -100,8 +97,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
 
   return (
     <GridPanelRoot
-      as={rootProps.slots.basePopper}
-      ownerState={rootProps}
+      as={slots.basePopper}
       placement="bottom-end"
       className={clsx(classes.panel, className, variablesClass)}
       flip
@@ -112,11 +108,11 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
       clickAwayTouchEvent={false}
       focusTrap
       {...other}
-      {...rootProps.slotProps?.basePopper}
+      {...slotProps?.basePopper}
       target={props.target ?? fallbackTarget}
       ref={ref}
     >
-      <GridPanelContent className={classes.paper} ownerState={rootProps} onKeyDown={handleKeyDown}>
+      <GridPanelContent className={classes.paper} onKeyDown={handleKeyDown}>
         {isPlaced && children}
       </GridPanelContent>
     </GridPanelRoot>

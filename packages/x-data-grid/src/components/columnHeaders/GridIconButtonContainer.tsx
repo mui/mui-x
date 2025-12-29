@@ -9,7 +9,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridIconButtonContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridIconButtonContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'IconButtonContainer',
-})<{ ownerState: OwnerState }>(() => ({
+})(() => ({
   display: 'flex',
   visibility: 'hidden',
   width: 0,
@@ -33,16 +33,11 @@ const GridIconButtonContainerRoot = styled('div', {
 export const GridIconButtonContainer = forwardRef<HTMLDivElement, GridIconButtonContainerProps>(
   function GridIconButtonContainer(props, ref) {
     const { className, ...other } = props;
-    const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
+    const { classes: rootPropsClasses } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: rootPropsClasses });
 
     return (
-      <GridIconButtonContainerRoot
-        className={clsx(classes.root, className)}
-        ownerState={rootProps}
-        {...other}
-        ref={ref}
-      />
+      <GridIconButtonContainerRoot className={clsx(classes.root, className)} {...other} ref={ref} />
     );
   },
 );

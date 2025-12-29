@@ -14,7 +14,7 @@ export type GridChartsPanelDataSearchProps = Pick<
   onClear: () => void;
 };
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -29,15 +29,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridChartsPanelDataSearchContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataSearchContainer',
-})<{ ownerState: OwnerState }>({
+})({
   padding: vars.spacing(1),
 });
 
 function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
   const { onClear, value, onChange } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
@@ -46,8 +46,8 @@ function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
   };
 
   return (
-    <GridChartsPanelDataSearchContainer ownerState={rootProps} className={classes.container}>
-      <rootProps.slots.baseTextField
+    <GridChartsPanelDataSearchContainer className={classes.container}>
+      <slots.baseTextField
         size="small"
         aria-label={apiRef.current.getLocaleText('chartsSearchLabel')}
         placeholder={apiRef.current.getLocaleText('chartsSearchPlaceholder')}
@@ -55,23 +55,23 @@ function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
         fullWidth
         slotProps={{
           input: {
-            startAdornment: <rootProps.slots.chartsSearchIcon fontSize="small" />,
+            startAdornment: <slots.chartsSearchIcon fontSize="small" />,
             endAdornment: value ? (
-              <rootProps.slots.baseIconButton
+              <slots.baseIconButton
                 edge="end"
                 size="small"
                 onClick={onClear}
                 aria-label={apiRef.current.getLocaleText('chartsSearchClear')}
               >
-                <rootProps.slots.chartsSearchClearIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
+                <slots.chartsSearchClearIcon fontSize="small" />
+              </slots.baseIconButton>
             ) : null,
           },
           htmlInput: {
             role: 'searchbox',
           },
         }}
-        {...rootProps.slotProps?.baseTextField}
+        {...slotProps?.baseTextField}
         value={value}
         onChange={onChange}
       />

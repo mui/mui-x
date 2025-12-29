@@ -39,11 +39,8 @@ function createPinnedRowsInternalCache(
 
 export const rowPinningStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>
-> = (state, props, apiRef) => {
-  apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(
-    props.pinnedRows,
-    props.getRowId,
-  );
+> = (state, { pinnedRows: pinnedRowsProp, getRowId }, apiRef) => {
+  apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(pinnedRowsProp, getRowId);
 
   return {
     ...state,
@@ -61,16 +58,14 @@ export const useGridRowPinning = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'pinnedRows' | 'getRowId'>,
 ): void => {
+  const { pinnedRows, getRowId } = props;
   const setPinnedRows = React.useCallback<GridRowPinningApi['unstable_setPinnedRows']>(
     (newPinnedRows) => {
-      apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(
-        newPinnedRows,
-        props.getRowId,
-      );
+      apiRef.current.caches.pinnedRows = createPinnedRowsInternalCache(newPinnedRows, getRowId);
 
       apiRef.current.requestPipeProcessorsApplication('hydrateRows');
     },
-    [apiRef, props.getRowId],
+    [apiRef, getRowId],
   );
 
   useGridApiMethod(
@@ -88,6 +83,6 @@ export const useGridRowPinning = (
       isFirstRender.current = false;
       return;
     }
-    apiRef.current.unstable_setPinnedRows(props.pinnedRows);
-  }, [apiRef, props.pinnedRows]);
+    apiRef.current.unstable_setPinnedRows(pinnedRows);
+  }, [apiRef, pinnedRows]);
 };

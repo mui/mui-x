@@ -328,6 +328,14 @@ export const useGridColumnResize = (
     | 'disableVirtualization'
   >,
 ) => {
+  const {
+    autosizeOptions,
+    autosizeOnMount,
+    disableAutosize,
+    onColumnResize,
+    onColumnWidthChange,
+    disableVirtualization,
+  } = props;
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridColumnResize');
 
@@ -734,7 +742,7 @@ export const useGridColumnResize = (
 
   const handleColumnSeparatorDoubleClick: GridEventListener<'columnSeparatorDoubleClick'> =
     useEventCallback((params, event) => {
-      if (props.disableAutosize) {
+      if (disableAutosize) {
         return;
       }
 
@@ -749,7 +757,7 @@ export const useGridColumnResize = (
       }
 
       apiRef.current.autosizeColumns({
-        ...props.autosizeOptions,
+        ...autosizeOptions,
         disableColumnVirtualization: false,
         columns: [column.field],
       });
@@ -783,7 +791,7 @@ export const useGridColumnResize = (
       const columns = options.columns.map((c) => apiRef.current.state.columns.lookup[c]);
 
       try {
-        if (!props.disableVirtualization && options.disableColumnVirtualization) {
+        if (!disableVirtualization && options.disableColumnVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(false);
           await columnVirtualizationDisabled();
         }
@@ -833,14 +841,14 @@ export const useGridColumnResize = (
           }
         });
       } finally {
-        if (!props.disableVirtualization) {
+        if (!disableVirtualization) {
           apiRef.current.unstable_setColumnVirtualization(true);
         }
 
         isAutosizingRef.current = false;
       }
     },
-    [apiRef, columnVirtualizationDisabled, props.disableVirtualization],
+    [apiRef, columnVirtualizationDisabled, disableVirtualization],
   );
 
   /**
@@ -850,9 +858,9 @@ export const useGridColumnResize = (
   React.useEffect(() => stopListening, [stopListening]);
 
   useOnMount(() => {
-    if (props.autosizeOnMount) {
+    if (autosizeOnMount) {
       Promise.resolve().then(() => {
-        apiRef.current.autosizeColumns(props.autosizeOptions);
+        apiRef.current.autosizeColumns(autosizeOptions);
       });
     }
   });
@@ -888,8 +896,8 @@ export const useGridColumnResize = (
     }
   });
 
-  useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
-  useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);
+  useGridEventPriority(apiRef, 'columnResize', onColumnResize);
+  useGridEventPriority(apiRef, 'columnWidthChange', onColumnWidthChange);
 };
 
 function updateProperty(

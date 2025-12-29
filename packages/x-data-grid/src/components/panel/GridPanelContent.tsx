@@ -8,7 +8,7 @@ import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -23,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelContentRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelContent',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   flexDirection: 'column',
   overflow: 'auto',
@@ -35,16 +35,10 @@ const GridPanelContentRoot = styled('div', {
 
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
 
-  return (
-    <GridPanelContentRoot
-      className={clsx(classes.root, className)}
-      ownerState={rootProps}
-      {...other}
-    />
-  );
+  return <GridPanelContentRoot className={clsx(classes.root, className)} {...other} />;
 }
 
 GridPanelContent.propTypes = {

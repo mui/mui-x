@@ -14,7 +14,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { gridPivotActiveSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
-type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -34,10 +34,9 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, a
 export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, rowGroupingColumnMode, classes: rootPropsClasses } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const ownerState: OwnerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const filteredDescendantCountLookup = useGridSelector(
     apiRef,
     gridFilteredDescendantCountLookupSelector,
@@ -49,8 +48,8 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const shouldShowToggleButton = !pivotActive || rowNode.depth < maxTreeDepth - 2;
 
   const Icon = rowNode.childrenExpanded
-    ? rootProps.slots.groupingCriteriaCollapseIcon
-    : rootProps.slots.groupingCriteriaExpandIcon;
+    ? slots.groupingCriteriaCollapseIcon
+    : slots.groupingCriteriaExpandIcon;
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
     if (event.key === ' ') {
@@ -83,7 +82,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
       className={classes.root}
       style={{
         marginLeft:
-          rootProps.rowGroupingColumnMode === 'multiple'
+          rowGroupingColumnMode === 'multiple'
             ? 0
             : `calc(var(--DataGrid-cellOffsetMultiplier) * ${rowNode.depth} * ${vars.spacing(1)})`,
       }}
@@ -91,7 +90,7 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
       {shouldShowToggleContainer ? (
         <div className={classes.toggle}>
           {shouldShowToggleButton && filteredDescendantCount > 0 && (
-            <rootProps.slots.baseIconButton
+            <slots.baseIconButton
               size="small"
               onClick={handleClick}
               onKeyDown={handleKeyDown}
@@ -101,10 +100,10 @@ export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
                   ? apiRef.current.getLocaleText('treeDataCollapse')
                   : apiRef.current.getLocaleText('treeDataExpand')
               }
-              {...rootProps.slotProps?.baseIconButton}
+              {...slotProps?.baseIconButton}
             >
               <Icon fontSize="inherit" />
-            </rootProps.slots.baseIconButton>
+            </slots.baseIconButton>
           )}
         </div>
       ) : null}

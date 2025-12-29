@@ -100,7 +100,7 @@ const GridPivotPanelFieldRoot = styled('div', {
 const GridPivotPanelFieldName = styled('span', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldName',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -110,7 +110,7 @@ const GridPivotPanelFieldName = styled('span', {
 const GridPivotPanelFieldActionContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldActionContainer',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   alignItems: 'center',
 });
@@ -118,7 +118,7 @@ const GridPivotPanelFieldActionContainer = styled('div', {
 const GridPivotPanelFieldDragIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldDragIcon',
-})<{ ownerState: OwnerState }>({
+})({
   position: 'absolute',
   left: -1,
   width: 16,
@@ -134,7 +134,7 @@ const GridPivotPanelFieldDragIcon = styled('div', {
 const GridPivotPanelFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldCheckbox',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   position: 'relative',
   margin: vars.spacing(0, 0, 0, -1),
@@ -148,7 +148,7 @@ function AggregationSelect({
   aggFunc: GridPivotModel['values'][number]['aggFunc'];
   field: FieldTransferObject['field'];
 }) {
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, aggregationFunctions, dataSource } = useGridRootProps();
   const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
   const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
   const aggregationMenuTriggerId = useId();
@@ -161,11 +161,11 @@ function AggregationSelect({
   const availableAggregationFunctions = React.useMemo(
     () =>
       getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
+        aggregationFunctions,
         colDef,
-        isDataSource: !!rootProps.dataSource,
+        isDataSource: !!dataSource,
       }),
-    [colDef, rootProps.aggregationFunctions, rootProps.dataSource],
+    [colDef, aggregationFunctions, dataSource],
   );
 
   const handleClick = (func: string) => {
@@ -185,12 +185,12 @@ function AggregationSelect({
 
   return availableAggregationFunctions.length > 0 ? (
     <React.Fragment>
-      <rootProps.slots.baseChip
+      <slots.baseChip
         label={getAggregationFunctionLabel({
           apiRef,
           aggregationRule: {
             aggregationFunctionName: aggFunc,
-            aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+            aggregationFunction: aggregationFunctions[aggFunc],
           },
         })}
         size="small"
@@ -208,29 +208,29 @@ function AggregationSelect({
         target={aggregationMenuTriggerRef.current}
         position="bottom-start"
       >
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={aggregationMenuId}
           aria-labelledby={aggregationMenuTriggerId}
           autoFocusItem
-          {...rootProps.slotProps?.baseMenuList}
+          {...slotProps?.baseMenuList}
         >
           {availableAggregationFunctions.map((func) => (
-            <rootProps.slots.baseMenuItem
+            <slots.baseMenuItem
               key={func}
               selected={aggFunc === func}
               onClick={() => handleClick(func)}
-              {...rootProps.slotProps?.baseMenuItem}
+              {...slotProps?.baseMenuItem}
             >
               {getAggregationFunctionLabel({
                 apiRef,
                 aggregationRule: {
                   aggregationFunctionName: func,
-                  aggregationFunction: rootProps.aggregationFunctions[func],
+                  aggregationFunction: aggregationFunctions[func],
                 },
               })}
-            </rootProps.slots.baseMenuItem>
+            </slots.baseMenuItem>
           ))}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   ) : null;
@@ -238,10 +238,10 @@ function AggregationSelect({
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   const { children, field, onDragStart, onDragEnd } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, classes: rootPropsClasses, sortingOrder } = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.modelKey;
-  const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
+  const ownerState = { ...props, classes: rootPropsClasses, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
 
@@ -361,37 +361,31 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       onDragEnd={onDragEnd}
       draggable="true"
     >
-      <GridPivotPanelFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
-        <rootProps.slots.columnReorderIcon fontSize="small" />
+      <GridPivotPanelFieldDragIcon className={classes.dragIcon}>
+        <slots.columnReorderIcon fontSize="small" />
       </GridPivotPanelFieldDragIcon>
 
       {hideable ? (
         <GridPivotPanelFieldCheckbox
-          ownerState={ownerState}
           className={classes.checkbox}
-          as={rootProps.slots.baseCheckbox}
+          as={slots.baseCheckbox}
           size="small"
           density="compact"
-          {...rootProps.slotProps?.baseCheckbox}
+          {...slotProps?.baseCheckbox}
           checked={!props.modelValue.hidden || false}
           onChange={handleVisibilityChange}
           label={children}
         />
       ) : (
-        <GridPivotPanelFieldName ownerState={ownerState} className={classes.name}>
-          {children}
-        </GridPivotPanelFieldName>
+        <GridPivotPanelFieldName className={classes.name}>{children}</GridPivotPanelFieldName>
       )}
 
-      <GridPivotPanelFieldActionContainer
-        ownerState={ownerState}
-        className={classes.actionContainer}
-      >
+      <GridPivotPanelFieldActionContainer className={classes.actionContainer}>
         {section === 'columns' && (
           <GridColumnSortButton
             field={field}
             direction={props.modelValue.sort}
-            sortingOrder={rootProps.sortingOrder}
+            sortingOrder={sortingOrder}
             onClick={handleSort}
           />
         )}

@@ -221,7 +221,7 @@ export const useDataGridPremiumComponent = (
   useGridColumnGrouping(apiRef, props);
   useGridClipboardImport(apiRef, props);
   useGridEditing(apiRef, props, configuration);
-  useGridFocus(apiRef, props);
+  useGridFocus(apiRef);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props, configuration);
   useGridSorting(apiRef, props);

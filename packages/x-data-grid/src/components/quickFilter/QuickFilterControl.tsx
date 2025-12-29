@@ -33,7 +33,7 @@ export type QuickFilterControlProps = Omit<GridSlotProps['baseTextField'], 'clas
 const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>(
   function QuickFilterControl(props, ref) {
     const { render, className, slotProps, onKeyDown, onChange, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps: rootPropsSlotProps } = useGridRootProps();
     const { state, controlId, controlRef, onValueChange, onExpandedChange, clearValue } =
       useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
@@ -68,10 +68,10 @@ const QuickFilterControl = forwardRef<HTMLInputElement, QuickFilterControlProps>
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseTextField,
+      slots.baseTextField,
       render,
       {
-        ...rootProps.slotProps?.baseTextField,
+        ...rootPropsSlotProps?.baseTextField,
         slotProps: {
           htmlInput: {
             role: 'searchbox',

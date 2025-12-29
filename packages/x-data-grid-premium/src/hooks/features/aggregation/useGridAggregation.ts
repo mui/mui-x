@@ -45,10 +45,12 @@ export const aggregationStateInitializer: GridStateInitializer<
     rulesOnLastRowHydration: {},
   };
 
+  const { aggregationModel, initialState } = props;
+
   return {
     ...state,
     aggregation: {
-      model: props.aggregationModel ?? props.initialState?.aggregation?.model ?? {},
+      model: aggregationModel ?? initialState?.aggregation?.model ?? {},
     },
   };
 };
@@ -58,20 +60,27 @@ export const useGridAggregation = (
   props: Pick<
     DataGridPremiumProcessedProps,
     | 'onAggregationModelChange'
-    | 'initialState'
     | 'aggregationModel'
     | 'getAggregationPosition'
     | 'aggregationFunctions'
     | 'aggregationRowsScope'
     | 'disableAggregation'
-    | 'rowGroupingColumnMode'
     | 'dataSource'
   >,
 ) => {
+  const {
+    onAggregationModelChange,
+    aggregationModel,
+    getAggregationPosition,
+    aggregationFunctions,
+    aggregationRowsScope,
+    disableAggregation,
+    dataSource,
+  } = props;
   apiRef.current.registerControlState({
     stateId: 'aggregation',
-    propModel: props.aggregationModel,
-    propOnChange: props.onAggregationModelChange,
+    propModel: aggregationModel,
+    propOnChange: onAggregationModelChange,
     stateSelector: gridAggregationModelSelector,
     changeEvent: 'aggregationModelChange',
   });
@@ -101,8 +110,8 @@ export const useGridAggregation = (
     const aggregationRules = getAggregationRules(
       gridColumnLookupSelector(apiRef),
       gridAggregationModelSelector(apiRef),
-      props.aggregationFunctions,
-      !!props.dataSource,
+      aggregationFunctions,
+      !!dataSource,
     );
     const aggregatedFields = Object.keys(aggregationRules);
     const currentAggregationLookup = gridAggregationLookupSelector(apiRef);
@@ -158,11 +167,11 @@ export const useGridAggregation = (
       // createAggregationLookup now RETURNS new partial lookup
       const partialLookup = createAggregationLookup({
         apiRef,
-        getAggregationPosition: props.getAggregationPosition,
+        getAggregationPosition,
         aggregatedFields: currentChunk,
         aggregationRules,
-        aggregationRowsScope: props.aggregationRowsScope,
-        isDataSource: !!props.dataSource,
+        aggregationRowsScope,
+        isDataSource: !!dataSource,
         applySorting,
       });
 
@@ -205,13 +214,7 @@ export const useGridAggregation = (
         aggregation: { ...state.aggregation, lookup: {} },
       }));
     }
-  }, [
-    apiRef,
-    props.getAggregationPosition,
-    props.aggregationFunctions,
-    props.aggregationRowsScope,
-    props.dataSource,
-  ]);
+  }, [apiRef, getAggregationPosition, aggregationFunctions, aggregationRowsScope, dataSource]);
 
   React.useEffect(() => {
     return () => {
@@ -255,18 +258,18 @@ export const useGridAggregation = (
     const { rulesOnLastRowHydration, rulesOnLastColumnHydration } =
       apiRef.current.caches.aggregation;
 
-    const aggregationRules = props.disableAggregation
+    const aggregationRules = disableAggregation
       ? {}
       : getAggregationRules(
           gridColumnLookupSelector(apiRef),
           gridAggregationModelSelector(apiRef),
-          props.aggregationFunctions,
-          !!props.dataSource,
+          aggregationFunctions,
+          !!dataSource,
         );
 
     // Re-apply the row hydration to add / remove the aggregation footers
     if (
-      (!props.dataSource || pivotingActive) &&
+      (!dataSource || pivotingActive) &&
       !areAggregationRulesEqual(rulesOnLastRowHydration, aggregationRules)
     ) {
       apiRef.current.requestPipeProcessorsApplication('hydrateRows');
@@ -277,13 +280,7 @@ export const useGridAggregation = (
     if (!areAggregationRulesEqual(rulesOnLastColumnHydration, aggregationRules)) {
       apiRef.current.requestPipeProcessorsApplication('hydrateColumns');
     }
-  }, [
-    apiRef,
-    deferredApplyAggregation,
-    props.aggregationFunctions,
-    props.disableAggregation,
-    props.dataSource,
-  ]);
+  }, [apiRef, deferredApplyAggregation, aggregationFunctions, disableAggregation, dataSource]);
 
   useGridEvent(apiRef, 'aggregationModelChange', checkAggregationRulesDiff);
   useGridEvent(apiRef, 'columnsChange', checkAggregationRulesDiff);
@@ -300,8 +297,8 @@ export const useGridAggregation = (
     const aggregationRules = getAggregationRules(
       gridColumnLookupSelector(apiRef),
       gridAggregationModelSelector(apiRef),
-      props.aggregationFunctions,
-      !!props.dataSource,
+      aggregationFunctions,
+      !!dataSource,
     );
     const aggregatedFields = Object.keys(aggregationRules);
     if (!aggregatedFields.length) {
@@ -319,14 +316,14 @@ export const useGridAggregation = (
    * EFFECTS
    */
   React.useEffect(() => {
-    if (props.aggregationModel !== undefined) {
-      apiRef.current.setAggregationModel(props.aggregationModel);
+    if (aggregationModel !== undefined) {
+      apiRef.current.setAggregationModel(aggregationModel);
     }
-  }, [apiRef, props.aggregationModel]);
+  }, [apiRef, aggregationModel]);
 
   React.useEffect(() => {
-    if (props.getAggregationPosition !== undefined) {
+    if (getAggregationPosition !== undefined) {
       deferredApplyAggregation();
     }
-  }, [deferredApplyAggregation, props.getAggregationPosition]);
+  }, [deferredApplyAggregation, getAggregationPosition]);
 };

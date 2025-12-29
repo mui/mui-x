@@ -34,7 +34,7 @@ export type ExportCsvProps = GridSlotProps['baseButton'] & {
  */
 const ExportCsv = forwardRef<HTMLButtonElement, ExportCsvProps>(function ExportCsv(props, ref) {
   const { render, options, onClick, ...other } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const apiRef = useGridApiContext();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,8 +42,8 @@ const ExportCsv = forwardRef<HTMLButtonElement, ExportCsvProps>(function ExportC
     onClick?.(event);
   };
 
-  const element = useComponentRenderer(rootProps.slots.baseButton, render, {
-    ...rootProps.slotProps?.baseButton,
+  const element = useComponentRenderer(slots.baseButton, render, {
+    ...slotProps?.baseButton,
     onClick: handleClick,
     ...other,
     ref,

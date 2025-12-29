@@ -34,7 +34,7 @@ type MenuDivider = {
 
 function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) {
   const { field, section, blockedSections, dimensionsLabel, valuesLabel } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridPrivateApiContext();
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
@@ -71,26 +71,26 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
       {
         key: 'up',
         label: apiRef.current.getLocaleText('chartsMenuMoveUp'),
-        icon: <rootProps.slots.chartsMenuMoveUpIcon />,
+        icon: <slots.chartsMenuMoveUpIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'down',
         label: apiRef.current.getLocaleText('chartsMenuMoveDown'),
-        icon: <rootProps.slots.chartsMenuMoveDownIcon />,
+        icon: <slots.chartsMenuMoveDownIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
       {
         key: 'top',
         label: apiRef.current.getLocaleText('chartsMenuMoveToTop'),
-        icon: <rootProps.slots.chartsMenuMoveToTopIcon />,
+        icon: <slots.chartsMenuMoveToTopIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'bottom',
         label: apiRef.current.getLocaleText('chartsMenuMoveToBottom'),
-        icon: <rootProps.slots.chartsMenuMoveToBottomIcon />,
+        icon: <slots.chartsMenuMoveToBottomIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
@@ -100,7 +100,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
       {
         key: null,
         label: apiRef.current.getLocaleText('chartsMenuRemove'),
-        icon: <rootProps.slots.chartsMenuRemoveIcon />,
+        icon: <slots.chartsMenuRemoveIcon />,
       },
     ];
 
@@ -127,7 +127,7 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
   }, [
     isAvailableField,
     apiRef,
-    rootProps,
+    slots,
     canMoveUp,
     canMoveDown,
     section,
@@ -199,9 +199,9 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseIconButton
+      <slots.baseIconButton
         size="small"
-        {...rootProps.slotProps?.baseIconButton}
+        {...slotProps?.baseIconButton}
         id={triggerId}
         aria-haspopup="true"
         aria-controls={open ? menuId : undefined}
@@ -211,11 +211,11 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
         ref={triggerRef}
       >
         {isAvailableField ? (
-          <rootProps.slots.chartsMenuAddIcon fontSize="small" />
+          <slots.chartsMenuAddIcon fontSize="small" />
         ) : (
-          <rootProps.slots.columnMenuIcon fontSize="small" />
+          <slots.columnMenuIcon fontSize="small" />
         )}
-      </rootProps.slots.baseIconButton>
+      </slots.baseIconButton>
 
       <GridMenu
         target={triggerRef.current}
@@ -223,28 +223,28 @@ function GridChartsPanelDataFieldMenu(props: GridChartsPanelDataFieldMenuProps) 
         onClose={handleClose}
         position="bottom-start"
       >
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={menuId}
           aria-labelledby={triggerId}
           autoFocusItem
-          {...rootProps.slotProps?.baseMenuList}
+          {...slotProps?.baseMenuList}
         >
           {menuItems.map((item, index) =>
             'divider' in item ? (
-              <rootProps.slots.baseDivider key={`divider-${index}`} />
+              <slots.baseDivider key={`divider-${index}`} />
             ) : (
-              <rootProps.slots.baseMenuItem
+              <slots.baseMenuItem
                 key={item.key}
                 disabled={item.disabled}
                 onClick={() => handleMove(item.key)}
                 iconStart={item.icon}
-                {...rootProps.slotProps?.baseMenuItem}
+                {...slotProps?.baseMenuItem}
               >
                 {item.label}
-              </rootProps.slots.baseMenuItem>
+              </slots.baseMenuItem>
             ),
           )}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );

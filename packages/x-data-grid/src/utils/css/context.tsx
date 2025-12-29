@@ -25,19 +25,19 @@ export function GridPortalWrapper({ children }: { children: React.ReactNode }) {
 
 export function GridCSSVariablesContext(props: { children: any }) {
   const config = useGridConfiguration();
-  const rootProps = useGridRootProps();
+  const { nonce } = useGridRootProps();
   const description = config.hooks.useCSSVariables();
 
   const context = React.useMemo(() => {
     const className = `${CLASSNAME_PREFIX}-${description.id}`;
     const cssString = `.${className}{${variablesToString(description.variables)}}`;
     const tag = (
-      <style href={`/${className}`} nonce={rootProps.nonce}>
+      <style href={`/${className}`} nonce={nonce}>
         {cssString}
       </style>
     );
     return { className, tag };
-  }, [rootProps.nonce, description]);
+  }, [nonce, description]);
 
   return (
     <CSSVariablesContext.Provider value={context}>{props.children}</CSSVariablesContext.Provider>

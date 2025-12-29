@@ -20,7 +20,7 @@ interface GridFooterCellProps extends GridRenderCellParams {
   sx?: SxProps<Theme>;
 }
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,9 +48,9 @@ function GridFooterCellRaw(props: GridFooterCellProps) {
     isEditable,
     ...other
   } = props;
-  const rootProps = useGridRootProps();
+  const { classes: rootPropsClasses } = useGridRootProps();
 
-  const ownerState = { classes: rootProps.classes };
+  const ownerState = { classes: rootPropsClasses };
   const classes = useUtilityClasses(ownerState);
 
   return (

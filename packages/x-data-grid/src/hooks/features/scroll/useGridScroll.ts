@@ -55,6 +55,7 @@ export const useGridScroll = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'pagination'>,
 ): void => {
+  const { pagination } = props;
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
@@ -107,7 +108,7 @@ export const useGridScroll = (
         const page = gridPageSelector(apiRef);
         const pageSize = gridPageSizeSelector(apiRef);
 
-        const elementIndex = !props.pagination
+        const elementIndex = !pagination
           ? params.rowIndex
           : params.rowIndex - page * pageSize;
 
@@ -139,7 +140,7 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, virtualScrollerRef, props.pagination],
+    [logger, apiRef, virtualScrollerRef, pagination],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(

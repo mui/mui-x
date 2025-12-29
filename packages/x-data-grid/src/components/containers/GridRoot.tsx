@@ -29,17 +29,20 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sidePanel?: React.ReactNode;
 }
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<
+  DataGridProcessedProps,
+  'classes' | 'autoHeight' | 'showCellVerticalBorder' | 'slots'
+>;
 
 const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
-  const { autoHeight, classes, showCellVerticalBorder } = ownerState;
+  const { autoHeight, classes, showCellVerticalBorder, slots: ownerStateSlots } = ownerState;
 
   const slots = {
     root: [
       'root',
       autoHeight && 'autoHeight',
       `root--density${capitalize(density)}`,
-      ownerState.slots.toolbar === null && 'root--noToolbar',
+      ownerStateSlots.toolbar === null && 'root--noToolbar',
       'withBorderColor',
       showCellVerticalBorder && 'withVerticalBorder',
     ],
@@ -49,7 +52,12 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
 };
 
 const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
-  const rootProps = useGridRootProps();
+  const {
+    classes: rootPropsClasses,
+    slots,
+    autoHeight,
+    showCellVerticalBorder,
+  } = useGridRootProps();
   const { className, children, sidePanel, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
@@ -67,7 +75,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
 
   const handleRef = useForkRef(rootElementRef, ref, rootMountCallback);
 
-  const ownerState = rootProps;
+  const ownerState = { classes: rootPropsClasses, slots, autoHeight, showCellVerticalBorder };
 
   const classes = useUtilityClasses(ownerState, density);
   const cssVariables = useCSSVariablesContext();
@@ -86,7 +94,6 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
         cssVariables.className,
         sidePanel && gridClasses.withSidePanel,
       )}
-      ownerState={ownerState}
       {...other}
       ref={handleRef}
     >

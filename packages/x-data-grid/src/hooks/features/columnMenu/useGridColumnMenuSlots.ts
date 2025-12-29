@@ -16,7 +16,7 @@ type UseGridColumnMenuSlotsResponse = Array<
 
 const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const { slots: rootPropsSlots } = useGridRootProps();
   const {
     defaultSlots,
     defaultSlotProps,
@@ -43,7 +43,7 @@ const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
     return mergedProps;
   }, [defaultSlotProps, slotProps]);
 
-  const defaultItems = apiRef.current.unstable_applyPipeProcessors('columnMenu', [], props.colDef);
+  const defaultItems = apiRef.current.unstable_applyPipeProcessors('columnMenu', [], colDef);
 
   const userItems = React.useMemo(() => {
     const defaultComponentKeys = Object.keys(defaultSlots);
@@ -72,7 +72,7 @@ const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
         itemProps = { ...itemProps, ...customProps };
       }
       return addDividers && index !== sorted.length - 1
-        ? [...acc, [processedComponents[key]!, itemProps], [rootProps.slots.baseDivider, {}]]
+        ? [...acc, [processedComponents[key]!, itemProps], [rootPropsSlots.baseDivider, {}]]
         : [...acc, [processedComponents[key]!, itemProps]];
     }, []);
   }, [
@@ -83,7 +83,7 @@ const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
     processedComponents,
     processedSlotProps,
     userItems,
-    rootProps.slots.baseDivider,
+    rootPropsSlots.baseDivider,
   ]);
 };
 

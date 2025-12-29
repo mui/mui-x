@@ -8,7 +8,7 @@ import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { disableColumnSelector, slots } = useGridRootProps();
 
   const showColumns = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -18,17 +18,17 @@ function GridColumnMenuManageItem(props: GridColumnMenuItemProps) {
     [apiRef, onClick],
   );
 
-  if (rootProps.disableColumnSelector) {
+  if (disableColumnSelector) {
     return null;
   }
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={showColumns}
-      iconStart={<rootProps.slots.columnMenuManageColumnsIcon fontSize="small" />}
+      iconStart={<slots.columnMenuManageColumnsIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('columnMenuManageColumns')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }
 

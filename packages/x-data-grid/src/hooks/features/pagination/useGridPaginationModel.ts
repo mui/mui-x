@@ -72,15 +72,25 @@ export const useGridPaginationModel = (
     | 'rowHeight'
   >,
 ) => {
+  const {
+    paginationModel: paginationModelProp,
+    onPaginationModelChange,
+    autoPageSize,
+    initialState,
+    paginationMode,
+    pagination,
+    signature,
+    rowHeight: rowHeightProp,
+  } = props;
   const logger = useGridLogger(apiRef, 'useGridPaginationModel');
   const densityFactor = useGridSelector(apiRef, gridDensityFactorSelector);
   const previousFilterModel = React.useRef<GridFilterModel>(gridFilterModelSelector(apiRef));
 
-  const rowHeight = Math.floor(props.rowHeight * densityFactor);
+  const rowHeight = Math.floor(rowHeightProp * densityFactor);
   apiRef.current.registerControlState({
     stateId: 'paginationModel',
-    propModel: props.paginationModel,
-    propOnChange: props.onPaginationModelChange,
+    propModel: paginationModelProp,
+    propOnChange: onPaginationModelChange,
     stateSelector: gridPaginationModelSelector,
     changeEvent: 'paginationModelChange',
   });
@@ -130,7 +140,7 @@ export const useGridPaginationModel = (
             ...state.pagination,
             paginationModel: getDerivedPaginationModel(
               state.pagination,
-              props.signature,
+              signature,
               paginationModel,
             ),
           },
@@ -138,7 +148,7 @@ export const useGridPaginationModel = (
         'setPaginationModel',
       );
     },
-    [apiRef, logger, props.signature],
+    [apiRef, logger, signature],
   );
 
   const paginationModelApi: GridPaginationModelApi = {
@@ -160,12 +170,11 @@ export const useGridPaginationModel = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the `paginationModel` is controlled
-        props.paginationModel != null ||
+        paginationModelProp != null ||
         // Always export if the `paginationModel` has been initialized
-        props.initialState?.pagination?.paginationModel != null ||
+        initialState?.pagination?.paginationModel != null ||
         // Export if `page` or `pageSize` is not equal to the default value
-        (paginationModel.page !== 0 &&
-          paginationModel.pageSize !== defaultPageSize(props.autoPageSize));
+        (paginationModel.page !== 0 && paginationModel.pageSize !== defaultPageSize(autoPageSize));
 
       if (!shouldExportPaginationModel) {
         return prevState;
@@ -179,19 +188,14 @@ export const useGridPaginationModel = (
         },
       };
     },
-    [
-      apiRef,
-      props.paginationModel,
-      props.initialState?.pagination?.paginationModel,
-      props.autoPageSize,
-    ],
+    [apiRef, paginationModelProp, initialState?.pagination?.paginationModel, autoPageSize],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context) => {
       const paginationModel = context.stateToRestore.pagination?.paginationModel
         ? {
-            ...getDefaultGridPaginationModel(props.autoPageSize),
+            ...getDefaultGridPaginationModel(autoPageSize),
             ...context.stateToRestore.pagination?.paginationModel,
           }
         : gridPaginationModelSelector(apiRef);
@@ -202,7 +206,7 @@ export const useGridPaginationModel = (
             ...state.pagination,
             paginationModel: getDerivedPaginationModel(
               state.pagination,
-              props.signature,
+              signature,
               paginationModel,
             ),
           },
@@ -211,7 +215,7 @@ export const useGridPaginationModel = (
       );
       return params;
     },
-    [apiRef, props.autoPageSize, props.signature],
+    [apiRef, autoPageSize, signature],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
@@ -230,7 +234,7 @@ export const useGridPaginationModel = (
   };
 
   const handleUpdateAutoPageSize = React.useCallback(() => {
-    if (!props.autoPageSize) {
+    if (!autoPageSize) {
       return;
     }
 
@@ -242,7 +246,7 @@ export const useGridPaginationModel = (
     );
 
     apiRef.current.setPageSize(maximumPageSizeWithoutScrollBar);
-  }, [apiRef, props.autoPageSize, rowHeight]);
+  }, [apiRef, autoPageSize, rowHeight]);
 
   const handleRowCountChange = React.useCallback(
     (newRowCount: GridPaginationState['rowCount']) => {
@@ -325,7 +329,7 @@ export const useGridPaginationModel = (
       isFirstRender.current = false;
       return;
     }
-    if (!props.pagination) {
+    if (!pagination) {
       return;
     }
     apiRef.current.setState((state) => ({
@@ -334,18 +338,18 @@ export const useGridPaginationModel = (
         ...state.pagination,
         paginationModel: getDerivedPaginationModel(
           state.pagination,
-          props.signature,
-          props.paginationModel,
+          signature,
+          paginationModelProp,
         ),
       },
     }));
-  }, [apiRef, props.paginationModel, props.signature, props.pagination]);
+  }, [apiRef, paginationModelProp, signature, pagination]);
 
   React.useEffect(() => {
     apiRef.current.setState((state) => {
-      const isEnabled = props.pagination === true;
+      const isEnabled = pagination === true;
       if (
-        state.pagination.paginationMode === props.paginationMode &&
+        state.pagination.paginationMode === paginationMode &&
         state.pagination.enabled === isEnabled
       ) {
         return state;
@@ -355,12 +359,12 @@ export const useGridPaginationModel = (
         ...state,
         pagination: {
           ...state.pagination,
-          paginationMode: props.paginationMode,
+          paginationMode,
           enabled: isEnabled,
         },
       };
     });
-  }, [apiRef, props.paginationMode, props.pagination]);
+  }, [apiRef, paginationMode, pagination]);
 
   React.useEffect(handleUpdateAutoPageSize, [handleUpdateAutoPageSize]);
 };

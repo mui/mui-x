@@ -28,13 +28,14 @@ export const useGridLazyLoader = (
     'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
   >,
 ): void => {
+  const { onFetchRows, rowsLoadingMode } = props;
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef({
     firstRowToRender: 0,
     lastRowToRender: 0,
   });
-  const isDisabled = props.rowsLoadingMode !== 'server';
+  const isDisabled = rowsLoadingMode !== 'server';
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
@@ -64,10 +65,7 @@ export const useGridLazyLoader = (
       };
 
       if (sortModel.length === 0 && filterModel.items.length === 0) {
-        const currentVisibleRows = getVisibleRows(privateApiRef, {
-          pagination: props.pagination,
-          paginationMode: props.paginationMode,
-        });
+        const currentVisibleRows = getVisibleRows(privateApiRef);
         const skeletonRowsSection = findSkeletonRowsSection({
           apiRef: privateApiRef,
           visibleRows: currentVisibleRows.rows,
@@ -87,7 +85,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
+    [privateApiRef, isDisabled, sortModel, filterModel],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
@@ -135,5 +133,5 @@ export const useGridLazyLoader = (
   useGridEvent(privateApiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);
   useGridEvent(privateApiRef, 'sortModelChange', handleGridSortModelChange);
   useGridEvent(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
-  useGridEventPriority(privateApiRef, 'fetchRows', props.onFetchRows);
+  useGridEventPriority(privateApiRef, 'fetchRows', onFetchRows);
 };

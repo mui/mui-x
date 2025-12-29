@@ -35,6 +35,7 @@ import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { createSelector } from '../utils/createSelector';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 
 const isRowReorderingEnabledSelector = createSelector(
   gridEditRowsStateSelector,
@@ -114,12 +115,25 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const apiRef = useGridPrivateApiContext();
   const configuration = useGridConfiguration();
   const ref = React.useRef<HTMLDivElement>(null);
-  const rootProps = useGridRootProps();
-  const currentPage = useGridVisibleRows(apiRef, rootProps);
+  const {
+    editMode,
+    classes: rootPropsClasses,
+    rowSpacingType,
+    getRowClassName,
+    showCellVerticalBorder,
+    pinnedColumnsSectionSeparator,
+    slots,
+    slotProps,
+    disableColumnReorder,
+    // from the pro package
+    rowReordering,
+    treeData,
+  } = useGridRootProps() as DataGridProcessedProps & { treeData: boolean; rowReordering: boolean };
+  const { getColumn, getCellMode } = apiRef.current;
+
+  const { range: currentPageRange } = useGridVisibleRows(apiRef);
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
-  const rowReordering = (rootProps as any).rowReordering as boolean;
-  const treeData = (rootProps as any).treeData as boolean;
   const isRowReorderingEnabled = useGridSelector(apiRef, isRowReorderingEnabledSelector, {
     rowReordering,
     treeData,
@@ -129,9 +143,9 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const rowNode = gridRowNodeSelector(apiRef, rowId);
   const editing = useGridSelector(apiRef, gridRowIsEditingSelector, {
     rowId,
-    editMode: rootProps.editMode,
+    editMode,
   });
-  const editable = rootProps.editMode === GridEditModes.Row;
+  const editable = editMode === GridEditModes.Row;
   const hasFocusCell = focusedColumnIndex !== undefined;
   const hasVirtualFocusCellLeft =
     hasFocusCell &&
@@ -142,7 +156,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
     focusedColumnIndex >= lastColumnIndex;
 
-  const classes = composeGridClasses(rootProps.classes, {
+  const classes = composeGridClasses(rootPropsClasses, {
     root: [
       'row',
       selected && 'selected',
@@ -157,7 +171,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const getRowAriaAttributes = configuration.hooks.useGridRowAriaAttributes();
 
   React.useLayoutEffect(() => {
-    if (currentPage.range) {
+    if (currentPageRange) {
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(rowId);
       // Pinned rows are not part of the visible rows
       if (rowIndex !== undefined) {
@@ -170,7 +184,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     }
 
     return undefined;
-  }, [apiRef, currentPage.range, rowHeight, rowId]);
+  }, [apiRef, currentPageRange, rowHeight, rowId]);
 
   const publish = React.useCallback(
     (
@@ -221,12 +235,12 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
         }
 
         // User is editing a cell
-        if (apiRef.current.getCellMode(rowId, field) === GridCellModes.Edit) {
+        if (getCellMode(rowId, field) === GridCellModes.Edit) {
           return;
         }
 
         // User clicked a button from the "actions" column type
-        const column = apiRef.current.getColumn(field);
+        const column = getColumn(field);
         if (column?.type === GRID_ACTIONS_COLUMN_TYPE) {
           return;
         }
@@ -234,10 +248,8 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
 
       publish('rowClick', onClick)(event);
     },
-    [apiRef, onClick, publish, rowId],
+    [onClick, publish, rowId, getCellMode, getColumn],
   );
-
-  const { slots, slotProps, disableColumnReorder } = rootProps;
 
   const heightEntry = useGridSelector(
     apiRef,
@@ -263,12 +275,12 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     };
 
     if (heightEntry.spacingTop) {
-      const property = rootProps.rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
+      const property = rowSpacingType === 'border' ? 'borderTopWidth' : 'marginTop';
       rowStyle[property] = heightEntry.spacingTop;
     }
 
     if (heightEntry.spacingBottom) {
-      const property = rootProps.rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
+      const property = rowSpacingType === 'border' ? 'borderBottomWidth' : 'marginBottom';
       let propertyValue = rowStyle[property];
       // avoid overriding existing value
       if (typeof propertyValue !== 'number') {
@@ -285,7 +297,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     styleProp,
     heightEntry.spacingTop,
     heightEntry.spacingBottom,
-    rootProps.rowSpacingType,
+    rowSpacingType,
   ]);
 
   // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
@@ -296,16 +308,16 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const rowClassNames = apiRef.current.unstable_applyPipeProcessors('rowClassName', [], rowId);
   const ariaAttributes = getRowAriaAttributes(rowNode, index);
 
-  if (typeof rootProps.getRowClassName === 'function') {
-    const indexRelativeToCurrentPage = index - (currentPage.range?.firstRowIndex || 0);
+  if (typeof getRowClassName === 'function') {
+    const indexRelativeToCurrentPage = index - (currentPageRange?.firstRowIndex || 0);
     const rowParams: GridRowClassNameParams = {
       ...apiRef.current.getRowParams(rowId),
       isFirstVisible: indexRelativeToCurrentPage === 0,
-      isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+      isLastVisible: indexRelativeToCurrentPage === (currentPageRange?.lastRowIndex || 0),
       indexRelativeToCurrentPage,
     };
 
-    rowClassNames.push(rootProps.getRowClassName(rowParams));
+    rowClassNames.push(getRowClassName(rowParams));
   }
 
   const getCell = (
@@ -367,16 +379,16 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     const showLeftBorder = shouldCellShowLeftBorder(
       pinnedPosition,
       indexInSection,
-      rootProps.showCellVerticalBorder,
-      rootProps.pinnedColumnsSectionSeparator,
+      showCellVerticalBorder,
+      pinnedColumnsSectionSeparator,
     );
     const showRightBorder = shouldCellShowRightBorder(
       pinnedPosition,
       indexInSection,
       sectionLength,
-      rootProps.showCellVerticalBorder,
+      showCellVerticalBorder,
       gridHasFiller,
-      rootProps.pinnedColumnsSectionSeparator,
+      pinnedColumnsSectionSeparator,
     );
 
     return (

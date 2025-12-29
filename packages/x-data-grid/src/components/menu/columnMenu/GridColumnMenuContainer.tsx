@@ -28,7 +28,7 @@ function handleMenuScrollCapture(event: React.WheelEvent | React.TouchEvent) {
 const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuContainerProps>(
   function GridColumnMenuContainer(props, ref) {
     const { hideMenu, colDef, id, labelledby, className, children, open, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots } = useGridRootProps();
 
     const handleListKeyDown = React.useCallback(
       (event: React.KeyboardEvent) => {
@@ -44,7 +44,7 @@ const GridColumnMenuContainer = forwardRef<HTMLUListElement, GridColumnMenuConta
 
     return (
       <StyledMenuList
-        as={rootProps.slots.baseMenuList}
+        as={slots.baseMenuList}
         id={id}
         className={clsx(gridClasses.menuList, className)}
         aria-labelledby={labelledby}

@@ -95,20 +95,22 @@ export const useGridRowReorder = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    | 'rowReordering'
-    | 'onRowOrderChange'
-    | 'classes'
-    | 'treeData'
-    | 'dataSource'
-    | 'isValidRowReorder'
+    'rowReordering' | 'onRowOrderChange' | 'classes' | 'treeData' | 'isValidRowReorder'
   >,
 ): void => {
+  const {
+    rowReordering,
+    onRowOrderChange,
+    classes: classesProp,
+    treeData,
+    isValidRowReorder,
+  } = props;
   const logger = useGridLogger(apiRef, 'useGridRowReorder');
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const dragRowNode = React.useRef<HTMLElement | null>(null);
   const originRowIndex = React.useRef<number | null>(null);
   const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const ownerState = { classes: props.classes };
+  const ownerState = { classes: classesProp };
   const classes = useUtilityClasses(ownerState);
   const [dragRowId, setDragRowId] = React.useState<GridRowId>('');
   const timeoutInfoRef = React.useRef<TimeoutInfo>(EMPTY_TIMEOUT_INFO);
@@ -128,19 +130,17 @@ export const useGridRowReorder = (
 
   // TODO: remove sortModel check once row reorder is sorting compatible
   const isRowReorderDisabled = React.useMemo((): boolean => {
-    return !props.rowReordering || !!sortModel.length;
-  }, [props.rowReordering, sortModel]);
+    return !rowReordering || !!sortModel.length;
+  }, [rowReordering, sortModel]);
 
   const calculateDropPosition = React.useCallback(
     (event: MuiEvent<React.DragEvent<HTMLElement>>): RowReorderDropPosition => {
       // For tree data, we need to find the cell element to avoid flickerings on top 20% selection
-      const targetElement = props.treeData
-        ? findCellElement(event.target)
-        : (event.target as Element);
+      const targetElement = treeData ? findCellElement(event.target) : (event.target as Element);
       const targetRect = targetElement.getBoundingClientRect();
       const relativeY = Math.floor(event.clientY - targetRect.top);
 
-      if (props.treeData) {
+      if (treeData) {
         // For tree data: top 20% = above, middle 60% = over, bottom 20% = below
         const topThreshold = targetRect.height * 0.2;
         const bottomThreshold = targetRect.height * 0.8;
@@ -157,7 +157,7 @@ export const useGridRowReorder = (
       const midPoint = targetRect.height / 2;
       return relativeY < midPoint ? 'above' : 'below';
     },
-    [props.treeData],
+    [treeData],
   );
 
   const applyDraggedState = React.useCallback(
@@ -583,7 +583,7 @@ export const useGridRowReorder = (
     ],
   );
 
-  const isValidRowReorderProp = props.isValidRowReorder;
+  const isValidRowReorderProp = isValidRowReorder;
   const isRowReorderValid = React.useCallback<GridPipeProcessor<'isRowReorderValid'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
       if (gridRowMaximumTreeDepthSelector(apiRef) > 1) {
@@ -642,7 +642,7 @@ export const useGridRowReorder = (
   useGridEvent(apiRef, 'rowDragOver', handleDragOver);
   useGridEvent(apiRef, 'rowDragEnd', handleDragEnd);
   useGridEvent(apiRef, 'cellDragOver', handleDragOver);
-  useGridEventPriority(apiRef, 'rowOrderChange', props.onRowOrderChange);
+  useGridEventPriority(apiRef, 'rowOrderChange', onRowOrderChange);
 
   const setRowDragActive = React.useCallback(
     (isActive: boolean) => {

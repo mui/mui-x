@@ -82,8 +82,8 @@ const ScrollShadow = styled('div', {
 
 function GridScrollShadows(props: GridScrollShadowsProps) {
   const { position } = props;
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes, position };
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const ownerState = { classes: rootPropsClasses, position };
   const classes = useUtilityClasses(ownerState);
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridPrivateApiContext();

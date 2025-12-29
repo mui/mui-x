@@ -33,7 +33,8 @@ interface ScrollAreaProps {
   scrollPosition: RefObject<GridScrollParams>;
 }
 
-type OwnerState = DataGridProcessedProps & Pick<ScrollAreaProps, 'scrollDirection'>;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'> &
+  Pick<ScrollAreaProps, 'scrollDirection'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { scrollDirection, classes } = ownerState;
@@ -148,9 +149,17 @@ function GridHorizontalScrollAreaContent(props: ScrollAreaProps) {
     return false;
   };
 
-  const rootProps = useGridRootProps();
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
-  const headerHeight = Math.floor(rootProps.columnHeaderHeight * densityFactor);
+  const { columnHeaderHeight, headerFilterHeight, listView, columnGroupHeaderHeight } =
+    useGridRootProps();
+
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, {
+    columnHeaderHeight,
+    headerFilterHeight,
+    listView,
+    columnGroupHeaderHeight,
+  });
+
+  const headerHeight = Math.floor(columnHeaderHeight * densityFactor);
 
   const style: React.CSSProperties = {
     height: headerHeight,
@@ -222,8 +231,14 @@ function GridVerticalScrollAreaContent(props: ScrollAreaProps) {
     return false;
   };
 
-  const rootProps = useGridRootProps();
-  const totalHeaderHeight = getTotalHeaderHeight(apiRef, rootProps);
+  const { columnHeaderHeight, headerFilterHeight, listView, columnGroupHeaderHeight } =
+    useGridRootProps();
+  const totalHeaderHeight = getTotalHeaderHeight(apiRef, {
+    columnHeaderHeight,
+    headerFilterHeight,
+    listView,
+    columnGroupHeaderHeight,
+  });
 
   const style: React.CSSProperties = {
     top: scrollDirection === 'up' ? totalHeaderHeight : undefined,
@@ -281,8 +296,8 @@ const GridScrollAreaContent = forwardRef(function GridScrollAreaContent(
 
   const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
 
-  const rootProps = useGridRootProps();
-  const ownerState = { ...rootProps, scrollDirection };
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const ownerState = { classes: rootPropsClasses, scrollDirection };
   const classes = useUtilityClasses(ownerState);
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {

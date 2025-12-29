@@ -21,7 +21,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridPanelContext } from '../panel/GridPanelContext';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -36,7 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
-})<{ ownerState: OwnerState }>({
+})({
   margin: vars.spacing(1, 1, 0.5),
   padding: vars.spacing(0, 1),
 });
@@ -63,11 +63,16 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const tooltipProps = slotProps.tooltip || {};
     const badgeProps = slotProps.badge || {};
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const {
+      classes: rootPropsClasses,
+      disableColumnFilter,
+      slots,
+      slotProps: rootPropsSlotProps,
+    } = useGridRootProps();
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
-    const classes = useUtilityClasses(rootProps);
+    const classes = useUtilityClasses({ classes: rootPropsClasses });
     const filterButtonId = useId();
     const filterPanelId = useId();
     const { filterPanelTriggerRef } = useGridPanelContext();
@@ -99,7 +104,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
       return (
         <div>
           {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
-          <GridToolbarFilterListRoot className={classes.root} ownerState={rootProps}>
+          <GridToolbarFilterListRoot className={classes.root}>
             {activeFilters.map((item, index) => ({
               ...(lookup[item.field!] && (
                 <li key={index}>
@@ -115,7 +120,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           </GridToolbarFilterListRoot>
         </div>
       );
-    }, [apiRef, rootProps, preferencePanel.open, activeFilters, lookup, classes]);
+    }, [apiRef, preferencePanel.open, activeFilters, lookup, classes]);
 
     const toggleFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
       const { open, openedPanelValue } = preferencePanel;
@@ -132,19 +137,19 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     };
 
     // Disable the button if the corresponding is disabled
-    if (rootProps.disableColumnFilter) {
+    if (disableColumnFilter) {
       return null;
     }
 
     const isOpen = preferencePanel.open && preferencePanel.panelId === filterPanelId;
     return (
-      <rootProps.slots.baseTooltip
+      <slots.baseTooltip
         title={tooltipContentNode}
         enterDelay={1000}
-        {...rootProps.slotProps?.baseTooltip}
+        {...rootPropsSlotProps?.baseTooltip}
         {...tooltipProps}
       >
-        <rootProps.slots.baseButton
+        <slots.baseButton
           id={filterButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
@@ -152,16 +157,16 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           aria-expanded={isOpen}
           aria-haspopup
           startIcon={
-            <rootProps.slots.baseBadge
+            <slots.baseBadge
               badgeContent={activeFilters.length}
               color="primary"
-              {...rootProps.slotProps?.baseBadge}
+              {...rootPropsSlotProps?.baseBadge}
               {...badgeProps}
             >
-              <rootProps.slots.openFilterButtonIcon />
-            </rootProps.slots.baseBadge>
+              <slots.openFilterButtonIcon />
+            </slots.baseBadge>
           }
-          {...rootProps.slotProps?.baseButton}
+          {...rootPropsSlotProps?.baseButton}
           {...buttonProps}
           onClick={toggleFilter}
           onPointerUp={(event) => {
@@ -173,8 +178,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
-        </rootProps.slots.baseButton>
-      </rootProps.slots.baseTooltip>
+        </slots.baseButton>
+      </slots.baseTooltip>
     );
   },
 );

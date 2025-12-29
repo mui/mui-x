@@ -67,7 +67,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysProps>) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { classes: rootPropsClasses } = useGridRootProps();
   const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
   let height: React.CSSProperties['height'] = Math.max(
@@ -82,7 +82,7 @@ export function GridOverlayWrapper(props: React.PropsWithChildren<GridOverlaysPr
     height = minimalContentHeight;
   }
 
-  const classes = useUtilityClasses({ ...props, classes: rootProps.classes });
+  const classes = useUtilityClasses({ ...props, classes: rootPropsClasses });
 
   return (
     <GridOverlayWrapperRoot

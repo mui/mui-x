@@ -14,7 +14,7 @@ export type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -30,7 +30,7 @@ const GridToolbarContainerRoot = styled(Toolbar, {
   name: 'MuiDataGrid',
   slot: 'ToolbarContainer',
   shouldForwardProp: (prop) => prop !== 'ownerState',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   alignItems: 'center',
   flexWrap: 'wrap',
@@ -45,19 +45,14 @@ const GridToolbarContainerRoot = styled(Toolbar, {
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;
-    const rootProps = useGridRootProps();
-    const classes = useUtilityClasses(rootProps);
+    const { classes: rootPropsClasses } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: rootPropsClasses });
     if (!children) {
       return null;
     }
 
     return (
-      <GridToolbarContainerRoot
-        className={clsx(classes.root, className)}
-        ownerState={rootProps}
-        {...other}
-        ref={ref}
-      >
+      <GridToolbarContainerRoot className={clsx(classes.root, className)} {...other} ref={ref}>
         {children}
       </GridToolbarContainerRoot>
     );

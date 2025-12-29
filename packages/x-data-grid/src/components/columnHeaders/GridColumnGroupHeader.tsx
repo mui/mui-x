@@ -99,7 +99,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
     pinnedOffset,
   } = props;
 
-  const rootProps = useGridRootProps();
+  const { classes: rootPropsClasses } = useGridRootProps();
   const isRtl = useRtl();
 
   const headerCellRef = React.useRef<HTMLDivElement>(null);
@@ -132,7 +132,7 @@ function GridColumnGroupHeader(props: GridColumnGroupHeaderProps) {
 
   const ownerState = {
     ...props,
-    classes: rootProps.classes,
+    classes: rootPropsClasses,
     headerAlign,
     depth,
     isDragging: false,

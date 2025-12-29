@@ -13,10 +13,9 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-interface OwnerState extends DataGridPremiumProcessedProps {
-  classes: DataGridPremiumProcessedProps['classes'];
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
   colDef: GridColDef;
-}
+};
 
 const GridAggregationHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
@@ -44,7 +43,7 @@ const GridAggregationHeaderRoot = styled('div', {
 const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.small,
   lineHeight: 'normal',
   color: vars.colors.foreground.muted,
@@ -76,9 +75,9 @@ function GridAggregationHeader(
   const { colDef, aggregation } = params;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { classes: rootPropsClasses } = useGridRootProps();
 
-  const ownerState = { ...rootProps, classes: rootProps.classes, colDef };
+  const ownerState = { classes: rootPropsClasses, colDef };
   const classes = useUtilityClasses(ownerState);
 
   if (!aggregation) {
@@ -101,7 +100,7 @@ function GridAggregationHeader(
           columnWidth={colDef.computedWidth}
         />
       )}
-      <GridAggregationFunctionLabel ownerState={ownerState} className={classes.aggregationLabel}>
+      <GridAggregationFunctionLabel className={classes.aggregationLabel}>
         {aggregationLabel}
       </GridAggregationFunctionLabel>
     </GridAggregationHeaderRoot>

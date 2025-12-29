@@ -74,13 +74,13 @@ const DEFAULT_FORMATTER = (values: string[]) => values.join(' ');
  * - [QuickFilter API](https://mui.com/x/api/data-grid/quick-filter/)
  */
 function QuickFilter(props: QuickFilterProps) {
-  const rootProps = useGridRootProps();
+  const { filterDebounceMs } = useGridRootProps();
   const {
     render,
     className,
     parser = DEFAULT_PARSER,
     formatter = DEFAULT_FORMATTER,
-    debounceMs = rootProps.filterDebounceMs,
+    debounceMs = filterDebounceMs,
     defaultExpanded,
     expanded,
     onExpandedChange,

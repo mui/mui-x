@@ -19,36 +19,37 @@ import {
 
 export const headerFilteringStateInitializer: GridStateInitializer = (
   state,
-  props: DataGridProcessedProps,
+  { headerFilters }: Pick<DataGridProcessedProps, 'headerFilters'>,
 ) => ({
   ...state,
-  headerFiltering: { enabled: props.headerFilters ?? false, editing: null, menuOpen: null },
+  headerFiltering: { enabled: headerFilters ?? false, editing: null, menuOpen: null },
 });
 
 export const useGridHeaderFiltering = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'signature' | 'headerFilters'>,
 ) => {
+  const { signature, headerFilters } = props;
   const logger = useGridLogger(apiRef, 'useGridHeaderFiltering');
   const setHeaderFilterState = React.useCallback(
     (headerFilterState: Partial<GridHeaderFilteringState>) => {
       apiRef.current.setState((state) => {
         // Safety check to avoid MIT users from using it
         // This hook should ultimately be moved to the Pro package
-        if (props.signature === 'DataGrid') {
+        if (signature === 'DataGrid') {
           return state;
         }
         return {
           ...state,
           headerFiltering: {
-            enabled: props.headerFilters ?? false,
+            enabled: headerFilters ?? false,
             editing: headerFilterState.editing ?? null,
             menuOpen: headerFilterState.menuOpen ?? null,
           },
         };
       });
     },
-    [apiRef, props.signature, props.headerFilters],
+    [apiRef, signature, headerFilters],
   );
 
   const startHeaderFilterEditMode = React.useCallback<
@@ -130,7 +131,7 @@ export const useGridHeaderFiltering = (
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {
-      apiRef.current.setHeaderFilterState({ enabled: props.headerFilters ?? false });
+      apiRef.current.setHeaderFilterState({ enabled: headerFilters ?? false });
     }
-  }, [apiRef, props.headerFilters]);
+  }, [apiRef, headerFilters]);
 };

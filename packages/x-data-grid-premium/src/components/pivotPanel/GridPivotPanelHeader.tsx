@@ -20,7 +20,7 @@ export interface GridPivotPanelHeaderProps {
   onSearchValueChange: (value: string) => void;
 }
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -37,7 +37,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPivotPanelHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelHeader',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(1),
@@ -49,14 +49,14 @@ const GridPivotPanelHeaderRoot = styled('div', {
 const GridPivotPanelSwitch = styled(NotRendered<GridSlotProps['baseSwitch']>, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSwitch',
-})<{ ownerState: OwnerState }>({
+})({
   marginRight: 'auto',
 });
 
 const GridPivotPanelSwitchLabel = styled('span', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSwitchLabel',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.large,
   fontWeight: vars.typography.fontWeight.medium,
 });
@@ -64,18 +64,17 @@ const GridPivotPanelSwitchLabel = styled('span', {
 function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const { searchValue, onSearchValueChange } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const rows = useGridSelector(apiRef, gridRowCountSelector);
   const isEmptyPivot = pivotActive && rows === 0;
 
   return (
     <SidebarHeader>
-      <GridPivotPanelHeaderRoot ownerState={rootProps} className={classes.root}>
+      <GridPivotPanelHeaderRoot className={classes.root}>
         <GridPivotPanelSwitch
-          as={rootProps.slots.baseSwitch}
-          ownerState={rootProps}
+          as={slots.baseSwitch}
           className={classes.switch}
           checked={pivotActive}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -83,13 +82,13 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
           }
           size="small"
           label={
-            <GridPivotPanelSwitchLabel ownerState={rootProps} className={classes.label}>
+            <GridPivotPanelSwitchLabel className={classes.label}>
               {apiRef.current.getLocaleText('pivotToggleLabel')}
             </GridPivotPanelSwitchLabel>
           }
-          {...rootProps.slotProps?.baseSwitch}
+          {...slotProps?.baseSwitch}
         />
-        <rootProps.slots.baseIconButton
+        <slots.baseIconButton
           onClick={() => {
             apiRef.current.hideSidebar();
             if (isEmptyPivot) {
@@ -97,10 +96,10 @@ function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
             }
           }}
           aria-label={apiRef.current.getLocaleText('pivotCloseButton')}
-          {...rootProps.slotProps?.baseIconButton}
+          {...slotProps?.baseIconButton}
         >
-          <rootProps.slots.sidebarCloseIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
+          <slots.sidebarCloseIcon fontSize="small" />
+        </slots.baseIconButton>
       </GridPivotPanelHeaderRoot>
       <GridPivotPanelSearch
         value={searchValue}

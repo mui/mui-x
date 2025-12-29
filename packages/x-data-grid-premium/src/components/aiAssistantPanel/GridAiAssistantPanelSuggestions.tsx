@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const AiAssistantPanelSuggestionsRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelSuggestions',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing(0.75),
@@ -38,7 +38,7 @@ const AiAssistantPanelSuggestionsRoot = styled('div', {
 const AiAssistantPanelSuggestionsList = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelSuggestionsList',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   gap: vars.spacing(0.75),
   overflow: 'auto',
@@ -50,7 +50,7 @@ const AiAssistantPanelSuggestionsList = styled('div', {
 const AiAssistantPanelSuggestionsLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelSuggestionsLabel',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(1),
@@ -61,19 +61,18 @@ const AiAssistantPanelSuggestionsLabel = styled('div', {
 
 function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsProps) {
   const { suggestions } = props;
-  const rootProps = useGridRootProps();
+  const { slots, classes: rootPropsClasses } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
 
   return (
-    <AiAssistantPanelSuggestionsRoot className={classes.root} ownerState={ownerState}>
-      <AiAssistantPanelSuggestionsLabel className={classes.label} ownerState={ownerState}>
+    <AiAssistantPanelSuggestionsRoot className={classes.root}>
+      <AiAssistantPanelSuggestionsLabel className={classes.label}>
         {apiRef.current.getLocaleText('aiAssistantSuggestions')}
       </AiAssistantPanelSuggestionsLabel>
-      <AiAssistantPanelSuggestionsList className={classes.list} ownerState={ownerState}>
+      <AiAssistantPanelSuggestionsList className={classes.list}>
         {suggestions.map((suggestion) => (
-          <rootProps.slots.baseChip
+          <slots.baseChip
             key={suggestion.value}
             label={suggestion.value}
             className={classes.item}

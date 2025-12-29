@@ -17,7 +17,7 @@ import {
 } from '../hooks/features/detailPanel/gridDetailPanelSelector';
 import { GridApiPro } from '../models';
 
-type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
+type OwnerState = Pick<DataGridProProcessedProps, 'classes'> & { isExpanded: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes, isExpanded } = ownerState;
@@ -41,20 +41,18 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const rowId = api.getRowId(row);
   const isExpanded = useGridSelector({ current: api as GridApiPro }, isExpandedSelector, rowId);
 
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const ownerState: OwnerState = { classes: rootProps.classes, isExpanded };
+  const ownerState: OwnerState = { classes: rootPropsClasses, isExpanded };
   const classes = useUtilityClasses(ownerState);
 
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);
   const hasContent = React.isValidElement(contentCache[id]);
 
-  const Icon = isExpanded
-    ? rootProps.slots.detailPanelCollapseIcon
-    : rootProps.slots.detailPanelExpandIcon;
+  const Icon = isExpanded ? slots.detailPanelCollapseIcon : slots.detailPanelExpandIcon;
 
   return (
-    <rootProps.slots.baseIconButton
+    <slots.baseIconButton
       size="small"
       tabIndex={-1}
       disabled={!hasContent}
@@ -65,10 +63,10 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
           ? apiRef.current.getLocaleText('collapseDetailPanel')
           : apiRef.current.getLocaleText('expandDetailPanel')
       }
-      {...rootProps.slotProps?.baseIconButton}
+      {...slotProps?.baseIconButton}
     >
       <Icon fontSize="inherit" />
-    </rootProps.slots.baseIconButton>
+    </slots.baseIconButton>
   );
 }
 

@@ -13,7 +13,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 type GridVirtualScrollbarProps = {
   position: Position;
   scrollPosition: React.RefObject<{
@@ -101,11 +101,11 @@ export const ScrollbarCorner = styled(Scrollbar, {
 const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
-    const rootProps = useGridRootProps();
+    const { classes: rootPropsClasses } = useGridRootProps();
     const isLocked = React.useRef(false);
     const lastPosition = React.useRef(0);
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
-    const classes = useUtilityClasses(rootProps, props.position);
+    const classes = useUtilityClasses({ classes: rootPropsClasses }, props.position);
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';

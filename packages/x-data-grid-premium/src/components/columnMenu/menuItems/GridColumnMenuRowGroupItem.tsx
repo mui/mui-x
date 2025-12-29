@@ -18,7 +18,7 @@ export function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
   const apiRef = useGridApiContext();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const columnsLookup = useGridSelector(apiRef, gridColumnLookupSelector);
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
 
   const renderUnGroupingMenuItem = (field: string) => {
     const ungroupColumn = (event: React.MouseEvent<HTMLElement>) => {
@@ -29,14 +29,14 @@ export function GridColumnMenuRowGroupItem(props: GridColumnMenuItemProps) {
     const groupedColumn = columnsLookup[field];
     const name = groupedColumn.headerName ?? field;
     return (
-      <rootProps.slots.baseMenuItem
+      <slots.baseMenuItem
         onClick={ungroupColumn}
         key={field}
         disabled={!groupedColumn.groupable}
-        iconStart={<rootProps.slots.columnMenuUngroupIcon fontSize="small" />}
+        iconStart={<slots.columnMenuUngroupIcon fontSize="small" />}
       >
         {apiRef.current.getLocaleText('unGroupColumn')(name)}
-      </rootProps.slots.baseMenuItem>
+      </slots.baseMenuItem>
     );
   };
 

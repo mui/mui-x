@@ -1,13 +1,11 @@
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export function GridFooterPlaceholder() {
-  const rootProps = useGridRootProps();
+  const { hideFooter, slots, slotProps } = useGridRootProps();
 
-  if (rootProps.hideFooter) {
+  if (hideFooter) {
     return null;
   }
 
-  return (
-    <rootProps.slots.footer {...(rootProps.slotProps?.footer as any) /* FIXME: typing error */} />
-  );
+  return <slots.footer {...(slotProps?.footer as any) /* FIXME: typing error */} />;
 }

@@ -32,15 +32,13 @@ const emptySet = new Set();
 
 export const detailPanelStateInitializer: GridStateInitializer<
   Pick<DataGridProProcessedProps, 'initialState' | 'detailPanelExpandedRowIds'>
-> = (state, props) => {
+> = (state, { detailPanelExpandedRowIds, initialState }) => {
   return {
     ...state,
     detailPanel: {
       heightCache: {},
       expandedRowIds:
-        props.detailPanelExpandedRowIds ??
-        props.initialState?.detailPanel?.expandedRowIds ??
-        emptySet,
+        detailPanelExpandedRowIds ?? initialState?.detailPanel?.expandedRowIds ?? emptySet,
     },
   };
 };
@@ -89,9 +87,15 @@ export const useGridDetailPanel = (
     | 'onDetailPanelExpandedRowIdsChange'
   >,
 ): void => {
+  const {
+    getDetailPanelContent,
+    getDetailPanelHeight,
+    detailPanelExpandedRowIds,
+    onDetailPanelExpandedRowIdsChange,
+  } = props;
   const handleCellClick = React.useCallback<GridEventListener<'cellClick'>>(
     (params: GridCellParams, event: React.MouseEvent) => {
-      if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || props.getDetailPanelContent == null) {
+      if (params.field !== GRID_DETAIL_PANEL_TOGGLE_FIELD || getDetailPanelContent == null) {
         return;
       }
       const contentCache = gridDetailPanelExpandedRowsContentCacheSelector(apiRef);
@@ -107,12 +111,12 @@ export const useGridDetailPanel = (
 
       apiRef.current.toggleDetailPanel(params.id);
     },
-    [apiRef, props.getDetailPanelContent],
+    [apiRef, getDetailPanelContent],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
-      if (props.getDetailPanelContent == null) {
+      if (getDetailPanelContent == null) {
         return;
       }
 
@@ -120,7 +124,7 @@ export const useGridDetailPanel = (
         apiRef.current.toggleDetailPanel(params.id);
       }
     },
-    [apiRef, props.getDetailPanelContent],
+    [apiRef, getDetailPanelContent],
   );
 
   useGridEvent(apiRef, 'cellClick', handleCellClick);
@@ -128,15 +132,15 @@ export const useGridDetailPanel = (
 
   apiRef.current.registerControlState({
     stateId: 'detailPanels',
-    propModel: props.detailPanelExpandedRowIds,
-    propOnChange: props.onDetailPanelExpandedRowIdsChange,
+    propModel: detailPanelExpandedRowIds,
+    propOnChange: onDetailPanelExpandedRowIdsChange,
     stateSelector: gridDetailPanelExpandedRowIdsSelector,
     changeEvent: 'detailPanelsExpandedRowIdsChange',
   });
 
   const toggleDetailPanel = React.useCallback<GridDetailPanelApi['toggleDetailPanel']>(
     (id: GridRowId) => {
-      if (props.getDetailPanelContent == null) {
+      if (getDetailPanelContent == null) {
         return;
       }
       const contentCache = gridDetailPanelExpandedRowsContentCacheSelector(apiRef);
@@ -154,7 +158,7 @@ export const useGridDetailPanel = (
       }
       apiRef.current.setExpandedDetailPanels(newIds);
     },
-    [apiRef, props.getDetailPanelContent],
+    [apiRef, getDetailPanelContent],
   );
 
   const getExpandedDetailPanels = React.useCallback<GridDetailPanelApi['getExpandedDetailPanels']>(
@@ -217,16 +221,16 @@ export const useGridDetailPanel = (
   useGridApiMethod(apiRef, detailPanelPrivateApi, 'private');
 
   React.useEffect(() => {
-    if (props.detailPanelExpandedRowIds) {
+    if (detailPanelExpandedRowIds) {
       const currentModel = gridDetailPanelExpandedRowIdsSelector(apiRef);
-      if (currentModel !== props.detailPanelExpandedRowIds) {
-        apiRef.current.setExpandedDetailPanels(props.detailPanelExpandedRowIds);
+      if (currentModel !== detailPanelExpandedRowIds) {
+        apiRef.current.setExpandedDetailPanels(detailPanelExpandedRowIds);
       }
     }
-  }, [apiRef, props.detailPanelExpandedRowIds]);
+  }, [apiRef, detailPanelExpandedRowIds]);
 
   const updateCaches = React.useCallback(() => {
-    if (!props.getDetailPanelContent) {
+    if (!getDetailPanelContent) {
       return;
     }
     apiRef.current.setState((state) => {
@@ -236,14 +240,14 @@ export const useGridDetailPanel = (
           ...state.detailPanel,
           ...cacheContentAndHeight(
             apiRef,
-            props.getDetailPanelContent,
-            props.getDetailPanelHeight,
+            getDetailPanelContent,
+            getDetailPanelHeight,
             state.detailPanel.heightCache,
           ),
         },
       };
     });
-  }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
+  }, [apiRef, getDetailPanelContent, getDetailPanelHeight]);
 
   useGridEvent(apiRef, 'sortedRowsSet', updateCaches);
 
@@ -254,9 +258,9 @@ export const useGridDetailPanel = (
 
   const updateCachesIfNeeded = React.useCallback(() => {
     if (
-      (props.getDetailPanelContent === previousGetDetailPanelContentProp.current &&
-        props.getDetailPanelHeight === previousGetDetailPanelHeightProp.current) ||
-      !props.getDetailPanelContent
+      (getDetailPanelContent === previousGetDetailPanelContentProp.current &&
+        getDetailPanelHeight === previousGetDetailPanelHeightProp.current) ||
+      !getDetailPanelContent
     ) {
       return;
     }
@@ -268,17 +272,17 @@ export const useGridDetailPanel = (
           ...state.detailPanel,
           ...cacheContentAndHeight(
             apiRef,
-            props.getDetailPanelContent,
-            props.getDetailPanelHeight,
+            getDetailPanelContent,
+            getDetailPanelHeight,
             state.detailPanel.heightCache,
           ),
         },
       };
     });
 
-    previousGetDetailPanelContentProp.current = props.getDetailPanelContent;
-    previousGetDetailPanelHeightProp.current = props.getDetailPanelHeight;
-  }, [apiRef, props.getDetailPanelContent, props.getDetailPanelHeight]);
+    previousGetDetailPanelContentProp.current = getDetailPanelContent;
+    previousGetDetailPanelHeightProp.current = getDetailPanelHeight;
+  }, [apiRef, getDetailPanelContent, getDetailPanelHeight]);
 
   const addDetailHeight = React.useCallback<GridPipeProcessor<'rowHeight'>>(
     (initialValue, row) => {
@@ -298,7 +302,7 @@ export const useGridDetailPanel = (
     [apiRef, updateCachesIfNeeded],
   );
 
-  const enabled = props.getDetailPanelContent !== undefined;
+  const enabled = getDetailPanelContent !== undefined;
   useGridRegisterPipeProcessor(apiRef, 'rowHeight', addDetailHeight, enabled);
 
   const isFirstRender = React.useRef(true);

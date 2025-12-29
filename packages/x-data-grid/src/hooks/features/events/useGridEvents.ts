@@ -30,26 +30,46 @@ export function useGridEvents(
     | 'onMenuClose'
   >,
 ): void {
-  useGridEventPriority(apiRef, 'columnHeaderClick', props.onColumnHeaderClick);
-  useGridEventPriority(apiRef, 'columnHeaderContextMenu', props.onColumnHeaderContextMenu);
-  useGridEventPriority(apiRef, 'columnHeaderDoubleClick', props.onColumnHeaderDoubleClick);
-  useGridEventPriority(apiRef, 'columnHeaderOver', props.onColumnHeaderOver);
-  useGridEventPriority(apiRef, 'columnHeaderOut', props.onColumnHeaderOut);
-  useGridEventPriority(apiRef, 'columnHeaderEnter', props.onColumnHeaderEnter);
-  useGridEventPriority(apiRef, 'columnHeaderLeave', props.onColumnHeaderLeave);
+  const {
+    onColumnHeaderClick,
+    onColumnHeaderDoubleClick,
+    onColumnHeaderContextMenu,
+    onColumnHeaderOver,
+    onColumnHeaderOut,
+    onColumnHeaderEnter,
+    onColumnHeaderLeave,
+    onCellClick,
+    onCellDoubleClick,
+    onCellKeyDown,
+    onPreferencePanelClose,
+    onPreferencePanelOpen,
+    onRowDoubleClick,
+    onRowClick,
+    onStateChange,
+    onMenuOpen,
+    onMenuClose,
+  } = props;
 
-  useGridEventPriority(apiRef, 'cellClick', props.onCellClick);
-  useGridEventPriority(apiRef, 'cellDoubleClick', props.onCellDoubleClick);
-  useGridEventPriority(apiRef, 'cellKeyDown', props.onCellKeyDown);
+  useGridEventPriority(apiRef, 'columnHeaderClick', onColumnHeaderClick);
+  useGridEventPriority(apiRef, 'columnHeaderContextMenu', onColumnHeaderContextMenu);
+  useGridEventPriority(apiRef, 'columnHeaderDoubleClick', onColumnHeaderDoubleClick);
+  useGridEventPriority(apiRef, 'columnHeaderOver', onColumnHeaderOver);
+  useGridEventPriority(apiRef, 'columnHeaderOut', onColumnHeaderOut);
+  useGridEventPriority(apiRef, 'columnHeaderEnter', onColumnHeaderEnter);
+  useGridEventPriority(apiRef, 'columnHeaderLeave', onColumnHeaderLeave);
 
-  useGridEventPriority(apiRef, 'preferencePanelClose', props.onPreferencePanelClose);
-  useGridEventPriority(apiRef, 'preferencePanelOpen', props.onPreferencePanelOpen);
+  useGridEventPriority(apiRef, 'cellClick', onCellClick);
+  useGridEventPriority(apiRef, 'cellDoubleClick', onCellDoubleClick);
+  useGridEventPriority(apiRef, 'cellKeyDown', onCellKeyDown);
 
-  useGridEventPriority(apiRef, 'menuOpen', props.onMenuOpen);
-  useGridEventPriority(apiRef, 'menuClose', props.onMenuClose);
+  useGridEventPriority(apiRef, 'preferencePanelClose', onPreferencePanelClose);
+  useGridEventPriority(apiRef, 'preferencePanelOpen', onPreferencePanelOpen);
 
-  useGridEventPriority(apiRef, 'rowDoubleClick', props.onRowDoubleClick);
-  useGridEventPriority(apiRef, 'rowClick', props.onRowClick);
+  useGridEventPriority(apiRef, 'menuOpen', onMenuOpen);
+  useGridEventPriority(apiRef, 'menuClose', onMenuClose);
 
-  useGridEventPriority(apiRef, 'stateChange', props.onStateChange);
+  useGridEventPriority(apiRef, 'rowDoubleClick', onRowDoubleClick);
+  useGridEventPriority(apiRef, 'rowClick', onRowClick);
+
+  useGridEventPriority(apiRef, 'stateChange', onStateChange);
 }

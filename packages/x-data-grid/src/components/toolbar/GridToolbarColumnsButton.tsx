@@ -34,7 +34,7 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
     const columnPanelId = useId();
 
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const { slots, slotProps: rootPropsSlotProps, disableColumnSelector } = useGridRootProps();
     const { columnsPanelTriggerRef } = useGridPanelContext();
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
     const handleRef = useForkRef(ref, columnsPanelTriggerRef);
@@ -57,28 +57,28 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
     };
 
     // Disable the button if the corresponding is disabled
-    if (rootProps.disableColumnSelector) {
+    if (disableColumnSelector) {
       return null;
     }
 
     const isOpen = preferencePanel.open && preferencePanel.panelId === columnPanelId;
 
     return (
-      <rootProps.slots.baseTooltip
+      <slots.baseTooltip
         title={apiRef.current.getLocaleText('toolbarColumnsLabel')}
         enterDelay={1000}
-        {...rootProps.slotProps?.baseTooltip}
+        {...rootPropsSlotProps?.baseTooltip}
         {...tooltipProps}
       >
-        <rootProps.slots.baseButton
+        <slots.baseButton
           id={columnButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarColumnsLabel')}
           aria-haspopup="menu"
           aria-expanded={isOpen}
           aria-controls={isOpen ? columnPanelId : undefined}
-          startIcon={<rootProps.slots.columnSelectorIcon />}
-          {...rootProps.slotProps?.baseButton}
+          startIcon={<slots.columnSelectorIcon />}
+          {...rootPropsSlotProps?.baseButton}
           {...buttonProps}
           onPointerUp={(event) => {
             if (preferencePanel.open) {
@@ -90,8 +90,8 @@ const GridToolbarColumnsButton = forwardRef<HTMLButtonElement, GridToolbarColumn
           ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarColumns')}
-        </rootProps.slots.baseButton>
-      </rootProps.slots.baseTooltip>
+        </slots.baseButton>
+      </slots.baseTooltip>
     );
   },
 );

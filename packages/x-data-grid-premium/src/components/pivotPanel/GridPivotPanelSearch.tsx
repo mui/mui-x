@@ -14,7 +14,7 @@ export type GridPivotPanelSearchProps = Pick<
   onClear: () => void;
 };
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -29,15 +29,15 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPivotPanelSearchContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSearchContainer',
-})<{ ownerState: OwnerState }>({
+})({
   padding: vars.spacing(0, 1, 1),
 });
 
 function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
   const { onClear, value, onChange } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
@@ -46,8 +46,8 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
   };
 
   return (
-    <GridPivotPanelSearchContainer ownerState={rootProps} className={classes.container}>
-      <rootProps.slots.baseTextField
+    <GridPivotPanelSearchContainer className={classes.container}>
+      <slots.baseTextField
         size="small"
         aria-label={apiRef.current.getLocaleText('pivotSearchControlLabel')}
         placeholder={apiRef.current.getLocaleText('pivotSearchControlPlaceholder')}
@@ -55,23 +55,23 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
         fullWidth
         slotProps={{
           input: {
-            startAdornment: <rootProps.slots.pivotSearchIcon fontSize="small" />,
+            startAdornment: <slots.pivotSearchIcon fontSize="small" />,
             endAdornment: value ? (
-              <rootProps.slots.baseIconButton
+              <slots.baseIconButton
                 edge="end"
                 size="small"
                 onClick={onClear}
                 aria-label={apiRef.current.getLocaleText('pivotSearchControlClear')}
               >
-                <rootProps.slots.pivotSearchClearIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
+                <slots.pivotSearchClearIcon fontSize="small" />
+              </slots.baseIconButton>
             ) : null,
           },
           htmlInput: {
             role: 'searchbox',
           },
         }}
-        {...rootProps.slotProps?.baseTextField}
+        {...slotProps?.baseTextField}
         value={value}
         onChange={onChange}
       />

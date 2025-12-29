@@ -3,7 +3,6 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { computeOffsetLeft } from '@mui/x-virtualizer';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridSelector } from '../../utils';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
@@ -75,12 +74,10 @@ export interface GetHeadersParams {
   maxLastColumn?: number;
 }
 
-type OwnerState = DataGridProcessedProps;
-
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
 });
 
@@ -104,7 +101,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const { showColumnVerticalBorder, pinnedColumnsSectionSeparator } = useGridRootProps();
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -249,16 +246,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const showLeftBorder = shouldCellShowLeftBorder(
         pinnedPosition,
         indexInSection,
-        rootProps.showColumnVerticalBorder,
-        rootProps.pinnedColumnsSectionSeparator,
+        showColumnVerticalBorder,
+        pinnedColumnsSectionSeparator,
       );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,
         sectionLength,
-        rootProps.showColumnVerticalBorder,
+        showColumnVerticalBorder,
         gridHasFiller,
-        rootProps.pinnedColumnsSectionSeparator,
+        pinnedColumnsSectionSeparator,
       );
 
       columns.push(
@@ -295,7 +292,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       <GridColumnHeaderRow
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 1}
-        ownerState={rootProps}
         className={gridClasses['row--borderBottom']}
         style={{ height: headerHeight }}
       >
@@ -438,16 +434,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           showLeftBorder={shouldCellShowLeftBorder(
             pinnedPosition,
             indexInSection,
-            rootProps.showColumnVerticalBorder,
-            rootProps.pinnedColumnsSectionSeparator,
+            showColumnVerticalBorder,
+            pinnedColumnsSectionSeparator,
           )}
           showRightBorder={shouldCellShowRightBorder(
             pinnedPosition,
             indexInSection,
             visibleColumnGroupHeader.length,
-            rootProps.showColumnVerticalBorder,
+            showColumnVerticalBorder,
             gridHasFiller,
-            rootProps.pinnedColumnsSectionSeparator,
+            pinnedColumnsSectionSeparator,
           )}
         />
       );
@@ -469,7 +465,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           key={depth}
           role="row"
           aria-rowindex={depth + 1}
-          ownerState={rootProps}
           style={{ height: groupHeaderHeight }}
         >
           {leftRenderContext &&

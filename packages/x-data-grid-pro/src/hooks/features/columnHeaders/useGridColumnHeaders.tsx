@@ -27,7 +27,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-type OwnerState = DataGridProProcessedProps;
+type OwnerState = Omit<DataGridProProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -67,7 +67,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
     headerFiltersElementRef: headerFiltersRef,
   });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
@@ -116,9 +116,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
       const isFirstColumn = columnIndex === 0;
       const tabIndexField = columnHeaderFilterTabIndexState?.field;
       const tabIndex =
-        tabIndexField === colDef.field || (isFirstColumn && !props.hasOtherElementInTabSequence)
-          ? 0
-          : -1;
+        tabIndexField === colDef.field || (isFirstColumn && !hasOtherElementInTabSequence) ? 0 : -1;
 
       const headerClassName =
         typeof colDef.headerClassName === 'function'
@@ -191,7 +189,6 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
         className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
-        ownerState={rootProps}
       >
         {leftRenderContext &&
           getColumnFilters({

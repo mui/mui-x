@@ -17,13 +17,13 @@ import { STATUS_OPTIONS } from '../services/static-data';
 
 function EditStatus(props: GridRenderEditCellParams<any, string>) {
   const { id, value, field } = props;
-  const rootProps = useGridRootProps();
+  const { editMode } = useGridRootProps();
   const apiRef = useGridApiContext();
 
   const handleChange: SelectProps['onChange'] = async (event) => {
     const isValid = await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
 
-    if (isValid && rootProps.editMode === GridEditModes.Cell) {
+    if (isValid && editMode === GridEditModes.Cell) {
       apiRef.current.stopCellEditMode({ id, field, cellToFocusAfter: 'below' });
     }
   };

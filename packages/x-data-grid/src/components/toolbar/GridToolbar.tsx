@@ -39,20 +39,16 @@ const GridToolbar = forwardRef<HTMLDivElement, GridToolbarProps>(function GridTo
     quickFilterProps = {},
     ...other
   } = props as typeof props & { excelOptions: any };
-  const rootProps = useGridRootProps();
+  const { disableColumnFilter, disableColumnSelector, disableDensitySelector, label } =
+    useGridRootProps();
 
-  if (
-    rootProps.disableColumnFilter &&
-    rootProps.disableColumnSelector &&
-    rootProps.disableDensitySelector &&
-    !showQuickFilter
-  ) {
+  if (disableColumnFilter && disableColumnSelector && disableDensitySelector && !showQuickFilter) {
     return null;
   }
 
   return (
     <GridToolbarContainer {...other} ref={ref}>
-      {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
+      {label && <GridToolbarLabel>{label}</GridToolbarLabel>}
       <GridToolbarColumnsButton />
       <GridToolbarFilterButton />
       <GridToolbarDensitySelector />

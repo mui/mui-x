@@ -4,12 +4,9 @@ import { styled } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
-
-export type OwnerState = DataGridProcessedProps;
 
 const columnSeparatorTargetSize = 10;
 const columnSeparatorOffset = -5;
@@ -154,7 +151,7 @@ export const GridRootStyles = styled('div', {
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
     { [`& .${c['row--beingDragged']}`]: styles['row--beingDragged'] },
   ],
-})<{ ownerState: OwnerState }>(() => {
+})(() => {
   const apiRef = useGridPrivateApiContext();
   const shouldShowBorderTopRightRadius = useGridSelector(
     apiRef,

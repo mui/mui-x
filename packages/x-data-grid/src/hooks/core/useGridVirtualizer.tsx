@@ -87,9 +87,28 @@ const addGridDimensionsCreator = () =>
  */
 export function useGridVirtualizer() {
   const isRtl = useRtl();
-  const rootProps = useGridRootProps();
+  const {
+    listView,
+    pagination: rootPropsPagination,
+    paginationMode,
+    autoHeight,
+    rowHeight: rootPropsRowHeight,
+    columnHeaderHeight,
+    headerFilterHeight: rootPropsHeaderFilterHeight,
+    columnGroupHeaderHeight,
+    scrollbarSize,
+    rowBufferPx,
+    columnBufferPx,
+    initialState,
+    resizeThrottleMs,
+    virtualizeColumnsWithAutoRowHeight,
+    slots,
+    slotProps,
+    getRowHeight,
+    getEstimatedRowHeight,
+    getRowSpacing,
+  } = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
-  const { listView } = rootProps;
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
 
   const pinnedRows = useGridSelector(apiRef, gridPinnedRowsSelector);
@@ -101,13 +120,16 @@ export function useGridVirtualizer() {
     [rowSelectionManager, apiRef],
   );
 
-  const currentPage = useGridVisibleRows(apiRef);
+  const {
+    rows: currentPageRows,
+    range: currentPageRange,
+    rowIdToIndexMap,
+  } = useGridVisibleRows(apiRef);
 
   const hasColSpan = useGridSelector(apiRef, gridHasColSpanSelector);
 
   const verticalScrollbarWidth = useGridSelector(apiRef, gridVerticalScrollbarWidthSelector);
   const hasFiller = useGridSelector(apiRef, gridHasFillerSelector);
-  const { autoHeight } = rootProps;
 
   const scrollReset = listView;
 
@@ -115,25 +137,28 @@ export function useGridVirtualizer() {
   const density = useGridSelector(apiRef, gridDensityFactorSelector);
 
   const baseRowHeight = getValidRowHeight(
-    rootProps.rowHeight,
+    rootPropsRowHeight,
     DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
     rowHeightWarning,
   );
   const rowHeight = Math.floor(baseRowHeight * density);
-  const headerHeight = Math.floor(rootProps.columnHeaderHeight * density);
-  const groupHeaderHeight = Math.floor(
-    (rootProps.columnGroupHeaderHeight ?? rootProps.columnHeaderHeight) * density,
-  );
+  const headerHeight = Math.floor(columnHeaderHeight * density);
+  const groupHeaderHeight = Math.floor((columnGroupHeaderHeight ?? columnHeaderHeight) * density);
   const headerFilterHeight = Math.floor(
-    (rootProps.headerFilterHeight ?? rootProps.columnHeaderHeight) * density,
+    (rootPropsHeaderFilterHeight ?? columnHeaderHeight) * density,
   );
   const columnsTotalWidth = useGridSelector(apiRef, columnsTotalWidthSelector);
-  const headersTotalHeight = getTotalHeaderHeight(apiRef, rootProps);
+  const headersTotalHeight = getTotalHeaderHeight(apiRef, {
+    listView,
+    columnHeaderHeight,
+    headerFilterHeight,
+    columnGroupHeaderHeight,
+  });
 
   const leftPinnedWidth = pinnedColumns.left.reduce((w, col) => w + col.computedWidth, 0);
   const rightPinnedWidth = pinnedColumns.right.reduce((w, col) => w + col.computedWidth, 0);
 
-  const overlayState = useGridOverlays(apiRef, rootProps);
+  const overlayState = useGridOverlays(apiRef, { slotProps });
 
   const dimensionsParams = {
     rowHeight,
@@ -145,7 +170,7 @@ export function useGridVirtualizer() {
     bottomPinnedHeight: 0,
     autoHeight,
     minimalContentHeight,
-    scrollbarSize: rootProps.scrollbarSize,
+    scrollbarSize,
   };
 
   const addGridDimensions = useLazyRef(addGridDimensionsCreator).current;
@@ -159,11 +184,10 @@ export function useGridVirtualizer() {
     pagination.enabled ? pagination.paginationModel.pageSize : dataRowCount,
     dataRowCount,
   );
-  const { getRowHeight, getEstimatedRowHeight, getRowSpacing } = rootProps;
   // </ROWS_META>
 
-  const RowSlot = rootProps.slots.row;
-  const rowSlotProps = rootProps.slotProps?.row;
+  const RowSlot = slots.row;
+  const rowSlotProps = slotProps?.row;
 
   const focusedVirtualCell = useGridSelector(apiRef, gridFocusedVirtualCellSelector);
   // We need it to trigger a new render, but rowsMeta needs access to the latest value, hence we cannot pass it to the focusedVirtualCell callback in the virtualizer params
@@ -185,8 +209,8 @@ export function useGridVirtualizer() {
     dimensions: dimensionsParams,
     virtualization: {
       isRtl,
-      rowBufferPx: rootProps.rowBufferPx,
-      columnBufferPx: rootProps.columnBufferPx,
+      rowBufferPx,
+      columnBufferPx,
     },
     colspan: {
       enabled: hasColSpan,
@@ -204,12 +228,12 @@ export function useGridVirtualizer() {
     },
 
     initialState: {
-      scroll: rootProps.initialState?.scroll,
+      scroll: initialState?.scroll,
       rowSpanning: apiRef.current.state.rowSpanning,
       virtualization: apiRef.current.state.virtualization,
     },
-    rows: currentPage.rows,
-    range: currentPage.range,
+    rows: currentPageRows,
+    range: currentPageRange,
     rowCount,
     columns: visibleColumns,
     pinnedRows,
@@ -236,11 +260,11 @@ export function useGridVirtualizer() {
       () =>
         getRowSpacing
           ? (rowEntry) => {
-              const indexRelativeToCurrentPage = currentPage.rowIdToIndexMap.get(rowEntry.id) ?? -1;
+              const indexRelativeToCurrentPage = rowIdToIndexMap.get(rowEntry.id) ?? -1;
 
               const visibility = {
                 isFirstVisible: indexRelativeToCurrentPage === 0,
-                isLastVisible: indexRelativeToCurrentPage === currentPage.rows.length - 1,
+                isLastVisible: indexRelativeToCurrentPage === rowIdToIndexMap.size - 1,
                 indexRelativeToCurrentPage,
               };
 
@@ -253,16 +277,16 @@ export function useGridVirtualizer() {
               });
             }
           : undefined,
-      [apiRef, getRowSpacing, currentPage.rows, currentPage.rowIdToIndexMap],
+      [apiRef, getRowSpacing, rowIdToIndexMap],
     ),
     applyRowHeight: useEventCallback((entry, row) =>
       apiRef.current.unstable_applyPipeProcessors('rowHeight', entry, row),
     ),
-    virtualizeColumnsWithAutoRowHeight: rootProps.virtualizeColumnsWithAutoRowHeight,
+    virtualizeColumnsWithAutoRowHeight,
 
     focusedVirtualCell: useEventCallback(() => gridFocusedVirtualCellSelector(apiRef)),
 
-    resizeThrottleMs: rootProps.resizeThrottleMs,
+    resizeThrottleMs,
     onResize: useEventCallback((size) => apiRef.current.publishEvent('resize', size)),
     onWheel: useEventCallback((event: React.WheelEvent) => {
       apiRef.current.publishEvent('virtualScrollerWheel', {}, event);
@@ -387,7 +411,14 @@ export function useGridVirtualizer() {
     virtualizer,
   });
 
-  useGridRowsMeta(apiRef, rootProps);
+  useGridRowsMeta(apiRef, {
+    getRowHeight,
+    getEstimatedRowHeight,
+    getRowSpacing,
+    pagination: rootPropsPagination,
+    paginationMode,
+    rowHeight: rootPropsRowHeight,
+  });
 
   return virtualizer;
 }

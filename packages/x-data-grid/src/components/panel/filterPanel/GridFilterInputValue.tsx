@@ -37,7 +37,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
   );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps, filterDebounceMs } = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +45,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
       setFilterValueState(value);
       setIsApplying(true);
-      filterTimeout.start(rootProps.filterDebounceMs, () => {
+      filterTimeout.start(filterDebounceMs, () => {
         const newItem = {
           ...item,
           value: type === 'number' && !Number.isNaN(Number(value)) ? Number(value) : value,
@@ -55,7 +55,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         setIsApplying(false);
       });
     },
-    [filterTimeout, rootProps.filterDebounceMs, item, type, id, applyValue],
+    [filterTimeout, filterDebounceMs, item, type, id, applyValue],
   );
 
   React.useEffect(() => {
@@ -67,7 +67,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseTextField
+      <slots.baseTextField
         id={id}
         label={apiRef.current.getLocaleText('filterPanelInputLabel')}
         placeholder={apiRef.current.getLocaleText('filterPanelInputPlaceholder')}
@@ -78,9 +78,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         slotProps={{
           ...textFieldProps?.slotProps,
           input: {
-            endAdornment: applying ? (
-              <rootProps.slots.loadIcon fontSize="small" color="action" />
-            ) : null,
+            endAdornment: applying ? <slots.loadIcon fontSize="small" color="action" /> : null,
             ...textFieldProps?.slotProps?.input,
           },
           htmlInput: {
@@ -89,7 +87,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
           },
         }}
         inputRef={focusElementRef}
-        {...rootProps.slotProps?.baseTextField}
+        {...rootPropsSlotProps?.baseTextField}
         {...other}
         {...textFieldProps}
       />

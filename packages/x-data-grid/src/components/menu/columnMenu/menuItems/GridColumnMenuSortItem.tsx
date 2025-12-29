@@ -11,7 +11,12 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const rootProps = useGridRootProps();
+  const {
+    sortingOrder: rootPropsSortingOrder,
+    multipleColumnsSortingMode,
+    disableColumnSorting,
+    slots,
+  } = useGridRootProps();
 
   const sortDirection = React.useMemo(() => {
     if (!colDef) {
@@ -21,24 +26,24 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     return sortItem?.sort;
   }, [colDef, sortModel]);
 
-  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootPropsSortingOrder;
 
   const onSortMenuItemClick = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
-      const allowMultipleSorting = rootProps.multipleColumnsSortingMode === 'always';
+      const allowMultipleSorting = multipleColumnsSortingMode === 'always';
       apiRef.current.sortColumn(
         colDef!.field,
         (direction === sortDirection ? null : direction) as GridSortDirection,
         allowMultipleSorting,
       );
     },
-    [apiRef, colDef, onClick, sortDirection, rootProps.multipleColumnsSortingMode],
+    [apiRef, colDef, onClick, sortDirection, multipleColumnsSortingMode],
   );
 
   if (
-    rootProps.disableColumnSorting ||
+    disableColumnSorting ||
     !colDef ||
     !colDef.sortable ||
     !sortingOrder.some((item) => !!item)
@@ -54,36 +59,36 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
   return (
     <React.Fragment>
       {sortingOrder.includes('asc') && sortDirection !== 'asc' ? (
-        <rootProps.slots.baseMenuItem
+        <slots.baseMenuItem
           onClick={onSortMenuItemClick}
           data-value="asc"
-          iconStart={<rootProps.slots.columnMenuSortAscendingIcon fontSize="small" />}
+          iconStart={<slots.columnMenuSortAscendingIcon fontSize="small" />}
         >
           {getLabel('columnMenuSortAsc')}
-        </rootProps.slots.baseMenuItem>
+        </slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes('desc') && sortDirection !== 'desc' ? (
-        <rootProps.slots.baseMenuItem
+        <slots.baseMenuItem
           onClick={onSortMenuItemClick}
           data-value="desc"
-          iconStart={<rootProps.slots.columnMenuSortDescendingIcon fontSize="small" />}
+          iconStart={<slots.columnMenuSortDescendingIcon fontSize="small" />}
         >
           {getLabel('columnMenuSortDesc')}
-        </rootProps.slots.baseMenuItem>
+        </slots.baseMenuItem>
       ) : null}
       {sortingOrder.includes(null) && sortDirection != null ? (
-        <rootProps.slots.baseMenuItem
+        <slots.baseMenuItem
           onClick={onSortMenuItemClick}
           iconStart={
-            rootProps.slots.columnMenuUnsortIcon ? (
-              <rootProps.slots.columnMenuUnsortIcon fontSize="small" />
+            slots.columnMenuUnsortIcon ? (
+              <slots.columnMenuUnsortIcon fontSize="small" />
             ) : (
               <span />
             )
           }
         >
           {apiRef.current.getLocaleText('columnMenuUnsort')}
-        </rootProps.slots.baseMenuItem>
+        </slots.baseMenuItem>
       ) : null}
     </React.Fragment>
   );

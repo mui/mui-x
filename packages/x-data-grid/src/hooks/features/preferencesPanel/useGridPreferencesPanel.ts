@@ -23,6 +23,7 @@ export const useGridPreferencesPanel = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'initialState'>,
 ): void => {
+  const { initialState } = props;
   const logger = useGridLogger(apiRef, 'useGridPreferencesPanel');
 
   /**
@@ -83,7 +84,7 @@ export const useGridPreferencesPanel = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the panel was initialized
-        props.initialState?.preferencePanel != null ||
+        initialState?.preferencePanel != null ||
         // Always export if the panel is opened
         preferencePanelToExport.open;
 
@@ -96,7 +97,7 @@ export const useGridPreferencesPanel = (
         preferencePanel: preferencePanelToExport,
       };
     },
-    [apiRef, props.initialState?.preferencePanel],
+    [apiRef, initialState?.preferencePanel],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(

@@ -49,8 +49,8 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
   } = props;
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
+  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  const ownerState = { classes: rootPropsClasses };
   const classes = useUtilityClasses(ownerState);
 
   const maxDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
@@ -59,8 +59,8 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
     maxDepth > 0 && rowNode.type === 'group' && rootProps.treeData === false;
 
   const Icon = React.useMemo(
-    () => (value ? rootProps.slots.booleanCellTrueIcon : rootProps.slots.booleanCellFalseIcon),
-    [rootProps.slots.booleanCellFalseIcon, rootProps.slots.booleanCellTrueIcon, value],
+    () => (value ? slots.booleanCellTrueIcon : slots.booleanCellFalseIcon),
+    [slots.booleanCellFalseIcon, slots.booleanCellTrueIcon, value],
   );
 
   if (isServerSideRowGroupingRow && value === undefined) {

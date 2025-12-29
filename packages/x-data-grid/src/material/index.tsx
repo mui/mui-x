@@ -225,8 +225,7 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
   }, [disabled]);
 
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const { estimatedRowCount } = rootProps;
+  const { estimatedRowCount } = useGridRootProps();
 
   return (
     <StyledPagination
@@ -422,7 +421,7 @@ function BaseTextField(props: P['baseTextField']) {
 }
 
 function BaseAutocomplete(props: P['baseAutocomplete']) {
-  const rootProps = useGridRootProps();
+  const { slotProps: rootPropsSlotProps } = useGridRootProps();
   const {
     id,
     multiple,
@@ -477,7 +476,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
               ...InputLabelProps,
             }}
             {...slotProps?.textField}
-            {...rootProps.slotProps?.baseTextField}
+            {...rootPropsSlotProps?.baseTextField}
           />
         );
       }}

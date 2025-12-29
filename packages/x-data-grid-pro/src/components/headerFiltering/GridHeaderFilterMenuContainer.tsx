@@ -38,7 +38,7 @@ function GridHeaderFilterMenuContainer(props: {
   const buttonId = useId();
   const menuId = useId();
 
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const apiRef = useGridApiContext();
   const menuOpenField = useGridSelector(apiRef, gridHeaderFilteringMenuSelector);
   const open = Boolean(menuOpenField === field && headerFilterMenuRef.current);
@@ -48,7 +48,7 @@ function GridHeaderFilterMenuContainer(props: {
     apiRef.current.showHeaderFilterMenu(field);
   };
 
-  if (!rootProps.slots.headerFilterMenu) {
+  if (!slots.headerFilterMenu) {
     return null;
   }
 
@@ -57,7 +57,7 @@ function GridHeaderFilterMenuContainer(props: {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseIconButton
+      <slots.baseIconButton
         id={buttonId}
         ref={buttonRef}
         aria-label={labelString}
@@ -69,17 +69,13 @@ function GridHeaderFilterMenuContainer(props: {
         size="small"
         onClick={handleClick}
         disabled={disabled}
-        {...rootProps.slotProps?.baseIconButton}
+        {...slotProps?.baseIconButton}
       >
-        <rootProps.slots.baseBadge
-          color="primary"
-          variant="dot"
-          badgeContent={showClearItem ? 1 : 0}
-        >
-          <rootProps.slots.openFilterButtonIcon fontSize="inherit" />
-        </rootProps.slots.baseBadge>
-      </rootProps.slots.baseIconButton>
-      <rootProps.slots.headerFilterMenu
+        <slots.baseBadge color="primary" variant="dot" badgeContent={showClearItem ? 1 : 0}>
+          <slots.openFilterButtonIcon fontSize="inherit" />
+        </slots.baseBadge>
+      </slots.baseIconButton>
+      <slots.headerFilterMenu
         field={field}
         open={open}
         item={item}

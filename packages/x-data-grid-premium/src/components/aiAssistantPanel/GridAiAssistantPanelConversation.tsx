@@ -13,7 +13,7 @@ type GridAiAssistantPanelConversationProps = {
   conversation: Conversation;
 };
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const AiAssistantPanelConversationRoot = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelConversation',
-})<{ ownerState: OwnerState; ref: React.RefObject<HTMLDivElement | null> }>({
+})<{ ref: React.RefObject<HTMLDivElement | null> }>({
   flexShrink: 0,
   height: '100%',
 });
@@ -37,7 +37,7 @@ const AiAssistantPanelConversationRoot = styled(GridShadowScrollArea, {
 const AiAssistantPanelConversationList = styled('ol', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelConversationList',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   padding: 0,
   margin: 0,
@@ -45,8 +45,8 @@ const AiAssistantPanelConversationList = styled('ol', {
 
 function GridAiAssistantPanelConversation(props: GridAiAssistantPanelConversationProps) {
   const { conversation } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
@@ -59,8 +59,8 @@ function GridAiAssistantPanelConversation(props: GridAiAssistantPanelConversatio
   }, [conversation]);
 
   return (
-    <AiAssistantPanelConversationRoot className={classes.root} ownerState={rootProps} ref={ref}>
-      <AiAssistantPanelConversationList className={classes.list} ownerState={rootProps}>
+    <AiAssistantPanelConversationRoot className={classes.root} ref={ref}>
+      <AiAssistantPanelConversationList className={classes.list}>
         {conversation.prompts.map((item) => (
           <GridPrompt
             key={item.createdAt.toISOString()}

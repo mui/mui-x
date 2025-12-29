@@ -36,15 +36,13 @@ const Element = styled('div', {
 
 export function GridBottomContainer(props: GridBottomContainerProps) {
   const classes = useUtilityClasses();
-  const rootProps = useGridRootProps();
+  const { getAggregationPosition } = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
   const isLoading = useGridSelector(apiRef, gridRowsLoadingSelector);
   const tree = useGridSelector(apiRef, gridRowTreeSelector);
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
-  const aggregationPosition = rootProps.getAggregationPosition(
-    tree[GRID_ROOT_GROUP_ID] as GridGroupNode,
-  );
+  const aggregationPosition = getAggregationPosition(tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
   const hasAggregation = React.useMemo(
     () => Object.keys(aggregationModel).length > 0,
     [aggregationModel],

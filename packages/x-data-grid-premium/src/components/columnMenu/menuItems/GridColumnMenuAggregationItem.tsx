@@ -16,22 +16,21 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   const { colDef } = props;
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<any>(null);
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, aggregationFunctions, dataSource } = useGridRootProps();
   const id = useId();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
   const availableAggregationFunctions = React.useMemo(
     () =>
       getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
+        aggregationFunctions,
         colDef,
-        isDataSource: !!rootProps.dataSource,
+        isDataSource: !!dataSource,
       }),
-    [colDef, rootProps.aggregationFunctions, rootProps.dataSource],
+    [colDef, aggregationFunctions, dataSource],
   );
-  const { native: isBaseSelectNative = false, ...baseSelectProps } =
-    rootProps.slotProps?.baseSelect || {};
+  const { native: isBaseSelectNative = false, ...baseSelectProps } = slotProps?.baseSelect || {};
 
-  const baseSelectOptionProps = rootProps.slotProps?.baseSelectOption || {};
+  const baseSelectOptionProps = slotProps?.baseSelectOption || {};
 
   const selectedAggregationRule = React.useMemo(() => {
     if (!colDef || !aggregationModel[colDef.field]) {
@@ -42,15 +41,15 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
       canColumnHaveAggregationFunction({
         colDef,
         aggregationFunctionName,
-        aggregationFunction: rootProps.aggregationFunctions[aggregationFunctionName],
-        isDataSource: !!rootProps.dataSource,
+        aggregationFunction: aggregationFunctions[aggregationFunctionName],
+        isDataSource: !!dataSource,
       })
     ) {
       return aggregationFunctionName;
     }
 
     return '';
-  }, [rootProps.aggregationFunctions, rootProps.dataSource, aggregationModel, colDef]);
+  }, [aggregationFunctions, dataSource, aggregationModel, colDef]);
 
   const handleAggregationItemChange = (event: React.ChangeEvent<unknown>) => {
     const newAggregationItem = (event.target as HTMLSelectElement | null)?.value || undefined;
@@ -80,12 +79,12 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
   }, []);
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       inert
-      iconStart={<rootProps.slots.columnMenuAggregationIcon fontSize="small" />}
+      iconStart={<slots.columnMenuAggregationIcon fontSize="small" />}
       onKeyDown={handleMenuItemKeyDown}
     >
-      <rootProps.slots.baseSelect
+      <slots.baseSelect
         labelId={`${id}-label`}
         id={`${id}-input`}
         value={selectedAggregationRule}
@@ -104,15 +103,11 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
         }}
         {...baseSelectProps}
       >
-        <rootProps.slots.baseSelectOption
-          {...baseSelectOptionProps}
-          native={isBaseSelectNative}
-          value=""
-        >
+        <slots.baseSelectOption {...baseSelectOptionProps} native={isBaseSelectNative} value="">
           ...
-        </rootProps.slots.baseSelectOption>
+        </slots.baseSelectOption>
         {availableAggregationFunctions.map((aggFunc) => (
-          <rootProps.slots.baseSelectOption
+          <slots.baseSelectOption
             {...baseSelectOptionProps}
             key={aggFunc}
             value={aggFunc}
@@ -122,13 +117,13 @@ function GridColumnMenuAggregationItem(props: GridColumnMenuItemProps) {
               apiRef,
               aggregationRule: {
                 aggregationFunctionName: aggFunc,
-                aggregationFunction: rootProps.aggregationFunctions[aggFunc],
+                aggregationFunction: aggregationFunctions[aggFunc],
               },
             })}
-          </rootProps.slots.baseSelectOption>
+          </slots.baseSelectOption>
         ))}
-      </rootProps.slots.baseSelect>
-    </rootProps.slots.baseMenuItem>
+      </slots.baseSelect>
+    </slots.baseMenuItem>
   );
 }
 

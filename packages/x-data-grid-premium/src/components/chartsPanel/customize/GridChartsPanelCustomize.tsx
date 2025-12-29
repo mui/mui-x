@@ -12,15 +12,12 @@ import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridCha
 import { Collapsible } from '../../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
-import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../../hooks/features/chartsIntegration/useGridChartsIntegration';
 
 interface GridChartsPanelCustomizeProps {
   activeChartId: string;
   sections: GridChartsConfigurationSection[];
 }
-
-type OwnerState = DataGridPremiumProcessedProps;
 
 const GridChartsPanelCustomizeRoot = styled(GridShadowScrollArea)({
   height: '100%',
@@ -29,14 +26,14 @@ const GridChartsPanelCustomizeRoot = styled(GridShadowScrollArea)({
 const GridChartsPanelCustomizeSection = styled(Collapsible, {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelCustomizeSection',
-})<{ ownerState: OwnerState }>({
+})({
   margin: vars.spacing(0.5, 1),
 });
 
 const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
   name: 'MuiDataGrid',
   slot: 'chartsPanelSection',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   flexDirection: 'column',
   padding: vars.spacing(2, 1.5),
@@ -46,7 +43,7 @@ const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
 const GridChartsPanelCustomizePanelTitle = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelCustomizePanelTitle',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
 });
@@ -54,7 +51,7 @@ const GridChartsPanelCustomizePanelTitle = styled('div', {
 export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   const { activeChartId, sections } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
 
   const {
@@ -78,17 +75,11 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   return (
     <GridChartsPanelCustomizeRoot>
       {sections.map((section, index) => (
-        <GridChartsPanelCustomizeSection
-          key={section.id}
-          initiallyOpen={index === 0}
-          ownerState={rootProps}
-        >
+        <GridChartsPanelCustomizeSection key={section.id} initiallyOpen={index === 0}>
           <CollapsibleTrigger>
-            <GridChartsPanelCustomizePanelTitle ownerState={rootProps}>
-              {section.label}
-            </GridChartsPanelCustomizePanelTitle>
+            <GridChartsPanelCustomizePanelTitle>{section.label}</GridChartsPanelCustomizePanelTitle>
           </CollapsibleTrigger>
-          <GridChartsPanelCustomizePanel ownerState={rootProps}>
+          <GridChartsPanelCustomizePanel>
             {Object.entries(section.controls).map(([key, optRaw]) => {
               const opt = optRaw as GridChartsConfigurationControl;
               const context = { configuration, dimensions, values };
@@ -99,7 +90,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
               const isDisabled = opt.isDisabled?.(context) ?? false;
               if (opt.type === 'boolean') {
                 return (
-                  <rootProps.slots.baseSwitch
+                  <slots.baseSwitch
                     key={key}
                     checked={Boolean(configuration[key] ?? opt.default)}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -108,13 +99,13 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                     size="small"
                     label={opt.label}
                     disabled={isDisabled}
-                    {...rootProps.slotProps?.baseSwitch}
+                    {...slotProps?.baseSwitch}
                   />
                 );
               }
               if (opt.type === 'select') {
                 return (
-                  <rootProps.slots.baseSelect
+                  <slots.baseSelect
                     key={key}
                     fullWidth
                     size="small"
@@ -129,23 +120,23 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                         ...opt.htmlAttributes,
                       },
                     }}
-                    {...rootProps.slotProps?.baseSelect}
+                    {...slotProps?.baseSelect}
                   >
                     {(opt.options || []).map((option) => (
-                      <rootProps.slots.baseSelectOption
+                      <slots.baseSelectOption
                         key={option.value}
                         value={option.value}
                         native={false}
                       >
                         {option.content}
-                      </rootProps.slots.baseSelectOption>
+                      </slots.baseSelectOption>
                     ))}
-                  </rootProps.slots.baseSelect>
+                  </slots.baseSelect>
                 );
               }
               // string or number
               return (
-                <rootProps.slots.baseTextField
+                <slots.baseTextField
                   key={key}
                   aria-label={opt.label}
                   placeholder={opt.label}
@@ -159,7 +150,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                       ...opt.htmlAttributes,
                     },
                   }}
-                  {...rootProps.slotProps?.baseTextField}
+                  {...slotProps?.baseTextField}
                   value={(configuration[key] ?? opt.default ?? '').toString()}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     handleChange(

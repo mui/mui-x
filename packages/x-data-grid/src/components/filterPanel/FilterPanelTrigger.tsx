@@ -52,7 +52,7 @@ export type FilterPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
 const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps>(
   function FilterPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
     const apiRef = useGridApiContext();
@@ -83,10 +83,10 @@ const FilterPanelTrigger = forwardRef<HTMLButtonElement, FilterPanelTriggerProps
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseButton,
+      slots.baseButton,
       render,
       {
-        ...rootProps.slotProps?.baseButton,
+        ...slotProps?.baseButton,
         id: buttonId,
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,

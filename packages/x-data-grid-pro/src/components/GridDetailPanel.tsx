@@ -8,7 +8,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
-type OwnerState = DataGridProProcessedProps;
+type OwnerState = Pick<DataGridProProcessedProps, 'classes'>;
 
 const DetailPanel = styled('div', {
   name: 'MuiDataGrid',
@@ -38,8 +38,8 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const { rowId, height, className, children } = props;
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const rootProps = useGridRootProps();
-  const ownerState = rootProps;
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const ownerState = { classes: rootPropsClasses };
   const hasAutoHeight = height === 'auto';
   const rowNode = gridRowNodeSelector(apiRef, rowId);
 

@@ -81,9 +81,9 @@ const ResizablePanelHandleRoot = styled('div', {
 function ResizablePanelHandle(props: ResizablePanelHandleProps) {
   const { className, children, ...other } = props;
   const { rootRef, direction } = useResizablePanelContext();
-  const rootProps = useGridRootProps();
+  const { classes: rootPropsClasses } = useGridRootProps();
   const ownerState = {
-    classes: rootProps.classes,
+    classes: rootPropsClasses,
     direction,
   };
   const classes = useUtilityClasses(ownerState);

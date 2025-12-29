@@ -85,15 +85,22 @@ export interface GridVirtualScrollerProps {
 
 function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const {
+    listView,
+    pinnedColumnsSectionSeparator,
+    pinnedRowsSectionSeparator,
+    slots,
+    slotProps,
+    classes: rootPropsClasses,
+  } = useGridRootProps();
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
   const hasBottomFiller = useGridSelector(apiRef, gridHasBottomFillerSelector);
-  const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, rootProps);
-  const Overlay = rootProps.slots?.[overlayType];
+  const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, { slotProps });
+  const Overlay = slots?.[overlayType];
   const ownerState = {
-    classes: rootProps.classes,
+    classes: rootPropsClasses,
     hasScrollX,
     hasPinnedRight,
     overlayType,
@@ -124,8 +131,8 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       <GridScrollArea scrollDirection="down" {...getScrollAreaProps()} />
       <Scroller className={classes.scroller} {...getScrollerProps()} ownerState={ownerState}>
         <TopContainer>
-          {!rootProps.listView && <GridHeaders />}
-          <rootProps.slots.pinnedRows position="top" virtualScroller={virtualScroller} />
+          {!listView && <GridHeaders />}
+          <slots.pinnedRows position="top" virtualScroller={virtualScroller} />
         </TopContainer>
 
         {overlayType && (
@@ -133,25 +140,25 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
             overlayType={overlayType}
             loadingOverlayVariant={loadingOverlayVariant}
           >
-            <Overlay {...rootProps.slotProps?.[overlayType]} />
+            <Overlay {...slotProps?.[overlayType]} />
           </GridOverlayWrapper>
         )}
 
         <Content {...getContentProps()}>
           <RenderZone role="rowgroup" {...getPositionerProps()}>
             {rows}
-            {<rootProps.slots.detailPanels virtualScroller={virtualScroller} />}
+            {<slots.detailPanels virtualScroller={virtualScroller} />}
           </RenderZone>
         </Content>
 
         {hasBottomFiller && <SpaceFiller rowsLength={rows.length} />}
-        <rootProps.slots.bottomContainer>
-          <rootProps.slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
-        </rootProps.slots.bottomContainer>
+        <slots.bottomContainer>
+          <slots.pinnedRows position="bottom" virtualScroller={virtualScroller} />
+        </slots.bottomContainer>
       </Scroller>
       {hasScrollX && (
         <React.Fragment>
-          {rootProps.pinnedColumnsSectionSeparator?.endsWith('shadow') && (
+          {pinnedColumnsSectionSeparator?.endsWith('shadow') && (
             <ScrollShadows position="horizontal" />
           )}
           <Scrollbar position="horizontal" {...getScrollbarHorizontalProps()} />
@@ -159,9 +166,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
       )}
       {hasScrollY && (
         <React.Fragment>
-          {rootProps.pinnedRowsSectionSeparator?.endsWith('shadow') && (
-            <ScrollShadows position="vertical" />
-          )}
+          {pinnedRowsSectionSeparator?.endsWith('shadow') && <ScrollShadows position="vertical" />}
           <Scrollbar position="vertical" {...getScrollbarVerticalProps()} />
         </React.Fragment>
       )}

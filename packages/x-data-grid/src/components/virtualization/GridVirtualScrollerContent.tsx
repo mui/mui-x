@@ -9,7 +9,10 @@ import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & { overflowedContent: boolean };
 
-const useUtilityClasses = (props: DataGridProcessedProps, overflowedContent: boolean) => {
+const useUtilityClasses = (
+  props: Pick<DataGridProcessedProps, 'classes'>,
+  overflowedContent: boolean,
+) => {
   const { classes } = props;
 
   const slots = {
@@ -35,10 +38,10 @@ const GridVirtualScrollerContent = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerContent(props, ref) {
-  const rootProps = useGridRootProps();
-  const overflowedContent = !rootProps.autoHeight && props.style?.minHeight === 'auto';
-  const classes = useUtilityClasses(rootProps, overflowedContent);
-  const ownerState = { classes: rootProps.classes, overflowedContent };
+  const { classes: rootPropsClasses, autoHeight } = useGridRootProps();
+  const overflowedContent = !autoHeight && props.style?.minHeight === 'auto';
+  const classes = useUtilityClasses({ classes: rootPropsClasses }, overflowedContent);
+  const ownerState = { classes: rootPropsClasses, overflowedContent };
 
   return (
     <VirtualScrollerContentRoot

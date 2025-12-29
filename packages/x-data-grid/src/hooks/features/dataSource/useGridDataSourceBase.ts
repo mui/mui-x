@@ -51,13 +51,21 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   >,
   options: GridDataSourceBaseOptions = {},
 ) => {
+  const {
+    dataSource,
+    dataSourceCache,
+    onDataSourceError: onDataSourceErrorProp,
+    pageSizeOptions,
+    pagination,
+    signature,
+  } = props;
   const setStrategyAvailability = React.useCallback(() => {
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.Default,
-      props.dataSource ? () => true : () => false,
+      dataSource ? () => true : () => false,
     );
-  }, [apiRef, props.dataSource]);
+  }, [apiRef, dataSource]);
 
   const [currentStrategy, setCurrentStrategy] = React.useState<DataSourceRowsUpdateStrategy>(
     apiRef.current.getActiveStrategy(GridStrategyGroup.DataSource) as DataSourceRowsUpdateStrategy,
@@ -73,14 +81,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const lastRequestId = React.useRef<number>(0);
 
-  const onDataSourceErrorProp = props.onDataSourceError;
-
   const cacheChunkManager = useLazyRef<CacheChunkManager, void>(() => {
-    if (!props.pagination) {
+    if (!pagination) {
       return new CacheChunkManager(paginationModel.pageSize);
     }
 
-    const sortedPageSizeOptions = props.pageSizeOptions
+    const sortedPageSizeOptions = pageSizeOptions
       .map((option) => (typeof option === 'number' ? option : option.value))
       .sort((a, b) => a - b);
     const cacheChunkSize = Math.min(paginationModel.pageSize, sortedPageSizeOptions[0]);
@@ -88,17 +94,17 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     return new CacheChunkManager(cacheChunkSize);
   }).current;
   const [cache, setCache] = React.useState<GridDataSourceCache>(() =>
-    getCache(props.dataSourceCache, options.cacheOptions),
+    getCache(dataSourceCache, options.cacheOptions),
   );
 
   const fetchRows = React.useCallback<GridDataSourceApiBase['fetchRows']>(
     async (parentId, params) => {
-      const getRows = props.dataSource?.getRows;
+      const getRows = dataSource?.getRows;
       if (!getRows) {
         return;
       }
 
-      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
+      if (parentId && parentId !== GRID_ROOT_GROUP_ID && signature !== 'DataGrid') {
         options.fetchRowChildren?.([parentId]);
         return;
       }
@@ -183,10 +189,10 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       cache,
       apiRef,
       standardRowsUpdateStrategyActive,
-      props.dataSource?.getRows,
+      dataSource?.getRows,
       onDataSourceErrorProp,
       options,
-      props.signature,
+      signature,
     ],
   );
 
@@ -221,7 +227,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     [apiRef],
   );
 
-  const dataSourceUpdateRow = props.dataSource?.updateRow;
+  const dataSourceUpdateRow = dataSource?.updateRow;
   const handleEditRowOption = options.handleEditRow;
 
   const editRow = React.useCallback<GridDataSourceApiBase['editRow']>(
@@ -283,12 +289,12 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       isFirstRender.current = false;
       return;
     }
-    if (props.dataSourceCache === undefined) {
+    if (dataSourceCache === undefined) {
       return;
     }
-    const newCache = getCache(props.dataSourceCache, options.cacheOptions);
+    const newCache = getCache(dataSourceCache, options.cacheOptions);
     setCache((prevCache) => (prevCache !== newCache ? newCache : prevCache));
-  }, [props.dataSourceCache, options.cacheOptions]);
+  }, [dataSourceCache, options.cacheOptions]);
 
   React.useEffect(() => {
     // Return early if the proper strategy isn't set yet
@@ -300,7 +306,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     ) {
       return undefined;
     }
-    if (props.dataSource) {
+    if (dataSource) {
       apiRef.current.dataSource.cache.clear();
       apiRef.current.dataSource.fetchRows();
     }
@@ -309,7 +315,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
       // ignore the current request on unmount
       lastRequestId.current += 1;
     };
-  }, [apiRef, props.dataSource, currentStrategy]);
+  }, [apiRef, dataSource, currentStrategy]);
 
   return {
     api: { public: dataSourceApi },

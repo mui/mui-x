@@ -15,7 +15,7 @@ import { useGridRootProps } from '../../utils/useGridRootProps';
 
 export const useGridRowAriaAttributesPro = (addTreeDataAttributes?: boolean) => {
   const apiRef = useGridPrivateApiContext();
-  const props = useGridRootProps();
+  const { treeData } = useGridRootProps();
   const getRowAriaAttributesCommunity = useGridRowAriaAttributesCommunity();
 
   const filteredTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
@@ -32,7 +32,7 @@ export const useGridRowAriaAttributesPro = (addTreeDataAttributes?: boolean) => 
     (rowNode: GridTreeNode, index: number) => {
       const ariaAttributes = getRowAriaAttributesCommunity(rowNode, index);
 
-      if (!rowNode || !(props.treeData || addTreeDataAttributes)) {
+      if (!rowNode || !(treeData || addTreeDataAttributes)) {
         return ariaAttributes;
       }
 
@@ -61,7 +61,7 @@ export const useGridRowAriaAttributesPro = (addTreeDataAttributes?: boolean) => 
       return ariaAttributes;
     },
     [
-      props.treeData,
+      treeData,
       addTreeDataAttributes,
       filteredTopLevelRowCount,
       filteredChildrenCountLookup,

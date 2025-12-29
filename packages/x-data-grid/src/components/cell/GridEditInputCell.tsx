@@ -13,7 +13,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -28,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridEditInputCellRoot = styled(NotRendered<GridSlotProps['baseInput']>, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
-})<{ ownerState: OwnerState }>({
+})({
   font: vars.typography.font.body,
   padding: '1px 0',
   '& input': {
@@ -55,7 +55,7 @@ export interface GridEditInputCellProps extends GridRenderEditCellParams {
 }
 
 const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
-  const rootProps = useGridRootProps();
+  const { slots, classes: rootPropsClasses } = useGridRootProps();
 
   const {
     id,
@@ -81,7 +81,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [valueState, setValueState] = React.useState(value);
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
 
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,16 +123,15 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
   return (
     <GridEditInputCellRoot
-      as={rootProps.slots.baseInput}
+      as={slots.baseInput}
       inputRef={inputRef}
       className={classes.root}
-      ownerState={rootProps}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState ?? ''}
       onChange={handleChange}
       endAdornment={
-        isProcessingProps ? <rootProps.slots.loadIcon fontSize="small" color="action" /> : undefined
+        isProcessingProps ? <slots.loadIcon fontSize="small" color="action" /> : undefined
       }
       {...other}
       {...slotProps?.root}

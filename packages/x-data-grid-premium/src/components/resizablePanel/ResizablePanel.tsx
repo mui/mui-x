@@ -15,7 +15,7 @@ export type ResizablePanelProps = React.HTMLAttributes<HTMLDivElement> & {
   direction?: 'horizontal' | 'vertical';
 };
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -30,26 +30,21 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const ResizablePanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ResizablePanel',
-})<{ ownerState: OwnerState }>({
+})({
   position: 'relative',
 });
 
 function ResizablePanel(props: ResizablePanelProps) {
   const { className, children, direction = 'horizontal', ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const ref = React.useRef<HTMLDivElement>(null);
 
   const contextValue = React.useMemo(() => ({ rootRef: ref, direction }), [direction]);
 
   return (
     <ResizablePanelContext.Provider value={contextValue}>
-      <ResizablePanelRoot
-        className={clsx(classes.root, className)}
-        ownerState={rootProps}
-        {...other}
-        ref={ref}
-      >
+      <ResizablePanelRoot className={clsx(classes.root, className)} {...other} ref={ref}>
         {children}
       </ResizablePanelRoot>
     </ResizablePanelContext.Provider>

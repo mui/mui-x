@@ -65,9 +65,9 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   const filterValue = item.value ?? '';
   const id = useId();
   const labelId = useId();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps } = useGridRootProps();
 
-  const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;
+  const isSelectNative = rootPropsSlotProps?.baseSelect?.native ?? false;
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
@@ -97,7 +97,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseSelect
+      <slots.baseSelect
         fullWidth
         id={id}
         label={label}
@@ -116,19 +116,19 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
           },
         }}
         native={isSelectNative}
-        {...rootProps.slotProps?.baseSelect}
+        {...rootPropsSlotProps?.baseSelect}
         {...other}
         {...slotProps?.root}
       >
         {renderSingleSelectOptions({
           column: resolvedColumn,
-          OptionComponent: rootProps.slots.baseSelectOption,
+          OptionComponent: slots.baseSelectOption,
           getOptionLabel,
           getOptionValue,
           isSelectNative,
-          baseSelectOptionProps: rootProps.slotProps?.baseSelectOption,
+          baseSelectOptionProps: rootPropsSlotProps?.baseSelectOption,
         })}
-      </rootProps.slots.baseSelect>
+      </slots.baseSelect>
       {headerFilterMenu}
       {clearButton}
     </React.Fragment>

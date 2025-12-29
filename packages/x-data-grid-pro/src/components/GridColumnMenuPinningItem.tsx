@@ -8,7 +8,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
   const isRtl = useRtl();
 
   const pinColumn = React.useCallback(
@@ -24,21 +24,21 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     onClick(event);
   };
   const pinToLeftMenuItem = (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={pinColumn(GridPinnedColumnPosition.LEFT)}
-      iconStart={<rootProps.slots.columnMenuPinLeftIcon fontSize="small" />}
+      iconStart={<slots.columnMenuPinLeftIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('pinToLeft')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 
   const pinToRightMenuItem = (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={pinColumn(GridPinnedColumnPosition.RIGHT)}
-      iconStart={<rootProps.slots.columnMenuPinRightIcon fontSize="small" />}
+      iconStart={<slots.columnMenuPinRightIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('pinToRight')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 
   if (!colDef) {
@@ -55,19 +55,16 @@ function GridColumnMenuPinningItem(props: GridColumnMenuItemProps) {
     const label = otherSide === GridPinnedColumnPosition.RIGHT ? 'pinToRight' : 'pinToLeft';
     const Icon =
       side === GridPinnedColumnPosition.RIGHT
-        ? rootProps.slots.columnMenuPinLeftIcon
-        : rootProps.slots.columnMenuPinRightIcon;
+        ? slots.columnMenuPinLeftIcon
+        : slots.columnMenuPinRightIcon;
     return (
       <React.Fragment>
-        <rootProps.slots.baseMenuItem
-          onClick={pinColumn(otherSide)}
-          iconStart={<Icon fontSize="small" />}
-        >
+        <slots.baseMenuItem onClick={pinColumn(otherSide)} iconStart={<Icon fontSize="small" />}>
           {apiRef.current.getLocaleText(label)}
-        </rootProps.slots.baseMenuItem>
-        <rootProps.slots.baseMenuItem onClick={unpinColumn} iconStart={<span />}>
+        </slots.baseMenuItem>
+        <slots.baseMenuItem onClick={unpinColumn} iconStart={<span />}>
           {apiRef.current.getLocaleText('unpin')}
-        </rootProps.slots.baseMenuItem>
+        </slots.baseMenuItem>
       </React.Fragment>
     );
   }

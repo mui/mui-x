@@ -10,7 +10,7 @@ import {
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 
 function GridAiAssistantPanelConversationsMenu() {
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const apiRef = useGridApiContext();
   const activeConversationIndex = useGridSelector(
     apiRef,
@@ -49,13 +49,13 @@ function GridAiAssistantPanelConversationsMenu() {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseTooltip
+      <slots.baseTooltip
         title={apiRef.current.getLocaleText('aiAssistantPanelConversationHistory')}
         enterDelay={500}
       >
         <span>
-          <rootProps.slots.baseIconButton
-            {...rootProps.slotProps?.baseIconButton}
+          <slots.baseIconButton
+            {...slotProps?.baseIconButton}
             disabled={conversations.length === 0}
             id={triggerId}
             aria-haspopup="true"
@@ -65,21 +65,21 @@ function GridAiAssistantPanelConversationsMenu() {
             onClick={handleOpen}
             ref={triggerRef}
           >
-            <rootProps.slots.aiAssistantPanelHistoryIcon fontSize="small" />
-          </rootProps.slots.baseIconButton>
+            <slots.aiAssistantPanelHistoryIcon fontSize="small" />
+          </slots.baseIconButton>
         </span>
-      </rootProps.slots.baseTooltip>
+      </slots.baseTooltip>
       <GridMenu target={triggerRef.current} open={open} onClose={handleClose} position="bottom-end">
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={menuId}
           aria-labelledby={triggerId}
           autoFocusItem
-          {...rootProps.slotProps?.baseMenuList}
+          {...slotProps?.baseMenuList}
         >
           {sortedConversations.map((conversation, sortedIndex) => {
             const conversationIndex = conversations.findIndex((c) => c === conversation);
             return (
-              <rootProps.slots.baseMenuItem
+              <slots.baseMenuItem
                 key={`${conversation.id}-${sortedIndex}`}
                 selected={conversationIndex === activeConversationIndex}
                 onClick={() => {
@@ -88,10 +88,10 @@ function GridAiAssistantPanelConversationsMenu() {
                 }}
               >
                 {conversation.title}
-              </rootProps.slots.baseMenuItem>
+              </slots.baseMenuItem>
             );
           })}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );

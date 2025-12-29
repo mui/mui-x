@@ -10,17 +10,15 @@ import { gridPaginationMetaSelector } from './gridPaginationSelector';
 
 export const useGridPaginationMeta = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<
-    DataGridProcessedProps,
-    'paginationMeta' | 'initialState' | 'paginationMode' | 'onPaginationMetaChange'
-  >,
+  props: Pick<DataGridProcessedProps, 'paginationMeta' | 'initialState' | 'onPaginationMetaChange'>,
 ) => {
+  const { paginationMeta: paginationMetaProp, initialState, onPaginationMetaChange } = props;
   const logger = useGridLogger(apiRef, 'useGridPaginationMeta');
 
   apiRef.current.registerControlState({
     stateId: 'paginationMeta',
-    propModel: props.paginationMeta,
-    propOnChange: props.onPaginationMetaChange,
+    propModel: paginationMetaProp,
+    propOnChange: onPaginationMetaChange,
     stateSelector: gridPaginationMetaSelector,
     changeEvent: 'paginationMetaChange',
   });
@@ -64,9 +62,9 @@ export const useGridPaginationMeta = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the `paginationMeta` is controlled
-        props.paginationMeta != null ||
+        paginationMetaProp != null ||
         // Always export if the `paginationMeta` has been initialized
-        props.initialState?.pagination?.meta != null;
+        initialState?.pagination?.meta != null;
 
       if (!shouldExportRowCount) {
         return prevState;
@@ -80,7 +78,7 @@ export const useGridPaginationMeta = (
         },
       };
     },
-    [apiRef, props.paginationMeta, props.initialState?.pagination?.meta],
+    [apiRef, paginationMetaProp, initialState?.pagination?.meta],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -107,8 +105,8 @@ export const useGridPaginationMeta = (
    * EFFECTS
    */
   React.useEffect(() => {
-    if (props.paginationMeta) {
-      apiRef.current.setPaginationMeta(props.paginationMeta);
+    if (paginationMetaProp) {
+      apiRef.current.setPaginationMeta(paginationMetaProp);
     }
-  }, [apiRef, props.paginationMeta]);
+  }, [apiRef, paginationMetaProp]);
 };

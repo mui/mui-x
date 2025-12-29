@@ -55,8 +55,8 @@ GridColumnHeaderFilterIconButtonWrapped.propTypes = {
 function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonProps) {
   const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const ownerState = { ...props, classes: rootProps.classes };
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const ownerState = { ...props, classes: rootPropsClasses };
   const classes = useUtilityClasses(ownerState);
   const labelId = useId();
   const isOpen = useGridSelector(apiRef, gridPreferencePanelSelectorWithLabel, labelId);
@@ -87,7 +87,7 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
   }
 
   const iconButton = (
-    <rootProps.slots.baseIconButton
+    <slots.baseIconButton
       id={labelId}
       onClick={toggleFilter}
       aria-label={apiRef.current.getLocaleText('columnHeaderFiltersLabel')}
@@ -96,32 +96,32 @@ function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonPro
       aria-haspopup="menu"
       aria-expanded={isOpen}
       aria-controls={isOpen ? panelId : undefined}
-      {...rootProps.slotProps?.baseIconButton}
+      {...slotProps?.baseIconButton}
     >
-      <rootProps.slots.columnFilteredIcon className={classes.icon} fontSize="small" />
-    </rootProps.slots.baseIconButton>
+      <slots.columnFilteredIcon className={classes.icon} fontSize="small" />
+    </slots.baseIconButton>
   );
 
   return (
-    <rootProps.slots.baseTooltip
+    <slots.baseTooltip
       title={
         apiRef.current.getLocaleText('columnHeaderFiltersTooltipActive')(
           counter,
         ) as React.ReactElement<any>
       }
       enterDelay={1000}
-      {...rootProps.slotProps?.baseTooltip}
+      {...slotProps?.baseTooltip}
     >
       <GridIconButtonContainer>
         {counter > 1 && (
-          <rootProps.slots.baseBadge badgeContent={counter} color="default">
+          <slots.baseBadge badgeContent={counter} color="default">
             {iconButton}
-          </rootProps.slots.baseBadge>
+          </slots.baseBadge>
         )}
 
         {counter === 1 && iconButton}
       </GridIconButtonContainer>
-    </rootProps.slots.baseTooltip>
+    </slots.baseTooltip>
   );
 }
 

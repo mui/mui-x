@@ -12,7 +12,6 @@ import { GridCellParams } from '../../../models/params/gridCellParams';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
@@ -37,10 +36,7 @@ export const focusStateInitializer: GridStateInitializer = (state) => ({
  * @requires useGridRows (method)
  * @requires useGridEditing (event)
  */
-export const useGridFocus = (
-  apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'pagination' | 'paginationMode'>,
-): void => {
+export const useGridFocus = (apiRef: RefObject<GridPrivateApiCommunity>): void => {
   const logger = useGridLogger(apiRef, 'useGridFocus');
 
   const lastClickedCell = React.useRef<GridCellParams | null>(null);
@@ -203,10 +199,7 @@ export const useGridFocus = (
       let columnIndexToFocus = apiRef.current.getColumnIndex(field);
       const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
 
-      const currentPage = getVisibleRows(apiRef, {
-        pagination: props.pagination,
-        paginationMode: props.paginationMode,
-      });
+      const currentPage = getVisibleRows(apiRef);
       const pinnedRows = gridPinnedRowsSelector(apiRef);
 
       // Include pinned rows as well
@@ -267,7 +260,7 @@ export const useGridFocus = (
       const columnToFocus = visibleColumns[columnIndexToFocus];
       apiRef.current.setCellFocus(rowToFocus.id, columnToFocus.field);
     },
-    [apiRef, props.pagination, props.paginationMode],
+    [apiRef],
   );
 
   const handleCellDoubleClick = React.useCallback<GridEventListener<'cellDoubleClick'>>(
@@ -424,10 +417,7 @@ export const useGridFocus = (
       if (typeof lastFocusedRowId !== 'undefined') {
         const rowEl = apiRef.current.getRowElement(lastFocusedRowId);
         const lastFocusedRowIndex = rowEl?.dataset.rowindex ? Number(rowEl?.dataset.rowindex) : 0;
-        const currentPage = getVisibleRows(apiRef, {
-          pagination: props.pagination,
-          paginationMode: props.paginationMode,
-        });
+        const currentPage = getVisibleRows(apiRef);
 
         const nextRow =
           currentPage.rows[clamp(lastFocusedRowIndex, 0, currentPage.rows.length - 1)];
@@ -444,7 +434,7 @@ export const useGridFocus = (
         },
       }));
     }
-  }, [apiRef, props.pagination, props.paginationMode]);
+  }, [apiRef]);
 
   const debouncedHandleRowsSet = React.useMemo(() => debounce(handleRowsSet, 0), [handleRowsSet]);
 
@@ -454,10 +444,7 @@ export const useGridFocus = (
       return;
     }
 
-    const currentPage = getVisibleRows(apiRef, {
-      pagination: props.pagination,
-      paginationMode: props.paginationMode,
-    });
+    const currentPage = getVisibleRows(apiRef);
 
     const rowIsInCurrentPage = currentPage.rows.find((row) => row.id === currentFocusedCell.id);
     if (rowIsInCurrentPage || currentPage.rows.length === 0) {

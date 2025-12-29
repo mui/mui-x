@@ -9,7 +9,7 @@ import { useGridPanelContext } from './GridPanelContext';
 export function GridPreferencesPanel() {
   const apiRef = useGridApiContext();
   const columns = useGridSelector(apiRef, gridColumnDefinitionsSelector);
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const preferencePanelState = useGridSelector(apiRef, gridPreferencePanelStateSelector);
   const { columnsPanelTriggerRef, filterPanelTriggerRef, aiAssistantPanelTriggerRef } =
     useGridPanelContext();
@@ -35,15 +35,15 @@ export function GridPreferencesPanel() {
   }
 
   return (
-    <rootProps.slots.panel
+    <slots.panel
       id={preferencePanelState.panelId}
       open={columns.length > 0 && preferencePanelState.open}
       aria-labelledby={preferencePanelState.labelId}
       target={target}
       onClose={() => apiRef.current.hidePreferences()}
-      {...rootProps.slotProps?.panel}
+      {...slotProps?.panel}
     >
       {panelContent}
-    </rootProps.slots.panel>
+    </slots.panel>
   );
 }

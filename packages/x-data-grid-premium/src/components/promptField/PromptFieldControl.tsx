@@ -32,7 +32,7 @@ export type PromptFieldControlProps = Omit<GridSlotProps['baseTextField'], 'clas
 const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>(
   function PromptFieldControl(props, ref) {
     const { render, className, onChange, onKeyDown, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const { state, onValueChange, onSubmit } = usePromptFieldContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
@@ -49,10 +49,10 @@ const PromptFieldControl = forwardRef<HTMLInputElement, PromptFieldControlProps>
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseTextField,
+      slots.baseTextField,
       render,
       {
-        ...rootProps.slotProps?.baseTextField,
+        ...slotProps?.baseTextField,
         value: state.value,
         className: resolvedClassName,
         ...other,

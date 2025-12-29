@@ -67,9 +67,9 @@ const CollapsibleIcon = styled('div', {
 
 function CollapsibleTrigger(props: CollapsibleTriggerProps) {
   const { children, className, ...other } = props;
-  const rootProps = useGridRootProps();
+  const { slots, classes: rootPropsClasses } = useGridRootProps();
   const { open, onOpenChange, panelId } = useCollapsibleContext();
-  const ownerState = { classes: rootProps.classes, open };
+  const ownerState = { classes: rootPropsClasses, open };
   const classes = useUtilityClasses(ownerState);
 
   return (
@@ -84,7 +84,7 @@ function CollapsibleTrigger(props: CollapsibleTriggerProps) {
     >
       {children}
       <CollapsibleIcon ownerState={ownerState} className={classes.icon}>
-        <rootProps.slots.collapsibleIcon />
+        <slots.collapsibleIcon />
       </CollapsibleIcon>
     </CollapsibleTriggerRoot>
   );

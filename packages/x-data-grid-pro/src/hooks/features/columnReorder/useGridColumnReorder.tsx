@@ -66,6 +66,12 @@ export const useGridColumnReorder = (
     | 'onColumnOrderChange'
   >,
 ): void => {
+  const {
+    disableColumnReorder,
+    keepColumnPositionIfDraggedOutside,
+    classes: classesProp,
+    onColumnOrderChange,
+  } = props;
   const logger = useGridLogger(apiRef, 'useGridColumnReorder');
 
   const dragColNode = React.useRef<HTMLElement | null>(null);
@@ -76,7 +82,7 @@ export const useGridColumnReorder = (
   const originColumnIndex = React.useRef<number | null>(null);
   const forbiddenIndexes = React.useRef<{ [key: number]: boolean }>({});
   const removeDnDStylesTimeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const ownerState = { classes: props.classes };
+  const ownerState = { classes: classesProp };
   const classes = useUtilityClasses(ownerState);
   const isRtl = useRtl();
 
@@ -89,7 +95,7 @@ export const useGridColumnReorder = (
   const handleDragEnd = React.useCallback<GridEventListener<'columnHeaderDragEnd'>>(
     (params, event): void => {
       const dragColField = gridColumnReorderDragColSelector(apiRef);
-      if (props.disableColumnReorder || !dragColField) {
+      if (disableColumnReorder || !dragColField) {
         return;
       }
 
@@ -109,7 +115,7 @@ export const useGridColumnReorder = (
       dragColNode.current = null;
 
       // Check if the column was dropped outside the grid.
-      if (event.dataTransfer.dropEffect === 'none' && !props.keepColumnPositionIfDraggedOutside) {
+      if (event.dataTransfer.dropEffect === 'none' && !keepColumnPositionIfDraggedOutside) {
         // Accessing params.field may contain the wrong field as header elements are reused
         apiRef.current.setColumnIndex(dragColField, originColumnIndex.current!);
         originColumnIndex.current = null;
@@ -131,8 +137,8 @@ export const useGridColumnReorder = (
     },
     [
       apiRef,
-      props.disableColumnReorder,
-      props.keepColumnPositionIfDraggedOutside,
+      disableColumnReorder,
+      keepColumnPositionIfDraggedOutside,
       logger,
       classes.columnHeaderDragging,
     ],
@@ -140,7 +146,7 @@ export const useGridColumnReorder = (
 
   const handleDragStart = React.useCallback<GridEventListener<'columnHeaderDragStart'>>(
     (params, event) => {
-      if (props.disableColumnReorder || params.colDef.disableReorder) {
+      if (disableColumnReorder || params.colDef.disableReorder) {
         return;
       }
 
@@ -237,7 +243,7 @@ export const useGridColumnReorder = (
         }
       }
     },
-    [props.disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
+    [disableColumnReorder, classes.columnHeaderDragging, logger, apiRef],
   );
 
   const handleDragEnter = React.useCallback<
@@ -359,7 +365,7 @@ export const useGridColumnReorder = (
   );
 
   React.useEffect(() => {
-    if (!props.keepColumnPositionIfDraggedOutside) {
+    if (!keepColumnPositionIfDraggedOutside) {
       return () => {};
     }
 
@@ -377,7 +383,7 @@ export const useGridColumnReorder = (
     return () => {
       doc.removeEventListener('dragover', listener);
     };
-  }, [apiRef, props.keepColumnPositionIfDraggedOutside]);
+  }, [apiRef, keepColumnPositionIfDraggedOutside]);
 
   useGridEvent(apiRef, 'columnHeaderDragStart', handleDragStart);
   useGridEvent(apiRef, 'columnHeaderDragEnter', handleDragEnter);
@@ -385,5 +391,5 @@ export const useGridColumnReorder = (
   useGridEvent(apiRef, 'columnHeaderDragEndNative', handleDragEnd);
   useGridEvent(apiRef, 'cellDragEnter', handleDragEnter);
   useGridEvent(apiRef, 'cellDragOver', handleDragOver);
-  useGridEventPriority(apiRef, 'columnOrderChange', props.onColumnOrderChange);
+  useGridEventPriority(apiRef, 'columnOrderChange', onColumnOrderChange);
 };

@@ -56,13 +56,14 @@ export const useGridDataSourceLazyLoader = (
     'dataSource' | 'lazyLoading' | 'lazyLoadingRequestThrottleMs'
   >,
 ): void => {
+  const { dataSource, lazyLoading, lazyLoadingRequestThrottleMs } = props;
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       DataSourceRowsUpdateStrategy.LazyLoading,
-      props.dataSource && props.lazyLoading ? () => true : () => false,
+      dataSource && lazyLoading ? () => true : () => false,
     );
-  }, [privateApiRef, props.lazyLoading, props.dataSource]);
+  }, [privateApiRef, lazyLoading, dataSource]);
 
   const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
     React.useState(false);
@@ -427,8 +428,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
-    [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
+    () => throttle(handleRenderedRowsIntervalChange, lazyLoadingRequestThrottleMs),
+    [lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
   React.useEffect(() => {

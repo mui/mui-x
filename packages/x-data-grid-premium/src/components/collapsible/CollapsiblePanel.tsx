@@ -11,7 +11,7 @@ import { useCollapsibleContext } from './CollapsibleContext';
 
 export type CollapsiblePanelProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const CollapsiblePanelRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'CollapsiblePanel',
-})<{ ownerState: OwnerState }>({
+})({
   border: `1px solid ${vars.colors.border.base}`,
   borderTop: 'none',
   borderBottomLeftRadius: vars.radius.base,
@@ -37,8 +37,8 @@ const CollapsiblePanelRoot = styled('div', {
 
 function CollapsiblePanel(props: CollapsiblePanelProps) {
   const { 'aria-label': ariaLabel, children, className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const id = useId();
   const { open } = useCollapsibleContext();
 
@@ -47,12 +47,7 @@ function CollapsiblePanel(props: CollapsiblePanelProps) {
   }
 
   return (
-    <CollapsiblePanelRoot
-      ownerState={rootProps}
-      className={clsx(classes.root, className)}
-      id={id}
-      {...other}
-    >
+    <CollapsiblePanelRoot className={clsx(classes.root, className)} id={id} {...other}>
       {children}
     </CollapsiblePanelRoot>
   );

@@ -26,7 +26,7 @@ import type { GridChartsIntegrationSection } from '../../../hooks/features/chart
 import { gridRowGroupingSanitizedModelSelector } from '../../../hooks/features/rowGrouping/gridRowGroupingSelector';
 import { gridPivotModelSelector } from '../../../hooks/features/pivoting/gridPivotingSelectors';
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,7 +48,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridChartsPanelDataBodyRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataBody',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -58,7 +58,7 @@ const GridChartsPanelDataBodyRoot = styled('div', {
 const GridChartsPanelDataAvailableFields = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataAvailableFields',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   minHeight: 84,
   transition: vars.transition(['background-color'], {
@@ -73,7 +73,7 @@ const GridChartsPanelDataAvailableFields = styled(GridShadowScrollArea, {
 const GridChartsPanelDataSections = styled(ResizablePanel, {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataSections',
-})<{ ownerState: OwnerState }>({
+})({
   position: 'relative',
   minHeight: 158,
   overflow: 'hidden',
@@ -84,7 +84,7 @@ const GridChartsPanelDataSections = styled(ResizablePanel, {
 const GridChartsPanelDataScrollArea = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataScrollArea',
-})<{ ownerState: OwnerState }>({
+})({
   height: '100%',
 });
 
@@ -92,7 +92,7 @@ const GridChartsPanelDataSection = styled(Collapsible, {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataSection',
   shouldForwardProp: (prop) => prop !== 'disabled',
-})<{ ownerState: OwnerState; disabled: boolean }>(({ disabled }) => ({
+})<{ disabled: boolean }>(({ disabled }) => ({
   opacity: disabled ? 0.5 : 1,
   margin: vars.spacing(0.5, 1),
   transition: vars.transition(['border-color', 'background-color'], {
@@ -108,7 +108,7 @@ const GridChartsPanelDataSection = styled(Collapsible, {
 const GridChartsPanelDataSectionTitle = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataSectionTitle',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   marginRight: vars.spacing(1.75),
   display: 'flex',
@@ -122,7 +122,7 @@ const GridChartsPanelDataSectionTitle = styled('div', {
 const GridChartsPanelDataFieldList = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataFieldList',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -132,7 +132,7 @@ const GridChartsPanelDataFieldList = styled('div', {
 const GridChartsPanelDataPlaceholder = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataPlaceholder',
-})<{ ownerState: OwnerState }>({
+})({
   flex: 1,
   display: 'flex',
   alignItems: 'center',
@@ -165,7 +165,7 @@ const SECTION_COUNT = 2;
 function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const { searchValue } = props;
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const { slots, classes: rootPropsClasses } = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
@@ -173,7 +173,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const { chartStateLookup } = useGridChartsIntegrationContext();
   const dimensions = useGridSelector(apiRef, gridChartsDimensionsSelector, activeChartId);
   const values = useGridSelector(apiRef, gridChartsValuesSelector, activeChartId);
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const chartableColumns = useGridSelector(apiRef, gridChartableColumnsSelector);
 
   const dimensionsLabel = React.useMemo(
@@ -329,13 +329,11 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
 
   return (
     <GridChartsPanelDataBodyRoot
-      ownerState={rootProps}
       className={classes.root}
       data-dragging={drag.active}
       onDragLeave={handleDragLeave}
     >
       <GridChartsPanelDataAvailableFields
-        ownerState={rootProps}
         className={classes.availableFields}
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
@@ -344,12 +342,12 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
         data-drag-over={drag.active && drag.dropSection === null}
       >
         {availableFields.length === 0 && (
-          <GridChartsPanelDataPlaceholder ownerState={rootProps} className={classes.placeholder}>
+          <GridChartsPanelDataPlaceholder className={classes.placeholder}>
             {apiRef.current.getLocaleText('chartsNoFields')}
           </GridChartsPanelDataPlaceholder>
         )}
         {availableFields.length > 0 && (
-          <GridChartsPanelDataFieldList ownerState={rootProps} className={classes.fieldList}>
+          <GridChartsPanelDataFieldList className={classes.fieldList}>
             {availableFields.map((field) => (
               <GridChartsPanelDataField
                 key={field}
@@ -368,15 +366,10 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
           </GridChartsPanelDataFieldList>
         )}
       </GridChartsPanelDataAvailableFields>
-      <GridChartsPanelDataSections
-        ownerState={rootProps}
-        className={classes.sections}
-        direction="vertical"
-      >
+      <GridChartsPanelDataSections className={classes.sections} direction="vertical">
         <ResizablePanelHandle />
-        <GridChartsPanelDataScrollArea ownerState={rootProps} className={classes.scrollArea}>
+        <GridChartsPanelDataScrollArea className={classes.scrollArea}>
           <GridChartsPanelDataSection
-            ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
@@ -388,13 +381,10 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
             }
           >
             <CollapsibleTrigger aria-label={dimensionsLabel}>
-              <GridChartsPanelDataSectionTitle
-                ownerState={rootProps}
-                className={classes.sectionTitle}
-              >
+              <GridChartsPanelDataSectionTitle className={classes.sectionTitle}>
                 {dimensionsLabel}
                 {(chartStateLookup[activeChartId]?.maxDimensions || dimensions.length > 0) && (
-                  <rootProps.slots.baseBadge
+                  <slots.baseBadge
                     badgeContent={
                       chartStateLookup[activeChartId]?.maxDimensions
                         ? `${dimensions.length}/${chartStateLookup[activeChartId]?.maxDimensions}`
@@ -406,15 +396,12 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {dimensions.length === 0 && (
-                <GridChartsPanelDataPlaceholder
-                  ownerState={rootProps}
-                  className={classes.placeholder}
-                >
+                <GridChartsPanelDataPlaceholder className={classes.placeholder}>
                   {apiRef.current.getLocaleText('chartsDragToDimensions')(dimensionsLabel)}
                 </GridChartsPanelDataPlaceholder>
               )}
               {dimensions.length > 0 && (
-                <GridChartsPanelDataFieldList ownerState={rootProps} className={classes.fieldList}>
+                <GridChartsPanelDataFieldList className={classes.fieldList}>
                   {dimensions.map((dimension) => (
                     <GridChartsPanelDataField
                       key={dimension.field}
@@ -438,7 +425,6 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
           </GridChartsPanelDataSection>
 
           <GridChartsPanelDataSection
-            ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
@@ -448,13 +434,10 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
             data-drag-over={!disabledSections.has('values') && drag.dropSection === 'values'}
           >
             <CollapsibleTrigger aria-label={valuesLabel}>
-              <GridChartsPanelDataSectionTitle
-                ownerState={rootProps}
-                className={classes.sectionTitle}
-              >
+              <GridChartsPanelDataSectionTitle className={classes.sectionTitle}>
                 {valuesLabel}
                 {(chartStateLookup[activeChartId]?.maxValues || values.length > 0) && (
-                  <rootProps.slots.baseBadge
+                  <slots.baseBadge
                     badgeContent={
                       chartStateLookup[activeChartId]?.maxValues
                         ? `${values.length}/${chartStateLookup[activeChartId]?.maxValues}`
@@ -466,15 +449,12 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {values.length === 0 && (
-                <GridChartsPanelDataPlaceholder
-                  ownerState={rootProps}
-                  className={classes.placeholder}
-                >
+                <GridChartsPanelDataPlaceholder className={classes.placeholder}>
                   {apiRef.current.getLocaleText('chartsDragToValues')(valuesLabel)}
                 </GridChartsPanelDataPlaceholder>
               )}
               {values.length > 0 && (
-                <GridChartsPanelDataFieldList ownerState={rootProps} className={classes.fieldList}>
+                <GridChartsPanelDataFieldList className={classes.fieldList}>
                   {values.map((value) => (
                     <GridChartsPanelDataField
                       key={value.field}

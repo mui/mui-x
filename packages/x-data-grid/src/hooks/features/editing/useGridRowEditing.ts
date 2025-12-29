@@ -58,7 +58,6 @@ export const useGridRowEditing = (
     | 'onProcessRowUpdateError'
     | 'rowModesModel'
     | 'onRowModesModelChange'
-    | 'signature'
     | 'dataSource'
   >,
 ) => {
@@ -70,16 +69,20 @@ export const useGridRowEditing = (
   const nextFocusedCell = React.useRef<GridCellParams | null>(null);
 
   const {
+    editMode,
     processRowUpdate,
+    onRowEditStart,
+    onRowEditStop,
     onProcessRowUpdateError,
     rowModesModel: rowModesModelProp,
     onRowModesModelChange,
+    dataSource,
   } = props;
 
   const runIfEditModeIsRow =
     <Args extends any[]>(callback: (...args: Args) => void) =>
     (...args: Args) => {
-      if (props.editMode === GridEditModes.Row) {
+      if (editMode === GridEditModes.Row) {
         callback(...args);
       }
     };
@@ -323,22 +326,22 @@ export const useGridRowEditing = (
   useGridEvent(apiRef, 'rowEditStart', runIfEditModeIsRow(handleRowEditStart));
   useGridEvent(apiRef, 'rowEditStop', runIfEditModeIsRow(handleRowEditStop));
 
-  useGridEventPriority(apiRef, 'rowEditStart', props.onRowEditStart);
-  useGridEventPriority(apiRef, 'rowEditStop', props.onRowEditStop);
+  useGridEventPriority(apiRef, 'rowEditStart', onRowEditStart);
+  useGridEventPriority(apiRef, 'rowEditStop', onRowEditStop);
 
   const getRowMode = React.useCallback<GridRowEditingApi['getRowMode']>(
     (id) => {
       const isEditing = gridRowIsEditingSelector(apiRef, {
         rowId: id,
-        editMode: props.editMode,
+        editMode,
       });
       return isEditing ? GridRowModes.Edit : GridRowModes.View;
     },
-    [apiRef, props.editMode],
+    [apiRef, editMode],
   );
 
   const updateRowModesModel = useEventCallback((newModel: GridRowModesModel) => {
-    const isNewModelDifferentFromProp = newModel !== props.rowModesModel;
+    const isNewModelDifferentFromProp = newModel !== rowModesModel;
 
     if (onRowModesModelChange && isNewModelDifferentFromProp) {
       onRowModesModelChange(newModel, {
@@ -346,7 +349,7 @@ export const useGridRowEditing = (
       });
     }
 
-    if (props.rowModesModel && isNewModelDifferentFromProp) {
+    if (rowModesModel && isNewModelDifferentFromProp) {
       return; // The prop always win
     }
 
@@ -544,7 +547,7 @@ export const useGridRowEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
 
-      if (props.dataSource?.updateRow) {
+      if (dataSource?.updateRow) {
         if (isDeepEqual(row, rowUpdate)) {
           finishRowEditMode();
           return;

@@ -13,7 +13,7 @@ export interface GridChartsPanelChartProps {
   onChartTypeChange: (type: string) => void;
 }
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -34,7 +34,7 @@ interface ChartTypeButtonProps {
 const GridChartsManagementRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsManagement',
-})<{ ownerState: OwnerState }>({
+})({
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
@@ -86,11 +86,11 @@ const GridChartTypeButton = styled('button', {
 
 function GridChartsPanelChart(props: GridChartsPanelChartProps) {
   const { schema, selectedChartType, onChartTypeChange } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
 
   return (
-    <GridChartsManagementRoot ownerState={rootProps} className={classes.root}>
+    <GridChartsManagementRoot className={classes.root}>
       <GridChartTypeRoot className={classes.chartTypeRoot}>
         {Object.entries(schema).map(([type, config]) => (
           <GridChartTypeButton
@@ -98,7 +98,7 @@ function GridChartsPanelChart(props: GridChartsPanelChartProps) {
             className={classes.button}
             isSelected={type === selectedChartType}
             onClick={() => onChartTypeChange(type)}
-            {...rootProps.slotProps?.baseButton}
+            {...slotProps?.baseButton}
           >
             <config.icon style={{ width: 32, height: 32 }} />
             {config.label}

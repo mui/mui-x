@@ -32,7 +32,7 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -47,7 +47,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridMenuRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'Menu',
-})<{ ownerState: OwnerState }>({
+})({
   zIndex: vars.zIndex.menu,
   [`& .${gridClasses.menuList}`]: {
     outline: 0,
@@ -65,8 +65,8 @@ export interface GridMenuProps extends Pick<PopperProps, 'className' | 'onExited
 function GridMenu(props: GridMenuProps) {
   const { open, target, onClose, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   const variablesClass = useCSSVariablesClass();
 
   const savedFocusRef = React.useRef<HTMLElement | null>(null);
@@ -101,9 +101,8 @@ function GridMenu(props: GridMenuProps) {
 
   return (
     <GridMenuRoot
-      as={rootProps.slots.basePopper}
+      as={slots.basePopper}
       className={clsx(classes.root, className, variablesClass)}
-      ownerState={rootProps}
       open={open}
       target={target}
       transition
@@ -113,7 +112,7 @@ function GridMenu(props: GridMenuProps) {
       clickAwayMouseEvent="onMouseDown"
       onKeyDown={handleKeyDown}
       {...other}
-      {...rootProps.slotProps?.basePopper}
+      {...slotProps?.basePopper}
     >
       {children}
     </GridMenuRoot>

@@ -152,7 +152,12 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   } = props;
 
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const {
+    classes: rootClasses,
+    getCellClassName,
+    cellSelection,
+    experimentalFeatures,
+  } = useGridRootProps();
   const isRtl = useRtl();
 
   const field = column.field;
@@ -217,8 +222,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const tabIndex =
     (cellMode === 'view' || !isEditable) && column.type !== 'actions' ? cellParams.tabIndex : -1;
 
-  const { classes: rootClasses, getCellClassName } = rootProps;
-
   // There is a hidden grid state access in `applyPipeProcessor('cellClassName', ...)`
   const pipesClassName = useGridSelector(apiRef, () =>
     apiRef.current
@@ -251,14 +254,14 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const valueToRender = cellParams.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
-  const isSelectionMode = rootProps.cellSelection ?? false;
+  const isSelectionMode = cellSelection ?? false;
 
   const ownerState = {
     align,
     showLeftBorder,
     showRightBorder,
     isEditable,
-    classes: rootProps.classes,
+    classes: rootClasses,
     pinnedPosition,
     isSelected,
     isSelectionMode,
@@ -383,7 +386,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   if (
     process.env.NODE_ENV === 'test' &&
-    rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced
+    experimentalFeatures?.warnIfFocusStateIsNotSynced
   ) {
     handleFocus = (event: React.FocusEvent) => {
       const focusedCell = gridFocusCellSelector(apiRef);

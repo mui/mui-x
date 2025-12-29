@@ -14,7 +14,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRowSelectionCheckboxParams } from '../../models/params/gridRowSelectionCheckboxParams';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -43,8 +43,13 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       ...other
     } = props;
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const ownerState = { classes: rootProps.classes };
+    const {
+      rowSelectionPropagation,
+      slots,
+      slotProps,
+      classes: rootPropsClasses,
+    } = useGridRootProps();
+    const ownerState = { classes: rootPropsClasses };
     const classes = useUtilityClasses(ownerState);
 
     const { isIndeterminate, isChecked, isSelectable } = useGridSelector(
@@ -52,7 +57,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       checkboxPropsSelector,
       {
         groupId: id,
-        autoSelectParents: rootProps.rowSelectionPropagation?.parents ?? false,
+        autoSelectParents: rowSelectionPropagation?.parents ?? false,
       },
     );
 
@@ -109,7 +114,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     );
 
     return (
-      <rootProps.slots.baseCheckbox
+      <slots.baseCheckbox
         tabIndex={disabled ? -1 : tabIndex}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
@@ -129,7 +134,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
-        {...rootProps.slotProps?.baseCheckbox}
+        {...slotProps?.baseCheckbox}
         {...other}
         ref={ref as any}
       />
