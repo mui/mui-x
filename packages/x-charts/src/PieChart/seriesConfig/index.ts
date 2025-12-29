@@ -7,7 +7,7 @@ import seriesLayout from './seriesLayout';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
-import { identifierSerializerSeriesIdDataIndex } from '../../internals/plugins/corePlugins/useChartSeries';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 
 export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   colorProcessor: getColor,

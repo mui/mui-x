@@ -1,4 +1,4 @@
-import type { SeriesId } from '../../../../models';
+import type { SeriesId } from '../models';
 
 export const typeSerializer = (type: string) => `Type(${type})`;
 export const seriesIdSerializer = (id: SeriesId) => `Series(${id})`;
