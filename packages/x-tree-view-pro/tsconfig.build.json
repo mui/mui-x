@@ -14,6 +14,7 @@
   "references": [
     { "path": "../x-internals/tsconfig.build.json" },
     { "path": "../x-tree-view/tsconfig.build.json" },
+    { "path": "../x-virtualizer/tsconfig.build.json" },
     { "path": "../x-license/tsconfig.build.json" }
   ],
   "include": ["src/**/*.ts*"],
