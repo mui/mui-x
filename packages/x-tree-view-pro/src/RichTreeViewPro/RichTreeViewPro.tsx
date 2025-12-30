@@ -19,6 +19,7 @@ import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
 import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { RichTreeViewVirtualizedItems } from './RichTreeViewVirtualizedItems';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -92,8 +93,11 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
 
   const { slots, slotProps, apiRef, parameters, forwardedProps } =
     useExtractRichTreeViewProParameters(props);
+
+  // Context hooks
   const store = useTreeViewStore(RichTreeViewProStore, parameters);
 
+  // Ref hooks
   const ref = React.useRef<HTMLUListElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, ref);
   const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
@@ -119,7 +123,11 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
         <Root {...rootProps}>
-          <RichTreeViewItems slots={slots} slotProps={slotProps} />
+          {true ? (
+            <RichTreeViewVirtualizedItems slots={slots} slotProps={slotProps} />
+          ) : (
+            <RichTreeViewItems slots={slots} slotProps={slotProps} />
+          )}
           <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
         </Root>
       </TreeViewItemDepthContext.Provider>

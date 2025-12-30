@@ -21,13 +21,13 @@ const selectorNoChildren = () => EMPTY_ARRAY;
 const selectorChildrenIdsNull = (state: MinimalTreeViewState<any, any>) =>
   itemsSelectors.itemOrderedChildrenIds(state, null);
 
-const WrappedTreeItem = React.memo(function WrappedTreeItem({
+export const RichTreeViewItem = React.memo(function RichTreeViewItem({
   itemSlot,
   itemSlotProps,
   itemId,
   skipChildren,
-}: WrappedTreeItemProps) {
-  const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext)!;
+}: RichTreeViewItemProps) {
+  const renderItemForRichTreeView = React.useContext(RichTreeViewItemsContext);
   const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
 
   const itemMeta = useStore(store, itemsSelectors.itemMeta, itemId);
@@ -45,7 +45,11 @@ const WrappedTreeItem = React.memo(function WrappedTreeItem({
     ownerState: { itemId, label: itemMeta?.label as string },
   });
 
-  return <Item {...itemProps}>{children?.map(renderItemForRichTreeView)}</Item>;
+  return (
+    <Item {...itemProps}>
+      {renderItemForRichTreeView ? children?.map(renderItemForRichTreeView) : null}
+    </Item>
+  );
 }, fastObjectShallowCompare);
 
 export function RichTreeViewItems(props: RichTreeViewItemsProps) {
@@ -65,7 +69,7 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
   const renderItem = React.useCallback(
     (itemId: TreeViewItemId) => {
       return (
-        <WrappedTreeItem
+        <RichTreeViewItem
           itemSlot={itemSlot}
           itemSlotProps={itemSlotProps}
           key={itemId}
@@ -114,7 +118,7 @@ export interface RichTreeViewItemsProps {
   slotProps?: RichTreeViewItemsSlotProps;
 }
 
-interface WrappedTreeItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
+interface RichTreeViewItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {
   itemSlot: React.JSXElementConstructor<TreeItemProps> | undefined;
   itemSlotProps: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState> | undefined;
   skipChildren: boolean;

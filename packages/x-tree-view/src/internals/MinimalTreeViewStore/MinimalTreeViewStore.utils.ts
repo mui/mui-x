@@ -18,7 +18,7 @@ export function deriveStateFromParameters<
 >(parameters: MinimalTreeViewParameters<R, Multiple> & { isItemEditable?: any }) {
   return {
     disabledItemsFocusable: parameters.disabledItemsFocusable ?? false,
-    domStructure: 'nested' as const,
+    domStructure: 'flat' as const,
     itemChildrenIndentation: parameters.itemChildrenIndentation ?? '12px',
     providedTreeId: parameters.id,
     // TODO: Fix

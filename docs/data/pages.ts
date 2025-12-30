@@ -728,6 +728,11 @@ const pages: MuiPage[] = [
             newFeature: true,
           },
           {
+            pathname: '/x/react-tree-view/rich-tree-view/virtualization',
+            plan: 'pro',
+            newFeature: true,
+          },
+          {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
             newFeature: true,
