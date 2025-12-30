@@ -136,7 +136,7 @@ See [the dedicated document on CSP](/x/react-charts/content-security-policy/) fo
 ### Print or export as PDF
 
 The `apiRef` prop exposes the `exportAsPrint()` method that can be used to open the browser's print dialog.
-The print dialog lets you print the chart or save it as a PDF, as well as configuring other settings.
+The print dialog lets you print the chart or save it as a PDF, as well as configure other settings.
 
 {{"demo": "PrintChart.js"}}
 
