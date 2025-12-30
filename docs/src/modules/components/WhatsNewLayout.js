@@ -17,6 +17,74 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v8.2',
+    description: 'A roundup of all new features beyond v8.0.0.',
+    date: new Date(2025, 12, 1),
+    url: 'https://github.com/mui/mui-x/releases/tag/v8.23.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Server-side pivoting [Premium]',
+        url: '/x/react-data-grid/pivoting/',
+      },
+      {
+        title: 'Data Grid –Row grouping that adapts as you explore [Premium]',
+        url: '/x/react-data-grid/row-grouping/',
+      },
+      {
+        title: 'Data Grid – Charts integration [Premium]',
+        url: '/x/react-data-grid/charts-integration/',
+      },
+      {
+        title: 'Data Grid – Export resilience [Premium]',
+        url: '/x/react-data-grid/export/',
+      },
+      {
+        title: 'Data Grid – Smoother reordering with clear affordances [Pro]',
+        url: '/x/react-data-grid/row-ordering/',
+      },
+      {
+        title: 'Data Grid – Pinned areas and scrolling polish',
+        url: '/x/react-data-grid/scrolling/',
+      },
+      {
+        title: 'Charts – Sankey chart [Pro]',
+        url: '/x/react-charts/sankey/',
+      },
+      {
+        title: 'Charts – Funnel chart polished presets [Pro]',
+        url: '/x/react-charts/funnel/',
+      },
+      {
+        title: 'Charts – Intuitive zooming and panning [Pro]',
+        url: '/x/react-charts/zoom-and-pan/',
+      },
+      {
+        title: 'Charts – Zoom slider with preview [Pro]',
+        url: '/x/react-charts/zoom-and-pan/#zoom-slider',
+      },
+      {
+        title: 'Charts – Brush selection',
+        url: '/x/react-charts/brush/',
+      },
+      {
+        title: 'Charts – Keyboard navigation and a11y improvements',
+        url: '/x/react-charts/accessibility/',
+      },
+      {
+        title: 'Date & Time Pickers – Better range defaults [Pro]',
+        url: '/x/react-date-pickers/base-concepts/#reference-date',
+      },
+      {
+        title: 'Date & Time Pickers – Polished inputs across devices',
+        url: '/x/react-date-pickers/',
+      },
+      {
+        title: 'Tree View – Drag-and-drop support and other improvements',
+        url: '/x/react-tree-view/',
+      },
+    ],
+  },
+  {
     title: 'MUI X v8',
     description: 'Cutting-edge features, enhanced customization, and full support for native ESM.',
     date: new Date(2025, 3, 17),
