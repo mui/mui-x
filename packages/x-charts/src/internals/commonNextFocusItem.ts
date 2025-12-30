@@ -1,4 +1,5 @@
 import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getPreviousNonEmptySeries';
+import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
@@ -12,22 +13,6 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   seriesId: SeriesId;
   dataIndex: number;
 } | null;
-
-function getNonNullIndex(data: readonly unknown[], step: 1 | -1, startIndex: number): number {
-  // Edge case if we arrive on a series with a smaller length than the startIndex
-  const clampedStartIndex = Math.min(data.length - 1, startIndex);
-
-  if (data[clampedStartIndex] != null) {
-    return clampedStartIndex;
-  }
-
-  let nextDataIndex = (data.length + clampedStartIndex + step) % data.length;
-
-  while (data[nextDataIndex] == null && nextDataIndex !== clampedStartIndex) {
-    nextDataIndex = (data.length + nextDataIndex + step) % data.length;
-  }
-  return nextDataIndex;
-}
 
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
@@ -54,13 +39,15 @@ export function createGetNextIndexFocusedItem<
       seriesId = nextSeries.seriesId;
     }
 
-    const data = processedSeries[type]!.series[seriesId].data;
-    const startIndex =
-      currentItem?.dataIndex == null ? 0 : (currentItem.dataIndex + 1) % data.length;
+    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+    const dataIndex = Math.min(
+      maxLength - 1,
+      currentItem?.dataIndex == null ? 0 : currentItem.dataIndex + 1,
+    );
     return {
       type,
       seriesId,
-      dataIndex: getNonNullIndex(data, 1, startIndex),
+      dataIndex,
     };
   };
 }
@@ -90,16 +77,16 @@ export function createGetPreviousIndexFocusedItem<
       seriesId = previousSeries.seriesId;
     }
 
-    const data = processedSeries[type]!.series[seriesId].data;
-    const startIndex =
-      currentItem?.dataIndex == null
-        ? data.length - 1
-        : (data.length + currentItem.dataIndex - 1) % data.length;
+    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+    const dataIndex = Math.max(
+      0,
+      currentItem?.dataIndex == null ? maxLength - 1 : currentItem.dataIndex - 1,
+    );
 
     return {
       type,
       seriesId,
-      dataIndex: getNonNullIndex(data, -1, startIndex),
+      dataIndex,
     };
   };
 }
@@ -130,13 +117,12 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const data = processedSeries[type]!.series[seriesId].data;
-    const startIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
+    const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: getNonNullIndex(data, 1, startIndex),
+      dataIndex,
     };
   };
 }
@@ -166,12 +152,12 @@ export function createGetPreviousSeriesFocusedItem<
     seriesId = previousSeries.seriesId;
 
     const data = processedSeries[type]!.series[seriesId].data;
-    const startIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
+    const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: getNonNullIndex(data, -1, startIndex),
+      dataIndex,
     };
   };
 }
