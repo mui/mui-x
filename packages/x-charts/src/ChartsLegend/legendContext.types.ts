@@ -1,6 +1,7 @@
 import { type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
 import { type PieItemId } from '../models';
 import { type SeriesId } from '../models/seriesType/common';
+import type { ChartSeriesType } from '../models/seriesType/config';
 
 interface LegendItemContextBase {
   /**
@@ -23,6 +24,10 @@ export interface LegendItemParams
    * Used for internal purpose such as `key` props
    */
   id: number | string;
+  /**
+   * The type of the series
+   */
+  type: ChartSeriesType;
   markType: ChartsLabelMarkProps['type'];
 }
 
@@ -41,6 +46,10 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
    * The identifier of the pie item
    */
   itemId?: PieItemId;
+  /**
+   * Same as `itemId` but kept for compatibility with series types.
+   */
+  dataIndex?: string | number;
 }
 
 export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {
