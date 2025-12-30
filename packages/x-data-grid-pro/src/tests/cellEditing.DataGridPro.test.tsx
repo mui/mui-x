@@ -864,6 +864,19 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
       });
+
+      it('should prevent the default behavior to avoid the key affecting the edit component', () => {
+        const handleKeyDown = spy((event: React.KeyboardEvent) => event.defaultPrevented);
+        render(
+          <div onKeyDown={handleKeyDown}>
+            <TestCase />
+          </div>,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Enter' });
+        expect(handleKeyDown.returnValues).to.deep.equal([true]);
+      });
     });
 
     describe('by pressing Delete', () => {

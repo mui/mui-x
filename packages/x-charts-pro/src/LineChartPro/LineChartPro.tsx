@@ -154,7 +154,7 @@ LineChartPro.propTypes = {
       setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
       showItem: PropTypes.func.isRequired,
-      toggleItem: PropTypes.func.isRequired,
+      toggleItemVisibility: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -355,19 +355,85 @@ LineChartPro.propTypes = {
   /**
    * Map of the visibility status of series and/or items.
    *
-   * Different chart types use different strategies to generate these keys.
-   *
-   * Generally, the key format is:
-   * - For series-level visibility: `${seriesId}`
-   * - For item-level visibility: `${seriesId}-${itemId}`
+   * Different chart types use different keys.
    *
    * @example
-   * {
-   *   "series1": false, // series-level hidden
-   *   "series2-itemA": false // item-level hidden
-   * }
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
    */
-  visibilityMap: PropTypes.object,
+  visibilityMap: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['line']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['heatmap']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['funnel']).isRequired,
+      }),
+      PropTypes.shape({
+        nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        subType: PropTypes.oneOf([
+          /**
+           * Subtype to differentiate between node and link
+           */
+          'node',
+        ]).isRequired,
+        type: PropTypes.oneOf(['sankey']).isRequired,
+      }),
+      PropTypes.shape({
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        subType: PropTypes.oneOf([
+          /**
+           * Subtype to differentiate between node and link
+           */
+          'link',
+        ]).isRequired,
+        targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['sankey']).isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

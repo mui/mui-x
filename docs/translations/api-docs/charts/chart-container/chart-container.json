@@ -83,7 +83,7 @@
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
     "visibilityMap": {
-      "description": "Map of the visibility status of series and/or items.<br>Different chart types use different strategies to generate these keys.<br>Generally, the key format is: - For series-level visibility: <code>${seriesId}</code> - For item-level visibility: <code>${seriesId}-${itemId}</code>"
+      "description": "Map of the visibility status of series and/or items.<br>Different chart types use different keys."
     },
     "voronoiMaxRadius": {
       "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."

@@ -18,6 +18,8 @@ export interface ProcessedBarSeriesData {
   yOrigin: number;
 }
 
+export type BorderRadiusSide = 'top' | 'bottom' | 'left' | 'right';
+
 export interface ProcessedBarData extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
@@ -25,6 +27,7 @@ export interface ProcessedBarData extends AnimationData {
   value: number | null;
   maskId: string;
   hidden: boolean;
+  borderRadiusSide?: BorderRadiusSide;
 }
 
 export interface MaskData extends AnimationData {

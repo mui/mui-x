@@ -106,7 +106,12 @@
         "returned": "string"
       }
     },
-    "visibilityMap": { "type": { "name": "object" } },
+    "visibilityMap": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'line' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+      }
+    },
     "voronoiMaxRadius": {
       "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }
     },

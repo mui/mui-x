@@ -29,7 +29,7 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'بحث...',
+  toolbarQuickFilterPlaceholder: 'بحث…',
   toolbarQuickFilterLabel: 'بحث',
   toolbarQuickFilterDeleteIconLabel: 'أزال',
 

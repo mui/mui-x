@@ -82,6 +82,9 @@
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
     },
+    "renderer": {
+      "description": "The type of renderer to use for the bar plot. - <code>svg-single</code>: Renders every bar in a <code>&lt;rect /&gt;</code> element. - <code>svg-batch</code>: Batch renders bars in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/bars/#performance\">https://mui.com/x/react-charts/bars/#performance</a>"
+    },
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> objects."
     },
@@ -92,7 +95,7 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
     "visibilityMap": {
-      "description": "Map of the visibility status of series and/or items.<br>Different chart types use different strategies to generate these keys.<br>Generally, the key format is: - For series-level visibility: <code>${seriesId}</code> - For item-level visibility: <code>${seriesId}-${itemId}</code>"
+      "description": "Map of the visibility status of series and/or items.<br>Different chart types use different keys."
     },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."

@@ -9,20 +9,49 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot } from '@mui/x-charts/BarChart';
+import { BarPlot, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useChartContainerProProps } from '@mui/x-charts-pro/internals';
+import { seriesPreviewPlotMap, useChartContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import {
+  type BarItemIdentifier,
+  type RangeBarItemIdentifier,
+  type RangeBarSeriesType,
+} from '../models';
+import { RangeBarPlot } from './RangeBar/RangeBarPlot';
+import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
-export interface BarChartPremiumProps extends BarChartProProps {}
+import type {} from '../typeOverloads/modules';
+
+seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
+
+export type RangeBarSeries = RangeBarSeriesType;
+
+export interface BarChartPremiumProps extends Omit<BarChartProProps, 'series' | 'onItemClick'> {
+  /**
+   * Callback fired when a bar or range bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
+   */
+  onItemClick?(
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
+  ): void;
+
+  /**
+   * The series to display in the bar chart.
+   * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
+   */
+  series: ReadonlyArray<BarSeries | RangeBarSeries>;
+}
 
 /**
  * Demos:
@@ -46,6 +75,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
+    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -57,7 +87,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   } = useBarChartPremiumProps(other);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
-    'bar',
+    'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
   >(
     {
@@ -83,6 +113,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
+            <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
@@ -107,8 +138,11 @@ BarChartPremium.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      hideItem: PropTypes.func.isRequired,
       setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
+      showItem: PropTypes.func.isRequired,
+      toggleItemVisibility: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -267,11 +301,25 @@ BarChartPremium.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * Callback fired when the visible series change.
+   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   */
+  onVisibilityChange: PropTypes.func,
+  /**
    * Callback fired when the zoom has changed.
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
@@ -304,6 +352,93 @@ BarChartPremium.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * Map of the visibility status of series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  visibilityMap: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['line']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['heatmap']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['funnel']).isRequired,
+      }),
+      PropTypes.shape({
+        nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        subType: PropTypes.oneOf([
+          /**
+           * Subtype to differentiate between node and link
+           */
+          'node',
+        ]).isRequired,
+        type: PropTypes.oneOf(['sankey']).isRequired,
+      }),
+      PropTypes.shape({
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        subType: PropTypes.oneOf([
+          /**
+           * Subtype to differentiate between node and link
+           */
+          'link',
+        ]).isRequired,
+        targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['sankey']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number.isRequired,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+        type: PropTypes.oneOf(['rangeBar']).isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
