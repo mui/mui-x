@@ -227,7 +227,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   return (
     <React.Fragment>
-      {svgRef.current && ReactDOM.createPortal(<rect ref={anchorRef} />, svgRef.current)}
+      {svgRef.current &&
+        ReactDOM.createPortal(<rect ref={anchorRef} display="hidden" />, svgRef.current)}
       <NoSsr>
         {isOpen && (
           <ChartsTooltipRoot
