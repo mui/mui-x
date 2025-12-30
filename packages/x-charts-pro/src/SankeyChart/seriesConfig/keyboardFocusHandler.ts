@@ -2,7 +2,7 @@ import type { KeyboardFocusHandler, FocusedItemUpdater } from '@mui/x-charts/int
 
 // ====================================================================================================================
 //
-// Info: This files use node.layer and not node.depth to navigate between nodes on the same level.
+// Info: This file uses node.layer and not node.depth to navigate between nodes on the same level.
 //
 // - depth is the graph depth, starting at 0 on the left, increasing by 1 for each link to the right.
 // - layer is the visual level of the node. It takes into consideration the node alignment (left/right/justify/center)
@@ -48,7 +48,7 @@ const getNodeToNode =
         }
       }
     }
-    // If we fail, we fallback on the fist node
+    // If we fail, we fallback on the first node
     return getFirstNode(null, state);
   };
 
@@ -78,7 +78,7 @@ const getNodeToLink =
         targetId: links[0].target.id,
       };
     }
-    // If we fail, we fallback on the fist node
+    // If we fail, we fallback on the first node
     return getFirstNode(null, state);
   };
 
