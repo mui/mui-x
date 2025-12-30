@@ -4,4 +4,5 @@ export type {
   TreeViewProviderProps,
   TreeViewContextValue,
   TreeViewItemPluginsRunner,
+  TreeViewStoreInContext,
 } from './TreeViewProvider.types';

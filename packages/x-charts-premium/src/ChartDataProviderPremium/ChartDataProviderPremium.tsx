@@ -7,12 +7,18 @@ import {
   type ChartAnyPluginSignature,
   type ChartProviderProps,
   ChartsSlotsProvider,
+  type ChartSeriesConfig,
   defaultSlotsMaterial,
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
+import {
+  type ChartsSlotPropsPro,
+  type ChartsSlotsPro,
+  defaultSeriesConfigPro,
+} from '@mui/x-charts-pro/internals';
 import { type ChartDataProviderProProps } from '@mui/x-charts-pro/ChartDataProviderPro';
-import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '@mui/x-charts-pro/internals';
+import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderPremiumProps } from './useChartDataProviderPremiumProps';
 
@@ -33,6 +39,13 @@ export type ChartDataProviderPremiumProps<
      */
     slotProps?: Partial<ChartsSlotPropsPro>;
   };
+
+export const defaultSeriesConfigPremium: ChartSeriesConfig<
+  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
+> = {
+  ...defaultSeriesConfigPro,
+  rangeBar: rangeBarSeriesConfig,
+};
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
@@ -68,6 +81,7 @@ function ChartDataProviderPremium<
   const { children, localeText, chartProviderProps, slots, slotProps } =
     useChartDataProviderPremiumProps({
       ...props,
+      seriesConfig: props.seriesConfig ?? defaultSeriesConfigPremium,
       plugins: props.plugins ?? DEFAULT_PLUGINS,
     });
 

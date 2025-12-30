@@ -319,6 +319,15 @@ BarChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
+  /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.
    */
