@@ -11,7 +11,7 @@ export default function BasicTimeline() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '500px', width: '100%', overflowY: 'scroll' }}>
       <Timeline
         events={events}
         resources={resources}
