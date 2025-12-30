@@ -30,8 +30,23 @@ export interface HeatmapSeriesType
  */
 export type HeatmapItemIdentifier = {
   type: 'heatmap';
+  /**
+   * The id of the series the cell belongs to.
+   */
   seriesId: DefaultizedHeatmapSeriesType['id'];
-  dataIndex: number;
+  /**
+   * The data index of the cell.
+   * Is defined only if some data is associated to the cell.
+   */
+  dataIndex?: number;
+  /**
+   * The x index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
+   */
+  xIndex?: number;
+  /**
+   * The y index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
+   */
+  yIndex?: number;
 };
 
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
