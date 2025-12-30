@@ -71,11 +71,11 @@ const entries = [
         url: '/x/react-charts/accessibility/',
       },
       {
-        title: 'Date & Time Pickers – Better range defaults [Pro]',
+        title: 'Date and Time Pickers – Better range defaults [Pro]',
         url: '/x/react-date-pickers/base-concepts/',
       },
       {
-        title: 'Date & Time Pickers – Polished inputs across devices',
+        title: 'Date and Time Pickers – Polished inputs across devices',
         url: '/x/react-date-pickers/',
       },
       {
@@ -99,7 +99,7 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
       },
       {
-        title: 'Data Grid – Server-side aggregation & Lazy loading [Premium/Pro]',
+        title: 'Data Grid – Server-side aggregation and Lazy loading [Premium/Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
       },
       {
@@ -119,23 +119,23 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#no-columns-overlay',
       },
       {
-        title: 'Date & Time Pickers – Time Range Picker [Pro]',
+        title: 'Date and Time Pickers – Time Range Picker [Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#time-range-picker',
       },
       {
-        title: 'Date & Time Pickers – New view-switching strategy',
+        title: 'Date and Time Pickers – New view-switching strategy',
         url: 'https://mui.com/blog/mui-x-v8/#new-view-switching-strategy',
       },
       {
-        title: 'Date & Time Pickers – Clear "ownerState" for slots',
+        title: 'Date and Time Pickers – Clear "ownerState" for slots',
         url: 'https://mui.com/blog/mui-x-v8/#clear-ownerstate-for-slots',
       },
       {
-        title: 'Date & Time Pickers – Accessible DOM structure',
+        title: 'Date and Time Pickers – Accessible DOM structure',
         url: 'https://mui.com/blog/mui-x-v8/#accessible-dom-structure',
       },
       {
-        title: 'Date & Time Pickers – Keyboard editing on mobile pickers',
+        title: 'Date and Time Pickers – Keyboard editing on mobile pickers',
         url: 'https://mui.com/blog/mui-x-v8/#keyboard-editing-on-mobile-pickers',
       },
       {
@@ -227,7 +227,7 @@ const entries = [
         url: '/x/react-data-grid/overlays/#loading-overlay',
       },
       {
-        title: 'Rich Tree View – Drag & drop re-ordering',
+        title: 'Rich Tree View – Drag-and-drop re-ordering',
         url: '/x/react-tree-view/rich-tree-view/ordering/',
       },
       {
@@ -239,7 +239,7 @@ const entries = [
         url: '/x/react-charts/heatmap/',
       },
       {
-        title: 'Charts – Zoom & Pan',
+        title: 'Charts – Zoom and pan',
         url: '/x/react-charts/zoom-and-pan/',
       },
       {
