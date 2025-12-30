@@ -7,7 +7,7 @@ const items: TreeViewDefaultItemModelProperties[] = Array.from(
   (_, index) => ({
     id: `product-${index + 1}`,
     label: `Product ${index + 1}`,
-    children: Array.from({ length: 5 }, (_, childIndex) => ({
+    children: Array.from({ length: 5 }, (_2, childIndex) => ({
       id: `product-${index + 1}-feature-${childIndex + 1}`,
       label: `Feature ${childIndex + 1} of Product ${index + 1}`,
     })),

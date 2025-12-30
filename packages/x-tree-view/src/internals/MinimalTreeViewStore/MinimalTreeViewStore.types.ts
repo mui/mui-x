@@ -31,12 +31,6 @@ export interface MinimalTreeViewState<
    */
   itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
   /**
-   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
-   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
-   * Nested DOM structure is not compatible with collapse / expansion animations.
-   */
-  domStructure: 'flat' | 'nested';
-  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    */

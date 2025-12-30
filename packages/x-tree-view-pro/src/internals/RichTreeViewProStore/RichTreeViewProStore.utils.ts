@@ -14,6 +14,8 @@ const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<an
   isItemReorderable: parameters.itemsReordering
     ? (parameters.isItemReorderable ?? DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED)
     : DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED,
+  domStructure: parameters.domStructure ?? (parameters.virtualization ? 'flat' : 'nested'),
+  virtualization: parameters.virtualization ?? false,
 });
 
 export const parametersToStateMapper: TreeViewParametersToStateMapper<

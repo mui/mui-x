@@ -191,6 +191,13 @@ RichTreeView.propTypes = {
    */
   disableSelection: PropTypes.bool,
   /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * @default 'nested'
+   */
+  domStructure: PropTypes.oneOf(['flat', 'nested']),
+  /**
    * Expanded item ids.
    * Used when the item's expansion is controlled.
    */
