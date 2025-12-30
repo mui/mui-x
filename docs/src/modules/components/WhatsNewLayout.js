@@ -72,7 +72,7 @@ const entries = [
       },
       {
         title: 'Date & Time Pickers – Better range defaults [Pro]',
-        url: '/x/react-date-pickers/base-concepts/#reference-date',
+        url: '/x/react-date-pickers/base-concepts/',
       },
       {
         title: 'Date & Time Pickers – Polished inputs across devices',
