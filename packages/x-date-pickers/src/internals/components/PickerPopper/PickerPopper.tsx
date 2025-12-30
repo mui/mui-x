@@ -330,7 +330,7 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const props = useThemeProps({ props: inProps, name: 'MuiPickerPopper' });
   const { children, placement = 'bottom-start', slots, slotProps, classes: classesProp } = props;
 
-  const { open, popupRef, reduceAnimations } = usePickerContext();
+  const { open, popupRef, reduceAnimations, keepPickerOpen } = usePickerContext();
   const { ownerState: pickerOwnerState, rootRefObject } = usePickerPrivateContext();
   const { dismissViews, getCurrentViewMode, onPopperExited, triggerElement, viewContainerRole } =
     usePickerPrivateContext();
@@ -374,7 +374,11 @@ export function PickerPopper(inProps: PickerPopperProps) {
   const classes = useUtilityClasses(classesProp);
 
   const handleClickAway: OnClickAway = useEventCallback(() => {
-    if (viewContainerRole === 'tooltip') {
+    // When keepPickerOpen is enabled, clicking back into the field should NOT close the popper.
+    // We reuse the same guarded behavior as when the view container has the 'tooltip' role,
+    // which defers and checks whether the active element is inside the field root or the popper
+    // before deciding to dismiss.
+    if (viewContainerRole === 'tooltip' || keepPickerOpen) {
       executeInTheNextEventLoopTick(() => {
         if (
           rootRefObject.current?.contains(getActiveElement(rootRefObject.current)) ||
