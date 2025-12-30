@@ -16,7 +16,11 @@ const defaultExpandedItems = items.map((el) => el.id);
 export default function BasicVirtualizedRichTreeViewPro() {
   return (
     <Box sx={{ minHeight: 352, minWidth: 250 }}>
-      <RichTreeViewPro items={items} defaultExpandedItems={defaultExpandedItems} />
+      <RichTreeViewPro
+        items={items}
+        defaultExpandedItems={defaultExpandedItems}
+        virtualization
+      />
     </Box>
   );
 }
