@@ -79,7 +79,6 @@ export function useBarPlotData(
           dataIndex,
           numberOfGroups: stackingGroups.length,
           groupIndex,
-          isSeriesVisible: !series[seriesId].hidden,
         });
 
         if (barDimensions == null) {
@@ -91,7 +90,6 @@ export function useBarPlotData(
         const result: ProcessedBarData = {
           seriesId,
           dataIndex,
-          layout: series[seriesId].layout,
           hidden: series[seriesId].hidden,
           ...barDimensions,
           color: colorGetter(dataIndex),

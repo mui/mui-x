@@ -19,7 +19,6 @@ export function getBarDimensions(params: {
   dataIndex: number;
   numberOfGroups: number;
   groupIndex: number;
-  isSeriesVisible: boolean;
 }) {
   const {
     verticalLayout,
@@ -29,7 +28,6 @@ export function getBarDimensions(params: {
     dataIndex,
     numberOfGroups,
     groupIndex,
-    isSeriesVisible,
   } = params;
 
   const baseScaleConfig = (verticalLayout ? xAxisConfig : yAxisConfig) as ComputedAxis<'band'>;
@@ -63,7 +61,7 @@ export function getBarDimensions(params: {
 
   let barSize = 0;
   if (seriesValue !== 0) {
-    if (isSeriesVisible) {
+    if (!series.hidden) {
       barSize = Math.max(series.minBarSize, maxValueCoord - minValueCoord);
     }
   }
