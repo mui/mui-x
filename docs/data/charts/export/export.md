@@ -122,7 +122,7 @@ See [Composition](/x/react-charts/composition/) for more details on implementing
 
 `ChartsWrapper` is considered the root element of a chart for exporting purposes, and all descendants are included in the export.
 
-To use a custom wrapper element, you must set the reference to the root element with the `useChartRootRef()` hook as shown below:
+To use a custom wrapper instead, you must set the reference to the root element with the `useChartRootRef()` hook as shown below:
 
 {{"demo": "ExportCompositionNoSnap.js"}}
 
