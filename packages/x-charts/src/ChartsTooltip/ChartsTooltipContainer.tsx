@@ -142,7 +142,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
     if (itemPosition !== null) {
       // Tooltip position is already handled by the anchor element
-      return () => {};
+      return undefined;
     }
 
     const pointerUpdate = rafThrottle((x: number, y: number) => {
