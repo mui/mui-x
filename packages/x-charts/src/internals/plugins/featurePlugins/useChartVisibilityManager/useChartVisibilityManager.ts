@@ -6,23 +6,25 @@ import {
   type UseChartVisibilityManagerSignature,
   type VisibilityIdentifier,
 } from './useChartVisibilityManager.types';
-import { buildIdentifier } from './isIdentifierVisible';
 import { EMPTY_VISIBILITY_MAP } from './useChartVisibilityManager.selectors';
+import { visibilityParamToMap } from './visibilityParamToMap';
 
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({
   store,
   params,
+  seriesConfig,
+  instance,
 }) => {
   // Manage controlled state
   useEffectAfterFirstRender(() => {
-    if (params.visibilityMap === undefined) {
+    if (params.hiddenIdentifiers === undefined) {
       return;
     }
 
     if (process.env.NODE_ENV !== 'production' && !store.state.visibilityManager.isControlled) {
       console.error(
         [
-          `MUI X Charts: A chart component is changing the \`visibilityMap\` from uncontrolled to controlled.`,
+          `MUI X Charts: A chart component is changing the \`hiddenIdentifiers\` from uncontrolled to controlled.`,
           'Elements should not switch from uncontrolled to controlled (or vice versa).',
           'Decide between using a controlled or uncontrolled for the lifetime of the component.',
           "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
@@ -32,52 +34,56 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     }
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: params.visibilityMap,
+      visibilityMap: visibilityParamToMap(params.hiddenIdentifiers, seriesConfig),
     });
-  }, [store, params.visibilityMap]);
+  }, [store, params.hiddenIdentifiers, seriesConfig]);
 
-  const hideItem = useEventCallback((...identifiers: VisibilityIdentifier[]) => {
+  const hideItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = buildIdentifier(identifiers);
+    const id = instance.serializeIdentifier(identifier);
 
-    if (visibilityMap[id] === false) {
-      return; // Already hidden
+    if (visibilityMap.has(id) === true) {
+      return;
     }
 
-    const newVisibility = { ...visibilityMap, [id]: false };
+    const newVisibilityMap = new Map(visibilityMap);
+    newVisibilityMap.set(id, identifier);
+
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: newVisibility,
+      visibilityMap: newVisibilityMap,
     });
 
-    params.onVisibilityChange?.(newVisibility);
+    params.onVisibilityChange?.(Array.from(newVisibilityMap.values()));
   });
 
-  const showItem = useEventCallback((...identifiers: VisibilityIdentifier[]) => {
+  const showItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = buildIdentifier(identifiers);
+    const id = instance.serializeIdentifier(identifier);
 
-    if (visibilityMap[id] !== false) {
-      return; // Already visible
+    if (visibilityMap.has(id) === false) {
+      return;
     }
 
-    const newVisibility = { ...visibilityMap, [id]: true };
+    const newVisibilityMap = new Map(visibilityMap);
+    newVisibilityMap.delete(id);
+
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: newVisibility,
+      visibilityMap: newVisibilityMap,
     });
 
-    params.onVisibilityChange?.(newVisibility);
+    params.onVisibilityChange?.(Array.from(newVisibilityMap.values()));
   });
 
-  const toggleItem = useEventCallback((...identifiers: VisibilityIdentifier[]) => {
+  const toggleItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
-    const id = buildIdentifier(identifiers);
+    const id = instance.serializeIdentifier(identifier);
 
-    if (visibilityMap[id] === false) {
-      showItem(id);
+    if (visibilityMap.has(id) === false) {
+      showItem(identifier);
     } else {
-      hideItem(id);
+      hideItem(identifier);
     }
   });
 
@@ -95,14 +101,16 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   };
 };
 
-useChartVisibilityManager.getInitialState = (params) => ({
+useChartVisibilityManager.getInitialState = (params, _, seriesConfig) => ({
   visibilityManager: {
-    visibilityMap: params.visibilityMap || EMPTY_VISIBILITY_MAP,
-    isControlled: params.visibilityMap !== undefined,
+    visibilityMap: params.hiddenIdentifiers
+      ? visibilityParamToMap(params.hiddenIdentifiers, seriesConfig)
+      : EMPTY_VISIBILITY_MAP,
+    isControlled: params.hiddenIdentifiers !== undefined,
   },
 });
 
 useChartVisibilityManager.params = {
   onVisibilityChange: true,
-  visibilityMap: true,
+  hiddenIdentifiers: true,
 };

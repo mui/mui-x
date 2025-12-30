@@ -5,6 +5,7 @@ import type {
 } from './useChartVisibilityManager.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { isIdentifierVisible } from './isIdentifierVisible';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeries';
 
 /**
  * Selector to get the visibility manager state.
@@ -13,7 +14,7 @@ const selectVisibilityManager: ChartOptionalRootSelector<UseChartVisibilityManag
   state,
 ) => state.visibilityManager;
 
-export const EMPTY_VISIBILITY_MAP = {};
+export const EMPTY_VISIBILITY_MAP = new Map();
 
 /**
  * Selector to get the hidden identifiers from the visibility manager.
@@ -28,8 +29,9 @@ export const selectorVisibilityMap = createSelector(
  */
 export const selectorIsItemVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
-  (visibilityMap) => {
-    return (...identifiers: (VisibilityIdentifier | undefined)[]) =>
-      isIdentifierVisible(visibilityMap, identifiers);
+  selectorChartSeriesConfig,
+  (visibilityMap, seriesConfig) => {
+    return (identifier: VisibilityIdentifier) =>
+      isIdentifierVisible(visibilityMap, identifier, seriesConfig);
   },
 );

@@ -1,7 +1,10 @@
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { type SeriesItemIdentifier } from '../../../../models';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  type ChartSeriesType,
+  type ChartsSeriesConfig,
+} from '../../../../models/seriesType/config';
 
 export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> =
   SeriesItemIdentifier<T>;
@@ -15,10 +18,10 @@ export type IsItemVisibleFunction = {
    * If more than one parameter is provided, they will be joined using '-' to form the identifier.
    * Number values will be converted to strings.
    *
-   * @param {VisibilityIdentifier} identifiers The identifier of the item to check.
+   * @param {VisibilityIdentifier} identifier The identifier of the item to check.
    * @returns {boolean} Whether the item is visible.
    */
-  (...identifiers: VisibilityIdentifier[]): boolean;
+  (identifier: VisibilityIdentifier): boolean;
 };
 
 export interface UseChartVisibilityManagerPublicAPI {
@@ -28,39 +31,41 @@ export interface UseChartVisibilityManagerPublicAPI {
    * If more than one parameter is provided, they will be joined using '-' to form the identifier.
    * Number values will be converted to strings.
    *
-   * @param {VisibilityIdentifier} identifiers The identifiers of the item to hide.
+   * @param {VisibilityIdentifier} identifier The identifier of the item to hide.
    */
-  hideItem(...identifiers: VisibilityIdentifier[]): void;
+  hideItem(identifier: VisibilityIdentifier): void;
   /**
    * Show an item by its identifier.
    *
    * If more than one parameter is provided, they will be joined using '-' to form the identifier.
    * Number values will be converted to strings.
    *
-   * @param {VisibilityIdentifier} identifiers The identifiers of the item to show.
+   * @param {VisibilityIdentifier} identifier The identifier of the item to show.
    */
-  showItem(...identifiers: VisibilityIdentifier[]): void;
+  showItem(identifier: VisibilityIdentifier): void;
   /**
    * Toggle the visibility of an item by its identifier.
    *
    * If more than one parameter is provided, they will be joined using '-' to form the identifier.
    * Number values will be converted to strings.
    *
-   * @param {VisibilityIdentifier} identifiers The identifiers of the item to toggle.
+   * @param {VisibilityIdentifier} identifier The identifier of the item to toggle.
    */
-  toggleItemVisibility(...identifiers: VisibilityIdentifier[]): void;
+  toggleItemVisibility(identifier: VisibilityIdentifier): void;
 }
 
 export interface UseChartVisibilityManagerInstance extends UseChartVisibilityManagerPublicAPI {}
 
 export interface UseChartVisibilityManagerParameters {
   /**
-   * Callback fired when the visible series change.
-   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
    */
-  onVisibilityChange?: <T extends string = string>(visibilityMap: Record<T, boolean>) => void;
+  onVisibilityChange?: <T extends ChartSeriesType = keyof ChartsSeriesConfig>(
+    hiddenIdentifiers: VisibilityIdentifier<T>[],
+  ) => void;
   /**
-   * Map of the visibility status of series and/or items.
+   * List of hidden series and/or items.
    *
    * Different chart types use different keys.
    *
@@ -79,7 +84,7 @@ export interface UseChartVisibilityManagerParameters {
    * ]
    * ```
    */
-  visibilityMap?: VisibilityIdentifier[];
+  hiddenIdentifiers?: VisibilityIdentifier[];
 }
 
 export type UseChartVisibilityManagerDefaultizedParameters = UseChartVisibilityManagerParameters;
@@ -87,10 +92,9 @@ export type UseChartVisibilityManagerDefaultizedParameters = UseChartVisibilityM
 export interface UseChartVisibilityManagerState {
   visibilityManager: {
     /**
-     * Map of identifiers visibility status.
+     * Map of hidden identifiers by their serialized form.
      */
     visibilityMap: VisibilityMap;
-    computedOutput: VisibilityIdentifier[];
     /**
      * Internal information to know if the user controls the state or not.
      */
