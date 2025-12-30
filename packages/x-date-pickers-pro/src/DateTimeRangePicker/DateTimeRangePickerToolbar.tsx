@@ -38,7 +38,8 @@ const useUtilityClasses = (classes: Partial<DateTimeRangePickerToolbarClasses> |
 };
 
 export interface DateTimeRangePickerToolbarProps
-  extends BaseToolbarProps, ExportedDateTimeRangePickerToolbarProps {
+  extends BaseToolbarProps,
+    ExportedDateTimeRangePickerToolbarProps {
   ampm?: boolean;
 }
 

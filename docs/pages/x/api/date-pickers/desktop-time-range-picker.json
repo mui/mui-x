@@ -26,6 +26,7 @@
     "inputRef": {
       "type": { "name": "union", "description": "func<br>&#124;&nbsp;{ current?: object }" }
     },
+    "keepOpenDuringFieldFocus": { "type": { "name": "bool" }, "default": "false" },
     "label": { "type": { "name": "node" } },
     "localeText": { "type": { "name": "object" } },
     "maxTime": { "type": { "name": "object" } },

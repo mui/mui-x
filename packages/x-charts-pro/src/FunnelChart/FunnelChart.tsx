@@ -27,8 +27,7 @@ import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './Funnel
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
-  extends
-    Omit<
+  extends Omit<
       ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'

@@ -23,8 +23,7 @@ export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
 
 export interface SankeyChartProps
-  extends
-    Omit<
+  extends Omit<
       ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
       'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
     >,

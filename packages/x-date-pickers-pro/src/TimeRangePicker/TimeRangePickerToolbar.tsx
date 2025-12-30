@@ -49,14 +49,13 @@ const useUtilityClasses = (
 };
 
 export interface TimeRangePickerToolbarProps
-  extends Omit<BaseToolbarProps, 'toolbarFormat'>, ExportedTimeRangePickerToolbarProps {
+  extends Omit<BaseToolbarProps, 'toolbarFormat'>,
+    ExportedTimeRangePickerToolbarProps {
   ampm: boolean;
 }
 
-export interface ExportedTimeRangePickerToolbarProps extends Omit<
-  ExportedBaseToolbarProps,
-  'toolbarFormat'
-> {
+export interface ExportedTimeRangePickerToolbarProps
+  extends Omit<ExportedBaseToolbarProps, 'toolbarFormat'> {
   /**
    * Override or extend the styles applied to the component.
    */

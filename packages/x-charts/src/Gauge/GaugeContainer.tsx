@@ -10,8 +10,7 @@ import { type ChartCorePluginSignatures } from '../internals/plugins/corePlugins
 import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
-  extends
-    Omit<ChartsSurfaceProps, 'children'>,
+  extends Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
       'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures'

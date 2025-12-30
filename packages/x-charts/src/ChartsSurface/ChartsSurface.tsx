@@ -20,10 +20,11 @@ import {
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { selectorChartHasZoom } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 
-export interface ChartsSurfaceProps extends Omit<
-  React.SVGProps<SVGSVGElement>,
-  'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-> {
+export interface ChartsSurfaceProps
+  extends Omit<
+    React.SVGProps<SVGSVGElement>,
+    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
+  > {
   className?: string;
   title?: string;
   desc?: string;

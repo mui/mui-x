@@ -56,8 +56,7 @@ import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
 import { FocusedLineMark } from './FocusedLineMark';
 
 export interface LineChartSlots
-  extends
-    ChartsAxisSlots,
+  extends ChartsAxisSlots,
     AreaPlotSlots,
     LinePlotSlots,
     MarkPlotSlots,
@@ -68,8 +67,7 @@ export interface LineChartSlots
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 export interface LineChartSlotProps
-  extends
-    ChartsAxisSlotProps,
+  extends ChartsAxisSlotProps,
     AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
@@ -82,8 +80,10 @@ export interface LineChartSlotProps
 
 export type LineSeries = MakeOptional<LineSeriesType, 'type'>;
 export interface LineChartProps
-  extends
-    Omit<ChartContainerProps<'line', LineChartPluginSignatures>, 'series' | 'plugins' | 'zAxis'>,
+  extends Omit<
+      ChartContainerProps<'line', LineChartPluginSignatures>,
+      'series' | 'plugins' | 'zAxis'
+    >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**

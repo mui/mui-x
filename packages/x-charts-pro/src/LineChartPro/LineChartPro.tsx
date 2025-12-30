@@ -35,16 +35,16 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
-  extends Omit<LineChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
+  extends Omit<LineChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface LineChartProSlotProps
-  extends
-    Omit<LineChartSlotProps, 'toolbar'>,
+  extends Omit<LineChartSlotProps, 'toolbar'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface LineChartProProps
-  extends
-    Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+  extends Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'line', LineChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'

@@ -37,7 +37,8 @@ export interface ExportedDateTimePickerToolbarProps extends ExportedBaseToolbarP
 }
 
 export interface DateTimePickerToolbarProps
-  extends ExportedDateTimePickerToolbarProps, BaseToolbarProps {
+  extends ExportedDateTimePickerToolbarProps,
+    BaseToolbarProps {
   /**
    * If provided, it will be used instead of `dateTimePickerToolbarTitle` from localization.
    */

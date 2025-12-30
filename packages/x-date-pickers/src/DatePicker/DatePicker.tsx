@@ -59,12 +59,6 @@ DatePicker.propTypes = {
    */
   closeOnSelect: PropTypes.bool,
   /**
-   * If `true`, keep the picker open when the value is edited from the field (typing in the input).
-   * Only affects changes coming from the field.
-   * @default false
-   */
-  keepOpenDuringFieldFocus: PropTypes.bool,
-  /**
    * Formats the day of week displayed in the calendar header.
    * @param {PickerValidDate} date The date of the day of week provided by the adapter.
    * @returns {string} The name to display.
@@ -137,6 +131,13 @@ DatePicker.propTypes = {
    * Pass a ref to the `input` element.
    */
   inputRef: refType,
+  /**
+   * If `true`, keep the picker open when the value is edited from the field.
+   * Useful to prevent the popper/dialog from closing while typing in the input.
+   * This only affects changes with `source = "field"` and does not alter view interactions.
+   * @default false
+   */
+  keepOpenDuringFieldFocus: PropTypes.bool,
   /**
    * The label content.
    */
