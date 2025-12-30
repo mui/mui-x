@@ -1,5 +1,4 @@
 ---
-productId: x-introduction
 title: What's new in MUI X
 ---
 
