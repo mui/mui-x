@@ -34,9 +34,7 @@ export interface UsePickerBaseProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
->
-  extends
-    OnErrorProps<TValue, TError>,
+> extends OnErrorProps<TValue, TError>,
     Omit<
       UseViewsOptions<any, TView>,
       'onChange' | 'onFocusedViewChange' | 'focusedView' | 'getStepNavigation'
@@ -158,8 +156,8 @@ export interface UsePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
->
-  extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>, UsePickerNonStaticProps {
+> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>,
+    UsePickerNonStaticProps {
   // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
   referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   className?: string;
@@ -231,10 +229,8 @@ export interface UsePickerState<TValue extends PickerValidValue> {
   hasBeenModifiedSinceMount: boolean;
 }
 
-export interface PickerViewsRendererBaseExternalProps extends Omit<
-  UsePickerProps<any, any, any, any>,
-  'openTo' | 'viewRenderers' | 'onChange'
-> {}
+export interface PickerViewsRendererBaseExternalProps
+  extends Omit<UsePickerProps<any, any, any, any>, 'openTo' | 'viewRenderers' | 'onChange'> {}
 
 export type PickerViewsRendererProps<
   TValue extends PickerValidValue,

@@ -22,10 +22,17 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
 
   it('keeps popper open when clicking back into one of the fields (multi input)', async () => {
     const { user } = render(
-      <DesktopDateRangePicker keepOpenDuringFieldFocus slots={{ field: MultiInputDateRangeField }} />,
+      <DesktopDateRangePicker
+        keepOpenDuringFieldFocus
+        slots={{ field: MultiInputDateRangeField }}
+      />,
     );
 
-    await openPickerAsync(user, { type: 'date-range', fieldType: 'multi-input', initialFocus: 'start' });
+    await openPickerAsync(user, {
+      type: 'date-range',
+      fieldType: 'multi-input',
+      initialFocus: 'start',
+    });
 
     const textboxes = screen.getAllByRole('textbox');
     await user.click(textboxes[0]);

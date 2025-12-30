@@ -98,9 +98,8 @@ export interface DescribeTreeViewRendererUtils {
   getItemIdTree: () => TreeViewItemIdTreeElement[];
 }
 
-export interface DescribeTreeViewRendererReturnValue<
-  TStore extends TreeViewAnyStore,
-> extends DescribeTreeViewRendererUtils {
+export interface DescribeTreeViewRendererReturnValue<TStore extends TreeViewAnyStore>
+  extends DescribeTreeViewRendererUtils {
   /**
    * The ref object that allows Tree View manipulation.
    */

@@ -72,7 +72,8 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   'data-editable'?: '';
 }
 
-export interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromUseTreeItem {}
+export interface UseTreeItemContentSlotOwnProps
+  extends UseTreeItemContentSlotPropsFromUseTreeItem {}
 
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemContentSlotOwnProps;
