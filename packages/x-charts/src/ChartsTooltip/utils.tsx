@@ -65,10 +65,8 @@ export function usePointerType(): null | PointerType {
       return () => {};
     }
 
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
-        setPointerType(null);
-      }
+    const handleOut = () => {
+      setPointerType(null);
     };
 
     const handleEnter = (event: PointerEvent) => {
@@ -78,11 +76,11 @@ export function usePointerType(): null | PointerType {
     };
 
     element.addEventListener('pointerenter', handleEnter);
-    element.addEventListener('pointerup', handleOut);
+    element.addEventListener('pointerleave', handleOut);
 
     return () => {
       element.removeEventListener('pointerenter', handleEnter);
-      element.removeEventListener('pointerup', handleOut);
+      element.removeEventListener('pointerleave', handleOut);
     };
   }, [svgRef]);
 

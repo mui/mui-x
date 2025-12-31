@@ -125,7 +125,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
   const lastInteraction = store.use(selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
+  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
   const itemPosition = store.use(
     trigger === 'item' && computedAnchor === 'node'
