@@ -116,11 +116,6 @@ export default function StackOrderDemo() {
           ]}
           yAxis={[{ min: 0, max: 100 }]}
           series={modifiedSeries}
-          slotProps={{
-            legend: {
-              toggleVisibilityOnClick: true,
-            },
-          }}
         />
       </Box>
     </Box>

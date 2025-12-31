@@ -18,6 +18,12 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
+    "hiddenIdentifiers": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
       "type": {
@@ -69,7 +75,13 @@
         "describedArgs": ["event", "radarItemIdentifier"]
       }
     },
-    "onVisibilityChange": { "type": { "name": "func" } },
+    "onVisibilityChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenIdentifiers"]
+      }
+    },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"
@@ -89,12 +101,6 @@
         "type": "function(index: number) => string",
         "describedArgs": ["index"],
         "returned": "string"
-      }
-    },
-    "visibilityMap": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'line' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'radar' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'funnel' }<br>&#124;&nbsp;{ nodeId: number<br>&#124;&nbsp;string, seriesId: number<br>&#124;&nbsp;string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: number<br>&#124;&nbsp;string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }&gt;"
       }
     },
     "width": { "type": { "name": "number" } }

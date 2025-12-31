@@ -26,6 +26,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenIdentifiers": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
     },
@@ -77,7 +80,15 @@
         }
       }
     },
-    "onVisibilityChange": { "description": "Callback fired when the visible series change." },
+    "onVisibilityChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenIdentifiers": {
+          "name": "hiddenIdentifiers",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "plotType": { "description": "Type of plot used." },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."
@@ -96,9 +107,6 @@
         "value": { "name": "value", "description": "The value to format." },
         "string": { "name": "string", "description": "the formatted value." }
       }
-    },
-    "visibilityMap": {
-      "description": "Map of the visibility status of series and/or items.<br>Different chart types use different keys."
     },
     "voronoiMaxRadius": {
       "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."

@@ -13,30 +13,22 @@ const data = [
 ];
 
 export default function ControlledVisibility() {
-  const [visibilityMap, setVisibilityMap] = React.useState({});
+  const [hiddenIdentifiers, setHiddenIdentifiers] = React.useState([]);
 
   const handleShowAll = () => {
-    setVisibilityMap({
-      'pie-0': true,
-      'pie-1': true,
-      'pie-2': true,
-    });
+    setHiddenIdentifiers([
+      { type: 'pie', seriesId: 'pie', dataIndex: 0 },
+      { type: 'pie', seriesId: 'pie', dataIndex: 1 },
+      { type: 'pie', seriesId: 'pie', dataIndex: 2 },
+    ]);
   };
 
   const handleHideAll = () => {
-    setVisibilityMap({
-      'pie-0': false,
-      'pie-1': false,
-      'pie-2': false,
-    });
+    setHiddenIdentifiers([]);
   };
 
   const handleShowOnlyA = () => {
-    setVisibilityMap({
-      'pie-0': true,
-      'pie-1': false,
-      'pie-2': false,
-    });
+    setHiddenIdentifiers([{ type: 'pie', seriesId: 'pie', dataIndex: 0 }]);
   };
 
   const handleToggleChange = (_event, newValue) => {
@@ -50,18 +42,10 @@ export default function ControlledVisibility() {
   };
 
   const getCurrentValue = () => {
-    const allVisible =
-      visibilityMap['pie-0'] !== false &&
-      visibilityMap['pie-1'] !== false &&
-      visibilityMap['pie-2'] !== false;
-    const allHidden =
-      visibilityMap['pie-0'] === false &&
-      visibilityMap['pie-1'] === false &&
-      visibilityMap['pie-2'] === false;
+    const allVisible = hiddenIdentifiers.length === data.length;
+    const allHidden = hiddenIdentifiers.length === 0;
     const onlyAVisible =
-      visibilityMap['pie-0'] !== false &&
-      visibilityMap['pie-1'] === false &&
-      visibilityMap['pie-2'] === false;
+      hiddenIdentifiers.length === 1 && hiddenIdentifiers[0].dataIndex === 0;
 
     if (allVisible) {
       return 'all';
@@ -100,13 +84,13 @@ export default function ControlledVisibility() {
       <PieChart
         series={[{ id: 'pie', data }]}
         height={300}
-        visibilityMap={visibilityMap}
+        hiddenIdentifiers={hiddenIdentifiers}
         slotProps={{
           legend: {
             toggleVisibilityOnClick: true,
           },
         }}
-        onVisibilityChange={(newVisibilityMap) => setVisibilityMap(newVisibilityMap)}
+        onVisibilityChange={(newIdentifiers) => setHiddenIdentifiers(newIdentifiers)}
       />
     </Stack>
   );

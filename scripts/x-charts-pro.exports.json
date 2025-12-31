@@ -660,6 +660,7 @@
   { "name": "useZAxes", "kind": "Function" },
   { "name": "useZAxis", "kind": "Function" },
   { "name": "useZColorScale", "kind": "Function" },
+  { "name": "VisibilityIdentifier", "kind": "TypeAlias" },
   { "name": "XAxis", "kind": "TypeAlias" },
   { "name": "YAxis", "kind": "TypeAlias" },
   { "name": "yellowPalette", "kind": "Variable" },

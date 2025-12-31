@@ -10,6 +10,12 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "height": { "type": { "name": "number" } },
+    "hiddenIdentifiers": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'pie' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
@@ -34,7 +40,13 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
-    "onVisibilityChange": { "type": { "name": "func" } },
+    "onVisibilityChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenIdentifiers"]
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -42,12 +54,6 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    },
-    "visibilityMap": {
-      "type": {
-        "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'line' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
-      }
     },
     "width": { "type": { "name": "number" } }
   },

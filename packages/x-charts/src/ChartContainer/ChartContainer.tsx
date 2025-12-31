@@ -111,6 +111,37 @@ ChartContainer.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenIdentifiers: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.shape({
+        toLocaleString: PropTypes.func.isRequired,
+        toString: PropTypes.func.isRequired,
+        valueOf: PropTypes.func.isRequired,
+      }),
+      type: PropTypes.object.isRequired,
+    }),
+  ),
+  /**
    * The controlled axis highlight.
    * Identified by the axis id, and data index.
    */
@@ -181,8 +212,8 @@ ChartContainer.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
-   * Callback fired when the visible series change.
-   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
    */
   onVisibilityChange: PropTypes.func,
   /**
@@ -945,55 +976,6 @@ ChartContainer.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
-  /**
-   * Map of the visibility status of series and/or items.
-   *
-   * Different chart types use different keys.
-   *
-   * @example
-   * ```ts
-   * [
-   *   {
-   *     type: 'pie',
-   *     seriesId: 'series-1',
-   *     itemId: 'item-3',
-   *   },
-   *   {
-   *     type: 'line',
-   *     seriesId: 'series-2',
-   *   }
-   * ]
-   * ```
-   */
-  visibilityMap: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number.isRequired,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['line']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number.isRequired,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['scatter']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number.isRequired,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['pie']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['radar']).isRequired,
-      }),
-    ]).isRequired,
-  ),
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.

@@ -160,6 +160,33 @@ RadarChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenIdentifiers: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -231,8 +258,8 @@ RadarChart.propTypes = {
    */
   onMarkClick: PropTypes.func,
   /**
-   * Callback fired when the visible series change.
-   * @param {{ [key: string]: boolean }} visibilityMap The new visibility map.
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
    */
   onVisibilityChange: PropTypes.func,
   /**
@@ -298,55 +325,6 @@ RadarChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
-  /**
-   * Map of the visibility status of series and/or items.
-   *
-   * Different chart types use different keys.
-   *
-   * @example
-   * ```ts
-   * [
-   *   {
-   *     type: 'pie',
-   *     seriesId: 'series-1',
-   *     itemId: 'item-3',
-   *   },
-   *   {
-   *     type: 'line',
-   *     seriesId: 'series-2',
-   *   }
-   * ]
-   * ```
-   */
-  visibilityMap: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.shape({
-        dataIndex: PropTypes.number.isRequired,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['bar']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['line']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number.isRequired,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['scatter']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number.isRequired,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['pie']).isRequired,
-      }),
-      PropTypes.shape({
-        dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-        type: PropTypes.oneOf(['radar']).isRequired,
-      }),
-    ]).isRequired,
-  ),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
