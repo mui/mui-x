@@ -68,7 +68,7 @@
     "@babel/traverse": "catalog:",
     "@babel/types": "^7.28.5",
     "@emotion/cache": "catalog:",
-    "@inquirer/prompts": "^7.10.1",
+    "@inquirer/prompts": "^8.0.0",
     "@mui/internal-babel-plugin-display-name": "1.0.4-canary.8",
     "@mui/internal-bundle-size-checker": "1.0.9-canary.57",
     "@mui/internal-code-infra": "0.0.3-canary.62",
