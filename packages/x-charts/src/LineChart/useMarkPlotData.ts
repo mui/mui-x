@@ -56,7 +56,7 @@ export function useMarkPlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
-          stackedData,
+          visibleStackedData,
           data,
           showMark = true,
           shape = 'circle',
@@ -95,13 +95,13 @@ export function useMarkPlotData(
         if (xData) {
           for (let index = 0; index < xData.length; index += 1) {
             const x = xData[index];
-            const value = data[index] == null ? null : stackedData[index][1];
+            const value = data[index] == null ? null : visibleStackedData[index][1];
 
             if (value === null) {
               continue;
             }
 
-            const y = yScale(value)!;
+            const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
             const xPos = xScale(x);
 
             if (!instance.isPointInside(xPos, y)) {
