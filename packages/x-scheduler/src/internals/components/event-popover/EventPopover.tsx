@@ -45,6 +45,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
         <Popover.Positioner
           sideOffset={8}
           anchor={anchor}
+          disableAnchorTracking
           positionMethod="fixed"
           className={clsx('PopoverPositioner', 'EventPopoverPositioner', getColorClassName(color))}
         >
