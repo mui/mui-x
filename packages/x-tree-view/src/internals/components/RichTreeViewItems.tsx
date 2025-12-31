@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
-import { MakeRequired } from '@mui/x-internals/types';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -59,8 +58,6 @@ export function RichTreeViewItems<TProps extends object>(props: RichTreeViewItem
   const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
   const { classes } = useTreeViewStyleContext();
 
-  const Root = slots.root;
-
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
   const domStructure = useStore(store, itemsSelectors.domStructure);
@@ -71,8 +68,9 @@ export function RichTreeViewItems<TProps extends object>(props: RichTreeViewItem
 
   const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
 
+  const Root = slots.root;
   const rootProps = useSlotProps({
-    elementType: slots.root,
+    elementType: Root,
     externalSlotProps: slotProps?.root,
     className: classes.root,
     getSlotProps: getRootProps,
@@ -113,7 +111,7 @@ export interface RichTreeViewItemsSlots {
    * Element rendered at the root.
    * @default RichTreeViewProRoot
    */
-  root?: React.ElementType;
+  root: React.ElementType;
   /**
    * Custom component to render a Tree Item.
    * @default TreeItem.
@@ -131,7 +129,7 @@ export interface RichTreeViewItemsProps<TProps extends object> {
    * Overridable component slots.
    * @default {}
    */
-  slots: MakeRequired<RichTreeViewItemsSlots, 'root'>;
+  slots: RichTreeViewItemsSlots;
   /**
    * The props used for each component slot.
    * @default {}

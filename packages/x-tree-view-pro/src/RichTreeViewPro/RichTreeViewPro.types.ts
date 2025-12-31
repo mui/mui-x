@@ -13,7 +13,13 @@ import {
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
-export interface RichTreeViewProSlots extends TreeViewSlots, RichTreeViewItemsSlots {}
+export interface RichTreeViewProSlots extends TreeViewSlots, Omit<RichTreeViewItemsSlots, 'root'> {
+  /**
+   * Element rendered at the root.
+   * @default RichTreeViewProRoot
+   */
+  root?: React.ElementType;
+}
 
 export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean | undefined>
   extends TreeViewSlotProps, RichTreeViewItemsSlotProps<RichTreeViewProProps<R, Multiple>> {}

@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import Box from '@mui/material/Box';
 import { LayoutList, useVirtualizer, Virtualizer } from '@mui/x-virtualizer';
 import { createSelectorMemoized, useStore } from '@mui/x-internals/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
@@ -104,13 +103,7 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
 
   return (
     <VirtualizerContext.Provider value={virtualizer}>
-      <Root
-        {...rootProps}
-        sx={{
-          height: '100%',
-          width: '100%',
-        }}
-      >
+      <Root {...rootProps} sx={{}}>
         <div className="List--filler" {...contentProps} />
         <div className="List--positioner" {...positionerProps} />
         <ListContent />
