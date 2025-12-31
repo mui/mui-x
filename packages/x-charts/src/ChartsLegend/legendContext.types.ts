@@ -47,9 +47,9 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
    */
   itemId?: PieItemId;
   /**
-   * Same as `itemId` but kept for compatibility with series types.
+   * The data index of the item in the series data array
    */
-  dataIndex?: string | number;
+  dataIndex?: number;
 }
 
 export interface PiecewiseColorLegendItemContext extends LegendItemContextBase {

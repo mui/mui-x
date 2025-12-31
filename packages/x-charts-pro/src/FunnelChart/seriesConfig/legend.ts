@@ -19,7 +19,7 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
         seriesId,
         id,
         itemId: id,
-        dataIndex: id,
+        dataIndex,
         color: item.color,
         label: formattedLabel,
       });
