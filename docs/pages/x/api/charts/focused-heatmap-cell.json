@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "FocusedHeatmapCell",
+  "imports": [
+    "import { FocusedHeatmapCell } from '@mui/x-charts-pro/Heatmap';",
+    "import { FocusedHeatmapCell } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedHeatmapCell",
+  "filename": "/packages/x-charts-pro/src/Heatmap/FocusedHeatmapCell.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}
