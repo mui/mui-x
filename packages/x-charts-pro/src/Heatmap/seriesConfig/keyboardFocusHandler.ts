@@ -37,9 +37,10 @@ const updateCoordinates = (
     ...currentItem,
     xIndex: newXIndex,
     yIndex: newYIndex,
-    ...(dataIndex === -1 || dataIndex === undefined ? {} : { dataIndex }),
+    dataIndex: dataIndex === -1 || dataIndex === undefined ? undefined : dataIndex,
   };
 };
+
 const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event) => {
   switch (event.key) {
     case 'ArrowRight':
