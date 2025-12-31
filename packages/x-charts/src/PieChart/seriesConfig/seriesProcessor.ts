@@ -28,9 +28,8 @@ const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, isItemVisible)
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
   seriesOrder.forEach((seriesId) => {
     // Filter out hidden data points for arc calculation
-    const visibleData = series[seriesId].data.filter((piePoint, index) => {
-      const itemId = piePoint.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
-      return isItemVisible?.(seriesId, itemId);
+    const visibleData = series[seriesId].data.filter((_, index) => {
+      return isItemVisible?.({ type: 'pie', seriesId, dataIndex: index });
     });
 
     const visibleArcs = d3Pie()
@@ -49,7 +48,7 @@ const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, isItemVisible)
       ...series[seriesId],
       data: series[seriesId].data.map((item, index) => {
         const itemId = item.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
-        const isHidden = !isItemVisible?.(seriesId, itemId);
+        const isHidden = !isItemVisible?.({ type: 'pie', seriesId, dataIndex: index });
         let arcData;
 
         if (isHidden) {

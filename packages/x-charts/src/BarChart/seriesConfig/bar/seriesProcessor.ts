@@ -95,7 +95,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
         const keyIndex = keys.indexOf(key);
         const seriesId = ids[keyIndex];
 
-        if (!isItemVisible?.(`${seriesId}`)) {
+        if (!isItemVisible?.({ type: 'bar', seriesId })) {
           // For hidden series, return 0 so they don't contribute to the stack
           return 0;
         }
@@ -112,7 +112,7 @@ const seriesProcessor: SeriesProcessor<'bar'> = (params, dataset, isItemVisible)
             return typeof value === 'number' ? value : null;
           })
         : series[id].data!;
-      const hidden = !isItemVisible?.(`${id}`);
+      const hidden = !isItemVisible?.({ type: 'bar', seriesId: id });
       completedSeries[id] = {
         layout: 'vertical',
         labelMarkType: 'square',

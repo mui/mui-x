@@ -6,8 +6,11 @@ import {
   type ChartsSeriesConfig,
 } from '../../../../models/seriesType/config';
 
-export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> =
-  SeriesItemIdentifier<T>;
+export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> = Partial<
+  SeriesItemIdentifier<T>
+> &
+  // Only type is required. If type has subTypes, subType is required too.
+  (SeriesItemIdentifier<T> extends { subType?: infer U } ? { type: T; subType: U } : { type: T });
 
 export type VisibilityMap = Map<string, VisibilityIdentifier>;
 

@@ -12,7 +12,7 @@ const seriesProcessor: SeriesProcessor<'radar'> = (params, _, isItemVisible) => 
 
   seriesOrder.forEach((seriesId) => {
     const series = seriesMap[seriesId];
-    const hidden = !isItemVisible?.(`${seriesId}`);
+    const hidden = !isItemVisible?.({ type: 'radar', seriesId });
 
     completedSeries[seriesId] = {
       labelMarkType: 'square',

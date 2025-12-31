@@ -45,7 +45,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = (
             ...seriesData?.preview,
           },
           data,
-          hidden: !isItemVisible?.(`${seriesId}`),
+          hidden: !isItemVisible?.({ type: 'scatter', seriesId }),
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
       ];
