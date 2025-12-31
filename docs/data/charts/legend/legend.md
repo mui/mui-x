@@ -44,7 +44,7 @@ This prop accepts an array of item identifiers that should be hidden in the char
 
 Different chart types have different identifier formats:
 
-- All identifiers require a `type` field indicating the series type (e.g., `'line'`, `'bar'`, `'pie'`, etc.).
+- All identifiers require a `type` field indicating the series type (for example, `'line'`, `'bar'`, `'pie'`, etc.).
 - For most charts, the only needed property is the `seriesId` for series-level visibility control.
 - For pie charts, the identifier also includes a `dataIndex` to specify individual slices.
 
