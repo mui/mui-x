@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system/styleFunctionSx';
-import { SlotComponentProps } from '@mui/utils/types';
 import { RichTreeViewClasses } from './richTreeViewClasses';
 import {
   RichTreeViewItemsSlotProps,
@@ -16,18 +15,10 @@ import { TreeViewValidItem } from '../models/items';
 import { UseTreeViewStoreParameters } from '../internals/hooks/useTreeViewStore';
 import { TreeViewPublicAPI } from '../internals/models';
 
-export interface RichTreeViewSlots extends TreeViewSlots, RichTreeViewItemsSlots {
-  /**
-   * Element rendered at the root.
-   * @default RichTreeViewRoot
-   */
-  root?: React.ElementType;
-}
+export interface RichTreeViewSlots extends TreeViewSlots, RichTreeViewItemsSlots {}
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends TreeViewSlotProps, RichTreeViewItemsSlotProps {
-  root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
-}
+  extends TreeViewSlotProps, RichTreeViewItemsSlotProps<RichTreeViewProps<R, Multiple>> {}
 
 export type RichTreeViewApiRef<
   R extends TreeViewValidItem<R> = any,

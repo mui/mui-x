@@ -12,7 +12,10 @@ import {
   RichTreeViewItem,
   RichTreeViewItemsProps,
   useTreeViewContext,
+  useTreeViewRootProps,
+  useTreeViewStyleContext,
 } from '@mui/x-tree-view/internals';
+import useSlotProps from '@mui/utils/useSlotProps';
 import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
 const VirtualizerContext = React.createContext<Virtualizer | null>(null);
@@ -30,9 +33,12 @@ const ListContent = React.memo(() => {
   return <React.Fragment>{rows}</React.Fragment>;
 });
 
-export function RichTreeViewVirtualizedItems(props: RichTreeViewItemsProps) {
-  const { slots, slotProps } = props;
+export function RichTreeViewVirtualizedItems<TProps extends object>(
+  props: RichTreeViewItemsProps<TProps>,
+) {
+  const { slots, slotProps, ownerState, forwardedProps, rootRef } = props;
   const { store } = useTreeViewContext<RichTreeViewProStore<any, any>>();
+  const { classes } = useTreeViewStyleContext();
 
   const domStructure = useStore(store, itemsSelectors.domStructure);
   if (domStructure === 'nested') {
@@ -78,26 +84,37 @@ export function RichTreeViewVirtualizedItems(props: RichTreeViewItemsProps) {
     ),
   });
 
-  // Selector hooks
   const containerProps = virtualizer.store.use(LayoutList.selectors.containerProps);
   const contentProps = virtualizer.store.use(LayoutList.selectors.contentProps);
   const positionerProps = virtualizer.store.use(LayoutList.selectors.positionerProps);
 
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
+  const Root = slots.root;
+  const rootProps = useSlotProps({
+    elementType: Root,
+    externalSlotProps: slotProps?.root,
+    className: classes.root,
+    getSlotProps: getRootProps,
+    additionalProps: {
+      ...containerProps,
+      'data-virtualized': '',
+    },
+    ownerState,
+  });
+
   return (
-    <Box
-      {...containerProps}
-      sx={{
-        height: 352,
-        width: '100%',
-        overflowX: 'hidden',
-        overflowY: 'auto',
-      }}
-    >
-      <div className="List--filler" {...contentProps} />
-      <div className="List--positioner" {...positionerProps} />
-      <VirtualizerContext.Provider value={virtualizer}>
+    <VirtualizerContext.Provider value={virtualizer}>
+      <Root
+        {...rootProps}
+        sx={{
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <div className="List--filler" {...contentProps} />
+        <div className="List--positioner" {...positionerProps} />
         <ListContent />
-      </VirtualizerContext.Provider>
-    </Box>
+      </Root>
+    </VirtualizerContext.Provider>
   );
 }

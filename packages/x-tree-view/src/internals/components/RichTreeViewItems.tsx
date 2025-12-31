@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { EMPTY_ARRAY } from '@base-ui/utils/empty';
+import { MakeRequired } from '@mui/x-internals/types';
 import { useStore } from '@mui/x-internals/store';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { SlotComponentProps } from '@mui/utils/types';
@@ -8,10 +9,11 @@ import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowComp
 import { TreeItem, TreeItemProps } from '../../TreeItem';
 import { TreeViewItemId } from '../../models';
 import { itemsSelectors } from '../plugins/items';
-import { useTreeViewContext } from '../TreeViewProvider';
+import { useTreeViewContext, useTreeViewStyleContext } from '../TreeViewProvider';
 import { expansionSelectors } from '../plugins/expansion';
 import { RichTreeViewStore } from '../RichTreeViewStore';
 import { MinimalTreeViewState } from '../MinimalTreeViewStore';
+import { useTreeViewRootProps } from '../hooks/useTreeViewRootProps';
 
 const RichTreeViewItemsContext = React.createContext<
   ((itemId: TreeViewItemId) => React.ReactNode) | null
@@ -52,9 +54,12 @@ export const RichTreeViewItem = React.memo(function RichTreeViewItem({
   );
 }, fastObjectShallowCompare);
 
-export function RichTreeViewItems(props: RichTreeViewItemsProps) {
-  const { slots, slotProps } = props;
+export function RichTreeViewItems<TProps extends object>(props: RichTreeViewItemsProps<TProps>) {
+  const { slots, slotProps, ownerState, forwardedProps, rootRef } = props;
   const { store } = useTreeViewContext<RichTreeViewStore<any, any>>();
+  const { classes } = useTreeViewStyleContext();
+
+  const Root = slots.root;
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
@@ -63,6 +68,16 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
     store,
     domStructure === 'flat' ? expansionSelectors.flatList : selectorChildrenIdsNull,
   );
+
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, rootRef);
+
+  const rootProps = useSlotProps({
+    elementType: slots.root,
+    externalSlotProps: slotProps?.root,
+    className: classes.root,
+    getSlotProps: getRootProps,
+    ownerState,
+  });
 
   const skipChildren = domStructure === 'flat';
 
@@ -83,7 +98,7 @@ export function RichTreeViewItems(props: RichTreeViewItemsProps) {
 
   return (
     <RichTreeViewItemsContext.Provider value={renderItem}>
-      {items.map(renderItem)}
+      <Root {...rootProps}>{items.map(renderItem)}</Root>
     </RichTreeViewItemsContext.Provider>
   );
 }
@@ -95,27 +110,45 @@ interface RichTreeViewItemsOwnerState {
 
 export interface RichTreeViewItemsSlots {
   /**
+   * Element rendered at the root.
+   * @default RichTreeViewProRoot
+   */
+  root?: React.ElementType;
+  /**
    * Custom component to render a Tree Item.
    * @default TreeItem.
    */
   item?: React.JSXElementConstructor<TreeItemProps>;
 }
 
-export interface RichTreeViewItemsSlotProps {
+export interface RichTreeViewItemsSlotProps<TProps extends object> {
   item?: SlotComponentProps<typeof TreeItem, {}, RichTreeViewItemsOwnerState>;
+  root?: SlotComponentProps<'ul', {}, TProps>;
 }
 
-export interface RichTreeViewItemsProps {
+export interface RichTreeViewItemsProps<TProps extends object> {
   /**
    * Overridable component slots.
    * @default {}
    */
-  slots?: RichTreeViewItemsSlots;
+  slots: MakeRequired<RichTreeViewItemsSlots, 'root'>;
   /**
    * The props used for each component slot.
    * @default {}
    */
-  slotProps?: RichTreeViewItemsSlotProps;
+  slotProps?: RichTreeViewItemsSlotProps<TProps>;
+  /**
+   * Owner state applied to the root slot component.
+   */
+  ownerState: TProps;
+  /**
+   * Props provided to the component and applied to the root element.
+   */
+  forwardedProps: React.HTMLAttributes<HTMLUListElement>;
+  /**
+   * Ref forwarded to the root element.
+   */
+  rootRef: React.Ref<HTMLUListElement>;
 }
 
 interface RichTreeViewItemProps extends Pick<TreeItemProps, 'id' | 'itemId' | 'children'> {

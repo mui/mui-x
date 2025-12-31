@@ -6,7 +6,6 @@ import { useStore } from '@mui/x-internals/store';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import composeClasses from '@mui/utils/composeClasses';
-import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
 import { getRichTreeViewUtilityClass } from './richTreeViewClasses';
 import { RichTreeViewProps } from './RichTreeView.types';
@@ -15,7 +14,6 @@ import { TreeViewProvider } from '../internals/TreeViewProvider';
 import { RichTreeViewItems } from '../internals/components/RichTreeViewItems';
 import { lazyLoadingSelectors } from '../internals/plugins/lazyLoading';
 import { TreeViewValidItem } from '../models';
-import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
 import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
 import { useExtractRichTreeViewParameters } from './useExtractRichTreeViewParameters';
 import { itemsSelectors } from '../internals/plugins/items';
@@ -87,26 +85,28 @@ const RichTreeView = React.forwardRef(function RichTreeView<
     }
   }
 
-  const { slots, slotProps, apiRef, parameters, forwardedProps } =
-    useExtractRichTreeViewParameters(props);
+  const {
+    slots: inSlots,
+    slotProps,
+    apiRef,
+    parameters,
+    forwardedProps,
+  } = useExtractRichTreeViewParameters(props);
+
+  // Context hooks
   const store = useTreeViewStore(RichTreeViewStore, parameters);
 
+  // Ref hooks
   const ref = React.useRef<HTMLUListElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, ref);
-  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
-  const classes = useUtilityClasses(props);
 
+  // Selector hooks
   const isLoading = useStore(store, lazyLoadingSelectors.isItemLoading, null);
   const error = useStore(store, lazyLoadingSelectors.itemError, null);
 
-  const Root = slots?.root ?? RichTreeViewRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState: props as RichTreeViewProps<any, any>,
-  });
+  // Feature hooks
+  const classes = useUtilityClasses(props);
+  const slots = React.useMemo(() => ({ root: RichTreeViewRoot, ...inSlots }), [inSlots]);
 
   if (isLoading) {
     return <Typography>Loading...</Typography>;
@@ -126,9 +126,13 @@ const RichTreeView = React.forwardRef(function RichTreeView<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <Root {...rootProps}>
-          <RichTreeViewItems slots={slots} slotProps={slotProps} />
-        </Root>
+        <RichTreeViewItems
+          slots={slots}
+          slotProps={slotProps}
+          forwardedProps={forwardedProps}
+          ownerState={props}
+          rootRef={handleRef}
+        />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );

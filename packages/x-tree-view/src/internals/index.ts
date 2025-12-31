@@ -1,4 +1,4 @@
-export { TreeViewProvider, useTreeViewContext } from './TreeViewProvider';
+export { TreeViewProvider, useTreeViewContext, useTreeViewStyleContext } from './TreeViewProvider';
 
 export { RichTreeViewItems, RichTreeViewItem } from './components/RichTreeViewItems';
 export type {

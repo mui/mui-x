@@ -5,13 +5,11 @@ import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@mui/x-internals/store';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import useSlotProps from '@mui/utils/useSlotProps';
 import {
   TreeViewProvider,
   RichTreeViewItems,
   TreeViewItemDepthContext,
   itemsSelectors,
-  useTreeViewRootProps,
   useTreeViewStore,
 } from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
@@ -57,6 +55,10 @@ export const RichTreeViewProRoot = styled('ul', {
   listStyle: 'none',
   outline: 0,
   position: 'relative',
+  '&[data-virtualized]': {
+    height: '100%',
+    width: '100%',
+  },
 });
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
@@ -93,8 +95,13 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { slots, slotProps, apiRef, parameters, forwardedProps } =
-    useExtractRichTreeViewProParameters(props);
+  const {
+    slots: inSlots,
+    slotProps,
+    apiRef,
+    parameters,
+    forwardedProps,
+  } = useExtractRichTreeViewProParameters(props);
 
   // Context hooks
   const store = useTreeViewStore(RichTreeViewProStore, parameters);
@@ -106,17 +113,11 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   // Selector hooks
   const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
 
-  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
+  // Feature hooks
   const classes = useUtilityClasses(props);
+  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
 
-  const Root = slots?.root ?? RichTreeViewProRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState: props as RichTreeViewProProps<any, any>,
-  });
+  const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
   return (
     <TreeViewProvider
@@ -128,14 +129,14 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
       rootRef={ref}
     >
       <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
-        <Root {...rootProps}>
-          {isVirtualizationEnabled ? (
-            <RichTreeViewVirtualizedItems slots={slots} slotProps={slotProps} />
-          ) : (
-            <RichTreeViewItems slots={slots} slotProps={slotProps} />
-          )}
-          <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-        </Root>
+        <Renderer
+          slots={slots}
+          slotProps={slotProps}
+          forwardedProps={forwardedProps}
+          ownerState={props}
+          rootRef={handleRef}
+        />
+        <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
       </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );

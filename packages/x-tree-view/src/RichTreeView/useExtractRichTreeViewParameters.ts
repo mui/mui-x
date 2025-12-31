@@ -43,6 +43,7 @@ export function useExtractRichTreeViewParameters<
     // RichTreeViewStore parameters
     onItemLabelChange,
     isItemEditable,
+    domStructure,
 
     // Forwarded props
     ...forwardedProps
@@ -79,6 +80,7 @@ export function useExtractRichTreeViewParameters<
       // RichTreeViewStore parameters
       onItemLabelChange,
       isItemEditable,
+      domStructure,
     }),
     [
       // Shared parameters
@@ -110,6 +112,7 @@ export function useExtractRichTreeViewParameters<
       // RichTreeViewStore parameters
       onItemLabelChange,
       isItemEditable,
+      domStructure,
     ],
   );
 

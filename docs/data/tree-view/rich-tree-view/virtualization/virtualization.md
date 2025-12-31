@@ -12,7 +12,20 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Basic usage
 
-Use the `items` prop to define items.
-This prop expects an array of objects.
+Use the `virtualization` prop to enable virtualization on the `RichTreeViewPro` component:
 
 {{"demo": "BasicVirtualizedRichTreeViewPro.js"}}
+
+:::success
+When using virtualization, the DOM structure of the tree is flat (this means that the descendants of a given item are rendered as siblings):
+
+```html
+<ul>
+  <li>Item 1</li>
+  <li>Item 1-1></li>
+  <li>Item 1-2</li>
+  <li>Item 2</li>
+</ul>
+```
+
+:::

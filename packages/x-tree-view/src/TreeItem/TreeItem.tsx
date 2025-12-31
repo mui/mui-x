@@ -18,7 +18,7 @@ import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
-import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
