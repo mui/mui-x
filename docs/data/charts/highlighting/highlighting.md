@@ -35,11 +35,11 @@ This interaction is controlled by the `highlightScope` property on `series`, whi
 - `highlighted`: Indicates which item to highlight. Its value can be:
   - `'none'`: Do nothing (default)
   - `'item'`: Only highlight the item itself
-  - `'series'`: Highlight all items of the series
-- `faded`: Indicates which item to fade (if they are not already highlighted). Its value can be:
+  - `'series'`: Highlight all items in the series
+- `faded`: Indicates which item to fade (if they're not already highlighted). Its value can be:
   - `'none'`: Do nothing (default)
-  - `'series'`: Fade all the items of the series
-  - `'global'`: Fade all the items of the chart
+  - `'series'`: Fade all items in the series
+  - `'global'`: Fade all items in the chart
 
 :::info
 For Line charts, you can increase the interaction area by using slots.

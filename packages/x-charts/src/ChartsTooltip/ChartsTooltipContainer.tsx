@@ -48,9 +48,8 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
-export interface ChartsTooltipContainerProps<
-  T extends TriggerOptions = TriggerOptions,
-> extends Partial<PopperProps> {
+export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
+  extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
