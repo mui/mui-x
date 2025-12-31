@@ -13,11 +13,8 @@ export type FocusedItemUpdater<
 > = (
   currentItem: (TSeriesType extends any ? FocusedItemIdentifier<TSeriesType> : never) | null,
   state: ChartState<
-    [
-      UseChartKeyboardNavigationSignature,
-      TSeriesType extends CartesianChartSeriesType ? UseChartCartesianAxisSignature : never,
-    ],
-    []
+    [UseChartKeyboardNavigationSignature],
+    [TSeriesType extends CartesianChartSeriesType ? UseChartCartesianAxisSignature : never]
   >,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 

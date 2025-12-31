@@ -47,7 +47,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
         if (!currentItem) {
           return getFirstCell(state);
         }
-        const maxLength = state.cartesianAxis.x[0].data?.length;
+        const maxLength = state.cartesianAxis?.x[0].data?.length;
         if (currentItem.xIndex + 1 === (maxLength ?? 0)) {
           return currentItem;
         }
@@ -70,7 +70,7 @@ const keyboardFocusHandler: KeyboardFocusHandler<'heatmap', 'heatmap'> = (event)
         if (!currentItem) {
           return getFirstCell(state);
         }
-        const maxLength = state.cartesianAxis.y[0].data?.length;
+        const maxLength = state.cartesianAxis?.y[0].data?.length;
         if (currentItem.yIndex + 1 === (maxLength ?? 0)) {
           return currentItem;
         }
