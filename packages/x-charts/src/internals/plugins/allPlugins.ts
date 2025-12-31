@@ -37,7 +37,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];
@@ -49,7 +49,7 @@ export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSerie
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
 ];

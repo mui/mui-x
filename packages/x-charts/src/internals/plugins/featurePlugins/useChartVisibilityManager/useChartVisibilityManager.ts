@@ -9,7 +9,7 @@ import {
 import { EMPTY_VISIBILITY_MAP } from './useChartVisibilityManager.selectors';
 import { visibilityParamToMap } from './visibilityParamToMap';
 
-export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature> = ({
+export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature<any>> = ({
   store,
   params,
   seriesConfig,

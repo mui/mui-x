@@ -21,7 +21,7 @@ export type FunnelChartPluginSignatures = [
   UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<'funnel'>,
   UseChartProExportSignature,
 ];
 

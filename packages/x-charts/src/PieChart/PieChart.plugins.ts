@@ -24,7 +24,7 @@ export type PieChartPluginSignatures = [
   UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<'pie'>,
   UseChartKeyboardNavigationSignature,
 ];
 export const PIE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<PieChartPluginSignatures> = [

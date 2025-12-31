@@ -39,7 +39,7 @@ export type BarChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'bar'>,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<'bar'>,
   UseChartKeyboardNavigationSignature,
 ];
 

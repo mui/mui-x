@@ -39,7 +39,7 @@ export type LineChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'line'>,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<'line'>,
   UseChartKeyboardNavigationSignature,
 ];
 

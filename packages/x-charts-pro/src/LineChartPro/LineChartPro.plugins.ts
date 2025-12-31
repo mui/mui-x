@@ -33,7 +33,7 @@ export type LineChartProPluginSignatures = [
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'line'>,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<'line'>,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,

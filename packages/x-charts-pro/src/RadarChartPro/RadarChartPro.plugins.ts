@@ -21,7 +21,7 @@ export type RadarChartProPluginSignatures = [
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<'radar'>,
   UseChartProExportSignature,
 ];
 

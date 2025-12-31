@@ -33,7 +33,7 @@ export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesTyp
   UseChartHighlightSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
 ];
 
 export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
@@ -62,7 +62,7 @@ export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSerie
   UseChartHighlightSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
-  UseChartVisibilityManagerSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
 ];
 
 export type DefaultPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =

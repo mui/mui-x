@@ -1,10 +1,7 @@
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { type SeriesItemIdentifier } from '../../../../models';
-import {
-  type ChartSeriesType,
-  type ChartsSeriesConfig,
-} from '../../../../models/seriesType/config';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
 export type VisibilityIdentifier<T extends ChartSeriesType = ChartSeriesType> = Partial<
   SeriesItemIdentifier<T>
@@ -27,7 +24,7 @@ export type IsItemVisibleFunction = {
   (identifier: VisibilityIdentifier): boolean;
 };
 
-export interface UseChartVisibilityManagerPublicAPI {
+export interface UseChartVisibilityManagerPublicAPI<T extends ChartSeriesType> {
   /**
    * Hide an item by its identifier.
    *
@@ -36,7 +33,7 @@ export interface UseChartVisibilityManagerPublicAPI {
    *
    * @param {VisibilityIdentifier} identifier The identifier of the item to hide.
    */
-  hideItem(identifier: VisibilityIdentifier): void;
+  hideItem(identifier: VisibilityIdentifier<T>): void;
   /**
    * Show an item by its identifier.
    *
@@ -45,7 +42,7 @@ export interface UseChartVisibilityManagerPublicAPI {
    *
    * @param {VisibilityIdentifier} identifier The identifier of the item to show.
    */
-  showItem(identifier: VisibilityIdentifier): void;
+  showItem(identifier: VisibilityIdentifier<T>): void;
   /**
    * Toggle the visibility of an item by its identifier.
    *
@@ -54,19 +51,19 @@ export interface UseChartVisibilityManagerPublicAPI {
    *
    * @param {VisibilityIdentifier} identifier The identifier of the item to toggle.
    */
-  toggleItemVisibility(identifier: VisibilityIdentifier): void;
+  toggleItemVisibility(identifier: VisibilityIdentifier<T>): void;
 }
 
-export interface UseChartVisibilityManagerInstance extends UseChartVisibilityManagerPublicAPI {}
+export interface UseChartVisibilityManagerInstance<
+  T extends ChartSeriesType,
+> extends UseChartVisibilityManagerPublicAPI<T> {}
 
-export interface UseChartVisibilityManagerParameters {
+export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> {
   /**
    * Callback fired when any hidden identifiers change.
    * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
    */
-  onVisibilityChange?: <T extends ChartSeriesType = keyof ChartsSeriesConfig>(
-    hiddenIdentifiers: VisibilityIdentifier<T>[],
-  ) => void;
+  onVisibilityChange?: (hiddenIdentifiers: VisibilityIdentifier<T>[]) => void;
   /**
    * List of hidden series and/or items.
    *
@@ -87,10 +84,11 @@ export interface UseChartVisibilityManagerParameters {
    * ]
    * ```
    */
-  hiddenIdentifiers?: VisibilityIdentifier[];
+  hiddenIdentifiers?: VisibilityIdentifier<T>[];
 }
 
-export type UseChartVisibilityManagerDefaultizedParameters = UseChartVisibilityManagerParameters;
+export type UseChartVisibilityManagerDefaultizedParameters<T extends ChartSeriesType> =
+  UseChartVisibilityManagerParameters<T>;
 
 export interface UseChartVisibilityManagerState {
   visibilityManager: {
@@ -105,11 +103,12 @@ export interface UseChartVisibilityManagerState {
   };
 }
 
-export type UseChartVisibilityManagerSignature = ChartPluginSignature<{
-  instance: UseChartVisibilityManagerInstance;
-  publicAPI: UseChartVisibilityManagerPublicAPI;
-  state: UseChartVisibilityManagerState;
-  params: UseChartVisibilityManagerParameters;
-  defaultizedParams: UseChartVisibilityManagerDefaultizedParameters;
-  dependencies: [UseChartSeriesSignature];
-}>;
+export type UseChartVisibilityManagerSignature<T extends ChartSeriesType = ChartSeriesType> =
+  ChartPluginSignature<{
+    instance: UseChartVisibilityManagerInstance<T>;
+    publicAPI: UseChartVisibilityManagerPublicAPI<T>;
+    state: UseChartVisibilityManagerState;
+    params: UseChartVisibilityManagerParameters<T>;
+    defaultizedParams: UseChartVisibilityManagerDefaultizedParameters<T>;
+    dependencies: [UseChartSeriesSignature];
+  }>;
