@@ -22,7 +22,7 @@ export function FocusedPieArc(
   const { isHighlighted, isFaded } = useItemHighlighted(focusedItem);
   const pieSeries = usePieSeriesContext();
 
-  if (focusedItem === null || focusedItem.seriesType !== 'pie' || !pieSeries) {
+  if (focusedItem === null || focusedItem.type !== 'pie' || !pieSeries) {
     return null;
   }
 

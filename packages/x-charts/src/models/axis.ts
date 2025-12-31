@@ -12,7 +12,7 @@ import type {
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -23,6 +23,7 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
+import { type ChartsTypeFeatureFlags } from './featureFlags';
 
 export type AxisId = string | number;
 
@@ -649,7 +650,13 @@ export interface ChartsAxisData {
   /**
    * The mapping of series ids to their value for this particular axis index.
    */
-  seriesValues: Record<string, number | null | undefined>;
+  seriesValues: Record<
+    string,
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+      ? // @ts-ignore this property is added through module augmentation
+        ChartsTypeFeatureFlags['seriesValuesOverride']
+      : number | null | undefined
+  >;
 }
 
 export type CartesianDirection = 'x' | 'y';
