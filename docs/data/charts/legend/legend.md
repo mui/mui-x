@@ -39,13 +39,14 @@ When both are provided, the `onItemClick` callback is called first, followed by 
 
 ### Controlled visibility
 
-You can control the visibility state externally using the `visibilityMap` prop.
-This prop accepts an object where keys are item identifiers and values are booleans indicating visibility status (`false` means hidden).
+You can control the visibility state externally using the `hiddenIdentifiers` prop.
+This prop accepts an array of item identifiers that should be hidden in the chart.
 
-Different chart types use different strategies to generate these identifiers:
+Different chart types have different identifier formats:
 
-- For series-level visibility: `${seriesId}`
-- For item-level visibility: `${seriesId}-${itemId}`
+- All identifiers require a `type` field indicating the series type (e.g., `'line'`, `'bar'`, `'pie'`, etc.).
+- For most charts, the only needed property is the `seriesId` for series-level visibility control.
+- For pie charts, the identifier also includes a `dataIndex` to specify individual slices.
 
 The demo below shows how to programmatically control which items are visible using buttons.
 

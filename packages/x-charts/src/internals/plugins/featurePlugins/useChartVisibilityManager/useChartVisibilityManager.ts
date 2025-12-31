@@ -42,7 +42,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     const visibilityMap = store.state.visibilityManager.visibilityMap;
     const id = instance.serializeIdentifier(identifier);
 
-    if (visibilityMap.has(id) === true) {
+    if (visibilityMap.has(id)) {
       return;
     }
 
@@ -61,7 +61,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     const visibilityMap = store.state.visibilityManager.visibilityMap;
     const id = instance.serializeIdentifier(identifier);
 
-    if (visibilityMap.has(id) === false) {
+    if (!visibilityMap.has(id)) {
       return;
     }
 
@@ -80,7 +80,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     const visibilityMap = store.state.visibilityManager.visibilityMap;
     const id = instance.serializeIdentifier(identifier);
 
-    if (visibilityMap.has(id) === false) {
+    if (visibilityMap.has(id)) {
       showItem(identifier);
     } else {
       hideItem(identifier);

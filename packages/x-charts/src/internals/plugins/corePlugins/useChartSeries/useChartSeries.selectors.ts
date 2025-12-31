@@ -38,7 +38,9 @@ export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDataset,
   selectorIsItemVisibleGetter,
   function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset, isItemVisible) {
-    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, isItemVisible);
+    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, (identifier) =>
+      isItemVisible(seriesConfig, identifier),
+    );
   },
 );
 

@@ -37,4 +37,5 @@ export {
   type UseChartVisibilityManagerSignature,
   type UseChartVisibilityManagerInstance,
   type UseChartVisibilityManagerParameters,
+  type VisibilityIdentifier,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
