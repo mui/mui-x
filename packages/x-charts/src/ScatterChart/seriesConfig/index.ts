@@ -6,6 +6,8 @@ import legendGetter from './legend';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 
 export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   seriesProcessor,
@@ -16,4 +18,6 @@ export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };
