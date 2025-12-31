@@ -2,6 +2,7 @@ import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import type { VisibilityIdentifier } from '@mui/x-charts/plugins';
 
 const series = [
   { data: [20, 30, 25, 40, 30], label: 'Series A' },
@@ -10,10 +11,9 @@ const series = [
 ];
 
 export default function VisibilityOnChange() {
-  const [hiddenItems, setHiddenItems] = React.useState({});
+  const [hiddenItems, setHiddenItems] = React.useState<VisibilityIdentifier[]>([]);
 
-  const visibleCount =
-    series.length - Object.values(hiddenItems).filter((v) => v === false).length;
+  const visibleCount = series.length - hiddenItems.length;
 
   return (
     <Stack direction="column" spacing={2} width={'100%'}>

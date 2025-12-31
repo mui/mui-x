@@ -10,10 +10,9 @@ const series = [
 ];
 
 export default function VisibilityOnChange() {
-  const [hiddenItems, setHiddenItems] = React.useState({});
+  const [hiddenItems, setHiddenItems] = React.useState([]);
 
-  const visibleCount =
-    series.length - Object.values(hiddenItems).filter((v) => v === false).length;
+  const visibleCount = series.length - hiddenItems.length;
 
   return (
     <Stack direction="column" spacing={2} width={'100%'}>
