@@ -66,7 +66,7 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 ## Graphical components
 
 Graphical components are used to render the visual elements of a chart.
-They are children of the [structural components](#structural-components) shown above.
+They are children of the [structural components](#structural-components) described above.
 These are too numerous to list, but common examples include:
 
 - `LinePlot`
