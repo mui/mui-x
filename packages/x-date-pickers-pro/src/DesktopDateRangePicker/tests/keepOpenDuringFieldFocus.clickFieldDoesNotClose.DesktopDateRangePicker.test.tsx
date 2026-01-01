@@ -10,7 +10,11 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
   it('keeps popper open when clicking back into the field (single input)', async () => {
     const { user } = render(<DesktopDateRangePicker keepOpenDuringFieldFocus />);
 
-    await openPickerAsync(user, { type: 'date-range', fieldType: 'single-input' });
+    await openPickerAsync(user, {
+      type: 'date-range',
+      fieldType: 'single-input',
+      initialFocus: 'start',
+    });
 
     const textbox = screen.getByRole('textbox');
     await user.click(textbox);
