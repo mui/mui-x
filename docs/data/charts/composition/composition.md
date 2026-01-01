@@ -16,7 +16,7 @@ There are two main types of components used to create Charts: [structural](#stru
 
 ## Structural components
 
-Structural components are used to define a chart's structure and data.
+Structural components are used to define a chart's dimensions, surfaces, and data.
 
 - `ChartDataProvider` provides data to children components.
 - `ChartsSurface` renders the SVG elements.
@@ -65,7 +65,7 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 
 ## Graphical components
 
-Graphical components are used to render the graphical elements of a chart.
+Graphical components are used to render the visual elements of a chart.
 They are children of the [structural components](#structural-components) shown above.
 These are too numerous to list, but common examples include:
 
@@ -167,7 +167,7 @@ By modifying the series `type` property, you can switch between rendering a line
 ## Subcomponents
 
 :::info
-The CSS `z-index` property does not exist on SVG elements, so their order in the composed component is the only way to define how they overlap.
+The CSS `z-index` property does not exist on SVG elements, so the order of SVG elements in the composed component is the only way to define how they overlap.
 Elements rendered later will overlap on top of elements rendered earlier.
 :::
 
