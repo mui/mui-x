@@ -8,6 +8,8 @@ components: BarChart, ScatterChart, LineChart, PieChart
 
 <p class="description">Customize how series and data points are labeled in charts.</p>
 
+A label is the text that identifies a series or data point in a chart, appearing in locations such as the legend, tooltip, or directly on chart elements.
+
 You can set a series label by passing a `string` to the `label` property of a series.
 The label appears in different locations such as the legend and tooltip.
 
