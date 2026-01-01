@@ -28,7 +28,8 @@ export type SimpleTreeViewApiRef<Multiple extends boolean | undefined = any> = R
 >;
 
 export interface SimpleTreeViewProps<Multiple extends boolean | undefined>
-  extends UseTreeViewStoreParameters<SimpleTreeViewStore<Multiple>>,
+  extends
+    UseTreeViewStoreParameters<SimpleTreeViewStore<Multiple>>,
     React.HTMLAttributes<HTMLUListElement> {
   /**
    * The content of the component.

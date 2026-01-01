@@ -25,8 +25,7 @@ export interface RichTreeViewSlots extends TreeViewSlots, RichTreeViewItemsSlots
 }
 
 export interface RichTreeViewSlotProps<R extends {}, Multiple extends boolean | undefined>
-  extends TreeViewSlotProps,
-    RichTreeViewItemsSlotProps {
+  extends TreeViewSlotProps, RichTreeViewItemsSlotProps {
   root?: SlotComponentProps<'ul', {}, RichTreeViewProps<R, Multiple>>;
 }
 
@@ -48,8 +47,7 @@ export interface RichTreeViewPropsBase extends React.HTMLAttributes<HTMLUListEle
 }
 
 export interface RichTreeViewProps<R extends {}, Multiple extends boolean | undefined>
-  extends UseTreeViewStoreParameters<RichTreeViewStore<R, Multiple>>,
-    RichTreeViewPropsBase {
+  extends UseTreeViewStoreParameters<RichTreeViewStore<R, Multiple>>, RichTreeViewPropsBase {
   /**
    * Overridable component slots.
    * @default {}

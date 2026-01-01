@@ -47,7 +47,8 @@ import {
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface HeatmapSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
     ChartsToolbarProSlots,
@@ -64,7 +65,8 @@ export interface HeatmapSlots
   legend?: ChartsLegendSlots['legend'];
 }
 export interface HeatmapSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
     ChartsLegendSlotProps,
@@ -75,7 +77,8 @@ export interface HeatmapSlotProps
 
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
       | 'series'
       | 'plugins'

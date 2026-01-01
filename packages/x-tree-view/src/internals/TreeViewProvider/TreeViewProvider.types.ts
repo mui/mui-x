@@ -33,8 +33,9 @@ export interface TreeViewContextValue<TStore extends TreeViewAnyStore> {
   runItemPlugins: TreeViewItemPluginsRunner;
 }
 
-export interface TreeViewProviderProps<TStore extends TreeViewAnyStore>
-  extends UseTreeViewBuildContextParameters<TStore> {
+export interface TreeViewProviderProps<
+  TStore extends TreeViewAnyStore,
+> extends UseTreeViewBuildContextParameters<TStore> {
   children: React.ReactNode;
   classes: Partial<TreeViewClasses> | undefined;
   slots: TreeViewSlots | undefined;

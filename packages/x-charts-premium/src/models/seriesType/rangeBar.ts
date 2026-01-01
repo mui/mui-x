@@ -10,8 +10,7 @@ import { type DefaultizedProps } from '@mui/x-internals/types';
 export type RangeBarValueType = [number, number];
 
 export interface RangeBarSeriesType
-  extends CommonSeriesType<RangeBarValueType | null>,
-    CartesianSeriesType {
+  extends CommonSeriesType<RangeBarValueType | null>, CartesianSeriesType {
   type: 'rangeBar';
   /**
    * Data associated to each range bar.
@@ -51,5 +50,7 @@ export type RangeBarItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedRangeBarSeriesType
-  extends DefaultizedProps<RangeBarSeriesType, CommonDefaultizedProps | 'color' | 'layout'> {}
+export interface DefaultizedRangeBarSeriesType extends DefaultizedProps<
+  RangeBarSeriesType,
+  CommonDefaultizedProps | 'color' | 'layout'
+> {}
