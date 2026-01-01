@@ -1,8 +1,11 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { DesktopDateRangePicker } from '@mui/x-date-pickers-pro/DesktopDateRangePicker';
 import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
-import { createPickerRenderer, openPickerAsync } from 'test/utils/pickers';
+import {
+  createPickerRenderer,
+  getFieldSectionsContainer,
+  openPickerAsync,
+} from 'test/utils/pickers';
 
 describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field should not close', () => {
   const { render } = createPickerRenderer();
@@ -16,7 +19,7 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
       initialFocus: 'start',
     });
 
-    const textbox = screen.getByRole('textbox');
+    const textbox = getFieldSectionsContainer();
     await user.click(textbox);
 
     const popper = screen.queryByRole('dialog') ?? screen.queryByRole('tooltip');
@@ -38,8 +41,8 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
       initialFocus: 'start',
     });
 
-    const textboxes = screen.getAllByRole('textbox');
-    await user.click(textboxes[0]);
+    const startField = getFieldSectionsContainer(0);
+    await user.click(startField);
 
     const popper = screen.queryByRole('dialog') ?? screen.queryByRole('tooltip');
     expect(popper).not.to.equal(null);
