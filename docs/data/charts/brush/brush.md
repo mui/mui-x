@@ -6,7 +6,7 @@ components: ChartsBrushOverlay
 
 # Charts - Brush
 
-<p class="description">Let users select a region on the chart by clicking and dragging.</p>
+<p class="description">Let users select a region on a chart by clicking and dragging.</p>
 
 The brush interaction enables users to select chart regions by clicking and dragging.
 It captures the start and current positions of the selection, which you can use for:
@@ -81,13 +81,11 @@ function MyCustomOverlay() {
 
 ## Configuration
 
-The `brushConfig` prop accepts an object with the following options:
+The `brushConfig` prop accepts an object with the following boolean options:
 
-- `enabled` (boolean, default: `false`): Whether the brush interaction is enabled
-- `preventTooltip` (boolean, default: `true`): Whether to prevent tooltip from showing during brush interaction
-- `preventHighlight` (boolean, default: `true`): Whether to prevent highlighting during brush interaction
-
-Example:
+- `enabled` (default: `false`): Whether the brush interaction is enabled
+- `preventTooltip` (default: `true`): Whether to prevent tooltip from showing during brush interaction
+- `preventHighlight` (default: `true`): Whether to prevent highlighting during brush interaction
 
 ```jsx
 <LineChart
