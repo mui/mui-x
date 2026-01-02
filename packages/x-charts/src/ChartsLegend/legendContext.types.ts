@@ -27,7 +27,7 @@ export interface LegendItemParams
   /**
    * The type of the series
    */
-  type: ChartSeriesType;
+  type?: ChartSeriesType;
   markType: ChartsLabelMarkProps['type'];
 }
 
