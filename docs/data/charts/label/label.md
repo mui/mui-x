@@ -10,11 +10,11 @@ components: BarChart, ScatterChart, LineChart, PieChart
 
 A label is the text that identifies a series or data point in a chart, appearing in locations such as the legend, tooltip, or directly on chart elements.
 
-You can set a series label by passing a `string` to the `label` property of a series.
+You can set a series label by passing a string to the `label` property of a series.
 The label appears in different locations such as the legend and tooltip.
 
 :::info
-The Pie chart has specific behavior described in its [own section](#pie).
+The Pie chart has specific behavior described in its [own section](#pie-chart-labels).
 :::
 
 {{"demo": "BasicLabel.js"}}
@@ -29,9 +29,9 @@ The function receives `location` as its first argument, which can have the follo
 
 {{"demo": "FunctionLabel.js"}}
 
-## Pie
+## Pie chart labels
 
-The [Pie](/x/react-charts/pie/) chart behaves differently due to its nature.
+The [Pie chart](/x/react-charts/pie/) behaves differently due to its nature.
 It has labels per slice instead of per series, and provides one additional location where labels can be rendered.
 Instead of receiving the `label` as part of the series, it receives it as part of the `data` set inside a series.
 
