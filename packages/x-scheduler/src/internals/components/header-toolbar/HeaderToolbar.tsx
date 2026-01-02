@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
@@ -9,7 +10,42 @@ import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { PreferencesMenu } from './preferences-menu';
-import './HeaderToolbar.css';
+
+const HeaderToolbarRoot = styled('header', {
+  name: 'MuiSchedulerHeaderToolbar',
+  slot: 'Root',
+})(({ theme }) => ({
+  gridColumn: '2 / -1',
+  display: 'grid',
+  gridTemplateColumns: 'subgrid',
+  alignItems: 'center',
+  gap: theme.spacing(2),
+  width: '100%',
+  ...theme.typography.body2,
+  '&[data-single-primary-action="true"]': {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+}));
+
+const HeaderToolbarActions = styled('div', {
+  name: 'MuiSchedulerHeaderToolbar',
+  slot: 'Actions',
+})(() => ({
+  display: 'flex',
+}));
+
+const HeaderToolbarPrimaryActionWrapper = styled('div', {
+  name: 'MuiSchedulerHeaderToolbar',
+  slot: 'PrimaryActionWrapper',
+})(({ theme }) => ({
+  flexGrow: 1,
+  display: 'flex',
+  gap: theme.spacing(2),
+  justifyContent: 'center',
+  gridColumn: 2,
+  justifySelf: 'end',
+}));
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
@@ -28,26 +64,23 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showViewSwitcher = views.length > 1;
 
   return (
-    <header
+    <HeaderToolbarRoot
       ref={forwardedRef}
-      className={clsx(
-        'HeaderToolbarContainer',
-        !showViewSwitcher && 'SinglePrimaryAction',
-        className,
-      )}
+      className={className}
+      data-single-primary-action={!showViewSwitcher}
       {...other}
     >
-      <div className="HeaderToolbarActions">
-        <div className="PrimaryActionWrapper">
+      <HeaderToolbarActions>
+        <HeaderToolbarPrimaryActionWrapper>
           {showViewSwitcher && (
             <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
           )}
-          <button className="Button OutlinedNeutralButton" onClick={store.goToToday} type="button">
+          <Button variant="outlined" onClick={store.goToToday}>
             {translations.today}
-          </button>
-        </div>
+          </Button>
+        </HeaderToolbarPrimaryActionWrapper>
         <PreferencesMenu />
-      </div>
-    </header>
+      </HeaderToolbarActions>
+    </HeaderToolbarRoot>
   );
 });

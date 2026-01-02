@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { createSelectorMemoized, useStore } from '@base-ui/utils/store';
 import { useResizeObserver } from '@mui/x-internals/useResizeObserver';
@@ -23,8 +23,82 @@ import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
-import './MonthView.css';
 import '../index.css';
+
+const FIXED_CELL_WIDTH = 28;
+
+const MonthViewContainer = styled('div', {
+  name: 'MuiSchedulerMonthView',
+  slot: 'Root',
+})(({ theme }) => ({
+  width: '100%',
+  borderRadius: theme.shape.borderRadius,
+  border: `1px solid ${theme.palette.divider}`,
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
+  maxHeight: '100%',
+}));
+
+const MonthViewRoot = styled(CalendarGrid.Root, {
+  name: 'MuiSchedulerMonthView',
+  slot: 'Grid',
+})({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  maxHeight: '100%',
+});
+
+interface MonthViewRowGridProps {
+  showWeekNumber?: boolean;
+}
+
+const MonthViewHeader = styled(CalendarGrid.HeaderRow, {
+  name: 'MuiSchedulerMonthView',
+  slot: 'Header',
+})<{ ownerState: MonthViewRowGridProps }>(({ theme, ownerState }) => ({
+  display: 'grid',
+  gridTemplateColumns: ownerState.showWeekNumber
+    ? `${FIXED_CELL_WIDTH}px repeat(auto-fit, minmax(0, 1fr))`
+    : 'repeat(auto-fit, minmax(0, 1fr))',
+  borderBlockEnd: `1px solid ${theme.palette.divider}`,
+}));
+
+const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
+  name: 'MuiSchedulerMonthView',
+  slot: 'HeaderCell',
+})(({ theme }) => ({
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  fontSize: theme.typography.body2.fontSize,
+  lineHeight: '18px',
+  '&:not(:first-of-type)': {
+    borderInlineStart: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+const MonthViewWeekHeaderCell = styled('div', {
+  name: 'MuiSchedulerMonthView',
+  slot: 'WeekHeaderCell',
+})(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+  textAlign: 'center',
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: '18px',
+  color: theme.palette.text.secondary,
+  fontStyle: 'italic',
+}));
+
+const MonthViewBody = styled('div', {
+  name: 'MuiSchedulerMonthView',
+  slot: 'Body',
+})({
+  flex: 1,
+  display: 'grid',
+  gridAutoRows: '1fr',
+  maxHeight: '100%',
+});
 
 const CELL_PADDING = 8;
 const DAY_NUMBER_HEADER_HEIGHT = 18;
@@ -110,36 +184,21 @@ export const MonthView = React.memo(
     );
 
     return (
-      <div
-        {...props}
-        ref={handleRef}
-        className={clsx('MonthViewContainer', 'mui-x-scheduler', props.className)}
-      >
+      <MonthViewContainer {...props} ref={handleRef}>
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>
-            <CalendarGrid.Root className="MonthViewRoot">
-              <CalendarGrid.HeaderRow
-                className={clsx(
-                  'MonthViewHeader',
-                  'MonthViewRowGrid',
-                  showWeekNumber ? 'WithWeekNumber' : undefined,
-                )}
-              >
+            <MonthViewRoot>
+              <MonthViewHeader ownerState={{ showWeekNumber }}>
                 {showWeekNumber && (
-                  <div className="MonthViewWeekHeaderCell">{translations.weekAbbreviation}</div>
+                  <MonthViewWeekHeaderCell>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
                 )}
                 {weeks[0].map((weekDay) => (
-                  <CalendarGrid.HeaderCell
-                    key={weekDay.key}
-                    date={weekDay}
-                    skipDataCurrent
-                    className="MonthViewHeaderCell"
-                  >
+                  <MonthViewHeaderCell key={weekDay.key} date={weekDay} skipDataCurrent>
                     {adapter.formatByString(weekDay.value, 'ccc')}
-                  </CalendarGrid.HeaderCell>
+                  </MonthViewHeaderCell>
                 ))}
-              </CalendarGrid.HeaderRow>
-              <div className="MonthViewBody">
+              </MonthViewHeader>
+              <MonthViewBody>
                 {weeks.map((week, weekIdx) => (
                   <MonthViewWeekRow
                     key={weekIdx}
@@ -149,11 +208,11 @@ export const MonthView = React.memo(
                     firstDayRef={weekIdx === 0 ? cellRef : undefined}
                   />
                 ))}
-              </div>
-            </CalendarGrid.Root>
+              </MonthViewBody>
+            </MonthViewRoot>
           </MoreEventsPopoverProvider>
         </EventPopoverProvider>
-      </div>
+      </MonthViewContainer>
     );
   }),
 );

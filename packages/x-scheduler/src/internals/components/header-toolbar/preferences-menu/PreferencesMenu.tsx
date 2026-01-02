@@ -4,7 +4,13 @@ import clsx from 'clsx';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import { CheckIcon, ChevronRight, Settings } from 'lucide-react';
-import { Menu } from '@base-ui/react/menu';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import ListSubheader from '@mui/material/ListSubheader';
 import {
   CalendarView,
   EventCalendarPreferences,
@@ -16,7 +22,6 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import './PreferencesMenu.css';
 
 export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   props: React.HTMLAttributes<HTMLDivElement>,
@@ -37,6 +42,13 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   const preferences = useStore(store, eventCalendarPreferenceSelectors.all);
   const preferencesMenuConfig = useStore(store, eventCalendarPreferenceSelectors.menuConfig);
 
+  // State hooks (must come before any early returns)
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [timeFormatAnchorEl, setTimeFormatAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const open = Boolean(anchorEl);
+  const timeFormatOpen = Boolean(timeFormatAnchorEl);
+
   const handleToggle = (key: keyof EventCalendarPreferences, checked: boolean, event: Event) => {
     store.setPreferences({ [key]: checked }, event);
   };
@@ -45,6 +57,23 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
     store.setPreferences({ ampm: value === '12' }, event);
   };
 
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleTimeFormatClick = (event: React.MouseEvent<HTMLElement>) => {
+    setTimeFormatAnchorEl(event.currentTarget);
+  };
+
+  const handleTimeFormatClose = () => {
+    setTimeFormatAnchorEl(null);
+  };
+
+  // Early return if config is false
   if (preferencesMenuConfig === false) {
     return null;
   }
@@ -81,107 +110,131 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   ];
 
   const visibleOptions = preferenceOptions.filter(
-    (option) => !!preferencesMenuConfig?.[option.configKey],
+    (option) => preferencesMenuConfig?.[option.configKey] !== false,
   );
 
   const visibleViewSpecificOptions = viewSpecificPreferenceOptions.filter(
-    (option) => !!preferencesMenuConfig?.[option.configKey] && option.view === currentView,
+    (option) => preferencesMenuConfig?.[option.configKey] !== false && option.view === currentView,
   );
 
   const showSpecificOptions = visibleViewSpecificOptions.length > 0;
-  const showTimeFormatSubmenu = preferencesMenuConfig?.toggleAmpm;
+  const showTimeFormatSubmenu = preferencesMenuConfig?.toggleAmpm !== false;
 
+  // Early return if no menu items to show
   if (!showTimeFormatSubmenu && visibleOptions.length === 0 && !showSpecificOptions) {
     return null;
   }
 
   return (
     <div ref={handleRef} className={clsx('PreferencesMenuContainer', className)} {...other}>
-      <Menu.Root>
-        <Menu.Trigger
-          aria-label={translations.preferencesMenu}
-          className={clsx('OutlinedNeutralButton', 'Button', 'PreferencesMenuButton')}
+      <IconButton
+        aria-label={translations.preferencesMenu}
+        onClick={handleClick}
+        aria-controls={open ? 'preferences-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+      >
+        <Settings size={20} strokeWidth={1.5} />
+      </IconButton>
+      <Menu
+        id="preferences-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        container={containerRef.current}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        slotProps={{ list: { 'aria-label': translations.preferencesMenu } }}
+      >
+        {visibleOptions.map((option) => (
+          <MenuItem
+            key={option.configKey}
+            onClick={(event) => {
+              handleToggle(
+                option.preferenceKey,
+                !preferences[option.preferenceKey],
+                event.nativeEvent,
+              );
+            }}
+          >
+            <ListItemText>{option.label}</ListItemText>
+            {preferences[option.preferenceKey] && (
+              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                <CheckIcon size={16} strokeWidth={1.5} />
+              </ListItemIcon>
+            )}
+          </MenuItem>
+        ))}
+        {showTimeFormatSubmenu && (
+          <MenuItem onClick={handleTimeFormatClick}>
+            <ListItemText>{translations.timeFormat}</ListItemText>
+            <ChevronRight size={14} strokeWidth={1.5} />
+          </MenuItem>
+        )}
+        {showSpecificOptions && visibleOptions.length > 0 && <Divider />}
+        {showSpecificOptions && (
+          <ListSubheader>{translations.viewSpecificOptions(currentView)}</ListSubheader>
+        )}
+        {showSpecificOptions &&
+          visibleViewSpecificOptions.map((option) => (
+            <MenuItem
+              key={option.configKey}
+              onClick={(event) => {
+                handleToggle(
+                  option.preferenceKey,
+                  !preferences[option.preferenceKey],
+                  event.nativeEvent,
+                );
+              }}
+            >
+              <ListItemText>{option.label}</ListItemText>
+              {preferences[option.preferenceKey] && (
+                <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                  <CheckIcon size={16} strokeWidth={1.5} />
+                </ListItemIcon>
+              )}
+            </MenuItem>
+          ))}
+      </Menu>
+      {/* Time format submenu */}
+      <Menu
+        anchorEl={timeFormatAnchorEl}
+        open={timeFormatOpen}
+        onClose={handleTimeFormatClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <MenuItem
+          selected={preferences.ampm}
+          onClick={(event) => {
+            handleTimeFormatChange('12', event.nativeEvent);
+            handleTimeFormatClose();
+            handleClose();
+          }}
         >
-          <Settings size={20} strokeWidth={1.5} className="SettingsIcon" />
-        </Menu.Trigger>
-        <Menu.Portal container={containerRef}>
-          <Menu.Positioner className="MenuPositioner" sideOffset={4} align="end">
-            <Menu.Popup className="MenuPopup">
-              {visibleOptions.map((option) => (
-                <Menu.CheckboxItem
-                  key={option.configKey}
-                  checked={preferences[option.preferenceKey]}
-                  onCheckedChange={(checked, eventDetails) =>
-                    handleToggle(option.preferenceKey, checked, eventDetails.event)
-                  }
-                  className="CheckboxItem"
-                >
-                  <span>{option.label}</span>
-                  <Menu.CheckboxItemIndicator className="CheckboxIndicator">
-                    <CheckIcon size={16} strokeWidth={1.5} />
-                  </Menu.CheckboxItemIndicator>
-                </Menu.CheckboxItem>
-              ))}
-              {showTimeFormatSubmenu && (
-                <Menu.SubmenuRoot>
-                  <Menu.SubmenuTrigger className="SubmenuTrigger" openOnHover={false}>
-                    <span>{translations.timeFormat}</span>
-                    <ChevronRight size={14} strokeWidth={1.5} />
-                  </Menu.SubmenuTrigger>
-
-                  <Menu.Portal>
-                    <Menu.Positioner className="MenuPositioner" alignOffset={-4} sideOffset={4}>
-                      <Menu.Popup className="MenuPopup">
-                        <Menu.RadioGroup
-                          aria-label={translations.timeFormat}
-                          value={preferences.ampm ? '12' : '24'}
-                          onValueChange={(val, eventDetails) =>
-                            handleTimeFormatChange(val, eventDetails.event)
-                          }
-                        >
-                          <Menu.RadioItem value="12" className="RadioItem">
-                            <span>{translations.amPm12h}</span>
-                            <Menu.RadioItemIndicator className="RadioItemIndicator" />
-                          </Menu.RadioItem>
-                          <Menu.RadioItem value="24" className="RadioItem">
-                            <span>{translations.hour24h}</span>
-                            <Menu.RadioItemIndicator className="RadioItemIndicator" />
-                          </Menu.RadioItem>
-                        </Menu.RadioGroup>
-                      </Menu.Popup>
-                    </Menu.Positioner>
-                  </Menu.Portal>
-                </Menu.SubmenuRoot>
-              )}
-              {showSpecificOptions && (
-                <React.Fragment>
-                  {visibleOptions.length > 0 && <Menu.Separator className="MenuSeparator" />}
-                  <Menu.Group>
-                    <Menu.GroupLabel className="MenuGroupLabel">
-                      {translations.viewSpecificOptions(currentView)}
-                    </Menu.GroupLabel>
-                    {visibleViewSpecificOptions.map((option) => (
-                      <Menu.CheckboxItem
-                        key={option.configKey}
-                        checked={preferences[option.preferenceKey]}
-                        onCheckedChange={(checked, eventDetails) =>
-                          handleToggle(option.preferenceKey, checked, eventDetails.event)
-                        }
-                        className="CheckboxItem"
-                      >
-                        <span>{option.label}</span>
-                        <Menu.CheckboxItemIndicator className="CheckboxIndicator">
-                          <CheckIcon size={16} strokeWidth={1.5} />
-                        </Menu.CheckboxItemIndicator>
-                      </Menu.CheckboxItem>
-                    ))}
-                  </Menu.Group>
-                </React.Fragment>
-              )}
-            </Menu.Popup>
-          </Menu.Positioner>
-        </Menu.Portal>
-      </Menu.Root>
+          <ListItemText>{translations.amPm12h}</ListItemText>
+          {preferences.ampm && (
+            <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <CheckIcon size={16} strokeWidth={1.5} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+        <MenuItem
+          selected={!preferences.ampm}
+          onClick={(event) => {
+            handleTimeFormatChange('24', event.nativeEvent);
+            handleTimeFormatClose();
+            handleClose();
+          }}
+        >
+          <ListItemText>{translations.hour24h}</ListItemText>
+          {!preferences.ampm && (
+            <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+              <CheckIcon size={16} strokeWidth={1.5} />
+            </ListItemIcon>
+          )}
+        </MenuItem>
+      </Menu>
     </div>
   );
 });

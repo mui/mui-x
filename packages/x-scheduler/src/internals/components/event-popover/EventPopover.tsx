@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { Popover } from '@base-ui/react/popover';
+import { styled } from '@mui/material/styles';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -14,11 +14,26 @@ import {
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
 } from './EventPopover.types';
-import { getColorClassName } from '../../utils/color-utils';
+import { getDataPaletteProps } from '../../utils/color-utils';
+import { schedulerPaletteStyles } from '../../utils/tokens';
 import { createPopover } from '../create-popover';
-import './EventPopover.css';
 import ReadonlyContent from './ReadonlyContent';
 import { FormContent } from './FormContent';
+
+const EventPopoverPositioner = styled(Popover.Positioner, {
+  name: 'MuiSchedulerEventPopover',
+  slot: 'Positioner',
+})(({ theme }) => ({
+  width: '100%',
+  maxWidth: 460,
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  zIndex: theme.zIndex.modal,
+  boxShadow: theme.shadows[4],
+  overflow: 'hidden',
+  ...schedulerPaletteStyles,
+}));
 
 const EventPopover = createPopover<SchedulerEventOccurrence>({
   contextName: 'EventPopoverContext',
@@ -42,11 +57,11 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   return (
     <div ref={forwardedRef} className={className} {...other}>
       <Popover.Portal container={container}>
-        <Popover.Positioner
+        <EventPopoverPositioner
           sideOffset={8}
           anchor={anchor}
           disableAnchorTracking
-          className={clsx('PopoverPositioner', 'EventPopoverPositioner', getColorClassName(color))}
+          {...getDataPaletteProps(color)}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
             {isEventReadOnly ? (
@@ -55,7 +70,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
               <FormContent occurrence={occurrence} onClose={onClose} />
             )}
           </Popover.Popup>
-        </Popover.Positioner>
+        </EventPopoverPositioner>
       </Popover.Portal>
     </div>
   );

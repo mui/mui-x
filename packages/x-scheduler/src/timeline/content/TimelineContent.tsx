@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
@@ -14,6 +14,116 @@ import {
   EventPopoverProvider,
   EventPopoverTrigger,
 } from '../../internals/components/event-popover';
+
+const TimelineViewContent = styled('section', {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'Root',
+})(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  border: `1px solid ${theme.palette.divider}`,
+  flexGrow: 1,
+  width: '100%',
+}));
+
+const TimelineRoot = styled(TimelinePrimitive.Root, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'Grid',
+})({
+  height: '100%',
+  display: 'grid',
+  gridTemplateColumns: 'minmax(100px, auto) 1fr',
+  gridTemplateRows: 'auto repeat(var(--row-count, 0), auto) minmax(auto, 1fr)',
+  alignItems: 'stretch',
+});
+
+const TitleSubGridContainer = styled('div', {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'TitleSubGridContainer',
+})(({ theme }) => ({
+  gridColumn: 1,
+  borderRight: `1px solid ${theme.palette.divider}`,
+  display: 'grid',
+  gridTemplateRows: 'subgrid',
+  gridRow: '1 / -1',
+}));
+
+const TitleSubGrid = styled(TimelinePrimitive.SubGrid, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'TitleSubGrid',
+})({
+  gridColumn: 1,
+  display: 'grid',
+  gridTemplateRows: 'subgrid',
+  gridRow: '2 / -1',
+});
+
+const HeaderTitleRow = styled(TimelinePrimitive.Row, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'HeaderTitleRow',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  gridRow: 1,
+  gridColumn: 1,
+}));
+
+const HeaderTitleCell = styled(TimelinePrimitive.Cell, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'HeaderTitleCell',
+})(({ theme }) => ({
+  fontWeight: theme.typography.fontWeightMedium,
+  padding: theme.spacing(1),
+  display: 'flex',
+  fontSize: theme.typography.body2.fontSize,
+  alignItems: 'flex-end',
+  height: '100%',
+}));
+
+const EventSubGridContainer = styled('div', {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'EventSubGridContainer',
+})({
+  overflowX: 'auto',
+  scrollbarWidth: 'thin',
+  gridColumn: 2,
+  display: 'grid',
+  gridTemplateRows: 'subgrid',
+  gridRow: '1 / -1',
+});
+
+const EventSubGrid = styled(TimelinePrimitive.SubGrid, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'EventSubGrid',
+})({
+  display: 'grid',
+  gridTemplateRows: 'subgrid',
+  gridRow: '2 / -1',
+});
+
+const HeaderRow = styled(TimelinePrimitive.Row, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'HeaderRow',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  gridRow: 1,
+}));
+
+const TimelineEventRow = styled(TimelinePrimitive.EventRow, {
+  name: 'MuiSchedulerTimelineContent',
+  slot: 'EventRow',
+})(({ theme }) => ({
+  width: 'calc(var(--unit-count) * var(--unit-width))',
+  minWidth: '100%',
+  boxSizing: 'border-box',
+  display: 'grid',
+  gridTemplateRows: 'repeat(var(--lane-count, 1), auto)',
+  rowGap: theme.spacing(0.5),
+  position: 'relative',
+  padding: theme.spacing(2),
+  alignContent: 'start',
+  '&:not(:last-of-type)': {
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 export const TimelineContent = React.forwardRef(function TimelineContent(
   props: TimelineContentProps,
@@ -52,35 +162,26 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   }
 
   return (
-    <section className={clsx(props.className, 'TimelineViewContent')} ref={handleRef} {...props}>
+    <TimelineViewContent ref={handleRef} {...props}>
       <EventPopoverProvider containerRef={containerRef}>
-        <TimelinePrimitive.Root
-          className="TimelineRoot"
+        <TimelineRoot
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
         >
-          <div className="TitleSubGridContainer">
-            <TimelinePrimitive.Row className="HeaderTitleRow">
-              <TimelinePrimitive.Cell className={clsx('TimelineCell', 'HeaderTitleCell')}>
-                Resource title
-              </TimelinePrimitive.Cell>
-            </TimelinePrimitive.Row>
-            <TimelinePrimitive.SubGrid className="TitleSubGrid">
+          <TitleSubGridContainer>
+            <HeaderTitleRow>
+              <HeaderTitleCell>Resource title</HeaderTitleCell>
+            </HeaderTitleRow>
+            <TitleSubGrid>
               {(resourceId) => <TimelineTitleCell key={resourceId} resourceId={resourceId} />}
-            </TimelinePrimitive.SubGrid>
-          </div>
-          <div className="EventSubGridContainer">
-            <TimelinePrimitive.Row className="HeaderRow">
-              <TimelinePrimitive.Cell className={clsx('TimelineCell', 'HeaderCell')}>
-                {header}
-              </TimelinePrimitive.Cell>
-            </TimelinePrimitive.Row>
-            <TimelinePrimitive.SubGrid className="EventSubGrid">
+            </TitleSubGrid>
+          </TitleSubGridContainer>
+          <EventSubGridContainer>
+            <HeaderRow>
+              <TimelinePrimitive.Cell>{header}</TimelinePrimitive.Cell>
+            </HeaderRow>
+            <EventSubGrid>
               {(resourceId) => (
-                <TimelinePrimitive.EventRow
-                  key={resourceId}
-                  className="TimelineEventRow"
-                  resourceId={resourceId}
-                >
+                <TimelineEventRow key={resourceId} resourceId={resourceId}>
                   {({ occurrences, placeholder }) => (
                     <React.Fragment>
                       {occurrences.map((occurrence) => (
@@ -105,12 +206,12 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
                       )}
                     </React.Fragment>
                   )}
-                </TimelinePrimitive.EventRow>
+                </TimelineEventRow>
               )}
-            </TimelinePrimitive.SubGrid>
-          </div>
-        </TimelinePrimitive.Root>
+            </EventSubGrid>
+          </EventSubGridContainer>
+        </TimelineRoot>
       </EventPopoverProvider>
-    </section>
+    </TimelineViewContent>
   );
 });

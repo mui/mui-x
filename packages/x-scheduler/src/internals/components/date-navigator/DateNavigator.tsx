@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useStore } from '@base-ui/utils/store';
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -12,7 +13,37 @@ import {
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../utils/TranslationsContext';
-import './DateNavigator.css';
+
+const DateNavigatorRoot = styled('header', {
+  name: 'MuiSchedulerDateNavigator',
+  slot: 'Root',
+})(({ theme }) => ({
+  gridColumn: '1 / 2',
+  gridTemplateColumns: 'subgrid',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.spacing(2),
+  padding: `${theme.spacing(1)} 0`,
+}));
+
+const DateNavigatorLabel = styled('p', {
+  name: 'MuiSchedulerDateNavigator',
+  slot: 'Label',
+})(({ theme }) => ({
+  margin: 0,
+  ...theme.typography.h6,
+  fontWeight: theme.typography.fontWeightBold,
+  lineHeight: 1.4,
+}));
+
+const DateNavigatorButtonsContainer = styled('div', {
+  name: 'MuiSchedulerDateNavigator',
+  slot: 'ButtonsContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  gap: theme.spacing(0.5),
+}));
 
 export const DateNavigator = React.forwardRef(function DateNavigator(
   props: DateNavigatorProps,
@@ -31,47 +62,36 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
-    <header
-      ref={forwardedRef}
-      role="navigation"
-      className={clsx('DateNavigatorContainer', className)}
-      {...other}
-    >
-      <button
-        type="button"
+    <DateNavigatorRoot ref={forwardedRef} role="navigation" className={className} {...other}>
+      <IconButton
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
-        className={clsx('OutlinedNeutralButton', 'Button', 'IconButton')}
         onClick={(event) =>
           store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
         }
       >
         {isSidePanelOpen ? (
-          <PanelLeftClose size={20} strokeWidth={1.5} className="Icon" />
+          <PanelLeftClose size={20} strokeWidth={1.5} />
         ) : (
-          <PanelLeftOpen size={20} strokeWidth={1.5} className="Icon" />
+          <PanelLeftOpen size={20} strokeWidth={1.5} />
         )}
-      </button>
-      <p className="DateNavigatorLabel" aria-live="polite">
+      </IconButton>
+      <DateNavigatorLabel aria-live="polite">
         {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
-      </p>
-      <div className="DateNavigatorButtonsContainer">
-        <button
-          className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
+      </DateNavigatorLabel>
+      <DateNavigatorButtonsContainer>
+        <IconButton
           onClick={store.goToPreviousVisibleDate}
-          type="button"
           aria-label={translations.previousTimeSpan(view)}
         >
           <ChevronLeft size={24} strokeWidth={2} />
-        </button>
-        <button
-          className={clsx('NeutralTextButton', 'Button', 'DateNavigatorButton')}
+        </IconButton>
+        <IconButton
           onClick={store.goToNextVisibleDate}
-          type="button"
           aria-label={translations.nextTimeSpan(view)}
         >
           <ChevronRight size={24} strokeWidth={2} />
-        </button>
-      </div>
-    </header>
+        </IconButton>
+      </DateNavigatorButtonsContainer>
+    </DateNavigatorRoot>
   );
 });

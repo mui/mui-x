@@ -2,9 +2,12 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { ChevronDown } from 'lucide-react';
-import { Menu } from '@base-ui/react/menu';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import { Menubar } from '@base-ui/react/menubar';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import IconButton from '@mui/material/IconButton';
 import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
 
@@ -29,9 +32,11 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
 
-  const handleClick = React.useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      const newView = (event.currentTarget as HTMLElement).getAttribute('data-view') as T;
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleToggleChange = React.useCallback(
+    (event: React.MouseEvent<HTMLElement>, newView: T | null) => {
       if (newView) {
         onViewChange(newView, event.nativeEvent);
       }
@@ -39,12 +44,18 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
     [onViewChange],
   );
 
-  const handleViewChange = React.useCallback(
-    (newView: T, eventDetails: Menu.Root.ChangeEventDetails) => {
-      onViewChange(newView, eventDetails.event);
-    },
-    [onViewChange],
-  );
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, newView: T) => {
+    onViewChange(newView, event.nativeEvent);
+    handleMenuClose();
+  };
 
   const showAll = views.length <= 3;
   const visible = showAll ? views : views.slice(0, 2);
@@ -76,68 +87,42 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
 
   return (
     <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
-      <Menubar className="MenuBar">
+      <ToggleButtonGroup value={view} exclusive onChange={handleToggleChange} size="small">
         {visible.map((visibleView) => (
-          <button
-            key={visibleView}
-            className="MainItem"
-            onClick={handleClick}
-            data-view={visibleView}
-            type="button"
-            data-pressed={view === visibleView || undefined}
-            aria-pressed={view === visibleView}
-          >
+          <ToggleButton key={visibleView} value={visibleView}>
             {translations[visibleView]}
-          </button>
+          </ToggleButton>
         ))}
 
         {!!state.dropdownView && (
-          <React.Fragment>
-            <button
-              className="MainItem"
-              onClick={handleClick}
-              data-view={state.dropdownView}
-              type="button"
-              data-pressed={view === state.dropdownView || undefined}
-              aria-pressed={view === state.dropdownView}
-            >
-              {translations[state.dropdownView]}
-            </button>
-            <Menu.Root>
-              <Menu.Trigger className="MainItem" data-view="other" aria-label="Show more views">
-                <ChevronDown size={16} strokeWidth={1.5} />
-              </Menu.Trigger>
-              <Menu.Portal container={containerRef}>
-                <Menu.Positioner
-                  className="MenuPositioner "
-                  sideOffset={9}
-                  align="end"
-                  alignOffset={-4}
-                >
-                  <Menu.Popup className="MenuPopup ">
-                    <Menu.RadioGroup
-                      value={view}
-                      onValueChange={handleViewChange}
-                      className="RadioGroup "
-                    >
-                      {dropdown.map((dropdownView) => (
-                        <Menu.RadioItem
-                          key={dropdownView}
-                          className="RadioItem"
-                          value={dropdownView}
-                          closeOnClick
-                        >
-                          {translations[dropdownView]}
-                        </Menu.RadioItem>
-                      ))}
-                    </Menu.RadioGroup>
-                  </Menu.Popup>
-                </Menu.Positioner>
-              </Menu.Portal>
-            </Menu.Root>
-          </React.Fragment>
+          <ToggleButton value={state.dropdownView}>{translations[state.dropdownView]}</ToggleButton>
         )}
-      </Menubar>
+      </ToggleButtonGroup>
+
+      {dropdown.length > 0 && (
+        <React.Fragment>
+          <IconButton
+            size="small"
+            onClick={handleMenuOpen}
+            aria-label="Show more views"
+            aria-haspopup="true"
+            aria-expanded={menuOpen ? 'true' : undefined}
+          >
+            <ChevronDown size={16} strokeWidth={1.5} />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
+            {dropdown.map((dropdownView) => (
+              <MenuItem
+                key={dropdownView}
+                selected={view === dropdownView}
+                onClick={(event) => handleMenuItemClick(event, dropdownView)}
+              >
+                {translations[dropdownView]}
+              </MenuItem>
+            ))}
+          </Menu>
+        </React.Fragment>
+      )}
     </div>
   );
 }) as ViewSwitcherComponent;

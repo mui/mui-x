@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, within } from '@mui/internal-test-utils';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
 import { HeaderToolbar } from './HeaderToolbar';
@@ -19,16 +19,16 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const buttons = screen
-      .getAllByRole('button')
-      .filter((btn) => btn.className.includes('MainItem'));
+    // MUI ToggleButtonGroup uses role="group" and ToggleButtons inside
+    const toggleGroup = screen.getByRole('group');
+    const toggleButtons = within(toggleGroup).getAllByRole('button');
 
-    expect(buttons).toHaveLength(3);
-    expect(buttons[0]).to.have.text('Week');
-    expect(buttons[1]).to.have.text('Day');
-    expect(buttons[2]).to.have.text('Month');
+    expect(toggleButtons).toHaveLength(3);
+    expect(toggleButtons[0]).to.have.text('Week');
+    expect(toggleButtons[1]).to.have.text('Day');
+    expect(toggleButtons[2]).to.have.text('Month');
 
-    expect(screen.getByRole('menuitem')).to.have.attribute('aria-label', 'Show more views');
+    expect(screen.getByRole('button', { name: 'Show more views' })).not.to.equal(null);
   });
 
   it('should render the first three views + Arrow down for a custom set of views (with more than 3 views)', () => {
@@ -38,14 +38,13 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const buttons = screen
-      .getAllByRole('button')
-      .filter((btn) => btn.className.includes('MainItem'));
-    expect(buttons).toHaveLength(3);
-    expect(buttons[0]).to.have.text('Agenda');
-    expect(buttons[1]).to.have.text('Week');
-    expect(buttons[2]).to.have.text('Day');
-    expect(screen.getByRole('menuitem')).to.have.attribute('aria-label', 'Show more views');
+    const toggleGroup = screen.getByRole('group');
+    const toggleButtons = within(toggleGroup).getAllByRole('button');
+    expect(toggleButtons).toHaveLength(3);
+    expect(toggleButtons[0]).to.have.text('Agenda');
+    expect(toggleButtons[1]).to.have.text('Week');
+    expect(toggleButtons[2]).to.have.text('Day');
+    expect(screen.getByRole('button', { name: 'Show more views' })).not.to.equal(null);
   });
 
   it('should render the first three views + the selected view for a custom set of views (with more than 3 views)', () => {
@@ -59,17 +58,16 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const buttons = screen
-      .getAllByRole('button')
-      .filter((btn) => btn.className.includes('MainItem'));
-    expect(buttons).toHaveLength(3);
-    expect(buttons[0]).to.have.text('Agenda');
-    expect(buttons[1]).to.have.text('Week');
-    expect(buttons[2]).to.have.text('Day');
-    expect(buttons[2]).to.have.attribute('data-pressed', 'true');
+    const toggleGroup = screen.getByRole('group');
+    const toggleButtons = within(toggleGroup).getAllByRole('button');
+    expect(toggleButtons).toHaveLength(3);
+    expect(toggleButtons[0]).to.have.text('Agenda');
+    expect(toggleButtons[1]).to.have.text('Week');
+    expect(toggleButtons[2]).to.have.text('Day');
+    // MUI ToggleButton uses aria-pressed instead of data-pressed
+    expect(toggleButtons[2]).to.have.attribute('aria-pressed', 'true');
 
-    const menuButton = screen.getByRole('menuitem');
-    expect(menuButton).to.have.attribute('aria-label', 'Show more views');
+    expect(screen.getByRole('button', { name: 'Show more views' })).not.to.equal(null);
   });
 
   it('should render the three first views for a custom set of views (with exactly 3 views)', () => {
@@ -79,13 +77,12 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const buttons = screen
-      .getAllByRole('button')
-      .filter((btn) => btn.className.includes('MainItem'));
-    expect(buttons).toHaveLength(3);
-    expect(buttons[0]).to.have.text('Agenda');
-    expect(buttons[1]).to.have.text('Week');
-    expect(buttons[2]).to.have.text('Day');
+    const toggleGroup = screen.getByRole('group');
+    const toggleButtons = within(toggleGroup).getAllByRole('button');
+    expect(toggleButtons).toHaveLength(3);
+    expect(toggleButtons[0]).to.have.text('Agenda');
+    expect(toggleButtons[1]).to.have.text('Week');
+    expect(toggleButtons[2]).to.have.text('Day');
   });
 
   it('should render the two first views for a custom set of views (with exactly 2 views)', () => {
@@ -95,11 +92,10 @@ describe('<ViewSwitcher />', () => {
       </EventCalendarProvider>,
     );
 
-    const buttons = screen
-      .getAllByRole('button')
-      .filter((btn) => btn.className.includes('MainItem'));
-    expect(buttons).toHaveLength(2);
-    expect(buttons[0]).to.have.text('Agenda');
-    expect(buttons[1]).to.have.text('Week');
+    const toggleGroup = screen.getByRole('group');
+    const toggleButtons = within(toggleGroup).getAllByRole('button');
+    expect(toggleButtons).toHaveLength(2);
+    expect(toggleButtons[0]).to.have.text('Agenda');
+    expect(toggleButtons[1]).to.have.text('Week');
   });
 });
