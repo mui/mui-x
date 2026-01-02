@@ -14,7 +14,7 @@ You can set a series label by passing a string to the `label` property of a seri
 The label appears in different locations such as the legend and tooltip.
 
 :::info
-The Pie chart has specific behavior described in its [own section](#pie-chart-labels).
+The Pie chart has specific behavior described in [Pie chart labels](#pie-chart-labels) below.
 :::
 
 {{"demo": "BasicLabel.js"}}
