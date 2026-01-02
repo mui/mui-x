@@ -17,4 +17,5 @@ export const schedulerOtherSelectors = {
    */
   defaultEventColor: createSelector((state: State) => state.eventColor),
   displayTimezone: createSelector((state: State) => state.displayTimezone),
+  isLoading: createSelector((state: State) => state.isLoading),
 };

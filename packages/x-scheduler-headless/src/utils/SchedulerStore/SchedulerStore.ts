@@ -33,7 +33,7 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { SchedulerDataManager } from './utils';
+import { SchedulerDataManager } from './queue';
 import { SchedulerDataSourceCacheDefault } from './cache';
 import { applyDataTimezoneToEventUpdate } from '../date-utils';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
@@ -101,6 +101,7 @@ export class SchedulerStore<
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
+      ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -195,16 +196,17 @@ export class SchedulerStore<
       this.update({
         ...this.state,
         ...eventsState,
+        isLoading: false,
       });
 
       await this.dataManager.setRequestSettled(range);
 
       return;
-
-      // TODO: Unset loading state
     }
 
     try {
+      // Set loading state
+      this.set('isLoading', true);
       const events = await dataSource.getEvents(range.start, range.end);
       console.log('SchedulerStore: FETCHED events from data source');
       this.cache!.setRange(
@@ -227,7 +229,8 @@ export class SchedulerStore<
       // TODO: Set error state for this range
       await this.dataManager.setRequestSettled(range);
     } finally {
-      // TODO: unset loading state
+      // Unset loading state
+      this.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
     }
   };

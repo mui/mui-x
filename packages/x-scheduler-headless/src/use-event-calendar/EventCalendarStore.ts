@@ -101,13 +101,19 @@ export class EventCalendarStore<
         return {
           viewConfig: state.viewConfig,
           visibleDaysKey,
+          isLoading: state.isLoading,
         };
       },
 
       (previous, next) => {
         // Bail out if nothing relevant changed.
-        if (previous.visibleDaysKey === next.visibleDaysKey) {
+        if (previous.visibleDaysKey === next.visibleDaysKey ) {
           return;
+        }
+
+        let isInstantLoad = false;
+        if (previous.viewConfig == null) {
+          isInstantLoad = true;
         }
 
         const visibleDays =
@@ -122,7 +128,7 @@ export class EventCalendarStore<
           end: visibleDays[visibleDays.length - 1].value,
         };
 
-        queueMicrotask(() => this.queueDataFetchForRange(range), false);
+        queueMicrotask(() => this.queueDataFetchForRange(range, isInstantLoad));
       },
     );
   }

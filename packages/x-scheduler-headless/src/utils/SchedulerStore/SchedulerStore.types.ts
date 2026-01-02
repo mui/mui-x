@@ -148,6 +148,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
+  /**
+   * Whether the store is currently loading events from the data source.
+   */
+  isLoading: boolean;
 }
 
 export interface SchedulerDataSource<TEvent extends object> {

@@ -11,7 +11,10 @@ import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-schedul
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../event-popover';
@@ -42,6 +45,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -103,6 +107,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       <span className="DayTimeGridHeaderDayNumber">{adapter.format(day.value, 'dayOfMonth')}</span>
     </span>
   );
+
+  if(isLoading){
+    return 'Loading...'
+  }
 
   return (
     <CalendarGrid.Root
