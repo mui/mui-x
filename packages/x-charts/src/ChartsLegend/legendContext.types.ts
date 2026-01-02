@@ -26,6 +26,7 @@ export interface LegendItemParams
   id: number | string;
   /**
    * The type of the series
+   * This property is always defined, but marked as optional to avoid breaking changes. It will become required in a future major version.
    */
   type?: ChartSeriesType;
   markType: ChartsLabelMarkProps['type'];
