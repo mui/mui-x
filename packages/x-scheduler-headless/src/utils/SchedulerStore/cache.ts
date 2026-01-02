@@ -12,19 +12,24 @@ export interface SchedulerDataSourceCache<TEvent extends object> {
    * Checks if the requested time range is fully covered by cached data.
    */
   hasCoverage: (start: number, end: number) => boolean;
-
   /**
    * Saves the events and marks the specific range as "loaded".
    */
   setRange: (start: number, end: number, events: TEvent[]) => void;
-
+  /**
+   * Updates or adds a single event to the cache.
+   */
+  upsert: (event: TEvent) => void;
+  /**
+   * Removes an event from the cache.
+   */
+  remove: (id: string) => void;
   /**
    * Returns all currently valid (non-expired) events in the cache.
    * We return *all* because we cannot safely filter recurring events
    * by date without complex logic here.
    */
   getAll: () => TEvent[];
-
   /**
    * Clear the cache.
    */
@@ -97,8 +102,7 @@ export class SchedulerDataSourceCacheDefault<
 
     // 1. Update Events (Refreshes the expiry of these specific data points)
     for (const event of newEvents) {
-      const id = String((event as any).id);
-      this.cache[id] = { value: event, expiry };
+      this.upsert(event);
     }
 
     // 2. Add New Range
@@ -144,6 +148,17 @@ export class SchedulerDataSourceCacheDefault<
 
     nextRanges.push(newRange);
     this.loadedRanges = nextRanges;
+  }
+
+  upsert(event: TEvent) {
+    const id = String((event as any).id);
+    const expiry = Date.now() + this.ttl;
+    console.log('Cache upsert for event id:', id, event);
+    this.cache[id] = { value: event, expiry };
+  }
+
+  remove(id: string) {
+    delete this.cache[id];
   }
 
   getAll(): TEvent[] {

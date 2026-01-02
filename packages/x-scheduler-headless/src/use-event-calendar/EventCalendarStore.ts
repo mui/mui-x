@@ -107,7 +107,7 @@ export class EventCalendarStore<
 
       (previous, next) => {
         // Bail out if nothing relevant changed.
-        if (previous.visibleDaysKey === next.visibleDaysKey ) {
+        if (previous.visibleDaysKey === next.visibleDaysKey) {
           return;
         }
 

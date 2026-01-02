@@ -227,6 +227,7 @@ export class SchedulerStore<
       await this.dataManager.setRequestSettled(range);
     } catch (error) {
       // TODO: Set error state for this range
+      console.log('SchedulerStore: Error while fetching events from data source', error);
       await this.dataManager.setRequestSettled(range);
     } finally {
       // Unset loading state
@@ -394,8 +395,43 @@ export class SchedulerStore<
       createdIds.push(response.id);
     }
 
+    console.log('SchedulerStore: updateEvents called', {
+      deleted: Array.from(deleted),
+      updated: Array.from(updated.keys()),
+      created: createdIds,
+    });
+
+    if (this.cache) {
+      for (const id of deleted) {
+        this.cache.remove(String(id));
+      }
+
+      const modifiedIds = new Set([...createdIds, ...updated.keys()]);
+      if (modifiedIds.size > 0) {
+        for (const event of newEvents) {
+          // @ts-ignore
+          if (modifiedIds.has(event.id)) {
+            this.cache.upsert(event);
+          }
+        }
+      }
+    }
     this.parameters.onEventsChange?.(newEvents, eventDetails);
 
+    const isControlled = this.parameters.events !== undefined && !this.parameters.dataSource;
+    if (!isControlled) {
+      const { adapter, displayTimezone } = this.state;
+      const eventsState = buildEventsState(
+        { ...this.parameters, events: newEvents } as Parameters,
+        adapter,
+        displayTimezone,
+      );
+
+      this.update({
+        ...this.state,
+        ...eventsState,
+      });
+    }
     return {
       deleted: deletedParam ?? [],
       updated: Array.from(updated.keys()) as SchedulerEventId[],
