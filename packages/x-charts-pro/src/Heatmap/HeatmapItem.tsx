@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
-import { type SeriesId } from '@mui/x-charts/internals';
+import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
 import { type HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
 
 export interface HeatmapItemSlots {
@@ -106,8 +106,17 @@ function HeatmapItem(props: HeatmapItemProps) {
   const classes = useUtilityClasses(ownerState);
 
   const Cell = slots?.cell ?? HeatmapCell;
+  // If Cell is not the default HeatmapCell, we skip adding interaction props because we have a more efficient way to
+  // calculate them. To avoid breaking changes, we need to keep this behavior. We can remove this in v9.
+  const skipInteractionItemProps = Cell !== HeatmapCell;
+  const interactionProps = useInteractionItemProps(
+    { type: 'heatmap', seriesId, dataIndex },
+    skipInteractionItemProps,
+  );
+
   const cellProps = useSlotProps({
     elementType: Cell,
+    additionalProps: interactionProps,
     externalForwardedProps: { ...other },
     externalSlotProps: slotProps.cell,
     ownerState,
