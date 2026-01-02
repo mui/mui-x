@@ -32,6 +32,10 @@
   "keywords": [
     "react",
     "react-component",
+    "mui",
+    "mui-x",
+    "material-ui",
+    "material design",
     "scheduler",
     "event-calendar",
     "calendar",
@@ -61,11 +65,25 @@
     "lucide-react": "^0.562.0"
   },
   "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
