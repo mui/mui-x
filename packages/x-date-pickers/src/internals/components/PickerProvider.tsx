@@ -182,7 +182,7 @@ export interface PickerContextValue<
   triggerStatus: 'hidden' | 'disabled' | 'enabled';
   /**
    * If true, the picker should open when the user focuses/clicks the field input to edit.
-   * Controlled by the component prop `keepOpenOnFieldChange`.
+   * Controlled by the component prop `keepOpenDuringFieldFocus`.
    */
   keepPickerOpen?: boolean;
   /**
