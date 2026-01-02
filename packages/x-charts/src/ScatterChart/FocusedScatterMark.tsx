@@ -12,7 +12,7 @@ export function FocusedScatterMark(props: React.SVGAttributes<SVGRectElement>) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  if (focusedItem === null || focusedItem.seriesType !== 'scatter' || !scatterSeries) {
+  if (focusedItem === null || focusedItem.type !== 'scatter' || !scatterSeries) {
     return null;
   }
 
