@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import Button from '@mui/material/Button';
@@ -24,8 +23,8 @@ import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
-  name: 'MuiSchedulerMonthViewCell',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCell',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
@@ -37,7 +36,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   '&:not(:first-of-type)': {
     borderInlineStart: `1px solid ${theme.palette.divider}`,
   },
-  '&.Weekend': {
+  '&[data-weekend]': {
     backgroundColor: theme.palette.action.hover,
     color: theme.palette.text.primary,
   },
@@ -48,7 +47,7 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
   },
-  '&.OtherMonth': {
+  '&[data-other-month]': {
     color: theme.palette.text.disabled,
   },
   // Today button states
@@ -74,8 +73,8 @@ const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
 }));
 
 const MonthViewCellNumber = styled('span', {
-  name: 'MuiSchedulerMonthViewCell',
-  slot: 'Number',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCellNumber',
 })(({ theme }) => ({
   gridRow: 1,
   justifySelf: 'end',
@@ -85,8 +84,8 @@ const MonthViewCellNumber = styled('span', {
 }));
 
 const MonthViewCellNumberButton = styled('button', {
-  name: 'MuiSchedulerMonthViewCell',
-  slot: 'NumberButton',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCellNumberButton',
 })(({ theme }) => ({
   gridRow: 1,
   justifySelf: 'end',
@@ -116,8 +115,8 @@ const MonthViewCellNumberButton = styled('button', {
 }));
 
 const MonthViewCellEvents = styled('div', {
-  name: 'MuiSchedulerMonthViewCell',
-  slot: 'Events',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCellEvents',
 })(({ theme }) => ({
   position: 'relative',
   display: 'grid',
@@ -125,8 +124,8 @@ const MonthViewCellEvents = styled('div', {
 }));
 
 const MonthViewMoreEvents = styled(Button, {
-  name: 'MuiSchedulerMonthViewCell',
-  slot: 'MoreEvents',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewMoreEvents',
 })(({ theme }) => ({
   margin: 0,
   color: theme.palette.text.secondary,
@@ -138,8 +137,8 @@ const MonthViewMoreEvents = styled(Button, {
 }));
 
 const MonthViewPlaceholderEventContainer = styled('div', {
-  name: 'MuiSchedulerMonthViewCell',
-  slot: 'PlaceholderContainer',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewPlaceholderContainer',
 })(({ theme }) => ({
   position: 'absolute',
   top: 0,
@@ -224,12 +223,9 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ref={handleRef}
       key={day.key}
       value={day.value}
-      data-current={isToday ? '' : undefined}
-      className={clsx(
-        !isCurrentMonth && 'OtherMonth',
-        isToday && 'Today',
-        isWeekend(adapter, day.value) && 'Weekend',
-      )}
+      data-current={isToday || undefined}
+      data-other-month={!isCurrentMonth || undefined}
+      data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--row-count': rowCount } as React.CSSProperties}
       {...eventCreationProps}
     >

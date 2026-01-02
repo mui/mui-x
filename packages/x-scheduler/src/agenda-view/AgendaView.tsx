@@ -18,8 +18,8 @@ import { EventItem } from '../internals/components/event/event-item/EventItem';
 import '../index.css';
 
 const AgendaViewContainer = styled('div', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewContainer',
 })(({ theme }) => ({
   width: '100%',
   height: '100%',
@@ -29,8 +29,8 @@ const AgendaViewContainer = styled('div', {
 }));
 
 const AgendaViewRow = styled('section', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'Row',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewRow',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: '190px 1fr',
@@ -40,8 +40,8 @@ const AgendaViewRow = styled('section', {
 }));
 
 const DayHeaderCell = styled('header', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'DayHeaderCell',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewDayHeaderCell',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'flex-start',
@@ -55,8 +55,8 @@ const DayHeaderCell = styled('header', {
 }));
 
 const DayNumberCell = styled('span', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'DayNumber',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewDayNumber',
 })(({ theme }) => ({
   fontSize: theme.typography.h6.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
@@ -67,8 +67,8 @@ const DayNumberCell = styled('span', {
 }));
 
 const WeekDayCell = styled('div', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'WeekDay',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewWeekDay',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -76,8 +76,8 @@ const WeekDayCell = styled('div', {
 }));
 
 const AgendaWeekDayNameLabel = styled('span', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'WeekDayName',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewWeekDayName',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   lineHeight: 1,
@@ -91,8 +91,8 @@ const AgendaWeekDayNameLabel = styled('span', {
 }));
 
 const AgendaYearAndMonthLabel = styled('span', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'YearAndMonth',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewYearAndMonth',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1,
@@ -110,8 +110,8 @@ const AgendaYearAndMonthLabel = styled('span', {
 }));
 
 const EventsList = styled('ul', {
-  name: 'MuiSchedulerAgendaView',
-  slot: 'EventsList',
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewEventsList',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',

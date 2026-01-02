@@ -16,8 +16,8 @@ import {
 } from '../../internals/components/event-popover';
 
 const TimelineViewContent = styled('section', {
-  name: 'MuiSchedulerTimelineContent',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'Content',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: `1px solid ${theme.palette.divider}`,
@@ -26,8 +26,8 @@ const TimelineViewContent = styled('section', {
 }));
 
 const TimelineRoot = styled(TimelinePrimitive.Root, {
-  name: 'MuiSchedulerTimelineContent',
-  slot: 'Grid',
+  name: 'MuiTimeline',
+  slot: 'ContentGrid',
 })({
   height: '100%',
   display: 'grid',
@@ -37,7 +37,7 @@ const TimelineRoot = styled(TimelinePrimitive.Root, {
 });
 
 const TitleSubGridContainer = styled('div', {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'TitleSubGridContainer',
 })(({ theme }) => ({
   gridColumn: 1,
@@ -48,7 +48,7 @@ const TitleSubGridContainer = styled('div', {
 }));
 
 const TitleSubGrid = styled(TimelinePrimitive.SubGrid, {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'TitleSubGrid',
 })({
   gridColumn: 1,
@@ -58,7 +58,7 @@ const TitleSubGrid = styled(TimelinePrimitive.SubGrid, {
 });
 
 const HeaderTitleRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'HeaderTitleRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
@@ -67,7 +67,7 @@ const HeaderTitleRow = styled(TimelinePrimitive.Row, {
 }));
 
 const HeaderTitleCell = styled(TimelinePrimitive.Cell, {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'HeaderTitleCell',
 })(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
@@ -79,7 +79,7 @@ const HeaderTitleCell = styled(TimelinePrimitive.Cell, {
 }));
 
 const EventSubGridContainer = styled('div', {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'EventSubGridContainer',
 })({
   overflowX: 'auto',
@@ -91,7 +91,7 @@ const EventSubGridContainer = styled('div', {
 });
 
 const EventSubGrid = styled(TimelinePrimitive.SubGrid, {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'EventSubGrid',
 })({
   display: 'grid',
@@ -100,7 +100,7 @@ const EventSubGrid = styled(TimelinePrimitive.SubGrid, {
 });
 
 const HeaderRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'HeaderRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
@@ -108,7 +108,7 @@ const HeaderRow = styled(TimelinePrimitive.Row, {
 }));
 
 const TimelineEventRow = styled(TimelinePrimitive.EventRow, {
-  name: 'MuiSchedulerTimelineContent',
+  name: 'MuiTimeline',
   slot: 'EventRow',
 })(({ theme }) => ({
   width: 'calc(var(--unit-count) * var(--unit-width))',

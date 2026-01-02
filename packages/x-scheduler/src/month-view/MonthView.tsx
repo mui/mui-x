@@ -28,8 +28,8 @@ import '../index.css';
 const FIXED_CELL_WIDTH = 28;
 
 const MonthViewContainer = styled('div', {
-  name: 'MuiSchedulerMonthView',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewContainer',
 })(({ theme }) => ({
   width: '100%',
   borderRadius: theme.shape.borderRadius,
@@ -41,8 +41,8 @@ const MonthViewContainer = styled('div', {
 }));
 
 const MonthViewRoot = styled(CalendarGrid.Root, {
-  name: 'MuiSchedulerMonthView',
-  slot: 'Grid',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewGrid',
 })({
   flex: 1,
   display: 'flex',
@@ -55,8 +55,8 @@ interface MonthViewRowGridProps {
 }
 
 const MonthViewHeader = styled(CalendarGrid.HeaderRow, {
-  name: 'MuiSchedulerMonthView',
-  slot: 'Header',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewHeader',
 })<{ ownerState: MonthViewRowGridProps }>(({ theme, ownerState }) => ({
   display: 'grid',
   gridTemplateColumns: ownerState.showWeekNumber
@@ -66,8 +66,8 @@ const MonthViewHeader = styled(CalendarGrid.HeaderRow, {
 }));
 
 const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
-  name: 'MuiSchedulerMonthView',
-  slot: 'HeaderCell',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewHeaderCell',
 })(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: 'center',
@@ -79,8 +79,8 @@ const MonthViewHeaderCell = styled(CalendarGrid.HeaderCell, {
 }));
 
 const MonthViewWeekHeaderCell = styled('div', {
-  name: 'MuiSchedulerMonthView',
-  slot: 'WeekHeaderCell',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewWeekHeaderCell',
 })(({ theme }) => ({
   padding: theme.spacing(1, 0),
   textAlign: 'center',
@@ -91,8 +91,8 @@ const MonthViewWeekHeaderCell = styled('div', {
 }));
 
 const MonthViewBody = styled('div', {
-  name: 'MuiSchedulerMonthView',
-  slot: 'Body',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewBody',
 })({
   flex: 1,
   display: 'grid',

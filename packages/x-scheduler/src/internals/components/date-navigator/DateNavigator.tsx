@@ -49,8 +49,6 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   props: DateNavigatorProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
-
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
@@ -62,7 +60,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
-    <DateNavigatorRoot ref={forwardedRef} role="navigation" className={className} {...other}>
+    <DateNavigatorRoot ref={forwardedRef} role="navigation" {...props}>
       <IconButton
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         onClick={(event) =>

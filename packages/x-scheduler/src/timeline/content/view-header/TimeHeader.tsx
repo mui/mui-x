@@ -9,16 +9,16 @@ import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 
 const TimeHeaderRoot = styled('div', {
-  name: 'MuiSchedulerTimeHeader',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'TimeHeaderRoot',
 })({
   display: 'flex',
   minWidth: 'calc(var(--unit-count) * var(--time-cell-width))',
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiSchedulerTimeHeader',
-  slot: 'Cell',
+  name: 'MuiTimeline',
+  slot: 'TimeHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
   justifyContent: 'center',
@@ -30,8 +30,8 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('time', {
-  name: 'MuiSchedulerTimeHeader',
-  slot: 'DayLabel',
+  name: 'MuiTimeline',
+  slot: 'TimeHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
   fontSize: theme.typography.body2.fontSize,
@@ -42,8 +42,8 @@ const DayLabel = styled('time', {
 }));
 
 const TimeCellsRow = styled('div', {
-  name: 'MuiSchedulerTimeHeader',
-  slot: 'TimeCellsRow',
+  name: 'MuiTimeline',
+  slot: 'TimeHeaderCellsRow',
 })(({ theme }) => ({
   padding: theme.spacing(0, 1),
   display: 'grid',
@@ -51,16 +51,16 @@ const TimeCellsRow = styled('div', {
 }));
 
 const TimeCell = styled('div', {
-  name: 'MuiSchedulerTimeHeader',
-  slot: 'TimeCell',
+  name: 'MuiTimeline',
+  slot: 'TimeHeaderTimeCell',
 })(({ theme }) => ({
   padding: theme.spacing(1, 0),
   textAlign: 'center',
 }));
 
 const TimeLabel = styled('time', {
-  name: 'MuiSchedulerTimeHeader',
-  slot: 'TimeLabel',
+  name: 'MuiTimeline',
+  slot: 'TimeHeaderTimeLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.secondary,

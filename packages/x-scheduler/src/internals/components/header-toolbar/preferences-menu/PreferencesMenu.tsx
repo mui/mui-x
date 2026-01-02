@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
 import { CheckIcon, ChevronRight, Settings } from 'lucide-react';
@@ -23,12 +23,15 @@ import {
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useTranslations } from '../../../utils/TranslationsContext';
 
+const PreferencesMenuRoot = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'PreferencesMenu',
+})({});
+
 export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   props: React.HTMLAttributes<HTMLDivElement>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
-
   // Context hooks
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
@@ -126,7 +129,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   }
 
   return (
-    <div ref={handleRef} className={clsx('PreferencesMenuContainer', className)} {...other}>
+    <PreferencesMenuRoot ref={handleRef} {...props}>
       <IconButton
         aria-label={translations.preferencesMenu}
         onClick={handleClick}
@@ -235,6 +238,6 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           )}
         </MenuItem>
       </Menu>
-    </div>
+    </PreferencesMenuRoot>
   );
 });

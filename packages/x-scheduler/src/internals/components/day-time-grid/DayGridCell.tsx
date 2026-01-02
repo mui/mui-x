@@ -15,8 +15,8 @@ import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 const EVENT_HEIGHT = 22;
 
 const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventsCell',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsCell',
 })(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
   flexGrow: 1,
@@ -34,8 +34,8 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
 }));
 
 const DayTimeGridAllDayEventsCellEvents = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventsCellEvents',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsCellEvents',
 })({
   position: 'absolute',
   top: 0,
@@ -45,8 +45,8 @@ const DayTimeGridAllDayEventsCellEvents = styled('div', {
 });
 
 const DayTimeGridAllDayEventContainer = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventContainer',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventContainer',
 })({
   position: 'absolute',
   top: 0,

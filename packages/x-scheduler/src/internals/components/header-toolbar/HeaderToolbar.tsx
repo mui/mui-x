@@ -51,8 +51,6 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   props: HeaderToolbarProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
-
   // Context hooks
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
@@ -64,12 +62,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showViewSwitcher = views.length > 1;
 
   return (
-    <HeaderToolbarRoot
-      ref={forwardedRef}
-      className={className}
-      data-single-primary-action={!showViewSwitcher}
-      {...other}
-    >
+    <HeaderToolbarRoot ref={forwardedRef} data-single-primary-action={!showViewSwitcher} {...props}>
       <HeaderToolbarActions>
         <HeaderToolbarPrimaryActionWrapper>
           {showViewSwitcher && (

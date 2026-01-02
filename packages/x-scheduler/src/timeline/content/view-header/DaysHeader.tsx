@@ -7,16 +7,16 @@ import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-select
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 
 const DaysHeaderRoot = styled('div', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderRoot',
 })({
   display: 'flex',
   width: 'calc(var(--unit-count) * var(--days-cell-width))',
 });
 
 const DayHeaderCell = styled('div', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'Cell',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderCell',
 })(({ theme }) => ({
   width: 'var(--days-cell-width)',
   textAlign: 'center',
@@ -32,8 +32,8 @@ const DayHeaderCell = styled('div', {
 }));
 
 const DayHeaderTime = styled('time', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'Time',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderTime',
 })({
   display: 'flex',
   flexDirection: 'column',
@@ -41,8 +41,8 @@ const DayHeaderTime = styled('time', {
 });
 
 const WeekDay = styled('span', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'WeekDay',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderWeekDay',
 })(({ theme }) => ({
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
@@ -53,8 +53,8 @@ const WeekDay = styled('span', {
 }));
 
 const DayNumber = styled('span', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'DayNumber',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderDayNumber',
 })(({ theme }) => ({
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
@@ -63,8 +63,8 @@ const DayNumber = styled('span', {
 }));
 
 const MonthStart = styled('div', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'MonthStart',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderMonthStart',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   color: theme.palette.text.secondary,
@@ -80,8 +80,8 @@ const MonthStart = styled('div', {
 }));
 
 const MonthStartLabel = styled('p', {
-  name: 'MuiSchedulerDaysHeader',
-  slot: 'MonthStartLabel',
+  name: 'MuiTimeline',
+  slot: 'DaysHeaderMonthStartLabel',
 })({
   transform: 'rotate(-90deg)',
 });

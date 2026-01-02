@@ -24,8 +24,8 @@ const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
 
 const DayTimeGridContainer = styled(CalendarGrid.Root, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'Container',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridContainer',
 })(({ theme }) => ({
   '--fixed-cell-width': `${FIXED_CELL_WIDTH}px`,
   '--hour-height': `${HOUR_HEIGHT}px`,
@@ -40,8 +40,8 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
 }));
 
 const DayTimeGridRoot = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridRoot',
 })({
   display: 'flex',
   flexDirection: 'column',
@@ -50,25 +50,16 @@ const DayTimeGridRoot = styled('div', {
 });
 
 const DayTimeGridHeader = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'Header',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeader',
 })({
   display: 'flex',
   flexDirection: 'column',
 });
 
-const DayTimeGridGridRow = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'GridRow',
-})({
-  display: 'grid',
-  gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
-  width: '100%',
-});
-
 const DayTimeGridHeaderRow = styled(CalendarGrid.HeaderRow, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'HeaderRow',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeaderRow',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
@@ -77,8 +68,8 @@ const DayTimeGridHeaderRow = styled(CalendarGrid.HeaderRow, {
 }));
 
 const DayTimeGridAllDayEventsGrid = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventsGrid',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsGrid',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
@@ -104,8 +95,8 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
 }));
 
 const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventsRow',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsRow',
 })(({ theme }) => ({
   position: 'relative',
   backgroundColor: 'transparent',
@@ -120,16 +111,16 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
 }));
 
 const DayTimeGridAllDayEventsCell = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventsCell',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsCell',
 })(({ theme }) => ({
   padding: theme.spacing(0.5),
   backgroundColor: theme.palette.background.paper,
 }));
 
 const DayTimeGridAllDayEventsHeaderCell = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'AllDayEventsHeaderCell',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsHeaderCell',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   fontStyle: 'italic',
@@ -143,8 +134,8 @@ const DayTimeGridAllDayEventsHeaderCell = styled('div', {
 }));
 
 const DayTimeGridHeaderContent = styled('span', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'HeaderContent',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeaderContent',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -154,8 +145,8 @@ const DayTimeGridHeaderContent = styled('span', {
 }));
 
 const DayTimeGridHeaderButton = styled('button', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'HeaderButton',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeaderButton',
 })(({ theme }) => ({
   width: '100%',
   display: 'flex',
@@ -176,8 +167,8 @@ const DayTimeGridHeaderButton = styled('button', {
 }));
 
 const DayTimeGridHeaderDayName = styled('span', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'HeaderDayName',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeaderDayName',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.secondary,
@@ -185,8 +176,8 @@ const DayTimeGridHeaderDayName = styled('span', {
 }));
 
 const DayTimeGridHeaderDayNumber = styled('span', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'HeaderDayNumber',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridHeaderDayNumber',
 })(({ theme }) => ({
   fontSize: theme.typography.h5.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
@@ -199,16 +190,16 @@ const DayTimeGridHeaderDayNumber = styled('span', {
 }));
 
 const DayTimeGridBody = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'Body',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridBody',
 })({
   flex: 1,
   height: '100%',
 });
 
 const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'ScrollableContent',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridScrollableContent',
 })({
   display: 'flex',
   height: `calc(var(--hour-height) * 24)`,
@@ -217,8 +208,8 @@ const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, 
 });
 
 const DayTimeGridTimeAxis = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'TimeAxis',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridTimeAxis',
 })({
   display: 'flex',
   flexDirection: 'column',
@@ -227,8 +218,8 @@ const DayTimeGridTimeAxis = styled('div', {
 });
 
 const DayTimeGridTimeAxisCell = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'TimeAxisCell',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridTimeAxisCell',
 })(({ theme }) => ({
   height: 'calc(100% / 24)',
   lineHeight: 'calc(100% / 24)',
@@ -247,8 +238,8 @@ const DayTimeGridTimeAxisCell = styled('div', {
 }));
 
 const DayTimeGridTimeAxisText = styled('time', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'TimeAxisText',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridTimeAxisText',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 'calc(100% / 24)',
@@ -260,8 +251,8 @@ const DayTimeGridTimeAxisText = styled('time', {
 }));
 
 const DayTimeGridGrid = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'Grid',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridGrid',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
@@ -275,7 +266,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, className, ...other } = props;
+  const { days, ...other } = props;
 
   // Context hooks
   const adapter = useAdapter();
@@ -359,11 +350,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   return (
-    <DayTimeGridContainer
-      ref={handleRef}
-      className={`mui-x-scheduler${className ? ` ${className}` : ''}`}
-      {...other}
-    >
+    <DayTimeGridContainer ref={handleRef} {...other}>
       <EventPopoverProvider containerRef={containerRef}>
         <DayTimeGridHeader>
           <DayTimeGridHeaderRow as={CalendarGrid.HeaderRow}>

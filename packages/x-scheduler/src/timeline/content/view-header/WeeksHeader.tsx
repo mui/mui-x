@@ -9,8 +9,8 @@ import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 
 const WeeksHeaderRoot = styled('div', {
-  name: 'MuiSchedulerWeeksHeader',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'WeeksHeaderRoot',
 })({
   display: 'flex',
   // TODO: update this calculation when we add the option to hide weekends
@@ -18,8 +18,8 @@ const WeeksHeaderRoot = styled('div', {
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiSchedulerWeeksHeader',
-  slot: 'Cell',
+  name: 'MuiTimeline',
+  slot: 'WeeksHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
   justifyContent: 'center',
@@ -31,8 +31,8 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('div', {
-  name: 'MuiSchedulerWeeksHeader',
-  slot: 'DayLabel',
+  name: 'MuiTimeline',
+  slot: 'WeeksHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
   fontSize: theme.typography.body2.fontSize,
@@ -43,8 +43,8 @@ const DayLabel = styled('div', {
 }));
 
 const WeekDaysRow = styled('div', {
-  name: 'MuiSchedulerWeeksHeader',
-  slot: 'WeekDaysRow',
+  name: 'MuiTimeline',
+  slot: 'WeeksHeaderDaysRow',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(7, 1fr)',
@@ -52,8 +52,8 @@ const WeekDaysRow = styled('div', {
 }));
 
 const WeekDayCell = styled('time', {
-  name: 'MuiSchedulerWeeksHeader',
-  slot: 'WeekDayCell',
+  name: 'MuiTimeline',
+  slot: 'WeeksHeaderDayCell',
 })(({ theme }) => ({
   padding: theme.spacing(0.5),
   textAlign: 'center',

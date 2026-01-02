@@ -14,8 +14,8 @@ import { MonthViewCell } from './MonthViewCell';
 const FIXED_CELL_WIDTH = 28;
 
 const MonthViewRow = styled(CalendarGrid.DayRow, {
-  name: 'MuiSchedulerMonthViewRow',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewRow',
 })(({ theme }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
@@ -28,8 +28,8 @@ const MonthViewRow = styled(CalendarGrid.DayRow, {
 }));
 
 const MonthViewWeekNumberCell = styled('div', {
-  name: 'MuiSchedulerMonthViewRow',
-  slot: 'WeekNumberCell',
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewWeekNumberCell',
 })(({ theme }) => ({
   padding: theme.spacing(1, 0),
   textAlign: 'center',

@@ -13,7 +13,7 @@ import { TimelineContent } from './content';
 import '../index.css';
 
 const TimelineViewContainer = styled('div', {
-  name: 'MuiSchedulerTimeline',
+  name: 'MuiTimeline',
   slot: 'Root',
 })(({ theme }) => ({
   '--time-cell-width': '64px',
@@ -30,7 +30,7 @@ const TimelineViewContainer = styled('div', {
 }));
 
 const TimelineHeaderToolbar = styled('header', {
-  name: 'MuiSchedulerTimeline',
+  name: 'MuiTimeline',
   slot: 'HeaderToolbar',
 })({
   display: 'flex',
@@ -56,7 +56,7 @@ export const Timeline = React.forwardRef(function EventTimeline<
   return (
     <TimelineStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
-        <TimelineViewContainer ref={forwardedRef} className="mui-x-scheduler" {...forwardedProps}>
+        <TimelineViewContainer ref={forwardedRef} {...forwardedProps}>
           <TimelineHeaderToolbar>
             <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} />
           </TimelineHeaderToolbar>

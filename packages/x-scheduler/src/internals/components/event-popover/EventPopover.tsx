@@ -46,7 +46,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, style, container, anchor, occurrence, onClose, ...other } = props;
+  const { style, container, anchor, occurrence, onClose, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
 
@@ -55,7 +55,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   return (
-    <div ref={forwardedRef} className={className} {...other}>
+    <div ref={forwardedRef} {...other}>
       <Popover.Portal container={container}>
         <EventPopoverPositioner
           sideOffset={8}

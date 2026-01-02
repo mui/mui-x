@@ -8,8 +8,8 @@ import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 
 const MonthsHeaderRoot = styled('div', {
-  name: 'MuiSchedulerMonthsHeader',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'MonthsHeaderRoot',
 })({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(var(--months-cell-width), 1fr))',
@@ -18,8 +18,8 @@ const MonthsHeaderRoot = styled('div', {
 });
 
 const YearLabel = styled('div', {
-  name: 'MuiSchedulerMonthsHeader',
-  slot: 'YearLabel',
+  name: 'MuiTimeline',
+  slot: 'MonthsHeaderYearLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: 'center',
@@ -33,8 +33,8 @@ const YearLabel = styled('div', {
 }));
 
 const MonthLabel = styled('div', {
-  name: 'MuiSchedulerMonthsHeader',
-  slot: 'MonthLabel',
+  name: 'MuiTimeline',
+  slot: 'MonthsHeaderMonthLabel',
 })(({ theme }) => ({
   gridRow: 2,
   padding: theme.spacing(1),

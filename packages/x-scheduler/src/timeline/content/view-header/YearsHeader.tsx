@@ -8,8 +8,8 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-schedule
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 
 const YearsHeaderRoot = styled('div', {
-  name: 'MuiSchedulerYearsHeader',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'YearsHeaderRoot',
 })({
   display: 'grid',
   gridTemplateColumns: 'repeat(var(--unit-count), minmax(var(--years-cell-width), 1fr))',
@@ -18,8 +18,8 @@ const YearsHeaderRoot = styled('div', {
 });
 
 const YearLabel = styled('div', {
-  name: 'MuiSchedulerYearsHeader',
-  slot: 'YearLabel',
+  name: 'MuiTimeline',
+  slot: 'YearsHeaderYearLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
   textAlign: 'center',

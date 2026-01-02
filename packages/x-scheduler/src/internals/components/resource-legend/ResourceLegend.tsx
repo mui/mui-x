@@ -96,7 +96,6 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   props: ResourceLegendProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, ...other } = props;
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
@@ -117,8 +116,7 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
     <ResourceLegendRoot
       ref={forwardedRef}
       aria-label={translations.resourceLegendSectionLabel}
-      className={className}
-      {...other}
+      {...props}
     >
       {resources.map((resource) => (
         <ResourceLegendItem

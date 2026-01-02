@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { ChevronDown } from 'lucide-react';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -10,6 +10,11 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../utils/TranslationsContext';
+
+const ViewSwitcherRoot = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'ViewSwitcher',
+})({});
 
 export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   views: T[];
@@ -26,7 +31,7 @@ type ViewSwitcherComponent = <T extends string>(
 export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
   T extends TimelineView | CalendarView,
 >(props: ViewSwitcherProps<T>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
-  const { className, views, onViewChange, view, ...other } = props;
+  const { views, onViewChange, view, ...other } = props;
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
@@ -86,7 +91,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
   }
 
   return (
-    <div ref={handleRef} className={clsx('ViewSwitcherContainer', className)} {...other}>
+    <ViewSwitcherRoot ref={handleRef} {...other}>
       <ToggleButtonGroup value={view} exclusive onChange={handleToggleChange} size="small">
         {visible.map((visibleView) => (
           <ToggleButton key={visibleView} value={visibleView}>
@@ -123,6 +128,6 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
           </Menu>
         </React.Fragment>
       )}
-    </div>
+    </ViewSwitcherRoot>
   );
 }) as ViewSwitcherComponent;

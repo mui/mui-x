@@ -6,13 +6,13 @@ import { useId } from '@base-ui/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { getColorClassName } from '../../../internals/utils/color-utils';
+import { getDataPaletteProps } from '../../../internals/utils/color-utils';
 import { EventDragPreview } from '../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
 
 const TimelineEventRoot = styled('div', {
-  name: 'MuiSchedulerTimelineEvent',
-  slot: 'Root',
+  name: 'MuiTimeline',
+  slot: 'Event',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-color-3)',
@@ -43,8 +43,8 @@ const TimelineEventRoot = styled('div', {
 }));
 
 const TimelineEventResizeHandler = styled(Timeline.EventResizeHandler, {
-  name: 'MuiSchedulerTimelineEvent',
-  slot: 'ResizeHandler',
+  name: 'MuiTimeline',
+  slot: 'EventResizeHandler',
 })({
   position: 'absolute',
   width: 4,
@@ -90,11 +90,12 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
-    className: clsx(className, getColorClassName(color)),
+    className: clsx(className),
     style: {
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
     } as React.CSSProperties,
+    ...getDataPaletteProps(color),
     ...other,
   };
 

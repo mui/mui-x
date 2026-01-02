@@ -18,7 +18,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
-    const { className, containerRef, ...other } = props;
+    const { containerRef, ...other } = props;
 
     // Context hooks
     const translations = useTranslations();
@@ -45,7 +45,7 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
     };
 
     return (
-      <div ref={ref} className={className} {...other}>
+      <div ref={ref} {...other}>
         <Dialog
           open={open}
           onClose={() => handleOpenChange(false)}

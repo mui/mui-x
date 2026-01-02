@@ -20,8 +20,8 @@ import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 const HOUR_HEIGHT = 46;
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'Column',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridColumn',
 })(({ theme }) => ({
   borderRight: `1px solid ${theme.palette.divider}`,
   flexGrow: 1,
@@ -38,8 +38,8 @@ const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
 }));
 
 const DayTimeGridColumnInteractiveLayer = styled('div', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'ColumnInteractiveLayer',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridColumnInteractiveLayer',
 })({
   position: 'absolute',
   top: 0,
@@ -49,8 +49,8 @@ const DayTimeGridColumnInteractiveLayer = styled('div', {
 });
 
 const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator, {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'CurrentTimeIndicator',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridCurrentTimeIndicator',
 })(({ theme }) => ({
   position: 'absolute',
   left: 0,
@@ -70,8 +70,8 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
 }));
 
 const DayTimeGridCurrentTimeLabel = styled('span', {
-  name: 'MuiSchedulerDayTimeGrid',
-  slot: 'CurrentTimeLabel',
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridCurrentTimeLabel',
 })(({ theme }) => ({
   position: 'absolute',
   right: `calc(100% + ${theme.spacing(0.25)})`,
