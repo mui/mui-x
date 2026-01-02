@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
+import { useStore } from '@base-ui/utils/store';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -10,11 +11,13 @@ import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
+import { useTranslations } from '../internals/utils/TranslationsContext';
 import './AgendaView.css';
 import '../index.css';
 
@@ -37,6 +40,8 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
+    const translations = useTranslations();
+    const store = useEventCalendarStoreContext();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -45,6 +50,9 @@ export const AgendaView = React.memo(
     // Feature hooks
     const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+
+    // Selector hooks
+    const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
     const today = adapter.now('default');
     const daysWithOccurrences = React.useMemo(
@@ -63,6 +71,8 @@ export const AgendaView = React.memo(
         className={clsx('AgendaViewContainer', 'mui-x-scheduler', props.className)}
       >
         <EventPopoverProvider containerRef={containerRef}>
+          {isLoading && <div className="LoadingOverlay">{translations.loading}</div>}
+
           {daysWithOccurrences.map(({ date, occurrences }) => (
             <section
               className="AgendaViewRow"

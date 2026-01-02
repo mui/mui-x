@@ -71,6 +71,7 @@ export const MonthView = React.memo(
 
     // Selector hooks
     const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
+    const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
     // State hooks
     const [maxEvents, setMaxEvents] = React.useState<number>(4);
@@ -140,6 +141,8 @@ export const MonthView = React.memo(
                 ))}
               </CalendarGrid.HeaderRow>
               <div className="MonthViewBody">
+                {isLoading && <div className="LoadingOverlay">{translations.loading}</div>}
+
                 {weeks.map((week, weekIdx) => (
                   <MonthViewWeekRow
                     key={weekIdx}

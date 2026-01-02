@@ -58,3 +58,11 @@
   justify-content: center;
   color: var(--gray-6);
 }
+
+.LoadingOverlay {
+  position: absolute;
+  font-size: var(--font-size-2);
+  padding: var(--space-2);
+  color: var(--gray-9);
+  z-index: 1;
+}

@@ -108,10 +108,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     </span>
   );
 
-  if(isLoading){
-    return 'Loading...'
-  }
-
   return (
     <CalendarGrid.Root
       ref={handleRef}
@@ -194,6 +190,8 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               </div>
 
               <div className="DayTimeGridGrid">
+                {isLoading && <div className="LoadingOverlay">{translations.loading}</div>}
+
                 {occurrences.days.map((day, index) => (
                   <TimeGridColumn
                     key={day.key}
