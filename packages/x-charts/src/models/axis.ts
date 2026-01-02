@@ -171,7 +171,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
       position?: 'top' | 'bottom' | 'none';
       /**
        * The height of the axis.
-       * @default 30
+       * @default 45 if an axis label is provided, 25 otherwise.
        */
       height?: number;
     }
@@ -189,7 +189,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
         position?: 'left' | 'right' | 'none';
         /**
          * The width of the axis.
-         * @default 30
+         * @default 65 if an axis label is provided, 45 otherwise.
          */
         width?: number;
       }

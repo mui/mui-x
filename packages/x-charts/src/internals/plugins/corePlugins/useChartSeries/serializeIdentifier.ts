@@ -1,11 +1,6 @@
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { ChartSeriesConfig } from '../../models';
 
-export type RawSerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  seriesConfig: ChartSeriesConfig<ChartSeriesType>,
-  identifier: T,
-) => string;
-
 /**
  * Serializes a series item identifier into a unique string using the appropriate serializer
  * from the provided series configuration.
@@ -15,13 +10,17 @@ export type RawSerializeIdentifierFunction = <T extends { type: ChartSeriesType 
  * @returns {string} A unique string representation of the identifier.
  * @throws Will throw an error if no serializer is found for the given series type.
  */
-export const serializeIdentifier: RawSerializeIdentifierFunction = (seriesConfig, identifier) => {
+export const serializeIdentifier = <T extends ChartSeriesType, U extends { type: T }>(
+  seriesConfig: ChartSeriesConfig<T>,
+  identifier: U,
+): string => {
   const serializer = seriesConfig[identifier.type]?.identifierSerializer;
   if (!serializer) {
     throw new Error(
       `MUI X Charts: No identifier serializer found for series type "${identifier.type}".`,
     );
   }
-  // @ts-expect-error TS is not able to infer the correct type here
+  // @ts-expect-error identifierSerializer expects the full object,
+  // but this function accepts a partial one in order be able to serialize all identifiers.
   return serializer(identifier);
 };
