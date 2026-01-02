@@ -19,60 +19,60 @@ function TestWrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-describe.skipIf(isJSDOM).for([[MarkElement], [CircleMarkElement]])(
-  '%i',
-  ([MarkElementComponent]) => {
-    const { render } = createRenderer();
+describe.for([
+  ['MarkElement', MarkElement],
+  ['CircleMarkElement', CircleMarkElement],
+])('%s click behavior', ([_, MarkElementComponent]) => {
+  const { render } = createRenderer();
 
-    it('should not be clickable when hidden', async () => {
-      const onClick = vi.fn();
-      const { user } = render(
-        <TestWrapper>
-          <MarkElementComponent
-            id="s1"
-            dataIndex={0}
-            x={10}
-            y={10}
-            color="red"
-            shape="circle"
-            hidden
-            onClick={onClick}
-            data-testid="mark"
-          />
-        </TestWrapper>,
-      );
+  it.skipIf(isJSDOM)('should not be clickable when hidden', async () => {
+    const onClick = vi.fn();
+    const { user } = render(
+      <TestWrapper>
+        <MarkElementComponent
+          id="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          shape="circle"
+          hidden
+          onClick={onClick}
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
 
-      const mark = screen.getByTestId('mark');
-      expect(mark.getAttribute('pointer-events')).to.equal('none');
-      expect(mark.getAttribute('opacity')).to.equal('0');
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('pointer-events')).to.equal('none');
+    expect(mark.getAttribute('opacity')).to.equal('0');
 
-      // It throws because `click` event cannot be fired on an element with `pointer-events: none`
-      expect(async () => await user.click(mark)).rejects.toThrow();
-      expect(onClick).not.toHaveBeenCalled();
-    });
+    // It throws because `click` event cannot be fired on an element with `pointer-events: none`
+    expect(async () => await user.click(mark)).rejects.toThrow();
+    expect(onClick).not.toHaveBeenCalled();
+  });
 
-    it('should be clickable when visible', async () => {
-      const onClick = vi.fn();
-      const { user } = render(
-        <TestWrapper>
-          <CircleMarkElement
-            id="s1"
-            dataIndex={0}
-            x={10}
-            y={10}
-            color="red"
-            onClick={onClick}
-            data-testid="mark"
-          />
-        </TestWrapper>,
-      );
+  it.skipIf(isJSDOM)('should be clickable when visible', async () => {
+    const onClick = vi.fn();
+    const { user } = render(
+      <TestWrapper>
+        <CircleMarkElement
+          id="s1"
+          dataIndex={0}
+          x={10}
+          y={10}
+          color="red"
+          onClick={onClick}
+          data-testid="mark"
+        />
+      </TestWrapper>,
+    );
 
-      const mark = screen.getByTestId('mark');
-      expect(mark.getAttribute('pointer-events')).to.not.equal('none');
-      expect(mark.getAttribute('opacity')).to.equal('1');
+    const mark = screen.getByTestId('mark');
+    expect(mark.getAttribute('pointer-events')).to.not.equal('none');
+    expect(mark.getAttribute('opacity')).to.equal('1');
 
-      await user.click(mark);
-      expect(onClick).toHaveBeenCalled();
-    });
-  },
-);
+    await user.click(mark);
+    expect(onClick).toHaveBeenCalled();
+  });
+});
