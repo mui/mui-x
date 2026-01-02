@@ -108,6 +108,7 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
+      pointerEvents={hidden ? 'none' : undefined}
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}

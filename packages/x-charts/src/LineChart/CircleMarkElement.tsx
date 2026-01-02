@@ -100,6 +100,7 @@ function CircleMarkElement(props: CircleMarkElementProps) {
       className={classes.root}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
+      pointerEvents={hidden ? 'none' : undefined}
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
