@@ -6,6 +6,8 @@ import tooltipGetter from './tooltip';
 import seriesLayout from './seriesLayout';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 
 export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   colorProcessor: getColor,
@@ -15,4 +17,6 @@ export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   tooltipGetter,
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

@@ -72,7 +72,7 @@ function BarElement(props: BarElementProps) {
   const isFocused = useIsItemFocused(
     React.useMemo(
       () => ({
-        seriesType: 'bar',
+        type: 'bar',
         seriesId: id,
         dataIndex,
       }),

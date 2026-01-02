@@ -167,6 +167,7 @@ export const useGridCellEditing = (
           reason = GridCellEditStartReasons.pasteKeyDown;
         } else if (event.key === 'Enter') {
           reason = GridCellEditStartReasons.enterKeyDown;
+          event.preventDefault();
         } else if (event.key === 'Backspace' || event.key === 'Delete') {
           reason = GridCellEditStartReasons.deleteKeyDown;
         }
