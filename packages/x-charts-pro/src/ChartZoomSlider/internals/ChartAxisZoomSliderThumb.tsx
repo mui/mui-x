@@ -35,8 +35,7 @@ export interface ChartZoomSliderThumbOwnerState {
 }
 
 export interface ChartZoomSliderThumbProps
-  extends Omit<React.ComponentProps<'rect'>, 'orientation'>,
-    ChartZoomSliderThumbOwnerState {}
+  extends Omit<React.ComponentProps<'rect'>, 'orientation'>, ChartZoomSliderThumbOwnerState {}
 
 function preventDefault(event: Event) {
   event.preventDefault();

@@ -22,6 +22,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarChart',
   },
   {
+    pathname: '/x/api/charts/bar-chart-premium',
+    title: 'BarChartPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/bar-chart-pro',
     title: 'BarChartPro',
     plan: 'pro',
@@ -50,6 +55,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/chart-data-provider',
     title: 'ChartDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/chart-data-provider-premium',
+    title: 'ChartDataProviderPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/chart-data-provider-pro',
@@ -298,6 +308,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/range-bar-plot',
+    title: 'RangeBarPlot',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/sankey-chart',

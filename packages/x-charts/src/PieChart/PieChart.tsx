@@ -28,9 +28,11 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartsWrapper } from '../ChartsWrapper';
 import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
+import { FocusedPieArc } from './FocusedPieArc';
 
 export interface PieChartSlots
-  extends PiePlotSlots,
+  extends
+    PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
@@ -38,7 +40,8 @@ export interface PieChartSlots
     Partial<ChartsSlots> {}
 
 export interface PieChartSlotProps
-  extends PiePlotSlotProps,
+  extends
+    PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
@@ -47,7 +50,8 @@ export interface PieChartSlotProps
 
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
@@ -141,26 +145,27 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar;
+  const Toolbar = slots?.toolbar;
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
-        legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
+        legendPosition={slotProps?.legend?.position}
+        legendDirection={slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
         hideLegend={hideLegend ?? false}
       >
-        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar && Toolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
-            direction={props.slotProps?.legend?.direction ?? 'vertical'}
+            direction={slotProps?.legend?.direction ?? 'vertical'}
             slots={slots}
             slotProps={slotProps}
           />
         )}
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+          <FocusedPieArc />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           {children}
         </ChartsSurface>

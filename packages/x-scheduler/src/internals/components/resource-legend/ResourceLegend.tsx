@@ -2,10 +2,10 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { Eye, EyeClosed } from 'lucide-react';
-import { Checkbox } from '@base-ui-components/react/checkbox';
-import { CheckboxGroup } from '@base-ui-components/react/checkbox-group';
-import { useStore } from '@base-ui-components/utils/store';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { Checkbox } from '@base-ui/react/checkbox';
+import { CheckboxGroup } from '@base-ui/react/checkbox-group';
+import { useStore } from '@base-ui/utils/store';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
@@ -27,6 +27,7 @@ function ResourceLegendItem(props: { resource: SchedulerResource }) {
       <Checkbox.Root
         className={clsx('NeutralTextButton', 'Button', 'ResourceLegendButton')}
         value={resource.id}
+        nativeButton
         render={(rootProps, state) => (
           <button
             type="button"
@@ -64,17 +65,19 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
-  const handleVisibleResourcesChange = useStableCallback((value: string[]) => {
-    const valueSet = new Set(value);
-    const newVisibleResourcesMap = new Map(
-      schedulerResourceSelectors
-        .processedResourceList(store.state)
-        .filter((resource) => !valueSet.has(resource.id))
-        .map((resource) => [resource.id, false]),
-    );
+  const handleVisibleResourcesChange = useStableCallback(
+    (value: string[], eventDetails: CheckboxGroup.ChangeEventDetails) => {
+      const valueSet = new Set(value);
+      const newVisibleResources: Record<string, boolean> = {};
+      for (const resource of schedulerResourceSelectors.processedResourceList(store.state)) {
+        if (!valueSet.has(resource.id)) {
+          newVisibleResources[resource.id] = false;
+        }
+      }
 
-    store.setVisibleResources(newVisibleResourcesMap);
-  });
+      store.setVisibleResources(newVisibleResources, eventDetails.event);
+    },
+  );
 
   if (resources.length === 0) {
     return null;

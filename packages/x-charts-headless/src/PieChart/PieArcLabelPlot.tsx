@@ -61,7 +61,8 @@ function getItemLabel(
 }
 
 export interface PieArcLabelPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
       | 'data'
       | 'faded'

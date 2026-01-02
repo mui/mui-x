@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Popover } from '@base-ui-components/react/popover';
+import { Popover } from '@base-ui/react/popover';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 
 export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {

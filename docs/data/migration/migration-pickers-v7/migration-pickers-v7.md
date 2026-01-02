@@ -1568,9 +1568,9 @@ However, consider looking into your usage to see if you really need those types.
   interface UseDateRangeFieldProps<
     TEnableAccessibleFieldDOMStructure extends boolean,
   > extends Omit<
-      DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
-      'unstableFieldRef'
-    > {}
+    DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+    'unstableFieldRef'
+  > {}
   ```
 
 - `UseMultiInputDateRangeFieldProps`
@@ -1581,7 +1581,9 @@ However, consider looking into your usage to see if you really need those types.
 
   interface UseMultiInputDateRangeFieldProps<
     TEnableAccessibleFieldDOMStructure extends boolean,
-  > extends DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+  >
+    extends
+      DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
       MultiInputFieldRefs {}
   ```
 
@@ -1611,7 +1613,9 @@ However, consider looking into your usage to see if you really need those types.
 
   interface UseMultiInputTimeRangeFieldProps<
     TEnableAccessibleFieldDOMStructure extends boolean,
-  > extends TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+  >
+    extends
+      TimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
       MultiInputFieldRefs {}
   ```
 
@@ -1641,7 +1645,9 @@ However, consider looking into your usage to see if you really need those types.
 
   interface UseMultiInputDateTimeRangeFieldProps<
     TEnableAccessibleFieldDOMStructure extends boolean,
-  > extends DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+  >
+    extends
+      DateTimeRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
       MultiInputFieldRefs {}
   ```
 

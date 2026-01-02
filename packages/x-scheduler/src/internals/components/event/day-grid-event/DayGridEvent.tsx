@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { createSelector, useStore } from '@base-ui-components/utils/store';
+import { createSelector, useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { SchedulerEventOccurrence, SchedulerEventSide } from '@mui/x-scheduler-headless/models';
@@ -66,6 +66,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(store, isResizableSelector, 'start', occurrence);
   const isEndResizable = useStore(store, isResizableSelector, 'end', occurrence);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
+
   const resource = useStore(
     store,
     schedulerResourceSelectors.processedResource,
@@ -75,7 +77,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   // Feature hooks
   const formatTime = useFormatTime();
-  const isRecurring = Boolean(occurrence.rrule);
 
   const content = React.useMemo(() => {
     switch (variant) {
@@ -120,8 +121,8 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               style={{ '--number-of-lines': 1 } as React.CSSProperties}
             >
               <time className="DayGridEventTime">
-                <span>{formatTime(occurrence.start.value)}</span>
-                <span> - {formatTime(occurrence.end.value)}</span>
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
               </time>
               <span className="DayGridEventTitle">{occurrence.title}</span>
             </p>
@@ -139,19 +140,19 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         throw new Error('Unsupported variant provided to EventItem component.');
     }
   }, [
-    formatTime,
     variant,
     occurrence.title,
-    occurrence.start,
-    occurrence.end,
+    occurrence.displayTimezone.start.value,
+    occurrence.displayTimezone.end.value,
     isRecurring,
     resource?.title,
     translations,
+    formatTime,
   ]);
 
   const sharedProps = {
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     className: clsx(
       classNameProp,

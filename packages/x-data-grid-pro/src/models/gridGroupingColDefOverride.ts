@@ -1,16 +1,15 @@
 import { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
 
-export interface GridGroupingColDefOverride<R extends GridValidRowModel = any>
-  extends Omit<
-    GridColDef<R>,
-    | 'editable'
-    | 'valueSetter'
-    | 'field'
-    | 'type'
-    | 'preProcessEditCellProps'
-    | 'renderEditCell'
-    | 'groupable'
-  > {
+export interface GridGroupingColDefOverride<R extends GridValidRowModel = any> extends Omit<
+  GridColDef<R>,
+  | 'editable'
+  | 'valueSetter'
+  | 'field'
+  | 'type'
+  | 'preProcessEditCellProps'
+  | 'renderEditCell'
+  | 'groupable'
+> {
   /**
    * The field from which we want to apply the sorting and the filtering for the grouping column.
    * It is only useful when `props.rowGroupingColumnMode === "multiple"` to decide which grouping criteria should be used for sorting and filtering.

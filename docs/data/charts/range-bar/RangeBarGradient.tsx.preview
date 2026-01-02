@@ -1,0 +1,13 @@
+<BarChartPremium
+  {...settings}
+  sx={{
+    [`& .${rangeBarClasses.series}[data-series="2"] .${barElementClasses.root}`]:
+      {
+        fill: 'url(#bar-gradient)',
+      },
+  }}
+>
+  <defs>
+    <Gradient id="bar-gradient" />
+  </defs>
+</BarChartPremium>

@@ -23,13 +23,15 @@ export type PieArcItemValues = Pick<
   | 'isFaded'
   | 'isHighlighted'
   | 'isFocused'
-  | 'onClick'
   | 'dataIndex'
   | 'seriesId'
->;
+> & {
+  onClick?: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+};
 
 export interface PieArcPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
       'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
     >,
@@ -78,7 +80,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     highlighted,
     faded,
     data,
-    onItemClick,
   });
 
   if (data.length === 0) {
@@ -102,7 +103,11 @@ function PieArcPlot(props: PieArcPlotProps) {
             isFaded: item.isFaded,
             isHighlighted: item.isHighlighted,
             isFocused: item.isFocused,
-            onClick: item.onClick,
+            onClick:
+              onItemClick &&
+              ((event: React.MouseEvent<SVGPathElement, MouseEvent>) => {
+                onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+              }),
           },
           index,
         ),

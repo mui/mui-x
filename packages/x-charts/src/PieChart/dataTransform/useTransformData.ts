@@ -4,12 +4,11 @@ import {
   type ComputedPieRadius,
   type DefaultizedPieSeriesType,
   type DefaultizedPieValueType,
-  type PieItemId,
-  type PieItemIdentifier,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
-import { deg2rad } from '../../internals/angleConversion';
+import { getModifiedArcProperties } from './getModifiedArcProperties';
+import type { SeriesId } from '../../models';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -21,13 +20,12 @@ export interface AnimatedObject {
   paddingAngle: number;
 }
 
-export interface ValueWithHighlight extends Omit<DefaultizedPieValueType, 'id'>, AnimatedObject {
-  seriesId: PieItemId;
+export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObject {
   dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
   isFocused: boolean;
-  onClick: (event: React.MouseEvent<SVGPathElement, MouseEvent>) => void;
+  seriesId: SeriesId;
 }
 
 export function useTransformData(
@@ -35,26 +33,9 @@ export function useTransformData(
     DefaultizedPieSeriesType,
     'cornerRadius' | 'paddingAngle' | 'id' | 'highlighted' | 'faded' | 'data'
   > &
-    ComputedPieRadius & {
-      onItemClick?: (
-        event: React.MouseEvent<SVGPathElement, MouseEvent>,
-        pieItemIdentifier: PieItemIdentifier,
-        item: DefaultizedPieValueType,
-      ) => void;
-    },
+    ComputedPieRadius,
 ) {
-  const {
-    id: seriesId,
-    data,
-    faded,
-    highlighted,
-    paddingAngle: basePaddingAngle = 0,
-    innerRadius: baseInnerRadius = 0,
-    arcLabelRadius: baseArcLabelRadius,
-    outerRadius: baseOuterRadius,
-    cornerRadius: baseCornerRadius = 0,
-    onItemClick,
-  } = series;
+  const { id: seriesId, data, faded, highlighted } = series;
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
   const isItemFocused = useIsItemFocusedGetter();
@@ -68,64 +49,39 @@ export function useTransformData(
         };
         const isHighlighted = isItemHighlighted(currentItem);
         const isFaded = !isHighlighted && isItemFaded(currentItem);
-        const isFocused = isItemFocused({ seriesType: 'pie', seriesId, dataIndex: itemIndex });
+        const isFocused = isItemFocused({ type: 'pie', seriesId, dataIndex: itemIndex });
 
+        // TODO v9: Replace the second argument with the result of useSeriesLayout
+        const arcSizes = getModifiedArcProperties(
+          series,
+          {
+            radius: {
+              inner: series.innerRadius ?? 0,
+              outer: series.outerRadius,
+              label: series.arcLabelRadius ?? 0,
+              available: 0,
+            },
+          },
+          isHighlighted,
+          isFaded,
+        );
         const attributesOverride = {
           additionalRadius: 0,
           ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
-        };
-        const paddingAngle = Math.max(
-          0,
-          deg2rad(attributesOverride.paddingAngle ?? basePaddingAngle),
-        );
-        const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
-
-        const outerRadius = Math.max(
-          0,
-          attributesOverride.outerRadius ?? baseOuterRadius + attributesOverride.additionalRadius,
-        );
-        const cornerRadius = attributesOverride.cornerRadius ?? baseCornerRadius;
-
-        const arcLabelRadius =
-          attributesOverride.arcLabelRadius ??
-          baseArcLabelRadius ??
-          (innerRadius + outerRadius) / 2;
-
-        const onClick = (event: React.MouseEvent<SVGPathElement, MouseEvent>) => {
-          onItemClick?.(event, { type: 'pie', seriesId, dataIndex: itemIndex }, item);
         };
 
         return {
           ...item,
           ...attributesOverride,
-          seriesId,
           dataIndex: itemIndex,
           isFaded,
           isHighlighted,
           isFocused,
-          paddingAngle,
-          innerRadius,
-          outerRadius,
-          cornerRadius,
-          arcLabelRadius,
-          onClick,
+          seriesId,
+          ...arcSizes,
         };
       }),
-    [
-      baseCornerRadius,
-      baseInnerRadius,
-      baseOuterRadius,
-      basePaddingAngle,
-      baseArcLabelRadius,
-      data,
-      faded,
-      highlighted,
-      isItemFaded,
-      isItemHighlighted,
-      isItemFocused,
-      seriesId,
-      onItemClick,
-    ],
+    [data, seriesId, isItemHighlighted, isItemFaded, isItemFocused, series, faded, highlighted],
   );
 
   return dataWithHighlight;

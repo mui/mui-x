@@ -49,6 +49,5 @@ export namespace CalendarGridDayCell {
   export interface State {}
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
-      useDayCellDropTarget.Parameters {}
+    extends BaseUIComponentProps<'div', State>, useDayCellDropTarget.Parameters {}
 }

@@ -33,7 +33,8 @@ const GridPanelWrapperRoot = styled('div', {
 });
 
 export interface GridPanelWrapperProps
-  extends React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
+  extends
+    React.PropsWithChildren<React.HTMLAttributes<HTMLDivElement>>,
     MUIStyledCommonProps<Theme> {}
 
 const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(

@@ -5,7 +5,6 @@ import { type SeriesId } from '../models/seriesType/common';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 import type { ProcessedSeries } from './plugins/corePlugins/useChartSeries';
 import { useStore } from './store/useStore';
-import { useSelector } from './store/useSelector';
 
 export const selectorAllSeriesOfType = createSelector(
   selectorChartSeriesProcessed,
@@ -55,7 +54,7 @@ export const selectorSeriesOfType = createSelectorMemoized(
 
 export const useAllSeriesOfType = <T extends keyof ChartsSeriesConfig>(seriesType: T) => {
   const store = useStore();
-  return useSelector(store, selectorAllSeriesOfType, seriesType) as ProcessedSeries[T];
+  return store.use(selectorAllSeriesOfType, seriesType) as ProcessedSeries[T];
 };
 
 export const useSeriesOfType = <T extends keyof ChartsSeriesConfig>(
@@ -63,7 +62,7 @@ export const useSeriesOfType = <T extends keyof ChartsSeriesConfig>(
   seriesId?: SeriesId | SeriesId[],
 ) => {
   const store = useStore();
-  return useSelector(store, selectorSeriesOfType, seriesType, seriesId) as
+  return store.use(selectorSeriesOfType, seriesType, seriesId) as
     | ChartSeriesDefaultized<T>
     | ChartSeriesDefaultized<T>[]
     | undefined;

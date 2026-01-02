@@ -3,8 +3,10 @@ import { GridColumnGroup } from '../gridColumnGrouping';
 /**
  * Object passed as parameter in the column group header renderer.
  */
-export interface GridColumnGroupHeaderParams
-  extends Pick<GridColumnGroup, 'headerName' | 'description'> {
+export interface GridColumnGroupHeaderParams extends Pick<
+  GridColumnGroup,
+  'headerName' | 'description'
+> {
   /**
    * A unique string identifying the group.
    */
