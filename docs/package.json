@@ -73,7 +73,7 @@
     "jscodeshift": "catalog:",
     "luxon": "catalog:",
     "lz-string": "^1.5.0",
-    "markdown-to-jsx": "^9.4.2",
+    "markdown-to-jsx": "^9.5.0",
     "moment": "catalog:",
     "moment-hijri": "catalog:",
     "moment-jalaali": "catalog:",
@@ -86,7 +86,7 @@
     "react": "catalog:",
     "react-docgen": "^5.4.3",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.68.0",
+    "react-hook-form": "^7.69.0",
     "react-router": "catalog:",
     "react-runner": "^1.0.5",
     "react-simple-code-editor": "^0.14.1",
@@ -96,7 +96,7 @@
     "rxjs": "^7.8.2",
     "styled-components": "^6.1.19",
     "stylis": "catalog:",
-    "webpack-bundle-analyzer": "^5.0.1"
+    "webpack-bundle-analyzer": "^5.1.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-constant-elements": "catalog:",
