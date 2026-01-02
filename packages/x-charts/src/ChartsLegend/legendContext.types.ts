@@ -22,6 +22,7 @@ export interface LegendItemParams
   /**
    * The identifier of the legend element.
    * Used for internal purpose such as `key` props
+   * @deprecated use `seriesId` and `dataIndex` instead
    */
   id: number | string;
   /**
@@ -45,6 +46,7 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
   seriesId: SeriesId;
   /**
    * The identifier of the pie item
+   * @deprecated use `dataIndex` instead
    */
   itemId?: PieItemId;
   /**
