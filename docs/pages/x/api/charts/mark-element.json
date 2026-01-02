@@ -8,6 +8,7 @@
       },
       "required": true
     },
+    "hidden": { "type": { "name": "bool" }, "default": "false" },
     "isFaded": { "type": { "name": "bool" }, "default": "false" },
     "isHighlighted": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } }
