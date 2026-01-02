@@ -102,7 +102,7 @@ export const applySeriesLayout = <TSeriesType extends ChartSeriesType>(
 
       if (newValue && newValue !== processedSeries[type]) {
         processingDetected = true;
-        (seriesLayout)[type] = newValue;
+        seriesLayout[type] = newValue;
       }
     }
   });
