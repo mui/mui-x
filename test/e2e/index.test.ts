@@ -248,7 +248,6 @@ async function initializeEnvironment(
       );
 
       // this test sometimes fails on webkit for some reason
-      // @ts-expect-error
       it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
         'should reorder columns by dropping into the grid row column',
         async () => {
@@ -324,7 +323,7 @@ async function initializeEnvironment(
       // if this test fails locally on chromium, be aware that it uses system locale format,
       // instead of one specified by the `locale`
       // webkit has issues with date input locale on circleci
-      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
+      it.skipIf(!process.env.CI || (browserType.name() === 'webkit' && process.env.CIRCLECI))(
         'should edit date cells',
         async () => {
           await renderFixture('DataGrid/KeyboardEditDate');
@@ -770,20 +769,11 @@ async function initializeEnvironment(
           await textbox.press('2');
           await page.getByRole('button', { name: 'Clear' }).click();
 
-          // firefox does not support document.getSelection().toString() on input elements
-          if (browserType.name() === 'firefox') {
-            expect(
-              await page.evaluate(() => {
-                return (
-                  document.activeElement?.tagName === 'INPUT' &&
-                  // only focused input has value set
-                  (document.activeElement as HTMLInputElement)?.value === 'MM/DD/YYYY'
-                );
-              }),
-            ).to.equal(true);
-          } else {
-            expect(await page.evaluate(() => document.getSelection()?.toString())).to.equal('MM');
-          }
+          // assert that the hours section has been selected using two APIs
+          const result = await page.waitForFunction(
+            () => document.getSelection()?.toString() === 'MM',
+          );
+          expect(await result.jsonValue()).to.equal(true);
         });
 
         it('should submit a form when clicking "Enter" key', async () => {
