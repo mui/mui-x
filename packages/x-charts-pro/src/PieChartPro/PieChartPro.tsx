@@ -107,7 +107,7 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
           sx={sx}
           hideLegend={hideLegend ?? false}
         >
-          {showToolbar ? <Toolbar /> : null}
+          {showToolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
           {!hideLegend && (
             <ChartsLegend
               direction={props.slotProps?.legend?.direction ?? 'vertical'}
