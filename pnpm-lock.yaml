@@ -270,8 +270,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#800638d6fdc275d7a5e4255a08646a6ee692ff75
-        version: https://codeload.github.com/mui/material-ui/tar.gz/800638d6fdc275d7a5e4255a08646a6ee692ff75(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)
+        specifier: github:mui/material-ui#7777eabf7fe007f9be5bc4ba365f1098028a9a97
+        version: https://codeload.github.com/mui/material-ui/tar.gz/7777eabf7fe007f9be5bc4ba365f1098028a9a97(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.5(@types/react@19.2.7)(react@19.2.3)
@@ -4600,10 +4600,10 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/800638d6fdc275d7a5e4255a08646a6ee692ff75':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/800638d6fdc275d7a5e4255a08646a6ee692ff75}
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/7777eabf7fe007f9be5bc4ba365f1098028a9a97':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/7777eabf7fe007f9be5bc4ba365f1098028a9a97}
     version: 7.3.6
-    engines: {node: '>=22.12.0', pnpm: 10.22.0}
+    engines: {node: '>=22.18.0', pnpm: 10.25.0}
 
   '@mui/private-theming@5.17.1':
     resolution: {integrity: sha512-XMxU0NTYcKqdsG8LRmSoxERPXwMbp16sIXPcLVgLGII/bVNagX0xaheWAwFv8+zDK7tI3ajllkuD3GZZE++ICQ==}
@@ -4911,12 +4911,12 @@ packages:
   '@napi-rs/wasm-runtime@0.2.4':
     resolution: {integrity: sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ==}
 
-  '@netlify/functions@5.1.0':
-    resolution: {integrity: sha512-LZtiQtf/QzPHIeNDZuIBxx04kmU7lCipWqZ26ejX7mYSB3yj2wvpZfF49kD8B8FoKTydSvgFmBpIcCO5FvpEXA==}
+  '@netlify/functions@5.1.2':
+    resolution: {integrity: sha512-tpPiLSkQatuexH8AdAZ8RlALvT7ixOE9VhvpkzQGNvihcms8hzmvUDuSxQa7UneTj/sHsdirnXmnJ+nmf+Nx/w==}
     engines: {node: '>=18.0.0'}
 
-  '@netlify/types@2.2.0':
-    resolution: {integrity: sha512-XOWlZ2wPpdRKkAOcQbjIf/Qz7L4RjcSVINVNQ9p3F6U8V6KSEOsB3fPrc6Ly8EOeJioHUepRPuzHzJE/7V5EsA==}
+  '@netlify/types@2.3.0':
+    resolution: {integrity: sha512-5gxMWh/S7wr0uHKSTbMv4bjWmWSpwpeLYvErWeVNAPll5/QNFo9aWimMAUuh8ReLY3/fg92XAroVVu7+z27Snw==}
     engines: {node: ^18.14.0 || >=20}
 
   '@next/env@15.5.9':
@@ -6347,8 +6347,8 @@ packages:
       '@vitest/browser':
         optional: true
 
-  '@vitest/eslint-plugin@1.5.1':
-    resolution: {integrity: sha512-t49CNERe/YadnLn90NTTKJLKzs99xBkXElcoUTLodG6j1G0Q7jy3mXqqiHd3N5aryG2KkgOg4UAoGwgwSrZqKQ==}
+  '@vitest/eslint-plugin@1.6.4':
+    resolution: {integrity: sha512-+qw32ux8HMVNrJnQOYgdjrMYmCn9vsiKnJUv5MoOg40e18WOvhWurzHdbRB3vXLfUrP7+jYyQbd6TuRhL23AkQ==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8.57.0'
@@ -14930,7 +14930,7 @@ snapshots:
       '@octokit/oauth-methods': 6.0.2
       '@octokit/rest': 22.0.1
       '@pnpm/find-workspace-dir': 1000.1.3
-      '@vitest/eslint-plugin': 1.5.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)
+      '@vitest/eslint-plugin': 1.6.4(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)
       babel-plugin-optimize-clsx: 2.6.2
       babel-plugin-react-compiler: 1.0.0
       babel-plugin-transform-inline-environment-variables: 0.4.4
@@ -15171,11 +15171,11 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
       '@types/react': 19.2.7
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/800638d6fdc275d7a5e4255a08646a6ee692ff75(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/7777eabf7fe007f9be5bc4ba365f1098028a9a97(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)':
     dependencies:
-      '@netlify/functions': 5.1.0
+      '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
-      '@vitest/eslint-plugin': 1.5.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)
+      '@vitest/eslint-plugin': 1.6.4(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)
       babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.28.5)
       execa: 9.6.1
     transitivePeerDependencies:
@@ -15449,11 +15449,11 @@ snapshots:
       '@emnapi/runtime': 1.7.1
       '@tybys/wasm-util': 0.9.0
 
-  '@netlify/functions@5.1.0':
+  '@netlify/functions@5.1.2':
     dependencies:
-      '@netlify/types': 2.2.0
+      '@netlify/types': 2.3.0
 
-  '@netlify/types@2.2.0': {}
+  '@netlify/types@2.3.0': {}
 
   '@next/env@15.5.9': {}
 
@@ -17142,7 +17142,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/eslint-plugin@1.5.1(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)':
+  '@vitest/eslint-plugin@1.6.4(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.15)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.50.0
       '@typescript-eslint/utils': 8.50.0(eslint@9.39.2)(typescript@5.9.3)
