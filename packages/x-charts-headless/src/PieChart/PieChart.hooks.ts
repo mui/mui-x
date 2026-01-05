@@ -3,7 +3,6 @@ import { getPieCoordinates } from '@mui/x-charts';
 import { getPercentageValue } from '@mui/x-charts/internals/getPercentageValue';
 import { selectorChartDrawingArea } from '@mui/x-charts/internals/plugins/corePlugins/useChartDimensions';
 import { selectorChartSeriesProcessed } from '@mui/x-charts/internals/plugins/corePlugins/useChartSeries';
-import { useSelector } from '@mui/x-charts/internals/store/useSelector';
 import { useStore } from '@mui/x-charts/internals/store/useStore';
 import { createSelectorMemoized } from '@mui/x-internals/store';
 
@@ -74,5 +73,5 @@ const selectorPieSeriesData = createSelectorMemoized(
 
 export const usePiePlotData = () => {
   const store = useStore();
-  return useSelector(store, selectorPieSeriesData);
+  return store.use(selectorPieSeriesData);
 };
