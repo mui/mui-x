@@ -22,12 +22,14 @@ export interface LegendItemParams
   /**
    * The identifier of the legend element.
    * Used for internal purpose such as `key` props
+   * @deprecated use `seriesId` and `dataIndex` instead
    */
   id: number | string;
   /**
    * The type of the series
+   * This property is always defined, but marked as optional to avoid breaking changes. It will become required in a future major version.
    */
-  type: ChartSeriesType;
+  type?: ChartSeriesType;
   markType: ChartsLabelMarkProps['type'];
 }
 
@@ -44,6 +46,7 @@ export interface SeriesLegendItemContext extends LegendItemContextBase {
   seriesId: SeriesId;
   /**
    * The identifier of the pie item
+   * @deprecated use `dataIndex` instead
    */
   itemId?: PieItemId;
   /**
