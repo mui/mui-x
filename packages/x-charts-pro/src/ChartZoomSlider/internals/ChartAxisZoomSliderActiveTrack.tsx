@@ -27,6 +27,7 @@ import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
 import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderActiveTrackRect = styled('rect', {
+  slot: 'internal',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
 })<{ preview: boolean }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.grey[600],

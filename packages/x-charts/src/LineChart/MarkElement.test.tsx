@@ -48,7 +48,7 @@ describe.for([
     expect(mark.getAttribute('opacity')).to.equal('0');
 
     // It throws because `click` event cannot be fired on an element with `pointer-events: none`
-    expect(async () => await user.click(mark)).rejects.toThrow();
+    await expect(user.click(mark)).rejects.toThrow();
     expect(onClick).not.toHaveBeenCalled();
   });
 
