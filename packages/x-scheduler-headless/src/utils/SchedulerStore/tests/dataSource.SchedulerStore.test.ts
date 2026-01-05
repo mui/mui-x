@@ -31,7 +31,10 @@ const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => 
 storeClasses.forEach((storeClass) => {
   describe(`${storeClass.name} - Data Source`, () => {
     it('should fetch events from data source when queueDataFetchForRange is called (lazy load)', async () => {
-      const dataSource = { getEvents: spy(mockFetchData) };
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: async () => ({ success: true }),
+      };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
@@ -52,7 +55,11 @@ storeClasses.forEach((storeClass) => {
     });
 
     it('should fetch new events when visible range changes to an uncached area', async () => {
-      const dataSource = { getEvents: spy(mockFetchData) };
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: async () => ({ success: true }),
+      };
+
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
       // First fetch
@@ -76,7 +83,11 @@ storeClasses.forEach((storeClass) => {
     });
 
     it('should use cached data when fetching a range that is already covered', async () => {
-      const dataSource = { getEvents: spy(mockFetchData) };
+      const dataSource = {
+        getEvents: spy(mockFetchData),
+        updateEvents: async () => ({ success: true }),
+      };
+
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
       // Fetch a large range
@@ -105,7 +116,10 @@ storeClasses.forEach((storeClass) => {
         resolveFetch = resolve;
       });
 
-      const dataSource = { getEvents: spy(() => fetchPromise) };
+      const dataSource = {
+        getEvents: spy(() => fetchPromise),
+        updateEvents: async () => ({ success: true }),
+      };
       const store = new storeClass.Value({ ...DEFAULT_PARAMS, dataSource }, adapter);
 
       const start = adapter.date('2025-07-01T00:00:00Z', 'default');
