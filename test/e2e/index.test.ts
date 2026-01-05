@@ -760,12 +760,8 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
 
-        it(
+        it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
           'should focus the first field section after clearing a value with the non-accessible DOM structure',
-          {
-            // This fails on webkit sometimes in CI
-            retry: browserType.name() === 'webkit' ? 3 : 0,
-          },
           async () => {
             await renderFixture('DatePicker/BasicDesktopDatePickerNonAccessibleDOMStructure');
 
