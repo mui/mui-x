@@ -127,6 +127,8 @@ const ChartsLegend = consumeSlots(
           }
 
           if (toggleVisibilityOnClick) {
+            // TODO: Remove in v9
+            // @ts-expect-error item always has type defined.
             instance.toggleItemVisibility(item);
           }
         },
@@ -144,6 +146,8 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
+          // TODO: Remove in v9
+          // @ts-expect-error item always has type defined.
           const isVisible = isItemVisible(seriesConfig, item);
           return (
             <li
