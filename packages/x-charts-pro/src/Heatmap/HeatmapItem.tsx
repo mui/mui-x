@@ -74,6 +74,14 @@ function HeatmapItem(props: HeatmapItemProps) {
     ...other
   } = props;
 
+  // If we aren't using the default cell, we skip adding interaction props because we have a more efficient way to
+  // calculate them. To avoid breaking changes, we need to keep this behavior. We can remove this in v9.
+  const skipInteractionItemProps = !shouldRegisterPointerInteractionsGlobally(props.slots);
+  const interactionProps = useInteractionItemProps(
+    { type: 'heatmap', seriesId, dataIndex },
+    skipInteractionItemProps,
+  );
+
   const ownerState = {
     seriesId,
     dataIndex,
@@ -85,14 +93,6 @@ function HeatmapItem(props: HeatmapItemProps) {
   const classes = useUtilityClasses(ownerState);
 
   const Cell = slots?.cell ?? HeatmapCell;
-  // If Cell is not the default HeatmapCell, we skip adding interaction props because we have a more efficient way to
-  // calculate them. To avoid breaking changes, we need to keep this behavior. We can remove this in v9.
-  const skipInteractionItemProps = !shouldRegisterPointerInteractionsGlobally(props.slots);
-  const interactionProps = useInteractionItemProps(
-    { type: 'heatmap', seriesId, dataIndex },
-    skipInteractionItemProps,
-  );
-
   const cellProps = useSlotProps({
     elementType: Cell,
     additionalProps: interactionProps,
