@@ -32,6 +32,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "hiddenIdentifiers": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'scatter' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
@@ -73,6 +79,13 @@
       "signature": {
         "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
+    "onVisibilityChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenIdentifiers"]
       }
     },
     "onZoomChange": {

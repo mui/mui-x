@@ -14,6 +14,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenIdentifiers": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
@@ -55,6 +58,15 @@
         "funnelItemIdentifier": {
           "name": "funnelItemIdentifier",
           "description": "The funnel item identifier."
+        }
+      }
+    },
+    "onVisibilityChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenIdentifiers": {
+          "name": "hiddenIdentifiers",
+          "description": "The new list of hidden identifiers."
         }
       }
     },

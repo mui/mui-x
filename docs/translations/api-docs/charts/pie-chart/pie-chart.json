@@ -8,6 +8,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenIdentifiers": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedItem": {
       "description": "The highlighted item. Used when the highlight is controlled."
@@ -30,6 +33,15 @@
       }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
+    "onVisibilityChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenIdentifiers": {
+          "name": "hiddenIdentifiers",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "series": {
       "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series/'>PieSeries</a> objects."
     },

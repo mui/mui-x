@@ -18,6 +18,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenIdentifiers": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
@@ -70,6 +73,15 @@
       "typeDescriptions": {
         "event": { "name": "event", "description": "The event source of the callback." },
         "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
+      }
+    },
+    "onVisibilityChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenIdentifiers": {
+          "name": "hiddenIdentifiers",
+          "description": "The new list of hidden identifiers."
+        }
       }
     },
     "onZoomChange": {
