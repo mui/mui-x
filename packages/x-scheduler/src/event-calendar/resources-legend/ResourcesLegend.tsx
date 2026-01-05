@@ -115,7 +115,7 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   return (
     <ResourcesLegendRoot
       ref={forwardedRef}
-      aria-label={translations.ResourcesLegendSectionLabel}
+      aria-label={translations.resourcesLegendSectionLabel}
       {...props}
     >
       {resources.map((resource) => (
