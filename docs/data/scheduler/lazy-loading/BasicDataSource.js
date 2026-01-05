@@ -106,6 +106,12 @@ function generateRandomEventsInRange(rangeStart, rangeEnd, resources) {
   return events;
 }
 
+const resolveUpdate = async (_params) => {
+  return new Promise((resolve) => {
+    resolve({ success: true });
+  });
+};
+
 export default function BasicDataSource() {
   const fetchData = async (start, end) => {
     const generated = generateRandomEventsInRange(start, end, flatResources);
@@ -123,7 +129,7 @@ export default function BasicDataSource() {
     <div style={{ height: '700px', width: '100%' }}>
       <EventCalendar
         events={[]}
-        dataSource={{ getEvents: fetchData }}
+        dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
         resources={flatResources}
         areEventsDraggable
         defaultVisibleDate={defaultVisibleDate}

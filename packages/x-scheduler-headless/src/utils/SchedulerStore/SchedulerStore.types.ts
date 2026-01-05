@@ -160,6 +160,11 @@ export interface SchedulerState<TEvent extends object = any> {
 
 export interface SchedulerDataSource<TEvent extends object> {
   getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
+  updateEvents: (parameters: {
+    deleted: SchedulerEventId[];
+    updated: SchedulerEventId[];
+    created: SchedulerEventId[];
+  }) => Promise<{ success: boolean }>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {

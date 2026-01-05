@@ -153,7 +153,6 @@ export class SchedulerDataSourceCacheDefault<
   upsert(event: TEvent) {
     const id = String((event as any).id);
     const expiry = Date.now() + this.ttl;
-    console.log('Cache upsert for event id:', id, event);
     this.cache[id] = { value: event, expiry };
   }
 

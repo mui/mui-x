@@ -1,6 +1,10 @@
 import * as React from 'react';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEvent,
+  SchedulerEventId,
+  SchedulerResource,
+} from '@mui/x-scheduler-headless/models';
 import {
   resources as agendaResources,
   defaultVisibleDate,
@@ -112,6 +116,16 @@ function generateRandomEventsInRange(
   return events;
 }
 
+const resolveUpdate = async (_params: {
+  deleted: SchedulerEventId[];
+  updated: SchedulerEventId[];
+  created: SchedulerEventId[];
+}) => {
+  return new Promise<{ success: boolean }>((resolve) => {
+    resolve({ success: true });
+  });
+};
+
 export default function BasicDataSource() {
   const fetchData = async (start: Date, end: Date): Promise<SchedulerEvent[]> => {
     const generated = generateRandomEventsInRange(start, end, flatResources);
@@ -129,7 +143,7 @@ export default function BasicDataSource() {
     <div style={{ height: '700px', width: '100%' }}>
       <EventCalendar
         events={[]}
-        dataSource={{ getEvents: fetchData }}
+        dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
         resources={flatResources}
         areEventsDraggable
         defaultVisibleDate={defaultVisibleDate}

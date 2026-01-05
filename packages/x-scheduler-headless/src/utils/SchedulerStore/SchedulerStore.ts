@@ -239,6 +239,66 @@ export class SchedulerStore<
     }
   };
 
+  private updateEventsFromDataSource = async (
+    {
+      deleted,
+      updated,
+      created,
+    }: {
+      deleted: SchedulerEventId[];
+      updated: SchedulerEventId[];
+      created: SchedulerEventId[];
+    },
+    newEvents: TEvent[],
+  ) => {
+    const { dataSource } = this.parameters;
+    const { adapter, displayTimezone } = this.state;
+
+    if (!dataSource || !this.cache) {
+      return;
+    }
+
+    try {
+      const shouldUpdateEvents = await dataSource.updateEvents({
+        deleted,
+        updated,
+        created,
+      });
+
+      if (!shouldUpdateEvents.success) {
+        return;
+      }
+
+      // Update cache
+      for (const id of deleted) {
+        this.cache.remove(String(id));
+      }
+
+      const modifiedIds = new Set([...created, ...updated]);
+      if (modifiedIds.size > 0) {
+        for (const event of newEvents) {
+          // @ts-ignore
+          if (modifiedIds.has(event.id)) {
+            this.cache.upsert(event);
+          }
+        }
+      }
+
+      const eventsState = buildEventsState(
+        { ...this.parameters, events: newEvents },
+        adapter,
+        displayTimezone,
+      );
+
+      this.update({
+        ...this.state,
+        ...eventsState,
+      });
+    } catch (error) {
+      this.set('errors', [error]);
+    }
+  };
+
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
@@ -393,37 +453,18 @@ export class SchedulerStore<
       createdIds.push(response.id);
     }
 
-    if (this.cache) {
-      for (const id of deleted) {
-        this.cache.remove(String(id));
-      }
-
-      const modifiedIds = new Set([...createdIds, ...updated.keys()]);
-      if (modifiedIds.size > 0) {
-        for (const event of newEvents) {
-          // @ts-ignore
-          if (modifiedIds.has(event.id)) {
-            this.cache.upsert(event);
-          }
-        }
-      }
-    }
     this.parameters.onEventsChange?.(newEvents, eventDetails);
+    queueMicrotask(() =>
+      this.updateEventsFromDataSource(
+        {
+          deleted: deletedParam ?? [],
+          updated: Array.from(updated.keys()) as SchedulerEventId[],
+          created: createdIds,
+        },
+        newEvents,
+      ),
+    );
 
-    const isControlled = this.parameters.events !== undefined && !this.parameters.dataSource;
-    if (!isControlled) {
-      const { adapter, displayTimezone } = this.state;
-      const eventsState = buildEventsState(
-        { ...this.parameters, events: newEvents } as Parameters,
-        adapter,
-        displayTimezone,
-      );
-
-      this.update({
-        ...this.state,
-        ...eventsState,
-      });
-    }
     return {
       deleted: deletedParam ?? [],
       updated: Array.from(updated.keys()) as SchedulerEventId[],
