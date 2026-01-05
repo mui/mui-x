@@ -21,6 +21,10 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
+import {
+  useHeatmapCellClick,
+  type UseHeatmapCellClickSignature,
+} from './plugins/useHeatmapCellClick';
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
@@ -31,6 +35,7 @@ export type HeatmapPluginSignatures = [
   UseChartProExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,
+  UseHeatmapCellClickSignature,
 ];
 
 export const HEATMAP_PLUGINS = [
@@ -42,4 +47,5 @@ export const HEATMAP_PLUGINS = [
   useChartProExport,
   useChartBrush,
   useChartProZoom,
+  useHeatmapCellClick,
 ] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;

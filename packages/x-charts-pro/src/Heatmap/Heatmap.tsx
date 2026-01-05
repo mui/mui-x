@@ -189,6 +189,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     loading,
     highlightedItem,
     onHighlightChange,
+    onCellClick,
     hideLegend = true,
     showToolbar = false,
   } = props;
@@ -262,6 +263,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       onAxisClick={onAxisClick}
+      onCellClick={onCellClick}
       plugins={HEATMAP_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>

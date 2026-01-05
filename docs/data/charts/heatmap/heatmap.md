@@ -57,6 +57,18 @@ In the following demo, we replace the highlight saturation by a border radius an
 
 {{"demo": "HighlightClasses.js"}}
 
+## Click event
+
+Use `onCellClick` to know which cell is clicked by user.
+
+The second argument is an object describing the cell with the following properties:
+
+- `x: { index, value }`: the cell value along the x-axis.
+- `y: { index, value }`: the cell value along the y-axis.
+- `cell?: { seriesId, dataIndex, value }`: The cell value if defined. It's undefined if with there is not data associated to the cell.
+
+{{"demo": "HeatmapCellClick.js"}}
+
 ## Common features
 
 The heatmap shares several features with other charts.
