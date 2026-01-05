@@ -760,6 +760,7 @@ async function initializeEnvironment(
           expect(await page.evaluate(() => document.activeElement?.textContent)).to.equal('MM');
         });
 
+        // this test sometimes fails on webkit for some reason
         it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
           'should focus the first field section after clearing a value with the non-accessible DOM structure',
           async () => {
