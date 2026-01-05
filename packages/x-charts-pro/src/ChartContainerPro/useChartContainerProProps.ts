@@ -35,7 +35,7 @@ export const useChartContainerProProps = <
     plugins,
     apiRef,
     ...baseProps
-  } = props as ChartContainerProProps<TSeries, AllPluginSignatures>;
+  } = props as ChartContainerProProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
     baseProps,
