@@ -402,8 +402,16 @@ Heatmap.propTypes = {
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   *
+   * @deprecated Use `onCellClick` instead to get access to both x- and y-axis values.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * Callback fired when a cell is clicked.
+   * @param {PointerEvent} event The native pointer event
+   * @param {OnCellClickParams} params The parameters related to the clicked cell
+   */
+  onCellClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

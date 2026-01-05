@@ -55,9 +55,18 @@
     },
     "onAxisClick": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onCellClick</code> instead to get access to both x- and y-axis values.",
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onCellClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: PointerEvent, params: OnCellClickParams) => void",
+        "describedArgs": ["event", "params"]
       }
     },
     "onHighlightChange": {
