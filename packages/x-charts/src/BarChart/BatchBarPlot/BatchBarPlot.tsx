@@ -11,9 +11,11 @@ import {
   selectorChartSeriesUnfadedItem,
   type UseChartHighlightSignature,
 } from '../../internals/plugins/featurePlugins/useChartHighlight';
-import { useRegisterPointerEventHandlers } from '../useRegisterPointerEventHandlers';
+import { useRegisterItemClickHandlers } from '../useRegisterItemClickHandlers';
 import { createPath, useCreateBarPaths } from './useCreateBarPaths';
 import { BarGroup } from './BarGroup';
+import { useRegisterPointerInteractions } from '../../internals/plugins/featurePlugins/shared/useRegisterPointerInteractions';
+import { selectorBarItemAtPosition } from '../../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
 interface BatchBarPlotProps extends Omit<IndividualBarPlotProps, 'onItemClick'> {
   onItemClick?: (event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void;
@@ -25,7 +27,28 @@ export function BatchBarPlot({
   onItemClick,
   skipAnimation = false,
 }: BatchBarPlotProps) {
-  useRegisterPointerEventHandlers(onItemClick);
+  const prevCursorRef = React.useRef<string | null>(null);
+
+  const onItemEnter = onItemClick
+    ? () => {
+        if (prevCursorRef.current == null) {
+          prevCursorRef.current = document.body.style.cursor;
+          document.body.style.cursor = 'pointer';
+        }
+      }
+    : undefined;
+
+  const onItemLeave = onItemClick
+    ? () => {
+        if (prevCursorRef.current != null) {
+          document.body.style.cursor = prevCursorRef.current;
+          prevCursorRef.current = null;
+        }
+      }
+    : undefined;
+
+  useRegisterPointerInteractions(selectorBarItemAtPosition, onItemEnter, onItemLeave);
+  useRegisterItemClickHandlers(onItemClick);
 
   return (
     <React.Fragment>
