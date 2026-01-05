@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.18.13",
+    "@base-ui/react": "^1.0.0",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@mui/x-charts-headless": "workspace:^",

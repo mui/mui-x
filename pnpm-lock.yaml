@@ -930,6 +930,9 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(react@19.2.3)
     devDependencies:
+      '@base-ui/react':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/x-charts-headless':
         specifier: workspace:^
         version: link:../x-charts-headless/build
