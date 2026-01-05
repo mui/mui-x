@@ -323,7 +323,7 @@ async function initializeEnvironment(
       // if this test fails locally on chromium, be aware that it uses system locale format,
       // instead of one specified by the `locale`
       // webkit has issues with date input locale on circleci
-      it.skipIf(!process.env.CI || (browserType.name() === 'webkit' && process.env.CIRCLECI))(
+      it.skipIf(browserType.name() === 'webkit' && process.env.CIRCLECI)(
         'should edit date cells',
         async () => {
           await renderFixture('DataGrid/KeyboardEditDate');
