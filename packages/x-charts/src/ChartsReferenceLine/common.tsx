@@ -44,7 +44,10 @@ export type CommonChartsReferenceLineProps = {
   classes?: Partial<ChartsReferenceLineClasses>;
 };
 
-export const ReferenceLineRoot = styled('g')(({ theme }) => ({
+export const ReferenceLineRoot = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   [`& .${referenceLineClasses.line}`]: {
     fill: 'none',
     stroke: (theme.vars || theme).palette.text.primary,
