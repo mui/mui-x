@@ -25,7 +25,6 @@ function HeatmapPlot(props: HeatmapPlotProps) {
 
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
   const isFaded = store.use(selectorChartsIsFadedCallback);
-  useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
 
   const xDomain = xScale.domain();
   const yDomain = yScale.domain();

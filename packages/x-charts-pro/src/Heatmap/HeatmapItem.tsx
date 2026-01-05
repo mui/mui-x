@@ -76,7 +76,7 @@ function HeatmapItem(props: HeatmapItemProps) {
 
   // If we aren't using the default cell, we skip adding interaction props because we have a more efficient way to
   // calculate them. To avoid breaking changes, we need to keep this behavior. We can remove this in v9.
-  const skipInteractionItemProps = !shouldRegisterPointerInteractionsGlobally(props.slots);
+  const skipInteractionItemProps = shouldRegisterPointerInteractionsGlobally(props.slots);
   const interactionProps = useInteractionItemProps(
     { type: 'heatmap', seriesId, dataIndex },
     skipInteractionItemProps,
