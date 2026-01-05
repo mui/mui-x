@@ -40,6 +40,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const view = useStore(store, eventCalendarViewSelectors.view);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const errors = useStore(store, schedulerOtherSelectors.errors);
+
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -106,6 +108,15 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
               >
                 {content}
               </section>
+              {errors?.length > 0 && (
+                <div className="SchedulerErrorContainer">
+                  {errors.map((error, index) => (
+                    <div className="SchedulerError" key={index}>
+                      {error.message}
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
             </div>

@@ -152,6 +152,10 @@ export interface SchedulerState<TEvent extends object = any> {
    * Whether the store is currently loading events from the data source.
    */
   isLoading: boolean;
+  /**
+   * The errors that occurred during data fetching.
+   */
+  errors: Error[];
 }
 
 export interface SchedulerDataSource<TEvent extends object> {

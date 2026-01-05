@@ -66,3 +66,14 @@
   color: var(--gray-9);
   z-index: 1;
 }
+
+.SchedulerErrorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.SchedulerError {
+  color: var(--red-9);
+  font-size: var(--font-size-2);
+}

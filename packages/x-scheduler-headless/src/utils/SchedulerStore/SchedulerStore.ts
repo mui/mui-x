@@ -101,6 +101,7 @@ export class SchedulerStore<
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
+      errors: [],
       ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
     };
 
@@ -210,6 +211,7 @@ export class SchedulerStore<
     try {
       // Set loading state
       this.set('isLoading', true);
+      this.set('errors', []);
       const events = await dataSource.getEvents(range.start, range.end);
       this.cache!.setRange(
         adapter.getTime(range.start),
@@ -228,7 +230,7 @@ export class SchedulerStore<
       // Mark request as settled
       await this.dataManager.setRequestSettled(range);
     } catch (error) {
-      // TODO: Set error state for this range
+      this.set('errors', [error]);
       await this.dataManager.setRequestSettled(range);
     } finally {
       // Unset loading state
