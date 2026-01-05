@@ -154,6 +154,7 @@ const ChartsLegend = consumeSlots(
               key={`${item.seriesId}-${item.dataIndex}`}
               className={classes?.item}
               data-series={item.seriesId}
+              data-index={item.dataIndex}
             >
               <Element
                 className={clsx(classes?.series, !isVisible && classes?.hidden)}
