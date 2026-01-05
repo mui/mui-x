@@ -24,7 +24,7 @@ export type IsItemVisibleFunction = {
   (identifier: VisibilityIdentifier): boolean;
 };
 
-export interface UseChartVisibilityManagerPublicAPI<T extends ChartSeriesType> {
+export interface UseChartVisibilityManagerInstance<T extends ChartSeriesType> {
   /**
    * Hide an item by its identifier.
    *
@@ -53,10 +53,6 @@ export interface UseChartVisibilityManagerPublicAPI<T extends ChartSeriesType> {
    */
   toggleItemVisibility(identifier: VisibilityIdentifier<T>): void;
 }
-
-export interface UseChartVisibilityManagerInstance<
-  T extends ChartSeriesType,
-> extends UseChartVisibilityManagerPublicAPI<T> {}
 
 export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> {
   /**
@@ -106,7 +102,6 @@ export interface UseChartVisibilityManagerState {
 export type UseChartVisibilityManagerSignature<T extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     instance: UseChartVisibilityManagerInstance<T>;
-    publicAPI: UseChartVisibilityManagerPublicAPI<T>;
     state: UseChartVisibilityManagerState;
     params: UseChartVisibilityManagerParameters<T>;
     defaultizedParams: UseChartVisibilityManagerDefaultizedParameters<T>;
