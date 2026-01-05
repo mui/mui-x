@@ -17,7 +17,9 @@ import { useRangePosition } from '../useRangePosition';
 import { PickerRangePositionContext } from '../../../hooks/usePickerRangePositionContext';
 import { createRangePickerStepNavigation } from '../../utils/createRangePickerStepNavigation';
 
-const PickerStaticLayout = styled(PickersLayout)(({ theme }) => ({
+const PickerStaticLayout = styled(PickersLayout, {
+  slot: 'internal',
+})(({ theme }) => ({
   overflow: 'hidden',
   minWidth: DIALOG_WIDTH,
   backgroundColor: (theme.vars || theme).palette.background.paper,

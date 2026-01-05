@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -106,6 +107,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   } = props;
 
   const svgRef = useSvgRef();
+  const anchorRef = React.useRef<SVGRectElement | null>(null);
+
   const classes = useUtilityClasses(propClasses);
 
   const pointerType = usePointerType();
@@ -138,19 +141,12 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     }
 
     if (itemPosition !== null) {
-      const positionUpdate = rafThrottle(() => {
-        // eslint-disable-next-line react-compiler/react-compiler
-        positionRef.current = {
-          x: svgElement.getBoundingClientRect().left + (itemPosition?.x ?? 0),
-          y: svgElement.getBoundingClientRect().top + (itemPosition?.y ?? 0),
-        };
-        popperRef.current?.update();
-      });
-      positionUpdate();
-      return () => positionUpdate.clear();
+      // Tooltip position is already handled by the anchor element
+      return undefined;
     }
 
     const pointerUpdate = rafThrottle((x: number, y: number) => {
+      // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x, y };
       popperRef.current?.update();
     });
@@ -171,7 +167,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     };
   }, [svgRef, positionRef, itemPosition]);
 
-  const anchorEl = React.useMemo(
+  const pointerAnchorEl = React.useMemo(
     () => ({
       getBoundingClientRect: () => ({
         x: positionRef.current.x,
@@ -224,22 +220,35 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     return null;
   }
 
+  if (itemPosition !== null && anchorRef.current) {
+    anchorRef.current.setAttribute('x', String(itemPosition.x));
+    anchorRef.current.setAttribute('y', String(itemPosition.y));
+  }
+
   return (
-    <NoSsr>
-      {isOpen && (
-        <ChartsTooltipRoot
-          {...other}
-          className={classes?.root}
-          open={isOpen}
-          placement={other.placement ?? position ?? (isMouse ? 'right-start' : 'top')}
-          popperRef={popperRef}
-          anchorEl={anchorEl}
-          modifiers={modifiers}
-        >
-          {children}
-        </ChartsTooltipRoot>
-      )}
-    </NoSsr>
+    <React.Fragment>
+      {svgRef.current &&
+        ReactDOM.createPortal(<rect ref={anchorRef} display="hidden" />, svgRef.current)}
+      <NoSsr>
+        {isOpen && (
+          <ChartsTooltipRoot
+            {...other}
+            className={classes?.root}
+            open={isOpen}
+            placement={
+              other.placement ??
+              position ??
+              (pointerType !== null && isMouse ? 'right-start' : 'top')
+            }
+            popperRef={popperRef}
+            anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
+            modifiers={modifiers}
+          >
+            {children}
+          </ChartsTooltipRoot>
+        )}
+      </NoSsr>
+    </React.Fragment>
   );
 }
 

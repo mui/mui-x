@@ -12,13 +12,17 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
         return;
       }
 
+      const id = item.id ?? dataIndex;
+
       acc.push({
+        type: 'pie',
         markType: item.labelMarkType ?? series[seriesId].labelMarkType,
-        id: item.id ?? dataIndex,
         seriesId,
+        id,
+        itemId: id,
+        dataIndex,
         color: item.color,
         label: formattedLabel,
-        itemId: item.id ?? dataIndex,
       });
     });
     return acc;
