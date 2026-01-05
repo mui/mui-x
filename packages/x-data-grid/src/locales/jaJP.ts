@@ -292,7 +292,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Prompt
   promptRerun: '再試行',
   promptProcessing: '実行中…',
-  promptAppliedChanges: '変更を適用',
+  promptAppliedChanges: '変更を適用済み',
 
   // Prompt changes
   // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
