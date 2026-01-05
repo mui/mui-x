@@ -222,7 +222,6 @@ export function buildEventsState<TEvent extends object, TResource extends object
   | 'eventModelStructure'
   | 'eventModelList'
 > {
-  console.log('buildEventsState called');
   const { events, eventModelStructure } = parameters;
 
   const eventIdList: SchedulerEventId[] = [];

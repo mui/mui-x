@@ -148,7 +148,6 @@ export class SchedulerDataManager {
         // Move from Stage -> Actual Queue
         if (this.stagedRanges) {
           this.commitRangesToQueue(this.stagedRanges);
-          console.log('Debounce period ended, committing staged ranges to queue.');
           this.stagedRanges = null;
         }
 

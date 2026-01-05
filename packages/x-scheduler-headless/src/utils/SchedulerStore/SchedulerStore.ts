@@ -115,6 +115,11 @@ export class SchedulerStore<
     const timeUntilNextMinuteMs =
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
+    if (parameters.dataSource) {
+      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
+      this.dataManager = new SchedulerDataManager(adapter, this.loadEventsFromDataSource);
+    }
+
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
       this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
@@ -185,8 +190,6 @@ export class SchedulerStore<
       )
     ) {
       const allCachedEvents = this.cache?.getAll() || [];
-      console.log('SchedulerStore: CACHE hit for range');
-
       const eventsState = buildEventsState(
         { ...this.parameters, events: allCachedEvents } as Parameters,
         adapter,
@@ -208,7 +211,6 @@ export class SchedulerStore<
       // Set loading state
       this.set('isLoading', true);
       const events = await dataSource.getEvents(range.start, range.end);
-      console.log('SchedulerStore: FETCHED events from data source');
       this.cache!.setRange(
         adapter.getTime(range.start),
         adapter.getTime(adapter.endOfDay(range.end)),
@@ -227,7 +229,6 @@ export class SchedulerStore<
       await this.dataManager.setRequestSettled(range);
     } catch (error) {
       // TODO: Set error state for this range
-      console.log('SchedulerStore: Error while fetching events from data source', error);
       await this.dataManager.setRequestSettled(range);
     } finally {
       // Unset loading state
@@ -291,11 +292,6 @@ export class SchedulerStore<
       );
     }
     newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
-
-    if (parameters.dataSource) {
-      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
-      this.dataManager = new SchedulerDataManager(adapter, this.loadEventsFromDataSource);
-    }
 
     if (
       parameters.resources !== this.parameters.resources ||
@@ -394,12 +390,6 @@ export class SchedulerStore<
       newEvents.push(response.model);
       createdIds.push(response.id);
     }
-
-    console.log('SchedulerStore: updateEvents called', {
-      deleted: Array.from(deleted),
-      updated: Array.from(updated.keys()),
-      created: createdIds,
-    });
 
     if (this.cache) {
       for (const id of deleted) {
