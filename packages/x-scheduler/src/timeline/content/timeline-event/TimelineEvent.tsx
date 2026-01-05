@@ -11,7 +11,7 @@ import { EventDragPreview } from '../../../internals/components/event-drag-previ
 import { TimelineEventProps } from './TimelineEvent.types';
 
 const TimelineEventRoot = styled('div', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'Event',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -43,7 +43,7 @@ const TimelineEventRoot = styled('div', {
 }));
 
 const TimelineEventResizeHandler = styled(Timeline.EventResizeHandler, {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'EventResizeHandler',
 })({
   position: 'absolute',

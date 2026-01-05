@@ -9,7 +9,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
-import { useTranslations } from '../../../utils/TranslationsContext';
+import { useTranslations } from '../../../internals/utils/TranslationsContext';
 
 const ViewSwitcherRoot = styled('div', {
   name: 'MuiEventCalendar',

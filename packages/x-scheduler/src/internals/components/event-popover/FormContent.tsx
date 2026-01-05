@@ -31,8 +31,8 @@ import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
-const FormContentActions = styled('div', {
-  name: 'MuiSchedulerEventPopover',
+const FormActions = styled('div', {
+  name: 'MuiEventPopover',
   slot: 'FormActions',
 })(({ theme }) => ({
   display: 'flex',
@@ -257,14 +257,14 @@ export function FormContent(props: FormContentProps) {
         value={tabValue}
       />
       <Divider />
-      <FormContentActions>
+      <FormActions>
         <Button color="error" type="button" onClick={handleDelete}>
           {translations.deleteEvent}
         </Button>
         <Button variant="contained" type="submit">
           {translations.saveChanges}
         </Button>
-      </FormContentActions>
+      </FormActions>
     </form>
   );
 }

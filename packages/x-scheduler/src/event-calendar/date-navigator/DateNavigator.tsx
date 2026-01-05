@@ -12,11 +12,11 @@ import {
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DateNavigatorProps } from './DateNavigator.types';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 
 const DateNavigatorRoot = styled('header', {
-  name: 'MuiSchedulerDateNavigator',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'DateNavigator',
 })(({ theme }) => ({
   gridColumn: '1 / 2',
   gridTemplateColumns: 'subgrid',
@@ -28,8 +28,8 @@ const DateNavigatorRoot = styled('header', {
 }));
 
 const DateNavigatorLabel = styled('p', {
-  name: 'MuiSchedulerDateNavigator',
-  slot: 'Label',
+  name: 'MuiEventCalendar',
+  slot: 'DateNavigatorLabel',
 })(({ theme }) => ({
   margin: 0,
   ...theme.typography.h6,
@@ -38,8 +38,8 @@ const DateNavigatorLabel = styled('p', {
 }));
 
 const DateNavigatorButtonsContainer = styled('div', {
-  name: 'MuiSchedulerDateNavigator',
-  slot: 'ButtonsContainer',
+  name: 'MuiEventCalendar',
+  slot: 'DateNavigatorButtonsContainer',
 })(({ theme }) => ({
   display: 'flex',
   gap: theme.spacing(0.5),

@@ -3,7 +3,7 @@ import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { PreferencesMenu } from './PreferencesMenu';
-import { getPreferencesMenu, openPreferencesMenu } from '../../../utils/test-utils';
+import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';
 
 describe('<PreferencesMenu />', () => {
   const anchor = document.createElement('button');

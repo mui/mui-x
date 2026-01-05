@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import { useTranslations } from '../../utils/TranslationsContext';
 
 const EventPopoverHeaderRoot = styled('header', {
-  name: 'MuiSchedulerEventPopover',
+  name: 'MuiEventPopover',
   slot: 'Header',
 })(({ theme }) => ({
   display: 'flex',
@@ -18,7 +18,7 @@ const EventPopoverHeaderRoot = styled('header', {
 }));
 
 const EventPopoverHeaderContent = styled('div', {
-  name: 'MuiSchedulerEventPopover',
+  name: 'MuiEventPopover',
   slot: 'HeaderContent',
 })(({ theme }) => ({
   display: 'flex',

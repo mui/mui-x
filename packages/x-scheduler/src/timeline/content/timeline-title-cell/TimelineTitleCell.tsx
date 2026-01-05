@@ -7,7 +7,7 @@ import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-
 import { getDataPaletteProps } from '../../../internals/utils/color-utils';
 
 const TimelineRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
   padding: theme.spacing(2),
@@ -18,7 +18,7 @@ const TimelineRow = styled(TimelinePrimitive.Row, {
 }));
 
 const TimelineTitleCellRoot = styled(TimelinePrimitive.Cell, {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TitleCell',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -28,7 +28,7 @@ const TimelineTitleCellRoot = styled(TimelinePrimitive.Cell, {
 }));
 
 const ResourceLegendColor = styled('span', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TitleCellLegendColor',
 })({
   width: 10,

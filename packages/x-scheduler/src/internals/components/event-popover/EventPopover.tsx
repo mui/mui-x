@@ -21,7 +21,7 @@ import ReadonlyContent from './ReadonlyContent';
 import { FormContent } from './FormContent';
 
 const EventPopoverPositioner = styled(Popover.Positioner, {
-  name: 'MuiSchedulerEventPopover',
+  name: 'MuiEventPopover',
   slot: 'Positioner',
 })(({ theme }) => ({
   width: '100%',

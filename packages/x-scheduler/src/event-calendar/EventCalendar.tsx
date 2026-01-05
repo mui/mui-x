@@ -20,9 +20,9 @@ import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
-import { HeaderToolbar } from '../internals/components/header-toolbar';
-import { ResourceLegend } from '../internals/components/resource-legend';
-import { DateNavigator } from '../internals/components/date-navigator';
+import { HeaderToolbar } from './header-toolbar';
+import { ResourcesLegend } from './resources-legend';
+import { DateNavigator } from './date-navigator';
 import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 import { schedulerTokens } from '../internals/utils/tokens';
 
@@ -162,7 +162,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
                   >
                     Month Calendar
                   </EventCalendarMonthCalendarPlaceholder>
-                  <ResourceLegend />
+                  <ResourcesLegend />
                 </EventCalendarSidePanel>
               )}
 

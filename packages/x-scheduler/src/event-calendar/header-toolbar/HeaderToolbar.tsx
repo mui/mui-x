@@ -8,12 +8,12 @@ import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-cale
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { PreferencesMenu } from './preferences-menu';
 
 const HeaderToolbarRoot = styled('header', {
-  name: 'MuiSchedulerHeaderToolbar',
-  slot: 'Root',
+  name: 'MuiEventCalendar',
+  slot: 'HeaderToolbar',
 })(({ theme }) => ({
   gridColumn: '2 / -1',
   display: 'grid',
@@ -29,15 +29,15 @@ const HeaderToolbarRoot = styled('header', {
 }));
 
 const HeaderToolbarActions = styled('div', {
-  name: 'MuiSchedulerHeaderToolbar',
-  slot: 'Actions',
+  name: 'MuiEventCalendar',
+  slot: 'HeaderToolbarActions',
 })(() => ({
   display: 'flex',
 }));
 
 const HeaderToolbarPrimaryActionWrapper = styled('div', {
-  name: 'MuiSchedulerHeaderToolbar',
-  slot: 'PrimaryActionWrapper',
+  name: 'MuiEventCalendar',
+  slot: 'HeaderToolbarPrimaryActionWrapper',
 })(({ theme }) => ({
   flexGrow: 1,
   display: 'flex',

@@ -27,9 +27,9 @@ import '../index.css';
 
 const FIXED_CELL_WIDTH = 28;
 
-const MonthViewContainer = styled('div', {
+const MonthViewRoot = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'MonthViewContainer',
+  slot: 'MonthView',
 })(({ theme }) => ({
   width: '100%',
   borderRadius: theme.shape.borderRadius,
@@ -40,7 +40,7 @@ const MonthViewContainer = styled('div', {
   maxHeight: '100%',
 }));
 
-const MonthViewRoot = styled(CalendarGrid.Root, {
+const MonthViewGrid = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'MonthViewGrid',
 })({
@@ -184,10 +184,10 @@ export const MonthView = React.memo(
     );
 
     return (
-      <MonthViewContainer {...props} ref={handleRef}>
+      <MonthViewRoot {...props} ref={handleRef}>
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>
-            <MonthViewRoot>
+            <MonthViewGrid>
               <MonthViewHeader ownerState={{ showWeekNumber }}>
                 {showWeekNumber && (
                   <MonthViewWeekHeaderCell>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
@@ -209,10 +209,10 @@ export const MonthView = React.memo(
                   />
                 ))}
               </MonthViewBody>
-            </MonthViewRoot>
+            </MonthViewGrid>
           </MoreEventsPopoverProvider>
         </EventPopoverProvider>
-      </MonthViewContainer>
+      </MonthViewRoot>
     );
   }),
 );

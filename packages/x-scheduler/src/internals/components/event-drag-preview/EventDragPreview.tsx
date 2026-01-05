@@ -7,7 +7,7 @@ import { getDataPaletteProps } from '../../utils/color-utils';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const EventDragPreviewRoot = styled('div', {
-  name: 'MuiSchedulerEventDragPreview',
+  name: 'MuiEventDragPreview',
   slot: 'Root',
 })(({ theme }) => ({
   padding: theme.spacing(0.5, 1),

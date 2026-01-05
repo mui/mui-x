@@ -9,7 +9,7 @@ import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
 
 const TimeHeaderRoot = styled('div', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderRoot',
 })({
   display: 'flex',
@@ -17,7 +17,7 @@ const TimeHeaderRoot = styled('div', {
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
@@ -30,7 +30,7 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('time', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -42,7 +42,7 @@ const DayLabel = styled('time', {
 }));
 
 const TimeCellsRow = styled('div', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderCellsRow',
 })(({ theme }) => ({
   padding: theme.spacing(0, 1),
@@ -51,7 +51,7 @@ const TimeCellsRow = styled('div', {
 }));
 
 const TimeCell = styled('div', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderTimeCell',
 })(({ theme }) => ({
   padding: theme.spacing(1, 0),
@@ -59,7 +59,7 @@ const TimeCell = styled('div', {
 }));
 
 const TimeLabel = styled('time', {
-  name: 'MuiTimeline',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderTimeLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,

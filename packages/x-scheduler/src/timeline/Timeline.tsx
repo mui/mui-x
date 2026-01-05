@@ -8,12 +8,12 @@ import { TimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-sto
 import { TimelineView } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { TimelineProps } from './Timeline.types';
-import { ViewSwitcher } from '../internals/components/header-toolbar/view-switcher';
+import { ViewSwitcher } from '../event-calendar/header-toolbar/view-switcher';
 import { TimelineContent } from './content';
 import '../index.css';
 
-const TimelineViewContainer = styled('div', {
-  name: 'MuiTimeline',
+const EventTimelineRoot = styled('div', {
+  name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
   '--time-cell-width': '64px',
@@ -29,8 +29,8 @@ const TimelineViewContainer = styled('div', {
   fontSize: theme.typography.body2.fontSize,
 }));
 
-const TimelineHeaderToolbar = styled('header', {
-  name: 'MuiTimeline',
+const EventTimelineHeaderToolbar = styled('header', {
+  name: 'MuiEventTimeline',
   slot: 'HeaderToolbar',
 })({
   display: 'flex',
@@ -56,12 +56,12 @@ export const Timeline = React.forwardRef(function EventTimeline<
   return (
     <TimelineStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
-        <TimelineViewContainer ref={forwardedRef} {...forwardedProps}>
-          <TimelineHeaderToolbar>
+        <EventTimelineRoot ref={forwardedRef} {...forwardedProps}>
+          <EventTimelineHeaderToolbar>
             <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} />
-          </TimelineHeaderToolbar>
+          </EventTimelineHeaderToolbar>
           <TimelineContent />
-        </TimelineViewContainer>
+        </EventTimelineRoot>
       </SchedulerStoreContext.Provider>
     </TimelineStoreContext.Provider>
   );

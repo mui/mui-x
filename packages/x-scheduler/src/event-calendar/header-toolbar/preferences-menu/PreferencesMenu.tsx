@@ -21,7 +21,7 @@ import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { useTranslations } from '../../../utils/TranslationsContext';
+import { useTranslations } from '../../../internals/utils/TranslationsContext';
 
 const PreferencesMenuRoot = styled('div', {
   name: 'MuiEventCalendar',

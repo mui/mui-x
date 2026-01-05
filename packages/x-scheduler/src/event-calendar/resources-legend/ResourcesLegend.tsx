@@ -9,21 +9,21 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
-import { ResourceLegendProps } from './ResourceLegend.types';
-import { useTranslations } from '../../utils/TranslationsContext';
-import { schedulerPaletteStyles } from '../../utils/tokens';
+import { ResourcesLegendProps } from './ResourcesLegend.types';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
+import { schedulerPaletteStyles } from '../../internals/utils/tokens';
 
-const ResourceLegendRoot = styled('section', {
-  name: 'MuiSchedulerResourceLegend',
-  slot: 'Root',
+const ResourcesLegendRoot = styled('section', {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegend',
 })({
   display: 'flex',
   flexDirection: 'column',
 });
 
-const ResourceLegendItemRoot = styled('div', {
-  name: 'MuiSchedulerResourceLegend',
-  slot: 'Item',
+const ResourcesLegendItemRoot = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegendItem',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -36,9 +36,9 @@ const ResourceLegendItemRoot = styled('div', {
   },
 }));
 
-const ResourceLegendColorDot = styled('span', {
-  name: 'MuiSchedulerResourceLegend',
-  slot: 'ColorDot',
+const ResourcesLegendItemColorDot = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegendItemColorDot',
 })({
   width: 8,
   height: 8,
@@ -48,30 +48,30 @@ const ResourceLegendColorDot = styled('span', {
   ...schedulerPaletteStyles,
 });
 
-const ResourceLegendName = styled(Typography, {
-  name: 'MuiSchedulerResourceLegend',
-  slot: 'Name',
+const ResourcesLegendItemName = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'ResourcesLegendItemName',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   color: theme.palette.text.secondary,
 }));
 
-interface ResourceLegendItemProps {
+interface ResourcesLegendItemProps {
   resource: SchedulerResource;
   isVisible: boolean;
   onToggle: (resourceId: string, event: React.MouseEvent) => void;
 }
 
-function ResourceLegendItem(props: ResourceLegendItemProps) {
+function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   const { resource, isVisible, onToggle } = props;
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
-    <ResourceLegendItemRoot>
-      <ResourceLegendColorDot data-palette={eventColor} />
-      <ResourceLegendName>{resource.title}</ResourceLegendName>
+    <ResourcesLegendItemRoot>
+      <ResourcesLegendItemColorDot data-palette={eventColor} />
+      <ResourcesLegendItemName>{resource.title}</ResourcesLegendItemName>
       <IconButton
         size="small"
         onClick={(event) => onToggle(resource.id, event)}
@@ -88,12 +88,12 @@ function ResourceLegendItem(props: ResourceLegendItemProps) {
           <EyeClosed size={16} strokeWidth={1.5} />
         )}
       </IconButton>
-    </ResourceLegendItemRoot>
+    </ResourcesLegendItemRoot>
   );
 }
 
-export const ResourceLegend = React.forwardRef(function ResourceLegend(
-  props: ResourceLegendProps,
+export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
+  props: ResourcesLegendProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const translations = useTranslations();
@@ -113,19 +113,19 @@ export const ResourceLegend = React.forwardRef(function ResourceLegend(
   }
 
   return (
-    <ResourceLegendRoot
+    <ResourcesLegendRoot
       ref={forwardedRef}
-      aria-label={translations.resourceLegendSectionLabel}
+      aria-label={translations.ResourcesLegendSectionLabel}
       {...props}
     >
       {resources.map((resource) => (
-        <ResourceLegendItem
+        <ResourcesLegendItem
           key={resource.id}
           resource={resource}
           isVisible={visibleSet.has(resource.id)}
           onToggle={handleToggle}
         />
       ))}
-    </ResourceLegendRoot>
+    </ResourcesLegendRoot>
   );
 });

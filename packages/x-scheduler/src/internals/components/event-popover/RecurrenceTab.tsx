@@ -32,7 +32,7 @@ import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './uti
 import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 const RecurrenceTabContent = styled('div', {
-  name: 'MuiSchedulerEventPopover',
+  name: 'MuiEventPopover',
   slot: 'RecurrenceTabContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),

@@ -17,9 +17,9 @@ import { EventPopoverProvider, EventPopoverTrigger } from '../internals/componen
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import '../index.css';
 
-const AgendaViewContainer = styled('div', {
+const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'AgendaViewContainer',
+  slot: 'AgendaViewRoot',
 })(({ theme }) => ({
   width: '100%',
   height: '100%',
@@ -161,7 +161,7 @@ export const AgendaView = React.memo(
     );
 
     return (
-      <AgendaViewContainer {...props} ref={handleRef}>
+      <AgendaViewRoot {...props} ref={handleRef}>
         <EventPopoverProvider containerRef={containerRef}>
           {daysWithOccurrences.map(({ date, occurrences }) => (
             <AgendaViewRow
@@ -207,7 +207,7 @@ export const AgendaView = React.memo(
             </AgendaViewRow>
           ))}
         </EventPopoverProvider>
-      </AgendaViewContainer>
+      </AgendaViewRoot>
     );
   }),
 );
