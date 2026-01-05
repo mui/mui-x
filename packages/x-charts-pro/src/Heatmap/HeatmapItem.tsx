@@ -1,10 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
-import { type HeatmapClasses, getHeatmapUtilityClass } from './heatmapClasses';
+import { getHeatmapUtilityClass } from './heatmapClasses';
+import { HeatmapCell, type HeatmapItemOwnerState } from './HeatmapCell';
+import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {
   /**
@@ -41,15 +42,6 @@ export interface HeatmapItemProps {
   slots?: HeatmapItemSlots;
 }
 
-export interface HeatmapItemOwnerState {
-  seriesId: SeriesId;
-  dataIndex: number;
-  color: string;
-  isFaded: boolean;
-  isHighlighted: boolean;
-  classes?: Partial<HeatmapClasses>;
-}
-
 export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
   x: number;
   y: number;
@@ -57,19 +49,6 @@ export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
   height: number;
   ownerState: HeatmapItemOwnerState;
 }
-
-const HeatmapCell = styled('rect', {
-  name: 'MuiHeatmap',
-  slot: 'Cell',
-  overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
-})<{ ownerState: HeatmapItemOwnerState }>(({ ownerState }) => ({
-  filter:
-    (ownerState.isHighlighted && 'saturate(120%)') ||
-    (ownerState.isFaded && 'saturate(80%)') ||
-    undefined,
-  fill: ownerState.color,
-  shapeRendering: 'crispEdges',
-}));
 
 const useUtilityClasses = (ownerState: HeatmapItemOwnerState) => {
   const { classes, seriesId, isFaded, isHighlighted } = ownerState;
@@ -108,7 +87,7 @@ function HeatmapItem(props: HeatmapItemProps) {
   const Cell = slots?.cell ?? HeatmapCell;
   // If Cell is not the default HeatmapCell, we skip adding interaction props because we have a more efficient way to
   // calculate them. To avoid breaking changes, we need to keep this behavior. We can remove this in v9.
-  const skipInteractionItemProps = Cell !== HeatmapCell;
+  const skipInteractionItemProps = !shouldRegisterPointerInteractionsGlobally(props.slots);
   const interactionProps = useInteractionItemProps(
     { type: 'heatmap', seriesId, dataIndex },
     skipInteractionItemProps,
