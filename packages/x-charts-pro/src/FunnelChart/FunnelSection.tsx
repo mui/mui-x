@@ -14,7 +14,10 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
   variant?: 'filled' | 'outlined';
 }
 
-export const FunnelSectionPath = styled('path')(() => ({
+export const FunnelSectionPath = styled('path', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(() => ({
   transition:
     'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
 }));
