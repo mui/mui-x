@@ -327,7 +327,11 @@ SparkLineChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.object,
+    current: PropTypes.shape({
+      hideItem: PropTypes.func.isRequired,
+      showItem: PropTypes.func.isRequired,
+      toggleItemVisibility: PropTypes.func.isRequired,
+    }),
   }),
   /**
    * Set to `true` to fill spark line area.
@@ -423,6 +427,55 @@ SparkLineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenIdentifiers: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['line']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+    ]).isRequired,
+  ),
+  /**
    * The controlled axis highlight.
    * Identified by the axis id, and data index.
    */
@@ -493,6 +546,11 @@ SparkLineChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
+  /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   */
+  onVisibilityChange: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'

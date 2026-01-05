@@ -129,6 +129,9 @@ FunnelChart.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      hideItem: PropTypes.func.isRequired,
+      showItem: PropTypes.func.isRequired,
+      toggleItemVisibility: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -259,6 +262,33 @@ FunnelChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     itemId: 'item-3',
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenIdentifiers: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['funnel']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    * @default false
    */
@@ -319,6 +349,11 @@ FunnelChart.propTypes = {
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   */
+  onVisibilityChange: PropTypes.func,
   /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeries]] objects.
