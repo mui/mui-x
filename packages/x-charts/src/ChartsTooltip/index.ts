@@ -13,6 +13,8 @@ export type { UseItemTooltipReturnValue, UseRadarItemTooltipReturnValue } from '
 export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
 export * from './useAxisTooltip';
 export * from './useAxesTooltip';
+export * from './useTooltipPosition';
+export * from './useTooltipAnchor';
 
 export { useMouseTracker } from './utils';
 export * from './ChartTooltip.types';

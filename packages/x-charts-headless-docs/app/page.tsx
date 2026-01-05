@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import Link from 'next/link';
 import { PieChart } from 'packages/x-charts-headless/src';
 import { PieChart as PieChartMaterial } from '@mui/x-charts-material';
 import type { PieChartProps } from '@mui/x-charts/PieChart';
@@ -66,6 +67,25 @@ export default function Home() {
           components and theming
         </li>
       </ul>
+
+      <nav
+        style={{
+          marginBottom: '2rem',
+          padding: '1rem',
+          background: '#f5f5f5',
+          borderRadius: '8px',
+        }}
+      >
+        <strong>Examples:</strong>
+        <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.5rem' }}>
+          <li>
+            <Link href="/base-ui" style={{ color: '#1976d2', textDecoration: 'none' }}>
+              Base UI Integration
+            </Link>{' '}
+            - Headless charts with Base UI tooltip and legend components
+          </li>
+        </ul>
+      </nav>
 
       <div>
         <h2>Headless Pie Chart</h2>
