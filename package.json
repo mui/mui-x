@@ -124,7 +124,6 @@
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "null-loader": "^4.0.1",
-    "nyc": "^17.1.0",
     "playwright": "catalog:",
     "prettier": "^3.7.4",
     "pretty-quick": "^4.2.2",
