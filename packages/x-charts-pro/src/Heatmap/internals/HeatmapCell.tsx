@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import type * as React from 'react';
 import type { SeriesId } from '@mui/x-charts/models';
-import type { HeatmapClasses } from './heatmapClasses';
+import type { HeatmapClasses } from '../heatmapClasses';
 
 export interface HeatmapItemOwnerState {
   seriesId: SeriesId;

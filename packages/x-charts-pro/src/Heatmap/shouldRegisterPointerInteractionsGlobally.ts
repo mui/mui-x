@@ -1,5 +1,5 @@
 import { type HeatmapPlotProps } from './HeatmapPlot';
-import { HeatmapCell } from './HeatmapCell';
+import { HeatmapCell } from './internals/HeatmapCell';
 
 export function shouldRegisterPointerInteractionsGlobally(
   slots: HeatmapPlotProps['slots'],

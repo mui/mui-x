@@ -4,7 +4,7 @@ import useSlotProps from '@mui/utils/useSlotProps';
 import composeClasses from '@mui/utils/composeClasses';
 import { type SeriesId, useInteractionItemProps } from '@mui/x-charts/internals';
 import { getHeatmapUtilityClass } from './heatmapClasses';
-import { HeatmapCell, type HeatmapItemOwnerState } from './HeatmapCell';
+import { HeatmapCell, type HeatmapItemOwnerState } from './internals/HeatmapCell';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapItemSlots {
