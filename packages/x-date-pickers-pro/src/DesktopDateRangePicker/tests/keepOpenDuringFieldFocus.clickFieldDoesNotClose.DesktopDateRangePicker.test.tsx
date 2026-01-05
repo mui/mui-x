@@ -48,4 +48,30 @@ describe('DesktopDateRangePicker keepOpenDuringFieldFocus - clicking field shoul
     expect(popper).not.to.equal(null);
     expect(popper).toBeVisible();
   });
+
+  it('after selecting a start date (single input), clicking the field focuses it and keeps popper open', async () => {
+    const { user } = render(<DesktopDateRangePicker keepOpenDuringFieldFocus />);
+
+    await openPickerAsync(user, {
+      type: 'date-range',
+      fieldType: 'single-input',
+      initialFocus: 'start',
+    });
+
+    // Pick a start date in the calendar (January 15th for the default test date)
+    const dayCell = screen.getByRole('gridcell', { name: '15' });
+    await user.click(dayCell);
+
+    const textbox = getFieldSectionsContainer();
+    await user.click(textbox);
+
+    // Popper should stay open
+    const popper = screen.queryByRole('dialog') ?? screen.queryByRole('tooltip');
+    expect(popper).not.to.equal(null);
+    expect(popper).toBeVisible();
+
+    // And the field should receive focus (or contain the focused element)
+    expect(textbox === document.activeElement || textbox.contains(document.activeElement!)).to
+      .equal(true);
+  });
 });

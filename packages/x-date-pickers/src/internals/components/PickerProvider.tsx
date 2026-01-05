@@ -184,7 +184,7 @@ export interface PickerContextValue<
    * If true, the picker should open when the user focuses/clicks the field input to edit.
    * Controlled by the component prop `keepOpenDuringFieldFocus`.
    */
-  keepPickerOpen?: boolean;
+  keepOpenDuringFieldFocus?: boolean;
   /**
    * Whether the Picker has any value picking steps left.
    */

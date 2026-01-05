@@ -307,7 +307,7 @@ export const usePicker = <
       reduceAnimations,
       triggerRef,
       triggerStatus,
-      keepPickerOpen: Boolean(keepOpenDuringFieldFocus),
+      keepOpenDuringFieldFocus: Boolean(keepOpenDuringFieldFocus),
       hasNextStep,
       fieldFormat: format ?? '',
       name,

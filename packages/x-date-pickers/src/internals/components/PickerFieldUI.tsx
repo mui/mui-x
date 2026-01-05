@@ -520,7 +520,7 @@ export function useFieldTextFieldProps<
   // When requested, open the picker when the user focuses/clicks the field to edit
   if (
     pickerContext &&
-    pickerContext.keepPickerOpen &&
+    pickerContext.keepOpenDuringFieldFocus &&
     pickerContext.triggerStatus === 'enabled' &&
     !pickerContext.open &&
     !pickerContext.readOnly &&

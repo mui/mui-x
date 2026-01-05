@@ -38,7 +38,10 @@ export const useDesktopRangePicker = <
 
   const fieldType = getRangeFieldType(slots.field);
   const isSingleInput = fieldType === 'single-input';
-  const viewContainerRole = isSingleInput ? 'dialog' : 'tooltip';
+  // When keepOpenDuringFieldFocus is enabled, we want the popper to behave like a tooltip
+  // so focus is not trapped inside the views and the user can click back into the field.
+  // Dialog only when focus trapping is desired (single input without the keep-open behavior).
+  const viewContainerRole = props.keepOpenDuringFieldFocus || !isSingleInput ? 'tooltip' : 'dialog';
   const rangePositionResponse = useRangePosition(props);
 
   const getStepNavigation = createRangePickerStepNavigation({
