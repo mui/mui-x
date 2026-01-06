@@ -20,5 +20,5 @@ export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  identifierCleaner: identifierCleanerSeriesIdDataIndex<'pie'>,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

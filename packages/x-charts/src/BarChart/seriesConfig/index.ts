@@ -22,5 +22,5 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  identifierCleaner: identifierCleanerSeriesIdDataIndex<'bar'>,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

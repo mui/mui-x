@@ -20,5 +20,5 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   radiusExtremumGetter,
   rotationExtremumGetter,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  identifierCleaner: identifierCleanerSeriesIdDataIndex<'radar'>,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

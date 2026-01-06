@@ -9,16 +9,13 @@ const identifierCleaner: IdentifierCleaner<'sankey'> = (identifier) => {
       nodeId: identifier.nodeId,
     };
   }
-  if (identifier.subType === 'link') {
-    return {
-      type: identifier.type,
-      seriesId: identifier.seriesId,
-      subType: 'link',
-      sourceId: identifier.sourceId,
-      targetId: identifier.targetId,
-    };
-  }
-  throw new Error('Invalid identifier for Sankey chart');
+  return {
+    type: identifier.type,
+    seriesId: identifier.seriesId,
+    subType: 'link',
+    sourceId: identifier.sourceId,
+    targetId: identifier.targetId,
+  };
 };
 
 export default identifierCleaner;

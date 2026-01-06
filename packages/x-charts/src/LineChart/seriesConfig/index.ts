@@ -22,5 +22,5 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  identifierCleaner: identifierCleanerSeriesIdDataIndex<'line'>,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

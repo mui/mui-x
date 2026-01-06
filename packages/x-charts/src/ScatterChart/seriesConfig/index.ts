@@ -21,5 +21,5 @@ export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  identifierCleaner: identifierCleanerSeriesIdDataIndex<'scatter'>,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };
