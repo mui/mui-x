@@ -120,7 +120,7 @@
     "jsdom": "^26.1.0",
     "lerna": "^9.0.3",
     "magic-string": "^0.30.21",
-    "markdownlint-cli2": "^0.18.1",
+    "markdownlint-cli2": "^0.20.0",
     "moment": "catalog:",
     "moment-timezone": "catalog:",
     "playwright": "catalog:",
