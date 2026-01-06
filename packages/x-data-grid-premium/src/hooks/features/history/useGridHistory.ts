@@ -47,14 +47,14 @@ export const useGridHistory = (
     | 'columns'
     | 'isCellEditable'
     | 'dataSource'
-    | 'historyQueueSize'
+    | 'historyStackSize'
     | 'historyEventHandlers'
     | 'historyValidationEvents'
     | 'onUndo'
     | 'onRedo'
   >,
 ) => {
-  const { historyQueueSize, onUndo, onRedo, historyValidationEvents } = props;
+  const { historyStackSize, onUndo, onRedo, historyValidationEvents } = props;
 
   // Use default history events if none provided
   const historyEventHandlers = React.useMemo(() => {
@@ -69,8 +69,8 @@ export const useGridHistory = (
   }, [apiRef, props.columns, props.isCellEditable, props.dataSource, props.historyEventHandlers]);
 
   const isEnabled = React.useMemo(
-    () => historyQueueSize > 0 && !isObjectEmpty(historyEventHandlers),
-    [historyQueueSize, historyEventHandlers],
+    () => historyStackSize > 0 && !isObjectEmpty(historyEventHandlers),
+    [historyStackSize, historyEventHandlers],
   );
 
   const isValidationNeeded = React.useMemo(
@@ -95,7 +95,7 @@ export const useGridHistory = (
   // Validation event unsubscribers
   const validationEventUnsubscribersRef = React.useRef<(() => void)[]>([]);
 
-  const setHistoryState = React.useCallback(
+  const updateHistoryState = React.useCallback(
     (newState: Partial<GridHistoryState>) => {
       apiRef.current.setState((state) => ({
         ...state,
@@ -122,24 +122,24 @@ export const useGridHistory = (
       newQueue.push(item);
 
       // If queue exceeds size, remove oldest items
-      if (newQueue.length > historyQueueSize) {
-        newQueue = newQueue.slice(newQueue.length - historyQueueSize);
+      if (newQueue.length > historyStackSize) {
+        newQueue = newQueue.slice(newQueue.length - historyStackSize);
       }
 
-      setHistoryState({
+      updateHistoryState({
         queue: newQueue,
         currentPosition: newQueue.length - 1,
       });
     },
-    [apiRef, setHistoryState, historyQueueSize],
+    [apiRef, updateHistoryState, historyStackSize],
   );
 
   const clear = React.useCallback(() => {
-    setHistoryState({
+    updateHistoryState({
       queue: [],
       currentPosition: -1,
     });
-  }, [setHistoryState]);
+  }, [updateHistoryState]);
 
   const clearUndoItems = React.useCallback(() => {
     const queue = gridHistoryQueueSelector(apiRef);
@@ -149,20 +149,20 @@ export const useGridHistory = (
     if (currentPosition >= queue.length - 1) {
       clear();
     } else {
-      setHistoryState({
+      updateHistoryState({
         queue: queue.slice(currentPosition + 1),
         currentPosition: -1,
       });
     }
-  }, [apiRef, clear, setHistoryState]);
+  }, [apiRef, clear, updateHistoryState]);
 
   const clearRedoItems = React.useCallback(() => {
     const queue = gridHistoryQueueSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-    setHistoryState({
+    updateHistoryState({
       queue: queue.slice(currentPosition + 1),
     });
-  }, [apiRef, setHistoryState]);
+  }, [apiRef, updateHistoryState]);
 
   const canUndo = React.useCallback(() => gridHistoryCanUndoSelector(apiRef), [apiRef]);
   const canRedo = React.useCallback(() => gridHistoryCanRedoSelector(apiRef), [apiRef]);
@@ -184,7 +184,7 @@ export const useGridHistory = (
     const queue = gridHistoryQueueSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
 
-    if (historyQueueSize === 0) {
+    if (historyStackSize === 0) {
       if (queue.length > 0) {
         clear();
       }
@@ -224,7 +224,7 @@ export const useGridHistory = (
         }
       }
     }
-  }, [apiRef, historyEventHandlers, historyQueueSize, clear, clearUndoItems, clearRedoItems]);
+  }, [apiRef, historyEventHandlers, historyStackSize, clear, clearUndoItems, clearRedoItems]);
 
   const debouncedValidateQueueItems = React.useMemo(
     () => debounce(validateQueueItems, 0),
@@ -260,7 +260,7 @@ export const useGridHistory = (
       await handler[operation](data);
       operationStateRef.current = 'waiting-replay';
 
-      setHistoryState({
+      updateHistoryState({
         currentPosition: operation === 'undo' ? currentPosition - 1 : currentPosition + 1,
       });
 
@@ -279,7 +279,7 @@ export const useGridHistory = (
       historyEventHandlers,
       clearUndoItems,
       clearRedoItems,
-      setHistoryState,
+      updateHistoryState,
       validateQueueItems,
     ],
   );
@@ -316,10 +316,6 @@ export const useGridHistory = (
 
   const handleKeyDown = React.useCallback(
     async (event: React.KeyboardEvent<HTMLElement>) => {
-      if (!isEnabled) {
-        return;
-      }
-
       if (!isUndoShortcut(event) && !isRedoShortcut(event)) {
         return;
       }
@@ -331,26 +327,25 @@ export const useGridHistory = (
       event.stopPropagation();
 
       await action();
-      return;
     },
-    [apiRef, isEnabled],
+    [apiRef],
   );
 
   useGridNativeEventListener(
     apiRef,
     () => apiRef.current.rootElementRef.current,
     'keydown',
-    runIf(historyQueueSize > 0, handleKeyDown),
+    runIf(isEnabled, handleKeyDown),
   );
 
   useGridEvent(apiRef, 'undo', onUndo);
   useGridEvent(apiRef, 'redo', onRedo);
 
   React.useEffect(() => {
-    setHistoryState({
+    updateHistoryState({
       enabled: isEnabled,
     });
-  }, [isEnabled, setHistoryState]);
+  }, [isEnabled, updateHistoryState]);
 
   React.useEffect(() => {
     if (!isValidationNeeded) {
@@ -370,7 +365,7 @@ export const useGridHistory = (
   }, [apiRef, isValidationNeeded, historyValidationEvents, debouncedValidateQueueItems]);
 
   React.useEffect(() => {
-    if (historyQueueSize === 0) {
+    if (historyStackSize === 0) {
       return () => {};
     }
 
@@ -397,5 +392,5 @@ export const useGridHistory = (
       eventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       eventUnsubscribersRef.current = [];
     };
-  }, [apiRef, historyEventHandlers, historyQueueSize, addToQueue]);
+  }, [apiRef, historyEventHandlers, historyStackSize, addToQueue]);
 };

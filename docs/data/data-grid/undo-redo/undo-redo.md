@@ -11,7 +11,7 @@ It tracks registered events, listens for keyboard events and adds toolbar button
 
 ## Basic usage
 
-The undo/redo feature is enabled when at least one event handler is registered and `historyQueueSize` is greater than 0.
+The undo/redo feature is enabled when at least one event handler is registered and `historyStackSize` is greater than 0.
 The toolbar automatically displays undo and redo buttons when the feature is active.
 
 Users can:
@@ -23,10 +23,10 @@ Users can:
 
 ### Disabling the undo and redo
 
-To disable the undo/redo feature, set `historyQueueSize` to `0`:
+To disable the undo/redo feature, set `historyStackSize` to `0`:
 
 ```tsx
-<DataGridPremium historyQueueSize={0} />
+<DataGridPremium historyStackSize={0} />
 ```
 
 This prevents any history from being tracked and hides the undo/redo buttons from the toolbar.
@@ -56,7 +56,7 @@ A history event handler is an object that defines how to `store()`, `undo()`, `r
 ```tsx
 interface GridHistoryEventHandler<T = any> {
   // Store the data when the event occurs.
-  // Returns null to skip adding the current change to the queue (to control undo step granularity)
+  // Returns null to skip adding the current change to the stack (to control undo step granularity)
   store: (...params: any[]) => T | null;
 
   // Undo the action
@@ -96,7 +96,7 @@ Remove the `updateRow` method to see the toolbar adjustment.
 
 ## Custom event handlers
 
-Provide your own map of the event handlers via the `historyEventHandlers` prop to change the default handlers or to track more events and add them to the undo/redo queue.
+Provide your own map of the event handlers via the `historyEventHandlers` prop to change the default handlers or to track more events and add them to the undo/redo stack.
 Use default handler exports (like `createCellEditHistoryHandler()`) to create a map that can combine:
 
 - default handlers
@@ -128,9 +128,9 @@ To reduce the number of undo steps, changes on the filter model items that do no
 The undo/redo state is automatically revalidated when certain grid events occur.
 By default, validation happens on `paginationModelChange`, `columnsChange` and `rowsSet` events.
 
-During revalidation, the `validate()` method of the current item in the queue is called for the `undo` operation and the `validate()` method of the next item in the queue is called for the `redo` operation.
-If validation fails for the `undo` operation, all items in the queue before the current item and the current item itself are removed from the queue.
-If validation fails for the `redo` operation, all items after the current item in the queue are removed from the queue.
+During revalidation, the `validate()` method of the current item in the stack is called for the `undo` operation and the `validate()` method of the next item in the stack is called for the `redo` operation.
+If validation fails for the `undo` operation, all items in the stack before the current item and the current item itself are removed from the stack.
+If validation fails for the `redo` operation, all items after the current item in the stack are removed from the stack.
 
 ### Customizing validation events
 

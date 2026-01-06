@@ -161,19 +161,19 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   chartsIntegration: boolean;
   /**
-   * The maximum size of the history queue.
+   * The maximum size of the history stack.
    * Set to 0 to disable the undo/redo feature.
    * @default 30
    */
-  historyQueueSize: number;
+  historyStackSize: number;
   /**
    * Map of grid events to their undo/redo handlers.
    * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
    */
   historyEventHandlers: Record<GridEvents, GridHistoryEventHandler<any>>;
   /**
-   * List of grid events after which the history queue items should be re-validated.
-   * @default ['columnsChange', 'rowsSet']
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'paginationModelChange']
    */
   historyValidationEvents: GridEvents[];
 }

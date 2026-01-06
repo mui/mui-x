@@ -241,7 +241,7 @@ describe('<DataGridPremium /> - History', () => {
   });
 
   describe('Queue management', () => {
-    it('should respect historyQueueSize limit and keep the latest items', async () => {
+    it('should respect historyStackSize limit and keep the latest items', async () => {
       let lastUndoData: any = null;
       const customHandler: GridHistoryEventHandler = {
         store: (params: any) => ({ rowId: params.id }),
@@ -256,7 +256,7 @@ describe('<DataGridPremium /> - History', () => {
       } as Record<GridEvents, GridHistoryEventHandler>;
 
       const { user } = render(
-        <Test historyQueueSize={2} historyEventHandlers={historyEventHandlers} />,
+        <Test historyStackSize={2} historyEventHandlers={historyEventHandlers} />,
       );
 
       // Make 3 clicks
@@ -508,7 +508,7 @@ describe('<DataGridPremium /> - History', () => {
   });
 
   describe('Disabled history', () => {
-    it('should not track history when `historyQueueSize` is 0', async () => {
+    it('should not track history when `historyStackSize` is 0', async () => {
       const customHandler: GridHistoryEventHandler = {
         store: () => ({ data: 'test' }),
         undo: async () => {},
@@ -520,7 +520,7 @@ describe('<DataGridPremium /> - History', () => {
       } as Record<GridEvents, GridHistoryEventHandler>;
 
       const { user } = render(
-        <Test historyQueueSize={0} historyEventHandlers={historyEventHandlers} />,
+        <Test historyStackSize={0} historyEventHandlers={historyEventHandlers} />,
       );
 
       const cell = getCell(0, 2);

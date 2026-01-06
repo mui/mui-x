@@ -352,7 +352,7 @@ export const createDefaultHistoryHandlers = (
     | GridHistoryEventHandler<GridClipboardPasteHistoryData>
   >;
 
-  const canHaveEditing = props.columns.some((col) => col.editable) || props.isCellEditable;
+  const canHaveEditing = props.isCellEditable || props.columns.some((col) => col.editable);
 
   if (!canHaveEditing) {
     return handlers;

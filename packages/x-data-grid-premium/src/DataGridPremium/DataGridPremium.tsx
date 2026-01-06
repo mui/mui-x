@@ -606,14 +606,14 @@ DataGridPremiumRaw.propTypes = {
    */
   historyEventHandlers: PropTypes.object,
   /**
-   * The maximum size of the history queue.
+   * The maximum size of the history stack.
    * Set to 0 to disable the undo/redo feature.
    * @default 30
    */
-  historyQueueSize: PropTypes.number,
+  historyStackSize: PropTypes.number,
   /**
-   * List of grid events after which the history queue items should be re-validated.
-   * @default ['columnsChange', 'rowsSet']
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'paginationModelChange']
    */
   historyValidationEvents: PropTypes.arrayOf(
     PropTypes.oneOf([
