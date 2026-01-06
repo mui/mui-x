@@ -12,7 +12,7 @@ export function FocusedLineMark() {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  if (focusedItem === null || focusedItem.seriesType !== 'line' || !lineSeries) {
+  if (focusedItem === null || focusedItem.type !== 'line' || !lineSeries) {
     return null;
   }
 

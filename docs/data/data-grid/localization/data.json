@@ -179,7 +179,7 @@
     "languageTag": "ja-JP",
     "importName": "jaJP",
     "localeName": "Japanese",
-    "missingKeysCount": 97,
+    "missingKeysCount": 76,
     "totalKeysCount": 221,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-data-grid/src/locales/jaJP.ts"
   },

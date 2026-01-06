@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": {
-      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewProApiRef()</code>."
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewApiProRef()</code>."
     },
     "canMoveItemToNewPosition": {
       "description": "Used to determine if a given item can move to some new position.",
@@ -93,6 +93,16 @@
         "boolean": {
           "name": "boolean",
           "description": "<code>true</code> if the item can be reordered."
+        }
+      }
+    },
+    "isItemSelectionDisabled": {
+      "description": "Used to determine if a given item should have selection disabled.",
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> if the item should have selection disabled."
         }
       }
     },

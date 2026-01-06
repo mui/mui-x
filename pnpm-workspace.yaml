@@ -29,7 +29,6 @@ catalog:
   'playwright': ^1.57.0
   '@react-spring/web': ^10.0.3
   '@types/chance': ^1.1.7
-  '@types/d3-scale': ^4.0.9
   '@types/karma': ^6.3.9
   '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
@@ -48,7 +47,7 @@ catalog:
   '@vitest/browser-playwright': ^4.0.15
   '@vitest/coverage-v8': ^4.0.15
   '@vitest/ui': ^4.0.15
-  autoprefixer: ^10.4.22
+  autoprefixer: ^10.4.23
   babel-plugin-optimize-clsx: ^2.6.2
   babel-plugin-react-remove-properties: ^0.3.1
   babel-plugin-transform-react-remove-prop-types: ^0.4.24
@@ -69,7 +68,7 @@ catalog:
   prop-types: ^15.8.1
   react: 19.2.3
   react-dom: 19.2.3
-  react-router: ^7.10.1
+  react-router: ^7.11.0
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.1.2
