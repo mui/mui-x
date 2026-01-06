@@ -10,21 +10,20 @@ components: ChartsLegend, ChartsText, ContinuousColorLegend, PiecewiseColorLegen
 
 A legend is a UI element that maps symbols and colors to series labels, helping users identify different data series in a chart.
 
-## Basic display
-
 In chart components, the legend links series with `label` properties and their colors.
 
 {{"demo": "BasicLegend.js"}}
 
 ## Customization
 
-You can customize the legend using classes and properties.
+You can customize a legend's dimensions, position, and styles using the classes and properties described below.
 
 ### Dimensions
 
 You can customize much of the legend using CSS properties.
 The main class for the legend container is `.MuiChartsLegend-root`.
-Alternatively, you can use the `legendClasses` variable if using CSS-in-JS to target the elements.
+
+Alternatively, you can use the `legendClasses` variable if using CSS-in-JS (such as Emotion with Material UI) to target the elements.
 
 Each legend item is composed of two main elements: the `mark` and the `label`.
 
@@ -41,14 +40,14 @@ You can also move it with the `position: { vertical, horizontal }` property, whi
 - `vertical`: `'top'`, `'middle'`, or `'bottom'`
 - `horizontal`: `'left'`, `'middle'`, or `'right'`
 
-By default, the legend is placed above the charts.
+By default, the legend is placed above the chart.
 
-Position management relies on a [grid-template](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/grid-template).
-If you create a custom legend component, you need to set the CSS property `grid-area` to `'legend'` to place your component correctly.
+Position management relies on the [`grid-template` CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/grid-template).
+If you create a custom legend component, you need to set the CSS property `grid-area` to `'legend'` to position your component correctly.
 
 :::warning
-The `position` property is only available in `slotProps`, but not in the props for `ChartsLegend`.
-In the latter case, you can place the legend wherever you want.
+The `position` property is only available in `slotProps`, not in the props for `ChartsLegend`.
+In the latter case, you can place the legend wherever you prefer.
 :::
 
 {{"demo": "LegendPosition.js", "hideToolbar": true, "bg": "playground"}}
@@ -63,8 +62,7 @@ You can hide the legend with the `hideLegend` prop of the Chart.
 
 You can change the `label` style by targeting the root component's font properties.
 
-To change the `mark` color or shape, use the `fill` class instead.
-Keep in mind that the `mark` is an SVG element, so use the `fill` property to change its color.
+The mark is an SVG element, so you must use the `fill` property via the `sx` prop to change its color, as shown in the demo below:
 
 {{"demo": "LegendTextStyling.js", "hideToolbar": true, "bg": "playground"}}
 
@@ -83,7 +81,7 @@ For more advanced use cases, you can provide a component to the `labelMarkType` 
 
 Passing a component to `labelMarkType` affects not only the legend but also other places where the label mark is shown, such as tooltips.
 
-Customizing the mark shape of a pie chart depending on the series is slightly different.
+Customizing the mark shape of a pie chart based on the series is slightly different.
 See [this example](/x/react-charts/pie-demo/#pie-chart-with-custom-mark-in-legend-and-tooltip) for details.
 
 To ensure compatibility with [gradients and patterns](/x/react-charts/styling/#gradients-and-patterns), consider using SVG instead of HTML in the `labelMarkType`.
@@ -107,21 +105,21 @@ Each legend item has a `data-series` attribute where its value is the ID of the 
 For advanced customization, you can create your own legend with the `useLegend()` hook.
 This hook returns the items that the default legend would plot so you can focus on the rendering.
 
-This demo also shows how to use `labelMarkType` together with a custom legend to create a legend with custom shapes.
+The demo below shows how to use `labelMarkType` together with `useLegend()` to create a legend with custom shapes.
 
 This approach uses slots to render the legend items.
-See [HTML components docs](/x/react-charts/components/#html-components) for another demo showing how to use it with composition.
+See [HTML components](/x/react-charts/components/#html-components) for a demo that shows how to implement it when composing a custom chart.
 
 {{"demo": "CustomLegend.js"}}
 
 ## Color legend
 
-To display a legend associated with a [colorMap](https://mui.com/x/react-charts/styling/#values-color), you can use:
+To display a legend associated with a [`colorMap`](/x/react-charts/styling/#values-color), you can use:
 
 - `ContinuousColorLegend` if you're using `colorMap.type='continuous'`
 - `PiecewiseColorLegend` if you're using `colorMap.type='piecewise'`
 
-You can override the `legend` slot to display the desired legend, or use the [composition API](https://mui.com/x/react-charts/composition/) to add as many legends as needed.
+You can override the `legend` slot to display the desired legend, or use the [composition API](/x/react-charts/composition/) to add as many legends as needed.
 
 {{"demo": "VeryBasicColorLegend.js"}}
 
@@ -129,19 +127,19 @@ You can override the `legend` slot to display the desired legend, or use the [co
 
 To select the color mapping to represent, use the following props:
 
-- `axisDirection`: `'x'`, `'y'`, or `'z'`—indicates which axis contains the `colorMap` definition
-- `axisId`: The ID of the axis to use if the selected direction contains multiple axes
+- `axisDirection`: `'x'`, `'y'`, or `'z'` - indicates which axis contains the `colorMap` definition
+- `axisId`: The ID of the axis to use (if the selected direction contains multiple axes)
 
 {{"demo": "BasicColorLegend.js"}}
 
 ### Position
 
-Positioning this component works the same way as the [legend for series](#position).
+Positioning for the color legend works the same way as the [series legend]](#position).
 
 ### Label position
 
 You can position labels in relation to the marks or gradient with the `labelPosition` prop.
-The general values accepted are `'start'`, `'end'`, and `'extremes'`.
+The values accepted are `'start'`, `'end'`, and `'extremes'`.
 The piecewise legend has two additional options: `'inline-start'` and `'inline-end'`.
 
 - With `direction='horizontal'`, `'start'` places labels above the visual marker, while `'end'` places them below
@@ -159,7 +157,7 @@ For the piecewise legend, two extra values are accepted:
 
 You can modify the shape of the gradient using the `length` and `thickness` props.
 The `length` can be either a number (in px) or a percentage string.
-The `"100%"` corresponds to the parent dimension.
+`"100%"` corresponds to the parent dimension.
 
 To format labels, use the `minLabel`/`maxLabel` props.
 They accept either a string to display or a function `({value, formattedValue}) => string`.
@@ -170,11 +168,10 @@ You can also reverse the gradient with the `reverse` prop.
 
 ### Piecewise color mapping
 
-The piecewise legend is similar to the series legend.
-It accepts the same props for [customization](#dimensions).
+The piecewise legend is similar to the series legend when it comes to color mapping and accepts the same props for [customization](#dimensions).
 
 To override labels generated by default, provide a `labelFormatter` prop.
-It takes the min/max of the piece and returns the label.
+This prop takes the minimum or maximum of the piece and returns the label.
 
 Values can be `null` for the first and last pieces.
 Returning `null` removes the piece from the legend.
@@ -185,14 +182,14 @@ labelFormatter = ({ index, length, min, max, formattedMin, formattedMax }) =>
   string | null;
 ```
 
-You can change the `markType` with the `markType` prop.
+You can change the mark type with the `markType` prop.
 Since the color values are based on the axis and not the series, you must set `markType` directly on the legend.
 
 {{"demo": "PiecewiseInteractiveDemo.js", "hideToolbar": true, "bg": "playground"}}
 
 ## Click event
 
-You can pass an `onItemClick` function to the `ChartsLegend` or `PiecewiseColorLegend` components to handle click events.
+You can pass an `onItemClick()` function to the `ChartsLegend` or `PiecewiseColorLegend` components to handle click events.
 They both provide the following signature:
 
 ```js
@@ -204,6 +201,6 @@ const clickHandler = (
 ```
 
 The `context` object contains different properties depending on the legend type.
-Click the legend items to see their content.
+Click the legend items in the demo below to see their content.
 
 {{"demo": "LegendClick.js"}}
