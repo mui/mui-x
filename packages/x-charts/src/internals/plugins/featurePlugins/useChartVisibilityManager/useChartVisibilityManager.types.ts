@@ -15,9 +15,6 @@ export type IsItemVisibleFunction = {
   /**
    * Function to check if an item is visible based on its identifier.
    *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
-   *
    * @param {VisibilityIdentifier} identifier The identifier of the item to check.
    * @returns {boolean} Whether the item is visible.
    */
@@ -28,26 +25,17 @@ export interface UseChartVisibilityManagerInstance<T extends ChartSeriesType> {
   /**
    * Hide an item by its identifier.
    *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
-   *
    * @param {VisibilityIdentifier} identifier The identifier of the item to hide.
    */
   hideItem(identifier: VisibilityIdentifier<T>): void;
   /**
    * Show an item by its identifier.
    *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
-   *
    * @param {VisibilityIdentifier} identifier The identifier of the item to show.
    */
   showItem(identifier: VisibilityIdentifier<T>): void;
   /**
    * Toggle the visibility of an item by its identifier.
-   *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
    *
    * @param {VisibilityIdentifier} identifier The identifier of the item to toggle.
    */
@@ -71,7 +59,7 @@ export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> 
    *   {
    *     type: 'pie',
    *     seriesId: 'series-1',
-   *     itemId: 'item-3',
+   *     dataIndex: 3,
    *   },
    *   {
    *     type: 'line',
