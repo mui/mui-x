@@ -38,8 +38,8 @@ export function useRegisterPointerInteractions(
   React.useEffect(() => {
     const svg = svgRef.current;
 
-    if (svg == null) {
-      return () => void 0;
+    if (!svg) {
+      return undefined;
     }
 
     function onPointerEnter() {

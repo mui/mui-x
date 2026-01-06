@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSvgRef } from '../../hooks';
 import type { BarItemIdentifier } from '../../models';
 import { type ProcessedBarSeriesData } from '../types';
 import { useUtilityClasses } from '../barClasses';
@@ -28,20 +29,34 @@ export function BatchBarPlot({
   skipAnimation = false,
 }: BatchBarPlotProps) {
   const prevCursorRef = React.useRef<string | null>(null);
+  const svgRef = useSvgRef();
 
   const onItemEnter = onItemClick
     ? () => {
+        const svg = svgRef.current;
+
+        if (!svg) {
+          return;
+        }
+
         if (prevCursorRef.current == null) {
-          prevCursorRef.current = document.body.style.cursor;
-          document.body.style.cursor = 'pointer';
+          prevCursorRef.current = svg.style.cursor;
+          // eslint-disable-next-line react-compiler/react-compiler
+          svg.style.cursor = 'pointer';
         }
       }
     : undefined;
 
   const onItemLeave = onItemClick
     ? () => {
+        const svg = svgRef.current;
+
+        if (!svg) {
+          return;
+        }
+
         if (prevCursorRef.current != null) {
-          document.body.style.cursor = prevCursorRef.current;
+          svg.style.cursor = prevCursorRef.current;
           prevCursorRef.current = null;
         }
       }

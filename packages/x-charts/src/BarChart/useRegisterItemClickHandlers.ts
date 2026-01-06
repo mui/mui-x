@@ -28,8 +28,8 @@ export function useRegisterItemClickHandlers(
   React.useEffect(() => {
     const element = svgRef.current;
 
-    if (element == null || onItemClick == null) {
-      return () => void 0;
+    if (!element || !onItemClick) {
+      return undefined;
     }
 
     let lastPointerUp: Pick<MouseEvent, 'clientX' | 'clientY'> | null = null;
