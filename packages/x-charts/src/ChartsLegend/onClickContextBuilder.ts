@@ -7,4 +7,5 @@ export const seriesContextBuilder = (context: LegendItemParams): SeriesLegendIte
     label: context.label,
     seriesId: context.seriesId!,
     itemId: context.itemId,
+    dataIndex: context.dataIndex,
   }) as const;

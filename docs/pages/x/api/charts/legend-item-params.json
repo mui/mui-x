@@ -13,6 +13,8 @@
     "maxValue": { "type": { "description": "number | Date | null" }, "required": true },
     "minValue": { "type": { "description": "number | Date | null" }, "required": true },
     "seriesId": { "type": { "description": "SeriesId" }, "required": true },
-    "itemId": { "type": { "description": "PieItemId" } }
+    "dataIndex": { "type": { "description": "number" } },
+    "itemId": { "type": { "description": "PieItemId" } },
+    "type": { "type": { "description": "ChartSeriesType" } }
   }
 }
