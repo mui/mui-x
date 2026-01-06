@@ -226,7 +226,14 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     <React.Fragment>
       {svgRef.current &&
         ReactDOM.createPortal(
-          <rect ref={anchorRef} {...itemPosition} display="hidden" />,
+          <rect
+            ref={anchorRef}
+            {...itemPosition}
+            // On ios a rect with no width/height is not detectable by the popper.js
+            opacity={0}
+            width={1}
+            height={1}
+          />,
           svgRef.current,
         )}
       <NoSsr>
