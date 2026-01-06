@@ -10,7 +10,7 @@ packageName: '@mui/x-charts'
 
 <p class="description">Learn how to use composition to build advanced custom Charts.</p>
 
-The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its children, which can then be composed.
+The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants, which can then be composed.
 
 There are two main types of components used to create Charts: [structural](#structural-components) and [graphical](#graphical-components).
 
@@ -19,7 +19,7 @@ There are two main types of components used to create Charts: [structural](#stru
 Structural components are used to define a chart's dimensions, surfaces, and data.
 
 - `ChartDataProvider` provides data to children components.
-- `ChartsSurface` renders the SVG elements.
+- `ChartsSurface` renders the SVG element.
 - `ChartContainer` combines the Data Provider and Surface components, and is useful when you only need to customize graphical elements.
 
 :::info
@@ -66,7 +66,7 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 ## Graphical components
 
 Graphical components are used to render the visual elements of a chart.
-They are children of the [structural components](#structural-components) described above.
+They are children of [`ChartDataProvider`](#structural-components) described above.
 These are too numerous to list, but common examples include:
 
 - `LinePlot`
@@ -168,7 +168,7 @@ By modifying the series `type` property, you can switch between rendering a line
 
 :::info
 The CSS `z-index` property does not exist on SVG elements, so the order of SVG elements in the composed component is the only way to define how they overlap.
-Elements rendered later will overlap on top of elements rendered earlier.
+Elements rendered later display above elements rendered earlier.
 :::
 
 ### Plotting
@@ -225,7 +225,7 @@ See [Axis—Grid](/x/react-charts/axis/#grid) for more information.
 
 ### Legend
 
-Use `ChartsLegend` to add a legend to the component.
+Use `ChartsLegend` to display a legend with information about the chart.
 
 :::warning
 `ChartsLegend` is an HTML element since v8.
