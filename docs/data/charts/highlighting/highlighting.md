@@ -62,8 +62,7 @@ Its value is an array of `{ axisId: string, dataIndex: number }` objects.
 When the array is empty, nothing is highlighted.
 
 The `onHighlightedAxisChange` handler triggers each time the pointer crosses the boundaries between two axis values.
-It receives an array of one `{ axisId, dataIndex }` object per axis.
-The handler ignores axes without a `data` property.
+It receives an array of one `{ axisId, dataIndex }` object per axis containing at least one data point.
 
 :::warning
 The `onHighlightedAxisChange` handler can trigger at a high frequency when the user moves their pointer over the chart.
