@@ -4,6 +4,7 @@ import { tooltipGetter } from './tooltipGetter';
 import { calculateSankeyLayout } from '../calculateSankeyLayout';
 import tooltipItemPositionGetter from './tooltipPosition';
 import identifierSerializer from './identifierSerializer';
+import identifierCleaner from './identifierCleaner';
 
 // Simple passthrough functions for sankey chart
 const seriesProcessor = (series: any) => series;
@@ -30,4 +31,5 @@ export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
   identifierSerializer,
+  identifierCleaner,
 };

@@ -1,5 +1,8 @@
-import type { ChartSeriesType, ChartsSeriesConfig } from '../../../../models/seriesType/config';
+import type { SeriesItemIdentifier } from '../../../../models';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export type IdentifierCleaner<TSeriesType extends ChartSeriesType> = (
-  identifier: Partial<ChartsSeriesConfig[TSeriesType]['itemIdentifier']> & { type: TSeriesType },
-) => ChartsSeriesConfig[TSeriesType]['itemIdentifier'];
+export type IdentifierCleaner<
+  T extends ChartSeriesType = ChartSeriesType,
+  S extends SeriesItemIdentifier<T> = SeriesItemIdentifier<T>,
+  I extends S = S,
+> = (identifier: I) => S;

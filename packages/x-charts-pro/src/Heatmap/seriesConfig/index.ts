@@ -1,6 +1,7 @@
 import {
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
+  identifierCleanerSeriesIdDataIndex,
 } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
 import seriesProcessor from './seriesProcessor';
@@ -19,4 +20,5 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

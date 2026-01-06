@@ -30,15 +30,15 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
   /**
    * A function to serialize the series item identifier into a unique string.
-   * @param {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} identifier The series item identifier.
+   * @param {SeriesItemIdentifier<TSeriesType>} identifier The series item identifier.
    * @returns {string} A unique string representation of the identifier.
    */
   identifierSerializer: IdentifierSerializer<TSeriesType>;
   /**
    * A function to clean a series item identifier, returning only the properties
    * relevant to the series type.
-   * @param {Partial<ChartsSeriesConfig[TSeriesType]['itemIdentifier']> & { type: TSeriesType }} identifier The partial identifier to clean.
-   * @returns {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} A cleaned identifier with only the relevant properties.
+   * @param {Partial<SeriesItemIdentifier<TSeriesType>> & { type: TSeriesType }} identifier The partial identifier to clean.
+   * @returns {SeriesItemIdentifier<TSeriesType>} A cleaned identifier with only the relevant properties.
    */
   identifierCleaner: IdentifierCleaner<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
