@@ -74,7 +74,7 @@ const linkBE = {
 } as const;
 
 function test(
-  direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown',
+  direction: 'ArrowRight' | 'ArrowLeft' | 'ArrowUp' | 'ArrowDown' | 'A',
   initialFocus: FocusedItemIdentifier<'sankey'> | null,
   align: 'left' | 'justify' = 'left',
 ) {
@@ -172,5 +172,11 @@ describe('<Sankey /> - keyboard navigation', () => {
     it('should stay if source has no other link', async () => {
       expect(test('ArrowUp', linkBE)).to.deep.equal(linkBE);
     });
+  });
+
+  it('should no move is the key is not an arrow key', async () => {
+    expect(test('A', null)).to.deep.equal(null);
+    expect(test('A', nodeC)).to.deep.equal(nodeC);
+    expect(test('A', linkAD)).to.deep.equal(linkAD);
   });
 });

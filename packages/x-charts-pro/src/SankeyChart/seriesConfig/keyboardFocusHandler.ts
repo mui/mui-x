@@ -142,9 +142,8 @@ const keyboardFocusHandler: KeyboardFocusHandler<'sankey', 'sankey'> =
         return isLink
           ? getLinkToNode('source')(currentItem, state)
           : getNodeToLink('target')(currentItem, state);
-
       default:
-        return null;
+        return currentItem;
     }
   };
 
