@@ -15,21 +15,15 @@ export type IsItemVisibleFunction = {
   /**
    * Function to check if an item is visible based on its identifier.
    *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
-   *
    * @param {VisibilityIdentifier} identifier The identifier of the item to check.
    * @returns {boolean} Whether the item is visible.
    */
   (identifier: VisibilityIdentifier): boolean;
 };
 
-export interface UseChartVisibilityManagerPublicAPI<T extends ChartSeriesType> {
+export interface UseChartVisibilityManagerInstance<T extends ChartSeriesType> {
   /**
    * Hide an item by its identifier.
-   *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
    *
    * @param {VisibilityIdentifier} identifier The identifier of the item to hide.
    */
@@ -37,33 +31,23 @@ export interface UseChartVisibilityManagerPublicAPI<T extends ChartSeriesType> {
   /**
    * Show an item by its identifier.
    *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
-   *
    * @param {VisibilityIdentifier} identifier The identifier of the item to show.
    */
   showItem(identifier: VisibilityIdentifier<T>): void;
   /**
    * Toggle the visibility of an item by its identifier.
    *
-   * If more than one parameter is provided, they will be joined using '-' to form the identifier.
-   * Number values will be converted to strings.
-   *
    * @param {VisibilityIdentifier} identifier The identifier of the item to toggle.
    */
   toggleItemVisibility(identifier: VisibilityIdentifier<T>): void;
 }
 
-export interface UseChartVisibilityManagerInstance<
-  T extends ChartSeriesType,
-> extends UseChartVisibilityManagerPublicAPI<T> {}
-
 export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> {
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
-  onVisibilityChange?: (hiddenIdentifiers: VisibilityIdentifier<T>[]) => void;
+  onHiddenItemsChange?: (hiddenItems: VisibilityIdentifier<T>[]) => void;
   /**
    * List of hidden series and/or items.
    *
@@ -75,7 +59,7 @@ export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> 
    *   {
    *     type: 'pie',
    *     seriesId: 'series-1',
-   *     itemId: 'item-3',
+   *     dataIndex: 3,
    *   },
    *   {
    *     type: 'line',
@@ -84,7 +68,7 @@ export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> 
    * ]
    * ```
    */
-  hiddenIdentifiers?: VisibilityIdentifier<T>[];
+  hiddenItems?: VisibilityIdentifier<T>[];
 }
 
 export type UseChartVisibilityManagerDefaultizedParameters<T extends ChartSeriesType> =
@@ -106,7 +90,6 @@ export interface UseChartVisibilityManagerState {
 export type UseChartVisibilityManagerSignature<T extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     instance: UseChartVisibilityManagerInstance<T>;
-    publicAPI: UseChartVisibilityManagerPublicAPI<T>;
     state: UseChartVisibilityManagerState;
     params: UseChartVisibilityManagerParameters<T>;
     defaultizedParams: UseChartVisibilityManagerDefaultizedParameters<T>;

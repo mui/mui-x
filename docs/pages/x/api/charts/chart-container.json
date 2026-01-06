@@ -17,7 +17,7 @@
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
     "height": { "type": { "name": "number" } },
-    "hiddenIdentifiers": {
+    "hiddenItems": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ dataIndex?: any, seriesId?: { toLocaleString: func, toString: func, valueOf: func }, type: object }&gt;"
@@ -48,6 +48,13 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {

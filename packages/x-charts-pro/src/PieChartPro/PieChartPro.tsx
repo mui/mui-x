@@ -169,7 +169,7 @@ PieChartPro.propTypes = {
    *   {
    *     type: 'pie',
    *     seriesId: 'series-1',
-   *     itemId: 'item-3',
+   *     dataIndex: 3,
    *   },
    *   {
    *     type: 'line',
@@ -178,7 +178,7 @@ PieChartPro.propTypes = {
    * ]
    * ```
    */
-  hiddenIdentifiers: PropTypes.arrayOf(
+  hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -226,6 +226,11 @@ PieChartPro.propTypes = {
       top: PropTypes.number,
     }),
   ]),
+  /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

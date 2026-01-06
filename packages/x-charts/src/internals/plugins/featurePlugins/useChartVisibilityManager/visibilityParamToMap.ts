@@ -4,13 +4,13 @@ import type { ChartSeriesConfig } from '../../models';
 import type { VisibilityIdentifier, VisibilityMap } from './useChartVisibilityManager.types';
 
 export const visibilityParamToMap = (
-  hiddenIdentifiers: VisibilityIdentifier[] | undefined,
+  hiddenItems: VisibilityIdentifier[] | undefined,
   seriesConfig: ChartSeriesConfig<ChartSeriesType>,
 ): VisibilityMap => {
   const visibilityMap: VisibilityMap = new Map();
 
-  if (hiddenIdentifiers) {
-    hiddenIdentifiers.forEach((identifier) => {
+  if (hiddenItems) {
+    hiddenItems.forEach((identifier) => {
       const uniqueId = serializeIdentifier(seriesConfig, identifier);
       visibilityMap.set(uniqueId, identifier);
     });

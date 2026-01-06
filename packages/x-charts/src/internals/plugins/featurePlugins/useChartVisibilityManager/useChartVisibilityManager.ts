@@ -17,14 +17,14 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
 }) => {
   // Manage controlled state
   useEffectAfterFirstRender(() => {
-    if (params.hiddenIdentifiers === undefined) {
+    if (params.hiddenItems === undefined) {
       return;
     }
 
     if (process.env.NODE_ENV !== 'production' && !store.state.visibilityManager.isControlled) {
       console.error(
         [
-          `MUI X Charts: A chart component is changing the \`hiddenIdentifiers\` from uncontrolled to controlled.`,
+          `MUI X Charts: A chart component is changing the \`hiddenItems\` from uncontrolled to controlled.`,
           'Elements should not switch from uncontrolled to controlled (or vice versa).',
           'Decide between using a controlled or uncontrolled for the lifetime of the component.',
           "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
@@ -34,9 +34,9 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     }
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: visibilityParamToMap(params.hiddenIdentifiers, seriesConfig),
+      visibilityMap: visibilityParamToMap(params.hiddenItems, seriesConfig),
     });
-  }, [store, params.hiddenIdentifiers, seriesConfig]);
+  }, [store, params.hiddenItems, seriesConfig]);
 
   const hideItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
@@ -54,7 +54,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
       visibilityMap: newVisibilityMap,
     });
 
-    params.onVisibilityChange?.(Array.from(newVisibilityMap.values()));
+    params.onHiddenItemsChange?.(Array.from(newVisibilityMap.values()));
   });
 
   const showItem = useEventCallback((identifier: VisibilityIdentifier) => {
@@ -73,7 +73,7 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
       visibilityMap: newVisibilityMap,
     });
 
-    params.onVisibilityChange?.(Array.from(newVisibilityMap.values()));
+    params.onHiddenItemsChange?.(Array.from(newVisibilityMap.values()));
   });
 
   const toggleItem = useEventCallback((identifier: VisibilityIdentifier) => {
@@ -93,24 +93,19 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
       showItem,
       toggleItemVisibility: toggleItem,
     },
-    publicAPI: {
-      hideItem,
-      showItem,
-      toggleItemVisibility: toggleItem,
-    },
   };
 };
 
 useChartVisibilityManager.getInitialState = (params, _, seriesConfig) => ({
   visibilityManager: {
-    visibilityMap: params.hiddenIdentifiers
-      ? visibilityParamToMap(params.hiddenIdentifiers, seriesConfig)
+    visibilityMap: params.hiddenItems
+      ? visibilityParamToMap(params.hiddenItems, seriesConfig)
       : EMPTY_VISIBILITY_MAP,
-    isControlled: params.hiddenIdentifiers !== undefined,
+    isControlled: params.hiddenItems !== undefined,
   },
 });
 
 useChartVisibilityManager.params = {
-  onVisibilityChange: true,
-  hiddenIdentifiers: true,
+  onHiddenItemsChange: true,
+  hiddenItems: true,
 };
