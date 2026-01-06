@@ -8,9 +8,9 @@ export const gridHistoryEnabledSelector = createSelector(
   (history) => history.enabled,
 );
 
-export const gridHistoryQueueSelector = createSelector(
+export const gridHistoryStackSelector = createSelector(
   gridHistoryStateSelector,
-  (history) => history.queue,
+  (history) => history.stack,
 );
 
 export const gridHistoryCurrentPositionSelector = createSelector(
@@ -24,7 +24,7 @@ export const gridHistoryCanUndoSelector = createSelector(
 );
 
 export const gridHistoryCanRedoSelector = createSelector(
-  gridHistoryQueueSelector,
+  gridHistoryStackSelector,
   gridHistoryCurrentPositionSelector,
-  (queue, currentPosition) => currentPosition < queue.length - 1,
+  (stack, currentPosition) => currentPosition < stack.length - 1,
 );

@@ -23,7 +23,7 @@ import {
 } from './gridHistoryInterfaces';
 import {
   gridHistoryCurrentPositionSelector,
-  gridHistoryQueueSelector,
+  gridHistoryStackSelector,
   gridHistoryCanUndoSelector,
   gridHistoryCanRedoSelector,
 } from './gridHistorySelectors';
@@ -33,7 +33,7 @@ export const historyStateInitializer: GridStateInitializer = (state) => {
   return {
     ...state,
     history: {
-      queue: [],
+      stack: [],
       currentPosition: -1,
       enabled: false,
     },
@@ -108,27 +108,27 @@ export const useGridHistory = (
     [apiRef],
   );
 
-  const addToQueue = React.useCallback(
+  const addToStack = React.useCallback(
     (item: GridHistoryItem) => {
       const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-      let newQueue = [...gridHistoryQueueSelector(apiRef)];
+      let newStack = [...gridHistoryStackSelector(apiRef)];
 
-      // If we're not at the end of the queue, truncate forward history
-      if (currentPosition < newQueue.length - 1) {
-        newQueue = newQueue.slice(0, currentPosition + 1);
+      // If we're not at the end of the stack, truncate forward history
+      if (currentPosition < newStack.length - 1) {
+        newStack = newStack.slice(0, currentPosition + 1);
       }
 
       // Add the new item
-      newQueue.push(item);
+      newStack.push(item);
 
-      // If queue exceeds size, remove oldest items
-      if (newQueue.length > historyStackSize) {
-        newQueue = newQueue.slice(newQueue.length - historyStackSize);
+      // If stack exceeds size, remove oldest items
+      if (newStack.length > historyStackSize) {
+        newStack = newStack.slice(newStack.length - historyStackSize);
       }
 
       updateHistoryState({
-        queue: newQueue,
-        currentPosition: newQueue.length - 1,
+        stack: newStack,
+        currentPosition: newStack.length - 1,
       });
     },
     [apiRef, updateHistoryState, historyStackSize],
@@ -136,38 +136,38 @@ export const useGridHistory = (
 
   const clear = React.useCallback(() => {
     updateHistoryState({
-      queue: [],
+      stack: [],
       currentPosition: -1,
     });
   }, [updateHistoryState]);
 
   const clearUndoItems = React.useCallback(() => {
-    const queue = gridHistoryQueueSelector(apiRef);
+    const stack = gridHistoryStackSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
 
-    // If we're at the end of the queue (no redo items), clear everything
-    if (currentPosition >= queue.length - 1) {
+    // If we're at the end of the stack (no redo items), clear everything
+    if (currentPosition >= stack.length - 1) {
       clear();
     } else {
       updateHistoryState({
-        queue: queue.slice(currentPosition + 1),
+        stack: stack.slice(currentPosition + 1),
         currentPosition: -1,
       });
     }
   }, [apiRef, clear, updateHistoryState]);
 
   const clearRedoItems = React.useCallback(() => {
-    const queue = gridHistoryQueueSelector(apiRef);
+    const stack = gridHistoryStackSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
     updateHistoryState({
-      queue: queue.slice(currentPosition + 1),
+      stack: stack.slice(0, currentPosition + 1),
     });
   }, [apiRef, updateHistoryState]);
 
   const canUndo = React.useCallback(() => gridHistoryCanUndoSelector(apiRef), [apiRef]);
   const canRedo = React.useCallback(() => gridHistoryCanRedoSelector(apiRef), [apiRef]);
 
-  const validateQueueItems = React.useCallback(() => {
+  const validateStackItems = React.useCallback(() => {
     /**
      * When:
      * - idle: continue with the validation
@@ -181,25 +181,25 @@ export const useGridHistory = (
       return;
     }
 
-    const queue = gridHistoryQueueSelector(apiRef);
+    const stack = gridHistoryStackSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
 
     if (historyStackSize === 0) {
-      if (queue.length > 0) {
+      if (stack.length > 0) {
         clear();
       }
       return;
     }
 
-    if (queue.length === 0) {
+    if (stack.length === 0) {
       return;
     }
 
-    const newQueue = [...queue];
+    const newStack = [...stack];
 
     // Redo check
-    if (currentPosition + 1 < newQueue.length) {
-      const item = newQueue[currentPosition + 1];
+    if (currentPosition + 1 < newStack.length) {
+      const item = newStack[currentPosition + 1];
       const handler = historyEventHandlers[item.eventName];
       if (!handler) {
         clearRedoItems();
@@ -213,7 +213,7 @@ export const useGridHistory = (
 
     // Undo check
     if (currentPosition >= 0) {
-      const item = newQueue[currentPosition];
+      const item = newStack[currentPosition];
       const handler = historyEventHandlers[item.eventName];
       if (!handler) {
         clearUndoItems();
@@ -226,9 +226,9 @@ export const useGridHistory = (
     }
   }, [apiRef, historyEventHandlers, historyStackSize, clear, clearUndoItems, clearRedoItems]);
 
-  const debouncedValidateQueueItems = React.useMemo(
-    () => debounce(validateQueueItems, 0),
-    [validateQueueItems],
+  const debouncedValidateStackItems = React.useMemo(
+    () => debounce(validateStackItems, 0),
+    [validateStackItems],
   );
 
   const apply = React.useCallback(
@@ -267,7 +267,7 @@ export const useGridHistory = (
       apiRef.current.publishEvent(operation, { eventName, data });
       // If there are no validations in the current setup, skip calling it and change the operation state to idle
       if (isValidationNeeded) {
-        validateQueueItems();
+        validateStackItems();
       } else {
         operationStateRef.current = 'idle';
       }
@@ -280,7 +280,7 @@ export const useGridHistory = (
       clearUndoItems,
       clearRedoItems,
       updateHistoryState,
-      validateQueueItems,
+      validateStackItems,
     ],
   );
 
@@ -289,9 +289,9 @@ export const useGridHistory = (
       return false;
     }
 
-    const queue = gridHistoryQueueSelector(apiRef);
+    const stack = gridHistoryStackSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-    return apply(queue[currentPosition], 'undo');
+    return apply(stack[currentPosition], 'undo');
   }, [apiRef, apply, canUndo]);
 
   const redo = React.useCallback(async (): Promise<boolean> => {
@@ -299,9 +299,9 @@ export const useGridHistory = (
       return false;
     }
 
-    const queue = gridHistoryQueueSelector(apiRef);
+    const stack = gridHistoryStackSelector(apiRef);
     const currentPosition = gridHistoryCurrentPositionSelector(apiRef);
-    return apply(queue[currentPosition + 1], 'redo');
+    return apply(stack[currentPosition + 1], 'redo');
   }, [apiRef, apply, canRedo]);
 
   const historyApi: GridHistoryApi['history'] = {
@@ -354,7 +354,7 @@ export const useGridHistory = (
 
     historyValidationEvents.forEach((eventName) => {
       validationEventUnsubscribersRef.current.push(
-        apiRef.current.subscribeEvent(eventName, debouncedValidateQueueItems),
+        apiRef.current.subscribeEvent(eventName, debouncedValidateStackItems),
       );
     });
 
@@ -362,7 +362,7 @@ export const useGridHistory = (
       validationEventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       validationEventUnsubscribersRef.current = [];
     };
-  }, [apiRef, isValidationNeeded, historyValidationEvents, debouncedValidateQueueItems]);
+  }, [apiRef, isValidationNeeded, historyValidationEvents, debouncedValidateStackItems]);
 
   React.useEffect(() => {
     if (historyStackSize === 0) {
@@ -381,7 +381,7 @@ export const useGridHistory = (
 
         const data = handler.store(...params);
         if (data !== null) {
-          addToQueue({ eventName, data });
+          addToStack({ eventName, data });
         }
       });
 
@@ -392,5 +392,13 @@ export const useGridHistory = (
       eventUnsubscribersRef.current.forEach((unsubscribe) => unsubscribe());
       eventUnsubscribersRef.current = [];
     };
-  }, [apiRef, historyEventHandlers, historyStackSize, addToQueue]);
+  }, [apiRef, historyEventHandlers, historyStackSize, addToStack]);
+
+  // If the stack size is changed and it is smaller than the current stack size, clear the stack
+  React.useEffect(() => {
+    const currentStackSize = gridHistoryStackSelector(apiRef).length;
+    if (currentStackSize > historyStackSize) {
+      clear();
+    }
+  }, [apiRef, historyStackSize, clear]);
 };

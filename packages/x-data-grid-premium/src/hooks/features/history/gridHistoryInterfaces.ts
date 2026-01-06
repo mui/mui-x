@@ -7,7 +7,7 @@ export interface GridHistoryEventHandler<T = any> {
   /**
    * Store the data to be used for undo/redo operations.
    * @param {any} params The parameters from the original event.
-   * @returns {T | null} The data to store in the history queue.
+   * @returns {T | null} The data to store in the history stack.
    * Return `null` if the event should not be stored.
    * This can be used to descrease the granularity of the undo steps.
    */
@@ -40,15 +40,15 @@ export interface GridHistoryItem<T = any> {
 }
 
 export interface GridHistoryState {
-  queue: GridHistoryItem[];
+  stack: GridHistoryItem[];
   /**
-   * The current position in the queue.
+   * The current position in the stack.
    * Points to the last executed action.
    * -1 means no actions have been executed.
    */
   currentPosition: number;
   /**
-   * True if the queue size is greater than 0 and there is at least one event handler.
+   * True if the stack size is greater than 0 and there is at least one event handler.
    */
   enabled: boolean;
 }
