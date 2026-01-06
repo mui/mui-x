@@ -31,6 +31,8 @@ To disable the undo/redo feature, set `historyStackSize` to `0`:
 
 This prevents any history from being tracked and hides the undo/redo buttons from the toolbar.
 
+{{"demo": "ToggleUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ### Removing the toolbar buttons
 
 To remove the toolbar buttons for undo and redo while keeping the keyboard controls active, set the `showUndoRedo` flag to `false` in the Toolbar's slot props.
