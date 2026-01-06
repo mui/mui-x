@@ -31,7 +31,7 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
-    "hiddenIdentifiers": {
+    "hiddenItems": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }&gt;"
@@ -97,11 +97,11 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "onVisibilityChange": {
+    "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "onZoomChange": {

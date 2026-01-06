@@ -165,7 +165,7 @@ RadarChartPro.propTypes = {
    * ]
    * ```
    */
-  hiddenIdentifiers: PropTypes.arrayOf(
+  hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -245,9 +245,9 @@ RadarChartPro.propTypes = {
   onMarkClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
-  onVisibilityChange: PropTypes.func,
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */

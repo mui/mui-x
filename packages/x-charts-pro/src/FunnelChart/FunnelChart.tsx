@@ -278,7 +278,7 @@ FunnelChart.propTypes = {
    * ]
    * ```
    */
-  hiddenIdentifiers: PropTypes.arrayOf(
+  hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
       seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -348,9 +348,9 @@ FunnelChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
-  onVisibilityChange: PropTypes.func,
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeries]] objects.

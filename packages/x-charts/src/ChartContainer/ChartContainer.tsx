@@ -126,7 +126,7 @@ ChartContainer.propTypes = {
    * ]
    * ```
    */
-  hiddenIdentifiers: PropTypes.arrayOf(
+  hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
       seriesId: PropTypes.shape({
@@ -209,9 +209,9 @@ ChartContainer.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
-  onVisibilityChange: PropTypes.func,
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.

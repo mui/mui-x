@@ -18,7 +18,7 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
-    "hiddenIdentifiers": {
+    "hiddenItems": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
@@ -75,11 +75,11 @@
         "describedArgs": ["event", "radarItemIdentifier"]
       }
     },
-    "onVisibilityChange": {
+    "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "shape": {

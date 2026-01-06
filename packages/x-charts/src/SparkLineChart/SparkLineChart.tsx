@@ -442,7 +442,7 @@ SparkLineChart.propTypes = {
    * ]
    * ```
    */
-  hiddenIdentifiers: PropTypes.arrayOf(
+  hiddenItems: PropTypes.arrayOf(
     PropTypes.oneOfType([
       PropTypes.shape({
         dataIndex: PropTypes.number,
@@ -544,9 +544,9 @@ SparkLineChart.propTypes = {
   onItemClick: PropTypes.func,
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
-  onVisibilityChange: PropTypes.func,
+  onHiddenItemsChange: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'

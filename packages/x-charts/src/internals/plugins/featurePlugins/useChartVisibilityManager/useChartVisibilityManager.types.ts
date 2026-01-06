@@ -45,9 +45,9 @@ export interface UseChartVisibilityManagerInstance<T extends ChartSeriesType> {
 export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> {
   /**
    * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
    */
-  onVisibilityChange?: (hiddenIdentifiers: VisibilityIdentifier<T>[]) => void;
+  onHiddenItemsChange?: (hiddenItems: VisibilityIdentifier<T>[]) => void;
   /**
    * List of hidden series and/or items.
    *
@@ -68,7 +68,7 @@ export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> 
    * ]
    * ```
    */
-  hiddenIdentifiers?: VisibilityIdentifier<T>[];
+  hiddenItems?: VisibilityIdentifier<T>[];
 }
 
 export type UseChartVisibilityManagerDefaultizedParameters<T extends ChartSeriesType> =

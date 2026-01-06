@@ -10,7 +10,7 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "height": { "type": { "name": "number" } },
-    "hiddenIdentifiers": {
+    "hiddenItems": {
       "type": {
         "name": "arrayOf",
         "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'pie' }&gt;"
@@ -40,11 +40,11 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
-    "onVisibilityChange": {
+    "onHiddenItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },

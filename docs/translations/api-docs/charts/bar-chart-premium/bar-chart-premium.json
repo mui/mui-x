@@ -18,7 +18,7 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
-    "hiddenIdentifiers": {
+    "hiddenItems": {
       "description": "List of hidden series and/or items.<br>Different chart types use different keys."
     },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
@@ -75,11 +75,11 @@
         "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
       }
     },
-    "onVisibilityChange": {
+    "onHiddenItemsChange": {
       "description": "Callback fired when any hidden identifiers change.",
       "typeDescriptions": {
-        "hiddenIdentifiers": {
-          "name": "hiddenIdentifiers",
+        "hiddenItems": {
+          "name": "hiddenItems",
           "description": "The new list of hidden identifiers."
         }
       }
