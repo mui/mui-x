@@ -47,9 +47,9 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
       rowSelectionPropagation,
       slots,
       slotProps,
-      classes: rootPropsClasses,
+      classes: classesRootProps,
     } = useGridRootProps();
-    const ownerState = { classes: rootPropsClasses };
+    const ownerState = { classes: classesRootProps };
     const classes = useUtilityClasses(ownerState);
 
     const { isIndeterminate, isChecked, isSelectable } = useGridSelector(

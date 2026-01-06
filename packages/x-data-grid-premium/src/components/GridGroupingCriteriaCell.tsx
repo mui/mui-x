@@ -34,9 +34,9 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, a
 export function GridGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
-  const { slots, slotProps, rowGroupingColumnMode, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, slotProps, rowGroupingColumnMode, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const filteredDescendantCountLookup = useGridSelector(
     apiRef,
     gridFilteredDescendantCountLookupSelector,

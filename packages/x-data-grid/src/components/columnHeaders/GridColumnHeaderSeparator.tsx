@@ -46,8 +46,8 @@ function GridColumnHeaderSeparatorRaw(props: GridColumnHeaderSeparatorProps) {
     side = GridColumnHeaderSeparatorSides.Right,
     ...other
   } = props;
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { ...props, side, classes: rootPropsClasses };
+  const { slots, classes: classesRootProps } = useGridRootProps();
+  const ownerState = { ...props, side, classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const stopClick = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {

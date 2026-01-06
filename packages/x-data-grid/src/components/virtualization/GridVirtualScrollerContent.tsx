@@ -38,10 +38,10 @@ const GridVirtualScrollerContent = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerContent(props, ref) {
-  const { classes: rootPropsClasses, autoHeight } = useGridRootProps();
+  const { classes: classesRootProps, autoHeight } = useGridRootProps();
   const overflowedContent = !autoHeight && props.style?.minHeight === 'auto';
-  const classes = useUtilityClasses({ classes: rootPropsClasses }, overflowedContent);
-  const ownerState = { classes: rootPropsClasses, overflowedContent };
+  const classes = useUtilityClasses({ classes: classesRootProps }, overflowedContent);
+  const ownerState = { classes: classesRootProps, overflowedContent };
 
   return (
     <VirtualScrollerContentRoot

@@ -52,8 +52,8 @@ const GridSelectedRowCount = forwardRef<HTMLDivElement, GridSelectedRowCountProp
   function GridSelectedRowCount(props, ref) {
     const { className, selectedRowCount, ...other } = props;
     const apiRef = useGridApiContext();
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const ownerState = { classes: rootPropsClasses };
+    const { classes: classesRootProps } = useGridRootProps();
+    const ownerState = { classes: classesRootProps };
     const classes = useUtilityClasses(ownerState);
     const rowSelectedText = apiRef.current.getLocaleText('footerRowSelected')(selectedRowCount);
 

@@ -148,14 +148,14 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridPrivateApiContext();
   const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const fields = React.useMemo(() => Array.from(initialColumns.keys()), [initialColumns]);
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, classes: classesRootProps } = useGridRootProps();
   const [drag, setDrag] = React.useState<{
     active: boolean;
     dropZone: FieldTransferObject['modelKey'];
     initialModelKey: FieldTransferObject['modelKey'];
   }>(INITIAL_DRAG_STATE);
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   const getColumnName = React.useCallback(
     (field: string) => {

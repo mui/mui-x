@@ -33,8 +33,8 @@ const GridIconButtonContainerRoot = styled('div', {
 export const GridIconButtonContainer = forwardRef<HTMLDivElement, GridIconButtonContainerProps>(
   function GridIconButtonContainer(props, ref) {
     const { className, ...other } = props;
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const { classes: classesRootProps } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: classesRootProps });
 
     return (
       <GridIconButtonContainerRoot className={clsx(classes.root, className)} {...other} ref={ref} />

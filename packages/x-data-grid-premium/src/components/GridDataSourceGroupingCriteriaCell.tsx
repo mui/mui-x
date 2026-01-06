@@ -48,8 +48,8 @@ interface GridGroupingCriteriaCellIconProps extends Pick<
 
 function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) {
   const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPremium>;
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const { rowNode, id, field, descendantCount } = props;
 
   const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
@@ -104,12 +104,12 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
 export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCellProps) {
   const { id, field, rowNode, hideDescendantCount, formattedValue } = props;
 
-  const { dataSource, rowGroupingColumnMode, classes: rootPropsClasses } = useGridRootProps();
+  const { dataSource, rowGroupingColumnMode, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const rowGroupingModelLength = useGridSelector(apiRef, gridRowGroupingModelSelector).length;
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const shouldShowToggleContainer = !pivotActive || rowGroupingModelLength > 1;
   // Do not allow expand/collapse the last grouping criteria cell when in pivot mode
   const shouldShowToggleButton = !pivotActive || rowNode.depth < rowGroupingModelLength - 1;

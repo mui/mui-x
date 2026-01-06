@@ -38,8 +38,8 @@ const SidebarRoot = styled(ResizablePanel, {
 function Sidebar(props: SidebarProps) {
   const { className, children, ...other } = props;
   const apiRef = useGridApiContext();
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const { value, sidebarId, labelId } = useGridSelector(apiRef, gridSidebarContentSelector);
 
   if (!value) {

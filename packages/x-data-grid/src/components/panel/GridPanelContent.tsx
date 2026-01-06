@@ -35,8 +35,8 @@ const GridPanelContentRoot = styled('div', {
 
 function GridPanelContent(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   return <GridPanelContentRoot className={clsx(classes.root, className)} {...other} />;
 }

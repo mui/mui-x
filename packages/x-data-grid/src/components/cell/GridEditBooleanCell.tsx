@@ -68,8 +68,8 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses };
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(

@@ -45,8 +45,8 @@ const GridToolbarContainerRoot = styled(Toolbar, {
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const { classes: classesRootProps } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: classesRootProps });
     if (!children) {
       return null;
     }

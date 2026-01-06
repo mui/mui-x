@@ -125,11 +125,11 @@ function GridAiAssistantPanel() {
   const {
     slots,
     slotProps,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     aiAssistantSuggestions,
   } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
   const conversations = useGridSelector(apiRef, gridAiAssistantConversationsSelector);
   const conversationTitle =

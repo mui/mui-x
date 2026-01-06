@@ -32,8 +32,8 @@ const GridVirtualScrollerRenderZone = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }
 >(function GridVirtualScrollerRenderZone(props, ref) {
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   return (
     <VirtualScrollerRenderZoneRoot

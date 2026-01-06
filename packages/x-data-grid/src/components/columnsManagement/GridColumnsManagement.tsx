@@ -105,9 +105,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     columnFilterDebounceMs: rootPropsColumnFilterDebounceMs,
     slots,
     slotProps,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
   } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses };
+  const ownerState = { classes: classesRootProps };
   const [searchValue, setSearchValue] = React.useState('');
   const classes = useUtilityClasses(ownerState);
   const columnDefinitions = useGridSelector(apiRef, gridColumnDefinitionsSelector);

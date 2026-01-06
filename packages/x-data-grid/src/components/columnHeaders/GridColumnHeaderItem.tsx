@@ -122,7 +122,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const apiRef = useGridPrivateApiContext();
   const {
     disableColumnReorder,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     disableColumnMenu,
     slots,
     slotProps,
@@ -147,7 +147,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const ownerState = {
     ...props,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     showRightBorder,
     showLeftBorder,
   };

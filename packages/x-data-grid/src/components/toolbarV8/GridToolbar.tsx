@@ -62,8 +62,8 @@ const Label = styled('span', {
 
 function GridToolbarDivider(props: GridSlotProps['baseDivider']) {
   const { className, ...other } = props;
-  const { classes: rootPropsClasses, slots } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps, slots } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   return (
     <Divider as={slots.baseDivider} orientation="vertical" className={classes.divider} {...other} />
   );
@@ -80,8 +80,8 @@ GridToolbarDivider.propTypes = {
 
 function GridToolbarLabel(props: React.HTMLAttributes<HTMLSpanElement>) {
   const { className, ...other } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   return <Label className={classes.label} {...other} />;
 }
 

@@ -22,8 +22,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridAggregationRowOverlay = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   function GridAggregationRowOverlay(props, forwardedRef) {
     const apiRef = useGridApiContext();
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const { classes: classesRootProps } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: classesRootProps });
     const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
 
     const visibleColumns = new Set(Object.keys(aggregationModel));

@@ -33,8 +33,8 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
   const { colDef, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
   const { toggleColumnMenu } = apiRef.current;
-  const { classes: rootPropsClasses, slots, slotProps } = useGridRootProps();
-  const ownerState = { ...props, classes: rootPropsClasses };
+  const { classes: classesRootProps, slots, slotProps } = useGridRootProps();
+  const ownerState = { ...props, classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const handleMenuIconClick = React.useCallback(

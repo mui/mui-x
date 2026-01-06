@@ -37,8 +37,8 @@ const CollapsiblePanelRoot = styled('div', {
 
 function CollapsiblePanel(props: CollapsiblePanelProps) {
   const { 'aria-label': ariaLabel, children, className, ...other } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const id = useId();
   const { open } = useCollapsibleContext();
 

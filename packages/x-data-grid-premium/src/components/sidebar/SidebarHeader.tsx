@@ -32,8 +32,8 @@ const SidebarHeaderRoot = styled('div', {
 
 function SidebarHeader(props: SidebarHeaderProps) {
   const { className, children, ...other } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   return (
     <SidebarHeaderRoot className={clsx(className, classes.root)} {...other}>

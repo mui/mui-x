@@ -272,9 +272,9 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
     onDragStart,
     onDragEnd,
   } = props;
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
-  const ownerState = { ...props, classes: rootPropsClasses, dropPosition, section };
+  const ownerState = { ...props, classes: classesRootProps, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);

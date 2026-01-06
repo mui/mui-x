@@ -86,8 +86,8 @@ const GridChartTypeButton = styled('button', {
 
 function GridChartsPanelChart(props: GridChartsPanelChartProps) {
   const { schema, selectedChartType, onChartTypeChange } = props;
-  const { slotProps, classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { slotProps, classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   return (
     <GridChartsManagementRoot className={classes.root}>

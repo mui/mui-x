@@ -117,7 +117,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
   const ref = React.useRef<HTMLDivElement>(null);
   const {
     editMode,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     rowSpacingType,
     getRowClassName,
     showCellVerticalBorder,
@@ -156,7 +156,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     focusedColumnIndex < visibleColumns.length - pinnedColumns.right.length &&
     focusedColumnIndex >= lastColumnIndex;
 
-  const classes = composeGridClasses(rootPropsClasses, {
+  const classes = composeGridClasses(classesRootProps, {
     root: [
       'row',
       selected && 'selected',

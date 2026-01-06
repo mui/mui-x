@@ -61,13 +61,13 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
   GridSkeletonLoadingOverlayInnerProps
 >(function GridSkeletonLoadingOverlayInner(props, forwardedRef) {
   const {
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     slots,
     showCellVerticalBorder,
     pinnedColumnsSectionSeparator,
   } = useGridRootProps();
   const isRtl = useRtl();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const ref = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);
   const apiRef = useGridApiContext();

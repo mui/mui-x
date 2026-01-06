@@ -65,8 +65,8 @@ export interface GridMenuProps extends Pick<PopperProps, 'className' | 'onExited
 function GridMenu(props: GridMenuProps) {
   const { open, target, onClose, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const variablesClass = useCSSVariablesClass();
 
   const savedFocusRef = React.useRef<HTMLElement | null>(null);

@@ -38,8 +38,8 @@ function GridDetailPanel(props: GridDetailPanelProps) {
   const { rowId, height, className, children } = props;
   const apiRef = useGridPrivateApiContext();
   const ref = React.useRef<HTMLDivElement | null>(null);
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses };
+  const { classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps };
   const hasAutoHeight = height === 'auto';
   const rowNode = gridRowNodeSelector(apiRef, rowId);
 

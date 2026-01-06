@@ -75,9 +75,9 @@ function GridAggregationHeader(
   const { colDef, aggregation } = params;
 
   const apiRef = useGridApiContext();
-  const { classes: rootPropsClasses } = useGridRootProps();
+  const { classes: classesRootProps } = useGridRootProps();
 
-  const ownerState = { classes: rootPropsClasses, colDef };
+  const ownerState = { classes: classesRootProps, colDef };
   const classes = useUtilityClasses(ownerState);
 
   if (!aggregation) {

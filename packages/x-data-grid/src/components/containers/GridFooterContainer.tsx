@@ -38,8 +38,8 @@ const GridFooterContainerRoot = styled('div', {
 const GridFooterContainer = forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooterContainer(props, ref) {
     const { className, ...other } = props;
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const ownerState = { classes: rootPropsClasses };
+    const { classes: classesRootProps } = useGridRootProps();
+    const ownerState = { classes: classesRootProps };
     const classes = useUtilityClasses(ownerState);
 
     return (

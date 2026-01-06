@@ -44,8 +44,8 @@ const GridOverlayRoot = styled('div', {
 
 const GridOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(function GridOverlay(props, ref) {
   const { className, ...other } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   return <GridOverlayRoot className={clsx(classes.root, className)} {...other} ref={ref} />;
 });

@@ -40,8 +40,8 @@ export interface GridPanelWrapperProps
 const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
     const { className, ...other } = props;
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const { classes: classesRootProps } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: classesRootProps });
 
     return (
       <GridPanelWrapperRoot

@@ -106,9 +106,9 @@ const GridQuickFilterTextField = styled(
  */
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const apiRef = useGridApiContext();
-  const { slots, slotProps: rootPropsSlotProps, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps, classes: classesRootProps } = useGridRootProps();
   const ownerState = {
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     expanded: false,
   };
   const classes = useUtilityClasses(ownerState);

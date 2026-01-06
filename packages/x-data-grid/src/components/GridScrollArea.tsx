@@ -296,8 +296,8 @@ const GridScrollAreaContent = forwardRef(function GridScrollAreaContent(
 
   const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
 
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses, scrollDirection };
+  const { classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps, scrollDirection };
   const classes = useUtilityClasses(ownerState);
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {

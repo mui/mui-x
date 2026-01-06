@@ -48,9 +48,9 @@ function GridFooterCellRaw(props: GridFooterCellProps) {
     isEditable,
     ...other
   } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
+  const { classes: classesRootProps } = useGridRootProps();
 
-  const ownerState = { classes: rootPropsClasses };
+  const ownerState = { classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   return (

@@ -55,8 +55,8 @@ GridColumnHeaderFilterIconButtonWrapped.propTypes = {
 function GridColumnHeaderFilterIconButton(props: ColumnHeaderFilterIconButtonProps) {
   const { counter, field, onClick } = props;
   const apiRef = useGridApiContext();
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { ...props, classes: rootPropsClasses };
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const ownerState = { ...props, classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
   const labelId = useId();
   const isOpen = useGridSelector(apiRef, gridPreferencePanelSelectorWithLabel, labelId);

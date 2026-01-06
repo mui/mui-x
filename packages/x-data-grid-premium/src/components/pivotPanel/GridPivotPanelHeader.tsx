@@ -64,9 +64,9 @@ const GridPivotPanelSwitchLabel = styled('span', {
 function GridPivotPanelHeader(props: GridPivotPanelHeaderProps) {
   const { searchValue, onSearchValueChange } = props;
   const apiRef = useGridApiContext();
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const rows = useGridSelector(apiRef, gridRowCountSelector);
   const isEmptyPivot = pivotActive && rows === 0;
 

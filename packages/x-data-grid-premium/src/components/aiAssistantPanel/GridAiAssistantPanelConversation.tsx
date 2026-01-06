@@ -45,8 +45,8 @@ const AiAssistantPanelConversationList = styled('ol', {
 
 function GridAiAssistantPanelConversation(props: GridAiAssistantPanelConversationProps) {
   const { conversation } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 

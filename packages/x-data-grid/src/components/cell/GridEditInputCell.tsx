@@ -55,7 +55,7 @@ export interface GridEditInputCellProps extends GridRenderEditCellParams {
 }
 
 const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, classes: classesRootProps } = useGridRootProps();
 
   const {
     id,
@@ -81,7 +81,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [valueState, setValueState] = React.useState(value);
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {

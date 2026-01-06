@@ -36,9 +36,9 @@ interface GridBaseColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement
 export const GridBaseColumnHeaders = forwardRef<HTMLDivElement, GridBaseColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const { className, ...other } = props;
-    const { classes: rootPropsClasses } = useGridRootProps();
+    const { classes: classesRootProps } = useGridRootProps();
 
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const classes = useUtilityClasses({ classes: classesRootProps });
 
     return (
       <GridColumnHeadersRoot

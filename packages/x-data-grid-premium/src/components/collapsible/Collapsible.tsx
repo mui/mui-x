@@ -40,8 +40,8 @@ function Collapsible(props: CollapsibleProps) {
   const { className, children, initiallyOpen = true, ...other } = props;
   const [open, setOpen] = React.useState(initiallyOpen);
   const panelId = useId();
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses, open };
+  const { classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps, open };
   const classes = useUtilityClasses(ownerState);
 
   const contextValue = React.useMemo(

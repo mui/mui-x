@@ -50,8 +50,8 @@ function GridBooleanCellRaw(props: GridBooleanCellProps) {
 
   const apiRef = useGridApiContext();
   // @ts-expect-error - Access tree data prop
-  const { slots, classes: rootPropsClasses, treeData } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses };
+  const { slots, classes: classesRootProps, treeData } = useGridRootProps();
+  const ownerState = { classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const maxDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);

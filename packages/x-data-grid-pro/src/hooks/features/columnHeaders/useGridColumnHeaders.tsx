@@ -71,11 +71,11 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
     headerFilters,
     showColumnVerticalBorder,
     pinnedColumnsSectionSeparator,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     slots,
     slotProps,
   } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const disableHeaderFiltering = !headerFilters;
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);

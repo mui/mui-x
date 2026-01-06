@@ -66,8 +66,8 @@ const ToolbarRoot = styled('div', {
  */
 const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props, ref) {
   const { render, className, ...other } = props;
-  const { classes: rootPropsClasses, label } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps, label } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
   const [items, setItems] = React.useState<Item[]>([]);

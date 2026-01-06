@@ -40,7 +40,7 @@ const RowReorderIcon = styled('svg', {
 
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
-  const { isRowReorderable, rowReordering, slots, classes: rootPropsClasses } = useGridRootProps();
+  const { isRowReorderable, rowReordering, slots, classes: classesRootProps } = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const cellValue =
@@ -66,7 +66,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     return true;
   }, [rowReordering, isRowReorderable, sortModel, editRowsState, params.row, params.rowNode]);
 
-  const ownerState = { isDraggable, classes: rootPropsClasses };
+  const ownerState = { isDraggable, classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(

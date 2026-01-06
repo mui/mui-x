@@ -64,7 +64,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const badgeProps = slotProps.badge || {};
     const apiRef = useGridApiContext();
     const {
-      classes: rootPropsClasses,
+      classes: classesRootProps,
       disableColumnFilter,
       slots,
       slotProps: rootPropsSlotProps,
@@ -72,7 +72,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const classes = useUtilityClasses({ classes: classesRootProps });
     const filterButtonId = useId();
     const filterPanelId = useId();
     const { filterPanelTriggerRef } = useGridPanelContext();

@@ -52,8 +52,8 @@ interface GridTreeDataGroupingCellIconProps extends Pick<
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
   const apiRef = useGridPrivateApiContext();
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const { rowNode, id, field, descendantCount } = props;
 
   const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
@@ -106,10 +106,10 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
 export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const { id, field, formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2 } = props;
 
-  const { dataSource, classes: rootPropsClasses } = useGridRootProps();
+  const { dataSource, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   let descendantCount = 0;
   if (row) {

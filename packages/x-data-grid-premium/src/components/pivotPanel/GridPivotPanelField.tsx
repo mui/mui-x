@@ -238,10 +238,10 @@ function AggregationSelect({
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   const { children, field, onDragStart, onDragEnd } = props;
-  const { slots, slotProps, classes: rootPropsClasses, sortingOrder } = useGridRootProps();
+  const { slots, slotProps, classes: classesRootProps, sortingOrder } = useGridRootProps();
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.modelKey;
-  const ownerState = { ...props, classes: rootPropsClasses, dropPosition, section };
+  const ownerState = { ...props, classes: classesRootProps, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
 

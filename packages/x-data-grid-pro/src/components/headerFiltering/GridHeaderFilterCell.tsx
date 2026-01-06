@@ -166,7 +166,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   const apiRef = useGridPrivateApiContext();
   const isRtl = useRtl();
   const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
-  const { classes: rootPropsClasses } = useGridRootProps();
+  const { classes: classesRootProps } = useGridRootProps();
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -325,7 +325,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   );
 
   const ownerState: OwnerState = {
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     pinnedPosition,
     colDef,
     showLeftBorder,

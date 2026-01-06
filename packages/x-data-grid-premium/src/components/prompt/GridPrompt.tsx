@@ -198,10 +198,10 @@ const PromptChangesToggleIcon = styled('svg', {
 
 function GridPrompt(props: GridPromptProps) {
   const { value, response, helperText, variant, onRerun } = props;
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, classes: classesRootProps } = useGridRootProps();
   const [showChanges, setShowChanges] = React.useState(false);
   const ownerState = {
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     variant,
     showChanges,
   };

@@ -36,8 +36,8 @@ const ResizablePanelRoot = styled('div', {
 
 function ResizablePanel(props: ResizablePanelProps) {
   const { className, children, direction = 'horizontal', ...other } = props;
-  const { classes: rootPropsClasses } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const { classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const ref = React.useRef<HTMLDivElement>(null);
 
   const contextValue = React.useMemo(() => ({ rootRef: ref, direction }), [direction]);

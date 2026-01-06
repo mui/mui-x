@@ -101,11 +101,11 @@ export const ScrollbarCorner = styled(Scrollbar, {
 const GridVirtualScrollbar = forwardRef<HTMLDivElement, GridVirtualScrollbarProps>(
   function GridVirtualScrollbar(props, ref) {
     const apiRef = useGridPrivateApiContext();
-    const { classes: rootPropsClasses } = useGridRootProps();
+    const { classes: classesRootProps } = useGridRootProps();
     const isLocked = React.useRef(false);
     const lastPosition = React.useRef(0);
     const scrollbarRef = React.useRef<HTMLDivElement>(null);
-    const classes = useUtilityClasses({ classes: rootPropsClasses }, props.position);
+    const classes = useUtilityClasses({ classes: classesRootProps }, props.position);
     const dimensions = useGridSelector(apiRef, gridDimensionsSelector);
 
     const propertyDimension = props.position === 'vertical' ? 'height' : 'width';

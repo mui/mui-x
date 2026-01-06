@@ -41,9 +41,9 @@ function GridDetailPanelToggleCell(props: GridRenderCellParams) {
   const rowId = api.getRowId(row);
   const isExpanded = useGridSelector({ current: api as GridApiPro }, isExpandedSelector, rowId);
 
-  const { slots, slotProps, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const ownerState: OwnerState = { classes: rootPropsClasses, isExpanded };
+  const ownerState: OwnerState = { classes: classesRootProps, isExpanded };
   const classes = useUtilityClasses(ownerState);
 
   const contentCache = useGridSelector(apiRef, gridDetailPanelExpandedRowsContentCacheSelector);

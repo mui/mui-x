@@ -45,8 +45,8 @@ const GridRowCount = forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {
     const { className, rowCount, visibleRowCount, ...other } = props;
     const apiRef = useGridApiContext();
-    const { classes: rootPropsClasses } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: rootPropsClasses });
+    const { classes: classesRootProps } = useGridRootProps();
+    const classes = useUtilityClasses({ classes: classesRootProps });
 
     if (rowCount === 0) {
       return null;

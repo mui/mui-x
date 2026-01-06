@@ -165,7 +165,7 @@ const SECTION_COUNT = 2;
 function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const { searchValue } = props;
   const apiRef = useGridPrivateApiContext();
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, classes: classesRootProps } = useGridRootProps();
   const rowGroupingModel = useGridSelector(apiRef, gridRowGroupingSanitizedModelSelector);
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
@@ -173,7 +173,7 @@ function GridChartsPanelDataBody(props: GridChartsPanelDataBodyProps) {
   const { chartStateLookup } = useGridChartsIntegrationContext();
   const dimensions = useGridSelector(apiRef, gridChartsDimensionsSelector, activeChartId);
   const values = useGridSelector(apiRef, gridChartsValuesSelector, activeChartId);
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const chartableColumns = useGridSelector(apiRef, gridChartableColumnsSelector);
 
   const dimensionsLabel = React.useMemo(

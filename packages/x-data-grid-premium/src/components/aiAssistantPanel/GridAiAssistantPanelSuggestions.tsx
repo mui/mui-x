@@ -61,9 +61,9 @@ const AiAssistantPanelSuggestionsLabel = styled('div', {
 
 function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsProps) {
   const { suggestions } = props;
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
+  const { slots, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses({ classes: rootPropsClasses });
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   return (
     <AiAssistantPanelSuggestionsRoot className={classes.root}>

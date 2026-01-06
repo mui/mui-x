@@ -91,7 +91,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
     pinnedRowsSectionSeparator,
     slots,
     slotProps,
-    classes: rootPropsClasses,
+    classes: classesRootProps,
   } = useGridRootProps();
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
@@ -100,7 +100,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, { slotProps });
   const Overlay = slots?.[overlayType];
   const ownerState = {
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     hasScrollX,
     hasPinnedRight,
     overlayType,

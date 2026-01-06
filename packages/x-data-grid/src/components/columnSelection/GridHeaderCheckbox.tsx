@@ -47,9 +47,9 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       signature,
       disableMultipleRowSelection,
       checkboxSelection,
-      classes: rootPropsClasses,
+      classes: classesRootProps,
     } = useGridRootProps();
-    const ownerState = { classes: rootPropsClasses };
+    const ownerState = { classes: classesRootProps };
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);

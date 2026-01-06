@@ -53,7 +53,7 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
 
 const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
   const {
-    classes: rootPropsClasses,
+    classes: classesRootProps,
     slots,
     autoHeight,
     showCellVerticalBorder,
@@ -75,7 +75,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
 
   const handleRef = useForkRef(rootElementRef, ref, rootMountCallback);
 
-  const ownerState = { classes: rootPropsClasses, slots, autoHeight, showCellVerticalBorder };
+  const ownerState = { classes: classesRootProps, slots, autoHeight, showCellVerticalBorder };
 
   const classes = useUtilityClasses(ownerState, density);
   const cssVariables = useCSSVariablesContext();

@@ -59,8 +59,8 @@ const randomNumberGenerator = createRandomNumberGenerator(12345);
 
 function GridSkeletonCell(props: GridSkeletonCellProps) {
   const { field, type, align, width, height, empty = false, style, className, ...other } = props;
-  const { slots, classes: rootPropsClasses } = useGridRootProps();
-  const ownerState = { classes: rootPropsClasses, align, empty };
+  const { slots, classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps, align, empty };
   const classes = useUtilityClasses(ownerState);
 
   // Memo prevents the non-circular skeleton widths changing to random widths on every render
