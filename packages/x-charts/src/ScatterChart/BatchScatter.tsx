@@ -14,6 +14,7 @@ import {
   selectorChartSeriesHighlightedItem,
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import { appendAtKey } from '../internals/appendAtKey';
 
 export interface BatchScatterProps {
   series: DefaultizedScatterSeriesType;
@@ -28,17 +29,6 @@ const MAX_POINTS_PER_PATH = 1000;
 /* In an SVG arc, if the arc starts and ends at the same point, it is not rendered, so we add a tiny
  * value to one of the coordinates to ensure that the arc is rendered. */
 const ALMOST_ZERO = 0.01;
-
-function appendAtKey(map: Map<string, string[]>, key: string, value: string) {
-  let bucket = map.get(key);
-  if (!bucket) {
-    bucket = [value];
-    map.set(key, bucket);
-  } else {
-    bucket.push(value);
-  }
-  return bucket;
-}
 
 function createPath(x: number, y: number, markerSize: number) {
   return `M${x - markerSize} ${y} a${markerSize} ${markerSize} 0 1 1 0 ${ALMOST_ZERO}`;
@@ -117,7 +107,10 @@ function BatchScatterPaths(props: BatchScatterPathsProps) {
 
 const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
-const Group = styled('g')({
+const Group = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   '&[data-faded="true"]': {
     opacity: 0.3,
   },
