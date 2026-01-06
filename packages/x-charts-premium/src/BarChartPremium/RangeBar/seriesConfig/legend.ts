@@ -11,6 +11,7 @@ const legendGetter: LegendGetter<'rangeBar'> = (params) => {
     }
 
     acc.push({
+      type: 'rangeBar',
       markType: series[seriesId].labelMarkType,
       id: seriesId,
       seriesId,
