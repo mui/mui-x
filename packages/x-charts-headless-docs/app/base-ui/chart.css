@@ -6,6 +6,49 @@
   border: 1px solid #e2e8f0;
 }
 
+body {
+  --data-color-0: #3b82f6;
+  --data-color-1: #8b5cf6;
+  --data-color-2: #ec4899;
+  --data-color-3: #f59e0b;
+  --data-color-4: #10b981;
+}
+
+[data-index='0'] .tooltip-color,
+[data-index='0'] .legend-color,
+path[data-index='0'] {
+  fill: var(--data-color-0);
+  background: var(--data-color-0);
+}
+
+[data-index='1'] .tooltip-color,
+[data-index='1'] .legend-color,
+path[data-index='1'] {
+  fill: var(--data-color-1);
+  background: var(--data-color-1);
+}
+
+[data-index='2'] .tooltip-color,
+[data-index='2'] .legend-color,
+path[data-index='2'] {
+  fill: var(--data-color-2);
+  background: var(--data-color-2);
+}
+
+[data-index='3'] .tooltip-color,
+[data-index='3'] .legend-color,
+path[data-index='3'] {
+  fill: var(--data-color-3);
+  background: var(--data-color-3);
+}
+
+[data-index='4'] .tooltip-color,
+[data-index='4'] .legend-color,
+path[data-index='4'] {
+  fill: var(--data-color-4);
+  background: var(--data-color-4);
+}
+
 .pie-arc {
   stroke: #fff;
   stroke-width: 3px;
@@ -50,6 +93,7 @@
 
 .tooltip-positioner {
   z-index: 1000;
+  pointer-events: none;
 }
 
 .tooltip-popup {
@@ -57,8 +101,6 @@
   align-items: center;
   gap: 0.5rem;
   background: #fff;
-  font-family: sans-serif;
-  color: #1a1a2e;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   font-size: 0.875rem;

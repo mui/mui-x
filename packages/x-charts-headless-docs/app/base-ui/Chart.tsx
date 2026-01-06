@@ -15,11 +15,11 @@ const chartProps: PieRootProps = {
       innerRadius: '30%',
       id: 'series-1',
       data: [
-        { value: 35, label: 'Product A', color: '#3b82f6' },
-        { value: 25, label: 'Product B', color: '#8b5cf6' },
-        { value: 20, label: 'Product C', color: '#ec4899' },
-        { value: 15, label: 'Product D', color: '#f59e0b' },
-        { value: 5, label: 'Product E', color: '#10b981' },
+        { value: 35, label: 'Product A' },
+        { value: 25, label: 'Product B' },
+        { value: 20, label: 'Product C' },
+        { value: 15, label: 'Product D' },
+        { value: 5, label: 'Product E' },
       ],
     },
   ],
@@ -59,13 +59,13 @@ function BaseUITooltip() {
           className="tooltip-positioner"
           anchor={anchor}
         >
-          <Popover.Popup className="tooltip-popup" initialFocus={false} finalFocus={false}>
+          <Popover.Popup initialFocus={false} finalFocus={false}>
             {data && (
-              <React.Fragment>
-                <span className="tooltip-color" style={{ backgroundColor: data.color }} />
+              <div className="tooltip-popup" data-index={data.identifier.dataIndex}>
+                <span className="tooltip-color" />
                 <span className="tooltip-label">{data.label}</span>
                 <span className="tooltip-value">{data.formattedValue}</span>
-              </React.Fragment>
+              </div>
             )}
           </Popover.Popup>
         </Popover.Positioner>
@@ -84,8 +84,8 @@ function BaseUILegend() {
   return (
     <ul className="legend">
       {legendData.items.map((item, index) => (
-        <li key={index} className="legend-item">
-          <span className="legend-color" style={{ backgroundColor: item.color }} />
+        <li key={index} className="legend-item" data-index={index}>
+          <span className="legend-color" />
           {item.label}
         </li>
       ))}

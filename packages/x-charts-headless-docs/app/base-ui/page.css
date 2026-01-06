@@ -1,11 +1,14 @@
 /* Base UI Integration Page Styles */
 
+body {
+  font-family: sans-serif;
+  color: #1a1a2e;
+}
+
 .page-container {
   max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: sans-serif;
-  color: #1a1a2e;
 }
 
 .header {
