@@ -14,6 +14,9 @@ body {
   --data-color-4: #10b981;
 }
 
+/* Can be adapted for unknown number of series with [data-index]:nth-child(xn + y) */
+/* Where x is the number of available colors and y is the index(1+) of the color */
+/* e.g., for 3 colors: [data-index]:nth-child(3n + 1), [data-index]:nth-child(3n + 2), [data-index]:nth-child(3n + 3) */
 [data-index='0'] .tooltip-color,
 [data-index='0'] .legend-color,
 path[data-index='0'] {
