@@ -134,13 +134,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     position,
   );
 
+  const isTooltipNodeAnchored = itemPosition !== null;
+
   React.useEffect(() => {
     const svgElement = svgRef.current;
     if (svgElement === null) {
       return () => {};
     }
 
-    if (itemPosition !== null) {
+    if (isTooltipNodeAnchored) {
       // Tooltip position is already handled by the anchor element
       return undefined;
     }
@@ -165,7 +167,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
     };
-  }, [svgRef, positionRef, itemPosition]);
+  }, [svgRef, positionRef, isTooltipNodeAnchored]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -193,7 +195,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         name: 'offset',
         options: {
           offset: () => {
-            if (isTouch) {
+            if (isTouch && !isTooltipNodeAnchored) {
               return [0, 64];
             }
             // The popper offset: [skidding, distance]
@@ -213,22 +215,20 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         : []), // Keep default behavior
       { name: 'preventOverflow', options: { altAxis: true } },
     ],
-    [isMouse, isTouch],
+    [isMouse, isTooltipNodeAnchored, isTouch],
   );
 
   if (trigger === 'none') {
     return null;
   }
 
-  if (itemPosition !== null && anchorRef.current) {
-    anchorRef.current.setAttribute('x', String(itemPosition.x));
-    anchorRef.current.setAttribute('y', String(itemPosition.y));
-  }
-
   return (
     <React.Fragment>
       {svgRef.current &&
-        ReactDOM.createPortal(<rect ref={anchorRef} display="hidden" />, svgRef.current)}
+        ReactDOM.createPortal(
+          <rect ref={anchorRef} {...itemPosition} display="hidden" />,
+          svgRef.current,
+        )}
       <NoSsr>
         {isOpen && (
           <ChartsTooltipRoot
@@ -238,7 +238,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             placement={
               other.placement ??
               position ??
-              (pointerType !== null && isMouse ? 'right-start' : 'top')
+              (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
             }
             popperRef={popperRef}
             anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
