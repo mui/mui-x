@@ -14,6 +14,7 @@ import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.type
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
+import { type IdentifierCleaner } from './identifierCleaner.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
@@ -33,6 +34,13 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
    * @returns {string} A unique string representation of the identifier.
    */
   identifierSerializer: IdentifierSerializer<TSeriesType>;
+  /**
+   * A function to clean a series item identifier, returning only the properties
+   * relevant to the series type.
+   * @param {Partial<ChartsSeriesConfig[TSeriesType]['itemIdentifier']> & { type: TSeriesType }} identifier The partial identifier to clean.
+   * @returns {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} A cleaned identifier with only the relevant properties.
+   */
+  identifierCleaner: IdentifierCleaner<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
