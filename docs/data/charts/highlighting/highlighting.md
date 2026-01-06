@@ -29,7 +29,9 @@ axisHighlight={{
 
 ## Highlighting series
 
-In parallel with the tooltip, you can highlight and fade elements.
+When hovering over elements, a tooltip is shown by default.
+You can also configure highlighting and fading independently of the tooltip.
+
 This interaction is controlled by the `highlightScope` property on `series`, which contains two options:
 
 - `highlighted`: Indicates which item to highlight. Its value can be:
