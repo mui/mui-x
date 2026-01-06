@@ -150,11 +150,8 @@ LineChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
-      hideItem: PropTypes.func.isRequired,
       setAxisZoomData: PropTypes.func.isRequired,
       setZoomData: PropTypes.func.isRequired,
-      showItem: PropTypes.func.isRequired,
-      toggleItemVisibility: PropTypes.func.isRequired,
     }),
   }),
   /**
@@ -341,11 +338,6 @@ LineChartPro.propTypes = {
    * Callback fired when a mark element is clicked.
    */
   onMarkClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
-   */
-  onVisibilityChange: PropTypes.func,
   /**
    * Callback fired when the zoom has changed.
    *

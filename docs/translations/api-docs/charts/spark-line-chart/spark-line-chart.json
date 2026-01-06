@@ -89,15 +89,6 @@
         }
       }
     },
-    "onVisibilityChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenIdentifiers": {
-          "name": "hiddenIdentifiers",
-          "description": "The new list of hidden identifiers."
-        }
-      }
-    },
     "plotType": { "description": "Type of plot used." },
     "showHighlight": {
       "description": "Set to <code>true</code> to highlight the value. With line, it shows a point. With bar, it shows a highlight band."

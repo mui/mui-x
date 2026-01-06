@@ -82,13 +82,6 @@
         "describedArgs": ["event", "radarItemIdentifier"]
       }
     },
-    "onVisibilityChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
-      }
-    },
     "shape": {
       "type": { "name": "enum", "description": "'circular'<br>&#124;&nbsp;'sharp'" },
       "default": "'sharp'"

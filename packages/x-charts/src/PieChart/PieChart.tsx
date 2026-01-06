@@ -181,11 +181,7 @@ PieChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.shape({
-      hideItem: PropTypes.func.isRequired,
-      showItem: PropTypes.func.isRequired,
-      toggleItemVisibility: PropTypes.func.isRequired,
-    }),
+    current: PropTypes.object,
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -287,11 +283,6 @@ PieChart.propTypes = {
    * Callback fired when a pie arc is clicked.
    */
   onItemClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
-   */
-  onVisibilityChange: PropTypes.func,
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeries]] objects.

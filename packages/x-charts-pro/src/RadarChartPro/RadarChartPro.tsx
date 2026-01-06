@@ -121,9 +121,6 @@ RadarChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
-      hideItem: PropTypes.func.isRequired,
-      showItem: PropTypes.func.isRequired,
-      toggleItemVisibility: PropTypes.func.isRequired,
     }),
   }),
   className: PropTypes.string,
@@ -251,11 +248,6 @@ RadarChartPro.propTypes = {
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onMarkClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
-   */
-  onVisibilityChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */

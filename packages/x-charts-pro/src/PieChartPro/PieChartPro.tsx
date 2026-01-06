@@ -136,9 +136,6 @@ PieChartPro.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
-      hideItem: PropTypes.func.isRequired,
-      showItem: PropTypes.func.isRequired,
-      toggleItemVisibility: PropTypes.func.isRequired,
     }),
   }),
   children: PropTypes.node,
@@ -241,11 +238,6 @@ PieChartPro.propTypes = {
    * Callback fired when a pie arc is clicked.
    */
   onItemClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
-   */
-  onVisibilityChange: PropTypes.func,
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeries]] objects.

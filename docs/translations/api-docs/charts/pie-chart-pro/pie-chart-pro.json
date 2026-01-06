@@ -42,15 +42,6 @@
       }
     },
     "onItemClick": { "description": "Callback fired when a pie arc is clicked." },
-    "onVisibilityChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenIdentifiers": {
-          "name": "hiddenIdentifiers",
-          "description": "The new list of hidden identifiers."
-        }
-      }
-    },
     "series": {
       "description": "The series to display in the pie chart. An array of <a href='/x/api/charts/pie-series/'>PieSeries</a> objects."
     },

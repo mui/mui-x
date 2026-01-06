@@ -327,11 +327,7 @@ SparkLineChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.shape({
-      hideItem: PropTypes.func.isRequired,
-      showItem: PropTypes.func.isRequired,
-      toggleItemVisibility: PropTypes.func.isRequired,
-    }),
+    current: PropTypes.object,
   }),
   /**
    * Set to `true` to fill spark line area.
@@ -551,11 +547,6 @@ SparkLineChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
-   */
-  onVisibilityChange: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'

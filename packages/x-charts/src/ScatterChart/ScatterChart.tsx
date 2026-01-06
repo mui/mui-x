@@ -190,11 +190,7 @@ ScatterChart.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
-    current: PropTypes.shape({
-      hideItem: PropTypes.func.isRequired,
-      showItem: PropTypes.func.isRequired,
-      toggleItemVisibility: PropTypes.func.isRequired,
-    }),
+    current: PropTypes.object,
   }),
   /**
    * The configuration of axes highlight.
@@ -340,11 +336,6 @@ ScatterChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenIdentifiers The new list of hidden identifiers.
-   */
-  onVisibilityChange: PropTypes.func,
   /**
    * The type of renderer to use for the scatter plot.
    * - `svg-single`: Renders every scatter item in a `<circle />` element.

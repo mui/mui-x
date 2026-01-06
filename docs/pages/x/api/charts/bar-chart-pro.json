@@ -104,13 +104,6 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "onVisibilityChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
-      }
-    },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {

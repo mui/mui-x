@@ -13,10 +13,10 @@ const data = [
 ];
 
 export default function ControlledVisibility() {
-  const [hiddenIdentifiers, setHiddenIdentifiers] = React.useState([]);
+  const [hiddenItems, setHiddenItems] = React.useState([]);
 
   const handleShowAll = () => {
-    setHiddenIdentifiers([
+    setHiddenItems([
       { type: 'pie', seriesId: 'pie', dataIndex: 0 },
       { type: 'pie', seriesId: 'pie', dataIndex: 1 },
       { type: 'pie', seriesId: 'pie', dataIndex: 2 },
@@ -24,11 +24,11 @@ export default function ControlledVisibility() {
   };
 
   const handleHideAll = () => {
-    setHiddenIdentifiers([]);
+    setHiddenItems([]);
   };
 
   const handleShowOnlyA = () => {
-    setHiddenIdentifiers([{ type: 'pie', seriesId: 'pie', dataIndex: 0 }]);
+    setHiddenItems([{ type: 'pie', seriesId: 'pie', dataIndex: 0 }]);
   };
 
   const handleToggleChange = (_event, newValue) => {
@@ -42,10 +42,9 @@ export default function ControlledVisibility() {
   };
 
   const getCurrentValue = () => {
-    const allVisible = hiddenIdentifiers.length === data.length;
-    const allHidden = hiddenIdentifiers.length === 0;
-    const onlyAVisible =
-      hiddenIdentifiers.length === 1 && hiddenIdentifiers[0].dataIndex === 0;
+    const allVisible = hiddenItems.length === data.length;
+    const allHidden = hiddenItems.length === 0;
+    const onlyAVisible = hiddenItems.length === 1 && hiddenItems[0].dataIndex === 0;
 
     if (allVisible) {
       return 'all';
@@ -84,13 +83,13 @@ export default function ControlledVisibility() {
       <PieChart
         series={[{ id: 'pie', data }]}
         height={300}
-        hiddenIdentifiers={hiddenIdentifiers}
+        hiddenItems={hiddenItems}
         slotProps={{
           legend: {
             toggleVisibilityOnClick: true,
           },
         }}
-        onVisibilityChange={(newIdentifiers) => setHiddenIdentifiers(newIdentifiers)}
+        onHiddenItemsChange={(newIdentifiers) => setHiddenItems(newIdentifiers)}
       />
     </Stack>
   );

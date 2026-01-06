@@ -98,13 +98,6 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
-    "onVisibilityChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
-      }
-    },
     "renderer": {
       "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"

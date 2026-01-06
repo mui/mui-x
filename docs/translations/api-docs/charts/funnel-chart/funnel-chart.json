@@ -70,15 +70,6 @@
         }
       }
     },
-    "onVisibilityChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenIdentifiers": {
-          "name": "hiddenIdentifiers",
-          "description": "The new list of hidden identifiers."
-        }
-      }
-    },
     "series": {
       "description": "The series to display in the funnel chart. An array of <a href='/x/api/charts/funnel-series/'>FunnelSeries</a> objects."
     },

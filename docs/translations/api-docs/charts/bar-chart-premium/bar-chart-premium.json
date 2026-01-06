@@ -84,15 +84,6 @@
         "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
       }
     },
-    "onVisibilityChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenIdentifiers": {
-          "name": "hiddenIdentifiers",
-          "description": "The new list of hidden identifiers."
-        }
-      }
-    },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": {

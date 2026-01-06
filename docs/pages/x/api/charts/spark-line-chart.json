@@ -96,13 +96,6 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
-    "onVisibilityChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenIdentifiers: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenIdentifiers"]
-      }
-    },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"

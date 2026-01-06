@@ -25,7 +25,7 @@ Hidden items are visually indicated in the legend with reduced opacity.
 
 ### Visibility change callback
 
-You can listen to visibility changes using the `onVisibilityChange` prop on the chart component.
+You can listen to visibility changes using the `onHiddenItemsChange` prop on the chart component.
 This callback receives an array of hidden item identifiers whenever the visibility state changes.
 
 The following demo shows a pie chart where you can toggle individual slices and see the count of visible slices update.
@@ -39,7 +39,7 @@ When both are provided, the `onItemClick` callback is called first, followed by 
 
 ### Controlled visibility
 
-You can control the visibility state externally using the `hiddenIdentifiers` prop.
+You can control the visibility state externally using the `hiddenItems` prop.
 This prop accepts an array of item identifiers that should be hidden in the chart.
 
 Different chart types have different identifier formats:
