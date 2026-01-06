@@ -14,7 +14,7 @@ type CollapsibleProps = React.HTMLAttributes<HTMLDivElement> & {
   initiallyOpen?: boolean;
 };
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & { open: boolean };
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'> & { open: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -40,8 +40,8 @@ function Collapsible(props: CollapsibleProps) {
   const { className, children, initiallyOpen = true, ...other } = props;
   const [open, setOpen] = React.useState(initiallyOpen);
   const panelId = useId();
-  const { classes: classesRootProps } = useGridRootProps();
-  const ownerState = { classes: classesRootProps, open };
+  const { rows, ...rootProps } = useGridRootProps();
+  const ownerState = { ...rootProps, open };
   const classes = useUtilityClasses(ownerState);
 
   const contextValue = React.useMemo(

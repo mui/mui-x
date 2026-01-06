@@ -13,7 +13,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'> & {
   colDef: GridColDef;
 };
 
@@ -75,9 +75,9 @@ function GridAggregationHeader(
   const { colDef, aggregation } = params;
 
   const apiRef = useGridApiContext();
-  const { classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
 
-  const ownerState = { classes: classesRootProps, colDef };
+  const ownerState = { ...rootProps, colDef };
   const classes = useUtilityClasses(ownerState);
 
   if (!aggregation) {

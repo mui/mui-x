@@ -40,7 +40,7 @@ type GridPivotPanelFieldProps = {
 );
 
 type OwnerState = GridPivotPanelFieldProps &
-  Pick<DataGridPremiumProcessedProps, 'classes'> & {
+  Omit<DataGridPremiumProcessedProps, 'rows'> & {
     dropPosition: DropPosition;
     section: FieldTransferObject['modelKey'];
   };
@@ -238,10 +238,11 @@ function AggregationSelect({
 
 function GridPivotPanelField(props: GridPivotPanelFieldProps) {
   const { children, field, onDragStart, onDragEnd } = props;
-  const { slots, slotProps, classes: classesRootProps, sortingOrder } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps, sortingOrder } = rootProps;
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
   const section = props.modelKey;
-  const ownerState = { ...props, classes: classesRootProps, dropPosition, section };
+  const ownerState = { ...props, ...rootProps, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
 

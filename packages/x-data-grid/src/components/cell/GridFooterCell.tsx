@@ -8,6 +8,8 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
+
 const GridFooterCellRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterCell',
@@ -19,8 +21,6 @@ const GridFooterCellRoot = styled('div', {
 interface GridFooterCellProps extends GridRenderCellParams {
   sx?: SxProps<Theme>;
 }
-
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -48,13 +48,11 @@ function GridFooterCellRaw(props: GridFooterCellProps) {
     isEditable,
     ...other
   } = props;
-  const { classes: classesRootProps } = useGridRootProps();
-
-  const ownerState = { classes: classesRootProps };
-  const classes = useUtilityClasses(ownerState);
+  const { rows, ...rootProps } = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
 
   return (
-    <GridFooterCellRoot ownerState={ownerState} className={classes.root} {...other}>
+    <GridFooterCellRoot ownerState={rootProps} className={classes.root} {...other}>
       {formattedValue}
     </GridFooterCellRoot>
   );

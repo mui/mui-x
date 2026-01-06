@@ -21,7 +21,7 @@ export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-type OwnerState = GridColumnSortButtonProps & Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = GridColumnSortButtonProps & Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -67,8 +67,9 @@ function getIcon(
 function GridColumnSortButton(props: GridColumnSortButtonProps) {
   const { direction, index, sortingOrder, disabled, className, ...other } = props;
   const apiRef = useGridApiContext();
-  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
-  const ownerState = { ...props, classes: classesRootProps };
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
+  const ownerState = { ...props, ...rootProps };
   const classes = useUtilityClasses(ownerState);
 
   const iconElement = getIcon(slots, direction, classes.icon, sortingOrder);

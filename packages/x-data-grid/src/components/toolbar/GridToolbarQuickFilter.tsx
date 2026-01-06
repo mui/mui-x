@@ -46,7 +46,7 @@ export type GridToolbarQuickFilterProps = {
   };
 };
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridProcessedProps, 'rows'> & {
   expanded: boolean;
 };
 
@@ -106,9 +106,10 @@ const GridQuickFilterTextField = styled(
  */
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const apiRef = useGridApiContext();
-  const { slots, slotProps: rootPropsSlotProps, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps } = rootProps;
   const ownerState = {
-    classes: classesRootProps,
+    ...rootProps,
     expanded: false,
   };
   const classes = useUtilityClasses(ownerState);

@@ -19,7 +19,7 @@ const GridPanelAnchor = styled('div', {
   width: 'calc(100% - (var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize)))',
 });
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridProcessedProps, 'rows'> & {
   hasScrollX: boolean;
   hasPinnedRight: boolean;
   overlayType: GridOverlayType;

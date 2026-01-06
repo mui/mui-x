@@ -33,8 +33,7 @@ interface ScrollAreaProps {
   scrollPosition: RefObject<GridScrollParams>;
 }
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'> &
-  Pick<ScrollAreaProps, 'scrollDirection'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'> & Pick<ScrollAreaProps, 'scrollDirection'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { scrollDirection, classes } = ownerState;
@@ -296,8 +295,8 @@ const GridScrollAreaContent = forwardRef(function GridScrollAreaContent(
 
   const [canScrollMore, setCanScrollMore] = React.useState<boolean>(getCanScrollMore);
 
-  const { classes: classesRootProps } = useGridRootProps();
-  const ownerState = { classes: classesRootProps, scrollDirection };
+  const { rows, ...rootProps } = useGridRootProps();
+  const ownerState = { ...rootProps, scrollDirection };
   const classes = useUtilityClasses(ownerState);
 
   const handleScrolling: GridEventListener<'scrollPositionChange'> = () => {

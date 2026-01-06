@@ -15,7 +15,7 @@ import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-d
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-type OwnerState = Pick<DataGridProProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridProProcessedProps, 'rows'> & {
   isDraggable: boolean;
 };
 
@@ -40,7 +40,8 @@ const RowReorderIcon = styled('svg', {
 
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
-  const { isRowReorderable, rowReordering, slots, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { isRowReorderable, rowReordering, slots } = rootProps;
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const cellValue =
@@ -66,7 +67,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     return true;
   }, [rowReordering, isRowReorderable, sortModel, editRowsState, params.row, params.rowNode]);
 
-  const ownerState = { isDraggable, classes: classesRootProps };
+  const ownerState = { isDraggable, ...rootProps };
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(

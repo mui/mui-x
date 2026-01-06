@@ -75,7 +75,7 @@ export interface GridColumnsManagementProps {
   getTogglableColumns?: (columns: GridColDef[]) => GridColDef['field'][];
 }
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -101,15 +101,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     gridInitialColumnVisibilityModelSelector,
   );
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
-  const {
-    columnFilterDebounceMs: rootPropsColumnFilterDebounceMs,
-    slots,
-    slotProps,
-    classes: classesRootProps,
-  } = useGridRootProps();
-  const ownerState = { classes: classesRootProps };
+  const { rows, ...rootProps } = useGridRootProps();
+  const { columnFilterDebounceMs: rootPropsColumnFilterDebounceMs, slots, slotProps } = rootProps;
   const [searchValue, setSearchValue] = React.useState('');
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
   const columnDefinitions = useGridSelector(apiRef, gridColumnDefinitionsSelector);
   const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
   const pivotInitialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
@@ -258,10 +253,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
 
   return (
     <React.Fragment>
-      <GridColumnsManagementHeader className={classes.header} ownerState={ownerState}>
+      <GridColumnsManagementHeader className={classes.header} ownerState={rootProps}>
         <SearchInput
           as={slots.baseTextField}
-          ownerState={ownerState}
+          ownerState={rootProps}
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
           className={classes.searchInput}
@@ -303,8 +298,8 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           {...searchInputProps}
         />
       </GridColumnsManagementHeader>
-      <GridColumnsManagementScrollArea ownerState={ownerState}>
-        <GridColumnsManagementBody className={classes.root} ownerState={ownerState}>
+      <GridColumnsManagementScrollArea ownerState={rootProps}>
+        <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
           {currentColumns.map((column) => (
             <GridColumnsManagementRow
               as={slots.baseCheckbox}
@@ -322,14 +317,14 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
             />
           ))}
           {currentColumns.length === 0 && (
-            <GridColumnsManagementEmptyText ownerState={ownerState}>
+            <GridColumnsManagementEmptyText ownerState={rootProps}>
               {apiRef.current.getLocaleText('columnsManagementNoColumns')}
             </GridColumnsManagementEmptyText>
           )}
         </GridColumnsManagementBody>
       </GridColumnsManagementScrollArea>
       {!disableShowHideToggle || !disableResetButton ? (
-        <GridColumnsManagementFooter ownerState={ownerState} className={classes.footer}>
+        <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
             <slots.baseCheckbox
               disabled={hideableColumns.length === 0 || pivotActive}

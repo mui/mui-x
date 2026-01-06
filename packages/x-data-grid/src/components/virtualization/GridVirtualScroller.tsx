@@ -31,7 +31,7 @@ import type {
 import { GridApiCommunity } from '../../models/api/gridApiCommunity';
 import { useGridVirtualizer } from '../../hooks/core/useGridVirtualizer';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridProcessedProps, 'rows'> & {
   hasScrollX: boolean;
   hasPinnedRight: boolean;
   loadingOverlayVariant: GridLoadingOverlayVariant | null;
@@ -86,14 +86,9 @@ export interface GridVirtualScrollerProps {
 
 function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const apiRef = useGridPrivateApiContext();
-  const {
-    listView,
-    pinnedColumnsSectionSeparator,
-    pinnedRowsSectionSeparator,
-    slots,
-    slotProps,
-    classes: classesRootProps,
-  } = useGridRootProps();
+  const { rows: rowsRootProps, ...rootProps } = useGridRootProps();
+  const { listView, pinnedColumnsSectionSeparator, pinnedRowsSectionSeparator, slots, slotProps } =
+    rootProps;
   const hasScrollY = useGridSelector(apiRef, gridHasScrollYSelector);
   const hasScrollX = useGridSelector(apiRef, gridHasScrollXSelector);
   const hasPinnedRight = useGridSelector(apiRef, hasPinnedRightSelector);
@@ -101,7 +96,7 @@ function GridVirtualScroller(props: GridVirtualScrollerProps) {
   const { overlayType, loadingOverlayVariant } = useGridOverlays(apiRef, { slotProps });
   const Overlay = slots?.[overlayType];
   const ownerState = {
-    classes: classesRootProps,
+    ...rootProps,
     hasScrollX,
     hasPinnedRight,
     overlayType,

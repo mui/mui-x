@@ -11,9 +11,9 @@ import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps
 
 export type ResizablePanelHandleProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = { direction: 'horizontal' | 'vertical' } & Pick<
+type OwnerState = { direction: 'horizontal' | 'vertical' } & Omit<
   DataGridPremiumProcessedProps,
-  'classes'
+  'rows'
 >;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
@@ -81,9 +81,9 @@ const ResizablePanelHandleRoot = styled('div', {
 function ResizablePanelHandle(props: ResizablePanelHandleProps) {
   const { className, children, ...other } = props;
   const { rootRef, direction } = useResizablePanelContext();
-  const { classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const ownerState = {
-    classes: classesRootProps,
+    ...rootProps,
     direction,
   };
   const classes = useUtilityClasses(ownerState);

@@ -42,7 +42,7 @@ type GridChartsPanelDataFieldProps = {
 };
 
 type OwnerState = GridChartsPanelDataFieldProps &
-  Pick<DataGridPremiumProcessedProps, 'classes'> & {
+  Omit<DataGridPremiumProcessedProps, 'rows'> & {
     dropPosition: DropPosition;
     section: GridChartsIntegrationSection;
   };
@@ -272,9 +272,10 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
     onDragStart,
     onDragEnd,
   } = props;
-  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
-  const ownerState = { ...props, classes: classesRootProps, dropPosition, section };
+  const ownerState = { ...props, ...rootProps, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);

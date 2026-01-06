@@ -20,7 +20,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = Prompt & { onRerun: () => void };
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'> & {
   variant?: 'success' | 'error' | 'processing';
   showChanges: boolean;
 };
@@ -198,10 +198,11 @@ const PromptChangesToggleIcon = styled('svg', {
 
 function GridPrompt(props: GridPromptProps) {
   const { value, response, helperText, variant, onRerun } = props;
-  const { slots, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
   const [showChanges, setShowChanges] = React.useState(false);
   const ownerState = {
-    classes: classesRootProps,
+    ...rootProps,
     variant,
     showChanges,
   };
