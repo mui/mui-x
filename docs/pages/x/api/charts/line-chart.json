@@ -71,6 +71,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -87,13 +94,6 @@
     },
     "onLineClick": { "type": { "name": "func" } },
     "onMarkClick": { "type": { "name": "func" } },
-    "onHiddenItemsChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenItems"]
-      }
-    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

@@ -287,7 +287,7 @@ LineChart.propTypes = {
    *   {
    *     type: 'pie',
    *     seriesId: 'series-1',
-   *     itemId: 'item-3',
+   *     dataIndex: 3,
    *   },
    *   {
    *     type: 'line',
@@ -366,6 +366,11 @@ LineChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -387,11 +392,6 @@ LineChart.propTypes = {
    * Callback fired when a mark element is clicked.
    */
   onMarkClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
-   */
-  onHiddenItemsChange: PropTypes.func,
   /**
    * The series to display in the line chart.
    * An array of [[LineSeries]] objects.

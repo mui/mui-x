@@ -77,6 +77,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -93,13 +100,6 @@
     },
     "onLineClick": { "type": { "name": "func" } },
     "onMarkClick": { "type": { "name": "func" } },
-    "onHiddenItemsChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenItems"]
-      }
-    },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {

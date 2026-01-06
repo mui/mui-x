@@ -166,7 +166,7 @@ PieChartPro.propTypes = {
    *   {
    *     type: 'pie',
    *     seriesId: 'series-1',
-   *     itemId: 'item-3',
+   *     dataIndex: 3,
    *   },
    *   {
    *     type: 'line',
@@ -224,6 +224,11 @@ PieChartPro.propTypes = {
     }),
   ]),
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -233,11 +238,6 @@ PieChartPro.propTypes = {
    * Callback fired when a pie arc is clicked.
    */
   onItemClick: PropTypes.func,
-  /**
-   * Callback fired when any hidden identifiers change.
-   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
-   */
-  onHiddenItemsChange: PropTypes.func,
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeries]] objects.

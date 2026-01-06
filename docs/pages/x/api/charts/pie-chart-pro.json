@@ -32,6 +32,13 @@
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -40,13 +47,6 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
-    "onHiddenItemsChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenItems"]
-      }
-    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

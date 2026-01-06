@@ -58,6 +58,15 @@
         }
       }
     },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": {
@@ -75,15 +84,6 @@
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
-    "onHiddenItemsChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenItems": {
-          "name": "hiddenItems",
-          "description": "The new list of hidden identifiers."
-        }
-      }
-    },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": {

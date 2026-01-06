@@ -57,6 +57,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -69,13 +76,6 @@
       "signature": {
         "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, funnelItemIdentifier: FunnelItemIdentifier) => void",
         "describedArgs": ["event", "funnelItemIdentifier"]
-      }
-    },
-    "onHiddenItemsChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenItems"]
       }
     },
     "skipAnimation": { "type": { "name": "bool" } },

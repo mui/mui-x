@@ -42,6 +42,15 @@
         }
       }
     },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": {
@@ -58,15 +67,6 @@
         "funnelItemIdentifier": {
           "name": "funnelItemIdentifier",
           "description": "The funnel item identifier."
-        }
-      }
-    },
-    "onHiddenItemsChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenItems": {
-          "name": "hiddenItems",
-          "description": "The new list of hidden identifiers."
         }
       }
     },

@@ -76,6 +76,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -95,13 +102,6 @@
       "signature": {
         "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
-      }
-    },
-    "onHiddenItemsChange": {
-      "type": { "name": "func" },
-      "signature": {
-        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
-        "describedArgs": ["hiddenItems"]
       }
     },
     "onZoomChange": {

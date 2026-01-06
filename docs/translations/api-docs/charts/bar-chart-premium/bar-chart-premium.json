@@ -53,6 +53,15 @@
         }
       }
     },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": {
@@ -73,15 +82,6 @@
       "typeDescriptions": {
         "event": { "name": "event", "description": "The event source of the callback." },
         "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
-      }
-    },
-    "onHiddenItemsChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenItems": {
-          "name": "hiddenItems",
-          "description": "The new list of hidden identifiers."
-        }
       }
     },
     "onZoomChange": {

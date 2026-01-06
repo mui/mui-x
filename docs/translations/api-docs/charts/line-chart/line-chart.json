@@ -55,6 +55,15 @@
         }
       }
     },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": {
@@ -72,15 +81,6 @@
     },
     "onLineClick": { "description": "Callback fired when a line element is clicked." },
     "onMarkClick": { "description": "Callback fired when a mark element is clicked." },
-    "onHiddenItemsChange": {
-      "description": "Callback fired when any hidden identifiers change.",
-      "typeDescriptions": {
-        "hiddenItems": {
-          "name": "hiddenItems",
-          "description": "The new list of hidden identifiers."
-        }
-      }
-    },
     "series": {
       "description": "The series to display in the line chart. An array of <a href='/x/api/charts/line-series/'>LineSeries</a> objects."
     },
