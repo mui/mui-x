@@ -18,7 +18,7 @@ There are two main types of components used to create Charts: [structural](#stru
 
 Structural components are used to define a chart's dimensions, surfaces, and data.
 
-- `ChartDataProvider` provides data to children components.
+- `ChartDataProvider` provides data to descendants.
 - `ChartsSurface` renders the SVG element.
 - `ChartContainer` combines the Data Provider and Surface components, and is useful when you only need to customize graphical elements.
 
@@ -66,7 +66,7 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 ## Graphical components
 
 Graphical components are used to render the visual elements of a chart.
-They are children of [`ChartDataProvider`](#structural-components) described above.
+They are descendants of [`ChartDataProvider`](#structural-components) described above.
 These are too numerous to list, but common examples include:
 
 - `LinePlot`
@@ -139,8 +139,8 @@ For example, the custom Chart below uses both `BarPlot` and `LinePlot`, and each
     { data: [3, 2, 1], type: 'line' },
   ]}
 >
-  <BarPlot /> {/* Only display the series with type: 'bar' */}
-  <LinePlot /> {/* Only display the series with type: 'line' */}
+  <BarPlot /> {/* Only displays the series with type: 'bar' */}
+  <LinePlot /> {/* Only displays series with type: 'line' */}
 </ChartContainer>
 ```
 
