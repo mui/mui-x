@@ -67,6 +67,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
     headerFiltersElementRef: headerFiltersRef,
   });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
+  const { rows, ...rootProps } = useGridRootProps();
   const {
     headerFilters,
     showColumnVerticalBorder,
@@ -74,7 +75,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
     classes: classesRootProps,
     slots,
     slotProps,
-  } = useGridRootProps();
+  } = rootProps;
   const classes = useUtilityClasses({ classes: classesRootProps });
   const disableHeaderFiltering = !headerFilters;
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
@@ -196,6 +197,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
         className={classes.headerFilterRow}
         role="row"
         aria-rowindex={headerGroupingMaxDepth + 2}
+        ownerState={rootProps}
       >
         {leftRenderContext &&
           getColumnFilters({
