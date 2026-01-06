@@ -37,7 +37,7 @@ import { frFRLocaleText } from '@mui/x-charts-pro/locales';
 You can find [all built-in locales](https://github.com/mui/mui-x/tree/HEAD/packages/x-charts/src/locales) in the source code on GitHub.
 
 To create your own translation or customize the English text, copy this file to your project, make any changes needed, and import the locale from there.
-Note that these chart component translations follo [Material UI's localization strategy](/material-ui/guides/localization/).
+Note that these chart component translations follow [Material UI's localization strategy](/material-ui/guides/localization/).
 
 The list of built-in translations and their completion level is available in the [translation status table](#translation-status).
 If a translation is missing, you're welcome to open a PR to complete missing keys or add support for additional languages.
