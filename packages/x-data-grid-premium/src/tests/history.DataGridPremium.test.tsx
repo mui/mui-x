@@ -8,7 +8,14 @@ import {
   GridHistoryEventHandler,
   GridEvents,
 } from '@mui/x-data-grid-premium';
-import { createRenderer, waitFor, act, fireEvent, MuiRenderResult } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  waitFor,
+  act,
+  fireEvent,
+  MuiRenderResult,
+  screen,
+} from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
@@ -46,7 +53,7 @@ describe('<DataGridPremium /> - History', () => {
   }
 
   describe('API', () => {
-    it('should start with an empty queue', () => {
+    it('should start with an empty stack', () => {
       render(<Test />);
 
       expect(apiRef.current!.history.canUndo()).to.equal(false);
@@ -63,7 +70,7 @@ describe('<DataGridPremium /> - History', () => {
       expect(resultRedo).to.equal(false);
     });
 
-    it('should clear the queue', async () => {
+    it('should clear the stack', async () => {
       const { user } = render(<Test />);
 
       // Edit a cell
@@ -240,7 +247,7 @@ describe('<DataGridPremium /> - History', () => {
     });
   });
 
-  describe('Queue management', () => {
+  describe('Stack management', () => {
     it('should respect historyStackSize limit and keep the latest items', async () => {
       let lastUndoData: any = null;
       const customHandler: GridHistoryEventHandler = {
@@ -268,7 +275,7 @@ describe('<DataGridPremium /> - History', () => {
         expect(apiRef.current!.history.canUndo()).to.equal(true);
       });
 
-      // Should only be able to undo 2 times (queue size limit) and only for the last two items
+      // Should only be able to undo 2 times (stack size limit) and only for the last two items
       await act(async () => {
         await apiRef.current!.history.undo();
       });
@@ -282,7 +289,7 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canUndo()).to.equal(false);
     });
 
-    it('should validate the previous queue item after undo', async () => {
+    it('should validate the previous stack item after undo', async () => {
       let firstEventValid = true;
 
       const firstHandler: GridHistoryEventHandler = {
@@ -346,6 +353,63 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canRedo()).to.equal(true);
     });
 
+    it('should validate the current item after redo', async () => {
+      let eventValid = true;
+
+      const firstHandler: GridHistoryEventHandler = {
+        store: () => ({}),
+        undo: async () => {},
+        redo: async () => {},
+        validate: (_, operation) => {
+          if (operation === 'redo') {
+            return eventValid;
+          }
+          return true;
+        },
+      };
+
+      const historyEventHandlers = {
+        cellClick: firstHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
+
+      const { user } = render(
+        <Test
+          historyEventHandlers={historyEventHandlers}
+          historyValidationEvents={['stateChange']}
+        />,
+      );
+
+      const cell = getCell(0, 2);
+      await user.click(cell);
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+
+      // Undo the event
+      await act(async () => {
+        const result = await apiRef.current!.history.undo();
+        expect(result).to.equal(true);
+      });
+
+      // Invalidate the event
+      eventValid = false;
+
+      // Can still redo
+      expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+      // Redo the event
+      await act(async () => {
+        const result = await apiRef.current!.history.redo();
+        // redo is invalid, the result should be false
+        expect(result).to.equal(false);
+      });
+
+      // Make the redo valid
+      eventValid = true;
+
+      // Since the event was invalid, stack should be cleared
+      expect(apiRef.current!.history.canRedo()).to.equal(false);
+    });
+
     it('should clear undo history when the first event is invalid', async () => {
       let eventValid = true;
 
@@ -380,7 +444,7 @@ describe('<DataGridPremium /> - History', () => {
       expect(apiRef.current!.history.canRedo()).to.equal(false);
     });
 
-    it('should not add items to the queue if the store method returns null', async () => {
+    it('should not add items to the stack if the store method returns null', async () => {
       const customHandler: GridHistoryEventHandler = {
         store: () => null,
         undo: async () => {},
@@ -434,6 +498,74 @@ describe('<DataGridPremium /> - History', () => {
       // Make a new click (should clear redo history)
       await user.click(cell);
 
+      expect(apiRef.current!.history.canRedo()).to.equal(false);
+    });
+
+    it('should clear the stack when `historyStackSize` is reduced below the current stack size', async () => {
+      const customHandler: GridHistoryEventHandler = {
+        store: () => ({ data: 'test' }),
+        undo: async () => {},
+        redo: async () => {},
+      };
+
+      const historyEventHandlers = {
+        cellClick: customHandler,
+      } as Record<GridEvents, GridHistoryEventHandler>;
+
+      function TestWithDynamicStackSize({ initialStackSize }: { initialStackSize: number }) {
+        const [stackSize, setStackSize] = React.useState(initialStackSize);
+        apiRef = useGridApiRef();
+
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              {...data}
+              apiRef={apiRef}
+              disableRowSelectionOnClick
+              disableVirtualization
+              cellSelection
+              historyStackSize={stackSize}
+              historyEventHandlers={historyEventHandlers}
+            />
+            <button
+              data-testid="reduce-stack-size"
+              onClick={() => setStackSize((prev) => prev - 1)}
+            >
+              Reduce Stack Size
+            </button>
+          </div>
+        );
+      }
+
+      const { user } = render(<TestWithDynamicStackSize initialStackSize={4} />);
+
+      const button = screen.getByTestId('reduce-stack-size');
+
+      // Create 3 history items
+      await user.click(getCell(0, 2));
+      await user.click(getCell(1, 2));
+      await user.click(getCell(2, 2));
+
+      // Undo to have both undo and redo available
+      await act(async () => {
+        await apiRef.current!.history.undo();
+      });
+
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+      expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+      // Reduce the stack size to 3 (current stack size)
+      await user.click(button);
+
+      // undo and redo still available
+      expect(apiRef.current!.history.canUndo()).to.equal(true);
+      expect(apiRef.current!.history.canRedo()).to.equal(true);
+
+      // Reduce the stack size to 2 (smaller than current stack size)
+      await user.click(button);
+
+      // undo and redo are not available anymore
+      expect(apiRef.current!.history.canUndo()).to.equal(false);
       expect(apiRef.current!.history.canRedo()).to.equal(false);
     });
   });
