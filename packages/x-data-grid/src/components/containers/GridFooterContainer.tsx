@@ -12,7 +12,7 @@ export type GridFooterContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -27,7 +27,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridFooterContainerRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FooterContainer',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -38,12 +38,16 @@ const GridFooterContainerRoot = styled('div', {
 const GridFooterContainer = forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooterContainer(props, ref) {
     const { className, ...other } = props;
-    const { classes: classesRootProps } = useGridRootProps();
-    const ownerState = { classes: classesRootProps };
-    const classes = useUtilityClasses(ownerState);
+    const { rows, ...rootProps } = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
 
     return (
-      <GridFooterContainerRoot className={clsx(classes.root, className)} {...other} ref={ref} />
+      <GridFooterContainerRoot
+        className={clsx(classes.root, className)}
+        ownerState={rootProps}
+        {...other}
+        ref={ref}
+      />
     );
   },
 );

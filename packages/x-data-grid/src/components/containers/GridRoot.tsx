@@ -29,10 +29,7 @@ export interface GridRootProps extends React.HTMLAttributes<HTMLDivElement> {
   sidePanel?: React.ReactNode;
 }
 
-type OwnerState = Pick<
-  DataGridProcessedProps,
-  'classes' | 'autoHeight' | 'showCellVerticalBorder' | 'slots'
->;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
   const { autoHeight, classes, showCellVerticalBorder, slots: ownerStateSlots } = ownerState;
@@ -52,12 +49,7 @@ const useUtilityClasses = (ownerState: OwnerState, density: GridDensity) => {
 };
 
 const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(props, ref) {
-  const {
-    classes: classesRootProps,
-    slots,
-    autoHeight,
-    showCellVerticalBorder,
-  } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const { className, children, sidePanel, ...other } = props;
   const apiRef = useGridPrivateApiContext();
   const density = useGridSelector(apiRef, gridDensitySelector);
@@ -75,9 +67,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
 
   const handleRef = useForkRef(rootElementRef, ref, rootMountCallback);
 
-  const ownerState = { classes: classesRootProps, slots, autoHeight, showCellVerticalBorder };
-
-  const classes = useUtilityClasses(ownerState, density);
+  const classes = useUtilityClasses(rootProps, density);
   const cssVariables = useCSSVariablesContext();
 
   const isSSR = useIsSSR();
@@ -94,6 +84,7 @@ const GridRoot = forwardRef<HTMLDivElement, GridRootProps>(function GridRoot(pro
         cssVariables.className,
         sidePanel && gridClasses.withSidePanel,
       )}
+      ownerState={rootProps}
       {...other}
       ref={handleRef}
     >

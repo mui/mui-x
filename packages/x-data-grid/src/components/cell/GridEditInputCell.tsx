@@ -13,7 +13,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -28,7 +28,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridEditInputCellRoot = styled(NotRendered<GridSlotProps['baseInput']>, {
   name: 'MuiDataGrid',
   slot: 'EditInputCell',
-})({
+})<{ ownerState: OwnerState }>({
   font: vars.typography.font.body,
   padding: '1px 0',
   '& input': {
@@ -55,7 +55,8 @@ export interface GridEditInputCellProps extends GridRenderEditCellParams {
 }
 
 const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
-  const { slots, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
 
   const {
     id,
@@ -81,7 +82,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
   const apiRef = useGridApiContext();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [valueState, setValueState] = React.useState(value);
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const classes = useUtilityClasses(rootProps);
 
   const handleChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,6 +127,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
       as={slots.baseInput}
       inputRef={inputRef}
       className={classes.root}
+      ownerState={rootProps}
       fullWidth
       type={colDef.type === 'number' ? colDef.type : 'text'}
       value={valueState ?? ''}

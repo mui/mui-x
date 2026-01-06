@@ -12,7 +12,10 @@ import { useGridChartsIntegrationContext } from '../../../hooks/utils/useGridCha
 import { Collapsible } from '../../collapsible/Collapsible';
 import { CollapsibleTrigger } from '../../collapsible/CollapsibleTrigger';
 import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../../hooks/features/chartsIntegration/useGridChartsIntegration';
+
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 interface GridChartsPanelCustomizeProps {
   activeChartId: string;
@@ -26,14 +29,14 @@ const GridChartsPanelCustomizeRoot = styled(GridShadowScrollArea)({
 const GridChartsPanelCustomizeSection = styled(Collapsible, {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelCustomizeSection',
-})({
+})<{ ownerState: OwnerState }>({
   margin: vars.spacing(0.5, 1),
 });
 
 const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
   name: 'MuiDataGrid',
   slot: 'chartsPanelSection',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   padding: vars.spacing(2, 1.5),
@@ -43,7 +46,7 @@ const GridChartsPanelCustomizePanel = styled(CollapsiblePanel, {
 const GridChartsPanelCustomizePanelTitle = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelCustomizePanelTitle',
-})({
+})<{ ownerState: OwnerState }>({
   font: vars.typography.font.body,
   fontWeight: vars.typography.fontWeight.medium,
 });
@@ -51,7 +54,8 @@ const GridChartsPanelCustomizePanelTitle = styled('div', {
 export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   const { activeChartId, sections } = props;
   const apiRef = useGridApiContext();
-  const { slots, slotProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
 
   const {
@@ -75,11 +79,17 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   return (
     <GridChartsPanelCustomizeRoot>
       {sections.map((section, index) => (
-        <GridChartsPanelCustomizeSection key={section.id} initiallyOpen={index === 0}>
+        <GridChartsPanelCustomizeSection
+          key={section.id}
+          initiallyOpen={index === 0}
+          ownerState={rootProps}
+        >
           <CollapsibleTrigger>
-            <GridChartsPanelCustomizePanelTitle>{section.label}</GridChartsPanelCustomizePanelTitle>
+            <GridChartsPanelCustomizePanelTitle ownerState={rootProps}>
+              {section.label}
+            </GridChartsPanelCustomizePanelTitle>
           </CollapsibleTrigger>
-          <GridChartsPanelCustomizePanel>
+          <GridChartsPanelCustomizePanel ownerState={rootProps}>
             {Object.entries(section.controls).map(([key, optRaw]) => {
               const opt = optRaw as GridChartsConfigurationControl;
               const context = { configuration, dimensions, values };

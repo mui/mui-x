@@ -69,7 +69,7 @@ const fadeInUp = keyframes({
 const PromptItem = styled('li', {
   name: 'MuiDataGrid',
   slot: 'Prompt',
-})`
+})<{ ownerState: OwnerState }>`
   display: flex;
   padding: ${vars.spacing(1, 1.25)};
   align-items: flex-start;
@@ -89,7 +89,7 @@ const PromptItem = styled('li', {
 const PromptContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PromptContent',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -100,14 +100,14 @@ const PromptContent = styled('div', {
 const PromptText = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PromptText',
-})({
+})<{ ownerState: OwnerState }>({
   font: vars.typography.font.body,
 });
 
 const PromptIconContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PromptIconContainer',
-})({
+})<{ ownerState: OwnerState }>({
   flexShrink: 0,
   display: 'flex',
   alignItems: 'center',
@@ -151,7 +151,7 @@ const PromptFeedback = styled('div', {
 const PromptChangeList = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PromptChangeList',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexWrap: 'wrap',
   gap: vars.spacing(0.5),
@@ -163,7 +163,7 @@ const PromptChangeList = styled('div', {
 const PromptChangesToggle = styled('button', {
   name: 'MuiDataGrid',
   slot: 'PromptChangesToggle',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(0.25),
@@ -432,8 +432,8 @@ function GridPrompt(props: GridPromptProps) {
   ]);
 
   return (
-    <PromptItem className={classes.root}>
-      <PromptIconContainer className={classes.iconContainer}>
+    <PromptItem className={classes.root} ownerState={ownerState}>
+      <PromptIconContainer className={classes.iconContainer} ownerState={ownerState}>
         {!response && variant !== 'error' ? (
           <slots.baseCircularProgress size={20} />
         ) : (
@@ -445,8 +445,10 @@ function GridPrompt(props: GridPromptProps) {
           />
         )}
       </PromptIconContainer>
-      <PromptContent className={classes.content}>
-        <PromptText className={classes.text}>{value}</PromptText>
+      <PromptContent className={classes.content} ownerState={ownerState}>
+        <PromptText className={classes.text} ownerState={ownerState}>
+          {value}
+        </PromptText>
         <PromptFeedback ownerState={ownerState} className={classes.feedback}>
           {helperText}
         </PromptFeedback>
@@ -454,6 +456,7 @@ function GridPrompt(props: GridPromptProps) {
           <React.Fragment>
             <PromptChangesToggle
               className={classes.changesToggle}
+              ownerState={ownerState}
               aria-expanded={showChanges}
               aria-controls={changesListId}
               onClick={() => setShowChanges(!showChanges)}
@@ -466,7 +469,11 @@ function GridPrompt(props: GridPromptProps) {
               />
             </PromptChangesToggle>
             {showChanges && (
-              <PromptChangeList id={changesListId} className={classes.changeList}>
+              <PromptChangeList
+                id={changesListId}
+                className={classes.changeList}
+                ownerState={ownerState}
+              >
                 {changeList.map((change) => (
                   <slots.baseTooltip key={change.label} title={change.description}>
                     <slots.baseChip label={change.label} icon={<change.icon />} size="small" />

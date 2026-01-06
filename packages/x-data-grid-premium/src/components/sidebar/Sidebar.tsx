@@ -11,7 +11,7 @@ import { gridSidebarContentSelector } from '../../hooks/features/sidebar';
 
 export type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const SidebarRoot = styled(ResizablePanel, {
   name: 'MuiDataGrid',
   slot: 'Sidebar',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   width: 300,
@@ -38,8 +38,8 @@ const SidebarRoot = styled(ResizablePanel, {
 function Sidebar(props: SidebarProps) {
   const { className, children, ...other } = props;
   const apiRef = useGridApiContext();
-  const { classes: classesRootProps } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const { rows, ...rootProps } = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
   const { value, sidebarId, labelId } = useGridSelector(apiRef, gridSidebarContentSelector);
 
   if (!value) {
@@ -56,6 +56,7 @@ function Sidebar(props: SidebarProps) {
     <SidebarRoot
       id={sidebarId}
       className={clsx(className, classes.root)}
+      ownerState={rootProps}
       aria-labelledby={labelId}
       {...other}
     >

@@ -7,7 +7,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -22,7 +22,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnHeadersRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaders',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   borderTopLeftRadius: 'var(--unstable_DataGrid-radius)',
@@ -36,13 +36,14 @@ interface GridBaseColumnHeadersProps extends React.HTMLAttributes<HTMLDivElement
 export const GridBaseColumnHeaders = forwardRef<HTMLDivElement, GridBaseColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {
     const { className, ...other } = props;
-    const { classes: classesRootProps } = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
 
-    const classes = useUtilityClasses({ classes: classesRootProps });
+    const classes = useUtilityClasses(rootProps);
 
     return (
       <GridColumnHeadersRoot
         className={clsx(classes.root, className)}
+        ownerState={rootProps}
         {...other}
         role="presentation"
         ref={ref}

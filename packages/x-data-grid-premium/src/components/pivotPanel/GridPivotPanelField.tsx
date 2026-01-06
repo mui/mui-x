@@ -100,7 +100,7 @@ const GridPivotPanelFieldRoot = styled('div', {
 const GridPivotPanelFieldName = styled('span', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldName',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   overflow: 'hidden',
   textOverflow: 'ellipsis',
@@ -110,7 +110,7 @@ const GridPivotPanelFieldName = styled('span', {
 const GridPivotPanelFieldActionContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldActionContainer',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
 });
@@ -118,7 +118,7 @@ const GridPivotPanelFieldActionContainer = styled('div', {
 const GridPivotPanelFieldDragIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldDragIcon',
-})({
+})<{ ownerState: OwnerState }>({
   position: 'absolute',
   left: -1,
   width: 16,
@@ -134,7 +134,7 @@ const GridPivotPanelFieldDragIcon = styled('div', {
 const GridPivotPanelFieldCheckbox = styled(NotRendered<GridSlotProps['baseCheckbox']>, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldCheckbox',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   position: 'relative',
   margin: vars.spacing(0, 0, 0, -1),
@@ -361,13 +361,14 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
       onDragEnd={onDragEnd}
       draggable="true"
     >
-      <GridPivotPanelFieldDragIcon className={classes.dragIcon}>
+      <GridPivotPanelFieldDragIcon className={classes.dragIcon} ownerState={ownerState}>
         <slots.columnReorderIcon fontSize="small" />
       </GridPivotPanelFieldDragIcon>
 
       {hideable ? (
         <GridPivotPanelFieldCheckbox
           className={classes.checkbox}
+          ownerState={ownerState}
           as={slots.baseCheckbox}
           size="small"
           density="compact"
@@ -377,10 +378,15 @@ function GridPivotPanelField(props: GridPivotPanelFieldProps) {
           label={children}
         />
       ) : (
-        <GridPivotPanelFieldName className={classes.name}>{children}</GridPivotPanelFieldName>
+        <GridPivotPanelFieldName className={classes.name} ownerState={ownerState}>
+          {children}
+        </GridPivotPanelFieldName>
       )}
 
-      <GridPivotPanelFieldActionContainer className={classes.actionContainer}>
+      <GridPivotPanelFieldActionContainer
+        className={classes.actionContainer}
+        ownerState={ownerState}
+      >
         {section === 'columns' && (
           <GridColumnSortButton
             field={field}

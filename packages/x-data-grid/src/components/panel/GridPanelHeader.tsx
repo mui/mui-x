@@ -8,7 +8,7 @@ import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -23,16 +23,22 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelHeader',
-})({
+})<{ ownerState: OwnerState }>({
   padding: vars.spacing(1),
 });
 
 function GridPanelHeader(props: React.HTMLAttributes<HTMLDivElement> & { sx?: SxProps<Theme> }) {
   const { className, ...other } = props;
-  const { classes: classesRootProps } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const { rows, ...rootProps } = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
 
-  return <GridPanelHeaderRoot className={clsx(classes.root, className)} {...other} />;
+  return (
+    <GridPanelHeaderRoot
+      className={clsx(classes.root, className)}
+      ownerState={rootProps}
+      {...other}
+    />
+  );
 }
 
 GridPanelHeader.propTypes = {

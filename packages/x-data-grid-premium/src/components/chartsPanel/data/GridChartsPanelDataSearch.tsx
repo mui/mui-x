@@ -14,7 +14,7 @@ export type GridChartsPanelDataSearchProps = Pick<
   onClear: () => void;
 };
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -29,15 +29,16 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridChartsPanelDataSearchContainer = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ChartsPanelDataSearchContainer',
-})({
+})<{ ownerState: OwnerState }>({
   padding: vars.spacing(1),
 });
 
 function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
   const { onClear, value, onChange } = props;
-  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const classes = useUtilityClasses(rootProps);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Escape') {
@@ -46,7 +47,7 @@ function GridChartsPanelDataSearch(props: GridChartsPanelDataSearchProps) {
   };
 
   return (
-    <GridChartsPanelDataSearchContainer className={classes.container}>
+    <GridChartsPanelDataSearchContainer className={classes.container} ownerState={rootProps}>
       <slots.baseTextField
         size="small"
         aria-label={apiRef.current.getLocaleText('chartsSearchLabel')}

@@ -9,7 +9,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type SidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -24,7 +24,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const SidebarHeaderRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'SidebarHeader',
-})({
+})<{ ownerState: OwnerState }>({
   position: 'sticky',
   top: 0,
   borderBottom: `1px solid ${vars.colors.border.base}`,
@@ -32,11 +32,11 @@ const SidebarHeaderRoot = styled('div', {
 
 function SidebarHeader(props: SidebarHeaderProps) {
   const { className, children, ...other } = props;
-  const { classes: classesRootProps } = useGridRootProps();
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const { rows, ...rootProps } = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
 
   return (
-    <SidebarHeaderRoot className={clsx(className, classes.root)} {...other}>
+    <SidebarHeaderRoot className={clsx(className, classes.root)} ownerState={rootProps} {...other}>
       {children}
     </SidebarHeaderRoot>
   );

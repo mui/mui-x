@@ -9,9 +9,12 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars } from '../../constants/cssVariables';
 import { useCSSVariablesClass } from '../../utils/css/context';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { NotRendered } from '../../utils/assert';
+
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -42,14 +45,14 @@ export const gridPanelClasses = generateUtilityClasses<keyof GridPanelClasses>('
 const GridPanelRoot = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
   slot: 'panel',
-})({
+})<{ ownerState: OwnerState }>({
   zIndex: vars.zIndex.panel,
 });
 
 const GridPanelContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'panelContent',
-})({
+})<{ ownerState: OwnerState }>({
   backgroundColor: vars.colors.background.overlay,
   borderRadius: vars.radius.base,
   boxShadow: vars.shadows.overlay,
@@ -61,7 +64,8 @@ const GridPanelContent = styled('div', {
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, onClose, ...other } = props;
   const apiRef = useGridApiContext();
-  const { slots, slotProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
   const variablesClass = useCSSVariablesClass();
@@ -107,12 +111,13 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
       clickAwayMouseEvent="onPointerUp"
       clickAwayTouchEvent={false}
       focusTrap
+      ownerState={rootProps}
       {...other}
       {...slotProps?.basePopper}
       target={props.target ?? fallbackTarget}
       ref={ref}
     >
-      <GridPanelContent className={classes.paper} onKeyDown={handleKeyDown}>
+      <GridPanelContent className={classes.paper} ownerState={rootProps} onKeyDown={handleKeyDown}>
         {isPlaced && children}
       </GridPanelContent>
     </GridPanelRoot>

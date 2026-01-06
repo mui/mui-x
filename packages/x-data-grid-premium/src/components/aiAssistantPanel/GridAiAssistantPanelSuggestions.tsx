@@ -29,7 +29,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const AiAssistantPanelSuggestionsRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelSuggestions',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing(0.75),
@@ -38,7 +38,7 @@ const AiAssistantPanelSuggestionsRoot = styled('div', {
 const AiAssistantPanelSuggestionsList = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelSuggestionsList',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   gap: vars.spacing(0.75),
   overflow: 'auto',
@@ -50,7 +50,7 @@ const AiAssistantPanelSuggestionsList = styled('div', {
 const AiAssistantPanelSuggestionsLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AiAssistantPanelSuggestionsLabel',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing(1),
@@ -63,14 +63,15 @@ function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsP
   const { suggestions } = props;
   const { slots, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const ownerState = { classes: classesRootProps };
+  const classes = useUtilityClasses(ownerState);
 
   return (
-    <AiAssistantPanelSuggestionsRoot className={classes.root}>
-      <AiAssistantPanelSuggestionsLabel className={classes.label}>
+    <AiAssistantPanelSuggestionsRoot className={classes.root} ownerState={ownerState}>
+      <AiAssistantPanelSuggestionsLabel className={classes.label} ownerState={ownerState}>
         {apiRef.current.getLocaleText('aiAssistantSuggestions')}
       </AiAssistantPanelSuggestionsLabel>
-      <AiAssistantPanelSuggestionsList className={classes.list}>
+      <AiAssistantPanelSuggestionsList className={classes.list} ownerState={ownerState}>
         {suggestions.map((suggestion) => (
           <slots.baseChip
             key={suggestion.value}

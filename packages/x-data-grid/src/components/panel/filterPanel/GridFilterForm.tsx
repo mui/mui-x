@@ -126,7 +126,7 @@ export interface GridFilterFormProps {
   children?: React.ReactNode;
 }
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -146,7 +146,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridFilterFormRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterForm',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   gap: vars.spacing(1.5),
 });
@@ -154,7 +154,7 @@ const GridFilterFormRoot = styled('div', {
 const FilterFormDeleteIcon = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormDeleteIcon',
-})({
+})<{ ownerState: OwnerState }>({
   flexShrink: 0,
   display: 'flex',
   justifyContent: 'center',
@@ -164,7 +164,7 @@ const FilterFormDeleteIcon = styled('div', {
 const FilterFormLogicOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormLogicOperatorInput',
-})({
+})<{ ownerState: OwnerState }>({
   minWidth: 75,
   justifyContent: 'end',
 });
@@ -172,17 +172,17 @@ const FilterFormLogicOperatorInput = styled('div', {
 const FilterFormColumnInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormColumnInput',
-})({ width: 150 });
+})<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormOperatorInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormOperatorInput',
-})({ width: 150 });
+})<{ ownerState: OwnerState }>({ width: 150 });
 
 const FilterFormValueInput = styled('div', {
   name: 'MuiDataGrid',
   slot: 'FilterFormValueInput',
-})({ width: 190 });
+})<{ ownerState: OwnerState }>({ width: 190 });
 
 const getLogicOperatorLocaleKey = (logicOperator: GridLogicOperator) => {
   switch (logicOperator) {
@@ -230,8 +230,9 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     const columnSelectLabelId = useId();
     const operatorSelectId = useId();
     const operatorSelectLabelId = useId();
-    const { classes: classesRootProps, slots, slotProps: rootPropsSlotProps } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: classesRootProps });
+    const { rows, ...rootProps } = useGridRootProps();
+    const { slots, slotProps: rootPropsSlotProps } = rootProps;
+    const classes = useUtilityClasses(rootProps);
     const valueRef = React.useRef<any>(null);
     const filterSelectorRef = React.useRef<HTMLInputElement>(null);
     const multiFilterOperator = filterModel.logicOperator ?? GridLogicOperator.And;
@@ -443,10 +444,17 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
     );
 
     return (
-      <GridFilterFormRoot className={classes.root} data-id={item.id} {...other} ref={ref}>
+      <GridFilterFormRoot
+        className={classes.root}
+        data-id={item.id}
+        ownerState={rootProps}
+        {...other}
+        ref={ref}
+      >
         <FilterFormDeleteIcon
           {...deleteIconProps}
           className={clsx(classes.deleteIcon, deleteIconProps.className)}
+          ownerState={rootProps}
         >
           <slots.baseIconButton
             aria-label={apiRef.current.getLocaleText('filterPanelDeleteIconLabel')}
@@ -479,6 +487,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
             logicOperatorInputProps.sx,
           ]}
           className={clsx(classes.logicOperatorInput, logicOperatorInputProps.className)}
+          ownerState={rootProps}
           {...logicOperatorInputProps}
           size="small"
           slotProps={{
@@ -507,6 +516,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           as={slots.baseSelect}
           {...columnInputProps}
           className={clsx(classes.columnInput, columnInputProps.className)}
+          ownerState={rootProps}
           size="small"
           labelId={columnSelectLabelId}
           id={columnSelectId}
@@ -533,6 +543,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
           size="small"
           {...operatorInputProps}
           className={clsx(classes.operatorInput, operatorInputProps.className)}
+          ownerState={rootProps}
           labelId={operatorSelectLabelId}
           label={apiRef.current.getLocaleText('filterPanelOperator')}
           id={operatorSelectId}
@@ -560,6 +571,7 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
         <FilterFormValueInput
           {...valueInputPropsOther}
           className={clsx(classes.valueInput, valueInputPropsOther.className)}
+          ownerState={rootProps}
         >
           {currentOperator?.InputComponent ? (
             <currentOperator.InputComponent

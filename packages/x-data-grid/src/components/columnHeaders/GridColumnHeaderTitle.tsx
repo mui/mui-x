@@ -10,7 +10,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -25,7 +25,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridColumnHeaderTitleRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderTitle',
-})({
+})<{ ownerState: OwnerState }>({
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   whiteSpace: 'nowrap',
@@ -38,11 +38,16 @@ const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<H
     // Tooltip adds aria-label to the props, which is not needed since the children prop is a string
     // See https://github.com/mui/mui-x/pull/14482
     const { className, 'aria-label': ariaLabel, ...other } = props;
-    const { classes: classesRootProps } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: classesRootProps });
+    const { rows, ...rootProps } = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
 
     return (
-      <GridColumnHeaderTitleRoot className={clsx(classes.root, className)} {...other} ref={ref} />
+      <GridColumnHeaderTitleRoot
+        className={clsx(classes.root, className)}
+        ownerState={rootProps}
+        {...other}
+        ref={ref}
+      />
     );
   },
 );

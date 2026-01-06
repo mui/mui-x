@@ -43,7 +43,7 @@ const GridAggregationHeaderRoot = styled('div', {
 const GridAggregationFunctionLabel = styled('div', {
   name: 'MuiDataGrid',
   slot: 'AggregationColumnHeaderLabel',
-})({
+})<{ ownerState: OwnerState }>({
   font: vars.typography.font.small,
   lineHeight: 'normal',
   color: vars.colors.foreground.muted,
@@ -100,7 +100,7 @@ function GridAggregationHeader(
           columnWidth={colDef.computedWidth}
         />
       )}
-      <GridAggregationFunctionLabel className={classes.aggregationLabel}>
+      <GridAggregationFunctionLabel ownerState={ownerState} className={classes.aggregationLabel}>
         {aggregationLabel}
       </GridAggregationFunctionLabel>
     </GridAggregationHeaderRoot>

@@ -8,7 +8,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -23,7 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPanelWrapperRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PanelWrapper',
-})({
+})<{ ownerState: OwnerState }>({
   display: 'flex',
   flexDirection: 'column',
   flex: 1,
@@ -40,13 +40,14 @@ export interface GridPanelWrapperProps
 const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
     const { className, ...other } = props;
-    const { classes: classesRootProps } = useGridRootProps();
-    const classes = useUtilityClasses({ classes: classesRootProps });
+    const { rows, ...rootProps } = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
 
     return (
       <GridPanelWrapperRoot
         tabIndex={-1}
         className={clsx(classes.root, className)}
+        ownerState={rootProps}
         {...other}
         ref={ref}
       />

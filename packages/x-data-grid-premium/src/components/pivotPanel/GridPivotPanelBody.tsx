@@ -19,7 +19,7 @@ import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiCon
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
 import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -41,7 +41,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridPivotPanelBodyRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelBody',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -51,7 +51,7 @@ const GridPivotPanelBodyRoot = styled('div', {
 const GridPivotPanelAvailableFields = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelAvailableFields',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   minHeight: 84,
   transition: vars.transition(['background-color'], {
@@ -66,7 +66,7 @@ const GridPivotPanelAvailableFields = styled(GridShadowScrollArea, {
 const GridPivotPanelSections = styled(ResizablePanel, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSections',
-})({
+})<{ ownerState: OwnerState }>({
   position: 'relative',
   minHeight: 158,
   overflow: 'hidden',
@@ -77,14 +77,14 @@ const GridPivotPanelSections = styled(ResizablePanel, {
 const GridPivotPanelScrollArea = styled(GridShadowScrollArea, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelScrollArea',
-})({
+})<{ ownerState: OwnerState }>({
   height: '100%',
 });
 
 const GridPivotPanelSection = styled(Collapsible, {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSection',
-})({
+})<{ ownerState: OwnerState }>({
   margin: vars.spacing(0.5, 1),
   transition: vars.transition(['border-color', 'background-color'], {
     duration: vars.transitions.duration.short,
@@ -99,7 +99,7 @@ const GridPivotPanelSection = styled(Collapsible, {
 const GridPivotPanelSectionTitle = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelSectionTitle',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   marginRight: vars.spacing(1.75),
   display: 'flex',
@@ -113,7 +113,7 @@ const GridPivotPanelSectionTitle = styled('div', {
 const GridPivotPanelFieldList = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelFieldList',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
@@ -123,7 +123,7 @@ const GridPivotPanelFieldList = styled('div', {
 const GridPivotPanelPlaceholder = styled('div', {
   name: 'MuiDataGrid',
   slot: 'PivotPanelPlaceholder',
-})({
+})<{ ownerState: OwnerState }>({
   flex: 1,
   display: 'flex',
   alignItems: 'center',
@@ -148,14 +148,15 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
   const apiRef = useGridPrivateApiContext();
   const initialColumns = useGridSelector(apiRef, gridPivotInitialColumnsSelector);
   const fields = React.useMemo(() => Array.from(initialColumns.keys()), [initialColumns]);
-  const { slots, classes: classesRootProps } = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
   const [drag, setDrag] = React.useState<{
     active: boolean;
     dropZone: FieldTransferObject['modelKey'];
     initialModelKey: FieldTransferObject['modelKey'];
   }>(INITIAL_DRAG_STATE);
   const pivotModel = useGridSelector(apiRef, gridPivotModelSelector);
-  const classes = useUtilityClasses({ classes: classesRootProps });
+  const classes = useUtilityClasses(rootProps);
 
   const getColumnName = React.useCallback(
     (field: string) => {
@@ -242,11 +243,13 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
 
   return (
     <GridPivotPanelBodyRoot
+      ownerState={rootProps}
       className={classes.root}
       data-dragging={drag.active}
       onDragLeave={handleDragLeave}
     >
       <GridPivotPanelAvailableFields
+        ownerState={rootProps}
         className={classes.availableFields}
         onDrop={handleDrop}
         onDragEnter={handleDragEnter}
@@ -255,12 +258,12 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
         data-drag-over={drag.active && drag.dropZone === null}
       >
         {availableFields.length === 0 && (
-          <GridPivotPanelPlaceholder className={classes.placeholder}>
+          <GridPivotPanelPlaceholder className={classes.placeholder} ownerState={rootProps}>
             {apiRef.current.getLocaleText('pivotNoFields')}
           </GridPivotPanelPlaceholder>
         )}
         {availableFields.length > 0 && (
-          <GridPivotPanelFieldList className={classes.fieldList}>
+          <GridPivotPanelFieldList className={classes.fieldList} ownerState={rootProps}>
             {availableFields.map((field) => (
               <GridPivotPanelField
                 key={field}
@@ -276,10 +279,15 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
         )}
       </GridPivotPanelAvailableFields>
 
-      <GridPivotPanelSections className={classes.sections} direction="vertical">
+      <GridPivotPanelSections
+        className={classes.sections}
+        direction="vertical"
+        ownerState={rootProps}
+      >
         <ResizablePanelHandle />
-        <GridPivotPanelScrollArea className={classes.scrollArea}>
+        <GridPivotPanelScrollArea className={classes.scrollArea} ownerState={rootProps}>
           <GridPivotPanelSection
+            ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
@@ -288,7 +296,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             data-drag-over={drag.dropZone === 'rows'}
           >
             <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotRows')}>
-              <GridPivotPanelSectionTitle className={classes.sectionTitle}>
+              <GridPivotPanelSectionTitle className={classes.sectionTitle} ownerState={rootProps}>
                 {rowsLabel}
                 {pivotModel.rows.length > 0 && (
                   <slots.baseBadge badgeContent={pivotModel.rows.length} />
@@ -297,12 +305,12 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {pivotModel.rows.length === 0 && (
-                <GridPivotPanelPlaceholder className={classes.placeholder}>
+                <GridPivotPanelPlaceholder className={classes.placeholder} ownerState={rootProps}>
                   {apiRef.current.getLocaleText('pivotDragToRows')}
                 </GridPivotPanelPlaceholder>
               )}
               {pivotModel.rows.length > 0 && (
-                <GridPivotPanelFieldList className={classes.fieldList}>
+                <GridPivotPanelFieldList className={classes.fieldList} ownerState={rootProps}>
                   {pivotModel.rows.map((modelValue) => (
                     <GridPivotPanelField
                       key={modelValue.field}
@@ -322,6 +330,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
           </GridPivotPanelSection>
 
           <GridPivotPanelSection
+            ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
@@ -330,7 +339,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             data-drag-over={drag.dropZone === 'columns'}
           >
             <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotColumns')}>
-              <GridPivotPanelSectionTitle className={classes.sectionTitle}>
+              <GridPivotPanelSectionTitle className={classes.sectionTitle} ownerState={rootProps}>
                 {columnsLabel}
                 {pivotModel.columns.length > 0 && (
                   <slots.baseBadge badgeContent={pivotModel.columns.length} />
@@ -339,12 +348,12 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {pivotModel.columns.length === 0 && (
-                <GridPivotPanelPlaceholder className={classes.placeholder}>
+                <GridPivotPanelPlaceholder className={classes.placeholder} ownerState={rootProps}>
                   {apiRef.current.getLocaleText('pivotDragToColumns')}
                 </GridPivotPanelPlaceholder>
               )}
               {pivotModel.columns.length > 0 && (
-                <GridPivotPanelFieldList className={classes.fieldList}>
+                <GridPivotPanelFieldList className={classes.fieldList} ownerState={rootProps}>
                   {pivotModel.columns.map((modelValue) => (
                     <GridPivotPanelField
                       key={modelValue.field}
@@ -363,6 +372,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
           </GridPivotPanelSection>
 
           <GridPivotPanelSection
+            ownerState={rootProps}
             className={classes.section}
             onDrop={handleDrop}
             onDragEnter={handleDragEnter}
@@ -371,7 +381,7 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             data-drag-over={drag.dropZone === 'values'}
           >
             <CollapsibleTrigger aria-label={apiRef.current.getLocaleText('pivotValues')}>
-              <GridPivotPanelSectionTitle className={classes.sectionTitle}>
+              <GridPivotPanelSectionTitle className={classes.sectionTitle} ownerState={rootProps}>
                 {valuesLabel}
                 {pivotModel.values.length > 0 && (
                   <slots.baseBadge badgeContent={pivotModel.values.length} />
@@ -380,12 +390,12 @@ function GridPivotPanelBody({ searchValue }: { searchValue: string }) {
             </CollapsibleTrigger>
             <CollapsiblePanel>
               {pivotModel.values.length === 0 && (
-                <GridPivotPanelPlaceholder className={classes.placeholder}>
+                <GridPivotPanelPlaceholder className={classes.placeholder} ownerState={rootProps}>
                   {apiRef.current.getLocaleText('pivotDragToValues')}
                 </GridPivotPanelPlaceholder>
               )}
               {pivotModel.values.length > 0 && (
-                <GridPivotPanelFieldList className={classes.fieldList}>
+                <GridPivotPanelFieldList className={classes.fieldList} ownerState={rootProps}>
                   {pivotModel.values.map((modelValue) => (
                     <GridPivotPanelField
                       key={modelValue.field}

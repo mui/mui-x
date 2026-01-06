@@ -21,7 +21,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridPanelContext } from '../panel/GridPanelContext';
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -36,7 +36,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const GridToolbarFilterListRoot = styled('ul', {
   name: 'MuiDataGrid',
   slot: 'ToolbarFilterList',
-})({
+})<{ ownerState: OwnerState }>({
   margin: vars.spacing(1, 1, 0.5),
   padding: vars.spacing(0, 1),
 });
@@ -63,16 +63,12 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const tooltipProps = slotProps.tooltip || {};
     const badgeProps = slotProps.badge || {};
     const apiRef = useGridApiContext();
-    const {
-      classes: classesRootProps,
-      disableColumnFilter,
-      slots,
-      slotProps: rootPropsSlotProps,
-    } = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
+    const { slots, slotProps: rootPropsSlotProps, disableColumnFilter } = rootProps;
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
-    const classes = useUtilityClasses({ classes: classesRootProps });
+    const classes = useUtilityClasses(rootProps);
     const filterButtonId = useId();
     const filterPanelId = useId();
     const { filterPanelTriggerRef } = useGridPanelContext();
@@ -104,7 +100,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
       return (
         <div>
           {apiRef.current.getLocaleText('toolbarFiltersTooltipActive')(activeFilters.length)}
-          <GridToolbarFilterListRoot className={classes.root}>
+          <GridToolbarFilterListRoot className={classes.root} ownerState={rootProps}>
             {activeFilters.map((item, index) => ({
               ...(lookup[item.field!] && (
                 <li key={index}>
@@ -120,7 +116,7 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           </GridToolbarFilterListRoot>
         </div>
       );
-    }, [apiRef, preferencePanel.open, activeFilters, lookup, classes]);
+    }, [apiRef, rootProps, preferencePanel.open, activeFilters, lookup, classes]);
 
     const toggleFilter = (event: React.MouseEvent<HTMLButtonElement>) => {
       const { open, openedPanelValue } = preferencePanel;

@@ -27,7 +27,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
 
   const slots = {
-    // all root slots are failing the test
     root: ['sortButton'],
     icon: ['sortIcon'],
   };
