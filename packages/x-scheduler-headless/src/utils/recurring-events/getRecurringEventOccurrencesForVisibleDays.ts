@@ -3,7 +3,6 @@ import { processDate } from '../../process-date';
 import {
   RecurringEventRecurrenceRule,
   RecurringEventWeekDayCode,
-  SchedulerEvent,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -20,7 +19,6 @@ import {
   parsesByDayForMonthlyFrequency,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
-import { parseRRuleString } from './rRuleString';
 
 /**
  * Max attempts to find a valid monthly occurrence.
@@ -38,7 +36,7 @@ const YEARLY_MAX_ATTEMPTS = 4;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
-  private readonly eventModel: SchedulerEvent;
+  private readonly dataTimezone: SchedulerProcessedEvent['dataTimezone'];
 
   private readonly rule: RecurringEventRecurrenceRule;
 
@@ -77,17 +75,16 @@ class RecurringEventExpander {
     start: TemporalSupportedObject,
     end: TemporalSupportedObject,
   ) {
-    // Important: We use `modelInBuiltInFormat` because it preserves the event's original (data) timezone.
-    // The processed event is already converted to the display timezone, which would make recurrence
-    // calculations incorrect around DST and timezone boundaries.
+    // Important:
+    // Occurrences are always computed in dataTimezone to avoid DST issues
+    // DisplayTimezone is applied only for presentation purposes
 
-    this.eventModel = this.event.modelInBuiltInFormat;
-    // TODO: Should use parseRRule that only parses the rule, without any timezone conversion after, after 20769 PR is merged
-    this.rule = parseRRuleString(this.adapter, this.eventModel.rrule!, this.displayTimezone);
-    this.seriesStart = adapter.startOfDay(this.eventModel.start);
+    this.dataTimezone = event.dataTimezone;
+    this.rule = this.dataTimezone.rrule!;
+    this.seriesStart = adapter.startOfDay(this.dataTimezone.start.value);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
-    const dataTz = adapter.getTimezone(this.eventModel.start);
+    const dataTz = this.dataTimezone.timezone;
     const visibleStartDataTz = adapter.startOfDay(adapter.setTimezone(start, dataTz));
     const visibleEndDataTz = adapter.startOfDay(adapter.setTimezone(end, dataTz));
 
@@ -97,7 +94,7 @@ class RecurringEventExpander {
     this.scanLastDay = adapter.startOfDay(visibleEndDataTz);
 
     // Pre-compute boundaries and exclusions
-    this.exDateKeys = new Set(this.eventModel.exDates?.map((d) => getDateKey(d, adapter)));
+    this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
     this.minDate = adapter.isBefore(this.seriesStart, this.scanFirstDay)
       ? this.scanFirstDay
@@ -174,8 +171,11 @@ class RecurringEventExpander {
       return;
     }
 
-    const baseTimeOriginal = this.eventModel.start;
-    const occurrenceStartOriginal = mergeDateAndTime(this.adapter, day, baseTimeOriginal);
+    const occurrenceStartOriginal = mergeDateAndTime(
+      this.adapter,
+      day,
+      this.dataTimezone.start.value,
+    );
     const occurrenceEndOriginal = getOccurrenceEnd({
       adapter: this.adapter,
       event: this.event,
@@ -193,8 +193,18 @@ class RecurringEventExpander {
     occurrences.push({
       ...this.event,
       key: `${this.event.id}::${dateKey}`,
-      start: processDate(occurrenceStartDisplayTimezone, this.adapter),
-      end: processDate(occurrenceEndDisplayTimezone, this.adapter),
+      dataTimezone: {
+        ...this.event.dataTimezone,
+        start: processDate(occurrenceStartOriginal, this.adapter),
+        end: processDate(occurrenceEndOriginal, this.adapter),
+        timezone: this.event.dataTimezone.timezone,
+      },
+      displayTimezone: {
+        ...this.event.displayTimezone,
+        start: processDate(occurrenceStartDisplayTimezone, this.adapter),
+        end: processDate(occurrenceEndDisplayTimezone, this.adapter),
+        timezone: this.event.displayTimezone.timezone,
+      },
     });
   }
 

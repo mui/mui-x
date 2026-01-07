@@ -17,14 +17,10 @@ export interface AmPmProps {
 }
 
 export interface ExportedBaseClockProps
-  extends ExportedValidateTimeProps,
-    TimezoneProps,
-    AmPmProps {}
+  extends ExportedValidateTimeProps, TimezoneProps, AmPmProps {}
 
 export interface BaseClockProps<TView extends TimeViewWithMeridiem>
-  extends ExportedUseViewsOptions<PickerValue, TView>,
-    ExportedBaseClockProps,
-    FormProps {
+  extends ExportedUseViewsOptions<PickerValue, TView>, ExportedBaseClockProps, FormProps {
   className?: string;
   /**
    * The system prop that allows defining system overrides as well as additional CSS styles.
@@ -48,7 +44,8 @@ export interface BaseClockProps<TView extends TimeViewWithMeridiem>
 }
 
 export interface DigitalTimePickerProps
-  extends Omit<ExportedDigitalClockProps, 'timeStep'>,
+  extends
+    Omit<ExportedDigitalClockProps, 'timeStep'>,
     Omit<ExportedMultiSectionDigitalClockProps, 'timeSteps'> {
   /**
    * Amount of time options below or at which the single column time renderer is used.

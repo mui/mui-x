@@ -9,7 +9,6 @@ import {
   selectorChartAxisZoomOptionsLookup,
   useChartContext,
   useDrawingArea,
-  useSelector,
   useStore,
   type ZoomData,
 } from '@mui/x-charts/internals';
@@ -28,6 +27,7 @@ import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
 import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderActiveTrackRect = styled('rect', {
+  slot: 'internal',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
 })<{ preview: boolean }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.grey[600],
@@ -79,7 +79,7 @@ export function ChartAxisZoomSliderActiveTrack({
 }: ChartAxisZoomSliderActiveTrackProps) {
   const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
   const store = useStore<[UseChartProZoomSignature]>();
-  const axis = useSelector(store, selectorChartAxis, axisId);
+  const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();
   const activePreviewRectRef = React.useRef<SVGRectElement>(null);
   const [startThumbEl, setStartThumbEl] = React.useState<SVGRectElement | null>(null);

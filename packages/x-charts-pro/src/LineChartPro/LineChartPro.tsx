@@ -35,16 +35,16 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { LINE_CHART_PRO_PLUGINS, type LineChartProPluginSignatures } from './LineChartPro.plugins';
 
 export interface LineChartProSlots
-  extends Omit<LineChartSlots, 'toolbar'>,
-    ChartsToolbarProSlots,
-    Partial<ChartsSlotsPro> {}
+  extends Omit<LineChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
 export interface LineChartProSlotProps
-  extends Omit<LineChartSlotProps, 'toolbar'>,
+  extends
+    Omit<LineChartSlotProps, 'toolbar'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface LineChartProProps
-  extends Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+  extends
+    Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
     Omit<
       ChartContainerProProps<'line', LineChartProPluginSignatures>,
       'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
@@ -212,6 +212,33 @@ LineChartPro.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -284,6 +311,11 @@ LineChartPro.propTypes = {
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

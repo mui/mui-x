@@ -13,11 +13,16 @@ export function FocusedBar(props: React.SVGAttributes<SVGRectElement>) {
   const { xAxis, xAxisIds } = useXAxes();
   const { yAxis, yAxisIds } = useYAxes();
 
-  if (focusedItem === null || focusedItem.seriesType !== 'bar' || !barSeries) {
+  if (focusedItem === null || focusedItem.type !== 'bar' || !barSeries) {
     return null;
   }
 
-  const series = barSeries?.series[focusedItem.seriesId];
+  const series = barSeries.series[focusedItem.seriesId];
+
+  if (series.data[focusedItem.dataIndex] == null) {
+    // Handle missing data
+    return null;
+  }
 
   const xAxisId = series.xAxisId ?? xAxisIds[0];
   const yAxisId = series.yAxisId ?? yAxisIds[0];

@@ -15,7 +15,8 @@ import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '@mui/x-cha
 import { type FunnelPlotSlotProps, type FunnelPlotSlots } from './funnelPlotSlots.types';
 
 export interface FunnelChartSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     FunnelPlotSlots,
     ChartsLegendSlots,
     ChartsTooltipSlots,
@@ -24,7 +25,8 @@ export interface FunnelChartSlots
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 export interface FunnelChartSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     FunnelPlotSlotProps,
     ChartsLegendSlotProps,
     Omit<ChartsTooltipSlotProps, 'tooltip'>,

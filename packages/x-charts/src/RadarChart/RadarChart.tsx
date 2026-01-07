@@ -30,21 +30,24 @@ import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
 
 export interface RadarChartSlots
-  extends ChartsTooltipSlots,
+  extends
+    ChartsTooltipSlots,
     ChartsOverlaySlots,
     ChartsLegendSlots,
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 
 export interface RadarChartSlotProps
-  extends ChartsTooltipSlotProps,
+  extends
+    ChartsTooltipSlotProps,
     ChartsOverlaySlotProps,
     ChartsLegendSlotProps,
     ChartsToolbarSlotProps,
     Partial<ChartsSlotProps> {}
 
 export interface RadarChartProps
-  extends RadarDataProviderProps,
+  extends
+    RadarDataProviderProps,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -153,6 +156,33 @@ RadarChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -211,6 +241,11 @@ RadarChart.propTypes = {
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    */
   onAxisClick: PropTypes.func,
+  /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

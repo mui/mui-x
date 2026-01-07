@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
@@ -86,8 +86,7 @@ export namespace TimelineEventRow {
   export interface State {}
 
   export interface Props
-    extends Omit<BaseUIComponentProps<'div', State>, 'children'>,
-      useEventRowDropTarget.Parameters {
+    extends Omit<BaseUIComponentProps<'div', State>, 'children'>, useEventRowDropTarget.Parameters {
     children: (parameters: ChildrenParameters) => React.ReactNode;
   }
 

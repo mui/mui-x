@@ -336,7 +336,7 @@ export const createColumnsState = ({
     const currentState = gridColumnsStateSelector(apiRef);
     columnsState = {
       orderedFields: keepOnlyColumnsToUpsert ? [] : [...currentState.orderedFields],
-      lookup: { ...currentState.lookup }, // Will be cleaned later if keepOnlyColumnsToUpsert=true
+      lookup: keepOnlyColumnsToUpsert ? {} : { ...currentState.lookup },
       columnVisibilityModel,
       initialColumnVisibilityModel: updateInitialVisibilityModel
         ? columnVisibilityModel
@@ -353,10 +353,8 @@ export const createColumnsState = ({
     }
   }
 
-  const columnsToUpsertLookup: Record<string, true> = {};
   columnsToUpsert.forEach((newColumn) => {
     const { field } = newColumn;
-    columnsToUpsertLookup[field] = true;
     columnsToKeep[field] = true;
     let existingState = columnsState.lookup[field];
 

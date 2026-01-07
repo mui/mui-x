@@ -31,7 +31,8 @@ import { defaultizeMargin } from '../internals/defaultizeMargin';
 import { FocusedPieArc } from './FocusedPieArc';
 
 export interface PieChartSlots
-  extends PiePlotSlots,
+  extends
+    PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
@@ -39,7 +40,8 @@ export interface PieChartSlots
     Partial<ChartsSlots> {}
 
 export interface PieChartSlotProps
-  extends PiePlotSlotProps,
+  extends
+    PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
@@ -48,7 +50,8 @@ export interface PieChartSlotProps
 
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
@@ -142,20 +145,20 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar;
+  const Toolbar = slots?.toolbar;
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
-        legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props.slotProps?.legend?.direction ?? 'vertical'}
+        legendPosition={slotProps?.legend?.position}
+        legendDirection={slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
         hideLegend={hideLegend ?? false}
       >
-        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar && Toolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
-            direction={props.slotProps?.legend?.direction ?? 'vertical'}
+            direction={slotProps?.legend?.direction ?? 'vertical'}
             slots={slots}
             slotProps={slotProps}
           />
@@ -198,6 +201,33 @@ PieChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -238,6 +268,11 @@ PieChart.propTypes = {
       top: PropTypes.number,
     }),
   ]),
+  /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

@@ -29,8 +29,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps
-  extends GridRenderCellParams<any, any, any, GridDataSourceGroupNode> {
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<
+  any,
+  any,
+  any,
+  GridDataSourceGroupNode
+> {
   hideDescendantCount?: boolean;
   /**
    * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
@@ -39,8 +43,10 @@ interface GridTreeDataGroupingCellProps
   offsetMultiplier?: number;
 }
 
-interface GridTreeDataGroupingCellIconProps
-  extends Pick<GridTreeDataGroupingCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
+interface GridTreeDataGroupingCellIconProps extends Pick<
+  GridTreeDataGroupingCellProps,
+  'id' | 'field' | 'rowNode' | 'row'
+> {
   descendantCount: number;
 }
 

@@ -1,4 +1,5 @@
-import { Store } from '@base-ui-components/utils/store';
+import { Store } from '@base-ui/utils/store';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
 import {
@@ -78,7 +79,8 @@ export class SchedulerStore<
       copiedEvent: null,
       nowUpdatedEveryMinute: adapter.now(stateFromParameters.displayTimezone),
       pendingUpdateRecurringEventParameters: null,
-      visibleResources: new Map(),
+      visibleResources:
+        parameters.visibleResources ?? parameters.defaultVisibleResources ?? EMPTY_OBJECT,
       visibleDate:
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
@@ -194,6 +196,7 @@ export class SchedulerStore<
     }
 
     updateModel(newSchedulerState, 'visibleDate', 'defaultVisibleDate');
+    updateModel(newSchedulerState, 'visibleResources', 'defaultVisibleResources');
 
     const newState = this.mapper.updateStateFromParameters(
       newSchedulerState,
@@ -313,7 +316,7 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
-    if (original?.rrule) {
+    if (original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
       );
@@ -354,7 +357,7 @@ export class SchedulerStore<
 
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
-    if (!original.rrule) {
+    if (!original.dataTimezone.rrule) {
       throw new Error(
         `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
       );
@@ -441,7 +444,7 @@ export class SchedulerStore<
     if (cleanChanges.start != null) {
       cleanChanges.end = adapter.addMilliseconds(
         cleanChanges.start,
-        original.end.timestamp - original.start.timestamp,
+        original.dataTimezone.end.timestamp - original.dataTimezone.start.timestamp,
       );
     }
 
@@ -462,9 +465,20 @@ export class SchedulerStore<
   /**
    * Updates the visible resources.
    */
-  public setVisibleResources = (visibleResources: Map<SchedulerResourceId, boolean>) => {
-    if (this.state.visibleResources !== visibleResources) {
-      this.set('visibleResources', visibleResources);
+  public setVisibleResources = (
+    visibleResources: Record<SchedulerResourceId, boolean>,
+    event: Event,
+  ) => {
+    const { visibleResources: visibleResourcesProp, onVisibleResourcesChange } = this.parameters;
+    const hasChange = this.state.visibleResources !== visibleResources;
+
+    if (hasChange) {
+      const eventDetails = createChangeEventDetails('none', event);
+      onVisibleResourcesChange?.(visibleResources, eventDetails);
+
+      if (!eventDetails.isCanceled && visibleResourcesProp === undefined) {
+        this.set('visibleResources', visibleResources);
+      }
     }
   };
 

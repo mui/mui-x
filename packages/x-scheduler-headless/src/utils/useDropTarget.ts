@@ -211,8 +211,8 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
 
   const adapter = store.state.adapter;
   if (
-    adapter.isEqual(originalOccurrence.start.value, start) &&
-    adapter.isEqual(originalOccurrence.end.value, end)
+    adapter.isEqual(originalOccurrence.displayTimezone.start.value, start) &&
+    adapter.isEqual(originalOccurrence.displayTimezone.end.value, end)
   ) {
     return;
   }
@@ -229,9 +229,9 @@ async function applyInternalDragOrResizeOccurrencePlaceholder(
     Object.assign(changes, addPropertiesToDroppedEvent());
   }
 
-  if (originalOccurrence.rrule) {
+  if (originalOccurrence.displayTimezone.rrule) {
     store.updateRecurringEvent({
-      occurrenceStart: originalOccurrence.start.value,
+      occurrenceStart: originalOccurrence.displayTimezone.start.value,
       changes,
     });
     return;

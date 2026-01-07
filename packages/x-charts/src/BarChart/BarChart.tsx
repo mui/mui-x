@@ -34,7 +34,8 @@ import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
 
 export interface BarChartSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     BarPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
@@ -42,7 +43,8 @@ export interface BarChartSlots
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 export interface BarChartSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     BarPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
@@ -53,7 +55,8 @@ export interface BarChartSlotProps
 export type BarSeries = MakeOptional<BarSeriesType, 'type'>;
 
 export interface BarChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'bar', BarChartPluginSignatures>,
       'series' | 'plugins' | 'zAxis' | 'experimentalFeatures'
     >,
@@ -233,6 +236,33 @@ BarChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -296,6 +326,11 @@ BarChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -315,6 +350,15 @@ BarChart.propTypes = {
    * @param {BarItemIdentifier} barItemIdentifier The bar item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] objects.

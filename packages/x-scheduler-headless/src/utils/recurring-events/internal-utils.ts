@@ -159,8 +159,8 @@ export function getEventDurationInDays(
   // +1 so start/end same day = 1 day, spans include last day
   return (
     adapter.differenceInDays(
-      adapter.startOfDay(event.end.value),
-      adapter.startOfDay(event.start.value),
+      adapter.startOfDay(event.dataTimezone.end.value),
+      adapter.startOfDay(event.dataTimezone.start.value),
     ) + 1
   );
 }

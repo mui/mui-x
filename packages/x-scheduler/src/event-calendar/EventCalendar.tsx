@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui/utils/store';
+import { useThemeProps } from '@mui/material/styles';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
@@ -30,7 +31,12 @@ import { RecurringScopeDialog } from '../internals/components/scope-dialog/Scope
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
   TResource extends object,
->(props: EventCalendarProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+>(
+  inProps: EventCalendarProps<TEvent, TResource>,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
     TResource,

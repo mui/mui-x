@@ -18,7 +18,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         adapter,
         days,
         events,
-        visibleResources: new Map(),
+        visibleResources: {},
         resourceParentIds: new Map(),
         displayTimezone: 'default',
       });

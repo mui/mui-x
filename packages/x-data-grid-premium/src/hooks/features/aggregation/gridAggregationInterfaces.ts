@@ -1,5 +1,6 @@
-import { GridRowId, GridRowModel, GridColDef, GridValueFormatter } from '@mui/x-data-grid-pro';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridRowId, GridRowModel, GridColDef, GridValueFormatter } from '@mui/x-data-grid-pro';
+import type { GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
+import type { GridApiPremium } from '../../../models/gridApiPremium';
 
 export interface GridAggregationState {
   model: GridAggregationModel;
@@ -98,8 +99,10 @@ export interface GridAggregationFunction<V = any, AV = V> {
  * @demos
  *   - [Server-side aggregation](/x/react-data-grid/server-side-data/aggregation/)
  */
-export interface GridAggregationFunctionDataSource
-  extends Omit<GridAggregationFunction, 'apply' | 'getCellValue'> {}
+export interface GridAggregationFunctionDataSource extends Omit<
+  GridAggregationFunction,
+  'apply' | 'getCellValue'
+> {}
 
 export interface GridAggregationParams<V = any> {
   values: (V | undefined)[];
@@ -120,22 +123,6 @@ export type GridAggregationLookup = {
     };
   };
 };
-
-export type GridAggregationPosition = 'inline' | 'footer';
-
-export interface GridAggregationCellMeta {
-  /**
-   * If `true`, the current aggregated value has the same unit as the value of the other cells of this row.
-   * For instance, "min" / "max" aggregation have the same unit as the other cells.
-   * If `false`, the current aggregated value has another unit or not unit.
-   * For instance, "size" aggregation has no unit.
-   */
-  hasCellUnit: boolean;
-  /**
-   * Name of the aggregation function currently applied on this cell.
-   */
-  aggregationFunctionName: string;
-}
 
 export interface GridAggregationHeaderMeta {
   aggregationRule: GridAggregationRule;

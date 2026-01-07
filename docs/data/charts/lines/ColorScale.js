@@ -14,7 +14,7 @@ export default function ColorScale() {
 
   return (
     <Stack direction="column" spacing={1} sx={{ width: '100%', maxWidth: 600 }}>
-      <Stack direction="row" spacing={1}>
+      <Stack direction="row" spacing={1} flexWrap="wrap">
         <TextField
           select
           sx={{ minWidth: 150 }}

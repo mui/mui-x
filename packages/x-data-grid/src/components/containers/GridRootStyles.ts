@@ -317,6 +317,10 @@ export const GridRootStyles = styled('div', {
       [`& .${c.treeDataGroupingCell}`]: {
         width: 'unset',
       },
+      [`& .${c['columnHeader--filter']}`]: {
+        flex: 'none !important',
+        width: 'unset !important',
+      },
     },
     [`&.${c.withSidePanel}`]: {
       flexDirection: 'row',
@@ -391,6 +395,10 @@ export const GridRootStyles = styled('div', {
       paddingRight: 5,
       minHeight: 'min-content',
       overflow: 'hidden',
+    },
+    [`&.${c['root--densityCompact']} .${c['columnHeader--filter']}`]: {
+      paddingTop: 4,
+      paddingBottom: 4,
     },
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',

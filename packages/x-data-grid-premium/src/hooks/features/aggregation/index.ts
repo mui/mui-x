@@ -1,4 +1,8 @@
 export type {
+  GridAggregationPosition,
+  GridAggregationCellMeta,
+} from '@mui/x-data-grid-pro/internals';
+export type {
   GridAggregationState,
   GridAggregationInitialState,
   GridAggregationInternalCache,
@@ -9,8 +13,6 @@ export type {
   GridAggregationParams,
   GridAggregationModel,
   GridAggregationLookup,
-  GridAggregationPosition,
-  GridAggregationCellMeta,
   GridAggregationHeaderMeta,
   GridAggregationRule,
   GridAggregationRules,

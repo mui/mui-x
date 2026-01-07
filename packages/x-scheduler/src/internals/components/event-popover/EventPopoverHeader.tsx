@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Popover } from '@base-ui-components/react';
+import { Popover } from '@base-ui/react';
 import { X } from 'lucide-react';
 import { useTranslations } from '../../utils/TranslationsContext';
 
