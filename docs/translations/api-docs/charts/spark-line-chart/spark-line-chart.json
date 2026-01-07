@@ -26,6 +26,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenItems": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
     },
@@ -49,6 +52,15 @@
         "data": {
           "name": "data",
           "description": "The data about the clicked axis and items associated with it."
+        }
+      }
+    },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
         }
       }
     },
