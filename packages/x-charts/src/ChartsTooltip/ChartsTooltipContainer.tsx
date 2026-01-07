@@ -229,8 +229,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
           <rect
             ref={anchorRef}
             {...itemPosition}
-            // On ios a rect with no width/height is not detectable by the popper.js
+            pointerEvents="none"
+            visibility="hidden"
             opacity={0}
+            // On ios a rect with no width/height is not detectable by the popper.js
             width={1}
             height={1}
           />,
