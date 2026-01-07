@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { type BarItemIdentifier } from '../models/seriesType';
 import { useSvgRef } from '../hooks/useSvgRef';
-import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
+import { type UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 import { type UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
 import { type UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
 import { type UseChartCartesianAxisSignature } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
@@ -12,10 +12,10 @@ import { useStore } from '../internals/store/useStore';
 import { selectorBarItemAtPosition } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisPosition.selectors';
 
 /**
- * Hook that registers pointer event handlers for chart item highlighting and clicking.
+ * Hook that registers pointer event handlers for chart item clicking.
  * @param onItemClick Callback for item click events.
  */
-export function useRegisterPointerEventHandlers(
+export function useRegisterItemClickHandlers(
   onItemClick: ((event: MouseEvent, barItemIdentifier: BarItemIdentifier) => void) | undefined,
 ) {
   const { instance } =
@@ -24,87 +24,12 @@ export function useRegisterPointerEventHandlers(
     >();
   const svgRef = useSvgRef();
   const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
-  const interactionActive = React.useRef(false);
-  const lastItemRef = React.useRef<BarItemIdentifier | undefined>(undefined);
-  const prevCursorRef = React.useRef<string | null>(null);
-  const setCursorPointer = onItemClick != null;
 
   React.useEffect(() => {
     const element = svgRef.current;
 
-    if (element == null) {
-      return () => void 0;
-    }
-
-    function onPointerEnter() {
-      interactionActive.current = true;
-    }
-
-    function reset() {
-      const lastItem = lastItemRef.current;
-
-      if (lastItem) {
-        lastItemRef.current = undefined;
-        instance.removeTooltipItem(lastItem);
-        instance.clearHighlight();
-      }
-
-      if (setCursorPointer && prevCursorRef.current !== null) {
-        document.body.style.cursor = prevCursorRef.current;
-        prevCursorRef.current = null;
-      }
-    }
-
-    function onPointerLeave() {
-      interactionActive.current = false;
-      reset();
-    }
-
-    const onPointerMove = function onPointerMove(event: PointerEvent) {
-      const svgPoint = getSVGPoint(element, event);
-
-      if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
-        return;
-      }
-
-      const item = selectorBarItemAtPosition(store.state, svgPoint);
-
-      if (item) {
-        if (setCursorPointer && prevCursorRef.current === null) {
-          prevCursorRef.current = document.body.style.cursor;
-          document.body.style.cursor = 'pointer';
-        }
-
-        instance.setLastUpdateSource('pointer');
-        instance.setTooltipItem(item);
-        instance.setHighlight(item);
-        lastItemRef.current = item;
-      } else {
-        reset();
-      }
-    };
-
-    document.addEventListener('pointerleave', onPointerLeave);
-    document.addEventListener('pointermove', onPointerMove);
-    document.addEventListener('pointerenter', onPointerEnter);
-
-    return () => {
-      document.removeEventListener('pointerenter', onPointerEnter);
-      document.removeEventListener('pointermove', onPointerMove);
-      document.removeEventListener('pointerleave', onPointerLeave);
-
-      /* Clean up state if this item is unmounted while active. */
-      if (interactionActive.current) {
-        onPointerLeave();
-      }
-    };
-  }, [instance, setCursorPointer, store, svgRef]);
-
-  React.useEffect(() => {
-    const element = svgRef.current;
-
-    if (element == null) {
-      return () => void 0;
+    if (!element || !onItemClick) {
+      return undefined;
     }
 
     let lastPointerUp: Pick<MouseEvent, 'clientX' | 'clientY'> | null = null;
@@ -141,7 +66,7 @@ export function useRegisterPointerEventHandlers(
       const item = selectorBarItemAtPosition(store.state, svgPoint);
 
       if (item) {
-        onItemClick?.(event, {
+        onItemClick(event, {
           type: 'bar',
           seriesId: item.seriesId,
           dataIndex: item.dataIndex,
