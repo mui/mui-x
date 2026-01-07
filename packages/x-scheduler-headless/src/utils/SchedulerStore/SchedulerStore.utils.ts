@@ -1,7 +1,7 @@
 import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
 import { TemporalTimezone } from '../../base-ui-copy/types';
 import {
-  SchedulerProcessedEvent,
+  SchedulerProcessedEventBase,
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
   SchedulerResource,
@@ -85,7 +85,7 @@ export function getProcessedEventFromModel<TEvent extends object>(
   adapter: Adapter,
   eventModelStructure: SchedulerEventModelStructure<TEvent> | undefined,
   displayTimezone: TemporalTimezone,
-): SchedulerProcessedEvent {
+): SchedulerProcessedEventBase {
   // 1. Convert the model to a default event model
   const modelInDefaultFormat = {} as SchedulerEvent;
 
@@ -226,7 +226,7 @@ export function buildEventsState<TEvent extends object, TResource extends object
 
   const eventIdList: SchedulerEventId[] = [];
   const eventModelLookup = new Map<SchedulerEventId, TEvent>();
-  const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEvent>();
+  const processedEventLookup = new Map<SchedulerEventId, SchedulerProcessedEventBase>();
 
   for (const event of events) {
     const processedEvent = getProcessedEventFromModel(

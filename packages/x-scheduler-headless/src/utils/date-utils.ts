@@ -54,7 +54,7 @@ export function applyDataTimezoneToEventUpdate({
   originalEvent: SchedulerProcessedEvent;
   changes: SchedulerEventUpdatedProperties;
 }): SchedulerEventUpdatedProperties {
-  const originalTz = adapter.getTimezone(originalEvent.modelInBuiltInFormat!.start);
+  const originalTz = adapter.getTimezone(originalEvent.modelInBuiltInFormat.start);
 
   const convertToOriginalTz = (date: TemporalSupportedObject): TemporalSupportedObject =>
     adapter.setTimezone(date, originalTz);

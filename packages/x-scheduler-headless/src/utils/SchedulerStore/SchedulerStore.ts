@@ -366,7 +366,7 @@ export class SchedulerStore<
       changes,
     });
 
-    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat!.start);
+    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat.start);
     const occurrenceStartInDataTimezone = adapter.setTimezone(occurrenceStart, originalTz);
 
     const updatedEvents = updateRecurringEvent(
@@ -450,7 +450,7 @@ export class SchedulerStore<
       return this.updateEvents({ updated: [updatedEvent] }).updated[0];
     }
 
-    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat!;
+    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
       ...cleanChanges,

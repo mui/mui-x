@@ -38,7 +38,6 @@ export function usePlaceholderInRow(
       key: 'occurrence-placeholder',
       start: processDate(rawPlaceholder.start, adapter),
       end: processDate(rawPlaceholder.end, adapter),
-      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {
@@ -89,5 +88,5 @@ export namespace usePlaceholderInRow {
   }
 
   export type ReturnValue =
-    useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null;
+    useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }

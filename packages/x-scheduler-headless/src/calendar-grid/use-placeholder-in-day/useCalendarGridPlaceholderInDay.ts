@@ -13,7 +13,7 @@ import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 export function useCalendarGridPlaceholderInDay(
   day: TemporalSupportedObject,
   row: useEventOccurrencesWithDayGridPosition.ReturnValue,
-): useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition | null {
+): useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition | null {
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const { start: rowStart, end: rowEnd } = useCalendarGridDayRowContext();
@@ -37,7 +37,6 @@ export function useCalendarGridPlaceholderInDay(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      modelInBuiltInFormat: null,
     };
 
     // Creation mode

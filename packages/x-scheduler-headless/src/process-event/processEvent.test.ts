@@ -23,8 +23,8 @@ describe('processEvent', () => {
 
     const processed = processEvent(event, 'Pacific/Kiritimati', adapter);
 
-    expect(adapter.getTimezone(processed.modelInBuiltInFormat!.start)).to.equal('America/New_York');
-    expect(adapter.getTimezone(processed.modelInBuiltInFormat!.end)).to.equal('America/New_York');
+    expect(adapter.getTimezone(processed.modelInBuiltInFormat.start)).to.equal('America/New_York');
+    expect(adapter.getTimezone(processed.modelInBuiltInFormat.end)).to.equal('America/New_York');
   });
 
   it('throws if start and end have different timezones', () => {

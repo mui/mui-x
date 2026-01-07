@@ -38,7 +38,6 @@ export function useCalendarGridPlaceholderInRange(
       key: 'occurrence-placeholder',
       start: processDate(rawPlaceholder.start, adapter),
       end: processDate(rawPlaceholder.end, adapter),
-      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {

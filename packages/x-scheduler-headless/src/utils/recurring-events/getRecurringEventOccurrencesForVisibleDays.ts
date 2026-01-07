@@ -3,6 +3,7 @@ import { processDate } from '../../process-date';
 import {
   RecurringEventRecurrenceRule,
   RecurringEventWeekDayCode,
+  SchedulerEvent,
   SchedulerEventOccurrence,
   SchedulerProcessedEvent,
   TemporalSupportedObject,
@@ -36,7 +37,7 @@ const YEARLY_MAX_ATTEMPTS = 4;
  * Expands a recurring event into concrete occurrences within a visible range.
  */
 class RecurringEventExpander {
-  private readonly eventModel: NonNullable<SchedulerProcessedEvent['modelInBuiltInFormat']>;
+  private readonly eventModel: SchedulerEvent;
 
   private readonly rule: RecurringEventRecurrenceRule;
 
@@ -79,7 +80,8 @@ class RecurringEventExpander {
     // The processed event is already converted to the display timezone, which would make recurrence
     // calculations incorrect around DST and timezone boundaries.
 
-    this.eventModel = this.event.modelInBuiltInFormat!;
+    this.eventModel = this.event.modelInBuiltInFormat;
+    // we need to make sure eventModel is parsed as an object
     this.rule = this.eventModel.rrule! as RecurringEventRecurrenceRule;
     this.seriesStart = adapter.startOfDay(this.eventModel.start);
     this.interval = Math.max(1, this.rule.interval ?? 1);

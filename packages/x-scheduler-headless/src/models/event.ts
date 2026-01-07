@@ -3,7 +3,7 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
-export interface SchedulerProcessedEvent {
+interface SchedulerProcessedEventBase {
   /**
    * The unique identifier of the event.
    */
@@ -57,10 +57,6 @@ export interface SchedulerProcessedEvent {
    */
   extractedFromId?: SchedulerEventId;
   /**
-   * The event model in the `SchedulerEvent` format.
-   */
-  modelInBuiltInFormat: SchedulerEvent | null;
-  /**
    * The color of the event.
    * Takes precedence over resource color if both are defined.
    */
@@ -83,6 +79,17 @@ export interface SchedulerProcessedEvent {
    * A custom class name to apply to the event element.
    */
   className?: string;
+}
+
+export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
+  /**
+   * The event model in the `SchedulerEvent` format.
+   */
+  modelInBuiltInFormat: SchedulerEvent;
+}
+
+export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {
+  modelInBuiltInFormat?: never;
 }
 
 export interface SchedulerEvent {
@@ -172,6 +179,17 @@ export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
   key: string;
 }
 
+export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedEventDraft {
+  /**
+   * Unique key that can be passed to the React `key` property when looping through events.
+   */
+  key: string;
+}
+
+export type SchedulerRenderableEventOccurrence =
+  | SchedulerEventOccurrence
+  | SchedulerEventOccurrencePlaceholder;
+
 export type SchedulerEventId = string | number;
 
 export type SchedulerEventColor =
@@ -228,8 +246,7 @@ export interface SchedulerOccurrencePlaceholderCreation extends SchedulerOccurre
   lockSurfaceType?: boolean;
 }
 
-export interface SchedulerOccurrencePlaceholderInternalDragOrResize
-  extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -248,8 +265,7 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize
   originalOccurrence: SchedulerEventOccurrence;
 }
 
-export interface SchedulerOccurrencePlaceholderExternalDrag
-  extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
