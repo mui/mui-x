@@ -51,27 +51,36 @@ export const useGridTreeDataPreProcessors = (
     | 'dataSource'
   >,
 ) => {
+  const {
+    treeData,
+    groupingColDef,
+    getTreeDataPath,
+    disableChildrenSorting,
+    disableChildrenFiltering,
+    defaultGroupingExpansionDepth,
+    isGroupExpandedByDefault,
+    dataSource,
+  } = props;
+
   const setStrategyAvailability = React.useCallback(() => {
     privateApiRef.current.setStrategyAvailability(
       GridStrategyGroup.RowTree,
       TreeDataStrategy.Default,
-      props.treeData && !props.dataSource ? () => true : () => false,
+      treeData && !dataSource ? () => true : () => false,
     );
-  }, [privateApiRef, props.treeData, props.dataSource]);
+  }, [privateApiRef, treeData, dataSource]);
 
   const getGroupingColDef = React.useCallback(() => {
-    const groupingColDefProp = props.groupingColDef;
-
     let colDefOverride: GridGroupingColDefOverride | null | undefined;
-    if (typeof groupingColDefProp === 'function') {
+    if (typeof groupingColDef === 'function') {
       const params: GridGroupingColDefOverrideParams = {
         groupingName: TreeDataStrategy.Default,
         fields: [],
       };
 
-      colDefOverride = groupingColDefProp(params);
+      colDefOverride = groupingColDef(params);
     } else {
-      colDefOverride = groupingColDefProp;
+      colDefOverride = groupingColDef;
     }
 
     const { hideDescendantCount, ...colDefOverrideProperties } = colDefOverride ?? {};
@@ -92,16 +101,16 @@ export const useGridTreeDataPreProcessors = (
       ...colDefOverrideProperties,
       ...GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
     };
-  }, [privateApiRef, props.groupingColDef]);
+  }, [privateApiRef, groupingColDef]);
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      if (props.dataSource) {
+      if (dataSource) {
         return columnsState;
       }
       const groupingColDefField = GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES.field;
 
-      const shouldHaveGroupingColumn = props.treeData;
+      const shouldHaveGroupingColumn = treeData;
       const prevGroupingColumn = columnsState.lookup[groupingColDefField];
 
       if (shouldHaveGroupingColumn) {
@@ -123,18 +132,18 @@ export const useGridTreeDataPreProcessors = (
 
       return columnsState;
     },
-    [props.treeData, props.dataSource, getGroupingColDef],
+    [treeData, dataSource, getGroupingColDef],
   );
 
   const createRowTreeForTreeData = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      if (!props.getTreeDataPath) {
+      if (!getTreeDataPath) {
         throw new Error('MUI X: No getTreeDataPath given.');
       }
 
       const getRowTreeBuilderNode = (rowId: GridRowId) => ({
         id: rowId,
-        path: props.getTreeDataPath!(params.dataRowIdToModelLookup[rowId]).map(
+        path: getTreeDataPath!(params.dataRowIdToModelLookup[rowId]).map(
           (key): RowTreeBuilderGroupingCriterion => ({ key, field: null }),
         ),
       });
@@ -153,8 +162,8 @@ export const useGridTreeDataPreProcessors = (
         return createRowTree({
           previousTree: params.previousTree,
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
-          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
-          isGroupExpandedByDefault: props.isGroupExpandedByDefault,
+          defaultGroupingExpansionDepth,
+          isGroupExpandedByDefault,
           groupingName: TreeDataStrategy.Default,
           onDuplicatePath,
         });
@@ -168,12 +177,12 @@ export const useGridTreeDataPreProcessors = (
         },
         previousTree: params.previousTree!,
         previousTreeDepth: params.previousTreeDepths!,
-        defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
-        isGroupExpandedByDefault: props.isGroupExpandedByDefault,
+        defaultGroupingExpansionDepth,
+        isGroupExpandedByDefault,
         groupingName: TreeDataStrategy.Default,
       });
     },
-    [props.getTreeDataPath, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
+    [getTreeDataPath, defaultGroupingExpansionDepth, isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(
@@ -183,13 +192,13 @@ export const useGridTreeDataPreProcessors = (
       return filterRowTreeFromTreeData({
         rowTree,
         isRowMatchingFilters: params.isRowMatchingFilters,
-        disableChildrenFiltering: props.disableChildrenFiltering,
+        disableChildrenFiltering,
         filterModel: params.filterModel,
         filterValueGetter: params.filterValueGetter,
         apiRef: privateApiRef,
       });
     },
-    [privateApiRef, props.disableChildrenFiltering],
+    [privateApiRef, disableChildrenFiltering],
   );
 
   const sortRows = React.useCallback<GridStrategyProcessor<'sorting'>>(
@@ -199,11 +208,11 @@ export const useGridTreeDataPreProcessors = (
       return sortRowTree({
         rowTree,
         sortRowList: params.sortRowList,
-        disableChildrenSorting: props.disableChildrenSorting,
+        disableChildrenSorting,
         shouldRenderGroupBelowLeaves: false,
       });
     },
-    [privateApiRef, props.disableChildrenSorting],
+    [privateApiRef, disableChildrenSorting],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateGroupingColumn);

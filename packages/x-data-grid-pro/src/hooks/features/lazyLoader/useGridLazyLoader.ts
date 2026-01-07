@@ -23,10 +23,7 @@ import { findSkeletonRowsSection } from './utils';
  */
 export const useGridLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<
-    DataGridProProcessedProps,
-    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
-  >,
+  props: Pick<DataGridProProcessedProps, 'onFetchRows' | 'rowsLoadingMode'>,
 ): void => {
   const { onFetchRows, rowsLoadingMode } = props;
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);

@@ -13,7 +13,6 @@ import { GridRowReorderPrivateApi } from '@mui/x-data-grid-pro/internals';
 import { GridInitialStatePremium, GridStatePremium } from './gridStatePremium';
 import type { GridRowGroupingApi, GridExcelExportApi, GridAggregationApi } from '../hooks';
 import { GridCellSelectionApi } from '../hooks/features/cellSelection/gridCellSelectionInterfaces';
-import type { DataGridPremiumProcessedProps } from './dataGridPremiumProps';
 import type {
   GridDataSourcePremiumPrivateApi,
   GridDataSourceApiPremium,
@@ -57,7 +56,7 @@ export interface GridApiPremium
 export interface GridPrivateApiPremium
   extends
     GridApiPremium,
-    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
+    GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
     GridDetailPanelPrivateApi,

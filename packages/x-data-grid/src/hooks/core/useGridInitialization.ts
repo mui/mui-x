@@ -15,16 +15,26 @@ import { useGridProps } from './useGridProps';
  */
 export const useGridInitialization = <PrivateApi extends GridPrivateApiCommon>(
   privateApiRef: RefObject<PrivateApi>,
-  props: DataGridProcessedProps,
+  props: Pick<
+    DataGridProcessedProps,
+    | 'getRowId'
+    | 'listView'
+    | 'isCellEditable'
+    | 'isRowSelectable'
+    | 'logger'
+    | 'logLevel'
+    | 'localeText'
+  >,
 ) => {
+  const { getRowId, listView, isCellEditable, isRowSelectable, logger, logLevel, localeText } =
+    props;
+
   useGridRefs(privateApiRef);
-  useGridProps(privateApiRef, props);
+  useGridProps(privateApiRef, { getRowId, listView, isCellEditable, isRowSelectable });
   useGridIsRtl(privateApiRef);
-  useGridLoggerFactory(privateApiRef, props);
+  useGridLoggerFactory(privateApiRef, { logger, logLevel });
   useGridStateInitialization(privateApiRef);
   useGridPipeProcessing(privateApiRef);
   useGridStrategyProcessing(privateApiRef);
-  useGridLocaleText(privateApiRef, props);
-
-  privateApiRef.current.register('private', { rootProps: props });
+  useGridLocaleText(privateApiRef, { localeText });
 };

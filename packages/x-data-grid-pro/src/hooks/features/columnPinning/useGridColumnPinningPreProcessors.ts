@@ -10,7 +10,7 @@ import { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const useGridColumnPinningPreProcessors = (
   apiRef: RefObject<GridPrivateApiPro>,
-  props: DataGridProProcessedProps,
+  props: Pick<DataGridProProcessedProps, 'disableColumnPinning'>,
 ) => {
   const { disableColumnPinning } = props;
 

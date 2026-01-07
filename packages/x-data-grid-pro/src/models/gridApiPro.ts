@@ -17,7 +17,6 @@ import type {
   GridDataSourceApiPro,
   GridDataSourcePrivateApiPro,
 } from '../hooks/features/dataSource/models';
-import type { DataGridProProcessedProps } from './dataGridProProps';
 
 /**
  * The api of Data Grid Pro.
@@ -37,7 +36,7 @@ export interface GridApiPro
 export interface GridPrivateApiPro
   extends
     GridApiPro,
-    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
+    GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro>,
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,
     GridRowReorderPrivateApi,

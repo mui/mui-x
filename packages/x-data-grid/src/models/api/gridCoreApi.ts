@@ -4,7 +4,6 @@ import type { Store } from '@mui/x-internals/store';
 import type { GridEventPublisher, GridEventListener, GridEvents } from '../events';
 import type { GridApiCaches } from '../gridApiCaches';
 import type { GridApiCommon, GridPrivateApiCommon } from './gridApiCommon';
-import type { DataGridProcessedProps } from '../props/DataGridProps';
 
 /**
  * The core API interface that is available in the grid `apiRef`.
@@ -49,7 +48,6 @@ export interface GridCoreApi {
 export interface GridCorePrivateApi<
   GridPublicApi extends GridApiCommon,
   GridPrivateApi extends GridPrivateApiCommon,
-  GridProps extends DataGridProcessedProps,
 > {
   /**
    * The caches used by hooks and state initializers.
@@ -104,9 +102,4 @@ export interface GridCorePrivateApi<
    * @returns {GridPublicApi} The public api.
    */
   getPublicApi: () => GridPublicApi;
-  /**
-   * Allows to access the root props outside of the React component.
-   * Do not use in React components - use the `useGridRootProps` hook instead.
-   */
-  rootProps: GridProps;
 }

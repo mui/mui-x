@@ -39,8 +39,9 @@ import type { SerializedRow } from './serializer/utils';
  */
 export const useGridExcelExport = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: DataGridPremiumProps,
+  props: Pick<DataGridPremiumProps, 'onExcelExportStateChange'>,
 ): void => {
+  const { onExcelExportStateChange } = props;
   const logger = useGridLogger(apiRef, 'useGridExcelExport');
 
   const getDataAsExcel = React.useCallback<GridExcelExportApi['getDataAsExcel']>(
@@ -207,5 +208,5 @@ export const useGridExcelExport = (
 
   useGridRegisterPipeProcessor(apiRef, 'exportMenu', addExportMenuButtons);
 
-  useGridEventPriority(apiRef, 'excelExportStateChange', props.onExcelExportStateChange);
+  useGridEventPriority(apiRef, 'excelExportStateChange', onExcelExportStateChange);
 };

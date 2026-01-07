@@ -157,16 +157,28 @@ export const useGridChartsIntegration = (
     | 'experimentalFeatures'
   >,
 ) => {
+  const {
+    chartsIntegration,
+    activeChartId: activeChartIdRootProps,
+    onActiveChartIdChange,
+    initialState,
+    slots,
+    slotProps,
+    aggregationFunctions,
+    dataSource,
+    experimentalFeatures,
+  } = props;
+
   const visibleDimensions = React.useRef<Record<string, GridColDef[]>>({});
   const visibleValues = React.useRef<Record<string, GridColDef[]>>({});
   const schema = React.useMemo(
-    () => props.slotProps?.chartsPanel?.schema || {},
-    [props.slotProps?.chartsPanel?.schema],
+    () => slotProps?.chartsPanel?.schema || {},
+    [slotProps?.chartsPanel?.schema],
   );
 
   const context = useGridChartsIntegrationContext(true);
   const isChartsIntegrationAvailable =
-    !!props.chartsIntegration && !!props.experimentalFeatures?.charts && !!context;
+    !!chartsIntegration && !!experimentalFeatures?.charts && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const pivotActive = gridPivotActiveSelector(apiRef);
@@ -192,7 +204,7 @@ export const useGridChartsIntegration = (
 
   const getColumnName = React.useCallback(
     (field: string) => {
-      const customFieldName = props.slotProps?.chartsPanel?.getColumnName?.(field);
+      const customFieldName = slotProps?.chartsPanel?.getColumnName?.(field);
       if (customFieldName) {
         return customFieldName;
       }
@@ -213,13 +225,13 @@ export const useGridChartsIntegration = (
       );
       return [columnName, ...groupNames].join(' - ');
     },
-    [apiRef, pivotActive, props.slotProps?.chartsPanel],
+    [apiRef, pivotActive, slotProps?.chartsPanel],
   );
 
   // Adds aggregation function label to the column name
   const getValueDatasetLabel = React.useCallback(
     (field: string) => {
-      const customFieldName = props.slotProps?.chartsPanel?.getColumnName?.(field);
+      const customFieldName = slotProps?.chartsPanel?.getColumnName?.(field);
       if (customFieldName) {
         return customFieldName;
       }
@@ -232,20 +244,20 @@ export const useGridChartsIntegration = (
             apiRef,
             aggregationRule: {
               aggregationFunctionName: fieldAggregation,
-              aggregationFunction: props.aggregationFunctions[fieldAggregation] || {},
+              aggregationFunction: aggregationFunctions[fieldAggregation] || {},
             },
           })})`
         : '';
 
       return `${columnName}${suffix}`;
     },
-    [apiRef, props.aggregationFunctions, props.slotProps?.chartsPanel, getColumnName],
+    [apiRef, aggregationFunctions, slotProps?.chartsPanel, getColumnName],
   );
 
   apiRef.current.registerControlState({
     stateId: 'activeChartId',
-    propModel: props.activeChartId,
-    propOnChange: props.onActiveChartIdChange,
+    propModel: activeChartIdRootProps,
+    propOnChange: onActiveChartIdChange,
     stateSelector: gridChartsIntegrationActiveChartIdSelector,
     changeEvent: 'activeChartIdChange',
   });
@@ -292,9 +304,9 @@ export const useGridChartsIntegration = (
         if (!hasAggregation) {
           // use the first available aggregation function
           aggregationsToAdd[item.field] = getAvailableAggregationFunctions({
-            aggregationFunctions: props.aggregationFunctions,
+            aggregationFunctions,
             colDef: item,
-            isDataSource: !!props.dataSource,
+            isDataSource: !!dataSource,
           })[0];
         }
       });
@@ -306,14 +318,7 @@ export const useGridChartsIntegration = (
         });
       }
     }
-  }, [
-    apiRef,
-    props.aggregationFunctions,
-    props.dataSource,
-    activeChartId,
-    pivotActive,
-    aggregationModel,
-  ]);
+  }, [apiRef, aggregationFunctions, dataSource, activeChartId, pivotActive, aggregationModel]);
 
   const handleRowDataUpdate = React.useCallback(
     (chartIds: string[]) => {
@@ -793,9 +798,9 @@ export const useGridChartsIntegration = (
             apiRef.current.setAggregationModel({
               ...aggregationModel,
               [field]: getAvailableAggregationFunctions({
-                aggregationFunctions: props.aggregationFunctions,
+                aggregationFunctions,
                 colDef: columns[field],
-                isDataSource: !!props.dataSource,
+                isDataSource: !!dataSource,
               })[0],
             });
           }
@@ -814,8 +819,8 @@ export const useGridChartsIntegration = (
     },
     [
       apiRef,
-      props.aggregationFunctions,
-      props.dataSource,
+      aggregationFunctions,
+      dataSource,
       activeChartId,
       chartStateLookup,
       updateChartDimensionsData,
@@ -840,17 +845,13 @@ export const useGridChartsIntegration = (
 
   const addChartsPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
     (initialValue, value) => {
-      if (
-        props.slots.chartsPanel &&
-        isChartsIntegrationAvailable &&
-        value === GridSidebarValue.Charts
-      ) {
-        return <props.slots.chartsPanel {...props.slotProps?.chartsPanel} />;
+      if (slots.chartsPanel && isChartsIntegrationAvailable && value === GridSidebarValue.Charts) {
+        return <slots.chartsPanel {...slotProps?.chartsPanel} />;
       }
 
       return initialValue;
     },
-    [props, isChartsIntegrationAvailable],
+    [slots, slotProps?.chartsPanel, isChartsIntegrationAvailable],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'sidebar', addChartsPanel);
@@ -862,7 +863,7 @@ export const useGridChartsIntegration = (
   );
   useGridApiMethod(
     apiRef,
-    props.experimentalFeatures?.charts
+    experimentalFeatures?.charts
       ? {
           setChartsPanelOpen,
           setActiveChartId,
@@ -903,7 +904,7 @@ export const useGridChartsIntegration = (
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState, exportContext) => {
-      if (!props.chartsIntegration || !props.experimentalFeatures?.charts) {
+      if (!chartsIntegration || !experimentalFeatures?.charts) {
         return prevState;
       }
 
@@ -925,7 +926,7 @@ export const useGridChartsIntegration = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !exportContext.exportOnlyDirtyModels ||
         // Always export if the chart state has been initialized
-        props.initialState?.chartsIntegration != null ||
+        initialState?.chartsIntegration != null ||
         // Export if the chart model or context is not empty
         Object.keys(chartsLookup).length > 0 ||
         Object.keys(integrationContextToExport).length > 0;
@@ -949,9 +950,9 @@ export const useGridChartsIntegration = (
     [
       apiRef,
       chartStateLookup,
-      props.chartsIntegration,
-      props.experimentalFeatures?.charts,
-      props.initialState?.chartsIntegration,
+      chartsIntegration,
+      experimentalFeatures?.charts,
+      initialState?.chartsIntegration,
     ],
   );
 
@@ -1021,15 +1022,14 @@ export const useGridChartsIntegration = (
     isInitialized.current = true;
 
     availableChartIds.forEach((chartId) => {
-      const chartType = props.initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '';
+      const chartType = initialState?.chartsIntegration?.charts?.[chartId]?.chartType || '';
       setChartState(chartId, {
         type: chartType,
         maxDimensions: schema[chartType]?.maxDimensions,
         maxValues: schema[chartType]?.maxValues,
         dimensionsLabel: schema[chartType]?.dimensionsLabel,
         valuesLabel: schema[chartType]?.valuesLabel,
-        configuration:
-          props.initialState?.chartsIntegration?.charts?.[chartId]?.configuration || {},
+        configuration: initialState?.chartsIntegration?.charts?.[chartId]?.configuration || {},
       });
     });
 
@@ -1038,7 +1038,7 @@ export const useGridChartsIntegration = (
     schema,
     availableChartIds,
     syncedChartIds,
-    props.initialState?.chartsIntegration?.charts,
+    initialState?.chartsIntegration?.charts,
     setChartState,
     debouncedHandleColumnDataUpdate,
   ]);

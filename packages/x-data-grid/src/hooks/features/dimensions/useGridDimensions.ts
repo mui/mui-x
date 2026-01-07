@@ -25,21 +25,6 @@ import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridProps
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
 
-type RootProps = Pick<
-  DataGridProcessedProps,
-  | 'onResize'
-  | 'scrollbarSize'
-  | 'pagination'
-  | 'paginationMode'
-  | 'autoHeight'
-  | 'getRowHeight'
-  | 'rowHeight'
-  | 'resizeThrottleMs'
-  | 'columnHeaderHeight'
-  | 'columnGroupHeaderHeight'
-  | 'headerFilterHeight'
->;
-
 export type GridDimensionsState = GridDimensions;
 
 const EMPTY_SIZE: ElementSize = { width: 0, height: 0 };
@@ -68,21 +53,26 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   minimalContentHeight: undefined,
 };
 
-export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
-  state,
-  props,
-  apiRef,
-) => {
+export const dimensionsStateInitializer: GridStateInitializer<
+  Pick<
+    DataGridProcessedProps,
+    'rowHeight' | 'columnHeaderHeight' | 'columnGroupHeaderHeight' | 'headerFilterHeight'
+  >
+> = (state, props, apiRef) => {
   const dimensions = EMPTY_DIMENSIONS;
+  const { rowHeight, columnHeaderHeight, columnGroupHeaderHeight, headerFilterHeight } = props;
 
   const density = gridDensityFactorSelector(apiRef);
   const dimensionsWithStatic = {
     ...dimensions,
     ...getStaticDimensions(
-      props,
       apiRef,
       density,
       gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+      rowHeight,
+      columnHeaderHeight,
+      columnGroupHeaderHeight,
+      headerFilterHeight,
     ),
   };
 
@@ -109,7 +99,11 @@ const columnsTotalWidthSelector = createSelector(
   },
 );
 
-export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
+export function useGridDimensions(
+  apiRef: RefObject<GridPrivateApiCommunity>,
+  props: Pick<DataGridProcessedProps, 'onResize' | 'autoHeight'>,
+) {
+  const { onResize, autoHeight } = props;
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
   const apiPublic: GridDimensionsApi = {
@@ -133,7 +127,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   };
 
   useGridEventPriority(apiRef, 'rootMount', handleRootMount);
-  useGridEventPriority(apiRef, 'debouncedResize', props.onResize);
+  useGridEventPriority(apiRef, 'debouncedResize', onResize);
 
   if (process.env.NODE_ENV !== 'production') {
     /* eslint-disable react-hooks/rules-of-hooks */
@@ -144,7 +138,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
       if (!getRootDimensions().isReady) {
         return;
       }
-      if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
+      if (size.height === 0 && !errorShown.current && !autoHeight && !isJSDOM) {
         logger.error(
           [
             'The parent DOM element of the Data Grid has an empty height.',
@@ -210,28 +204,31 @@ function setCSSVariables(root: HTMLElement, dimensions: GridDimensions) {
 }
 
 function getStaticDimensions(
-  props: RootProps,
   apiRef: RefObject<GridPrivateApiCommunity>,
   density: number,
   pinnedColumnns: ReturnType<typeof gridVisiblePinnedColumnDefinitionsSelector>,
+  rowHeight: number,
+  columnHeaderHeight: number,
+  columnGroupHeaderHeight?: number,
+  headerFilterHeight?: number,
 ) {
   const validRowHeight = getValidRowHeight(
-    props.rowHeight,
+    rowHeight,
     DATA_GRID_PROPS_DEFAULT_VALUES.rowHeight,
     rowHeightWarning,
   );
 
   return {
     rowHeight: Math.floor(validRowHeight * density),
-    headerHeight: Math.floor(props.columnHeaderHeight * density),
-    groupHeaderHeight: Math.floor(
-      (props.columnGroupHeaderHeight ?? props.columnHeaderHeight) * density,
-    ),
-    headerFilterHeight: Math.floor(
-      (props.headerFilterHeight ?? props.columnHeaderHeight) * density,
-    ),
+    headerHeight: Math.floor(columnHeaderHeight * density),
+    groupHeaderHeight: Math.floor((columnGroupHeaderHeight ?? columnHeaderHeight) * density),
+    headerFilterHeight: Math.floor((headerFilterHeight ?? columnHeaderHeight) * density),
     columnsTotalWidth: columnsTotalWidthSelector(apiRef),
-    headersTotalHeight: getTotalHeaderHeight(apiRef, props),
+    headersTotalHeight: getTotalHeaderHeight(apiRef, {
+      columnHeaderHeight,
+      columnGroupHeaderHeight,
+      headerFilterHeight,
+    }),
     leftPinnedWidth: pinnedColumnns.left.reduce((w, col) => w + col.computedWidth, 0),
     rightPinnedWidth: pinnedColumnns.right.reduce((w, col) => w + col.computedWidth, 0),
   };

@@ -25,6 +25,7 @@ export const useGridSidebar = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<DataGridPremiumProcessedProps, 'initialState' | 'onSidebarClose' | 'onSidebarOpen'>,
 ): void => {
+  const { initialState, onSidebarClose, onSidebarOpen } = props;
   const hideSidebar = React.useCallback(() => {
     apiRef.current.setState((state) => {
       if (!state.sidebar.open || !state.sidebar.value) {
@@ -74,7 +75,7 @@ export const useGridSidebar = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the sidebar was initialized
-        props.initialState?.sidebar != null ||
+        initialState?.sidebar != null ||
         // Always export if the sidebar is opened
         sidebarToExport.open;
 
@@ -87,7 +88,7 @@ export const useGridSidebar = (
         sidebar: sidebarToExport,
       };
     },
-    [apiRef, props.initialState?.sidebar],
+    [apiRef, initialState?.sidebar],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -107,6 +108,6 @@ export const useGridSidebar = (
 
   useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
-  useGridEventPriority(apiRef, 'sidebarClose', props.onSidebarClose);
-  useGridEventPriority(apiRef, 'sidebarOpen', props.onSidebarOpen);
+  useGridEventPriority(apiRef, 'sidebarClose', onSidebarClose);
+  useGridEventPriority(apiRef, 'sidebarOpen', onSidebarOpen);
 };
