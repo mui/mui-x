@@ -50,14 +50,10 @@ export function getBarDimensions(params: {
     return null;
   }
 
-  const visibleValues = series.visibleStackedData[dataIndex];
-  const visibleValueCoordinates = visibleValues.map((v) =>
-    verticalLayout ? yScale(v)! : xScale(v)!,
-  );
+  const values = series.visibleStackedData[dataIndex];
+  const valueCoordinates = values.map((v) => (verticalLayout ? yScale(v)! : xScale(v)!));
 
-  const [minValueCoord, maxValueCoord] = findMinMax(visibleValueCoordinates).map((v) =>
-    Math.round(v),
-  );
+  const [minValueCoord, maxValueCoord] = findMinMax(valueCoordinates).map((v) => Math.round(v));
 
   let barSize = 0;
   if (seriesValue !== 0) {
