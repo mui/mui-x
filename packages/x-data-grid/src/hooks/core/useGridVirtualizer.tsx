@@ -151,7 +151,7 @@ export function useGridVirtualizer() {
   const headersTotalHeight = getTotalHeaderHeight(apiRef, {
     listView,
     columnHeaderHeight,
-    headerFilterHeight,
+    headerFilterHeight: rootPropsHeaderFilterHeight,
     columnGroupHeaderHeight,
   });
 
