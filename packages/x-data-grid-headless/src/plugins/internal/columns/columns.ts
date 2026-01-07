@@ -1,11 +1,6 @@
 'use client';
 import * as React from 'react';
-import {
-  type Store,
-  useStore,
-  createSelector,
-  createSelectorMemoized,
-} from '@base-ui/utils/store';
+import { type Store, useStore, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { type Plugin } from '../../core/plugin';
 import {
   type ColumnsState,
