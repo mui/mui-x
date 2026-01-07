@@ -69,7 +69,7 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
   const apiRef = useGridApiContext();
   const { rows, ...rootProps } = useGridRootProps();
   const { slots, slotProps } = rootProps;
-  const ownerState = { ...props, ...rootProps };
+  const ownerState = { ...rootProps, ...props };
   const classes = useUtilityClasses(ownerState);
 
   const iconElement = getIcon(slots, direction, classes.icon, sortingOrder);

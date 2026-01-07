@@ -46,7 +46,6 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     scroller: ['virtualScroller', hasScrollX && 'virtualScroller--hasScrollX'],
   };
 
-  //
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 

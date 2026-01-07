@@ -102,6 +102,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   return (
     <GridPanelRoot
       as={slots.basePopper}
+      ownerState={rootProps}
       placement="bottom-end"
       className={clsx(classes.panel, className, variablesClass)}
       flip
@@ -111,7 +112,6 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
       clickAwayMouseEvent="onPointerUp"
       clickAwayTouchEvent={false}
       focusTrap
-      ownerState={rootProps}
       {...other}
       {...slotProps?.basePopper}
       target={props.target ?? fallbackTarget}

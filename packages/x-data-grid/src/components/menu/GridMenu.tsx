@@ -104,6 +104,7 @@ function GridMenu(props: GridMenuProps) {
     <GridMenuRoot
       as={slots.basePopper}
       className={clsx(classes.root, className, variablesClass)}
+      ownerState={rootProps}
       open={open}
       target={target}
       transition
@@ -112,7 +113,6 @@ function GridMenu(props: GridMenuProps) {
       onExited={onExited}
       clickAwayMouseEvent="onMouseDown"
       onKeyDown={handleKeyDown}
-      ownerState={rootProps}
       {...other}
       {...slotProps?.basePopper}
     >
