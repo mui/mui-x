@@ -727,11 +727,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // OccurrenceStart in display timezone (Madrid) will look like next day,
       // but update must use data timezone
-<<<<<<< HEAD
       const occurrenceStart = original.modelInBuiltInFormat.start;
-=======
-      const occurrenceStart = original.modelInBuiltInFormat!.start;
->>>>>>> upstream/master
 
       const updated = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, {
         id: original.id,
