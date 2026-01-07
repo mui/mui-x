@@ -20,6 +20,7 @@ import {
   parsesByDayForMonthlyFrequency,
   parsesByDayForWeeklyFrequency,
 } from './internal-utils';
+import { parseRRuleString } from './rRuleString';
 
 /**
  * Max attempts to find a valid monthly occurrence.
@@ -81,8 +82,8 @@ class RecurringEventExpander {
     // calculations incorrect around DST and timezone boundaries.
 
     this.eventModel = this.event.modelInBuiltInFormat;
-    // we need to make sure eventModel is parsed as an object
-    this.rule = this.eventModel.rrule! as RecurringEventRecurrenceRule;
+    // TODO: Should use parseRRule that only parses the rule, without any timezone conversion after, after 20769 PR is merged
+    this.rule = parseRRuleString(this.adapter, this.eventModel.rrule!, this.displayTimezone);
     this.seriesStart = adapter.startOfDay(this.eventModel.start);
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
