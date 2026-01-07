@@ -16,7 +16,12 @@ export function FocusedLineMark() {
     return null;
   }
 
-  const series = lineSeries?.series[focusedItem.seriesId];
+  const series = lineSeries.series[focusedItem.seriesId];
+
+  if (series.data[focusedItem.dataIndex] == null) {
+    // Handle missing data
+    return null;
+  }
 
   const xAxisId = series.xAxisId ?? xAxisIds[0];
   const yAxisId = series.yAxisId ?? yAxisIds[0];
