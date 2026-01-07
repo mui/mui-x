@@ -68,11 +68,7 @@ export default function StackOffsetDemo() {
           labelPlacement="end"
         />
       </Stack>
-      <BarChart
-        height={300}
-        series={getSeries({ hasNegativeValue, stackOffset })}
-        layout="horizontal"
-      />
+      <BarChart height={300} series={getSeries({ hasNegativeValue, stackOffset })} />
     </Box>
   );
 }
