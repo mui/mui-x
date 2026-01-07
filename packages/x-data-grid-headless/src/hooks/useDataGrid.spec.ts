@@ -60,12 +60,17 @@ export function Example() {
   // Internal plugins state is available
   grid1.state.rows.tree;
 
-  // Selectors
-  grid1.selectors.rows.tree;
-  grid1.selectors.columns.orderedFields;
-  grid1.selectors.sorting.sortModel;
-  // @ts-expect-error pagination selector does not exist
-  grid1.selectors.pagination.model;
+  // Hooks - Internal plugins (rows, columns)
+  grid1.hooks.rows.useRowIds;
+  grid1.hooks.rows.useTree;
+  grid1.hooks.rows.useLoading;
+  grid1.hooks.columns.useOrderedFields;
+  grid1.hooks.columns.useVisibleColumns;
+  grid1.hooks.columns.useAllColumns;
+
+  grid1.hooks.sorting.useSortModel;
+  // @ts-expect-error pagination hooks do not exist
+  grid1.hooks.pagination.usePaginationModel;
 
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
@@ -94,11 +99,16 @@ export function Example() {
   grid2.api.sorting.sortColumn('name', 'asc');
   grid2.api.pagination.setPage(1);
 
-  // Selectors
-  grid2.selectors.rows.tree;
-  grid2.selectors.columns.orderedFields;
-  grid2.selectors.sorting.sortModel;
-  grid2.selectors.pagination.model;
+  // Hooks - Internal plugins (rows, columns)
+  grid2.hooks.rows.useRowIds;
+  grid2.hooks.rows.useTree;
+  grid2.hooks.rows.useRowIdToModelLookup;
+  grid2.hooks.columns.useOrderedFields;
+  grid2.hooks.columns.useVisibleColumns;
+  grid2.hooks.columns.useLookup;
+
+  grid2.hooks.sorting.useSortModel;
+  grid2.hooks.pagination.usePaginationModel;
 
   // Extract grid options type
   const plugins = [sortingPlugin, paginationPlugin] as const;

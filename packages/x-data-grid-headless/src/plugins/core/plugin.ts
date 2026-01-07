@@ -6,13 +6,12 @@ export interface BaseApi {
   pluginRegistry: PluginRegistry;
 }
 
-type Selector<TState> = (state: TState, ...args: any[]) => any;
-
 export interface Plugin<
   TName extends string,
   TState,
   TApi,
   TParams extends Record<string, any> = any,
+  THooks = {},
   TRequiredApi extends Record<string, any> = {},
 > {
   name: TName;
@@ -22,5 +21,5 @@ export interface Plugin<
     params: TParams & InternalPluginsOptions,
     api: TRequiredApi & BaseApi & InternalPluginsApi,
   ) => TApi;
-  selectors?: Record<string, Selector<TState> | Record<string, Selector<TState>>>;
+  createHooks?: (store: Store<TState & InternalPluginsState>) => THooks;
 }

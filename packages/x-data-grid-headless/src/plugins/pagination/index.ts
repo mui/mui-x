@@ -1,3 +1,4 @@
+import { type Store, useStore } from '@base-ui/utils/store';
 import type { Plugin } from '../core/plugin';
 
 export interface PaginationModel {
@@ -30,6 +31,14 @@ interface PaginationApi {
   };
 }
 
+const createPaginationHooks = (store: Store<PaginationState>) => ({
+  pagination: {
+    usePaginationModel: () => useStore(store, (state) => state.pagination.paginationModel),
+  },
+});
+
+export type PaginationPluginHooks = ReturnType<typeof createPaginationHooks>;
+
 const paginationPlugin = {
   name: 'pagination',
   initialize: (params) => ({
@@ -52,11 +61,13 @@ const paginationPlugin = {
       },
     };
   },
-  selectors: {
-    pagination: {
-      model: (state) => state.pagination.paginationModel,
-    },
-  },
-} satisfies Plugin<'pagination', PaginationState, PaginationApi, PaginationOptions>;
+  createHooks: createPaginationHooks,
+} satisfies Plugin<
+  'pagination',
+  PaginationState,
+  PaginationApi,
+  PaginationOptions,
+  PaginationPluginHooks
+>;
 
 export default paginationPlugin;

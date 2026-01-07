@@ -9,7 +9,7 @@ import {
   internalPlugins,
   InternalPluginsApi,
   InternalPluginsState,
-  InternalPluginsSelectors,
+  InternalPluginsHooks,
 } from '../plugins/internal';
 
 // ================================
@@ -32,34 +32,34 @@ type DataGridApi<
   TRow = any,
 > = PluginsApi<TPlugins, TRow>;
 
-// Helper to extract selectors from a plugin, preserving their shape
-type ExtractPluginSelectors<T> = T extends { selectors?: infer S } ? S : {};
+// Helper to extract hooks from a plugin, preserving their shape
+type ExtractPluginHooks<T> = T extends { createHooks?: (...args: any[]) => infer H } ? H : {};
 
-// Merge all plugin selectors (internal + user plugins), preserving their shape
-type PluginsSelectors<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
+// Merge all plugin hooks (internal + user plugins), preserving their shape
+type PluginsHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>[]> =
   UnionToIntersection<
     {
-      [K in keyof TPlugins]: ExtractPluginSelectors<TPlugins[K]>;
+      [K in keyof TPlugins]: ExtractPluginHooks<TPlugins[K]>;
     }[number]
   > &
-    InternalPluginsSelectors;
+    InternalPluginsHooks;
 
-type DataGridSelectors<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
-  PluginsSelectors<TPlugins>;
+type DataGridHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>[]> =
+  PluginsHooks<TPlugins>;
 
 // ================================
 // Instance
 // ================================
 
 interface DataGridInstance<
-  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TPlugins extends readonly Plugin<any, any, any, any, any, any>[],
   TRow = any,
 > {
   options: UseDataGridOptions<TPlugins, TRow>;
   state: DataGridState<TPlugins>;
   store: Store<DataGridState<TPlugins>>;
   api: DataGridApi<TPlugins, TRow>;
-  selectors: DataGridSelectors<TPlugins>;
+  hooks: DataGridHooks<TPlugins>;
 }
 
 // ================================
@@ -67,7 +67,7 @@ interface DataGridInstance<
 // ================================
 
 export const useDataGrid = <
-  const TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  const TPlugins extends readonly Plugin<any, any, any, any, any, any>[],
   TRow extends object = any,
 >(
   options: UseDataGridOptions<TPlugins, TRow>,
@@ -135,32 +135,32 @@ export const useDataGrid = <
     Object.assign(api, pluginApi);
   });
 
-  // Collect selectors from all plugins, preserving their shape
-  const selectors = useRefWithInit(() => {
-    const allSelectors: Record<string, any> = {};
+  // Collect hooks from all plugins, preserving their shape
+  const hooks = useRefWithInit(() => {
+    const allHooks: Record<string, any> = {};
 
-    // Collect selectors from internal plugins
+    // Collect hooks from internal plugins
     internalPlugins.forEach((plugin) => {
-      if (plugin.selectors) {
-        Object.assign(allSelectors, plugin.selectors);
+      if ('createHooks' in plugin && typeof plugin.createHooks === 'function') {
+        Object.assign(allHooks, plugin.createHooks(stateStore as any));
       }
     });
 
-    // Collect selectors from user plugins
+    // Collect hooks from user plugins
     pluginRegistry.forEachUserPlugin((plugin) => {
-      if (plugin.selectors) {
-        Object.assign(allSelectors, plugin.selectors);
+      if ('createHooks' in plugin && typeof plugin.createHooks === 'function') {
+        Object.assign(allHooks, (plugin as any).createHooks(stateStore));
       }
     });
 
-    return allSelectors as DataGridSelectors<TPlugins>;
+    return allHooks as DataGridHooks<TPlugins>;
   }).current;
 
   return {
     store: stateStore,
     state: stateStore.state,
     api,
-    selectors,
+    hooks,
     options,
   };
 };

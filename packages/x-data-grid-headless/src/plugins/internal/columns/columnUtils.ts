@@ -150,8 +150,7 @@ interface CoreState {
  */
 export function createColumnsApi<TData>(
   store: Store<CoreState>,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  options: ColumnsOptions<TData>,
+  _options: ColumnsOptions<TData>,
 ): ColumnsApi {
   const getColumn = (field: string): ColumnState | undefined => {
     return store.state.columns.lookup[field];

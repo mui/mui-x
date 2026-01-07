@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type Store } from '@base-ui/utils/store';
+import { type Store, useStore } from '@base-ui/utils/store';
 import { type Plugin } from '../../core/plugin';
 import {
   type RowsState,
@@ -24,6 +24,24 @@ export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
     rows?: Partial<RowsState>;
   };
 }
+
+const createRowsHooks = (store: Store<RowsPluginState>) => ({
+  rows: {
+    useRowIds: () => useStore(store, (state) => state.rows.dataRowIds),
+    useRowIdToModelLookup: () => useStore(store, (state) => state.rows.dataRowIdToModelLookup),
+    useTree: () => useStore(store, (state) => state.rows.tree),
+    useTreeDepths: () => useStore(store, (state) => state.rows.treeDepths),
+    useTotalRowCount: () => useStore(store, (state) => state.rows.totalRowCount),
+    useTotalTopLevelRowCount: () => useStore(store, (state) => state.rows.totalTopLevelRowCount),
+    useLoading: () => useStore(store, (state) => state.rows.loading),
+    useGroupingName: () => useStore(store, (state) => state.rows.groupingName),
+    useRow: (id: GridRowId) =>
+      useStore(store, (state) => state.rows.dataRowIdToModelLookup[id] ?? null),
+    useRowNode: (id: GridRowId) => useStore(store, (state) => state.rows.tree[id] ?? null),
+  },
+});
+
+export type RowsPluginHooks = ReturnType<typeof createRowsHooks>;
 
 const rowsPlugin = {
   name: 'rows',
@@ -77,20 +95,7 @@ const rowsPlugin = {
 
     return { rows: rowsApi };
   },
-  selectors: {
-    rows: {
-      dataRowIds: (state) => state.rows.dataRowIds,
-      dataRowIdToModelLookup: (state) => state.rows.dataRowIdToModelLookup,
-      tree: (state) => state.rows.tree,
-      treeDepths: (state) => state.rows.treeDepths,
-      totalRowCount: (state) => state.rows.totalRowCount,
-      totalTopLevelRowCount: (state) => state.rows.totalTopLevelRowCount,
-      loading: (state) => state.rows.loading,
-      groupingName: (state) => state.rows.groupingName,
-      row: (state, id: GridRowId) => state.rows.dataRowIdToModelLookup[id] ?? null,
-      rowNode: (state, id: GridRowId) => state.rows.tree[id] ?? null,
-    },
-  },
-} satisfies Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
+  createHooks: createRowsHooks,
+} satisfies Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions, RowsPluginHooks>;
 
 export default rowsPlugin;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDataGrid } from '@mui/x-data-grid-headless';
-import { StoreInspector, useStore } from '@base-ui/utils/store';
+import { StoreInspector } from '@base-ui/utils/store';
 import sortingPlugin from '@mui/x-data-grid-headless/plugins/sorting';
 import paginationPlugin from '@mui/x-data-grid-headless/plugins/pagination';
 // import { useDataGridPro } from '@mui/x-data-grid-headless-pro';
@@ -109,9 +109,9 @@ function DataGrid() {
     plugins: [sortingPlugin, paginationPlugin],
   });
 
-  const rowIds = useStore(grid.store, grid.selectors.rows.dataRowIds);
-  const rowsData = useStore(grid.store, grid.selectors.rows.dataRowIdToModelLookup);
-  const visibleColumns = useStore(grid.store, grid.selectors.columns.visibleColumns);
+  const rowIds = grid.hooks.rows.useRowIds();
+  const rowsData = grid.hooks.rows.useRowIdToModelLookup();
+  const visibleColumns = grid.hooks.columns.useVisibleColumns();
 
   const handleRefreshRows = () => {
     setRows(generateSampleData(30));

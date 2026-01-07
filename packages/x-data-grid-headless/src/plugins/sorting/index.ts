@@ -1,3 +1,4 @@
+import { type Store, useStore } from '@base-ui/utils/store';
 import type { Plugin } from '../core/plugin';
 
 export type SortModel = Array<{
@@ -34,6 +35,14 @@ interface SortingApi {
   };
 }
 
+const createSortingHooks = (store: Store<SortingState>) => ({
+  sorting: {
+    useSortModel: () => useStore(store, (state) => state.sorting.sortModel),
+  },
+});
+
+export type SortingPluginHooks = ReturnType<typeof createSortingHooks>;
+
 // Plugin implementation
 const sortingPlugin = {
   name: 'sorting',
@@ -54,11 +63,7 @@ const sortingPlugin = {
       },
     };
   },
-  selectors: {
-    sorting: {
-      sortModel: (state: any) => state.sorting.sortModel,
-    },
-  },
-} satisfies Plugin<'sorting', SortingState, SortingApi, SortingOptions>;
+  createHooks: createSortingHooks,
+} satisfies Plugin<'sorting', SortingState, SortingApi, SortingOptions, SortingPluginHooks>;
 
 export default sortingPlugin;

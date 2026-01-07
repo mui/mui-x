@@ -1,6 +1,11 @@
 'use client';
 import * as React from 'react';
-import { type Store, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import {
+  type Store,
+  useStore,
+  createSelector,
+  createSelectorMemoized,
+} from '@base-ui/utils/store';
 import { type Plugin } from '../../core/plugin';
 import {
   type ColumnsState,
@@ -57,6 +62,20 @@ const selectVisibleColumns = createSelectorMemoized(
 
 const selectColumn = createSelector(selectLookup, (lookup, field: string) => lookup[field]);
 
+const createColumnsHooks = (store: Store<ColumnsPluginState>) => ({
+  columns: {
+    useOrderedFields: () => useStore(store, selectOrderedFields),
+    useLookup: () => useStore(store, selectLookup),
+    useColumnVisibilityModel: () => useStore(store, selectColumnVisibilityModel),
+    useInitialColumnVisibilityModel: () => useStore(store, selectInitialColumnVisibilityModel),
+    useAllColumns: () => useStore(store, selectAllColumns),
+    useVisibleColumns: () => useStore(store, selectVisibleColumns),
+    useColumn: (field: string) => useStore(store, selectColumn, field),
+  },
+});
+
+export type ColumnsPluginHooks = ReturnType<typeof createColumnsHooks>;
+
 const columnsPlugin = {
   name: 'columns',
   initialize: (params) => {
@@ -100,17 +119,13 @@ const columnsPlugin = {
 
     return { columns: columnsApi };
   },
-  selectors: {
-    columns: {
-      orderedFields: selectOrderedFields,
-      lookup: selectLookup,
-      columnVisibilityModel: selectColumnVisibilityModel,
-      initialColumnVisibilityModel: selectInitialColumnVisibilityModel,
-      allColumns: selectAllColumns,
-      visibleColumns: selectVisibleColumns,
-      column: selectColumn,
-    },
-  },
-} satisfies Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
+  createHooks: createColumnsHooks,
+} satisfies Plugin<
+  'columns',
+  ColumnsPluginState,
+  ColumnsPluginApi,
+  ColumnsPluginOptions,
+  ColumnsPluginHooks
+>;
 
 export default columnsPlugin;
