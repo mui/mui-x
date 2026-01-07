@@ -89,9 +89,9 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     fontSize: '14px',
   },
   [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: vars.spacing(0.5),
-    paddingBottom: vars.spacing(0.5),
-    height: 23,
+    paddingTop: vars.spacing(0.25),
+    paddingBottom: vars.spacing(0.25),
+    height: 20,
   },
 });
 
