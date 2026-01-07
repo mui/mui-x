@@ -127,9 +127,13 @@ const ChartsLegend = consumeSlots(
           }
 
           if (toggleVisibilityOnClick) {
-            // TODO: Remove in v9
-            // @ts-expect-error item always has type defined.
-            instance.toggleItemVisibility(item);
+            instance.toggleItemVisibility({
+              // TODO: Remove in v9
+              // @ts-expect-error item always has type defined.
+              type: item.type,
+              seriesId: item.seriesId,
+              dataIndex: item.dataIndex,
+            });
           }
         },
     );
@@ -146,9 +150,13 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
-          // TODO: Remove in v9
-          // @ts-expect-error item always has type defined.
-          const isVisible = isItemVisible(seriesConfig, item);
+          const isVisible = isItemVisible(seriesConfig, {
+            // TODO: Remove in v9
+            // @ts-expect-error item always has type defined.
+            type: item.type,
+            seriesId: item.seriesId,
+            dataIndex: item.dataIndex,
+          });
           return (
             <li
               key={`${item.seriesId}-${item.dataIndex}`}
