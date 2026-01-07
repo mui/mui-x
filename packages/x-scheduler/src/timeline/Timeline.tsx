@@ -2,6 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
+import { useThemeProps } from '@mui/material/styles';
 import { useExtractTimelineParameters, useTimeline } from '@mui/x-scheduler-headless/use-timeline';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { TimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
@@ -13,10 +14,12 @@ import { TimelineContent } from './content';
 import '../index.css';
 import './Timeline.css';
 
-export const Timeline = React.forwardRef(function Timeline<
+export const Timeline = React.forwardRef(function EventTimeline<
   TEvent extends object,
   TResource extends object,
->(props: TimelineProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+>(inProps: TimelineProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+  const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
+
   const { parameters, forwardedProps } = useExtractTimelineParameters<
     TEvent,
     TResource,
