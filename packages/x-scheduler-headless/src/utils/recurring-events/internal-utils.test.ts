@@ -77,24 +77,24 @@ describe('recurring-events/internal-utils', () => {
     });
 
     it('returns 1 for allDay event on same calendar day', () => {
-      const event = EventBuilder.new().fullDay('2025-02-10').toProcessed();
+      const event = EventBuilder.new().fullDay('2025-02-10Z').toProcessed();
       expect(getEventDurationInDays(adapter, event)).to.equal(1);
     });
 
     it('returns inclusive day count for multi-day event', () => {
-      const event = EventBuilder.new().span('2025-01-01', '2025-01-04').toProcessed();
+      const event = EventBuilder.new().span('2025-01-01Z', '2025-01-04Z').toProcessed();
       // Jan 1,2,3,4 => 4 days
       expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles month boundary correctly', () => {
-      const event = EventBuilder.new().span('2025-01-30', '2025-02-02').toProcessed();
+      const event = EventBuilder.new().span('2025-01-30Z', '2025-02-02Z').toProcessed();
       // Jan 30,31, Feb 1,2 => 4 days
       expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles leap day span', () => {
-      const event = EventBuilder.new().span('2024-02-28', '2024-03-01').toProcessed();
+      const event = EventBuilder.new().span('2024-02-28Z', '2024-03-01Z').toProcessed();
       // Feb 28, Feb 29, Mar 1 => 3 days
       expect(getEventDurationInDays(adapter, event)).to.equal(3);
     });
@@ -270,7 +270,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingDailyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-03-10', 'default'),
+          seriesStartDay: adapter.date('2025-03-10Z', 'default'),
           date: adapter.date('2025-03-09T23:59:59Z', 'default'),
           count: 100,
         }),
@@ -282,7 +282,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingDailyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-01-01', 'default'),
+          seriesStartDay: adapter.date('2025-01-01Z', 'default'),
           date: adapter.date('2025-01-05T23:59:59Z', 'default'), // 1,2,3,4,5 = 5 occurrences
           count: 100,
         }),
@@ -294,7 +294,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingDailyOccurrences({
           adapter,
           rule: createRule(2),
-          seriesStartDay: adapter.date('2025-01-01', 'default'),
+          seriesStartDay: adapter.date('2025-01-01Z', 'default'),
           date: adapter.date('2025-01-11T00:00:00Z', 'default'), // Days: 1,3,5,7,9,11 => 6 occurrences
           count: 100,
         }),
@@ -306,7 +306,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingDailyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-01-01', 'default'),
+          seriesStartDay: adapter.date('2025-01-01Z', 'default'),
           date: adapter.date('2025-01-10T23:59:59Z', 'default'), // 10 occurrences
           count: 5,
         }),
@@ -329,7 +329,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'),
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'),
           date: adapter.date('2025-06-09T23:59:59Z', 'default'), // Mon before start,
           count: 100,
         }),
@@ -341,7 +341,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-06-10T23:59:59Z', 'default'),
           count: 100,
         }),
@@ -353,7 +353,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-07-08T12:00:00Z', 'default'), // 5 Tuesdays inclusive
           count: 100,
         }),
@@ -366,7 +366,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['MO', 'WE']),
-          seriesStartDay: adapter.date('2025-06-02', 'default'), // Monday,
+          seriesStartDay: adapter.date('2025-06-02Z', 'default'), // Monday,
           date: adapter.date('2025-06-18T23:59:59Z', 'default'), // includes weeks of Jun 2,9,16
           count: 100,
         }),
@@ -378,7 +378,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU'], 2),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday,
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday,
           date: adapter.date('2025-07-22T12:00:00Z', 'default'),
           count: 100,
         }),
@@ -391,7 +391,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-06-23T12:00:00Z', 'default'), // Monday of week containing Tue 24
           count: 100,
         }),
@@ -403,7 +403,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['FR', 'MO']),
-          seriesStartDay: adapter.date('2025-06-02', 'default'), // Monday,
+          seriesStartDay: adapter.date('2025-06-02Z', 'default'), // Monday,
           date: adapter.date('2025-06-13T23:59:59Z', 'default'), // Mon 2, Fri 6, Mon 9, Fri 13 => 4
           count: 100,
         }),
@@ -415,7 +415,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-07-08T12:00:00Z', 'default'), // 5 Tuesdays inclusive
           count: 3,
         }),
@@ -436,7 +436,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10),
-            seriesStartDay: adapter.date('2025-06-10', 'default'),
+            seriesStartDay: adapter.date('2025-06-10Z', 'default'),
             date: adapter.date('2025-05-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -448,7 +448,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10),
-            seriesStartDay: adapter.date('2025-01-10', 'default'),
+            seriesStartDay: adapter.date('2025-01-10Z', 'default'),
             date: adapter.date('2025-04-10T12:00:00Z', 'default'), // Jan, Feb, Mar, Apr = 4
             count: 100,
           }),
@@ -460,7 +460,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10, 2),
-            seriesStartDay: adapter.date('2025-01-10', 'default'),
+            seriesStartDay: adapter.date('2025-01-10Z', 'default'),
             date: adapter.date('2025-11-10T09:00:00Z', 'default'), // Jan, Mar, May, Jul, Sep, Nov = 6
             count: 100,
           }),
@@ -472,7 +472,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(31),
-            seriesStartDay: adapter.date('2025-01-31', 'default'),
+            seriesStartDay: adapter.date('2025-01-31Z', 'default'),
             date: adapter.date('2025-05-31T09:00:00Z', 'default'), // Jan(31), Mar(31), May(31) = 3
             count: 100,
           }),
@@ -484,7 +484,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(20),
-            seriesStartDay: adapter.date('2025-01-20', 'default'),
+            seriesStartDay: adapter.date('2025-01-20Z', 'default'),
             date: adapter.date('2025-02-15T09:00:00Z', 'default'), // Feb 20 not reached = 1
             count: 100,
           }),
@@ -496,7 +496,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10),
-            seriesStartDay: adapter.date('2025-01-10', 'default'),
+            seriesStartDay: adapter.date('2025-01-10Z', 'default'),
             date: adapter.date('2025-06-10T12:00:00Z', 'default'), // Jan–Jun = 6 occurrences
             count: 4,
           }),
@@ -520,7 +520,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['2TU']),
-            seriesStartDay: adapter.date('2025-07-01', 'default'), // before 2nd Tuesday (Jul 8)
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'), // before 2nd Tuesday (Jul 8)
             date: adapter.date('2025-10-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -533,7 +533,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['2TU'], 2),
-            seriesStartDay: adapter.date('2025-07-01', 'default'), // before 2nd Tuesday (Jul 8)
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'), // before 2nd Tuesday (Jul 8)
             date: adapter.date('2025-10-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -546,7 +546,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['2TU']),
-            seriesStartDay: adapter.date('2025-07-20', 'default'), // after Jul 8
+            seriesStartDay: adapter.date('2025-07-20Z', 'default'), // after Jul 8
             date: adapter.date('2025-08-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -559,7 +559,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['-1FR']),
-            seriesStartDay: adapter.date('2025-07-01', 'default'),
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'),
             date: adapter.date('2025-10-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -572,7 +572,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['-2WE']),
-            seriesStartDay: adapter.date('2025-07-01', 'default'),
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'),
             date: adapter.date('2025-09-30T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -585,7 +585,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['-5MO']),
-            seriesStartDay: adapter.date('2025-06-01', 'default'), // Jun 2025 has 5 Mondays
+            seriesStartDay: adapter.date('2025-06-01Z', 'default'), // Jun 2025 has 5 Mondays
             date: adapter.date('2025-07-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -597,7 +597,7 @@ describe('recurring-events/internal-utils', () => {
           getRemainingMonthlyOccurrences({
             adapter,
             rule: { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] },
-            seriesStartDay: adapter.date('2025-07-01', 'default'),
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'),
             date: adapter.date('2025-07-31T23:59:59Z', 'default'),
             count: 100,
           }),
@@ -617,7 +617,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-06-10', 'default'),
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'),
           date: adapter.date('2024-12-31T23:59:59Z', 'default'),
           count: 100,
         }),
@@ -629,7 +629,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-03-15', 'default'),
+          seriesStartDay: adapter.date('2025-03-15Z', 'default'),
           date: adapter.date('2025-03-15T23:59:59Z', 'default'),
           count: 100,
         }),
@@ -641,7 +641,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2023-02-05', 'default'),
+          seriesStartDay: adapter.date('2023-02-05Z', 'default'),
           date: adapter.date('2026-02-05T09:00:00Z', 'default'), // 2023,24,25,26 => 4 occurrences
           count: 100,
         }),
@@ -653,7 +653,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(2),
-          seriesStartDay: adapter.date('2022-07-20', 'default'),
+          seriesStartDay: adapter.date('2022-07-20Z', 'default'),
           date: adapter.date('2030-07-20T09:00:00Z', 'default'), // 2022,24,26,28,30 => 5 occurrences
           count: 100,
         }),
@@ -665,7 +665,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2024-02-29', 'default'),
+          seriesStartDay: adapter.date('2024-02-29Z', 'default'),
           date: adapter.date('2032-12-31T23:59:59Z', 'default'), // 2024, 2028, 2032 => 3 occurrences
           count: 100,
         }),
@@ -677,7 +677,7 @@ describe('recurring-events/internal-utils', () => {
         getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2023-02-05', 'default'),
+          seriesStartDay: adapter.date('2023-02-05Z', 'default'),
           date: adapter.date('2030-02-05T09:00:00Z', 'default'), // 2023–2030 => 8 occurrences
           count: 5,
         }),

@@ -21,7 +21,10 @@ export interface GaugeContainerProps
   children?: React.ReactNode;
 }
 
-const GStyled = styled('g')(({ theme }) => ({
+const GStyled = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },

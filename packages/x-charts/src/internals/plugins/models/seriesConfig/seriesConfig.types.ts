@@ -14,6 +14,7 @@ import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.type
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierCompare } from './identifierCompare.types';
+import { type IdentifierSerializer } from './identifierSerializer.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
@@ -32,6 +33,12 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
    * @return `true` if the two identifiers are equal, `false` otherwise.
    */
   identifierCompare: IdentifierCompare<TSeriesType>;
+  /**
+   * A function to serialize the series item identifier into a unique string.
+   * @param {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} identifier The series item identifier.
+   * @returns {string} A unique string representation of the identifier.
+   */
+  identifierSerializer: IdentifierSerializer<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;

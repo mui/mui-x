@@ -1,6 +1,7 @@
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 import type { SeriesId } from '../../../../../models/seriesType/common';
 import type { ProcessedSeries } from '../../../corePlugins/useChartSeries';
+import { getNonEmptySeriesArray } from './getNonEmptySeriesArray';
 
 /**
  * Returns the previous series type and id that contains some data.
@@ -17,55 +18,21 @@ export function getPreviousNonEmptySeries<
   type: OutSeriesType;
   seriesId: SeriesId;
 } | null {
-  const seriesType = Object.keys(series) as Array<ChartSeriesType>;
-  const startingSeriesIndex =
-    type !== undefined && seriesId !== undefined && series[type] && series[type].series[seriesId]
-      ? series[type].seriesOrder.indexOf(seriesId)
-      : 1;
-
-  const typesAvailable = seriesType.filter((t): t is OutSeriesType =>
-    availableSeriesTypes?.has(t as OutSeriesType),
-  );
-  const startingTypeIndex =
-    type !== undefined && series[type] ? typesAvailable.indexOf(type as OutSeriesType) : 0;
-
-  // Loop over all series types starting with the current seriesType
-  for (let typeGap = 0; typeGap < typesAvailable.length; typeGap += 1) {
-    const typeIndex = (typesAvailable.length + startingTypeIndex - typeGap) % typesAvailable.length;
-    const seriesOfType = series[typesAvailable[typeIndex]]!;
-
-    const maxGap = typeGap === 0 ? startingSeriesIndex + 1 : seriesOfType.seriesOrder.length;
-    for (let seriesGap = 1; seriesGap < maxGap; seriesGap += 1) {
-      const seriesIndex =
-        (seriesOfType.seriesOrder.length + startingSeriesIndex - seriesGap) %
-        seriesOfType.seriesOrder.length;
-
-      if (seriesOfType.series[seriesOfType.seriesOrder[seriesIndex]].data.length > 0) {
-        return {
-          type: typesAvailable[typeIndex],
-          seriesId: seriesOfType.seriesOrder[seriesIndex],
-        };
-      }
-    }
+  const nonEmptySeries = getNonEmptySeriesArray(series, availableSeriesTypes);
+  if (nonEmptySeries.length === 0) {
+    return null;
   }
 
-  // End looping on the initial type down to the initial series (excluded)
-  const typeIndex = startingTypeIndex;
-  const seriesOfType = series[typesAvailable[typeIndex]]!;
+  const currentSeriesIndex =
+    type !== undefined && seriesId !== undefined
+      ? nonEmptySeries.findIndex(
+          (seriesItem) => seriesItem.type === type && seriesItem.seriesId === seriesId,
+        )
+      : -1;
 
-  const availableSeriesIds = seriesOfType.seriesOrder;
-
-  for (
-    let seriesIndex = availableSeriesIds.length - 1;
-    seriesIndex > startingSeriesIndex;
-    seriesIndex -= 1
-  ) {
-    if (seriesOfType.series[seriesOfType.seriesOrder[seriesIndex]].data.length > 0) {
-      return {
-        type: typesAvailable[typeIndex],
-        seriesId: seriesOfType.seriesOrder[seriesIndex],
-      };
-    }
+  if (currentSeriesIndex <= 0) {
+    // If no current series, or if it's the first series
+    return nonEmptySeries[nonEmptySeries.length - 1];
   }
-  return null;
+  return nonEmptySeries[(currentSeriesIndex - 1 + nonEmptySeries.length) % nonEmptySeries.length];
 }

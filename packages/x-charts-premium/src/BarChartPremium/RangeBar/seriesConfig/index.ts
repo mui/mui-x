@@ -1,6 +1,7 @@
 import {
   cartesianSeriesTypes,
   identifierCompareSeriesIdDataIndex,
+  identifierSerializerSeriesIdDataIndex,
   type ChartSeriesTypeConfig,
 } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extrema';
@@ -22,6 +23,7 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   identifierCompare: identifierCompareSeriesIdDataIndex,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };
 
 cartesianSeriesTypes.addType('rangeBar');

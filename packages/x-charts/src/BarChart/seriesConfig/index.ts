@@ -8,6 +8,7 @@ import keyboardFocusHandler from './bar/keyboardFocusHandler';
 import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
 import tooltipItemPositionGetter from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 
 export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   seriesProcessor,
@@ -20,5 +21,6 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCompare: identifierCompareSeriesIdDataIndex,
 };

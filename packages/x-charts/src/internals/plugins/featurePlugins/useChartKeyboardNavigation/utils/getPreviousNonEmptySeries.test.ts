@@ -17,6 +17,20 @@ const lineSeries = {
   color: '',
 };
 
+const singleSeries: ProcessedSeries<'bar'> = {
+  bar: {
+    series: {
+      a: {
+        data: [1, 2],
+        id: 'a',
+        ...barSeries,
+      },
+    },
+    seriesOrder: ['a'],
+    stackingGroups: [],
+  },
+};
+
 const seriesSingleType: ProcessedSeries<'bar'> = {
   bar: {
     series: {
@@ -97,5 +111,14 @@ describe('getPreviousNonEmptySeries', () => {
         type: 'bar',
       },
     );
+  });
+
+  it('should not move focus if no other series are available', () => {
+    expect(
+      getPreviousNonEmptySeries(singleSeries, new Set(['bar', 'line']), 'bar', 'a'),
+    ).to.deep.equal({
+      seriesId: 'a',
+      type: 'bar',
+    });
   });
 });
