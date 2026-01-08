@@ -53,7 +53,7 @@ describe('highlight', () => {
         margin={0}
         series={[{ id: 'A', data: [50, 100], highlightScope: { highlight: 'item' } }]}
         enableKeyboardNavigation
-        highlightedItem={{ seriesId: 'A', dataIndex: 1 }}
+        highlightedItem={{ type: 'bar', seriesId: 'A', dataIndex: 1 }}
       />,
     );
 
@@ -89,7 +89,7 @@ describe('highlight', () => {
         xAxis={[{ data: ['A', 'B'] }]}
         hideLegend
         skipAnimation
-        highlightedItem={{ seriesId: 'id-a', dataIndex: 0 }}
+        highlightedItem={{ type: 'bar', seriesId: 'id-a', dataIndex: 0 }}
         onHighlightChange={handleHighlight}
       />,
     );

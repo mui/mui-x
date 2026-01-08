@@ -42,6 +42,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
         }
 
         const item: HighlightItemData = {
+          type: 'heatmap',
           seriesId: seriesToDisplay.id,
           dataIndex,
         };

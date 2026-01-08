@@ -47,6 +47,7 @@ const FunnelSection = consumeSlots(
     } = props;
     const interactionProps = useInteractionItemProps({ type: 'funnel', seriesId, dataIndex });
     const { isFaded, isHighlighted } = useItemHighlighted({
+      type: 'funnel',
       seriesId,
       dataIndex,
     });

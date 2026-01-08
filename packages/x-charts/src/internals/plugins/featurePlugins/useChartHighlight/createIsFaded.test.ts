@@ -4,9 +4,10 @@ const seriesId = 'id1';
 const dataIndex = 1;
 
 const itemData = {
+  type: 'bar',
   seriesId,
   dataIndex,
-};
+} as const;
 
 describe('createIsFaded', () => {
   it('should return false when no options are set', () => {
