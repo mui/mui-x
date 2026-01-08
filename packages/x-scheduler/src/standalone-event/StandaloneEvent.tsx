@@ -1,16 +1,20 @@
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { StandaloneEvent as HeadlessStandaloneEvent } from '@mui/x-scheduler-headless/standalone-event';
 import { StandaloneEventProps } from './StandaloneEvent.types';
 import { EventDragPreview } from '../internals/components/event-drag-preview';
 
+const StandaloneEventRoot = styled(HeadlessStandaloneEvent, {
+  name: 'MuiEventCalendar',
+  slot: 'StandaloneEvent',
+})({});
+
 export const StandaloneEvent = React.forwardRef<HTMLDivElement, StandaloneEventProps>(
   function StandaloneEvent(props, forwardedRef) {
     return (
-      <HeadlessStandaloneEvent
+      <StandaloneEventRoot
         ref={forwardedRef}
         {...props}
-        className={clsx('StandaloneEvent', props.className)}
         renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       />
     );
