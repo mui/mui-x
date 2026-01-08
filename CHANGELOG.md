@@ -12,7 +12,7 @@ _Jan 8, 2026_
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
 - ⚡️Add bar [batch renderer](https://mui.com/x/react-charts/bars/#performance), result in a significant performance improvement when rendering thousands of bars
-- 📊 Add [range bar chart](https://mui.com/x/react-charts/range-bar/) to render 
+- 📊 Add [range bar chart](https://mui.com/x/react-charts/range-bar/) to render
   ![image](https://github.com/user-attachments/assets/4112c09b-d841-42f7-a0c8-d23b61c23ca0)
 - 🌎 Improved Danish (da-DK) and Japanese (ja-JP) locales on the Data Grid
 
