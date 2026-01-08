@@ -7,6 +7,7 @@ export default function SimpleCharts() {
         {
           id: 'barCategories',
           data: ['bar A', 'bar B', 'bar C'],
+          height: 28,
         },
       ]}
       series={[

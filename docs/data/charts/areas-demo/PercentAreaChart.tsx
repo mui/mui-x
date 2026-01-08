@@ -53,6 +53,7 @@ export default function PercentAreaChart() {
             data: time,
             min: time[0].getTime(),
             max: time[time.length - 1].getTime(),
+            height: 28,
           },
         ]}
       />

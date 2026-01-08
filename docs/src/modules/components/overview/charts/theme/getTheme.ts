@@ -57,11 +57,9 @@ export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
           root: ({ theme }) => ({
             '& .MuiChartsAxis-line': {
               stroke: theme.palette.text.secondary,
-              strokeWidth: 0.5,
             },
             '& .MuiChartsAxis-tick': {
               stroke: theme.palette.text.secondary,
-              strokeWidth: 0.5,
             },
           }),
         },

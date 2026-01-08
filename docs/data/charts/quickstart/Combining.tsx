@@ -46,7 +46,7 @@ export default function Combining() {
             data: alphabetStock.map((day) => new Date(day.date)),
             scaleType: 'band',
             valueFormatter: (value) => value.toLocaleDateString(),
-            height: 45,
+            height: 48,
           },
         ]}
         yAxis={[

@@ -24,7 +24,7 @@ export default function MixedBarChart() {
           { data: amtData, label: 'amt' },
           { data: uData, label: 'uv', stack: 'stack1' },
         ]}
-        xAxis={[{ data: xLabels }]}
+        xAxis={[{ data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
       />
     </Box>

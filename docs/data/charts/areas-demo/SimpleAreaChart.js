@@ -18,7 +18,7 @@ export default function SimpleAreaChart() {
     <Box sx={{ width: '100%', height: 300 }}>
       <LineChart
         series={[{ data: uData, label: 'uv', area: true, showMark: false }]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         sx={{
           [`& .${lineElementClasses.root}`]: {
             display: 'none',

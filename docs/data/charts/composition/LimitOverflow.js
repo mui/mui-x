@@ -66,6 +66,7 @@ export default function LimitOverflow() {
             min: xLimits[0],
             max: xLimits[1],
             data: [-30, -25, -20, -15, -10, -5, 0, 5, 10, 15, 20, 25],
+            height: 48,
           },
         ]}
         series={[

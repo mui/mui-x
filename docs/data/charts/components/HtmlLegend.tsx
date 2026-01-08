@@ -51,7 +51,7 @@ export default function HtmlLegend() {
           { label: 'First Series', type: 'bar', data: [100, 200] },
           { label: veryLongText, type: 'bar', data: [45, 333] },
         ]}
-        xAxis={[{ data: ['A', 'B'], scaleType: 'band', id: 'x-axis' }]}
+        xAxis={[{ data: ['A', 'B'], scaleType: 'band', id: 'x-axis', height: 28 }]}
       >
         <ChartsSurface>
           <BarPlot />

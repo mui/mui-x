@@ -30,7 +30,7 @@ export default function StackedAreaChart() {
             showMark: false,
           },
         ]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         sx={{
           [`& .${lineElementClasses.root}`]: {
