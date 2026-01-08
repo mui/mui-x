@@ -116,7 +116,3 @@ This means:
 - Event dates are not reinterpreted based on `event.timezone`
 
 Support for string-based, wall-time event definitions is planned for a future release.
-
-```
-
-```
