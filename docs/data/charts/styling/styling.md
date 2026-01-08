@@ -14,7 +14,7 @@ It also explains how to customize overlays, chart sizing and placement, CSS styl
 
 ### Series color
 
-Series accept a `color` property, which is the base color used to render its components.
+A chart's series accepts a `color` property, which is the base color used to render its components.
 
 ```jsx
 <LineChart series={[{ ..., color: '#fdb462'}]} />
@@ -22,31 +22,27 @@ Series accept a `color` property, which is the base color used to render its com
 
 {{"demo": "BasicColor.js"}}
 
-### Color palette
+### Built-in color palettes
 
-Charts come with built-in color palettes to automatically assign colors to series.
-If a particular series lacks a `color` prop, the chart defaults to assigning a color based on the series' index.
+The library provides three built-in color palettes to automatically assign colors to series.
+If a series lacks a `color` prop, the chart defaults to assigning a color based on the series' index.
 
 You can set a custom color palette using the `colors` prop on chart components (or `ChartContainer` if you're composing a custom component).
 This prop takes an array of colors, or a callback whose input is the theme's mode (`'dark'` or `'light'`) and returns the array of colors.
 
-#### Provided palettes
-
-The library includes three palettes.
-
 {{"demo": "MuiColorTemplate.js"}}
 
-#### Custom palettes
+### Custom color palettes
 
-You can also generate palettes using [d3-scale-chromatic](https://observablehq.com/@d3/color-schemes) or any color manipulation library you prefer.
+You can generate custom color palettes using [d3-scale-chromatic](https://observablehq.com/@d3/color-schemes) or any color manipulation library you prefer.
 
 The example below shows the d3 Categorical color palette.
 
 {{"demo": "ColorTemplate.js"}}
 
-### Values color
+### Value-based colors
 
-You can also set colors according to item values using the `colorMap` property of the corresponding axis.
+You can set colors according to item values using the `colorMap` property of the corresponding axis.
 
 See the dedicated documentation sections for each chart component to learn more about using this feature:
 
@@ -54,7 +50,7 @@ See the dedicated documentation sections for each chart component to learn more 
 - [line charts](/x/react-charts/lines/#color-scale)
 - [scatter charts](/x/react-charts/scatter/#color-scale)
 
-The `colorMap` property can accept three kinds of objects defined below.
+The `colorMap` property accepts three kinds of objects for color maps: piecewise, continuous, and ordinal.
 
 #### Piecewise color map
 
@@ -89,7 +85,7 @@ By default, the `min`/`max` range is set to 0 / 100.
 
 #### Ordinal color map
 
-This configuration takes two properties—`values` and `colors`—and maps those values to their respective colors.
+The ordinal configuration takes two properties—`values` and `colors`—and maps those values to their respective colors.
 
 If a value is not defined, it falls back to `unknownColor`, and if this is also undefined, it falls back to the series color.
 
@@ -107,7 +103,6 @@ You can use this configuration in Bar Charts to set colors according to string c
 ### Color callback
 
 If you need more control over the color assignment, you can provide a `colorGetter` callback prop to the chart component.
-
 The callback receives a `{ value, dataIndex }` object and should return a color string for the provided data point.
 
 In components where a series-level color is required (for example, the legend), the `color` prop is used instead.
@@ -116,7 +111,7 @@ In components where a series-level color is required (for example, the legend), 
 
 ## Overlay
 
-Charts have _loading_ and _noData_ overlays that appear if:
+Charts have built-in overlays for loading and "no data" states that appear when:
 
 - The `loading` prop is set to `true`
 - There is no data to display
@@ -131,7 +126,7 @@ You can provide axis data to display axes while loading the data.
 
 ### Custom overlay
 
-To modify the default overlay message or translate it, use the `noData` or `loading` key in the [localization](/x/react-charts/localization/).
+To modify the default overlay message or translate it, use the `noData` or `loading` key with your [preferred locale](/x/react-charts/localization/).
 
 ```jsx
 <BarChart
