@@ -31,7 +31,7 @@ the event actually happens.
 Events can optionally define a `timezone` field. This field is metadata and does not
 reinterpret or shift the event start or end dates.
 
-The `timezone` field is only used in situations where wall-time matters, such as:
+The `timezone` field is only used internally in situations where wall-time matters, such as:
 
 - Recurring event rules (RRULE)
 - Daylight Saving Time calculations
