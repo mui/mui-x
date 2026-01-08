@@ -43,6 +43,18 @@ The `timezone` field is only used internally in situations where wall-time matte
 - Recurring event rules (RRULE)
 - Daylight Saving Time calculations
 
+For example:
+
+```ts
+const event = {
+  start: new Date('2024-01-10T13:00:00Z'),
+  end: new Date('2024-01-10T14:00:00Z'),
+  timezone: 'Europe/Paris',
+};
+```
+
+The `timezone` field does not affect the event dates. It is only used internally for recurrence and daylight saving time handling.
+
 ## Event date values
 
 The `start` and `end` fields of an event must represent a fixed moment in time.
@@ -89,3 +101,7 @@ This means:
 - Event dates are not reinterpreted based on `event.timezone`
 
 Support for string-based, wall-time event definitions is planned for a future release.
+
+```
+
+```
