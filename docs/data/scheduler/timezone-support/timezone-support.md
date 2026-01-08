@@ -77,10 +77,25 @@ It does not modify the event data or change when an event occurs.
 ## Recurring events and timezones
 
 While single events are updated using pure instants, recurring events define
-a **pattern** that is evaluated in a specific timezone.
+a pattern that is evaluated in a specific timezone.
 
-When updating occurrences of a recurring event, Scheduler interprets the edited
-occurrence in the event's `timezone` in order to update the recurring rule correctly.
+For example, consider a daily recurring event that happens every day at 09:00
+in the `Europe/Paris` timezone:
+
+```ts
+const event = {
+  start: new Date('2024-03-01T08:00:00Z'),
+  end: new Date('2024-03-01T09:00:00Z'),
+  timezone: 'Europe/Paris',
+  rrule: { freq: 'DAILY' },
+};
+```
+
+Even when daylight saving time starts, the event continues to happen at 09:00
+local time in Europe/Paris.
+
+To achieve this, Scheduler uses the event's timezone to interpret and update
+the recurrence pattern correctly.
 
 This is the only case where Scheduler intentionally operates on day/hour semantics
 instead of pure instants.
