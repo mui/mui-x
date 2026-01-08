@@ -112,14 +112,15 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
   });
 
   it('should convert recurring event occurrences to the display timezone before grouping', () => {
-    // Event at Jan 10, 23:00 local time in New York.
-    // In January New York is UTC−5, so the event corresponds to 2024-01-11 04:00 UTC.
-    // Display timezone is Europe/Paris (UTC+1 in January), which makes it 2024-01-11 05:00.
-    // This means the occurrence must always appear on day1 (Jan 11) and day2 (Jan 12) in the UI, never on day0.
+    // Event at Jan 10, 23:00 local time in New York (UTC−5)
+    // 2024-01-10 23:00 EST → 2024-01-11T04:00:00Z
+    // Display timezone is Europe/Paris (UTC+1 in January),
+    // which makes it 2024-01-11 05:00 local Paris time.
+    // The occurrence must never appear on Jan 10 in the UI.
 
     const event = EventBuilder.new(adapter)
-      .span('2024-01-10T23:00:00', '2024-01-11T00:00:00') // local NY time
-      .withTimezone('America/New_York')
+      .span('2024-01-11T04:00:00Z', '2024-01-11T05:00:00Z')
+      .withDataTimezone('America/New_York')
       .withDisplayTimezone('Europe/Paris')
       .rrule({ freq: 'DAILY' })
       .toProcessed();
@@ -136,7 +137,7 @@ describe('innerGetEventOccurrencesGroupedByDay', () => {
     // Should NOT appear on Jan 10 in Paris
     expect(result.get(days[0].key)).to.have.length(0);
 
-    // Should appear on Jan 11 and 12 in Paris
+    // Should appear on Jan 11 and Jan 12 in Paris
     expect(result.get(days[1].key)).to.have.length(1);
     expect(result.get(days[1].key)![0].id).to.equal(event.id);
 

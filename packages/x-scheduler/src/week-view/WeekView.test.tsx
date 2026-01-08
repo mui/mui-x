@@ -11,27 +11,27 @@ import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 
 const multiDayEvent = EventBuilder.new()
-  .span('2025-05-05T00:00:00', '2025-05-07T23:59:59')
+  .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z')
   .allDay()
   .build();
 const longEvent = EventBuilder.new()
-  .span('2025-04-28T00:00:00', '2025-05-06T23:59:59') // Previous - current week
+  .span('2025-04-28T00:00:00Z', '2025-05-06T23:59:59Z') // Previous - current week
   .allDay()
   .build();
 const fourDayEvent = EventBuilder.new()
-  .span('2025-05-04T00:00:00', '2025-05-07T23:59:59')
+  .span('2025-05-04T00:00:00Z', '2025-05-07T23:59:59Z')
   .allDay()
   .build();
 const allDayEvents = [multiDayEvent, longEvent, fourDayEvent];
 
 describe('<WeekView />', () => {
-  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04') });
+  const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-04Z') });
 
   describe('All day events', () => {
     it('should render all-day events correctly with main event in start date cell', () => {
       render(
         <EventCalendarProvider
-          events={[EventBuilder.new().span('2025-05-05', '2025-05-07', { allDay: true }).build()]}
+          events={[EventBuilder.new().span('2025-05-05Z', '2025-05-07Z', { allDay: true }).build()]}
           resources={[]}
         >
           <WeekView />
@@ -106,15 +106,15 @@ describe('<WeekView />', () => {
 
     it('should handle multiple overlapping all-day events with different grid rows', () => {
       const event1 = EventBuilder.new()
-        .span('2025-05-04T00:00:00', '2025-05-06T23:59:59')
+        .span('2025-05-04T00:00:00Z', '2025-05-06T23:59:59Z')
         .allDay()
         .build();
       const event2 = EventBuilder.new()
-        .span('2025-05-05T00:00:00', '2025-05-07T23:59:59')
+        .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z')
         .allDay()
         .build();
       const event3 = EventBuilder.new()
-        .span('2025-05-08T00:00:00', '2025-05-09T23:59:59')
+        .span('2025-05-08T00:00:00Z', '2025-05-09T23:59:59Z')
         .allDay()
         .build();
       const overlappingEvents = [event1, event2, event3];
