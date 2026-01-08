@@ -164,6 +164,10 @@ export interface SchedulerEvent {
    */
   end: TemporalSupportedObject;
   /**
+   * The timezone of the event dates.
+   */
+  timezone?: TemporalTimezone;
+  /**
    * The id of the resource this event is associated with.
    * @default null
    */
