@@ -95,7 +95,7 @@ Internal changes.
 ### Docs
 
 - [docs] Fix axis size default values (#20799) @bernardobelchior
-- [docs] Update What's New in MUI X page with post v8 features (DX-118) (#20787) @alelthomas
+- [docs] Update What's New in MUI X page with post v8 features (DX-118) (#20787) @alelthomas
 - [docs] Fix `onAccept`'s `context.source` documentation to use 'view' instead of 'picker' (#20465) @auloin
 - [docs] Revise the Charts Brush doc (#20792) @mapache-salvaje
 - [docs] Revise the Charts Highlighting doc (#20788) @mapache-salvaje
