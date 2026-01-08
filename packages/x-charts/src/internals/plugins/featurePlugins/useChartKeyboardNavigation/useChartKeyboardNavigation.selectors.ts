@@ -1,9 +1,9 @@
 import { createSelector } from '@mui/x-internals/store';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
 import { type UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import {
   type ProcessedSeries,
+  selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
 } from '../../corePlugins/useChartSeries';
 import {
@@ -18,6 +18,7 @@ import {
   type AxisItemIdentifier,
   type ChartsAxisProps,
 } from '../../../../models/axis';
+import { isSameIdentifier } from '../../corePlugins/useChartSeries/isSameIdentifier';
 
 const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNavigationSignature> = (
   state,
@@ -25,9 +26,9 @@ const selectKeyboardNavigation: ChartOptionalRootSelector<UseChartKeyboardNaviga
 
 export const selectorChartsItemIsFocused = createSelector(
   selectKeyboardNavigation,
-  (keyboardNavigationState, item: FocusedItemIdentifier<ChartSeriesType>) =>
-    keyboardNavigationState?.item != null &&
-    fastObjectShallowCompare(keyboardNavigationState.item, item),
+  selectorChartSeriesConfig,
+  (keyboardNavigationState, seriesConfig, item: FocusedItemIdentifier<ChartSeriesType>) =>
+    isSameIdentifier(seriesConfig, keyboardNavigationState?.item, item),
 );
 
 export const selectorChartsHasFocusedItem = createSelector(

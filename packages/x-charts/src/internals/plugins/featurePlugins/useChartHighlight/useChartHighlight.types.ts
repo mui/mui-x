@@ -20,6 +20,7 @@ import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
  * {}
  */
 export type HighlightItemData = {
+  type: string;
   /**
    * The series id of the highlighted item.
    */

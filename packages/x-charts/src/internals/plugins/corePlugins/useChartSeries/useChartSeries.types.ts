@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/require-returns-type */
-/* eslint-disable jsdoc/require-param-type */
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import {
@@ -72,6 +70,11 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
 ) => string;
 
+export type IsSameIdentifierFunction = <T extends { type: string }>(
+  a: T | undefined | null,
+  b: T | undefined | null,
+) => boolean;
+
 export interface UseChartSeriesInstance {
   /**
    * Function to serialize a series item identifier into a unique string.
@@ -86,10 +89,7 @@ export interface UseChartSeriesInstance {
    * @param b The second series item identifier to compare.
    * @returns `true` if the two identifiers are equal, `false` otherwise.
    */
-  isSameIdentifier: <T extends { type: string }>(
-    a: T | undefined | null,
-    b: T | undefined | null,
-  ) => boolean;
+  isSameIdentifier: IsSameIdentifierFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

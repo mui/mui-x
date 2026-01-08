@@ -1,11 +1,10 @@
 import useEventCallback from '@mui/utils/useEventCallback';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { ChartPlugin } from '../../models';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
-export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }) => {
+export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store, instance }) => {
   const removeTooltipItem = useEventCallback(function removeTooltipItem(
     itemToRemove?: SeriesItemIdentifier<ChartSeriesType>,
   ) {
@@ -19,7 +18,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }
       return;
     }
 
-    if (prevItem === null || !fastObjectShallowCompare(prevItem, itemToRemove)) {
+    if (!instance.isSameIdentifier(prevItem, itemToRemove)) {
       // The current item is already different from the one to remove. No need to clean it.
       return;
     }
@@ -30,7 +29,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature> = ({ store }
   const setTooltipItem = useEventCallback(function setTooltipItem(
     newItem: SeriesItemIdentifier<ChartSeriesType>,
   ) {
-    if (!fastObjectShallowCompare(store.state.tooltip.item, newItem)) {
+    if (!instance.isSameIdentifier(store.state.tooltip.item, newItem)) {
       store.set('tooltip', { item: newItem });
     }
   });

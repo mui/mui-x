@@ -3,12 +3,14 @@ import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstR
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type ChartPlugin } from '../../models';
 import {
+  type IsSameIdentifierFunction,
   type SerializeIdentifierFunction,
   type UseChartSeriesSignature,
 } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
 import { serializeIdentifier as serializeIdentifierFn } from './serializeIdentifier';
+import { isSameIdentifier as isSameIdentifierFn } from './isSameIdentifier';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
   params,
@@ -31,18 +33,8 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
     });
   }, [colors, dataset, series, theme, seriesConfig, store]);
 
-  const isSameIdentifier = useEventCallback(
-    <T extends { type: string }>(a: T | undefined | null, b: T | undefined | null): boolean => {
-      // Nullish values or different series types are never equal regardless of the series config
-      if (!a || !b || a.type !== b.type) {
-        return false;
-      }
-
-      // We already checked that a and b are the same type
-      const seriesType = a.type;
-      const identifierCompare = seriesConfig[seriesType].identifierCompare;
-      return identifierCompare(a, b);
-    },
+  const isSameIdentifier: IsSameIdentifierFunction = useEventCallback((a, b) =>
+    isSameIdentifierFn(seriesConfig, a, b),
   );
 
   const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
