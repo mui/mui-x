@@ -37,6 +37,8 @@ export function useCalendarGridPlaceholderInDay(
 
     const sharedProperties = {
       key: 'occurrence-placeholder',
+      id: 'occurrence-placeholder',
+      title: originalEvent ? originalEvent.title : '',
     };
 
     // Creation mode
@@ -49,15 +51,8 @@ export function useCalendarGridPlaceholderInDay(
       const timezone = adapter.getTimezone(day);
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: '',
         allDay: true,
-        // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
-        dataTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
-        },
         displayTimezone: {
           start: startProcessed,
           end: endProcessed,
@@ -77,14 +72,7 @@ export function useCalendarGridPlaceholderInDay(
 
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
-        dataTimezone: {
-          start: startProcessed,
-          end: endProcessed,
-          timezone,
-        },
-        // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
         displayTimezone: {
           start: startProcessed,
           end: endProcessed,
@@ -109,10 +97,10 @@ export function useCalendarGridPlaceholderInDay(
     }
 
     return {
-      ...originalEvent!,
       ...sharedProperties,
       start: processDate(rawPlaceholder.start, adapter),
       end: processDate(rawPlaceholder.end, adapter),
+      displayTimezone: { ...originalEvent!.displayTimezone },
       position: {
         index: positionIndex,
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,

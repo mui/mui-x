@@ -2,7 +2,7 @@ import { Adapter } from '../../use-adapter';
 import {
   RecurringEventWeekDayCode,
   RecurringEventByDayValue,
-  SchedulerProcessedEventBase,
+  SchedulerProcessedEvent,
   TemporalSupportedObject,
   RecurringEventRecurrenceRule,
 } from '../../models';
@@ -152,10 +152,7 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
  *  Duration of the event in days.
  *  @returns At least 1, start==end yields 1.
  */
-export function getEventDurationInDays(
-  adapter: Adapter,
-  event: SchedulerProcessedEventBase,
-): number {
+export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcessedEvent): number {
   // +1 so start/end same day = 1 day, spans include last day
   return (
     adapter.differenceInDays(

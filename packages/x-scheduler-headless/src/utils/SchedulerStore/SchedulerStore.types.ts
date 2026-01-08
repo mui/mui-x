@@ -9,7 +9,7 @@ import {
   SchedulerEventUpdatedProperties,
   SchedulerOccurrencePlaceholder,
   SchedulerPreferences,
-  SchedulerProcessedEventBase,
+  SchedulerProcessedEvent,
   SchedulerResource,
   SchedulerResourceId,
   SchedulerResourceModelStructure,
@@ -43,7 +43,7 @@ export interface SchedulerState<TEvent extends object = any> {
   /**
    * A lookup to get the processed event from its ID.
    */
-  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEventBase>;
+  processedEventLookup: Map<SchedulerEventId, SchedulerProcessedEvent>;
   /**
    * The structure of the event model.
    * It defines how to read and write properties of the event model.

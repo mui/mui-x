@@ -8,43 +8,11 @@ interface SchedulerProcessedEventBase {
    * The unique identifier of the event.
    */
   id: SchedulerEventId;
+
   /**
    * The title of the event.
    */
   title: string;
-  /**
-   * The description of the event.
-   */
-  description?: string;
-
-  /**
-   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
-   * Always expressed in the event data timezone.
-   */
-  dataTimezone: {
-    /**
-     * The start date and time of the event.
-     */
-    start: SchedulerProcessedDate;
-    /**
-     * The end date and time of the event.
-     */
-    end: SchedulerProcessedDate;
-    /**
-     * The timezone of the event dates.
-     * */
-    timezone: TemporalTimezone;
-    /**
-     * The recurrence rule for the event.
-     * If not defined, the event will have only one occurrence.
-     */
-    rrule?: RecurringEventRecurrenceRule;
-    /**
-     * Exception dates for the event.
-     * These dates will be excluded from the recurrence.
-     */
-    exDates?: TemporalSupportedObject[];
-  };
 
   /**
    * Values prepared for rendering and user interaction.
@@ -77,21 +45,65 @@ interface SchedulerProcessedEventBase {
   };
 
   /**
-   * The id of the resource this event is associated with.
-   */
-  resource?: SchedulerResourceId | null;
-
-  /**
    * Whether the event is an all-day event.
    * @default false
    */
   allDay?: boolean;
+
+  /**
+   * The id of the resource this event is associated with.
+   */
+  resource?: SchedulerResourceId | null;
+}
+
+export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
+  /**
+   * The description of the event.
+   */
+  description?: string;
+
+  /**
+   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
+   * Always expressed in the event data timezone.
+   */
+
+  dataTimezone: {
+    /**
+     * The start date and time of the event.
+     */
+    start: SchedulerProcessedDate;
+    /**
+     * The end date and time of the event.
+     */
+    end: SchedulerProcessedDate;
+    /**
+     * The timezone of the event dates.
+     * */
+    timezone: TemporalTimezone;
+    /**
+     * The recurrence rule for the event.
+     * If not defined, the event will have only one occurrence.
+     */
+    rrule?: RecurringEventRecurrenceRule;
+    /**
+     * Exception dates for the event.
+     * These dates will be excluded from the recurrence.
+     */
+    exDates?: TemporalSupportedObject[];
+  };
+
+  /**
+   * The event model in the `SchedulerEvent` format.
+   */
+  modelInBuiltInFormat: SchedulerEvent;
+
   /**
    * Whether the event is read-only.
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
    * @default false
    */
   readOnly?: boolean;
+
   /**
    * The id of the original event from which this event was split.
    * If provided, it must reference an existing event in the calendar.
@@ -99,16 +111,19 @@ interface SchedulerProcessedEventBase {
    * and no link to an original event will be created.
    */
   extractedFromId?: SchedulerEventId;
+
   /**
    * The color of the event.
    * Takes precedence over resource color if both are defined.
    */
   color?: SchedulerEventColor;
+
   /**
    * Whether the event is draggable.
    * If not defined, the event is draggable if the `areEventsDraggable` property is enabled.
    */
   draggable?: boolean;
+
   /**
    * Whether the event is resizable.
    * If `true`, both start and end can be resized.
@@ -118,22 +133,14 @@ interface SchedulerProcessedEventBase {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
+
   /**
    * A custom class name to apply to the event element.
    */
   className?: string;
 }
 
-export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
-  /**
-   * The event model in the `SchedulerEvent` format.
-   */
-  modelInBuiltInFormat: SchedulerEvent;
-}
-
-export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {
-  modelInBuiltInFormat?: never;
-}
+export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {}
 
 export interface SchedulerEvent {
   /**
