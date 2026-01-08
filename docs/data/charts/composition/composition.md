@@ -18,9 +18,12 @@ There are two main types of components used to create Charts: [structural](#stru
 
 Structural components are used to define a chart's dimensions, surfaces, and data.
 
-- `ChartDataProvider` provides data to descendants.
-- `ChartsSurface` renders the SVG element.
-- `ChartContainer` combines the Data Provider and Surface components, and is useful when you only need to customize graphical elements.
+- Basics
+  - `ChartDataProvider` provides data to descendants.
+  - `ChartsSurface` renders the SVG element.
+- Helpers
+  - `ChartContainer` combines the Data Provider and Surface components.
+  - `ChartsWrapper` styled div that positions surface, tooltip, and legend on a grid.
 
 :::info
 Demos in this doc use the `ChartContainer` component.
@@ -28,6 +31,10 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 :::
 
 ### Chart Data Provider and Surface usage
+
+Notice that the `width` and `heigh` props are passed to the `ChartDataProvider` and not the `ChartsSurface`.
+
+Also the `ChartsLegend` is placed inside the `ChartDataProvider` to get access to the context, but outside the `ChartsSurface` since it's not an SVG component.
 
 ```jsx
 <ChartDataProvider
@@ -49,6 +56,12 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 
 ### Chart Container usage
 
+The `ChartContainer` is the direct concatenation of the `ChartDataProvider` and `ChartsSurface`.
+It takes care of dispatching props between the two components.
+
+Using `ChartContainer` has one major drawback: All the children will be inside the `ChartsSurface`.
+So you can't render HTML elements like we did with `ChartsLegend` in the previous code example.
+
 ```jsx
 <ChartContainer
   // The configuration of the chart
@@ -59,8 +72,29 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
   // Ref is forwarded internally to the ChartsSurface
   ref={mySvgRef}
 >
-  {children}
+  {children} // Only SVG component here
 </ChartContainer>
+```
+
+### Chart Wrapper usage
+
+Charts are often made of a graphic, plus a legend.
+The `ChartsWrapper` helps positioning those elements in a grid structure.
+
+The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`.
+Which is done by default on built-in components.
+
+The the layout can be modified with the [wrapper props](/x/api/charts/charts-wrapper/).
+
+```jsx
+<ChartDataProvider height={300} series={ /* ... */ }>
+  <ChartsWrapper legendDirection='horizontal' legendPosition={{ vertical: 'bottom' }}>
+    <ChartsLegend direction='horizontal' />
+    <ChartsSurface>
+      {children}
+    </ChartsSurface>
+  </ChartsWrapper>
+</ChartDataProvider>
 ```
 
 ## Graphical components
