@@ -121,3 +121,10 @@ export function getEndsSelectionFromRRule(rrule?: {
   }
   return 'never';
 }
+
+export function hasProp<T extends object, K extends PropertyKey>(
+  obj: T,
+  prop: K,
+): obj is T & Record<K, unknown> {
+  return obj != null && prop in obj;
+}

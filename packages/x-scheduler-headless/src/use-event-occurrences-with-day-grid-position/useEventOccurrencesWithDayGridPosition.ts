@@ -140,6 +140,10 @@ export namespace useEventOccurrencesWithDayGridPosition {
     position: EventOccurrencePosition;
   }
 
+  export type EventRenderableOccurrenceWithPosition =
+    | EventOccurrenceWithPosition
+    | EventOccurrencePlaceholderWithPosition;
+
   export interface DayData extends SchedulerProcessedDate {
     /**
      * Occurrences that have been augmented with position information.

@@ -64,6 +64,10 @@ export namespace useEventOccurrencesWithTimelinePosition {
     position: EventOccurrencePosition;
   }
 
+  export type EventRenderableOccurrenceWithPosition =
+    | EventOccurrenceWithPosition
+    | EventOccurrencePlaceholderWithPosition;
+
   export interface ReturnValue {
     /**
      * The occurrences augmented with position information

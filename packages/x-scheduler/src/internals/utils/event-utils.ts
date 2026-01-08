@@ -1,8 +1,8 @@
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 
 export function isOccurrenceAllDayOrMultipleDay(
-  occurrence: SchedulerEventOccurrence,
+  occurrence: SchedulerRenderableEventOccurrence,
   adapter: Adapter,
 ) {
   if (occurrence.allDay) {
