@@ -14,10 +14,10 @@ We'd like to extend a big thank you to the 12 contributors who made this release
 TODO INSERT HIGHLIGHTS
 
 Special thanks go out to these community members for their valuable contributions:
-@anders-noerrelykke, @auloin, @yuito-it
+@anders-noerrelykke, @auloin, @sai6855, @yuito-it
 
 The following team members contributed to this release:
-@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @mapache-salvaje, @sai6855, @siriwatknp
+@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @mapache-salvaje, @siriwatknp
 
 ### Data Grid
 
@@ -53,7 +53,7 @@ Same changes as in `@mui/x-date-pickers@8.24.0`.
 - [charts] Add `identifierSerializer` configuration (#20775) @JCQuintas
 - [charts] Add `serializeIdentifier` instance function (#20791) @JCQuintas
 - [charts] Add bar batch renderer (#20457) @bernardobelchior
-- [charts] Allow animating bar, line and pie elements to hidden state (#20798) @JCQuintas
+- [charts] Allow animating bar, line, and pie elements to hidden state (#20798) @JCQuintas
 - [charts] Fix failing lint step (#20813) @bernardobelchior
 - [charts] Fix tooltip anchored to item (#20783) @alexfauquette
 - [charts] Fix type casting in getCategoryAxisConfig and applySeriesLayout functions (#20797) @sai6855
