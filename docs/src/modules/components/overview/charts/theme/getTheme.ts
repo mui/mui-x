@@ -1,4 +1,4 @@
-import { ThemeOptions } from '@mui/material/styles';
+import { alpha, ThemeOptions } from '@mui/material/styles';
 import '@mui/x-charts/themeAugmentation';
 import '@mui/x-charts-pro/themeAugmentation';
 
@@ -56,10 +56,10 @@ export const getTheme = (mode: 'light' | 'dark'): ThemeOptions => {
         styleOverrides: {
           root: ({ theme }) => ({
             '& .MuiChartsAxis-line': {
-              stroke: theme.palette.text.secondary,
+              stroke: alpha(theme.palette.text.secondary, 0.5),
             },
             '& .MuiChartsAxis-tick': {
-              stroke: theme.palette.text.secondary,
+              stroke: alpha(theme.palette.text.secondary, 0.5),
             },
           }),
         },
