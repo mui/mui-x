@@ -1,8 +1,7 @@
 'use client';
 import * as React from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/dist/types/adapter/element-adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/dist/types/public-utils/element/disable-native-drag-preview';
-import { DragLocationHistory } from '@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types';
+import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 
 const getDeltas = (location: DragLocationHistory) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;

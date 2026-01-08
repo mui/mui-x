@@ -16,6 +16,7 @@ import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+import { EventDraggableDialogTrigger } from '../draggable-dialog/EventDraggableDialog';
 
 const HOUR_HEIGHT = 46;
 
@@ -183,11 +184,9 @@ function ColumnInteractiveLayer({
   return (
     <DayTimeGridColumnInteractiveLayer ref={columnRef} {...eventCreationProps}>
       {occurrences.map((occurrence) => (
-        <EventPopoverTrigger
-          key={occurrence.key}
-          occurrence={occurrence}
-          render={<TimeGridEvent occurrence={occurrence} variant="regular" />}
-        />
+        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+          <TimeGridEvent occurrence={occurrence} variant="regular" />
+        </EventDraggableDialogTrigger>
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
