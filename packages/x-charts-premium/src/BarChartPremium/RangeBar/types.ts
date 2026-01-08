@@ -22,4 +22,5 @@ export interface ProcessedRangeBarData extends LayoutData {
   dataIndex: number;
   color: string;
   value: RangeBarValueType | null;
+  hidden: boolean;
 }

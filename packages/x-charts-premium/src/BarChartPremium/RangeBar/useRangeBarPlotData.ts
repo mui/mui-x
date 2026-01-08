@@ -97,6 +97,7 @@ export function useRangeBarPlotData(
         width: verticalLayout ? barWidth : barSize,
         color: colorGetter(dataIndex),
         value: currentSeriesData[dataIndex],
+        hidden: series[seriesId].hidden,
       };
 
       if (

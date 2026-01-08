@@ -6,7 +6,7 @@ import { type DefaultizedRangeBarSeriesType, type RangeBarValueType } from '../.
 const rangeBarValueFormatter = (v: RangeBarValueType | null) =>
   v == null ? '' : `[${v[0]}, ${v[1]}]`;
 
-const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
+const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset, isItemVisible) => {
   const { seriesOrder, series } = params;
 
   const completedSeries: Record<SeriesId, DefaultizedRangeBarSeriesType> = {};
@@ -72,6 +72,7 @@ const seriesProcessor: SeriesProcessor<'rangeBar'> = (params, dataset) => {
             return [start, end];
           })
         : series[id].data!,
+      hidden: !isItemVisible?.({ type: 'rangeBar', seriesId: id }),
     } satisfies DefaultizedRangeBarSeriesType;
   }
 

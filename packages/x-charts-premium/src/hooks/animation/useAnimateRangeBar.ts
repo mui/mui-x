@@ -8,6 +8,7 @@ type UseAnimateRangeBarParams = Pick<
   'x' | 'y' | 'xOrigin' | 'yOrigin' | 'width' | 'height' | 'skipAnimation' | 'layout'
 > & {
   ref?: React.Ref<SVGRectElement>;
+  hidden?: boolean;
 };
 type UseAnimateRangeBarReturnValue = {
   ref: React.Ref<SVGRectElement>;
@@ -46,25 +47,27 @@ export function useAnimateRangeBar(props: UseAnimateRangeBarParams): UseAnimateR
     height: props.layout === 'vertical' ? 0 : props.height,
   };
 
-  return useAnimate(
-    {
-      x: props.x,
-      y: props.y,
-      width: props.width,
-      height: props.height,
+  // When hidden, animate to collapsed state (same as initial)
+  const targetProps = props.hidden
+    ? initialProps
+    : {
+        x: props.x,
+        y: props.y,
+        width: props.width,
+        height: props.height,
+      };
+
+  return useAnimate(targetProps, {
+    createInterpolator: rangeBarPropsInterpolator,
+    applyProps(element, animatedProps) {
+      element.setAttribute('x', animatedProps.x.toString());
+      element.setAttribute('y', animatedProps.y.toString());
+      element.setAttribute('width', animatedProps.width.toString());
+      element.setAttribute('height', animatedProps.height.toString());
     },
-    {
-      createInterpolator: rangeBarPropsInterpolator,
-      applyProps(element, animatedProps) {
-        element.setAttribute('x', animatedProps.x.toString());
-        element.setAttribute('y', animatedProps.y.toString());
-        element.setAttribute('width', animatedProps.width.toString());
-        element.setAttribute('height', animatedProps.height.toString());
-      },
-      transformProps: (p) => p,
-      initialProps,
-      skip: props.skipAnimation,
-      ref: props.ref,
-    },
-  );
+    transformProps: (p) => p,
+    initialProps,
+    skip: props.skipAnimation,
+    ref: props.ref,
+  });
 }
