@@ -6,6 +6,8 @@ export interface BaseApi {
   pluginRegistry: PluginRegistry;
 }
 
+export type AnyPlugin = Plugin<any, any, any, any, any, any>;
+
 export interface Plugin<
   TName extends string,
   TState,

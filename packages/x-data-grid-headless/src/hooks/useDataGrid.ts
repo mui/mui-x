@@ -2,7 +2,7 @@
 import type { UnionToIntersection } from 'type-fest';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@base-ui/utils/store';
-import { BaseApi, Plugin } from '../plugins/core/plugin';
+import { AnyPlugin, BaseApi, Plugin } from '../plugins/core/plugin';
 import { PluginsApi, PluginsOptions, PluginsState } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
 import {
@@ -11,10 +11,6 @@ import {
   InternalPluginsState,
   InternalPluginsHooks,
 } from '../plugins/internal';
-
-// ================================
-// Combined Types
-// ================================
 
 type UseDataGridOptions<
   TPlugins extends readonly Plugin<any, any, any, any, any>[],
@@ -32,10 +28,8 @@ type DataGridApi<
   TRow = any,
 > = PluginsApi<TPlugins, TRow>;
 
-// Helper to extract hooks from a plugin, preserving their shape
 type ExtractPluginHooks<T> = T extends { createHooks?: (...args: any[]) => infer H } ? H : {};
 
-// Merge all plugin hooks (internal + user plugins), preserving their shape
 type PluginsHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>[]> =
   UnionToIntersection<
     {
@@ -46,10 +40,6 @@ type PluginsHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>
 
 type DataGridHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>[]> =
   PluginsHooks<TPlugins>;
-
-// ================================
-// Instance
-// ================================
 
 interface DataGridInstance<
   TPlugins extends readonly Plugin<any, any, any, any, any, any>[],
@@ -62,10 +52,6 @@ interface DataGridInstance<
   hooks: DataGridHooks<TPlugins>;
 }
 
-// ================================
-// Hook
-// ================================
-
 export const useDataGrid = <
   const TPlugins extends readonly Plugin<any, any, any, any, any, any>[],
   TRow extends object = any,
@@ -73,10 +59,8 @@ export const useDataGrid = <
   options: UseDataGridOptions<TPlugins, TRow>,
 ): DataGridInstance<TPlugins, TRow> => {
   const { pluginRegistry, stateStore } = useRefWithInit(() => {
-    // 1. Create registry with internal + user plugins (order maintained)
     const registry = new PluginRegistry(internalPlugins, options.plugins);
 
-    // 2. Initialize internal plugin states FIRST
     const baseStateParts: Record<string, any>[] = [];
     internalPlugins.forEach((plugin) => {
       const pluginState = plugin.initialize({
@@ -87,7 +71,6 @@ export const useDataGrid = <
     });
     const baseState = Object.assign({}, ...baseStateParts) as InternalPluginsState;
 
-    // 3. Initialize user plugin states
     const userPluginStateParts: Record<string, any>[] = [];
     registry.forEachUserPlugin((plugin) => {
       const pluginState = plugin.initialize({
@@ -98,7 +81,6 @@ export const useDataGrid = <
     });
     const userPluginState = Object.assign({}, ...userPluginStateParts);
 
-    // 4. Create store with base + user plugin state
     const store = new Store<DataGridState<TPlugins>>(
       Object.assign({}, baseState, userPluginState) as DataGridState<TPlugins>,
     );
@@ -109,44 +91,37 @@ export const useDataGrid = <
     };
   }).current;
 
-  // Create base API from internal plugins (called on every render so hooks work)
   const baseApi = useRefWithInit(() => {
     return {
       pluginRegistry,
     } as BaseApi & InternalPluginsApi<TRow>;
   }).current;
 
-  // Initialize internal plugin APIs (called on every render so hooks inside work)
-  internalPlugins.forEach((plugin: Plugin<any, any, any, any, any>) => {
+  internalPlugins.forEach((plugin: AnyPlugin) => {
     const pluginApi = plugin.use(stateStore, options as any, baseApi);
     Object.assign(baseApi, pluginApi);
   });
 
-  // Build full API: base (internal) + user plugins
   const api = useRefWithInit(() => {
     return {
       ...baseApi,
     } as DataGridApi<TPlugins, TRow>;
   }).current;
 
-  // Initialize user plugin APIs (called on every render so hooks inside work)
   pluginRegistry.forEachUserPlugin((plugin) => {
     const pluginApi = plugin.use(stateStore, options, baseApi);
     Object.assign(api, pluginApi);
   });
 
-  // Collect hooks from all plugins, preserving their shape
   const hooks = useRefWithInit(() => {
     const allHooks: Record<string, any> = {};
 
-    // Collect hooks from internal plugins
     internalPlugins.forEach((plugin) => {
       if ('createHooks' in plugin && typeof plugin.createHooks === 'function') {
         Object.assign(allHooks, plugin.createHooks(stateStore as any));
       }
     });
 
-    // Collect hooks from user plugins
     pluginRegistry.forEachUserPlugin((plugin) => {
       if ('createHooks' in plugin && typeof plugin.createHooks === 'function') {
         Object.assign(allHooks, (plugin as any).createHooks(stateStore));
