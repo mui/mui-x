@@ -118,6 +118,7 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
                 p: 1,
                 boxSizing: 'border-box',
                 width: colDef.computedWidth * 1.25,
+                maxWidth: '100%',
                 minHeight: cellRef.current?.offsetHeight,
                 typography: 'body2',
                 '&:focus': {
@@ -156,7 +157,6 @@ const columns: GridColDef[] = [
     field: 'bio',
     headerName: 'Bio',
     width: 400,
-    editable: true,
     renderCell: (params) => <ExpandableCell {...params} />,
   },
 ];
