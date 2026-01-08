@@ -5,7 +5,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.23.1
+## 8.24.0
 
 _Jan 8, 2026_
 
@@ -21,33 +21,33 @@ The following team members contributed to this release:
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.23.1`
+#### `@mui/x-data-grid@8.24.0`
 
 Internal changes.
 
-#### `@mui/x-data-grid-pro@8.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.23.1`, plus:
+Same changes as in `@mui/x-data-grid@8.24.0`, plus:
 
 - [DataGridPro] Fix header filter height for `density="compact"` (#20834) @arminmeh
 
-#### `@mui/x-data-grid-premium@8.23.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.24.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.23.1`.
+Same changes as in `@mui/x-data-grid-pro@8.24.0`.
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.23.1`
+#### `@mui/x-date-pickers@8.24.0`
 
 - [pickers] Fix Styles applied to PickersDay when MuiPickersDay-dayOutsideMonth is used (#20719) @sai6855
 
-#### `@mui/x-date-pickers-pro@8.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.23.1`.
+Same changes as in `@mui/x-date-pickers@8.24.0`.
 
 ### Charts
 
-#### `@mui/x-charts@8.23.1`
+#### `@mui/x-charts@8.24.0`
 
 - [charts] Add `VisibilityManager` logic to allow managing series/items (#20571) @JCQuintas
 - [charts] Add `identifierSerializer` configuration (#20775) @JCQuintas
@@ -62,31 +62,31 @@ Same changes as in `@mui/x-date-pickers@8.23.1`.
 - [charts] Refactor `useRegisterPointerEventHandlers` (#20824) @bernardobelchior
 - [charts] Update legend types to allow hiding/showing items (#20784) @JCQuintas
 
-#### `@mui/x-charts-pro@8.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.23.1`, plus:
+Same changes as in `@mui/x-charts@8.24.0`, plus:
 
 - [charts-pro] Pass `slotProps.toolbar` to `Toolbar` in `PieChartPro` (#20796) @sai6855
 
-#### `@mui/x-charts-premium@8.23.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.24.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.23.1`, plus:
+Same changes as in `@mui/x-charts-pro@8.24.0`, plus:
 
 - [charts-premium] Add range bar chart (#20275) @bernardobelchior
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.23.1`
+#### `@mui/x-tree-view@8.24.0`
 
 - [tree view] Introduce a Tree View Store to clean the internals (#20051) @flaviendelangle
 
-#### `@mui/x-tree-view-pro@8.23.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.23.1`.
+Same changes as in `@mui/x-tree-view@8.24.0`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.23.1`
+#### `@mui/x-codemod@8.24.0`
 
 Internal changes.
 
