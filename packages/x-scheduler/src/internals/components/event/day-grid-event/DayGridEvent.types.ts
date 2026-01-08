@@ -5,7 +5,9 @@ export interface DayGridEventProps extends React.HTMLAttributes<HTMLDivElement> 
   /**
    * The event occurrence to render.
    */
-  occurrence: useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition;
+  occurrence:
+    | useEventOccurrencesWithDayGridPosition.EventOccurrenceWithPosition
+    | useEventOccurrencesWithDayGridPosition.EventOccurrencePlaceholderWithPosition;
   /**
    * The variant of the event, which determines its styling.
    * 'filled': displays the event title only on a solid background.

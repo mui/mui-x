@@ -54,6 +54,11 @@ interface SchedulerProcessedEventBase {
    * The id of the resource this event is associated with.
    */
   resource?: SchedulerResourceId | null;
+
+  /**
+   * A custom class name to apply to the event element.
+   */
+  className?: string;
 }
 
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
@@ -133,11 +138,6 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
-
-  /**
-   * A custom class name to apply to the event element.
-   */
-  className?: string;
 }
 
 export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {}
