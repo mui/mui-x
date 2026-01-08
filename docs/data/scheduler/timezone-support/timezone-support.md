@@ -21,29 +21,32 @@ TODO: Issue #20394 - Create documentation and demos
 
 ## Overview
 
-Scheduler supports displaying and editing events across different timezones using an
-**instant-based model**.
+Scheduler supports displaying and editing events across different timezones by treating
+event dates as fixed moments in time.
 
-Each event occurrence represents a fixed moment in time (an instant), which can be rendered
-in different timezones without changing when the event actually happens.
+An event always represents the same moment, regardless of the timezone in which it is
+displayed. Changing the timezone only affects how the date is shown to the user, not when
+the event actually happens.
 
-In addition to instant-based date values, events may define an optional `timezone` field.
-This field represents the **conceptual timezone of the event**, and is used for:
+Events can optionally define a `timezone` field. This field is metadata and does not
+reinterpret or shift the event start or end dates.
+
+The `timezone` field is only used in situations where wall-time matters, such as:
 
 - Recurring event rules (RRULE)
 - Daylight Saving Time calculations
 
-The `timezone` field does **not** reinterpret or shift date values by itself.
+## Event date values
 
-## Supported date values
+The `start` and `end` fields of an event must represent a fixed moment in time.
 
-Scheduler works with **adapter-defined temporal objects**.
+They are expected to be provided as JavaScript `Date` objects or timezone-aware
+date objects (such as `TZDate`).
 
-All date values (`start`, `end`, etc.) are instances of
-`TemporalSupportedObject`, whose concrete type depends on the active date adapter.
-
-These objects are expected to represent **fixed instants in time**, independently
-of how they are rendered or serialized.
+:::info
+The timezone of the date object itself is not used to define event semantics.
+Only the instant it represents is taken into account.
+:::
 
 ## Rendering behavior
 
@@ -68,3 +71,14 @@ Recurring event updates are pattern-based.
 This is the only case where Scheduler intentionally operates on wall-time semantics
 instead of pure instants.
 :::
+
+## What Scheduler does not support yet
+
+Scheduler currently does not support wall-time event definitions based on string dates.
+
+This means:
+
+- Dates without an explicit instant (for example `"2024-03-10 09:00"`) are not supported
+- Event dates are not reinterpreted based on `event.timezone`
+
+Support for string-based, wall-time event definitions is planned for a future release.
