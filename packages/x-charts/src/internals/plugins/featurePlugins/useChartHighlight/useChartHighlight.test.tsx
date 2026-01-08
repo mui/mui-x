@@ -104,7 +104,11 @@ describe('highlight', () => {
     await user.pointer({ target: bars[3] });
     expect(handleHighlight.callCount).to.equal(2);
     expect(handleHighlight.firstCall.args[0]).to.deep.equal(null);
-    expect(handleHighlight.lastCall.args[0]).to.deep.equal({ seriesId: 'id-b', dataIndex: 1 });
+    expect(handleHighlight.lastCall.args[0]).to.deep.equal({
+      type: 'bar',
+      seriesId: 'id-b',
+      dataIndex: 1,
+    });
 
     // Moving pointer back only triggers the exist since the controlled value was not modified
     await user.pointer({ target: bars[0] });
