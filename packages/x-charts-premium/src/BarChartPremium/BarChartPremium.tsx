@@ -9,20 +9,49 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
-import { BarPlot } from '@mui/x-charts/BarChart';
+import { BarPlot, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartZoomSlider } from '@mui/x-charts-pro/ChartZoomSlider';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
-import { useChartContainerProProps } from '@mui/x-charts-pro/internals';
+import { seriesPreviewPlotMap, useChartContainerProProps } from '@mui/x-charts-pro/internals';
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import {
+  type BarItemIdentifier,
+  type RangeBarItemIdentifier,
+  type RangeBarSeriesType,
+} from '../models';
+import { RangeBarPlot } from './RangeBar/RangeBarPlot';
+import { RangeBarPreviewPlot } from '../ChartZoomSlider/internals/previews/RangeBarPreviewPlot';
 
-export interface BarChartPremiumProps extends BarChartProProps {}
+import type {} from '../typeOverloads/modules';
+
+seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
+
+export type RangeBarSeries = RangeBarSeriesType;
+
+export interface BarChartPremiumProps extends Omit<BarChartProProps, 'series' | 'onItemClick'> {
+  /**
+   * Callback fired when a bar or range bar item is clicked.
+   * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
+   * @param {BarItemIdentifier | RangeBarItemIdentifier} itemIdentifier The item identifier.
+   */
+  onItemClick?(
+    event: React.MouseEvent<SVGElement, MouseEvent>,
+    itemIdentifier: BarItemIdentifier | RangeBarItemIdentifier,
+  ): void;
+
+  /**
+   * The series to display in the bar chart.
+   * An array of [[BarSeries]] or [[RangeBarSeries]] objects.
+   */
+  series: ReadonlyArray<BarSeries | RangeBarSeries>;
+}
 
 /**
  * Demos:
@@ -46,6 +75,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
     chartsWrapperProps,
     chartContainerProps,
     barPlotProps,
+    rangeBarPlotProps,
     gridProps,
     clipPathProps,
     clipPathGroupProps,
@@ -57,7 +87,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   } = useBarChartPremiumProps(other);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
-    'bar',
+    'bar' | 'rangeBar',
     BarChartPremiumPluginSignatures
   >(
     {
@@ -83,6 +113,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
+            <RangeBarPlot {...rangeBarPlotProps} />
             <ChartsOverlay {...overlayProps} />
             <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
@@ -173,6 +204,33 @@ BarChartPremium.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -247,6 +305,11 @@ BarChartPremium.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -272,6 +335,15 @@ BarChartPremium.propTypes = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * The type of renderer to use for the bar plot.
+   * - `svg-single`: Renders every bar in a `<rect />` element.
+   * - `svg-batch`: Batch renders bars in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/bars/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * The series to display in the bar chart.
    * An array of [[BarSeries]] or [[RangeBarSeries]] objects.

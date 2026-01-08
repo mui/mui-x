@@ -1,9 +1,9 @@
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 
 export interface SchedulerTranslations {
-  // ResourceLegend
+  // ResourcesLegend
   hideEventsLabel: (resourceName: string) => string;
-  resourceLegendSectionLabel: string;
+  resourcesLegendSectionLabel: string;
   showEventsLabel: (resourceName: string) => string;
 
   // ViewSwitcher

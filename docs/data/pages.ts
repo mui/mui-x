@@ -537,8 +537,15 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-charts-bars',
             title: 'Bars',
+            newFeature: true,
             children: [
               { pathname: '/x/react-charts/bars', title: 'Bars overview' },
+              {
+                pathname: '/x/react-charts/range-bar',
+                title: 'Range bar',
+                plan: 'premium',
+                newFeature: true,
+              },
               { pathname: '/x/react-charts/bar-demo', title: 'Demos' },
             ],
           },

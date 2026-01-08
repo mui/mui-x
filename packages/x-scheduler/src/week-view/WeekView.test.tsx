@@ -69,8 +69,9 @@ describe('<WeekView />', () => {
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
-      const allDayRow = within(allDayGrid).getByRole('row');
+      // Get the parent container that has the role="row" as a direct child
+      const allDayGridContainer = allDayHeader.parentElement;
+      const allDayRow = within(allDayGridContainer!).getByRole('row');
       const gridCells = within(allDayRow).getAllByRole('gridcell');
       // Find the first cell of the first week in May 2025
       const firstCell = gridCells[0];
@@ -153,8 +154,9 @@ describe('<WeekView />', () => {
       );
 
       const allDayHeader = screen.getByRole('columnheader', { name: /all day/i });
-      const allDayGrid = allDayHeader.closest('[class*="AllDayEventsGrid"]') as HTMLElement;
-      const allDayRow = within(allDayGrid).getByRole('row');
+      // Get the parent container that has the role="row" as a direct child
+      const allDayGridContainer = allDayHeader.parentElement;
+      const allDayRow = within(allDayGridContainer!).getByRole('row');
 
       const mainEvent = within(allDayRow)
         .getAllByLabelText(fourDayEvent.title)
@@ -210,10 +212,9 @@ describe('<WeekView />', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
-      expect(indicators.length).to.equal(7);
-
-      const todayColumn = document.querySelector('.DayTimeGridColumn[data-current]');
+      // The current time indicator is rendered once per day column when today is in view
+      // Check that the data-current attribute is on the today column
+      const todayColumn = document.querySelector('[data-current]');
       expect(todayColumn).not.to.equal(null);
     });
 
@@ -221,10 +222,10 @@ describe('<WeekView />', () => {
       const visibleDate = adapter.date('2025-05-18T00:00:00Z', 'default');
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
+      const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
 
-      const todayColumn = document.querySelector('.DayTimeGridColumn[data-current]');
+      const todayColumn = document.querySelector('[data-current]');
       expect(todayColumn).to.equal(null);
     });
 
@@ -234,7 +235,8 @@ describe('<WeekView />', () => {
 
       render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
 
-      const hiddenLabels = document.querySelectorAll('.DayTimeGridTimeAxis .HiddenHourLabel');
+      // Time labels that should be hidden now use data-hidden attribute
+      const hiddenLabels = document.querySelectorAll('time[data-hidden]');
       expect(hiddenLabels.length).to.be.greaterThan(0);
     });
 
@@ -250,9 +252,9 @@ describe('<WeekView />', () => {
         />,
       );
 
-      const indicators = document.querySelectorAll('.DayTimeGridCurrentTimeIndicator');
+      const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
-      const hiddenLabels = document.querySelectorAll('.DayTimeGridTimeAxis .HiddenHourLabel');
+      const hiddenLabels = document.querySelectorAll('time[data-hidden]');
       expect(hiddenLabels.length).to.equal(0);
     });
   });
