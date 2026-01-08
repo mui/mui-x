@@ -1,5 +1,5 @@
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store/useStore';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
@@ -7,7 +7,64 @@ import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
-import './Headers.css';
+
+const TimeHeaderRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeaderRoot',
+})({
+  display: 'flex',
+  minWidth: 'calc(var(--unit-count) * var(--time-cell-width))',
+});
+
+const TimeHeaderCell = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeaderCell',
+})(({ theme }) => ({
+  flexGrow: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  '&:not(:last-child)': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+const DayLabel = styled('time', {
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeaderDayLabel',
+})(({ theme }) => ({
+  padding: theme.spacing(1),
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  display: 'flex',
+  justifyContent: 'center',
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const TimeCellsRow = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeaderCellsRow',
+})(({ theme }) => ({
+  padding: theme.spacing(0, 1),
+  display: 'grid',
+  gridTemplateColumns: 'repeat(24, var(--time-cell-width))',
+}));
+
+const TimeCell = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeaderTimeCell',
+})(({ theme }) => ({
+  padding: theme.spacing(1, 0),
+  textAlign: 'center',
+}));
+
+const TimeLabel = styled('time', {
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeaderTimeLabel',
+})(({ theme }) => ({
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.secondary,
+}));
 
 export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
@@ -26,26 +83,22 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <div className={clsx('TimeHeader', props.className)} {...props}>
+    <TimeHeaderRoot {...props}>
       {days.map((day) => (
-        <div key={day.key} className="TimeHeaderCell">
-          <time dateTime={day.key} className="DayLabel">
+        <TimeHeaderCell key={day.key}>
+          <DayLabel dateTime={day.key}>
             {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
-          </time>
-          <div className="TimeCellsRow">
+          </DayLabel>
+          <TimeCellsRow>
             {/* TODO: Make sure it works across DST */}
             {Array.from({ length: 24 }, (_, hour) => (
-              <div
-                key={hour}
-                className="TimeCell"
-                style={{ '--hour': hour } as React.CSSProperties}
-              >
-                <time className="TimeLabel">{formatTime(adapter.setHours(day.value, hour))}</time>
-              </div>
+              <TimeCell key={hour} style={{ '--hour': hour } as React.CSSProperties}>
+                <TimeLabel>{formatTime(adapter.setHours(day.value, hour))}</TimeLabel>
+              </TimeCell>
             ))}
-          </div>
-        </div>
+          </TimeCellsRow>
+        </TimeHeaderCell>
       ))}
-    </div>
+    </TimeHeaderRoot>
   );
 }
