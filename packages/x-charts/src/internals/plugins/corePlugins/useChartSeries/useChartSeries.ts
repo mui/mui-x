@@ -34,7 +34,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
   const isSameIdentifier = useEventCallback(
     <T extends { type: string }>(a: T | undefined | null, b: T | undefined | null): boolean => {
       // Nullish values or different series types are never equal regardless of the series config
-      if (a === null || b === null || a === undefined || b === undefined || a.type !== b.type) {
+      if (!a || !b || a.type !== b.type) {
         return false;
       }
 
