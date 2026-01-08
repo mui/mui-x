@@ -11,7 +11,8 @@ _Jan 8, 2026_
 
 We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- ⚡️Add bar [batch renderer](https://mui.com/x/react-charts/bars/#performance). Allows rendering thousands of bars without impacting performance
+- 🌎 Improved Danish (da-DK) and Japanese (ja-JP) locales on the Data Grid
 
 Special thanks go out to these community members for their valuable contributions:
 @anders-noerrelykke, @auloin, @sai6855, @yuito-it
@@ -23,7 +24,8 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@8.24.0`
 
-Internal changes.
+- [l10n] Improve Danish (da-DK) locale (#20828) @anders-noerrelykke
+- [l10n] Improve Japanese (ja-JP) locale (#20251) @yuito-it
 
 #### `@mui/x-data-grid-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -94,11 +96,11 @@ Internal changes.
 
 - [docs] Fix axis size default values (#20799) @bernardobelchior
 - [docs] Update What's New in MUI X page with post v8 features (DX-118) (#20787) @alelthomas
-- [docs][pickers] Fix `onAccept`'s `context.source` documentation to use 'view' instead of 'picker' (#20465) @auloin
-- [docs][charts] Revise the Charts Brush doc (#20792) @mapache-salvaje
-- [docs][charts] Revise the Charts Highlighting doc (#20788) @mapache-salvaje
-- [docs][charts] Revise the Charts Label doc (#20794) @mapache-salvaje
-- [docs][charts] Revise the Charts Export doc (#20779) @mapache-salvaje
+- [docs] Fix `onAccept`'s `context.source` documentation to use 'view' instead of 'picker' (#20465) @auloin
+- [docs] Revise the Charts Brush doc (#20792) @mapache-salvaje
+- [docs] Revise the Charts Highlighting doc (#20788) @mapache-salvaje
+- [docs] Revise the Charts Label doc (#20794) @mapache-salvaje
+- [docs] Revise the Charts Export doc (#20779) @mapache-salvaje
 
 ### Core
 
@@ -110,11 +112,6 @@ Internal changes.
 - [code-infra] Remove unused `path` package (#20802) @bernardobelchior
 - [code-infra] Retry flaky e2e test on webkit (#20806) @JCQuintas
 - [internal] Add `internal` slot to properly generate components CSS layer (#20763) @siriwatknp
-
-### Miscellaneous
-
-- [l10n] Improve Danish (da-DK) locale (#20828) @anders-noerrelykke
-- [l10n] Improve Japanese (ja-JP) locale (#20251) @yuito-it
 
 ## 8.23.0
 
