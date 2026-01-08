@@ -44,7 +44,7 @@ If a translation is missing, you're welcome to open a PR to complete missing key
 
 ### Set translations locally
 
-To pass language translations to multiple components, you can load the built-in language translations from the `@mui/x-charts` or `@mui/x-charts-pro` package and pass them to `ChartsLocalizationProvider`.
+To pass language translations to multiple components, you can load the built-in language translations from the Charts package you're using and pass them to `ChartsLocalizationProvider`.
 This applies `localeText` to all charts inside the provider.
 
 ```jsx
