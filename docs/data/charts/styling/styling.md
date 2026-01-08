@@ -7,6 +7,9 @@ productId: x-charts
 
 <p class="description">Customize chart appearance, colors, and styling.</p>
 
+This page covers how to customize chart colors, including series colors, color palettes, and value-based color mapping.
+It also explains how to customize overlays, chart sizing and placement, CSS styling, and advanced features like gradients and patterns.
+
 ## Colors
 
 ### Series color
