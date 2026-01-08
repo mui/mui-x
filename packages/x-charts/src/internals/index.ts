@@ -35,6 +35,7 @@ export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartTooltip';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVisibilityManager';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
