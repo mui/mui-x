@@ -140,7 +140,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default');
       // All-day multi-day spanning Jan 03-06
       const event = EventBuilder.new()
-        .span('2025-01-03', '2025-01-06', { allDay: true })
+        .span('2025-01-03T00:00:00Z', '2025-01-06T00:00:00Z', { allDay: true })
         .rrule({ freq: 'DAILY', interval: 7 })
         .toProcessed();
 
@@ -534,7 +534,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const event = EventBuilder.new(adapter)
         .singleDay('2024-01-10T23:00:00Z')
-        .withTimezone('America/New_York')
+        .withDataTimezone('America/New_York')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
@@ -561,8 +561,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // Recurrence must still belong to the original day (Tokyo's day), not Madrid's previous day.
 
       const event = EventBuilder.new(adapter)
-        .singleDay('2025-01-10T00:30:00Z', 30)
-        .withTimezone('Asia/Tokyo')
+        // 2025-01-10 00:30 JST → 2025-01-09T15:30:00Z
+        .singleDay('2025-01-09T15:30:00Z', 30)
+        .withDataTimezone('Asia/Tokyo')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
@@ -580,7 +581,10 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // Only three occurrences, still belonging to Jan 10
       expect(result).to.have.length(3);
-      expect(adapter.getDate(result[0].dataTimezone.start.value)).to.equal(10);
+      // Check local day in the data timezone (Tokyo)
+      expect(
+        adapter.getDate(adapter.setTimezone(result[0].dataTimezone.start.value, 'Asia/Tokyo')),
+      ).to.equal(10);
     });
 
     it('preserves multi-day duration when converting occurrences to the display timezone', () => {
@@ -590,7 +594,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const event = EventBuilder.new(adapter)
         .span('2025-03-01T08:00:00Z', '2025-03-03T08:00:00Z') // 48h
-        .withTimezone('America/Los_Angeles')
+        .withDataTimezone('America/Los_Angeles')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();

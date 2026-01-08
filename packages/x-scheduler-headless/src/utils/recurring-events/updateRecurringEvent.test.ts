@@ -235,7 +235,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       // UTC equivalent = 2025-01-03T04:30:00Z
       const original = EventBuilder.new(adapter)
         .singleDay('2025-01-03T04:30:00Z') // 23:30 Jan 2 NY
-        .withTimezone('America/New_York')
+        .withDataTimezone('America/New_York')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
@@ -475,25 +475,27 @@ describe('recurring-events/updateRecurringEvent', () => {
       // 2025-01-10 00:30 JST → 2025-01-09 15:30 UTC
       const original = EventBuilder.new(adapter)
         .singleDay('2025-01-09T15:30:00Z')
-        .withTimezone('Asia/Tokyo')
+        .withDataTimezone('Asia/Tokyo')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
       const occurrenceStart = original.modelInBuiltInFormat!.start;
 
-      // Changes were previously converted to Tokyo time
+      // Changes come as instants
+      // 00:40 JST → 2025-01-09T15:40:00Z
+      // 01:30 JST → 2025-01-09T16:30:00Z
       const changes = {
         id: original.id,
-        start: adapter.date('2025-01-10T00:40:00', 'Asia/Tokyo'),
-        end: adapter.date('2025-01-10T01:30:00', 'Asia/Tokyo'),
+        start: adapter.date('2025-01-09T15:40:00Z', 'default'),
+        end: adapter.date('2025-01-09T16:30:00Z', 'default'),
       };
 
       const updated = applyRecurringUpdateAll(adapter, original, occurrenceStart, changes);
 
-      // Updated DTSTART must remain Jan 10 Tokyo-time
+      // DTSTART should still correspond to Jan 10 in the event data timezone (Tokyo)
       const newStart = updated.updated![0].start!;
-      expect(adapter.getDate(newStart)).to.equal(10);
+      expect(adapter.getDate(adapter.setTimezone(newStart, 'Asia/Tokyo'))).to.equal(10);
     });
 
     it('should use the rrule provided in changes when present', () => {
@@ -658,7 +660,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       const original = EventBuilder.new()
         .singleDay('2025-01-01T09:00:00Z')
         .rrule({ freq: 'DAILY', interval: 1 })
-        .exDates(['2025-01-03'])
+        .exDates(['2025-01-03Z'])
         .toProcessed();
 
       const occurrenceStart = adapter.date('2025-01-05T09:00:00Z', 'default');
@@ -720,7 +722,7 @@ describe('recurring-events/updateRecurringEvent', () => {
       // Original event in New York
       const original = EventBuilder.new()
         .singleDay('2025-03-01T23:00:00Z')
-        .withTimezone('America/New_York')
+        .withDataTimezone('America/New_York')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
