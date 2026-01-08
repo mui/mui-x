@@ -21,12 +21,12 @@ TODO: Issue #20394 - Create documentation and demos
 
 ## Overview
 
-Scheduler supports displaying and editing events across different timezones by treating
-event dates as fixed moments in time.
+Scheduler always renders dates in the timezone defined by the `displayTimezone` prop.
 
-An event always represents the same moment, regardless of the timezone in which it is
-displayed. Changing the timezone only affects how the date is shown to the user, not when
-the event actually happens.
+Event dates (`start`, `end`, etc.) represent fixed moments in time. This means an event
+always represents the same moment, regardless of the timezone in which it is displayed.
+Changing `displayTimezone` only affects how the date is shown to the user, not when the
+event actually happens.
 
 For example, an event with `start: 2024-01-10T13:00:00Z`:
 
@@ -57,10 +57,10 @@ Only the instant it represents is taken into account.
 
 ## Rendering behavior
 
-Scheduler always renders events using the `displayTimezone` prop.
+Scheduler renders all events in the timezone defined by the `displayTimezone` prop.
 
-Changing the display timezone does not change when an event occurs,
-only how that instant is presented to the user. The underlying event data remains unchanged.
+Changing `displayTimezone` only affects how event dates are displayed in the UI.
+It does not modify the event data or change when an event occurs.
 
 ## Recurring events and timezones
 
