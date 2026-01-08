@@ -28,6 +28,13 @@ An event always represents the same moment, regardless of the timezone in which 
 displayed. Changing the timezone only affects how the date is shown to the user, not when
 the event actually happens.
 
+For example, an event with `start: 2024-01-10T13:00:00Z`:
+
+- is displayed as `14:00` in `Europe/Paris` (UTC+1)
+- is displayed as `08:00` in `America/New_York` (UTC-5)
+
+In all cases, it is still the same event happening at the same instant in time.
+
 Events can optionally define a `timezone` field. This field is metadata and does not
 reinterpret or shift the event start or end dates.
 
