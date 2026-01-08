@@ -41,12 +41,12 @@ catalog:
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
   '@typescript-eslint/parser': ^8.48.1
-  '@vitejs/plugin-react': ^5.1.1
+  '@vitejs/plugin-react': ^5.1.2
   '@vitejs/plugin-react-swc': ^4.2.2
-  '@vitest/browser': ^4.0.15
-  '@vitest/browser-playwright': ^4.0.15
-  '@vitest/coverage-v8': ^4.0.15
-  '@vitest/ui': ^4.0.15
+  '@vitest/browser': ^4.0.16
+  '@vitest/browser-playwright': ^4.0.16
+  '@vitest/coverage-v8': ^4.0.16
+  '@vitest/ui': ^4.0.16
   autoprefixer: ^10.4.23
   babel-plugin-optimize-clsx: ^2.6.2
   babel-plugin-react-remove-properties: ^0.3.1
@@ -77,8 +77,8 @@ catalog:
   tsx: ^4.21.0
   type-fest: ^5.3.1
   use-sync-external-store: ^1.6.0
-  vite: ^7.2.6
-  vitest: ^4.0.15
+  vite: ^7.3.0
+  vitest: ^4.0.16
   yargs: ^18.0.0
 
 engineStrict: true
