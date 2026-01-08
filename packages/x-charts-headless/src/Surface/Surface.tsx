@@ -14,7 +14,7 @@ import {
 } from '@mui/x-charts/internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useStore } from '@mui/x-charts/internals/store/useStore';
 
-export interface ChartsSurfaceProps extends Omit<
+export interface SurfaceProps extends Omit<
   React.SVGProps<SVGSVGElement>,
   'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
 > {
@@ -22,8 +22,12 @@ export interface ChartsSurfaceProps extends Omit<
   children?: React.ReactNode;
 }
 
-const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
-  inProps: ChartsSurfaceProps,
+/**
+ * The `Surface` component is used to render the SVG surface for charts.
+ * It handles sizing, keyboard navigation, and focused item state.
+ */
+const Surface = React.forwardRef<SVGSVGElement, SurfaceProps>(function Surface(
+  inProps: SurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
   const store = useStore();
@@ -63,4 +67,4 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   );
 });
 
-export { ChartsSurface };
+export { Surface };
