@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,18 +8,24 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Paper, { PaperProps } from '@mui/material/Paper';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 import Fade from '@mui/material/Fade';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggabble-dialog';
 
 function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
   const nodeRef = React.useRef<HTMLDivElement>(null);
-  const offset = React.useRef({ x: 0, y: 0 });
+
+  const mutateStyle = React.useCallback((style: string) => {
+    if (nodeRef.current) {
+      nodeRef.current.style.transform = style;
+    }
+  }, []);
+
+  const resetDrag = useDraggableDialog(nodeRef, mutateStyle);
   const { anchorEl, ...other } = props;
 
   const calculatePosition = React.useCallback(
-    (resetDrag = false) => {
+    (shouldResetDrag = false) => {
       const element = nodeRef.current;
       if (!element || !anchorEl) {
         return;
@@ -76,13 +83,12 @@ function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
       element.style.top = `${top}px`;
       element.style.left = `${left}px`;
 
-      if (resetDrag) {
+      if (shouldResetDrag) {
         // Reset transform when position is recalculated
-        offset.current = { x: 0, y: 0 };
-        element.style.transform = 'none';
+        resetDrag();
       }
     },
-    [anchorEl],
+    [anchorEl, resetDrag],
   );
 
   React.useLayoutEffect(() => {
@@ -98,38 +104,6 @@ function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
       window.removeEventListener('resize', handleResize);
     };
   }, [calculatePosition]);
-
-  React.useEffect(() => {
-    const element = nodeRef.current;
-    if (!element) {
-      return;
-    }
-
-    return draggable({
-      element,
-      onGenerateDragPreview: ({ nativeSetDragImage }) => {
-        disableNativeDragPreview({ nativeSetDragImage });
-      },
-      onDrag: ({ location }) => {
-        const deltaX = location.current.input.clientX - location.initial.input.clientX;
-        const deltaY = location.current.input.clientY - location.initial.input.clientY;
-
-        const x = offset.current.x + deltaX;
-        const y = offset.current.y + deltaY;
-
-        if (nodeRef.current) {
-          nodeRef.current.style.transform = `translate(${x}px, ${y}px)`;
-        }
-      },
-      onDrop: ({ location }) => {
-        const deltaX = location.current.input.clientX - location.initial.input.clientX;
-        const deltaY = location.current.input.clientY - location.initial.input.clientY;
-
-        offset.current.x += deltaX;
-        offset.current.y += deltaY;
-      },
-    });
-  }, []);
 
   return (
     <Paper
@@ -150,7 +124,7 @@ function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
 
 export interface SimpleDialogProps {
   open: boolean;
-  onClose: (value: string) => void;
+  onClose: (event: React.SyntheticEvent) => void;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
