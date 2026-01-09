@@ -4803,7 +4803,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
    />
   ```
 
-- The headless field hooks (e.g. `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
+- The headless field hooks (for example, `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
   This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 
   When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
@@ -5925,7 +5925,7 @@ We'd like to offer a big thanks to the 6 contributors who made this release poss
 
 - The `filterModel` now supports `Date` objects as values for `date` and `dateTime` column types.
   The `filterModel` still accepts strings as values for `date` and `dateTime` column types,
-  but all updates to the `filterModel` coming from the UI (for example filter panel) will set the value as a `Date` object.
+  but all updates to the `filterModel` coming from the UI (for example, filter panel) will set the value as a `Date` object.
 
 #### `@mui/x-data-grid@7.0.0-alpha.6`
 
@@ -6084,7 +6084,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
   The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-  You should now be able to directly pass the returned value from your field hook (e.g. `useDateField`) to `useClearableField`
+  You should now be able to directly pass the returned value from your field hook (for example, `useDateField`) to `useClearableField`
 
   ```diff
    const fieldResponse = useDateField(props);
@@ -6230,7 +6230,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 Support localized start of the week on pickers' `AdapterLuxon`
 
-  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g. Sunday for `en-US`, Monday for `fr-FR`).
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (for example, Sunday for `en-US`, Monday for `fr-FR`).
 
 - 📈 Fix a lot of Charts package issues
 - 🎉 The Data Grid features Cell selection and Clipboard paste are now stable
