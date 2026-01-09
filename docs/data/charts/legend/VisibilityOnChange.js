@@ -27,7 +27,7 @@ export default function VisibilityOnChange() {
         onHiddenItemsChange={(newHiddenItems) => setHiddenItems(newHiddenItems)}
       />
       <Typography variant="body2" textAlign="center">
-        Visible slices: {visibleCount} / {series.length}
+        Visible series: {visibleCount} / {series.length}
       </Typography>
     </Stack>
   );
