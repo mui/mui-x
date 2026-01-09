@@ -28,7 +28,7 @@ Hidden items are visually indicated in the legend with reduced opacity.
 You can listen to visibility changes using the `onHiddenItemsChange` prop on the chart component.
 This callback receives an array of hidden item identifiers whenever the visibility state changes.
 
-The following demo shows a pie chart where you can toggle individual slices and see the count of visible slices update.
+The following demo shows a line chart where you can toggle series' visibility and see the count of currently visible series.
 
 {{"demo": "VisibilityOnChange.js"}}
 
