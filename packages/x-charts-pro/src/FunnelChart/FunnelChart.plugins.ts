@@ -8,6 +8,8 @@ import {
   type UseChartInteractionSignature,
   useChartKeyboardNavigation,
   type UseChartKeyboardNavigationSignature,
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -21,6 +23,7 @@ export type FunnelChartPluginSignatures = [
   UseChartTooltipSignature,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<'funnel'>,
   UseChartProExportSignature,
   UseChartKeyboardNavigationSignature,
 ];
@@ -30,6 +33,7 @@ export const FUNNEL_CHART_PLUGINS: ConvertSignaturesIntoPlugins<FunnelChartPlugi
   useChartTooltip,
   useChartInteraction,
   useChartHighlight,
+  useChartVisibilityManager,
   useChartProExport,
   useChartKeyboardNavigation,
 ];
