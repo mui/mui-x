@@ -1,4 +1,3 @@
-import { warnOnce } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
@@ -26,16 +25,6 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
     if (store.state.tooltip.item !== params.tooltipItem) {
       store.set('tooltip', { ...store.state.tooltip, item: params.tooltipItem });
     }
-    if (process.env.NODE_ENV !== 'production') {
-      if (params.tooltipItem !== undefined && !store.state.tooltip.itemIsControlled) {
-        warnOnce(
-          [
-            'MUI X Charts: The `tooltipItem` switched between controlled and uncontrolled state.',
-            'To remove the tooltip when using controlled state, you must provide `null` to the `tooltipItem` prop instead of `undefined`.',
-          ].join('\n'),
-        );
-      }
-    }
   }, [store, params.tooltipItem]);
 
   const removeTooltipItem = useEventCallback(function removeTooltipItem(
@@ -48,7 +37,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
     }
 
     if (!itemToRemove || fastObjectShallowCompare(prevItem, itemToRemove)) {
-      // Remove the item is eihter
+      // Remove the item is either
       // - no item provided, so we unconditionally remove it
       // - the provided item matches the current one
 
