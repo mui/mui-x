@@ -305,18 +305,17 @@ export const createClipboardPasteHistoryHandler = (
       // Focus the first affected cell
       if (oldRowsValues.length > 0 && visibleColumns.length > 0) {
         const columnOrder = gridColumnFieldsSelector(apiRef);
-        const currentFocus = gridFocusCellSelector(apiRef);
 
         // Since we undo, oldRowData is the new data that will be set and newRowData is the current row
         const firstOldRow = Array.from(newRows.values())[0];
         const [firstNewRowId, firstNewRow] = Array.from(oldRows.entries())[0];
 
-        let differentField = columnOrder[0];
+        let differentFieldIndex = columnOrder.length - 1;
         // Find the first field that is different to set the focus on
         for (let i = 0; i < columnOrder.length; i += 1) {
           const field = columnOrder[i];
           if (!isDeepEqual(firstOldRow[field], firstNewRow[field])) {
-            differentField = field;
+            differentFieldIndex = i;
             break;
           }
         }
@@ -324,14 +323,13 @@ export const createClipboardPasteHistoryHandler = (
         // Restore all rows to their original state
         await apiRef.current.updateRows(oldRowsValues);
 
-        if (differentField && currentFocus?.id !== firstNewRowId) {
-          // Use `requestAnimationFrame` to ensure all undo updates are applied
+        if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, differentField);
+            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
           });
           apiRef.current.scrollToIndexes({
             rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-            colIndex: apiRef.current.getColumnIndex(differentField),
+            colIndex: differentFieldIndex,
           });
         }
       }
@@ -346,17 +344,16 @@ export const createClipboardPasteHistoryHandler = (
       // Focus the first affected cell
       if (newRowsValues.length > 0 && visibleColumns.length > 0) {
         const columnOrder = gridColumnFieldsSelector(apiRef);
-        const currentFocus = gridFocusCellSelector(apiRef);
 
         const firstOldRow = Array.from(oldRows.values())[0];
         const [firstNewRowId, firstNewRow] = Array.from(newRows.entries())[0];
 
-        let differentField = columnOrder[0];
+        let differentFieldIndex = columnOrder.length - 1;
         // Find the first field that is different to set the focus on
         for (let i = 0; i < columnOrder.length; i += 1) {
           const field = columnOrder[i];
           if (!isDeepEqual(firstOldRow[field], firstNewRow[field])) {
-            differentField = field;
+            differentFieldIndex = i;
             break;
           }
         }
@@ -364,14 +361,14 @@ export const createClipboardPasteHistoryHandler = (
         // Restore all rows to the pasted state
         await apiRef.current.updateRows(newRowsValues);
 
-        if (differentField && currentFocus?.id !== firstNewRowId) {
-          // Use `requestAnimationFrame` to ensure all redo updates are applied
+        if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstNewRowId, differentField);
+            apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
           });
+
           apiRef.current.scrollToIndexes({
             rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-            colIndex: apiRef.current.getColumnIndex(differentField),
+            colIndex: differentFieldIndex,
           });
         }
       }
