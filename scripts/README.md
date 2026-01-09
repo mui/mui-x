@@ -120,8 +120,8 @@ pnpm docs:deploy
 
 <!-- #target-branch-reference -->
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v8)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v8` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v9)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v9` deployment.
 
 ### Publish GitHub release
 
