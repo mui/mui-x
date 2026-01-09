@@ -35,13 +35,13 @@ This prevents any history from being tracked and hides the undo/redo buttons fro
 
 ### Removing the toolbar buttons
 
-To remove the toolbar buttons for undo and redo while keeping the keyboard controls active, set the `showUndoRedo` flag to `false` in the Toolbar's slot props.
+To remove the toolbar buttons for undo and redo while keeping the keyboard controls active, set the `showHistoryControls` flag to `false` in the Toolbar's slot props.
 
 ```tsx
 <DataGridPremium
   slotProps={{
     toolbar: {
-      showUndoRedo: false,
+      showHistoryControls: false,
       // ... other toolbar slotProps
     },
     // ... other slotProps

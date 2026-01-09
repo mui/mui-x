@@ -24,13 +24,14 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
   const { excelOptions, ...other } = props;
 
   const historyEnabled = useGridSelector(apiRef, gridHistoryEnabledSelector);
-  const showUndoRedo = rootProps.slotProps?.toolbar?.showUndoRedo !== false && historyEnabled;
+  const showHistoryControls =
+    rootProps.slotProps?.toolbar?.showHistoryControls !== false && historyEnabled;
   const canUndo = useGridSelector(apiRef, gridHistoryCanUndoSelector);
   const canRedo = useGridSelector(apiRef, gridHistoryCanRedoSelector);
 
   const mainControls = (
     <React.Fragment>
-      {showUndoRedo && (
+      {showHistoryControls && (
         <React.Fragment>
           <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarUndo')}>
             <div>
@@ -48,7 +49,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
           </rootProps.slots.baseTooltip>
         </React.Fragment>
       )}
-      {showUndoRedo && <GridToolbarDivider />}
+      {showHistoryControls && <GridToolbarDivider />}
       {!rootProps.disableColumnSelector && (
         <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
           <ColumnsPanelTrigger render={<ToolbarButton />}>
