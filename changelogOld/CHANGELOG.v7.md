@@ -320,7 +320,7 @@ Same changes as in `@mui/x-date-pickers@7.29.2`.
 
 ### Docs
 
-- [docs] Fix MUI X v7 install instructions (#17537) @oliviertassinari
+- [docs] Fix MUI X v7 install instructions (#17537) @oliviertassinari
 - [docs] Improve data grid export docs (#17553) @MBilalShafi
 
 ### Core
@@ -524,7 +524,7 @@ Same changes as in `@mui/x-date-pickers@7.28.3`.
 ### Docs
 
 - [docs] Update Localization Provider JSDoc link (#17208) @LukasTy
-- [docs] Use v6 core packages in MUI X v7 docs (#17171) @cherniavskii
+- [docs] Use v6 core packages in MUI X v7 docs (#17171) @cherniavskii
 
 ## 7.28.2
 
@@ -1281,7 +1281,7 @@ _Dec 27, 2024_
 
 Here are some highlights ✨:
 
-- 🐞 Fix version mismatch issue in Data Grid codesandbox/stackblitz demos
+- 🐞 Fix version mismatch issue in Data Grid CodeSandbox/StackBlitz demos
 
 <!--/ HIGHLIGHT_ABOVE_SEPARATOR /-->
 
@@ -1985,7 +1985,7 @@ Same changes as in `@mui/x-charts@7.21.0`.
 
 - [docs] Add recipe showing how to toggle detail panels on row click (#14666) @k-rajat19
 - [docs] Fix broken link to the validation section in the Data grid component (#14973) @arminmeh
-- [docs] Update v5 migration codesandbox @oliviertassinari
+- [docs] Update v5 migration CodeSandbox @oliviertassinari
 - [docs] Enforce component style rules for the Tree View (#14963) @samuelsycamore
 
 ### Core
@@ -2193,7 +2193,7 @@ Same changes as in `@mui/x-charts@7.19.0`.
 - [code-infra] Remove custom playwright installation steps (#14728) @Janpot
 - [code-infra] Replace or remove all instances of `e` identifier (#14724) @samuelsycamore
 - [infra] Adds community contribution section to the changelog script (#14799) @michelengelen
-- [infra] Fix line break in Stack Overflow message @oliviertassinari
+- [infra] Fix line break in Stack Overflow message @oliviertassinari
 - [test] Fix `Escape` event firing event (#14797) @oliviertassinari
 
 ## 7.18.0
@@ -2285,7 +2285,7 @@ Same changes as in `@mui/x-charts@7.18.0`.
 - [core] Fix 301 link to Next.js and git diff @oliviertassinari
 - [core] Fix failing CI on `master` (#14644) @cherniavskii
 - [core] Fix `package.json` repository rule @oliviertassinari
-- [core] MUI X repository moved to a new location @oliviertassinari
+- [core] MUI X repository moved to a new location @oliviertassinari
 - [docs-infra] Strengthen CSP (#14581) @oliviertassinari
 - [license] Finish renaming of LicensingModel (#14615) @oliviertassinari
 
@@ -2451,7 +2451,7 @@ Same changes as in `@mui/x-charts@7.16.0`, plus:
 
 ### `@mui/x-codemod@7.16.0`
 
-- [codemod] Fix `experimentalFeatures` codemod for typescript parser (#14150) @MBilalShafi
+- [codemod] Fix `experimentalFeatures` codemod for TypeScript parser (#14150) @MBilalShafi
 
 ### Docs
 
@@ -3282,7 +3282,7 @@ Same changes as in `@mui/x-date-pickers@7.8.0`.
 
 ### Core
 
-- [core] Add eslint rule to restrict import from `../internals` root (#13633) @JCQuintas
+- [core] Add ESLint rule to restrict import from `../internals` root (#13633) @JCQuintas
 - [docs-infra] Sync `\_app` folder with monorepo (#13582) @Janpot
 - [license] Allow usage of Charts and Tree View Pro package for old premium licenses (#13619) @flaviendelangle
 
@@ -3420,7 +3420,7 @@ Same changes as in `@mui/x-date-pickers@7.7.0`.
 
 - [charts] Add watermark on the pro `ResponsiveChartContainer` (#13398) @alexfauquette
 - [charts] Allow to specify y-axis configuration (#13438) @alexfauquette
-- [charts] Fix eslint for react compiler (#13444) @alexfauquette
+- [charts] Fix ESLint for react compiler (#13444) @alexfauquette
 - [charts] Improve themeAugmentation typing (#13433) @noraleonte
 - [charts] Move the `ZAxisContextProvider` by default in the `ChartContainer` (#13465) @alexfauquette
 - [charts] Use plugins to define series extremum and colors (#13397) @alexfauquette
@@ -3967,7 +3967,7 @@ Same changes as in `@mui/x-date-pickers@7.3.1`.
 - [core] Use `describeTreeView` for focus tests (#12698) @flaviendelangle
 - [core] Use `describeTreeView` for type-ahead tests (#12811) @flaviendelangle
 - [code-infra] Change package manager to `pnpm` (#11875) @LukasTy
-- [code-infra] Closer sync with eslint config of codebase (#12864) @oliviertassinari
+- [code-infra] Closer sync with ESLint config of codebase (#12864) @oliviertassinari
 - [support-infra] Add release announcement to GitHub workflows (#11867) (#12843) @michelengelen
 
 ## 7.3.0
@@ -4187,7 +4187,7 @@ Same changes as in `@mui/x-date-pickers@7.1.1`, plus:
 
 - [charts] Fix `tickInterval` usage for y-axis (#12592) @alexfauquette
 - [charts] Fix Scatter series highlight when `id` is a `number` (#12677) @JCQuintas
-- [charts] Fix TS error when using `sx` property on `ChartsTooltip` (#12659) @JCQuintas
+- [charts] Fix TypeScript error when using `sx` property on `ChartsTooltip` (#12659) @JCQuintas
 
 ### Tree View
 
@@ -4480,7 +4480,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0`, plus:
 - [core] Fix `no-restricted-imports` ESLint rule not working for Data Grid packages (#12477) @cherniavskii
 - [core] Lower the frequency of `no-response` action runs (#12491) @michaldudak
 - [core] Remove leftover `legacy` `browserlistrc` entry (#12415) @LukasTy
-- [core] Update NPM tag (#12511) @cherniavskii
+- [core] Update npm tag (#12511) @cherniavskii
 - [core] Update supported browsers (browserlistrc) (#12521) @LukasTy
 - [core] Use Circle CI context @oliviertassinari
 - [license] Fix grammar on expired license error message (#12460) @joserodolfofreitas
@@ -5968,7 +5968,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.6`.
 
 - [docs] Document `false` default values for boolean props (#11477) @cherniavskii
 - [docs] Improve Pickers `name` prop examples (#11422) @LukasTy
-- [docs] Limit `date-fns` package to v2 in codesandbox (#11463) @LukasTy
+- [docs] Limit `date-fns` package to v2 in CodeSandbox (#11463) @LukasTy
 
 ### Core
 
@@ -6084,7 +6084,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
   The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-  You should now be able to directly pass the returned value from your field hook (e.g: `useDateField`) to `useClearableField`
+  You should now be able to directly pass the returned value from your field hook (e.g.: `useDateField`) to `useClearableField`
 
   ```diff
    const fieldResponse = useDateField(props);
@@ -6401,7 +6401,7 @@ Same changes as in `@mui/x-date-pickers@7.0.0-alpha.3`.
 - [core] Make `@mui/system` a direct dependency (#11128) @LukasTy
 - [core] Remove blank lines, coding style @oliviertassinari
 - [core] Remove outdated `ENABLE_AD` env variable (#11181) @oliviertassinari
-- [github] Do not add `plan: Pro` and `plan: Premium` labels on Pro / Premium issue templates (#10183) @flaviendelangle
+- [core] Do not add `plan: Pro` and `plan: Premium` labels on Pro / Premium issue templates (#10183) @flaviendelangle
 
 ## 7.0.0-alpha.2
 
