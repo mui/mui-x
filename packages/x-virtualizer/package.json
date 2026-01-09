@@ -46,7 +46,7 @@
     "@mui/types": "^7.4.8",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "^6.1.2"
+    "rimraf": "6.1.2"
   },
   "engines": {
     "node": ">=14.0.0"
