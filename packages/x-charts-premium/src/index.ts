@@ -44,6 +44,7 @@ export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
+export * from './plugins';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';
 
