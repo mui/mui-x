@@ -18,7 +18,7 @@ import { type UseChartFunnelAxisSignature } from './funnelAxisPlugin/useChartFun
 
 export type FunnelChartPluginSignatures = [
   UseChartFunnelAxisSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'funnel'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVisibilityManagerSignature<'funnel'>,

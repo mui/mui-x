@@ -67,7 +67,7 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "csstype": "catalog:",
-    "rasterizehtml": "^1.4.0",
+    "rasterizehtml": "1.4.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
