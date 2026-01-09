@@ -79,7 +79,7 @@ describe('<PieChart />', () => {
     const { container, user } = render(
       <PieChart
         enableKeyboardNavigation
-        data-testid="chart"
+        data-testid="chart-keyboard-navigation"
         height={100}
         width={100}
         series={[
@@ -99,7 +99,7 @@ describe('<PieChart />', () => {
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
-    await act(async () => screen.getByTestId('chart').focus());
+    await act(async () => screen.getByTestId('chart-keyboard-navigation').focus());
 
     // Focus the first arc
     await user.keyboard('{ArrowRight}');
@@ -119,7 +119,7 @@ describe('<PieChart />', () => {
     const { container, user } = render(
       <PieChart
         enableKeyboardNavigation
-        data-testid="chart"
+        data-testid="chart-focus-series"
         height={400}
         width={400}
         series={[
@@ -148,7 +148,7 @@ describe('<PieChart />', () => {
 
     /* eslint-disable testing-library/no-container */
     // focus the chart
-    await act(async () => screen.getByTestId('chart').focus());
+    await act(async () => screen.getByTestId('chart-focus-series').focus());
 
     // Focus the first arc of series-1
     await user.keyboard('{ArrowRight}');

@@ -2,18 +2,17 @@ import * as React from 'react';
 import { Theme } from '@mui/material/styles';
 import { SxProps } from '@mui/system/styleFunctionSx';
 import { SlotComponentProps } from '@mui/utils/types';
+import { TreeViewValidItem } from '@mui/x-tree-view/models';
 import {
-  TreeViewPublicAPI,
   RichTreeViewItemsSlots,
   RichTreeViewItemsSlotProps,
   TreeViewSlots,
   TreeViewSlotProps,
+  UseTreeViewStoreParameters,
+  TreeViewPublicAPI,
 } from '@mui/x-tree-view/internals';
 import { RichTreeViewProClasses } from './richTreeViewProClasses';
-import {
-  RichTreeViewProPluginParameters,
-  RichTreeViewProPluginSignatures,
-} from './RichTreeViewPro.plugins';
+import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
 export interface RichTreeViewProSlots extends TreeViewSlots, RichTreeViewItemsSlots {
   /**
@@ -28,9 +27,10 @@ export interface RichTreeViewProSlotProps<R extends {}, Multiple extends boolean
   root?: SlotComponentProps<'ul', {}, RichTreeViewProProps<R, Multiple>>;
 }
 
-export type RichTreeViewProApiRef = React.RefObject<
-  Partial<TreeViewPublicAPI<RichTreeViewProPluginSignatures>> | undefined
->;
+export type RichTreeViewProApiRef<
+  R extends TreeViewValidItem<R> = any,
+  Multiple extends boolean | undefined = any,
+> = React.RefObject<Partial<TreeViewPublicAPI<RichTreeViewProStore<R, Multiple>>> | undefined>;
 
 export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUListElement> {
   className?: string;
@@ -45,7 +45,7 @@ export interface RichTreeViewProPropsBase extends React.HTMLAttributes<HTMLUList
 }
 
 export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | undefined>
-  extends RichTreeViewProPluginParameters<R, Multiple>, RichTreeViewProPropsBase {
+  extends UseTreeViewStoreParameters<RichTreeViewProStore<R, Multiple>>, RichTreeViewProPropsBase {
   /**
    * Overridable component slots.
    * @default {}
@@ -57,7 +57,7 @@ export interface RichTreeViewProProps<R extends {}, Multiple extends boolean | u
    */
   slotProps?: RichTreeViewProSlotProps<R, Multiple>;
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewProApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewApiProRef()`.
    */
   apiRef?: RichTreeViewProApiRef;
 }

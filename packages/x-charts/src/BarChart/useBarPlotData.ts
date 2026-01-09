@@ -1,12 +1,14 @@
 import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
-import { type ChartDrawingArea, useChartId, useXAxes, useYAxes } from '../hooks';
+import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
 import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { getBarDimensions } from '../internals/getBarDimensions';
+import { type ChartDrawingArea } from '../hooks/useDrawingArea';
+import { useChartId } from '../hooks/useChartId';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -34,6 +36,8 @@ export function useBarPlotData(
 
     const yMin = drawingArea.top;
     const yMax = drawingArea.top + drawingArea.height;
+    const lastNegativePerIndex = new Map<number, ProcessedBarData>();
+    const lastPositivePerIndex = new Map<number, ProcessedBarData>();
 
     return seriesIds.map((seriesId) => {
       const xAxisId = series[seriesId].xAxisId ?? defaultXAxisId;
@@ -83,7 +87,7 @@ export function useBarPlotData(
 
         const stackId = series[seriesId].stack;
 
-        const result = {
+        const result: ProcessedBarData = {
           seriesId,
           dataIndex,
           ...barDimensions,
@@ -99,6 +103,25 @@ export function useBarPlotData(
           result.y + result.height < yMin
         ) {
           continue;
+        }
+
+        const lastNegative = lastNegativePerIndex.get(dataIndex);
+        const lastPositive = lastPositivePerIndex.get(dataIndex);
+        const sign = (reverse ? -1 : 1) * Math.sign(result.value ?? 0);
+        if (sign > 0) {
+          if (lastPositive) {
+            delete lastPositive.borderRadiusSide;
+          }
+
+          result.borderRadiusSide = verticalLayout ? 'top' : 'right';
+          lastPositivePerIndex.set(dataIndex, result);
+        } else if (sign < 0) {
+          if (lastNegative) {
+            delete lastNegative.borderRadiusSide;
+          }
+
+          result.borderRadiusSide = verticalLayout ? 'bottom' : 'left';
+          lastNegativePerIndex.set(dataIndex, result);
         }
 
         if (!masks[result.maskId]) {

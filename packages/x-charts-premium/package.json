@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-premium",
-  "version": "8.22.1",
+  "version": "8.24.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Charts components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -67,7 +67,7 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "csstype": "catalog:",
-    "rasterizehtml": "^1.4.0",
+    "rasterizehtml": "1.4.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"
@@ -77,6 +77,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.ts",
+    "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
   }
 }

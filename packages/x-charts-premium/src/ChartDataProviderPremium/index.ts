@@ -1,1 +1,4 @@
-export * from './ChartDataProviderPremium';
+export {
+  ChartDataProviderPremium,
+  type ChartDataProviderPremiumProps,
+} from './ChartDataProviderPremium';

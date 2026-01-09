@@ -396,6 +396,10 @@ export const GridRootStyles = styled('div', {
       minHeight: 'min-content',
       overflow: 'hidden',
     },
+    [`&.${c['root--densityCompact']} .${c['columnHeader--filter']}`]: {
+      paddingTop: 4,
+      paddingBottom: 4,
+    },
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
     },

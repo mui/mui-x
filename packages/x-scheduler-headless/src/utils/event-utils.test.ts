@@ -16,7 +16,7 @@ describe('event-utils', () => {
 
     it('should return all days when event spans multiple days', () => {
       const event = EventBuilder.new()
-        .span('2024-01-15T10:00:00', '2024-01-17T14:00:00')
+        .span('2024-01-15T10:00:00Z', '2024-01-17T14:00:00Z')
         .allDay(true)
         .toOccurrence();
 
@@ -26,7 +26,7 @@ describe('event-utils', () => {
 
     it('should return empty array when event is completely outside visible range', () => {
       const event = EventBuilder.new()
-        .span('2024-01-10T10:00:00', '2024-01-12T14:00:00')
+        .span('2024-01-10T10:00:00Z', '2024-01-12T14:00:00Z')
         .allDay(true)
         .toOccurrence();
 
@@ -36,7 +36,7 @@ describe('event-utils', () => {
 
     it('should return empty array when event is after visible range', () => {
       const event = EventBuilder.new()
-        .span('2024-01-20T10:00:00', '2024-01-22T14:00:00')
+        .span('2024-01-20T10:00:00Z', '2024-01-22T14:00:00Z')
         .allDay(true)
         .toOccurrence();
 
@@ -46,7 +46,7 @@ describe('event-utils', () => {
 
     it('should handle event that partially overlaps with visible range at the beginning', () => {
       const event = EventBuilder.new()
-        .span('2024-01-13T10:00:00', '2024-01-16T14:00:00')
+        .span('2024-01-13T10:00:00Z', '2024-01-16T14:00:00Z')
         .allDay(true)
         .toOccurrence();
 
@@ -56,7 +56,7 @@ describe('event-utils', () => {
 
     it('should handle event that partially overlaps with visible range at the end', () => {
       const event = EventBuilder.new()
-        .span('2024-01-16T10:00:00', '2024-01-19T14:00:00')
+        .span('2024-01-16T10:00:00Z', '2024-01-19T14:00:00Z')
         .allDay(true)
         .toOccurrence();
 

@@ -63,6 +63,8 @@ export type BarLabelProps = Omit<
      * @default 'center'
      */
     placement?: 'center' | 'outside';
+    /** If true, the bar label is hidden. */
+    hidden?: boolean;
   };
 
 function BarLabel(inProps: BarLabelProps): React.JSX.Element {
@@ -80,6 +82,7 @@ function BarLabel(inProps: BarLabelProps): React.JSX.Element {
     xOrigin,
     yOrigin,
     placement,
+    hidden,
     ...otherProps
   } = props;
 
@@ -93,7 +96,7 @@ function BarLabel(inProps: BarLabelProps): React.JSX.Element {
     <BarLabelComponent
       textAnchor={textAnchor}
       dominantBaseline={dominantBaseline}
-      opacity={fadedOpacity}
+      opacity={hidden ? 0 : fadedOpacity}
       {...otherProps}
       {...animatedProps}
     />
@@ -151,6 +154,10 @@ BarLabel.propTypes = {
    * Height of the bar this label belongs to.
    */
   height: PropTypes.number.isRequired,
+  /**
+   * If true, the bar label is hidden.
+   */
+  hidden: PropTypes.bool,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,

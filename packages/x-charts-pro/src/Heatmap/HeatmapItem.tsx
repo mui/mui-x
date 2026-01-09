@@ -15,7 +15,7 @@ export interface HeatmapItemSlots {
 }
 
 export interface HeatmapItemSlotProps {
-  cell?: Partial<React.ComponentPropsWithRef<'rect'>>;
+  cell?: Partial<HeatmapCellProps>;
 }
 
 export interface HeatmapItemProps {
@@ -48,6 +48,14 @@ export interface HeatmapItemOwnerState {
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<HeatmapClasses>;
+}
+
+export interface HeatmapCellProps extends React.ComponentPropsWithRef<'rect'> {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  ownerState: HeatmapItemOwnerState;
 }
 
 const HeatmapCell = styled('rect', {

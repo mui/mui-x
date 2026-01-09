@@ -18,12 +18,15 @@ export interface ProcessedBarSeriesData {
   yOrigin: number;
 }
 
+export type BorderRadiusSide = 'top' | 'bottom' | 'left' | 'right';
+
 export interface ProcessedBarData extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
   value: number | null;
   maskId: string;
+  borderRadiusSide?: BorderRadiusSide;
 }
 
 export interface MaskData extends AnimationData {

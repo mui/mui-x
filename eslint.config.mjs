@@ -375,9 +375,11 @@ export default defineConfig(
                 // Exceptions (QUESTION: Keep or remove?)
                 '!@mui/x-data-grid/internals/demo',
                 '!@mui/x-date-pickers/internals/demo',
-                '!@mui/x-tree-view/hooks/useTreeViewApiRef',
                 // TODO: export this from /ButtonBase in core. This will break after we move to package exports
                 '!@mui/material/ButtonBase/TouchRipple',
+                /* Module augmentation for feature flags in Charts. Users should be able to pick the features they need.
+                 * so it's useful to allow deeper imports */
+                '!@mui/x-charts*/moduleAugmentation/*',
               ],
               message: 'Use less deep import instead',
             },

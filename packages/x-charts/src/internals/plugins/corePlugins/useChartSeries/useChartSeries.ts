@@ -1,9 +1,14 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
+import useEventCallback from '@mui/utils/useEventCallback';
 import { type ChartPlugin } from '../../models';
-import { type UseChartSeriesSignature } from './useChartSeries.types';
+import {
+  type SerializeIdentifierFunction,
+  type UseChartSeriesSignature,
+} from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
+import { serializeIdentifier as serializeIdentifierFn } from './serializeIdentifier';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
   params,
@@ -26,7 +31,15 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
     });
   }, [colors, dataset, series, theme, seriesConfig, store]);
 
-  return {};
+  const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
+    serializeIdentifierFn(seriesConfig, identifier),
+  );
+
+  return {
+    instance: {
+      serializeIdentifier,
+    },
+  };
 };
 
 useChartSeries.params = {

@@ -15,7 +15,7 @@ import {
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import {
   selectorChartsKeyboardItem,
-  selectorChartsKeyboardItemIsDefined,
+  selectorChartsHasFocusedItem,
 } from '../useChartKeyboardNavigation';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
 import type { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
@@ -61,8 +61,7 @@ export const selectorChartsTooltipItem = createSelector(
 export const selectorChartsTooltipItemIsDefined = createSelector(
   selectorChartsLastInteraction,
   selectorChartsTooltipPointerItemIsDefined,
-  selectorChartsKeyboardItemIsDefined,
-
+  selectorChartsHasFocusedItem,
   (lastInteraction, pointerItemIsDefined, keyboardItemIsDefined) =>
     lastInteraction === 'keyboard' ? keyboardItemIsDefined : pointerItemIsDefined,
 );

@@ -38,7 +38,10 @@ export interface SankeyPlotProps {
   ) => void;
 }
 
-const SankeyPlotRoot = styled('g')({});
+const SankeyPlotRoot = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({});
 
 /**
  * Renders a Sankey diagram plot.

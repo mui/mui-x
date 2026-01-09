@@ -1,5 +1,4 @@
-import type { ScaleName, ChartsXAxisProps, ChartsYAxisProps } from '../models';
-import type { ComputedAxis } from '../models/axis';
+import type { ChartsXAxisProps, ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import type { ChartSeriesDefaultized } from '../models/seriesType/config';
 import { getBandSize } from './getBandSize';
 

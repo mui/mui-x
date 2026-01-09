@@ -1,4 +1,5 @@
-import { type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
+import type { DefaultizedProps } from '@mui/x-internals/types';
+import type { BarSeriesType, DefaultizedBarSeriesType } from './bar';
 import {
   type CartesianChartSeriesType,
   type ChartSeriesType,
@@ -39,6 +40,10 @@ export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
 
 export type SeriesItemIdentifierWithData<T extends ChartSeriesType = ChartSeriesType> =
   ChartsSeriesConfig[T]['itemIdentifierWithData'];
+
+export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> = T extends 'line'
+  ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'dataIndex'>
+  : ChartsSeriesConfig[T]['itemIdentifier'];
 
 export { type SeriesId } from './common';
 export * from './line';

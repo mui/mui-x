@@ -6,6 +6,8 @@ import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
@@ -17,4 +19,6 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

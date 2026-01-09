@@ -66,7 +66,19 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
   };
 }
 
-export interface UseChartSeriesInstance {}
+export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
+  identifier: T,
+) => string;
+
+export interface UseChartSeriesInstance {
+  /**
+   * Function to serialize a series item identifier into a unique string.
+   *
+   * @param identifier The identifier to serialize.
+   * @returns A unique string representing the identifier.
+   */
+  serializeIdentifier: SerializeIdentifierFunction;
+}
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
