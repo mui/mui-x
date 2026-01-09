@@ -224,15 +224,23 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     return null;
   }
 
-  if (itemPosition !== null && anchorRef.current) {
-    anchorRef.current.setAttribute('x', String(itemPosition.x));
-    anchorRef.current.setAttribute('y', String(itemPosition.y));
-  }
-
   return (
     <React.Fragment>
       {svgRef.current &&
-        ReactDOM.createPortal(<rect ref={anchorRef} display="hidden" />, svgRef.current)}
+        itemPosition !== null &&
+        ReactDOM.createPortal(
+          <rect
+            ref={anchorRef}
+            {...itemPosition}
+            display="hidden"
+            // On ios a rect with no width/height is not detectable by the popper.js
+            pointerEvents="none"
+            opacity={0}
+            width={1}
+            height={1}
+          />,
+          svgRef.current,
+        )}
       <NoSsr>
         {isOpen && (
           <ChartsTooltipRoot
