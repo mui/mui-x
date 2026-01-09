@@ -1,23 +1,57 @@
-import type { Plugin } from './plugin';
+import type { AnyPlugin, BaseApi, ExtractPluginApi, PluginRegistryApi } from './plugin';
 
-type AnyPlugin = Plugin<any, any, any, any, any>;
+function resolvePluginDependencies(userPlugins: readonly AnyPlugin[]): AnyPlugin[] {
+  const resolved: AnyPlugin[] = [];
+  const resolvedNames = new Set<string>();
+  const visiting = new Set<string>();
 
-export class PluginRegistry {
+  function visit(plugin: AnyPlugin): void {
+    if (resolvedNames.has(plugin.name)) {
+      return;
+    }
+
+    if (visiting.has(plugin.name)) {
+      throw new Error(
+        `Circular dependency detected: plugin "${plugin.name}" depends on itself through its dependency chain.`,
+      );
+    }
+
+    visiting.add(plugin.name);
+
+    if (plugin.dependencies) {
+      for (const dep of plugin.dependencies) {
+        visit(dep);
+      }
+    }
+
+    visiting.delete(plugin.name);
+    resolvedNames.add(plugin.name);
+    resolved.push(plugin);
+  }
+
+  for (const plugin of userPlugins) {
+    visit(plugin);
+  }
+
+  return resolved;
+}
+
+export class PluginRegistry implements PluginRegistryApi {
   private plugins: Map<string, AnyPlugin> = new Map();
-  private internalPluginCount: number = 0;
+  private resolvedUserPlugins: AnyPlugin[] = [];
 
   constructor(internalPlugins: readonly AnyPlugin[], userPlugins: readonly AnyPlugin[]) {
     internalPlugins.forEach((plugin) => {
       this.register(plugin);
     });
-    this.internalPluginCount = internalPlugins.length;
 
-    // Then register user plugins
-    userPlugins.forEach((plugin) => {
+    // Resolve dependencies and register user plugins in dependency order
+    this.resolvedUserPlugins = resolvePluginDependencies(userPlugins);
+    this.resolvedUserPlugins.forEach((plugin) => {
       if (this.plugins.has(plugin.name)) {
-        throw new Error(
-          `Plugin "${plugin.name}" conflicts with an internal plugin. Please use a different name.`,
-        );
+        // Skip if already registered (from internal plugins)
+        // This allows dependencies to be internal plugins
+        return;
       }
       this.register(plugin);
     });
@@ -25,8 +59,12 @@ export class PluginRegistry {
     return this;
   }
 
-  hasPlugin(id: string): boolean {
-    return this.plugins.has(id);
+  // Type guard for checking plugin availability - narrows api type
+  hasPlugin<TPlugin extends AnyPlugin>(
+    _api: BaseApi,
+    pluginName: TPlugin['name'],
+  ): _api is BaseApi & ExtractPluginApi<TPlugin> {
+    return this.plugins.has(pluginName);
   }
 
   register(plugin: AnyPlugin): void {
@@ -41,9 +79,11 @@ export class PluginRegistry {
   }
 
   forEachUserPlugin(callback: (plugin: AnyPlugin) => void): void {
-    const pluginsArray = Array.from(this.plugins.values());
-    for (let i = this.internalPluginCount; i < pluginsArray.length; i += 1) {
-      callback(pluginsArray[i]);
-    }
+    // Use resolved order to ensure dependencies are processed first
+    this.resolvedUserPlugins.forEach((plugin) => {
+      if (this.plugins.has(plugin.name)) {
+        callback(plugin);
+      }
+    });
   }
 }

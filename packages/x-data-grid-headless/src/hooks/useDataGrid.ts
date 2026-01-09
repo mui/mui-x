@@ -94,7 +94,7 @@ export const useDataGrid = <
   const baseApi = useRefWithInit(() => {
     return {
       pluginRegistry,
-    } as BaseApi & InternalPluginsApi<TRow>;
+    } as unknown as BaseApi & InternalPluginsApi<TRow>;
   }).current;
 
   internalPlugins.forEach((plugin: AnyPlugin) => {
@@ -108,8 +108,9 @@ export const useDataGrid = <
     } as DataGridApi<TPlugins, TRow>;
   }).current;
 
+  // Pass the accumulating api object so dependencies' APIs are available
   pluginRegistry.forEachUserPlugin((plugin) => {
-    const pluginApi = plugin.use(stateStore, options, baseApi);
+    const pluginApi = plugin.use(stateStore, options, api);
     Object.assign(api, pluginApi);
   });
 

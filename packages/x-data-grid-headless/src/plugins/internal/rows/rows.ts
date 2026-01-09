@@ -49,7 +49,7 @@ const rowsPlugin = {
     rows: createRowsState(params.rows, params.getRowId, params.loading ?? false, params.rowCount),
   }),
   use: (store, params, _api) => {
-    const rowsApi = createRowsApi(store as Store<{ rows: RowsState }>, {
+    const rowsApi = createRowsApi(store, {
       rows: params.rows,
       getRowId: params.getRowId,
       loading: params.loading,
