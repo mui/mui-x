@@ -58,7 +58,7 @@ export const useGridScroll = (
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
-  const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
+  const virtualScrollerRef = apiRef.current.virtualScrollerRef;
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -97,7 +97,7 @@ export const useGridScroll = (
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
           containerSize: dimensions.viewportOuterSize.width,
-          scrollPosition: Math.abs(virtualScrollerRef.current!.scrollLeft),
+          scrollPosition: Math.abs(virtualScrollerRef.current?.scrollLeft ?? 0),
           elementSize: cellWidth,
           elementOffset: columnPositions[params.colIndex],
         });
@@ -117,7 +117,7 @@ export const useGridScroll = (
 
         scrollCoordinates.top = scrollIntoView({
           containerSize: dimensions.viewportInnerSize.height,
-          scrollPosition: virtualScrollerRef.current!.scrollTop,
+          scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
           elementSize: targetOffsetHeight,
           elementOffset: rowsMeta.positions[elementIndex],
         });
