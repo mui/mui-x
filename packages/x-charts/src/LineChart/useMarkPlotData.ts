@@ -101,6 +101,8 @@ export function useMarkPlotData(
               continue;
             }
 
+            // The line fade animation move all the values to the min.
+            // So we need to do the same with mark in order for it to look nice.
             const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
             const xPos = xScale(x);
 
