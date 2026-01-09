@@ -5,7 +5,7 @@
     "localeName": "French",
     "missingKeysCount": 5,
     "totalKeysCount": 103,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/frFR.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v8.x/packages/x-charts/src/locales/frFR.ts"
   },
   {
     "languageTag": "el-GR",
@@ -13,7 +13,7 @@
     "localeName": "Greek",
     "missingKeysCount": 0,
     "totalKeysCount": 103,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/elGR.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v8.x/packages/x-charts/src/locales/elGR.ts"
   },
   {
     "languageTag": "nb-NO",
@@ -21,7 +21,7 @@
     "localeName": "Norwegian (Bokmål)",
     "missingKeysCount": 0,
     "totalKeysCount": 103,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/nbNO.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v8.x/packages/x-charts/src/locales/nbNO.ts"
   },
   {
     "languageTag": "pt-PT",
@@ -29,7 +29,7 @@
     "localeName": "Portuguese",
     "missingKeysCount": 96,
     "totalKeysCount": 103,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/ptPT.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v8.x/packages/x-charts/src/locales/ptPT.ts"
   },
   {
     "languageTag": "pt-BR",
@@ -37,7 +37,7 @@
     "localeName": "Portuguese (Brazil)",
     "missingKeysCount": 0,
     "totalKeysCount": 103,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/ptBR.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v8.x/packages/x-charts/src/locales/ptBR.ts"
   },
   {
     "languageTag": "sv-SE",
@@ -45,6 +45,6 @@
     "localeName": "Swedish",
     "missingKeysCount": 96,
     "totalKeysCount": 103,
-    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-charts/src/locales/svSE.ts"
+    "githubLink": "https://github.com/mui/mui-x/blob/v8.x/packages/x-charts/src/locales/svSE.ts"
   }
 ]
