@@ -91,6 +91,12 @@ When using a Data Source, `clipboardPasteEnd` is not tracked and the other two e
 
 If you use a Data Source that doesn't have an `updateRow` method, then the event handler list is empty and the feature is disabled.
 
+:::warning
+Default handlers invalidate the stack if the data is not visible to the user anymore due to filtering, grouping, page change, etc.
+
+Check the customization sections to learn how to change the default behavior.
+:::
+
 The following demo shows the undo/redo feature working with a Data Source that supports row editing.
 Remove the `updateRow` method to see the toolbar adjustment.
 
