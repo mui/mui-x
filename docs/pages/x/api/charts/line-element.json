@@ -1,5 +1,6 @@
 {
   "props": {
+    "hidden": { "type": { "name": "bool" } },
     "skipAnimation": { "type": { "name": "bool" }, "default": "false" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {

@@ -1,4 +1,5 @@
 import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getPreviousNonEmptySeries';
+import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
@@ -38,11 +39,15 @@ export function createGetNextIndexFocusedItem<
       seriesId = nextSeries.seriesId;
     }
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+    const dataIndex = Math.min(
+      maxLength - 1,
+      currentItem?.dataIndex == null ? 0 : currentItem.dataIndex + 1,
+    );
     return {
       type,
       seriesId,
-      dataIndex: ((currentItem?.dataIndex ?? -1) + 1) % dataLength,
+      dataIndex,
     };
   };
 }
@@ -72,11 +77,16 @@ export function createGetPreviousIndexFocusedItem<
       seriesId = previousSeries.seriesId;
     }
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+    const dataIndex = Math.max(
+      0,
+      currentItem?.dataIndex == null ? maxLength - 1 : currentItem.dataIndex - 1,
+    );
+
     return {
       type,
       seriesId,
-      dataIndex: (dataLength + (currentItem?.dataIndex ?? 1) - 1) % dataLength,
+      dataIndex,
     };
   };
 }
@@ -107,12 +117,12 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: Math.min(dataLength - 1, currentItem?.dataIndex ?? 0),
+      dataIndex,
     };
   };
 }
@@ -141,12 +151,13 @@ export function createGetPreviousSeriesFocusedItem<
     type = previousSeries.type;
     seriesId = previousSeries.seriesId;
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const data = processedSeries[type]!.series[seriesId].data;
+    const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: Math.min(dataLength - 1, currentItem?.dataIndex ?? 0),
+      dataIndex,
     };
   };
 }

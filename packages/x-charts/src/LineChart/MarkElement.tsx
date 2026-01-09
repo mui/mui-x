@@ -15,10 +15,8 @@ import {
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
-})<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  stroke: ownerState.color,
-  strokeWidth: 2,
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
     transitionProperty: 'transform, transform-origin, opacity',
@@ -28,6 +26,11 @@ const MarkElementPath = styled('path', {
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
   Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+    /**
+     * If `true`, the marker is hidden.
+     * @default false
+     */
+    hidden?: boolean;
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -76,6 +79,8 @@ function MarkElement(props: MarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    hidden,
+    style,
     ...other
   } = props;
 
@@ -86,7 +91,6 @@ function MarkElement(props: MarkElementProps) {
     classes: innerClasses,
     isHighlighted,
     isFaded,
-    color,
     skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
@@ -95,6 +99,7 @@ function MarkElement(props: MarkElementProps) {
     <MarkElementPath
       {...other}
       style={{
+        ...style,
         transform: `translate(${x}px, ${y}px)`,
         transformOrigin: `${x}px ${y}px`,
       }}
@@ -103,9 +108,13 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
+      pointerEvents={hidden ? 'none' : undefined}
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      opacity={hidden ? 0 : 1}
+      strokeWidth={2}
+      stroke={color}
     />
   );
 }
@@ -120,6 +129,11 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
+  /**
+   * If `true`, the marker is hidden.
+   * @default false
+   */
+  hidden: PropTypes.bool,
   id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   /**
    * If `true`, the marker is faded.

@@ -15,16 +15,22 @@ import {
   type UseChartKeyboardNavigationSignature,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { type ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import {
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export type PieChartPluginSignatures = [
   UseChartTooltipSignature<'pie'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<'pie'>,
   UseChartKeyboardNavigationSignature,
 ];
 export const PIE_CHART_PLUGINS: ConvertSignaturesIntoPlugins<PieChartPluginSignatures> = [
   useChartTooltip,
   useChartInteraction,
   useChartHighlight,
+  useChartVisibilityManager,
   useChartKeyboardNavigation,
 ];

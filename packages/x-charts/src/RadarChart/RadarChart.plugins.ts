@@ -14,12 +14,17 @@ import {
   useChartHighlight,
   type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import {
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export const RADAR_PLUGINS = [
   useChartTooltip,
   useChartInteraction,
   useChartPolarAxis,
   useChartHighlight,
+  useChartVisibilityManager,
 ] as const;
 
 export type RadarChartPluginSignatures = [
@@ -27,4 +32,5 @@ export type RadarChartPluginSignatures = [
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<'radar'>,
 ];
