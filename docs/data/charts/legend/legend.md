@@ -34,7 +34,7 @@ The following demo shows a pie chart where you can toggle individual slices and 
 
 :::info
 The `toggleVisibilityOnClick` prop can be combined with the `onItemClick` handler.
-When both are provided, the `onItemClick` callback is called first, followed by the visibility toggle.
+When both are in use, the `onItemClick` callback is called first, followed by `onHiddenItemsChange`.
 :::
 
 ### Controlled visibility
