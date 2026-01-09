@@ -548,6 +548,12 @@ SparkLineChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
    * Type of plot used.
    * @default 'line'
    */
@@ -586,6 +592,37 @@ SparkLineChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ]),
   /**
    * Formatter used by the tooltip.
    * @param {number} value The value to format.

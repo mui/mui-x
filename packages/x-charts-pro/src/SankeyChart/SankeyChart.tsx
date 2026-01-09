@@ -194,6 +194,12 @@ SankeyChart.propTypes = {
    */
   onNodeClick: PropTypes.func,
   /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
    * The series to display in the Sankey chart.
    * A single object is expected.
    */
@@ -215,6 +221,35 @@ SankeyChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'node',
+      ]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+    PropTypes.shape({
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      subType: PropTypes.oneOf([
+        /**
+         * Subtype to differentiate between node and link
+         */
+        'link',
+      ]).isRequired,
+      targetId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['sankey']).isRequired,
+    }),
+  ]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

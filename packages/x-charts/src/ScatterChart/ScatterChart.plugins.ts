@@ -39,7 +39,7 @@ import {
 export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'scatter'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
