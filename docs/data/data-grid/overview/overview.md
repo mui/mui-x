@@ -63,7 +63,7 @@ You can also try exporting to Excel, and copying and pasting data to and from Ex
 
 ## Why choose the MUI X Data Grid?
 
-There are numerous solutions available when it comes to building a data table, each with distinct trade-offs and design philosophies.
+There are numerous solutions available for building a data table, each with distinct trade-offs and design philosophies.
 The MUI X Data Grid is built specifically for React, offering a batteries-included solution with a fully styled, accessible user interface out of the box.
 Unlike headless table libraries, you can start building immediately without implementing UI components yourself, while still maintaining full customization capabilities through theming and component composition.
 
