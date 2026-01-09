@@ -36,7 +36,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
 
   return (
     <React.Fragment>
-      {shouldRegisterPointerInteractionsGlobally(props.slots) ? (
+      {shouldRegisterPointerInteractionsGlobally(props.slots, props.slotProps) ? (
         <RegisterHeatmapPointerInteractions />
       ) : null}
       <g>
