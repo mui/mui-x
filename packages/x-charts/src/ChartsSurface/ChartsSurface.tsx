@@ -6,7 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useStore } from '../internals/store/useStore';
+import { useChartContext } from '../context/ChartProvider';
 import {
   selectorChartPropsHeight,
   selectorChartPropsWidth,
@@ -19,6 +19,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import { selectorChartHasZoom } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
 export interface ChartsSurfaceProps extends Omit<
   React.SVGProps<SVGSVGElement>,
@@ -71,7 +72,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const store = useStore();
+  const { store, instance } = useChartContext<[], [UseChartInteractionSignature]>();
 
   const svgWidth = store.use(selectorChartSvgWidth);
   const svgHeight = store.use(selectorChartSvgHeight);
@@ -99,6 +100,14 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       data-has-focused-item={hasFocusedItem || undefined}
       {...other}
+      onPointerEnter={(event) => {
+        other.onPointerEnter?.(event);
+        instance.handlePointerEnter?.(event);
+      }}
+      onPointerLeave={(event) => {
+        other.onPointerLeave?.(event);
+        instance.handlePointerLeave?.(event);
+      }}
       ref={handleRef}
     >
       {title && <title>{title}</title>}

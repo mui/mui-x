@@ -29,7 +29,7 @@ import {
 export type BarChartProPluginSignatures = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'bar'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'bar'>,
   UseChartHighlightSignature,

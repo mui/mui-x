@@ -26,7 +26,7 @@ import { useChartProZoom, type UseChartProZoomSignature } from './useChartProZoo
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
@@ -57,7 +57,7 @@ export const ALL_PLUGINS = [
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
