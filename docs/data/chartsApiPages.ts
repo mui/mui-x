@@ -320,6 +320,11 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/sankey-data-provider',
+    title: 'SankeyDataProvider',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/sankey-plot',
     title: 'SankeyPlot',
     plan: 'pro',
