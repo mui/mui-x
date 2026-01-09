@@ -13,9 +13,9 @@ import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-e
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import '../index.css';
+import { EventDraggableDialogTrigger } from '../internals/components/draggable-dialog';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -162,51 +162,44 @@ export const AgendaView = React.memo(
 
     return (
       <AgendaViewRoot {...props} ref={handleRef}>
-        <EventPopoverProvider containerRef={containerRef}>
-          {daysWithOccurrences.map(({ date, occurrences }) => (
-            <AgendaViewRow
-              key={date.key}
-              id={`AgendaViewRow-${date.key}`}
-              aria-labelledby={`DayHeaderCell-${date.key}`}
+        {daysWithOccurrences.map(({ date, occurrences }) => (
+          <AgendaViewRow
+            key={date.key}
+            id={`AgendaViewRow-${date.key}`}
+            aria-labelledby={`DayHeaderCell-${date.key}`}
+          >
+            <DayHeaderCell
+              id={`DayHeaderCell-${date.key}`}
+              aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
+              data-current={adapter.isSameDay(date.value, today) ? '' : undefined}
             >
-              <DayHeaderCell
-                id={`DayHeaderCell-${date.key}`}
-                aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(date.value, today) ? '' : undefined}
-              >
-                <DayNumberCell>{adapter.format(date.value, 'dayOfMonth')}</DayNumberCell>
-                <WeekDayCell>
-                  <AgendaWeekDayNameLabel style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-                    {adapter.format(date.value, 'weekday')}
-                  </AgendaWeekDayNameLabel>
-                  <AgendaYearAndMonthLabel
-                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
-                  >
-                    {adapter.format(date.value, 'monthFullLetter')},{' '}
-                    {adapter.format(date.value, 'yearPadded')}
-                  </AgendaYearAndMonthLabel>
-                </WeekDayCell>
-              </DayHeaderCell>
-              <EventsList>
-                {occurrences.map((occurrence) => (
-                  <li key={occurrence.key}>
-                    <EventPopoverTrigger
+              <DayNumberCell>{adapter.format(date.value, 'dayOfMonth')}</DayNumberCell>
+              <WeekDayCell>
+                <AgendaWeekDayNameLabel style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+                  {adapter.format(date.value, 'weekday')}
+                </AgendaWeekDayNameLabel>
+                <AgendaYearAndMonthLabel style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+                  {adapter.format(date.value, 'monthFullLetter')},{' '}
+                  {adapter.format(date.value, 'yearPadded')}
+                </AgendaYearAndMonthLabel>
+              </WeekDayCell>
+            </DayHeaderCell>
+            <EventsList>
+              {occurrences.map((occurrence) => (
+                <li key={occurrence.key}>
+                  <EventDraggableDialogTrigger occurrence={occurrence}>
+                    <EventItem
                       occurrence={occurrence}
-                      render={
-                        <EventItem
-                          occurrence={occurrence}
-                          date={date}
-                          variant="regular"
-                          ariaLabelledBy={`DayHeaderCell-${date.key}`}
-                        />
-                      }
+                      date={date}
+                      variant="regular"
+                      ariaLabelledBy={`DayHeaderCell-${date.key}`}
                     />
-                  </li>
-                ))}
-              </EventsList>
-            </AgendaViewRow>
-          ))}
-        </EventPopoverProvider>
+                  </EventDraggableDialogTrigger>
+                </li>
+              ))}
+            </EventsList>
+          </AgendaViewRow>
+        ))}
       </AgendaViewRoot>
     );
   }),

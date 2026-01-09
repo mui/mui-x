@@ -15,12 +15,12 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
+import { EventDraggableDialogTrigger } from '../../internals/components/draggable-dialog';
+import { useEventDraggableDialogContext } from '../../internals/components/draggable-dialog/EventDraggableDialog';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -160,7 +160,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const { open: startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventDraggableDialogContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -250,18 +250,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           }
 
           return (
-            <EventPopoverTrigger
-              key={occurrence.key}
-              occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                  }
-                />
-              }
-            />
+            <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <DayGridEvent
+                occurrence={occurrence}
+                variant={
+                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                }
+              />
+            </EventDraggableDialogTrigger>
           );
         })}
         {hiddenCount > 0 && (

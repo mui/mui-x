@@ -7,10 +7,10 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
-import { useEventPopoverContext } from '../event-popover/EventPopover';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+import { EventDraggableDialogTrigger } from '../draggable-dialog';
+import { useEventDraggableDialogContext } from '../draggable-dialog/EventDraggableDialog';
 
 const EVENT_HEIGHT = 22;
 
@@ -60,7 +60,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { open: startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventDraggableDialogContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -115,11 +115,9 @@ export function DayGridCell(props: DayGridCellProps) {
           }
 
           return (
-            <EventPopoverTrigger
-              key={occurrence.key}
-              occurrence={occurrence}
-              render={<DayGridEvent occurrence={occurrence} variant="filled" />}
-            />
+            <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <DayGridEvent occurrence={occurrence} variant="filled" />
+            </EventDraggableDialogTrigger>
           );
         })}
         {placeholder != null && (

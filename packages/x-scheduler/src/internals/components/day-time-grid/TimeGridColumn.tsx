@@ -12,11 +12,12 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { EventPopoverTrigger } from '../event-popover';
-import { useEventPopoverContext } from '../event-popover/EventPopover';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
-import { EventDraggableDialogTrigger } from '../draggable-dialog/EventDraggableDialog';
+import {
+  EventDraggableDialogTrigger,
+  useEventDraggableDialogContext,
+} from '../draggable-dialog/EventDraggableDialog';
 
 const HOUR_HEIGHT = 46;
 
@@ -138,7 +139,7 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { open: startEditing } = useEventPopoverContext();
+  const { open: startEditing } = useEventDraggableDialogContext();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);

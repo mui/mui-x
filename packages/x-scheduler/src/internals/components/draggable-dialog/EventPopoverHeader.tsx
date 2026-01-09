@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { Popover } from '@base-ui/react';
 import { X } from 'lucide-react';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
-import { useTranslations } from '../../utils/TranslationsContext';
 
 const EventPopoverHeaderRoot = styled('header', {
   name: 'MuiEventPopover',
@@ -28,17 +25,11 @@ const EventPopoverHeaderContent = styled('div', {
 }));
 
 export default function EventPopoverHeader({ children }: React.PropsWithChildren) {
-  const translations = useTranslations();
-
   return (
     <EventPopoverHeaderRoot>
       <EventPopoverHeaderContent>{children}</EventPopoverHeaderContent>
-      <Popover.Close
-        aria-label={translations.closeButtonAriaLabel}
-        render={<IconButton size="small" />}
-      >
-        <X size={18} strokeWidth={2} />
-      </Popover.Close>
+
+      <X size={18} strokeWidth={2} />
     </EventPopoverHeaderRoot>
   );
 }

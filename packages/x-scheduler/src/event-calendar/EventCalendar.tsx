@@ -25,6 +25,7 @@ import { ResourcesLegend } from './resources-legend';
 import { DateNavigator } from './date-navigator';
 import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 import { schedulerTokens } from '../internals/utils/tokens';
+import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
 
 const EventCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -148,36 +149,38 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     <EventCalendarStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
-          <EventCalendarRoot {...other} ref={handleRootRef}>
-            <DateNavigator />
+          <EventDraggableDialogProvider containerRef={rootRef}>
+            <EventCalendarRoot {...other} ref={handleRootRef}>
+              <DateNavigator />
 
-            <HeaderToolbar />
+              <HeaderToolbar />
 
-            <EventCalendarMainPanel data-view={view}>
-              {isSidePanelOpen && (
-                <EventCalendarSidePanel>
-                  <EventCalendarMonthCalendarPlaceholder
-                    // TODO: Add localization
-                    aria-label="Month calendar"
-                  >
-                    Month Calendar
-                  </EventCalendarMonthCalendarPlaceholder>
-                  <ResourcesLegend />
-                </EventCalendarSidePanel>
-              )}
+              <EventCalendarMainPanel data-view={view}>
+                {isSidePanelOpen && (
+                  <EventCalendarSidePanel>
+                    <EventCalendarMonthCalendarPlaceholder
+                      // TODO: Add localization
+                      aria-label="Month calendar"
+                    >
+                      Month Calendar
+                    </EventCalendarMonthCalendarPlaceholder>
+                    <ResourcesLegend />
+                  </EventCalendarSidePanel>
+                )}
 
-              <EventCalendarContent
-                data-view={view}
-                data-side-panel-open={isSidePanelOpen}
-                // TODO: Add localization
-                aria-label="Calendar content"
-              >
-                {content}
-              </EventCalendarContent>
+                <EventCalendarContent
+                  data-view={view}
+                  data-side-panel-open={isSidePanelOpen}
+                  // TODO: Add localization
+                  aria-label="Calendar content"
+                >
+                  {content}
+                </EventCalendarContent>
 
-              {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
-            </EventCalendarMainPanel>
-          </EventCalendarRoot>
+                {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
+              </EventCalendarMainPanel>
+            </EventCalendarRoot>
+          </EventDraggableDialogProvider>
         </TranslationsProvider>
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>

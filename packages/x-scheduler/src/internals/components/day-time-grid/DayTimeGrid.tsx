@@ -14,12 +14,10 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
-import { EventDraggableDialogProvider } from '../draggable-dialog/EventDraggableDialog';
 
 const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
@@ -352,7 +350,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   return (
     <DayTimeGridContainer ref={handleRef} {...other}>
-      {/* <EventPopoverProvider containerRef={containerRef}> */}
       <DayTimeGridHeader>
         <DayTimeGridHeaderRow as={CalendarGrid.HeaderRow}>
           <DayTimeGridAllDayEventsCell />
@@ -434,7 +431,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           </DayTimeGridScrollableContent>
         </DayTimeGridBody>
       </DayTimeGridRoot>
-      {/* </EventPopoverProvider> */}
     </DayTimeGridContainer>
   );
 });

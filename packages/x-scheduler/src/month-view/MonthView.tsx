@@ -19,11 +19,11 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
-import { EventPopoverProvider } from '../internals/components/event-popover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import '../index.css';
+import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -185,7 +185,7 @@ export const MonthView = React.memo(
 
     return (
       <MonthViewRoot {...props} ref={handleRef}>
-        <EventPopoverProvider containerRef={containerRef}>
+        <EventDraggableDialogProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>
             <MonthViewGrid>
               <MonthViewHeader ownerState={{ showWeekNumber }}>
@@ -211,7 +211,7 @@ export const MonthView = React.memo(
               </MonthViewBody>
             </MonthViewGrid>
           </MoreEventsPopoverProvider>
-        </EventPopoverProvider>
+        </EventDraggableDialogProvider>
       </MonthViewRoot>
     );
   }),
