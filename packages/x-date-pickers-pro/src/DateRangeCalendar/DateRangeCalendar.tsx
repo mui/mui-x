@@ -301,7 +301,7 @@ const DateRangeCalendar = React.forwardRef(function DateRangeCalendar(
       !adapter.isValid(value[0]) ? value[0] : adapter.startOfDay(value[0]),
       !adapter.isValid(value[1]) ? value[1] : adapter.endOfDay(value[1]),
     ],
-    [value, adapter],
+    [value, adapter, timezone],
   );
 
   const { isDragging, rangeDragDay, draggingDatePosition, ...dragEventHandlers } = useDragRange({

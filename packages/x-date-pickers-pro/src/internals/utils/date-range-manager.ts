@@ -71,9 +71,19 @@ export function calculateRangeChange({
   const truthyResult: CalculateRangeChangeResponse = allowRangeFlip
     ? { nextSelection: 'end', newRange: [newSelectedDate, start!] }
     : { nextSelection: 'end', newRange: [newSelectedDate, null] };
-  return Boolean(start) && adapter.isBeforeDay(newSelectedDate!, start!)
-    ? truthyResult
-    : { nextSelection: 'start', newRange: [start, newSelectedDate] };
+
+  if (Boolean(start) && adapter.isBeforeDay(newSelectedDate!, start!)) {
+    return truthyResult;
+  }
+
+  // If we're selecting the same day as the start, but the time would make the range invalid,
+  // set the end to the end of the day instead
+  let adjustedEndDate = newSelectedDate;
+  if (start && newSelectedDate && adapter.isSameDay(start, newSelectedDate) && adapter.isBefore(newSelectedDate, start)) {
+    adjustedEndDate = adapter.endOfDay(newSelectedDate);
+  }
+
+  return { nextSelection: 'start', newRange: [start, adjustedEndDate] };
 }
 
 export function calculateRangePreview(options: CalculateRangeChangeOptions): PickerRangeValue {
