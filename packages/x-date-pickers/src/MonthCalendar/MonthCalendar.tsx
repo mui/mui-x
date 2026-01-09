@@ -272,6 +272,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
 
         event.preventDefault();
         break;
+      case 'Enter':
+      case ' ':
+        handleMonthSelection(event, month);
+        event.preventDefault();
+        break;
       default:
         break;
     }
