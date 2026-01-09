@@ -16,6 +16,10 @@ export default function ControlledVisibility() {
   const [hiddenItems, setHiddenItems] = React.useState([]);
 
   const handleShowAll = () => {
+    setHiddenItems([]);
+  };
+
+  const handleHideAll = () => {
     setHiddenItems([
       { type: 'pie', seriesId: 'pie', dataIndex: 0 },
       { type: 'pie', seriesId: 'pie', dataIndex: 1 },
@@ -23,12 +27,11 @@ export default function ControlledVisibility() {
     ]);
   };
 
-  const handleHideAll = () => {
-    setHiddenItems([]);
-  };
-
   const handleShowOnlyA = () => {
-    setHiddenItems([{ type: 'pie', seriesId: 'pie', dataIndex: 0 }]);
+    setHiddenItems([
+      { type: 'pie', seriesId: 'pie', dataIndex: 1 },
+      { type: 'pie', seriesId: 'pie', dataIndex: 2 },
+    ]);
   };
 
   const handleToggleChange = (_event, newValue) => {
@@ -42,9 +45,12 @@ export default function ControlledVisibility() {
   };
 
   const getCurrentValue = () => {
-    const allVisible = hiddenItems.length === data.length;
-    const allHidden = hiddenItems.length === 0;
-    const onlyAVisible = hiddenItems.length === 1 && hiddenItems[0].dataIndex === 0;
+    const allVisible = hiddenItems.length === 0;
+    const allHidden = hiddenItems.length === data.length;
+    const onlyAVisible =
+      hiddenItems.length === 2 &&
+      hiddenItems[0].dataIndex === 1 &&
+      hiddenItems[1].dataIndex === 2;
 
     if (allVisible) {
       return 'all';
