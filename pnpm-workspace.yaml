@@ -23,7 +23,7 @@ catalog:
   '@mui/material': ^7.3.5
   '@mui/stylis-plugin-rtl': ^7.3.5
   '@mui/system': ^7.3.5
-  '@mui/utils': ^7.3.5
+  '@mui/utils': 7.3.5
   '@mui/x-internal-exceljs-fork': 4.4.3
   '@playwright/test': ^1.57.0
   '@react-spring/web': ^10.0.3

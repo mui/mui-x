@@ -60,6 +60,7 @@
     "@base-ui/utils": "^0.2.3",
     "@floating-ui/react": "^0.27.16",
     "@mui/icons-material": "catalog:",
+    "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
     "clsx": "catalog:",

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import useForkRef from '@mui/utils/useForkRef';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Box from '@mui/material/Box';
 import Paper, { PaperProps } from '@mui/material/Paper';
@@ -20,12 +21,18 @@ import {
 import { createDialog } from '../create-dialog';
 import { FormContent } from './FormContent';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
+import { calculatePosition } from '../../utils/dialog-utils';
 
 // 1. Setup the Draggable Paper Logic
-function PaperComponent(
-  props: PaperProps & { anchorEl?: HTMLElement | null; handleRef: React.RefObject<HTMLDivElement> },
+const PaperComponent = React.forwardRef(function PaperComponent(
+  props: PaperProps & {
+    anchorElement: React.RefObject<HTMLElement | null>;
+    handleRef: React.RefObject<HTMLDivElement>;
+  },
+  ref: React.ForwardedRef<HTMLDivElement>,
 ) {
   const nodeRef = React.useRef<HTMLDivElement>(null);
+  const finalRef = useForkRef(ref, nodeRef);
 
   const mutateStyle = React.useCallback((style: string) => {
     if (nodeRef.current) {
@@ -33,95 +40,45 @@ function PaperComponent(
     }
   }, []);
 
-  const { anchorEl, handleRef, ...other } = props;
+  const { anchorElement, handleRef, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, handleRef, mutateStyle);
 
-  const calculatePosition = React.useCallback(
+  const updatePosition = React.useCallback(
     (shouldResetDrag = false) => {
-      const element = nodeRef.current;
+      const position = calculatePosition(anchorElement, nodeRef.current, 'left');
+      console.log('Calculated Position:', position);
 
-      if (!element || !anchorEl) {
-        return;
-      }
+      if (position && nodeRef.current) {
+        nodeRef.current.style.top = `${position.top}px`;
+        nodeRef.current.style.left = `${position.left}px`;
 
-      const anchorRect = anchorEl.getBoundingClientRect();
-      const elemRect = element.getBoundingClientRect();
-      const margin = 16;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-
-      let top = 0;
-      let left = 0;
-
-      // Helper to clamp values to viewport
-      const clamp = (value: number, min: number, max: number) =>
-        Math.max(min, Math.min(value, max));
-
-      // Determine available space
-      const spaceRight = windowWidth - anchorRect.right;
-      const spaceLeft = anchorRect.left;
-      const spaceBottom = windowHeight - anchorRect.bottom;
-      const spaceTop = anchorRect.top;
-
-      if (spaceRight >= elemRect.width + margin) {
-        // Position Right
-        left = anchorRect.right + margin;
-        // Align Top, but clamp to viewport
-        top = anchorRect.top;
-        top = clamp(top, margin, windowHeight - elemRect.height - margin);
-      } else if (spaceLeft >= elemRect.width + margin) {
-        // Position Left
-        left = anchorRect.left - elemRect.width - margin;
-        // Align Top, but clamp to viewport
-        top = anchorRect.top;
-        top = clamp(top, margin, windowHeight - elemRect.height - margin);
-      } else if (spaceBottom >= elemRect.height + margin) {
-        // Position Bottom
-        top = anchorRect.bottom + margin;
-        // Align Left, clamp
-        left = anchorRect.left;
-        left = clamp(left, margin, windowWidth - elemRect.width - margin);
-      } else if (spaceTop >= elemRect.height + margin) {
-        // Position Top
-        top = anchorRect.top - elemRect.height - margin;
-        // Align Left, clamp
-        left = anchorRect.left;
-        left = clamp(left, margin, windowWidth - elemRect.width - margin);
-      } else {
-        // Fallback: Center on screen
-        left = (windowWidth - elemRect.width) / 2;
-        top = (windowHeight - elemRect.height) / 2;
-      }
-
-      element.style.top = `${top}px`;
-      element.style.left = `${left}px`;
-
-      if (shouldResetDrag) {
-        // Reset transform when position is recalculated
-        resetDrag();
+        if (shouldResetDrag) {
+          // Reset transform when position is recalculated
+          resetDrag();
+        }
       }
     },
-    [anchorEl, resetDrag],
+    [anchorElement, resetDrag, nodeRef],
   );
 
   React.useLayoutEffect(() => {
-    calculatePosition(true);
-  }, [calculatePosition]);
+    updatePosition(true);
+  }, [updatePosition]);
 
   React.useEffect(() => {
     const handleResize = () => {
-      calculatePosition(false);
+      updatePosition(false);
     };
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [calculatePosition]);
+  }, [updatePosition]);
 
   return (
     <Paper
       {...other}
-      ref={nodeRef}
+      ref={finalRef}
       sx={{
         position: 'relative',
         inset: 0,
@@ -134,7 +91,7 @@ function PaperComponent(
       }}
     />
   );
-}
+});
 
 const EventDraggableDialog = createDialog<SchedulerEventOccurrence>({
   contextName: 'EventDraggableDialogContext',
@@ -149,7 +106,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 ) {
   const { style, container, anchor, occurrence, onClose, open, ...other } = props;
   const handleRef = React.useRef<HTMLDivElement>(null);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const paperRef = React.useRef<HTMLDivElement>(null);
 
   // Context hooks
   const store = useSchedulerStoreContext();
@@ -176,7 +133,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
         container: {
           sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
         },
-        paper: { sx: { m: 0 }, anchorEl: anchor, handleRef },
+        paper: { sx: { m: 0 }, anchorElement: anchor, handleRef, ref: paperRef },
       }}
       {...other}
     >
@@ -185,7 +142,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       </Box>
       <FormContent occurrence={occurrence} onClose={onClose} />
 
-      {isScopeDialogOpen && <RecurringScopeDialog containerRef={containerRef} />}
+      {isScopeDialogOpen && <RecurringScopeDialog containerRef={paperRef} />}
     </Dialog>
   );
 });

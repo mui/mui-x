@@ -55,7 +55,7 @@ catalogs:
       specifier: ^7.3.5
       version: 7.3.5
     '@mui/utils':
-      specifier: ^7.3.5
+      specifier: 7.3.5
       version: 7.3.5
     '@mui/x-internal-exceljs-fork':
       specifier: 4.4.3
@@ -1746,6 +1746,9 @@ importers:
       '@mui/icons-material':
         specifier: 'catalog:'
         version: 7.3.5(@mui/material@7.3.5(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
+      '@mui/utils':
+        specifier: 'catalog:'
+        version: 7.3.5(@types/react@19.2.7)(react@19.2.3)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
