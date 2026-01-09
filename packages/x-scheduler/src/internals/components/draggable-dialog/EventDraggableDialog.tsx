@@ -19,6 +19,7 @@ import {
 } from './EventDraggableDialog.types';
 import { createDialog } from '../create-dialog';
 import { FormContent } from './FormContent';
+import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
 // 1. Setup the Draggable Paper Logic
 function PaperComponent(
@@ -148,12 +149,15 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 ) {
   const { style, container, anchor, occurrence, onClose, open, ...other } = props;
   const handleRef = React.useRef<HTMLDivElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
   // Context hooks
   const store = useSchedulerStoreContext();
 
   // Selector hooks
   //   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
     <Dialog
@@ -181,7 +185,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       </Box>
       <FormContent occurrence={occurrence} onClose={onClose} />
 
-      {/* <SimpleDialog open={childOpen} onClose={(_e) => setChildOpen(false)} /> */}
+      {isScopeDialogOpen && <RecurringScopeDialog containerRef={containerRef} />}
     </Dialog>
   );
 });
@@ -189,7 +193,6 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 export function EventDraggableDialogProvider(props: EventDraggableDialogProviderProps) {
   const { children } = props;
   const store = useSchedulerStoreContext();
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
     <EventDraggableDialog.Provider
