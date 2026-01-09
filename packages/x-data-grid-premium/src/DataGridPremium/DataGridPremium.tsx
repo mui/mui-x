@@ -613,7 +613,7 @@ DataGridPremiumRaw.propTypes = {
   historyStackSize: PropTypes.number,
   /**
    * List of grid events after which the history stack items should be re-validated.
-   * @default ['columnsChange', 'rowsSet', 'paginationModelChange']
+   * @default ['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']
    */
   historyValidationEvents: PropTypes.arrayOf(
     PropTypes.oneOf([

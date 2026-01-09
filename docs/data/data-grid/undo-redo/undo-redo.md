@@ -134,7 +134,7 @@ To reduce the number of undo steps, changes on the filter model items that do no
 ## Validation events
 
 The undo/redo state is automatically revalidated when certain grid events occur.
-By default, validation happens on `paginationModelChange`, `columnsChange` and `rowsSet` events.
+By default, validation happens on `paginationModelChange`, `columnsChange`, `sortedRowsSet`, `filteredRowsSet` and `rowsSet` events.
 
 During revalidation, the `validate()` method of the current item in the stack is called for the `undo` operation and the `validate()` method of the next item in the stack is called for the `redo` operation.
 If validation fails for the `undo` operation, all items in the stack before the current item and the current item itself are removed from the stack.
