@@ -22,7 +22,10 @@ export interface SankeyLinkPlotProps {
   ) => void;
 }
 
-const SankeyLinkPlotRoot = styled('g')({
+const SankeyLinkPlotRoot = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',
   '& [data-faded=true]': { filter: 'saturate(80%)' },
   '& [data-highlighted=true]': { filter: 'saturate(120%)' },
