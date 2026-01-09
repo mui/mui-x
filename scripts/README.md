@@ -119,6 +119,8 @@ pnpm docs:deploy
 ```
 
 <!-- #target-branch-reference -->
+<!-- Replace `docs-vX` with the future new version number -->
+<!-- For example, when creating v9 from v8, `docs-v8 -> docs-v9` -->
 
 You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v9)
 Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v9` deployment.
