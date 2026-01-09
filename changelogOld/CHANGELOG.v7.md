@@ -176,7 +176,7 @@ We'd like to extend a big thank you to @cherniavskii, who made this release poss
 
 #### `@mui/x-data-grid@7.29.5`
 
-- [DataGrid] Avoid ResizeObserver loop error (@cherniavskii) (#18005) @github-actions[bot]
+- [DataGrid] Avoid ResizeObserver loop error (@cherniavskii) (#18005)
 
 #### `@mui/x-data-grid-pro@7.29.5` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -1464,7 +1464,7 @@ Releasing to benefit from license package fix (#15818).
 ### Core
 
 - [core] Add `@mui/x-tree-view-pro` to `releaseChangelog` (#15747) @flaviendelangle
-- [license] Use `console.log` for the error message on Codesandbox to avoid rendering error (#15818) @arminmeh
+- [license] Use `console.log` for the error message on CodeSandbox to avoid rendering error (#15818) @arminmeh
 
 ## 7.23.1
 
@@ -4803,7 +4803,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-beta.4`.
    />
   ```
 
-- The headless field hooks (e.g.: `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
+- The headless field hooks (e.g. `useDateField`) now returns a new prop called `enableAccessibleFieldDOMStructure`.
   This property is utilized to determine whether the anticipated UI is constructed using an accessible DOM structure. Learn more about this new [accessible DOM structure](/x/react-date-pickers/fields/#accessible-dom-structure).
 
   When building a custom UI, you are most-likely only supporting one DOM structure, so you can remove `enableAccessibleFieldDOMStructure` before it is passed to the DOM:
@@ -6084,7 +6084,7 @@ Same changes as in `@mui/x-data-grid-pro@7.0.0-alpha.5`.
 
   The `useClearableField` hook API has been simplified to now take a `props` parameter instead of a `fieldProps`, `InputProps`, `clearable`, `onClear`, `slots` and `slotProps` parameters.
 
-  You should now be able to directly pass the returned value from your field hook (e.g.: `useDateField`) to `useClearableField`
+  You should now be able to directly pass the returned value from your field hook (e.g. `useDateField`) to `useClearableField`
 
   ```diff
    const fieldResponse = useDateField(props);
@@ -6230,7 +6230,7 @@ We'd like to offer a big thanks to the 15 contributors who made this release pos
 
 - 🚀 Support localized start of the week on pickers' `AdapterLuxon`
 
-  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g.: Sunday for `en-US`, Monday for `fr-FR`).
+  When using Luxon 3.4.4 or higher, the start of the week will be defined by the date locale (e.g. Sunday for `en-US`, Monday for `fr-FR`).
 
 - 📈 Fix a lot of Charts package issues
 - 🎉 The Data Grid features Cell selection and Clipboard paste are now stable
