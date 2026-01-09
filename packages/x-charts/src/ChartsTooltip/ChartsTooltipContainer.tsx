@@ -161,12 +161,10 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       pointerUpdate(event.clientX, event.clientY);
     };
 
-    svgElement.addEventListener('pointerdown', handlePointerEvent);
     svgElement.addEventListener('pointermove', handlePointerEvent);
     svgElement.addEventListener('pointerenter', handlePointerEvent);
 
     return () => {
-      svgElement.removeEventListener('pointerdown', handlePointerEvent);
       svgElement.removeEventListener('pointermove', handlePointerEvent);
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
@@ -229,7 +227,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   return (
     <React.Fragment>
       {svgRef.current &&
-        itemPosition !== null &&
         ReactDOM.createPortal(
           <rect
             ref={anchorRef}
