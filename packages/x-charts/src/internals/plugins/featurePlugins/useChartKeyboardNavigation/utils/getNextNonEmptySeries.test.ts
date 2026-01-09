@@ -17,6 +17,20 @@ const lineSeries = {
   color: '',
 };
 
+const singleSeries: ProcessedSeries<'bar'> = {
+  bar: {
+    series: {
+      a: {
+        data: [1, 2],
+        id: 'a',
+        ...barSeries,
+      },
+    },
+    seriesOrder: ['a'],
+    stackingGroups: [],
+  },
+};
+
 const seriesSingleType: ProcessedSeries<'bar'> = {
   bar: {
     series: {
@@ -71,6 +85,19 @@ const seriesMultipleTypes: ProcessedSeries<'bar' | 'line'> = {
   },
 };
 
+const nullifySeries = (series: ProcessedSeries<any>, type: string, id: string) => {
+  return {
+    ...series,
+    [type]: {
+      ...series[type],
+      series: {
+        ...series[type]?.series,
+        [id]: { ...series[type]?.series[id], data: series[type]?.series[id].data.map(() => null) },
+      },
+    },
+  };
+};
+
 describe('getNextNonEmptySeries', () => {
   it('should return next series of same type if available', () => {
     expect(
@@ -95,5 +122,28 @@ describe('getNextNonEmptySeries', () => {
       seriesId: 'a',
       type: 'bar',
     });
+  });
+
+  it('should not return first series of same type if the series is full of null values', () => {
+    expect(
+      getNextNonEmptySeries(
+        nullifySeries(seriesSingleType, 'bar', 'a'),
+        new Set(['bar']),
+        'bar',
+        'b',
+      ),
+    ).to.deep.equal({
+      seriesId: 'b',
+      type: 'bar',
+    });
+  });
+
+  it('should not move focus if no other series are available', () => {
+    expect(getNextNonEmptySeries(singleSeries, new Set(['bar', 'line']), 'bar', 'a')).to.deep.equal(
+      {
+        seriesId: 'a',
+        type: 'bar',
+      },
+    );
   });
 });

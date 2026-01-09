@@ -32,6 +32,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "hiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'scatter' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
@@ -53,6 +59,13 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {

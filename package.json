@@ -1,5 +1,5 @@
 {
-  "version": "8.23.0",
+  "version": "8.24.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -69,9 +69,9 @@
     "@babel/types": "^7.28.5",
     "@emotion/cache": "catalog:",
     "@inquirer/prompts": "^8.0.0",
-    "@mui/internal-babel-plugin-display-name": "1.0.4-canary.8",
-    "@mui/internal-bundle-size-checker": "1.0.9-canary.58",
-    "@mui/internal-code-infra": "0.0.3-canary.66",
+    "@mui/internal-babel-plugin-display-name": "1.0.4-canary.9",
+    "@mui/internal-bundle-size-checker": "1.0.9-canary.59",
+    "@mui/internal-code-infra": "0.0.3-canary.67",
     "@mui/internal-markdown": "2.0.13",
     "@mui/internal-netlify-cache": "0.0.2-canary.1",
     "@mui/internal-test-utils": "catalog:",
@@ -109,7 +109,7 @@
     "date-fns-jalali-v2": "npm:date-fns-jalali@2.30.0-0",
     "date-fns-v2": "npm:date-fns@2.30.0",
     "es-toolkit": "^1.42.0",
-    "esbuild": "^0.27.1",
+    "esbuild": "0.27.1",
     "eslint": "^9.39.1",
     "eslint-import-resolver-webpack": "^0.13.10",
     "eslint-plugin-consistent-default-export-name": "^0.0.15",
@@ -147,9 +147,9 @@
   "resolutions": {
     "ast-types": "^0.14.2"
   },
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "pnpm@10.27.0",
   "engines": {
-    "pnpm": "10.24.0",
+    "pnpm": "10.27.0",
     "node": ">=22.18"
   }
 }

@@ -1,10 +1,22 @@
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { Store, useStore } from '@base-ui/utils/store';
-import './EventDragPreview.css';
 import { RenderDragPreviewParameters } from '@mui/x-scheduler-headless/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { getColorClassName } from '../../utils/color-utils';
+import { getDataPaletteProps } from '../../utils/color-utils';
+import { schedulerPaletteStyles } from '../../utils/tokens';
+
+const EventDragPreviewRoot = styled('div', {
+  name: 'MuiEventDragPreview',
+  slot: 'Root',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5, 1),
+  borderRadius: theme.spacing(0.5),
+  fontSize: theme.typography.body2.fontSize,
+  backgroundColor: 'var(--event-color-8)',
+  color: 'var(--event-color-1)',
+  ...schedulerPaletteStyles,
+}));
 
 const fakeStore = {
   subscribe: () => {},
@@ -20,6 +32,6 @@ export function EventDragPreview(props: RenderDragPreviewParameters) {
   );
 
   return (
-    <div className={clsx('EventDragPreview', getColorClassName(color))}>{props.data.title}</div>
+    <EventDragPreviewRoot {...getDataPaletteProps(color)}>{props.data.title}</EventDragPreviewRoot>
   );
 }
