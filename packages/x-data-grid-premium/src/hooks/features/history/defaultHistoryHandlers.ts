@@ -6,6 +6,7 @@ import {
   type GridEvents,
   gridVisibleRowsSelector,
   gridVisibleColumnFieldsSelector,
+  gridColumnFieldsSelector,
   gridFocusCellSelector,
 } from '@mui/x-data-grid-pro';
 import type { GridApiPremium } from '../../../models/gridApiPremium';
@@ -296,52 +297,81 @@ export const createClipboardPasteHistoryHandler = (
     },
 
     undo: async (data: GridClipboardPasteHistoryData) => {
-      const { oldRows } = data;
+      const { oldRows, newRows } = data;
       const oldRowsValues = Array.from(oldRows.values());
-
-      // Restore all rows to their original state
-      await apiRef.current.updateRows(oldRowsValues);
 
       const visibleColumns = apiRef.current.getVisibleColumns();
 
       // Focus the first affected cell
       if (oldRowsValues.length > 0 && visibleColumns.length > 0) {
-        const firstRowId = Array.from(oldRows.keys())[0];
-        const firstField = visibleColumns[0].field;
-        if (firstField) {
+        const columnOrder = gridColumnFieldsSelector(apiRef);
+        const currentFocus = gridFocusCellSelector(apiRef);
+
+        // Since we undo, oldRowData is the new data that will be set and newRowData is the current row
+        const firstOldRow = Array.from(newRows.values())[0];
+        const [firstNewRowId, firstNewRow] = Array.from(oldRows.entries())[0];
+
+        let differentField = columnOrder[0];
+        // Find the first field that is different to set the focus on
+        for (let i = 0; i < columnOrder.length; i += 1) {
+          const field = columnOrder[i];
+          if (!isDeepEqual(firstOldRow[field], firstNewRow[field])) {
+            differentField = field;
+            break;
+          }
+        }
+
+        // Restore all rows to their original state
+        await apiRef.current.updateRows(oldRowsValues);
+
+        if (differentField && currentFocus?.id !== firstNewRowId) {
           // Use `requestAnimationFrame` to ensure all undo updates are applied
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstRowId, firstField);
+            apiRef.current.setCellFocus(firstNewRowId, differentField);
           });
           apiRef.current.scrollToIndexes({
-            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
-            colIndex: apiRef.current.getColumnIndex(firstField),
+            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
+            colIndex: apiRef.current.getColumnIndex(differentField),
           });
         }
       }
     },
 
     redo: async (data: GridClipboardPasteHistoryData) => {
-      const { newRows } = data;
+      const { oldRows, newRows } = data;
       const newRowsValues = Array.from(newRows.values());
-
-      // Restore all rows to the pasted state
-      await apiRef.current.updateRows(newRowsValues);
 
       const visibleColumns = apiRef.current.getVisibleColumns();
 
       // Focus the first affected cell
       if (newRowsValues.length > 0 && visibleColumns.length > 0) {
-        const firstRowId = Array.from(newRows.keys())[0];
-        const firstField = visibleColumns[0].field;
-        if (firstField) {
+        const columnOrder = gridColumnFieldsSelector(apiRef);
+        const currentFocus = gridFocusCellSelector(apiRef);
+
+        const firstOldRow = Array.from(oldRows.values())[0];
+        const [firstNewRowId, firstNewRow] = Array.from(newRows.entries())[0];
+
+        let differentField = columnOrder[0];
+        // Find the first field that is different to set the focus on
+        for (let i = 0; i < columnOrder.length; i += 1) {
+          const field = columnOrder[i];
+          if (!isDeepEqual(firstOldRow[field], firstNewRow[field])) {
+            differentField = field;
+            break;
+          }
+        }
+
+        // Restore all rows to the pasted state
+        await apiRef.current.updateRows(newRowsValues);
+
+        if (differentField && currentFocus?.id !== firstNewRowId) {
           // Use `requestAnimationFrame` to ensure all redo updates are applied
           requestAnimationFrame(() => {
-            apiRef.current.setCellFocus(firstRowId, firstField);
+            apiRef.current.setCellFocus(firstNewRowId, differentField);
           });
           apiRef.current.scrollToIndexes({
-            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstRowId),
-            colIndex: apiRef.current.getColumnIndex(firstField),
+            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
+            colIndex: apiRef.current.getColumnIndex(differentField),
           });
         }
       }
