@@ -92,10 +92,10 @@ export const createCellEditHistoryHandler = (
       // Use `requestAnimationFrame` to ensure all undo updates are applied
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      });
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-        colIndex: apiRef.current.getColumnIndex(field),
+        apiRef.current.scrollToIndexes({
+          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          colIndex: apiRef.current.getColumnIndex(field),
+        });
       });
     },
 
@@ -116,10 +116,10 @@ export const createCellEditHistoryHandler = (
       // Use `requestAnimationFrame` to ensure all redo updates are applied
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      });
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-        colIndex: apiRef.current.getColumnIndex(field),
+        apiRef.current.scrollToIndexes({
+          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          colIndex: apiRef.current.getColumnIndex(field),
+        });
       });
     },
   };
@@ -194,10 +194,10 @@ export const createRowEditHistoryHandler = (
       // Use `requestAnimationFrame` to ensure all undo updates are applied
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(oldRow)[0]);
-      });
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-        colIndex: 0,
+        apiRef.current.scrollToIndexes({
+          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          colIndex: 0,
+        });
       });
     },
 
@@ -217,10 +217,10 @@ export const createRowEditHistoryHandler = (
       // Use `requestAnimationFrame` to ensure all redo updates are applied
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, Object.keys(newRow)[0]);
-      });
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-        colIndex: 0,
+        apiRef.current.scrollToIndexes({
+          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          colIndex: 0,
+        });
       });
     },
   };
@@ -305,10 +305,10 @@ export const createClipboardPasteHistoryHandler = (
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
             apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
-          });
-          apiRef.current.scrollToIndexes({
-            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-            colIndex: differentFieldIndex,
+            apiRef.current.scrollToIndexes({
+              rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
+              colIndex: differentFieldIndex,
+            });
           });
         }
       }
@@ -343,11 +343,10 @@ export const createClipboardPasteHistoryHandler = (
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
             apiRef.current.setCellFocus(firstNewRowId, columnOrder[differentFieldIndex]);
-          });
-
-          apiRef.current.scrollToIndexes({
-            rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
-            colIndex: differentFieldIndex,
+            apiRef.current.scrollToIndexes({
+              rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(firstNewRowId),
+              colIndex: differentFieldIndex,
+            });
           });
         }
       }
