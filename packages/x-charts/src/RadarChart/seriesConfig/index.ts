@@ -2,6 +2,7 @@ import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import { radiusExtremumGetter, rotationExtremumGetter } from './extremums';
 import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { identifierCompareSeriesIdDataIndex } from '../../internals/identifierCompare';
 import legendGetter from './legend';
 import tooltipGetter, { axisTooltipGetter } from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
@@ -18,5 +19,6 @@ export const radarSeriesConfig: ChartSeriesTypeConfig<'radar'> = {
   getSeriesWithDefaultValues,
   radiusExtremumGetter,
   rotationExtremumGetter,
+  identifierCompare: identifierCompareSeriesIdDataIndex,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

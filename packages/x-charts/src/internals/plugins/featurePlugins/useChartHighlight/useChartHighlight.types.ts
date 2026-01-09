@@ -2,6 +2,7 @@ import { type DefaultizedProps } from '@mui/x-internals/types';
 import { type ChartPluginSignature } from '../../models';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 /**
  * The data of the highlighted item.
@@ -20,6 +21,7 @@ import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
  * {}
  */
 export type HighlightItemData = {
+  type: ChartSeriesType;
   /**
    * The series id of the highlighted item.
    */

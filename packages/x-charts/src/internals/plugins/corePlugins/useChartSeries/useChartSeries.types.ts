@@ -70,6 +70,11 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
 ) => string;
 
+export type IsSameIdentifierFunction = <T extends { type: string }>(
+  a: T | undefined | null,
+  b: T | undefined | null,
+) => boolean;
+
 export interface UseChartSeriesInstance {
   /**
    * Function to serialize a series item identifier into a unique string.
@@ -78,6 +83,13 @@ export interface UseChartSeriesInstance {
    * @returns A unique string representing the identifier.
    */
   serializeIdentifier: SerializeIdentifierFunction;
+  /**
+   * Compares two series item identifiers.
+   * @param a The first series item identifier to compare.
+   * @param b The second series item identifier to compare.
+   * @returns `true` if the two identifiers are equal, `false` otherwise.
+   */
+  isSameIdentifier: IsSameIdentifierFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

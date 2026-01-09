@@ -8,4 +8,5 @@ export * from './tooltipGetter.types';
 export * from './tooltipItemPositionGetter.types';
 export * from './legendGetter.types';
 export * from './getSeriesWithDefaultValues.types';
+export * from './identifierCompare.types';
 export * from './identifierSerializer.types';

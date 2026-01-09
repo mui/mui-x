@@ -114,6 +114,7 @@ function LineElement(props: LineElementProps) {
   } = props;
   const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
   const { isFaded, isHighlighted } = useItemHighlighted({
+    type: 'line',
     seriesId: id,
   });
 

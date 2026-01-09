@@ -1,7 +1,6 @@
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { type ChartPlugin } from '@mui/x-charts/internals';
 import type {
   UseSankeyHighlightSignature,
@@ -12,7 +11,11 @@ import type {
  * Custom highlight plugin for Sankey charts that uses SankeyItemIdentifier
  * instead of the standard HighlightItemData.
  */
-export const useSankeyHighlight: ChartPlugin<UseSankeyHighlightSignature> = ({ store, params }) => {
+export const useSankeyHighlight: ChartPlugin<UseSankeyHighlightSignature> = ({
+  store,
+  params,
+  instance,
+}) => {
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
     componentName: 'SankeyChart',
@@ -35,7 +38,7 @@ export const useSankeyHighlight: ChartPlugin<UseSankeyHighlightSignature> = ({ s
   const setHighlight = useEventCallback((newItem: SankeyHighlightItemData) => {
     const prevItem = store.state.highlight.item;
 
-    if (fastObjectShallowCompare(prevItem, newItem)) {
+    if (instance.isSameIdentifier(prevItem, newItem)) {
       return;
     }
 

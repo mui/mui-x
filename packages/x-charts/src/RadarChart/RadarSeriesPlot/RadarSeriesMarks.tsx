@@ -20,8 +20,8 @@ interface GetCirclePropsParams {
 
 export function getCircleProps(params: GetCirclePropsParams): React.SVGProps<SVGCircleElement> {
   const { isHighlighted, isFaded, seriesId, classes, point, fillArea, color } = params;
-  const isItemHighlighted = isHighlighted({ seriesId });
-  const isItemFaded = !isItemHighlighted && isFaded({ seriesId });
+  const isItemHighlighted = isHighlighted({ type: 'radar', seriesId });
+  const isItemFaded = !isItemHighlighted && isFaded({ type: 'radar', seriesId });
 
   return {
     cx: point.x,

@@ -14,6 +14,7 @@ describe('highlightStates', () => {
   const dataIndex = 5;
 
   const itemData1: HighlightItemData = {
+    type: 'bar',
     seriesId: s1,
     dataIndex,
   };
@@ -113,7 +114,7 @@ describe('highlightStates', () => {
       });
 
       it('should handle undefined dataIndex', () => {
-        const itemWithoutDataIndex: HighlightItemData = { seriesId: s1 };
+        const itemWithoutDataIndex: HighlightItemData = { type: 'bar', seriesId: s1 };
         expect(getSeriesHighlightedItem(highlightItemScope, itemWithoutDataIndex, s1)).to.equal(
           undefined,
         );
@@ -178,7 +179,7 @@ describe('highlightStates', () => {
 
       it('should handle undefined dataIndex', () => {
         const scope: Partial<HighlightScope> = { fade: 'global' };
-        const itemWithoutDataIndex: HighlightItemData = { seriesId: s1 };
+        const itemWithoutDataIndex: HighlightItemData = { type: 'bar', seriesId: s1 };
         expect(getSeriesUnfadedItem(scope, itemWithoutDataIndex, s1)).to.equal(undefined);
       });
     });

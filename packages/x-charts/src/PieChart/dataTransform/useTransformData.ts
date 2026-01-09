@@ -8,6 +8,7 @@ import {
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { getModifiedArcProperties } from './getModifiedArcProperties';
+import type { HighlightItemData } from '../../context';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -41,7 +42,8 @@ export function useTransformData(
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
       data.map((item, itemIndex) => {
-        const currentItem = {
+        const currentItem: HighlightItemData = {
+          type: 'pie',
           seriesId,
           dataIndex: itemIndex,
         };

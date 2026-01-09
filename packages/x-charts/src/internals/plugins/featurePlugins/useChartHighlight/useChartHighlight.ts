@@ -2,11 +2,14 @@ import { warnOnce } from '@mui/x-internals/warning';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import { type ChartPlugin } from '../../models';
 import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
 
-export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
+export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({
+  store,
+  params,
+  instance,
+}) => {
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
     componentName: 'Chart',
@@ -48,7 +51,7 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
     const prevHighlight = store.state.highlight;
 
-    if (fastObjectShallowCompare(prevHighlight.item, newItem)) {
+    if (instance.isSameIdentifier(prevHighlight.item, newItem)) {
       return;
     }
 

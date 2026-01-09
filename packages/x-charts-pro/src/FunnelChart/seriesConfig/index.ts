@@ -1,3 +1,4 @@
+import { identifierCompareSeriesIdDataIndex } from '@mui/x-charts/internals';
 import {
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
@@ -19,5 +20,6 @@ export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  identifierCompare: identifierCompareSeriesIdDataIndex,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

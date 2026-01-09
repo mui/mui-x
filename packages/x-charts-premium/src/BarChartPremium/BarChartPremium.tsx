@@ -251,6 +251,17 @@ BarChartPremium.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf([
+      'bar',
+      'funnel',
+      'heatmap',
+      'line',
+      'pie',
+      'radar',
+      'rangeBar',
+      'sankey',
+      'scatter',
+    ]).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.

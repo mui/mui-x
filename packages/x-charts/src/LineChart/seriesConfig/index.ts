@@ -1,4 +1,5 @@
 import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { identifierCompareSeriesIdDataIndex } from '../../internals/identifierCompare';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
@@ -20,5 +21,6 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
+  identifierCompare: identifierCompareSeriesIdDataIndex,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

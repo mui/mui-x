@@ -13,6 +13,7 @@ import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.ty
 import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
+import { type IdentifierCompare } from './identifierCompare.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
@@ -27,6 +28,11 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
   getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
   keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
+  /**
+   * A function to compare two series item identifiers.
+   * @return `true` if the two identifiers are equal, `false` otherwise.
+   */
+  identifierCompare: IdentifierCompare<TSeriesType>;
   /**
    * A function to serialize the series item identifier into a unique string.
    * @param {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} identifier The series item identifier.

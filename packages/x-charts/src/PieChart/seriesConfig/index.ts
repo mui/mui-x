@@ -1,4 +1,5 @@
 import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { identifierCompareSeriesIdDataIndex } from '../../internals/identifierCompare';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';
@@ -18,5 +19,6 @@ export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
+  identifierCompare: identifierCompareSeriesIdDataIndex,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

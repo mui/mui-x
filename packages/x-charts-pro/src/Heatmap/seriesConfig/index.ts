@@ -1,5 +1,6 @@
 import {
   type ChartSeriesTypeConfig,
+  identifierCompareSeriesIdDataIndex,
   identifierSerializerSeriesIdDataIndex,
 } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
@@ -18,5 +19,6 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   xExtremumGetter: getBaseExtremum,
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,
+  identifierCompare: identifierCompareSeriesIdDataIndex,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

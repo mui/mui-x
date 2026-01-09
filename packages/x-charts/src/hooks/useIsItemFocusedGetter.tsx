@@ -1,8 +1,8 @@
 'use client';
-import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowCompare';
 import type { FocusedItemIdentifier } from '../models/seriesType';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import { useFocusedItem } from './useFocusedItem';
+import { useChartContext } from '../context/ChartProvider';
 
 /**
  * A hook to check focus state of multiple items.
@@ -12,7 +12,8 @@ import { useFocusedItem } from './useFocusedItem';
  */
 export function useIsItemFocusedGetter() {
   const focusedItem = useFocusedItem();
+  const { instance } = useChartContext();
 
   return (item: FocusedItemIdentifier<ChartSeriesType>) =>
-    focusedItem !== null && fastObjectShallowCompare(focusedItem, item);
+    instance.isSameIdentifier(focusedItem, item);
 }

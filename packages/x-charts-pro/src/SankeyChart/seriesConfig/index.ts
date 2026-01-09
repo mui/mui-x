@@ -3,6 +3,7 @@ import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { tooltipGetter } from './tooltipGetter';
 import { calculateSankeyLayout } from '../calculateSankeyLayout';
 import tooltipItemPositionGetter from './tooltipPosition';
+import identifierCompare from './identifierCompare';
 import identifierSerializer from './identifierSerializer';
 
 // Simple passthrough functions for sankey chart
@@ -29,5 +30,6 @@ export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   tooltipGetter,
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
+  identifierCompare,
   identifierSerializer,
 };
