@@ -99,6 +99,6 @@ export interface GridRowEditHistoryData {
 }
 
 export interface GridClipboardPasteHistoryData {
-  oldRows: { [rowId: GridRowId]: GridValidRowModel };
-  newRows: { [rowId: GridRowId]: GridValidRowModel };
+  oldRows: Map<GridRowId, GridValidRowModel>;
+  newRows: Map<GridRowId, GridValidRowModel>;
 }

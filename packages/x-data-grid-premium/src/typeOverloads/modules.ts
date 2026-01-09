@@ -82,8 +82,8 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    */
   clipboardPasteEnd: {
     params: {
-      oldRows: { [rowId: GridRowId]: GridValidRowModel };
-      newRows: { [rowId: GridRowId]: GridValidRowModel };
+      oldRows: Map<GridRowId, GridValidRowModel>;
+      newRows: Map<GridRowId, GridValidRowModel>;
     };
   };
   /**

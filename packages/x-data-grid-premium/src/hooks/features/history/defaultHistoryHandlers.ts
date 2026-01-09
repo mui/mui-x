@@ -256,7 +256,7 @@ export const createClipboardPasteHistoryHandler = (
     store: (params: GridClipboardPasteHistoryData) => params,
     validate: (data: GridClipboardPasteHistoryData, direction: 'undo' | 'redo') => {
       const { oldRows, newRows } = data;
-      const updatedRowIds = Object.keys(newRows);
+      const updatedRowIds = Array.from(newRows.keys());
 
       // Check if any rows were updated
       if (updatedRowIds.length === 0) {
@@ -282,7 +282,7 @@ export const createClipboardPasteHistoryHandler = (
           return false;
         }
 
-        const expectedRow = direction === 'undo' ? newRows[rowId] : oldRows[rowId];
+        const expectedRow = direction === 'undo' ? newRows.get(rowId)! : oldRows.get(rowId)!;
 
         // Check if the row values match what we expect
         for (const field of Object.keys(expectedRow)) {
@@ -297,7 +297,7 @@ export const createClipboardPasteHistoryHandler = (
 
     undo: async (data: GridClipboardPasteHistoryData) => {
       const { oldRows } = data;
-      const oldRowsValues = Object.values(oldRows);
+      const oldRowsValues = Array.from(oldRows.values());
 
       // Restore all rows to their original state
       await apiRef.current.updateRows(oldRowsValues);
@@ -306,7 +306,7 @@ export const createClipboardPasteHistoryHandler = (
 
       // Focus the first affected cell
       if (oldRowsValues.length > 0 && visibleColumns.length > 0) {
-        const firstRowId = Object.keys(oldRows)[0];
+        const firstRowId = Array.from(oldRows.keys())[0];
         const firstField = visibleColumns[0].field;
         if (firstField) {
           // Use `requestAnimationFrame` to ensure all undo updates are applied
@@ -323,7 +323,7 @@ export const createClipboardPasteHistoryHandler = (
 
     redo: async (data: GridClipboardPasteHistoryData) => {
       const { newRows } = data;
-      const newRowsValues = Object.values(newRows);
+      const newRowsValues = Array.from(newRows.values());
 
       // Restore all rows to the pasted state
       await apiRef.current.updateRows(newRowsValues);
@@ -332,7 +332,7 @@ export const createClipboardPasteHistoryHandler = (
 
       // Focus the first affected cell
       if (newRowsValues.length > 0 && visibleColumns.length > 0) {
-        const firstRowId = Object.keys(newRows)[0];
+        const firstRowId = Array.from(newRows.keys())[0];
         const firstField = visibleColumns[0].field;
         if (firstField) {
           // Use `requestAnimationFrame` to ensure all redo updates are applied

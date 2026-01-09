@@ -85,9 +85,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 
 // Keeps track of updated rows during clipboard paste
 class CellValueUpdater {
-  rowsToUpdate: {
-    [rowId: GridRowId]: GridValidRowModel;
-  } = {};
+  rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
   updateRow: (row: GridRowModel) => void;
 
@@ -121,7 +119,7 @@ class CellValueUpdater {
     if (!colDef || !colDef.editable) {
       return;
     }
-    const row = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
+    const row = this.rowsToUpdate.get(rowId) || { ...apiRef.current.getRow(rowId) };
     if (!row) {
       return;
     }
@@ -155,29 +153,29 @@ class CellValueUpdater {
       // We cannot update row id, so this cell value update should be ignored
       return;
     }
-    this.rowsToUpdate[rowId] = rowCopy;
+    this.rowsToUpdate.set(rowId, rowCopy);
   }
 
   applyUpdates() {
     const { apiRef, processRowUpdate, onProcessRowUpdateError } = this.options;
     const rowsToUpdate = this.rowsToUpdate;
-    const rowIdsToUpdate = Object.keys(rowsToUpdate);
+    const rowIdsToUpdate = Array.from(rowsToUpdate.keys());
 
     if (rowIdsToUpdate.length === 0) {
       apiRef.current.publishEvent('clipboardPasteEnd', {
-        oldRows: {},
-        newRows: {},
+        oldRows: new Map<GridRowId, GridValidRowModel>(),
+        newRows: new Map<GridRowId, GridValidRowModel>(),
       });
       return;
     }
 
-    const oldRows: { [rowId: GridRowId]: GridValidRowModel } = {};
-    const newRows: { [rowId: GridRowId]: GridValidRowModel } = {};
+    const oldRows = new Map<GridRowId, GridValidRowModel>();
+    const newRows = new Map<GridRowId, GridValidRowModel>();
 
     const handleRowUpdate = async (rowId: GridRowId) => {
       const oldRow = apiRef.current.getRow(rowId);
-      const newRow = rowsToUpdate[rowId];
-      oldRows[rowId] = oldRow;
+      const newRow = rowsToUpdate.get(rowId)!;
+      oldRows.set(rowId, oldRow);
 
       if (typeof processRowUpdate === 'function') {
         const handleError = (errorThrown: any) => {
@@ -197,13 +195,13 @@ class CellValueUpdater {
 
         try {
           const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
-          newRows[rowId] = finalRowUpdate;
+          newRows.set(rowId, finalRowUpdate);
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);
         }
       } else {
-        newRows[rowId] = newRow;
+        newRows.set(rowId, newRow);
         this.updateRow(newRow);
       }
     };
@@ -220,7 +218,7 @@ class CellValueUpdater {
         oldRows,
         newRows,
       });
-      this.rowsToUpdate = {};
+      this.rowsToUpdate.clear();
     });
   }
 }
