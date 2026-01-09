@@ -12,10 +12,6 @@ export interface EventDraggableDialogProps extends DialogProps {
    */
   anchor: HTMLElement;
   /**
-   * The container element for the popover portal.
-   */
-  container: HTMLElement | null;
-  /**
    * Handles the close action of the popover.
    */
   onClose: () => void;

@@ -12,7 +12,7 @@ export interface CreateDialogConfig {
 
 export type ContextValue<TData> = {
   open: (anchor: HTMLElement, data: TData) => void;
-  close: (event: React.SyntheticEvent) => void;
+  close: () => void;
   isOpen: boolean;
 };
 
@@ -25,9 +25,9 @@ export interface ProviderProps<TData> {
     isOpen: boolean;
     anchor: HTMLElement;
     data: TData;
-    onClose: (event: React.SyntheticEvent) => void;
+    onClose: () => void;
   }) => React.ReactNode;
-  onClose?: (event: React.SyntheticEvent) => void;
+  onClose?: () => void;
 }
 
 export interface TriggerProps<TData> {

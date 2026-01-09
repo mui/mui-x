@@ -3,7 +3,7 @@ import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
 
-const getDeltas = (location: DragLocationHistory) => {
+const getDeltas = (location) => {
   const deltaX = location.current.input.clientX - location.initial.input.clientX;
   const deltaY = location.current.input.clientY - location.initial.input.clientY;
   return { deltaX, deltaY };
@@ -11,6 +11,7 @@ const getDeltas = (location: DragLocationHistory) => {
 
 export function useDraggableDialog(
   elementRef: React.RefObject<HTMLElement | null>,
+  handleRef: React.RefObject<HTMLElement | null>,
   mutateStyle: (style: string) => void,
 ) {
   const offset = React.useRef({ x: 0, y: 0 });
@@ -31,8 +32,16 @@ export function useDraggableDialog(
 
     return draggable({
       element,
+      dragHandle: handleRef.current || undefined,
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
+      },
+      canDrag: (test) => {
+        console.log(test);
+        return true;
+      },
+      onDragStart: (test) => {
+        console.log('drag start', test);
       },
       onDrag: ({ location }) => {
         const { deltaX, deltaY } = getDeltas(location);

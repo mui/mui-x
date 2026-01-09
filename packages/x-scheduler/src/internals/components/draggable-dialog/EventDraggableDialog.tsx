@@ -1,13 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import Box from '@mui/material/Box';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
-import Button from '@mui/material/Button';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
@@ -21,9 +18,12 @@ import {
   EventDraggableDialogTriggerProps,
 } from './EventDraggableDialog.types';
 import { createDialog } from '../create-dialog';
+import { FormContent } from './FormContent';
 
 // 1. Setup the Draggable Paper Logic
-function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
+function PaperComponent(
+  props: PaperProps & { anchorEl?: HTMLElement | null; handleRef: React.RefObject<HTMLDivElement> },
+) {
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
   const mutateStyle = React.useCallback((style: string) => {
@@ -32,12 +32,13 @@ function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
     }
   }, []);
 
-  const resetDrag = useDraggableDialog(nodeRef, mutateStyle);
-  const { anchorEl, ...other } = props;
+  const { anchorEl, handleRef, ...other } = props;
+  const resetDrag = useDraggableDialog(nodeRef, handleRef, mutateStyle);
 
   const calculatePosition = React.useCallback(
     (shouldResetDrag = false) => {
       const element = nodeRef.current;
+
       if (!element || !anchorEl) {
         return;
       }
@@ -128,6 +129,7 @@ function PaperComponent(props: PaperProps & { anchorEl?: HTMLElement | null }) {
         borderTopWidth: 1,
         height: 'fit-content',
         m: 0,
+        cursor: 'move',
       }}
     />
   );
@@ -145,6 +147,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { style, container, anchor, occurrence, onClose, open, ...other } = props;
+  const handleRef = React.useRef<HTMLDivElement>(null);
   // Context hooks
   const store = useSchedulerStoreContext();
 
@@ -169,25 +172,15 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
         container: {
           sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
         },
-        paper: { sx: { m: 0 }, anchorEl: anchor },
+        paper: { sx: { m: 0 }, anchorEl: anchor, handleRef },
       }}
       {...other}
     >
-      <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        {occurrence.title}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-          To subscribe to this website, please enter your email address here. We will send updates
-          occasionally.
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={onClose}>
-          Cancel
-        </Button>
-        {/* <Button onClick={handleOpenChild}>Subscribe</Button> */}
-      </DialogActions>
+      <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <MoreHorizIcon ref={handleRef} />
+      </Box>
+      <FormContent occurrence={occurrence} onClose={onClose} />
+
       {/* <SimpleDialog open={childOpen} onClose={(_e) => setChildOpen(false)} /> */}
     </Dialog>
   );

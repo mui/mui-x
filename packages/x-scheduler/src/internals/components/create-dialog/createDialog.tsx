@@ -35,8 +35,8 @@ export function createDialog<TData>(config: CreateDialogConfig) {
       setState({ isOpen: true, anchor, data });
     });
 
-    const close = useStableCallback((event: React.SyntheticEvent) => {
-      onCloseProp?.(event);
+    const close = useStableCallback(() => {
+      onCloseProp?.();
       setState((prev) => ({ ...prev, isOpen: false }));
     });
 

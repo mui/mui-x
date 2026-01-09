@@ -58,9 +58,10 @@
     "@babel/runtime": "catalog:",
     "@base-ui/react": "^1.0.0",
     "@base-ui/utils": "^0.2.3",
-    "@mui/x-scheduler-headless": "workspace:*",
     "@floating-ui/react": "^0.27.16",
+    "@mui/icons-material": "catalog:",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-scheduler-headless": "workspace:*",
     "clsx": "catalog:",
     "lucide-react": "^0.562.0"
   },
