@@ -100,7 +100,7 @@ catalogs:
       specifier: ^1.5.0
       version: 1.5.0
     '@typescript-eslint/parser':
-      specifier: ^8.48.1
+      specifier: ^8.52.0
       version: 8.52.0
     '@vitejs/plugin-react':
       specifier: ^5.1.2
@@ -372,16 +372,16 @@ importers:
         specifier: 0.27.1
         version: 0.27.1
       eslint:
-        specifier: ^9.39.1
+        specifier: 9.39.2
         version: 9.39.2
       eslint-import-resolver-webpack:
         specifier: 0.13.10
         version: 0.13.10(eslint-plugin-import@2.32.0)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.27.1))
       eslint-plugin-consistent-default-export-name:
-        specifier: ^0.0.15
+        specifier: 0.0.15
         version: 0.0.15
       eslint-plugin-jsdoc:
-        specifier: ^61.4.1
+        specifier: 61.4.1
         version: 61.4.1(eslint@9.39.2)
       eslint-plugin-mui-x:
         specifier: workspace:^
@@ -806,7 +806,7 @@ importers:
   packages/eslint-plugin-mui-x:
     dependencies:
       '@typescript-eslint/utils':
-        specifier: ^8.48.1
+        specifier: ^8.52.0
         version: 8.52.0(eslint@9.39.2)(typescript@5.9.3)
     devDependencies:
       '@types/eslint':
@@ -816,7 +816,7 @@ importers:
         specifier: 'catalog:'
         version: 8.52.0(eslint@9.39.2)(typescript@5.9.3)
       '@typescript-eslint/rule-tester':
-        specifier: ^8.48.1
+        specifier: 8.48.1
         version: 8.48.1(eslint@9.39.2)(typescript@5.9.3)
 
   packages/x-charts:
