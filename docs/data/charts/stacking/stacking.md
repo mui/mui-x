@@ -13,11 +13,11 @@ You can use stacking to display multiple series in a single bar or line, showing
 
 Bar and line charts support stacking.
 To stack series together, pass them a `stack` attribute.
-Series with the same `stack` value will be stacked together.
+Series with the same `stack` value are stacked together.
 
 {{"demo": "BasicStacking.js"}}
 
-### Stacking strategy
+## Stacking strategy
 
 You can modify how series are stacked based on D3 [stack orders](https://d3js.org/d3-shape/stack#stack_order) and [stack offsets](https://d3js.org/d3-shape/stack#stack_offset).
 
