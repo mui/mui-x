@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build --ignore 'src/**/*.bench.ts'",
+    "build": "code-infra build-new",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
     "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts",
     "bench:browser": "pnpm vitest bench -c ./vitest.config.browser.mts"
@@ -78,7 +78,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts",
+    "./*": "./src/*/index.{ts,tsx}",
     "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
   }
 }

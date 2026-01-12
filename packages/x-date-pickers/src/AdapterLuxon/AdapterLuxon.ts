@@ -149,16 +149,16 @@ export class AdapterLuxon implements MuiPickersAdapter<string> {
   ): DateBuilderReturnType<T> => {
     type R = DateBuilderReturnType<T>;
     if (value === null) {
-      return <R>null;
+      return null as R;
     }
 
     if (typeof value === 'undefined') {
       // @ts-ignore
-      return <R>DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone });
+      return DateTime.fromJSDate(new Date(), { locale: this.locale, zone: timezone }) as R;
     }
 
     // @ts-ignore
-    return <R>DateTime.fromISO(value, { locale: this.locale, zone: timezone });
+    return DateTime.fromISO(value, { locale: this.locale, zone: timezone }) as R;
   };
 
   public getInvalidDate = () => DateTime.fromJSDate(new Date('Invalid Date'));

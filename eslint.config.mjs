@@ -305,7 +305,6 @@ export default defineConfig(
       'react/jsx-filename-extension': 'off',
     },
   },
-
   {
     files: [`test/regressions/**/*${EXTENSION_TS}`],
     rules: {

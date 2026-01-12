@@ -1,16 +1,16 @@
-const { default: getBaseConfig } = require('@mui/internal-code-infra/babel-config');
-const generateReleaseInfo = require('./packages/x-license/generateReleaseInfo');
+import getBaseConfig from '@mui/internal-code-infra/babel-config';
+import generateReleaseInfo from './packages/x-license/generateReleaseInfo.mjs';
 
 /**
  * @typedef {import('@babel/core')} babel
  */
 
 /** @type {babel.ConfigFunction} */
-module.exports = function getBabelConfig(api) {
+export default function getBabelConfig(api) {
   const baseConfig = getBaseConfig(api);
 
   const plugins = [
-    ['@babel/plugin-transform-object-rest-spread', { loose: true }],
+    // ['@babel/plugin-transform-object-rest-spread', { loose: true }],
     [
       'babel-plugin-transform-react-remove-prop-types',
       {
@@ -34,7 +34,7 @@ module.exports = function getBabelConfig(api) {
       plugins.push(['babel-plugin-react-remove-properties', { properties: ['data-testid'] }]);
     }
 
-    if (process.env.BABEL_ENV) {
+    if (process.env.BABEL_ENV || process.env.MUI_IS_TSDOWN_BABEL) {
       plugins.push([
         'search-and-replace',
         {
@@ -68,4 +68,4 @@ module.exports = function getBabelConfig(api) {
   delete baseConfig.assumptions.setSpreadProperties;
 
   return baseConfig;
-};
+}

@@ -57,9 +57,9 @@ const base64Encode = (input) => {
   return output;
 };
 
-module.exports = function generateReleaseInfo() {
+export default function generateReleaseInfo() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   return base64Encode(today.getTime().toString());
-};
+}
