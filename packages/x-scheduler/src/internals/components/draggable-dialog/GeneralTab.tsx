@@ -29,7 +29,7 @@ const GeneralTabContent = styled('div', {
 
 const DateTimeFieldsContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
-  slot: 'DateTimeFields',
+  slot: 'DateTimeFieldsContainer',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
