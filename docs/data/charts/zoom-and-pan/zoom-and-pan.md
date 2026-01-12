@@ -74,7 +74,8 @@ The size is the height on an x-axis and the width on a y-axis.
 
 The zoom slider supports a tooltip that displays the current zoom range.
 
-Configure the tooltip by setting the `zoom.slider.showTooltip` property on the axis config. The following options are available:
+Configure the tooltip by setting the `zoom.slider.showTooltip` property on the axis config.
+The following options are available:
 
 - `true`: The tooltip is always displayed
 - `'hover'`: The tooltip is displayed on hover (default)
@@ -90,7 +91,8 @@ When formatting the zoom slider tooltip, `valueFormatter` is called with `zoom-s
 
 ### Limits
 
-The zoom slider uses the same limits as the zooming options. Set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis config to restrict the zoom slider range.
+The zoom slider uses the same limits as the zooming options.
+Set the `minStart`, `maxEnd`, `minSpan`, and `maxSpan` properties on the axis config to restrict the zoom slider range.
 
 The zoom slider does not display values outside the range delimited by `minStart` and `maxEnd`.
 
@@ -161,28 +163,30 @@ The `zoomInteractionConfig` prop lets you specify which interactions are enabled
 
 - `wheel` (default): Zoom in/out by scrolling the mouse wheel
 - `pinch` (default): Zoom in/out by pinching on touch devices
-- `tapAndDrag`: Zoom in/out by tapping twice and then dragging vertically. Dragging up zooms in, dragging down zooms out
+- `tapAndDrag`: Zoom in/out by tapping twice and then dragging vertically.
+  Dragging up zooms in, dragging down zooms out
 - `brush`: Zoom into a selected area by clicking and dragging to create a selection rectangle
 - `doubleTapReset`: Reset the zoom level to the original state when double-tapping
 
 **Pan** interactions:
 
-- `wheel` (default\*): Pan the chart by scrolling the mouse wheel. On a desktop trackpad, it enables pan using two fingers. Only pans the horizontal axis by default. Use `allowedDirection` to customize which axes are affected
+- `wheel` (default\*): Pan the chart by scrolling the mouse wheel.
+  On a desktop trackpad, it enables pan using two fingers.
+  Only pans the horizontal axis by default.
+  Use `allowedDirection` to customize which axes are affected
 - `drag` (default): Pan the chart by dragging with the mouse or touch
-- `pressAndDrag`: Pan the chart by pressing and holding, then dragging. Useful for avoiding conflicts with selection gestures
+- `pressAndDrag`: Pan the chart by pressing and holding, then dragging.
+  Useful for avoiding conflicts with selection gestures
 
 :::warning
 
-\* The `wheel` pan interaction is only added automatically if pan is enabled for at least one of the x-axis and none of the y-axis.
+\* The `wheel` pan interaction is only added automatically if pan is enabled for at least one x-axis and not enabled for any y-axis.
 :::
 
 :::info
 When modifying the zoom interaction configuration, take care not to create a bad user experience.
-
 For example, the "drag" and "brush" interactions do not work well together.
-
 If both are needed, the `pointerMode` and `requiredKeys` options described in the next sections can help.
-
 :::
 
 {{"demo": "ZoomAndPanInteractions.js"}}
