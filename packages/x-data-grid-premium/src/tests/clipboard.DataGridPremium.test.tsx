@@ -972,11 +972,11 @@ describe('<DataGridPremium /> - Clipboard', () => {
       let writeTextStub: MockInstance;
 
       const stubClipboard = () => {
-        writeTextStub = stub(navigator.clipboard, 'writeText').callsFake(writeText);
+        writeTextStub = vi.spyOn(navigator.clipboard, 'writeText').mockImplementation(writeText);
       };
 
       afterEach(function afterEachHook() {
-        writeTextStubvi.restoreAllMocks();
+        vi.restoreAllMocks();
         clipboardData = '';
       });
 
