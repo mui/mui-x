@@ -79,10 +79,10 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
 
 ### Chart Wrapper usage
 
-Charts are often made of a graphic plus a legend.
+Charts are often constructed of a graphic with a legend.
 `ChartsWrapper` helps position those elements in a grid structure.
 
-The children should have a CSS `gridArea` property set to `'chart'` or `'legend'`.
+The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`, or `'toolbar'`.
 This is done by default on built-in components.
 
 The layout can be modified with the [wrapper props](/x/api/charts/charts-wrapper/).
