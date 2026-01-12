@@ -104,25 +104,29 @@ export function RecurrenceTab(props: RecurrenceTabProps) {
     }));
   };
 
-  const handleChangeFrequency = (newFreq: RecurringEventFrequency | null) => {
-    if (newFreq == null) {
+  const handleChangeFrequency = (newFrequency: RecurringEventFrequency | null) => {
+    if (newFrequency == null) {
       return;
     }
     setControlled((prev) => {
       // When switching to MONTHLY, initialize byMonthDay with the current day of month
       if (
-        newFreq === 'MONTHLY' &&
+        newFrequency === 'MONTHLY' &&
         !prev.rruleDraft.byDay?.length &&
         !prev.rruleDraft.byMonthDay?.length
       ) {
         return {
           ...prev,
-          rruleDraft: { ...prev.rruleDraft, freq: newFreq, byMonthDay: [monthlyRef.dayOfMonth] },
+          rruleDraft: {
+            ...prev.rruleDraft,
+            freq: newFrequency,
+            byMonthDay: [monthlyRef.dayOfMonth],
+          },
         };
       }
       return {
         ...prev,
-        rruleDraft: { ...prev.rruleDraft, freq: newFreq },
+        rruleDraft: { ...prev.rruleDraft, freq: newFrequency },
       };
     });
   };
