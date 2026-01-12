@@ -2,6 +2,7 @@
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { styled, useTheme, useThemeProps } from '@mui/material/styles';
+import { type OrdinalTimeTicks } from '../models';
 import type { ChartsXAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleXAxisTicks } from './ChartsSingleXAxisTicks';
 import { ChartsGroupedXAxisTicks } from './ChartsGroupedXAxisTicks';
@@ -81,20 +82,6 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
   const domain = xScale.domain();
   const isScaleOrdinal = isOrdinalScale(xScale);
   const skipTickRendering = isScaleOrdinal ? domain.length === 0 : domain.some(isInfinity);
-  let children: React.ReactNode = null;
-
-  if (!skipTickRendering) {
-    children =
-      'groups' in axis && Array.isArray(axis.groups) ? (
-        <ChartsGroupedXAxisTicks {...inProps} />
-      ) : (
-        <ChartsSingleXAxisTicks
-          {...inProps}
-          axisLabelHeight={labelHeight}
-          ordinalTimeTicks={ordinalTimeTicks}
-        />
-      );
-  }
 
   const labelRefPoint = {
     x: left + width / 2,
@@ -110,7 +97,14 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
       {!disableLine && (
         <Line x1={left} x2={left + width} className={classes.line} {...slotProps?.axisLine} />
       )}
-      {children}
+      {!skipTickRendering && (
+        <ChartsXAxisTicks
+          axis={axis}
+          axisLabelHeight={labelHeight}
+          ordinalTimeTicks={ordinalTimeTicks}
+          {...inProps}
+        />
+      )}
       {label && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
@@ -118,4 +112,30 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
       )}
     </XAxisRoot>
   );
+}
+
+interface ChartsXAxisTicksProps extends Omit<ChartsXAxisProps, 'axis'> {
+  axis: ComputedAxis<ScaleName, any, ChartsXAxisProps>;
+  axisLabelHeight: number;
+  ordinalTimeTicks: OrdinalTimeTicks;
+}
+
+function ChartsXAxisTicks({
+  axis,
+  ordinalTimeTicks,
+  axisLabelHeight,
+  ...inProps
+}: ChartsXAxisTicksProps) {
+  const children =
+    'groups' in axis && Array.isArray(axis.groups) ? (
+      <ChartsGroupedXAxisTicks {...inProps} />
+    ) : (
+      <ChartsSingleXAxisTicks
+        {...inProps}
+        axisLabelHeight={axisLabelHeight}
+        ordinalTimeTicks={ordinalTimeTicks}
+      />
+    );
+
+  return <React.Fragment>{children}</React.Fragment>;
 }
