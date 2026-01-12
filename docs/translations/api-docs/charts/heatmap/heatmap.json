@@ -40,13 +40,6 @@
         }
       }
     },
-    "onCellClick": {
-      "description": "Callback fired when a cell is clicked.",
-      "typeDescriptions": {
-        "event": { "name": "event", "description": "The native pointer event" },
-        "params": { "name": "params", "description": "The parameters related to the clicked cell" }
-      }
-    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": {
@@ -55,6 +48,10 @@
           "description": "The newly highlighted item."
         }
       }
+    },
+    "onItemClick": {
+      "description": "The callback fired when an item is clicked.",
+      "typeDescriptions": { "item": { "name": "item", "description": "The clicked item." } }
     },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",

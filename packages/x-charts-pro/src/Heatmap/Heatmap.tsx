@@ -415,6 +415,12 @@ Heatmap.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
+  /**
    * Callback fired when the zoom has changed.
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
