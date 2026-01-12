@@ -11,7 +11,7 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-import { EventDraggableDialogTrigger } from '../draggable-dialog';
+import { EventDraggableDialogTrigger, useEventDraggableDialogContext } from '../draggable-dialog';
 
 const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -54,6 +54,13 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // Context hooks
   const adapter = useAdapter();
+  const { subscribe } = useEventDraggableDialogContext();
+
+  React.useEffect(() => {
+    subscribe('close', () => {
+      onClose();
+    });
+  }, [subscribe, onClose]);
 
   return (
     <Popover open={open} anchorEl={anchor} onClose={onClose}>

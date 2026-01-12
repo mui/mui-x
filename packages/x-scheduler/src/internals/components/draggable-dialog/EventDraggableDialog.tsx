@@ -27,9 +27,6 @@ interface PaperComponentProps extends PaperProps {
 
 // 1. Setup the Draggable Paper Logic
 const PaperComponent = function PaperComponent(props: PaperComponentProps) {
-  const store = useSchedulerStoreContext();
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
-
   const nodeRef = React.useRef<HTMLDivElement>(null);
 
   const mutateStyle = React.useCallback(
@@ -41,7 +38,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
     [nodeRef],
   );
 
-  const { anchorRef, handleRef, children, ...other } = props;
+  const { anchorRef, handleRef, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, handleRef, mutateStyle);
 
   const updatePosition = React.useCallback(
@@ -88,10 +85,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
         m: 0,
         cursor: 'move',
       }}
-    >
-      {children}
-      {isScopeDialogOpen && <RecurringScopeDialog />}
-    </Paper>
+    />
   );
 } as any as DialogProps['PaperComponent'];
 
@@ -144,6 +138,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 export function EventDraggableDialogProvider(props: EventDraggableDialogProviderProps) {
   const { children } = props;
   const store = useSchedulerStoreContext();
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
     <EventDraggableDialog.Provider
@@ -160,6 +155,7 @@ export function EventDraggableDialogProvider(props: EventDraggableDialogProvider
       }}
     >
       {children}
+      {isScopeDialogOpen && <RecurringScopeDialog />}
     </EventDraggableDialog.Provider>
   );
 }

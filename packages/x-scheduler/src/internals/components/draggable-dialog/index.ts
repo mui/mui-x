@@ -1,1 +1,5 @@
-export { EventDraggableDialogProvider, EventDraggableDialogTrigger } from './EventDraggableDialog';
+export {
+  EventDraggableDialogProvider,
+  EventDraggableDialogTrigger,
+  useEventDraggableDialogContext,
+} from './EventDraggableDialog';

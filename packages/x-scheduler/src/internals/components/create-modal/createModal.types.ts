@@ -9,10 +9,13 @@ export interface CreateModalConfig {
   contextName: string;
 }
 
+export type ModalEventType = 'open' | 'close';
+
 export type ContextValue<TData> = {
   onOpen: (anchorRef: React.RefObject<HTMLElement | null>, data: TData) => void;
   onClose: () => void;
   isOpen: boolean;
+  subscribe: (event: ModalEventType, handler: (data?: any) => void) => () => void;
 };
 
 export interface ProviderProps<TData> {

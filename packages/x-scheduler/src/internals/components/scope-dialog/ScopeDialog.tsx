@@ -15,11 +15,11 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { ScopePopoverProps } from './ScopeDialog.types';
 import { useTranslations } from '../../utils/TranslationsContext';
+import { useEventDraggableDialogContext } from '../draggable-dialog';
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
     const { container, ...other } = props;
-    console.log(container);
 
     // Context hooks
     const translations = useTranslations();
@@ -45,6 +45,14 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
       store.selectRecurringEventUpdateScope(recurrenceScopeValue);
     };
 
+    const { subscribe } = useEventDraggableDialogContext();
+
+    React.useEffect(() => {
+      // subscribe('close', () => {
+      //   console.log('EventDraggableDialog closed');
+      // });
+      // console.log('MoreEventsPopover subscribe', subscribe);
+    }, [subscribe]);
     return (
       <Dialog
         open={open}

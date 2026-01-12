@@ -23,7 +23,7 @@ import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import '../index.css';
-import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
+import { useEventDraggableDialogContext } from '../internals/components/draggable-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -137,6 +137,7 @@ export const MonthView = React.memo(
     const adapter = useAdapter();
     const translations = useTranslations();
     const store = useEventCalendarStoreContext();
+    // const yo = useEventDraggableDialogContext();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -151,6 +152,10 @@ export const MonthView = React.memo(
 
     // Feature hooks
     const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
+
+    // React.useEffect(() => {
+    //   console.log('MonthView EventDraggableDialogContext', yo);
+    // }, [yo]);
 
     const weeks = React.useMemo(() => {
       const tempWeeks: SchedulerProcessedDate[][] = [];
@@ -185,33 +190,31 @@ export const MonthView = React.memo(
 
     return (
       <MonthViewRoot {...props} ref={handleRef}>
-        <EventDraggableDialogProvider containerRef={containerRef}>
-          <MoreEventsPopoverProvider>
-            <MonthViewGrid>
-              <MonthViewHeader ownerState={{ showWeekNumber }}>
-                {showWeekNumber && (
-                  <MonthViewWeekHeaderCell>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
-                )}
-                {weeks[0].map((weekDay) => (
-                  <MonthViewHeaderCell key={weekDay.key} date={weekDay} skipDataCurrent>
-                    {adapter.formatByString(weekDay.value, 'ccc')}
-                  </MonthViewHeaderCell>
-                ))}
-              </MonthViewHeader>
-              <MonthViewBody>
-                {weeks.map((week, weekIdx) => (
-                  <MonthViewWeekRow
-                    key={weekIdx}
-                    maxEvents={maxEvents}
-                    days={week}
-                    occurrencesMap={occurrencesMap}
-                    firstDayRef={weekIdx === 0 ? cellRef : undefined}
-                  />
-                ))}
-              </MonthViewBody>
-            </MonthViewGrid>
-          </MoreEventsPopoverProvider>
-        </EventDraggableDialogProvider>
+        <MoreEventsPopoverProvider>
+          <MonthViewGrid>
+            <MonthViewHeader ownerState={{ showWeekNumber }}>
+              {showWeekNumber && (
+                <MonthViewWeekHeaderCell>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
+              )}
+              {weeks[0].map((weekDay) => (
+                <MonthViewHeaderCell key={weekDay.key} date={weekDay} skipDataCurrent>
+                  {adapter.formatByString(weekDay.value, 'ccc')}
+                </MonthViewHeaderCell>
+              ))}
+            </MonthViewHeader>
+            <MonthViewBody>
+              {weeks.map((week, weekIdx) => (
+                <MonthViewWeekRow
+                  key={weekIdx}
+                  maxEvents={maxEvents}
+                  days={week}
+                  occurrencesMap={occurrencesMap}
+                  firstDayRef={weekIdx === 0 ? cellRef : undefined}
+                />
+              ))}
+            </MonthViewBody>
+          </MonthViewGrid>
+        </MoreEventsPopoverProvider>
       </MonthViewRoot>
     );
   }),

@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { EventManager } from '@mui/x-internals/EventManager';
 import {
   ContextValue,
   CreateModalConfig,
   ModalState,
   ProviderProps,
   TriggerProps,
+  ModalEventType,
 } from './createModal.types';
 
 export function createModal<TData>(config: CreateModalConfig) {
@@ -25,6 +27,7 @@ export function createModal<TData>(config: CreateModalConfig) {
   function Provider(props: ProviderProps<TData>) {
     const { children, render, onClose: onCloseProp } = props;
     const anchorRef = React.useRef<HTMLElement | null>(null);
+    const eventManager = React.useRef(new EventManager());
 
     const [state, setState] = React.useState<ModalState<TData>>({
       isOpen: false,
@@ -35,17 +38,26 @@ export function createModal<TData>(config: CreateModalConfig) {
       (forwardedAnchorRef: React.RefObject<HTMLElement | null>, data: TData) => {
         anchorRef.current = forwardedAnchorRef?.current ?? null;
         setState({ isOpen: true, data });
+        eventManager.current.emit('open', { data, anchorRef: anchorRef.current });
       },
     );
 
     const onClose = useStableCallback(() => {
       onCloseProp?.();
       setState({ isOpen: false, data: null });
+      eventManager.current.emit('close');
     });
 
+    const subscribe = React.useCallback((event: ModalEventType, handler: (data?: any) => void) => {
+      eventManager.current.on(event, handler);
+      return () => {
+        eventManager.current.removeListener(event, handler);
+      };
+    }, []);
+
     const contextValue = React.useMemo(
-      () => ({ onOpen, onClose, isOpen: state.isOpen || false }),
-      [onOpen, onClose, state.isOpen],
+      () => ({ onOpen, onClose, isOpen: state.isOpen || false, subscribe }),
+      [onOpen, onClose, state.isOpen, subscribe],
     );
 
     return (
