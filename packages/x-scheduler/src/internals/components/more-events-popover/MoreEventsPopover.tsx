@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
+import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
