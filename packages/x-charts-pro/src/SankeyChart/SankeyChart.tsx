@@ -5,22 +5,18 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { type ChartContainerProProps } from '../ChartContainerPro';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { SankeyPlot, type SankeyPlotProps } from './SankeyPlot';
 import { useSankeyChartProps } from './useSankeyChartProps';
-import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import type { SankeySeriesType } from './sankey.types';
-import { sankeySeriesConfig } from './seriesConfig';
 import { SankeyTooltip } from './SankeyTooltip';
 import type { SankeyChartSlotExtension } from './sankeySlots.types';
+import { SankeyDataProvider } from './SankeyDataProvider';
+import type { ChartContainerProProps } from '../ChartContainerPro';
+import type { SankeyChartPluginSignatures } from './SankeyChart.plugins';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
-
-const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
 
 export interface SankeyChartProps
   extends
@@ -60,19 +56,15 @@ const SankeyChart = React.forwardRef(function SankeyChart(
 
   const { chartContainerProps, sankeyPlotProps, overlayProps, chartsWrapperProps, children } =
     useSankeyChartProps(themedProps);
-  const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps(
-    chartContainerProps,
-    ref,
-  );
+  const {
+    chartDataProviderProProps: { series, ...chartDataProviderProProps },
+    chartsSurfaceProps,
+  } = useChartContainerProProps<'sankey', SankeyChartPluginSignatures>(chartContainerProps, ref);
 
   const Tooltip = themedProps.slots?.tooltip ?? SankeyTooltip;
 
   return (
-    <ChartDataProviderPro<'sankey', SankeyChartPluginSignatures>
-      {...chartDataProviderProProps}
-      seriesConfig={seriesConfig}
-      plugins={SANKEY_CHART_PLUGINS}
-    >
+    <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         <ChartsSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
@@ -81,7 +73,7 @@ const SankeyChart = React.forwardRef(function SankeyChart(
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
-    </ChartDataProviderPro>
+    </SankeyDataProvider>
   );
 });
 

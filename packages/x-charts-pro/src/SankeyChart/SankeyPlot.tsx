@@ -6,19 +6,18 @@ import {
   type SankeyLinkIdentifierWithData,
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';
-import { SankeyNodeElement } from './SankeyNodeElement';
-import { SankeyLinkElement } from './SankeyLinkElement';
-import { SankeyLinkLabel } from './SankeyLinkLabel';
-import { useSankeyLayout, useSankeySeriesContext } from '../hooks/useSankeySeries';
-import { sankeyPlotClasses, useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
-import { SankeyNodeLabel } from './SankeyNodeLabel';
+import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
+import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { SankeyNodePlot } from './SankeyNodePlot';
+import { SankeyLinkPlot } from './SankeyLinkPlot';
+import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
+import { SankeyLinkLabelPlot } from './SankeyLinkLabelPlot';
 
 export interface SankeyPlotProps {
   /**
    * Classes applied to the various elements.
    */
   classes?: Partial<SankeyPlotClasses>;
-
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -28,7 +27,6 @@ export interface SankeyPlotProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     node: SankeyNodeIdentifierWithData,
   ) => void;
-
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -43,13 +41,7 @@ export interface SankeyPlotProps {
 const SankeyPlotRoot = styled('g', {
   slot: 'internal',
   shouldForwardProp: undefined,
-})({
-  [`.${sankeyPlotClasses.links} path, .${sankeyPlotClasses.nodes} rect`]: {
-    transition: 'opacity 0.1s ease-out, filter 0.1s ease-out',
-  },
-  '& [data-faded=true]': { filter: 'saturate(80%)' },
-  '& [data-highlighted=true]': { filter: 'saturate(120%)' },
-});
+})({});
 
 /**
  * Renders a Sankey diagram plot.
@@ -59,8 +51,7 @@ function SankeyPlot(props: SankeyPlotProps) {
 
   const classes = useUtilityClasses({ classes: inputClasses });
 
-  const sankeyContext = useSankeySeriesContext();
-  const sankeySeries = sankeyContext?.series[sankeyContext?.seriesOrder[0]];
+  const sankeySeries = useSankeySeries()[0];
   const layout = useSankeyLayout();
 
   if (!sankeySeries) {
@@ -69,54 +60,21 @@ function SankeyPlot(props: SankeyPlotProps) {
     );
   }
 
+  // Early return if no data or dimensions
   if (!layout || !layout.links) {
     return null;
   }
 
   const { linkOptions, nodeOptions } = sankeySeries;
-  // Early return if no data or dimensions
 
   const showNodeLabels = nodeOptions?.showLabels ?? true;
   return (
     <SankeyPlotRoot className={classes.root}>
-      <g className={classes.links}>
-        {layout.links.map((link) => (
-          <SankeyLinkElement
-            seriesId={sankeySeries.id}
-            key={`${link.source.id}-${link.target.id}`}
-            link={link}
-            opacity={linkOptions?.opacity}
-            onClick={onLinkClick}
-          />
-        ))}
-      </g>
+      <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
+      <SankeyNodePlot classes={classes} onClick={onNodeClick} />
 
-      <g className={classes.nodes}>
-        {layout.nodes.map((node) => (
-          <SankeyNodeElement
-            seriesId={sankeySeries.id}
-            key={node.id}
-            node={node}
-            onClick={onNodeClick}
-          />
-        ))}
-      </g>
-
-      {linkOptions?.showValues && (
-        <g className={classes.linkLabels}>
-          {layout.links.map((link) => (
-            <SankeyLinkLabel key={`label-link-${link.source.id}-${link.target.id}`} link={link} />
-          ))}
-        </g>
-      )}
-
-      {showNodeLabels && (
-        <g className={classes.nodeLabels}>
-          {layout.nodes.map((node) => (
-            <SankeyNodeLabel key={`label-node-${node.id}`} node={node} />
-          ))}
-        </g>
-      )}
+      {linkOptions?.showValues && <SankeyLinkLabelPlot classes={classes} />}
+      {showNodeLabels && <SankeyNodeLabelPlot classes={classes} />}
     </SankeyPlotRoot>
   );
 }
