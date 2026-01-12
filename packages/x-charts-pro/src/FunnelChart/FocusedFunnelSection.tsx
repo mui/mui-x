@@ -1,16 +1,20 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import type { Point } from '@mui/x-charts/internals';
+import { useStore, type Point } from '@mui/x-charts/internals';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useFocusedItem } from '@mui/x-charts/hooks';
 import { useFunnelSeriesContext, useXAxis, useYAxis } from '../hooks';
 import { createPositionGetter } from './coordinateMapper';
 import { getFunnelCurve } from './curves/getFunnelCurve';
+import { selectorFunnelGap } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 
 export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
   const focusedItem = useFocusedItem();
+  const store = useStore();
+
+  const gap = store.use(selectorFunnelGap);
 
   const funnelSeries = useFunnelSeriesContext()?.series?.[focusedItem?.seriesId ?? ''];
 
@@ -23,10 +27,6 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
 
   const isHorizontal = funnelSeries.layout === 'horizontal';
   const baseScaleConfig = isHorizontal ? xAxis : yAxis;
-
-  // FIXME gap should be obtained from the store.
-  // Maybe moving it to the series would be a good idea similar to what we do with bar charts and their stackingGroups
-  const gap = 0;
 
   const xPosition = createPositionGetter(xAxis.scale, isHorizontal, gap);
   const yPosition = createPositionGetter(yAxis.scale, !isHorizontal, gap);
