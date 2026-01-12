@@ -74,7 +74,7 @@ export const useGridScroll = (
 
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
-      if (params.colIndex !== undefined) {
+      if (params.colIndex !== undefined && visibleColumns[params.colIndex]) {
         const columnPositions = gridColumnPositionsSelector(apiRef);
 
         let cellWidth: number | undefined;
@@ -102,6 +102,7 @@ export const useGridScroll = (
           elementOffset: columnPositions[params.colIndex],
         });
       }
+
       if (params.rowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef);
         const page = gridPageSelector(apiRef);
