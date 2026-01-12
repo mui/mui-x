@@ -333,6 +333,7 @@ export interface SchedulerProcessedDate {
    * The timestamp of the date.
    */
   timestamp: number;
+  minutesInDay: number;
 }
 
 /**

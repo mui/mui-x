@@ -17,6 +17,7 @@ export default function BasicTimeline() {
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
+        displayTimezone="Europe/Paris"
       />
     </div>
   );

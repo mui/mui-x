@@ -9,9 +9,15 @@ export function processDate(
   date: TemporalSupportedObject,
   adapter: Adapter,
 ): SchedulerProcessedDate {
+  const value = date;
+
+  const hours = Number(adapter.formatByString(value as Date, 'HH'));
+  const minutes = Number(adapter.formatByString(value as Date, 'mm'));
+
   return {
-    value: date,
-    key: getDateKey(date, adapter),
-    timestamp: adapter.getTime(date),
+    value,
+    key: getDateKey(value, adapter),
+    timestamp: adapter.getTime(value as Date),
+    minutesInDay: hours * 60 + minutes,
   };
 }

@@ -2,6 +2,8 @@ import * as React from 'react';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 
+const MINUTES_PER_DAY = 24 * 60;
+
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
 ): useElementPositionInCollection.ReturnValue {
@@ -10,17 +12,43 @@ export function useElementPositionInCollection(
   const adapter = useAdapter();
 
   return React.useMemo(() => {
-    const collectionStartTimestamp = adapter.getTime(collectionStart);
-    const collectionEndTimestamp = adapter.getTime(collectionEnd);
-    const collectionDurationMs = collectionEndTimestamp - collectionStartTimestamp;
-    const startTimestamp = Math.max(start.timestamp, collectionStartTimestamp);
-    const endTimestamp = Math.min(end.timestamp, collectionEndTimestamp);
+    const startDayIndex = adapter.differenceInDays(
+      adapter.startOfDay(start.value),
+      adapter.startOfDay(collectionStart),
+    );
+
+    const endDayIndex = adapter.differenceInDays(
+      adapter.startOfDay(end.value),
+      adapter.startOfDay(collectionStart),
+    );
+
+    const startIndexMinutes = startDayIndex * MINUTES_PER_DAY + start.minutesInDay;
+
+    let endIndexMinutes = endDayIndex * MINUTES_PER_DAY + end.minutesInDay;
+
+    // If the event ends before it starts, it means it spans over midnight(s)
+    if (endIndexMinutes < startIndexMinutes) {
+      endIndexMinutes += MINUTES_PER_DAY;
+    }
+
+    const totalDays =
+      adapter.differenceInDays(
+        adapter.startOfDay(collectionEnd),
+        adapter.startOfDay(collectionStart),
+      ) + 1;
+
+    const totalMinutes = Math.max(1, totalDays * MINUTES_PER_DAY);
+
+    const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMinutes);
+
+    const clampedStartMinutes = clampToTimeline(startIndexMinutes);
+    const clampedEndMinutes = clampToTimeline(endIndexMinutes);
 
     return {
-      position: (startTimestamp - collectionStartTimestamp) / collectionDurationMs,
-      duration: (endTimestamp - startTimestamp) / collectionDurationMs,
+      position: clampedStartMinutes / totalMinutes,
+      duration: Math.max(0, clampedEndMinutes - clampedStartMinutes) / totalMinutes,
     };
-  }, [adapter, collectionStart, collectionEnd, start, end]);
+  }, [adapter, start, end, collectionStart, collectionEnd]);
 }
 
 namespace useElementPositionInCollection {
