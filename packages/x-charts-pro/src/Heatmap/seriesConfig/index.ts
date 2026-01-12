@@ -21,5 +21,5 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap', HeatmapPlugin
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
-  getItemAtPosition
+  getItemAtPosition,
 };

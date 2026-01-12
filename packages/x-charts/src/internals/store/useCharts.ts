@@ -93,7 +93,7 @@ export function useCharts<
       >,
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
-      seriesConfig,
+      seriesConfig: seriesConfig as ChartSeriesConfig<any, any>,
     });
 
     if (pluginResponse.publicAPI) {

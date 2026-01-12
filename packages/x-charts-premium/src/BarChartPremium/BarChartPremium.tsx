@@ -20,7 +20,10 @@ import { seriesPreviewPlotMap, useChartContainerProProps } from '@mui/x-charts-p
 import type { BarChartPremiumPluginSignatures } from './BarChartPremium.plugins';
 import { useBarChartPremiumProps } from './useBarChartPremiumProps';
 import { BAR_CHART_PREMIUM_PLUGINS } from './BarChartPremium.plugins';
-import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
+import {
+  ChartDataProviderPremium,
+  type ChartDataProviderPremiumProps,
+} from '../ChartDataProviderPremium';
 import {
   type BarItemIdentifier,
   type RangeBarItemIdentifier,
@@ -35,7 +38,13 @@ seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export type RangeBarSeries = RangeBarSeriesType;
 
-export interface BarChartPremiumProps extends Omit<BarChartProProps, 'series' | 'onItemClick'> {
+export interface BarChartPremiumProps
+  extends
+    Omit<BarChartProProps, 'series' | 'onItemClick' | 'seriesConfig' | 'plugins'>,
+    Omit<
+      ChartDataProviderPremiumProps<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>,
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
+    > {
   /**
    * Callback fired when a bar or range bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -92,6 +101,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   >(
     {
       ...chartContainerProps,
+      seriesConfig: props.seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,

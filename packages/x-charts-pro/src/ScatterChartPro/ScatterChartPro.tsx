@@ -49,12 +49,10 @@ export interface ScatterChartProSlotProps
 
 export interface ScatterChartProProps
   extends
-    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
-      | 'plugins'
-      | 'seriesConfig'
       | 'onItemClick'
       | 'slots'
       | 'slotProps'
@@ -100,13 +98,14 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     legendProps,
     axisHighlightProps,
     children,
-  } = useScatterChartProps(other);
+  } = useScatterChartProps(other as ScatterChartProps);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'scatter',
     ScatterChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
+      seriesConfig: props.seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,

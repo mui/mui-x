@@ -40,10 +40,10 @@ export interface RadarChartProSlotProps
 
 export interface RadarChartProProps
   extends
-    Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       RadarDataProviderProps<RadarChartProPluginSignatures>,
-      'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
+      'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -80,13 +80,14 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
     legendProps,
     highlight,
     children,
-  } = useRadarChartProps(props);
+  } = useRadarChartProps(props as RadarChartProps);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   const radarDataProviderProProps: RadarDataProviderProps<RadarChartProPluginSignatures> = {
     ...radarDataProviderProps,
+    seriesConfig: props.seriesConfig,
     apiRef:
       radarDataProviderProps.apiRef as RadarDataProviderProps<RadarChartProPluginSignatures>['apiRef'],
     plugins: RADAR_CHART_PRO_PLUGINS,

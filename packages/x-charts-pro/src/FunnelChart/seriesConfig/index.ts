@@ -9,8 +9,9 @@ import legendGetter from './legend';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import type { FunnelChartPluginSignatures } from '../FunnelChart.plugins';
 
-export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
+export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel', FunnelChartPluginSignatures> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter,

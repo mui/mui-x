@@ -2,7 +2,6 @@ import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 
-
 export interface UseChartItemClickParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**
    * The callback fired when an item is clicked.
@@ -12,12 +11,11 @@ export interface UseChartItemClickParameters<SeriesType extends ChartSeriesType 
   onItemClick?: (item: SeriesItemIdentifier<SeriesType>) => void;
 }
 
-
 export interface UseChartItemClickInstance {
   handleClick?: (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => void;
 }
 
-export interface UseChartItemClickState { }
+export interface UseChartItemClickState {}
 
 export type UseChartItemClickSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{

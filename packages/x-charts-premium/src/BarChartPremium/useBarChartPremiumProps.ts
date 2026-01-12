@@ -1,4 +1,4 @@
-import { type BarChartPluginSignatures } from '@mui/x-charts/BarChart';
+import type { BarChartProps, BarChartPluginSignatures } from '@mui/x-charts/BarChart';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { type ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { type BarChartPremiumProps } from './BarChartPremium';
@@ -14,7 +14,7 @@ import type {} from '../typeOverloads';
  * @returns An object with props for the children components of BarChartPremium
  */
 export function useBarChartPremiumProps(props: BarChartPremiumProps) {
-  const { chartContainerProps, ...barChartProps } = useBarChartProps(props);
+  const { chartContainerProps, ...barChartProps } = useBarChartProps(props as BarChartProps);
 
   const rangeBarPlotProps: RangeBarPlotProps = {
     onItemClick: props.onItemClick as RangeBarPlotProps['onItemClick'],

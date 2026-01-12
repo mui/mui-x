@@ -5,7 +5,6 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { type ChartContainerProProps } from '../ChartContainerPro';
@@ -20,7 +19,7 @@ import type { SankeyChartSlotExtension } from './sankeySlots.types';
 
 export type SankeySeries = MakeOptional<SankeySeriesType, 'type'>;
 
-const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
+const seriesConfig = { sankey: sankeySeriesConfig };
 
 export interface SankeyChartProps
   extends
