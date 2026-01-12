@@ -64,7 +64,7 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.0
-  motion: ^12.23.26
+  motion: ^12.24.12
   prop-types: ^15.8.1
   react: 19.2.3
   react-dom: 19.2.3
