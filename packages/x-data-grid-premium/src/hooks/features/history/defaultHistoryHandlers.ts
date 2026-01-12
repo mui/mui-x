@@ -86,7 +86,7 @@ export const createCellEditHistoryHandler = (
           previousRow: row,
         });
       } else {
-        await apiRef.current.updateRows([{ id, [field]: oldValue }]);
+        apiRef.current.updateRows([{ id, [field]: oldValue }]);
       }
 
       // Use `requestAnimationFrame` to ensure all undo updates are applied
@@ -110,7 +110,7 @@ export const createCellEditHistoryHandler = (
           previousRow: row,
         });
       } else {
-        await apiRef.current.updateRows([{ id, [field]: newValue }]);
+        apiRef.current.updateRows([{ id, [field]: newValue }]);
       }
 
       // Use `requestAnimationFrame` to ensure all redo updates are applied
@@ -188,7 +188,7 @@ export const createRowEditHistoryHandler = (
           previousRow: newRow,
         });
       } else {
-        await apiRef.current.updateRows([{ id, ...oldRow }]);
+        apiRef.current.updateRows([{ id, ...oldRow }]);
       }
 
       // Use `requestAnimationFrame` to ensure all undo updates are applied
@@ -211,7 +211,7 @@ export const createRowEditHistoryHandler = (
           previousRow: oldRow,
         });
       } else {
-        await apiRef.current.updateRows([{ id, ...newRow }]);
+        apiRef.current.updateRows([{ id, ...newRow }]);
       }
 
       // Use `requestAnimationFrame` to ensure all redo updates are applied
@@ -300,7 +300,7 @@ export const createClipboardPasteHistoryHandler = (
         }
 
         // Restore all rows to their original state
-        await apiRef.current.updateRows(oldRowsValues);
+        apiRef.current.updateRows(oldRowsValues);
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
@@ -338,7 +338,7 @@ export const createClipboardPasteHistoryHandler = (
         }
 
         // Restore all rows to the pasted state
-        await apiRef.current.updateRows(newRowsValues);
+        apiRef.current.updateRows(newRowsValues);
 
         if (differentFieldIndex >= 0) {
           requestAnimationFrame(() => {
