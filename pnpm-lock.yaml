@@ -270,8 +270,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/monorepo':
-        specifier: github:mui/material-ui#cb4d8ac4f22ff04928060db22f76f4b0ab4ebd0e
-        version: https://codeload.github.com/mui/material-ui/tar.gz/cb4d8ac4f22ff04928060db22f76f4b0ab4ebd0e(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
+        specifier: github:mui/material-ui#cde0ba049f211c469d7af47751b4f4d2bec6ed89
+        version: https://codeload.github.com/mui/material-ui/tar.gz/cde0ba049f211c469d7af47751b4f4d2bec6ed89(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
       '@mui/utils':
         specifier: 'catalog:'
         version: 7.3.7(@types/react@19.2.7)(react@19.2.3)
@@ -4429,9 +4429,9 @@ packages:
       '@types/react':
         optional: true
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/cb4d8ac4f22ff04928060db22f76f4b0ab4ebd0e':
-    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/cb4d8ac4f22ff04928060db22f76f4b0ab4ebd0e}
-    version: 7.3.6
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/cde0ba049f211c469d7af47751b4f4d2bec6ed89':
+    resolution: {tarball: https://codeload.github.com/mui/material-ui/tar.gz/cde0ba049f211c469d7af47751b4f4d2bec6ed89}
+    version: 7.3.7
     engines: {node: '>=22.18.0', pnpm: 10.27.0}
 
   '@mui/private-theming@5.17.1':
@@ -6131,8 +6131,8 @@ packages:
       '@vitest/browser':
         optional: true
 
-  '@vitest/eslint-plugin@1.6.4':
-    resolution: {integrity: sha512-+qw32ux8HMVNrJnQOYgdjrMYmCn9vsiKnJUv5MoOg40e18WOvhWurzHdbRB3vXLfUrP7+jYyQbd6TuRhL23AkQ==}
+  '@vitest/eslint-plugin@1.6.6':
+    resolution: {integrity: sha512-bwgQxQWRtnTVzsUHK824tBmHzjV0iTx3tZaiQIYDjX3SA7TsQS8CuDVqxXrRY3FaOUMgbGavesCxI9MOfFLm7Q==}
     engines: {node: '>=18'}
     peerDependencies:
       eslint: '>=8.57.0'
@@ -14499,7 +14499,7 @@ snapshots:
       '@octokit/oauth-methods': 6.0.2
       '@octokit/rest': 22.0.1
       '@pnpm/find-workspace-dir': 1000.1.3
-      '@vitest/eslint-plugin': 1.6.4(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
+      '@vitest/eslint-plugin': 1.6.6(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
       babel-plugin-optimize-clsx: 2.6.2
       babel-plugin-react-compiler: 1.0.0
       babel-plugin-transform-inline-environment-variables: 0.4.4
@@ -14743,11 +14743,11 @@ snapshots:
       '@emotion/styled': 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
       '@types/react': 19.2.7
 
-  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/cb4d8ac4f22ff04928060db22f76f4b0ab4ebd0e(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
+  '@mui/monorepo@https://codeload.github.com/mui/material-ui/tar.gz/cde0ba049f211c469d7af47751b4f4d2bec6ed89(@babel/core@7.28.5)(@types/express@5.0.3)(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
     dependencies:
       '@netlify/functions': 5.1.2
       '@slack/bolt': 4.6.0(@types/express@5.0.3)
-      '@vitest/eslint-plugin': 1.6.4(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
+      '@vitest/eslint-plugin': 1.6.6(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)
       babel-plugin-transform-import-meta: 2.3.3(@babel/core@7.28.5)
       execa: 9.6.1
     transitivePeerDependencies:
@@ -16651,7 +16651,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/eslint-plugin@1.6.4(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
+  '@vitest/eslint-plugin@1.6.6(eslint@9.39.2)(typescript@5.9.3)(vitest@4.0.16)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.52.0
       '@typescript-eslint/utils': 8.52.0(eslint@9.39.2)(typescript@5.9.3)
