@@ -15,7 +15,7 @@ export default function SimpleScatterChart() {
     <Box sx={{ width: '100%', height: 300 }}>
       <ScatterChart
         series={[{ data, label: 'pv', id: 'pvId' }]}
-        xAxis={[{ min: 0 }]}
+        xAxis={[{ min: 0, height: 28 }]}
       />
     </Box>
   );

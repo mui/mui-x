@@ -355,6 +355,12 @@ FunnelChart.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeries]] objects.
    */
@@ -381,6 +387,15 @@ FunnelChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf(['funnel']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
