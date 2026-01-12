@@ -7,7 +7,10 @@ import IconButton from '@mui/material/IconButton';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggabble-dialog';
 import {
@@ -19,6 +22,7 @@ import { createModal } from '../create-modal';
 import { FormContent } from './FormContent';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
+import ReadonlyContent from './ReadonlyContent';
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
@@ -101,7 +105,13 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { style, container, anchorRef, occurrence, onClose, open, ...other } = props;
+  // Context hooks
+  const store = useSchedulerStoreContext();
 
+  // Selector hooks
+  const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
+
+  // Ref hooks
   const handleRef = React.useRef<HTMLButtonElement>(null);
 
   return (
@@ -130,7 +140,11 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
           <MoreHorizIcon />
         </IconButton>
       </Box>
-      <FormContent occurrence={occurrence} onClose={onClose} />
+      {isEventReadOnly ? (
+        <ReadonlyContent occurrence={occurrence} onClose={onClose} />
+      ) : (
+        <FormContent occurrence={occurrence} onClose={onClose} />
+      )}
     </Dialog>
   );
 });
