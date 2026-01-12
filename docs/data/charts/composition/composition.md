@@ -10,7 +10,8 @@ packageName: '@mui/x-charts'
 
 <p class="description">Learn how to use composition to build advanced custom Charts.</p>
 
-The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants, which can then be composed.
+The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants.
+These descendants can then be composed.
 
 There are two main types of components used to create Charts: [structural](#structural-components) and [graphical](#graphical-components).
 
@@ -32,9 +33,9 @@ For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/
 
 ### Chart Data Provider and Surface usage
 
-Notice that the `width` and `heigh` props are passed to the `ChartDataProvider` and not the `ChartsSurface`.
+Notice that the `width` and `height` props are passed to `ChartDataProvider` and not `ChartsSurface`.
 
-Also the `ChartsLegend` is placed inside the `ChartDataProvider` to get access to the context, but outside the `ChartsSurface` since it's not an SVG component.
+`ChartsLegend` is placed inside `ChartDataProvider` to get access to the context, but outside `ChartsSurface` since it's not an SVG component.
 
 ```jsx
 <ChartDataProvider
@@ -46,7 +47,7 @@ Also the `ChartsLegend` is placed inside the `ChartDataProvider` to get access t
 >
   <ChartsLegend />
   <ChartsSurface
-    // Ref needs to be directly on the ChartsSurface
+    // Ref needs to be directly on ChartsSurface
     ref={mySvgRef}
   >
     {children}
@@ -56,11 +57,11 @@ Also the `ChartsLegend` is placed inside the `ChartDataProvider` to get access t
 
 ### Chart Container usage
 
-The `ChartContainer` is the direct concatenation of the `ChartDataProvider` and `ChartsSurface`.
+`ChartContainer` is the direct concatenation of `ChartDataProvider` and `ChartsSurface`.
 It takes care of dispatching props between the two components.
 
-Using `ChartContainer` has one major drawback: All the children will be inside the `ChartsSurface`.
-So you can't render HTML elements like we did with `ChartsLegend` in the previous code example.
+Using `ChartContainer` has one major drawback: all the children will be inside `ChartsSurface`.
+You can't render HTML elements such as `ChartsLegend` as shown in the previous example.
 
 ```jsx
 <ChartContainer
@@ -69,7 +70,7 @@ So you can't render HTML elements like we did with `ChartsLegend` in the previou
   xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
   width={500}
   height={300}
-  // Ref is forwarded internally to the ChartsSurface
+  // Ref is forwarded internally to ChartsSurface
   ref={mySvgRef}
 >
   {children} // Only SVG component here
@@ -78,13 +79,13 @@ So you can't render HTML elements like we did with `ChartsLegend` in the previou
 
 ### Chart Wrapper usage
 
-Charts are often made of a graphic, plus a legend.
-The `ChartsWrapper` helps positioning those elements in a grid structure.
+Charts are often made of a graphic plus a legend.
+`ChartsWrapper` helps position those elements in a grid structure.
 
-The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`.
-Which is done by default on built-in components.
+The children should have a CSS `gridArea` property set to `'chart'` or `'legend'`.
+This is done by default on built-in components.
 
-The the layout can be modified with the [wrapper props](/x/api/charts/charts-wrapper/).
+The layout can be modified with the [wrapper props](/x/api/charts/charts-wrapper/).
 
 ```jsx
 <ChartDataProvider height={300} series={ /* ... */ }>
@@ -117,14 +118,14 @@ You can also [create your own custom components](/x/react-charts/components/) fo
 
 `ChartContainer` is responsive by default: it automatically adjusts its dimensions to fit the available space defined by the parent element.
 
-You can provide the `width` and `height` props to define the dimensions of a chart.
+Provide the `width` and `height` props to define the dimensions of a chart.
 
 :::warning
 For a chart to be responsive, its parent element must have intrinsic dimensions.
 If the parent's dimensions rely on its content, the responsive chart will not render.
 :::
 
-The demo below lets you switch between a chart with discrete dimensions (`width={500} height={300}`) and one with no dimensions defined, so you can see how they differ.
+The demo below lets you switch between a chart with discrete dimensions (`width={500} height={300}`) and one with no dimensions defined, so you see how they differ.
 
 {{"demo": "BasicComposition.js" }}
 
@@ -140,7 +141,7 @@ This includes:
 #### Series
 
 The `series` prop is an array of series definitions.
-Learn more about each specific series type in their respective documents:
+See the following documents to learn more about each specific series type:
 
 - [Line](/x/react-charts/lines/)
 - [Bar](/x/react-charts/bars/)
@@ -148,7 +149,7 @@ Learn more about each specific series type in their respective documents:
 - [Scatter](/x/react-charts/scatter/)
 
 When using a [self-contained Chart component](/x/react-charts/quickstart/#self-contained-charts), it's assumed that the series type corresponds to the Chart type.
-For example, `BarChart` assumes that `series` is of type `'bar'`:
+For example, `BarChart` assumes that `series` is of type `'bar'`.
 
 ```jsx
 <BarChart
@@ -161,8 +162,8 @@ For example, `BarChart` assumes that `series` is of type `'bar'`:
 />
 ```
 
-When [composing a custom Chart](/x/react-charts/quickstart/#composable-charts), `ChartContainer` doesn't know the series type so you must explicitly define it.
-For example, the custom Chart below uses both `BarPlot` and `LinePlot`, and each one requires a corresponding `type` for its `data`:
+When composing a custom chart, `ChartContainer` doesn't know the series type, so you must explicitly define it.
+For example, the custom chart below uses both `BarPlot` and `LinePlot`, and each one requires a corresponding `type` for its `data`.
 
 ```jsx
 <ChartContainer
@@ -178,10 +179,11 @@ For example, the custom Chart below uses both `BarPlot` and `LinePlot`, and each
 </ChartContainer>
 ```
 
-Those series can use the `dataset` prop the same way that a single-component chart does—see [Bars—Using a dataset](/x/react-charts/bars/#using-a-dataset) for more details.
+Those series can use the `dataset` prop the same way that a single-component chart does.
+See [Bars—Using a dataset](/x/react-charts/bars/#using-a-dataset) for more details.
 
-In the demo below, the Chart is constructed by combining `BarPlot` and `LinePlot`.
-By modifying the series `type` property, you can switch between rendering a line and a bar.
+In the demo below, the chart is constructed by combining `BarPlot` and `LinePlot`.
+You can modify the series `type` property to switch between rendering a line and a bar.
 
 ```jsx
 <ChartContainer
@@ -213,6 +215,7 @@ To display data, you can use the components named `[Type]Plot` such as `LinePlot
 
 Use the `ChartsClipPath` component to ensure chart elements stay confined to the designated drawing area.
 This component defines a rectangular clip path that acts as a boundary.
+
 Here's how to apply it:
 
 1. Define the clip path: Use `<ChartsClipPath id={clipPathId} />` to establish the clip path for the drawing area. `clipPathId` must be a unique identifier.
@@ -229,7 +232,7 @@ Here's how to apply it:
 </ChartContainer>
 ```
 
-The following demo lets you toggle clipping for scatter and line plots.
+The demo below lets you toggle clipping for scatter and line plots.
 Observe how the line markers extend beyond the clip area, rendering on top of the axes.
 
 {{"demo": "LimitOverflow.js" }}
@@ -243,7 +246,7 @@ const clipPathId = `${id}-clip-path`;
 ```
 
 It's important to generate unique IDs for clip paths, especially when dealing with multiple charts on a page.
-Assigning a static ID like `"my-id"` will lead to conflicts.
+Assigning a static ID like `"my-id"` leads to conflicts.
 :::
 
 ### Axis
@@ -265,7 +268,8 @@ Use `ChartsLegend` to display a legend with information about the chart.
 `ChartsLegend` is an HTML element since v8.
 It must be rendered inside `ChartDataProvider` to gain access to the data, but outside of `ChartsSurface` since it's not an SVG element.
 
-This means you can't use it inside `ChartContainer`—you must use `ChartDataProvider` and `ChartsSurface` instead.
+This means you can't use it inside `ChartContainer`.
+You must use `ChartDataProvider` and `ChartsSurface` instead.
 
 ```jsx
 // ✅ Correct
