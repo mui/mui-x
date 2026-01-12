@@ -48,7 +48,7 @@ Different chart types have different identifier formats:
 - We export a `VisibilityIdentifier` type that can be used to build such identifiers.
   - It accepts a series type as generic parameter, and can be used as `VisibilityIdentifier<'line'>` in order to narrow the allowed values.
 
-The demo below shows how to programmatically control which items are visible using buttons.
+The demo below shows how to control which items are visible using buttons.
 
 {{"demo": "ControlledVisibility.js"}}
 
