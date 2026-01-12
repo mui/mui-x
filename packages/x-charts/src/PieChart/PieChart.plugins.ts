@@ -21,7 +21,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
 export type PieChartPluginSignatures = [
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'pie'>,
   UseChartInteractionSignature,
   UseChartHighlightSignature,
   UseChartVisibilityManagerSignature<'pie'>,
