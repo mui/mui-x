@@ -23,7 +23,6 @@ import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import '../index.css';
-import { useEventDraggableDialogContext } from '../internals/components/draggable-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -152,10 +151,6 @@ export const MonthView = React.memo(
 
     // Feature hooks
     const { days } = useEventCalendarView(MONTH_VIEW_CONFIG);
-
-    // React.useEffect(() => {
-    //   console.log('MonthView EventDraggableDialogContext', yo);
-    // }, [yo]);
 
     const weeks = React.useMemo(() => {
       const tempWeeks: SchedulerProcessedDate[][] = [];
