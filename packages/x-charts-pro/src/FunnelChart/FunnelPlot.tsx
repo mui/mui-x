@@ -16,6 +16,7 @@ import {
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 import { createPositionGetter } from './coordinateMapper';
+import { getCornerPoints } from './getCornerPoints';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -61,41 +62,10 @@ const useAggregatedData = () => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const xPosition = createPositionGetter(xScale, isHorizontal, gap);
-      const yPosition = createPositionGetter(yScale, !isHorizontal, gap);
+      const xPosition = createPositionGetter(xScale, isHorizontal, gap, baseScaleConfig.data);
+      const yPosition = createPositionGetter(yScale, !isHorizontal, gap, baseScaleConfig.data);
 
-      const minPoint = {
-        x: Infinity,
-        y: Infinity,
-      };
-      const maxPoint = {
-        x: -Infinity,
-        y: -Infinity,
-      };
-
-      currentSeries.dataPoints.forEach((section, dataIndex) => {
-        section.forEach((v) => {
-          const x = xPosition(
-            v.x,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          );
-          const y = yPosition(
-            v.y,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          );
-
-          minPoint.x = Math.min(minPoint.x, x);
-          minPoint.y = Math.min(minPoint.y, y);
-          maxPoint.x = Math.max(maxPoint.x, x);
-          maxPoint.y = Math.max(maxPoint.y, y);
-        });
-      });
+      const [minPoint, maxPoint] = getCornerPoints(currentSeries.dataPoints, xPosition, yPosition);
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
@@ -123,20 +93,8 @@ const useAggregatedData = () => {
         });
         const bandPoints = curve({} as any).processPoints(
           values.map((v) => ({
-            x: xPosition(
-              v.x,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
-            y: yPosition(
-              v.y,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
+            x: xPosition(v.x, dataIndex, v.stackOffset, v.useBandWidth),
+            y: yPosition(v.y, dataIndex, v.stackOffset, v.useBandWidth),
           })),
         );
 

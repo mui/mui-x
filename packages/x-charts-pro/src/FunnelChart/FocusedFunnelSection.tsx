@@ -8,6 +8,7 @@ import { useFunnelSeriesContext, useXAxis, useYAxis } from '../hooks';
 import { createPositionGetter } from './coordinateMapper';
 import { getFunnelCurve } from './curves/getFunnelCurve';
 import { selectorFunnelGap } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
+import { getCornerPoints } from './getCornerPoints';
 
 export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
@@ -28,43 +29,12 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
   const isHorizontal = funnelSeries.layout === 'horizontal';
   const baseScaleConfig = isHorizontal ? xAxis : yAxis;
 
-  const xPosition = createPositionGetter(xAxis.scale, isHorizontal, gap);
-  const yPosition = createPositionGetter(yAxis.scale, !isHorizontal, gap);
+  const xPosition = createPositionGetter(xAxis.scale, isHorizontal, gap, baseScaleConfig.data);
+  const yPosition = createPositionGetter(yAxis.scale, !isHorizontal, gap, baseScaleConfig.data);
 
   const isIncreasing = funnelSeries.funnelDirection === 'increasing';
 
-  const minPoint = {
-    x: Infinity,
-    y: Infinity,
-  };
-  const maxPoint = {
-    x: -Infinity,
-    y: -Infinity,
-  };
-
-  funnelSeries.dataPoints.forEach((section) => {
-    section.forEach((v) => {
-      const x = xPosition(
-        v.x,
-        focusedItem.dataIndex,
-        baseScaleConfig.data?.[focusedItem.dataIndex],
-        v.stackOffset,
-        v.useBandWidth,
-      );
-      const y = yPosition(
-        v.y,
-        focusedItem.dataIndex,
-        baseScaleConfig.data?.[focusedItem.dataIndex],
-        v.stackOffset,
-        v.useBandWidth,
-      );
-
-      minPoint.x = Math.min(minPoint.x, x);
-      minPoint.y = Math.min(minPoint.y, y);
-      maxPoint.x = Math.max(maxPoint.x, x);
-      maxPoint.y = Math.max(maxPoint.y, y);
-    });
-  });
+  const [minPoint, maxPoint] = getCornerPoints(funnelSeries.dataPoints, xPosition, yPosition);
 
   const curve = getFunnelCurve(funnelSeries.curve, {
     isHorizontal,
@@ -79,20 +49,8 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
 
   const bandPoints = curve({} as any).processPoints(
     funnelSeries.dataPoints[focusedItem.dataIndex].map((v) => ({
-      x: xPosition(
-        v.x,
-        focusedItem.dataIndex,
-        baseScaleConfig.data?.[focusedItem.dataIndex],
-        v.stackOffset,
-        v.useBandWidth,
-      ),
-      y: yPosition(
-        v.y,
-        focusedItem.dataIndex,
-        baseScaleConfig.data?.[focusedItem.dataIndex],
-        v.stackOffset,
-        v.useBandWidth,
-      ),
+      x: xPosition(v.x, focusedItem.dataIndex, v.stackOffset, v.useBandWidth),
+      y: yPosition(v.y, focusedItem.dataIndex, v.stackOffset, v.useBandWidth),
     })),
   );
 
