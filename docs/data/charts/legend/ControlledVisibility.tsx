@@ -8,9 +8,9 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import type { VisibilityIdentifier } from '@mui/x-charts/plugins';
 
 const data = [
-  { id: 0, value: 10, label: 'Series A' },
-  { id: 1, value: 15, label: 'Series B' },
-  { id: 2, value: 20, label: 'Series C' },
+  { value: 10, label: 'Series A' },
+  { value: 15, label: 'Series B' },
+  { value: 20, label: 'Series C' },
 ];
 
 export default function ControlledVisibility() {
@@ -24,16 +24,16 @@ export default function ControlledVisibility() {
 
   const handleHideAll = () => {
     setHiddenItems([
-      { type: 'pie', seriesId: 'pie', dataIndex: 0 },
-      { type: 'pie', seriesId: 'pie', dataIndex: 1 },
-      { type: 'pie', seriesId: 'pie', dataIndex: 2 },
+      { type: 'pie', seriesId: 'custom', dataIndex: 0 },
+      { type: 'pie', seriesId: 'custom', dataIndex: 1 },
+      { type: 'pie', seriesId: 'custom', dataIndex: 2 },
     ]);
   };
 
   const handleShowOnlyA = () => {
     setHiddenItems([
-      { type: 'pie', seriesId: 'pie', dataIndex: 1 },
-      { type: 'pie', seriesId: 'pie', dataIndex: 2 },
+      { type: 'pie', seriesId: 'custom', dataIndex: 1 },
+      { type: 'pie', seriesId: 'custom', dataIndex: 2 },
     ]);
   };
 
@@ -93,7 +93,7 @@ export default function ControlledVisibility() {
         </ToggleButtonGroup>
       </FormControl>
       <PieChart
-        series={[{ id: 'pie', data }]}
+        series={[{ id: 'custom', data }]}
         height={300}
         hiddenItems={hiddenItems}
         slotProps={{
