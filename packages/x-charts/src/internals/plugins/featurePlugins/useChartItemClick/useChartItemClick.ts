@@ -3,6 +3,7 @@ import type { ChartAnyPluginSignature, ChartInstance, ChartState, ChartPlugin } 
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import { getSVGPoint } from '../../../../internals/getSVGPoint';
 
 export type GetItemAtPosition = <
   TSeriesType extends ChartSeriesType,
@@ -25,17 +26,19 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
     return { instance: {} };
   }
 
-  const getItemPosition = (x: number, y: number) => {
+  const getItemPosition = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     let item: SeriesItemIdentifier<ChartSeriesType> | undefined = undefined;
 
     for (const getter of Object.values(store.state.series.seriesConfig)) {
       if (getter.getItemAtPosition === undefined) {
         continue;
       }
-      item = getter.getItemAtPosition(store.state, instance, { x, y });
+
+      const svgPoint = getSVGPoint(event?.currentTarget, event);
+      item = getter.getItemAtPosition(store.state, instance, { x: svgPoint.x, y: svgPoint.y });
 
       if (item) {
-        break;
+        return item
       }
     }
     return item;
@@ -44,7 +47,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
   return {
     instance: {
       handleClick: (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        const item = getItemPosition(event.clientX, event.clientY);
+        const item = getItemPosition(event);
         if (item !== undefined) {
           onItemClick(item);
         }

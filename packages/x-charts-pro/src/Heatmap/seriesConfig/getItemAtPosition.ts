@@ -51,7 +51,10 @@ export default function getItemAtPosition(
     : -1;
 
   if (dataIndex === -1) {
-    return undefined;
+    return {
+      type: 'heatmap',
+      seriesId,
+    }
   }
 
   return {
