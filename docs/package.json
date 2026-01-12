@@ -86,7 +86,7 @@
     "react": "catalog:",
     "react-docgen": "^5.4.3",
     "react-dom": "catalog:",
-    "react-hook-form": "^7.69.0",
+    "react-hook-form": "^7.70.0",
     "react-router": "catalog:",
     "react-runner": "^1.0.5",
     "react-simple-code-editor": "^0.14.1",
