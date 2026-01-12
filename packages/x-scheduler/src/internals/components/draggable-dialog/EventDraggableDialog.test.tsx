@@ -267,7 +267,10 @@ describe('<EventDraggableDialogContent />', () => {
         resources={resourcesNoColor}
       >
         <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} occurrence={eventWithNoResourceColorOccurrence} />
+          <EventDraggableDialogContent
+            {...defaultProps}
+            occurrence={eventWithNoResourceColorOccurrence}
+          />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -301,7 +304,10 @@ describe('<EventDraggableDialogContent />', () => {
         resources={resources}
       >
         <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} occurrence={eventWithoutResourceOccurrence} />
+          <EventDraggableDialogContent
+            {...defaultProps}
+            occurrence={eventWithoutResourceOccurrence}
+          />
         </Popover.Root>
       </EventCalendarProvider>,
     );
@@ -1125,7 +1131,10 @@ describe('<EventDraggableDialogContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventDraggableDialogContent {...defaultProps} occurrence={nonRecurringEventOccurrence} />
+              <EventDraggableDialogContent
+                {...defaultProps}
+                occurrence={nonRecurringEventOccurrence}
+              />
             </Popover.Root>
           </EventCalendarProvider>,
         );
@@ -1162,7 +1171,10 @@ describe('<EventDraggableDialogContent />', () => {
               }}
             />
             <Popover.Root open>
-              <EventDraggableDialogContent {...defaultProps} occurrence={nonRecurringEventOccurrence} />
+              <EventDraggableDialogContent
+                {...defaultProps}
+                occurrence={nonRecurringEventOccurrence}
+              />
             </Popover.Root>
           </EventCalendarProvider>,
         );
