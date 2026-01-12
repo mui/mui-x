@@ -41,7 +41,7 @@ export type ChartContextValue<
 
 export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
   UseChartBaseProps<TSignatures> &
-    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+  MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
 
 export interface ChartProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -56,5 +56,5 @@ export interface ChartProviderProps<
    * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
-  seriesConfig?: ChartSeriesConfig<TSeries>;
+  seriesConfig?: ChartSeriesConfig<TSeries, TSignatures>;
 }

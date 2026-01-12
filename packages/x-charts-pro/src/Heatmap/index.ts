@@ -5,4 +5,4 @@ export type { HeatmapCellProps } from './HeatmapItem';
 export * from './HeatmapTooltip';
 export * from './Heatmap.plugins';
 export * from './heatmapClasses';
-export * from './plugins/useHeatmapCellClick';
+

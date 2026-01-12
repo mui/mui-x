@@ -14,40 +14,50 @@ import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.type
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
+import { type GetItemAtPosition } from './getItemAtPosition.types';
+import { type ChartAnyPluginSignature } from '../plugin';
 
-export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
-  seriesProcessor: SeriesProcessor<TSeriesType>;
-  /**
-   * A processor to add series layout when the layout does not depend from other series.
-   */
-  seriesLayout?: SeriesLayoutGetter<TSeriesType>;
-  colorProcessor: ColorProcessor<TSeriesType>;
-  legendGetter: LegendGetter<TSeriesType>;
-  tooltipGetter: TooltipGetter<TSeriesType>;
-  tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
-  getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
-  keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
-  /**
-   * A function to serialize the series item identifier into a unique string.
-   * @param {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} identifier The series item identifier.
-   * @returns {string} A unique string representation of the identifier.
-   */
-  identifierSerializer: IdentifierSerializer<TSeriesType>;
-} & (TSeriesType extends CartesianChartSeriesType
-  ? {
+export type ChartSeriesTypeConfig<
+  TSeriesType extends ChartSeriesType,
+  RequiredPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
+  OptionalPluginsSignatures extends readonly ChartAnyPluginSignature[] = []
+>
+  = {
+    seriesProcessor: SeriesProcessor<TSeriesType>;
+    /**
+     * A processor to add series layout when the layout does not depend from other series.
+     */
+    seriesLayout?: SeriesLayoutGetter<TSeriesType>;
+    colorProcessor: ColorProcessor<TSeriesType>;
+    legendGetter: LegendGetter<TSeriesType>;
+    tooltipGetter: TooltipGetter<TSeriesType>;
+    tooltipItemPositionGetter?: TooltipItemPositionGetter<TSeriesType>;
+    getSeriesWithDefaultValues: GetSeriesWithDefaultValues<TSeriesType>;
+    keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
+    /**
+     * A function to serialize the series item identifier into a unique string.
+     * @param {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} identifier The series item identifier.
+     * @returns {string} A unique string representation of the identifier.
+     */
+    identifierSerializer: IdentifierSerializer<TSeriesType>;
+    getItemAtPosition?: GetItemAtPosition<TSeriesType, RequiredPluginsSignatures, OptionalPluginsSignatures>
+  } & (TSeriesType extends CartesianChartSeriesType
+    ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
       yExtremumGetter: CartesianExtremumGetter<TSeriesType>;
       axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'x' | 'y'>;
     }
-  : {}) &
+    : {}) &
   (TSeriesType extends PolarChartSeriesType
     ? {
-        rotationExtremumGetter: PolarExtremumGetter<TSeriesType>;
-        radiusExtremumGetter: PolarExtremumGetter<TSeriesType>;
-        axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'rotation' | 'radius'>;
-      }
+      rotationExtremumGetter: PolarExtremumGetter<TSeriesType>;
+      radiusExtremumGetter: PolarExtremumGetter<TSeriesType>;
+      axisTooltipGetter?: AxisTooltipGetter<TSeriesType, 'rotation' | 'radius'>;
+    }
     : {});
 
-export type ChartSeriesConfig<TSeriesType extends ChartSeriesType> = {
-  [Key in TSeriesType]: ChartSeriesTypeConfig<Key>;
-};
+export type ChartSeriesConfig<TSeriesType extends ChartSeriesType,
+  RequiredPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
+  OptionalPluginsSignatures extends readonly ChartAnyPluginSignature[] = []> = {
+    [Key in TSeriesType]: ChartSeriesTypeConfig<Key, RequiredPluginsSignatures, OptionalPluginsSignatures>;
+  };

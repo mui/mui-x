@@ -33,7 +33,7 @@ export function useCharts<
 >(
   inPlugins: ConvertSignaturesIntoPlugins<TSignatures>,
   props: Partial<UseChartBaseProps<TSignatures>>,
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
+  seriesConfig: ChartSeriesConfig<TSeriesType, TSignatures>,
 ) {
   type TSignaturesWithCorePluginSignatures = readonly [
     ...ChartCorePluginSignatures,

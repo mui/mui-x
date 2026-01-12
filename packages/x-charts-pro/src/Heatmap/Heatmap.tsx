@@ -101,7 +101,7 @@ export interface HeatmapProps
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    *
-   * @deprecated Use `onCellClick` instead to get access to both x- and y-axis values.
+   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
    */
   onAxisClick?: ChartContainerProProps<'heatmap', HeatmapPluginSignatures>['onAxisClick'];
   /**
@@ -161,7 +161,9 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
+const seriesConfig: ChartSeriesConfig<'heatmap', HeatmapPluginSignatures> = {
+  heatmap: heatmapSeriesConfig,
+};
 
 function getDefaultDataForAxis(series: HeatmapProps['series'], dimension: number) {
   if (series?.[0]?.data === undefined || series[0].data.length === 0) {
@@ -200,7 +202,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     loading,
     highlightedItem,
     onHighlightChange,
-    onCellClick,
+    onItemClick,
     hideLegend = true,
     showToolbar = false,
   } = props;
@@ -274,7 +276,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
       onAxisClick={onAxisClick}
-      onCellClick={onCellClick}
+      onItemClick={onItemClick}
       plugins={HEATMAP_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
@@ -403,15 +405,9 @@ Heatmap.propTypes = {
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
    *
-   * @deprecated Use `onCellClick` instead to get access to both x- and y-axis values.
+   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
    */
   onAxisClick: PropTypes.func,
-  /**
-   * Callback fired when a cell is clicked.
-   * @param {PointerEvent} event The native pointer event
-   * @param {OnCellClickParams} params The parameters related to the clicked cell
-   */
-  onCellClick: PropTypes.func,
   /**
    * The callback fired when the highlighted item changes.
    *

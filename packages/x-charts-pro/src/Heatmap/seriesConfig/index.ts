@@ -8,8 +8,10 @@ import getColor from './getColor';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import getItemAtPosition from './getItemAtPosition';
+import type { HeatmapPluginSignatures } from '../Heatmap.plugins';
 
-export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
+export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap', HeatmapPluginSignatures> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter: () => [],
@@ -19,4 +21,5 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  getItemAtPosition
 };

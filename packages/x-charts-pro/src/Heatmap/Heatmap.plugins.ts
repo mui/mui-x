@@ -9,9 +9,11 @@ import {
   type UseChartInteractionSignature,
   useChartHighlight,
   type UseChartHighlightSignature,
-  type ConvertSignaturesIntoPlugins,
   useChartBrush,
   type UseChartBrushSignature,
+  useChartItemClick,
+  type UseChartItemClickSignature,
+  type ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -21,10 +23,6 @@ import {
   useChartProZoom,
   type UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
-import {
-  useHeatmapCellClick,
-  type UseHeatmapCellClickSignature,
-} from './plugins/useHeatmapCellClick';
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
@@ -35,7 +33,7 @@ export type HeatmapPluginSignatures = [
   UseChartProExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,
-  UseHeatmapCellClickSignature,
+  UseChartItemClickSignature<'heatmap'>,
 ];
 
 export const HEATMAP_PLUGINS = [
@@ -47,5 +45,5 @@ export const HEATMAP_PLUGINS = [
   useChartProExport,
   useChartBrush,
   useChartProZoom,
-  useHeatmapCellClick,
+  useChartItemClick,
 ] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;

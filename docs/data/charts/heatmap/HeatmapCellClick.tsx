@@ -5,14 +5,11 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
-import { Heatmap, OnCellClickParams } from '@mui/x-charts-pro/Heatmap';
+import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';
 
 export default function HeatmapCellClick() {
-  const [cellData, setCellData] = React.useState<OnCellClickParams<
-    number,
-    string
-  > | null>(null);
+  const [cellData, setCellData] = React.useState<any>(null);
 
   return (
     <Stack
@@ -31,7 +28,7 @@ export default function HeatmapCellClick() {
             },
           ]}
           height={300}
-          onCellClick={(event, params) => setCellData(params)}
+          onItemClick={(params) => setCellData(params)}
         />
       </Box>
 

@@ -28,7 +28,7 @@ export default function HeatmapCellClick() {
             },
           ]}
           height={300}
-          onCellClick={(event, params) => setCellData(params)}
+          onItemClick={( params) => setCellData(params)}
         />
       </Box>
 
