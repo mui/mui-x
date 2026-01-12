@@ -186,7 +186,7 @@ export const MonthView = React.memo(
     return (
       <MonthViewRoot {...props} ref={handleRef}>
         <EventDraggableDialogProvider containerRef={containerRef}>
-          <MoreEventsPopoverProvider containerRef={containerRef}>
+          <MoreEventsPopoverProvider>
             <MonthViewGrid>
               <MonthViewHeader ownerState={{ showWeekNumber }}>
                 {showWeekNumber && (

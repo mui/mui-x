@@ -160,7 +160,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const { open: startEditing } = useEventDraggableDialogContext();
+  const { onOpen: startEditing } = useEventDraggableDialogContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -215,7 +215,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
-    startEditing(cellRef.current, placeholder);
+    startEditing(cellRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
@@ -261,16 +261,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           );
         })}
         {hiddenCount > 0 && (
-          <MoreEventsPopoverTrigger
-            occurrences={day.withPosition}
-            day={day}
-            nativeButton={true}
-            render={
-              <MonthViewMoreEvents size="small" aria-label={translations.hiddenEvents(hiddenCount)}>
-                {translations.hiddenEvents(hiddenCount)}
-              </MonthViewMoreEvents>
-            }
-          />
+          <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
+            <MonthViewMoreEvents size="small" aria-label={translations.hiddenEvents(hiddenCount)}>
+              {translations.hiddenEvents(hiddenCount)}
+            </MonthViewMoreEvents>
+          </MoreEventsPopoverTrigger>
         )}
         {placeholder != null && (
           <MonthViewPlaceholderEventContainer>

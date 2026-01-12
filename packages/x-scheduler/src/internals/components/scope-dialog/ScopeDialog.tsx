@@ -18,7 +18,8 @@ import { useTranslations } from '../../utils/TranslationsContext';
 
 export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopoverProps>(
   function ScopeDialog(props, ref) {
-    const { containerRef, ...other } = props;
+    const { container, ...other } = props;
+    console.log(container);
 
     // Context hooks
     const translations = useTranslations();
@@ -45,47 +46,47 @@ export const RecurringScopeDialog = React.forwardRef<HTMLDivElement, ScopePopove
     };
 
     return (
-      <div ref={ref} {...other}>
-        <Dialog
-          open={open}
-          onClose={() => handleOpenChange(false)}
-          container={containerRef.current}
-          aria-labelledby="scope-dialog-title"
-        >
-          <form onSubmit={handleSubmit}>
-            <DialogTitle id="scope-dialog-title">{translations.title}</DialogTitle>
-            <DialogContent>
-              <FormControl>
-                <RadioGroup
-                  aria-label={translations.radioGroupAriaLabel}
-                  defaultValue="only-this"
-                  name="recurrenceScope"
-                >
-                  <FormControlLabel
-                    value="only-this"
-                    control={<Radio />}
-                    label={translations.onlyThis}
-                  />
-                  <FormControlLabel
-                    value="this-and-following"
-                    control={<Radio />}
-                    label={translations.thisAndFollowing}
-                  />
-                  <FormControlLabel value="all" control={<Radio />} label={translations.all} />
-                </RadioGroup>
-              </FormControl>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => store.selectRecurringEventUpdateScope(null)} type="button">
-                {translations.cancel}
-              </Button>
-              <Button variant="contained" type="submit">
-                {translations.confirm}
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
-      </div>
+      <Dialog
+        open={open}
+        ref={ref}
+        onClose={() => handleOpenChange(false)}
+        container={container}
+        aria-labelledby="scope-dialog-title"
+        {...other}
+      >
+        <form onSubmit={handleSubmit}>
+          <DialogTitle id="scope-dialog-title">{translations.title}</DialogTitle>
+          <DialogContent>
+            <FormControl>
+              <RadioGroup
+                aria-label={translations.radioGroupAriaLabel}
+                defaultValue="only-this"
+                name="recurrenceScope"
+              >
+                <FormControlLabel
+                  value="only-this"
+                  control={<Radio />}
+                  label={translations.onlyThis}
+                />
+                <FormControlLabel
+                  value="this-and-following"
+                  control={<Radio />}
+                  label={translations.thisAndFollowing}
+                />
+                <FormControlLabel value="all" control={<Radio />} label={translations.all} />
+              </RadioGroup>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => store.selectRecurringEventUpdateScope(null)} type="button">
+              {translations.cancel}
+            </Button>
+            <Button variant="contained" type="submit">
+              {translations.confirm}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     );
   },
 );

@@ -10,15 +10,11 @@ export interface EventDraggableDialogProps extends DialogProps {
   /**
    * The anchor element for the popover positioning.
    */
-  anchor: HTMLElement;
+  anchorRef: React.RefObject<HTMLElement | null>;
   /**
    * Handles the close action of the popover.
    */
   onClose: () => void;
-  /**
-   * Ref to the Paper element of the dialog.
-   */
-  paperRef?: React.RefObject<HTMLDivElement>;
 }
 
 export interface EventDraggableDialogProviderProps {

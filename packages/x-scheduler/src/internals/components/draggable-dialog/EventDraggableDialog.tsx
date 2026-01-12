@@ -1,16 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import useForkRef from '@mui/utils/useForkRef';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
 import Paper, { PaperProps } from '@mui/material/Paper';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
-import {
-  schedulerEventSelectors,
-  schedulerOtherSelectors,
-} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggabble-dialog';
 import {
@@ -18,36 +15,38 @@ import {
   EventDraggableDialogProviderProps,
   EventDraggableDialogTriggerProps,
 } from './EventDraggableDialog.types';
-import { createDialog } from '../create-dialog';
+import { createModal } from '../create-modal';
 import { FormContent } from './FormContent';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
 
+interface PaperComponentProps extends PaperProps {
+  anchorRef: React.RefObject<HTMLElement>;
+  handleRef: React.RefObject<HTMLDivElement>;
+}
+
 // 1. Setup the Draggable Paper Logic
-const PaperComponent = React.forwardRef(function PaperComponent(
-  props: PaperProps & {
-    anchorElement: React.RefObject<HTMLElement | null>;
-    handleRef: React.RefObject<HTMLDivElement>;
-  },
-  ref: React.ForwardedRef<HTMLDivElement>,
-) {
+const PaperComponent = function PaperComponent(props: PaperComponentProps) {
+  const store = useSchedulerStoreContext();
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+
   const nodeRef = React.useRef<HTMLDivElement>(null);
-  const finalRef = useForkRef(ref, nodeRef);
 
-  const mutateStyle = React.useCallback((style: string) => {
-    if (nodeRef.current) {
-      nodeRef.current.style.transform = style;
-    }
-  }, []);
+  const mutateStyle = React.useCallback(
+    (style: string) => {
+      if (nodeRef.current) {
+        nodeRef.current.style.transform = style;
+      }
+    },
+    [nodeRef],
+  );
 
-  const { anchorElement, handleRef, ...other } = props;
+  const { anchorRef, handleRef, children, ...other } = props;
   const resetDrag = useDraggableDialog(nodeRef, handleRef, mutateStyle);
 
   const updatePosition = React.useCallback(
     (shouldResetDrag = false) => {
-      const position = calculatePosition(anchorElement, nodeRef.current, 'left');
-      console.log('Calculated Position:', position);
-
+      const position = calculatePosition(anchorRef.current, nodeRef.current, 'left');
       if (position && nodeRef.current) {
         nodeRef.current.style.top = `${position.top}px`;
         nodeRef.current.style.left = `${position.left}px`;
@@ -58,7 +57,7 @@ const PaperComponent = React.forwardRef(function PaperComponent(
         }
       }
     },
-    [anchorElement, resetDrag, nodeRef],
+    [anchorRef, resetDrag, nodeRef],
   );
 
   React.useLayoutEffect(() => {
@@ -78,7 +77,7 @@ const PaperComponent = React.forwardRef(function PaperComponent(
   return (
     <Paper
       {...other}
-      ref={finalRef}
+      ref={nodeRef}
       sx={{
         position: 'relative',
         inset: 0,
@@ -89,11 +88,14 @@ const PaperComponent = React.forwardRef(function PaperComponent(
         m: 0,
         cursor: 'move',
       }}
-    />
+    >
+      {children}
+      {isScopeDialogOpen && <RecurringScopeDialog />}
+    </Paper>
   );
-});
+} as any as DialogProps['PaperComponent'];
 
-const EventDraggableDialog = createDialog<SchedulerEventOccurrence>({
+const EventDraggableDialog = createModal<SchedulerEventOccurrence>({
   contextName: 'EventDraggableDialogContext',
 });
 
@@ -104,8 +106,9 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   props: EventDraggableDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { style, container, anchor, occurrence, onClose, open, paperRef, ...other } = props;
-  const handleRef = React.useRef<HTMLDivElement>(null);
+  const { style, container, anchorRef, occurrence, onClose, open, ...other } = props;
+
+  const handleRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <Dialog
@@ -124,12 +127,14 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
         container: {
           sx: { width: '100%', justifyContent: 'unset', alignItems: 'unset' },
         },
-        paper: { sx: { m: 0 }, anchorElement: anchor, handleRef, ref: paperRef },
+        paper: { sx: { m: 0 }, anchorRef, handleRef } as PaperProps,
       }}
       {...other}
     >
       <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <MoreHorizIcon ref={handleRef} />
+        <IconButton size="small" aria-label="drag-handle" ref={handleRef}>
+          <MoreHorizIcon />
+        </IconButton>
       </Box>
       <FormContent occurrence={occurrence} onClose={onClose} />
     </Dialog>
@@ -139,18 +144,15 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 export function EventDraggableDialogProvider(props: EventDraggableDialogProviderProps) {
   const { children } = props;
   const store = useSchedulerStoreContext();
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
-  const ref = React.useRef<HTMLDivElement>(null);
 
   return (
     <EventDraggableDialog.Provider
-      render={({ anchor, data: occurrence, onClose, isOpen }) => (
+      render={({ isOpen, anchorRef, data: occurrence, onClose }) => (
         <EventDraggableDialogContent
-          anchor={anchor}
+          open={isOpen}
+          anchorRef={anchorRef}
           occurrence={occurrence}
           onClose={onClose}
-          open={isOpen}
-          paperRef={ref}
         />
       )}
       onClose={() => {
@@ -158,13 +160,13 @@ export function EventDraggableDialogProvider(props: EventDraggableDialogProvider
       }}
     >
       {children}
-      {isScopeDialogOpen && <RecurringScopeDialog containerRef={ref} />}
     </EventDraggableDialog.Provider>
   );
 }
 
 export function EventDraggableDialogTrigger(props: EventDraggableDialogTriggerProps) {
   const { occurrence, ...other } = props;
+  const ref = React.useRef<HTMLElement | null>(null);
 
-  return <EventDraggableDialog.Trigger data={occurrence} {...other} />;
+  return <EventDraggableDialog.Trigger ref={ref} data={occurrence} {...other} />;
 }

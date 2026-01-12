@@ -3,16 +3,16 @@ import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import {
   ContextValue,
-  CreateDialogConfig,
-  DialogState,
+  CreateModalConfig,
+  ModalState,
   ProviderProps,
   TriggerProps,
-} from './createDialog.types';
+} from './createModal.types';
 
-export function createDialog<TData>(config: CreateDialogConfig) {
+export function createModal<TData>(config: CreateModalConfig) {
   const Context = React.createContext<ContextValue<TData> | undefined>(undefined);
 
-  function useDialogContext() {
+  function useModalContext() {
     const context = React.useContext(Context);
     if (!context) {
       throw new Error(
@@ -24,58 +24,64 @@ export function createDialog<TData>(config: CreateDialogConfig) {
 
   function Provider(props: ProviderProps<TData>) {
     const { children, render, onClose: onCloseProp } = props;
+    const anchorRef = React.useRef<HTMLElement | null>(null);
 
-    const [state, setState] = React.useState<DialogState<TData>>({
+    const [state, setState] = React.useState<ModalState<TData>>({
       isOpen: false,
-      anchor: null,
       data: null,
     });
 
-    const open = useStableCallback((anchor: HTMLElement, data: TData) => {
-      setState({ isOpen: true, anchor, data });
-    });
+    const onOpen = useStableCallback(
+      (forwardedAnchorRef: React.RefObject<HTMLElement | null>, data: TData) => {
+        anchorRef.current = forwardedAnchorRef?.current ?? null;
+        setState({ isOpen: true, data });
+      },
+    );
 
-    const close = useStableCallback(() => {
+    const onClose = useStableCallback(() => {
       onCloseProp?.();
-      setState((prev) => ({ ...prev, isOpen: false }));
+      setState({ isOpen: false, data: null });
     });
 
     const contextValue = React.useMemo(
-      () => ({ open, close, isOpen: state.isOpen }),
-      [open, close, state.isOpen],
+      () => ({ onOpen, onClose, isOpen: state.isOpen || false }),
+      [onOpen, onClose, state.isOpen],
     );
 
     return (
       <Context.Provider value={contextValue}>
         {children}
-        {state.isOpen &&
-          state.data &&
-          state.anchor &&
+        {state.data &&
+          anchorRef.current &&
           render({
-            isOpen: state.isOpen,
-            anchor: state.anchor,
+            isOpen: Boolean(state.isOpen),
+            anchorRef,
             data: state.data,
-            onClose: close,
+            onClose,
           })}
       </Context.Provider>
     );
   }
 
-  function Trigger(props: TriggerProps<TData>) {
+  const Trigger = React.forwardRef(function Trigger(
+    props: TriggerProps<TData>,
+    ref: React.ForwardedRef<HTMLElement | null>,
+  ) {
     const { data, onClick, children } = props;
-    const { open } = useDialogContext();
+    const { onOpen } = useModalContext();
 
     return React.cloneElement(children as React.ReactElement<any>, {
+      ref,
       onClick: (event: React.MouseEvent) => {
         onClick?.(event);
-        open(event.currentTarget as HTMLElement, data);
+        onOpen(ref as React.RefObject<HTMLElement | null>, data);
       },
     });
-  }
+  });
 
   return {
     Context,
-    useContext: useDialogContext,
+    useContext: useModalContext,
     Provider,
     Trigger,
   };

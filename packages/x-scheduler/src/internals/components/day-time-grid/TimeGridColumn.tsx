@@ -139,7 +139,7 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { open: startEditing } = useEventDraggableDialogContext();
+  const { onOpen: startEditing } = useEventDraggableDialogContext();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -179,7 +179,7 @@ function ColumnInteractiveLayer({
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
-    startEditing(columnRef.current, placeholder);
+    startEditing(columnRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (

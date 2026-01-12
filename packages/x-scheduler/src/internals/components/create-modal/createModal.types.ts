@@ -1,29 +1,28 @@
 import * as React from 'react';
 
-export interface DialogState<TData> {
-  isOpen: boolean;
-  anchor: HTMLElement | null;
+export interface ModalState<TData> {
   data: TData | null;
+  isOpen?: boolean;
 }
 
-export interface CreateDialogConfig {
+export interface CreateModalConfig {
   contextName: string;
 }
 
 export type ContextValue<TData> = {
-  open: (anchor: HTMLElement, data: TData) => void;
-  close: () => void;
+  onOpen: (anchorRef: React.RefObject<HTMLElement | null>, data: TData) => void;
+  onClose: () => void;
   isOpen: boolean;
 };
 
 export interface ProviderProps<TData> {
   children: React.ReactNode;
   /**
-   * Render function for the dialog.
+   * Render function for the modal.
    */
   render: (props: {
     isOpen: boolean;
-    anchor: HTMLElement;
+    anchorRef: React.RefObject<HTMLElement | null>;
     data: TData;
     onClose: () => void;
   }) => React.ReactNode;

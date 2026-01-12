@@ -36,13 +36,6 @@ export function useDraggableDialog(
       onGenerateDragPreview: ({ nativeSetDragImage }) => {
         disableNativeDragPreview({ nativeSetDragImage });
       },
-      canDrag: (test) => {
-        console.log(test);
-        return true;
-      },
-      onDragStart: (test) => {
-        console.log('drag start', test);
-      },
       onDrag: ({ location }) => {
         const { deltaX, deltaY } = getDeltas(location);
 
@@ -62,7 +55,7 @@ export function useDraggableDialog(
         offset.current.y += deltaY;
       },
     });
-  }, [elementRef, mutateStyle]);
+  }, [elementRef, mutateStyle, handleRef]);
 
   return resetDrag;
 }

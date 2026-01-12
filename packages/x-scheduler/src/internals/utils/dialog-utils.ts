@@ -5,7 +5,6 @@ export function calculatePosition(
   element: HTMLElement | null,
   defaultPosition: Position = 'right',
 ) {
-  console.log(anchorElement, element, defaultPosition);
   if (!element || !anchorElement) {
     return undefined;
   }
@@ -70,7 +69,6 @@ export function calculatePosition(
     defaultPosition,
     ...positions.filter((position) => position !== defaultPosition),
   ];
-  console.log('Preferred Positions:', preferredPositions);
   const validPosition = preferredPositions.find(checkFit);
 
   if (validPosition) {

@@ -60,7 +60,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
-  const { open: startEditing } = useEventDraggableDialogContext();
+  const { onOpen: startEditing } = useEventDraggableDialogContext();
 
   // Ref hooks
   const cellRef = React.useRef<HTMLDivElement | null>(null);
@@ -88,7 +88,7 @@ export function DayGridCell(props: DayGridCellProps) {
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
-    startEditing(cellRef.current, placeholder);
+    startEditing(cellRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
