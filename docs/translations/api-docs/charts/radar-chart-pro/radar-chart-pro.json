@@ -78,6 +78,12 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "radar": { "description": "The configuration of the radar scales." },
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/radar-series/'>RadarSeries</a> objects."
@@ -96,6 +102,7 @@
         "string": { "name": "string", "description": "The color to fill the stripe." }
       }
     },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }
