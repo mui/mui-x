@@ -24,7 +24,7 @@ export function processEvent(
   const parsedDataRRule = model.rrule ? parseRRule(adapter, model.rrule, dataTimezone) : undefined;
 
   const displayTimezoneRRule = parsedDataRRule
-    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone)
+    ? projectRRuleToTimezone(adapter, parsedDataRRule, displayTimezone, model.start)
     : undefined;
 
   return {
