@@ -18,7 +18,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue } from './utils';
 
 const GeneralTabContent = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'GeneralTabContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),
@@ -28,7 +28,7 @@ const GeneralTabContent = styled('div', {
 }));
 
 const DateTimeFieldsContainer = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'DateTimeFields',
 })(({ theme }) => ({
   display: 'flex',
@@ -37,7 +37,7 @@ const DateTimeFieldsContainer = styled('div', {
 }));
 
 const DateTimeFieldsRow = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'DateTimeFieldsRow',
 })(({ theme }) => ({
   display: 'flex',

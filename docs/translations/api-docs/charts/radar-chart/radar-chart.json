@@ -9,6 +9,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenItems": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlight": {
       "description": "Indicates if the chart should highlight items per axis or per series."
@@ -47,6 +50,15 @@
         }
       }
     },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
+        }
+      }
+    },
     "onHighlightChange": {
       "description": "The callback fired when the highlighted item changes.",
       "typeDescriptions": {
@@ -64,6 +76,12 @@
           "name": "radarItemIdentifier",
           "description": "The radar item identifier."
         }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
       }
     },
     "radar": { "description": "The configuration of the radar scales." },
@@ -84,6 +102,7 @@
         "string": { "name": "string", "description": "The color to fill the stripe." }
       }
     },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     }

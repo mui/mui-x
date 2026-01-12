@@ -56,7 +56,7 @@ const DayHeaderCell = styled('header', {
 
 const DayNumberCell = styled('span', {
   name: 'MuiEventCalendar',
-  slot: 'AgendaViewDayNumber',
+  slot: 'AgendaViewDayNumberCell',
 })(({ theme }) => ({
   fontSize: theme.typography.h6.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
@@ -68,7 +68,7 @@ const DayNumberCell = styled('span', {
 
 const WeekDayCell = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'AgendaViewWeekDay',
+  slot: 'AgendaViewWeekDayCell',
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -77,7 +77,7 @@ const WeekDayCell = styled('div', {
 
 const AgendaWeekDayNameLabel = styled('span', {
   name: 'MuiEventCalendar',
-  slot: 'AgendaViewWeekDayName',
+  slot: 'AgendaViewWeekDayNameLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
   lineHeight: 1,
@@ -92,7 +92,7 @@ const AgendaWeekDayNameLabel = styled('span', {
 
 const AgendaYearAndMonthLabel = styled('span', {
   name: 'MuiEventCalendar',
-  slot: 'AgendaViewYearAndMonth',
+  slot: 'AgendaViewYearAndMonthLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1,

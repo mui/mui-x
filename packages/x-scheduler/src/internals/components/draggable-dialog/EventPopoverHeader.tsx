@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { styled } from '@mui/material/styles';
 
 const EventPopoverHeaderRoot = styled('header', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'Header',
 })(({ theme }) => ({
   display: 'flex',
@@ -15,7 +15,7 @@ const EventPopoverHeaderRoot = styled('header', {
 }));
 
 const EventPopoverHeaderContent = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'HeaderContent',
 })(({ theme }) => ({
   display: 'flex',

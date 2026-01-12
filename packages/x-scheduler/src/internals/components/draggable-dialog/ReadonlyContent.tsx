@@ -19,7 +19,7 @@ import { useFormatTime } from '../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const ReadonlyContentRoot = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ReadonlyContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),
@@ -29,7 +29,7 @@ const ReadonlyContentRoot = styled('div', {
 }));
 
 const EventPopoverActions = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'Actions',
 })(({ theme }) => ({
   display: 'flex',
@@ -38,7 +38,7 @@ const EventPopoverActions = styled('div', {
 }));
 
 const EventPopoverDateTimeContainer = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'DateTimeContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -47,7 +47,7 @@ const EventPopoverDateTimeContainer = styled('div', {
 }));
 
 const EventPopoverTitle = styled('p', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'Title',
 })(({ theme }) => ({
   margin: 0,
@@ -57,7 +57,7 @@ const EventPopoverTitle = styled('p', {
 }));
 
 const EventPopoverResourceContainer = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -66,7 +66,7 @@ const EventPopoverResourceContainer = styled('div', {
 }));
 
 const EventPopoverResourceLegendContainer = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -75,7 +75,7 @@ const EventPopoverResourceLegendContainer = styled('div', {
 }));
 
 const ResourceLegendColorDot = styled('span', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendColor',
 })({
   width: 8,
@@ -87,7 +87,7 @@ const ResourceLegendColorDot = styled('span', {
 });
 
 const EventPopoverResourceTitle = styled('p', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceTitle',
 })(({ theme }) => ({
   margin: 0,
