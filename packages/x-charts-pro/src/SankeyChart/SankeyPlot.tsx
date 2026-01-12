@@ -70,8 +70,8 @@ function SankeyPlot(props: SankeyPlotProps) {
   const showNodeLabels = nodeOptions?.showLabels ?? true;
   return (
     <SankeyPlotRoot className={classes.root}>
-      <SankeyNodePlot classes={classes} onClick={onNodeClick} />
       <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
+      <SankeyNodePlot classes={classes} onClick={onNodeClick} />
 
       {linkOptions?.showValues && <SankeyLinkLabelPlot classes={classes} />}
       {showNodeLabels && <SankeyNodeLabelPlot classes={classes} />}
