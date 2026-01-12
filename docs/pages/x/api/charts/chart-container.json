@@ -36,6 +36,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: any, seriesId?: { toLocaleString: func, toString: func, valueOf: func }, type: object }&gt;"
+      }
+    },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
