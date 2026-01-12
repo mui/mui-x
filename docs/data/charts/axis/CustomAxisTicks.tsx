@@ -1,4 +1,5 @@
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
+import { useXAxisTicks } from '@mui/x-charts/hooks';
 
 const labels = [
   'Server Products',
@@ -18,7 +19,8 @@ const chartSetting = {
   height: 400,
   margin: { left: 0 },
   layout: 'horizontal',
-  yAxis: [{ scaleType: 'band', data: labels }],
+  xAxis: [{ id: 'x' }],
+  yAxis: [{ id: 'y', scaleType: 'band', data: labels }],
   series: [{ data }],
 } satisfies BarChartProps;
 
@@ -27,5 +29,6 @@ export default function CustomAxisTicks() {
 }
 
 function AxisTicks() {
+  console.log(useXAxisTicks('x'));
   return null;
 }
