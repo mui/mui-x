@@ -10,7 +10,7 @@ packageName: '@mui/x-charts'
 
 <p class="description">Learn how to use composition to build advanced custom Charts.</p>
 
-The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants.
+The MUI X Charts components follow an architecture based on context providers: you can pass your series and axes definitions to specialized components that transform the data and make it available to its descendants.
 These descendants can then be composed.
 
 There are two main types of components used to create Charts: [structural](#structural-components) and [graphical](#graphical-components).
