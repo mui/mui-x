@@ -28,7 +28,7 @@ export const RADAR_PLUGINS = [
 ] as const;
 
 export type RadarChartPluginSignatures = [
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'radar'>,
   UseChartInteractionSignature,
   UseChartPolarAxisSignature,
   UseChartHighlightSignature,
