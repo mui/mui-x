@@ -13,6 +13,7 @@ import { useIsHydrated } from '../hooks/useIsHydrated';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { getStringSize } from '../internals/domUtils';
 import { AxisRoot } from '../internals/components/AxisSharedComponents';
+import type { ChartsAxisTicksProps } from '../ChartsAxis/ChartsAxis.types';
 
 const YAxisRoot = styled(AxisRoot, {
   name: 'MuiChartsYAxis',
@@ -101,20 +102,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   const domain = yScale.domain();
   const isScaleOrdinal = isOrdinalScale(yScale);
   const skipTickRendering = isScaleOrdinal ? domain.length === 0 : domain.some(isInfinity);
-  let children: React.ReactNode = null;
-
-  if (!skipTickRendering) {
-    children =
-      'groups' in axis && Array.isArray(axis.groups) ? (
-        <ChartsGroupedYAxisTicks {...inProps} />
-      ) : (
-        <ChartsSingleYAxisTicks
-          {...inProps}
-          axisLabelHeight={axisLabelHeight}
-          ordinalTimeTicks={ordinalTimeTicks}
-        />
-      );
-  }
+  const AxisTicks = slots?.axisTicks ?? ChartsYAxisTicks;
 
   return (
     <YAxisRoot
@@ -123,12 +111,43 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
       sx={sx}
     >
       {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}
-      {children}
+      {!skipTickRendering && (
+        <AxisTicks
+          {...inProps}
+          {...slotProps?.axisTicks}
+          axis={axis}
+          axisLabelHeight={axisLabelHeight}
+          ordinalTimeTicks={ordinalTimeTicks}
+          direction="y"
+        />
+      )}
       {label && isHydrated && (
         <g className={classes.label}>
           <Label {...labelRefPoint} {...axisLabelProps} text={label} />
         </g>
       )}
     </YAxisRoot>
+  );
+}
+
+/**
+ * Renders the ticks for a Y axis, either grouped or single.
+ */
+export function ChartsYAxisTicks({
+  axis,
+  ordinalTimeTicks,
+  axisLabelHeight,
+  ...inProps
+}: ChartsAxisTicksProps<'y'>) {
+  if ('groups' in axis && Array.isArray(axis.groups)) {
+    return <ChartsGroupedYAxisTicks {...inProps} />;
+  }
+
+  return (
+    <ChartsSingleYAxisTicks
+      {...inProps}
+      axisLabelHeight={axisLabelHeight}
+      ordinalTimeTicks={ordinalTimeTicks}
+    />
   );
 }

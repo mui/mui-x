@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import type {
   ScaleBand,
   ScaleLinear,
@@ -24,6 +25,7 @@ import type {
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
 import { type ChartsTypeFeatureFlags } from './featureFlags';
+import { type ChartsAxisTicksProps } from '../ChartsAxis/ChartsAxis.types';
 
 export type AxisId = string | number;
 
@@ -63,6 +65,11 @@ export interface ChartsAxisSlots {
    */
   axisTick?: React.JSXElementConstructor<React.SVGAttributes<SVGPathElement>>;
   /**
+   * Custom component for the axis ticks. Can be used to customize tick rendering.
+   * @default ChartsXAxisTicks or ChartsYAxisTicks for x- and y-axes respectively.
+   */
+  axisTicks?: React.JSXElementConstructor<ChartsAxisTicksProps>;
+  /**
    * Custom component for tick label.
    * @default ChartsText
    */
@@ -77,6 +84,7 @@ export interface ChartsAxisSlots {
 export interface ChartsAxisSlotProps {
   axisLine?: Partial<React.SVGAttributes<SVGPathElement>>;
   axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
+  axisTicks?: Partial<ChartsAxisTicksProps>;
   axisTickLabel?: Partial<ChartsTextProps>;
   axisLabel?: Partial<ChartsTextProps>;
 }
