@@ -69,6 +69,18 @@
       "description": "Custom component for tick label.",
       "default": "ChartsText",
       "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis. Only used if axis prop is 'x'.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis. Only used if axis prop is 'y'.",
+      "default": "ChartsYAxis",
+      "class": null
     }
   ],
   "classes": [],

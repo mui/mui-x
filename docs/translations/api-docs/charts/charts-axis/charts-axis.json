@@ -38,6 +38,8 @@
     "axisLabel": "Custom component for axis label.",
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
-    "axisTickLabel": "Custom component for tick label."
+    "axisTickLabel": "Custom component for tick label.",
+    "xAxis": "Custom component for the x-axis. Only used if axis prop is &#39;x&#39;.",
+    "yAxis": "Custom component for the y-axis. Only used if axis prop is &#39;y&#39;."
   }
 }

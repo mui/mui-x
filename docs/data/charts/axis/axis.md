@@ -326,6 +326,12 @@ Bear in mind that using `foreignObject` might prevent charts from being [exporte
 
 {{"demo": "TickLabelImage.js"}}
 
+### Custom axis rendering
+
+You can fully customize how axis and their ticks are rendered by providing a component to the `xAxis` or `yAxis` slots.
+
+{{"demo": "CustomAxisTicks.js"}}
+
 ## Symlog scale
 
 A log scale cannot plot zero because log(0) is undefined.

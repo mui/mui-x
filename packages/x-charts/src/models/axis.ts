@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import type {
   ScaleBand,
   ScaleLinear,
@@ -72,6 +73,16 @@ export interface ChartsAxisSlots {
    * @default ChartsText
    */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  /**
+   * Custom component for the x-axis. Only used if axis prop is 'x'.
+   * @default ChartsXAxis
+   */
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  /**
+   * Custom component for the y-axis. Only used if axis prop is 'y'.
+   * @default ChartsYAxis
+   */
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
 }
 
 export interface ChartsAxisSlotProps {
@@ -79,6 +90,8 @@ export interface ChartsAxisSlotProps {
   axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
   axisTickLabel?: Partial<ChartsTextProps>;
   axisLabel?: Partial<ChartsTextProps>;
+  xAxis?: Partial<ChartsXAxisProps>;
+  yAxis?: Partial<ChartsYAxisProps>;
 }
 
 export interface ChartsAxisProps extends TickParams {
@@ -86,7 +99,7 @@ export interface ChartsAxisProps extends TickParams {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId?: AxisId;
+  axisId: AxisId;
   /**
    * If true, the axis line is disabled.
    * @default false

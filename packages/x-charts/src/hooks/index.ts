@@ -31,3 +31,4 @@ export {
   useYAxisCoordinates,
   type AxisCoordinates,
 } from './useAxisCoordinates';
+export * from './useAxisTicks';
