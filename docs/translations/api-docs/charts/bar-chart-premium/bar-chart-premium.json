@@ -84,6 +84,12 @@
         "itemIdentifier": { "name": "itemIdentifier", "description": "The item identifier." }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": {
@@ -102,6 +108,7 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },

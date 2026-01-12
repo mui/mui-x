@@ -3,25 +3,15 @@ import { processEvent } from '@mui/x-scheduler-headless/process-event';
 import { EventBuilder } from 'test/utils/scheduler/event-builder';
 
 describe('processEvent', () => {
-  it('throws if start and end have different timezones', () => {
+  it('keeps event timezone in modelInBuiltInFormat', () => {
     const event = EventBuilder.new(adapter)
-      .span('2025-01-01T10:00:00Z', '2025-01-01T11:00:00Z')
-      .build();
-    event.end = adapter.setTimezone(event.end, 'America/New_York');
-
-    expect(() => processEvent(event, 'Asia/Tokyo', adapter)).to.throw(/different timezones/);
-  });
-
-  it('keeps original timezone in modelInBuiltInFormat', () => {
-    const event = EventBuilder.new(adapter)
-      .withTimezone('America/New_York')
+      .withDataTimezone('America/New_York')
       .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
       .build();
 
     const processed = processEvent(event, 'Pacific/Kiritimati', adapter);
 
-    expect(adapter.getTimezone(processed.modelInBuiltInFormat!.start)).to.equal('America/New_York');
-    expect(adapter.getTimezone(processed.modelInBuiltInFormat!.end)).to.equal('America/New_York');
+    expect(processed.modelInBuiltInFormat!.timezone).to.equal('America/New_York');
   });
   describe('displayTimezone', () => {
     it('converts start and end to the display timezone', () => {
@@ -83,47 +73,13 @@ describe('processEvent', () => {
   describe('dataTimezone', () => {
     it('keeps original timezone in dataTimezone', () => {
       const event = EventBuilder.new(adapter)
-        .withTimezone('America/New_York')
+        .withDataTimezone('America/New_York')
         .span('2025-01-01T10:00:00Z', '2025-01-01T12:00:00Z')
         .build();
 
       const processed = processEvent(event, 'Pacific/Kiritimati', adapter);
 
-      expect(adapter.getTimezone(processed.dataTimezone.start.value)).to.equal('America/New_York');
-      expect(adapter.getTimezone(processed.dataTimezone.end.value)).to.equal('America/New_York');
-    });
-
-    it('keeps the data timezone for rrule.until when rrule is an object', () => {
-      const event = EventBuilder.new(adapter)
-        .withTimezone('America/New_York')
-        .rrule({
-          freq: 'DAILY',
-          until: adapter.date('2025-01-10T23:59:00Z', 'default'),
-        })
-        .build();
-
-      const processed = processEvent(event, 'Asia/Tokyo', adapter);
-
-      expect(adapter.getTimezone(processed.dataTimezone.rrule!.until!)).to.equal(
-        'America/New_York',
-      );
-    });
-
-    it('parses rrule string and keeps the original timezone', () => {
-      const event = EventBuilder.new(adapter).withTimezone('America/New_York').build();
-
-      const processed = processEvent(
-        {
-          ...event,
-          rrule: 'FREQ=DAILY;UNTIL=20250110T230000Z',
-        },
-        'Pacific/Kiritimati',
-        adapter,
-      );
-
-      expect(adapter.getTimezone(processed.dataTimezone.rrule!.until!)).to.equal(
-        'America/New_York',
-      );
+      expect(processed.dataTimezone.timezone).to.equal('America/New_York');
     });
   });
 });
