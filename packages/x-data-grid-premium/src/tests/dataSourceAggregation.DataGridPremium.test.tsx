@@ -133,7 +133,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       <TestDataSourceAggregation dataSource={dataSource} columns={[{ field: 'id' }]} />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     // wait for the column menu to be open first
@@ -144,7 +144,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   it('should not show aggregation option in the column menu when no aggregation function is defined', async () => {
     const { user } = render(<TestDataSourceAggregation aggregationFunctions={{}} />);
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
     await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
     expect(screen.queryByLabelText('Aggregation')).to.equal(null);
@@ -159,7 +159,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     expect(fetchRowsSpy.mock.lastCall[0].aggregationModel).to.deep.equal({ id: 'size' });
@@ -218,7 +218,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       />,
     );
 
-    expect(fetchRowsSpy.mock.calls.length).to.equal(1);
+    expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.be.greaterThan(1);
     });
@@ -227,7 +227,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
 
     const cell = getCell(1, apiRef.current!.state.columns.orderedFields.indexOf('gross'));
@@ -236,10 +236,10 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
     await user.keyboard('{Enter}{Delete}1{Enter}');
 
-    expect(editRowSpy.mock.calls.length).to.equal(1);
+    expect(editRowSpy).toHaveBeenCalledTimes(1);
     // Two additional calls should be made
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.equal(4);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(4);
     });
   });
 });

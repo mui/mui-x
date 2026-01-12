@@ -88,7 +88,7 @@ describe('<DataGridPro /> - Print export', () => {
           />,
         );
 
-        expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
+        expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(0);
 
         await act(() =>
           apiRef.current?.exportDataAsPrint({
@@ -96,7 +96,7 @@ describe('<DataGridPro /> - Print export', () => {
           }),
         );
 
-        expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+        expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(2);
         // verify column visibility has been set
         expect(onColumnVisibilityModelChange.firstCall.firstArg).to.deep.equal({
           currencyPair: printVisible,
@@ -118,7 +118,7 @@ describe('<DataGridPro /> - Print export', () => {
 
       render(<Test onColumnVisibilityModelChange={onColumnVisibilityModelChange} />);
 
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
@@ -138,7 +138,7 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ fields: ['id'], allColumns: true }));
 
@@ -158,7 +158,7 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 
@@ -179,7 +179,7 @@ describe('<DataGridPro /> - Print export', () => {
         />,
       );
 
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(0);
 
       await act(() => apiRef.current?.exportDataAsPrint({ allColumns: true }));
 

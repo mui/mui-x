@@ -132,7 +132,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     expect(fetchRowsSpy.mock.lastCall[0].pivotModel).to.deep.equal(pivotModel);
@@ -156,7 +156,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       />,
     );
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     expect(fetchRowsSpy.mock.lastCall[0].pivotModel).to.deep.equal({
@@ -227,7 +227,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     expect(fetchRowsSpy.mock.lastCall[0].pivotModel).to.deep.equal(pivotModel);
@@ -280,7 +280,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     // Verify that pivot model is passed to getRows
@@ -335,7 +335,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     // Verify that pivot model is passed to getRows
@@ -442,7 +442,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     await waitFor(() => {
@@ -501,7 +501,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     await waitFor(() => {
@@ -562,7 +562,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+      expect(fetchRowsSpy).toHaveBeenCalled();
     });
 
     // Custom header is being used and the value is picked from the custom field name
@@ -641,7 +641,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+        expect(fetchRowsSpy).toHaveBeenCalled();
       });
 
       await waitFor(() => {
@@ -722,7 +722,7 @@ describe('<DataGridPremium /> - Data source pivoting', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
+        expect(fetchRowsSpy).toHaveBeenCalled();
       });
 
       await waitFor(() => {

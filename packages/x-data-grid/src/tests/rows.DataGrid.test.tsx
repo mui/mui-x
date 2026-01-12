@@ -130,9 +130,9 @@ describe('<DataGrid /> - Rows', () => {
       </div>,
     );
     await user.click(document.querySelector('input[name="portal-input"]')!);
-    expect(handleRowClick.mock.calls.length).to.equal(0);
+    expect(handleRowClick).toHaveBeenCalledTimes(0);
     await user.click(document.querySelector('input[name="input"]')!);
-    expect(handleRowClick.mock.calls.length).to.equal(1);
+    expect(handleRowClick).toHaveBeenCalledTimes(1);
   });
 
   // https://github.com/mui/mui-x/issues/8042

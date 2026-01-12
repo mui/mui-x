@@ -203,12 +203,12 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(getColumnForNewFilter.mock.calls.length).to.equal(2);
+    expect(getColumnForNewFilter).toHaveBeenCalledTimes(2);
     const addButton = screen.getByRole('button', { name: /Add Filter/i });
     fireEvent.click(addButton);
-    expect(getColumnForNewFilter.mock.calls.length).to.equal(4);
+    expect(getColumnForNewFilter).toHaveBeenCalledTimes(4);
     fireEvent.click(addButton);
-    expect(getColumnForNewFilter.mock.calls.length).to.equal(6);
+    expect(getColumnForNewFilter).toHaveBeenCalledTimes(6);
   });
 
   it('should pass columns filtered by `filterColumns` to filters column list', () => {
@@ -495,7 +495,7 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.mock.calls.length).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
     expect(getColumnValues(0)).to.deep.equal([]);
 
     // The first combo is hidden and we include hidden elements to make the query faster
@@ -504,7 +504,7 @@ describe('<DataGridPro /> - Filter', () => {
       screen.queryAllByRole('combobox', { name: 'Logic operator', hidden: true })[0],
     );
     fireEvent.change(input!, { target: { value: 'or' } });
-    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(1);
     expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
   });
@@ -529,11 +529,11 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.mock.calls.length).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
     fireEvent.change(screen.getByRole('textbox', { name: 'Value' }), { target: { value: '' } });
 
     await waitFor(() => {
-      expect(onFilterModelChange.mock.calls.length).to.equal(1);
+      expect(onFilterModelChange).toHaveBeenCalledTimes(1);
     });
 
     expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('upsertFilterItem');
@@ -565,9 +565,9 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.mock.calls.length).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
     fireEvent.click(screen.queryAllByRole('button', { name: 'Delete' })[0]);
-    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(1);
     expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('deleteFilterItem');
   });
 
@@ -584,9 +584,9 @@ describe('<DataGridPro /> - Filter', () => {
         }}
       />,
     );
-    expect(onFilterModelChange.mock.calls.length).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
     fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(1);
     expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('upsertFilterItems');
   });
 
@@ -600,9 +600,9 @@ describe('<DataGridPro /> - Filter', () => {
       />,
     );
     apiRef.current?.subscribeEvent('filterModelChange', listener);
-    expect(listener.mock.calls.length).to.equal(0);
+    expect(listener).toHaveBeenCalledTimes(0);
     fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
-    expect(listener.mock.calls.length).to.equal(1);
+    expect(listener).toHaveBeenCalledTimes(1);
     expect(listener.mock.lastCall[1].reason).to.equal('upsertFilterItems');
   });
 
@@ -874,12 +874,12 @@ describe('<DataGridPro /> - Filter', () => {
           }}
         />,
       );
-      expect(onModelChange.mock.calls.length).to.equal(0);
+      expect(onModelChange).toHaveBeenCalledTimes(0);
       const addButton = screen.getByRole('button', { name: /Add Filter/i });
       fireEvent.click(addButton);
       const filterForms = document.querySelectorAll(`.MuiDataGrid-filterForm`);
       expect(filterForms).to.have.length(2);
-      expect(onModelChange.mock.calls.length).to.equal(1);
+      expect(onModelChange).toHaveBeenCalledTimes(1);
       expect(onModelChange.mock.lastCall![0].items.length).to.deep.equal(2);
       expect(onModelChange.mock.lastCall![0].logicOperator).to.deep.equal(GridLogicOperator.And);
     });
@@ -971,7 +971,7 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.change(filterCellInput, { target: { value: 'ad' } });
 
       await waitFor(() => {
-        expect(onFilterModelChange.mock.calls.length).to.equal(1);
+        expect(onFilterModelChange).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -1004,7 +1004,7 @@ describe('<DataGridPro /> - Filter', () => {
       fireEvent.click(within(filterCell).getByLabelText('Operator'));
       fireEvent.click(screen.getByRole('menuitem', { name: 'Equals' }));
 
-      expect(onFilterModelChange.mock.calls.length).to.equal(1);
+      expect(onFilterModelChange).toHaveBeenCalledTimes(1);
       expect(onFilterModelChange.mock.lastCall![0].items[0].operator).to.equal('equals');
       expect(getColumnValues(0)).to.deep.equal([]);
     });

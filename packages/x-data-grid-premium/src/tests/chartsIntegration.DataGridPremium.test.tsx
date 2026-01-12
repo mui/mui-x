@@ -700,7 +700,7 @@ describe('<DataGridPremium /> - Charts Integration', () => {
     it('should intercept rendering with custom renderer', async () => {
       render(<Test initialState={baseInitialState} />);
 
-      expect(renderSpy.mock.calls.length > 0).to.equal(true);
+      expect(renderSpy).toHaveBeenCalled();
       await waitFor(() => {
         expect(renderSpy.mock.lastCall![0].chartStateLookup.test.dimensions[0].id).to.equal(
           'category1',
@@ -712,14 +712,14 @@ describe('<DataGridPremium /> - Charts Integration', () => {
       render(<Test initialState={baseInitialState} />);
 
       renderSpy.mockClear();
-      expect(renderSpy.mock.calls.length).to.equal(0);
+      expect(renderSpy).toHaveBeenCalledTimes(0);
 
       act(() => {
         apiRef!.current?.sortColumn('amount', 'desc');
       });
 
       await waitFor(() => {
-        expect(renderSpy.mock.calls.length).to.be.greaterThan(0);
+        expect(renderSpy).toHaveBeenCalled();
       });
     });
   });

@@ -217,7 +217,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const dragEndEvent = createDragEndEvent(dragCol);
     fireEvent(dragCol, dragEndEvent);
 
-    expect(onColumnOrderChange.mock.calls.length).to.equal(1);
+    expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
     expect(onColumnOrderChange.mock.lastCall[2].api.state.columns.orderedFields).to.deep.equal([
       'currencyPair',
       'price1M',
@@ -393,10 +393,10 @@ describe('<DataGridPro /> - Columns reorder', () => {
     const dragEndColEvent = createDragEndEvent(dragCol);
     fireEvent(dragCol, dragEndColEvent);
 
-    expect(handleDragStart.mock.calls.length).to.equal(0);
-    expect(handleDragEnter.mock.calls.length).to.equal(0);
-    expect(handleDragOver.mock.calls.length).to.equal(0);
-    expect(handleDragEnd.mock.calls.length).to.equal(0);
+    expect(handleDragStart).toHaveBeenCalledTimes(0);
+    expect(handleDragEnter).toHaveBeenCalledTimes(0);
+    expect(handleDragOver).toHaveBeenCalledTimes(0);
+    expect(handleDragEnd).toHaveBeenCalledTimes(0);
   });
 
   describe('reorder with column grouping', () => {

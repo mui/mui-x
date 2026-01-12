@@ -1104,9 +1104,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
       );
     }
     const { setProps } = render(<TestCase rows={[]} loading />);
-    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
+    expect(NoRowsOverlay).toHaveBeenCalledTimes(0);
     setProps({ loading: false, rows: [{ id: 1 }] });
-    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
+    expect(NoRowsOverlay).toHaveBeenCalledTimes(0);
   });
 
   it('should render the "no rows" overlay when changing the loading to false but not changing the rows prop', () => {
@@ -1120,9 +1120,9 @@ describe('<DataGrid /> - Layout & warnings', () => {
     }
     const rows: DataGridProps['rows'] = [];
     const { setProps } = render(<TestCase rows={rows} loading />);
-    expect(NoRowsOverlay.mock.calls.length).to.equal(0);
+    expect(NoRowsOverlay).toHaveBeenCalledTimes(0);
     setProps({ loading: false });
-    expect(NoRowsOverlay.mock.calls.length).not.to.equal(0);
+    expect(NoRowsOverlay).toHaveBeenCalled();
   });
 
   // Doesn't work with mocked window.getComputedStyle

@@ -137,7 +137,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       await user.type(input, '[Backspace>4]Puma');
 
-      expect(onValueChange.mock.calls.length).to.equal(8);
+      expect(onValueChange).toHaveBeenCalledTimes(8);
       expect(onValueChange.mock.lastCall[1]).to.equal('Puma');
     });
   });
@@ -374,7 +374,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionEnd: 10,
       });
 
-      expect(onValueChange.mock.calls.length).to.equal(1);
+      expect(onValueChange).toHaveBeenCalledTimes(1);
       expect((onValueChange.mock.lastCall[1]! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
@@ -633,7 +633,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(onValueChange.mock.calls.length).to.equal(1);
+      expect(onValueChange).toHaveBeenCalledTimes(1);
       expect(onValueChange.mock.lastCall[1]).to.equal('Adidas');
     });
 
@@ -651,7 +651,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(document.getElementById('outside-grid')!);
 
-      expect(onCellEditStop.mock.calls.length).to.equal(1);
+      expect(onCellEditStop).toHaveBeenCalledTimes(1);
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
@@ -709,7 +709,7 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      expect(onValueChange.mock.calls.length).to.equal(1);
+      expect(onValueChange).toHaveBeenCalledTimes(1);
       expect(onValueChange.mock.lastCall[1]).to.equal(true);
     });
   });

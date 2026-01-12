@@ -1644,7 +1644,7 @@ describe('<DataGrid /> - Filter', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onFilterModelChange.mock.calls.length).to.equal(2);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(2);
     expect(onFilterModelChange.mock.lastCall![0]).to.deep.equal({ items: [] });
   });
 
@@ -1684,6 +1684,6 @@ describe('<DataGrid /> - Filter', () => {
       },
     });
     expect(getColumnValues(0)).to.deep.equal(['1']);
-    expect(onFilterModelChange.mock.calls.length).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
   });
 });

@@ -114,10 +114,10 @@ describe('<DataGridPremium /> - Row grouping', () => {
           />,
         );
 
-        expect(onRowGroupingModelChange.mock.calls.length).to.equal(0);
+        expect(onRowGroupingModelChange).toHaveBeenCalledTimes(0);
         setProps({ rowGroupingModel: ['category2'] });
 
-        expect(onRowGroupingModelChange.mock.calls.length).to.equal(0);
+        expect(onRowGroupingModelChange).toHaveBeenCalledTimes(0);
       });
 
       it('should allow to update the row grouping model from the outside', () => {
@@ -1352,7 +1352,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.mock.calls.length).to.equal(0);
+      expect(onFilteredRowsSet).toHaveBeenCalledTimes(0);
     });
 
     it('should not apply filters when the row is collapsed', () => {
@@ -1369,7 +1369,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
       apiRef.current?.subscribeEvent('filteredRowsSet', onFilteredRowsSet);
 
       fireEvent.click(getCell(0, 0).querySelector('button')!);
-      expect(onFilteredRowsSet.mock.calls.length).to.equal(0);
+      expect(onFilteredRowsSet).toHaveBeenCalledTimes(0);
     });
   });
 

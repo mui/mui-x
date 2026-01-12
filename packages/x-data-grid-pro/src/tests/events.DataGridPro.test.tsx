@@ -210,7 +210,7 @@ describe('<DataGridPro /> - Events params', () => {
       render(<TestEvents onCellDoubleClick={handleCellDoubleClick} />);
       const cell = getCell(1, 1);
       fireEvent.doubleClick(cell);
-      expect(handleCellDoubleClick.mock.calls.length).to.equal(1);
+      expect(handleCellDoubleClick).toHaveBeenCalledTimes(1);
       expect(cell).not.to.have.class(gridClasses['row--editing']);
     });
 
@@ -226,7 +226,7 @@ describe('<DataGridPro /> - Events params', () => {
 
       const input = cell.querySelector('input')!;
       fireEvent.keyDown(input, { key: 'Enter' });
-      expect(handleCellEditStop.mock.calls.length).to.equal(1);
+      expect(handleCellEditStop).toHaveBeenCalledTimes(1);
       expect(cell).to.have.class(gridClasses['cell--editing']);
     });
 
@@ -236,7 +236,7 @@ describe('<DataGridPro /> - Events params', () => {
 
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(handleRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(handleRowSelectionModelChange.mock.lastCall![0]).to.deep.equal(
         includeRowSelection([2]),
       );
@@ -252,7 +252,7 @@ describe('<DataGridPro /> - Events params', () => {
       );
       const cell11 = getCell(1, 1);
       fireEvent.click(cell11);
-      expect(handleRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(handleRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -344,7 +344,7 @@ describe('<DataGridPro /> - Events params', () => {
           rowCount={50}
         />,
       );
-      expect(handleFetchRows.mock.calls.length).to.equal(1);
+      expect(handleFetchRows).toHaveBeenCalledTimes(1);
       expect(handleFetchRows.mock.lastCall![0]).to.contain({
         firstRowToRender: 3,
         lastRowToRender: 50,
@@ -365,7 +365,7 @@ describe('<DataGridPro /> - Events params', () => {
       />,
     );
     // Since rowheight < viewport height, onmount calls fetchRows directly
-    expect(handleFetchRows.mock.calls.length).to.equal(1);
+    expect(handleFetchRows).toHaveBeenCalledTimes(1);
     act(() => {
       apiRef.current?.publishEvent('renderedRowsIntervalChange', {
         firstRowIndex: 3,
@@ -374,7 +374,7 @@ describe('<DataGridPro /> - Events params', () => {
         lastColumnIndex: 0,
       });
     });
-    expect(handleFetchRows.mock.calls.length).to.equal(2);
+    expect(handleFetchRows).toHaveBeenCalledTimes(2);
     expect(handleFetchRows.mock.lastCall![0]).to.contain({
       firstRowToRender: 3,
       lastRowToRender: 10,

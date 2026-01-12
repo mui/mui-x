@@ -92,11 +92,11 @@ describe('<DataGridPremium /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([3, 4]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
@@ -111,13 +111,13 @@ describe('<DataGridPremium /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({
           rowSelectionModel: includeRowSelection(['auto-generated-row-category1/Cat B']),
         });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
       );
@@ -287,12 +287,12 @@ describe('<DataGridPremium /> - Row selection', () => {
             />,
           );
 
-          expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+          expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
 
           act(() => {
             setProps({ rows });
           });
-          expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+          expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
           expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
             includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
           );
@@ -313,12 +313,12 @@ describe('<DataGridPremium /> - Row selection', () => {
             />,
           );
 
-          expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+          expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
 
           act(() => {
             setProps({ rows });
           });
-          expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+          expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
           expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
             includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4]),
           );

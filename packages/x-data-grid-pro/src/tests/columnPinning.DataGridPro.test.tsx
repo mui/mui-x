@@ -187,7 +187,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
 
-    expect(onPinnedColumnsChange.mock.calls.length).to.equal(0);
+    expect(onPinnedColumnsChange).toHaveBeenCalledTimes(0);
   });
 
   it('should filter out invalid columns when blocking a column from being dropped', () => {

@@ -246,11 +246,11 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getSelectByName('Operator').value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
-    expect(onFilterModelChange.mock.calls.length).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
 
     setOperatorValue('isEmpty');
 
-    expect(onFilterModelChange.mock.calls.length).to.equal(1);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(1);
     expect(onFilterModelChange.mock.lastCall[0].items[0].value).to.equal(undefined);
 
     expect(getSelectByName('Operator').value).to.equal('isEmpty');

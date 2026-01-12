@@ -275,7 +275,7 @@ describe('<DataGridPro /> - Row selection', () => {
       setProps({ rows: [...rows, { id: 15, hierarchy: ['New'], jobTitle: 'Test Job' }] });
     });
 
-    expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+    expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
   });
 
   it('should put the parent into indeterminate if some but not all the children are selected', async () => {
@@ -567,7 +567,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should select the parent only when selecting it', async () => {
@@ -647,11 +647,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should not auto select descendants when a parent is selected using controlled row selection model', async () => {
@@ -663,11 +663,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([1]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -746,11 +746,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should auto select descendants when a parent is selected using controlled row selection model', async () => {
@@ -762,11 +762,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([1]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
       );
@@ -817,7 +817,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(3);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(3);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
@@ -883,11 +883,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
@@ -902,11 +902,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([1]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
 
     describe('prop: isRowSelectable', () => {
@@ -1000,11 +1000,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
@@ -1019,11 +1019,11 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       act(() => {
         setProps({ rowSelectionModel: includeRowSelection([1]) });
       });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
       );
@@ -1151,9 +1151,9 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
       await act(async () => apiRef.current?.selectRow(0));
-      expect(handleRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(handleRowSelectionModelChange).toHaveBeenCalledTimes(0);
       await act(async () => apiRef.current?.selectRow(1));
-      expect(handleRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(handleRowSelectionModelChange).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -1342,7 +1342,7 @@ describe('<DataGridPro /> - Row selection', () => {
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);
       apiRef.current?.subscribeEvent('rowSelectionChange', handleSelectionChange);
       apiRef.current?.setRowSelectionModel(rowSelectionModel);
-      expect(handleSelectionChange.mock.calls.length).to.equal(0);
+      expect(handleSelectionChange).toHaveBeenCalledTimes(0);
     });
 
     it('should not call onRowSelectionModelChange on initialization if rowSelectionModel contains more than one id and checkboxSelection=false', () => {
@@ -1353,7 +1353,7 @@ describe('<DataGridPro /> - Row selection', () => {
           rowSelectionModel={includeRowSelection([0, 1])}
         />,
       );
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should call onRowSelectionModelChange with the `exclude` set when select all checkbox is clicked and filters are empty', async () => {

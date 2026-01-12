@@ -758,7 +758,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.mock.calls.length).to.equal(1);
+    expect(processRowUpdate).toHaveBeenCalledTimes(1);
     expect(processRowUpdate).toHaveBeenLastCalledWith({ id: 3, name: 'Marcus' });
   });
 
@@ -796,7 +796,7 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.mock.calls.length).to.equal(1);
+    expect(processRowUpdate).toHaveBeenCalledTimes(1);
     expect(processRowUpdate).toHaveBeenLastCalledWith({ id: 3, name: 'Marcus' });
   });
 

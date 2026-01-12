@@ -189,12 +189,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(handleOnRowOrderChange.mock.calls.length).to.equal(0);
+    expect(handleOnRowOrderChange).toHaveBeenCalledTimes(0);
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
 
     await waitFor(() => {
-      expect(handleOnRowOrderChange.mock.calls.length).to.equal(1);
+      expect(handleOnRowOrderChange).toHaveBeenCalledTimes(1);
     });
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
@@ -232,9 +232,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const dragEndRowEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndRowEvent);
 
-    expect(handleDragStart.mock.calls.length).to.equal(0);
-    expect(handleDragOver.mock.calls.length).to.equal(0);
-    expect(handleDragEnd.mock.calls.length).to.equal(0);
+    expect(handleDragStart).toHaveBeenCalledTimes(0);
+    expect(handleDragOver).toHaveBeenCalledTimes(0);
+    expect(handleDragEnd).toHaveBeenCalledTimes(0);
   });
 
   it('should reorder rows correctly on any page when pagination is enabled', async () => {
@@ -294,7 +294,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
     await waitFor(() => {
-      expect(onRowOrderChange.mock.calls.length).to.equal(1);
+      expect(onRowOrderChange).toHaveBeenCalledTimes(1);
     });
 
     expect(getRowsFieldContent('brand')).to.deep.equal(['Vans', 'Skechers', 'Converse']);
@@ -429,7 +429,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     fireEvent(rowReorderCell, dragEndEvent);
 
     await waitFor(() => {
-      expect(onRowOrderChange.mock.calls.length).to.equal(1);
+      expect(onRowOrderChange).toHaveBeenCalledTimes(1);
     });
 
     // Verify that the row order has changed (Nike should now be between Adidas and Puma)

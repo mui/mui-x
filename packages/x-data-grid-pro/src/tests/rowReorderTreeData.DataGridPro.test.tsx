@@ -189,7 +189,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Wait for state updates to complete
       await waitFor(() => {
-        expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify A.A is now after A.B
@@ -247,7 +247,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Wait for state updates to complete
       await waitFor(() => {
-        expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify A.A is now after A.B (became the second child of A)
@@ -314,7 +314,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify Work is now under Pictures in tree structure
@@ -347,7 +347,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify Resume.pdf is now under Pictures
@@ -456,7 +456,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       // Verify operation was blocked
-      expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+      expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -505,7 +505,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify LeafB became a group and LeafA is its child
@@ -560,7 +560,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         fireEvent(sourceCell, dragEndEvent);
 
         await waitFor(() => {
-          expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify Leaf became a group and Group is its child
@@ -603,7 +603,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify File.txt is now a child of Folder
@@ -664,7 +664,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify SourceFolder is now a child of TargetFolder
@@ -739,7 +739,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         // Verify operation was blocked
-        expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
 
         // Verify tree structure unchanged
         const rowTree = gridRowTreeSelector(apiRef!);
@@ -757,7 +757,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, grandchildCell, 'inside');
 
         // Verify this was also blocked
-        expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
 
         // Verify tree structure still unchanged
         const finalTree = gridRowTreeSelector(apiRef!);
@@ -805,7 +805,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify Project new path
@@ -895,7 +895,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         fireEvent(sourceCell, dragEndEvent);
 
         // Custom validation should block this operation
-        expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
       });
 
       it('should not bypass internal validation', () => {
@@ -926,7 +926,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         fireEvent(sourceCell, dragEndEvent);
 
         // Internal validation should still block this
-        expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -1034,7 +1034,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       const eventParams = handleRowOrderChange.firstCall.args[0];
@@ -1057,7 +1057,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const dragEndEvent = createDragEndEvent(sourceCell, true);
       fireEvent(sourceCell, dragEndEvent);
 
-      expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+      expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -1091,7 +1091,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       // Event should not fire immediately
-      expect(handleRowOrderChange.mock.calls.length).to.equal(0);
+      expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
 
       // Resolve the promise
       if (processRowUpdateCalls.length > 0) {
@@ -1100,7 +1100,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Now event should fire
       await waitFor(() => {
-        expect(handleRowOrderChange.mock.calls.length).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -1139,7 +1139,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(processRowUpdateCallCount).to.be.greaterThan(0);
       });
 
-      expect(handleProcessRowUpdateError.mock.calls.length).to.be.greaterThan(0);
+      expect(handleProcessRowUpdateError).toHaveBeenCalled();
     });
 
     it('should handle batch operations for group moves', async () => {

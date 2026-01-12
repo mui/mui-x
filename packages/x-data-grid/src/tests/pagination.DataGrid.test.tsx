@@ -58,7 +58,7 @@ describe('<DataGrid /> - Pagination', () => {
         />,
       );
 
-      expect(onPaginationModelChange.mock.calls.length).to.equal(0);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should allow to update the paginationModel from the outside', () => {
@@ -91,12 +91,12 @@ describe('<DataGrid /> - Pagination', () => {
       );
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPaginationModelChange.mock.calls.length).to.equal(1);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
       expect(onPaginationModelChange.mock.lastCall[0].page).to.equal(1);
       expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPaginationModelChange.mock.calls.length).to.equal(2);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(2);
       expect(onPaginationModelChange.mock.lastCall[0].page).to.equal(0);
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
@@ -123,7 +123,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(onPaginationModelChange.mock.calls.length).to.equal(1);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
       expect(onPaginationModelChange.mock.lastCall[0].pageSize).to.equal(2);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
@@ -173,7 +173,7 @@ describe('<DataGrid /> - Pagination', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPaginationModelChange.mock.calls.length).to.equal(1);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
       expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 1 });
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
       expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 0, pageSize: 1 });
@@ -230,7 +230,7 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }
       const { setProps } = render(<TestCasePaginationFilteredData />);
-      expect(onPaginationModelChange.mock.calls.length).to.equal(0);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(0);
 
       setProps({
         filterModel: {
@@ -248,7 +248,7 @@ describe('<DataGrid /> - Pagination', () => {
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       });
-      expect(onPaginationModelChange.mock.calls.length).to.equal(1);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
       expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 0, pageSize: 5 });
     });
 
@@ -294,7 +294,7 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(onPaginationModelChange.mock.calls.length).to.equal(1);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
       expect(onPaginationModelChange).toHaveBeenLastCalledWith({ pageSize: 2, page: 0 });
     });
 

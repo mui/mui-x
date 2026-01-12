@@ -263,9 +263,9 @@ describe('<DataGridPro /> - Sorting', () => {
     it('should update the sort state when the model is not set, but the onChange is set', () => {
       const onModelChange = vi.fn();
       render(<TestCase onSortModelChange={onModelChange} />);
-      expect(onModelChange.mock.calls.length).to.equal(0);
+      expect(onModelChange).toHaveBeenCalledTimes(0);
       fireEvent.click(getColumnHeaderCell(0));
-      expect(onModelChange.mock.calls.length).to.equal(1);
+      expect(onModelChange).toHaveBeenCalledTimes(1);
       expect(onModelChange.mock.lastCall![0]).to.deep.equal([{ field: 'brand', sort: 'asc' }]);
     });
 
@@ -325,7 +325,7 @@ describe('<DataGridPro /> - Sorting', () => {
         />,
       );
 
-      expect(onSortModelChange.mock.calls.length).to.equal(0);
+      expect(onSortModelChange).toHaveBeenCalledTimes(0);
       setProps({
         sortModel: [
           { field: 'year', sort: 'asc' },
@@ -333,7 +333,7 @@ describe('<DataGridPro /> - Sorting', () => {
         ],
       });
 
-      expect(onSortModelChange.mock.calls.length).to.equal(0);
+      expect(onSortModelChange).toHaveBeenCalledTimes(0);
     });
   });
 });

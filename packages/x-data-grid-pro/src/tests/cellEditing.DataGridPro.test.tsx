@@ -73,9 +73,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         const renderEditCell = spy(defaultRenderEditCell);
 
         render(<TestCase columnProps={{ renderEditCell }} />);
-        expect(renderEditCell.mock.calls.length).to.equal(0);
+        expect(renderEditCell).toHaveBeenCalledTimes(0);
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(renderEditCell.mock.calls.length).not.to.equal(0);
+        expect(renderEditCell).toHaveBeenCalled();
       });
 
       it('should pass props to renderEditCell', () => {
@@ -144,11 +144,11 @@ describe('<DataGridPro /> - Cell editing', () => {
         render(<TestCase columnProps={{ valueParser, renderEditCell }} />);
 
         act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-        expect(valueParser.mock.calls.length).to.equal(0);
+        expect(valueParser).toHaveBeenCalledTimes(0);
         await act(() =>
           apiRef.current?.setEditCellValue({ id: 0, field: 'currencyPair', value: 'USD GBP' }),
         );
-        expect(valueParser.mock.calls.length).to.equal(1);
+        expect(valueParser).toHaveBeenCalledTimes(1);
         expect(renderEditCell.mock.lastCall[0].value).to.equal('usd gbp');
       });
 
@@ -231,7 +231,7 @@ describe('<DataGridPro /> - Cell editing', () => {
 
         fireEvent.keyDown(cell, { key: 'Enter' });
 
-        expect(handleEditCellStop.mock.calls.length).to.equal(0);
+        expect(handleEditCellStop).toHaveBeenCalledTimes(0);
       });
 
       it('should pass to renderEditCell the props returned by preProcessEditCellProps', async () => {
@@ -351,17 +351,17 @@ describe('<DataGridPro /> - Cell editing', () => {
             value: 'USD',
             debounceMs: 100,
           });
-          expect(renderEditCell.mock.calls.length).to.equal(0);
+          expect(renderEditCell).toHaveBeenCalledTimes(0);
           apiRef.current?.setEditCellValue({
             id: 0,
             field: 'currencyPair',
             value: 'USD GBP',
             debounceMs: 100,
           });
-          expect(renderEditCell.mock.calls.length).to.equal(0);
+          expect(renderEditCell).toHaveBeenCalledTimes(0);
 
           await waitFor(() => {
-            expect(renderEditCell.mock.calls.length).not.to.equal(0);
+            expect(renderEditCell).toHaveBeenCalled();
           });
 
           expect(renderEditCell.mock.lastCall[0].value).to.equal('USD GBP');
@@ -517,7 +517,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         );
         act(() => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
         await act(() => Promise.resolve());
-        expect(processRowUpdate.mock.calls.length).to.equal(1);
+        expect(processRowUpdate).toHaveBeenCalledTimes(1);
         expect(getCell(0, 1).textContent).to.equal('USD-GBP');
       });
 
@@ -788,7 +788,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         apiRef.current?.subscribeEvent('cellEditStart', listener);
         const cell = getCell(0, 0);
         fireEvent.doubleClick(cell);
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
 
       it('should call startCellEditMode', () => {
@@ -796,7 +796,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const spiedStartCellEditMode = spyApi(apiRef.current!, 'startCellEditMode');
         const cell = getCell(0, 1);
         fireEvent.doubleClick(cell);
-        expect(spiedStartCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStartCellEditMode).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -818,7 +818,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         await user.click(cell);
         await user.keyboard('[Space]');
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -852,7 +852,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
 
       it('should call startCellEditMode', () => {
@@ -861,7 +861,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(spiedStartCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStartCellEditMode).toHaveBeenCalledTimes(1);
       });
 
       it('should prevent the default behavior to avoid the key affecting the edit component', () => {
@@ -896,7 +896,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
 
       it('should call startCellEditMode', () => {
@@ -905,7 +905,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
-        expect(spiedStartCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStartCellEditMode).toHaveBeenCalledTimes(1);
       });
 
       it('should empty the cell', () => {
@@ -914,7 +914,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Delete' });
-        expect(spiedStartCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStartCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStartCellEditMode).toHaveBeenLastCalledWith({
           id: 0,
           field: 'currencyPair',
@@ -930,7 +930,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         await user.click(cell);
         await user.keyboard('{Delete}');
 
-        expect(preProcessEditCellProps.mock.calls.length).to.equal(1);
+        expect(preProcessEditCellProps).toHaveBeenCalledTimes(1);
 
         expect(preProcessEditCellProps.mock.lastCall[0].props).to.deep.equal({
           value: '',
@@ -947,7 +947,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' }); // A
-        expect(spiedStartCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStartCellEditMode).toHaveBeenCalledTimes(1);
       });
 
       it(`should publish 'cellEditStart' with reason=printableKeyDown`, () => {
@@ -967,7 +967,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 0);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a', keyCode: 65 }); // A
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
 
       ['ctrlKey', 'metaKey'].forEach((key) => {
@@ -978,7 +978,7 @@ describe('<DataGridPro /> - Cell editing', () => {
           const cell = getCell(0, 1);
           fireUserEvent.mousePress(cell);
           fireEvent.keyDown(cell, { key: 'a', keyCode: 65, [key]: true }); // for example Ctrl + A, copy
-          expect(listener.mock.calls.length).to.equal(0);
+          expect(listener).toHaveBeenCalledTimes(0);
         });
       });
 
@@ -989,7 +989,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a', keyCode: 65, shiftKey: true }); // Print A in uppercase
-        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener).toHaveBeenCalledTimes(1);
       });
 
       it(`should call startCellEditMode if the paste shortcut is pressed`, () => {
@@ -999,7 +999,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, ctrlKey: true }); // Ctrl+V
-        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener).toHaveBeenCalledTimes(1);
       });
 
       it(`should call startCellEditMode if a special character on macOS is pressed`, () => {
@@ -1009,7 +1009,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'π', altKey: true }); // ⌥ Option + P
-        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener).toHaveBeenCalledTimes(1);
       });
 
       it('should empty the cell', () => {
@@ -1018,7 +1018,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'a' });
-        expect(spiedStartCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStartCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStartCellEditMode).toHaveBeenLastCalledWith({
           id: 0,
           field: 'currencyPair',
@@ -1035,9 +1035,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'あ' } });
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 229 });
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 13 });
-        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener).toHaveBeenCalledTimes(1);
         expect(input.value).to.equal('あ');
         expect(listener.mock.lastCall[0].reason).to.equal('enterKeyDown');
       });
@@ -1051,9 +1051,9 @@ describe('<DataGridPro /> - Cell editing', () => {
         const input = cell.querySelector('input')!;
         fireEvent.change(input, { target: { value: 'ありがとう' } });
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 229 });
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
         fireEvent.keyDown(cell, { key: 'Enter', keyCode: 13 });
-        expect(listener.mock.calls.length).to.equal(1);
+        expect(listener).toHaveBeenCalledTimes(1);
         expect(input.value).to.equal('ありがとう');
         expect(listener.mock.lastCall[0].reason).to.equal('enterKeyDown');
       });
@@ -1067,7 +1067,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const listener = vi.fn();
         apiRef.current?.subscribeEvent('cellEditStop', listener);
         fireEvent.doubleClick(getCell(0, 1));
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
         fireUserEvent.mousePress(getCell(1, 1));
         expect(listener.mock.lastCall[0].reason).to.equal('cellFocusOut');
       });
@@ -1077,7 +1077,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const spiedStopCellEditMode = spyApi(apiRef.current!, 'stopCellEditMode');
         fireEvent.doubleClick(getCell(0, 1));
         fireUserEvent.mousePress(getCell(1, 1));
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode).toHaveBeenLastCalledWith({
           id: 0,
           field: 'currencyPair',
@@ -1099,7 +1099,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             }),
         );
         fireUserEvent.mousePress(getCell(1, 1));
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode.mock.lastCall[0].ignoreModifications).to.equal(false);
       });
     });
@@ -1112,7 +1112,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
         fireEvent.keyDown(cell, { key: 'Escape' });
         expect(listener.mock.lastCall[0].reason).to.equal('escapeKeyDown');
       });
@@ -1124,7 +1124,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Escape' });
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode).toHaveBeenLastCalledWith({
           id: 0,
           field: 'currencyPair',
@@ -1142,7 +1142,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(listener.mock.lastCall[0].reason).to.equal('enterKeyDown');
       });
@@ -1154,7 +1154,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode).toHaveBeenLastCalledWith({
           id: 0,
           field: 'currencyPair',
@@ -1178,7 +1178,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             }),
         );
         fireEvent.keyDown(cell, { key: 'Enter' });
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode.mock.lastCall[0].ignoreModifications).to.equal(false);
       });
     });
@@ -1191,7 +1191,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         const cell = getCell(0, 1);
         await user.click(cell);
         await user.dblClick(cell);
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
         await user.keyboard('{Tab}');
         expect(listener.mock.lastCall[0].reason).to.equal('tabKeyDown');
       });
@@ -1203,7 +1203,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.doubleClick(cell);
         fireEvent.keyDown(cell, { key: 'Tab' });
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode).toHaveBeenLastCalledWith({
           id: 0,
           field: 'currencyPair',
@@ -1227,7 +1227,7 @@ describe('<DataGridPro /> - Cell editing', () => {
             }),
         );
         fireEvent.keyDown(cell, { key: 'Tab' });
-        expect(spiedStopCellEditMode.mock.calls.length).to.equal(1);
+        expect(spiedStopCellEditMode).toHaveBeenCalledTimes(1);
         expect(spiedStopCellEditMode.mock.lastCall[0].ignoreModifications).to.equal(false);
       });
     });
@@ -1298,7 +1298,7 @@ describe('<DataGridPro /> - Cell editing', () => {
     it(`should publish 'cellModesModelChange' when the prop changes`, () => {
       const { setProps } = render(<TestCase cellModesModel={{}} />);
       const listener = vi.fn();
-      expect(listener.mock.calls.length).to.equal(0);
+      expect(listener).toHaveBeenCalledTimes(0);
       apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       setProps({ cellModesModel: { 0: { currencyPair: { mode: 'edit' } } } });
       expect(listener).toHaveBeenLastCalledWith({
@@ -1312,7 +1312,7 @@ describe('<DataGridPro /> - Cell editing', () => {
       apiRef.current?.subscribeEvent('cellModesModelChange', listener);
       const cell = getCell(0, 1);
       fireEvent.doubleClick(cell);
-      expect(listener.mock.calls.length).to.equal(0);
+      expect(listener).toHaveBeenCalledTimes(0);
     });
 
     it('should not mutate the cellModesModel prop if props of any column contains error=true', async () => {
@@ -1340,9 +1340,9 @@ describe('<DataGridPro /> - Cell editing', () => {
     it('should call with mode=edit when startEditMode is called', () => {
       const onCellModesModelChange = vi.fn();
       render(<TestCase onCellModesModelChange={onCellModesModelChange} />);
-      expect(onCellModesModelChange.mock.calls.length).to.equal(0);
+      expect(onCellModesModelChange).toHaveBeenCalledTimes(0);
       act(() => apiRef.current?.startCellEditMode({ id: 0, field: 'currencyPair' }));
-      expect(onCellModesModelChange.mock.calls.length).to.equal(1);
+      expect(onCellModesModelChange).toHaveBeenCalledTimes(1);
       expect(onCellModesModelChange).toHaveBeenLastCalledWith({
         0: { currencyPair: { mode: 'edit' } },
       });
@@ -1365,9 +1365,9 @@ describe('<DataGridPro /> - Cell editing', () => {
       const { setProps } = render(
         <TestCase cellModesModel={{}} onCellModesModelChange={onCellModesModelChange} />,
       );
-      expect(onCellModesModelChange.mock.calls.length).to.equal(0);
+      expect(onCellModesModelChange).toHaveBeenCalledTimes(0);
       setProps({ cellModesModel: { 0: { currencyPair: { mode: 'edit' } } } });
-      expect(onCellModesModelChange.mock.calls.length).to.equal(0);
+      expect(onCellModesModelChange).toHaveBeenCalledTimes(0);
     });
   });
 });

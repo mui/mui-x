@@ -310,7 +310,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
       await user.click(getCell(0, 0));
 
-      expect(onCellSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onCellSelectionModelChange).toHaveBeenCalledTimes(1);
       expect(onCellSelectionModelChange).toHaveBeenLastCalledWith({ '0': { id: true } });
     });
 

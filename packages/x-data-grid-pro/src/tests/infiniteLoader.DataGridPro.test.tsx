@@ -44,7 +44,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
 
       await waitFor(() => {
-        expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+        expect(handleRowsScrollEnd).toHaveBeenCalledTimes(1);
       });
 
       await act(async () => {
@@ -60,12 +60,12 @@ describe('<DataGridPro /> - Infinite loader', () => {
         virtualScroller.dispatchEvent(new Event('scroll'));
       });
 
-      expect(handleRowsScrollEnd.mock.calls.length).to.equal(1);
+      expect(handleRowsScrollEnd).toHaveBeenCalledTimes(1);
 
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
 
       await waitFor(() => {
-        expect(handleRowsScrollEnd.mock.calls.length).to.equal(2);
+        expect(handleRowsScrollEnd).toHaveBeenCalledTimes(2);
       });
     },
   );
@@ -187,12 +187,12 @@ describe('<DataGridPro /> - Infinite loader', () => {
       // eslint-disable-next-line testing-library/no-container
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
       // on the initial render, last row is not visible and the `observe` method is not called
-      expect(observe.mock.calls.length).to.equal(0);
+      expect(observe).toHaveBeenCalledTimes(0);
       // arbitrary number to make sure that the bottom of the grid window is reached.
       await act(async () => virtualScroller.scrollTo({ top: 12345, behavior: 'instant' }));
       // observer was attached
       await waitFor(() => {
-        expect(observe.mock.calls.length).to.equal(1);
+        expect(observe).toHaveBeenCalledTimes(1);
       });
     },
   );

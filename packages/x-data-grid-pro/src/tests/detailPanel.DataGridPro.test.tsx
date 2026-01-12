@@ -338,9 +338,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     const getDetailPanelContent2 = spy(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent2.mock.calls.length).to.equal(2); // Called 2x by the effect
+    expect(getDetailPanelContent2).toHaveBeenCalledTimes(2); // Called 2x by the effect
     await user.click(screen.getByRole('button', { name: /previous page/i }));
-    expect(getDetailPanelContent2.mock.calls.length).to.equal(2);
+    expect(getDetailPanelContent2).toHaveBeenCalledTimes(2);
   });
 
   it('should cache the content of getDetailPanelHeight', async () => {
@@ -380,9 +380,9 @@ describe('<DataGridPro /> - Detail panel', () => {
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight2.mock.calls.length).to.equal(2); // Called 2x by the effect
+    expect(getDetailPanelHeight2).toHaveBeenCalledTimes(2); // Called 2x by the effect
     await user.click(screen.getByRole('button', { name: /previous page/i }));
-    expect(getDetailPanelHeight2.mock.calls.length).to.equal(2);
+    expect(getDetailPanelHeight2).toHaveBeenCalledTimes(2);
   });
 
   // Doesn't work with mocked window.getComputedStyle
@@ -458,7 +458,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     await user.click(getCell(1, 0));
-    expect(handleRowSelectionModelChange.mock.calls.length).to.equal(0);
+    expect(handleRowSelectionModelChange).toHaveBeenCalledTimes(0);
   });
 
   // See https://github.com/mui/mui-x/issues/4607

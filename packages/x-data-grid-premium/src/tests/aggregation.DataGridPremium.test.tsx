@@ -91,10 +91,10 @@ describe('<DataGridPremium /> - Aggregation', () => {
           />,
         );
 
-        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
+        expect(onAggregationModelChange).toHaveBeenCalledTimes(0);
         setProps({ id: 'min' });
 
-        expect(onAggregationModelChange.mock.calls.length).to.equal(0);
+        expect(onAggregationModelChange).toHaveBeenCalledTimes(0);
       });
 
       it('should allow to update the aggregation model from the outside', async () => {

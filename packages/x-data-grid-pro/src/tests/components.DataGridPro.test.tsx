@@ -56,8 +56,8 @@ describe('<DataGridPro/> - Components', () => {
         render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
         apiRef.current?.subscribeEvent(event, eventHandler);
 
-        expect(propHandler.mock.calls.length).to.equal(0);
-        expect(eventHandler.mock.calls.length).to.equal(0);
+        expect(propHandler).toHaveBeenCalledTimes(0);
+        expect(eventHandler).toHaveBeenCalledTimes(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
@@ -71,10 +71,10 @@ describe('<DataGridPro/> - Components', () => {
         fireEvent[eventToFire](cell);
 
         await waitFor(() => {
-          expect(propHandler.mock.calls.length).to.equal(1);
+          expect(propHandler).toHaveBeenCalledTimes(1);
         });
         expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
-        expect(eventHandler.mock.calls.length).to.equal(1);
+        expect(eventHandler).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -84,15 +84,15 @@ describe('<DataGridPro/> - Components', () => {
       const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef.current?.subscribeEvent('cellKeyDown', eventHandler);
 
-      expect(propHandler.mock.calls.length).to.equal(0);
-      expect(eventHandler.mock.calls.length).to.equal(0);
+      expect(propHandler).toHaveBeenCalledTimes(0);
+      expect(eventHandler).toHaveBeenCalledTimes(0);
 
       await user.click(getCell(0, 0));
       await user.keyboard('a');
 
-      expect(propHandler.mock.calls.length).to.equal(1);
+      expect(propHandler).toHaveBeenCalledTimes(1);
       expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
-      expect(eventHandler.mock.calls.length).to.equal(1);
+      expect(eventHandler).toHaveBeenCalledTimes(1);
     });
 
     (
@@ -107,17 +107,17 @@ describe('<DataGridPro/> - Components', () => {
         render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
         apiRef.current?.subscribeEvent(event, eventHandler);
 
-        expect(propHandler.mock.calls.length).to.equal(0);
-        expect(eventHandler.mock.calls.length).to.equal(0);
+        expect(propHandler).toHaveBeenCalledTimes(0);
+        expect(eventHandler).toHaveBeenCalledTimes(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
         ) as EventType; // for example onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
-        expect(propHandler.mock.calls.length).to.equal(1);
+        expect(propHandler).toHaveBeenCalledTimes(1);
         expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
-        expect(eventHandler.mock.calls.length).to.equal(1);
+        expect(eventHandler).toHaveBeenCalledTimes(1);
       });
     });
   });

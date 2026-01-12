@@ -55,7 +55,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       act(() => apiRef.current?.updateColumns([{ field: 'id', width: 300 }]));
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(0);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -88,14 +88,14 @@ describe('<DataGridPro /> - Columns visibility', () => {
       );
 
       act(() => apiRef.current?.setColumnVisibility('id', false));
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(1);
       expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         id: false,
         idBis: false,
       });
 
       act(() => apiRef.current?.setColumnVisibility('id', true));
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(2);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(2);
       expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({
         idBis: false,
         id: true,
@@ -114,7 +114,7 @@ describe('<DataGridPro /> - Columns visibility', () => {
         />,
       );
       act(() => apiRef.current?.setColumnVisibilityModel({}));
-      expect(onColumnVisibilityModelChange.mock.calls.length).to.equal(1);
+      expect(onColumnVisibilityModelChange).toHaveBeenCalledTimes(1);
       expect(onColumnVisibilityModelChange.mock.lastCall![0]).to.deep.equal({});
     });
   });

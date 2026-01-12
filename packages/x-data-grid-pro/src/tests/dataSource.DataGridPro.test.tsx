@@ -81,7 +81,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.mock.calls.length).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(199)).not.to.be.undefined);

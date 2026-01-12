@@ -408,7 +408,7 @@ describe('<DataGridPremium /> - Export Excel', () => {
       render(<TestCaseExcelExport />);
       const getDataAsExcelSpy = spyApi(apiRef.current!, 'getDataAsExcel');
       await act(() => apiRef.current?.exportDataAsExcel({ worker: () => workerMock as any }));
-      expect(getDataAsExcelSpy.mock.calls.length === 1).to.equal(false);
+      expect(getDataAsExcelSpy).not.toHaveBeenCalledTimes(1);
     });
 
     it('should post a message to the web worker with the serialized columns', async () => {

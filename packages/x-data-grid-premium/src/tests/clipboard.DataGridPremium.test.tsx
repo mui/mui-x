@@ -137,7 +137,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(2, 0), { ctrlKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.mock.lastCall![0]).to.equal(['Adidas', 'Nike', 'Puma'].join('\r\n'));
+      expect(writeText).toHaveBeenLastCalledWith(['Adidas', 'Nike', 'Puma'].join('\r\n'));
     });
 
     it('should not escape double quotes when copying multiple cells to clipboard', async () => {
@@ -165,7 +165,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       fireEvent.click(getCell(1, 0), { ctrlKey: true });
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.mock.lastCall![0]).to.equal(['1 " 1', '2'].join('\r\n'));
+      expect(writeText).toHaveBeenLastCalledWith(['1 " 1', '2'].join('\r\n'));
     });
 
     it('should copy aggregation cell value to clipboard', async () => {
@@ -217,7 +217,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const cell = getCell(0, 1);
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -230,7 +230,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         const cell = getCell(0, 1);
         await user.click(cell);
         fireEvent.keyDown(cell, { key: 'v', keyCode: 86, [key]: true }); // Ctrl+V
-        expect(listener.mock.calls.length).to.equal(0);
+        expect(listener).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -631,7 +631,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       paste(cell, 'John Doe');
 
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['Jon', 'John']));
-      expect(processRowUpdateSpy.mock.calls.length).to.equal(1);
+      expect(processRowUpdateSpy).toHaveBeenCalledTimes(1);
       expect(processRowUpdateSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
@@ -797,7 +797,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
         expect(getCell(2, 2).textContent).to.equal('12');
       });
 
-      expect(processRowUpdateSpy.mock.calls.length).to.equal(3);
+      expect(processRowUpdateSpy).toHaveBeenCalledTimes(3);
       expect(processRowUpdateSpy.args).to.deep.equal([
         [
           { id: 0, currencyPair: '12', price1M: '12' }, // new row
@@ -918,9 +918,9 @@ describe('<DataGridPremium /> - Clipboard', () => {
       paste(cell, '12');
 
       await waitFor(() => {
-        expect(onProcessRowUpdateError.mock.calls.length).to.equal(1);
+        expect(onProcessRowUpdateError).toHaveBeenCalledTimes(1);
       });
-      expect(onProcessRowUpdateError.mock.calls[0][0]).to.equal(error);
+      expect(onProcessRowUpdateError).toHaveBeenNthCalledWith(1, error);
     });
 
     it('should emit clipboard paste events', async () => {

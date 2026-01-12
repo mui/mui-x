@@ -88,7 +88,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       await user.type(input, 'Do something with the data');
       await user.keyboard('{Enter}');
 
-      expect(promptSpy.mock.calls.length).to.equal(1);
+      expect(promptSpy).toHaveBeenCalledTimes(1);
       expect(promptSpy.firstCall.args[1]).contains('Example1');
       expect(promptSpy.firstCall.args[1]).not.contains('CatA');
     });
@@ -103,7 +103,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
       await user.type(input, 'Do something with the data');
       await user.keyboard('{Enter}');
 
-      expect(promptSpy.mock.calls.length).to.equal(1);
+      expect(promptSpy).toHaveBeenCalledTimes(1);
       expect(promptSpy.firstCall.args[1]).not.contains('Example1');
       expect(promptSpy.firstCall.args[1]).contains('CatA');
     });
@@ -131,7 +131,7 @@ describe('<DataGridPremium /> - AI Assistant', () => {
 
       await act(() => apiRef.current?.aiAssistant.processPrompt('Do something with the data'));
 
-      expect(sortChangeSpy.mock.calls.length).to.equal(0);
+      expect(sortChangeSpy).toHaveBeenCalledTimes(0);
     });
 
     it('should apply the prompt result', async () => {
@@ -179,11 +179,11 @@ describe('<DataGridPremium /> - AI Assistant', () => {
 
       await act(() => apiRef.current?.aiAssistant.processPrompt('Do something with the data'));
 
-      expect(sortChangeSpy.mock.calls.length).to.equal(1);
-      expect(filterChangeSpy.mock.calls.length).to.equal(1);
-      expect(aggregationChangeSpy.mock.calls.length).to.equal(1);
-      expect(rowSelectionChangeSpy.mock.calls.length).to.equal(1);
-      expect(rowGroupingChangeSpy.mock.calls.length).to.equal(1);
+      expect(sortChangeSpy).toHaveBeenCalledTimes(1);
+      expect(filterChangeSpy).toHaveBeenCalledTimes(1);
+      expect(aggregationChangeSpy).toHaveBeenCalledTimes(1);
+      expect(rowSelectionChangeSpy).toHaveBeenCalledTimes(1);
+      expect(rowGroupingChangeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should return the prompt processing error', async () => {

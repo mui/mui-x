@@ -85,7 +85,7 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      expect(onFilterModelChange.mock.calls.length).to.equal(0);
+      expect(onFilterModelChange).toHaveBeenCalledTimes(0);
 
       await user.click(screen.getByRole('button', { name: 'Search' }));
       await user.type(screen.getByRole('searchbox'), 'adid, nik');
@@ -441,15 +441,15 @@ describe('<DataGrid /> - Quick filter', () => {
       );
 
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(0);
+      expect(getApplyQuickFilterFnSpy).toHaveBeenCalledTimes(0);
 
       setProps({ columnVisibilityModel: { brand: false } });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(0);
+      expect(getApplyQuickFilterFnSpy).toHaveBeenCalledTimes(0);
 
       setProps({ columnVisibilityModel: { brand: true } });
       expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-      expect(getApplyQuickFilterFnSpy.mock.calls.length).to.equal(0);
+      expect(getApplyQuickFilterFnSpy).toHaveBeenCalledTimes(0);
     });
 
     it('should not apply filters on column visibility change when quickFilterExcludeHiddenColumns=false', () => {

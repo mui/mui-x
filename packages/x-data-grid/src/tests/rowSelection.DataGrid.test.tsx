@@ -87,7 +87,7 @@ describe('<DataGrid /> - Row selection', () => {
     }
     const { user } = render(<TestDataGrid />);
     await user.click(getCell(0, 0).querySelector('input')!);
-    expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+    expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
   });
 
   describe('prop: checkboxSelection = false (single selection)', () => {
@@ -173,21 +173,21 @@ describe('<DataGrid /> - Row selection', () => {
             disableRowSelectionOnClick
           />,
         );
-        expect(onCellEditStart.mock.calls.length).to.equal(0);
+        expect(onCellEditStart).toHaveBeenCalledTimes(0);
 
         const cell01 = getCell(0, 1);
         await user.click(cell01);
 
         await user.keyboard('{Shift>}[Space]{/Shift}');
 
-        expect(onCellEditStart.mock.calls.length).to.equal(0);
+        expect(onCellEditStart).toHaveBeenCalledTimes(0);
         expect(getSelectedRowIds()).to.deep.equal([0]);
 
         const cell11 = getCell(1, 1);
         await user.click(cell11);
         await user.keyboard('{Shift>}[Space]{/Shift}');
 
-        expect(onCellEditStart.mock.calls.length).to.equal(0);
+        expect(onCellEditStart).toHaveBeenCalledTimes(0);
         expect(getSelectedRowIds()).to.deep.equal([1]);
       });
     });
@@ -289,7 +289,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(selectAllCheckbox);
 
       // The callback should be called with exclude type and empty ids
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       const selectionModel = onRowSelectionModelChange.firstCall.args[0];
       expect(selectionModel.type).to.equal('exclude');
       expect(selectionModel.ids.size).to.equal(0);
@@ -324,7 +324,7 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(getCell(1, 0).querySelector('input')!);
 
       // Should still be exclude type but with the deselected row ID
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       const selectionModel = onRowSelectionModelChange.firstCall.args[0];
       expect(selectionModel.type).to.equal('exclude');
       expect(selectionModel.ids.size).to.equal(1);
@@ -903,7 +903,7 @@ describe('<DataGrid /> - Row selection', () => {
         rows: data.rows.slice(0, 1),
       });
 
-      expect(onRowSelectionModelChangeSpy.mock.calls.length > 0).to.equal(true);
+      expect(onRowSelectionModelChangeSpy).toHaveBeenCalled();
     });
 
     it('should retain the outdated selected rows when the rows prop changes when keepNonExistentRowsSelected is true', () => {
@@ -946,9 +946,9 @@ describe('<DataGrid /> - Row selection', () => {
           rowSelectionModel={includeRowSelection([0])}
         />,
       );
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
       setProps({ rowSelectionModel: includeRowSelection([1]) });
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(0);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should call onRowSelectionModelChange with an empty array if no row is selectable in the current page when turning off checkboxSelection', async () => {
@@ -1047,7 +1047,7 @@ describe('<DataGrid /> - Row selection', () => {
 
       await user.click(getCell(0, 0));
       expect(getSelectedRowIds()).to.deep.equal([0]);
-      expect(onModelChange.mock.calls.length).to.equal(1);
+      expect(onModelChange).toHaveBeenCalledTimes(1);
       expect(onModelChange.firstCall.firstArg).to.deep.equal(includeRowSelection([0]));
     });
 
@@ -1175,7 +1175,7 @@ describe('<DataGrid /> - Row selection', () => {
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       await user.click(selectAllCheckbox);
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       const selectionModel = onRowSelectionModelChange.mock.lastCall[0];
       // With disableRowSelectionExcludeModel=true, it should use include model with all IDs
       expect(selectionModel.type).to.equal('include');
@@ -1196,7 +1196,7 @@ describe('<DataGrid /> - Row selection', () => {
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       await user.click(selectAllCheckbox);
 
-      expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
+      expect(onRowSelectionModelChange).toHaveBeenCalledTimes(1);
       const selectionModel = onRowSelectionModelChange.mock.lastCall[0];
       // By default (disableRowSelectionExcludeModel=false), it should use exclude model with empty IDs
       expect(selectionModel.type).to.equal('exclude');

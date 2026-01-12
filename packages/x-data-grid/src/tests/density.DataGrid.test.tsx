@@ -124,7 +124,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Density', () => {
       render(<Test />);
       fireEvent.click(screen.getByText('Density'));
       fireEvent.click(screen.getByText('Comfortable'));
-      expect(onDensityChange.mock.calls.length).to.equal(1);
+      expect(onDensityChange).toHaveBeenCalledTimes(1);
       expect(onDensityChange.firstCall.args[0]).to.equal('comfortable');
     });
   });

@@ -178,13 +178,13 @@ describe('<DataGrid /> - Sorting', () => {
     // Trigger a `asc` sort
     fireEvent.click(header);
     expect(getColumnValues(0)).to.deep.equal(['0', '5', '10']);
-    expect(onSortModelChange.mock.calls.length).to.equal(1);
+    expect(onSortModelChange).toHaveBeenCalledTimes(1);
     expect(onSortModelChange.mock.lastCall![0]).to.deep.equal([{ field: 'id', sort: 'asc' }]);
 
     // Clear the sort using `apiRef`
     act(() => apiRef.current?.sortColumn('id', null));
     expect(getColumnValues(0)).to.deep.equal(['10', '0', '5']);
-    expect(onSortModelChange.mock.calls.length).to.equal(2);
+    expect(onSortModelChange).toHaveBeenCalledTimes(2);
 
     // Confirm that the sort item is cleared and not passed to `onSortModelChange`
     expect(onSortModelChange.mock.lastCall![0]).to.deep.equal([]);
@@ -713,7 +713,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     setProps({ columns: [{ field: 'id' }] });
     expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
-    expect(onSortModelChange.mock.calls.length).to.equal(2);
+    expect(onSortModelChange).toHaveBeenCalledTimes(2);
     expect(onSortModelChange.mock.lastCall![0]).to.deep.equal([]);
   });
 
@@ -746,7 +746,7 @@ describe('<DataGrid /> - Sorting', () => {
 
     setProps({ columns: [{ field: 'id' }], sortModel: [{ field: 'id', sort: 'desc' }] });
     expect(getColumnValues(0)).to.deep.equal(['2', '1', '0']);
-    expect(onSortModelChange.mock.calls.length).to.equal(0);
+    expect(onSortModelChange).toHaveBeenCalledTimes(0);
   });
 
   describe('getSortComparator', () => {

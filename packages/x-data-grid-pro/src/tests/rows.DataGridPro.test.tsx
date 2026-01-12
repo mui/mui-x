@@ -874,9 +874,9 @@ describe('<DataGridPro /> - Rows', () => {
       const { user } = render(<TestCase rows={baselineProps.rows} />);
       apiRef.current?.subscribeEvent('cellFocusOut', handleCellFocusOut);
       await user.click(getCell(1, 0));
-      expect(handleCellFocusOut.mock.calls.length).to.equal(0);
+      expect(handleCellFocusOut).toHaveBeenCalledTimes(0);
       await user.click(document.body);
-      expect(handleCellFocusOut.mock.calls.length).to.equal(1);
+      expect(handleCellFocusOut).toHaveBeenCalledTimes(1);
       expect(handleCellFocusOut.mock.calls[0][0].id).to.equal(baselineProps.rows[1].id);
       expect(handleCellFocusOut.mock.calls[0][0].field).to.equal(baselineProps.columns[0].field);
     });

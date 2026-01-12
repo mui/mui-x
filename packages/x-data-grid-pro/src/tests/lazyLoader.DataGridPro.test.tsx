@@ -60,7 +60,7 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const handleFetchRows = vi.fn();
     const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
-    expect(handleFetchRows.mock.calls.length).to.equal(0);
+    expect(handleFetchRows).toHaveBeenCalledTimes(0);
   });
 
   // Needs layout
@@ -68,10 +68,10 @@ describe('<DataGridPro /> - Lazy loader', () => {
     const handleFetchRows = vi.fn();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
-    expect(handleFetchRows.mock.calls.length).to.equal(1);
+    expect(handleFetchRows).toHaveBeenCalledTimes(1);
     // Should be 1. When tested in the browser it's called only 2 time
     fireEvent.click(getColumnHeaderCell(0));
-    expect(handleFetchRows.mock.calls.length).to.equal(2);
+    expect(handleFetchRows).toHaveBeenCalledTimes(2);
   });
 
   // Needs layout

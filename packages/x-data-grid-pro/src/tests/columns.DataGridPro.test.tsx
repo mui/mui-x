@@ -119,7 +119,7 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnResize.mock.calls.length).to.equal(2);
+      expect(onColumnResize).toHaveBeenCalledTimes(2);
       expect(onColumnResize.mock.calls[0][0].width).to.equal(110);
       expect(onColumnResize.mock.calls[1][0].width).to.equal(120);
     });
@@ -129,7 +129,7 @@ describe('<DataGridPro /> - Columns', () => {
       const { user } = render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
-      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
+      expect(onColumnWidthChange).toHaveBeenCalledTimes(0);
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
@@ -137,7 +137,7 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange).toHaveBeenCalledTimes(1);
       expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
     });
 
@@ -146,7 +146,7 @@ describe('<DataGridPro /> - Columns', () => {
       const { user } = render(<Test onColumnWidthChange={onColumnWidthChange} columns={columns} />);
       const separator = document.querySelector(`.${gridClasses['columnSeparator--resizable']}`)!;
 
-      expect(onColumnWidthChange.mock.calls.length).to.equal(0);
+      expect(onColumnWidthChange).toHaveBeenCalledTimes(0);
 
       await user.pointer([
         { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
@@ -154,7 +154,7 @@ describe('<DataGridPro /> - Columns', () => {
         { keys: '[/MouseLeft]', target: separator, coords: { x: 120 } },
       ]);
 
-      expect(onColumnWidthChange.mock.calls.length).to.equal(1);
+      expect(onColumnWidthChange).toHaveBeenCalledTimes(1);
       expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(120);
       await user.dblClick(separator);
 
