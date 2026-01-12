@@ -104,17 +104,8 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   props: EventDraggableDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { style, container, anchor, occurrence, onClose, open, ...other } = props;
+  const { style, container, anchor, occurrence, onClose, open, paperRef, ...other } = props;
   const handleRef = React.useRef<HTMLDivElement>(null);
-  const paperRef = React.useRef<HTMLDivElement>(null);
-
-  // Context hooks
-  const store = useSchedulerStoreContext();
-
-  // Selector hooks
-  //   const color = useStore(store, schedulerEventSelectors.color, occurrence.id);
-  const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
   return (
     <Dialog
@@ -141,8 +132,6 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
         <MoreHorizIcon ref={handleRef} />
       </Box>
       <FormContent occurrence={occurrence} onClose={onClose} />
-
-      {isScopeDialogOpen && <RecurringScopeDialog containerRef={paperRef} />}
     </Dialog>
   );
 });
@@ -150,6 +139,8 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 export function EventDraggableDialogProvider(props: EventDraggableDialogProviderProps) {
   const { children } = props;
   const store = useSchedulerStoreContext();
+  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const ref = React.useRef<HTMLDivElement>(null);
 
   return (
     <EventDraggableDialog.Provider
@@ -159,6 +150,7 @@ export function EventDraggableDialogProvider(props: EventDraggableDialogProvider
           occurrence={occurrence}
           onClose={onClose}
           open={isOpen}
+          paperRef={ref}
         />
       )}
       onClose={() => {
@@ -166,6 +158,7 @@ export function EventDraggableDialogProvider(props: EventDraggableDialogProvider
       }}
     >
       {children}
+      {isScopeDialogOpen && <RecurringScopeDialog containerRef={ref} />}
     </EventDraggableDialog.Provider>
   );
 }

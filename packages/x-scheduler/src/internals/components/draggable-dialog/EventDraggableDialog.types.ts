@@ -15,6 +15,10 @@ export interface EventDraggableDialogProps extends DialogProps {
    * Handles the close action of the popover.
    */
   onClose: () => void;
+  /**
+   * Ref to the Paper element of the dialog.
+   */
+  paperRef?: React.RefObject<HTMLDivElement>;
 }
 
 export interface EventDraggableDialogProviderProps {
