@@ -2,7 +2,8 @@ import { createSelectorMemoized, createSelector } from '@mui/x-internals/store';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesLayout, applySeriesProcessors } from './processSeries';
-import { selectorChartDrawingArea } from '../useChartDimensions/useChartDimensions.selectors';
+import { selectorChartDrawingArea } from '../useChartDimensions';
+import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
@@ -35,8 +36,11 @@ export const selectorChartSeriesProcessed = createSelectorMemoized(
   selectorChartDefaultizedSeries,
   selectorChartSeriesConfig,
   selectorChartDataset,
-  function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset) {
-    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset);
+  selectorIsItemVisibleGetter,
+  function selectorChartSeriesProcessed(defaultizedSeries, seriesConfig, dataset, isItemVisible) {
+    return applySeriesProcessors(defaultizedSeries, seriesConfig, dataset, (identifier) =>
+      isItemVisible(seriesConfig, identifier),
+    );
   },
 );
 
