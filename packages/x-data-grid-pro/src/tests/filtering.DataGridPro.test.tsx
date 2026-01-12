@@ -505,7 +505,7 @@ describe('<DataGridPro /> - Filter', () => {
     );
     fireEvent.change(input!, { target: { value: 'or' } });
     expect(onFilterModelChange.mock.calls.length).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('changeLogicOperator');
+    expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('changeLogicOperator');
     expect(getColumnValues(0)).to.deep.equal([]);
   });
 
@@ -536,7 +536,7 @@ describe('<DataGridPro /> - Filter', () => {
       expect(onFilterModelChange.mock.calls.length).to.equal(1);
     });
 
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItem');
+    expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('upsertFilterItem');
   });
 
   it('should call onFilterModelChange with reason=deleteFilterItem when a filter is removed', () => {
@@ -568,7 +568,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.mock.calls.length).to.equal(0);
     fireEvent.click(screen.queryAllByRole('button', { name: 'Delete' })[0]);
     expect(onFilterModelChange.mock.calls.length).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('deleteFilterItem');
+    expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('deleteFilterItem');
   });
 
   it('should call onFilterModelChange with reason=upsertFilterItems when a filter is added', () => {
@@ -587,7 +587,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(onFilterModelChange.mock.calls.length).to.equal(0);
     fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(onFilterModelChange.mock.calls.length).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[1].reason).to.equal('upsertFilterItems');
+    expect(onFilterModelChange.mock.lastCall[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should publish filterModelChange with the reason whenever the model changes', () => {
@@ -603,7 +603,7 @@ describe('<DataGridPro /> - Filter', () => {
     expect(listener.mock.calls.length).to.equal(0);
     fireEvent.click(screen.getByRole('button', { name: 'Add filter' }));
     expect(listener.mock.calls.length).to.equal(1);
-    expect(listener.lastCall.args[1].reason).to.equal('upsertFilterItems');
+    expect(listener.mock.lastCall[1].reason).to.equal('upsertFilterItems');
   });
 
   it('should only select visible rows', () => {
@@ -1258,23 +1258,23 @@ describe('<DataGridPro /> - Filter', () => {
 
       await user.keyboard('0');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0);
+      expect(changeSpy.mock.lastCall[0].items[0].value).to.equal(0);
 
       await user.keyboard('.');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0); // 0.
+      expect(changeSpy.mock.lastCall[0].items[0].value).to.equal(0); // 0.
 
       await user.keyboard('1');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['10', '100', '1,000']));
-      await waitFor(() => expect(changeSpy.lastCall.args[0].items[0].value).to.equal(0.1)); // 0.1
+      await waitFor(() => expect(changeSpy.mock.lastCall[0].items[0].value).to.equal(0.1)); // 0.1
 
       await user.keyboard('e');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['-10', '10', '100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(undefined); // 0.1e
+      expect(changeSpy.mock.lastCall[0].items[0].value).to.equal(undefined); // 0.1e
 
       await user.keyboard('2');
       await waitFor(() => expect(getColumnValues(0)).to.deep.equal(['100', '1,000']));
-      expect(changeSpy.lastCall.args[0].items[0].value).to.equal(10); // 0.1e2
+      expect(changeSpy.mock.lastCall[0].items[0].value).to.equal(10); // 0.1e2
     });
 
     it('should allow to navigate to the header filter cell when there are no rows', async () => {

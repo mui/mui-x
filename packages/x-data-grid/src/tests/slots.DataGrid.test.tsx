@@ -115,8 +115,8 @@ describe('<DataGrid /> - Slots', () => {
       expect(onClick.mock.calls.length).to.equal(0);
       const button = screen.getByLabelText('Show filters');
       await user.click(button);
-      expect(onClick.lastCall.args[0]).to.have.property('field', 'brand');
-      expect(onClick.lastCall.args[1]).to.have.property('target', button);
+      expect(onClick.mock.lastCall[0]).to.have.property('field', 'brand');
+      expect(onClick.mock.lastCall[1]).to.have.property('target', button);
     });
   });
 

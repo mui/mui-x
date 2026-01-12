@@ -218,7 +218,7 @@ describe('<DataGridPro /> - Columns reorder', () => {
     fireEvent(dragCol, dragEndEvent);
 
     expect(onColumnOrderChange.mock.calls.length).to.equal(1);
-    expect(onColumnOrderChange.lastCall.args[2].api.state.columns.orderedFields).to.deep.equal([
+    expect(onColumnOrderChange.mock.lastCall[2].api.state.columns.orderedFields).to.deep.equal([
       'currencyPair',
       'price1M',
       'id',

@@ -73,7 +73,7 @@ describe('<DataGridPro/> - Components', () => {
         await waitFor(() => {
           expect(propHandler.mock.calls.length).to.equal(1);
         });
-        expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
+        expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
         expect(eventHandler.mock.calls.length).to.equal(1);
       });
     });
@@ -91,7 +91,7 @@ describe('<DataGridPro/> - Components', () => {
       await user.keyboard('a');
 
       expect(propHandler.mock.calls.length).to.equal(1);
-      expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
+      expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
       expect(eventHandler.mock.calls.length).to.equal(1);
     });
 
@@ -116,7 +116,7 @@ describe('<DataGridPro/> - Components', () => {
         fireEvent[eventToFire](getRow(0));
 
         expect(propHandler.mock.calls.length).to.equal(1);
-        expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
+        expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
         expect(eventHandler.mock.calls.length).to.equal(1);
       });
     });

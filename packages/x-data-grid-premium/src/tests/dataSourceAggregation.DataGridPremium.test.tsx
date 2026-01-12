@@ -162,7 +162,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       expect(fetchRowsSpy.mock.calls.length).to.be.greaterThan(0);
     });
 
-    expect(fetchRowsSpy.lastCall.args[0].aggregationModel).to.deep.equal({ id: 'size' });
+    expect(fetchRowsSpy.mock.lastCall[0].aggregationModel).to.deep.equal({ id: 'size' });
   });
 
   it('should show the aggregation footer row when aggregation is enabled', async () => {

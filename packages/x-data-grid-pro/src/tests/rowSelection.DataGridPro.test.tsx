@@ -767,7 +767,7 @@ describe('<DataGridPro /> - Row selection', () => {
         setProps({ rowSelectionModel: includeRowSelection([1]) });
       });
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
       );
     });
@@ -818,7 +818,7 @@ describe('<DataGridPro /> - Row selection', () => {
       );
 
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(3);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
     });
@@ -888,7 +888,7 @@ describe('<DataGridPro /> - Row selection', () => {
         setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
       });
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
     });
@@ -1005,7 +1005,7 @@ describe('<DataGridPro /> - Row selection', () => {
         setProps({ rowSelectionModel: includeRowSelection([2, 3, 4, 5, 6, 7]) });
       });
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
     });
@@ -1024,7 +1024,7 @@ describe('<DataGridPro /> - Row selection', () => {
         setProps({ rowSelectionModel: includeRowSelection([1]) });
       });
       expect(onRowSelectionModelChange.mock.calls.length).to.equal(1);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(onRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2, 3, 4, 5, 6, 7]),
       );
     });
@@ -1123,21 +1123,21 @@ describe('<DataGridPro /> - Row selection', () => {
       const handleRowSelectionModelChange = vi.fn();
       render(<TestDataGridSelection onRowSelectionModelChange={handleRowSelectionModelChange} />);
       await act(async () => apiRef.current?.selectRow(1));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1]),
       );
       // Reset old selection
       await act(async () => apiRef.current?.selectRow(2, true, true));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2]),
       );
       // Keep old selection
       await act(async () => apiRef.current?.selectRow(3));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2, 3]),
       );
       await act(async () => apiRef.current?.selectRow(3, false));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([2]),
       );
     });
@@ -1168,23 +1168,23 @@ describe('<DataGridPro /> - Row selection', () => {
       );
 
       await act(async () => apiRef.current?.selectRows([1, 2]));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2]),
       );
 
       await act(async () => apiRef.current?.selectRows([3]));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2, 3]),
       );
 
       await act(async () => apiRef.current?.selectRows([1, 2], false));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([3]),
       );
 
       // Deselect others
       await act(async () => apiRef.current?.selectRows([4, 5], true, true));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([4, 5]),
       );
     });
@@ -1198,7 +1198,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
       await act(async () => apiRef.current?.selectRows([0, 1, 2]));
-      expect(handleRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+      expect(handleRowSelectionModelChange).toHaveBeenLastCalledWith(
         includeRowSelection([1, 2]),
       );
     });
@@ -1374,7 +1374,7 @@ describe('<DataGridPro /> - Row selection', () => {
       );
       const selectAllCheckbox = screen.getByRole('checkbox', { name: 'Select all rows' });
       await user.click(selectAllCheckbox);
-      expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal({
+      expect(onRowSelectionModelChange).toHaveBeenLastCalledWith({
         type: 'exclude',
         ids: new Set(),
       });

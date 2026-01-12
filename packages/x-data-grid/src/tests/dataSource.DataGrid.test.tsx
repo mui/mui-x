@@ -384,7 +384,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.keyboard('{Enter} updated{Enter}');
 
       expect(editRowSpy.mock.calls.length).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
+      expect(editRowSpy.mock.lastCall[0].updatedRow.commodity).to.contain('updated');
 
       await waitFor(() => {
         expect(clearSpy.mock.calls.length).to.equal(1);
@@ -431,7 +431,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.keyboard('{Enter}{Enter}');
 
       expect(editRowSpy.mock.calls.length).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
+      expect(editRowSpy.mock.lastCall[0].updatedRow.commodity).to.contain('-edited');
     });
   });
 });
