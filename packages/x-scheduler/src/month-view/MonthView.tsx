@@ -136,7 +136,6 @@ export const MonthView = React.memo(
     const adapter = useAdapter();
     const translations = useTranslations();
     const store = useEventCalendarStoreContext();
-    // const yo = useEventDraggableDialogContext();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
