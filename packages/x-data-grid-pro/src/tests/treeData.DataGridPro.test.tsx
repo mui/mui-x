@@ -9,7 +9,6 @@ import {
 } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import * as React from 'react';
-import { vi } from 'vitest';
 import {
   DataGridPro,
   DataGridProProps,

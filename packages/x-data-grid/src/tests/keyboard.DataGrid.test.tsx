@@ -1,5 +1,4 @@
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
-import { vi } from 'vitest';
 import {
   getActiveCell,
   getActiveColumnHeader,

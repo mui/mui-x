@@ -62,7 +62,8 @@ describe('<DataGridPremium /> - Clipboard', () => {
     let writeText: MockInstance | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?vi.restoreAllMocks();
+      writeText?.mockRestore();
+      vi.restoreAllMocks();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {

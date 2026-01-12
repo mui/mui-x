@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { vi, MockInstance } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';

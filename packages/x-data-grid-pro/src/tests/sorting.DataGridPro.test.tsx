@@ -12,7 +12,6 @@ import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils
 import { vi } from 'vitest';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
-import { vi } from 'vitest';
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {

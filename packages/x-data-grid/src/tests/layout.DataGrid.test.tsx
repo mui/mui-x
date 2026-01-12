@@ -225,12 +225,11 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
     describe('swallow warnings', () => {
       beforeEach(() => {
-        stub(console, 'error');
+        vi.spyOn(console, 'error').mockImplementation(() => {});
       });
 
       afterEach(() => {
-        // @ts-expect-error beforeEach side effect
-        console.errorvi.restoreAllMocks();
+        vi.restoreAllMocks();
       });
 
       it('should have a stable height if the parent container has no intrinsic height', () => {

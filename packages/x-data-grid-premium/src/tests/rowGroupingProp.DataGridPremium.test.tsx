@@ -18,7 +18,7 @@ import {
   GridGroupingColDefOverrideParams,
   GridGroupNode,
 } from '@mui/x-data-grid-premium';
-import { vi } from 'vitest';
+
 import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {

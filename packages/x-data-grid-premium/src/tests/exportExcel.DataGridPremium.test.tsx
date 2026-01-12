@@ -8,7 +8,7 @@ import {
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
-import { vi, MockInstance } from 'vitest';
+import { MockInstance } from 'vitest';
 import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
 
