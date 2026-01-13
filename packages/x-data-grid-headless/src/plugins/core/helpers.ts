@@ -11,17 +11,16 @@ export type ExtractPluginState<T> =
   T extends Plugin<any, infer TState, any, any, any, any, any> ? TState : never;
 
 // Extract TDeps from Plugin type parameter (7th param)
-type ExtractPluginDeps<T> = T extends Plugin<any, any, any, any, any, any, infer TDeps>
-  ? TDeps
-  : readonly [];
+type ExtractPluginDeps<T> =
+  T extends Plugin<any, any, any, any, any, any, infer TDeps> ? TDeps : readonly [];
 
 // Check if TDeps is a concrete tuple (not just readonly AnyPlugin[])
 type HasConcreteDeps<TDeps> = TDeps extends readonly []
   ? false
   : TDeps extends readonly AnyPlugin[]
     ? readonly [] extends TDeps
-      ? false  // TDeps is readonly AnyPlugin[] (too general)
-      : true   // TDeps is a concrete tuple
+      ? false // TDeps is readonly AnyPlugin[] (too general)
+      : true // TDeps is a concrete tuple
     : false;
 
 // Recursively collect all plugins including their dependencies
@@ -38,9 +37,7 @@ type FlattenPluginsWithDeps<TPlugins extends readonly AnyPlugin[]> = TPlugins ex
   : CollectAllPlugins<TPlugins[number]>;
 
 // Safe union to intersection that handles never
-type SafeUnionToIntersection<T> = [T] extends [never]
-  ? {}
-  : UnionToIntersection<T>;
+type SafeUnionToIntersection<T> = [T] extends [never] ? {} : UnionToIntersection<T>;
 
 // Union all plugin options (params) including dependencies
 export type PluginsOptions<
