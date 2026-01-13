@@ -82,6 +82,7 @@ const chartSetting = {
       dataKey: 'year',
       valueFormatter: (v: number | null) => (v ? v.toString() : ''),
       domainLimit: 'strict' as const,
+      height: 28,
     },
   ],
 };

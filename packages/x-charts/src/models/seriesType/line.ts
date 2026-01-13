@@ -117,4 +117,6 @@ export type LineItemIdentifier = {
 export interface DefaultizedLineSeriesType extends DefaultizedProps<
   LineSeriesType,
   CommonDefaultizedProps | 'color'
-> {}
+> {
+  hidden: boolean;
+}

@@ -53,4 +53,6 @@ export type RangeBarItemIdentifier = {
 export interface DefaultizedRangeBarSeriesType extends DefaultizedProps<
   RangeBarSeriesType,
   CommonDefaultizedProps | 'color' | 'layout'
-> {}
+> {
+  hidden: boolean;
+}

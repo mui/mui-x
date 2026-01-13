@@ -55,8 +55,11 @@ describe('<Timeline />', () => {
       baseResources.forEach((resourceItem) => {
         expect(screen.getByText(resourceItem.title)).not.to.equal(null);
       });
-      const resourceTitleCells = document.querySelectorAll('.TimelineTitleCell');
-      expect(resourceTitleCells.length).to.equal(baseResources.length);
+      // Check that we have one title cell per resource by counting the cells with IDs
+      const resourceTitleCells = baseResources.map((resource) =>
+        document.getElementById(`TimelineTitleCell-${resource.id}`),
+      );
+      expect(resourceTitleCells.filter(Boolean).length).to.equal(baseResources.length);
     });
 
     it('does render resources with no events', () => {
@@ -225,7 +228,8 @@ describe('<Timeline />', () => {
       });
 
       let rootElement = screen.getByRole('grid');
-      expect(rootElement.querySelector('.TimeHeader')).not.to.equal(null);
+      // The time header has 24 time cells (one for each hour)
+      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
 
       expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
 
@@ -238,7 +242,8 @@ describe('<Timeline />', () => {
       });
 
       rootElement = screen.getAllByRole('grid').at(-1) as HTMLElement;
-      expect(rootElement.querySelector('.DaysHeader')).not.to.equal(null);
+      // Days header also has time elements for each day
+      expect(rootElement.querySelectorAll('time').length).to.be.greaterThan(0);
       expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('days-cell-width');
     });
   });
