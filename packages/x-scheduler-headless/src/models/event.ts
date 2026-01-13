@@ -3,6 +3,13 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
+/**
+ * Base shape for processed scheduler events.
+ *
+ * Contains properties that are required for rendering and user interaction,
+ * independently of whether the event represents a real persisted event
+ * or a temporary draft (placeholder, drag preview, creation flow).
+ */
 interface SchedulerProcessedEventBase {
   /**
    * The unique identifier of the event.
@@ -61,6 +68,16 @@ interface SchedulerProcessedEventBase {
   className?: string;
 }
 
+/**
+ * A processed scheduler event.
+ *
+ * This represents a real event that exists in the calendar and is fully
+ * normalized by the store for rendering and interactions.
+ *
+ * - Uses `displayTimezone` values for UI rendering.
+ * - Uses `dataTimezone` values for canonical logic (comparisons, recurrence expansion, etc.).
+ * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
+ */
 export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
   /**
    * The description of the event.
@@ -140,6 +157,14 @@ export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
   resizable?: boolean | SchedulerEventSide;
 }
 
+/**
+ * A processed draft event used by temporary UI flows.
+ *
+ * This represents transient data such as placeholders and drag/resize previews.
+ * It shares the same base shape as processed events for rendering, but it is not
+ * a persisted calendar event and does not include canonical data (`dataTimezone`)
+ * nor a `modelInBuiltInFormat`.
+ */
 export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {}
 
 export interface SchedulerEvent {
