@@ -49,6 +49,7 @@ const xAxis = {
   ordinalTimeTicks: ['months', 'weeks'],
   position: 'top',
   disableLine: true,
+  categoryGapRatio: 0.1,
 } satisfies XAxis<'band'>;
 
 const yAxis = {
@@ -56,6 +57,7 @@ const yAxis = {
   tickSize: 0,
   valueFormatter: formatWeekDay,
   disableLine: true,
+  categoryGapRatio: 0.1,
 } satisfies YAxis<'band'>;
 
 export default function ZoomHeatmap() {
@@ -68,7 +70,7 @@ export default function ZoomHeatmap() {
       </Typography>
       <Heatmap
         height={160}
-        xAxis={[{ ...xAxis, zoom: true }]}
+        xAxis={[{ ...xAxis, zoom: { minSpan: 60 } }]}
         yAxis={[yAxis]}
         zAxis={[
           {
@@ -143,24 +145,6 @@ function TooltipContent() {
   );
 }
 
-function HeatmapCell({
-  ownerState,
-  x,
-  y,
-  width,
-  height,
-  ...props
-}: HeatmapCellProps) {
-  return (
-    <rect
-      x={x + 1}
-      y={y + 1}
-      width={width - 2}
-      height={height - 2}
-      {...props}
-      rx={4}
-      ry={4}
-      fill={ownerState.color}
-    />
-  );
+function HeatmapCell({ ownerState, ...props }: HeatmapCellProps) {
+  return <rect {...props} rx={4} ry={4} fill={ownerState.color} />;
 }

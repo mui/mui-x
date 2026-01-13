@@ -11,7 +11,10 @@ import {
   useUtilityClasses,
 } from './chartAxisZoomSliderThumbClasses';
 
-const Rect = styled('rect')(({ theme }) => ({
+const Rect = styled('rect', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   [`&.${chartAxisZoomSliderThumbClasses.root}`]: {
     fill: (theme.vars || theme).palette.common.white,
     stroke: (theme.vars || theme).palette.grey[500],

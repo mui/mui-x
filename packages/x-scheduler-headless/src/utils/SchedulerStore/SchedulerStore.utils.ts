@@ -62,6 +62,7 @@ const EVENT_PROPERTIES_LOOKUP: { [P in keyof SchedulerEvent]-?: true } = {
   draggable: true,
   resizable: true,
   className: true,
+  timezone: true,
 };
 
 const EVENT_PROPERTIES = Object.keys(EVENT_PROPERTIES_LOOKUP) as (keyof SchedulerEvent)[];

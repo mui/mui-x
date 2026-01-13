@@ -14,6 +14,44 @@ In chart components, the legend links series with `label` properties and their c
 
 {{"demo": "BasicLegend.js"}}
 
+## Toggle visibility
+
+You can enable interactive visibility toggling by setting the `toggleVisibilityOnClick` prop to `true`.
+When enabled, clicking on a legend item hides or shows the corresponding series or data item in the chart.
+
+Hidden items are visually indicated in the legend with reduced opacity.
+
+{{"demo": "ToggleSeriesVisibility.js"}}
+
+### Visibility change callback
+
+You can listen to visibility changes using the `onHiddenItemsChange` prop on the chart component.
+This callback receives an array of hidden item identifiers whenever the visibility state changes.
+
+The following demo shows a line chart where you can toggle series' visibility and see the count of currently visible series.
+
+{{"demo": "VisibilityOnChange.js"}}
+
+:::info
+The `toggleVisibilityOnClick` prop can be combined with the `onItemClick` handler.
+When both are in use, the `onItemClick` callback is called first, followed by `onHiddenItemsChange`.
+:::
+
+### Controlled visibility
+
+You can control the visibility state externally using the `hiddenItems` prop.
+This prop accepts an array of item identifiers that should be hidden in the chart.
+
+Different chart types have different identifier formats:
+
+- All identifiers require a `type` field indicating the series type (for example, `'line'`, `'bar'`, `'pie'`, etc.).
+- Use `VisibilityIdentifier` type to build such identifiers.
+  - It accepts a series type as generic parameter, and can be used as `VisibilityIdentifier<'line'>` in order to narrow the allowed values.
+
+The demo below shows how to control which items are visible using buttons.
+
+{{"demo": "ControlledVisibility.js"}}
+
 ## Customization
 
 This section explains how to customize the legend using classes and properties.
