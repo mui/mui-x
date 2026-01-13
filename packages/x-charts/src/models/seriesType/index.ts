@@ -45,7 +45,9 @@ export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
   | 'line'
   | 'radar'
   ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'dataIndex'>
-  : ChartsSeriesConfig[T]['itemIdentifier'];
+  : T extends 'heatmap'
+    ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'xIndex' | 'yIndex'>
+    : ChartsSeriesConfig[T]['itemIdentifier'];
 
 export { type SeriesId } from './common';
 export * from './line';

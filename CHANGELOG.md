@@ -5,6 +5,116 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.24.0
+
+_Jan 8, 2026_
+
+We'd like to extend a big thank you to the 12 contributors who made this release possible. Here are some highlights ✨:
+
+- ⚡️Add bar [batch renderer](https://mui.com/x/react-charts/bars/#performance), result in a significant performance improvement when rendering thousands of bars
+- 📊 Add [range bar chart](https://mui.com/x/react-charts/range-bar/) to render
+  ![image](https://github.com/user-attachments/assets/4112c09b-d841-42f7-a0c8-d23b61c23ca0)
+- 🌎 Improved Danish (da-DK) and Japanese (ja-JP) locales on the Data Grid
+
+Special thanks go out to these community members for their valuable contributions:
+@anders-noerrelykke, @auloin, @sai6855, @yuito-it
+
+The following team members contributed to this release:
+@alelthomas, @alexfauquette, @arminmeh, @bernardobelchior, @flaviendelangle, @JCQuintas, @mapache-salvaje, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.24.0`
+
+- [l10n] Improve Danish (da-DK) locale (#20828) @anders-noerrelykke
+- [l10n] Improve Japanese (ja-JP) locale (#20251) @yuito-it
+
+#### `@mui/x-data-grid-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.24.0`, plus:
+
+- [DataGridPro] Fix header filter height for `density="compact"` (#20834) @arminmeh
+
+#### `@mui/x-data-grid-premium@8.24.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.24.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.24.0`
+
+- [pickers] Fix Styles applied to PickersDay when MuiPickersDay-dayOutsideMonth is used (#20719) @sai6855
+
+#### `@mui/x-date-pickers-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.24.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.24.0`
+
+- [charts] Add `VisibilityManager` logic to allow managing series/items (#20571) @JCQuintas
+- [charts] Add `identifierSerializer` configuration (#20775) @JCQuintas
+- [charts] Add `serializeIdentifier` instance function (#20791) @JCQuintas
+- [charts] Add bar batch renderer (#20457) @bernardobelchior
+- [charts] Allow animating bar, line, and pie elements to hidden state (#20798) @JCQuintas
+- [charts] Fix failing lint step (#20813) @bernardobelchior
+- [charts] Fix tooltip anchored to item (#20783) @alexfauquette
+- [charts] Fix type casting in getCategoryAxisConfig and applySeriesLayout functions (#20797) @sai6855
+- [charts] Let keyboard navigation avoid overflow and handle nullish values (#20757) @alexfauquette
+- [charts] Refactor `PieChart` and `PieChartPro` to use `slots` and `slotProps` directly (#20795) @sai6855
+- [charts] Refactor `useRegisterPointerEventHandlers` (#20824) @bernardobelchior
+- [charts] Update legend types to allow hiding/showing items (#20784) @JCQuintas
+
+#### `@mui/x-charts-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.24.0`, plus:
+
+- [charts-pro] Pass `slotProps.toolbar` to `Toolbar` in `PieChartPro` (#20796) @sai6855
+
+#### `@mui/x-charts-premium@8.24.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.24.0`, plus:
+
+- [charts-premium] Add range bar chart (#20275) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.24.0`
+
+- [tree view] Introduce a Tree View Store to clean the internals (#20051) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.24.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.24.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.24.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix axis size default values (#20799) @bernardobelchior
+- [docs] Update What's New in MUI X page with post v8 features (DX-118) (#20787) @alelthomas
+- [docs] Fix `onAccept`'s `context.source` documentation to use 'view' instead of 'picker' (#20465) @auloin
+- [docs] Revise the Charts Brush doc (#20792) @mapache-salvaje
+- [docs] Revise the Charts Highlighting doc (#20788) @mapache-salvaje
+- [docs] Revise the Charts Label doc (#20794) @mapache-salvaje
+- [docs] Revise the Charts Export doc (#20779) @mapache-salvaje
+
+### Core
+
+- [code-infra] Fix v8.23.0 release date (#20767) @bernardobelchior
+- [code-infra] Remove `glob-gitignore` (#20801) @bernardobelchior
+- [code-infra] Remove `nyc` (#20804) @bernardobelchior
+- [code-infra] Remove `stream-browserify` and `null-loader` (#20805) @bernardobelchior
+- [code-infra] Remove `stylelint-config-tailwindcss` (#20807) @bernardobelchior
+- [code-infra] Remove unused `path` package (#20802) @bernardobelchior
+- [code-infra] Retry flaky e2e test on webkit (#20806) @JCQuintas
+- [internal] Add `internal` slot to properly generate components CSS layer (#20763) @siriwatknp
+
 ## 8.23.0
 
 _Dec 24, 2025_

@@ -16,6 +16,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenItems": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
     },
@@ -39,6 +42,15 @@
         "data": {
           "name": "data",
           "description": "The data about the clicked axis and items associated with it."
+        }
+      }
+    },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
         }
       }
     },
@@ -67,6 +79,12 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "radiusAxis": {
       "description": "The configuration of the radial-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
@@ -81,6 +99,7 @@
     },
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "voronoiMaxRadius": {
       "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
