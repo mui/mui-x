@@ -553,7 +553,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 occurrence={originalRecurringEventOccurrence}
               />
 
-              {/* <RecurringScopeDialog containerRef={containerRef} /> */}
+              <RecurringScopeDialog />
             </EventCalendarProvider>
           </React.Fragment>,
         );
@@ -603,7 +603,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 occurrence={originalRecurringEventOccurrence}
               />
 
-              {/* <RecurringScopeDialog containerRef={containerRef} /> */}
+              <RecurringScopeDialog />
             </EventCalendarProvider>
           </React.Fragment>,
         );
@@ -666,7 +666,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 occurrence={originalRecurringEventOccurrence}
               />
 
-              <RecurringScopeDialog containerRef={containerRef} />
+              <RecurringScopeDialog />
             </EventCalendarProvider>
           </React.Fragment>,
         );
@@ -727,7 +727,7 @@ describe('<EventDraggableDialogContent open />', () => {
                 occurrence={originalRecurringEventOccurrence}
               />
 
-              {/* <RecurringScopeDialog containerRef={containerRef} /> */}
+              <RecurringScopeDialog />
             </EventCalendarProvider>
           </React.Fragment>,
         );
