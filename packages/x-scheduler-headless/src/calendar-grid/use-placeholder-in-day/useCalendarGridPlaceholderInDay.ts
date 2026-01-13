@@ -25,10 +25,12 @@ export function useCalendarGridPlaceholderInDay(
     rowStart,
   );
 
-  const originalEventId = isInternalDragOrResizePlaceholder(rawPlaceholder)
-    ? rawPlaceholder.eventId
-    : null;
-  const originalEvent = useStore(store, schedulerEventSelectors.processedEvent, originalEventId);
+  const originalEvent = useStore(store, (state) => {
+    if (!isInternalDragOrResizePlaceholder(rawPlaceholder)) {
+      return null;
+    }
+    return schedulerEventSelectors.processedEventRequired(state, rawPlaceholder.eventId);
+  });
 
   return React.useMemo(() => {
     if (!rawPlaceholder) {
@@ -96,11 +98,15 @@ export function useCalendarGridPlaceholderInDay(
       }
     }
 
+    if (!originalEvent) {
+      throw new Error('Scheduler: expected original event for internal drag placeholder.');
+    }
+
     return {
       ...sharedProperties,
       start: processDate(rawPlaceholder.start, adapter),
       end: processDate(rawPlaceholder.end, adapter),
-      displayTimezone: { ...originalEvent!.displayTimezone },
+      displayTimezone: { ...originalEvent.displayTimezone },
       position: {
         index: positionIndex,
         daySpan: adapter.differenceInDays(rawPlaceholder.end, day) + 1,
