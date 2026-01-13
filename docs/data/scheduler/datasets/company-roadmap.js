@@ -6,7 +6,7 @@ import { addDays } from 'date-fns/addDays';
 import { addMonths } from 'date-fns/addMonths';
 
 // Timeline starts July 1, 2025
-export const defaultVisibleDate = new Date('2025-03-30T00:00:00Z');
+export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
 // Helper to create dates relative to the start
 const date = (monthOffset, day) => {
@@ -1072,14 +1072,5 @@ export const initialEvents = [
     title: 'Q1 2026 Financial Close',
     resource: 'finance',
     allDay: true,
-  },
-  {
-    id: 'dst-check-0130',
-    title: 'DST check: 01:30 -> 03:00 (Paris)',
-    // 00:30Z = 01:30 Paris (before the jump)
-    // 01:00Z = 03:00 Paris (after the jump)
-    start: new Date('2025-03-30T00:30:00Z'),
-    end: new Date('2025-03-30T01:00:00Z'),
-    resource: 'engineering',
   },
 ];
