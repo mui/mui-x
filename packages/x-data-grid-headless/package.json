@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "@mui/x-data-grid-generator": "workspace:*",
     "@types/prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

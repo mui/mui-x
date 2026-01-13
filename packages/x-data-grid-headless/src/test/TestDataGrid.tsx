@@ -8,13 +8,22 @@ export function TestDataGrid<TRow extends object>(props: {
   rows: TRow[];
   columns: ColumnDef<TRow>[];
   getRowId?: (row: TRow) => string;
+  apiRef?: React.MutableRefObject<ReturnType<
+    typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
+  > | null>;
 }) {
-  const grid = useDataGrid({
+  const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>({
     rows: props.rows,
     getRowId: props.getRowId,
     columns: props.columns,
     plugins: [sortingPlugin, paginationPlugin],
   });
+
+  React.useEffect(() => {
+    if (props.apiRef) {
+      props.apiRef.current = grid;
+    }
+  }, [grid, props.apiRef]);
 
   const rowIds = grid.hooks.rows.useRowIds();
   const rowsData = grid.hooks.rows.useRowIdToModelLookup();
