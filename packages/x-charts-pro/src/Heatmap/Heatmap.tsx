@@ -85,6 +85,7 @@ export interface HeatmapProps
       | 'plugins'
       | 'xAxis'
       | 'yAxis'
+      | 'axesGap'
       | 'skipAnimation'
       | 'slots'
       | 'slotProps'

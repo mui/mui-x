@@ -175,6 +175,11 @@ BarChart.propTypes = {
     current: PropTypes.object,
   }),
   /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
+  /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
    * Depends on `layout` prop.

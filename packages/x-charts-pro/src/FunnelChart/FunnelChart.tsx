@@ -39,6 +39,7 @@ export interface FunnelChartProps
       | 'dataset'
       | 'yAxis'
       | 'xAxis'
+      | 'axesGap'
       | 'rotationAxis'
       | 'radiusAxis'
       | 'slots'

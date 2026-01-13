@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "axisHighlight": {
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."

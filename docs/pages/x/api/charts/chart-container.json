@@ -1,5 +1,6 @@
 {
   "props": {
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "brushConfig": {
       "type": {
         "name": "shape",

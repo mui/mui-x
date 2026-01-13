@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
         "name": "shape",

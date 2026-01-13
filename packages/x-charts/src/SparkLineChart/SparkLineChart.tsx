@@ -54,6 +54,7 @@ export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 
   | 'zAxis'
   | 'radiusAxis'
   | 'rotationAxis'
+  | 'axesGap'
   | 'margin'
   | 'plugins'
   | 'colors'
