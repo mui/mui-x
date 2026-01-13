@@ -89,7 +89,7 @@ export function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.displayTimezone.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      color: hasProp(occurrence, 'color') ? (occurrence.color as SchedulerEventColor) : null,
+      color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
         freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,

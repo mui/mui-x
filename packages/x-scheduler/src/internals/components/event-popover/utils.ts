@@ -122,9 +122,14 @@ export function getEndsSelectionFromRRule(rrule?: {
   return 'never';
 }
 
+type HasProp<T, K extends PropertyKey> =
+  T extends Partial<Record<K, unknown>>
+    ? T & { [P in K]-?: Exclude<T[P & keyof T], undefined> }
+    : never;
+
 export function hasProp<T extends object, K extends PropertyKey>(
   obj: T,
   prop: K,
-): obj is T & Record<K, unknown> {
-  return obj != null && prop in obj;
+): obj is HasProp<T, K> {
+  return prop in obj;
 }
