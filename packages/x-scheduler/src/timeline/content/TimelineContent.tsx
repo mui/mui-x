@@ -11,9 +11,9 @@ import { TimelineContentProps } from './TimelineContent.types';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
 import { TimelineEvent } from './timeline-event';
 import {
-  EventPopoverProvider,
-  EventPopoverTrigger,
-} from '../../internals/components/event-popover';
+  EventDraggableDialogProvider,
+  EventDraggableDialogTrigger,
+} from '../../internals/components/draggable-dialog';
 
 const EventTimelineContent = styled('section', {
   name: 'MuiEventTimeline',
@@ -163,7 +163,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 
   return (
     <EventTimelineContent ref={handleRef} {...props}>
-      <EventPopoverProvider containerRef={containerRef}>
+      <EventDraggableDialogProvider containerRef={containerRef}>
         <EventTimelineGrid
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
         >
@@ -187,17 +187,13 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
                   {({ occurrences, placeholder }) => (
                     <React.Fragment>
                       {occurrences.map((occurrence) => (
-                        <EventPopoverTrigger
-                          key={occurrence.key}
-                          occurrence={occurrence}
-                          render={
-                            <TimelineEvent
-                              occurrence={occurrence}
-                              ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
-                              variant="regular"
-                            />
-                          }
-                        />
+                        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+                          <TimelineEvent
+                            occurrence={occurrence}
+                            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+                            variant="regular"
+                          />
+                        </EventDraggableDialogTrigger>
                       ))}
                       {placeholder != null && (
                         <TimelineEvent
@@ -213,7 +209,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
             </EventTimelineEventsSubGrid>
           </EventTimelineEventsSubGridWrapper>
         </EventTimelineGrid>
-      </EventPopoverProvider>
+      </EventDraggableDialogProvider>
     </EventTimelineContent>
   );
 });

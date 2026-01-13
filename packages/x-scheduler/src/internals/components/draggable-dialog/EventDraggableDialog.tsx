@@ -12,7 +12,7 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggabble-dialog';
+import { useDraggableDialog } from '@mui/x-scheduler-headless/use-draggable-dialog';
 import {
   EventDraggableDialogProps,
   EventDraggableDialogProviderProps,
@@ -150,7 +150,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
 });
 
 export function EventDraggableDialogProvider(props: EventDraggableDialogProviderProps) {
-  const { children } = props;
+  const { children, ...other } = props;
   const store = useSchedulerStoreContext();
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
 
@@ -162,6 +162,7 @@ export function EventDraggableDialogProvider(props: EventDraggableDialogProvider
           anchorRef={anchorRef}
           occurrence={occurrence}
           onClose={onClose}
+          {...other}
         />
       )}
       onClose={() => {
