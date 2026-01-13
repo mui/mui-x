@@ -90,6 +90,7 @@ export function useBarPlotData(
         const result: ProcessedBarData = {
           seriesId,
           dataIndex,
+          hidden: series[seriesId].hidden,
           ...barDimensions,
           color: colorGetter(dataIndex),
           value: series[seriesId].data[dataIndex],

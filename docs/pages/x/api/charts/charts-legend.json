@@ -16,7 +16,8 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    }
+    },
+    "toggleVisibilityOnClick": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "ChartsLegend",
   "imports": [
@@ -34,6 +35,12 @@
     }
   ],
   "classes": [
+    {
+      "key": "hidden",
+      "className": "MuiChartsLegend-hidden",
+      "description": "Styles applied to hidden items.",
+      "isGlobal": false
+    },
     {
       "key": "horizontal",
       "className": "MuiChartsLegend-horizontal",
