@@ -12,14 +12,16 @@ export type FocusedItemUpdater<
   OutputSeriesType extends ChartSeriesType = ChartSeriesType,
 > = (
   currentItem: (TSeriesType extends any ? FocusedItemIdentifier<TSeriesType> : never) | null,
-  state: Pick<
-    ChartState<
-      [UseChartKeyboardNavigationSignature],
-      [TSeriesType extends CartesianChartSeriesType ? UseChartCartesianAxisSignature : never],
-      TSeriesType
-    >,
-    'series' | 'cartesianAxis'
-  >,
+  state: TSeriesType extends CartesianChartSeriesType
+    ? Pick<
+        ChartState<
+          [UseChartKeyboardNavigationSignature],
+          [UseChartCartesianAxisSignature],
+          TSeriesType
+        >,
+        'series' | 'cartesianAxis'
+      >
+    : Pick<ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>, 'series'>,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
 /**
