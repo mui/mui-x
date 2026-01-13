@@ -23,6 +23,7 @@ import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
 import '../index.css';
+import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -232,7 +233,9 @@ export const StandaloneMonthView = React.forwardRef(function StandaloneMonthView
 
   return (
     <EventCalendarProvider {...parameters}>
-      <MonthView ref={forwardedRef} {...forwardedProps} />
+      <EventDraggableDialogProvider>
+        <MonthView ref={forwardedRef} {...forwardedProps} />
+      </EventDraggableDialogProvider>
     </EventCalendarProvider>
   );
 }) as StandaloneMonthViewComponent;

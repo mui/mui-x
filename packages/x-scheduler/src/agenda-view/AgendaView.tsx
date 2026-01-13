@@ -15,7 +15,10 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import '../index.css';
-import { EventDraggableDialogTrigger } from '../internals/components/draggable-dialog';
+import {
+  EventDraggableDialogProvider,
+  EventDraggableDialogTrigger,
+} from '../internals/components/draggable-dialog';
 
 const AgendaViewRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -223,7 +226,9 @@ export const StandaloneAgendaView = React.forwardRef(function StandaloneAgendaVi
 
   return (
     <EventCalendarProvider {...parameters}>
-      <AgendaView ref={forwardedRef} {...forwardedProps} />
+      <EventDraggableDialogProvider>
+        <AgendaView ref={forwardedRef} {...forwardedProps} />
+      </EventDraggableDialogProvider>
     </EventCalendarProvider>
   );
 }) as StandaloneAgendaViewComponent;
