@@ -18,7 +18,11 @@ import { selectorChartsLastInteraction } from '../useChartInteraction/useChartIn
 import { type InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
 import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
 
-function getAxisHighlight(lastInteractionUpdate: InteractionUpdateSource | undefined, pointerHighlight: AxisItemIdentifier | false, keyboardHighlight: AxisItemIdentifier | false) {
+function getAxisHighlight(
+  lastInteractionUpdate: InteractionUpdateSource | undefined,
+  pointerHighlight: AxisItemIdentifier | false,
+  keyboardHighlight: AxisItemIdentifier | false,
+) {
   if (lastInteractionUpdate === 'pointer') {
     if (pointerHighlight) {
       return [pointerHighlight];
@@ -37,8 +41,7 @@ function getAxisHighlight(lastInteractionUpdate: InteractionUpdateSource | undef
     }
   }
 
-  return []
-
+  return [];
 }
 const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
@@ -57,7 +60,9 @@ const selectAxisHighlight = (
   }
 
   if (controlledAxisItems !== undefined) {
-    return controlledAxisItems.filter((item) => axis.axis[item.axisId] !== undefined).map((item) => item);
+    return controlledAxisItems
+      .filter((item) => axis.axis[item.axisId] !== undefined)
+      .map((item) => item);
   }
 
   const pointerHighlight = computedIndex !== null && {
@@ -67,7 +72,7 @@ const selectAxisHighlight = (
   const keyboardHighlight = keyboardAxisItem != null && keyboardAxisItem;
 
   return getAxisHighlight(lastInteractionUpdate, pointerHighlight, keyboardHighlight);
-}
+};
 
 export const selectorChartsHighlightXAxisIndex = createSelectorMemoized(
   selectorChartsInteractionXAxisIndex,
@@ -112,13 +117,15 @@ const selectAxisHighlightWithValue = (
       .filter(({ value }) => value !== undefined);
   }
 
-  const pointerHighlight = computedValue != null && computedIndex != null && {
-    axisId: axis.axisIds[0],
-    dataIndex: computedIndex,
-    value: computedValue,
-  };
+  const pointerHighlight = computedValue != null &&
+    computedIndex != null && {
+      axisId: axis.axisIds[0],
+      dataIndex: computedIndex,
+      value: computedValue,
+    };
   const keyboardValue =
-    keyboardAxisItem != null && axis.axis[keyboardAxisItem.axisId]?.data?.[keyboardAxisItem.dataIndex];
+    keyboardAxisItem != null &&
+    axis.axis[keyboardAxisItem.axisId]?.data?.[keyboardAxisItem.dataIndex];
   const keyboardHighlight = keyboardAxisItem != null &&
     keyboardValue != null && { ...keyboardAxisItem, value: keyboardValue };
 
