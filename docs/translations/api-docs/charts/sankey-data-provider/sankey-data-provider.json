@@ -1,0 +1,5 @@
+{
+  "componentDescription": "Orchestrates the data providers for the sankey chart components and hooks.\n\nUse this component if you have custom HTML components that need to access the chart data.",
+  "propDescriptions": {},
+  "classDescriptions": {}
+}

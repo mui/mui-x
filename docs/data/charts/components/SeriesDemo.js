@@ -84,7 +84,7 @@ export default function SeriesDemo() {
   return (
     <Box sx={{ position: 'relative', width: '100%' }}>
       <ChartDataProvider
-        xAxis={[{ id: 'x', data: [1, 2, 3, 5, 8, 10] }]}
+        xAxis={[{ id: 'x', data: [1, 2, 3, 5, 8, 10], height: 28 }]}
         series={[
           { id: 'a', type: 'line', data: [4, 6, 4, 9, 3, 5] },
           { id: 'b', type: 'line', data: [3, 7, 8, 2, 4, 9] },
