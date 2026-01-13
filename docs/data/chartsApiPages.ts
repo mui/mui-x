@@ -169,6 +169,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/focused-heatmap-cell',
+    title: 'FocusedHeatmapCell',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/funnel-chart',
     title: 'FunnelChart',
     plan: 'pro',
@@ -317,6 +322,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/sankey-chart',
     title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-data-provider',
+    title: 'SankeyDataProvider',
     plan: 'pro',
   },
   {

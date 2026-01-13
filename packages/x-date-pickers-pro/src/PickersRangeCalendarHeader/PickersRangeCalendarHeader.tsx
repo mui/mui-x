@@ -15,7 +15,9 @@ type PickersRangeCalendarHeaderComponent = ((
   props: PickersRangeCalendarHeaderProps & React.RefAttributes<HTMLDivElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher)({
+const PickersRangeCalendarHeaderContentMultipleCalendars = styled(PickersArrowSwitcher, {
+  slot: 'internal',
+})({
   padding: '12px 16px 4px 16px',
   display: 'flex',
   alignItems: 'center',

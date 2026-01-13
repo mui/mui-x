@@ -76,4 +76,6 @@ export type BarItemIdentifier = {
 export interface DefaultizedBarSeriesType extends DefaultizedProps<
   BarSeriesType,
   CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
-> {}
+> {
+  hidden: boolean;
+}

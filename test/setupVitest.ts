@@ -6,7 +6,6 @@ import { config } from 'react-transition-group';
 import sinon from 'sinon';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGrid } from '@mui/x-data-grid';
 import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingDataGridPro } from '@mui/x-data-grid-pro';
-import { unstable_resetCleanupTracking as unstable_resetCleanupTrackingTreeView } from '@mui/x-tree-view';
 import { clearWarningsCache } from '@mui/x-internals/warning';
 import setupVitest from '@mui/internal-test-utils/setupVitest';
 import { configure, isJsdom } from '@mui/internal-test-utils';
@@ -33,7 +32,6 @@ beforeEach(() => {
 afterEach(() => {
   unstable_resetCleanupTrackingDataGrid();
   unstable_resetCleanupTrackingDataGridPro();
-  unstable_resetCleanupTrackingTreeView();
 
   // Restore Sinon default sandbox to avoid memory leak
   // See https://github.com/sinonjs/sinon/issues/1866

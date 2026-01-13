@@ -22,6 +22,7 @@ export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
+export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
@@ -34,6 +35,7 @@ export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartTooltip';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVisibilityManager';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
@@ -91,3 +93,4 @@ export * from './createSvgIcon';
 
 export * from './constants';
 export * from './scales';
+export * from './identifierSerializer';

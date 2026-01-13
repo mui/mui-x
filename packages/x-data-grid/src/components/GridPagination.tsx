@@ -14,7 +14,9 @@ import {
 
 type PaginationProps = GridSlotProps['basePagination'];
 
-const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>)({
+const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, {
+  slot: 'internal',
+})({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
 });

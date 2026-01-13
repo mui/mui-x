@@ -35,8 +35,8 @@ import {
 import { TimeoutManager } from '../TimeoutManager';
 import { SchedulerDataManager } from './queue';
 import { SchedulerDataSourceCacheDefault } from './cache';
-import { applyDataTimezoneToEventUpdate } from '../date-utils';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
+import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -491,7 +491,6 @@ export class SchedulerStore<
    * Updates an event in the calendar.
    */
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
-    const { adapter } = this.state;
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (original.dataTimezone.rrule) {
       throw new Error(
@@ -499,14 +498,8 @@ export class SchedulerStore<
       );
     }
 
-    const updatedEventInDataTimezone = applyDataTimezoneToEventUpdate({
-      adapter,
-      originalEvent: original,
-      changes: calendarEvent,
-    });
-
     this.updateEvents({
-      updated: [updatedEventInDataTimezone],
+      updated: [calendarEvent],
     });
   };
 
@@ -540,14 +533,22 @@ export class SchedulerStore<
       );
     }
 
+    // IMPORTANT:
+    // Recurring updates are pattern-based, not instant-based.
+    // Using the raw instant here would incorrectly shift the recurring rule
+    // depending on the user's display timezone. We therefore convert the
+    // occurrence to the event's dataTimezone before applying the update.
+
     const changesInDataTimezone = applyDataTimezoneToEventUpdate({
       adapter,
       originalEvent: original,
       changes,
     });
 
-    const originalTz = adapter.getTimezone(original.modelInBuiltInFormat!.start);
-    const occurrenceStartInDataTimezone = adapter.setTimezone(occurrenceStart, originalTz);
+    const occurrenceStartInDataTimezone = adapter.setTimezone(
+      occurrenceStart,
+      original.dataTimezone.timezone,
+    );
 
     const updatedEvents = updateRecurringEvent(
       adapter,

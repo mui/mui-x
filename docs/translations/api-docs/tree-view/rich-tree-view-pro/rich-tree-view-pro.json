@@ -2,7 +2,7 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": {
-      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewProApiRef()</code>."
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useRichTreeViewApiProRef()</code>."
     },
     "canMoveItemToNewPosition": {
       "description": "Used to determine if a given item can move to some new position.",

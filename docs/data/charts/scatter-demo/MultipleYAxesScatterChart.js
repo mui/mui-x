@@ -42,7 +42,7 @@ export default function MultipleYAxesScatterChart() {
             valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
           },
         ]}
-        xAxis={[{ min: 0 }]}
+        xAxis={[{ min: 0, height: 28 }]}
         yAxis={[
           { id: 'leftAxis', min: 0 },
           { id: 'rightAxis', min: 0, position: 'right' },
