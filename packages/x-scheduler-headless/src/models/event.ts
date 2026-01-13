@@ -258,6 +258,10 @@ export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
   key: string;
 }
 
+/**
+ * A concrete occurrence placeholder derived from a `SchedulerEvent`.
+ * Used temporarily during creation, drag or resize interactions.
+ */
 export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedEventDraft {
   /**
    * Unique key that can be passed to the React `key` property when looping through events.
@@ -265,6 +269,11 @@ export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedE
   key: string;
 }
 
+/**
+ * Union of all event occurrence types that can be rendered by the scheduler.
+ *
+ * Includes both real event occurrences and temporary placeholder occurrences.
+ */
 export type SchedulerRenderableEventOccurrence =
   | SchedulerEventOccurrence
   | SchedulerEventOccurrencePlaceholder;
