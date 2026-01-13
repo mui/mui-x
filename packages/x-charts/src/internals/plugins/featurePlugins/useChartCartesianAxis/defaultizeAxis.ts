@@ -48,7 +48,6 @@ export function defaultizeXAxis(
       zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
     };
 
-    console.log({ axesGap });
     // Increment the offset for the next axis
     if (position !== 'none') {
       offsets[position] += sharedConfig.height + axesGap;
