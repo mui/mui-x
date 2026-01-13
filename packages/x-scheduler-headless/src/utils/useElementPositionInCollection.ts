@@ -2,7 +2,8 @@ import * as React from 'react';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../models';
 
-const MINUTES_PER_DAY = 24 * 60;
+// Fixed 24h grid (visual time, not real-time duration)
+const FIXED_24H_GRID_MINUTES = 24 * 60;
 
 export function useElementPositionInCollection(
   parameters: useElementPositionInCollection.Parameters,
@@ -22,13 +23,13 @@ export function useElementPositionInCollection(
       adapter.startOfDay(collectionStart),
     );
 
-    const startIndexMinutes = startDayIndex * MINUTES_PER_DAY + start.minutesInDay;
+    const startIndexMinutes = startDayIndex * FIXED_24H_GRID_MINUTES + start.minutesInDay;
 
-    let endIndexMinutes = endDayIndex * MINUTES_PER_DAY + end.minutesInDay;
+    let endIndexMinutes = endDayIndex * FIXED_24H_GRID_MINUTES + end.minutesInDay;
 
     // If the event ends before it starts, it means it spans over midnight(s)
     if (endIndexMinutes < startIndexMinutes) {
-      endIndexMinutes += MINUTES_PER_DAY;
+      endIndexMinutes += FIXED_24H_GRID_MINUTES;
     }
 
     const totalDays =
@@ -37,7 +38,7 @@ export function useElementPositionInCollection(
         adapter.startOfDay(collectionStart),
       ) + 1;
 
-    const totalMinutes = Math.max(1, totalDays * MINUTES_PER_DAY);
+    const totalMinutes = Math.max(1, totalDays * FIXED_24H_GRID_MINUTES);
 
     const clampToTimeline = (value: number) => Math.min(Math.max(value, 0), totalMinutes);
 
