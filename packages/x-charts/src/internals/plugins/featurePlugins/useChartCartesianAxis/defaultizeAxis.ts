@@ -16,6 +16,7 @@ type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 export function defaultizeXAxis(
   inAxes: readonly InXAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
+  axesGap: number,
 ): DefaultedXAxis[] {
   const offsets = {
     top: 0,
@@ -47,12 +48,13 @@ export function defaultizeXAxis(
       zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
     };
 
+    console.log({ axesGap });
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += sharedConfig.height;
+      offsets[position] += sharedConfig.height + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += sharedConfig.zoom.slider.size;
+        offsets[position] += sharedConfig.zoom.slider.size + axesGap;
       }
     }
 
@@ -80,6 +82,7 @@ type InYAxis = YAxis & { zoom?: boolean | ZoomOptions };
 export function defaultizeYAxis(
   inAxes: readonly InYAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
+  axesGap: number,
 ): DefaultedYAxis[] {
   const offsets = { right: 0, left: 0, none: 0 };
 
@@ -109,10 +112,10 @@ export function defaultizeYAxis(
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += sharedConfig.width;
+      offsets[position] += sharedConfig.width + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += sharedConfig.zoom.slider.size;
+        offsets[position] += sharedConfig.zoom.slider.size + axesGap;
       }
     }
 
