@@ -4,9 +4,6 @@
   "scripts": {
     "check": "NODE_OPTIONS=\"--max-old-space-size=4096\" bundle-size-checker --output ../size-snapshot.json"
   },
-  "devDependencies": {
-    "path": "^0.12.7"
-  },
   "dependencies": {
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",

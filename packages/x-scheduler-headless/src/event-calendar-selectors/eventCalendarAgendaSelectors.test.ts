@@ -21,20 +21,20 @@ describe('eventCalendarEventSelectors', () => {
 
     it('should extend forward until it fills AGENDA_VIEW_DAYS_AMOUNT days that contain events when showEmptyDaysInAgenda=false', () => {
       const events = [
-        EventBuilder.new().fullDay('2025-01-01').build(),
-        EventBuilder.new().fullDay('2025-01-03').build(),
-        EventBuilder.new().fullDay('2025-01-05').build(),
-        EventBuilder.new().fullDay('2025-01-08').build(),
-        EventBuilder.new().fullDay('2025-01-09').build(),
-        EventBuilder.new().fullDay('2025-01-10').build(),
-        EventBuilder.new().fullDay('2025-01-11').build(),
-        EventBuilder.new().fullDay('2025-01-13').build(),
-        EventBuilder.new().fullDay('2025-01-14').build(),
-        EventBuilder.new().fullDay('2025-01-16').build(),
-        EventBuilder.new().fullDay('2025-01-18').build(),
-        EventBuilder.new().fullDay('2025-01-20').build(),
-        EventBuilder.new().fullDay('2025-01-22').build(),
-        EventBuilder.new().fullDay('2025-01-24').build(),
+        EventBuilder.new().fullDay('2025-01-01Z').build(),
+        EventBuilder.new().fullDay('2025-01-03Z').build(),
+        EventBuilder.new().fullDay('2025-01-05Z').build(),
+        EventBuilder.new().fullDay('2025-01-08Z').build(),
+        EventBuilder.new().fullDay('2025-01-09Z').build(),
+        EventBuilder.new().fullDay('2025-01-10Z').build(),
+        EventBuilder.new().fullDay('2025-01-11Z').build(),
+        EventBuilder.new().fullDay('2025-01-13Z').build(),
+        EventBuilder.new().fullDay('2025-01-14Z').build(),
+        EventBuilder.new().fullDay('2025-01-16Z').build(),
+        EventBuilder.new().fullDay('2025-01-18Z').build(),
+        EventBuilder.new().fullDay('2025-01-20Z').build(),
+        EventBuilder.new().fullDay('2025-01-22Z').build(),
+        EventBuilder.new().fullDay('2025-01-24Z').build(),
       ];
 
       const state = getEventCalendarStateFromParameters({
@@ -49,41 +49,41 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDate(adapter.date('2025-01-01', 'default'), adapter),
-        processDate(adapter.date('2025-01-03', 'default'), adapter),
-        processDate(adapter.date('2025-01-05', 'default'), adapter),
-        processDate(adapter.date('2025-01-08', 'default'), adapter),
-        processDate(adapter.date('2025-01-09', 'default'), adapter),
-        processDate(adapter.date('2025-01-10', 'default'), adapter),
-        processDate(adapter.date('2025-01-11', 'default'), adapter),
-        processDate(adapter.date('2025-01-13', 'default'), adapter),
-        processDate(adapter.date('2025-01-14', 'default'), adapter),
-        processDate(adapter.date('2025-01-16', 'default'), adapter),
-        processDate(adapter.date('2025-01-18', 'default'), adapter),
-        processDate(adapter.date('2025-01-20', 'default'), adapter),
+        processDate(adapter.date('2025-01-01Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-03Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-05Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-08Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-09Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-10Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-11Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-13Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-14Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-16Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-18Z', 'default'), adapter),
+        processDate(adapter.date('2025-01-20Z', 'default'), adapter),
       ]);
     });
 
     it('should respect showWeekends preference when building the day list', () => {
       const events = [
-        EventBuilder.new().fullDay('2025-10-03').build(), // Fri
-        EventBuilder.new().fullDay('2025-10-04').build(), // Sat
-        EventBuilder.new().fullDay('2025-10-05').build(), // Sun
-        EventBuilder.new().fullDay('2025-10-06').build(), // Mon
-        EventBuilder.new().fullDay('2025-10-07').build(), // Tue
-        EventBuilder.new().fullDay('2025-10-08').build(), // Wed
-        EventBuilder.new().fullDay('2025-10-09').build(), // Thu
-        EventBuilder.new().fullDay('2025-10-10').build(), // Fri
-        EventBuilder.new().fullDay('2025-10-11').build(), // Sat
-        EventBuilder.new().fullDay('2025-10-12').build(), // Sun
-        EventBuilder.new().fullDay('2025-10-13').build(), // Mon
-        EventBuilder.new().fullDay('2025-10-14').build(), // Tue
-        EventBuilder.new().fullDay('2025-10-15').build(), // Wed
-        EventBuilder.new().fullDay('2025-10-16').build(), // Thu
-        EventBuilder.new().fullDay('2025-10-17').build(), // Fri
-        EventBuilder.new().fullDay('2025-10-18').build(), // Sat
-        EventBuilder.new().fullDay('2025-10-19').build(), // Sun
-        EventBuilder.new().fullDay('2025-10-20').build(), // Mon
+        EventBuilder.new().fullDay('2025-10-03Z').build(), // Fri
+        EventBuilder.new().fullDay('2025-10-04Z').build(), // Sat
+        EventBuilder.new().fullDay('2025-10-05Z').build(), // Sun
+        EventBuilder.new().fullDay('2025-10-06Z').build(), // Mon
+        EventBuilder.new().fullDay('2025-10-07Z').build(), // Tue
+        EventBuilder.new().fullDay('2025-10-08Z').build(), // Wed
+        EventBuilder.new().fullDay('2025-10-09Z').build(), // Thu
+        EventBuilder.new().fullDay('2025-10-10Z').build(), // Fri
+        EventBuilder.new().fullDay('2025-10-11Z').build(), // Sat
+        EventBuilder.new().fullDay('2025-10-12Z').build(), // Sun
+        EventBuilder.new().fullDay('2025-10-13Z').build(), // Mon
+        EventBuilder.new().fullDay('2025-10-14Z').build(), // Tue
+        EventBuilder.new().fullDay('2025-10-15Z').build(), // Wed
+        EventBuilder.new().fullDay('2025-10-16Z').build(), // Thu
+        EventBuilder.new().fullDay('2025-10-17Z').build(), // Fri
+        EventBuilder.new().fullDay('2025-10-18Z').build(), // Sat
+        EventBuilder.new().fullDay('2025-10-19Z').build(), // Sun
+        EventBuilder.new().fullDay('2025-10-20Z').build(), // Mon
       ];
 
       const state = getEventCalendarStateFromParameters({
@@ -98,18 +98,18 @@ describe('eventCalendarEventSelectors', () => {
       const visibleDays = eventCalendarAgendaSelectors.visibleDays(state);
 
       expect(visibleDays).to.deep.equal([
-        processDate(adapter.date('2025-10-03', 'default'), adapter),
-        processDate(adapter.date('2025-10-06', 'default'), adapter),
-        processDate(adapter.date('2025-10-07', 'default'), adapter),
-        processDate(adapter.date('2025-10-08', 'default'), adapter),
-        processDate(adapter.date('2025-10-09', 'default'), adapter),
-        processDate(adapter.date('2025-10-10', 'default'), adapter),
-        processDate(adapter.date('2025-10-13', 'default'), adapter),
-        processDate(adapter.date('2025-10-14', 'default'), adapter),
-        processDate(adapter.date('2025-10-15', 'default'), adapter),
-        processDate(adapter.date('2025-10-16', 'default'), adapter),
-        processDate(adapter.date('2025-10-17', 'default'), adapter),
-        processDate(adapter.date('2025-10-20', 'default'), adapter),
+        processDate(adapter.date('2025-10-03Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-06Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-07Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-08Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-09Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-10Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-13Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-14Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-15Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-16Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-17Z', 'default'), adapter),
+        processDate(adapter.date('2025-10-20Z', 'default'), adapter),
       ]);
     });
   });

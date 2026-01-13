@@ -107,7 +107,10 @@ function BatchScatterPaths(props: BatchScatterPathsProps) {
 
 const MemoBatchScatterPaths = React.memo(BatchScatterPaths);
 
-const Group = styled('g')({
+const Group = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   '&[data-faded="true"]': {
     opacity: 0.3,
   },

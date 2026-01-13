@@ -79,13 +79,16 @@ export { useMaterialCSSVariables } from './variables';
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
-const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
+const InputAdornment = styled(MUIInputAdornment, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: theme.spacing(-0.75),
   },
 }));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -108,6 +111,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 }));
 
 const Checkbox = styled(MUICheckbox, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
@@ -120,7 +124,9 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const ListItemText = styled(MUIListItemText)({
+const ListItemText = styled(MUIListItemText, {
+  slot: 'internal',
+})({
   [`& .${listItemTextClasses.primary}`]: {
     overflowX: 'clip',
     textOverflow: 'ellipsis',
@@ -189,7 +195,9 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
   );
 });
 
-const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+const StyledPagination = styled(MUIPagination, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -322,7 +330,9 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   return <MUIButton {...other} {...material} ref={ref} />;
 });
 
-const StyledToggleButton = styled(MUIToggleButton)(({ theme }) => ({
+const StyledToggleButton = styled(MUIToggleButton, {
+  slot: 'internal',
+})(({ theme }) => ({
   gap: theme.spacing(1),
   border: 0,
 }));

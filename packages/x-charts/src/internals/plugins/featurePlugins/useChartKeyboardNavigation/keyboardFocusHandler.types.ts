@@ -1,14 +1,24 @@
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type {
+  CartesianChartSeriesType,
+  ChartSeriesType,
+} from '../../../../models/seriesType/config';
 import type { FocusedItemIdentifier } from '../../../../models/seriesType';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartState } from '../../models/chart';
+import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
 
 export type FocusedItemUpdater<
   TSeriesType extends ChartSeriesType,
   OutputSeriesType extends ChartSeriesType = ChartSeriesType,
 > = (
   currentItem: (TSeriesType extends any ? FocusedItemIdentifier<TSeriesType> : never) | null,
-  state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+  state: Pick<
+    ChartState<
+      [UseChartKeyboardNavigationSignature],
+      [TSeriesType extends CartesianChartSeriesType ? UseChartCartesianAxisSignature : never]
+    >,
+    'series' | 'cartesianAxis'
+  >,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
 /**
