@@ -15,7 +15,6 @@ import {
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
-import { Popover } from '@base-ui/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
@@ -42,13 +41,14 @@ const resources: SchedulerResource[] = [
   },
 ];
 
-describe('<EventDraggableDialogContent />', () => {
+describe('<EventDraggableDialogContent open />', () => {
   const anchor = document.createElement('button');
   document.body.appendChild(anchor);
 
   const defaultProps = {
     anchor,
     container: document.body,
+    anchorRef: { current: anchor },
     occurrence: EventBuilder.new()
       .id(DEFAULT_EVENT.id)
       .title(DEFAULT_EVENT.title)
@@ -64,9 +64,7 @@ describe('<EventDraggableDialogContent />', () => {
   it('should render the event data in the form fields', async () => {
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-        <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} />
-        </Popover.Root>
+        <EventDraggableDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     expect(screen.getByDisplayValue(DEFAULT_EVENT.title)).not.to.equal(null);
@@ -92,9 +90,7 @@ describe('<EventDraggableDialogContent />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} />
-        </Popover.Root>
+        <EventDraggableDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.type(screen.getByLabelText(/event title/i), ' test');
@@ -130,9 +126,7 @@ describe('<EventDraggableDialogContent />', () => {
   it('should show error if start date is after end date', async () => {
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]}>
-        <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} />
-        </Popover.Root>
+        <EventDraggableDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.clear(screen.getByLabelText(/start date/i));
@@ -150,9 +144,7 @@ describe('<EventDraggableDialogContent />', () => {
     const onEventsChange = spy();
     const { user } = render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} onEventsChange={onEventsChange}>
-        <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} />
-        </Popover.Root>
+        <EventDraggableDialogContent open {...defaultProps} />
       </EventCalendarProvider>,
     );
     await user.click(screen.getByRole('button', { name: /delete event/i }));
@@ -173,9 +165,7 @@ describe('<EventDraggableDialogContent />', () => {
 
     render(
       <EventCalendarProvider events={[readOnlyEvent]} resources={resources}>
-        <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} occurrence={readOnlyOccurrence} />
-        </Popover.Root>
+        <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
     // Should display title as text, not in an input
@@ -211,9 +201,7 @@ describe('<EventDraggableDialogContent />', () => {
 
     render(
       <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources} readOnly>
-        <Popover.Root open>
-          <EventDraggableDialogContent {...defaultProps} occurrence={readOnlyOccurrence} />
-        </Popover.Root>
+        <EventDraggableDialogContent open {...defaultProps} occurrence={readOnlyOccurrence} />
       </EventCalendarProvider>,
     );
     // Should display title as text, not in an input
@@ -266,12 +254,11 @@ describe('<EventDraggableDialogContent />', () => {
         onEventsChange={onEventsChange}
         resources={resourcesNoColor}
       >
-        <Popover.Root open>
-          <EventDraggableDialogContent
-            {...defaultProps}
-            occurrence={eventWithNoResourceColorOccurrence}
-          />
-        </Popover.Root>
+        <EventDraggableDialogContent
+          open
+          {...defaultProps}
+          occurrence={eventWithNoResourceColorOccurrence}
+        />
       </EventCalendarProvider>,
     );
 
@@ -303,12 +290,11 @@ describe('<EventDraggableDialogContent />', () => {
         onEventsChange={onEventsChange}
         resources={resources}
       >
-        <Popover.Root open>
-          <EventDraggableDialogContent
-            {...defaultProps}
-            occurrence={eventWithoutResourceOccurrence}
-          />
-        </Popover.Root>
+        <EventDraggableDialogContent
+          open
+          {...defaultProps}
+          occurrence={eventWithoutResourceOccurrence}
+        />
       </EventCalendarProvider>,
     );
 
@@ -352,9 +338,9 @@ describe('<EventDraggableDialogContent />', () => {
               })
             }
           />
-          <Popover.Root open>
-            <EventDraggableDialogContent {...defaultProps} occurrence={creationOccurrence} />
-          </Popover.Root>
+
+          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+
           <StateWatcher
             Context={EventCalendarStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
@@ -396,9 +382,9 @@ describe('<EventDraggableDialogContent />', () => {
               })
             }
           />
-          <Popover.Root open>
-            <EventDraggableDialogContent {...defaultProps} occurrence={creationOccurrence} />
-          </Popover.Root>
+
+          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
+
           <StateWatcher
             Context={EventCalendarStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
@@ -439,9 +425,13 @@ describe('<EventDraggableDialogContent />', () => {
               })
             }
           />
-          <Popover.Root open>
-            <EventDraggableDialogContent {...defaultProps} occurrence={creationOccurrence as any} />
-          </Popover.Root>
+
+          <EventDraggableDialogContent
+            open
+            {...defaultProps}
+            occurrence={creationOccurrence as any}
+          />
+
           <StateWatcher
             Context={EventCalendarStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
@@ -492,9 +482,7 @@ describe('<EventDraggableDialogContent />', () => {
             }}
           />
 
-          <Popover.Root open>
-            <EventDraggableDialogContent {...defaultProps} occurrence={creationOccurrence} />
-          </Popover.Root>
+          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
@@ -558,13 +546,14 @@ describe('<EventDraggableDialogContent />', () => {
                   selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
-              <Popover.Root open>
-                <EventDraggableDialogContent
-                  {...defaultProps}
-                  occurrence={originalRecurringEventOccurrence}
-                />
-              </Popover.Root>
-              <RecurringScopeDialog containerRef={containerRef} />
+
+              <EventDraggableDialogContent
+                open
+                {...defaultProps}
+                occurrence={originalRecurringEventOccurrence}
+              />
+
+              {/* <RecurringScopeDialog containerRef={containerRef} /> */}
             </EventCalendarProvider>
           </React.Fragment>,
         );
@@ -607,13 +596,14 @@ describe('<EventDraggableDialogContent />', () => {
                   selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
-              <Popover.Root open>
-                <EventDraggableDialogContent
-                  {...defaultProps}
-                  occurrence={originalRecurringEventOccurrence}
-                />
-              </Popover.Root>
-              <RecurringScopeDialog containerRef={containerRef} />
+
+              <EventDraggableDialogContent
+                open
+                {...defaultProps}
+                occurrence={originalRecurringEventOccurrence}
+              />
+
+              {/* <RecurringScopeDialog containerRef={containerRef} /> */}
             </EventCalendarProvider>
           </React.Fragment>,
         );
@@ -669,12 +659,13 @@ describe('<EventDraggableDialogContent />', () => {
                   selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
-              <Popover.Root open>
-                <EventDraggableDialogContent
-                  {...defaultProps}
-                  occurrence={originalRecurringEventOccurrence}
-                />
-              </Popover.Root>
+
+              <EventDraggableDialogContent
+                open
+                {...defaultProps}
+                occurrence={originalRecurringEventOccurrence}
+              />
+
               <RecurringScopeDialog containerRef={containerRef} />
             </EventCalendarProvider>
           </React.Fragment>,
@@ -729,13 +720,14 @@ describe('<EventDraggableDialogContent />', () => {
                   selectRecurringEventUpdateScopeSpy = sp;
                 }}
               />
-              <Popover.Root open>
-                <EventDraggableDialogContent
-                  {...defaultProps}
-                  occurrence={originalRecurringEventOccurrence}
-                />
-              </Popover.Root>
-              <RecurringScopeDialog containerRef={containerRef} />
+
+              <EventDraggableDialogContent
+                open
+                {...defaultProps}
+                occurrence={originalRecurringEventOccurrence}
+              />
+
+              {/* <RecurringScopeDialog containerRef={containerRef} /> */}
             </EventCalendarProvider>
           </React.Fragment>,
         );
@@ -765,9 +757,7 @@ describe('<EventDraggableDialogContent />', () => {
         it('should render recurrence fields as disabled when not recurrent', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -786,9 +776,7 @@ describe('<EventDraggableDialogContent />', () => {
         it('should keep recurrence fields disabled when a preset is selected', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -807,9 +795,7 @@ describe('<EventDraggableDialogContent />', () => {
         it('should enable recurrence fields when selecting the custom repeat rule option', async () => {
           const { user } = render(
             <EventCalendarProvider events={[DEFAULT_EVENT]} resources={resources}>
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -834,9 +820,7 @@ describe('<EventDraggableDialogContent />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -889,9 +873,7 @@ describe('<EventDraggableDialogContent />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -940,9 +922,7 @@ describe('<EventDraggableDialogContent />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -989,9 +969,7 @@ describe('<EventDraggableDialogContent />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1030,9 +1008,7 @@ describe('<EventDraggableDialogContent />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1072,9 +1048,7 @@ describe('<EventDraggableDialogContent />', () => {
               resources={resources}
               onEventsChange={onEventsChange}
             >
-              <Popover.Root open>
-                <EventDraggableDialogContent {...defaultProps} />
-              </Popover.Root>
+              <EventDraggableDialogContent open {...defaultProps} />
             </EventCalendarProvider>,
           );
 
@@ -1130,12 +1104,12 @@ describe('<EventDraggableDialogContent />', () => {
                 updateEventSpy = sp;
               }}
             />
-            <Popover.Root open>
-              <EventDraggableDialogContent
-                {...defaultProps}
-                occurrence={nonRecurringEventOccurrence}
-              />
-            </Popover.Root>
+
+            <EventDraggableDialogContent
+              open
+              {...defaultProps}
+              occurrence={nonRecurringEventOccurrence}
+            />
           </EventCalendarProvider>,
         );
         await user.type(screen.getByLabelText(/event title/i), ' updated ');
@@ -1170,12 +1144,12 @@ describe('<EventDraggableDialogContent />', () => {
                 updateEventSpy = sp;
               }}
             />
-            <Popover.Root open>
-              <EventDraggableDialogContent
-                {...defaultProps}
-                occurrence={nonRecurringEventOccurrence}
-              />
-            </Popover.Root>
+
+            <EventDraggableDialogContent
+              open
+              {...defaultProps}
+              occurrence={nonRecurringEventOccurrence}
+            />
           </EventCalendarProvider>,
         );
         await user.click(screen.getByRole('tab', { name: /recurrence/i }));
