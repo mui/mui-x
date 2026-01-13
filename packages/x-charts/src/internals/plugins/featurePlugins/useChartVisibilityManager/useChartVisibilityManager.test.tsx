@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen, within } from '@mui/internal-test-utils';
 import { vi } from 'vitest';
 import { BarChart, barElementClasses } from '@mui/x-charts/BarChart';
@@ -189,7 +188,7 @@ describe('useChartVisibilityManager', () => {
   });
 
   describe('initialHiddenItems', () => {
-    it('should hide items on initial render with initialHiddenItems', () => {
+    it('should hide items on initial render with initialHiddenItems', async () => {
       render(
         <BarChart
           height={300}
@@ -208,7 +207,7 @@ describe('useChartVisibilityManager', () => {
       expect(getVisibleBars().length).to.equal(2);
 
       // The legend item for series-1 should be marked as hidden
-      const legend = screen.getByRole('list');
+      const legend = await screen.findByRole('list');
       const series1Item = within(legend).getByText('Series 1').closest(`.${legendClasses.series}`);
       const series2Item = within(legend).getByText('Series 2').closest(`.${legendClasses.series}`);
 
@@ -236,7 +235,7 @@ describe('useChartVisibilityManager', () => {
       expect(getVisibleBars().length).to.equal(2);
 
       // Click on series-1 legend item to show it
-      const series1Button = screen.getByRole('button', { name: /Series 1/ });
+      const series1Button = await screen.findByRole('button', { name: /Series 1/ });
       await user.click(series1Button);
 
       // All bars should now be visible
