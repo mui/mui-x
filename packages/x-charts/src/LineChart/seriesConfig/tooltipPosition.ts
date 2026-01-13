@@ -17,7 +17,7 @@ const tooltipItemPositionGetter: TooltipItemPositionGetter<'line'> = (params) =>
   }
 
   const xValue = axesConfig.x.data?.[identifier.dataIndex];
-  const yValue = itemSeries.data[identifier.dataIndex];
+  const yValue = itemSeries.data[identifier.dataIndex] == null ? null : itemSeries.visibleStackedData[identifier.dataIndex][1];
 
   if (xValue == null || yValue == null) {
     return null;
