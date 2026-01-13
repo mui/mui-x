@@ -456,9 +456,11 @@ Heatmap.propTypes = {
    * Used when the tooltip is controlled.
    */
   tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
+    dataIndex: PropTypes.number,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['heatmap']).isRequired,
+    xIndex: PropTypes.number,
+    yIndex: PropTypes.number,
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
