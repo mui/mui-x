@@ -102,6 +102,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
         <AxisTicks
           {...inProps}
           {...slotProps?.axisTicks}
+          axisId={axis.id}
           axis={axis}
           axisLabelHeight={labelHeight}
           ordinalTimeTicks={ordinalTimeTicks}
