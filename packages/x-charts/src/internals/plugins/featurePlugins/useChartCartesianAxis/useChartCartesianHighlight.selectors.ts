@@ -18,10 +18,10 @@ import { selectorChartsLastInteraction } from '../useChartInteraction/useChartIn
 import { type InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
 import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
 
-function getAxisHighlight(
+function getAxisHighlight<Item extends AxisItemIdentifier>(
   lastInteractionUpdate: InteractionUpdateSource | undefined,
-  pointerHighlight: AxisItemIdentifier | false,
-  keyboardHighlight: AxisItemIdentifier | false,
+  pointerHighlight: Item | false,
+  keyboardHighlight: Item | false,
 ) {
   if (lastInteractionUpdate === 'pointer') {
     if (pointerHighlight) {
