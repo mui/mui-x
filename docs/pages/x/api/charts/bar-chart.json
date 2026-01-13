@@ -170,6 +170,12 @@
       "class": null
     },
     {
+      "name": "axisTicks",
+      "description": "Custom component for the axis ticks. Can be used to customize tick rendering.",
+      "default": "ChartsXAxisTicks or ChartsYAxisTicks for x- and y-axes respectively.",
+      "class": null
+    },
+    {
       "name": "bar",
       "description": "The component that renders the bar.",
       "default": "BarElementPath",

@@ -131,6 +131,7 @@
     "axisLine": "Custom component for the axis main line.",
     "axisTick": "Custom component for the axis tick.",
     "axisTickLabel": "Custom component for tick label.",
+    "axisTicks": "Custom component for the axis ticks. Can be used to customize tick rendering.",
     "bar": "The component that renders the bar.",
     "barLabel": "The component that renders the bar label.",
     "baseButton": "",
