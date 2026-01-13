@@ -95,7 +95,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap' }"
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap', xIndex?: number, yIndex?: number }"
       }
     },
     "width": { "type": { "name": "number" } },

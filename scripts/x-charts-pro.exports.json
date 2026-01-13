@@ -226,6 +226,7 @@
   { "name": "Direction", "kind": "TypeAlias" },
   { "name": "FadeOptions", "kind": "TypeAlias" },
   { "name": "FocusedBar", "kind": "Function" },
+  { "name": "FocusedFunnelSection", "kind": "Function" },
   { "name": "FocusedHeatmapCell", "kind": "Function" },
   { "name": "FocusedItemIdentifier", "kind": "TypeAlias" },
   { "name": "FocusedLineMark", "kind": "Function" },
