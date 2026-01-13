@@ -1,6 +1,7 @@
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vitest/config';
+import { defineConfig, coverageConfigDefaults } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
 const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
 const WORKSPACE_ROOT = resolve(CURRENT_DIR, './');
@@ -45,6 +46,7 @@ const getProjects = () => {
 };
 
 export default defineConfig({
+  plugins: [react()],
   test: {
     projects: getProjects(),
     reporters: process.env.CI
@@ -54,8 +56,8 @@ export default defineConfig({
       provider: 'v8',
       reporter: process.env.CI ? ['lcovonly'] : ['text'],
       reportsDirectory: resolve(WORKSPACE_ROOT, 'coverage'),
-      include: ['packages/*/src/**/*.{ts,tsx}'],
-      exclude: ['**/*.{test,spec}.{js,ts,tsx}'],
+      include: ['packages/*/src/**/*.{js,ts,tsx}'],
+      exclude: ['**/*.{test,spec}.{js,ts,tsx}', ...coverageConfigDefaults.exclude],
     },
   },
 });
