@@ -1,5 +1,5 @@
 import { useThemeProps } from '@mui/material/styles';
-import { useXAxes, useYAxes } from '.';
+import { useXAxes, useYAxes } from './useAxis';
 import { useTicks } from './useTicks';
 import { type AxisId } from '../models/axis';
 import { defaultProps } from '../ChartsXAxis/utilities';
