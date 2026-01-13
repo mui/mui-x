@@ -18,7 +18,8 @@ export type FocusedItemUpdater<
       [TSeriesType extends CartesianChartSeriesType ? UseChartCartesianAxisSignature : never],
       TSeriesType
     >,
-    'series' | 'cartesianAxis'>
+    'series' | 'cartesianAxis'
+  >,
 ) => FocusedItemIdentifier<OutputSeriesType> | null;
 
 /**
