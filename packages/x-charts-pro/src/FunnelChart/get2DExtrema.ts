@@ -1,7 +1,7 @@
 import type { Point, PositionGetter } from './curves';
 import type { FunnelDataPoints } from './funnel.types';
 
-export const getCornerPoints = (
+export const get2DExtrema = (
   dataPoints: FunnelDataPoints[][],
   xPositionGetter: PositionGetter,
   yPositionGetter: PositionGetter,

@@ -16,7 +16,7 @@ import {
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 import { createPositionGetter } from './coordinateMapper';
-import { getCornerPoints } from './getCornerPoints';
+import { get2DExtrema } from './get2DExtrema';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -65,7 +65,7 @@ const useAggregatedData = () => {
       const xPosition = createPositionGetter(xScale, isHorizontal, gap, baseScaleConfig.data);
       const yPosition = createPositionGetter(yScale, !isHorizontal, gap, baseScaleConfig.data);
 
-      const [minPoint, maxPoint] = getCornerPoints(currentSeries.dataPoints, xPosition, yPosition);
+      const [minPoint, maxPoint] = get2DExtrema(currentSeries.dataPoints, xPosition, yPosition);
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;

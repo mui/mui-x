@@ -8,7 +8,7 @@ import { useFunnelSeriesContext, useXAxis, useYAxis } from '../hooks';
 import { createPositionGetter } from './coordinateMapper';
 import { getFunnelCurve } from './curves/getFunnelCurve';
 import { selectorFunnelGap } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
-import { getCornerPoints } from './getCornerPoints';
+import { get2DExtrema } from './get2DExtrema';
 
 export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
@@ -34,7 +34,7 @@ export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>)
 
   const isIncreasing = funnelSeries.funnelDirection === 'increasing';
 
-  const [minPoint, maxPoint] = getCornerPoints(funnelSeries.dataPoints, xPosition, yPosition);
+  const [minPoint, maxPoint] = get2DExtrema(funnelSeries.dataPoints, xPosition, yPosition);
 
   const curve = getFunnelCurve(funnelSeries.curve, {
     isHorizontal,
