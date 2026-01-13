@@ -1,36 +1,47 @@
 'use client';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { useStore, type Point } from '@mui/x-charts/internals';
+import { useStore } from '@mui/x-charts/internals';
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
 import { useFocusedItem } from '@mui/x-charts/hooks';
-import { useFunnelSeriesContext, useXAxis, useYAxis } from '../hooks';
+import { useFunnelSeriesContext } from '../hooks';
 import { createPositionGetter } from './coordinateMapper';
-import { getFunnelCurve } from './curves/getFunnelCurve';
-import { selectorFunnelGap } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
+import { getFunnelCurve, type Point } from './curves';
+import {
+  selectorChartXAxis,
+  selectorChartYAxis,
+  selectorFunnelGap,
+} from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 import { get2DExtrema } from './get2DExtrema';
 
 export function FocusedFunnelSection(props: React.SVGAttributes<SVGRectElement>) {
   const theme = useTheme();
   const focusedItem = useFocusedItem();
   const store = useStore();
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
 
   const gap = store.use(selectorFunnelGap);
 
-  const funnelSeries = useFunnelSeriesContext()?.series?.[focusedItem?.seriesId ?? ''];
+  const allFunnelSeries = useFunnelSeriesContext()?.series;
 
-  const xAxis = useXAxis(funnelSeries?.xAxisId);
-  const yAxis = useYAxis(funnelSeries?.yAxisId);
-
-  if (!focusedItem || focusedItem.type !== 'funnel' || !funnelSeries) {
+  if (!focusedItem || focusedItem.type !== 'funnel' || !allFunnelSeries) {
     return null;
   }
 
-  const isHorizontal = funnelSeries.layout === 'horizontal';
-  const baseScaleConfig = isHorizontal ? xAxis : yAxis;
+  const funnelSeries = allFunnelSeries[focusedItem.seriesId];
 
-  const xPosition = createPositionGetter(xAxis.scale, isHorizontal, gap, baseScaleConfig.data);
-  const yPosition = createPositionGetter(yAxis.scale, !isHorizontal, gap, baseScaleConfig.data);
+  const xAxisId = funnelSeries.xAxisId ?? xAxisIds[0];
+  const yAxisId = funnelSeries.yAxisId ?? yAxisIds[0];
+
+  const xScale = xAxis[xAxisId].scale;
+  const yScale = yAxis[yAxisId].scale;
+
+  const isHorizontal = funnelSeries.layout === 'horizontal';
+  const baseScaleData = isHorizontal ? xAxis[xAxisId].data : yAxis[yAxisId].data;
+
+  const xPosition = createPositionGetter(xScale, isHorizontal, gap, baseScaleData);
+  const yPosition = createPositionGetter(yScale, !isHorizontal, gap, baseScaleData);
 
   const isIncreasing = funnelSeries.funnelDirection === 'increasing';
 
