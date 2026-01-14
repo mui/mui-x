@@ -28,6 +28,7 @@ import {
 } from '../ChartsTooltip';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { FocusedRadarMark } from './FocusedRadarMark';
 
 export interface RadarChartSlots
   extends
@@ -116,6 +117,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <RadarSeriesArea {...radarSeriesAreaProps} />
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks {...radarSeriesMarksProps} />
+          <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -151,6 +153,7 @@ RadarChart.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
