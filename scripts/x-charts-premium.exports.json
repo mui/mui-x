@@ -29,6 +29,8 @@
   { "name": "BarChartPremium", "kind": "Variable" },
   { "name": "BarChartPremiumPluginSignatures", "kind": "TypeAlias" },
   { "name": "BarChartPremiumProps", "kind": "Interface" },
+  { "name": "BarChartPremiumSlotProps", "kind": "Interface" },
+  { "name": "BarChartPremiumSlots", "kind": "Interface" },
   { "name": "BarChartPro", "kind": "Variable" },
   { "name": "BarChartProPluginSignatures", "kind": "TypeAlias" },
   { "name": "BarChartProProps", "kind": "Interface" },
