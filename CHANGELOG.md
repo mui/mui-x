@@ -56,9 +56,6 @@ Same changes as in `@mui/x-date-pickers@8.25.0`.
 - [charts] Use React event handler to detect pointer type (#20849) @alexfauquette
 - [charts] Enable keyboard navigation in radar chart (#20765) @alexfauquette
 - [charts] Fix tooltip position for stacked line series (#20901) @alexfauquette
-- [charts][docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
-- [charts][docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
-- [charts][docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
 
 #### `@mui/x-charts-pro@8.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -100,6 +97,9 @@ Internal changes.
 - [docs] Fix broken links on Data Grid Editing sub-pages (#20911) @arminmeh
 - [docs] Increase chart axis size in docs to fit in Ubuntu Firefox (#20844) @bernardobelchior
 - [docs] Simplify heatmap zoom demo (#20851) @bernardobelchior
+- [docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
+- [docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
+- [docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
 
 ### Core
 
