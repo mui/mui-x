@@ -54,7 +54,7 @@ export default function getItemAtPosition(
     return {
       type: 'heatmap',
       seriesId,
-    }
+    };
   }
 
   return {

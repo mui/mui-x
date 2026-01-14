@@ -76,6 +76,13 @@
         "describedArgs": ["item"]
       }
     },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {
@@ -93,6 +100,12 @@
     "tooltip": {
       "type": { "name": "object" },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap', xIndex?: number, yIndex?: number }"
+      }
     },
     "width": { "type": { "name": "number" } },
     "zAxis": {

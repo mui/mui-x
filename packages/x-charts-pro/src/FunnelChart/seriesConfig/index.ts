@@ -10,6 +10,7 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import type { FunnelChartPluginSignatures } from '../FunnelChart.plugins';
+import keyboardFocusHandler from './keyboardFocusHandler';
 
 export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel', FunnelChartPluginSignatures> = {
   seriesProcessor,
@@ -20,5 +21,6 @@ export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel', FunnelChartPlug
   xExtremumGetter: getExtremumX,
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
 };

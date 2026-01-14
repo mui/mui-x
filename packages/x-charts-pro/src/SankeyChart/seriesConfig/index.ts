@@ -3,6 +3,7 @@ import { getSeriesWithDefaultValues } from './getSeriesWithDefaultValues';
 import { tooltipGetter } from './tooltipGetter';
 import { calculateSankeyLayout } from '../calculateSankeyLayout';
 import tooltipItemPositionGetter from './tooltipPosition';
+import keyboardFocusHandler from './keyboardFocusHandler';
 import identifierSerializer from './identifierSerializer';
 import type { SankeyChartPluginSignatures } from '../SankeyChart.plugins';
 
@@ -30,5 +31,6 @@ export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey', SankeyChartPlug
   tooltipGetter,
   tooltipItemPositionGetter,
   getSeriesWithDefaultValues,
+  keyboardFocusHandler,
   identifierSerializer,
 };

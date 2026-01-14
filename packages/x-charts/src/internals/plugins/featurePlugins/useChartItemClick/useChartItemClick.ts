@@ -38,7 +38,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
       item = getter.getItemAtPosition(store.state, instance, { x: svgPoint.x, y: svgPoint.y });
 
       if (item) {
-        return item
+        return item;
       }
     }
     return item;

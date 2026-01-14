@@ -1,4 +1,5 @@
 import {
+  cartesianSeriesTypes,
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
 } from '@mui/x-charts/internals';
@@ -10,6 +11,9 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
 import type { HeatmapPluginSignatures } from '../Heatmap.plugins';
+import keyboardFocusHandler from './keyboardFocusHandler';
+
+cartesianSeriesTypes.addType('heatmap');
 
 export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap', HeatmapPluginSignatures> = {
   seriesProcessor,
@@ -22,4 +26,5 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap', HeatmapPlugin
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   getItemAtPosition,
+  keyboardFocusHandler,
 };

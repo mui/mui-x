@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, type SxProps, type Theme } from '@mui/material/styles';

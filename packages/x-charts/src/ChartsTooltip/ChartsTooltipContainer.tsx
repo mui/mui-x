@@ -129,7 +129,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
   const lastInteraction = store.use(selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
+  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
   const itemPosition = store.use(
     trigger === 'item' && computedAnchor === 'node'
@@ -138,13 +138,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     position,
   );
 
+  const isTooltipNodeAnchored = itemPosition !== null;
+
   React.useEffect(() => {
     const svgElement = svgRef.current;
     if (svgElement === null) {
       return () => {};
     }
 
-    if (itemPosition !== null) {
+    if (isTooltipNodeAnchored) {
       // Tooltip position is already handled by the anchor element
       return undefined;
     }
@@ -159,17 +161,15 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       pointerUpdate(event.clientX, event.clientY);
     };
 
-    svgElement.addEventListener('pointerdown', handlePointerEvent);
     svgElement.addEventListener('pointermove', handlePointerEvent);
     svgElement.addEventListener('pointerenter', handlePointerEvent);
 
     return () => {
-      svgElement.removeEventListener('pointerdown', handlePointerEvent);
       svgElement.removeEventListener('pointermove', handlePointerEvent);
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
     };
-  }, [svgRef, positionRef, itemPosition]);
+  }, [svgRef, positionRef, isTooltipNodeAnchored]);
 
   const pointerAnchorEl = React.useMemo(
     () => ({
@@ -197,7 +197,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         name: 'offset',
         options: {
           offset: () => {
-            if (isTouch) {
+            if (isTouch && !isTooltipNodeAnchored) {
               return [0, 64];
             }
             // The popper offset: [skidding, distance]
@@ -217,7 +217,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         : []), // Keep default behavior
       { name: 'preventOverflow', options: { altAxis: true } },
     ],
-    [isMouse, isTouch],
+    [isMouse, isTooltipNodeAnchored, isTouch],
   );
 
   if (trigger === 'none') {
@@ -227,7 +227,6 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   return (
     <React.Fragment>
       {svgRef.current &&
-        itemPosition !== null &&
         ReactDOM.createPortal(
           <rect
             ref={anchorRef}
@@ -250,7 +249,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
             placement={
               other.placement ??
               position ??
-              (pointerType !== null && isMouse ? 'right-start' : 'top')
+              (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
             }
             popperRef={popperRef}
             anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
