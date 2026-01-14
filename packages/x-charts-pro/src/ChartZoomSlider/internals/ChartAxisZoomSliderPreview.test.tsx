@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { render } from '@mui/internal-test-utils';
+import { createRenderer } from '@mui/internal-test-utils';
 import { LineChartPro } from '@mui/x-charts-pro/LineChartPro';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 
 describe('ChartAxisZoomSliderPreview', () => {
+  const { render } = createRenderer();
+
   it('handles two axes with zoom slider preview in a bar chart', () => {
     const { container } = render(
       <BarChartPro
@@ -67,9 +69,9 @@ describe('ChartAxisZoomSliderPreview', () => {
           {
             xAxisId: 'x2',
             data: [
-              { x: 1, y: 1 },
-              { x: 2, y: 2 },
-              { x: 3, y: 3 },
+              { x: 1, y: 2 },
+              { x: 2, y: 3 },
+              { x: 3, y: 4 },
             ],
           },
         ]}
