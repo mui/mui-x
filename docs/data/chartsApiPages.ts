@@ -48,6 +48,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartContainer',
   },
   {
+    pathname: '/x/api/charts/chart-container-premium',
+    title: 'ChartContainerPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/chart-container-pro',
     title: 'ChartContainerPro',
     plan: 'pro',
