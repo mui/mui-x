@@ -230,6 +230,7 @@
   { "name": "FocusedHeatmapCell", "kind": "Function" },
   { "name": "FocusedItemIdentifier", "kind": "TypeAlias" },
   { "name": "FocusedLineMark", "kind": "Function" },
+  { "name": "FocusedPieArc", "kind": "Function" },
   { "name": "FocusedRadarMark", "kind": "Function" },
   { "name": "FocusedSankeyLink", "kind": "Function" },
   { "name": "FocusedSankeyNode", "kind": "Function" },
