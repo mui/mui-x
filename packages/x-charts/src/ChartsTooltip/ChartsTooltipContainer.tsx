@@ -52,6 +52,8 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
+export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
+
 export interface ChartsTooltipContainerProps<
   T extends TriggerOptions = TriggerOptions,
 > extends Partial<PopperProps> {

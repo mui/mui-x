@@ -8,9 +8,24 @@ import {
   useStore,
 } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
-import { HeatmapItem, type HeatmapItemProps } from './HeatmapItem';
+import { HeatmapItem, type HeatmapItemSlots, type HeatmapItemSlotProps } from './HeatmapItem';
 
-export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
+export interface HeatmapPlotSlots extends HeatmapItemSlots {}
+
+export interface HeatmapPlotSlotProps extends HeatmapItemSlotProps {}
+
+export interface HeatmapPlotProps {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: HeatmapPlotSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: HeatmapPlotSlotProps;
+}
 
 function HeatmapPlot(props: HeatmapPlotProps) {
   const store = useStore();
