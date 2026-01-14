@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "FocusedSankeyNode",
+  "imports": [
+    "import { FocusedSankeyNode } from '@mui/x-charts-pro/SankeyChart';",
+    "import { FocusedSankeyNode } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiFocusedSankeyNode",
+  "filename": "/packages/x-charts-pro/src/SankeyChart/FocusedSankeyNode.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
+  "cssComponent": false
+}

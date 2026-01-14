@@ -6,6 +6,8 @@ export * from './SankeyLinkPlot';
 export * from './SankeyNodePlot';
 export * from './SankeyLinkLabelPlot';
 export * from './SankeyNodeLabelPlot';
+export * from './FocusedSankeyLink';
+export * from './FocusedSankeyNode';
 export * from './sankey.types';
 export * from './sankeySlots.types';
 export * from './sankeyHighlightHooks';

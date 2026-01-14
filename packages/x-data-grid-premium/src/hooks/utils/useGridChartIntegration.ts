@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { GridChartsIntegrationContext } from '../../components/chartsIntegration/GridChartsIntegrationContext';
 import { GridChartsIntegrationContextValue } from '../../models/gridChartsIntegration';
