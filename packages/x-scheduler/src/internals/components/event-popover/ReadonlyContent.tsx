@@ -186,9 +186,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
         <Typography variant="body2" color="text.secondary">
           {recurrenceLabel}
         </Typography>
-        {hasProp(occurrence, 'description') &&
-        typeof occurrence.description === 'string' &&
-        occurrence.description ? (
+        {hasProp(occurrence, 'description') && !!occurrence.description ? (
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
