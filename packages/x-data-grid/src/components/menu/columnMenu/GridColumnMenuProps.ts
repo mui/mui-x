@@ -17,3 +17,14 @@ export interface GridColumnMenuProps extends Omit<
   GridGenericColumnMenuProps,
   'defaultSlots' | 'defaultSlotProps'
 > {}
+
+/**
+ * Type for column menu components with static defaultSlots and defaultSlotProps.
+ * Used by GridColumnMenu, GridProColumnMenu, and GridPremiumColumnMenu.
+ */
+export type GridColumnMenuComponent = React.ForwardRefExoticComponent<
+  GridColumnMenuProps & React.RefAttributes<HTMLUListElement>
+> & {
+  defaultSlots: GridColumnMenuRootProps['defaultSlots'];
+  defaultSlotProps: GridColumnMenuRootProps['defaultSlotProps'];
+};

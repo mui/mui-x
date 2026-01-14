@@ -1,10 +1,11 @@
 'use client';
 import {
   GridGenericColumnMenu,
-  GridColumnMenuProps,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
-  GridColumnMenuItemProps,
+  type GridColumnMenuProps,
+  type GridColumnMenuItemProps,
+  type GridColumnMenuComponent,
 } from '@mui/x-data-grid-pro';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuAggregationItem } from './columnMenu/menuItems/GridColumnMenuAggregationItem';
@@ -47,4 +48,7 @@ export const GridPremiumColumnMenu = forwardRef<HTMLUListElement, GridColumnMenu
       />
     );
   },
-);
+) as GridColumnMenuComponent;
+
+GridPremiumColumnMenu.defaultSlots = GRID_COLUMN_MENU_SLOTS_PREMIUM;
+GridPremiumColumnMenu.defaultSlotProps = GRID_COLUMN_MENU_SLOT_PROPS_PREMIUM;

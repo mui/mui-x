@@ -3,6 +3,7 @@ import { GridColumnMenuRootProps } from './columnMenuInterfaces';
 import { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
+import { getColumnMenuItemKeys } from './getColumnMenuItemKeys';
 
 interface UseGridColumnMenuSlotsProps extends GridColumnMenuRootProps {
   colDef: GridColDef;
@@ -43,46 +44,38 @@ const useGridColumnMenuSlots = (props: UseGridColumnMenuSlotsProps) => {
     return mergedProps;
   }, [defaultSlotProps, slotProps]);
 
-  const defaultItems = apiRef.current.unstable_applyPipeProcessors('columnMenu', [], props.colDef);
-
-  const userItems = React.useMemo(() => {
-    const defaultComponentKeys = Object.keys(defaultSlots);
-    return Object.keys(slots).filter((key) => !defaultComponentKeys.includes(key));
-  }, [slots, defaultSlots]);
-
   return React.useMemo(() => {
-    const uniqueItems = Array.from(new Set<string>([...defaultItems, ...userItems]));
-    const cleansedItems = uniqueItems.filter((key) => processedComponents[key] != null);
-    const sorted = cleansedItems.sort((a, b) => {
-      const leftItemProps = processedSlotProps[a];
-      const rightItemProps = processedSlotProps[b];
-      const leftDisplayOrder = Number.isFinite(leftItemProps?.displayOrder)
-        ? leftItemProps.displayOrder
-        : 100;
-      const rightDisplayOrder = Number.isFinite(rightItemProps?.displayOrder)
-        ? rightItemProps.displayOrder
-        : 100;
-      return leftDisplayOrder! - rightDisplayOrder!;
+    const sortedKeys = getColumnMenuItemKeys({
+      apiRef,
+      colDef,
+      defaultSlots,
+      defaultSlotProps,
+      slots,
+      slotProps,
     });
-    return sorted.reduce<UseGridColumnMenuSlotsResponse>((acc, key, index) => {
+
+    return sortedKeys.reduce<UseGridColumnMenuSlotsResponse>((acc, key, index) => {
       let itemProps = { colDef, onClick: hideMenu };
       const processedComponentProps = processedSlotProps[key];
       if (processedComponentProps) {
         const { displayOrder, ...customProps } = processedComponentProps;
         itemProps = { ...itemProps, ...customProps };
       }
-      return addDividers && index !== sorted.length - 1
+      return addDividers && index !== sortedKeys.length - 1
         ? [...acc, [processedComponents[key]!, itemProps], [rootProps.slots.baseDivider, {}]]
         : [...acc, [processedComponents[key]!, itemProps]];
     }, []);
   }, [
     addDividers,
+    apiRef,
     colDef,
-    defaultItems,
+    defaultSlotProps,
+    defaultSlots,
     hideMenu,
     processedComponents,
     processedSlotProps,
-    userItems,
+    slotProps,
+    slots,
     rootProps.slots.baseDivider,
   ]);
 };

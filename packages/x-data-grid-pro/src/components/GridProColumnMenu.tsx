@@ -4,6 +4,7 @@ import {
   GridColumnMenuProps,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
+  type GridColumnMenuComponent,
 } from '@mui/x-data-grid';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';
@@ -31,4 +32,7 @@ export const GridProColumnMenu = forwardRef<HTMLUListElement, GridColumnMenuProp
       />
     );
   },
-);
+) as GridColumnMenuComponent;
+
+GridProColumnMenu.defaultSlots = GRID_COLUMN_MENU_SLOTS_PRO;
+GridProColumnMenu.defaultSlotProps = GRID_COLUMN_MENU_SLOT_PROPS_PRO;

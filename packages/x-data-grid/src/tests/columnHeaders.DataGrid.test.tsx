@@ -67,6 +67,26 @@ describe('<DataGrid /> - Column headers', () => {
       expect(getColumnHeadersTextContent()).to.deep.equal(['brand']);
     });
 
+    it('should not render the column menu icon when the column menu has no items', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            disableColumnSelector
+            columns={[
+              { field: 'id', filterable: false, sortable: false, hideable: false },
+              { field: 'brand' },
+            ]}
+          />
+        </div>,
+      );
+
+      expect(within(getColumnHeaderCell(0)).queryByLabelText('id column menu')).to.equal(null);
+      expect(within(getColumnHeaderCell(1)).queryByLabelText('brand column menu')).not.to.equal(
+        null,
+      );
+    });
+
     it('should not allow to hide the only visible column', async () => {
       const { user } = render(
         <div style={{ width: 300, height: 300 }}>
