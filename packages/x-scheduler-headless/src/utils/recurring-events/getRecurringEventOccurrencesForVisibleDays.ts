@@ -41,7 +41,7 @@ class RecurringEventExpander {
 
   private readonly rule: RecurringEventRecurrenceRule;
 
-  // seriesStartDay is the day anchor for RRULE math (BYDAY/COUNT/WKST), always in data timezone.
+  // seriesStartDay is the day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
   private readonly seriesStartDay: TemporalSupportedObject;
 
   // dtStartInDataTz keeps the original DTSTART wall-time (HH:mm) in the event/data timezone,
@@ -233,8 +233,8 @@ class RecurringEventExpander {
         return first;
       }
       case 'WEEKLY': {
-        //         // NOTE: For RRULE expansion we use RRULE week start (Monday),
-        // // not adapter.startOfWeek() which is locale-driven and can start on Sunday.
+        // NOTE: For RRULE expansion we use RRULE week start (Monday),
+        // not adapter.startOfWeek() which is locale-driven and can start on Sunday.
         const seriesWeekStart = startOfRRuleWeek(this.adapter, this.seriesStartDay);
         const scanWeekStart = startOfRRuleWeek(this.adapter, this.scanFirstDay);
 
@@ -284,9 +284,7 @@ class RecurringEventExpander {
         return this.adapter.addDays(current, this.interval);
       }
       case 'WEEKLY': {
-        // NOTE: RRULE weeks use WKST semantics (default Monday). We must not use
-        // adapter.startOfWeek() here because it is locale-driven (often Sunday),
-        // which can produce "next" occurrences that go backwards for BYDAY like SU+TU.
+        // NOTE: Use RRULE week boundaries instead of locale weeks (always starts on Monday), otherwise BYDAY like SU+TU can go backwards.
         const weekStart = startOfRRuleWeek(this.adapter, current);
         const currentIndex = this.sortedWeekDayCodes!.indexOf(
           getWeekDayCode(this.adapter, current),
