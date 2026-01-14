@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
-import { type AxisItemIdentifier, type ChartsAxisProps } from '../../../../models/axis';
+import type { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
   selectorChartsInteractionXAxisIndex,
@@ -18,11 +18,29 @@ import { selectorChartsLastInteraction } from '../useChartInteraction/useChartIn
 import { type InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
 import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
 
-function getAxisHighlight<Item extends AxisItemIdentifier>(
+/**
+ * The return type of the `selectAxisHighlightWithValue`.
+ */
+export type AxisHighlightWithValue = {
+  /**
+   * The id of the axis.
+   */
+  axisId: AxisId;
+  /**
+   * The index of the highlighted data point.
+   * If the axis is continuous, this value is not available.
+   */
+  dataIndex?: number;
+  /**
+   * The value of the highlighted data point if available.
+   */
+  value: number | Date;
+};
+function getAxisHighlight<Item extends AxisItemIdentifier | AxisHighlightWithValue>(
   lastInteractionUpdate: InteractionUpdateSource | undefined,
   pointerHighlight: Item | false,
   keyboardHighlight: Item | false,
-) {
+): Item[] {
   if (lastInteractionUpdate === 'pointer') {
     if (pointerHighlight) {
       return [pointerHighlight];
@@ -43,6 +61,7 @@ function getAxisHighlight<Item extends AxisItemIdentifier>(
 
   return [];
 }
+
 const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
 ) => state.controlledCartesianAxisHighlight;
@@ -117,12 +136,14 @@ const selectAxisHighlightWithValue = (
       .filter(({ value }) => value !== undefined);
   }
 
-  const pointerHighlight = computedValue != null &&
-    computedIndex != null && {
-      axisId: axis.axisIds[0],
-      dataIndex: computedIndex,
-      value: computedValue,
-    };
+  const pointerHighlight: false | AxisHighlightWithValue = computedValue != null && {
+    axisId: axis.axisIds[0],
+    value: computedValue,
+  };
+  if (pointerHighlight && computedIndex != null) {
+    pointerHighlight.dataIndex = computedIndex;
+  }
+
   const keyboardValue =
     keyboardAxisItem != null &&
     axis.axis[keyboardAxisItem.axisId]?.data?.[keyboardAxisItem.dataIndex];
