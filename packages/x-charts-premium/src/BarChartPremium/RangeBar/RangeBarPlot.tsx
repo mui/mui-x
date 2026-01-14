@@ -90,7 +90,7 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
       {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => {
         return (
           <g key={seriesId} data-series={seriesId} className={classes.series}>
-            {data.map(({ dataIndex, color, x, y, width, height }) => {
+            {data.map(({ dataIndex, color, x, y, width, height, hidden }) => {
               return (
                 <BarElement
                   key={dataIndex}
@@ -105,6 +105,7 @@ function RangeBarPlot(props: RangeBarPlotProps): React.JSX.Element {
                   yOrigin={yOrigin}
                   width={width}
                   height={height}
+                  hidden={hidden}
                   rx={borderRadius}
                   ry={borderRadius}
                   {...other}

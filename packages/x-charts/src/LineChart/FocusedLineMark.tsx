@@ -32,7 +32,7 @@ export function FocusedLineMark() {
       stroke={(theme.vars ?? theme).palette.text.primary}
       strokeWidth={2}
       x={xAxis[xAxisId].scale(xAxis[xAxisId].data![focusedItem.dataIndex])! - RADIUS}
-      y={yAxis[yAxisId].scale(series.stackedData[focusedItem.dataIndex][1])! - RADIUS}
+      y={yAxis[yAxisId].scale(series.visibleStackedData[focusedItem.dataIndex][1])! - RADIUS}
       width={2 * RADIUS}
       height={2 * RADIUS}
       rx={3}

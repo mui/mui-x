@@ -22,7 +22,7 @@ const columns: GridColDef[] = [
 ```
 
 The `renderEditCell()` property receives all params from `GridRenderEditCellParams`, which extends `GridCellParams`.
-Additionally, the props added during [pre-processing](#validation) are also available in the params.
+Additionally, the props added during [pre-processing](/x/react-data-grid/editing/#validation) are also available in the params.
 These are the most important params to consider:
 
 - `value`: contains the current value of the cell in edit mode, overriding the value from `GridCellParams`
@@ -98,7 +98,7 @@ This second click can be avoided if the first click also stops the edit mode.
 To create an edit component with auto-stop, call `apiRef.current.stopCellEditMode()` after setting the new value.
 Since `apiRef.current.setEditCellValue()` may do additional processing, you must wait for it to resolve before stopping the edit mode.
 Also, it is a good practice to check if `apiRef.current.setEditCellValue()` has returned `true`.
-It will be `false` if `preProcessEditProps()` set an error during [validation](#validation).
+It will be `false` if `preProcessEditProps()` set an error during [validation](/x/react-data-grid/editing/#validation).
 
 ```tsx
 const handleChange = async (event: SelectChangeEvent) => {
