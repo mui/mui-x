@@ -227,6 +227,8 @@ export default defineConfig(
           fixStyle: 'inline-type-imports',
         },
       ],
+      // Charts have no semantics, so we often need to query by container
+      'testing-library/no-container': 'off',
     },
   },
   {
