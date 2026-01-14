@@ -490,11 +490,10 @@ export function getRemainingYearlyOccurrences(
 }
 
 /**
- * RRULE semantics define a "recurrence week" based on week start.
- * We MUST NOT use adapter.startOfWeek() here because it depends on locale,
- * and can start weeks on Sunday (e.g. en-US). That breaks weekly expansion when BYDAY
- * includes Sunday + other days (can generate "next" dates that go backwards),
- * especially when COUNT + timezone projection are involved.
+ * RRULE weekly expansion must use a Monday-based "recurrence week".
+ * We MUST NOT use adapter.startOfWeek() because it's locale-driven (often Sunday in en-US),
+ * which can reorder weekly occurrences for BYDAY combos like SU+TU and break COUNT,
+ * especially when timezone projection shifts weekdays around the week boundary.
  */
 export function startOfRRuleWeek(adapter: Adapter, date: TemporalSupportedObject) {
   // RRULE default week start is Monday (MO)
