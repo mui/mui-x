@@ -96,16 +96,20 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   };
 };
 
-useChartVisibilityManager.getInitialState = (params, _, seriesConfig) => ({
-  visibilityManager: {
-    visibilityMap: params.hiddenItems
-      ? visibilityParamToMap(params.hiddenItems, seriesConfig)
-      : EMPTY_VISIBILITY_MAP,
-    isControlled: params.hiddenItems !== undefined,
-  },
-});
+useChartVisibilityManager.getInitialState = (params, _, seriesConfig) => {
+  const initialItems = params.hiddenItems ?? params.initialHiddenItems;
+  return {
+    visibilityManager: {
+      visibilityMap: initialItems
+        ? visibilityParamToMap(initialItems, seriesConfig)
+        : EMPTY_VISIBILITY_MAP,
+      isControlled: params.hiddenItems !== undefined,
+    },
+  };
+};
 
 useChartVisibilityManager.params = {
   onHiddenItemsChange: true,
   hiddenItems: true,
+  initialHiddenItems: true,
 };

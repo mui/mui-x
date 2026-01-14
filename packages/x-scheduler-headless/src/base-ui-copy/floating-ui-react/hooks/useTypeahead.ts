@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useValueAsRef } from '@base-ui/utils/useValueAsRef';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';

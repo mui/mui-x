@@ -1,3 +1,4 @@
+'use client';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridSelector } from '../hooks/utils/useGridSelector';

@@ -69,6 +69,28 @@ export interface UseChartVisibilityManagerParameters<T extends ChartSeriesType> 
    * ```
    */
   hiddenItems?: VisibilityIdentifier<T>[];
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems?: VisibilityIdentifier<T>[];
 }
 
 export type UseChartVisibilityManagerDefaultizedParameters<T extends ChartSeriesType> =
