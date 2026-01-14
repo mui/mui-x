@@ -17,6 +17,9 @@ We'd like to extend a big thank you to the 8 contributors who made this release 
 
   ![Image](https://github.com/user-attachments/assets/c8250287-1318-4581-ac5d-07e7ee01341c)
 
+- 🐞 Bugfixes
+- 📚 Documentation improvements
+
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes
 
