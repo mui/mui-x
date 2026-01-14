@@ -90,7 +90,7 @@ export class EventCalendarStore<
       });
     }
 
-    this.lazyLoading = new EventCalendarLazyLoadingPlugin(this);
+    this.lazyLoading = new EventCalendarLazyLoadingPlugin<TEvent, TResource>(this);
   }
 
   private assertViewValidity(view: CalendarView) {

@@ -70,7 +70,7 @@ export class SchedulerStore<
 
   protected timeoutManager = new TimeoutManager();
 
-  public lazyLoading!: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters>;
+  public lazyLoading: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters> | undefined;
 
   public constructor(
     parameters: Parameters,
