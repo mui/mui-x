@@ -83,7 +83,7 @@ yargs(hideBin(process.argv))
           // #target-branch-reference
           // Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
           // For example, when creating v9 from v8, `master -> v8.x`
-          default: 'master',
+          default: 'v8.x',
           describe: 'Ref which we want to release',
           type: 'string',
         })

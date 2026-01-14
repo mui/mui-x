@@ -178,7 +178,7 @@ jobs:
             # #target-branch-reference
             # Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
             # For example, when creating v9 from v8, `master -> v8.x`
-            if [[ $(git diff --name-status master | grep pnpm-lock) == "" ]];
+            if [[ $(git diff --name-status v8.x | grep pnpm-lock) == "" ]];
             then
               echo "No changes to dependencies detected. Skipping..."
             else
