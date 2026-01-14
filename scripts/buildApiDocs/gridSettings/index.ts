@@ -118,6 +118,7 @@ export default dataGridApiPages;
   nonComponentFolders: [
     ...getNonComponentFolders(),
     'data-grid/components/usage.md',
+    'migration/migration-data-grid-v8',
     'migration/migration-data-grid-v7',
     'migration/migration-data-grid-v6',
     'migration/migration-data-grid-v5',

@@ -61,6 +61,7 @@ export const useChartContainerProps = <
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
+    initialHiddenItems,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
 
@@ -103,6 +104,7 @@ export const useChartContainerProps = <
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
+    initialHiddenItems,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,

@@ -21,7 +21,16 @@ type StateParameters<TSeriesType extends ChartSeriesType> = Pick<
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, allows cycling from the last item to the first one.
+   */
+  allowCycles: boolean = false,
+) {
   return function getNextIndexFocusedItem(
     currentItem: FocusedItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
@@ -46,10 +55,14 @@ export function createGetNextIndexFocusedItem<
     }
 
     const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
-    const dataIndex = Math.min(
-      maxLength - 1,
-      currentItem?.dataIndex == null ? 0 : currentItem.dataIndex + 1,
-    );
+
+    let dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex + 1;
+    if (allowCycles) {
+      dataIndex = dataIndex % maxLength;
+    } else {
+      dataIndex = Math.min(maxLength - 1, dataIndex);
+    }
+
     return {
       type,
       seriesId,
@@ -61,7 +74,16 @@ export function createGetNextIndexFocusedItem<
 export function createGetPreviousIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, allows cycling from the last item to the first one.
+   */
+  allowCycles: boolean = false,
+) {
   return function getPreviousIndexFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
@@ -86,10 +108,13 @@ export function createGetPreviousIndexFocusedItem<
     }
 
     const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
-    const dataIndex = Math.max(
-      0,
-      currentItem?.dataIndex == null ? maxLength - 1 : currentItem.dataIndex - 1,
-    );
+
+    let dataIndex = currentItem?.dataIndex == null ? maxLength - 1 : currentItem.dataIndex - 1;
+    if (allowCycles) {
+      dataIndex = (maxLength + dataIndex) % maxLength;
+    } else {
+      dataIndex = Math.max(0, dataIndex);
+    }
 
     return {
       type,
@@ -102,7 +127,12 @@ export function createGetPreviousIndexFocusedItem<
 export function createGetNextSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+) {
   return function getNextSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,
@@ -139,7 +169,12 @@ export function createGetNextSeriesFocusedItem<
 export function createGetPreviousSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+) {
   return function getPreviousSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
     state: StateParameters<InSeriesType>,

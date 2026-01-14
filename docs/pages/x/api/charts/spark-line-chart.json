@@ -53,6 +53,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+      }
+    },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
