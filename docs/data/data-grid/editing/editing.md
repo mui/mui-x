@@ -267,4 +267,3 @@ This API should only be used as a last resort when the Data Grid's built-in prop
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
-
