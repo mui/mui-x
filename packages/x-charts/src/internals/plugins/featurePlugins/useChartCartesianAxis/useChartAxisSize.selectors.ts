@@ -4,20 +4,46 @@ import {
   selectorChartRawXAxis,
   selectorChartRawYAxis,
 } from './useChartCartesianAxisLayout.selectors';
+import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+
+function selectAxisSize(
+  axes: DefaultedYAxis[] | undefined,
+  axesGap: number,
+  position: 'left' | 'right',
+): number;
+function selectAxisSize(
+  axes: DefaultedXAxis[] | undefined,
+  axesGap: number,
+  position: 'top' | 'bottom',
+): number;
+function selectAxisSize(
+  axes: DefaultedXAxis[] | DefaultedYAxis[] | undefined,
+  axesGap: number,
+  position: 'left' | 'right' | 'top' | 'bottom',
+): number {
+  let axesSize = 0;
+  let nbOfAxes = 0;
+
+  for (const axis of axes ?? []) {
+    if (axis.position !== position) {
+      continue;
+    }
+    const axisSize =
+      position === 'top' || position === 'bottom'
+        ? (axis as DefaultedXAxis).height
+        : (axis as DefaultedYAxis).width;
+    axesSize += (axisSize || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0);
+    nbOfAxes += 1;
+  }
+
+  return axesSize + axesGap * Math.max(0, nbOfAxes - 1);
+}
 
 export const selectorChartLeftAxisSize = createSelector(
   selectorChartRawYAxis,
   selectorChartCartesianAxesGap,
   function selectorChartLeftAxisSize(yAxis, axesGap) {
-    const visibleAxes = (yAxis ?? []).filter((axis) => axis.position === 'left');
-    return (
-      visibleAxes.reduce(
-        (acc, axis) =>
-          acc + (axis.width || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0),
-        0,
-      ) +
-      axesGap * Math.max(0, visibleAxes.length - 1)
-    );
+    return selectAxisSize(yAxis, axesGap, 'left');
   },
 );
 
@@ -25,15 +51,7 @@ export const selectorChartRightAxisSize = createSelector(
   selectorChartRawYAxis,
   selectorChartCartesianAxesGap,
   function selectorChartRightAxisSize(yAxis, axesGap) {
-    const visibleAxes = (yAxis ?? []).filter((axis) => axis.position === 'right');
-    return (
-      visibleAxes.reduce(
-        (acc, axis) =>
-          acc + (axis.width || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0),
-        0,
-      ) +
-      axesGap * Math.max(0, visibleAxes.length - 1)
-    );
+    return selectAxisSize(yAxis, axesGap, 'right');
   },
 );
 
@@ -41,16 +59,7 @@ export const selectorChartTopAxisSize = createSelector(
   selectorChartRawXAxis,
   selectorChartCartesianAxesGap,
   function selectorChartTopAxisSize(xAxis, axesGap) {
-    const visibleAxes = (xAxis ?? []).filter((axis) => axis.position === 'top');
-
-    return (
-      visibleAxes.reduce(
-        (acc, axis) =>
-          acc + (axis.height || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0),
-        0,
-      ) +
-      axesGap * Math.max(0, visibleAxes.length - 1)
-    );
+    return selectAxisSize(xAxis, axesGap, 'top');
   },
 );
 
@@ -58,16 +67,7 @@ export const selectorChartBottomAxisSize = createSelector(
   selectorChartRawXAxis,
   selectorChartCartesianAxesGap,
   function selectorChartBottomAxisSize(xAxis, axesGap) {
-    const visibleAxes = (xAxis ?? []).filter((axis) => axis.position === 'bottom');
-
-    return (
-      visibleAxes.reduce(
-        (acc, axis) =>
-          acc + (axis.height || 0) + (axis.zoom?.slider.enabled ? axis.zoom.slider.size : 0),
-        0,
-      ) +
-      axesGap * Math.max(0, visibleAxes.length - 1)
-    );
+    return selectAxisSize(xAxis, axesGap, 'bottom');
   },
 );
 
