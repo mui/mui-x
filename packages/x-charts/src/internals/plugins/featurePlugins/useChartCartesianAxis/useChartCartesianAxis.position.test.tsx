@@ -140,4 +140,38 @@ describe('useChartCartesianAxis - positions', () => {
       expect(getComputedStyle(axesRoot[3]).transform).toBe('matrix(1, 0, 0, 1, 20, 0)'); // yAxis
     },
   );
+
+  it.skipIf(isJSDOM)('should add extra space for preview', async () => {
+    render(
+      <BarChart
+        axesGap={5}
+        xAxis={[
+          { data: ['a', 'b'], height: 30, position: 'top' },
+          {
+            data: ['a', 'b'],
+            height: 30,
+            position: 'top',
+            zoom: { slider: { enabled: true, size: 10 } },
+          },
+        ]}
+        yAxis={[
+          { width: 20, position: 'left', zoom: { slider: { enabled: true, size: 10 } } },
+          { min: 0, max: 10, width: 20, position: 'left' },
+        ]}
+        series={[{ data: [1, 2] }]}
+        margin={0}
+        height={100}
+        width={100}
+      />,
+    );
+
+    const axesRoot = await document.querySelectorAll(`.${axisClasses.root}`);
+    expect(axesRoot).toHaveLength(4);
+
+    // transform format: matrix(a, b, c, d, tx, ty)
+    expect(getComputedStyle(axesRoot[0]).transform).toBe('matrix(1, 0, 0, 1, 0, 75)'); // xAxis (30 + 10 + 5 + 30)
+    expect(getComputedStyle(axesRoot[1]).transform).toBe('matrix(1, 0, 0, 1, 0, 40)'); // xAxis (30 + 10)
+    expect(getComputedStyle(axesRoot[2]).transform).toBe('matrix(1, 0, 0, 1, 55, 0)'); // yAxis (20 + 10 + 5 + 20)
+    expect(getComputedStyle(axesRoot[3]).transform).toBe('matrix(1, 0, 0, 1, 20, 0)'); // yAxis
+  });
 });
