@@ -48,6 +48,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartContainer',
   },
   {
+    pathname: '/x/api/charts/chart-container-premium',
+    title: 'ChartContainerPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/chart-container-pro',
     title: 'ChartContainerPro',
     plan: 'pro',
@@ -169,8 +174,27 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/focused-funnel-section',
+    title: 'FocusedFunnelSection',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/focused-heatmap-cell',
     title: 'FocusedHeatmapCell',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-radar-mark',
+    title: 'FocusedRadarMark',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-link',
+    title: 'FocusedSankeyLink',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-node',
+    title: 'FocusedSankeyNode',
     plan: 'pro',
   },
   {

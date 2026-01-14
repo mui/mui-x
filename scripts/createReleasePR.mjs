@@ -4,7 +4,7 @@
  * MUI-X Release Preparation Script
  *
  * This script automates the release preparation process for MUI-X:
- * 1. Asking for the major version to update (v7.x, v6.x, etc.)
+ * 1. Asking for the major version to update (v8.x, v7.x, v6.x, etc.)
  * 2. Creating a release branch
  * 3. Determining the new version:
  *    - For non-latest major versions: patch/minor/custom
