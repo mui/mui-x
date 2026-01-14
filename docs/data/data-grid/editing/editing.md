@@ -240,7 +240,7 @@ Additionally, the callback props `onCellModesModelChange()` and `onRowModesModel
 Use them to update the respective prop.
 
 In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
-For an example using row editing check the [full-featured CRUD component](#full-featured-crud-component).
+For an example using row editing check the [full-featured CRUD component](#full-featured-crud).
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -267,3 +267,4 @@ This API should only be used as a last resort when the Data Grid's built-in prop
 - [DataGrid](/x/api/data-grid/data-grid/)
 - [DataGridPro](/x/api/data-grid/data-grid-pro/)
 - [DataGridPremium](/x/api/data-grid/data-grid-premium/)
+
