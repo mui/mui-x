@@ -6,7 +6,7 @@ import type {
 import type { FocusedItemIdentifier } from '@mui/x-charts/models';
 
 function getFirstCell(
-  state: Pick<ChartState<[UseChartKeyboardNavigationSignature], []>, 'series'>,
+  state: Pick<ChartState<[UseChartKeyboardNavigationSignature], [], 'heatmap'>, 'series'>,
 ): FocusedItemIdentifier<'heatmap'> | null {
   const seriesId = state.series.defaultizedSeries.heatmap?.seriesOrder[0];
   const series = state.series.defaultizedSeries.heatmap?.series[seriesId!];
@@ -26,7 +26,7 @@ const updateCoordinates = (
   newXIndex: number,
   newYIndex: number,
   currentItem: FocusedItemIdentifier<'heatmap'>,
-  state: Pick<ChartState<[UseChartKeyboardNavigationSignature], []>, 'series'>,
+  state: Pick<ChartState<[UseChartKeyboardNavigationSignature], [], 'heatmap'>, 'series'>,
 ) => {
   const seriesData = state.series.defaultizedSeries.heatmap?.series[currentItem.seriesId]?.data;
   const dataIndex = seriesData?.findIndex(
