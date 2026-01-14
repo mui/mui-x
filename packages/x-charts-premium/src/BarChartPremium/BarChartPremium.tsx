@@ -43,8 +43,10 @@ export interface BarChartPremiumSlots extends BarChartProSlots {}
 
 export interface BarChartPremiumSlotProps extends BarChartProSlotProps {}
 
-export interface BarChartPremiumProps
-  extends Omit<BarChartProProps, 'series' | 'onItemClick' | 'slots' | 'slotProps'> {
+export interface BarChartPremiumProps extends Omit<
+  BarChartProProps,
+  'series' | 'onItemClick' | 'slots' | 'slotProps'
+> {
   /**
    * Overridable component slots.
    * @default {}
