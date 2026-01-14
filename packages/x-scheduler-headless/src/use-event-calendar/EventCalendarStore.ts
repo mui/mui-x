@@ -15,6 +15,7 @@ import {
 } from '../utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
+import { EventCalendarLazyLoadingPlugin } from './plugins/EventCalendarLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -89,48 +90,7 @@ export class EventCalendarStore<
       });
     }
 
-    this.registerStoreEffect(
-      (state) => {
-        const visibleDays =
-          state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
-
-        // Build a primitive key that is stable if the visible range didn't change.
-        // Adjust the mapping if your visibleDays items have a different shape.
-        const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
-
-        return {
-          viewConfig: state.viewConfig,
-          visibleDaysKey,
-          isLoading: state.isLoading,
-        };
-      },
-
-      (previous, next) => {
-        // Bail out if nothing relevant changed.
-        if (previous.visibleDaysKey === next.visibleDaysKey) {
-          return;
-        }
-
-        let isInstantLoad = false;
-        if (previous.viewConfig == null) {
-          isInstantLoad = true;
-        }
-
-        const visibleDays =
-          next.viewConfig?.visibleDaysSelector?.(this.state as EventCalendarState) ?? [];
-
-        if (!this.parameters.dataSource || visibleDays.length === 0) {
-          return;
-        }
-
-        const range = {
-          start: visibleDays[0].value,
-          end: visibleDays[visibleDays.length - 1].value,
-        };
-
-        queueMicrotask(() => this.queueDataFetchForRange(range, isInstantLoad));
-      },
-    );
+    this.lazyLoading = new EventCalendarLazyLoadingPlugin(this);
   }
 
   private assertViewValidity(view: CalendarView) {

@@ -33,9 +33,8 @@ import {
   shouldUpdateOccurrencePlaceholder,
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
-import { SchedulerDataManager } from './queue';
-import { SchedulerDataSourceCacheDefault } from './cache';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
+import { SchedulerLazyLoadingPlugin } from './plugins/SchedulerLazyLoadingPlugin';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -61,7 +60,7 @@ export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
-  protected parameters: Parameters;
+  public parameters: Parameters;
 
   private initialParameters: Parameters | null = null;
 
@@ -71,9 +70,7 @@ export class SchedulerStore<
 
   protected timeoutManager = new TimeoutManager();
 
-  private dataManager: SchedulerDataManager | null = null;
-
-  private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
+  public lazyLoading!: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters>;
 
   public constructor(
     parameters: Parameters,
@@ -116,11 +113,6 @@ export class SchedulerStore<
     const timeUntilNextMinuteMs =
       ONE_MINUTE_IN_MS - (currentDate.getSeconds() * 1000 + currentDate.getMilliseconds());
 
-    if (parameters.dataSource) {
-      this.cache = new SchedulerDataSourceCacheDefault<TEvent>({ ttl: 300_000 });
-      this.dataManager = new SchedulerDataManager(adapter, this.loadEventsFromDataSource);
-    }
-
     this.timeoutManager.startTimeout('set-now', timeUntilNextMinuteMs, () => {
       this.set('nowUpdatedEveryMinute', this.state.adapter.now(this.state.displayTimezone));
       this.timeoutManager.startInterval('set-now', ONE_MINUTE_IN_MS, () => {
@@ -155,154 +147,11 @@ export class SchedulerStore<
     };
   }
 
-  public queueDataFetchForRange = async (
-    range: {
-      start: TemporalSupportedObject;
-      end: TemporalSupportedObject;
-    },
-    immediate = false,
-  ) => {
-    if (this.dataManager) {
-      if (immediate) {
-        await this.dataManager.queueImmediate([range]);
-      } else {
-        await this.dataManager.queue([range]);
-      }
-    }
-  };
-
-  /**
-   * Loads events from the data source.
-   */
-  private loadEventsFromDataSource = async (range: {
-    start: TemporalSupportedObject;
-    end: TemporalSupportedObject;
-  }) => {
-    const { dataSource } = this.parameters;
-    const { adapter, displayTimezone } = this.state;
-
-    if (!dataSource || !this.cache || !this.dataManager) {
-      return;
-    }
-    if (
-      this.cache.hasCoverage(
-        adapter.getTime(range.start),
-        adapter.getTime(adapter.endOfDay(range.end)),
-      )
-    ) {
-      const allCachedEvents = this.cache?.getAll() || [];
-      const eventsState = buildEventsState(
-        { ...this.parameters, events: allCachedEvents } as Parameters,
-        adapter,
-        displayTimezone,
-      );
-
-      this.update({
-        ...this.state,
-        ...eventsState,
-        isLoading: false,
-      });
-
-      await this.dataManager.setRequestSettled(range);
-
-      return;
-    }
-
-    try {
-      // Set loading state
-      this.set('isLoading', true);
-      this.set('errors', []);
-      const events = await dataSource.getEvents(range.start, range.end);
-      this.cache!.setRange(
-        adapter.getTime(range.start),
-        adapter.getTime(adapter.endOfDay(range.end)),
-        events ?? [],
-      );
-      const eventsState = buildEventsState(
-        { ...this.parameters, events } as Parameters,
-        adapter,
-        displayTimezone,
-      );
-      this.update({
-        ...this.state,
-        ...eventsState,
-      });
-      // Mark request as settled
-      await this.dataManager.setRequestSettled(range);
-    } catch (error) {
-      this.set('errors', [error]);
-      await this.dataManager.setRequestSettled(range);
-    } finally {
-      // Unset loading state
-      this.set('isLoading', false);
-      await this.dataManager.setRequestSettled(range);
-    }
-  };
-
-  private updateEventsFromDataSource = async (
-    {
-      deleted,
-      updated,
-      created,
-    }: {
-      deleted: SchedulerEventId[];
-      updated: SchedulerEventId[];
-      created: SchedulerEventId[];
-    },
-    newEvents: TEvent[],
-  ) => {
-    const { dataSource } = this.parameters;
-    const { adapter, displayTimezone } = this.state;
-
-    if (!dataSource || !this.cache) {
-      return;
-    }
-
-    try {
-      const shouldUpdateEvents = await dataSource.updateEvents({
-        deleted,
-        updated,
-        created,
-      });
-
-      if (!shouldUpdateEvents.success) {
-        return;
-      }
-
-      // Update cache
-      for (const id of deleted) {
-        this.cache.remove(String(id));
-      }
-
-      const modifiedIds = new Set([...created, ...updated]);
-      if (modifiedIds.size > 0) {
-        for (const event of newEvents) {
-          // @ts-ignore
-          if (modifiedIds.has(event.id)) {
-            this.cache.upsert(event);
-          }
-        }
-      }
-
-      const eventsState = buildEventsState(
-        { ...this.parameters, events: newEvents },
-        adapter,
-        displayTimezone,
-      );
-
-      this.update({
-        ...this.state,
-        ...eventsState,
-      });
-    } catch (error) {
-      this.set('errors', [error]);
-    }
-  };
-
   /**
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
   public updateStateFromParameters = (parameters: Parameters, adapter: Adapter) => {
+    // TODO: Move the lazy loading plugin
     const updateModel: SchedulerModelUpdater<State, Parameters> = (
       mutableNewState,
       controlledProp,
@@ -455,10 +304,10 @@ export class SchedulerStore<
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
     queueMicrotask(() =>
-      this.updateEventsFromDataSource(
+      this.lazyLoading?.updateEventsFromDataSource(
         {
           deleted: deletedParam ?? [],
-          updated: Array.from(updated.keys()) as SchedulerEventId[],
+          updated,
           created: createdIds,
         },
         newEvents,

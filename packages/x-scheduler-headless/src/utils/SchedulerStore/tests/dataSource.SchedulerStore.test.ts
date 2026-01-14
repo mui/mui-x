@@ -44,7 +44,7 @@ storeClasses.forEach((storeClass) => {
       expect(store.state.eventIdList).toHaveLength(0);
 
       // Trigger fetch
-      await store.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading.queueDataFetchForRange({ start, end }, true);
 
       expect(dataSource.getEvents.calledOnce).to.equal(true);
       expect(dataSource.getEvents.firstCall.args[0]).toEqual(start);
@@ -66,7 +66,7 @@ storeClasses.forEach((storeClass) => {
       const start1 = adapter.date('2025-07-01T00:00:00Z', 'default');
       const end1 = adapter.date('2025-07-07T00:00:00Z', 'default');
 
-      await store.queueDataFetchForRange({ start: start1, end: end1 }, true);
+      await store.lazyLoading.queueDataFetchForRange({ start: start1, end: end1 }, true);
 
       expect(dataSource.getEvents.calledOnce).to.equal(true);
       expect(dataSource.getEvents.firstCall.args[0]).toEqual(start1);
@@ -75,7 +75,7 @@ storeClasses.forEach((storeClass) => {
       // Second fetch (different range)
       const start2 = adapter.date('2025-08-01T00:00:00Z', 'default');
       const end2 = adapter.date('2025-08-07T00:00:00Z', 'default');
-      await store.queueDataFetchForRange({ start: start2, end: end2 }, true);
+      await store.lazyLoading.queueDataFetchForRange({ start: start2, end: end2 }, true);
 
       expect(dataSource.getEvents.calledTwice).to.equal(true);
       expect(dataSource.getEvents.secondCall.args[0]).toEqual(start2);
@@ -94,7 +94,7 @@ storeClasses.forEach((storeClass) => {
       const start = adapter.date('2025-09-01T00:00:00Z', 'default');
       const end = adapter.date('2025-09-30T00:00:00Z', 'default');
 
-      await store.queueDataFetchForRange({ start, end }, true);
+      await store.lazyLoading.queueDataFetchForRange({ start, end }, true);
 
       expect(dataSource.getEvents.calledOnce).to.equal(true);
 
@@ -102,7 +102,7 @@ storeClasses.forEach((storeClass) => {
       const subStart = adapter.date('2025-07-10T00:00:00Z', 'default');
       const subEnd = adapter.date('2025-07-15T00:00:00Z', 'default');
 
-      await store.queueDataFetchForRange({ start: subStart, end: subEnd });
+      await store.lazyLoading.queueDataFetchForRange({ start: subStart, end: subEnd });
 
       expect(dataSource.getEvents.calledOnce).to.equal(false);
 
@@ -127,7 +127,7 @@ storeClasses.forEach((storeClass) => {
 
       expect(store.state.isLoading).toBe(true);
 
-      const actionPromise = store.queueDataFetchForRange({ start, end });
+      const actionPromise = store.lazyLoading.queueDataFetchForRange({ start, end });
       resolveFetch!([
         {
           id: '1',
