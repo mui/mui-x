@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -13,9 +14,79 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-he
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
-import './DayTimeGrid.css';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+
+const HOUR_HEIGHT = 46;
+
+const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridColumn',
+})(({ theme }) => ({
+  borderRight: `1px solid ${theme.palette.divider}`,
+  flexGrow: 1,
+  flexShrink: 0,
+  flexBasis: 0,
+  minWidth: 0,
+  position: 'relative',
+  '&:first-of-type': {
+    borderLeft: `1px solid ${theme.palette.divider}`,
+  },
+  '&[data-weekend]': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const DayTimeGridColumnInteractiveLayer = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridColumnInteractiveLayer',
+})({
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+});
+
+const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator, {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridCurrentTimeIndicator',
+})(({ theme }) => ({
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  height: 0,
+  borderTop: `2px solid ${theme.palette.primary.main}`,
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    left: -5,
+    top: -5,
+    width: 8,
+    height: 8,
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+  },
+}));
+
+const DayTimeGridCurrentTimeLabel = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridCurrentTimeLabel',
+})(({ theme }) => ({
+  position: 'absolute',
+  right: `calc(100% + ${theme.spacing(0.25)})`,
+  top: '50%',
+  transform: 'translateY(-50%)',
+  fontSize: theme.typography.caption.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  color: theme.palette.primary.main,
+  whiteSpace: 'nowrap',
+  paddingRight: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  height: HOUR_HEIGHT / 2,
+  display: 'flex',
+  alignItems: 'center',
+}));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
@@ -29,12 +100,11 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   });
 
   return (
-    <CalendarGrid.TimeColumn
+    <DayTimeGridColumn
       start={start}
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
-      className="DayTimeGridColumn"
-      data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+      data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--columns-count': maxIndex } as React.CSSProperties}
     >
       <ColumnInteractiveLayer
@@ -45,7 +115,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
         occurrences={occurrences}
         maxIndex={maxIndex}
       />
-    </CalendarGrid.TimeColumn>
+    </DayTimeGridColumn>
   );
 }
 
@@ -111,7 +181,7 @@ function ColumnInteractiveLayer({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <div className="DayTimeGridColumnInteractiveLayer" ref={columnRef} {...eventCreationProps}>
+    <DayTimeGridColumnInteractiveLayer ref={columnRef} {...eventCreationProps}>
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger
           key={occurrence.key}
@@ -121,15 +191,15 @@ function ColumnInteractiveLayer({
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
-        <CalendarGrid.CurrentTimeIndicator className="DayTimeGridCurrentTimeIndicator">
-          {index === 0 && <TimeGridCurrentTimeLabel />}
-        </CalendarGrid.CurrentTimeIndicator>
+        <DayTimeGridCurrentTimeIndicator>
+          {index === 0 && <CurrentTimeLabel />}
+        </DayTimeGridCurrentTimeIndicator>
       ) : null}
-    </div>
+    </DayTimeGridColumnInteractiveLayer>
   );
 }
 
-function TimeGridCurrentTimeLabel() {
+function CurrentTimeLabel() {
   const store = useEventCalendarStoreContext();
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const formatTime = useFormatTime();
@@ -137,9 +207,7 @@ function TimeGridCurrentTimeLabel() {
   const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
 
   return (
-    <span className="DayTimeGridCurrentTimeLabel" aria-hidden="true">
-      {currentTimeLabel}
-    </span>
+    <DayTimeGridCurrentTimeLabel aria-hidden="true">{currentTimeLabel}</DayTimeGridCurrentTimeLabel>
   );
 }
 

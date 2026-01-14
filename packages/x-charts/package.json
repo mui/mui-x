@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.21.0",
+  "version": "8.24.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -42,7 +42,6 @@
     "@mui/x-internals": "workspace:*",
     "bezier-easing": "^2.1.0",
     "clsx": "catalog:",
-    "flatqueue": "^3.0.0",
     "prop-types": "catalog:",
     "reselect": "catalog:",
     "use-sync-external-store": "catalog:"
@@ -79,6 +78,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.ts",
+    "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
   }
 }

@@ -2,8 +2,7 @@ import { EventCalendarParameters } from '@mui/x-scheduler-headless/use-event-cal
 import { SchedulerTranslations } from '../models/translations';
 
 export interface EventCalendarProps<TEvent extends object, TResource extends object>
-  extends React.HTMLAttributes<HTMLDivElement>,
-    EventCalendarParameters<TEvent, TResource> {
+  extends React.HTMLAttributes<HTMLDivElement>, EventCalendarParameters<TEvent, TResource> {
   /**
    * Translation overrides for the component's texts.
    */

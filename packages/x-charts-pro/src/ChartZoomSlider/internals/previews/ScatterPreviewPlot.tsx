@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-  useSelector,
   useStore,
   type D3Scale,
   type ColorGetter,
@@ -24,8 +23,8 @@ interface ScatterPreviewPlotProps extends PreviewPlotProps {
 export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPreviewPlotProps) {
   const store = useStore();
   const seriesData = useScatterSeriesContext();
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const { zAxis: zAxes, zAxisIds } = useZAxes();

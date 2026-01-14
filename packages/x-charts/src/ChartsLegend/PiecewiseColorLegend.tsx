@@ -21,8 +21,7 @@ import { type PiecewiseColorLegendItemContext } from './legendContext.types';
 import { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
 
 export interface PiecewiseColorLegendProps
-  extends ColorLegendSelector,
-    PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
+  extends ColorLegendSelector, PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * The direction of the legend layout.
    * @default 'horizontal'

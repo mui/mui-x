@@ -208,41 +208,37 @@ export interface SankeySeriesType {
 // ----------------------------------------------------------------------------------------
 // Those interfaces are here to allow circular dependencies between nodes and links.
 
-export interface SankeyLayoutNodeWithoutPosition
-  extends D3SankeyNode<
-    false,
-    MakeRequired<SankeyNode, 'label' | 'color'>,
-    SankeyLayoutLinkWithoutPosition
-  > {
+export interface SankeyLayoutNodeWithoutPosition extends D3SankeyNode<
+  false,
+  MakeRequired<SankeyNode, 'label' | 'color'>,
+  SankeyLayoutLinkWithoutPosition
+> {
   targetLinks: SankeyLayoutLinkWithoutPosition[];
   sourceLinks: SankeyLayoutLinkWithoutPosition[];
   value: number;
 }
-export interface SankeyLayoutLinkWithoutPosition
-  extends D3SankeyLink<
-    false,
-    SankeyLayoutNodeWithoutPosition,
-    Omit<MakeRequired<SankeyLink, 'color'>, 'source' | 'target'>
-  > {
+export interface SankeyLayoutLinkWithoutPosition extends D3SankeyLink<
+  false,
+  SankeyLayoutNodeWithoutPosition,
+  Omit<MakeRequired<SankeyLink, 'color'>, 'source' | 'target'>
+> {
   source: SankeyLayoutNodeWithoutPosition;
   target: SankeyLayoutNodeWithoutPosition;
 }
-export interface SankeyLayoutNodeWithPosition
-  extends D3SankeyNode<
-    true,
-    MakeRequired<SankeyNode, 'label' | 'color'>,
-    SankeyLayoutLinkWithPosition
-  > {
+export interface SankeyLayoutNodeWithPosition extends D3SankeyNode<
+  true,
+  MakeRequired<SankeyNode, 'label' | 'color'>,
+  SankeyLayoutLinkWithPosition
+> {
   targetLinks: SankeyLayoutLinkWithPosition[];
   sourceLinks: SankeyLayoutLinkWithPosition[];
   value: number;
 }
-export interface SankeyLayoutLinkWithPosition
-  extends D3SankeyLink<
-    true,
-    SankeyLayoutNodeWithPosition,
-    Omit<MakeRequired<SankeyLink, 'color'>, 'source' | 'target'>
-  > {
+export interface SankeyLayoutLinkWithPosition extends D3SankeyLink<
+  true,
+  SankeyLayoutNodeWithPosition,
+  Omit<MakeRequired<SankeyLink, 'color'>, 'source' | 'target'>
+> {
   path?: string | null;
   source: SankeyLayoutNodeWithPosition;
   target: SankeyLayoutNodeWithPosition;
@@ -271,8 +267,10 @@ export interface SankeyLayout<WithPosition extends boolean = true> {
   links: readonly SankeyLayoutLink<WithPosition>[];
 }
 
-export interface DefaultizedSankeySeriesType
-  extends DefaultizedProps<Omit<SankeySeriesType, 'data'>, 'id' | 'valueFormatter'> {
+export interface DefaultizedSankeySeriesType extends DefaultizedProps<
+  Omit<SankeySeriesType, 'data'>,
+  'id' | 'valueFormatter'
+> {
   // data: {
   //   nodes: Map<SankeyNodeId, SankeyNode>;
   //   links: readonly SankeyLink[];

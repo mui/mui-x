@@ -18,16 +18,13 @@ import {
  * Validation props used by the Date Time Range Picker and Date Time Range Field.
  */
 export interface ExportedValidateDateTimeRangeProps
-  extends ExportedValidateDateRangeProps,
-    ExportedValidateTimeRangeProps,
-    DateTimeValidationProps {}
+  extends ExportedValidateDateRangeProps, ExportedValidateTimeRangeProps, DateTimeValidationProps {}
 
 /**
  * Validation props as received by the validateDateTimeRange method.
  */
 export interface ValidateDateTimeRangeProps
-  extends ValidateDateRangeProps,
-    ValidateTimeRangeProps {}
+  extends ValidateDateRangeProps, ValidateTimeRangeProps {}
 
 export type ValidateDateTimeRangePropsToDefault =
   | ValidateDateRangePropsToDefault

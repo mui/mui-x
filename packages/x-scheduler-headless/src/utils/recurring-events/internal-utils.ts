@@ -7,6 +7,42 @@ import {
   RecurringEventRecurrenceRule,
 } from '../../models';
 
+const adapterCache = new WeakMap<
+  Adapter,
+  {
+    /**
+     * Week day number (1..7) of Monday for a given adapter.
+     */
+    mondayWeekDayNumber: number;
+    /**
+     * Date format string for UNTIL serialization (RFC5545 format: YYYYMMDDTHHmmssZ)
+     */
+    untilFormat: string;
+  }
+>();
+
+/**
+ * Returns cached adapter data.
+ */
+export function getAdapterCache(adapter: Adapter) {
+  let cache = adapterCache.get(adapter);
+  if (!cache) {
+    const f = adapter.formats;
+    const dateFormat = `${f.yearPadded}${f.monthPadded}${f.dayOfMonthPadded}`;
+    const dateTimeSeparator = `${adapter.escapedCharacters.start}T${adapter.escapedCharacters.end}`;
+    const timeFormat = `${f.hours24hPadded}${f.minutesPadded}${f.secondsPadded}`;
+    const timezoneSuffix = `${adapter.escapedCharacters.start}Z${adapter.escapedCharacters.end}`;
+    const untilFormat = `${dateFormat}${dateTimeSeparator}${timeFormat}${timezoneSuffix}`;
+
+    cache = {
+      untilFormat,
+      mondayWeekDayNumber: adapter.getDayOfWeek(adapter.date('2025-01-06T00:00:00Z', 'utc')), // ISO Monday
+    };
+    adapterCache.set(adapter, cache);
+  }
+  return cache;
+}
+
 /**
  * The week day codes for all 7 days of the week.
  */
@@ -20,22 +56,12 @@ export const NOT_LOCALIZED_WEEK_DAYS: RecurringEventWeekDayCode[] = [
   'SU',
 ];
 
-const mondayMap = new WeakMap<Adapter, TemporalSupportedObject>();
 /**
- * Returns the week day number (1..7) of Monday for a given adapter.
+ * A map of week day codes to their indexes in NOT_LOCALIZED_WEEK_DAYS.
  */
-export function getMondayWeekDayNumber(adapter: Adapter) {
-  let monday: TemporalSupportedObject;
-  const mondayFromCache = mondayMap.get(adapter);
-  if (mondayFromCache != null) {
-    monday = mondayFromCache;
-  } else {
-    monday = adapter.date('2025-01-06T00:00:00Z', 'utc'); // ISO Monday
-    mondayMap.set(adapter, monday);
-  }
-
-  return adapter.getDayOfWeek(monday);
-}
+export const NOT_LOCALIZED_WEEK_DAYS_INDEXES = new Map<RecurringEventWeekDayCode, number>(
+  NOT_LOCALIZED_WEEK_DAYS.map((code, index) => [code, index]),
+);
 
 /**
  * Returns the week day code (MO..SU) for a given date.
@@ -46,7 +72,7 @@ export function getWeekDayCode(
   date: TemporalSupportedObject,
 ): RecurringEventWeekDayCode {
   const dayOfWeek = adapter.getDayOfWeek(date);
-  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  const mondayWeekDayNumber = getAdapterCache(adapter).mondayWeekDayNumber;
   return NOT_LOCALIZED_WEEK_DAYS[(dayOfWeek - mondayWeekDayNumber + 7) % 7];
 }
 
@@ -58,8 +84,8 @@ export function getWeekDayNumberFromCode(
   adapter: Adapter,
   code: RecurringEventWeekDayCode,
 ): number {
-  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
-  const indexOfCode = NOT_LOCALIZED_WEEK_DAYS.indexOf(code);
+  const mondayWeekDayNumber = getAdapterCache(adapter).mondayWeekDayNumber;
+  const indexOfCode = NOT_LOCALIZED_WEEK_DAYS_INDEXES.get(code)!;
   return ((indexOfCode + mondayWeekDayNumber - 1) % 7) + 1;
 }
 
@@ -130,8 +156,8 @@ export function getEventDurationInDays(adapter: Adapter, event: SchedulerProcess
   // +1 so start/end same day = 1 day, spans include last day
   return (
     adapter.differenceInDays(
-      adapter.startOfDay(event.end.value),
-      adapter.startOfDay(event.start.value),
+      adapter.startOfDay(event.dataTimezone.end.value),
+      adapter.startOfDay(event.dataTimezone.start.value),
     ) + 1
   );
 }
@@ -181,27 +207,29 @@ export function nthWeekdayOfMonth(
   return adapter.startOfDay(nthFromEndOccurrenceDate);
 }
 
-const COUNT_OCCURRENCES_UP_TO_EXACT_METHOD_LOOKUP = {
-  DAILY: countDailyOccurrencesUpToExact,
-  WEEKLY: countWeeklyOccurrencesUpToExact,
-  MONTHLY: countMonthlyOccurrencesUpToExact,
-  YEARLY: countYearlyOccurrencesUpToExact,
+const GET_REMAINING_OCCURRENCES_METHOD_LOOKUP = {
+  DAILY: getRemainingDailyOccurrences,
+  WEEKLY: getRemainingWeeklyOccurrences,
+  MONTHLY: getRemainingMonthlyOccurrences,
+  YEARLY: getRemainingYearlyOccurrences,
 };
 
 /**
- *  Estimates how many occurrences exist from DTSTART up to `date` (inclusive).
- *  Used to enforce COUNT. Delegates to exact counters for WEEKLY/MONTHLY/YEARLY.
- *  Returns 0 if `date` is before DTSTART (day precision).
+ *  Computes how many occurrences remain after `date` (inclusive) given a total `count`.
+ *  Used to enforce COUNT. Delegates to frequency-specific counters.
+ *  Returns `count` if `date` is before DTSTART (day precision).
+ *  Returns 0 if all occurrences have been consumed.
  */
-export function estimateOccurrencesUpTo(
+export function getRemainingOccurrences(
   adapter: Adapter,
   rule: RecurringEventRecurrenceRule,
   seriesStart: TemporalSupportedObject,
   date: TemporalSupportedObject,
+  count: number,
 ): number {
   const seriesStartDay = adapter.startOfDay(seriesStart);
 
-  const method = COUNT_OCCURRENCES_UP_TO_EXACT_METHOD_LOOKUP[rule.freq];
+  const method = GET_REMAINING_OCCURRENCES_METHOD_LOOKUP[rule.freq];
   if (!method) {
     throw new Error(
       [
@@ -211,10 +239,10 @@ export function estimateOccurrencesUpTo(
     );
   }
 
-  return method({ adapter, rule, seriesStartDay, date });
+  return method({ adapter, rule, seriesStartDay, date, count });
 }
 
-interface CountOccurrencesUpToExactParameters {
+interface GetRemainingOccurrencesParameters {
   adapter: Adapter;
   rule: RecurringEventRecurrenceRule;
   /**
@@ -223,12 +251,16 @@ interface CountOccurrencesUpToExactParameters {
    */
   seriesStartDay: TemporalSupportedObject;
   date: TemporalSupportedObject;
+  /**
+   * The total count of occurrences allowed.
+   */
+  count: number;
 }
 
 /**
  *  Given a week start and a BYDAY code, returns the exact date in that week.
  */
-function dayInWeek(
+export function dayInWeek(
   adapter: Adapter,
   weekStart: TemporalSupportedObject,
   code: RecurringEventWeekDayCode,
@@ -240,33 +272,35 @@ function dayInWeek(
 }
 
 /**
- * Exact DAILY occurrence count up to `date` (inclusive).
+ * Remaining DAILY occurrences after `date` (inclusive).
  */
-export function countDailyOccurrencesUpToExact(
-  parameters: CountOccurrencesUpToExactParameters,
+export function getRemainingDailyOccurrences(
+  parameters: GetRemainingOccurrencesParameters,
 ): number {
-  const { adapter, rule, seriesStartDay, date } = parameters;
+  const { adapter, rule, seriesStartDay, date, count } = parameters;
   if (adapter.isBefore(date, seriesStartDay)) {
-    return 0;
+    return count;
   }
 
   const interval = Math.max(1, rule.interval ?? 1);
   const totalDays = adapter.differenceInDays(adapter.startOfDay(date), seriesStartDay);
+  const occurrencesSoFar = Math.floor(totalDays / interval) + 1;
 
-  return Math.floor(totalDays / interval) + 1;
+  return Math.max(0, count - occurrencesSoFar);
 }
 
 /**
- *  Exact WEEKLY occurrence count up to `date` (inclusive).
+ *  Remaining WEEKLY occurrences after `date` (inclusive).
  *  Iterates weeks by `interval`, checking each BYDAY. Skips days before DTSTART.
  *  BYDAY defaults to DTSTART weekday if omitted.
+ *  Short-circuits when count is exhausted.
  */
-export function countWeeklyOccurrencesUpToExact(
-  parameters: CountOccurrencesUpToExactParameters,
+export function getRemainingWeeklyOccurrences(
+  parameters: GetRemainingOccurrencesParameters,
 ): number {
-  const { adapter, rule, seriesStartDay, date } = parameters;
+  const { adapter, rule, seriesStartDay, date, count } = parameters;
   if (adapter.isBefore(date, seriesStartDay)) {
-    return 0;
+    return count;
   }
 
   const byDay = parsesByDayForWeeklyFrequency(rule.byDay) ?? [
@@ -279,12 +313,12 @@ export function countWeeklyOccurrencesUpToExact(
   const targetWeekStart = adapter.startOfWeek(date);
   const dateEndDay = adapter.endOfDay(date);
 
-  let count = 0;
+  let remaining = count;
 
   // Iterate weeks from start to target, stepping by `interval`
   for (
     let week = seriesWeekStart;
-    !adapter.isAfter(week, targetWeekStart);
+    !adapter.isAfter(week, targetWeekStart) && remaining > 0;
     week = adapter.addWeeks(week, interval)
   ) {
     // For the current week, check each weekday specified in BYDAY
@@ -295,27 +329,28 @@ export function countWeeklyOccurrencesUpToExact(
         continue;
       }
 
-      count += 1;
+      remaining -= 1;
     }
   }
 
-  return count;
+  return remaining;
 }
 
 /**
- * Counts MONTHLY occurrences up to `date` (inclusive).
+ * Remaining MONTHLY occurrences after `date` (inclusive).
  * Modes: BYDAY with ordinals (e.g. 2TU, -1FR; multiple allowed) OR single BYMONTHDAY (default = DTSTART day).
  * Skips months without a match. Steps by `interval`, respecting series start and target boundaries.
+ * Short-circuits when count is exhausted.
  * @throws If BYDAY is combined with BYMONTHDAY, or BYMONTHDAY has >1 value.
  */
-export function countMonthlyOccurrencesUpToExact(
-  parameters: CountOccurrencesUpToExactParameters,
+export function getRemainingMonthlyOccurrences(
+  parameters: GetRemainingOccurrencesParameters,
 ): number {
-  const { adapter, rule, seriesStartDay, date } = parameters;
+  const { adapter, rule, seriesStartDay, date, count } = parameters;
   const seriesStartMonth = adapter.startOfMonth(seriesStartDay);
   const targetMonth = adapter.startOfMonth(date);
   if (adapter.isBefore(targetMonth, seriesStartMonth)) {
-    return 0;
+    return count;
   }
 
   const dateEndDay = adapter.endOfDay(date);
@@ -331,10 +366,10 @@ export function countMonthlyOccurrencesUpToExact(
 
     const { ord, code } = parsesByDayForMonthlyFrequency(rule.byDay);
 
-    let count = 0;
+    let remaining = count;
     for (
       let month = seriesStartMonth;
-      !adapter.isAfter(month, targetMonth);
+      !adapter.isAfter(month, targetMonth) && remaining > 0;
       month = adapter.addMonths(month, interval)
     ) {
       const occurrenceDate = nthWeekdayOfMonth(adapter, month, code, ord);
@@ -346,9 +381,9 @@ export function countMonthlyOccurrencesUpToExact(
         continue;
       }
 
-      count += 1;
+      remaining -= 1;
     }
-    return count;
+    return remaining;
   }
 
   // Path B: BYMONTHDAY (single mode, default to DTSTART day)
@@ -361,12 +396,12 @@ export function countMonthlyOccurrencesUpToExact(
   // If no BYMONTHDAY is provided in a MONTHLY rule, default to the day of month of DTSTART.
   const dayOfMonth = rule.byMonthDay?.length ? rule.byMonthDay[0] : adapter.getDate(seriesStartDay);
 
-  let count = 0;
+  let remaining = count;
 
   // Iterate months from start to target, stepping by `interval`
   for (
     let month = seriesStartMonth;
-    !adapter.isAfter(month, targetMonth);
+    !adapter.isAfter(month, targetMonth) && remaining > 0;
     month = adapter.addMonths(month, interval)
   ) {
     // if the day doesn't exist in this month, skip it
@@ -380,28 +415,29 @@ export function countMonthlyOccurrencesUpToExact(
       continue;
     }
 
-    count += 1;
+    remaining -= 1;
   }
 
-  return count;
+  return remaining;
 }
 
 /**
- *  Exact YEARLY occurrence count up to `date` (inclusive).
+ *  Remaining YEARLY occurrences after `date` (inclusive).
  *  Only same month/day as DTSTART, skips non-leap years for Feb 29.
  *  Iterates years by `interval`, bounded by series start and target year.
+ *  Short-circuits when count is exhausted.
  *  @throws If BYMONTH/DAY/BYDAY are present (unsupported for YEARLY at the moment).
  */
-export function countYearlyOccurrencesUpToExact(
-  parameters: CountOccurrencesUpToExactParameters,
+export function getRemainingYearlyOccurrences(
+  parameters: GetRemainingOccurrencesParameters,
 ): number {
-  const { adapter, rule, seriesStartDay, date } = parameters;
+  const { adapter, rule, seriesStartDay, date, count } = parameters;
 
   const seriesStartYear = adapter.startOfYear(seriesStartDay);
   const dateEndDay = adapter.endOfDay(date);
   const targetYearStart = adapter.startOfYear(date);
   if (adapter.isBefore(targetYearStart, seriesStartYear)) {
-    return 0;
+    return count;
   }
 
   const interval = Math.max(1, rule.interval ?? 1);
@@ -417,13 +453,13 @@ export function countYearlyOccurrencesUpToExact(
   const targetMonth = adapter.getMonth(seriesStartDay);
   const targetDayOfMonth = adapter.getDate(seriesStartDay);
 
-  let count = 0;
+  let remaining = count;
 
   // Iterate years from the series start (inclusive) to the target year (inclusive),
   // stepping by `interval`.
   for (
     let year = seriesStartYear;
-    !adapter.isAfter(year, targetYearStart);
+    !adapter.isAfter(year, targetYearStart) && remaining > 0;
     year = adapter.addYears(year, interval)
   ) {
     // Anchor to the target month in the current year
@@ -441,8 +477,8 @@ export function countYearlyOccurrencesUpToExact(
       continue;
     }
 
-    count += 1;
+    remaining -= 1;
   }
 
-  return count;
+  return remaining;
 }

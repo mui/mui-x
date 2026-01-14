@@ -34,7 +34,8 @@ function getDominantBaseline(angle: number) {
 const LABEL_MARGIN = 2;
 
 interface GetLabelAttributesParams
-  extends Required<Pick<RadarAxisProps, 'labelOrientation'>>,
+  extends
+    Required<Pick<RadarAxisProps, 'labelOrientation'>>,
     Partial<Pick<RadarAxisProps, 'textAnchor' | 'dominantBaseline'>> {
   x: number;
   y: number;

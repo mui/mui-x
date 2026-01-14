@@ -73,7 +73,10 @@ export default function TimelineExternalDragAndDrop() {
           return;
         }
 
-        const { start, end, ...eventData } = data.originalOccurrence;
+        const {
+          displayTimezone: { start, end },
+          ...eventData
+        } = data.originalOccurrence;
 
         setPlaceholder({
           ...eventData,

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
@@ -9,9 +10,49 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-he
 import { EventPopoverTrigger } from '../event-popover';
 import { DayGridEvent } from '../event';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
-
-import './DayTimeGrid.css';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+
+const EVENT_HEIGHT = 22;
+
+const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsCell',
+})(({ theme }) => ({
+  borderRight: `1px solid ${theme.palette.divider}`,
+  flexGrow: 1,
+  flexShrink: 0,
+  flexBasis: 0,
+  minWidth: 0,
+  position: 'relative',
+  minHeight: `calc(var(--row-count, 0) * ${EVENT_HEIGHT}px + ${theme.spacing(0.5)})`,
+  '&:first-of-type': {
+    borderLeft: `1px solid ${theme.palette.divider}`,
+  },
+  '&[data-weekend]': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const DayTimeGridAllDayEventsCellEvents = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventsCellEvents',
+})({
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+});
+
+const DayTimeGridAllDayEventContainer = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridAllDayEventContainer',
+})({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+});
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
@@ -51,11 +92,10 @@ export function DayGridCell(props: DayGridCellProps) {
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <CalendarGrid.DayCell
+    <DayTimeGridAllDayEventsCell
       ref={cellRef}
       value={day.value}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
-      className="DayTimeGridAllDayEventsCell"
       style={
         {
           '--row-count': row.maxIndex,
@@ -63,10 +103,10 @@ export function DayGridCell(props: DayGridCellProps) {
       }
       aria-labelledby={`DayTimeGridHeaderCell-${adapter.getDate(day.value)} DayTimeGridAllDayEventsHeaderCell`}
       role="gridcell"
-      data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+      data-weekend={isWeekend(adapter, day.value) || undefined}
       {...eventCreationProps}
     >
-      <div className="DayTimeGridAllDayEventsCellEvents">
+      <DayTimeGridAllDayEventsCellEvents>
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
@@ -83,12 +123,12 @@ export function DayGridCell(props: DayGridCellProps) {
           );
         })}
         {placeholder != null && (
-          <div className="DayTimeGridAllDayEventContainer">
+          <DayTimeGridAllDayEventContainer>
             <DayGridEvent occurrence={placeholder} variant="placeholder" />
-          </div>
+          </DayTimeGridAllDayEventContainer>
         )}
-      </div>
-    </CalendarGrid.DayCell>
+      </DayTimeGridAllDayEventsCellEvents>
+    </DayTimeGridAllDayEventsCell>
   );
 }
 

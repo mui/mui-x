@@ -3,7 +3,6 @@ import {
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
   useBarPlotData,
-  useSelector,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartDrawingArea } from '@mui/x-charts/hooks';
@@ -60,8 +59,8 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, axisId);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, axisId);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useBarPlotData(drawingArea, xAxes, yAxes);
 }

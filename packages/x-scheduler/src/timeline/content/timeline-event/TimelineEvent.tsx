@@ -1,14 +1,65 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { useId } from '@base-ui-components/utils/useId';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store';
+import { useId } from '@base-ui/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import { getColorClassName } from '../../../internals/utils/color-utils';
+import { getDataPaletteProps } from '../../../internals/utils/color-utils';
 import { EventDragPreview } from '../../../internals/components/event-drag-preview';
 import { TimelineEventProps } from './TimelineEvent.types';
-import './TimelineEvent.css';
+
+const TimelineEventRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'Event',
+})(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: 'var(--event-color-3)',
+  color: 'var(--event-color-12)',
+  padding: theme.spacing(0.5, 1),
+  position: 'relative',
+  width: 'var(--width)',
+  marginLeft: 'var(--x-position)',
+  gridRow: 'var(--row-index, 1)',
+  gridColumn: 1,
+  '&[data-dragging], &[data-resizing]': {
+    opacity: 0.5,
+  },
+  '&:hover .TimelineEventResizeHandler': {
+    opacity: 1,
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: theme.spacing(0.5),
+    bottom: theme.spacing(0.5),
+    left: 0,
+    width: 3,
+    borderRadius: 2,
+    background: 'var(--event-color-9)',
+    pointerEvents: 'none',
+  },
+}));
+
+const TimelineEventResizeHandler = styled(Timeline.EventResizeHandler, {
+  name: 'MuiEventTimeline',
+  slot: 'EventResizeHandler',
+})({
+  position: 'absolute',
+  width: 4,
+  top: 0,
+  bottom: 0,
+  zIndex: 3,
+  cursor: 'ew-resize',
+  opacity: 0,
+  '&[data-start]': {
+    left: 0,
+  },
+  '&[data-end]': {
+    right: 0,
+  },
+});
 
 export const TimelineEvent = React.forwardRef(function TimelineEvent(
   props: TimelineEventProps,
@@ -35,21 +86,22 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   const sharedProps = {
     id,
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
-    className: clsx(className, 'TimelineEvent', getColorClassName(color)),
+    className: clsx(className),
     style: {
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
     } as React.CSSProperties,
+    ...getDataPaletteProps(color),
     ...other,
   };
 
   if (variant === 'placeholder') {
     return (
-      <Timeline.EventPlaceholder aria-hidden={true} {...sharedProps}>
+      <Timeline.EventPlaceholder render={<TimelineEventRoot />} aria-hidden={true} {...sharedProps}>
         <span className="LinesClamp">{occurrence.title}</span>
       </Timeline.EventPlaceholder>
     );
@@ -57,6 +109,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   return (
     <Timeline.Event
+      render={<TimelineEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
@@ -64,11 +117,11 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       {...sharedProps}
     >
       {isStartResizable && (
-        <Timeline.EventResizeHandler side="start" className="TimelineEventResizeHandler" />
+        <TimelineEventResizeHandler side="start" className="TimelineEventResizeHandler" />
       )}
       <span className="LinesClamp">{occurrence.title}</span>
       {isEndResizable && (
-        <Timeline.EventResizeHandler side="end" className="TimelineEventResizeHandler" />
+        <TimelineEventResizeHandler side="end" className="TimelineEventResizeHandler" />
       )}
     </Timeline.Event>
   );

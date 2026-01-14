@@ -20,16 +20,28 @@ describeAdapters(
       await view.user.keyboard('00');
       await view.user.tab();
 
+      const inputRoot = getFieldInputRoot();
+
       // Should be invalid now
-      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
+      expect(inputRoot).to.have.attribute('aria-invalid', 'true');
 
-      // Move to year and spin
+      await view.selectSectionAsync('day');
+
+      // Returns to valid after refocusing (incomplete date)
+      expect(inputRoot).to.have.attribute('aria-invalid', 'false');
+      await view.user.keyboard('05');
+
       await view.selectSectionAsync('year');
-      await view.user.keyboard('[ArrowUp][ArrowUp][ArrowDown]');
-      await view.user.tab();
+      await view.user.keyboard('2025');
 
-      // Still invalid, must not flash to valid between spins
-      expect(getFieldInputRoot()).to.have.attribute('aria-invalid', 'true');
+      // Should now be invalid
+      expect(inputRoot).to.have.attribute('aria-invalid', 'true');
+
+      // Spin using keypress
+      await view.user.keyboard('[ArrowUp][ArrowUp][ArrowDown]');
+
+      // Should still be invalid despite cycling 3 times, must not flash to valid between spins
+      expect(inputRoot).to.have.attribute('aria-invalid', 'true');
 
       view.unmount();
     });
@@ -41,16 +53,29 @@ describeAdapters(
       const input = getTextbox();
 
       await view.selectSectionAsync('month');
-      await view.user.keyboard('0');
+      await view.user.keyboard('00');
       await view.user.tab();
 
+      // Should be invalid now
       expect(input).to.have.attribute('aria-invalid', 'true');
+
+      await view.selectSectionAsync('day');
+
+      // Returns to valid after refocusing (incomplete date)
+      expect(input).to.have.attribute('aria-invalid', 'false');
+      await view.user.keyboard('05');
 
       // Move to year and spin using keypress
       await view.selectSectionAsync('year');
+      await view.user.keyboard('2025');
+
+      // Should now be invalid
+      expect(input).to.have.attribute('aria-invalid', 'true');
+
       await view.user.keyboard('[ArrowUp][ArrowUp][ArrowDown]');
       await view.user.tab();
 
+      // Should still be invalid despite cycling 3 times, must not flash to valid between spins
       expect(input).to.have.attribute('aria-invalid', 'true');
 
       view.unmount();

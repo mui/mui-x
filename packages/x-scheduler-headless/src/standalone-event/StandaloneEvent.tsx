@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
@@ -97,7 +97,8 @@ export namespace StandaloneEvent {
   }
 
   export interface Props
-    extends BaseUIComponentProps<'div', State>,
+    extends
+      BaseUIComponentProps<'div', State>,
       NonNativeButtonProps,
       Pick<useDragPreview.Parameters, 'renderDragPreview' | 'data'> {
     /**

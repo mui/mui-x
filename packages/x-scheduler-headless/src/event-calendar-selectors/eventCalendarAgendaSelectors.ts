@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EventCalendarState as State } from '../use-event-calendar';
 import {
   schedulerEventSelectors,
@@ -15,6 +15,7 @@ export const eventCalendarAgendaSelectors = {
   visibleDays: createSelectorMemoized(
     (state: State) => state.adapter,
     schedulerOtherSelectors.visibleDate,
+    schedulerOtherSelectors.displayTimezone,
     eventCalendarPreferenceSelectors.showWeekends,
     eventCalendarPreferenceSelectors.showEmptyDaysInAgenda,
     schedulerEventSelectors.processedEventList,
@@ -23,6 +24,7 @@ export const eventCalendarAgendaSelectors = {
     (
       adapter,
       visibleDate,
+      displayTimezone,
       showWeekends,
       showEmptyDaysInAgenda,
       events,
@@ -46,6 +48,7 @@ export const eventCalendarAgendaSelectors = {
         events,
         visibleResources,
         resourceParentIds,
+        displayTimezone,
       });
 
       const hasEvents = (day: SchedulerProcessedDate) =>
@@ -92,6 +95,7 @@ export const eventCalendarAgendaSelectors = {
           events,
           visibleResources,
           resourceParentIds,
+          displayTimezone,
         });
 
         daysWithEvents = accumulatedDays.filter(hasEvents).slice(0, amount);

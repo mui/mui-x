@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { EMPTY_OBJECT, EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT, EMPTY_ARRAY } from '@base-ui/utils/empty';
 import { useRenderElement } from '../../utils/useRenderElement';
 import { useCompositeItem } from './useCompositeItem';
 import type { BaseUIComponentProps } from '../../utils/types';
@@ -35,8 +35,10 @@ export function CompositeItem<Metadata, State extends Record<string, any>>(
 }
 
 export namespace CompositeItem {
-  export interface Props<Metadata, State extends Record<string, any>>
-    extends Pick<BaseUIComponentProps<any, State>, 'render' | 'className'> {
+  export interface Props<Metadata, State extends Record<string, any>> extends Pick<
+    BaseUIComponentProps<any, State>,
+    'render' | 'className'
+  > {
     children?: React.ReactNode;
     metadata?: Metadata;
     refs?: React.Ref<HTMLElement | null>[];

@@ -8,7 +8,6 @@ import {
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
   selectorChartsInteractionIsInitialized,
-  useSelector,
   defaultizeXAxis,
   defaultizeYAxis,
 } from '@mui/x-charts/internals';
@@ -41,9 +40,9 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
 
-  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
+  const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {

@@ -7,9 +7,9 @@ import { innerGetEventOccurrencesGroupedByDay } from '../use-event-occurrences-g
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const days = [
-    processDate(adapter.date('2024-01-15', 'default'), adapter),
-    processDate(adapter.date('2024-01-16', 'default'), adapter),
-    processDate(adapter.date('2024-01-17', 'default'), adapter),
+    processDate(adapter.date('2024-01-15Z', 'default'), adapter),
+    processDate(adapter.date('2024-01-16Z', 'default'), adapter),
+    processDate(adapter.date('2024-01-17Z', 'default'), adapter),
   ];
 
   function testHook(events: SchedulerProcessedEvent[]) {
@@ -18,8 +18,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         adapter,
         days,
         events,
-        visibleResources: new Map(),
+        visibleResources: {},
         resourceParentIds: new Map(),
+        displayTimezone: 'default',
       });
       return useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
     });
@@ -28,7 +29,7 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   }
 
   it('should set index to 1 for the first event on a day', () => {
-    const result = testHook([EventBuilder.new().singleDay('2024-01-15').toProcessed()]);
+    const result = testHook([EventBuilder.new().singleDay('2024-01-15Z').toProcessed()]);
 
     expect(result.maxIndex).to.equal(1);
     expect(result.days[0].withPosition).to.have.length(1);
@@ -37,9 +38,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   it('should place the occurrences in all the concurrent indexes when in the same day', () => {
     const result = testHook([
-      EventBuilder.new().id('A').singleDay('2024-01-15').toProcessed(),
-      EventBuilder.new().id('B').singleDay('2024-01-15').toProcessed(),
-      EventBuilder.new().id('C').singleDay('2024-01-15').toProcessed(),
+      EventBuilder.new().id('A').singleDay('2024-01-15Z').toProcessed(),
+      EventBuilder.new().id('B').singleDay('2024-01-15Z').toProcessed(),
+      EventBuilder.new().id('C').singleDay('2024-01-15Z').toProcessed(),
     ]);
 
     expect(result.maxIndex).to.equal(3);
@@ -53,8 +54,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   it('should keep the same index for multi-day events and set daySpan=1 and isInvisible: true for all days but the first one', () => {
     const result = testHook([
-      EventBuilder.new().id('A').startAt('2024-01-15').endAt('2024-01-16').toProcessed(),
-      EventBuilder.new().id('B').startAt('2024-01-16').endAt('2024-01-17').toProcessed(),
+      EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-16Z').toProcessed(),
+      EventBuilder.new().id('B').startAt('2024-01-16Z').endAt('2024-01-17Z').toProcessed(),
     ]);
 
     expect(result.maxIndex).to.equal(2);
@@ -70,9 +71,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
 
   it('should find gaps in the indexes and use the lower available', () => {
     const result = testHook([
-      EventBuilder.new().id('A').startAt('2024-01-15').endAt('2024-01-16').toProcessed(),
-      EventBuilder.new().id('B').startAt('2024-01-16').endAt('2024-01-17').toProcessed(),
-      EventBuilder.new().id('C').singleDay('2024-01-17').toProcessed(),
+      EventBuilder.new().id('A').startAt('2024-01-15Z').endAt('2024-01-16Z').toProcessed(),
+      EventBuilder.new().id('B').startAt('2024-01-16Z').endAt('2024-01-17Z').toProcessed(),
+      EventBuilder.new().id('C').singleDay('2024-01-17Z').toProcessed(),
     ]);
 
     // Event A is not present on day 3, so event C should use index 1 on that day instead of using index 3 below Event B

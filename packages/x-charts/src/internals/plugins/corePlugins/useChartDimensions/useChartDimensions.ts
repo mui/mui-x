@@ -3,7 +3,6 @@ import * as React from 'react';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { useSelector } from '../../../store/useSelector';
 import { DEFAULT_MARGINS } from '../../../../constants';
 import { type ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
@@ -174,7 +173,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
   const isXInside = React.useCallback(
     (x: number) => x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width,
     [drawingArea.left, drawingArea.width],

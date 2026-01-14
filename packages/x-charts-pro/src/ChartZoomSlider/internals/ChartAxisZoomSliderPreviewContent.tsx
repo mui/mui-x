@@ -1,16 +1,8 @@
 import * as React from 'react';
-import {
-  type AxisId,
-  selectorChartSeriesProcessed,
-  useSelector,
-  useStore,
-} from '@mui/x-charts/internals';
-import { LinePreviewPlot } from './previews/LinePreviewPlot';
-import { AreaPreviewPlot } from './previews/AreaPreviewPlot';
-import { BarPreviewPlot } from './previews/BarPreviewPlot';
-import { ScatterPreviewPlot } from './previews/ScatterPreviewPlot';
+import { type AxisId, selectorChartSeriesProcessed, useStore } from '@mui/x-charts/internals';
+import { seriesPreviewPlotMap } from './seriesPreviewPlotMap';
 
-interface ChartAxisZoomSliderPreviewContentProps {
+export interface ChartAxisZoomSliderPreviewContentProps {
   axisId: AxisId;
   x: number;
   y: number;
@@ -22,29 +14,17 @@ export function ChartAxisZoomSliderPreviewContent(props: ChartAxisZoomSliderPrev
   const { axisId, x, y, width, height } = props;
 
   const store = useStore();
-  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
+  const processedSeries = store.use(selectorChartSeriesProcessed);
 
   const children: React.JSX.Element[] = [];
   const clipId = `zoom-preview-mask-${axisId}`;
 
-  const hasLineSeries = (processedSeries.line?.seriesOrder?.length ?? 0) > 0;
-  const hasBarSeries = (processedSeries.bar?.seriesOrder?.length ?? 0) > 0;
-  const hasScatterSeries = (processedSeries.scatter?.seriesOrder?.length ?? 0) > 0;
+  for (const [seriesType, Component] of seriesPreviewPlotMap) {
+    const hasSeries = (processedSeries[seriesType]?.seriesOrder?.length ?? 0) > 0;
 
-  if (hasLineSeries) {
-    children.push(<AreaPreviewPlot key="area" axisId={axisId} />);
-  }
-
-  if (hasBarSeries) {
-    children.push(<BarPreviewPlot key="bar" {...props} />);
-  }
-
-  if (hasLineSeries) {
-    children.push(<LinePreviewPlot key="line" axisId={axisId} />);
-  }
-
-  if (hasScatterSeries) {
-    children.push(<ScatterPreviewPlot key="scatter" {...props} />);
+    if (hasSeries) {
+      children.push(<Component key={seriesType} {...props} />);
+    }
   }
 
   return (

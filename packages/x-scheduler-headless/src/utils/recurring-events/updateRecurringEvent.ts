@@ -12,8 +12,8 @@ import {
 import type { UpdateEventsParameters } from '../SchedulerStore';
 import { getDateKey, getOccurrenceEnd, mergeDateAndTime } from '../date-utils';
 import {
-  estimateOccurrencesUpTo,
-  getMondayWeekDayNumber,
+  getRemainingOccurrences,
+  getAdapterCache,
   getWeekDayCode,
   NOT_LOCALIZED_WEEK_DAYS,
   parsesByDayForWeeklyFrequency,
@@ -62,20 +62,20 @@ export function applyRecurringUpdateFollowing(
   occurrenceStart: TemporalSupportedObject,
   changes: SchedulerEventUpdatedProperties,
 ): UpdateEventsParameters {
-  const newStart = changes.start ?? originalEvent.start.value;
+  const newStart = changes.start ?? originalEvent.dataTimezone.start.value;
 
   // 1) Old series: truncate rule to end the day before the edited occurrence
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
-  const originalRule = originalEvent.rrule as RecurringEventRecurrenceRule;
+  const originalRule = originalEvent.dataTimezone.rrule as RecurringEventRecurrenceRule;
   const { count, until, ...baseRule } = originalRule;
 
   // 2) New event: apply changes, decide RRULE for the new series
   const newRRule = decideSplitRRule(
     adapter,
     originalRule,
-    originalEvent.start.value,
+    originalEvent.dataTimezone.start.value,
     occurrenceStart,
     changes,
   );
@@ -92,7 +92,7 @@ export function applyRecurringUpdateFollowing(
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.
   const shouldDropOldSeries = adapter.isBefore(
     adapter.endOfDay(untilDate),
-    adapter.startOfDay(originalEvent.start.value),
+    adapter.startOfDay(originalEvent.dataTimezone.start.value),
   );
 
   if (shouldDropOldSeries) {
@@ -131,7 +131,10 @@ export function applyRecurringUpdateAll(
   const touchedEndDate = changes.end != null && !adapter.isSameDay(occurrenceEnd, changes.end);
 
   // 2) Is the edited occurrence the first of the series (DTSTART)?
-  const editedIsDtstart = adapter.isSameDay(occurrenceStart, originalEvent.start.value);
+  const editedIsDtstart = adapter.isSameDay(
+    occurrenceStart,
+    originalEvent.dataTimezone.start.value,
+  );
 
   // 3) Decide new start/end
   if (changes.start != null) {
@@ -144,7 +147,7 @@ export function applyRecurringUpdateAll(
         // Not first: keep original DTSTART date, merge only time
         eventUpdatedProperties.start = mergeDateAndTime(
           adapter,
-          originalEvent.start.value,
+          originalEvent.dataTimezone.start.value,
           changes.start,
         );
       }
@@ -152,7 +155,7 @@ export function applyRecurringUpdateAll(
       // Same day -> merge time into original date
       eventUpdatedProperties.start = mergeDateAndTime(
         adapter,
-        originalEvent.start.value,
+        originalEvent.dataTimezone.start.value,
         changes.start,
       );
     }
@@ -165,21 +168,25 @@ export function applyRecurringUpdateAll(
       } else {
         eventUpdatedProperties.end = mergeDateAndTime(
           adapter,
-          originalEvent.end.value,
+          originalEvent.dataTimezone.end.value,
           changes.end,
         );
       }
     } else {
-      eventUpdatedProperties.end = mergeDateAndTime(adapter, originalEvent.end.value, changes.end);
+      eventUpdatedProperties.end = mergeDateAndTime(
+        adapter,
+        originalEvent.dataTimezone.end.value,
+        changes.end,
+      );
     }
   }
 
   // 4) RRULE adjustment: only if day changed and the event is recurring
-  if ((touchedStartDate || touchedEndDate) && originalEvent.rrule) {
+  if ((touchedStartDate || touchedEndDate) && originalEvent.dataTimezone.rrule) {
     const newOccurrenceStart = changes.start ?? occurrenceStart;
     eventUpdatedProperties.rrule = adjustRRuleForAllMove(
       adapter,
-      originalEvent.rrule,
+      originalEvent.dataTimezone.rrule,
       occurrenceStart,
       newOccurrenceStart,
     );
@@ -187,11 +194,7 @@ export function applyRecurringUpdateAll(
 
   // 5) Return the updated event
   return {
-    updated: [
-      {
-        ...eventUpdatedProperties,
-      },
-    ],
+    updated: [eventUpdatedProperties],
   };
 }
 
@@ -212,7 +215,10 @@ export function applyRecurringUpdateOnlyThis(
     updated: [
       {
         id: originalEvent.id,
-        exDates: [...(originalEvent.exDates ?? []), adapter.startOfDay(occurrenceStart)],
+        exDates: [
+          ...(originalEvent.dataTimezone.exDates ?? []),
+          adapter.startOfDay(occurrenceStart),
+        ],
       },
     ],
   };
@@ -235,27 +241,23 @@ export function adjustRRuleForAllMove(
   occurrenceStart: TemporalSupportedObject,
   newStart: TemporalSupportedObject,
 ): RecurringEventRecurrenceRule {
-  let nextRRule: RecurringEventRecurrenceRule = { ...rrule };
+  const nextRRule: RecurringEventRecurrenceRule = { ...rrule };
 
   if (rrule.freq === 'WEEKLY') {
     const normalized = parsesByDayForWeeklyFrequency(rrule.byDay) ?? [
       getWeekDayCode(adapter, occurrenceStart),
     ];
-
-    const swapped = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
-    nextRRule = { ...nextRRule, byDay: swapped };
-  }
-
-  if (rrule.freq === 'MONTHLY') {
+    nextRRule.byDay = realignWeeklyByDay(adapter, normalized, occurrenceStart, newStart);
+  } else if (rrule.freq === 'MONTHLY') {
     // BYMONTHDAY → match the new calendar day
     if (rrule.byMonthDay?.length) {
-      nextRRule = { ...nextRRule, byMonthDay: [adapter.getDate(newStart)] };
+      nextRRule.byMonthDay = [adapter.getDate(newStart)];
     }
     // Ordinal BYDAY → recompute ordinal + weekday for newStart
     if (rrule.byDay?.length) {
       const code = getWeekDayCode(adapter, newStart);
       const ord = computeMonthlyOrdinal(adapter, newStart);
-      nextRRule = { ...nextRRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
+      nextRRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
     }
   }
 
@@ -286,9 +288,6 @@ export function decideSplitRRule(
   splitStart: TemporalSupportedObject,
   changes: Partial<SchedulerEvent>,
 ): RecurringEventRecurrenceRule | undefined {
-  // Normalize base pattern (drop COUNT/UNTIL)
-  const { count, until, ...baseRule } = originalRule;
-
   // Detect whether user touched rrule at all
   const hasRRuleProp = Object.prototype.hasOwnProperty.call(changes, 'rrule');
   const changesRRule = changes.rrule;
@@ -304,53 +303,53 @@ export function decideSplitRRule(
   }
 
   // Case C — user did not touch RRULE → inherit pattern and recompute boundaries
-  let realignedRule: Omit<RecurringEventRecurrenceRule, 'count' | 'until'> = { ...baseRule };
+  const realignedRule: RecurringEventRecurrenceRule = { ...originalRule };
 
   // Freq WEEKLY: realign BYDAY, swap the old weekday for the new one while preserving the rest of the weekly pattern.
-  if (originalRule.freq === 'WEEKLY' && baseRule.byDay?.length && changes.start) {
-    realignedRule = {
-      ...realignedRule,
-      byDay: realignWeeklyByDay(
-        adapter,
-        baseRule.byDay as RecurringEventWeekDayCode[],
-        adapter.startOfDay(splitStart),
-        changes.start,
-      ),
-    };
+  if (originalRule.freq === 'WEEKLY' && originalRule.byDay?.length && changes.start) {
+    realignedRule.byDay = realignWeeklyByDay(
+      adapter,
+      originalRule.byDay as RecurringEventWeekDayCode[],
+      adapter.startOfDay(splitStart),
+      changes.start,
+    );
   }
   // Freq MONTHLY realignment
   if (originalRule.freq === 'MONTHLY' && changes.start) {
     // A) BYMONTHDAY → set to the new calendar day
-    if (baseRule.byMonthDay?.length) {
-      realignedRule = { ...realignedRule, byMonthDay: [adapter.getDate(changes.start)] };
+    if (originalRule.byMonthDay?.length) {
+      realignedRule.byMonthDay = [adapter.getDate(changes.start)];
     }
 
     // B) Ordinal BYDAY → recompute ordinal + weekday for the new date
-    if (baseRule.byDay?.length) {
+    if (originalRule.byDay?.length) {
       const code = getWeekDayCode(adapter, changes.start);
       const ord = computeMonthlyOrdinal(adapter, changes.start);
-      realignedRule = { ...realignedRule, byDay: [`${ord}${code}` as RecurringEventByDayValue] };
+      realignedRule.byDay = [`${ord}${code}` as RecurringEventByDayValue];
     }
   }
 
   // Recalculate COUNT: original minus prior occurrences.
   if (originalRule.count) {
     const dayBefore = adapter.addDays(adapter.startOfDay(splitStart), -1);
-    const occurrencesBeforeSplit = estimateOccurrencesUpTo(
+    const remaining = getRemainingOccurrences(
       adapter,
       originalRule,
       originalSeriesStart,
       dayBefore,
+      originalRule.count,
     );
-    const remaining = Math.max(0, originalRule.count - occurrencesBeforeSplit);
-    return remaining > 0 ? { ...realignedRule, count: remaining } : undefined;
+    // If no occurrences remain, the split segment is non-recurring.
+    if (remaining <= 0) {
+      return undefined;
+    }
+
+    realignedRule.count = remaining;
+  } else if (originalRule.until) {
+    realignedRule.until = originalRule.until;
   }
 
-  if (originalRule.until) {
-    return { ...realignedRule, until: originalRule.until };
-  }
-
-  return { ...realignedRule };
+  return realignedRule;
 }
 
 /**
@@ -373,7 +372,7 @@ export function realignWeeklyByDay(
   }
 
   const weekDayCodesSet = new Set(weekDayCodes);
-  const mondayWeekDayNumber = getMondayWeekDayNumber(adapter);
+  const mondayWeekDayNumber = getAdapterCache(adapter).mondayWeekDayNumber;
 
   const newWeekDayCodes: RecurringEventWeekDayCode[] = [];
   for (let i = 0; i < NOT_LOCALIZED_WEEK_DAYS.length; i += 1) {

@@ -69,11 +69,10 @@ interface GridMockServerData {
   initialState?: GridInitialState;
 }
 
-interface ColumnsOptions
-  extends Pick<
-    UseMockServerOptions,
-    'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
-  > {}
+interface ColumnsOptions extends Pick<
+  UseMockServerOptions,
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields' | 'derivedColumns'
+> {}
 
 const GET_DEFAULT_DATASET_OPTIONS: UseMockServerOptions = {
   dataSet: 'Commodity',

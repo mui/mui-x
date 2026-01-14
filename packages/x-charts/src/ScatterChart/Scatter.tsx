@@ -9,7 +9,6 @@ import {
 } from '../models/seriesType/scatter';
 import { getInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { type D3Scale } from '../models/axis';
 import { useItemHighlightedGetter } from '../hooks/useItemHighlightedGetter';
 import {
@@ -81,7 +80,7 @@ function Scatter(props: ScatterProps) {
       [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
     >();
   const store = useStore<[UseChartClosestPointSignature]>();
-  const isVoronoiEnabled = useSelector(store, selectorChartsIsVoronoiEnabled);
+  const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);
 
   const skipInteractionHandlers = isVoronoiEnabled || series.disableHover;
   const { isFaded, isHighlighted } = useItemHighlightedGetter();

@@ -1,4 +1,4 @@
-import { createSelector } from '@base-ui-components/utils/store';
+import { createSelector } from '@base-ui/utils/store';
 import { TimelineState as State } from '../use-timeline';
 import { SchedulerResourceId } from '../models';
 import { timelineViewSelectors } from './timelineViewSelectors';

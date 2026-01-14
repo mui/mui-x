@@ -167,6 +167,25 @@ describe('<DataGrid /> - Column headers', () => {
         expect(screen.queryByRole('menu')).to.equal(null);
       });
     });
+
+    it('column menu should open in response to the Ctrl+Enter hotkey', async () => {
+      const { user } = render(
+        <div style={{ height: 300, width: 300 }}>
+          <DataGrid
+            rows={Array.from({ length: 50 }, (_, id) => ({ id, name: id }))}
+            columns={[{ field: 'brand' }]}
+          />
+        </div>,
+      );
+
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      await user.keyboard('{Tab}');
+      expect(screen.getAllByRole('columnheader')[0]).toHaveFocus();
+
+      await user.keyboard('{Control>}{Enter}');
+      expect(screen.queryByRole('tooltip')).to.not.equal(null);
+    });
   });
 
   it("should use 'headerName' as the aria-label for the menu icon button", async () => {

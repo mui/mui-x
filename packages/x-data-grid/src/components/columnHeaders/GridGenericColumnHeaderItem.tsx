@@ -13,8 +13,10 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridColumnGroup } from '../../models/gridColumnGrouping';
 
-interface GridGenericColumnHeaderItemProps
-  extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
+interface GridGenericColumnHeaderItemProps extends Pick<
+  GridStateColDef,
+  'headerClassName' | 'description' | 'resizable'
+> {
   classes: Record<
     'root' | 'draggableContainer' | 'titleContainer' | 'titleContainerContent',
     string

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import useId from '@mui/utils/useId';
 import { styled } from '@mui/system';
 import {
   getDataGridUtilityClass,
@@ -148,8 +149,8 @@ export function AggregationSelect({
   const rootProps = useGridRootProps();
   const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
   const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
-  const aggregationMenuTriggerId = React.useId();
-  const aggregationMenuId = React.useId();
+  const aggregationMenuTriggerId = useId();
+  const aggregationMenuId = useId();
 
   const apiRef = useGridApiContext();
   const aggregationModel = gridAggregationModelSelector(apiRef);

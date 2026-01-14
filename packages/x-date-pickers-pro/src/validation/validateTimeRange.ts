@@ -13,14 +13,15 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
  * Validation props used by the Time Range Picker and Time Range Field.
  */
 export interface ExportedValidateTimeRangeProps
-  extends BaseTimeValidationProps,
-    TimeValidationProps {}
+  extends BaseTimeValidationProps, TimeValidationProps {}
 
 /**
  * Validation props as received by the validateTimeRange method.
  */
-export interface ValidateTimeRangeProps
-  extends MakeRequired<ExportedValidateTimeRangeProps, ValidateTimeRangePropsToDefault> {}
+export interface ValidateTimeRangeProps extends MakeRequired<
+  ExportedValidateTimeRangeProps,
+  ValidateTimeRangePropsToDefault
+> {}
 
 /**
  * Name of the props that should be defaulted before being passed to the validateTimeRange method.

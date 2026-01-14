@@ -5,36 +5,35 @@ import type { SeriesId } from '../../models/seriesType/common';
 import { type BarSeriesType, type BarValueType } from '../../models/seriesType/bar';
 import { type BarLabelFunction } from './BarLabel.types';
 
-interface BarLabelPlotProps<V extends BarValueType | null = BarValueType | null> {
-  processedSeries: ProcessedBarLabelSeriesData<V>;
+interface BarLabelPlotProps {
+  processedSeries: ProcessedBarLabelSeriesData;
   className: string;
   skipAnimation?: boolean;
-  barLabel?: BarLabelItemProps<V | null>['barLabel'];
+  barLabel?: BarLabelItemProps<BarValueType | null>['barLabel'];
 }
 
-export interface ProcessedBarLabelSeriesData<V extends BarValueType | null> {
+export interface ProcessedBarLabelSeriesData {
   seriesId: SeriesId;
-  data: ProcessedBarLabelData<V>[];
-  barLabel?: 'value' | BarLabelFunction<V>;
+  data: ProcessedBarLabelData[];
+  barLabel?: 'value' | BarLabelFunction;
   barLabelPlacement?: BarSeriesType['barLabelPlacement'];
   layout?: 'vertical' | 'horizontal';
   xOrigin: number;
   yOrigin: number;
 }
 
-export interface ProcessedBarLabelData<V extends BarValueType | null> extends AnimationData {
+export interface ProcessedBarLabelData extends AnimationData {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
-  value: V;
+  value: BarValueType | null;
+  hidden: boolean;
 }
 
 /**
  * @ignore - internal component.
  */
-function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
-  props: BarLabelPlotProps<V>,
-) {
+function BarLabelPlot(props: BarLabelPlotProps) {
   const { processedSeries, className, skipAnimation, ...other } = props;
   const { seriesId, data, layout, xOrigin, yOrigin } = processedSeries;
 
@@ -46,7 +45,7 @@ function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
 
   return (
     <g key={seriesId} className={className} data-series={seriesId}>
-      {data.map(({ x, y, dataIndex, color, value, width, height }) => (
+      {data.map(({ x, y, dataIndex, color, value, width, height, hidden }) => (
         <BarLabelItem
           key={dataIndex}
           seriesId={seriesId}
@@ -61,6 +60,7 @@ function BarLabelPlot<V extends BarValueType | null = BarValueType | null>(
           height={height}
           skipAnimation={skipAnimation ?? false}
           layout={layout ?? 'vertical'}
+          hidden={hidden}
           {...other}
           barLabel={barLabel}
           barLabelPlacement={processedSeries.barLabelPlacement || 'center'}

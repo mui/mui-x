@@ -1,5 +1,4 @@
 'use client';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsIsFadedCallback,
@@ -18,8 +17,8 @@ import { type UseChartHighlightSignature } from '../plugins';
 export function useItemHighlightedGetter() {
   const store = useStore<[UseChartHighlightSignature]>();
 
-  const isHighlighted = useSelector(store, selectorChartsIsHighlightedCallback);
-  const isFaded = useSelector(store, selectorChartsIsFadedCallback);
+  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
+  const isFaded = store.use(selectorChartsIsFadedCallback);
   return {
     isHighlighted,
     isFaded,

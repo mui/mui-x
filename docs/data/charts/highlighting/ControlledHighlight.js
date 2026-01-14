@@ -54,7 +54,7 @@ export default function ControlledHighlight() {
             fullWidth
           >
             {['A', 'B'].map((type) => (
-              <ToggleButton key={type} value={type} aria-label="left aligned">
+              <ToggleButton key={type} value={type}>
                 Series {type}
               </ToggleButton>
             ))}

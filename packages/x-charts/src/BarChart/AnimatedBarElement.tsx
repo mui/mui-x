@@ -4,11 +4,10 @@ import { type SeriesId } from '../models/seriesType/common';
 import { type BarElementOwnerState } from './barElementClasses';
 import { useAnimateBar } from '../hooks/animation/useAnimateBar';
 
-export interface BarProps
-  extends Omit<
-    React.SVGProps<SVGRectElement>,
-    'id' | 'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
-  > {
+export interface BarProps extends Omit<
+  React.SVGProps<SVGRectElement>,
+  'id' | 'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
+> {
   id: SeriesId;
   dataIndex: number;
   color: string;

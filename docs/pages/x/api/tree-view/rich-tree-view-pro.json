@@ -88,6 +88,14 @@
         "returned": "boolean"
       }
     },
+    "isItemSelectionDisabled": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(item: R) => boolean",
+        "describedArgs": ["item"],
+        "returned": "boolean"
+      }
+    },
     "itemChildrenIndentation": {
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"

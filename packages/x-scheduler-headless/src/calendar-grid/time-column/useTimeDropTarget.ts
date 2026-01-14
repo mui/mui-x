@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
@@ -153,6 +153,8 @@ export namespace useTimeDropTarget {
     addPropertiesToDroppedEvent?: () => Partial<SchedulerEvent>;
   }
 
-  export interface ReturnValue
-    extends Pick<CalendarGridTimeColumnContext, 'getCursorPositionInElementMs'> {}
+  export interface ReturnValue extends Pick<
+    CalendarGridTimeColumnContext,
+    'getCursorPositionInElementMs'
+  > {}
 }

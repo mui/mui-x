@@ -8,7 +8,6 @@ import {
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { type ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
 
 function getSeriesToDisplay(
@@ -35,7 +34,7 @@ function getSeriesToDisplay(
 export function useLegend(): { items: LegendItemParams[] } {
   const series = useSeries();
   const store = useStore<[UseChartSeriesSignature]>();
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   return {
     items: getSeriesToDisplay(series, seriesConfig),

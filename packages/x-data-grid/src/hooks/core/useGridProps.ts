@@ -12,6 +12,7 @@ export const propsStateInitializer: GridStateInitializer<GridStateProps> = (stat
       listView: props.listView,
       getRowId: props.getRowId,
       isCellEditable: props.isCellEditable,
+      isRowSelectable: props.isRowSelectable,
     },
   };
 };

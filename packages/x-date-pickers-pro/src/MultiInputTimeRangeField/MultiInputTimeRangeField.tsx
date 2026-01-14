@@ -12,10 +12,11 @@ import {
   MultiInputTimeRangeFieldClasses,
 } from './multiInputTimeRangeFieldClasses';
 
-export interface MultiInputTimeRangeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MultiInputRangeFieldProps<
-    UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
-  > {
+export interface MultiInputTimeRangeFieldProps<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends MultiInputRangeFieldProps<
+  UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure>
+> {
   // We need to redefine the classes here, otherwise we don't have the doc generation.
   /**
    * Override or extend the styles applied to the component.

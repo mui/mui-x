@@ -30,6 +30,7 @@ import {
   type ChartsLegendSlots,
   ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
+import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 import { type ChartContainerProProps } from '../ChartContainerPro';
 import { type HeatmapSeriesType } from '../models/seriesType/heatmap';
@@ -44,9 +45,11 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
+import { FocusedHeatmapCell } from './FocusedHeatmapCell';
 
 export interface HeatmapSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     ChartsOverlaySlots,
     HeatmapItemSlots,
     ChartsToolbarProSlots,
@@ -63,7 +66,8 @@ export interface HeatmapSlots
   legend?: ChartsLegendSlots['legend'];
 }
 export interface HeatmapSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     ChartsOverlaySlotProps,
     HeatmapItemSlotProps,
     ChartsLegendSlotProps,
@@ -74,7 +78,8 @@ export interface HeatmapSlotProps
 
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 export interface HeatmapProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
       | 'series'
       | 'plugins'
@@ -94,13 +99,13 @@ export interface HeatmapProps
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  xAxis: Readonly<Omit<MakeOptional<XAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
+  xAxis: Readonly<MakeOptional<XAxis<'band'>, 'scaleType'>[]>;
   /**
    * The configuration of the y-axes.
    * If not provided, a default axis config is used.
    * An array of [[AxisConfig]] objects.
    */
-  yAxis: Readonly<Omit<MakeOptional<YAxis<'band'>, 'scaleType'>, 'zoom'>[]>;
+  yAxis: Readonly<MakeOptional<YAxis<'band'>, 'scaleType'>[]>;
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
@@ -185,6 +190,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     loading,
     highlightedItem,
     onHighlightChange,
+    enableKeyboardNavigation,
     hideLegend = true,
     showToolbar = false,
   } = props;
@@ -257,6 +263,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
+      enableKeyboardNavigation={enableKeyboardNavigation}
       onAxisClick={onAxisClick}
       plugins={HEATMAP_PLUGINS}
     >
@@ -272,10 +279,12 @@ const Heatmap = React.forwardRef(function Heatmap(
         <ChartsSurface ref={ref} sx={sx}>
           <g clipPath={`url(#${clipPathId})`}>
             <HeatmapPlot slots={slots} slotProps={slotProps} />
+            <FocusedHeatmapCell />
             <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           </g>
           <ChartsAxis slots={slots} slotProps={slotProps} />
           <ChartsClipPath id={clipPathId} />
+          <ChartsBrushOverlay />
           {children}
         </ChartsSurface>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
@@ -293,7 +302,17 @@ Heatmap.propTypes = {
     current: PropTypes.shape({
       exportAsImage: PropTypes.func.isRequired,
       exportAsPrint: PropTypes.func.isRequired,
+      setAxisZoomData: PropTypes.func.isRequired,
+      setZoomData: PropTypes.func.isRequired,
     }),
+  }),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
   }),
   className: PropTypes.string,
   /**
@@ -312,6 +331,7 @@ Heatmap.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -334,6 +354,17 @@ Heatmap.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * The list of zoom data related to each axis.
+   * Used to initialize the zoom in a specific configuration without controlling it.
+   */
+  initialZoom: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -372,6 +403,18 @@ Heatmap.propTypes = {
    */
   onHighlightChange: PropTypes.func,
   /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
+   * Callback fired when the zoom has changed.
+   *
+   * @param {ZoomData[]} zoomData Updated zoom data.
+   */
+  onZoomChange: PropTypes.func,
+  /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
    */
@@ -408,6 +451,17 @@ Heatmap.propTypes = {
    * @see See {@link https://mui.com/x/react-charts/tooltip/ tooltip docs} for more details.
    */
   tooltip: PropTypes.object,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf(['heatmap']).isRequired,
+    xIndex: PropTypes.number,
+    yIndex: PropTypes.number,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -505,6 +559,24 @@ Heatmap.propTypes = {
       tickSize: PropTypes.number,
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          slider: PropTypes.shape({
+            enabled: PropTypes.bool,
+            preview: PropTypes.bool,
+            showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+            size: PropTypes.number,
+          }),
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ).isRequired,
   /**
@@ -599,6 +671,24 @@ Heatmap.propTypes = {
       tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
       width: PropTypes.number,
+      zoom: PropTypes.oneOfType([
+        PropTypes.shape({
+          filterMode: PropTypes.oneOf(['discard', 'keep']),
+          maxEnd: PropTypes.number,
+          maxSpan: PropTypes.number,
+          minSpan: PropTypes.number,
+          minStart: PropTypes.number,
+          panning: PropTypes.bool,
+          slider: PropTypes.shape({
+            enabled: PropTypes.bool,
+            preview: PropTypes.bool,
+            showTooltip: PropTypes.oneOf(['always', 'hover', 'never']),
+            size: PropTypes.number,
+          }),
+          step: PropTypes.number,
+        }),
+        PropTypes.bool,
+      ]),
     }),
   ).isRequired,
   /**
@@ -640,6 +730,72 @@ Heatmap.propTypes = {
       min: PropTypes.number,
     }),
   ),
+  /**
+   * The list of zoom data related to each axis.
+   */
+  zoomData: PropTypes.arrayOf(
+    PropTypes.shape({
+      axisId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      end: PropTypes.number.isRequired,
+      start: PropTypes.number.isRequired,
+    }),
+  ),
+  /**
+   * Configuration for zoom interactions.
+   */
+  zoomInteractionConfig: PropTypes.shape({
+    pan: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['drag', 'pressAndDrag', 'wheel']),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['drag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['pressAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          allowedDirection: PropTypes.oneOf(['x', 'xy', 'y']),
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+    zoom: PropTypes.arrayOf(
+      PropTypes.oneOfType([
+        PropTypes.oneOf(['brush', 'doubleTapReset', 'pinch', 'tapAndDrag', 'wheel']),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['wheel']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['pinch']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['tapAndDrag']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.oneOf(['mouse', 'touch']),
+          requiredKeys: PropTypes.arrayOf(PropTypes.string),
+          type: PropTypes.oneOf(['doubleTapReset']).isRequired,
+        }),
+        PropTypes.shape({
+          pointerMode: PropTypes.any,
+          requiredKeys: PropTypes.array,
+          type: PropTypes.oneOf(['brush']).isRequired,
+        }),
+      ]).isRequired,
+    ),
+  }),
 } as any;
 
 export { Heatmap };

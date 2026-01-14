@@ -337,6 +337,49 @@ describe('<DataGridPro /> - Columns', () => {
       );
     });
 
+    // https://github.com/mui/mui-x/pull/20676
+    it('should resize new rows correctly when they are added during column resize', async () => {
+      const { user } = render(
+        <Test rows={[{ id: 1, brand: 'Nike' }]} columns={[{ field: 'brand', width: 100 }]} />,
+      );
+
+      // Get initial cell width
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(100);
+
+      // Find the separator and start resizing
+      const separator = document.querySelector(
+        `.${gridClasses['columnSeparator--resizable']}`,
+      ) as HTMLElement;
+
+      // Start resizing
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: separator, coords: { x: 100 } },
+        { target: separator, coords: { x: 150 } },
+      ]);
+
+      // Verify cells are resized during the resize operation
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
+
+      // Update rows while resize is in progress
+      act(() =>
+        apiRef.current?.updateRows([
+          { id: 1, brand: 'Nike' },
+          { id: 2, brand: 'Adidas' },
+        ]),
+      );
+
+      // Verify that the new rows are added with the resized width
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(150);
+      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(150);
+
+      // Resize column back
+      await user.pointer([{ target: separator, coords: { x: 120 } }]);
+
+      // Verify all cells (old and new) have the new width
+      expect(getCell(0, 0).getBoundingClientRect().width).to.equal(120);
+      expect(getCell(1, 0).getBoundingClientRect().width).to.equal(120);
+    });
+
     // https://github.com/mui/mui-x/issues/13548
     it('should fill remaining horizontal space in a row with an empty cell', () => {
       render(<Test columns={[{ field: 'id', width: 100 }]} />);
@@ -670,6 +713,26 @@ describe('<DataGridPro /> - Columns', () => {
       it('.expand works', async () => {
         // These values are tuned to Ubuntu/Chromium and might be flaky in other environments
         await autosize({ expand: true }, [142, 155]);
+      });
+
+      it('.includeHeaderFilters works', async () => {
+        render(
+          <Test
+            rows={rows}
+            columns={[
+              {
+                field: 'id',
+                headerName: 'ID',
+                maxWidth: 200, // the `maxWidth` is to prevent flaky test due to different input widths between local and CI.
+              },
+            ]}
+            headerFilters
+          />,
+        );
+        await act(async () => apiRef.current?.autosizeColumns({ includeHeaderFilters: true }));
+        await waitFor(() => {
+          expect(parseInt(getColumnHeaderCell(0).style.width, 10)).to.deep.equal(200);
+        });
       });
     });
   });

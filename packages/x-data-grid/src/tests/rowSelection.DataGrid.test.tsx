@@ -363,7 +363,7 @@ describe('<DataGrid /> - Row selection', () => {
       );
       expect(getRow(0).querySelector('input')?.getAttribute('aria-disabled')).to.equal(null);
       expect(getRow(1).querySelector('input')?.getAttribute('aria-disabled')).to.equal('true');
-      expect(getRow(1).querySelector('input')?.getAttribute('disabled')).to.equal(null);
+      expect(getRow(1).querySelector('input')?.getAttribute('disabled')).to.equal('');
     });
 
     it('disabled checkboxes cannot be selected', async () => {
@@ -386,9 +386,9 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0]);
     });
 
-    it('disabled checkboxes can be focused', async () => {
+    it('disabled checkboxes cannot be focused', async () => {
       const { user } = render(
-        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+        <TestDataGridSelection isRowSelectable={(params) => params.id !== 1} checkboxSelection />,
       );
 
       expect(getSelectedRowIds()).to.deep.equal([]);
@@ -397,11 +397,11 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{ArrowDown}');
       expect(document.activeElement).to.equal(firstCheckbox);
 
-      const secondCheckbox = getCell(1, 0).querySelector('input');
       await user.keyboard('{ArrowDown}');
-      await user.keyboard('[Space]');
-      expect(getSelectedRowIds()).to.deep.equal([]);
-      expect(document.activeElement).to.equal(secondCheckbox);
+      const secondCheckboxCell = getCell(1, 0);
+      const secondCheckbox = secondCheckboxCell.querySelector('input');
+      expect(secondCheckbox?.getAttribute('tabindex')).to.equal('-1');
+      expect(document.activeElement).to.equal(secondCheckboxCell);
     });
 
     it('should select a range with shift pressed when clicking the row', async () => {

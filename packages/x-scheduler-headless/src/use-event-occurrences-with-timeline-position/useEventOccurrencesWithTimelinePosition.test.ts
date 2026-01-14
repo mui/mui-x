@@ -15,7 +15,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
         start: collectionStart,
         end: collectionEnd,
         events,
-        visibleResources: new Map(),
+        displayTimezone: 'default',
+        visibleResources: {},
         resourceParentIds: new Map(),
       });
       return useEventOccurrencesWithTimelinePosition({ occurrences, maxSpan });
@@ -27,9 +28,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should set firstIndex and lastIndex to all events when no events are overlapping', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T12:00:00').toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T13:30:00', 180).toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T12:00:00Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T13:30:00Z', 180).toProcessed(),
       ],
       1,
     );
@@ -44,8 +45,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should place overlapping events in different columns (same starting time)', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00', 120).toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00Z').toProcessed(),
       ],
       1,
     );
@@ -61,8 +62,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should place overlapping events in different columns (different starting time)', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00', 120).toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00Z').toProcessed(),
       ],
       1,
     );
@@ -77,8 +78,8 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should place events in the same column when event A ends exactly when event B starts', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00', 120).toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T12:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T12:00:00Z').toProcessed(),
       ],
       1,
     );
@@ -94,10 +95,10 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should span non overlapping events across all the available columns when maxSpan is large enough', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('D').singleDay('2024-01-15T15:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('D').singleDay('2024-01-15T15:00:00Z').toProcessed(),
       ],
       Infinity,
     );
@@ -111,10 +112,10 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should not span non overlapping events across all the available columns when maxSpan=1', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('D').singleDay('2024-01-15T15:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('D').singleDay('2024-01-15T15:00:00Z').toProcessed(),
       ],
       1,
     );
@@ -128,10 +129,10 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should respect maxSpan for non overlapping events when maxSpan is lower than the free space', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('D').singleDay('2024-01-15T15:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('D').singleDay('2024-01-15T15:00:00Z').toProcessed(),
       ],
       2,
     );
@@ -145,11 +146,11 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should span overlapping events across all the available columns when maxSpan is large enough', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00', 120).toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00', 120).toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T11:00:00', 120).toProcessed(),
-        EventBuilder.new().id('D').singleDay('2024-01-15T11:30:00', 420).toProcessed(),
-        EventBuilder.new().id('E').singleDay('2024-01-15T15:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00Z', 120).toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T11:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('D').singleDay('2024-01-15T11:30:00Z', 420).toProcessed(),
+        EventBuilder.new().id('E').singleDay('2024-01-15T15:00:00Z').toProcessed(),
       ],
       Infinity,
     );
@@ -171,11 +172,11 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should respect maxSpan for overlapping events when maxSpan is lower than the free space', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00', 120).toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00', 120).toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T11:00:00', 120).toProcessed(),
-        EventBuilder.new().id('D').singleDay('2024-01-15T11:30:00', 420).toProcessed(),
-        EventBuilder.new().id('E').singleDay('2024-01-15T15:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00Z', 120).toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T11:00:00Z', 120).toProcessed(),
+        EventBuilder.new().id('D').singleDay('2024-01-15T11:30:00Z', 420).toProcessed(),
+        EventBuilder.new().id('E').singleDay('2024-01-15T15:00:00Z').toProcessed(),
       ],
       2,
     );
@@ -197,9 +198,9 @@ describe('useDayListEventOccurrencesWithPosition', () => {
   it('should place event in the first column when overlapping when an event in the second column but the first column is free', () => {
     const result = testHook(
       [
-        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00').toProcessed(),
-        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00', 240).toProcessed(),
-        EventBuilder.new().id('C').singleDay('2024-01-15T12:00:00').toProcessed(),
+        EventBuilder.new().id('A').singleDay('2024-01-15T10:00:00Z').toProcessed(),
+        EventBuilder.new().id('B').singleDay('2024-01-15T10:30:00Z', 240).toProcessed(),
+        EventBuilder.new().id('C').singleDay('2024-01-15T12:00:00Z').toProcessed(),
       ],
       1,
     );

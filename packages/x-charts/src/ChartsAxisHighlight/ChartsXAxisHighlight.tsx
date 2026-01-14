@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightXAxisValue,
@@ -27,8 +26,8 @@ export default function ChartsXHighlight(props: {
   const { top, height } = useDrawingArea();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
-  const axisXValues = useSelector(store, selectorChartsHighlightXAxisValue);
-  const xAxes = useSelector(store, selectorChartXAxis);
+  const axisXValues = store.use(selectorChartsHighlightXAxisValue);
+  const xAxes = store.use(selectorChartXAxis);
 
   if (axisXValues.length === 0) {
     return null;

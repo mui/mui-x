@@ -5,7 +5,6 @@ import {
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   selectorChartAxisZoomOptionsLookup,
   useDrawingArea,
-  useSelector,
   useStore,
   ZOOM_SLIDER_MARGIN,
   ZOOM_SLIDER_PREVIEW_SIZE,
@@ -40,8 +39,8 @@ interface ChartZoomSliderProps {
 export function ChartAxisZoomSlider({ axisDirection, axisId }: ChartZoomSliderProps) {
   const store = useStore();
   const drawingArea = useDrawingArea();
-  const zoomData = useSelector(store, selectorChartAxisZoomData, axisId);
-  const zoomOptions = useSelector(store, selectorChartAxisZoomOptionsLookup, axisId);
+  const zoomData = store.use(selectorChartAxisZoomData, axisId);
+  const zoomOptions = store.use(selectorChartAxisZoomOptionsLookup, axisId);
   const [showTooltip, setShowTooltip] = React.useState(false);
   const { xAxis } = useXAxes();
   const { yAxis } = useYAxes();

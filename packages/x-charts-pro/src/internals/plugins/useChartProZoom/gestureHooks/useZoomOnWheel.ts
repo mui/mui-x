@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
   type ZoomData,
@@ -27,11 +26,11 @@ export const useZoomOnWheel = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
   const startedOutsideRef = React.useRef(false);
   const startedOutsideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'wheel' as const);
+  const config = store.use(selectorZoomInteractionConfig, 'wheel' as const);
 
   const isZoomOnWheelEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

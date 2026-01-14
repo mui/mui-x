@@ -1,6 +1,5 @@
-// TODO: Add typeOverloads when available
-// import './typeOverloads/modules';
 import '@mui/x-charts-pro/typeOverloads';
+import './typeOverloads/modules';
 
 // exports from MIT package
 export * from '@mui/x-charts/ChartsClipPath';
@@ -45,8 +44,12 @@ export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
+export * from './plugins';
 // Locales should be imported from `@mui/x-charts-premium/locales`
 // export * from './locales';
 
 // Premium components
 export * from './ChartsRenderer';
+export * from './ChartDataProviderPremium';
+export * from './ChartContainerPremium';
+export * from './BarChartPremium';

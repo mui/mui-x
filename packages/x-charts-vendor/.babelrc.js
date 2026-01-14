@@ -27,7 +27,7 @@ module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['stable', 'rollup']);
 
   return {
-    only: [/node_modules\/(d3-.*|internmap)\/.*\.js/],
+    only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
     plugins: [
       [
         '@babel/transform-modules-commonjs',
@@ -42,7 +42,7 @@ module.exports = function getBabelConfig(api) {
           // Convert all imports for _other_ d3 dependencies to the relative
           // path in our vendor package.
           resolvePath(sourcePath, currentFile) {
-            const d3pattern = /^(?<pkg>(d3-[^\/]+|internmap))(?<path>.*)/;
+            const d3pattern = /^(?<pkg>(d3-[^\/]+|internmap|flatqueue))(?<path>.*)/;
             const match = d3pattern.exec(sourcePath);
             if (match) {
               // We're assuming a common shape of d3 packages:

@@ -25,7 +25,8 @@ const MODIFIERS = [
 ];
 
 interface ChartsTooltipZoomSliderValueProps
-  extends Pick<PopperProps, 'anchorEl' | 'open' | 'modifiers' | 'placement'>,
+  extends
+    Pick<PopperProps, 'anchorEl' | 'open' | 'modifiers' | 'placement'>,
     React.PropsWithChildren {}
 
 export function ChartsTooltipZoomSliderValue({

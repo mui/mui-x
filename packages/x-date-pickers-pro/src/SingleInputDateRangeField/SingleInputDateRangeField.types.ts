@@ -8,7 +8,9 @@ import { DateRangeManagerFieldInternalProps } from '../managers/useDateRangeMana
 
 export interface UseSingleInputDateRangeFieldProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
+>
+  extends
+    DateRangeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure>,
     // TODO v8: Remove once the range fields open with a button.
     Omit<ExportedPickerFieldUIProps, 'openPickerButtonPosition'> {}
 

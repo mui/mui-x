@@ -263,6 +263,29 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
           // Calculate and store the starting centroid
           this.state.startCentroid = calculateCentroid(relevantPointers);
           this.state.lastCentroid = { ...this.state.startCentroid };
+        } else if (this.state.startCentroid && this.state.lastCentroid) {
+          // A new pointer was added during an active gesture
+          // Adjust the start centroid to prevent jumping
+          const oldCentroid = this.state.lastCentroid;
+          const newCentroid = calculateCentroid(relevantPointers);
+
+          // Calculate the offset that the new pointer would cause
+          const offsetX = newCentroid.x - oldCentroid.x;
+          const offsetY = newCentroid.y - oldCentroid.y;
+
+          // Adjust start centroid to compensate for the new pointer
+          this.state.startCentroid = {
+            x: this.state.startCentroid.x + offsetX,
+            y: this.state.startCentroid.y + offsetY,
+          };
+          this.state.lastCentroid = newCentroid;
+
+          // Add the new pointer to tracked pointers
+          relevantPointers.forEach((pointer) => {
+            if (!this.state.startPointers.has(pointer.pointerId)) {
+              this.state.startPointers.set(pointer.pointerId, pointer);
+            }
+          });
         }
         break;
 
@@ -354,6 +377,29 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
             }
             this.emitPanEvent(targetElement, 'end', relevantPointers, event, currentCentroid);
             this.resetState();
+          } else if (remainingPointers.length >= 1 && this.state.lastCentroid) {
+            // If we still have enough pointers, adjust the centroid
+            // to prevent jumping when a finger is lifted
+            const newCentroid = calculateCentroid(remainingPointers);
+
+            // Calculate the offset that removing the pointer would cause
+            const offsetX = newCentroid.x - this.state.lastCentroid.x;
+            const offsetY = newCentroid.y - this.state.lastCentroid.y;
+
+            // Adjust start centroid to compensate
+            this.state.startCentroid = {
+              x: this.state.startCentroid!.x + offsetX,
+              y: this.state.startCentroid!.y + offsetY,
+            };
+            this.state.lastCentroid = newCentroid;
+
+            // Remove the pointer from tracked pointers
+            const removedPointerId = relevantPointers.find(
+              (p) => p.type === 'pointerup' || p.type === 'pointercancel',
+            )?.pointerId;
+            if (removedPointerId !== undefined) {
+              this.state.startPointers.delete(removedPointerId);
+            }
           }
         } else {
           this.resetState();

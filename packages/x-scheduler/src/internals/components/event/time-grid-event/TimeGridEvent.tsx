@@ -1,29 +1,172 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
-import { getColorClassName } from '../../../utils/color-utils';
 import { EventDragPreview } from '../../event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import './TimeGridEvent.css';
-import '../index.css';
+import { schedulerPaletteStyles } from '../../../utils/tokens';
+
+const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEvent',
+})(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: 'var(--event-color-3)',
+  position: 'absolute',
+  left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
+  right:
+    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 4px + 12px)',
+  top: 'var(--y-position)',
+  bottom: 'calc(100% - var(--y-position) - var(--height))',
+  zIndex: 2,
+  padding: theme.spacing(0.5, 2, 0.5, 1.5),
+  '&[data-dragging], &[data-resizing]': {
+    opacity: 0.5,
+  },
+  '&[data-draggable]': {
+    cursor: 'grab',
+  },
+  '&[data-recurrent]': {
+    background:
+      'repeating-linear-gradient(-45deg, rgb(var(--event-color-4-rgb), 0.5) 0 12px, var(--event-color-3) 12px 22.5px)',
+    backgroundColor: 'var(--event-color-3)',
+  },
+  '&:focus-visible': {
+    outline: '2px solid var(--event-color-5)',
+    outlineOffset: 2,
+  },
+  '&[role="button"]': {
+    cursor: 'pointer',
+  },
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: theme.spacing(1),
+    left: 0,
+    width: 3,
+    height: `min(38px, calc(100% - ${theme.spacing(2)}))`,
+    borderRadius: 2,
+    background: 'var(--event-color-12)',
+    pointerEvents: 'none',
+  },
+  ...schedulerPaletteStyles,
+}));
+
+const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventPlaceholder',
+})(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: 'var(--event-color-5)',
+  color: 'var(--event-color-12)',
+  position: 'absolute',
+  left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
+  right:
+    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 4px + 12px)',
+  top: 'var(--y-position)',
+  bottom: 'calc(100% - var(--y-position) - var(--height))',
+  zIndex: 2,
+  padding: theme.spacing(0.5, 2, 0.5, 1.5),
+  ...schedulerPaletteStyles,
+}));
+
+const TimeGridEventTitle = styled('p', {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventTitle',
+})(({ theme }) => ({
+  margin: 0,
+  color: 'var(--event-color-12)',
+  fontWeight: theme.typography.fontWeightMedium,
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: 1.43,
+}));
+
+const TimeGridEventTime = styled('time', {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventTime',
+})(({ theme }) => ({
+  color: 'var(--event-color-11)',
+  fontWeight: theme.typography.fontWeightRegular,
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: 1.43,
+}));
+
+const TimeGridEventRecurringIcon = styled(Repeat, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventRecurringIcon',
+})({
+  position: 'absolute',
+  bottom: 3,
+  right: 3,
+  color: 'var(--event-color-11)',
+});
+
+const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventResizeHandler',
+})({
+  position: 'absolute',
+  height: 4,
+  left: 0,
+  right: 0,
+  zIndex: 3,
+  cursor: 'ns-resize',
+  opacity: 0,
+  '*:hover > &': {
+    opacity: 1,
+  },
+  '&[data-start]': {
+    top: 0,
+  },
+  '&[data-end]': {
+    bottom: 0,
+  },
+});
+
+const UnderHourEventContent = styled('p', {
+  name: 'MuiEventCalendar',
+  slot: 'TimeGridEventUnderHourContent',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  lineHeight: 1,
+  color: 'var(--event-color-11)',
+  margin: 0,
+  '&[data-under-30]': {
+    lineHeight: 0,
+  },
+  '& > p:first-of-type': {
+    marginInlineEnd: theme.spacing(0.5),
+    whiteSpace: 'nowrap',
+  },
+}));
+
+const LinesClamp = styled('span')({
+  display: '-webkit-box',
+  WebkitLineClamp: 'var(--number-of-lines)',
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  wordBreak: 'break-word',
+  overflowWrap: 'break-word',
+});
 
 export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, className, variant, ...other } = props;
+  const { occurrence, variant, ...other } = props;
 
   // Context hooks
   const store = useEventCalendarStoreContext();
 
   // Selector hooks
-  const isRecurring = Boolean(occurrence.rrule);
+  const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
   const isStartResizable = useStore(
     store,
@@ -37,7 +180,8 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   // Feature hooks
   const formatTime = useFormatTime();
 
-  const durationMs = occurrence.end.timestamp - occurrence.start.timestamp;
+  const durationMs =
+    occurrence.displayTimezone.end.timestamp - occurrence.displayTimezone.start.timestamp;
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
@@ -47,39 +191,32 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const content = React.useMemo(() => {
     if (isBetween30and60Minutes || isLessThan30Minutes) {
       return (
-        <p
-          className={clsx(
-            'UnderHourEvent',
-            'LinesClamp',
-            isLessThan30Minutes && 'Under30MinutesEvent',
-          )}
+        <UnderHourEventContent
+          data-under-30={isLessThan30Minutes || undefined}
           style={{ '--number-of-lines': 1 } as React.CSSProperties}
         >
-          <span className="EventTitle">{occurrence.title}</span>
-          <time className="EventTime">{formatTime(occurrence.start.value)}</time>
-          {isRecurring && (
-            <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
-          )}
-        </p>
+          <TimeGridEventTitle as="span">{occurrence.title}</TimeGridEventTitle>
+          <TimeGridEventTime>
+            {formatTime(occurrence.displayTimezone.start.value)}
+          </TimeGridEventTime>
+          {isRecurring && <TimeGridEventRecurringIcon aria-hidden="true" />}
+        </UnderHourEventContent>
       );
     }
     return (
       <React.Fragment>
-        <p
-          className={clsx('EventTitle', 'LinesClamp')}
+        <LinesClamp
           style={{ '--number-of-lines': titleLineCountRegularVariant } as React.CSSProperties}
         >
-          {occurrence.title}
-        </p>
-        <time
-          className={clsx('EventTime', 'LinesClamp')}
-          style={{ '--number-of-lines': 1 } as React.CSSProperties}
-        >
-          {formatTime(occurrence.start.value)} - {formatTime(occurrence.end.value)}
-        </time>
-        {isRecurring && (
-          <Repeat size={12} strokeWidth={1.5} className="EventRecurringIcon" aria-hidden="true" />
-        )}
+          <TimeGridEventTitle>{occurrence.title}</TimeGridEventTitle>
+        </LinesClamp>
+        <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+          <TimeGridEventTime>
+            {formatTime(occurrence.displayTimezone.start.value)} -{' '}
+            {formatTime(occurrence.displayTimezone.end.value)}
+          </TimeGridEventTime>
+        </LinesClamp>
+        {isRecurring && <TimeGridEventRecurringIcon aria-hidden="true" />}
       </React.Fragment>
     );
   }, [
@@ -87,29 +224,17 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     isLessThan30Minutes,
     titleLineCountRegularVariant,
     occurrence.title,
-    occurrence.start,
-    occurrence.end,
+    occurrence.displayTimezone.start.value,
+    occurrence.displayTimezone.end.value,
     formatTime,
     isRecurring,
   ]);
 
   const sharedProps = {
-    start: occurrence.start,
-    end: occurrence.end,
+    start: occurrence.displayTimezone.start,
+    end: occurrence.displayTimezone.end,
     ref: forwardedRef,
-    className: clsx(
-      className,
-      'TimeGridEvent',
-      'EventContainer',
-      'EventCard',
-      // TODO: Make sure we can use EventCard--placeholder without broken styles
-      'EventCard--regular',
-      (isLessThan30Minutes || isBetween30and60Minutes) && 'UnderHourEventCard',
-      isDraggable && 'Draggable',
-      isRecurring && 'Recurrent',
-      getColorClassName(color),
-      occurrence.className,
-    ),
+    className: occurrence.className,
     style: {
       '--first-index': occurrence.position.firstIndex,
       '--last-index': occurrence.position.lastIndex,
@@ -119,27 +244,34 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
 
   if (variant === 'placeholder') {
     return (
-      <CalendarGrid.TimeEventPlaceholder aria-hidden={true} {...sharedProps}>
+      <TimeGridEventPlaceholder
+        aria-hidden={true}
+        data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
+        data-draggable={isDraggable || undefined}
+        data-recurrent={isRecurring || undefined}
+        data-palette={color}
+        {...sharedProps}
+      >
         {content}
-      </CalendarGrid.TimeEventPlaceholder>
+      </TimeGridEventPlaceholder>
     );
   }
 
   return (
-    <CalendarGrid.TimeEvent
+    <TimeGridEventRoot
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
+      data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
+      data-draggable={isDraggable || undefined}
+      data-recurrent={isRecurring || undefined}
+      data-palette={color}
       {...sharedProps}
     >
-      {isStartResizable && (
-        <CalendarGrid.TimeEventResizeHandler side="start" className="TimeGridEventResizeHandler" />
-      )}
+      {isStartResizable && <TimeGridEventResizeHandler side="start" />}
       {content}
-      {isEndResizable && (
-        <CalendarGrid.TimeEventResizeHandler side="end" className="TimeGridEventResizeHandler" />
-      )}
-    </CalendarGrid.TimeEvent>
+      {isEndResizable && <TimeGridEventResizeHandler side="end" />}
+    </TimeGridEventRoot>
   );
 });

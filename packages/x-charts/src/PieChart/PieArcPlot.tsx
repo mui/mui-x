@@ -1,9 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { useFocusedItem } from '../hooks/useFocusedItem';
-import { PieArc, type PieArcProps, pieArcClasses } from './PieArc';
+import { PieArc, type PieArcProps } from './PieArc';
 import {
   type ComputedPieRadius,
   type DefaultizedPieSeriesType,
@@ -21,7 +19,8 @@ export interface PieArcPlotSlotProps {
 }
 
 export interface PieArcPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
       'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
     >,
@@ -76,8 +75,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     ...other
   } = props;
 
-  const theme = useTheme();
-
   const transformedData = useTransformData({
     innerRadius,
     outerRadius,
@@ -88,12 +85,6 @@ function PieArcPlot(props: PieArcPlotProps) {
     faded,
     data,
   });
-
-  const { dataIndex, seriesId, seriesType } = useFocusedItem() ?? {};
-  const focusedItem =
-    dataIndex !== undefined && seriesId === id && seriesType === 'pie'
-      ? transformedData[dataIndex]
-      : null;
 
   if (data.length === 0) {
     return null;
@@ -128,29 +119,6 @@ function PieArcPlot(props: PieArcPlotProps) {
           {...slotProps?.pieArc}
         />
       ))}
-      {/* Render the focus indicator last, so it can align nicely over all arcs */}
-      {focusedItem && (
-        <Arc
-          startAngle={focusedItem.startAngle}
-          endAngle={focusedItem.endAngle}
-          paddingAngle={focusedItem.paddingAngle}
-          innerRadius={focusedItem.innerRadius}
-          color="transparent"
-          pointerEvents="none"
-          skipInteraction
-          outerRadius={focusedItem.outerRadius}
-          cornerRadius={focusedItem.cornerRadius}
-          skipAnimation
-          stroke={(theme.vars ?? theme).palette.text.primary}
-          id={id}
-          className={pieArcClasses.focusIndicator}
-          dataIndex={focusedItem.dataIndex}
-          isFaded={false}
-          isHighlighted={false}
-          isFocused={false}
-          strokeWidth={3}
-        />
-      )}
     </g>
   );
 }

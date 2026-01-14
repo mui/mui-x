@@ -82,7 +82,7 @@ export const checkboxPropsSelector = createSelector(
     };
 
     let isSelectable = true;
-    if (typeof isRowSelectable === 'function') {
+    if (typeof isRowSelectable === 'function' && rowsLookup[groupId]) {
       isSelectable = isRowSelectable(rowParams);
     }
 
@@ -110,10 +110,24 @@ export const checkboxPropsSelector = createSelector(
       if (node?.type === 'group') {
         node.children.forEach(traverseDescendants);
       }
-      if (rowSelectionManager.has(itemToTraverseId)) {
-        hasSelectedDescendant = true;
-      } else {
-        hasUnSelectedDescendant = true;
+      // Check if row is selectable before considering it for parent selection state
+      const descendantRowParams: GridRowParams = {
+        id: itemToTraverseId,
+        row: rowsLookup[itemToTraverseId],
+        columns,
+      };
+      const rowIsSelectable =
+        typeof isRowSelectable === 'function' && rowsLookup[itemToTraverseId]
+          ? isRowSelectable(descendantRowParams)
+          : true;
+
+      // Only consider selectable rows when determining parent selection state
+      if (rowIsSelectable) {
+        if (rowSelectionManager.has(itemToTraverseId)) {
+          hasSelectedDescendant = true;
+        } else {
+          hasUnSelectedDescendant = true;
+        }
       }
     };
 
@@ -206,22 +220,39 @@ export const findRowsToSelect = (
 
   if (autoSelectParents) {
     const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
-      if (!rowSelectionManager.has(rowId) && !selectedDescendants.has(rowId)) {
-        return false;
-      }
       const node = tree[rowId];
       if (!node) {
         return false;
       }
+      // For non-group nodes, check if it's selected or if it's non-selectable
       if (node.type !== 'group') {
+        // If the row is selectable, it must be selected
+        if (apiRef.current.isRowSelectable(rowId)) {
+          return rowSelectionManager.has(rowId) || selectedDescendants.has(rowId);
+        }
+        // Non-selectable rows don't affect parent selection
         return true;
       }
+      // For group nodes, check if it's selected or all its children are selected
+      if (rowSelectionManager.has(rowId) || selectedDescendants.has(rowId)) {
+        return true;
+      }
+      // Recursively check all children
       return node.children.every(checkAllDescendantsSelected);
     };
 
     const traverseParents = (rowId: GridRowId) => {
       const siblings: GridRowId[] = getFilteredRowNodeSiblings(tree, filteredRows, rowId);
-      if (siblings.length === 0 || siblings.every(checkAllDescendantsSelected)) {
+      // Check if all selectable siblings are selected
+      const allSelectableSiblingsSelected = siblings.every((siblingId) => {
+        // Non-selectable siblings don't affect parent selection
+        if (!apiRef.current.isRowSelectable(siblingId)) {
+          return true;
+        }
+        return checkAllDescendantsSelected(siblingId);
+      });
+
+      if (siblings.length === 0 || allSelectableSiblingsSelected) {
         const rowNode = tree[rowId] as GridGroupNode;
         const parent = rowNode?.parent;
         if (

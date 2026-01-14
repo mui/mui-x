@@ -7,8 +7,10 @@ import { ChartsTooltipContainer, type ChartsTooltipContainerProps } from './Char
 import { useUtilityClasses } from './chartsTooltipClasses';
 import { type TriggerOptions } from './utils';
 
-export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions>
-  extends Omit<ChartsTooltipContainerProps<T>, 'children'> {}
+export interface ChartsTooltipProps<T extends TriggerOptions = TriggerOptions> extends Omit<
+  ChartsTooltipContainerProps<T>,
+  'children'
+> {}
 
 /**
  * Demos:

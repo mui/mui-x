@@ -25,8 +25,10 @@ export interface PickersShortcutsItem<TValue extends PickerValidValue> {
 
 export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<PickerValidValue>, 'getValue'>;
 
-export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
-  extends Omit<ListProps, 'onChange'> {
+export interface ExportedPickersShortcutProps<TValue extends PickerValidValue> extends Omit<
+  ListProps,
+  'onChange'
+> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
@@ -42,8 +44,9 @@ export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
   changeImportance?: PickerChangeImportance;
 }
 
-export interface PickersShortcutsProps<TValue extends PickerValidValue>
-  extends ExportedPickersShortcutProps<TValue> {}
+export interface PickersShortcutsProps<
+  TValue extends PickerValidValue,
+> extends ExportedPickersShortcutProps<TValue> {}
 
 const PickersShortcutsRoot = styled(List, {
   name: 'MuiPickersLayout',

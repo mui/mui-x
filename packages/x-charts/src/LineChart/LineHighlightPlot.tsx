@@ -3,7 +3,6 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { LineHighlightElement, type LineHighlightElementProps } from './LineHighlightElement';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
@@ -58,7 +57,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
   const { instance } = useChartContext();
 
   const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
-  const highlightedIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const highlightedIndexes = store.use(selectorChartsHighlightXAxisIndex);
 
   if (highlightedIndexes.length === 0) {
     return null;
@@ -81,7 +80,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             const {
               xAxisId = defaultXAxisId,
               yAxisId = defaultYAxisId,
-              stackedData,
+              visibleStackedData,
               data,
               disableHighlight,
               shape = 'circle',
@@ -108,7 +107,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             }
 
             const x = xScale(xData[highlightedIndex]);
-            const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+            const y = yScale(visibleStackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
             if (!instance.isPointInside(x, y)) {
               return null;

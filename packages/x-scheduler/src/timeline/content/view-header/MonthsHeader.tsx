@@ -1,12 +1,48 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store/useStore';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { Adapter, useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
-import './Headers.css';
+
+const MonthsHeaderRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeaderRoot',
+})({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(var(--months-cell-width), 1fr))',
+  minWidth: 'calc(var(--unit-count) * var(--months-cell-width))',
+  gridTemplateRows: 'auto auto',
+});
+
+const YearLabel = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeaderYearLabel',
+})(({ theme }) => ({
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  gridRow: 1,
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  '&:not(:last-child)': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+const MonthLabel = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeaderMonthLabel',
+})(({ theme }) => ({
+  gridRow: 2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  borderRight: `1px solid ${theme.palette.divider}`,
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.secondary,
+}));
 
 export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
@@ -23,30 +59,28 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <div className={clsx('MonthsHeader', props.className)} {...props}>
+    <MonthsHeaderRoot {...props}>
       {months.map((month, index) => {
         const monthNumber = adapter.getMonth(month.value);
 
         return (
           <React.Fragment key={month.key}>
             {(monthNumber === 0 || index === 0) && (
-              <div
-                className="YearLabel"
+              <YearLabel
                 style={
                   {
-                    '--grid-column': index + 1,
-                    '--columns-span': Math.min(12, months.length - index - 1) - monthNumber + 1,
+                    gridColumn: `${index + 1} / span ${Math.min(12, months.length - index - 1) - monthNumber + 1}`,
                   } as React.CSSProperties
                 }
               >
                 {adapter.getYear(month.value)}
-              </div>
+              </YearLabel>
             )}
-            <div className="MonthLabel">{adapter.format(month.value, 'month3Letters')}</div>
+            <MonthLabel>{adapter.format(month.value, 'month3Letters')}</MonthLabel>
           </React.Fragment>
         );
       })}
-    </div>
+    </MonthsHeaderRoot>
   );
 }
 

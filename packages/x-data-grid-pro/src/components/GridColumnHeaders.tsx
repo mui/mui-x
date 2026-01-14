@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
@@ -5,14 +6,16 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
 import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
-const Filler = styled('div')({
+const Filler = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   flex: 1,
   backgroundColor: vars.header.background.base,
 });
 
 export interface GridColumnHeadersProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    UseGridColumnHeadersProps {}
+  extends React.HTMLAttributes<HTMLDivElement>, UseGridColumnHeadersProps {}
 
 const GridColumnHeaders = forwardRef<HTMLDivElement, GridColumnHeadersProps>(
   function GridColumnHeaders(props, ref) {

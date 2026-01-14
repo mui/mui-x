@@ -17,8 +17,7 @@ export type ScatterValueType = {
 };
 
 export interface ScatterSeriesType
-  extends CommonSeriesType<ScatterValueType | null>,
-    CartesianSeriesType {
+  extends CommonSeriesType<ScatterValueType | null>, CartesianSeriesType {
   type: 'scatter';
   data?: readonly ScatterValueType[];
   /**
@@ -84,7 +83,10 @@ export type ScatterItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedScatterSeriesType
-  extends DefaultizedProps<ScatterSeriesType, CommonDefaultizedProps | 'color' | 'markerSize'> {
+export interface DefaultizedScatterSeriesType extends DefaultizedProps<
+  ScatterSeriesType,
+  CommonDefaultizedProps | 'color' | 'markerSize'
+> {
   preview: MakeRequired<NonNullable<ScatterSeriesType['preview']>, 'markerSize'>;
+  hidden: boolean;
 }

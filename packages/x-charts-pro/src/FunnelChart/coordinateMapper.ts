@@ -5,10 +5,12 @@ export const createPositionGetter: (
   scale: D3Scale,
   isCategoryDirection: boolean,
   gap: number,
+  ordinalScaleData: readonly any[] | undefined,
 ) => PositionGetter =
-  (scale, isCategoryDirection, gap) => (value, bandIndex, bandIdentifier, stackOffset, useBand) => {
+  (scale, isCategoryDirection, gap, ordinalScaleData) =>
+  (value, bandIndex, stackOffset, useBand) => {
     if (isOrdinalScale(scale)) {
-      const position = scale(bandIdentifier)!;
+      const position = scale(ordinalScaleData?.[bandIndex])!;
       return useBand ? position + scale.bandwidth() : position;
     }
     if (isCategoryDirection) {

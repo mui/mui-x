@@ -404,7 +404,8 @@ export interface GridControlledStateReasonLookup {
 }
 
 export interface GridEventLookup
-  extends GridRowEventLookup,
+  extends
+    GridRowEventLookup,
     GridColumnHeaderEventLookup,
     GridHeaderFilterEventLookup,
     GridColumnGroupHeaderEventLookup,

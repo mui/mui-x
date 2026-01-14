@@ -5,7 +5,8 @@ import { type GetWordsByLinesParams, getWordsByLines } from '../internals/getWor
 import { useIsHydrated } from '../hooks/useIsHydrated';
 
 export interface ChartsTextProps
-  extends Omit<
+  extends
+    Omit<
       React.SVGTextElementAttributes<SVGTextElement>,
       'width' | 'ref' | 'style' | 'dominantBaseline'
     >,

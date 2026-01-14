@@ -1,10 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useStore, useSelector } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 import type { SankeyLayoutNode } from './sankey.types';
-import { selectorIsNodeHighlighted } from './plugins';
-import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
+import { useSankeyNodeHighlightState } from './sankeyHighlightHooks';
 
 export interface SankeyNodeLabelProps {
   /**
@@ -20,28 +18,27 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
   function SankeyNodeLabel(props, ref) {
     const { node } = props;
     const theme = useTheme();
-    const store = useStore();
 
     const x0 = node.x0 ?? 0;
     const y0 = node.y0 ?? 0;
     const x1 = node.x1 ?? 0;
     const y1 = node.y1 ?? 0;
 
+    const isRightSide = node.depth === 0;
+
     // Determine label position
-    const labelX =
-      node.depth === 0
-        ? x1 + 6 // Right side for first column
-        : x0 - 6; // Left side for other columns
+    const labelX = isRightSide
+      ? x1 + 6 // Right side for first column
+      : x0 - 6; // Left side for other columns
 
-    const labelAnchor = node.depth === 0 ? 'start' : 'end';
+    const labelAnchor = isRightSide ? 'start' : 'end';
 
-    const isHighlighted = useSelector(store, selectorIsNodeHighlighted, node.id);
-    const isFaded = useSelector(store, selectorIsSankeyItemFaded, isHighlighted);
+    const highlightState = useSankeyNodeHighlightState(node.id);
 
     let opacity = 1;
-    if (isFaded) {
+    if (highlightState === 'faded') {
       opacity = 0.3;
-    } else if (isHighlighted) {
+    } else if (highlightState === 'highlighted') {
       opacity = 1;
     }
 
@@ -61,8 +58,8 @@ export const SankeyNodeLabel = React.forwardRef<SVGTextElement, SankeyNodeLabelP
         pointerEvents="none"
         opacity={opacity}
         data-node={node.id}
-        data-highlighted={isHighlighted || undefined}
-        data-faded={isFaded || undefined}
+        data-highlighted={highlightState === 'highlighted' || undefined}
+        data-faded={highlightState === 'faded' || undefined}
       >
         {node.label}
       </text>

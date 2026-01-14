@@ -14,11 +14,11 @@ export function sortEventOccurrences(
       return {
         occurrence,
         start: occurrence.allDay
-          ? adapter.getTime(adapter.startOfDay(occurrence.start.value))
-          : occurrence.start.timestamp,
+          ? adapter.getTime(adapter.startOfDay(occurrence.displayTimezone.start.value))
+          : occurrence.displayTimezone.start.timestamp,
         end: occurrence.allDay
-          ? adapter.getTime(adapter.endOfDay(occurrence.end.value))
-          : occurrence.end.timestamp,
+          ? adapter.getTime(adapter.endOfDay(occurrence.displayTimezone.end.value))
+          : occurrence.displayTimezone.end.timestamp,
       };
     })
     .sort((a, b) => a.start - b.start || b.end - a.end)

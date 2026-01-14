@@ -741,8 +741,14 @@ describe('<DataGrid /> - Keyboard', () => {
         field: 'actions',
         type: 'actions',
         getActions: () => [
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} />,
+          <GridActionsCellItem
+            key={1}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_1'}
+            disabled
+          />,
+          <GridActionsCellItem key={2} label="Test" icon={<RestoreIcon />} id={'action_2'} />,
         ],
       },
       { field: 'id', width: 400 },

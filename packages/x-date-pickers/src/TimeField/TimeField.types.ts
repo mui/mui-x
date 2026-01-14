@@ -11,7 +11,8 @@ import {
 } from '../internals/components/PickerFieldUI';
 
 export interface UseTimeFieldProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+  extends
+    MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'
     >,

@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import HTMLElementType from '@mui/utils/HTMLElementType';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -7,11 +8,13 @@ import { styled, useThemeProps } from '@mui/material/styles';
 import Popper, { type PopperProps } from '@mui/material/Popper';
 import NoSsr from '@mui/material/NoSsr';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { type TriggerOptions, useIsFineMainPointer, usePointerType } from './utils';
+import { type TriggerOptions, useIsFineMainPointer } from './utils';
 import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartsLastInteraction } from '../internals/plugins/featurePlugins/useChartInteraction';
+import {
+  selectorChartsLastInteraction,
+  selectorChartsPointerType,
+} from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   selectorChartsTooltipItemIsDefined,
   selectorChartsTooltipItemPosition,
@@ -24,6 +27,7 @@ import { selectorChartsInteractionPolarAxisTooltip } from '../internals/plugins/
 import { useAxisSystem } from '../hooks/useAxisSystem';
 import { useSvgRef } from '../hooks';
 import { selectorBrushShouldPreventTooltip } from '../internals/plugins/featurePlugins/useChartBrush';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 
 const selectorReturnFalse = () => false;
 const selectorReturnNull = () => null;
@@ -48,8 +52,9 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
-export interface ChartsTooltipContainerProps<T extends TriggerOptions = TriggerOptions>
-  extends Partial<PopperProps> {
+export interface ChartsTooltipContainerProps<
+  T extends TriggerOptions = TriggerOptions,
+> extends Partial<PopperProps> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse;
@@ -105,10 +110,14 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     ...other
   } = props;
 
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartInteractionSignature]>();
+
   const svgRef = useSvgRef();
+  const anchorRef = React.useRef<SVGRectElement | null>(null);
+
   const classes = useUtilityClasses(propClasses);
 
-  const pointerType = usePointerType();
+  const pointerType = store.use(selectorChartsPointerType);
   const isFineMainPointer = useIsFineMainPointer();
 
   const popperRef: PopperProps['popperRef'] = React.useRef(null);
@@ -116,24 +125,20 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
 
   const axisSystem = useAxisSystem();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
+  const shouldPreventBecauseOfBrush = store.use(selectorBrushShouldPreventTooltip);
+  const isOpen = store.use(getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush));
 
-  const shouldPreventBecauseOfBrush = useSelector(store, selectorBrushShouldPreventTooltip);
-  const isOpen = useSelector(
-    store,
-    getIsOpenSelector(trigger, axisSystem, shouldPreventBecauseOfBrush),
-  );
+  const lastInteraction = store.use(selectorChartsLastInteraction);
+  const computedAnchor = lastInteraction === 'keyboard' || pointerType === null ? 'node' : anchor;
 
-  const lastInteraction = useSelector(store, selectorChartsLastInteraction);
-  const computedAnchor = lastInteraction === 'keyboard' ? 'node' : anchor;
-
-  const itemPosition = useSelector(
-    store,
+  const itemPosition = store.use(
     trigger === 'item' && computedAnchor === 'node'
       ? selectorChartsTooltipItemPosition
       : selectorReturnNull,
     position,
   );
+
+  const isTooltipNodeAnchored = itemPosition !== null;
 
   React.useEffect(() => {
     const svgElement = svgRef.current;
@@ -141,20 +146,13 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       return () => {};
     }
 
-    if (itemPosition !== null) {
-      const positionUpdate = rafThrottle(() => {
-        // eslint-disable-next-line react-compiler/react-compiler
-        positionRef.current = {
-          x: svgElement.getBoundingClientRect().left + (itemPosition?.x ?? 0),
-          y: svgElement.getBoundingClientRect().top + (itemPosition?.y ?? 0),
-        };
-        popperRef.current?.update();
-      });
-      positionUpdate();
-      return () => positionUpdate.clear();
+    if (isTooltipNodeAnchored) {
+      // Tooltip position is already handled by the anchor element
+      return undefined;
     }
 
     const pointerUpdate = rafThrottle((x: number, y: number) => {
+      // eslint-disable-next-line react-compiler/react-compiler
       positionRef.current = { x, y };
       popperRef.current?.update();
     });
@@ -163,19 +161,17 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
       pointerUpdate(event.clientX, event.clientY);
     };
 
-    svgElement.addEventListener('pointerdown', handlePointerEvent);
     svgElement.addEventListener('pointermove', handlePointerEvent);
     svgElement.addEventListener('pointerenter', handlePointerEvent);
 
     return () => {
-      svgElement.removeEventListener('pointerdown', handlePointerEvent);
       svgElement.removeEventListener('pointermove', handlePointerEvent);
       svgElement.removeEventListener('pointerenter', handlePointerEvent);
       pointerUpdate.clear();
     };
-  }, [svgRef, positionRef, itemPosition]);
+  }, [svgRef, positionRef, isTooltipNodeAnchored]);
 
-  const anchorEl = React.useMemo(
+  const pointerAnchorEl = React.useMemo(
     () => ({
       getBoundingClientRect: () => ({
         x: positionRef.current.x,
@@ -192,8 +188,8 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
     [positionRef],
   );
 
-  const isMouse = pointerType?.pointerType === 'mouse' || isFineMainPointer;
-  const isTouch = pointerType?.pointerType === 'touch' || !isFineMainPointer;
+  const isMouse = pointerType === 'mouse' || isFineMainPointer;
+  const isTouch = pointerType === 'touch' || !isFineMainPointer;
 
   const modifiers = React.useMemo(
     () => [
@@ -201,7 +197,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         name: 'offset',
         options: {
           offset: () => {
-            if (isTouch) {
+            if (isTouch && !isTooltipNodeAnchored) {
               return [0, 64];
             }
             // The popper offset: [skidding, distance]
@@ -221,7 +217,7 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
         : []), // Keep default behavior
       { name: 'preventOverflow', options: { altAxis: true } },
     ],
-    [isMouse, isTouch],
+    [isMouse, isTooltipNodeAnchored, isTouch],
   );
 
   if (trigger === 'none') {
@@ -229,21 +225,41 @@ function ChartsTooltipContainer(inProps: ChartsTooltipContainerProps) {
   }
 
   return (
-    <NoSsr>
-      {isOpen && (
-        <ChartsTooltipRoot
-          {...other}
-          className={classes?.root}
-          open={isOpen}
-          placement={other.placement ?? position ?? (isMouse ? 'right-start' : 'top')}
-          popperRef={popperRef}
-          anchorEl={anchorEl}
-          modifiers={modifiers}
-        >
-          {children}
-        </ChartsTooltipRoot>
-      )}
-    </NoSsr>
+    <React.Fragment>
+      {svgRef.current &&
+        ReactDOM.createPortal(
+          <rect
+            ref={anchorRef}
+            {...itemPosition}
+            display="hidden"
+            // On ios a rect with no width/height is not detectable by the popper.js
+            pointerEvents="none"
+            opacity={0}
+            width={1}
+            height={1}
+          />,
+          svgRef.current,
+        )}
+      <NoSsr>
+        {isOpen && (
+          <ChartsTooltipRoot
+            {...other}
+            className={classes?.root}
+            open={isOpen}
+            placement={
+              other.placement ??
+              position ??
+              (!isTooltipNodeAnchored && isMouse ? 'right-start' : 'top')
+            }
+            popperRef={popperRef}
+            anchorEl={itemPosition ? anchorRef.current : pointerAnchorEl}
+            modifiers={modifiers}
+          >
+            {children}
+          </ChartsTooltipRoot>
+        )}
+      </NoSsr>
+    </React.Fragment>
   );
 }
 

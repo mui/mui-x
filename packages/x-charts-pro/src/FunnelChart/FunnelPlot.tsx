@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import { cartesianSeriesTypes, useSelector, useStore } from '@mui/x-charts/internals';
+import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
 import { type FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
@@ -16,6 +16,7 @@ import {
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
 import { createPositionGetter } from './coordinateMapper';
+import { get2DExtrema } from './get2DExtrema';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -34,9 +35,9 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
 const useAggregatedData = () => {
   const seriesData = useFunnelSeriesContext();
   const store = useStore();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const gap = useSelector(store, selectorFunnelGap);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
+  const gap = store.use(selectorFunnelGap);
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -61,39 +62,10 @@ const useAggregatedData = () => {
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const xPosition = createPositionGetter(xScale, isHorizontal, gap);
-      const yPosition = createPositionGetter(yScale, !isHorizontal, gap);
+      const xPosition = createPositionGetter(xScale, isHorizontal, gap, baseScaleConfig.data);
+      const yPosition = createPositionGetter(yScale, !isHorizontal, gap, baseScaleConfig.data);
 
-      const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          yPosition(
-            v.y,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          xPosition(
-            v.x,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const minPoint = {
-        x: Math.min(...allX),
-        y: Math.min(...allY),
-      };
-      const maxPoint = {
-        x: Math.max(...allX),
-        y: Math.max(...allY),
-      };
+      const [minPoint, maxPoint] = get2DExtrema(currentSeries.dataPoints, xPosition, yPosition);
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
@@ -121,20 +93,8 @@ const useAggregatedData = () => {
         });
         const bandPoints = curve({} as any).processPoints(
           values.map((v) => ({
-            x: xPosition(
-              v.x,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
-            y: yPosition(
-              v.y,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
+            x: xPosition(v.x, dataIndex, v.stackOffset, v.useBandWidth),
+            y: yPosition(v.y, dataIndex, v.stackOffset, v.useBandWidth),
           })),
         );
 

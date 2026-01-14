@@ -11,16 +11,15 @@ import {
 } from '../TimeRangePicker/shared';
 
 export interface MobileTimeRangePickerSlots
-  extends BaseTimeRangePickerSlots,
-    MakeOptional<UseMobileRangePickerSlots, 'field'> {}
+  extends BaseTimeRangePickerSlots, MakeOptional<UseMobileRangePickerSlots, 'field'> {}
 
 export interface MobileTimeRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseTimeRangePickerSlotProps,
+  extends
+    BaseTimeRangePickerSlotProps,
     Omit<UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>, 'tabs' | 'toolbar'> {}
 
 export interface MobileTimeRangePickerProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseTimeRangePickerProps,
-    MobileRangeOnlyPickerProps {
+  extends BaseTimeRangePickerProps, MobileRangeOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}

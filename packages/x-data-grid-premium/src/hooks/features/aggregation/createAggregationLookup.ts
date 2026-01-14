@@ -9,13 +9,12 @@ import {
   gridRowsLookupSelector,
   GridColumnLookup,
 } from '@mui/x-data-grid-pro';
-import { getVisibleRows } from '@mui/x-data-grid/internals';
+import { getVisibleRows, GridAggregationPosition } from '@mui/x-data-grid-pro/internals';
 import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   GridAggregationFunction,
   GridAggregationLookup,
-  GridAggregationPosition,
   GridAggregationRules,
 } from './gridAggregationInterfaces';
 

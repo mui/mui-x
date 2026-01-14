@@ -12,9 +12,7 @@ import { type BarItem, type BarLabelContext } from '../../BarChart';
 export type BarValueType = number;
 
 export interface BarSeriesType
-  extends CommonSeriesType<BarValueType | null>,
-    CartesianSeriesType,
-    StackableSeriesType {
+  extends CommonSeriesType<BarValueType | null>, CartesianSeriesType, StackableSeriesType {
   type: 'bar';
   /**
    * Data associated to each bar.
@@ -75,8 +73,9 @@ export type BarItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedBarSeriesType
-  extends DefaultizedProps<
-    BarSeriesType,
-    CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
-  > {}
+export interface DefaultizedBarSeriesType extends DefaultizedProps<
+  BarSeriesType,
+  CommonDefaultizedProps | 'color' | 'layout' | 'minBarSize'
+> {
+  hidden: boolean;
+}

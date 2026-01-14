@@ -24,7 +24,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export interface GridEditBooleanCellProps
-  extends GridRenderEditCellParams,
+  extends
+    GridRenderEditCellParams,
     Omit<
       React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
       'id' | 'tabIndex'

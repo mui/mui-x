@@ -14,11 +14,11 @@ import { TimeView } from '../models';
 export interface StaticTimePickerSlots extends BaseTimePickerSlots, UseStaticPickerSlots {}
 
 export interface StaticTimePickerSlotProps
-  extends BaseTimePickerSlotProps,
-    UseStaticPickerSlotProps {}
+  extends BaseTimePickerSlotProps, UseStaticPickerSlotProps {}
 
 export interface StaticTimePickerProps
-  extends BaseTimePickerProps<TimeView>,
+  extends
+    BaseTimePickerProps<TimeView>,
     MakeOptional<StaticOnlyPickerProps, 'displayStaticWrapperAs'> {
   /**
    * Overridable component slots.

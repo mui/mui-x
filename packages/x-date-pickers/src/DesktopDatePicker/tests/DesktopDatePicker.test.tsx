@@ -387,8 +387,8 @@ describe('<DesktopDatePicker />', () => {
     });
   });
 
-  it('should throw console warning when invalid `openTo` prop is provided', () => {
-    expect(async () => {
+  it('should throw console warning when invalid `openTo` prop is provided', async () => {
+    await expect(async () => {
       const { user } = render(<DesktopDatePicker defaultValue={null} openTo="month" />);
 
       await openPickerAsync(user, { type: 'date' });
@@ -429,7 +429,9 @@ describe('<DesktopDatePicker />', () => {
 
       const renderCountBeforeChange = RenderCount.callCount;
 
-      setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+      await act(async () => {
+        setProps({ defaultValue: adapterToUse.date('2018-01-04') });
+      });
 
       await user.click(screen.getByRole('gridcell', { name: '2' }));
       await user.click(screen.getByRole('gridcell', { name: '3' }));

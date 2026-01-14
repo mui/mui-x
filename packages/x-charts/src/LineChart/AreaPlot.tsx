@@ -21,7 +21,8 @@ export interface AreaPlotSlots extends AreaElementSlots {}
 export interface AreaPlotSlotProps extends AreaElementSlotProps {}
 
 export interface AreaPlotProps
-  extends React.SVGAttributes<SVGSVGElement>,
+  extends
+    React.SVGAttributes<SVGSVGElement>,
     Pick<AreaElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line area item is clicked.

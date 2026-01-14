@@ -34,9 +34,7 @@ export const DEFAULT_TESTING_VISIBLE_DATE = defaultAdapter.date(
 export class EventBuilder {
   protected event: SchedulerEvent;
 
-  protected dataTimezone: TemporalTimezone = 'default';
-
-  protected uiTimezone: TemporalTimezone = 'default';
+  protected displayTimezone: TemporalTimezone = 'default';
 
   protected constructor(protected adapter: Adapter) {
     const id = crypto.randomUUID();
@@ -101,7 +99,13 @@ export class EventBuilder {
 
   /** Set exception dates for recurrence. */
   exDates(dates?: string[]) {
-    this.event.exDates = dates?.map((date) => this.adapter.date(date, this.dataTimezone));
+    dates?.forEach((date) => {
+      if (!date.endsWith('Z')) {
+        throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
+      }
+    });
+
+    this.event.exDates = dates?.map((date) => this.adapter.date(date, 'default'));
     return this;
   }
 
@@ -117,33 +121,15 @@ export class EventBuilder {
     return this;
   }
 
-  /** Set the DATA timezone: used for all event fields (start, end, rrule, exDates...). */
-  withTimezone(timezone: TemporalTimezone) {
-    if (timezone === this.dataTimezone) {
-      return this;
-    }
-
-    this.event.start = this.adapter.setTimezone(this.event.start, timezone);
-    this.event.end = this.adapter.setTimezone(this.event.end, timezone);
-
-    if (this.event.exDates) {
-      this.event.exDates = this.event.exDates.map((date) =>
-        this.adapter.setTimezone(date, timezone),
-      );
-    }
-
-    const rrule = this.event.rrule;
-    if (rrule && typeof rrule !== 'string' && rrule.until) {
-      rrule.until = this.adapter.setTimezone(rrule.until, timezone);
-    }
-
-    this.dataTimezone = timezone;
+  /** Set the data timezone. */
+  withDataTimezone(timezone: TemporalTimezone) {
+    this.event.timezone = timezone;
     return this;
   }
 
-  /** Set the UI timezone for processed events. */
-  withUITimezone(timezone: TemporalTimezone) {
-    this.uiTimezone = timezone;
+  /** Set the display timezone for processed events. */
+  withDisplayTimezone(timezone: TemporalTimezone) {
+    this.displayTimezone = timezone;
     return this;
   }
 
@@ -172,8 +158,11 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.endAt(...)`).
    */
   startAt(start: string | TemporalSupportedObject) {
-    const startDate =
-      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
+    if (typeof start === 'string' && !start.endsWith('Z')) {
+      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
+    }
+
+    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
     this.event.start = startDate;
     return this;
   }
@@ -183,7 +172,11 @@ export class EventBuilder {
    * Useful for fine-grained control (e.g., pairing with `.startAt(...)`).
    */
   endAt(end: string | TemporalSupportedObject) {
-    const endDate = typeof end === 'string' ? this.adapter.date(end, this.dataTimezone) : end;
+    if (typeof end === 'string' && !end.endsWith('Z')) {
+      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
+    }
+
+    const endDate = typeof end === 'string' ? this.adapter.date(end, 'default') : end;
     this.event.end = endDate;
     return this;
   }
@@ -192,8 +185,11 @@ export class EventBuilder {
    * Create a single-day timed event starting at `start` with the given duration (minutes).
    */
   singleDay(start: string | TemporalSupportedObject, durationMinutes = 60) {
-    const startDate =
-      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
+    if (typeof start === 'string' && !start.endsWith('Z')) {
+      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
+    }
+
+    const startDate = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
     const endDate = this.adapter.addMinutes(startDate, durationMinutes);
     this.event.start = startDate;
     this.event.end = endDate;
@@ -205,7 +201,11 @@ export class EventBuilder {
    * Sets `allDay=true`.
    */
   fullDay(date: string) {
-    const d = this.adapter.date(date, this.dataTimezone);
+    if (typeof date === 'string' && !date.endsWith('Z')) {
+      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
+    }
+
+    const d = this.adapter.date(date, 'default');
     this.event.start = this.adapter.startOfDay(d);
     this.event.end = this.adapter.endOfDay(d);
     this.event.allDay = true;
@@ -221,9 +221,15 @@ export class EventBuilder {
     end: string | TemporalSupportedObject,
     opts?: { allDay?: boolean },
   ) {
-    this.event.start =
-      typeof start === 'string' ? this.adapter.date(start, this.dataTimezone) : start;
-    this.event.end = typeof end === 'string' ? this.adapter.date(end, this.dataTimezone) : end;
+    if (
+      (typeof start === 'string' && !start.endsWith('Z')) ||
+      (typeof end === 'string' && !end.endsWith('Z'))
+    ) {
+      throw new Error('EventBuilder only supports instant-based ISO strings (must include Z)');
+    }
+
+    this.event.start = typeof start === 'string' ? this.adapter.date(start, 'default') : start;
+    this.event.end = typeof end === 'string' ? this.adapter.date(end, 'default') : end;
     if (opts?.allDay !== undefined) {
       this.event.allDay = opts.allDay;
     }
@@ -241,7 +247,7 @@ export class EventBuilder {
    */
   recurrent(kind: RecurringEventPresetKey, rrule?: Omit<RecurringEventRecurrenceRule, 'freq'>) {
     const anchor =
-      this.event.start ?? this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, this.dataTimezone);
+      this.event.start ?? this.adapter.setTimezone(DEFAULT_TESTING_VISIBLE_DATE, 'default');
 
     let base: RecurringEventRecurrenceRule = { freq: kind, interval: 1 };
 
@@ -274,11 +280,12 @@ export class EventBuilder {
    */
   toOccurrence(occurrenceStartDate?: string): SchedulerEventOccurrence {
     const rawStart = occurrenceStartDate
-      ? this.adapter.date(occurrenceStartDate, this.dataTimezone)
+      ? this.adapter.date(occurrenceStartDate, 'default')
       : this.event.start;
 
-    const baseProcessed = processEvent(this.event, this.dataTimezone, this.adapter);
-    const originalDurationMs = baseProcessed.end.timestamp - baseProcessed.start.timestamp;
+    const baseProcessed = processEvent(this.event, this.displayTimezone, this.adapter);
+    const originalDurationMs =
+      baseProcessed.displayTimezone.end.timestamp - baseProcessed.displayTimezone.start.timestamp;
     const rawEnd = this.adapter.addMilliseconds(rawStart, originalDurationMs);
 
     const occurrenceModel: SchedulerEvent = {
@@ -287,7 +294,7 @@ export class EventBuilder {
       end: rawEnd,
     };
 
-    const processed = processEvent(occurrenceModel, this.uiTimezone, this.adapter);
+    const processed = processEvent(occurrenceModel, this.displayTimezone, this.adapter);
 
     return {
       ...processed,
@@ -299,7 +306,7 @@ export class EventBuilder {
    * Derives a processed event from the built event.
    */
   toProcessed() {
-    return processEvent(this.event, this.uiTimezone, this.adapter);
+    return processEvent(this.event, this.displayTimezone, this.adapter);
   }
 
   /**

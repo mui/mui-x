@@ -16,7 +16,8 @@ export interface GridAriaAttributesInternalHook {
 }
 
 export interface GridInternalHook<Api, Props>
-  extends GridAriaAttributesInternalHook,
+  extends
+    GridAriaAttributesInternalHook,
     GridRowAriaAttributesInternalHook,
     GridCellEditableInternalHook<Api, Props>,
     GridAggregationInternalHooks<Api, Props>,

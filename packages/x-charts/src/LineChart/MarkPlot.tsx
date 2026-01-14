@@ -11,7 +11,6 @@ import {
   selectorChartsHighlightXAxisIndex,
   type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { useSelector } from '../internals/store/useSelector';
 import { type AxisId } from '../models/axis';
 import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 import { useChartContext } from '../context/ChartProvider';
@@ -26,8 +25,7 @@ export interface MarkPlotSlotProps {
 }
 
 export interface MarkPlotProps
-  extends React.SVGAttributes<SVGSVGElement>,
-    Pick<MarkElementProps, 'skipAnimation'> {
+  extends React.SVGAttributes<SVGSVGElement>, Pick<MarkElementProps, 'skipAnimation'> {
   /**
    * Overridable component slots.
    * @default {}
@@ -69,7 +67,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   const { store } = useChartContext<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
   const { isFaded, isHighlighted } = useItemHighlightedGetter();
-  const xAxisHighlightIndexes = useSelector(store, selectorChartsHighlightXAxisIndex);
+  const xAxisHighlightIndexes = store.use(selectorChartsHighlightXAxisIndex);
 
   const highlightedItems = React.useMemo(() => {
     const rep: Record<AxisId, Set<number>> = {};
@@ -88,7 +86,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   return (
     <g {...other}>
-      {completedData.map(({ seriesId, clipId, shape, xAxisId, marks }) => {
+      {completedData.map(({ seriesId, clipId, shape, xAxisId, marks, hidden }) => {
         const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
         const isSeriesHighlighted = isHighlighted({ seriesId });
@@ -113,6 +111,7 @@ function MarkPlot(props: MarkPlotProps) {
                   }
                   isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
                   isFaded={isSeriesFaded}
+                  hidden={hidden}
                   {...slotProps?.mark}
                 />
               );

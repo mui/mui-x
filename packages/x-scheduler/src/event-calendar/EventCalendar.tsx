@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { useMergedRefs } from '@base-ui-components/utils/useMergedRefs';
+import { useStore } from '@base-ui/utils/store';
+import { styled, useThemeProps } from '@mui/material/styles';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
@@ -20,17 +20,94 @@ import { AgendaView } from '../agenda-view';
 import { DayView } from '../day-view/DayView';
 import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
-import { HeaderToolbar } from '../internals/components/header-toolbar';
-import { ResourceLegend } from '../internals/components/resource-legend';
-import { DateNavigator } from '../internals/components/date-navigator';
-import '../index.css';
-import './EventCalendar.css';
+import { HeaderToolbar } from './header-toolbar';
+import { ResourcesLegend } from './resources-legend';
+import { DateNavigator } from './date-navigator';
 import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
+import { schedulerTokens } from '../internals/utils/tokens';
+
+const EventCalendarRoot = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'Root',
+})(({ theme }) => ({
+  // CSS variable tokens
+  ...schedulerTokens,
+  // Layout
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: '280px 1fr',
+  gridTemplateRows: 'auto 1fr',
+  gap: theme.spacing(2),
+  height: '100%',
+}));
+
+const EventCalendarSidePanel = styled('aside', {
+  name: 'MuiEventCalendar',
+  slot: 'SidePanel',
+})(({ theme }) => ({
+  width: '100%',
+  minWidth: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+}));
+
+const EventCalendarMainPanel = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'MainPanel',
+})(({ theme }) => ({
+  gridRow: 2,
+  gridColumn: '1 / -1',
+  display: 'grid',
+  gridTemplateColumns: 'subgrid',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  minHeight: 0,
+  '&[data-view="month"]': {
+    maxHeight: '100%',
+    overflow: 'hidden',
+  },
+}));
+
+const EventCalendarContent = styled('section', {
+  name: 'MuiEventCalendar',
+  slot: 'Content',
+})(() => ({
+  display: 'flex',
+  flex: 1,
+  overflow: 'auto',
+  maxHeight: 'fit-content',
+  '&[data-view="month"]': {
+    maxHeight: 'none',
+  },
+  '&[data-side-panel-open="false"]': {
+    gridColumn: '1 / -1',
+  },
+}));
+
+const EventCalendarMonthCalendarPlaceholder = styled('section', {
+  name: 'MuiEventCalendar',
+  slot: 'MonthCalendarPlaceholder',
+})(({ theme }) => ({
+  backgroundColor: theme.palette.grey[100],
+  height: 220,
+  width: '100%',
+  borderRadius: theme.shape.borderRadius,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.grey[500],
+}));
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
   TResource extends object,
->(props: EventCalendarProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+>(
+  inProps: EventCalendarProps<TEvent, TResource>,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
+
   const { parameters, forwardedProps } = useExtractEventCalendarParameters<
     TEvent,
     TResource,
@@ -71,44 +148,36 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     <EventCalendarStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
-          <div
-            {...other}
-            className={clsx(forwardedProps.className, 'EventCalendarRoot', 'mui-x-scheduler')}
-            ref={handleRootRef}
-          >
+          <EventCalendarRoot {...other} ref={handleRootRef}>
             <DateNavigator />
 
             <HeaderToolbar />
 
-            <div className={clsx('EventCalendarMainPanel', view === 'month' && 'StretchView')}>
+            <EventCalendarMainPanel data-view={view}>
               {isSidePanelOpen && (
-                <aside className="EventCalendarSidePanel">
-                  <section
-                    className="EventCalendarMonthCalendarPlaceholder"
+                <EventCalendarSidePanel>
+                  <EventCalendarMonthCalendarPlaceholder
                     // TODO: Add localization
                     aria-label="Month calendar"
                   >
                     Month Calendar
-                  </section>
-                  <ResourceLegend />
-                </aside>
+                  </EventCalendarMonthCalendarPlaceholder>
+                  <ResourcesLegend />
+                </EventCalendarSidePanel>
               )}
 
-              <section
+              <EventCalendarContent
+                data-view={view}
+                data-side-panel-open={isSidePanelOpen}
                 // TODO: Add localization
-                className={clsx(
-                  'EventCalendarContent',
-                  view === 'month' && 'StretchView',
-                  !isSidePanelOpen && 'FullWidth',
-                )}
                 aria-label="Calendar content"
               >
                 {content}
-              </section>
+              </EventCalendarContent>
 
               {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
-            </div>
-          </div>
+            </EventCalendarMainPanel>
+          </EventCalendarRoot>
         </TranslationsProvider>
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>

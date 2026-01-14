@@ -1,4 +1,4 @@
-import type { TemporalSupportedObject } from '../base-ui-copy/types';
+import type { TemporalSupportedObject, TemporalTimezone } from '../base-ui-copy/types';
 import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
@@ -16,28 +16,71 @@ export interface SchedulerProcessedEvent {
    * The description of the event.
    */
   description?: string;
+
   /**
-   * The start date and time of the event.
+   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
+   * Always expressed in the event data timezone.
    */
-  start: SchedulerProcessedDate;
+  dataTimezone: {
+    /**
+     * The start date and time of the event.
+     */
+    start: SchedulerProcessedDate;
+    /**
+     * The end date and time of the event.
+     */
+    end: SchedulerProcessedDate;
+    /**
+     * The timezone of the event dates.
+     * */
+    timezone: TemporalTimezone;
+    /**
+     * The recurrence rule for the event.
+     * If not defined, the event will have only one occurrence.
+     */
+    rrule?: RecurringEventRecurrenceRule;
+    /**
+     * Exception dates for the event.
+     * These dates will be excluded from the recurrence.
+     */
+    exDates?: TemporalSupportedObject[];
+  };
+
   /**
-   * The end date and time of the event.
+   * Values prepared for rendering and user interaction.
+   * Always expressed in the display timezone.
    */
-  end: SchedulerProcessedDate;
+  displayTimezone: {
+    /**
+     * The start date and time of the event.
+     */
+    start: SchedulerProcessedDate;
+    /**
+     * The end date and time of the event.
+     */
+    end: SchedulerProcessedDate;
+    /**
+     * The timezone of the event dates.
+     * */
+    timezone: TemporalTimezone;
+    /**
+     * Recurrence projected to the display timezone so the UI reflects
+     * what the user actually experiences (e.g. displayed weekdays).
+     * Must be converted back to the dataTimezone representation when persisted.
+     */
+    rrule?: RecurringEventRecurrenceRule;
+    /**
+     * Exception dates projected to the display timezone for UI purposes.
+     * Must be converted back to the dataTimezone representation when persisted.
+     */
+    exDates?: TemporalSupportedObject[];
+  };
+
   /**
    * The id of the resource this event is associated with.
    */
   resource?: SchedulerResourceId | null;
-  /**
-   * The recurrence rule for the event.
-   * If not defined, the event will have only one occurrence.
-   */
-  rrule?: RecurringEventRecurrenceRule;
-  /**
-   * Exception dates for the event.
-   * These dates will be excluded from the recurrence.
-   */
-  exDates?: TemporalSupportedObject[];
+
   /**
    * Whether the event is an all-day event.
    * @default false
@@ -106,6 +149,10 @@ export interface SchedulerEvent {
    * The end date and time of the event.
    */
   end: TemporalSupportedObject;
+  /**
+   * The timezone of the event dates.
+   */
+  timezone?: TemporalTimezone;
   /**
    * The id of the resource this event is associated with.
    * @default null
@@ -228,8 +275,7 @@ export interface SchedulerOccurrencePlaceholderCreation extends SchedulerOccurre
   lockSurfaceType?: boolean;
 }
 
-export interface SchedulerOccurrencePlaceholderInternalDragOrResize
-  extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -248,8 +294,7 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize
   originalOccurrence: SchedulerEventOccurrence;
 }
 
-export interface SchedulerOccurrencePlaceholderExternalDrag
-  extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -288,6 +333,13 @@ export interface SchedulerProcessedDate {
    * The timestamp of the date.
    */
   timestamp: number;
+  /**
+   * Number of minutes since local midnight (0–1439).
+   *
+   * This value represents a visual position within a fixed 24h timeline grid
+   * and is intentionally independent from real-time duration (e.g. DST shifts).
+   */
+  minutesInDay: number;
 }
 
 /**

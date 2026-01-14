@@ -76,8 +76,10 @@ export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = Sca
     defaultizedYAxis: DefaultedYAxis<S>[];
   };
 
-export interface DefaultedZoomSliderOptions
-  extends Omit<NonNullable<Required<ZoomOptions['slider']>>, 'showTooltip'> {
+export interface DefaultedZoomSliderOptions extends Omit<
+  NonNullable<Required<ZoomOptions['slider']>>,
+  'showTooltip'
+> {
   showTooltip: ZoomSliderShowTooltip;
 }
 

@@ -1,33 +1,22 @@
-import {
-  type DefaultizedProps,
-  type MakeOptional,
-  type MakeRequired,
-} from '@mui/x-internals/types';
-import {
-  type ScatterSeriesType,
-  type DefaultizedScatterSeriesType,
-  type ScatterItemIdentifier,
-  type ScatterValueType,
+import type { DefaultizedProps, MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import type {
+  ScatterSeriesType,
+  DefaultizedScatterSeriesType,
+  ScatterItemIdentifier,
+  ScatterValueType,
 } from './scatter';
-import {
-  type LineSeriesType,
-  type DefaultizedLineSeriesType,
-  type LineItemIdentifier,
-} from './line';
-import { type BarItemIdentifier, type BarSeriesType, type DefaultizedBarSeriesType } from './bar';
-import {
-  type PieSeriesType,
-  type DefaultizedPieSeriesType,
-  type PieItemIdentifier,
-  type PieValueType,
-  type DefaultizedPieValueType,
+import type { LineSeriesType, DefaultizedLineSeriesType, LineItemIdentifier } from './line';
+import type { BarItemIdentifier, BarSeriesType, DefaultizedBarSeriesType } from './bar';
+import type {
+  PieSeriesType,
+  DefaultizedPieSeriesType,
+  PieItemIdentifier,
+  PieValueType,
+  DefaultizedPieValueType,
+  PieSeriesLayout,
 } from './pie';
-import {
-  type DefaultizedRadarSeriesType,
-  type RadarItemIdentifier,
-  type RadarSeriesType,
-} from './radar';
-import { type SeriesColor } from './common';
+import type { DefaultizedRadarSeriesType, RadarItemIdentifier, RadarSeriesType } from './radar';
+import type { SeriesColor } from './common';
 
 export interface ChartsSeriesConfig {
   bar: {
@@ -85,7 +74,7 @@ export interface ChartsSeriesConfig {
       >;
     };
     series: DefaultizedPieSeriesType;
-    seriesLayout: {};
+    seriesLayout: PieSeriesLayout;
     seriesProp: PieSeriesType<MakeOptional<PieValueType, 'id'>>;
     itemIdentifier: PieItemIdentifier;
     itemIdentifierWithData: PieItemIdentifier;
@@ -134,18 +123,15 @@ export type ChartSeries<T extends ChartSeriesType> = ChartsSeriesConfig[T]['seri
 export type ChartSeriesDefaultized<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends {
   canBeStacked: true;
 }
-  ? ChartsSeriesConfig[T]['series'] & { stackedData: [number, number][] }
+  ? ChartsSeriesConfig[T]['series'] & {
+      visibleStackedData: [number, number][];
+      stackedData: [number, number][];
+    }
   : ChartsSeriesConfig[T]['series'];
 
 export type ChartSeriesLayout<T extends ChartSeriesType> = ChartsSeriesConfig[T] extends any
   ? ChartsSeriesConfig[T]['seriesLayout']
   : never;
-
-export type ChartItemIdentifier<T extends ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifier'];
-
-export type ChartItemIdentifierWithData<T extends ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifierWithData'];
 
 export type DatasetElementType<T> = {
   [key: string]: T;

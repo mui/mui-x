@@ -26,8 +26,7 @@ export interface ExportedSlideTransitionProps {
   classes?: Partial<PickersSlideTransitionClasses>;
 }
 export interface SlideTransitionProps
-  extends Omit<CSSTransitionProps, 'timeout'>,
-    ExportedSlideTransitionProps {
+  extends Omit<CSSTransitionProps, 'timeout'>, ExportedSlideTransitionProps {
   children: React.ReactElement<any>;
   className?: string;
   reduceAnimations: boolean;

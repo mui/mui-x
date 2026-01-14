@@ -8,8 +8,7 @@ import { type ChartImageExportOptions } from '../internals/plugins/useChartProEx
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface ChartsToolbarImageExportOptions
-  extends Omit<ChartImageExportOptions, 'type'>,
-    Required<Pick<ChartImageExportOptions, 'type'>> {}
+  extends Omit<ChartImageExportOptions, 'type'>, Required<Pick<ChartImageExportOptions, 'type'>> {}
 
 export type ChartsToolbarImageExportTriggerProps = ChartsSlotPropsPro['baseButton'] & {
   /**

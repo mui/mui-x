@@ -33,24 +33,24 @@ export interface BaseRangeNonStaticPickerProps {
 }
 
 export interface NonStaticRangePickerProps
-  extends UsePickerNonStaticProps,
-    BaseRangeNonStaticPickerProps,
-    UseRangePositionProps {}
+  extends UsePickerNonStaticProps, BaseRangeNonStaticPickerProps, UseRangePositionProps {}
 
 export interface UseRangePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<PickerRangeValue, TView, TError, any>,
-> extends NonStaticRangePickerProps,
+>
+  extends
+    NonStaticRangePickerProps,
     BasePickerProps<PickerRangeValue, TView, TError, TExternalProps> {}
 
 export interface NonStaticRangePickerHookParameters<
   TView extends DateOrTimeViewWithMeridiem,
   TExternalProps extends UseRangePickerProps<TView, any, TExternalProps>,
 > extends Pick<
-    UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
-    'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
-  > {
+  UsePickerParameters<PickerRangeValue, TView, TExternalProps>,
+  'valueManager' | 'valueType' | 'validator' | 'rendererInterceptor' | 'ref'
+> {
   props: TExternalProps;
   /**
    * Steps available for the picker.

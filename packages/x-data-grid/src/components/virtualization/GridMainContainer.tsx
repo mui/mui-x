@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -9,7 +10,10 @@ import type {
   GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
-const GridPanelAnchor = styled('div')({
+const GridPanelAnchor = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,
   left: 0,

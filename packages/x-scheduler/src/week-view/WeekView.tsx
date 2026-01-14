@@ -10,7 +10,7 @@ import {
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';

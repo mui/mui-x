@@ -9,7 +9,6 @@ import {
   selectorChartRotationAxis,
   type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   type AxisId,
@@ -40,7 +39,7 @@ import {
  */
 export function useXAxes() {
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
 
   return { xAxis, xAxisIds };
 }
@@ -62,7 +61,7 @@ export function useXAxes() {
  */
 export function useYAxes() {
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
 
   return { yAxis, yAxisIds };
 }
@@ -87,7 +86,7 @@ export function useXAxis<T extends keyof AxisScaleConfig>(
   axisId?: AxisId,
 ): ComputedAxis<T, any, ChartsXAxisProps> {
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
 
   const id = axisId ?? xAxisIds[0];
 
@@ -114,7 +113,7 @@ export function useYAxis<T extends keyof AxisScaleConfig>(
   axisId?: AxisId,
 ): ComputedAxis<T, any, ChartsYAxisProps> {
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
 
   const id = axisId ?? yAxisIds[0];
 
@@ -138,10 +137,7 @@ export function useYAxis<T extends keyof AxisScaleConfig>(
  */
 export function useRotationAxes() {
   const store = useStore();
-  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
-    store,
-    selectorChartRotationAxis,
-  );
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
 
   return { rotationAxis, rotationAxisIds };
 }
@@ -163,7 +159,7 @@ export function useRotationAxes() {
  */
 export function useRadiusAxes() {
   const store = useStore();
-  const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
+  const { axis: radiusAxis, axisIds: radiusAxisIds } = store.use(selectorChartRadiusAxis);
 
   return { radiusAxis, radiusAxisIds };
 }
@@ -191,10 +187,7 @@ export function useRotationAxis(
   axisId?: AxisId,
 ): PolarAxisDefaultized<ScaleName, any, ChartsRotationAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
-  const { axis: rotationAxis, axisIds: rotationAxisIds } = useSelector(
-    store,
-    selectorChartRotationAxis,
-  );
+  const { axis: rotationAxis, axisIds: rotationAxisIds } = store.use(selectorChartRotationAxis);
 
   const id = axisId ?? rotationAxisIds[0];
 
@@ -224,7 +217,7 @@ export function useRadiusAxis(
   axisId?: AxisId,
 ): PolarAxisDefaultized<ScaleName, any, ChartsRadiusAxisProps> | undefined {
   const store = useStore<[UseChartPolarAxisSignature]>();
-  const { axis: radiusAxis, axisIds: radiusAxisIds } = useSelector(store, selectorChartRadiusAxis);
+  const { axis: radiusAxis, axisIds: radiusAxisIds } = store.use(selectorChartRadiusAxis);
 
   const id = axisId ?? radiusAxisIds[0];
 

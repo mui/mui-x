@@ -7,7 +7,6 @@ import { type ChartPlugin } from '../../models';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { type UseChartClosestPointSignature } from './useChartClosestPoint.types';
 import { getSVGPoint } from '../../../getSVGPoint';
-import { useSelector } from '../../../store/useSelector';
 import {
   selectorChartAxisZoomData,
   selectorChartSeriesEmptyFlatbushMap,
@@ -27,13 +26,12 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
 }) => {
   const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
 
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const zoomIsInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
+  const zoomIsInteracting = store.use(selectorChartZoomIsInteracting);
 
-  const { series, seriesOrder } = useSelector(store, selectorChartSeriesProcessed)?.scatter ?? {};
-  const flatbushMap = useSelector(
-    store,
+  const { series, seriesOrder } = store.use(selectorChartSeriesProcessed)?.scatter ?? {};
+  const flatbushMap = store.use(
     zoomIsInteracting ? selectorChartSeriesEmptyFlatbushMap : selectorChartSeriesFlatbushMap,
   );
 
@@ -78,8 +76,8 @@ export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = 
         const xAxisId = aSeries.xAxisId ?? defaultXAxisId;
         const yAxisId = aSeries.yAxisId ?? defaultYAxisId;
 
-        const xAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), xAxisId);
-        const yAxisZoom = selectorChartAxisZoomData(store.getSnapshot(), yAxisId);
+        const xAxisZoom = selectorChartAxisZoomData(store.state, xAxisId);
+        const yAxisZoom = selectorChartAxisZoomData(store.state, yAxisId);
         const maxRadius = voronoiMaxRadius === 'item' ? aSeries.markerSize : voronoiMaxRadius;
 
         const xZoomStart = (xAxisZoom?.start ?? 0) / 100;

@@ -4,7 +4,7 @@ title: Charts - Accessibility
 packageName: '@mui/x-charts'
 ---
 
-# Accessibility
+# Charts - Accessibility
 
 <p class="description">Learn how the Charts implement accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
@@ -86,11 +86,11 @@ When focused, the chart highlights a value item that can be modified with arrow 
 The focus highlight is done with a dedicated SVG element.
 When using composition, you've to add this component to make the focus visible.
 
-Each series type has its own component.
-Exception for the pie chart that has the focus directly managed in the `<PieArcPlot />`.
+Each series type has its own component:
 
 ```js
 import { FocusedBar } from '@mui/x-charts/BarChart';
+import { FocusedPieArc } from '@mui/x-charts/BarChart';
 import { FocusedLineMark } from '@mui/x-charts/LineChart';
 import { FocusedScatterMark } from '@mui/x-charts/ScatterChart';
 ```

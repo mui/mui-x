@@ -1,15 +1,20 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getSimpleTreeViewUtilityClass } from './simpleTreeViewClasses';
 import { SimpleTreeViewProps } from './SimpleTreeView.types';
-import { useTreeView } from '../internals/useTreeView';
 import { TreeViewProvider } from '../internals/TreeViewProvider';
-import { SIMPLE_TREE_VIEW_PLUGINS, SimpleTreeViewPluginSignatures } from './SimpleTreeView.plugins';
+import { useExtractSimpleTreeViewParameters } from './useExtractSimpleTreeViewParameters';
+import { useTreeViewRootProps } from '../internals/hooks/useTreeViewRootProps';
+import { TreeViewChildrenItemProvider } from '../internals/TreeViewProvider/TreeViewChildrenItemProvider';
+import { TreeViewItemDepthContext } from '../internals/TreeViewItemDepthContext';
+import { useTreeViewStore } from '../internals/hooks/useTreeViewStore';
+import { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
 
 const useThemeProps = createUseThemeProps('MuiSimpleTreeView');
 
@@ -51,8 +56,6 @@ type SimpleTreeViewComponent = (<Multiple extends boolean | undefined = undefine
   props: SimpleTreeViewProps<Multiple> & React.RefAttributes<HTMLUListElement>,
 ) => React.JSX.Element) & { propTypes?: any };
 
-const EMPTY_ITEMS: any[] = [];
-
 /**
  *
  * Demos:
@@ -65,10 +68,8 @@ const EMPTY_ITEMS: any[] = [];
  */
 const SimpleTreeView = React.forwardRef(function SimpleTreeView<
   Multiple extends boolean | undefined = undefined,
->(inProps: SimpleTreeViewProps<Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: SimpleTreeViewProps<Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiSimpleTreeView' });
-  const { slots, slotProps, ...other } = props;
-
   if (process.env.NODE_ENV !== 'production') {
     if ((props as any).items != null) {
       warnOnce([
@@ -79,15 +80,13 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<
-    SimpleTreeViewPluginSignatures,
-    typeof props & { items: any[] }
-  >({
-    plugins: SIMPLE_TREE_VIEW_PLUGINS,
-    rootRef: ref,
-    props: { ...other, items: EMPTY_ITEMS },
-  });
+  const { slots, slotProps, apiRef, parameters, forwardedProps } =
+    useExtractSimpleTreeViewParameters(props);
+  const store = useTreeViewStore(SimpleTreeViewStore, parameters);
 
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+  const getRootProps = useTreeViewRootProps(store, forwardedProps, handleRef);
   const classes = useUtilityClasses(props);
 
   const Root = slots?.root ?? SimpleTreeViewRoot;
@@ -101,12 +100,18 @@ const SimpleTreeView = React.forwardRef(function SimpleTreeView<
 
   return (
     <TreeViewProvider
-      contextValue={contextValue}
+      store={store}
       classes={classes}
       slots={slots}
       slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
     >
-      <Root {...rootProps} />
+      <TreeViewChildrenItemProvider itemId={null} idAttribute={null}>
+        <TreeViewItemDepthContext.Provider value={0}>
+          <Root {...rootProps} />
+        </TreeViewItemDepthContext.Provider>
+      </TreeViewChildrenItemProvider>
     </TreeViewProvider>
   );
 }) as SimpleTreeViewComponent;

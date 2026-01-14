@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import useSlotProps from '@mui/utils/useSlotProps';

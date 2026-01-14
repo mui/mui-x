@@ -29,10 +29,7 @@ import { FormProps } from '../internals/models/formProps';
 import { PickerValue } from '../internals/models';
 
 export interface DateCalendarSlots
-  extends PickersCalendarHeaderSlots,
-    DayCalendarSlots,
-    MonthCalendarSlots,
-    YearCalendarSlots {
+  extends PickersCalendarHeaderSlots, DayCalendarSlots, MonthCalendarSlots, YearCalendarSlots {
   /**
    * Custom component for calendar header.
    * Check the [PickersCalendarHeader](https://mui.com/x/api/date-pickers/pickers-calendar-header/) component.
@@ -42,7 +39,8 @@ export interface DateCalendarSlots
 }
 
 export interface DateCalendarSlotProps
-  extends PickersCalendarHeaderSlotProps,
+  extends
+    PickersCalendarHeaderSlotProps,
     DayCalendarSlotProps,
     MonthCalendarSlotProps,
     YearCalendarSlotProps {
@@ -50,7 +48,8 @@ export interface DateCalendarSlotProps
 }
 
 export interface ExportedDateCalendarProps
-  extends ExportedDayCalendarProps,
+  extends
+    ExportedDayCalendarProps,
     ExportedMonthCalendarProps,
     ExportedYearCalendarProps,
     ExportedValidateDateProps,
@@ -80,8 +79,7 @@ export interface ExportedDateCalendarProps
 }
 
 export interface DateCalendarProps
-  extends ExportedDateCalendarProps,
-    ExportedUseViewsOptions<PickerValue, DateView> {
+  extends ExportedDateCalendarProps, ExportedUseViewsOptions<PickerValue, DateView> {
   /**
    * The selected value.
    * Used when the component is controlled.

@@ -5,7 +5,7 @@ import { storeClasses } from '../utils/SchedulerStore/tests/utils';
 storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
     describe('visibleDate', () => {
-      it('should return the visibleDate with the default timezone applied', () => {
+      it('should return the visibleDate with the default display timezone applied', () => {
         const visibleDate = adapter.date('2025-07-03T00:00:00Z', 'default');
         const state = new storeClass.Value({ events: [], visibleDate }, adapter).state;
         const result = schedulerOtherSelectors.visibleDate(state);
@@ -13,10 +13,10 @@ storeClasses.forEach((storeClass) => {
         expect(result).toEqualDateTime(visibleDate);
       });
 
-      it('should apply the configured timezone to the visibleDate', () => {
+      it('should apply the configured display timezone to the visibleDate', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const state = new storeClass.Value(
-          { events: [], visibleDate, timezone: 'America/New_York' },
+          { events: [], visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         ).state;
         const result = schedulerOtherSelectors.visibleDate(state);
@@ -47,16 +47,16 @@ storeClasses.forEach((storeClass) => {
         expect(result2).toEqualDateTime(newVisibleDate);
       });
 
-      it('should return a new reference when timezone changes', () => {
+      it('should return a new reference when display timezone changes', () => {
         const visibleDate = adapter.date('2025-07-03T12:00:00Z', 'default');
         const store = new storeClass.Value(
-          { events: [], visibleDate, timezone: 'default' },
+          { events: [], visibleDate, displayTimezone: 'default' },
           adapter,
         );
         const result1 = schedulerOtherSelectors.visibleDate(store.state);
 
         store.updateStateFromParameters(
-          { events: [], visibleDate, timezone: 'America/New_York' },
+          { events: [], visibleDate, displayTimezone: 'America/New_York' },
           adapter,
         );
         const result2 = schedulerOtherSelectors.visibleDate(store.state);

@@ -198,6 +198,8 @@ export default defineConfig(
     rules: {
       // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
       'vitest/valid-expect': 'off',
+      // Annoying auto-fix
+      'vitest/no-focused-tests': 'off',
     },
   },
   {
@@ -225,6 +227,8 @@ export default defineConfig(
           fixStyle: 'inline-type-imports',
         },
       ],
+      // Charts have no semantics, so we often need to query by container
+      'testing-library/no-container': 'off',
     },
   },
   {
@@ -300,6 +304,14 @@ export default defineConfig(
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
+      'react/jsx-filename-extension': 'off',
+    },
+  },
+
+  {
+    files: [`test/regressions/**/*${EXTENSION_TS}`],
+    rules: {
+      'react/jsx-filename-extension': 'off',
     },
   },
 
@@ -365,9 +377,11 @@ export default defineConfig(
                 // Exceptions (QUESTION: Keep or remove?)
                 '!@mui/x-data-grid/internals/demo',
                 '!@mui/x-date-pickers/internals/demo',
-                '!@mui/x-tree-view/hooks/useTreeViewApiRef',
                 // TODO: export this from /ButtonBase in core. This will break after we move to package exports
                 '!@mui/material/ButtonBase/TouchRipple',
+                /* Module augmentation for feature flags in Charts. Users should be able to pick the features they need.
+                 * so it's useful to allow deeper imports */
+                '!@mui/x-charts*/moduleAugmentation/*',
               ],
               message: 'Use less deep import instead',
             },

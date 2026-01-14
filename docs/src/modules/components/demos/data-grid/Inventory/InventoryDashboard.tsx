@@ -236,7 +236,10 @@ function InventoryDashboard() {
   );
 
   return (
-    <DemoContainer theme={inventoryTheme}>
+    <DemoContainer
+      theme={inventoryTheme}
+      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/Inventory"
+    >
       <ThemeProvider theme={inventoryTheme}>
         <Box
           sx={{

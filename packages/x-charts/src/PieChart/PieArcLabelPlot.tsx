@@ -50,7 +50,8 @@ export interface PieArcLabelPlotSlotProps {
 }
 
 export interface PieArcLabelPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
       | 'data'
       | 'faded'
@@ -133,6 +134,7 @@ function PieArcLabelPlot(props: PieArcLabelPlotProps) {
           outerRadius={item.outerRadius}
           arcLabelRadius={item.arcLabelRadius}
           cornerRadius={item.cornerRadius}
+          hidden={item.hidden}
           id={id}
           color={item.color}
           isFaded={item.isFaded}

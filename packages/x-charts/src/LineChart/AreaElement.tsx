@@ -69,7 +69,8 @@ export interface AreaElementSlotProps {
 }
 
 export interface AreaElementProps
-  extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
     Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
   d: string;

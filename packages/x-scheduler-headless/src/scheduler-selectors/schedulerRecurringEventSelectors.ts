@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,

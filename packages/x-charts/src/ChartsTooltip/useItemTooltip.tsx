@@ -2,7 +2,6 @@
 import { useSeries } from '../hooks/useSeries';
 import { type ChartSeriesDefaultized, type ChartSeriesType } from '../models/seriesType/config';
 import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/useChartTooltip';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
@@ -24,8 +23,8 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
   | null {
   const store = useStore();
-  const identifier = useSelector(store, selectorChartsTooltipItem);
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const identifier = store.use(selectorChartsTooltipItem);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const series = useSeries();
 

@@ -19,7 +19,7 @@ These components are significantly more complex than the ones found in our Core 
 They feature advanced functionality for data-rich applications and a wide range of other use cases.
 
 :::info
-MUI X is **open core**—base components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
 See [Licensing](/x/introduction/licensing/) for details.
 
 Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {
   useChartContext,
   type ChartsSlotProps,
-  useSelector,
   useChartsSlots,
   type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
@@ -33,7 +32,7 @@ const ChartsToolbarZoomOutTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const disabled = useSelector(store, selectorChartCanZoomOut);
+  const disabled = store.use(selectorChartCanZoomOut);
 
   const element = useComponentRenderer(slots.baseButton, render, {
     ...slotProps.baseButton,

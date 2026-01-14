@@ -9,5 +9,8 @@ export function isOccurrenceAllDayOrMultipleDay(
     return true;
   }
 
-  return !adapter.isSameDay(occurrence.start.value, occurrence.end.value);
+  return !adapter.isSameDay(
+    occurrence.displayTimezone.start.value,
+    occurrence.displayTimezone.end.value,
+  );
 }

@@ -23,7 +23,6 @@
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-internals": "workspace:^",
     "@mui/x-license": "workspace:*",
-    "@playwright/test": "catalog:",
     "@types/moment-jalaali": "catalog:",
     "@types/react": "catalog:",
     "@types/react-router": "catalog:",

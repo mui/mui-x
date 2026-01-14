@@ -33,7 +33,7 @@ export const useSankeyHighlight: ChartPlugin<UseSankeyHighlightSignature> = ({ s
   });
 
   const setHighlight = useEventCallback((newItem: SankeyHighlightItemData) => {
-    const prevItem = store.getSnapshot().highlight.item;
+    const prevItem = store.state.highlight.item;
 
     if (fastObjectShallowCompare(prevItem, newItem)) {
       return;

@@ -36,11 +36,10 @@ const BrowserFieldContent = styled('div', { name: 'BrowserField', slot: 'Content
   },
 );
 
-interface BrowserTextFieldProps
-  extends UseMultiInputRangeFieldTextFieldProps<
-    true,
-    React.HTMLAttributes<HTMLDivElement>
-  > {
+interface BrowserTextFieldProps extends UseMultiInputRangeFieldTextFieldProps<
+  true,
+  React.HTMLAttributes<HTMLDivElement>
+> {
   triggerRef?: React.Ref<HTMLDivElement>;
 }
 
@@ -97,10 +96,8 @@ function BrowserTextField(props: BrowserTextFieldProps) {
 }
 
 interface BrowserMultiInputDateRangeFieldProps
-  extends Omit<
-      DateRangePickerFieldProps,
-      'unstableFieldRef' | 'clearable' | 'onClear'
-    >,
+  extends
+    Omit<DateRangePickerFieldProps, 'unstableFieldRef' | 'clearable' | 'onClear'>,
     MultiInputFieldRefs {
   slotProps: {
     textField: any;

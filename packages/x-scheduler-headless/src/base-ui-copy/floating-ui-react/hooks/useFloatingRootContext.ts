@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
 import { isElement } from '@floating-ui/utils/dom';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
-import { useId } from '@base-ui-components/utils/useId';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { useId } from '@base-ui/utils/useId';
 
 import type { FloatingRootContext, ReferenceElement, ContextData } from '../types';
 import type { BaseUIChangeEventDetails } from '../../utils/createBaseUIEventDetails';

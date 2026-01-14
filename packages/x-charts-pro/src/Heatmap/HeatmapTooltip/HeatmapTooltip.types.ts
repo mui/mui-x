@@ -1,7 +1,9 @@
 import { type ChartsTooltipContainerProps } from '@mui/x-charts/ChartsTooltip';
 
-export interface HeatmapTooltipProps
-  extends Omit<ChartsTooltipContainerProps, 'trigger' | 'children'> {
+export interface HeatmapTooltipProps extends Omit<
+  ChartsTooltipContainerProps,
+  'trigger' | 'children'
+> {
   /**
    * Select the kind of tooltip to display
    * - 'item': Shows data about the item below the mouse.

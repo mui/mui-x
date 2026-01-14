@@ -1,7 +1,9 @@
 import * as React from 'react';
-import clsx from 'clsx';
 import { Calendar } from 'lucide-react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
@@ -12,9 +14,89 @@ import {
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventPopoverHeader from './EventPopoverHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { getColorClassName } from '../../utils/color-utils';
 import { getRecurrenceLabel } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
+import { schedulerPaletteStyles } from '../../utils/tokens';
+
+const ReadonlyContentRoot = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'ReadonlyContent',
+})(({ theme }) => ({
+  padding: theme.spacing(3),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+}));
+
+const EventPopoverActions = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'Actions',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: theme.spacing(2),
+}));
+
+const EventPopoverDateTimeContainer = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'DateTimeContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+const EventPopoverTitle = styled('p', {
+  name: 'MuiEventPopover',
+  slot: 'Title',
+})(({ theme }) => ({
+  margin: 0,
+  fontSize: theme.typography.body1.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  color: 'var(--event-color-12)',
+}));
+
+const EventPopoverResourceContainer = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
+}));
+
+const EventPopoverResourceLegendContainer = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceLegendContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.5),
+}));
+
+const ResourceLegendColorDot = styled('span', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceLegendColor',
+})({
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  flexShrink: 0,
+  backgroundColor: 'var(--event-color-9)',
+  ...schedulerPaletteStyles,
+});
+
+const EventPopoverResourceTitle = styled('p', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceTitle',
+})(({ theme }) => ({
+  margin: 0,
+  fontSize: theme.typography.body2.fontSize,
+  color: 'var(--event-color-11)',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+}));
 
 type ReadonlyContentProps = {
   occurrence: SchedulerEventOccurrence;
@@ -39,15 +121,15 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   const defaultRecurrenceKey = useStore(
     store,
     schedulerRecurringEventSelectors.defaultPresetKey,
-    occurrence.rrule,
-    occurrence.start,
+    occurrence.displayTimezone.rrule,
+    occurrence.displayTimezone.start,
   );
 
   // Feature hook
   const formatTime = useFormatTime();
   const recurrenceLabel = getRecurrenceLabel(
     adapter,
-    occurrence.start,
+    occurrence.displayTimezone.start,
     defaultRecurrenceKey,
     translations,
   );
@@ -55,60 +137,62 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
   return (
     <React.Fragment>
       <EventPopoverHeader>
-        <p className="EventPopoverTitle"> {occurrence.title}</p>
+        <EventPopoverTitle>{occurrence.title}</EventPopoverTitle>
 
-        <div className="EventPopoverResourceContainer">
-          <div className="EventPopoverResourceLegendContainer">
+        <EventPopoverResourceContainer>
+          <EventPopoverResourceLegendContainer>
             {resource?.eventColor && resource.eventColor !== color && (
-              <span
-                className={clsx('ResourceLegendColor', getColorClassName(resource.eventColor))}
+              <ResourceLegendColorDot
+                className="ResourceLegendColor"
+                data-palette={resource.eventColor}
               />
             )}
 
-            <span className={clsx('ResourceLegendColor', getColorClassName(color))} />
-          </div>
-          <p
-            className={clsx('EventPopoverResourceTitle', 'LinesClamp')}
-            style={{ '--number-of-lines': 1 } as React.CSSProperties}
-          >
+            <ResourceLegendColorDot className="ResourceLegendColor" data-palette={color} />
+          </EventPopoverResourceLegendContainer>
+          <EventPopoverResourceTitle>
             {resource?.title || translations.noResourceAriaLabel}
-          </p>
-        </div>
+          </EventPopoverResourceTitle>
+        </EventPopoverResourceContainer>
       </EventPopoverHeader>
-      <div className="ReadonlyContent">
-        <div className="EventPopoverDateTimeContainer">
+      <ReadonlyContentRoot>
+        <EventPopoverDateTimeContainer>
           <Calendar size={16} strokeWidth={1.5} />
-          <p
-            className={clsx('EventPopoverDateTime', 'LinesClamp')}
-            style={{ '--number-of-lines': 1 } as React.CSSProperties}
-          >
+          <Typography variant="body2" component="p" noWrap>
             <time
-              dateTime={adapter.format(occurrence.start.value, 'localizedNumericDate')}
-              className="EventDate"
+              dateTime={adapter.format(
+                occurrence.displayTimezone.start.value,
+                'localizedNumericDate',
+              )}
             >
               <span>
-                {adapter.format(occurrence.start.value, 'localizedDateWithFullMonthAndWeekDay')}
+                {adapter.format(
+                  occurrence.displayTimezone.start.value,
+                  'localizedDateWithFullMonthAndWeekDay',
+                )}
                 ,{' '}
               </span>
             </time>
             {occurrence.allDay ? (
-              <span className="EventAllDay"> {translations.allDayLabel}</span>
+              <span> {translations.allDayLabel}</span>
             ) : (
-              <time className="EventTime">
-                <span>{formatTime(occurrence.start.value)}</span>
-                <span> - {formatTime(occurrence.end.value)}</span>
+              <time>
+                <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
+                <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
               </time>
             )}
-          </p>
-        </div>
-        <p className="EventRecurrence">{recurrenceLabel}</p>
-        <p className="EventDescription">{occurrence.description}</p>
-      </div>
-      <div className="EventPopoverActions">
-        <button className={clsx('NeutralButton', 'Button')} type="submit" onClick={onClose}>
+          </Typography>
+        </EventPopoverDateTimeContainer>
+        <Typography variant="body2" color="text.secondary">
+          {recurrenceLabel}
+        </Typography>
+        <Typography variant="body2">{occurrence.description}</Typography>
+      </ReadonlyContentRoot>
+      <EventPopoverActions>
+        <Button variant="contained" type="button" onClick={onClose}>
           {translations.closeButtonLabel}
-        </button>
-      </div>
+        </Button>
+      </EventPopoverActions>
     </React.Fragment>
   );
 }

@@ -1,4 +1,4 @@
-import { screen } from '@mui/internal-test-utils';
+import { screen, waitFor } from '@mui/internal-test-utils';
 import { createSchedulerRenderer, EventBuilder } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
@@ -15,12 +15,12 @@ describe('EventCalendar', () => {
 
   const event1 = EventBuilder.new()
     .title('Running')
-    .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+    .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
     .build();
 
   const event2 = EventBuilder.new()
     .title('Weekly')
-    .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
+    .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
     .build();
 
   // TODO: Move in a test file specific to the TimeGrid component.
@@ -46,13 +46,13 @@ describe('EventCalendar', () => {
   it('should allow to show / hide resources using the UI', async () => {
     const event1WithResource = EventBuilder.new()
       .title('Running')
-      .span('2025-05-26T07:30:00', '2025-05-26T08:15:00')
+      .span('2025-05-26T07:30:00Z', '2025-05-26T08:15:00Z')
       .resource('1')
       .build();
 
     const event2WithResource = EventBuilder.new()
       .title('Weekly')
-      .span('2025-05-27T16:00:00', '2025-05-27T17:00:00')
+      .span('2025-05-27T16:00:00Z', '2025-05-27T17:00:00Z')
       .resource('2')
       .build();
 
@@ -66,25 +66,40 @@ describe('EventCalendar', () => {
       />,
     );
 
-    const workResourceToggleButton = screen.getByRole('checkbox', { name: /Work/i });
-    const sportResourceToggleButton = screen.getByRole('checkbox', { name: /Sport/i });
+    // Resources are visible by default, so the buttons say "Hide events for ..."
+    // Use findByRole to wait for the component to fully render
+    const workResourceToggleButton = await screen.findByRole('button', {
+      name: /Hide events for Work/i,
+    });
+    const sportResourceToggleButton = await screen.findByRole('button', {
+      name: /Hide events for Sport/i,
+    });
 
-    expect(workResourceToggleButton).to.have.attribute('data-checked');
-    expect(sportResourceToggleButton).to.have.attribute('data-checked');
     expect(screen.queryByRole('button', { name: /Running/i })).not.to.equal(null);
     expect(screen.queryByRole('button', { name: /Weekly/i })).not.to.equal(null);
 
+    // Hide Work resource
     await user.click(workResourceToggleButton);
-    expect(workResourceToggleButton).not.to.have.attribute('data-checked');
+    // Button label changes to "Show events for ..." when hidden
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Show events for Work/i })).not.to.equal(null);
+    });
     expect(screen.queryByRole('button', { name: /Weekly/i })).to.equal(null);
 
-    await user.click(sportResourceToggleButton);
-    expect(sportResourceToggleButton).not.to.have.attribute('data-checked');
-    expect(screen.queryByRole('button', { name: /Running/i })).to.equal(null);
-
-    await user.click(workResourceToggleButton);
-    expect(workResourceToggleButton).to.have.attribute('data-checked');
+    // Show Work resource again (button text should now be "Show events for Work")
+    const workResourceToggleButton2 = screen.getByRole('button', { name: /Show events for Work/i });
+    await user.click(workResourceToggleButton2);
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Hide events for Work/i })).not.to.equal(null);
+    });
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
+
+    // Hide Sport resource
+    await user.click(sportResourceToggleButton);
+    await waitFor(() => {
+      expect(screen.queryByRole('button', { name: /Show events for Sport/i })).not.to.equal(null);
+    });
+    expect(screen.queryByRole('button', { name: /Running/i })).to.equal(null);
   });
 
   describe('Preferences Menu', () => {
@@ -95,10 +110,18 @@ describe('EventCalendar', () => {
       expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
       expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
 
+      // Wait for component to fully render before opening preferences menu
+      await waitFor(() =>
+        expect(screen.queryByRole('button', { name: /settings/i })).not.to.equal(null),
+      );
+
       // Hide the weekends
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
-      await user.click(document.body);
+      // Close menu with Escape key instead of body click
+      await user.keyboard('{Escape}');
+      // Wait for menu to close
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.queryByRole('columnheader', { name: /Sunday 25/i })).to.equal(null);
       expect(screen.queryByRole('columnheader', { name: /Saturday 31/i })).to.equal(null);
@@ -106,7 +129,8 @@ describe('EventCalendar', () => {
       // Show the weekends again
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.getByRole('columnheader', { name: /Sunday 25/i })).not.to.equal(null);
       expect(screen.getByRole('columnheader', { name: /Saturday 31/i })).not.to.equal(null);
@@ -122,7 +146,8 @@ describe('EventCalendar', () => {
       // Hide the weekends
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.queryByRole('columnheader', { name: /Sunday/i })).to.equal(null);
       expect(screen.queryByRole('columnheader', { name: /Saturday/i })).to.equal(null);
@@ -130,7 +155,8 @@ describe('EventCalendar', () => {
       // Show the weekends again
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
       expect(screen.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
@@ -146,7 +172,8 @@ describe('EventCalendar', () => {
       // Hide the weekends
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.queryByLabelText(/Saturday 31/i)).to.equal(null);
       expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
@@ -154,7 +181,8 @@ describe('EventCalendar', () => {
       // Show the weekends again
       await openPreferencesMenu(user);
       await toggleShowWeekends(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.getByLabelText(/Saturday 31/i)).not.to.equal(null);
       expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
@@ -170,14 +198,16 @@ describe('EventCalendar', () => {
       // Show the week number
       await openPreferencesMenu(user);
       await toggleShowWeekNumber(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(await findWeekHeaders()).to.have.lengthOf.above(0);
 
       // Hide the week number again
       await openPreferencesMenu(user);
       await toggleShowWeekNumber(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(await findWeekHeaders()).to.have.lengthOf(0);
     });
@@ -186,68 +216,68 @@ describe('EventCalendar', () => {
       const { user } = render(<EventCalendar events={[]} />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to change the time format using the UI in the month view', async () => {
       const { user } = render(<EventCalendar events={[event1]} defaultView="month" />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to change the time format using the UI in the agenda view', async () => {
       const { user } = render(<EventCalendar events={[event1]} defaultView="agenda" />);
 
       // 12 hours format should be visible by default
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
 
       // Change to 24 hours format
       await openPreferencesMenu(user);
       await changeTo24HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.equal(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.equal(0));
 
       // Show 12 hours format again
       await openPreferencesMenu(user);
       await changeTo12HoursFormat(user);
       await user.click(document.body);
 
-      expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0);
+      await waitFor(() => expect(screen.queryAllByText(/AM|PM/).length).to.be.above(0));
     });
 
     it('should allow to show / hide empty days using the UI in the agenda view', async () => {
-      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00').build();
-      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00').build();
+      const saturdayEvent = EventBuilder.new().singleDay('2025-05-31T07:30:00Z').build();
+      const sundayEvent = EventBuilder.new().singleDay('2025-06-02T07:30:00Z').build();
 
       const { user } = render(
         <EventCalendar events={[saturdayEvent, sundayEvent]} defaultView="agenda" />,
@@ -259,14 +289,16 @@ describe('EventCalendar', () => {
       // Hide empty days
       await openPreferencesMenu(user);
       await toggleShowEmptyDaysInAgenda(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.queryByLabelText(/Sunday 1/i)).to.equal(null);
 
       // Show empty days again
       await openPreferencesMenu(user);
       await toggleShowEmptyDaysInAgenda(user);
-      await user.click(document.body);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
       expect(screen.getByLabelText(/Sunday 1/i)).not.to.equal(null);
     });
@@ -276,7 +308,7 @@ describe('EventCalendar', () => {
     it('should apply className to event elements in week view', () => {
       const eventWithClassName = EventBuilder.new()
         .title('Important Meeting')
-        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .span('2025-05-26T10:00:00Z', '2025-05-26T11:00:00Z')
         .className('custom-event-class')
         .build();
 
@@ -289,7 +321,7 @@ describe('EventCalendar', () => {
     it('should apply className to event elements in month view', () => {
       const eventWithClassName = EventBuilder.new()
         .title('Monthly Event')
-        .span('2025-05-26T10:00:00', '2025-05-26T11:00:00')
+        .span('2025-05-26T10:00:00Z', '2025-05-26T11:00:00Z')
         .className('monthly-class')
         .build();
 
@@ -302,7 +334,7 @@ describe('EventCalendar', () => {
     it('should apply className to event elements in agenda view', () => {
       const eventWithClassName = EventBuilder.new()
         .title('Agenda Event')
-        .span('2025-05-26T14:00:00', '2025-05-26T15:00:00')
+        .span('2025-05-26T14:00:00Z', '2025-05-26T15:00:00Z')
         .className('agenda-class')
         .build();
 

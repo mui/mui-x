@@ -16,7 +16,8 @@ interface PickersTextFieldPropsUsedByField {
 }
 
 export interface PickersBaseTextFieldProps
-  extends PickersInputPropsUsedByField,
+  extends
+    PickersInputPropsUsedByField,
     PickersTextFieldPropsUsedByField,
     Omit<
       FormControlProps,

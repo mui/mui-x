@@ -21,7 +21,8 @@ export interface LinePlotSlots extends LineElementSlots {}
 export interface LinePlotSlotProps extends LineElementSlotProps {}
 
 export interface LinePlotProps
-  extends React.SVGAttributes<SVGSVGElement>,
+  extends
+    React.SVGAttributes<SVGSVGElement>,
     Pick<LineElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line item is clicked.
@@ -70,7 +71,7 @@ function LinePlot(props: LinePlotProps) {
   const completedData = useAggregatedData();
   return (
     <LinePlotRoot {...other}>
-      {completedData.map(({ d, seriesId, color, gradientId }) => {
+      {completedData.map(({ d, seriesId, color, gradientId, hidden }) => {
         return (
           <LineElement
             key={seriesId}
@@ -78,6 +79,7 @@ function LinePlot(props: LinePlotProps) {
             d={d}
             color={color}
             gradientId={gradientId}
+            hidden={hidden}
             skipAnimation={skipAnimation}
             slots={slots}
             slotProps={slotProps}

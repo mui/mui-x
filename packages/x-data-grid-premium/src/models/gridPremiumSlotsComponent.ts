@@ -6,8 +6,7 @@ import { GridPremiumIconSlotsComponent } from './gridPremiumIconSlotsComponent';
  * for Premium package
  */
 export interface GridPremiumSlotsComponent
-  extends GridProSlotsComponent,
-    GridPremiumIconSlotsComponent {
+  extends GridProSlotsComponent, GridPremiumIconSlotsComponent {
   /**
    * Component rendered when AI Assistant panel is open. Only needed when `aiAssistant` prop is passed to the grid.
    * Pass `GridAiAssistantPanel` to render the default AI Assistant panel.

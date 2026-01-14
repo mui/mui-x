@@ -4,11 +4,10 @@ import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { useToolbarContext } from './ToolbarContext';
 
-interface ToolbarItemProps
-  extends Pick<
-    React.ComponentProps<'button'>,
-    'onKeyDown' | 'onFocus' | 'aria-disabled' | 'disabled'
-  > {}
+interface ToolbarItemProps extends Pick<
+  React.ComponentProps<'button'>,
+  'onKeyDown' | 'onFocus' | 'aria-disabled' | 'disabled'
+> {}
 
 export function useRegisterToolbarButton(
   props: ToolbarItemProps,

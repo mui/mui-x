@@ -28,5 +28,9 @@ export type RadarItemIdentifier = {
   dataIndex?: number;
 };
 
-export interface DefaultizedRadarSeriesType
-  extends DefaultizedProps<RadarSeriesType, CommonDefaultizedProps | 'color'> {}
+export interface DefaultizedRadarSeriesType extends DefaultizedProps<
+  RadarSeriesType,
+  CommonDefaultizedProps | 'color'
+> {
+  hidden: boolean;
+}

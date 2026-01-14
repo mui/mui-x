@@ -4,7 +4,6 @@ import {
   type ChartPlugin,
   type AxisId,
   type ZoomData,
-  useSelector,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
@@ -35,7 +34,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
   } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
 
   useEffectAfterFirstRender(() => {
     store.set('zoom', {
@@ -186,10 +185,7 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginDat
     (step: number) => {
       setZoomDataCallback((prev) =>
         prev.map((zoomData) => {
-          const zoomOptions = selectorChartAxisZoomOptionsLookup(
-            store.getSnapshot(),
-            zoomData.axisId,
-          );
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, zoomData.axisId);
 
           return calculateZoom(zoomData, step, zoomOptions);
         }),

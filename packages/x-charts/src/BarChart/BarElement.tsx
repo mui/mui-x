@@ -41,6 +41,7 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     height: number;
     layout: 'horizontal' | 'vertical';
     skipAnimation: boolean;
+    hidden?: boolean;
   };
 
 function BarElement(props: BarElementProps) {
@@ -61,6 +62,7 @@ function BarElement(props: BarElementProps) {
     yOrigin,
     width,
     height,
+    hidden,
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
@@ -72,7 +74,7 @@ function BarElement(props: BarElementProps) {
   const isFocused = useIsItemFocused(
     React.useMemo(
       () => ({
-        seriesType: 'bar',
+        type: 'bar',
         seriesId: id,
         dataIndex,
       }),
@@ -116,6 +118,7 @@ function BarElement(props: BarElementProps) {
       fill: color,
       skipAnimation,
       layout,
+      hidden,
     },
     className: classes.root,
     ownerState,

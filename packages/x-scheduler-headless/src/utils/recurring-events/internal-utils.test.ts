@@ -6,11 +6,11 @@ import {
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import {
-  countMonthlyOccurrencesUpToExact,
-  countWeeklyOccurrencesUpToExact,
-  estimateOccurrencesUpTo,
+  getRemainingMonthlyOccurrences,
+  getRemainingWeeklyOccurrences,
+  getRemainingOccurrences,
   getEventDurationInDays,
-  countYearlyOccurrencesUpToExact,
+  getRemainingYearlyOccurrences,
   tokenizeByDay,
   parsesByDayForWeeklyFrequency,
   nthWeekdayOfMonth,
@@ -18,7 +18,7 @@ import {
   NOT_LOCALIZED_WEEK_DAYS,
   getWeekDayCode,
   getWeekDayNumberFromCode,
-  countDailyOccurrencesUpToExact,
+  getRemainingDailyOccurrences,
 } from './internal-utils';
 
 describe('recurring-events/internal-utils', () => {
@@ -77,24 +77,24 @@ describe('recurring-events/internal-utils', () => {
     });
 
     it('returns 1 for allDay event on same calendar day', () => {
-      const event = EventBuilder.new().fullDay('2025-02-10').toProcessed();
+      const event = EventBuilder.new().fullDay('2025-02-10Z').toProcessed();
       expect(getEventDurationInDays(adapter, event)).to.equal(1);
     });
 
     it('returns inclusive day count for multi-day event', () => {
-      const event = EventBuilder.new().span('2025-01-01', '2025-01-04').toProcessed();
+      const event = EventBuilder.new().span('2025-01-01Z', '2025-01-04Z').toProcessed();
       // Jan 1,2,3,4 => 4 days
       expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles month boundary correctly', () => {
-      const event = EventBuilder.new().span('2025-01-30', '2025-02-02').toProcessed();
+      const event = EventBuilder.new().span('2025-01-30Z', '2025-02-02Z').toProcessed();
       // Jan 30,31, Feb 1,2 => 4 days
       expect(getEventDurationInDays(adapter, event)).to.equal(4);
     });
 
     it('handles leap day span', () => {
-      const event = EventBuilder.new().span('2024-02-28', '2024-03-01').toProcessed();
+      const event = EventBuilder.new().span('2024-02-28Z', '2024-03-01Z').toProcessed();
       // Feb 28, Feb 29, Mar 1 => 3 days
       expect(getEventDurationInDays(adapter, event)).to.equal(3);
     });
@@ -250,56 +250,71 @@ describe('recurring-events/internal-utils', () => {
     });
   });
 
-  describe('estimateOccurrencesUpTo', () => {
+  describe('getRemainingOccurrences', () => {
     it('throws an error on unknown frequency', () => {
       const badRule = { freq: 'FOO', interval: 1 } as any;
       const start = adapter.date('2025-01-01T00:00:00Z', 'default');
       const target = adapter.date('2025-01-02T00:00:00Z', 'default');
-      expect(() => estimateOccurrencesUpTo(adapter, badRule, start, target)).to.throw();
+      expect(() => getRemainingOccurrences(adapter, badRule, start, target, 100)).to.throw();
     });
   });
 
-  describe('countDailyOccurrencesUpToExact', () => {
+  describe('getRemainingDailyOccurrences', () => {
     const createRule = (interval = 1): RecurringEventRecurrenceRule => ({
       freq: 'DAILY',
       interval,
     });
 
-    it('returns 0 when target is before start', () => {
+    it('returns count when target is before start', () => {
       expect(
-        countDailyOccurrencesUpToExact({
+        getRemainingDailyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-03-10', 'default'),
+          seriesStartDay: adapter.date('2025-03-10Z', 'default'),
           date: adapter.date('2025-03-09T23:59:59Z', 'default'),
+          count: 100,
         }),
-      ).to.equal(0);
+      ).to.equal(100);
     });
 
-    it('interval=1 returns inclusive day span count', () => {
+    it('interval=1 returns remaining after inclusive day span', () => {
       expect(
-        countDailyOccurrencesUpToExact({
+        getRemainingDailyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-01-01', 'default'),
-          date: adapter.date('2025-01-05T23:59:59Z', 'default'), // 1,2,3,4,5 = 5
+          seriesStartDay: adapter.date('2025-01-01Z', 'default'),
+          date: adapter.date('2025-01-05T23:59:59Z', 'default'), // 1,2,3,4,5 = 5 occurrences
+          count: 100,
         }),
-      ).to.equal(5);
+      ).to.equal(95); // 100 - 5
     });
 
-    it('interval=2 counts every other day inclusive', () => {
+    it('interval=2 returns remaining after every other day inclusive', () => {
       expect(
-        countDailyOccurrencesUpToExact({
+        getRemainingDailyOccurrences({
           adapter,
           rule: createRule(2),
-          seriesStartDay: adapter.date('2025-01-01', 'default'),
-          date: adapter.date('2025-01-11T00:00:00Z', 'default'), // Days: 1,3,5,7,9,11 => 6
+          seriesStartDay: adapter.date('2025-01-01Z', 'default'),
+          date: adapter.date('2025-01-11T00:00:00Z', 'default'), // Days: 1,3,5,7,9,11 => 6 occurrences
+          count: 100,
         }),
-      ).to.equal(6);
+      ).to.equal(94); // 100 - 6
+    });
+
+    it('returns 0 when count is lower than the number of occurrences', () => {
+      expect(
+        getRemainingDailyOccurrences({
+          adapter,
+          rule: createRule(),
+          seriesStartDay: adapter.date('2025-01-01Z', 'default'),
+          date: adapter.date('2025-01-10T23:59:59Z', 'default'), // 10 occurrences
+          count: 5,
+        }),
+      ).to.equal(0); // 5 - 10 = -5, clamped to 0
     });
   });
 
-  describe('countWeeklyOccurrencesUpToExact', () => {
+  describe('getRemainingWeeklyOccurrences', () => {
     const createRule = (
       by: RecurringEventWeekDayCode[],
       interval = 1,
@@ -309,87 +324,106 @@ describe('recurring-events/internal-utils', () => {
       byDay: by,
     });
 
-    it('returns 0 when target date is before series start', () => {
+    it('returns count when target date is before series start', () => {
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'),
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'),
           date: adapter.date('2025-06-09T23:59:59Z', 'default'), // Mon before start,
+          count: 100,
         }),
-      ).to.equal(0);
+      ).to.equal(100);
     });
 
-    it('counts first occurrence when target is same day', () => {
+    it('returns remaining after first occurrence when target is same day', () => {
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-06-10T23:59:59Z', 'default'),
+          count: 100,
         }),
-      ).to.equal(1);
+      ).to.equal(99); // 100 - 1
     });
 
-    it('counts occurrences for a single weekday across several weeks (interval=1)', () => {
+    it('returns remaining for a single weekday across several weeks (interval=1)', () => {
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-07-08T12:00:00Z', 'default'), // 5 Tuesdays inclusive
+          count: 100,
         }),
-      ).to.equal(5);
+      ).to.equal(95); // 100 - 5
     });
 
-    it('counts multiple days per week (e.g. Mon & Wed) up to target inclusive', () => {
+    it('returns remaining for multiple days per week (e.g. Mon & Wed) up to target inclusive', () => {
       // Occurrences: Mon(2), Wed(4), Mon(9), Wed(11), Mon(16), Wed(18) = 6
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['MO', 'WE']),
-          seriesStartDay: adapter.date('2025-06-02', 'default'), // Monday,
+          seriesStartDay: adapter.date('2025-06-02Z', 'default'), // Monday,
           date: adapter.date('2025-06-18T23:59:59Z', 'default'), // includes weeks of Jun 2,9,16
+          count: 100,
         }),
-      ).to.equal(6);
+      ).to.equal(94); // 100 - 6
     });
 
     it('respects interval > 1 (every 2 weeks)', () => {
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU'], 2),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday,
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday,
           date: adapter.date('2025-07-22T12:00:00Z', 'default'),
+          count: 100,
         }),
-      ).to.equal(4);
+      ).to.equal(96); // 100 - 4
     });
 
     it('does not count weekday in target week occurring after target day', () => {
       // Occurrences counted: Jun 10, Jun 17 => 2 (Jun 24 excluded)
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['TU']),
-          seriesStartDay: adapter.date('2025-06-10', 'default'), // Tuesday
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
           date: adapter.date('2025-06-23T12:00:00Z', 'default'), // Monday of week containing Tue 24
+          count: 100,
         }),
-      ).to.equal(2);
+      ).to.equal(98); // 100 - 2
     });
 
     it('handles unordered byDay array', () => {
       expect(
-        countWeeklyOccurrencesUpToExact({
+        getRemainingWeeklyOccurrences({
           adapter,
           rule: createRule(['FR', 'MO']),
-          seriesStartDay: adapter.date('2025-06-02', 'default'), // Monday,
+          seriesStartDay: adapter.date('2025-06-02Z', 'default'), // Monday,
           date: adapter.date('2025-06-13T23:59:59Z', 'default'), // Mon 2, Fri 6, Mon 9, Fri 13 => 4
+          count: 100,
         }),
-      ).to.equal(4);
+      ).to.equal(96); // 100 - 4
+    });
+
+    it('returns 0 when count is lower than the number of occurrences', () => {
+      expect(
+        getRemainingWeeklyOccurrences({
+          adapter,
+          rule: createRule(['TU']),
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'), // Tuesday
+          date: adapter.date('2025-07-08T12:00:00Z', 'default'), // 5 Tuesdays inclusive
+          count: 3,
+        }),
+      ).to.equal(0); // 3 - 5 = -2, clamped to 0
     });
   });
 
-  describe('countMonthlyOccurrencesUpToExact', () => {
+  describe('getRemainingMonthlyOccurrences', () => {
     describe('byMonthDay', () => {
       const createRule = (day: number, interval = 1): RecurringEventRecurrenceRule => ({
         freq: 'MONTHLY',
@@ -397,59 +431,76 @@ describe('recurring-events/internal-utils', () => {
         byMonthDay: [day],
       });
 
-      it('returns 0 when target month is before start month', () => {
+      it('returns count when target month is before start month', () => {
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10),
-            seriesStartDay: adapter.date('2025-06-10', 'default'),
+            seriesStartDay: adapter.date('2025-06-10Z', 'default'),
             date: adapter.date('2025-05-31T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(0);
+        ).to.equal(100);
       });
 
-      it('counts all byMonthDay occurrences up to inclusive target (interval=1)', () => {
+      it('returns remaining after byMonthDay occurrences up to inclusive target (interval=1)', () => {
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10),
-            seriesStartDay: adapter.date('2025-01-10', 'default'),
-            date: adapter.date('2025-04-10T12:00:00Z', 'default'), // Jan, Feb, Mar, Apr
+            seriesStartDay: adapter.date('2025-01-10Z', 'default'),
+            date: adapter.date('2025-04-10T12:00:00Z', 'default'), // Jan, Feb, Mar, Apr = 4
+            count: 100,
           }),
-        ).to.equal(4);
+        ).to.equal(96); // 100 - 4
       });
 
       it('respects interval > 1 (e.g. every 2 months)', () => {
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(10, 2),
-            seriesStartDay: adapter.date('2025-01-10', 'default'),
-            date: adapter.date('2025-11-10T09:00:00Z', 'default'), // Jan, Mar, May, Jul, Sep, Nov
+            seriesStartDay: adapter.date('2025-01-10Z', 'default'),
+            date: adapter.date('2025-11-10T09:00:00Z', 'default'), // Jan, Mar, May, Jul, Sep, Nov = 6
+            count: 100,
           }),
-        ).to.equal(6);
+        ).to.equal(94); // 100 - 6
       });
 
       it('skips months lacking the day (e.g. day 31)', () => {
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(31),
-            seriesStartDay: adapter.date('2025-01-31', 'default'),
-            date: adapter.date('2025-05-31T09:00:00Z', 'default'), // Jan(31), Mar(31), May(31),
+            seriesStartDay: adapter.date('2025-01-31Z', 'default'),
+            date: adapter.date('2025-05-31T09:00:00Z', 'default'), // Jan(31), Mar(31), May(31) = 3
+            count: 100,
           }),
-        ).to.equal(3);
+        ).to.equal(97); // 100 - 3
       });
 
       it('does not count occurrence after target day in same month', () => {
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createRule(20),
-            seriesStartDay: adapter.date('2025-01-20', 'default'),
-            date: adapter.date('2025-02-15T09:00:00Z', 'default'), // Feb 20 not reached
+            seriesStartDay: adapter.date('2025-01-20Z', 'default'),
+            date: adapter.date('2025-02-15T09:00:00Z', 'default'), // Feb 20 not reached = 1
+            count: 100,
           }),
-        ).to.equal(1);
+        ).to.equal(99); // 100 - 1
+      });
+
+      it('returns 0 when count is lower than the number of occurrences', () => {
+        expect(
+          getRemainingMonthlyOccurrences({
+            adapter,
+            rule: createRule(10),
+            seriesStartDay: adapter.date('2025-01-10Z', 'default'),
+            date: adapter.date('2025-06-10T12:00:00Z', 'default'), // Jan–Jun = 6 occurrences
+            count: 4,
+          }),
+        ).to.equal(0); // 4 - 6 = -2, clamped to 0
       });
     });
 
@@ -466,147 +517,171 @@ describe('recurring-events/internal-utils', () => {
       it('counts 2nd Tuesday from July to October 2025 (interval=1)', () => {
         // Jul 8, Aug 12, Sep 9, Oct 14 => 4
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['2TU']),
-            seriesStartDay: adapter.date('2025-07-01', 'default'), // before 2nd Tuesday (Jul 8)
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'), // before 2nd Tuesday (Jul 8)
             date: adapter.date('2025-10-31T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(4);
+        ).to.equal(96); // 100 - 4
       });
 
       it('respects interval > 1 (e.g., 2nd Tuesday every 2 months)', () => {
         // Jul 8, Sep 9 => 2
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['2TU'], 2),
-            seriesStartDay: adapter.date('2025-07-01', 'default'), // before 2nd Tuesday (Jul 8)
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'), // before 2nd Tuesday (Jul 8)
             date: adapter.date('2025-10-31T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(2);
+        ).to.equal(98); // 100 - 2
       });
 
-      it('skips the start month if DTSTART is after that month’s occurrence (2TU)', () => {
+      it("skips the start month if DTSTART is after that month's occurrence (2TU)", () => {
         // July skipped, Aug 12 counted => 1
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['2TU']),
-            seriesStartDay: adapter.date('2025-07-20', 'default'), // after Jul 8
+            seriesStartDay: adapter.date('2025-07-20Z', 'default'), // after Jul 8
             date: adapter.date('2025-08-31T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(1);
+        ).to.equal(99); // 100 - 1
       });
 
       it('counts last Friday (-1FR) from July to October 2025', () => {
         // Jul 25, Aug 29, Sep 26, Oct 31 => 4
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['-1FR']),
-            seriesStartDay: adapter.date('2025-07-01', 'default'),
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'),
             date: adapter.date('2025-10-31T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(4);
+        ).to.equal(96); // 100 - 4
       });
 
       it('counts 2nd last Wednesday (-2WE) across months (Jul–Sep 2025)', () => {
         // Jul 23, Aug 20, Sep 17 => 3
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['-2WE']),
-            seriesStartDay: adapter.date('2025-07-01', 'default'),
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'),
             date: adapter.date('2025-09-30T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(3);
+        ).to.equal(97); // 100 - 3
       });
 
       it('handles months without a 5th weekday: -5MO counts only months that have 5 Mondays', () => {
         // Jun: -5MO => Jun 2 (exists), Jul: no -5MO => skip => total 1
         expect(
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: createByDayRule(['-5MO']),
-            seriesStartDay: adapter.date('2025-06-01', 'default'), // Jun 2025 has 5 Mondays
+            seriesStartDay: adapter.date('2025-06-01Z', 'default'), // Jun 2025 has 5 Mondays
             date: adapter.date('2025-07-31T23:59:59Z', 'default'),
+            count: 100,
           }),
-        ).to.equal(1);
+        ).to.equal(99); // 100 - 1
       });
 
       it('throws when BYDAY and BYMONTHDAY are both provided', () => {
         expect(() =>
-          countMonthlyOccurrencesUpToExact({
+          getRemainingMonthlyOccurrences({
             adapter,
             rule: { freq: 'MONTHLY', byDay: ['2TU'], byMonthDay: [10] },
-            seriesStartDay: adapter.date('2025-07-01', 'default'),
+            seriesStartDay: adapter.date('2025-07-01Z', 'default'),
             date: adapter.date('2025-07-31T23:59:59Z', 'default'),
+            count: 100,
           }),
         ).to.throw();
       });
     });
   });
 
-  describe('countYearlyOccurrencesUpToExact', () => {
+  describe('getRemainingYearlyOccurrences', () => {
     const createRule = (interval = 1): RecurringEventRecurrenceRule => ({
       freq: 'YEARLY',
       interval,
     });
 
-    it('returns 0 when target year is before start year', () => {
+    it('returns count when target year is before start year', () => {
       expect(
-        countYearlyOccurrencesUpToExact({
+        getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-06-10', 'default'),
+          seriesStartDay: adapter.date('2025-06-10Z', 'default'),
           date: adapter.date('2024-12-31T23:59:59Z', 'default'),
+          count: 100,
         }),
-      ).to.equal(0);
+      ).to.equal(100);
     });
 
-    it('counts first occurrence when target is same calendar day', () => {
+    it('returns remaining after first occurrence when target is same calendar day', () => {
       expect(
-        countYearlyOccurrencesUpToExact({
+        getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2025-03-15', 'default'),
+          seriesStartDay: adapter.date('2025-03-15Z', 'default'),
           date: adapter.date('2025-03-15T23:59:59Z', 'default'),
+          count: 100,
         }),
-      ).to.equal(1);
+      ).to.equal(99); // 100 - 1
     });
 
-    it('counts all occurrences up to inclusive target (interval=1)', () => {
+    it('returns remaining for all occurrences up to inclusive target (interval=1)', () => {
       expect(
-        countYearlyOccurrencesUpToExact({
+        getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2023-02-05', 'default'),
-          date: adapter.date('2026-02-05T09:00:00Z', 'default'), // 2023,24,25,26,
+          seriesStartDay: adapter.date('2023-02-05Z', 'default'),
+          date: adapter.date('2026-02-05T09:00:00Z', 'default'), // 2023,24,25,26 => 4 occurrences
+          count: 100,
         }),
-      ).to.equal(4);
+      ).to.equal(96); // 100 - 4
     });
 
     it('respects interval > 1 (every 2 years)', () => {
       expect(
-        countYearlyOccurrencesUpToExact({
+        getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(2),
-          seriesStartDay: adapter.date('2022-07-20', 'default'),
-          date: adapter.date('2030-07-20T09:00:00Z', 'default'), // 2022,24,26,28,30
+          seriesStartDay: adapter.date('2022-07-20Z', 'default'),
+          date: adapter.date('2030-07-20T09:00:00Z', 'default'), // 2022,24,26,28,30 => 5 occurrences
+          count: 100,
         }),
-      ).to.equal(5);
+      ).to.equal(95); // 100 - 5
     });
 
     it('skips non-leap years for Feb 29 start', () => {
       expect(
-        countYearlyOccurrencesUpToExact({
+        getRemainingYearlyOccurrences({
           adapter,
           rule: createRule(),
-          seriesStartDay: adapter.date('2024-02-29', 'default'),
-          date: adapter.date('2032-12-31T23:59:59Z', 'default'), // 2024, 2028, 2032
+          seriesStartDay: adapter.date('2024-02-29Z', 'default'),
+          date: adapter.date('2032-12-31T23:59:59Z', 'default'), // 2024, 2028, 2032 => 3 occurrences
+          count: 100,
         }),
-      ).to.equal(3);
+      ).to.equal(97); // 100 - 3
+    });
+
+    it('returns 0 when count is lower than the number of occurrences', () => {
+      expect(
+        getRemainingYearlyOccurrences({
+          adapter,
+          rule: createRule(),
+          seriesStartDay: adapter.date('2023-02-05Z', 'default'),
+          date: adapter.date('2030-02-05T09:00:00Z', 'default'), // 2023–2030 => 8 occurrences
+          count: 5,
+        }),
+      ).to.equal(0); // 5 - 8 = -3, clamped to 0
     });
   });
 });

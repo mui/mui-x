@@ -19,16 +19,16 @@ catalog:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.1
   '@mui/icons-material': ^7.3.5
-  '@mui/internal-test-utils': ^2.0.15
+  '@mui/internal-test-utils': 2.0.18-canary.0
   '@mui/material': ^7.3.5
   '@mui/stylis-plugin-rtl': ^7.3.5
   '@mui/system': ^7.3.5
   '@mui/utils': ^7.3.5
   '@mui/x-internal-exceljs-fork': 4.4.3
   '@playwright/test': ^1.57.0
+  'playwright': ^1.57.0
   '@react-spring/web': ^10.0.3
   '@types/chance': ^1.1.7
-  '@types/d3-scale': ^4.0.9
   '@types/karma': ^6.3.9
   '@types/luxon': ^3.7.1
   '@types/moment-hijri': ^2.1.4
@@ -40,14 +40,14 @@ catalog:
   '@types/react-transition-group': ^4.4.12
   '@types/semver': ^7.7.1
   '@types/use-sync-external-store': ^1.5.0
-  '@typescript-eslint/parser': ^8.48.1
-  '@vitejs/plugin-react': ^5.1.1
+  '@typescript-eslint/parser': ^8.52.0
+  '@vitejs/plugin-react': ^5.1.2
   '@vitejs/plugin-react-swc': ^4.2.2
-  '@vitest/browser': ^4.0.15
-  '@vitest/browser-playwright': ^4.0.15
-  '@vitest/coverage-v8': ^4.0.15
-  '@vitest/ui': ^4.0.15
-  autoprefixer: ^10.4.22
+  '@vitest/browser': ^4.0.16
+  '@vitest/browser-playwright': ^4.0.16
+  '@vitest/coverage-v8': ^4.0.16
+  '@vitest/ui': ^4.0.16
+  autoprefixer: ^10.4.23
   babel-plugin-optimize-clsx: ^2.6.2
   babel-plugin-react-remove-properties: ^0.3.1
   babel-plugin-transform-react-remove-prop-types: ^0.4.24
@@ -64,11 +64,11 @@ catalog:
   moment-hijri: ^3.0.0
   moment-jalaali: ^0.10.4
   moment-timezone: ^0.6.0
-  motion: ^12.23.25
+  motion: ^12.24.12
   prop-types: ^15.8.1
-  react: 19.2.1
-  react-dom: 19.2.1
-  react-router: ^7.10.1
+  react: 19.2.3
+  react-dom: 19.2.3
+  react-router: ^7.12.0
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.1.2
@@ -76,8 +76,8 @@ catalog:
   stylis: ^4.3.6
   tsx: ^4.21.0
   use-sync-external-store: ^1.6.0
-  vite: ^7.2.6
-  vitest: ^4.0.15
+  vite: ^7.3.1
+  vitest: ^4.0.16
   yargs: ^18.0.0
 
 engineStrict: true

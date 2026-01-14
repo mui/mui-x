@@ -18,6 +18,12 @@
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "divisions": { "type": { "name": "number" }, "default": "5" },
     "height": { "type": { "name": "number" } },
+    "hiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlight": {
       "type": {
@@ -33,6 +39,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
@@ -55,6 +67,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -67,6 +86,13 @@
       "signature": {
         "type": "function(event: React.MouseEvent<SVGPathElement, MouseEvent>, radarItemIdentifier: RadarItemIdentifier) => void",
         "describedArgs": ["event", "radarItemIdentifier"]
+      }
+    },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
       }
     },
     "shape": {
@@ -88,6 +114,12 @@
         "type": "function(index: number) => string",
         "describedArgs": ["index"],
         "returned": "string"
+      }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'radar' }"
       }
     },
     "width": { "type": { "name": "number" } }

@@ -5,7 +5,6 @@ import {
   type ProcessedSeries,
   type SeriesId,
   type ChartSeriesDefaultized,
-  useSelector,
   useStore,
   type ChartSeriesLayout,
   selectorChartSeriesLayout,
@@ -52,6 +51,7 @@ export function useSankeySeries(seriesIds?: SeriesId | SeriesId[]) {
 export function useSankeySeriesContext(): UseSankeySeriesContextReturnValue {
   return useAllSeriesOfType('sankey');
 }
+
 /**
  * Get access to the sankey layout.
  * @returns {SankeyLayout | undefined} the sankey layout
@@ -61,7 +61,7 @@ export function useSankeyLayout(): SankeyLayout | undefined {
 
   const seriesContext = useSankeySeriesContext();
   const seriesId = seriesContext?.seriesOrder?.[0];
-  const layout = useSelector(store, selectorChartSeriesLayout);
+  const layout = store.use(selectorChartSeriesLayout);
 
   if (!seriesId) {
     return undefined;

@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {
   type ChartPlugin,
-  useSelector,
   getSVGPoint,
   selectorChartDrawingArea,
   type ZoomData,
@@ -21,9 +20,9 @@ export const useZoomOnBrush = (
   }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
   setZoomDataCallback: React.Dispatch<(prev: ZoomData[]) => ZoomData[]>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, 'brush' as const);
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'brush' as const);
 
   const isZoomOnBrushEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 

@@ -30,36 +30,37 @@ import type { ChartMargin } from '../internals/plugins/corePlugins/useChartDimen
 import { FocusedLineMark } from '../LineChart/FocusedLineMark';
 
 export interface SparkLineChartSlots
-  extends AreaPlotSlots,
+  extends
+    AreaPlotSlots,
     LinePlotSlots,
     MarkPlotSlots,
     LineHighlightPlotSlots,
     Omit<BarPlotSlots, 'barLabel'>,
     ChartsTooltipSlots {}
 export interface SparkLineChartSlotProps
-  extends AreaPlotSlotProps,
+  extends
+    AreaPlotSlotProps,
     LinePlotSlotProps,
     MarkPlotSlotProps,
     LineHighlightPlotSlotProps,
     BarPlotSlotProps,
     ChartsTooltipSlotProps {}
 
-export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'>
-  extends Omit<
-    ChartContainerProps,
-    | 'series'
-    | 'xAxis'
-    | 'yAxis'
-    | 'zAxis'
-    | 'radiusAxis'
-    | 'rotationAxis'
-    | 'margin'
-    | 'plugins'
-    | 'colors'
-    | 'slots'
-    | 'slotProps'
-    | 'experimentalFeatures'
-  > {
+export interface SparkLineChartProps<PlotType extends 'line' | 'bar' = 'line' | 'bar'> extends Omit<
+  ChartContainerProps,
+  | 'series'
+  | 'xAxis'
+  | 'yAxis'
+  | 'zAxis'
+  | 'radiusAxis'
+  | 'rotationAxis'
+  | 'margin'
+  | 'plugins'
+  | 'colors'
+  | 'slots'
+  | 'slotProps'
+  | 'experimentalFeatures'
+> {
   /**
    * The xAxis configuration.
    * Notice it is a single [[AxisConfig]] object, not an array of configuration.
@@ -422,6 +423,55 @@ SparkLineChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['line']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+    ]).isRequired,
+  ),
+  /**
    * The controlled axis highlight.
    * Identified by the axis id, and data index.
    */
@@ -444,6 +494,56 @@ SparkLineChart.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['bar']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['line']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['scatter']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['pie']).isRequired,
+      }),
+      PropTypes.shape({
+        dataIndex: PropTypes.number,
+        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        type: PropTypes.oneOf(['radar']).isRequired,
+      }),
+    ]).isRequired,
+  ),
   /**
    * Localized text for chart components.
    */
@@ -472,6 +572,11 @@ SparkLineChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -492,6 +597,12 @@ SparkLineChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * Type of plot used.
    * @default 'line'
@@ -531,6 +642,37 @@ SparkLineChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.oneOfType([
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number.isRequired,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ]),
   /**
    * Formatter used by the tooltip.
    * @param {number} value The value to format.

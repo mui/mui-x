@@ -12,8 +12,10 @@ export interface FunnelSectionLabelConfig {
   dominantBaseline?: React.SVGProps<SVGTextElement>['dominantBaseline'];
 }
 
-export interface FunnelSectionLabelProps
-  extends Omit<React.SVGProps<SVGTextElement>, 'ref' | 'id'> {
+export interface FunnelSectionLabelProps extends Omit<
+  React.SVGProps<SVGTextElement>,
+  'ref' | 'id'
+> {
   classes?: Partial<FunnelSectionClasses>;
   label: FunnelSectionLabelConfig;
   seriesId: SeriesId;

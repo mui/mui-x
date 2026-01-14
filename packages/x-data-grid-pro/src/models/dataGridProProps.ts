@@ -40,8 +40,10 @@ import type { IsRowReorderableParams } from '../hooks/features/rowReorder';
 
 export interface GridExperimentalProFeatures extends GridExperimentalFeatures {}
 
-interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
-  extends Omit<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'components'> {
+interface DataGridProPropsWithComplexDefaultValueBeforeProcessing extends Omit<
+  DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  'components'
+> {
   /**
    * Overridable components.
    */
@@ -51,16 +53,17 @@ interface DataGridProPropsWithComplexDefaultValueBeforeProcessing
 /**
  * The props users can give to the `DataGridProProps` component.
  */
-export interface DataGridProProps<R extends GridValidRowModel = any>
-  extends Omit<
-    Partial<DataGridProPropsWithDefaultValue<R>> &
-      DataGridProPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridProPropsWithoutDefaultValue<R>,
-    DataGridProForcedPropsKey
-  > {}
+export interface DataGridProProps<R extends GridValidRowModel = any> extends Omit<
+  Partial<DataGridProPropsWithDefaultValue<R>> &
+    DataGridProPropsWithComplexDefaultValueBeforeProcessing &
+    DataGridProPropsWithoutDefaultValue<R>,
+  DataGridProForcedPropsKey
+> {}
 
-interface DataGridProPropsWithComplexDefaultValueAfterProcessing
-  extends Omit<DataGridPropsWithComplexDefaultValueAfterProcessing, 'slots'> {
+interface DataGridProPropsWithComplexDefaultValueAfterProcessing extends Omit<
+  DataGridPropsWithComplexDefaultValueAfterProcessing,
+  'slots'
+> {
   slots: GridProSlotsComponent;
 }
 
@@ -68,7 +71,8 @@ interface DataGridProPropsWithComplexDefaultValueAfterProcessing
  * The props of the Data Grid Pro component after the pre-processing phase.
  */
 export interface DataGridProProcessedProps<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue<R>,
+  extends
+    DataGridProPropsWithDefaultValue<R>,
     DataGridProPropsWithComplexDefaultValueAfterProcessing,
     Omit<DataGridProPropsWithoutDefaultValue<R>, 'componentsProps'> {}
 
@@ -80,8 +84,7 @@ export type DataGridProForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`
  */
 export interface DataGridProPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridPropsWithDefaultValues<R>,
-    DataGridProSharedPropsWithDefaultValue {
+  extends DataGridPropsWithDefaultValues<R>, DataGridProSharedPropsWithDefaultValue {
   /**
    * Set the area in `px` at the bottom of the grid viewport where onRowsScrollEnd is called.
    * If combined with `lazyLoading`, it defines the area where the next data request is triggered.
@@ -187,7 +190,8 @@ interface DataGridProRegularProps<R extends GridValidRowModel> {
 }
 
 export interface DataGridProPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<
+  extends
+    Omit<
       DataGridPropsWithoutDefaultValue<R>,
       'initialState' | 'componentsProps' | 'slotProps' | 'dataSource' | 'onDataSourceError'
     >,

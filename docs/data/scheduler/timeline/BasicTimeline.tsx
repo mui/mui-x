@@ -11,7 +11,7 @@ export default function BasicTimeline() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
-    <div style={{ height: '500px', width: '100%' }}>
+    <div style={{ height: '500px', width: '100%', overflow: 'auto' }}>
       <Timeline
         events={events}
         resources={resources}

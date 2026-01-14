@@ -67,13 +67,13 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
     };
 
     React.useLayoutEffect(() => {
-      if (tabIndex === 0) {
+      if (tabIndex === 0 && !disabled) {
         const element = apiRef.current.getCellElement(id, field);
         if (element) {
           element.tabIndex = -1;
         }
       }
-    }, [apiRef, tabIndex, id, field]);
+    }, [apiRef, tabIndex, id, field, disabled]);
 
     const handleKeyDown = useEventCallback((event: React.KeyboardEvent) => {
       if (event.key === ' ') {
@@ -110,12 +110,13 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
 
     return (
       <rootProps.slots.baseCheckbox
-        tabIndex={tabIndex}
+        tabIndex={disabled ? -1 : tabIndex}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
         onClick={handleClick}
         onMouseDown={handleMouseDown}
         className={clsx(classes.root, disabled && 'Mui-disabled')}
+        disabled={disabled}
         material={{
           disableRipple: disabled,
         }}

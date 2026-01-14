@@ -150,6 +150,17 @@ The solution described above should resolve this.
 
 ## Using this documentation
 
+### Feature availability
+
+:::info
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+See [Licensing](/x/introduction/licensing/) for details.
+:::
+
+Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.
+
+All documentation for Community components and features also applies to their Pro and Premium counterparts.
+
 ### Localization Provider
 
 For practical purposes, each demo in this documentation has its own Localization Provider wrapper.

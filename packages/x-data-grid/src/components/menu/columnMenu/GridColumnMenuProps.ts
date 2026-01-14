@@ -11,8 +11,9 @@ export interface GridColumnMenuContainerProps extends React.HTMLAttributes<HTMLU
 }
 
 export interface GridGenericColumnMenuProps
-  extends GridColumnMenuRootProps,
-    GridColumnMenuContainerProps {}
+  extends GridColumnMenuRootProps, GridColumnMenuContainerProps {}
 
-export interface GridColumnMenuProps
-  extends Omit<GridGenericColumnMenuProps, 'defaultSlots' | 'defaultSlotProps'> {}
+export interface GridColumnMenuProps extends Omit<
+  GridGenericColumnMenuProps,
+  'defaultSlots' | 'defaultSlotProps'
+> {}

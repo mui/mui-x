@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useMergedRefs, useMergedRefsN } from '@base-ui-components/utils/useMergedRefs';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
-import { isReactVersionAtLeast } from '@base-ui-components/utils/reactVersion';
-import { mergeObjects } from '@base-ui-components/utils/mergeObjects';
+import { useMergedRefs, useMergedRefsN } from '@base-ui/utils/useMergedRefs';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
+import { isReactVersionAtLeast } from '@base-ui/utils/reactVersion';
+import { mergeObjects } from '@base-ui/utils/mergeObjects';
 import type { BaseUIComponentProps, ComponentRenderFn, HTMLProps } from './types';
 import { getStateAttributesProps, StateAttributesMapping } from './getStateAttributesProps';
 import { resolveClassName } from './resolveClassName';

@@ -178,7 +178,8 @@ function getTimeTicks<T extends { toString(): string }>(
 }
 
 interface GetTicksOptions
-  extends Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
+  extends
+    Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
     Required<Pick<TickParams, 'tickNumber'>> {
   scale: D3Scale;
   valueFormatter?: AxisConfig['valueFormatter'];

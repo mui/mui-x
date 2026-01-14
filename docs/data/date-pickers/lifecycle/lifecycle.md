@@ -450,8 +450,8 @@ Example usage:
     if (context.validationError) return;
 
     switch (context.source) {
-      case 'picker':
-        analytics.track('date_accept_from_picker', {
+      case 'view':
+        analytics.track('date_accept_from_view', {
           value,
           shortcut: context.shortcut?.id,
         });

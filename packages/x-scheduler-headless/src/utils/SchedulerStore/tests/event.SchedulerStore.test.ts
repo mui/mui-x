@@ -67,8 +67,13 @@ storeClasses.forEach((storeClass) => {
         expect(event).to.deep.contain({
           id: '1',
           title: 'Event 1',
-          start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
-          end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+          displayTimezone: {
+            start: processDate(adapter.date('2025-07-01T09:00:00.000Z', 'default'), adapter),
+            end: processDate(adapter.date('2025-07-01T10:00:00.000Z', 'default'), adapter),
+            timezone: 'default',
+            rrule: undefined,
+            exDates: undefined,
+          },
           allDay: false,
         });
       });
@@ -262,32 +267,33 @@ storeClasses.forEach((storeClass) => {
         );
       });
 
-      it('should convert all updated date fields back to the data timezone and preserve unrelated properties', () => {
+      it('should update start/end as instants, preserve unrelated properties, and keep event.timezone', () => {
         const onEventsChange = spy();
 
         const dataTimezone = 'America/New_York';
-        const uiTimezone = 'Europe/Paris';
+        const displayTimezone = 'Europe/Paris';
 
         const event = EventBuilder.new()
           .title('Original title')
           .description('Original description')
-          .span('2025-03-10T09:00:00', '2025-03-10T10:00:00')
-          .withTimezone(dataTimezone)
+          .span('2025-03-10T09:00:00Z', '2025-03-10T10:00:00Z')
+          .withDataTimezone(dataTimezone)
           .build();
 
         const store = new storeClass.Value(
-          { events: [event], onEventsChange, timezone: uiTimezone },
+          { events: [event], onEventsChange, displayTimezone },
           adapter,
         );
 
-        const newStartParis = adapter.date('2025-03-10T14:00:00', uiTimezone);
-        const newEndParis = adapter.date('2025-03-10T15:00:00', uiTimezone);
+        // New instants (what the UI would provide as absolute values)
+        const newStart = adapter.date('2025-03-10T14:00:00Z', 'default');
+        const newEnd = adapter.date('2025-03-10T15:00:00Z', 'default');
 
         store.updateEvent({
           id: event.id,
           title: 'Updated title',
-          start: newStartParis,
-          end: newEndParis,
+          start: newStart,
+          end: newEnd,
         });
 
         const updated = onEventsChange.lastCall.firstArg[0];
@@ -295,10 +301,11 @@ storeClasses.forEach((storeClass) => {
         expect(updated.title).to.equal('Updated title');
         expect(updated.description).to.equal(event.description);
 
-        expect(updated.start).toEqualDateTime(adapter.date('2025-03-10T09:00:00', dataTimezone));
-        expect(updated.end).toEqualDateTime(adapter.date('2025-03-10T10:00:00', dataTimezone));
-        expect(adapter.getTimezone(updated.start)).to.equal(dataTimezone);
-        expect(adapter.getTimezone(updated.end)).to.equal(dataTimezone);
+        // Keep the event conceptual timezone
+        expect(updated.timezone).to.equal(dataTimezone);
+        // Persist the new instants
+        expect(updated.start).toEqualDateTime(newStart);
+        expect(updated.end).toEqualDateTime(newEnd);
       });
     });
 
@@ -363,7 +370,7 @@ storeClasses.forEach((storeClass) => {
 
       it('should remove rrule and exDates from the original event', () => {
         const onEventsChange = spy();
-        const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14']).build();
+        const event = EventBuilder.new().recurrent('DAILY').exDates(['2025-07-14Z']).build();
 
         const store = new storeClass.Value({ events: [event], onEventsChange }, adapter);
 

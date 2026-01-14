@@ -300,7 +300,8 @@ export async function getDataForValueOptionsSheet(
   return record;
 }
 interface BuildExcelOptions
-  extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
+  extends
+    Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
     Pick<
       Required<GridExcelExportOptions>,
       'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulas'

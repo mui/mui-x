@@ -1,5 +1,4 @@
 'use client';
-import { useSelector } from '../../../store/useSelector';
 import { useStore } from '../../../store/useStore';
 import { selectorChartZoomIsInteracting } from './useChartCartesianAxisRendering.selectors';
 import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
@@ -15,7 +14,7 @@ import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.typ
  */
 export function useInternalIsZoomInteracting(): boolean | undefined {
   const store = useStore<[UseChartCartesianAxisSignature]>();
-  const isInteracting = useSelector(store, selectorChartZoomIsInteracting);
+  const isInteracting = store.use(selectorChartZoomIsInteracting);
 
   return isInteracting;
 }

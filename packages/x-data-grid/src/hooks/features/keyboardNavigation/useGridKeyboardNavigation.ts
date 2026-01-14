@@ -164,7 +164,7 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
-      if (!isNavigationKey(event.key) && event.key !== 'Tab') {
+      if (!isNavigationKey(event.key) && event.key !== 'Tab' && event.key !== 'Enter') {
         return;
       }
 

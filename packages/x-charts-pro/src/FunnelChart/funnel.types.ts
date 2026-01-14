@@ -36,8 +36,7 @@ export type FunnelValueType = {
 };
 
 export interface FunnelSeriesType
-  extends Omit<CommonSeriesType<FunnelValueType>, 'color' | 'colorGetter'>,
-    CartesianSeriesType {
+  extends Omit<CommonSeriesType<FunnelValueType>, 'color' | 'colorGetter'>, CartesianSeriesType {
   type: 'funnel';
   /**
    * Data associated to the funnel section.
@@ -132,11 +131,10 @@ export type FunnelItem = {
   value: number;
 };
 
-export interface DefaultizedFunnelSeriesType
-  extends Omit<
-    DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
-    'funnelDirection'
-  > {
+export interface DefaultizedFunnelSeriesType extends Omit<
+  DefaultizedProps<FunnelSeriesType, CommonDefaultizedProps | 'layout'>,
+  'funnelDirection'
+> {
   dataPoints: FunnelDataPoints[][];
   data: Readonly<MakeRequired<FunnelValueType, 'id' | 'color'>[]>;
   funnelDirection: 'increasing' | 'decreasing';

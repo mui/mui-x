@@ -1,13 +1,72 @@
 import * as React from 'react';
-import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store/useStore';
+import { styled } from '@mui/material/styles';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '../../../internals/utils/date-utils';
-import './Headers.css';
+
+const WeeksHeaderRoot = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'WeeksHeaderRoot',
+})({
+  display: 'flex',
+  // TODO: update this calculation when we add the option to hide weekends
+  minWidth: 'calc(var(--unit-count) * 7 * var(--weeks-cell-width))',
+});
+
+const TimeHeaderCell = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'WeeksHeaderCell',
+})(({ theme }) => ({
+  flexGrow: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  '&:not(:last-child)': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
+
+const DayLabel = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'WeeksHeaderDayLabel',
+})(({ theme }) => ({
+  padding: theme.spacing(1),
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  display: 'flex',
+  justifyContent: 'center',
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const WeekDaysRow = styled('div', {
+  name: 'MuiEventTimeline',
+  slot: 'WeeksHeaderDaysRow',
+})(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(7, 1fr)',
+  columnGap: theme.spacing(0.5),
+}));
+
+const WeekDayCell = styled('time', {
+  name: 'MuiEventTimeline',
+  slot: 'WeeksHeaderDayCell',
+})(({ theme }) => ({
+  padding: theme.spacing(0.5),
+  textAlign: 'center',
+  margin: 0,
+  fontSize: theme.typography.body2.fontSize,
+  color: theme.palette.text.secondary,
+  '&[data-weekend]': {
+    color: theme.palette.error.main,
+  },
+  '&:not(:last-child)': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
@@ -40,27 +99,26 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   }, [adapter, viewConfig]);
 
   return (
-    <div className={clsx('WeeksHeader', props.className)} {...props}>
+    <WeeksHeaderRoot {...props}>
       {weeks.map((week) => (
-        <div key={`${week[0].key}-week`} className="TimeHeaderCell">
-          <div className="DayLabel">
+        <TimeHeaderCell key={`${week[0].key}-week`}>
+          <DayLabel>
             {formatWeekDayMonthAndDayOfMonth(week[0].value, adapter)} -{' '}
             {formatWeekDayMonthAndDayOfMonth(week[6].value, adapter)}
-          </div>
-          <div className="WeekDaysRow">
+          </DayLabel>
+          <WeekDaysRow>
             {week.map((day) => (
-              <time
+              <WeekDayCell
                 dateTime={day.key}
                 key={day.key}
-                className="WeekDayCell WeekDay"
                 data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
               >
                 {adapter.format(day.value, 'weekday1Letter')}
-              </time>
+              </WeekDayCell>
             ))}
-          </div>
-        </div>
+          </WeekDaysRow>
+        </TimeHeaderCell>
       ))}
-    </div>
+    </WeeksHeaderRoot>
   );
 }

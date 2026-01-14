@@ -33,9 +33,7 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 }
 
 export interface LineSeriesType
-  extends CommonSeriesType<number | null>,
-    CartesianSeriesType,
-    StackableSeriesType {
+  extends CommonSeriesType<number | null>, CartesianSeriesType, StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
@@ -116,5 +114,9 @@ export type LineItemIdentifier = {
   dataIndex?: number;
 };
 
-export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps | 'color'> {}
+export interface DefaultizedLineSeriesType extends DefaultizedProps<
+  LineSeriesType,
+  CommonDefaultizedProps | 'color'
+> {
+  hidden: boolean;
+}

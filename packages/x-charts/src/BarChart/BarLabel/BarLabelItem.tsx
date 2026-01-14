@@ -79,15 +79,15 @@ export type BarLabelItemProps<V extends BarValueType | null> = Omit<
      * @param {BarLabelContext} context data about the bar.
      * @returns {string} The formatted label.
      */
-    barLabel?:
-      | 'value'
-      | ((item: BarItem<V>, context: BarLabelContext) => string | null | undefined);
+    barLabel?: 'value' | ((item: BarItem, context: BarLabelContext) => string | null | undefined);
     /**
      * The placement of the bar label.
      * It controls whether the label is rendered in the center or outside the bar.
      * @default 'center'
      */
     barLabelPlacement?: BarLabelProps['placement'];
+    /** If true, the bar label is hidden. */
+    hidden?: boolean;
   };
 
 /**
@@ -114,6 +114,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
     skipAnimation,
     layout,
     barLabelPlacement,
+    hidden,
     ...other
   } = props;
   const { isFaded, isHighlighted } = useItemHighlighted({
@@ -170,7 +171,7 @@ function BarLabelItem<V extends BarValueType | null = BarValueType | null>(
   }
 
   return (
-    <Component {...barLabelProps} {...barLabelOwnerState}>
+    <Component {...barLabelProps} {...barLabelOwnerState} hidden={hidden}>
       {formattedLabelText}
     </Component>
   );

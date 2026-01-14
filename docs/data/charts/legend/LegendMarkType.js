@@ -1,7 +1,7 @@
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-const seriesConfig = [
+const series = [
   { id: 0, data: [10], label: 'Series A' },
   { id: 1, data: [15], label: 'Series B' },
   { id: 2, data: [20], label: 'Series C' },
@@ -21,7 +21,7 @@ export default function LegendMarkType() {
       }}
       renderDemo={(props) => (
         <BarChart
-          series={seriesConfig.map((seriesItem) => ({
+          series={series.map((seriesItem) => ({
             ...seriesItem,
             labelMarkType: props.markType,
           }))}
@@ -35,7 +35,7 @@ export default function LegendMarkType() {
 <BarChart
   {/** ... */}
   series={
-    seriesConfig.map((seriesItem) => ({
+    series.map((seriesItem) => ({
       ...seriesItem,
       labelMarkType: '${props.markType}',
     }))
