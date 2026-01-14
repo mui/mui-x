@@ -89,7 +89,68 @@
     "import { SankeyTooltip } from '@mui/x-charts-pro/SankeyChart';",
     "import { SankeyTooltip } from '@mui/x-charts-pro';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "axisValueCell",
+      "className": "MuiSankeyTooltip-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell",
+      "className": "MuiSankeyTooltip-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiSankeyTooltip-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiSankeyTooltip-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markContainer",
+      "className": "MuiSankeyTooltip-markContainer",
+      "description": "Styles applied to the markContainer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiSankeyTooltip-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiSankeyTooltip-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiSankeyTooltip-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiSankeyTooltip-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiSankeyTooltip-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiSankeyTooltip",
   "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyTooltip/SankeyTooltip.tsx",
   "inheritance": null,
