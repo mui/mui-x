@@ -11,9 +11,9 @@ const outSeriesTypes: Set<'radar'> = new Set(['radar']);
 const keyboardFocusHandler: KeyboardFocusHandler<'radar', 'radar'> = (event) => {
   switch (event.key) {
     case 'ArrowRight':
-      return createGetNextIndexFocusedItem(outSeriesTypes);
+      return createGetNextIndexFocusedItem(outSeriesTypes, true);
     case 'ArrowLeft':
-      return createGetPreviousIndexFocusedItem(outSeriesTypes);
+      return createGetPreviousIndexFocusedItem(outSeriesTypes, true);
     case 'ArrowDown':
       return createGetPreviousSeriesFocusedItem(outSeriesTypes);
     case 'ArrowUp':
