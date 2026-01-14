@@ -81,6 +81,7 @@ export default treeViewApiPages;
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),
+    'migration/migration-tree-view-v8',
     'migration/migration-tree-view-v7',
     'migration/migration-tree-view-v6',
     'migration/migration-tree-view-lab',
