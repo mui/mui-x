@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-container */
 import { vi } from 'vitest';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -29,7 +28,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = container.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 75, clientY: 60 } }]);
 
@@ -87,7 +86,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = container.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 45, clientY: 60 } }]);
 
@@ -122,7 +121,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = container.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
@@ -154,7 +153,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = container.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
 
@@ -189,7 +188,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = container.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
     await waitFor(() => {
@@ -214,7 +213,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
       </ChartDataProvider>,
     );
 
-    const svg = container.querySelector<HTMLElement>('svg')!;
+    const svg = container.querySelector('svg')!;
 
     await user.pointer([{ keys: '[TouchA>]', target: svg, coords: { clientX: 10, clientY: 60 } }]);
     await waitFor(() => {
