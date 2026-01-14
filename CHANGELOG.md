@@ -21,7 +21,7 @@ We'd like to extend a big thank you to the 8 contributors who made this release 
 - 📚 Documentation improvements
 
 The following team members contributed to this release:
-@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes, @Janpot
 
 ### Data Grid
 
@@ -105,6 +105,7 @@ Internal changes.
 - [docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
 - [docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
 - [docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
+- [docs] Fix broken links (#20914) @Janpot
 
 ### Core
 
