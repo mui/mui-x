@@ -14,8 +14,10 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   dataIndex: number;
 } | null;
 
-type StateParameters = Pick<ChartState<[UseChartKeyboardNavigationSignature], []>, 'series'>;
-
+type StateParameters<TSeriesType extends ChartSeriesType> = Pick<
+  ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>,
+  'series'
+>;
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
@@ -31,7 +33,7 @@ export function createGetNextIndexFocusedItem<
 ) {
   return function getNextIndexFocusedItem(
     currentItem: FocusedItemIdentifier<InSeriesType> | null,
-    state: StateParameters,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
@@ -84,7 +86,7 @@ export function createGetPreviousIndexFocusedItem<
 ) {
   return function getPreviousIndexFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-    state: StateParameters,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
@@ -133,8 +135,7 @@ export function createGetNextSeriesFocusedItem<
 ) {
   return function getNextSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-
-    state: StateParameters,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,
@@ -176,7 +177,7 @@ export function createGetPreviousSeriesFocusedItem<
 ) {
   return function getPreviousSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-    state: StateParameters,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
     const processedSeries = selectorChartSeriesProcessed(
       state as ChartState<[UseChartKeyboardNavigationSignature], []>,

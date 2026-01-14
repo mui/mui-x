@@ -231,6 +231,8 @@
   { "name": "FocusedItemIdentifier", "kind": "TypeAlias" },
   { "name": "FocusedLineMark", "kind": "Function" },
   { "name": "FocusedRadarMark", "kind": "Function" },
+  { "name": "FocusedSankeyLink", "kind": "Function" },
+  { "name": "FocusedSankeyNode", "kind": "Function" },
   { "name": "FocusedScatterMark", "kind": "Function" },
   { "name": "FUNNEL_CHART_PLUGINS", "kind": "Variable" },
   { "name": "FunnelChart", "kind": "Variable" },
