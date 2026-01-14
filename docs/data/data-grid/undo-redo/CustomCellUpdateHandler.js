@@ -11,7 +11,7 @@ import {
   gridFocusCellSelector,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
+import { isDeepEqual } from './utils';
 
 function createCustomCellEditHandler(apiRef) {
   return {
