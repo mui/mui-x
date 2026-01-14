@@ -309,8 +309,14 @@ export function getRemainingWeeklyOccurrences(
 
   const interval = Math.max(1, rule.interval ?? 1);
 
-  const seriesWeekStart = adapter.startOfWeek(seriesStartDay);
-  const targetWeekStart = adapter.startOfWeek(date);
+  // IMPORTANT: weekly COUNT math must use RRULE week boundaries (WKST, default Monday),
+  // not adapter.startOfWeek() which is locale-driven (often Sunday). Using locale weeks can
+  // make remaining occurrences off (and even produce backwards weekly navigation) for BYDAY
+  // combinations like SU+TU, especially when timezone projection shifts weekdays.
+  // See issue #20755 for reference.
+  const seriesWeekStart = startOfRRuleWeek(adapter, seriesStartDay);
+  const targetWeekStart = startOfRRuleWeek(adapter, date);
+
   const dateEndDay = adapter.endOfDay(date);
 
   let remaining = count;
@@ -481,4 +487,19 @@ export function getRemainingYearlyOccurrences(
   }
 
   return remaining;
+}
+
+/**
+ * RRULE semantics define a "recurrence week" based on week start.
+ * We MUST NOT use adapter.startOfWeek() here because it depends on locale,
+ * and can start weeks on Sunday (e.g. en-US). That breaks weekly expansion when BYDAY
+ * includes Sunday + other days (can generate "next" dates that go backwards),
+ * especially when COUNT + timezone projection are involved.
+ */
+export function startOfRRuleWeek(adapter: Adapter, date: TemporalSupportedObject) {
+  // RRULE default week start is Monday (MO)
+  const dow = adapter.getDayOfWeek(date); // 1..7 from adapter
+  const monday = getAdapterCache(adapter).mondayWeekDayNumber; // the number that corresponds to Monday
+  const delta = (((dow - monday) % 7) + 7) % 7; // days since Monday
+  return adapter.startOfDay(adapter.addDays(date, -delta));
 }
