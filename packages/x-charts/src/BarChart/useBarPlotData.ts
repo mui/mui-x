@@ -1,4 +1,9 @@
-import { type ChartsXAxisProps, type ChartsYAxisProps, type ComputedAxis } from '../models/axis';
+import {
+  type AxisId,
+  type ChartsXAxisProps,
+  type ChartsYAxisProps,
+  type ComputedAxis,
+} from '../models/axis';
 import getColor from './seriesConfig/bar/getColor';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
@@ -9,6 +14,9 @@ import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/use
 import { getBarDimensions } from '../internals/getBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 import { useChartId } from '../hooks/useChartId';
+import type { ChartSeriesDefaultized } from '../models/seriesType/config';
+import type { StackingGroupsType } from '../internals/stacking';
+import { type SeriesId } from '../models/seriesType';
 
 export function useBarPlotData(
   drawingArea: ChartDrawingArea,
@@ -26,8 +34,28 @@ export function useBarPlotData(
 
   const chartId = useChartId();
 
-  const { series, stackingGroups } = seriesData;
+  return processBarDataForPlot(
+    drawingArea,
+    chartId,
+    seriesData.stackingGroups,
+    seriesData.series,
+    xAxes,
+    yAxes,
+    defaultXAxisId,
+    defaultYAxisId,
+  );
+}
 
+export function processBarDataForPlot(
+  drawingArea: ChartDrawingArea,
+  chartId: string | undefined,
+  stackingGroups: StackingGroupsType,
+  series: Record<SeriesId, ChartSeriesDefaultized<'bar'>>,
+  xAxes: ComputedAxisConfig<ChartsXAxisProps>,
+  yAxes: ComputedAxisConfig<ChartsYAxisProps>,
+  defaultXAxisId: AxisId,
+  defaultYAxisId: AxisId,
+) {
   const masks: Record<string, MaskData> = {};
 
   const data = stackingGroups.flatMap(({ ids: seriesIds }, groupIndex) => {
