@@ -328,7 +328,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const event = EventBuilder.new(adapter)
         .singleDay(dtstart)
-        .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['TU', 'SU'], count: 5 })
+        .rrule({ freq: 'WEEKLY', byDay: ['TU', 'SU'], count: 5 })
         .toProcessed();
 
       const result = getRecurringEventOccurrencesForVisibleDays(
@@ -675,7 +675,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         .singleDay('2025-03-03T00:30:00Z', 60)
         .withDataTimezone('America/Los_Angeles')
         .withDisplayTimezone('Europe/Paris')
-        .rrule({ freq: 'WEEKLY', interval: 1, byDay: ['SU', 'TU'], count: 5 })
+        .rrule({ freq: 'WEEKLY', byDay: ['SU', 'TU'], count: 5 })
         .toProcessed();
 
       const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
