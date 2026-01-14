@@ -5,8 +5,8 @@ import {
   GRID_COLUMN_MENU_SLOT_PROPS,
   type GridColumnMenuProps,
   type GridColumnMenuItemProps,
-  type GridColumnMenuComponent,
 } from '@mui/x-data-grid-pro';
+import type { GridColumnMenuComponent } from '@mui/x-data-grid-pro/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuAggregationItem } from './columnMenu/menuItems/GridColumnMenuAggregationItem';
 import { isGroupingColumn } from '../hooks/features/rowGrouping';

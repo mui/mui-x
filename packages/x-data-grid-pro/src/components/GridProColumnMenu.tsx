@@ -4,8 +4,8 @@ import {
   GridColumnMenuProps,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
-  type GridColumnMenuComponent,
 } from '@mui/x-data-grid';
+import type { GridColumnMenuComponent } from '@mui/x-data-grid/internals';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridColumnMenuPinningItem } from './GridColumnMenuPinningItem';
 
