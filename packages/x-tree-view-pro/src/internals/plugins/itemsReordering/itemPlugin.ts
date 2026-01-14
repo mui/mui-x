@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useStore } from '@mui/x-internals/store';
 import { TreeViewCancellableEvent, TreeViewCancellableEventHandler } from '@mui/x-tree-view/models';

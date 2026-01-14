@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { useSvgRef } from '../../hooks';
 import type { BarItemIdentifier } from '../../models';
