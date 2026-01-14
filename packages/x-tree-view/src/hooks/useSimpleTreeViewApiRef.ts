@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewPublicAPI } from '../internals/models';
 import { SimpleTreeViewStore } from '../internals/SimpleTreeViewStore';
