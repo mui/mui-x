@@ -184,6 +184,10 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/focused-radar-mark',
+    title: 'FocusedRadarMark',
+  },
+  {
     pathname: '/x/api/charts/focused-sankey-link',
     title: 'FocusedSankeyLink',
     plan: 'pro',
