@@ -31,6 +31,9 @@
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
     },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
+    },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
     },

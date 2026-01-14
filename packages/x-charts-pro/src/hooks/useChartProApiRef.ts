@@ -14,7 +14,7 @@ import { type ProPluginsPerSeriesType, type ChartProApi } from '../context/Chart
  * @example
  * ```tsx
  * // The API can be passed to the chart component and used to interact with the chart.
- * <BarChart apiRef={barApiRef} />
+ * <BarChartPro apiRef={barApiRef} />
  * ```
  * @example
  * ```tsx
