@@ -1,2 +1,2 @@
 export * from './RadarAxisHighlight';
-export * from './radarAxisHighlightClasses';
+export { type RadarAxisHighlightClasses } from './radarAxisHighlightClasses';
