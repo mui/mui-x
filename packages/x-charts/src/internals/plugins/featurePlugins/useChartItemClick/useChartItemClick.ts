@@ -29,13 +29,16 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
   const getItemPosition = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     let item: SeriesItemIdentifier<ChartSeriesType> | undefined = undefined;
 
-    for (const getter of Object.values(store.state.series.seriesConfig)) {
-      if (getter.getItemAtPosition === undefined) {
+    for (const seriesConfig of Object.values(store.state.series.seriesConfig)) {
+      if (seriesConfig.getItemAtPosition === undefined) {
         continue;
       }
 
       const svgPoint = getSVGPoint(event?.currentTarget, event);
-      item = getter.getItemAtPosition(store.state, instance, { x: svgPoint.x, y: svgPoint.y });
+      item = seriesConfig.getItemAtPosition(store.state, instance, {
+        x: svgPoint.x,
+        y: svgPoint.y,
+      });
 
       if (item) {
         return item;
@@ -49,7 +52,7 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
       handleClick: (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         const item = getItemPosition(event);
         if (item !== undefined) {
-          onItemClick(item);
+          onItemClick(event, item);
         }
       },
     },

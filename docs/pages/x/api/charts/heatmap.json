@@ -72,8 +72,8 @@
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(item: SeriesItemIdentifier<SeriesType>) => void",
-        "describedArgs": ["item"]
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
       }
     },
     "onTooltipItemChange": {

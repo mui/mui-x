@@ -51,7 +51,10 @@
     },
     "onItemClick": {
       "description": "The callback fired when an item is clicked.",
-      "typeDescriptions": { "item": { "name": "item", "description": "The clicked item." } }
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The click event." },
+        "item": { "name": "item", "description": "The clicked item." }
+      }
     },
     "onTooltipItemChange": {
       "description": "The callback fired when the tooltip item changes.",

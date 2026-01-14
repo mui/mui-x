@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
+
 import { data } from './dumbData';
 
 export default function HeatmapCellClick() {
@@ -28,7 +29,7 @@ export default function HeatmapCellClick() {
             },
           ]}
           height={300}
-          onItemClick={(params) => setCellData(params)}
+          onItemClick={(event, params) => setCellData(params)}
         />
       </Box>
 

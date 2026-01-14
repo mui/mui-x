@@ -59,10 +59,13 @@ In the following demo, we replace the highlight saturation by a border radius an
 
 ## Click event
 
-Use `onCellClick` to know which cell is clicked by user.
+Use `onItemClick` to know which cell is clicked by user.
 
-It's argument identifies the clicked cell with `xIndex`/`yIndex` that are the index of the cell along x- and y-axes.
-Plus the `dataIndex` that indicate the index in series `data` array of the cell if a data is provided for this cell.
+The first argument is the click event.
+The second one is the item identifiers.
+It contains the `xIndex` and `yIndex` that are the index of the clicked cell along x- and y-axes.
+
+If a data is associated to this cell, the `dataIndex` property provides the index in series `data` array of the cell.
 
 {{"demo": "HeatmapCellClick.js"}}
 
