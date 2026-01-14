@@ -53,7 +53,7 @@ export function defaultizeXAxis(
       offsets[position] += sharedConfig.height + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += sharedConfig.zoom.slider.size + axesGap;
+        offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
@@ -114,7 +114,7 @@ export function defaultizeYAxis(
       offsets[position] += sharedConfig.width + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
-        offsets[position] += sharedConfig.zoom.slider.size + axesGap;
+        offsets[position] += sharedConfig.zoom.slider.size;
       }
     }
 
