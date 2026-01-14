@@ -179,6 +179,16 @@ const chartsApiPages: MuiPage[] = [
     plan: 'pro',
   },
   {
+    pathname: '/x/api/charts/focused-sankey-link',
+    title: 'FocusedSankeyLink',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-node',
+    title: 'FocusedSankeyNode',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/funnel-chart',
     title: 'FunnelChart',
     plan: 'pro',

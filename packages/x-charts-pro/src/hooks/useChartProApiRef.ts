@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { type ChartAnyPluginSignature } from '@mui/x-charts/internals';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';

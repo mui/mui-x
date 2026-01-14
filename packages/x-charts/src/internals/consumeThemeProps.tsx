@@ -1,3 +1,4 @@
+'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import * as React from 'react';
