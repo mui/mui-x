@@ -22,6 +22,10 @@ export default function getItemAtPosition(
   instance: ChartInstance<[], []>,
   point: { x: number; y: number },
 ): SeriesItemIdentifier<'heatmap'> | undefined {
+  if (!instance.isPointInside(point.x, point.y)) {
+    return undefined;
+  }
+
   const { axis: xAxis, axisIds: xAxisIds } = selectorChartXAxis(state);
   const { axis: yAxis, axisIds: yAxisIds } = selectorChartYAxis(state);
   const series = selectorAllSeriesOfType(state, 'heatmap') as ProcessedSeries['heatmap'];
@@ -32,10 +36,6 @@ export default function getItemAtPosition(
   const seriesId = series?.seriesOrder[0];
 
   if (seriesId === undefined) {
-    return undefined;
-  }
-
-  if (!instance.isPointInside(point.x, point.y)) {
     return undefined;
   }
 
