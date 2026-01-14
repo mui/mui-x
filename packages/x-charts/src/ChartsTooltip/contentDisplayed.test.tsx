@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-container */
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
@@ -46,7 +47,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
 
   describe('axis trigger', () => {
     it('should show right values with vertical layout on axis', async () => {
-      const { user } = render(
+      const { user, container } = render(
         <BarChart
           {...config}
           series={[
@@ -58,7 +59,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = container.querySelector<HTMLElement>('svg')!;
 
       // Trigger the tooltip
       await user.pointer({
@@ -104,7 +105,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
     });
 
     it('should show right values with horizontal layout on axis', async () => {
-      const { user } = render(
+      const { user, container } = render(
         <BarChart
           {...config}
           layout="horizontal"
@@ -117,7 +118,7 @@ describe.skipIf(isJSDOM)('ChartsTooltip', () => {
         />,
         { wrapper },
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = container.querySelector<HTMLElement>('svg')!;
 
       // Trigger the tooltip
       await user.pointer({
