@@ -45,6 +45,7 @@ import {
   type ChartsToolbarProSlotProps,
   type ChartsToolbarProSlots,
 } from '../ChartsToolbarPro/Toolbar.types';
+import { FocusedHeatmapCell } from './FocusedHeatmapCell';
 
 export interface HeatmapSlots
   extends
@@ -189,6 +190,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     loading,
     highlightedItem,
     onHighlightChange,
+    enableKeyboardNavigation,
     hideLegend = true,
     showToolbar = false,
   } = props;
@@ -261,6 +263,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       disableAxisListener
       highlightedItem={highlightedItem}
       onHighlightChange={onHighlightChange}
+      enableKeyboardNavigation={enableKeyboardNavigation}
       onAxisClick={onAxisClick}
       plugins={HEATMAP_PLUGINS}
     >
@@ -276,6 +279,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         <ChartsSurface ref={ref} sx={sx}>
           <g clipPath={`url(#${clipPathId})`}>
             <HeatmapPlot slots={slots} slotProps={slotProps} />
+            <FocusedHeatmapCell />
             <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           </g>
           <ChartsAxis slots={slots} slotProps={slotProps} />
@@ -327,6 +331,7 @@ Heatmap.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -451,9 +456,11 @@ Heatmap.propTypes = {
    * Used when the tooltip is controlled.
    */
   tooltipItem: PropTypes.shape({
-    dataIndex: PropTypes.number.isRequired,
+    dataIndex: PropTypes.number,
     seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     type: PropTypes.oneOf(['heatmap']).isRequired,
+    xIndex: PropTypes.number,
+    yIndex: PropTypes.number,
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.

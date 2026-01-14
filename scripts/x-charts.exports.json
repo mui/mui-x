@@ -476,6 +476,7 @@
   { "name": "UseChartZAxisSignature", "kind": "TypeAlias" },
   { "name": "useDataset", "kind": "Function" },
   { "name": "useDrawingArea", "kind": "Function" },
+  { "name": "useFocusedItem", "kind": "Function" },
   { "name": "useGaugeState", "kind": "Function" },
   { "name": "useItemHighlighted", "kind": "Function" },
   { "name": "useItemHighlightedGetter", "kind": "Function" },

@@ -169,6 +169,16 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/focused-funnel-section',
+    title: 'FocusedFunnelSection',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-heatmap-cell',
+    title: 'FocusedHeatmapCell',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/funnel-chart',
     title: 'FunnelChart',
     plan: 'pro',
