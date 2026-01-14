@@ -54,6 +54,8 @@ Same changes as in `@mui/x-date-pickers@8.25.0`.
 - [charts] Fix test inconsistency in charts (#20907) @JCQuintas
 - [charts] Revert `touch-action: pan-y` removal when zoom is disabled (#20852) @bernardobelchior
 - [charts] Use React event handler to detect pointer type (#20849) @alexfauquette
+- [charts] Enable keyboard navigation in radar chart (#20765) @alexfauquette
+- [charts] Fix tooltip position for stacked line series (#20901) @alexfauquette
 - [charts][docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
 - [charts][docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
 - [charts][docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
@@ -67,6 +69,7 @@ Same changes as in `@mui/x-charts@8.25.0`, plus:
 - [charts-pro] Add keyboard navigation to sankey (#20777) @alexfauquette
 - [charts-pro] Prefer global pointer interaction tracker in Heatmap (#20697) @bernardobelchior
 - [charts-pro] Support composition for Sankey (#20604) @alexfauquette
+- [charts-pro] Fix crash when two same-direction axes have a zoom preview (#20916) @bernardobelchior
 
 #### `@mui/x-charts-premium@8.25.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
