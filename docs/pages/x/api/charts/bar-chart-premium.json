@@ -51,6 +51,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }&gt;"
+      }
+    },
     "initialZoom": {
       "type": {
         "name": "arrayOf",

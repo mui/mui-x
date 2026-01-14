@@ -211,6 +211,7 @@
   { "name": "FocusedBar", "kind": "Function" },
   { "name": "FocusedItemIdentifier", "kind": "TypeAlias" },
   { "name": "FocusedLineMark", "kind": "Function" },
+  { "name": "FocusedRadarMark", "kind": "Function" },
   { "name": "FocusedScatterMark", "kind": "Function" },
   { "name": "Gauge", "kind": "Variable" },
   { "name": "gaugeClasses", "kind": "Variable" },

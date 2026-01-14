@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
 import {
@@ -7,8 +8,11 @@ import {
   selectorChartsIsHighlightedCallback,
   useStore,
 } from '@mui/x-charts/internals';
+import { useRegisterPointerInteractions } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
 import { HeatmapItem, type HeatmapItemSlots, type HeatmapItemSlotProps } from './HeatmapItem';
+import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
+import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
 export interface HeatmapPlotSlots extends HeatmapItemSlots {}
 
@@ -46,41 +50,51 @@ function HeatmapPlot(props: HeatmapPlotProps) {
   const seriesToDisplay = series.series[series.seriesOrder[0]];
 
   return (
-    <g>
-      {seriesToDisplay.data.map(([xIndex, yIndex, value], dataIndex) => {
-        const x = xScale(xDomain[xIndex]);
-        const y = yScale(yDomain[yIndex]);
-        const color = colorScale?.(value);
+    <React.Fragment>
+      {shouldRegisterPointerInteractionsGlobally(props.slots, props.slotProps) ? (
+        <RegisterHeatmapPointerInteractions />
+      ) : null}
+      <g>
+        {seriesToDisplay.data.map(([xIndex, yIndex, value], dataIndex) => {
+          const x = xScale(xDomain[xIndex]);
+          const y = yScale(yDomain[yIndex]);
+          const color = colorScale?.(value);
 
-        if (x === undefined || y === undefined || !color) {
-          return null;
-        }
+          if (x === undefined || y === undefined || !color) {
+            return null;
+          }
 
-        const item: HighlightItemData = {
-          seriesId: seriesToDisplay.id,
-          dataIndex,
-        };
+          const item: HighlightItemData = {
+            seriesId: seriesToDisplay.id,
+            dataIndex,
+          };
 
-        return (
-          <HeatmapItem
-            key={`${xIndex}_${yIndex}`}
-            width={xScale.bandwidth()}
-            height={yScale.bandwidth()}
-            x={x}
-            y={y}
-            color={color}
-            dataIndex={dataIndex}
-            seriesId={series.seriesOrder[0]}
-            value={value}
-            slots={props.slots}
-            slotProps={props.slotProps}
-            isHighlighted={isHighlighted(item)}
-            isFaded={isFaded(item)}
-          />
-        );
-      })}
-    </g>
+          return (
+            <HeatmapItem
+              key={`${xIndex}_${yIndex}`}
+              width={xScale.bandwidth()}
+              height={yScale.bandwidth()}
+              x={x}
+              y={y}
+              color={color}
+              dataIndex={dataIndex}
+              seriesId={series.seriesOrder[0]}
+              value={value}
+              slots={props.slots}
+              slotProps={props.slotProps}
+              isHighlighted={isHighlighted(item)}
+              isFaded={isFaded(item)}
+            />
+          );
+        })}
+      </g>
+    </React.Fragment>
   );
+}
+
+function RegisterHeatmapPointerInteractions() {
+  useRegisterPointerInteractions(selectorHeatmapItemAtPosition);
+  return null;
 }
 
 HeatmapPlot.propTypes = {
