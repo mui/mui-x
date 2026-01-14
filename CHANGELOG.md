@@ -5,6 +5,106 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.25.0
+
+<!-- generated comparing v8.24.0..master -->
+
+_Jan 14, 2026_
+
+We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.25.0`
+
+Internal changes.
+
+#### `@mui/x-data-grid-pro@8.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.25.0`.
+
+#### `@mui/x-data-grid-premium@8.25.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.25.0`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.25.0`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.25.0`.
+
+### Charts
+
+#### `@mui/x-charts@8.25.0`
+
+- [charts] Add Legend actions (#20404) @JCQuintas
+- [charts] Add `initialHiddenItems` prop to set initial state (#20894) @JCQuintas
+- [charts] Control the item tooltip (#20617) @alexfauquette
+- [charts] Export plugins from premium (#20866) @JCQuintas
+- [charts] Fix node anchor on iOS (#20848) @alexfauquette
+- [charts] Fix test inconsistency in charts (#20907) @JCQuintas
+- [charts] Revert `touch-action: pan-y` removal when zoom is disabled (#20852) @bernardobelchior
+- [charts] Use React event handler to detect pointer type (#20849) @alexfauquette
+- [charts][docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
+- [charts][docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
+- [charts][docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
+
+#### `@mui/x-charts-pro@8.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.25.0`, plus:
+
+- [charts-pro] Add keyboard navigation to funnel (#20766) @alexfauquette
+- [charts-pro] Add keyboard navigation to heatmap (#20786) @alexfauquette
+- [charts-pro] Add keyboard navigation to sankey (#20777) @alexfauquette
+- [charts-pro] Prefer global pointer interaction tracker in Heatmap (#20697) @bernardobelchior
+- [charts-pro] Support composition for Sankey (#20604) @alexfauquette
+
+#### `@mui/x-charts-premium@8.25.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.25.0`, plus:
+
+- [charts-premium] Add `ChartContainerPremium` (#20910) @bernardobelchior
+- [charts-premium] Fix `ChartDataProviderPremium` tests (#20868) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.25.0`
+
+Internal changes.
+
+#### `@mui/x-tree-view-pro@8.25.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.25.0`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.25.0`
+
+Internal changes.
+
+### Docs
+
+- [docs] Fix Waterfall Chart documentation badge from Pro to Premium (#20888) @Copilot
+- [docs] Fix broken links on Data Grid Editing sub-pages (#20911) @arminmeh
+- [docs] Increase chart axis size in docs to fit in Ubuntu Firefox (#20844) @bernardobelchior
+- [docs] Simplify heatmap zoom demo (#20851) @bernardobelchior
+
+### Core
+
+- [code-infra] Fix `material-ui/disallow-react-api-in-server-components` (#20909) @JCQuintas
+- [code-infra] Prepare for v9 (#20860) @JCQuintas
+- [code-infra] Update codeowners (#20886) @JCQuintas
+- [internal] Remove local Claude settings from the repo (#20853) @cherniavskii
+
 ## 8.24.0
 
 _Jan 8, 2026_
