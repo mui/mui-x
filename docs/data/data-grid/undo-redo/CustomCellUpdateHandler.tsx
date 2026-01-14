@@ -13,7 +13,6 @@ import {
   gridVisibleColumnFieldsSelector,
   gridPaginationModelSelector,
   gridExpandedSortedRowIndexLookupSelector,
-  gridFocusCellSelector,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import { isDeepEqual } from './utils';
@@ -74,11 +73,11 @@ function createCustomCellEditHandler(
       return true;
     },
 
-    undo: async (data: CellEditHistoryData) => {
+    undo: (data: CellEditHistoryData) => {
       const { id, field, oldValue } = data;
 
       // We are not using the data source, do we don't have to do the checks like in the default handler.
-      await apiRef.current.updateRows([{ id, [field]: oldValue }]);
+      apiRef.current.updateRows([{ id, [field]: oldValue }]);
 
       // Navigate to the page with the row if it's on a different page
       const rowIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[id];
@@ -91,25 +90,20 @@ function createCustomCellEditHandler(
         }
       }
 
-      const currentFocus = gridFocusCellSelector(apiRef);
-      if (currentFocus?.id === id && currentFocus?.field === field) {
-        return;
-      }
-
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      });
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-        colIndex: apiRef.current.getColumnIndex(field),
+        apiRef.current.scrollToIndexes({
+          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          colIndex: apiRef.current.getColumnIndex(field),
+        });
       });
     },
 
-    redo: async (data: CellEditHistoryData) => {
+    redo: (data: CellEditHistoryData) => {
       const { id, field, newValue } = data;
 
       // Repeat the same logic as in the undo method
-      await apiRef.current.updateRows([{ id, [field]: newValue }]);
+      apiRef.current.updateRows([{ id, [field]: newValue }]);
 
       // Navigate to the row if it's on a different page
       const rowIndex = gridExpandedSortedRowIndexLookupSelector(apiRef)[id];
@@ -122,17 +116,12 @@ function createCustomCellEditHandler(
         }
       }
 
-      const currentFocus = gridFocusCellSelector(apiRef);
-      if (currentFocus?.id === id && currentFocus?.field === field) {
-        return;
-      }
-
       requestAnimationFrame(() => {
         apiRef.current.setCellFocus(id, field);
-      });
-      apiRef.current.scrollToIndexes({
-        rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
-        colIndex: apiRef.current.getColumnIndex(field),
+        apiRef.current.scrollToIndexes({
+          rowIndex: apiRef.current.getRowIndexRelativeToVisibleRows(id),
+          colIndex: apiRef.current.getColumnIndex(field),
+        });
       });
     },
   };
