@@ -13,22 +13,21 @@ import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipe
 
 export const densityStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'initialState' | 'density'>
-> = (state, { initialState, density }) => ({
+> = (state, props) => ({
   ...state,
-  density: initialState?.density ?? density ?? 'standard',
+  density: props.initialState?.density ?? props.density ?? 'standard',
 });
 
 export const useGridDensity = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'density' | 'onDensityChange' | 'initialState'>,
 ): void => {
-  const { density, onDensityChange, initialState } = props;
   const logger = useGridLogger(apiRef, 'useDensity');
 
   apiRef.current.registerControlState({
     stateId: 'density',
-    propModel: density,
-    propOnChange: onDensityChange,
+    propModel: props.density,
+    propOnChange: props.onDensityChange,
     stateSelector: gridDensitySelector,
     changeEvent: 'densityChange',
   });
@@ -61,9 +60,9 @@ export const useGridDensity = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the `density` is controlled
-        density != null ||
+        props.density != null ||
         // Always export if the `density` has been initialized
-        initialState?.density != null;
+        props.initialState?.density != null;
 
       if (!shouldExportRowCount) {
         return prevState;
@@ -74,7 +73,7 @@ export const useGridDensity = (
         density: exportedDensity,
       };
     },
-    [apiRef, density, initialState?.density],
+    [apiRef, props.density, props.initialState?.density],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -95,8 +94,8 @@ export const useGridDensity = (
   useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   React.useEffect(() => {
-    if (density) {
-      apiRef.current.setDensity(density);
+    if (props.density) {
+      apiRef.current.setDensity(props.density);
     }
-  }, [apiRef, density]);
+  }, [apiRef, props.density]);
 };

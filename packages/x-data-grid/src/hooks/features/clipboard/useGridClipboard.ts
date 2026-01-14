@@ -67,11 +67,13 @@ export const useGridClipboard = (
     'ignoreValueFormatterDuringExport' | 'onClipboardCopy' | 'clipboardCopyCellDelimiter'
   >,
 ): void => {
-  const { ignoreValueFormatterDuringExport, onClipboardCopy, clipboardCopyCellDelimiter } = props;
+  const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
   const ignoreValueFormatter =
-    (typeof ignoreValueFormatterDuringExport === 'object'
-      ? ignoreValueFormatterDuringExport?.clipboardExport
-      : ignoreValueFormatterDuringExport) || false;
+    (typeof ignoreValueFormatterProp === 'object'
+      ? ignoreValueFormatterProp?.clipboardExport
+      : ignoreValueFormatterProp) || false;
+
+  const clipboardCopyCellDelimiter = props.clipboardCopyCellDelimiter;
 
   const handleCopy = React.useCallback(
     (event: KeyboardEvent) => {
@@ -125,5 +127,5 @@ export const useGridClipboard = (
     handleCopy,
   );
 
-  useGridEventPriority(apiRef, 'clipboardCopy', onClipboardCopy);
+  useGridEventPriority(apiRef, 'clipboardCopy', props.onClipboardCopy);
 };

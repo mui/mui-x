@@ -47,27 +47,9 @@ export const INITIAL_STATE = {
 
 export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
   apiRef: RefObject<Api>,
-  props: Pick<
-    DataGridProProcessedProps,
-    | 'dataSource'
-    | 'lazyLoading'
-    | 'treeData'
-    | 'onDataSourceError'
-    | 'dataSourceCache'
-    | 'pageSizeOptions'
-    | 'pagination'
-  >,
+  props: DataGridProProcessedProps,
   options: GridDataSourceBaseOptions = {},
 ) => {
-  const {
-    dataSource,
-    lazyLoading,
-    treeData,
-    onDataSourceError,
-    dataSourceCache,
-    pageSizeOptions,
-    pagination,
-  } = props;
   const groupsToAutoFetch = useGridSelector(apiRef, gridRowGroupsToFetchSelector);
   const nestedDataManager = useLazyRef<NestedDataManager, void>(
     () => new NestedDataManager(apiRef),
@@ -103,25 +85,15 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     events,
     cacheChunkManager,
     cache,
-  } = useGridDataSourceBase(
-    apiRef,
-    {
-      dataSource,
-      onDataSourceError,
-      dataSourceCache,
-      pageSizeOptions,
-      pagination,
-    },
-    {
-      fetchRowChildren: nestedDataManager.queue,
-      clearDataSourceState,
-      handleEditRow,
-      ...options,
-    },
-  );
+  } = useGridDataSourceBase(apiRef, props, {
+    fetchRowChildren: nestedDataManager.queue,
+    clearDataSourceState,
+    handleEditRow,
+    ...options,
+  });
 
   const setStrategyAvailability = React.useCallback(() => {
-    const currentStrategy = treeData
+    const currentStrategy = props.treeData
       ? DataSourceRowsUpdateStrategy.GroupedData
       : DataSourceRowsUpdateStrategy.Default;
 
@@ -135,11 +107,11 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       currentStrategy,
-      dataSource && !lazyLoading ? () => true : () => false,
+      props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
-  }, [apiRef, dataSource, lazyLoading, treeData]);
+  }, [apiRef, props.dataSource, props.lazyLoading, props.treeData]);
 
-  const onDataSourceErrorProp = onDataSourceError;
+  const onDataSourceErrorProp = props.onDataSourceError;
 
   const fetchRowChildren = React.useCallback<GridDataSourcePrivateApiPro['fetchRowChildren']>(
     async (id) => {
@@ -147,11 +119,11 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         'getRowsParams',
         {},
       ) as Partial<GridGetRowsParamsPro & { groupFields: string[] }>;
-      if (!treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
+      if (!props.treeData && (pipedParams.groupFields?.length ?? 0) === 0) {
         nestedDataManager.clearPendingRequest(id);
         return;
       }
-      const getRows = dataSource?.getRows;
+      const getRows = props.dataSource?.getRows;
       if (!getRows) {
         nestedDataManager.clearPendingRequest(id);
         return;
@@ -260,8 +232,8 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
       cache,
       onDataSourceErrorProp,
       apiRef,
-      treeData,
-      dataSource?.getRows,
+      props.treeData,
+      props.dataSource?.getRows,
     ],
   );
 

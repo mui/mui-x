@@ -105,7 +105,6 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
 
   const apiRef = useGridPrivateApiContext();
   const { rows, ...rootProps } = useGridRootProps();
-  const { showColumnVerticalBorder, pinnedColumnsSectionSeparator } = rootProps;
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);
@@ -250,16 +249,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
       const showLeftBorder = shouldCellShowLeftBorder(
         pinnedPosition,
         indexInSection,
-        showColumnVerticalBorder,
-        pinnedColumnsSectionSeparator,
+        rootProps.showColumnVerticalBorder,
+        rootProps.pinnedColumnsSectionSeparator,
       );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,
         sectionLength,
-        showColumnVerticalBorder,
+        rootProps.showColumnVerticalBorder,
         gridHasFiller,
-        pinnedColumnsSectionSeparator,
+        rootProps.pinnedColumnsSectionSeparator,
       );
 
       columns.push(
@@ -439,16 +438,16 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
           showLeftBorder={shouldCellShowLeftBorder(
             pinnedPosition,
             indexInSection,
-            showColumnVerticalBorder,
-            pinnedColumnsSectionSeparator,
+            rootProps.showColumnVerticalBorder,
+            rootProps.pinnedColumnsSectionSeparator,
           )}
           showRightBorder={shouldCellShowRightBorder(
             pinnedPosition,
             indexInSection,
             visibleColumnGroupHeader.length,
-            showColumnVerticalBorder,
+            rootProps.showColumnVerticalBorder,
             gridHasFiller,
-            pinnedColumnsSectionSeparator,
+            rootProps.pinnedColumnsSectionSeparator,
           )}
         />
       );

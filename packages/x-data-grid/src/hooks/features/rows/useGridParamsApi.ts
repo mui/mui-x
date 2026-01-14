@@ -28,10 +28,9 @@ export class MissingRowIdError extends Error {}
  */
 export function useGridParamsApi(
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'listView' | 'listViewColumn'>,
+  props: DataGridProcessedProps,
   configuration: GridConfiguration,
 ) {
-  const { listView, listViewColumn } = props;
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
       field,
@@ -116,7 +115,7 @@ export function useGridParamsApi(
 
       return apiRef.current.getCellParamsForRow<any, any, any, any>(id, field, row, {
         colDef:
-          listView && listViewColumn?.field === field
+          props.listView && props.listViewColumn?.field === field
             ? gridListColumnSelector(apiRef)!
             : apiRef.current.getColumn(field),
         rowNode,
@@ -125,7 +124,7 @@ export function useGridParamsApi(
         cellMode,
       });
     },
-    [apiRef, listView, listViewColumn?.field],
+    [apiRef, props.listView, props.listViewColumn?.field],
   );
 
   const getColumnHeaderElement = React.useCallback<GridParamsApi['getColumnHeaderElement']>(

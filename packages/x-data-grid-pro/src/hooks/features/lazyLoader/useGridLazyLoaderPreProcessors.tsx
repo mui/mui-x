@@ -13,20 +13,22 @@ export const useGridLazyLoaderPreProcessors = (
   privateApiRef: RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'rowCount' | 'rowsLoadingMode'>,
 ) => {
-  const { rowCount, rowsLoadingMode } = props;
-
   const addSkeletonRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (groupingParams) => {
       const rootGroup = groupingParams.tree[GRID_ROOT_GROUP_ID] as GridGroupNode;
 
-      if (rowsLoadingMode !== 'server' || !rowCount || rootGroup.children.length >= rowCount) {
+      if (
+        props.rowsLoadingMode !== 'server' ||
+        !props.rowCount ||
+        rootGroup.children.length >= props.rowCount
+      ) {
         return groupingParams;
       }
 
       const tree = { ...groupingParams.tree };
       const rootGroupChildren = [...rootGroup.children];
 
-      for (let i = 0; i < rowCount - rootGroup.children.length; i += 1) {
+      for (let i = 0; i < props.rowCount - rootGroup.children.length; i += 1) {
         const skeletonId = getSkeletonRowId(i);
 
         rootGroupChildren.push(skeletonId);
@@ -48,7 +50,7 @@ export const useGridLazyLoaderPreProcessors = (
         tree,
       };
     },
-    [rowCount, rowsLoadingMode],
+    [props.rowCount, props.rowsLoadingMode],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateRows', addSkeletonRows);

@@ -86,13 +86,8 @@ export const useGridAiAssistant = (
   >,
 ) => {
   const {
-    aiAssistant,
-    aiAssistantConversations,
-    aiAssistantActiveConversationIndex,
-    allowAiAssistantDataSampling,
-    onAiAssistantConversationsChange,
-    onAiAssistantActiveConversationIndexChange,
     onPrompt,
+    allowAiAssistantDataSampling,
     slots,
     rowSelection,
     disableColumnFilter,
@@ -109,20 +104,20 @@ export const useGridAiAssistant = (
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
-  const isAiAssistantAvailable = !!aiAssistant;
+  const isAiAssistantAvailable = !!props.aiAssistant;
 
   apiRef.current.registerControlState({
     stateId: 'aiAssistantConversations',
-    propModel: aiAssistantConversations,
-    propOnChange: onAiAssistantConversationsChange,
+    propModel: props.aiAssistantConversations,
+    propOnChange: props.onAiAssistantConversationsChange,
     stateSelector: gridAiAssistantConversationsSelector,
     changeEvent: 'aiAssistantConversationsChange',
   });
 
   apiRef.current.registerControlState({
     stateId: 'aiAssistantActiveConversationIndex',
-    propModel: aiAssistantActiveConversationIndex,
-    propOnChange: onAiAssistantActiveConversationIndexChange,
+    propModel: props.aiAssistantActiveConversationIndex,
+    propOnChange: props.onAiAssistantActiveConversationIndexChange,
     stateSelector: gridAiAssistantActiveConversationIndexSelector,
     changeEvent: 'aiAssistantActiveConversationIndexChange',
   });
@@ -557,16 +552,16 @@ export const useGridAiAssistant = (
   );
 
   React.useEffect(() => {
-    if (aiAssistantConversations) {
-      setConversations(aiAssistantConversations);
+    if (props.aiAssistantConversations) {
+      setConversations(props.aiAssistantConversations);
     }
-  }, [apiRef, aiAssistantConversations, setConversations]);
+  }, [apiRef, props.aiAssistantConversations, setConversations]);
 
   React.useEffect(() => {
-    if (aiAssistantActiveConversationIndex) {
-      setActiveConversationIndex(aiAssistantActiveConversationIndex);
+    if (props.aiAssistantActiveConversationIndex) {
+      setActiveConversationIndex(props.aiAssistantActiveConversationIndex);
     }
-  }, [apiRef, aiAssistantActiveConversationIndex, setActiveConversationIndex]);
+  }, [apiRef, props.aiAssistantActiveConversationIndex, setActiveConversationIndex]);
 
   useGridRegisterPipeProcessor(apiRef, 'preferencePanel', preferencePanelPreProcessing);
   useGridApiMethod(

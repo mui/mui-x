@@ -27,7 +27,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-type OwnerState = Pick<DataGridProProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridProProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -68,16 +68,8 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
   });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
   const { rows, ...rootProps } = useGridRootProps();
-  const {
-    headerFilters,
-    showColumnVerticalBorder,
-    pinnedColumnsSectionSeparator,
-    classes: classesRootProps,
-    slots,
-    slotProps,
-  } = rootProps;
-  const classes = useUtilityClasses({ classes: classesRootProps });
-  const disableHeaderFiltering = !headerFilters;
+  const classes = useUtilityClasses(rootProps);
+  const disableHeaderFiltering = !rootProps.headerFilters;
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
   const columnsTotalWidth = useGridSelector(apiRef, gridColumnsTotalWidthSelector);
   const gridHasFiller = useGridSelector(apiRef, gridHasFillerSelector);
@@ -124,7 +116,9 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
       const isFirstColumn = columnIndex === 0;
       const tabIndexField = columnHeaderFilterTabIndexState?.field;
       const tabIndex =
-        tabIndexField === colDef.field || (isFirstColumn && !hasOtherElementInTabSequence) ? 0 : -1;
+        tabIndexField === colDef.field || (isFirstColumn && !props.hasOtherElementInTabSequence)
+          ? 0
+          : -1;
 
       const headerClassName =
         typeof colDef.headerClassName === 'function'
@@ -149,20 +143,20 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
       const showLeftBorder = shouldCellShowLeftBorder(
         pinnedPosition,
         indexInSection,
-        showColumnVerticalBorder,
-        pinnedColumnsSectionSeparator,
+        rootProps.showColumnVerticalBorder,
+        rootProps.pinnedColumnsSectionSeparator,
       );
       const showRightBorder = shouldCellShowRightBorder(
         pinnedPosition,
         indexInSection,
         sectionLength,
-        showColumnVerticalBorder,
+        rootProps.showColumnVerticalBorder,
         gridHasFiller,
-        pinnedColumnsSectionSeparator,
+        rootProps.pinnedColumnsSectionSeparator,
       );
 
       filters.push(
-        <slots.headerFilterCell
+        <rootProps.slots.headerFilterCell
           colIndex={columnIndex}
           key={`${colDef.field}-filter`}
           height={headerFilterHeight}
@@ -178,7 +172,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
           pinnedOffset={pinnedOffset}
           showLeftBorder={showLeftBorder}
           showRightBorder={showRightBorder}
-          {...slotProps?.headerFilterCell}
+          {...rootProps.slotProps?.headerFilterCell}
         />,
       );
     }

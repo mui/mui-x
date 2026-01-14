@@ -156,9 +156,8 @@ export const rowSpanningStateInitializer: GridStateInitializer = (state) => {
 
 export const useGridRowSpanning = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'rowSpanning'>,
+  props: Pick<DataGridProcessedProps, 'rowSpanning' | 'pagination' | 'paginationMode'>,
 ): void => {
-  const { rowSpanning } = props;
   const updateRowSpanningState = React.useCallback(
     (renderContext: GridRenderContext, resetState: boolean = false) => {
       const store = apiRef.current.virtualizer.store;
@@ -238,29 +237,29 @@ export const useGridRowSpanning = (
   useGridEvent(
     apiRef,
     'renderedRowsIntervalChange',
-    runIf(rowSpanning, (renderContext: GridRenderContext) => {
+    runIf(props.rowSpanning, (renderContext: GridRenderContext) => {
       const didHavePendingReset = cancel();
       updateRowSpanningState(renderContext, didHavePendingReset);
     }),
   );
 
-  useGridEvent(apiRef, 'sortedRowsSet', runIf(rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'paginationModelChange', runIf(rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'filteredRowsSet', runIf(rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'columnsChange', runIf(rowSpanning, resetRowSpanningState));
-  useGridEvent(apiRef, 'rowExpansionChange', runIf(rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'sortedRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'paginationModelChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'filteredRowsSet', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'columnsChange', runIf(props.rowSpanning, resetRowSpanningState));
+  useGridEvent(apiRef, 'rowExpansionChange', runIf(props.rowSpanning, resetRowSpanningState));
 
   React.useEffect(() => {
     const store = apiRef.current.virtualizer?.store;
     if (!store) {
       return;
     }
-    if (!rowSpanning) {
+    if (!props.rowSpanning) {
       if (store.state.rowSpanning !== EMPTY_STATE) {
         store.set('rowSpanning', EMPTY_STATE);
       }
     } else if (store.state.rowSpanning === EMPTY_STATE) {
       updateRowSpanningState(gridRenderContextSelector(apiRef));
     }
-  }, [apiRef, rowSpanning, updateRowSpanningState]);
+  }, [apiRef, props.rowSpanning, updateRowSpanningState]);
 };

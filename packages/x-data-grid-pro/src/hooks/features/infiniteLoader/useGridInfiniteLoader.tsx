@@ -18,10 +18,12 @@ import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
  */
 export const useGridInfiniteLoader = (
   apiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'onRowsScrollEnd' | 'rowsLoadingMode'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'onRowsScrollEnd' | 'pagination' | 'paginationMode' | 'rowsLoadingMode'
+  >,
 ): void => {
-  const { onRowsScrollEnd, rowsLoadingMode } = props;
-  const isEnabled = rowsLoadingMode === 'client' && !!onRowsScrollEnd;
+  const isEnabled = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
 
   const handleLoadMoreRows: GridEventListener<'rowsScrollEndIntersection'> = useEventCallback(
     () => {
@@ -37,6 +39,6 @@ export const useGridInfiniteLoader = (
     },
   );
 
-  useGridEventPriority(apiRef, 'rowsScrollEnd', onRowsScrollEnd);
+  useGridEventPriority(apiRef, 'rowsScrollEnd', props.onRowsScrollEnd);
   useGridEvent(apiRef, 'rowsScrollEndIntersection', runIf(isEnabled, handleLoadMoreRows));
 };

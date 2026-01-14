@@ -12,11 +12,8 @@ import { gridDetailPanelExpandedRowIdsSelector } from './gridDetailPanelSelector
 
 export const useGridDetailPanelPreProcessors = (
   privateApiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'getDetailPanelContent' | 'columns'>,
+  props: DataGridProProcessedProps,
 ) => {
-  const { getDetailPanelContent, columns } = props;
-  const shouldHaveToggleColumn = !!getDetailPanelContent;
-
   const addToggleColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
       const detailPanelToggleColumn: GridColDef = {
@@ -24,6 +21,7 @@ export const useGridDetailPanelPreProcessors = (
         headerName: privateApiRef.current.getLocaleText('detailPanelToggle'),
       };
 
+      const shouldHaveToggleColumn = !!props.getDetailPanelContent;
       const hasToggleColumn = columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD] != null;
 
       if (shouldHaveToggleColumn && !hasToggleColumn) {
@@ -43,7 +41,7 @@ export const useGridDetailPanelPreProcessors = (
           ...columnsState.lookup[GRID_DETAIL_PANEL_TOGGLE_FIELD],
         };
         // If the column is not in the columns array (not a custom detail panel toggle column), move it to the beginning of the column order
-        if (!columns.some((col) => col.field === GRID_DETAIL_PANEL_TOGGLE_FIELD)) {
+        if (!props.columns.some((col) => col.field === GRID_DETAIL_PANEL_TOGGLE_FIELD)) {
           columnsState.orderedFields = [
             GRID_DETAIL_PANEL_TOGGLE_FIELD,
             ...columnsState.orderedFields.filter(
@@ -55,12 +53,12 @@ export const useGridDetailPanelPreProcessors = (
 
       return columnsState;
     },
-    [privateApiRef, columns, shouldHaveToggleColumn],
+    [privateApiRef, props.columns, props.getDetailPanelContent],
   );
 
   const addExpandedClassToRow = React.useCallback<GridPipeProcessor<'rowClassName'>>(
     (classes, id) => {
-      if (getDetailPanelContent == null) {
+      if (props.getDetailPanelContent == null) {
         return classes;
       }
 
@@ -71,7 +69,7 @@ export const useGridDetailPanelPreProcessors = (
 
       return [...classes, gridClasses['row--detailPanelExpanded']];
     },
-    [privateApiRef, getDetailPanelContent],
+    [privateApiRef, props.getDetailPanelContent],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', addToggleColumn);

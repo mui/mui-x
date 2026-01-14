@@ -19,7 +19,6 @@ export const useGridTreeData = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<DataGridProProcessedProps, 'treeData' | 'dataSource' | 'isValidRowReorder'>,
 ) => {
-  const { treeData, dataSource, isValidRowReorder: isValidRowReorderProp } = props;
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
@@ -32,7 +31,7 @@ export const useGridTreeData = (
           return;
         }
 
-        if (dataSource && !params.rowNode.childrenExpanded) {
+        if (props.dataSource && !params.rowNode.childrenExpanded) {
           apiRef.current.dataSource.fetchRows(params.id);
           return;
         }
@@ -40,12 +39,13 @@ export const useGridTreeData = (
         apiRef.current.setRowChildrenExpansion(params.id, !params.rowNode.childrenExpanded);
       }
     },
-    [apiRef, dataSource],
+    [apiRef, props.dataSource],
   );
 
+  const isValidRowReorderProp = props.isValidRowReorder;
   const isRowReorderValid = React.useCallback<GridPipeProcessor<'isRowReorderValid'>>(
     (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
-      if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || !treeData) {
+      if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || !props.treeData) {
         return initialValue;
       }
 
@@ -89,7 +89,7 @@ export const useGridTreeData = (
 
       return isValid;
     },
-    [apiRef, treeData, isValidRowReorderProp],
+    [apiRef, props.treeData, isValidRowReorderProp],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'isRowReorderValid', isRowReorderValid);

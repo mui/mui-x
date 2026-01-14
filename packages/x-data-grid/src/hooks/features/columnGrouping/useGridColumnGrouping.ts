@@ -23,11 +23,10 @@ import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../co
 export const columnGroupsStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'columnGroupingModel'>
 > = (state, props, apiRef) => {
-  const { columnGroupingModel } = props;
   apiRef.current.caches.columnGrouping = {
-    lastColumnGroupingModel: columnGroupingModel,
+    lastColumnGroupingModel: props.columnGroupingModel,
   };
-  if (!columnGroupingModel) {
+  if (!props.columnGroupingModel) {
     return {
       ...state,
       columnGrouping: undefined,
@@ -37,8 +36,8 @@ export const columnGroupsStateInitializer: GridStateInitializer<
   const columnFields = gridColumnFieldsSelector(apiRef);
   const visibleColumnFields = gridVisibleColumnFieldsSelector(apiRef);
 
-  const groupLookup = createGroupLookup(columnGroupingModel ?? []);
-  const unwrappedGroupingModel = unwrapGroupingColumnModel(columnGroupingModel ?? []);
+  const groupLookup = createGroupLookup(props.columnGroupingModel ?? []);
+  const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
   const columnGroupsHeaderStructure = getColumnGroupsHeaderStructure(
     columnFields,
     unwrappedGroupingModel,
@@ -68,7 +67,6 @@ export const useGridColumnGrouping = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'columnGroupingModel'>,
 ) => {
-  const { columnGroupingModel: columnGroupingModelProp } = props;
   /**
    * API METHODS
    */
@@ -94,7 +92,7 @@ export const useGridColumnGrouping = (
   useGridApiMethod(apiRef, columnGroupingApi, 'public');
 
   const handleColumnIndexChange = React.useCallback<GridEventListener<'columnIndexChange'>>(() => {
-    const unwrappedGroupingModel = unwrapGroupingColumnModel(columnGroupingModelProp ?? []);
+    const unwrappedGroupingModel = unwrapGroupingColumnModel(props.columnGroupingModel ?? []);
 
     apiRef.current.setState((state) => {
       const orderedFields = state.columns?.orderedFields ?? [];
@@ -114,7 +112,7 @@ export const useGridColumnGrouping = (
         },
       };
     });
-  }, [apiRef, columnGroupingModelProp]);
+  }, [apiRef, props.columnGroupingModel]);
 
   const updateColumnGroupingState = React.useCallback(
     (columnGroupingModel: GridColumnGroupingModel | undefined) => {
@@ -157,19 +155,21 @@ export const useGridColumnGrouping = (
 
   useGridEvent(apiRef, 'columnIndexChange', handleColumnIndexChange);
   useGridEvent(apiRef, 'columnsChange', () => {
-    updateColumnGroupingState(columnGroupingModelProp);
+    updateColumnGroupingState(props.columnGroupingModel);
   });
   useGridEvent(apiRef, 'columnVisibilityModelChange', () => {
-    updateColumnGroupingState(columnGroupingModelProp);
+    updateColumnGroupingState(props.columnGroupingModel);
   });
 
   /**
    * EFFECTS
    */
   React.useEffect(() => {
-    if (columnGroupingModelProp === apiRef.current.caches.columnGrouping.lastColumnGroupingModel) {
+    if (
+      props.columnGroupingModel === apiRef.current.caches.columnGrouping.lastColumnGroupingModel
+    ) {
       return;
     }
-    updateColumnGroupingState(columnGroupingModelProp);
-  }, [apiRef, updateColumnGroupingState, columnGroupingModelProp]);
+    updateColumnGroupingState(props.columnGroupingModel);
+  }, [apiRef, updateColumnGroupingState, props.columnGroupingModel]);
 };

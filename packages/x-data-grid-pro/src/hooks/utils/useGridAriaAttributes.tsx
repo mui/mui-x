@@ -4,9 +4,9 @@ import { useGridRootProps } from './useGridRootProps';
 
 export const useGridAriaAttributesPro = (): React.HTMLAttributes<HTMLElement> => {
   const ariaAttributesCommunity = useGridAriaAttributesCommunity();
-  const { treeData } = useGridRootProps();
+  const rootProps = useGridRootProps();
 
-  const ariaAttributesPro = treeData ? { role: 'treegrid' } : {};
+  const ariaAttributesPro = rootProps.treeData ? { role: 'treegrid' } : {};
 
   return {
     ...ariaAttributesCommunity,

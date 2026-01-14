@@ -58,38 +58,13 @@ const options = {
 
 export const useGridDataSourcePremium = (
   apiRef: RefObject<GridPrivateApiPremium>,
-  props: Pick<
-    DataGridPremiumProcessedProps,
-    | 'dataSource'
-    | 'lazyLoading'
-    | 'treeData'
-    | 'disableRowGrouping'
-    | 'disableAggregation'
-    | 'pivotingColDef'
-    | 'onDataSourceError'
-    | 'dataSourceCache'
-    | 'pageSizeOptions'
-    | 'pagination'
-  >,
+  props: DataGridPremiumProcessedProps,
 ) => {
-  const {
-    dataSource,
-    lazyLoading,
-    treeData,
-    disableRowGrouping,
-    disableAggregation,
-    pivotingColDef,
-    onDataSourceError,
-    dataSourceCache,
-    pageSizeOptions,
-    pagination,
-  } = props;
-
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const groupingModelSize = gridRowGroupingSanitizedModelSelector(apiRef).length;
   const setStrategyAvailability = React.useCallback(() => {
     const currentStrategy =
-      treeData || (!disableRowGrouping && groupingModelSize > 0)
+      props.treeData || (!props.disableRowGrouping && groupingModelSize > 0)
         ? DataSourceRowsUpdateStrategy.GroupedData
         : DataSourceRowsUpdateStrategy.Default;
 
@@ -103,9 +78,16 @@ export const useGridDataSourcePremium = (
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
       currentStrategy,
-      dataSource && !lazyLoading ? () => true : () => false,
+      props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
-  }, [apiRef, dataSource, lazyLoading, treeData, disableRowGrouping, groupingModelSize]);
+  }, [
+    apiRef,
+    props.dataSource,
+    props.lazyLoading,
+    props.treeData,
+    props.disableRowGrouping,
+    groupingModelSize,
+  ]);
 
   const handleEditRowWithAggregation = React.useCallback(
     (params: GridUpdateRowParams, updatedRow: GridRowModel) => {
@@ -128,24 +110,12 @@ export const useGridDataSourcePremium = (
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor,
     events,
-  } = useGridDataSourceBasePro<GridPrivateApiPremium>(
-    apiRef,
-    {
-      dataSource,
-      lazyLoading,
-      treeData,
-      onDataSourceError,
-      dataSourceCache,
-      pageSizeOptions,
-      pagination,
-    },
-    {
-      ...(!disableAggregation && Object.keys(aggregationModel).length > 0
-        ? { handleEditRow: handleEditRowWithAggregation }
-        : {}),
-      ...options,
-    },
-  );
+  } = useGridDataSourceBasePro<GridPrivateApiPremium>(apiRef, props, {
+    ...(!props.disableAggregation && Object.keys(aggregationModel).length > 0
+      ? { handleEditRow: handleEditRowWithAggregation }
+      : {}),
+    ...options,
+  });
   const aggregateRowRef = React.useRef<GridValidRowModel>({});
 
   const initialColumns = gridPivotInitialColumnsSelector(apiRef);
@@ -174,6 +144,7 @@ export const useGridDataSourcePremium = (
       }
 
       if (response.pivotColumns) {
+        const pivotingColDef = props.pivotingColDef;
         if (!pivotingColDef || typeof pivotingColDef !== 'function') {
           throw new Error(
             'MUI X: No `pivotingColDef()` prop provided with to the Data Grid, but response contains `pivotColumns`.\n\n\
@@ -210,7 +181,7 @@ export const useGridDataSourcePremium = (
         response,
       };
     },
-    [apiRef, pivotingColDef, initialColumns, pivotModel],
+    [apiRef, props.pivotingColDef, initialColumns, pivotModel],
   );
 
   const resolveGroupAggregation = React.useCallback<
@@ -218,12 +189,12 @@ export const useGridDataSourcePremium = (
   >(
     (groupId, field) => {
       if (groupId === GRID_ROOT_GROUP_ID) {
-        return dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
+        return props.dataSource?.getAggregatedValue?.(aggregateRowRef.current, field);
       }
       const row = apiRef.current.getRow(groupId);
-      return dataSource?.getAggregatedValue?.(row, field);
+      return props.dataSource?.getAggregatedValue?.(row, field);
     },
-    [apiRef, dataSource],
+    [apiRef, props.dataSource],
   );
 
   const privateApi: GridDataSourcePremiumPrivateApi = {

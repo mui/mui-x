@@ -123,48 +123,32 @@ export const useGridPivoting = (
   originalColumnsProp: readonly GridColDef[],
   originalRowsProp: readonly GridRowModel[],
 ) => {
-  const {
-    pivotActive,
-    onPivotActiveChange,
-    pivotModel,
-    onPivotModelChange,
-    pivotPanelOpen,
-    onPivotPanelOpenChange,
-    disablePivoting,
-    getPivotDerivedColumns,
-    pivotingColDef,
-    groupingColDef,
-    aggregationFunctions,
-    loading,
-    dataSource,
-  } = props;
-
   const isPivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
-  const isLoading = loading ?? gridRowsLoadingSelector(apiRef);
+  const isLoading = props.loading ?? gridRowsLoadingSelector(apiRef);
   const { exportedStateRef, nonPivotDataRef } = apiRef.current.caches.pivoting;
 
-  const isPivotingAvailable = !disablePivoting;
+  const isPivotingAvailable = !props.disablePivoting;
 
   apiRef.current.registerControlState({
     stateId: 'pivotModel',
-    propModel: pivotModel,
-    propOnChange: onPivotModelChange,
+    propModel: props.pivotModel,
+    propOnChange: props.onPivotModelChange,
     stateSelector: gridPivotModelSelector,
     changeEvent: 'pivotModelChange',
   });
 
   apiRef.current.registerControlState({
     stateId: 'pivotMode',
-    propModel: pivotActive,
-    propOnChange: onPivotActiveChange,
+    propModel: props.pivotActive,
+    propOnChange: props.onPivotActiveChange,
     stateSelector: gridPivotActiveSelector,
     changeEvent: 'pivotModeChange',
   });
 
   apiRef.current.registerControlState({
     stateId: 'pivotPanelOpen',
-    propModel: pivotPanelOpen,
-    propOnChange: onPivotPanelOpenChange,
+    propModel: props.pivotPanelOpen,
+    propOnChange: props.onPivotPanelOpenChange,
     stateSelector: gridPivotPanelOpenSelector,
     changeEvent: 'pivotPanelOpenChange',
   });
@@ -175,7 +159,7 @@ export const useGridPivoting = (
     }
 
     let rows: GridRowModel[] = [];
-    if (!dataSource) {
+    if (!props.dataSource) {
       const rowIds = gridDataRowIdsSelector(apiRef);
       const rowsLookup = gridRowsLookupSelector(apiRef);
       rows = rowIds.map((id) => rowsLookup[id]);
@@ -183,38 +167,38 @@ export const useGridPivoting = (
 
     const initialColumns = getInitialColumns(
       originalColumnsProp,
-      getPivotDerivedColumns,
+      props.getPivotDerivedColumns,
       apiRef.current.getLocaleText,
     );
 
     return { rows, columns: initialColumns, originalRowsProp };
   }, [
     apiRef,
-    getPivotDerivedColumns,
+    props.getPivotDerivedColumns,
     originalColumnsProp,
     originalRowsProp,
     exportedStateRef,
-    dataSource,
+    props.dataSource,
   ]);
 
   const computePivotingState = React.useCallback(
-    ({ active, model }: Pick<GridPivotingState, 'active' | 'model'>) => {
-      if (active && model) {
+    ({ active, model: pivotModel }: Pick<GridPivotingState, 'active' | 'model'>) => {
+      if (active && pivotModel) {
         const { rows, columns } = nonPivotDataRef.current || { rows: [], columns: new Map() };
 
         let propsOverrides: GridPivotingPropsOverrides | GridPivotingStaticPropsOverrides =
-          getPivotForcedProps(model, columns, groupingColDef);
+          getPivotForcedProps(pivotModel, columns, props.groupingColDef);
 
         // without data source, add more props overrides based on the data
-        if (!isLoading && !dataSource) {
+        if (!isLoading && !props.dataSource) {
           propsOverrides = {
             ...propsOverrides,
             // TODO: fix createPivotPropsFromRows called twice in controlled mode
             ...createPivotPropsFromRows({
               rows,
               columns,
-              pivotModel: model,
-              pivotingColDef,
+              pivotModel,
+              pivotingColDef: props.pivotingColDef,
               apiRef,
             }),
           };
@@ -228,7 +212,14 @@ export const useGridPivoting = (
 
       return {};
     },
-    [apiRef, isLoading, dataSource, pivotingColDef, groupingColDef, nonPivotDataRef],
+    [
+      apiRef,
+      isLoading,
+      props.dataSource,
+      props.pivotingColDef,
+      props.groupingColDef,
+      nonPivotDataRef,
+    ],
   );
 
   useOnMount(() => {
@@ -340,9 +331,9 @@ export const useGridPivoting = (
             const aggFunc = isSameSection
               ? prev.values.find((item) => item.field === field)?.aggFunc
               : getAvailableAggregationFunctions({
-                  aggregationFunctions,
+                  aggregationFunctions: props.aggregationFunctions,
                   colDef: initialColumns.get(field)!,
-                  isDataSource: !!dataSource,
+                  isDataSource: !!props.dataSource,
                 })[0];
             newSectionArray.splice(toIndex, 0, {
               field,
@@ -369,7 +360,7 @@ export const useGridPivoting = (
         return newModel;
       });
     },
-    [apiRef, aggregationFunctions, dataSource],
+    [apiRef, props.aggregationFunctions, props.dataSource],
   );
 
   const setPivotActive = React.useCallback<GridPivotingApi['setPivotActive']>(
@@ -456,15 +447,17 @@ export const useGridPivoting = (
       }
 
       if (keepPreviousColumns) {
-        getInitialColumns(columns, getPivotDerivedColumns, apiRef.current.getLocaleText).forEach(
-          (col) => {
-            nonPivotDataRef.current!.columns.set(col.field, col);
-          },
-        );
+        getInitialColumns(
+          columns,
+          props.getPivotDerivedColumns,
+          apiRef.current.getLocaleText,
+        ).forEach((col) => {
+          nonPivotDataRef.current!.columns.set(col.field, col);
+        });
       } else {
         nonPivotDataRef.current.columns = getInitialColumns(
           columns,
-          getPivotDerivedColumns,
+          props.getPivotDerivedColumns,
           apiRef.current.getLocaleText,
         );
       }
@@ -484,14 +477,20 @@ export const useGridPivoting = (
         };
       });
     },
-    [isPivotingAvailable, apiRef, getPivotDerivedColumns, computePivotingState, nonPivotDataRef],
+    [
+      isPivotingAvailable,
+      apiRef,
+      props.getPivotDerivedColumns,
+      computePivotingState,
+      nonPivotDataRef,
+    ],
   );
 
   const updateNonPivotRows = React.useCallback<GridPivotingPrivateApi['updateNonPivotRows']>(
     (rows, keepPreviousRows = true) => {
       if (
         !nonPivotDataRef.current ||
-        dataSource ||
+        props.dataSource ||
         !isPivotingAvailable ||
         !rows ||
         rows.length === 0
@@ -534,7 +533,7 @@ export const useGridPivoting = (
         };
       });
     },
-    [apiRef, computePivotingState, isPivotingAvailable, nonPivotDataRef, dataSource],
+    [apiRef, computePivotingState, isPivotingAvailable, nonPivotDataRef, props.dataSource],
   );
 
   const addPivotingPanel = React.useCallback<GridPipeProcessor<'sidebar'>>(
@@ -554,10 +553,10 @@ export const useGridPivoting = (
         return params;
       }
 
-      const pivotModelState = gridPivotModelSelector(apiRef);
-      const visibleColumns = pivotModelState.columns.filter((column) => !column.hidden);
-      const visibleRows = pivotModelState.rows.filter((row) => !row.hidden);
-      const visibleValues = pivotModelState.values.filter((value) => !value.hidden);
+      const pivotModel = gridPivotModelSelector(apiRef);
+      const visibleColumns = pivotModel.columns.filter((column) => !column.hidden);
+      const visibleRows = pivotModel.rows.filter((row) => !row.hidden);
+      const visibleValues = pivotModel.values.filter((value) => !value.hidden);
 
       return {
         ...params,
@@ -593,22 +592,22 @@ export const useGridPivoting = (
   }, [originalRowsProp, apiRef, nonPivotDataRef]);
 
   useEnhancedEffect(() => {
-    if (pivotModel !== undefined) {
-      apiRef.current.setPivotModel(pivotModel);
+    if (props.pivotModel !== undefined) {
+      apiRef.current.setPivotModel(props.pivotModel);
     }
-  }, [apiRef, pivotModel]);
+  }, [apiRef, props.pivotModel]);
 
   useEnhancedEffect(() => {
-    if (pivotActive !== undefined) {
-      apiRef.current.setPivotActive(pivotActive);
+    if (props.pivotActive !== undefined) {
+      apiRef.current.setPivotActive(props.pivotActive);
     }
-  }, [apiRef, pivotActive]);
+  }, [apiRef, props.pivotActive]);
 
   useEnhancedEffect(() => {
-    if (pivotPanelOpen !== undefined) {
-      apiRef.current.setPivotPanelOpen(pivotPanelOpen);
+    if (props.pivotPanelOpen !== undefined) {
+      apiRef.current.setPivotPanelOpen(props.pivotPanelOpen);
     }
-  }, [apiRef, pivotPanelOpen]);
+  }, [apiRef, props.pivotPanelOpen]);
 };
 
 export const useGridPivotingExportState = (apiRef: RefObject<GridPrivateApiPremium>) => {

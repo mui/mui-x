@@ -15,10 +15,10 @@ export type GridListViewState = (GridListViewColDef & { computedWidth: number })
 
 export const listViewStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'listViewColumn'>
-> = (state, { listViewColumn }, apiRef) => ({
+> = (state, props, apiRef) => ({
   ...state,
-  listViewColumn: listViewColumn
-    ? { ...listViewColumn, computedWidth: getListColumnWidth(apiRef) }
+  listViewColumn: props.listViewColumn
+    ? { ...props.listViewColumn, computedWidth: getListColumnWidth(apiRef) }
     : undefined,
 });
 
@@ -26,7 +26,6 @@ export function useGridListView(
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<DataGridProcessedProps, 'listView' | 'listViewColumn'>,
 ) {
-  const { listView, listViewColumn } = props;
   /*
    * EVENTS
    */
@@ -62,7 +61,7 @@ export function useGridListView(
    * EFFECTS
    */
   useEnhancedEffect(() => {
-    const listColumn = listViewColumn;
+    const listColumn = props.listViewColumn;
     if (listColumn) {
       apiRef.current.setState((state) => {
         return {
@@ -74,17 +73,17 @@ export function useGridListView(
         };
       });
     }
-  }, [apiRef, listViewColumn]);
+  }, [apiRef, props.listViewColumn]);
 
   React.useEffect(() => {
-    if (listView && !listViewColumn) {
+    if (props.listView && !props.listViewColumn) {
       warnOnce([
         'MUI X: The `listViewColumn` prop must be set if `listView` is enabled.',
         'To fix, pass a column definition to the `listViewColumn` prop, e.g. `{ field: "example", renderCell: (params) => <div>{params.row.id}</div> }`.',
         'For more details, see https://mui.com/x/react-data-grid/list-view/',
       ]);
     }
-  }, [listView, listViewColumn]);
+  }, [props.listView, props.listViewColumn]);
 }
 
 function getListColumnWidth(apiRef: RefObject<GridPrivateApiCommunity>) {

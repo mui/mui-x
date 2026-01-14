@@ -41,14 +41,13 @@ import type { GridConfiguration } from '../../../models/configuration/gridConfig
 export const filterStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'filterModel' | 'initialState' | 'disableMultipleColumnsFiltering'>
 > = (state, props, apiRef) => {
-  const { filterModel: filterModelProp, initialState, disableMultipleColumnsFiltering } = props;
   const filterModel =
-    filterModelProp ?? initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
+    props.filterModel ?? props.initialState?.filter?.filterModel ?? getDefaultGridFilterModel();
 
   return {
     ...state,
     filter: {
-      filterModel: sanitizeFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+      filterModel: sanitizeFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
       ...defaultGridFilterLookup,
     },
     visibleRowsLookup: {},
@@ -99,27 +98,12 @@ export const useGridFilter = (
   >,
   configuration: GridConfiguration,
 ): void => {
-  const { rows, ...restProps } = props;
-  const {
-    initialState,
-    filterModel: filterModelProp,
-    getRowId,
-    onFilterModelChange,
-    filterMode,
-    disableMultipleColumnsFiltering,
-    slots,
-    slotProps,
-    disableColumnFilter,
-    disableEval,
-    ignoreDiacritics,
-    signature,
-  } = restProps;
   const logger = useGridLogger(apiRef, 'useGridFilter');
 
   apiRef.current.registerControlState({
     stateId: 'filter',
-    propModel: filterModelProp,
-    propOnChange: onFilterModelChange,
+    propModel: props.filterModel,
+    propOnChange: props.onFilterModelChange,
     stateSelector: gridFilterModelSelector,
     changeEvent: 'filterModelChange',
   });
@@ -149,13 +133,13 @@ export const useGridFilter = (
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
-      if (colDef == null || colDef.filterable === false || disableColumnFilter) {
+      if (colDef == null || colDef.filterable === false || props.disableColumnFilter) {
         return columnMenuItems;
       }
 
       return [...columnMenuItems, 'columnMenuFilterItem'];
     },
-    [disableColumnFilter],
+    [props.disableColumnFilter],
   );
 
   /**
@@ -249,7 +233,7 @@ export const useGridFilter = (
 
         if (filterItemOnTarget) {
           newFilterItems = filterItemsWithValue;
-        } else if (disableMultipleColumnsFiltering) {
+        } else if (props.disableMultipleColumnsFiltering) {
           newFilterItems = [
             cleanFilterItem(
               { field: targetColumnField, operator: targetColumn!.filterOperators![0].value! },
@@ -273,7 +257,7 @@ export const useGridFilter = (
       }
       apiRef.current.showPreferences(GridPreferencePanelsValue.filters, panelId, labelId);
     },
-    [apiRef, logger, disableMultipleColumnsFiltering],
+    [apiRef, logger, props.disableMultipleColumnsFiltering],
   );
 
   const hideFilterPanel = React.useCallback<GridFilterApi['hideFilterPanel']>(() => {
@@ -319,26 +303,26 @@ export const useGridFilter = (
         logger.debug('Setting filter model');
         apiRef.current.updateControlState(
           'filter',
-          mergeStateWithFilterModel(model, disableMultipleColumnsFiltering, apiRef),
+          mergeStateWithFilterModel(model, props.disableMultipleColumnsFiltering, apiRef),
           reason,
         );
         apiRef.current.unstable_applyFilters();
       }
     },
-    [apiRef, logger, disableMultipleColumnsFiltering],
+    [apiRef, logger, props.disableMultipleColumnsFiltering],
   );
 
   const getFilterState = React.useCallback<GridFilterApi['getFilterState']>(
     (inputFilterModel) => {
       const filterModel = sanitizeFilterModel(
         inputFilterModel,
-        disableMultipleColumnsFiltering,
+        props.disableMultipleColumnsFiltering,
         apiRef,
       );
-      const filterValueGetter = configuration.hooks.useFilterValueGetter(apiRef, restProps as any);
+      const filterValueGetter = configuration.hooks.useFilterValueGetter(apiRef, props as any);
       const isRowMatchingFilters =
-        filterMode === 'client'
-          ? buildAggregatedFilterApplier(filterModel, filterValueGetter, apiRef, disableEval)
+        props.filterMode === 'client'
+          ? buildAggregatedFilterApplier(filterModel, filterValueGetter, apiRef, props.disableEval)
           : null;
 
       const filterResult = apiRef.current.applyStrategyProcessor('filtering', {
@@ -351,14 +335,7 @@ export const useGridFilter = (
         filterModel,
       };
     },
-    [
-      apiRef,
-      configuration.hooks,
-      disableMultipleColumnsFiltering,
-      disableEval,
-      filterMode,
-      restProps,
-    ],
+    [apiRef, configuration.hooks, props],
   );
 
   const filterApi: GridFilterApi = {
@@ -371,7 +348,7 @@ export const useGridFilter = (
     showFilterPanel,
     hideFilterPanel,
     setQuickFilterValues,
-    ignoreDiacritics,
+    ignoreDiacritics: props.ignoreDiacritics,
     getFilterState,
   };
 
@@ -393,9 +370,9 @@ export const useGridFilter = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
-        filterModelProp != null ||
+        props.filterModel != null ||
         // Always export if the model has been initialized
-        initialState?.filter?.filterModel != null ||
+        props.initialState?.filter?.filterModel != null ||
         // Export if the model is not equal to the default value
         !isDeepEqual(filterModelToExport, getDefaultGridFilterModel());
 
@@ -410,7 +387,7 @@ export const useGridFilter = (
         },
       };
     },
-    [apiRef, filterModelProp, initialState?.filter?.filterModel],
+    [apiRef, props.filterModel, props.initialState?.filter?.filterModel],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -421,7 +398,7 @@ export const useGridFilter = (
       }
       apiRef.current.updateControlState(
         'filter',
-        mergeStateWithFilterModel(filterModel, disableMultipleColumnsFiltering, apiRef),
+        mergeStateWithFilterModel(filterModel, props.disableMultipleColumnsFiltering, apiRef),
         'restoreState',
       );
 
@@ -430,26 +407,28 @@ export const useGridFilter = (
         callbacks: [...params.callbacks, apiRef.current.unstable_applyFilters],
       };
     },
-    [apiRef, disableMultipleColumnsFiltering],
+    [apiRef, props.disableMultipleColumnsFiltering],
   );
 
   const preferencePanelPreProcessing = React.useCallback<GridPipeProcessor<'preferencePanel'>>(
     (initialValue, value) => {
       if (value === GridPreferencePanelsValue.filters) {
-        const FilterPanel = slots.filterPanel;
-        return <FilterPanel {...slotProps?.filterPanel} />;
+        const FilterPanel = props.slots.filterPanel;
+        return <FilterPanel {...props.slotProps?.filterPanel} />;
       }
 
       return initialValue;
     },
-    [slots.filterPanel, slotProps?.filterPanel],
+    [props.slots.filterPanel, props.slotProps?.filterPanel],
   );
+
+  const { getRowId } = props;
   const getRowsRef = useLazyRef(createMemoizedValues);
 
   const flatFilteringMethod = React.useCallback<GridStrategyProcessor<'filtering'>>(
     (params) => {
       if (
-        filterMode !== 'client' ||
+        props.filterMode !== 'client' ||
         !params.isRowMatchingFilters ||
         (!params.filterModel.items.length && !params.filterModel.quickFilterValues?.length)
       ) {
@@ -466,9 +445,9 @@ export const useGridFilter = (
         passingQuickFilterValues: null,
       };
 
-      const rowsData = getRowsRef.current(apiRef.current.state.rows.dataRowIdToModelLookup);
-      for (let i = 0; i < rowsData.length; i += 1) {
-        const row = rowsData[i];
+      const rows = getRowsRef.current(apiRef.current.state.rows.dataRowIdToModelLookup);
+      for (let i = 0; i < rows.length; i += 1) {
+        const row = rows[i];
         const id = getRowId ? getRowId(row) : row.id;
 
         isRowMatchingFilters(row, undefined, result);
@@ -499,7 +478,7 @@ export const useGridFilter = (
         filteredDescendantCountLookup: {},
       };
     },
-    [apiRef, filterMode, getRowId, getRowsRef],
+    [apiRef, props.filterMode, getRowId, getRowsRef],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'columnMenu', addColumnMenuItem);
@@ -568,7 +547,7 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    if (signature === 'DataGrid') {
+    if (props.signature === 'DataGrid') {
       updateFilteredRows();
     }
   });
@@ -577,8 +556,8 @@ export const useGridFilter = (
    * EFFECTS
    */
   useEnhancedEffect(() => {
-    if (filterModelProp !== undefined) {
-      apiRef.current.setFilterModel(filterModelProp);
+    if (props.filterModel !== undefined) {
+      apiRef.current.setFilterModel(props.filterModel);
     }
-  }, [apiRef, logger, filterModelProp]);
+  }, [apiRef, logger, props.filterModel]);
 };

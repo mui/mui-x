@@ -345,22 +345,19 @@ export const useGridClipboardImport = (
     | 'clipboardCopyCellDelimiter'
   >,
 ): void => {
+  const processRowUpdate = props.processRowUpdate;
+  const onProcessRowUpdateError = props.onProcessRowUpdateError;
+  const getRowId = props.getRowId;
+  const enableClipboardPaste = !props.disableClipboardPaste;
+  const logger = useGridLogger(apiRef, 'useGridClipboardImport');
+
   const {
-    pagination,
-    paginationMode,
-    processRowUpdate,
-    onProcessRowUpdateError,
-    getRowId,
-    disableClipboardPaste,
-    onBeforeClipboardPasteStart,
     clipboardCopyCellDelimiter,
     splitClipboardPastedText,
-    onClipboardPasteStart,
-    onClipboardPasteEnd,
+    pagination,
+    paginationMode,
+    onBeforeClipboardPasteStart,
   } = props;
-
-  const enableClipboardPaste = !disableClipboardPaste;
-  const logger = useGridLogger(apiRef, 'useGridClipboardImport');
 
   const handlePaste = React.useCallback<GridEventListener<'cellKeyDown'>>(
     async (params, event) => {
@@ -455,8 +452,8 @@ export const useGridClipboardImport = (
 
   useGridEvent(apiRef, 'cellKeyDown', handlePaste);
 
-  useGridEventPriority(apiRef, 'clipboardPasteStart', onClipboardPasteStart);
-  useGridEventPriority(apiRef, 'clipboardPasteEnd', onClipboardPasteEnd);
+  useGridEventPriority(apiRef, 'clipboardPasteStart', props.onClipboardPasteStart);
+  useGridEventPriority(apiRef, 'clipboardPasteEnd', props.onClipboardPasteEnd);
 
   useGridRegisterPipeProcessor(apiRef, 'canStartEditing', checkIfCanStartEditing);
 };

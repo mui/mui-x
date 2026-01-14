@@ -33,13 +33,11 @@ export const columnPinningStateInitializer: GridStateInitializer<
     orderedFieldsBeforePinningColumns: null,
   };
 
-  const { pinnedColumns, initialState } = props;
-
   let model: GridPinnedColumnFields;
-  if (pinnedColumns) {
-    model = pinnedColumns;
-  } else if (initialState?.pinnedColumns) {
-    model = initialState.pinnedColumns;
+  if (props.pinnedColumns) {
+    model = props.pinnedColumns;
+  } else if (props.initialState?.pinnedColumns) {
+    model = props.initialState.pinnedColumns;
   } else {
     model = {};
   }
@@ -54,15 +52,14 @@ export const useGridColumnPinning = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: Pick<
     DataGridProProcessedProps,
-    'disableColumnPinning' | 'initialState' | 'pinnedColumns' | 'onPinnedColumnsChange'
+    | 'disableColumnPinning'
+    | 'initialState'
+    | 'pinnedColumns'
+    | 'onPinnedColumnsChange'
+    | 'slotProps'
+    | 'slots'
   >,
 ): void => {
-  const {
-    disableColumnPinning,
-    initialState,
-    pinnedColumns: pinnedColumnsProp,
-    onPinnedColumnsChange,
-  } = props;
   const pinnedColumns = useGridSelector(apiRef, gridPinnedColumnsSelector);
 
   /**
@@ -110,7 +107,7 @@ export const useGridColumnPinning = (
 
   const addColumnMenuItems = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
-      if (disableColumnPinning) {
+      if (props.disableColumnPinning) {
         return columnMenuItems;
       }
 
@@ -120,7 +117,7 @@ export const useGridColumnPinning = (
 
       return [...columnMenuItems, 'columnMenuPinningItem'];
     },
-    [disableColumnPinning],
+    [props.disableColumnPinning],
   );
 
   const checkIfCanBeReordered = React.useCallback<GridPipeProcessor<'canBeReordered'>>(
@@ -155,9 +152,9 @@ export const useGridColumnPinning = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
-        pinnedColumnsProp != null ||
+        props.pinnedColumns != null ||
         // Always export if the model has been initialized
-        initialState?.pinnedColumns != null ||
+        props.initialState?.pinnedColumns != null ||
         // Export if the model is not empty
         (pinnedColumnsToExport.left ?? []).length > 0 ||
         (pinnedColumnsToExport.right ?? []).length > 0;
@@ -171,7 +168,7 @@ export const useGridColumnPinning = (
         pinnedColumns: pinnedColumnsToExport,
       };
     },
-    [apiRef, pinnedColumnsProp, initialState?.pinnedColumns],
+    [apiRef, props.pinnedColumns, props.initialState?.pinnedColumns],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -194,8 +191,8 @@ export const useGridColumnPinning = (
 
   apiRef.current.registerControlState({
     stateId: 'pinnedColumns',
-    propModel: pinnedColumnsProp,
-    propOnChange: onPinnedColumnsChange,
+    propModel: props.pinnedColumns,
+    propOnChange: props.onPinnedColumnsChange,
     stateSelector: gridPinnedColumnsSelector,
     changeEvent: 'pinnedColumnsChange',
   });
@@ -335,10 +332,10 @@ export const useGridColumnPinning = (
   useGridEvent(apiRef, 'columnOrderChange', handleColumnOrderChange);
 
   React.useEffect(() => {
-    if (pinnedColumnsProp) {
-      apiRef.current.setPinnedColumns(pinnedColumnsProp);
+    if (props.pinnedColumns) {
+      apiRef.current.setPinnedColumns(props.pinnedColumns);
     }
-  }, [apiRef, pinnedColumnsProp]);
+  }, [apiRef, props.pinnedColumns]);
 };
 
 function setState(apiRef: RefObject<GridPrivateApiPro>, model: GridPinnedColumnFields) {

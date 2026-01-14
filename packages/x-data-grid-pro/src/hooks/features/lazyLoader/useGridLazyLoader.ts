@@ -23,16 +23,18 @@ import { findSkeletonRowsSection } from './utils';
  */
 export const useGridLazyLoader = (
   privateApiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'onFetchRows' | 'rowsLoadingMode'>,
+  props: Pick<
+    DataGridProProcessedProps,
+    'onFetchRows' | 'rowsLoadingMode' | 'pagination' | 'paginationMode'
+  >,
 ): void => {
-  const { onFetchRows, rowsLoadingMode } = props;
   const sortModel = useGridSelector(privateApiRef, gridSortModelSelector);
   const filterModel = useGridSelector(privateApiRef, gridFilterModelSelector);
   const renderedRowsIntervalCache = React.useRef({
     firstRowToRender: 0,
     lastRowToRender: 0,
   });
-  const isDisabled = rowsLoadingMode !== 'server';
+  const isDisabled = props.rowsLoadingMode !== 'server';
 
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
@@ -62,7 +64,10 @@ export const useGridLazyLoader = (
       };
 
       if (sortModel.length === 0 && filterModel.items.length === 0) {
-        const currentVisibleRows = getVisibleRows(privateApiRef);
+        const currentVisibleRows = getVisibleRows(privateApiRef, {
+          pagination: props.pagination,
+          paginationMode: props.paginationMode,
+        });
         const skeletonRowsSection = findSkeletonRowsSection({
           apiRef: privateApiRef,
           visibleRows: currentVisibleRows.rows,
@@ -82,7 +87,7 @@ export const useGridLazyLoader = (
 
       privateApiRef.current.publishEvent('fetchRows', fetchRowsParams);
     },
-    [privateApiRef, isDisabled, sortModel, filterModel],
+    [privateApiRef, isDisabled, props.pagination, props.paginationMode, sortModel, filterModel],
   );
 
   const handleGridSortModelChange = React.useCallback<GridEventListener<'sortModelChange'>>(
@@ -130,5 +135,5 @@ export const useGridLazyLoader = (
   useGridEvent(privateApiRef, 'renderedRowsIntervalChange', handleRenderedRowsIntervalChange);
   useGridEvent(privateApiRef, 'sortModelChange', handleGridSortModelChange);
   useGridEvent(privateApiRef, 'filterModelChange', handleGridFilterModelChange);
-  useGridEventPriority(privateApiRef, 'fetchRows', onFetchRows);
+  useGridEventPriority(privateApiRef, 'fetchRows', props.onFetchRows);
 };

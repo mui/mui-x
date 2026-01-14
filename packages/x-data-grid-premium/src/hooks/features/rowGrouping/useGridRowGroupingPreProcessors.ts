@@ -52,21 +52,17 @@ export const useGridRowGroupingPreProcessors = (
     | 'dataSource'
   >,
 ) => {
-  const {
-    disableRowGrouping,
-    groupingColDef,
-    rowGroupingColumnMode,
-    defaultGroupingExpansionDepth,
-    isGroupExpandedByDefault,
-    dataSource,
-  } = props;
   const getGroupingColDefs = React.useCallback(
     (columnsState: GridHydrateColumnsValue) => {
-      if (disableRowGrouping) {
+      if (props.disableRowGrouping) {
         return [];
       }
 
-      const strategy = dataSource ? RowGroupingStrategy.DataSource : RowGroupingStrategy.Default;
+      const strategy = props.dataSource
+        ? RowGroupingStrategy.DataSource
+        : RowGroupingStrategy.Default;
+
+      const groupingColDefProp = props.groupingColDef;
 
       // We can't use `gridGroupingRowsSanitizedModelSelector` here because the new columns are not in the state yet
       const rowGroupingModel = gridRowGroupingModelSelector(apiRef).filter(
@@ -77,13 +73,13 @@ export const useGridRowGroupingPreProcessors = (
         return [];
       }
 
-      switch (rowGroupingColumnMode) {
+      switch (props.rowGroupingColumnMode) {
         case 'single': {
           return [
             createGroupingColDefForAllGroupingCriteria({
               apiRef,
               rowGroupingModel,
-              colDefOverride: getColDefOverrides(groupingColDef, rowGroupingModel, strategy),
+              colDefOverride: getColDefOverrides(groupingColDefProp, rowGroupingModel, strategy),
               columnsLookup: columnsState.lookup,
               strategy,
             }),
@@ -94,7 +90,7 @@ export const useGridRowGroupingPreProcessors = (
           return rowGroupingModel.map((groupingCriteria) =>
             createGroupingColDefForOneGroupingCriteria({
               groupingCriteria,
-              colDefOverride: getColDefOverrides(groupingColDef, [groupingCriteria]),
+              colDefOverride: getColDefOverrides(groupingColDefProp, [groupingCriteria]),
               groupedByColDef: columnsState.lookup[groupingCriteria],
               columnsLookup: columnsState.lookup,
               strategy,
@@ -107,7 +103,13 @@ export const useGridRowGroupingPreProcessors = (
         }
       }
     },
-    [apiRef, groupingColDef, rowGroupingColumnMode, disableRowGrouping, dataSource],
+    [
+      apiRef,
+      props.groupingColDef,
+      props.rowGroupingColumnMode,
+      props.disableRowGrouping,
+      props.dataSource,
+    ],
   );
 
   const updateGroupingColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -125,14 +127,14 @@ export const useGridRowGroupingPreProcessors = (
       });
 
       // We add the grouping column
-      groupingColDefs.forEach((def) => {
-        const matchingGroupingColDef = columnsState.lookup[def.field];
+      groupingColDefs.forEach((groupingColDef) => {
+        const matchingGroupingColDef = columnsState.lookup[groupingColDef.field];
         if (matchingGroupingColDef) {
-          def.width = matchingGroupingColDef.width;
-          def.flex = matchingGroupingColDef.flex;
+          groupingColDef.width = matchingGroupingColDef.width;
+          groupingColDef.flex = matchingGroupingColDef.flex;
         }
 
-        newColumnsLookup[def.field] = def;
+        newColumnsLookup[groupingColDef.field] = groupingColDef;
       });
 
       newColumnFields = [...groupingColDefs.map((colDef) => colDef.field), ...newColumnFields];
@@ -183,8 +185,8 @@ export const useGridRowGroupingPreProcessors = (
         return createRowTree({
           previousTree: params.previousTree,
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
-          defaultGroupingExpansionDepth,
-          isGroupExpandedByDefault,
+          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+          isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: RowGroupingStrategy.Default,
         });
       }
@@ -197,12 +199,12 @@ export const useGridRowGroupingPreProcessors = (
         },
         previousTree: params.previousTree!,
         previousTreeDepth: params.previousTreeDepths!,
-        defaultGroupingExpansionDepth,
-        isGroupExpandedByDefault,
+        defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+        isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: RowGroupingStrategy.Default,
       });
     },
-    [apiRef, defaultGroupingExpansionDepth, isGroupExpandedByDefault],
+    [apiRef, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(
@@ -251,15 +253,15 @@ export const useGridRowGroupingPreProcessors = (
   );
 
   useFirstRender(() => {
-    setStrategyAvailability(apiRef, disableRowGrouping, dataSource);
+    setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
   });
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
     if (!isFirstRender.current) {
-      setStrategyAvailability(apiRef, disableRowGrouping, dataSource);
+      setStrategyAvailability(apiRef, props.disableRowGrouping, props.dataSource);
     } else {
       isFirstRender.current = false;
     }
-  }, [apiRef, disableRowGrouping, dataSource]);
+  }, [apiRef, props.disableRowGrouping, props.dataSource]);
 };

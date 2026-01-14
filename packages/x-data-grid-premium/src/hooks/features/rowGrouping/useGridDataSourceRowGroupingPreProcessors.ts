@@ -23,18 +23,21 @@ export const useGridDataSourceRowGroupingPreProcessors = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'defaultGroupingExpansionDepth' | 'isGroupExpandedByDefault' | 'dataSource'
+    | 'disableRowGrouping'
+    | 'rowGroupingColumnMode'
+    | 'defaultGroupingExpansionDepth'
+    | 'isGroupExpandedByDefault'
+    | 'dataSource'
   >,
 ) => {
-  const { dataSource, defaultGroupingExpansionDepth, isGroupExpandedByDefault } = props;
   const createRowTreeForRowGrouping = React.useCallback<GridStrategyProcessor<'rowTreeCreation'>>(
     (params) => {
-      const getGroupKey = dataSource?.getGroupKey;
+      const getGroupKey = props.dataSource?.getGroupKey;
       if (!getGroupKey) {
         throw new Error('MUI X: No `getGroupKey` method provided with the dataSource.');
       }
 
-      const getChildrenCount = dataSource?.getChildrenCount;
+      const getChildrenCount = props.dataSource?.getChildrenCount;
       if (!getChildrenCount) {
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
@@ -68,8 +71,8 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         return createRowTree({
           previousTree: params.previousTree,
           nodes: params.updates.rows.map(getRowTreeBuilderNode),
-          defaultGroupingExpansionDepth,
-          isGroupExpandedByDefault,
+          defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+          isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: RowGroupingStrategy.DataSource,
           maxDepth,
         });
@@ -88,13 +91,13 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         previousTree: params.previousTree!,
         previousGroupsToFetch: params.previousGroupsToFetch,
         previousTreeDepth: params.previousTreeDepths!,
-        defaultGroupingExpansionDepth,
-        isGroupExpandedByDefault,
+        defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
+        isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: RowGroupingStrategy.DataSource,
         maxDepth,
       });
     },
-    [apiRef, dataSource, defaultGroupingExpansionDepth, isGroupExpandedByDefault],
+    [apiRef, props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],
   );
 
   const filterRows = React.useCallback<GridStrategyProcessor<'filtering'>>(() => {

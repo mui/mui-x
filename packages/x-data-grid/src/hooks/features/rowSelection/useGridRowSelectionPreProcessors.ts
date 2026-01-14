@@ -25,14 +25,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export const useGridRowSelectionPreProcessors = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'classes' | 'checkboxSelection' | 'columns'>,
+  props: DataGridProcessedProps,
 ) => {
-  const {
-    classes: classesRootProps,
-    checkboxSelection: shouldHaveSelectionColumn,
-    columns,
-  } = props;
-  const ownerState = { classes: classesRootProps };
+  const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 
   const updateSelectionColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -44,6 +39,7 @@ export const useGridRowSelectionPreProcessors = (
         headerName: apiRef.current.getLocaleText('checkboxSelectionHeaderName'),
       };
 
+      const shouldHaveSelectionColumn = props.checkboxSelection;
       const hasSelectionColumn = columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD] != null;
 
       if (shouldHaveSelectionColumn && !hasSelectionColumn) {
@@ -60,7 +56,7 @@ export const useGridRowSelectionPreProcessors = (
           ...columnsState.lookup[GRID_CHECKBOX_SELECTION_FIELD],
         };
         // If the column is not in the columns array (not a custom selection column), move it to the beginning of the column order
-        if (!columns.some((col) => col.field === GRID_CHECKBOX_SELECTION_FIELD)) {
+        if (!props.columns.some((col) => col.field === GRID_CHECKBOX_SELECTION_FIELD)) {
           columnsState.orderedFields = [
             GRID_CHECKBOX_SELECTION_FIELD,
             ...columnsState.orderedFields.filter(
@@ -72,7 +68,7 @@ export const useGridRowSelectionPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, classes, columns, shouldHaveSelectionColumn],
+    [apiRef, classes, props.columns, props.checkboxSelection],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateSelectionColumn);

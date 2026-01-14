@@ -22,15 +22,14 @@ export const useGridRowCount = (
     'rowCount' | 'initialState' | 'paginationMode' | 'onRowCountChange'
   >,
 ) => {
-  const { rowCount, initialState, paginationMode, onRowCountChange } = props;
   const logger = useGridLogger(apiRef, 'useGridRowCount');
 
   const previousPageSize = useLazyRef(() => gridPaginationModelSelector(apiRef).pageSize);
 
   apiRef.current.registerControlState({
     stateId: 'paginationRowCount',
-    propModel: rowCount,
-    propOnChange: onRowCountChange,
+    propModel: props.rowCount,
+    propOnChange: props.onRowCountChange,
     stateSelector: gridPaginationRowCountSelector,
     changeEvent: 'rowCountChange',
   });
@@ -74,9 +73,9 @@ export const useGridRowCount = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the `rowCount` is controlled
-        rowCount != null ||
+        props.rowCount != null ||
         // Always export if the `rowCount` has been initialized
-        initialState?.pagination?.rowCount != null;
+        props.initialState?.pagination?.rowCount != null;
 
       if (!shouldExportRowCount) {
         return prevState;
@@ -90,7 +89,7 @@ export const useGridRowCount = (
         },
       };
     },
-    [apiRef, rowCount, initialState?.pagination?.rowCount],
+    [apiRef, props.rowCount, props.initialState?.pagination?.rowCount],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -139,10 +138,10 @@ export const useGridRowCount = (
    * EFFECTS
    */
   React.useEffect(() => {
-    if (paginationMode === 'server' && rowCount != null) {
-      apiRef.current.setRowCount(rowCount);
+    if (props.paginationMode === 'server' && props.rowCount != null) {
+      apiRef.current.setRowCount(props.rowCount);
     }
-  }, [apiRef, paginationMode, rowCount]);
+  }, [apiRef, props.paginationMode, props.rowCount]);
 
   useStoreEffect(
     // typings not supported currently, but methods work

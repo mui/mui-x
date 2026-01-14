@@ -25,16 +25,20 @@ export const editingStateInitializer: GridStateInitializer = (state) => ({
 
 export const useGridEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,
-  props: Pick<DataGridProcessedProps, 'isCellEditable' | 'editMode'>,
+  props: Pick<
+    DataGridProcessedProps,
+    'isCellEditable' | 'editMode' | 'processRowUpdate' | 'dataSource' | 'onDataSourceError'
+  >,
   configuration: GridConfiguration,
 ) => {
-  const { isCellEditable: isCellEditableProp, editMode } = props;
   useGridCellEditing(apiRef, props);
   useGridRowEditing(apiRef, props);
 
   const debounceMap = React.useRef<
     Record<GridRowId, Record<string, [ReturnType<typeof setTimeout>, () => void]>>
   >({});
+
+  const { isCellEditable: isCellEditableProp } = props;
 
   const isCellEditableFn = configuration.hooks.useIsCellEditable(
     apiRef,
@@ -133,7 +137,7 @@ export const useGridEditing = (
       return new Promise((resolve) => {
         maybeDebounce(id, field, debounceMs, async () => {
           const setEditCellValueToCall =
-            editMode === GridEditModes.Row
+            props.editMode === GridEditModes.Row
               ? apiRef.current.setRowEditingEditCellValue
               : apiRef.current.setCellEditingEditCellValue;
 
@@ -146,18 +150,18 @@ export const useGridEditing = (
         });
       });
     },
-    [apiRef, editMode],
+    [apiRef, props.editMode],
   );
 
   const getRowWithUpdatedValues = React.useCallback<
     GridEditingSharedApi['getRowWithUpdatedValues']
   >(
     (id, field) => {
-      return editMode === GridEditModes.Cell
+      return props.editMode === GridEditModes.Cell
         ? apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field)
         : apiRef.current.getRowWithUpdatedValuesFromRowEditing(id);
     },
-    [apiRef, editMode],
+    [apiRef, props.editMode],
   );
 
   const getEditCellMeta = React.useCallback<GridEditingSharedApi['unstable_getEditCellMeta']>(

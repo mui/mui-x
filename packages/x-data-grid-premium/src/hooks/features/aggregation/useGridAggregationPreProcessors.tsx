@@ -26,23 +26,27 @@ export const useGridAggregationPreProcessors = (
   apiRef: RefObject<GridPrivateApiPremium>,
   props: Pick<
     DataGridPremiumProcessedProps,
-    'aggregationFunctions' | 'disableAggregation' | 'getAggregationPosition' | 'dataSource'
+    | 'aggregationFunctions'
+    | 'disableAggregation'
+    | 'getAggregationPosition'
+    | 'slotProps'
+    | 'slots'
+    | 'dataSource'
   >,
 ) => {
-  const { aggregationFunctions, disableAggregation, getAggregationPosition, dataSource } = props;
   // apiRef.current.caches.aggregation.rulesOnLastColumnHydration is not used because by the time
   // that the pre-processor is called it will already have been updated with the current rules.
   const rulesOnLastColumnHydration = React.useRef<GridAggregationRules>({});
 
   const updateAggregatedColumns = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
     (columnsState) => {
-      const aggregationRules = disableAggregation
+      const aggregationRules = props.disableAggregation
         ? {}
         : getAggregationRules(
             columnsState.lookup,
             gridAggregationModelSelector(apiRef),
-            aggregationFunctions,
-            !!dataSource,
+            props.aggregationFunctions,
+            !!props.dataSource,
           );
 
       columnsState.orderedFields.forEach((field) => {
@@ -67,18 +71,18 @@ export const useGridAggregationPreProcessors = (
 
       return columnsState;
     },
-    [apiRef, aggregationFunctions, disableAggregation, dataSource],
+    [apiRef, props.aggregationFunctions, props.disableAggregation, props.dataSource],
   );
 
   const addGroupFooterRows = React.useCallback<GridPipeProcessor<'hydrateRows'>>(
     (value) => {
-      const aggregationRules = disableAggregation
+      const aggregationRules = props.disableAggregation
         ? {}
         : getAggregationRules(
             gridColumnLookupSelector(apiRef),
             gridAggregationModelSelector(apiRef),
-            aggregationFunctions,
-            !!dataSource,
+            props.aggregationFunctions,
+            !!props.dataSource,
           );
 
       const hasAggregationRule = Object.keys(aggregationRules).length > 0;
@@ -97,23 +101,29 @@ export const useGridAggregationPreProcessors = (
       return addFooterRows({
         apiRef,
         groupingParams: value,
-        getAggregationPosition,
+        getAggregationPosition: props.getAggregationPosition,
         hasAggregationRule,
       });
     },
-    [apiRef, disableAggregation, getAggregationPosition, aggregationFunctions, dataSource],
+    [
+      apiRef,
+      props.disableAggregation,
+      props.getAggregationPosition,
+      props.aggregationFunctions,
+      props.dataSource,
+    ],
   );
 
   const addColumnMenuButtons = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
-      if (disableAggregation || !colDef.aggregable) {
+      if (props.disableAggregation || !colDef.aggregable) {
         return columnMenuItems;
       }
 
       const availableAggregationFunctions = getAvailableAggregationFunctions({
-        aggregationFunctions,
+        aggregationFunctions: props.aggregationFunctions,
         colDef,
-        isDataSource: !!dataSource,
+        isDataSource: !!props.dataSource,
       });
 
       if (availableAggregationFunctions.length === 0) {
@@ -122,12 +132,12 @@ export const useGridAggregationPreProcessors = (
 
       return [...columnMenuItems, 'columnMenuAggregationItem'];
     },
-    [aggregationFunctions, disableAggregation, dataSource],
+    [props.aggregationFunctions, props.disableAggregation, props.dataSource],
   );
 
   const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
     (prevState) => {
-      if (disableAggregation) {
+      if (props.disableAggregation) {
         return prevState;
       }
 
@@ -144,12 +154,12 @@ export const useGridAggregationPreProcessors = (
         },
       };
     },
-    [apiRef, disableAggregation],
+    [apiRef, props.disableAggregation],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
     (params, context: GridRestoreStatePreProcessingContext<GridInitialStatePremium>) => {
-      if (disableAggregation) {
+      if (props.disableAggregation) {
         return params;
       }
 
@@ -159,7 +169,7 @@ export const useGridAggregationPreProcessors = (
       }
       return params;
     },
-    [apiRef, disableAggregation],
+    [apiRef, props.disableAggregation],
   );
 
   useGridRegisterPipeProcessor(apiRef, 'hydrateColumns', updateAggregatedColumns);

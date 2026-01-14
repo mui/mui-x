@@ -32,13 +32,12 @@ export const useGridInfiniteLoadingIntersection = (
     'onRowsScrollEnd' | 'dataSource' | 'lazyLoading' | 'rowsLoadingMode' | 'scrollEndThreshold'
   >,
 ): void => {
-  const { onRowsScrollEnd, dataSource, lazyLoading, rowsLoadingMode, scrollEndThreshold } = props;
   const observer = React.useRef<IntersectionObserver>(null);
   const updateTargetTimeout = useTimeout();
   const triggerElement = React.useRef<HTMLElement | null>(null);
 
-  const isEnabledClientSide = rowsLoadingMode === 'client' && !!onRowsScrollEnd;
-  const isEnabledServerSide = dataSource && lazyLoading;
+  const isEnabledClientSide = props.rowsLoadingMode === 'client' && !!props.onRowsScrollEnd;
+  const isEnabledServerSide = props.dataSource && props.lazyLoading;
 
   const isEnabled = isEnabledClientSide || isEnabledServerSide;
   const isEnabledAndReady = useGridSelector(
@@ -66,7 +65,7 @@ export const useGridInfiniteLoadingIntersection = (
     observer.current?.disconnect();
 
     const horizontalScrollbarHeight = gridHorizontalScrollbarHeightSelector(apiRef);
-    const marginBottom = scrollEndThreshold - horizontalScrollbarHeight;
+    const marginBottom = props.scrollEndThreshold - horizontalScrollbarHeight;
 
     observer.current = new IntersectionObserver(handleIntersectionChange, {
       threshold: 1,
@@ -76,7 +75,7 @@ export const useGridInfiniteLoadingIntersection = (
     if (triggerElement.current) {
       observer.current.observe(triggerElement.current);
     }
-  }, [apiRef, handleIntersectionChange, isEnabledAndReady, scrollEndThreshold]);
+  }, [apiRef, handleIntersectionChange, isEnabledAndReady, props.scrollEndThreshold]);
 
   const updateTarget = (node: HTMLElement | null) => {
     if (triggerElement.current !== node) {

@@ -24,10 +24,9 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
 export const useGridRowReorderPreProcessors = (
   privateApiRef: RefObject<GridPrivateApiPro>,
-  props: Pick<DataGridProProcessedProps, 'classes' | 'rowReordering' | 'columns'>,
+  props: DataGridProProcessedProps,
 ) => {
-  const { classes: classesRootProps, rowReordering, columns } = props;
-  const ownerState = { classes: classesRootProps };
+  const ownerState = { classes: props.classes };
   const classes = useUtilityClasses(ownerState);
 
   const updateReorderColumn = React.useCallback<GridPipeProcessor<'hydrateColumns'>>(
@@ -39,7 +38,7 @@ export const useGridRowReorderPreProcessors = (
         headerName: privateApiRef.current.getLocaleText('rowReorderingHeaderName'),
       };
 
-      const shouldHaveReorderColumn = rowReordering;
+      const shouldHaveReorderColumn = props.rowReordering;
       const hasReorderColumn = columnsState.lookup[reorderColumn.field] != null;
 
       if (shouldHaveReorderColumn && !hasReorderColumn) {
@@ -56,7 +55,7 @@ export const useGridRowReorderPreProcessors = (
           ...columnsState.lookup[reorderColumn.field],
         };
         // If the column is not in the columns array (not a custom reorder column), move it to the beginning of the column order
-        if (!columns.some((col) => col.field === GRID_REORDER_COL_DEF.field)) {
+        if (!props.columns.some((col) => col.field === GRID_REORDER_COL_DEF.field)) {
           columnsState.orderedFields = [
             reorderColumn.field,
             ...columnsState.orderedFields.filter((field) => field !== reorderColumn.field),
@@ -66,7 +65,7 @@ export const useGridRowReorderPreProcessors = (
 
       return columnsState;
     },
-    [privateApiRef, classes, columns, rowReordering],
+    [privateApiRef, classes, props.columns, props.rowReordering],
   );
 
   useGridRegisterPipeProcessor(privateApiRef, 'hydrateColumns', updateReorderColumn);

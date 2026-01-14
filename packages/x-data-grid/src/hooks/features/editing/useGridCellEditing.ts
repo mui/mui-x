@@ -51,6 +51,7 @@ export const useGridCellEditing = (
     | 'cellModesModel'
     | 'onCellModesModelChange'
     | 'onProcessRowUpdateError'
+    | 'signature'
     | 'dataSource'
   >,
 ) => {
@@ -58,20 +59,16 @@ export const useGridCellEditing = (
   const cellModesModelRef = React.useRef(cellModesModel);
   const prevCellModesModel = React.useRef<GridCellModesModel>({});
   const {
-    editMode,
     processRowUpdate,
     onProcessRowUpdateError,
     cellModesModel: cellModesModelProp,
     onCellModesModelChange,
-    onCellEditStart,
-    onCellEditStop,
-    dataSource,
   } = props;
 
   const runIfEditModeIsCell =
     <Args extends any[]>(callback: (...args: Args) => void) =>
     (...args: Args) => {
-      if (editMode === GridEditModes.Cell) {
+      if (props.editMode === GridEditModes.Cell) {
         callback(...args);
       }
     };
@@ -252,8 +249,8 @@ export const useGridCellEditing = (
   useGridEvent(apiRef, 'cellEditStart', runIfEditModeIsCell(handleCellEditStart));
   useGridEvent(apiRef, 'cellEditStop', runIfEditModeIsCell(handleCellEditStop));
 
-  useGridEventPriority(apiRef, 'cellEditStart', onCellEditStart);
-  useGridEventPriority(apiRef, 'cellEditStop', runIfNoFieldErrors(onCellEditStop));
+  useGridEventPriority(apiRef, 'cellEditStart', props.onCellEditStart);
+  useGridEventPriority(apiRef, 'cellEditStop', runIfNoFieldErrors(props.onCellEditStop));
 
   const getCellMode = React.useCallback<GridCellEditingApi['getCellMode']>(
     (id, field) => {
@@ -265,7 +262,7 @@ export const useGridCellEditing = (
   );
 
   const updateCellModesModel = useEventCallback((newModel: GridCellModesModel) => {
-    const isNewModelDifferentFromProp = newModel !== cellModesModelProp;
+    const isNewModelDifferentFromProp = newModel !== props.cellModesModel;
 
     if (onCellModesModelChange && isNewModelDifferentFromProp) {
       onCellModesModelChange(newModel, {
@@ -273,7 +270,7 @@ export const useGridCellEditing = (
       });
     }
 
-    if (cellModesModelProp && isNewModelDifferentFromProp) {
+    if (props.cellModesModel && isNewModelDifferentFromProp) {
       return; // The prop always win
     }
 
@@ -429,7 +426,7 @@ export const useGridCellEditing = (
 
       const rowUpdate = apiRef.current.getRowWithUpdatedValuesFromCellEditing(id, field);
 
-      if (dataSource?.updateRow) {
+      if (props.dataSource?.updateRow) {
         if (isDeepEqual(row, rowUpdate)) {
           finishCellEditMode();
           return;

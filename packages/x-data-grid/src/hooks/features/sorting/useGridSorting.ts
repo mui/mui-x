@@ -37,13 +37,12 @@ import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 export const sortingStateInitializer: GridStateInitializer<
   Pick<DataGridProcessedProps, 'sortModel' | 'initialState' | 'disableMultipleColumnsSorting'>
 > = (state, props) => {
-  const { sortModel: sortModelProp, initialState, disableMultipleColumnsSorting } = props;
-  const sortModel = sortModelProp ?? initialState?.sorting?.sortModel ?? [];
+  const sortModel = props.sortModel ?? props.initialState?.sorting?.sortModel ?? [];
 
   return {
     ...state,
     sorting: {
-      sortModel: sanitizeSortModel(sortModel, disableMultipleColumnsSorting),
+      sortModel: sanitizeSortModel(sortModel, props.disableMultipleColumnsSorting),
       sortedRows: [],
     },
   };
@@ -68,23 +67,12 @@ export const useGridSorting = (
     | 'signature'
   >,
 ) => {
-  const {
-    initialState,
-    sortModel: sortModelProp,
-    onSortModelChange,
-    sortingOrder: sortingOrderProp,
-    sortingMode,
-    disableColumnSorting,
-    disableMultipleColumnsSorting,
-    multipleColumnsSortingMode,
-    signature,
-  } = props;
   const logger = useGridLogger(apiRef, 'useGridSorting');
 
   apiRef.current.registerControlState({
     stateId: 'sortModel',
-    propModel: sortModelProp,
-    propOnChange: onSortModelChange,
+    propModel: props.sortModel,
+    propOnChange: props.onSortModelChange,
     stateSelector: gridSortModelSelector,
     changeEvent: 'sortModelChange',
   });
@@ -116,7 +104,7 @@ export const useGridSorting = (
       if (existing) {
         const nextSort =
           directionOverride === undefined
-            ? getNextGridSortDirection(col.sortingOrder ?? sortingOrderProp, existing.sort)
+            ? getNextGridSortDirection(col.sortingOrder ?? props.sortingOrder, existing.sort)
             : directionOverride;
 
         return nextSort === undefined ? undefined : { ...existing, sort: nextSort };
@@ -125,20 +113,20 @@ export const useGridSorting = (
         field: col.field,
         sort:
           directionOverride === undefined
-            ? getNextGridSortDirection(col.sortingOrder ?? sortingOrderProp)
+            ? getNextGridSortDirection(col.sortingOrder ?? props.sortingOrder)
             : directionOverride,
       };
     },
-    [apiRef, sortingOrderProp],
+    [apiRef, props.sortingOrder],
   );
 
   const addColumnMenuItem = React.useCallback<GridPipeProcessor<'columnMenu'>>(
     (columnMenuItems, colDef) => {
-      if (colDef == null || colDef.sortable === false || disableColumnSorting) {
+      if (colDef == null || colDef.sortable === false || props.disableColumnSorting) {
         return columnMenuItems;
       }
 
-      const sortingOrder = colDef.sortingOrder || sortingOrderProp;
+      const sortingOrder = colDef.sortingOrder || props.sortingOrder;
 
       if (sortingOrder.some((item) => !!item)) {
         return [...columnMenuItems, 'columnMenuSortItem'];
@@ -146,7 +134,7 @@ export const useGridSorting = (
 
       return columnMenuItems;
     },
-    [sortingOrderProp, disableColumnSorting],
+    [props.sortingOrder, props.disableColumnSorting],
   );
 
   /**
@@ -154,7 +142,7 @@ export const useGridSorting = (
    */
   const applySorting = React.useCallback<GridSortApi['applySorting']>(() => {
     apiRef.current.setState((state) => {
-      if (sortingMode === 'server') {
+      if (props.sortingMode === 'server') {
         logger.debug('Skipping sorting rows as sortingMode = server');
         return {
           ...state,
@@ -182,18 +170,20 @@ export const useGridSorting = (
     });
 
     apiRef.current.publishEvent('sortedRowsSet');
-  }, [apiRef, logger, sortingMode]);
+  }, [apiRef, logger, props.sortingMode]);
 
   const setSortModel = React.useCallback<GridSortApi['setSortModel']>(
     (model) => {
       const currentModel = gridSortModelSelector(apiRef);
       if (currentModel !== model) {
         logger.debug(`Setting sort model`);
-        apiRef.current.setState(mergeStateWithSortModel(model, disableMultipleColumnsSorting));
+        apiRef.current.setState(
+          mergeStateWithSortModel(model, props.disableMultipleColumnsSorting),
+        );
         apiRef.current.applySorting();
       }
     },
-    [apiRef, logger, disableMultipleColumnsSorting],
+    [apiRef, logger, props.disableMultipleColumnsSorting],
   );
 
   const sortColumn = React.useCallback<GridSortApi['sortColumn']>(
@@ -201,14 +191,14 @@ export const useGridSorting = (
       const column = apiRef.current.getColumn(field);
       const sortItem = createSortItem(column, direction);
       let sortModel: GridSortModel;
-      if (!allowMultipleSorting || disableMultipleColumnsSorting) {
+      if (!allowMultipleSorting || props.disableMultipleColumnsSorting) {
         sortModel = sortItem?.sort == null ? [] : [sortItem];
       } else {
         sortModel = upsertSortModel(column.field, sortItem);
       }
       apiRef.current.setSortModel(sortModel);
     },
-    [apiRef, upsertSortModel, createSortItem, disableMultipleColumnsSorting],
+    [apiRef, upsertSortModel, createSortItem, props.disableMultipleColumnsSorting],
   );
 
   const getSortModel = React.useCallback<GridSortApi['getSortModel']>(
@@ -253,9 +243,9 @@ export const useGridSorting = (
         // Always export if the `exportOnlyDirtyModels` property is not activated
         !context.exportOnlyDirtyModels ||
         // Always export if the model is controlled
-        sortModelProp != null ||
+        props.sortModel != null ||
         // Always export if the model has been initialized
-        initialState?.sorting?.sortModel != null ||
+        props.initialState?.sorting?.sortModel != null ||
         // Export if the model is not empty
         sortModelToExport.length > 0;
 
@@ -270,7 +260,7 @@ export const useGridSorting = (
         },
       };
     },
-    [apiRef, sortModelProp, initialState?.sorting?.sortModel],
+    [apiRef, props.sortModel, props.initialState?.sorting?.sortModel],
   );
 
   const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
@@ -279,14 +269,16 @@ export const useGridSorting = (
       if (sortModel == null) {
         return params;
       }
-      apiRef.current.setState(mergeStateWithSortModel(sortModel, disableMultipleColumnsSorting));
+      apiRef.current.setState(
+        mergeStateWithSortModel(sortModel, props.disableMultipleColumnsSorting),
+      );
 
       return {
         ...params,
         callbacks: [...params.callbacks, apiRef.current.applySorting],
       };
     },
-    [apiRef, disableMultipleColumnsSorting],
+    [apiRef, props.disableMultipleColumnsSorting],
   );
 
   const flatSortingMethod = React.useCallback<GridStrategyProcessor<'sorting'>>(
@@ -315,27 +307,34 @@ export const useGridSorting = (
    */
   const handleColumnHeaderClick = React.useCallback<GridEventListener<'columnHeaderClick'>>(
     ({ field, colDef }, event) => {
-      if (!colDef.sortable || disableColumnSorting) {
+      if (!colDef.sortable || props.disableColumnSorting) {
         return;
       }
       const allowMultipleSorting =
-        multipleColumnsSortingMode === 'always' || event.shiftKey || event.metaKey || event.ctrlKey;
+        props.multipleColumnsSortingMode === 'always' ||
+        event.shiftKey ||
+        event.metaKey ||
+        event.ctrlKey;
       sortColumn(field, undefined, allowMultipleSorting);
     },
-    [sortColumn, disableColumnSorting, multipleColumnsSortingMode],
+    [sortColumn, props.disableColumnSorting, props.multipleColumnsSortingMode],
   );
 
   const handleColumnHeaderKeyDown = React.useCallback<GridEventListener<'columnHeaderKeyDown'>>(
     ({ field, colDef }, event) => {
-      if (!colDef.sortable || disableColumnSorting) {
+      if (!colDef.sortable || props.disableColumnSorting) {
         return;
       }
       // Ctrl + Enter opens the column menu
       if (event.key === 'Enter' && !event.ctrlKey && !event.metaKey) {
-        sortColumn(field, undefined, multipleColumnsSortingMode === 'always' || event.shiftKey);
+        sortColumn(
+          field,
+          undefined,
+          props.multipleColumnsSortingMode === 'always' || event.shiftKey,
+        );
       }
     },
-    [sortColumn, disableColumnSorting, multipleColumnsSortingMode],
+    [sortColumn, props.disableColumnSorting, props.multipleColumnsSortingMode],
   );
 
   const handleColumnsChange = React.useCallback<GridEventListener<'columnsChange'>>(() => {
@@ -375,7 +374,7 @@ export const useGridSorting = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    if (signature === 'DataGrid') {
+    if (props.signature === 'DataGrid') {
       apiRef.current.applySorting();
     }
   });
@@ -384,8 +383,8 @@ export const useGridSorting = (
    * EFFECTS
    */
   useEnhancedEffect(() => {
-    if (sortModelProp !== undefined) {
-      apiRef.current.setSortModel(sortModelProp);
+    if (props.sortModel !== undefined) {
+      apiRef.current.setSortModel(props.sortModel);
     }
-  }, [apiRef, sortModelProp]);
+  }, [apiRef, props.sortModel]);
 };

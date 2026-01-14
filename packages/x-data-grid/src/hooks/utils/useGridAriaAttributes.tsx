@@ -10,32 +10,23 @@ import { gridExpandedRowCountSelector } from '../features/filter/gridFilterSelec
 
 export const useGridAriaAttributes = (): React.HTMLAttributes<HTMLElement> => {
   const apiRef = useGridPrivateApiContext();
-  const {
-    'aria-label': ariaLabel,
-    'aria-labelledby': ariaLabelledby,
-    label,
-    signature,
-    disableMultipleRowSelection,
-    checkboxSelection,
-  } = useGridRootProps();
+  const rootProps = useGridRootProps();
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const accessibleRowCount = useGridSelector(apiRef, gridExpandedRowCountSelector);
   const headerGroupingMaxDepth = useGridSelector(apiRef, gridColumnGroupsHeaderMaxDepthSelector);
   const pinnedRowsCount = useGridSelector(apiRef, gridPinnedRowsCountSelector);
 
+  const ariaLabel = rootProps['aria-label'];
+  const ariaLabelledby = rootProps['aria-labelledby'];
   // `aria-label` and `aria-labelledby` should take precedence over `label`
-  const shouldUseLabelAsAriaLabel = !ariaLabel && !ariaLabelledby && label;
+  const shouldUseLabelAsAriaLabel = !ariaLabel && !ariaLabelledby && rootProps.label;
 
   return {
     role: 'grid',
-    'aria-label': shouldUseLabelAsAriaLabel ? label : ariaLabel,
+    'aria-label': shouldUseLabelAsAriaLabel ? rootProps.label : ariaLabel,
     'aria-labelledby': ariaLabelledby,
     'aria-colcount': visibleColumns.length,
     'aria-rowcount': headerGroupingMaxDepth + 1 + pinnedRowsCount + accessibleRowCount,
-    'aria-multiselectable': isMultipleRowSelectionEnabled({
-      signature,
-      disableMultipleRowSelection,
-      checkboxSelection,
-    }),
+    'aria-multiselectable': isMultipleRowSelectionEnabled(rootProps),
   };
 };
