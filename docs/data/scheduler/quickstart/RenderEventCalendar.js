@@ -25,10 +25,7 @@ const events = [
 export default function RenderEventCalendar() {
   return (
     <div style={{ height: 600, width: '100%' }}>
-      <EventCalendar
-        events={events}
-        defaultVisibleDate={new Date(2024, 0, 15)}
-      />
+      <EventCalendar events={events} defaultVisibleDate={new Date(2024, 0, 15)} />
     </div>
   );
 }

@@ -7,7 +7,7 @@ githubLabel: 'scope: scheduler'
 
 # Scheduler - Quickstart
 
-<p class="description">Install the MUI X Scheduler package and start building your React scheduling components.</p>
+<p class="description">Install the MUI X Scheduler package and start building your React scheduling components.</p>
 
 :::warning
 This package is not published on npm yet.
@@ -21,7 +21,7 @@ Install the Scheduler package:
 
 ### Peer dependencies
 
-#### Material UI
+#### Material UI
 
 The Scheduler packages has a peer dependency on `@mui/material`.
 If you're not already using it, install it now:
