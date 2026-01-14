@@ -13,7 +13,9 @@ _Jan 14, 2026_
 
 We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-TODO INSERT HIGHLIGHTS
+- 📊 The Chart legend now has an option that enables [click to toggle visibility](https://mui.com/x/react-charts/legend/#toggle-visibility) of series.
+
+  ![Image](https://github.com/user-attachments/assets/c8250287-1318-4581-ac5d-07e7ee01341c)
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @JCQuintas, @mapache-salvaje, @rita-codes
