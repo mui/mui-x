@@ -433,7 +433,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const columnPositions = Dimensions.selectors.columnPositions(store.state, columns);
 
     rowIndexes.forEach((rowIndexInPage) => {
-      const { id, model } = rowModels[rowIndexInPage];
+      const rowModel = rowModels[rowIndexInPage];
+      if (!rowModel) {
+        return;
+      }
+      const { id, model } = rowModel;
 
       // In certain cases, the state might already be updated and `params.rows` (which sets `rowModels`)
       // contains stale data.
