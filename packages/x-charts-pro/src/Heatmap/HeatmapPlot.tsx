@@ -20,6 +20,10 @@ export interface HeatmapPlotSlotProps extends HeatmapItemSlotProps {}
 
 export interface HeatmapPlotProps {
   /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius?: number;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -29,10 +33,6 @@ export interface HeatmapPlotProps {
    * @default {}
    */
   slotProps?: HeatmapPlotSlotProps;
-  /**
-   * The border radius of the heatmap cells in pixels.
-   */
-  borderRadius?: number;
 }
 
 const MemoHeatmapItem = React.memo(HeatmapItem);
