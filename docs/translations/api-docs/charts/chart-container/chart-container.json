@@ -117,5 +117,6 @@
     },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": { "baseButton": "", "baseIconButton": "" }
 }
