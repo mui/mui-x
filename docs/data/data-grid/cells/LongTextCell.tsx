@@ -19,14 +19,14 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
   const [hovered, setHovered] = React.useState(false);
   const [popupOpen, setPopupOpen] = React.useState(false);
   const cellRef = React.useRef<HTMLDivElement>(null);
-  const paperRef = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();
 
   React.useEffect(() => {
-    if (popupOpen) {
-      paperRef.current?.focus();
-    }
-  }, [popupOpen]);
+    return apiRef.current.subscribeEvent('scrollPositionChange', () => {
+      setPopupOpen(false);
+      setHovered(false);
+    });
+  }, [apiRef]);
 
   const handleIconClick = () => {
     setPopupOpen(true);
@@ -41,12 +41,6 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
     setPopupOpen(false);
     setHovered(false);
     apiRef.current.startCellEditMode({ id, field });
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      handleClose();
-    }
   };
 
   return (
@@ -109,11 +103,8 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
             ]}
           >
             <Paper
-              ref={paperRef}
-              tabIndex={-1}
               elevation={4}
               onDoubleClick={handleDoubleClick}
-              onKeyDown={handleKeyDown}
               sx={{
                 p: 1,
                 boxSizing: 'border-box',
@@ -121,9 +112,6 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
                 maxWidth: '100%',
                 minHeight: cellRef.current?.offsetHeight,
                 typography: 'body2',
-                '&:focus': {
-                  outline: 'none',
-                },
               }}
             >
               {value}

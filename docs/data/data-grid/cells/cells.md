@@ -73,7 +73,7 @@ See [Column definition—value formatter](/x/react-data-grid/column-definition/#
 
 ### Long text cell
 
-One approach to handling long text in a Data Grid cell is to create a custom cell that shows an expand button.
+To show long text in a Data Grid cell as a popup, customize the cell to show an expand button.
 When clicked, a Popper appears with a full view of the text content without increasing the cell size.
 
 In the example below, try hovering over the cells in the **Bio** column and clicking the expand button to see the full content.
@@ -81,5 +81,5 @@ In the example below, try hovering over the cells in the **Bio** column and clic
 {{"demo": "LongTextCell.js", "bg": "inline", "defaultCodeOpen": false}}
 
 :::info
-The recipe can be extended to support [editing](/x/react-data-grid/editing/) long text, take a look at the [Multiline editing recipe](/x/react-data-grid/recipes-editing/#multiline-editing) for the details.
+The recipe can be extended to support [editing](/x/react-data-grid/editing/) long text, take a look at the [Editing recipes—Multiline editing](/x/react-data-grid/recipes-editing/#multiline-editing) for the details.
 :::
