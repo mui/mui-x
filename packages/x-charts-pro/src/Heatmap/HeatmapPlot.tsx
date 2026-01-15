@@ -16,6 +16,8 @@ import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPoint
 
 export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
 
+const MemoHeatmapItem = React.memo(HeatmapItem);
+
 function HeatmapPlot(props: HeatmapPlotProps) {
   const store = useStore();
   const xScale = useXScale<'band'>();
@@ -55,7 +57,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
           };
 
           return (
-            <HeatmapItem
+            <MemoHeatmapItem
               key={`${xIndex}_${yIndex}`}
               width={xScale.bandwidth()}
               height={yScale.bandwidth()}
