@@ -11,7 +11,7 @@ import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,
-): useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null {
+): useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null {
   const { start, end, occurrences, maxIndex } = parameters;
 
   const adapter = useAdapter();
@@ -39,24 +39,18 @@ export function useCalendarGridPlaceholderInRange(
     const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
       key: 'occurrence-placeholder',
-      // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
-      dataTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone,
-      },
+      id: 'occurrence-placeholder',
+      title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
         start: startProcessed,
         end: endProcessed,
         timezone,
       },
-      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: '',
         position: {
           firstIndex: 1,
@@ -68,7 +62,6 @@ export function useCalendarGridPlaceholderInRange(
     if (rawPlaceholder.type === 'external-drag') {
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
         position: {
           firstIndex: 1,
@@ -85,11 +78,10 @@ export function useCalendarGridPlaceholderInRange(
     };
 
     return {
-      ...originalEvent!,
       ...sharedProperties,
       position,
     };
-  }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
+  }, [rawPlaceholder, adapter, originalEvent, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
