@@ -14,6 +14,8 @@ import { useAxesTooltip } from './useAxesTooltip';
 
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
+export interface ChartsAxisTooltipContentClasses extends ChartsTooltipClasses {}
+
 export interface ChartsAxisTooltipContentProps {
   /**
    * Override or extend the styles applied to the component.

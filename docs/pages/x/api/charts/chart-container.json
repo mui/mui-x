@@ -144,6 +144,10 @@
     "import { ChartContainer } from '@mui/x-charts-pro';",
     "import { ChartContainer } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": false,
