@@ -144,14 +144,14 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
    *
    * @param {ChartUsedDefaultizedParams<TSignature>} params The parameters after being processed with the default values.
    * @param {MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>} currentState The current state of the chart.
-   * @param {ChartSeriesConfig<any>} seriesConfig The series configuration.
+   * @param {ChartSeriesConfig<any, any>} seriesConfig The series configuration.
    *
    * @returns {TSignature['state']} The initial state of the plugin.
    */
   getInitialState?: (
     params: ChartUsedDefaultizedParams<TSignature>,
     currentState: MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>,
-    seriesConfig: ChartSeriesConfig<any>,
+    seriesConfig: ChartSeriesConfig<any, any>,
   ) => TSignature['state'];
   /**
    * An object where each property used by the plugin is set to `true`.

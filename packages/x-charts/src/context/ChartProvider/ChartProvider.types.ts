@@ -56,5 +56,5 @@ export interface ChartProviderProps<
    * The configuration helpers used to compute attributes according to the series type.
    * @ignore Unstable props for internal usage.
    */
-  seriesConfig?: ChartSeriesConfig<TSeries>;
+  seriesConfig?: ChartSeriesConfig<TSeries, TSignatures>;
 }

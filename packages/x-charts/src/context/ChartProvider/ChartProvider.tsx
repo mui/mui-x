@@ -44,7 +44,7 @@ function ChartProvider<
     children,
     plugins = defaultPlugins as unknown as ConvertSignaturesIntoPlugins<TSignatures>,
     pluginParams = {},
-    seriesConfig = defaultSeriesConfig as ChartSeriesConfig<TSeriesType>,
+    seriesConfig = defaultSeriesConfig as ChartSeriesConfig<TSeriesType, TSignatures>,
   } = props;
 
   const { contextValue } = useCharts<TSeriesType, TSignatures>(plugins, pluginParams, seriesConfig);
