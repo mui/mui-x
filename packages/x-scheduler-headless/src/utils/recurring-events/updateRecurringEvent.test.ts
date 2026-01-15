@@ -480,7 +480,7 @@ describe('recurring-events/updateRecurringEvent', () => {
         .rrule({ freq: 'DAILY' })
         .toProcessed();
 
-      const occurrenceStart = original.modelInBuiltInFormat!.start;
+      const occurrenceStart = original.modelInBuiltInFormat.start;
 
       // Changes come as instants
       // 00:40 JST → 2025-01-09T15:40:00Z
@@ -729,7 +729,7 @@ describe('recurring-events/updateRecurringEvent', () => {
 
       // OccurrenceStart in display timezone (Madrid) will look like next day,
       // but update must use data timezone
-      const occurrenceStart = original.modelInBuiltInFormat!.start;
+      const occurrenceStart = original.modelInBuiltInFormat.start;
 
       const updated = applyRecurringUpdateOnlyThis(adapter, original, occurrenceStart, {
         id: original.id,
