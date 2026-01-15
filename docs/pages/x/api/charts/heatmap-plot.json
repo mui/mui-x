@@ -12,6 +12,14 @@
     "import { HeatmapPlot } from '@mui/x-charts-pro/Heatmap';",
     "import { HeatmapPlot } from '@mui/x-charts-pro';"
   ],
+  "slots": [
+    {
+      "name": "cell",
+      "description": "The component that renders the heatmap cell.",
+      "default": "HeatmapCell",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiHeatmapPlot",
   "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapPlot.tsx",
