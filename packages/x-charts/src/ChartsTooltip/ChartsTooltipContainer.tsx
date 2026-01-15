@@ -52,6 +52,14 @@ function getIsOpenSelector(
   return selectorReturnFalse;
 }
 
+type PopperSlots = NonNullable<PopperProps['slots']>;
+
+type PopperSlotProps = NonNullable<PopperProps['slotProps']>;
+
+export interface ChartsTooltipContainerSlots extends PopperSlots {}
+
+export interface ChartsTooltipContainerSlotProps extends PopperSlotProps {}
+
 export interface ChartsTooltipContainerClasses extends ChartsTooltipClasses {}
 
 export interface ChartsTooltipContainerProps<
@@ -69,6 +77,16 @@ export interface ChartsTooltipContainerProps<
    * Override or extend the styles applied to the component.
    */
   classes?: Partial<ChartsTooltipContainerClasses>;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: ChartsTooltipContainerSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: ChartsTooltipContainerSlotProps;
   /**
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'

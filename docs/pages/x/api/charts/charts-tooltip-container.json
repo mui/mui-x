@@ -95,6 +95,14 @@
     "import { ChartsTooltipContainer } from '@mui/x-charts-pro';",
     "import { ChartsTooltipContainer } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "'div'",
+      "class": "MuiChartsTooltipContainer-root"
+    }
+  ],
   "classes": [
     {
       "key": "axisValueCell",
@@ -130,12 +138,6 @@
       "key": "paper",
       "className": "MuiChartsTooltipContainer-paper",
       "description": "Styles applied to the paper element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsTooltipContainer-root",
-      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {
