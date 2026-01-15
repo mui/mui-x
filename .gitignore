@@ -27,7 +27,7 @@ performance-snapshot.json
 # vale downloaded config
 .github/styles/
 test-results
-CLAUDE.md
+AGENTS.local.md
 
 # typescript
 *.tsbuildinfo
