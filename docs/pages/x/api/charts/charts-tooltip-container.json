@@ -95,7 +95,70 @@
     "import { ChartsTooltipContainer } from '@mui/x-charts-pro';",
     "import { ChartsTooltipContainer } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "'div'",
+      "class": "MuiChartsTooltipContainer-root"
+    }
+  ],
+  "classes": [
+    {
+      "key": "axisValueCell",
+      "className": "MuiChartsTooltipContainer-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell",
+      "className": "MuiChartsTooltipContainer-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiChartsTooltipContainer-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiChartsTooltipContainer-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markContainer",
+      "className": "MuiChartsTooltipContainer-markContainer",
+      "description": "Styles applied to the markContainer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiChartsTooltipContainer-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiChartsTooltipContainer-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiChartsTooltipContainer-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiChartsTooltipContainer-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiChartsTooltipContainer",
   "filename": "/packages/x-charts/src/ChartsTooltip/ChartsTooltipContainer.tsx",
   "inheritance": null,
