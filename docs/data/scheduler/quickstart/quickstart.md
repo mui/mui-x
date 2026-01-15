@@ -172,5 +172,7 @@ const theme = createTheme({
 
 ## API
 
-- [EventCalendar](/x/api/scheduler/event-calendar/)
-- [Timeline](/x/api/scheduler/timeline/)
+TODO: Uncomment once available
+
+<!-- - [EventCalendar](/x/api/scheduler/event-calendar/)
+- [Timeline](/x/api/scheduler/timeline/) -->
