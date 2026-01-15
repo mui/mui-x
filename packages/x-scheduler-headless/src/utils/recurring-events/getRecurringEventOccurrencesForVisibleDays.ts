@@ -41,11 +41,15 @@ class RecurringEventExpander {
 
   private readonly rule: RecurringEventRecurrenceRule;
 
-  // seriesStartDay is the day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
+  /*
+   * Day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
+   */
   private readonly seriesStartDay: TemporalSupportedObject;
 
-  // dtStartInDataTz keeps the original DTSTART wall-time (HH:mm) in the event/data timezone,
-  // used to build occurrence instants via mergeDateAndTime().
+  /*
+   * Represents the original DTSTART wall-time (HH:mm) in the event/data timezone
+   * It is used to build occurrence instants via mergeDateAndTime().
+   */
   private readonly dtStartInDataTz: TemporalSupportedObject;
 
   private readonly scanFirstDay: TemporalSupportedObject;
