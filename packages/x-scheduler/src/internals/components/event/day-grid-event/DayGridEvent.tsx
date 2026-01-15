@@ -5,7 +5,10 @@ import { styled } from '@mui/material/styles';
 import { createSelector, useStore } from '@base-ui/utils/store';
 import { Repeat } from 'lucide-react';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
-import { SchedulerEventOccurrence, SchedulerEventSide } from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerEventSide,
+  SchedulerRenderableEventOccurrence,
+} from '@mui/x-scheduler-headless/models';
 import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
   schedulerEventSelectors,
@@ -183,7 +186,11 @@ const LinesClamp = styled('span')({
 });
 
 const isResizableSelector = createSelector(
-  (state: EventCalendarState, side: SchedulerEventSide, occurrence: SchedulerEventOccurrence) => {
+  (
+    state: EventCalendarState,
+    side: SchedulerEventSide,
+    occurrence: SchedulerRenderableEventOccurrence,
+  ) => {
     if (!schedulerEventSelectors.isResizable(state, occurrence.id, side)) {
       return false;
     }

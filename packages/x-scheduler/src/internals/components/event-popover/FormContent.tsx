@@ -10,12 +10,12 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import {
   SchedulerEventColor,
-  SchedulerEventOccurrence,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   SchedulerResourceId,
   RecurringEventFrequency,
   RecurringEventRecurrenceRule,
+  SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -25,7 +25,7 @@ import {
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { computeRange, ControlledValue, validateRange } from './utils';
+import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
@@ -41,7 +41,7 @@ const FormActions = styled('div', {
 }));
 
 interface FormContentProps {
-  occurrence: SchedulerEventOccurrence;
+  occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
 }
 
@@ -89,7 +89,7 @@ export function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.displayTimezone.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      color: occurrence.color ?? null,
+      color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
         freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
