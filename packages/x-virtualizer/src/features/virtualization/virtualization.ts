@@ -419,11 +419,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     let virtualRowIndex = -1;
     const focusedVirtualCell = params.focusedVirtualCell?.();
     if (!isPinnedSection && focusedVirtualCell) {
-      if (focusedVirtualCell.rowIndex < firstRowToRender) {
+      if (
+        focusedVirtualCell.rowIndex < firstRowToRender &&
+        focusedVirtualCell.rowIndex >= 0 &&
+        focusedVirtualCell.rowIndex < rowModels.length
+      ) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
-      if (focusedVirtualCell.rowIndex > lastRowToRender) {
+      if (
+        focusedVirtualCell.rowIndex > lastRowToRender &&
+        focusedVirtualCell.rowIndex < rowModels.length
+      ) {
         rowIndexes.push(focusedVirtualCell.rowIndex);
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
@@ -433,11 +440,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     const columnPositions = Dimensions.selectors.columnPositions(store.state, columns);
 
     rowIndexes.forEach((rowIndexInPage) => {
-      const rowModel = rowModels[rowIndexInPage];
-      if (!rowModel) {
-        return;
-      }
-      const { id, model } = rowModel;
+      const { id, model } = rowModels[rowIndexInPage];
 
       // In certain cases, the state might already be updated and `params.rows` (which sets `rowModels`)
       // contains stale data.
