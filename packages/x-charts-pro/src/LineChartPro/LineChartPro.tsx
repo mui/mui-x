@@ -76,7 +76,8 @@ const LineChartPro = React.forwardRef(function LineChartPro(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiLineChartPro' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, seriesConfig, ...other } =
+    props;
   const {
     chartsWrapperProps,
     chartContainerProps,
@@ -92,14 +93,14 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     lineHighlightPlotProps,
     legendProps,
     children,
-  } = useLineChartProps(other as LineChartProps);
+  } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'line',
     LineChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
-      seriesConfig: props.seriesConfig,
+      seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,

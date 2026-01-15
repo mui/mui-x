@@ -24,7 +24,7 @@ import { LINE_CHART_PLUGINS, type LineChartPluginSignatures } from './LineChart.
  * @param props The input props for LineChart
  * @returns An object with props for the children components of LineChart
  */
-export const useLineChartProps = (props: LineChartProps) => {
+export const useLineChartProps = (props: Omit<LineChartProps, 'seriesConfig'> ) => {
   const {
     xAxis,
     yAxis,
