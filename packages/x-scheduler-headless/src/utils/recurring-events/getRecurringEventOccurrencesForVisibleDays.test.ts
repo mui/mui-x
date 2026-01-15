@@ -320,6 +320,48 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         ),
       ).to.throw();
     });
+    it('does not go backwards when BYDAY includes SU + another day with enUS week start and COUNT', () => {
+      // DTSTART: Sunday Mar 2, 2025
+      const dtstart = adapter.date('2025-03-02T09:00:00Z', 'default'); // SU
+      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 20);
+
+      const event = EventBuilder.new(adapter)
+        .singleDay(dtstart)
+        .rrule({ freq: 'WEEKLY', byDay: ['TU', 'SU'], count: 5 })
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'default',
+      );
+
+      // Expected occurrences in chronological order:
+      // SU 2, TU 4, SU 9, TU 11, SU 16
+      const days = result.map((o) =>
+        adapter.formatByString(o.displayTimezone.start.value, 'yyyy-MM-dd'),
+      );
+      expect(days).to.deep.equal([
+        '2025-03-02',
+        '2025-03-04',
+        '2025-03-09',
+        '2025-03-11',
+        '2025-03-16',
+      ]);
+
+      // And ensure they are strictly increasing (no backwards/duplicates)
+      for (let i = 1; i < result.length; i += 1) {
+        expect(
+          adapter.isAfter(
+            result[i].displayTimezone.start.value,
+            result[i - 1].displayTimezone.start.value,
+          ),
+        ).to.equal(true);
+      }
+    });
   });
 
   describe('monthly frequency - byMonthDay', () => {
@@ -623,6 +665,46 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
         );
         expect(hours).to.equal(48);
       });
+    });
+
+    it('weekly BYDAY + COUNT stays correct when data tz day differs from display tz day', () => {
+      // Pick a time that is Sunday in LA but Monday in Paris:
+      // 2025-03-03T00:30Z = 2025-03-02 16:30 in America/Los_Angeles (Sunday)
+      //                 = 2025-03-03 01:30 in Europe/Paris (Monday)
+      const event = EventBuilder.new(adapter)
+        .singleDay('2025-03-03T00:30:00Z', 60)
+        .withDataTimezone('America/Los_Angeles')
+        .withDisplayTimezone('Europe/Paris')
+        .rrule({ freq: 'WEEKLY', byDay: ['SU', 'TU'], count: 5 })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 25);
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'Europe/Paris',
+      );
+
+      // In data tz (LA): SU Mar2, TU Mar4, SU Mar9, TU Mar11, SU Mar16
+      // In display tz (Paris): MO Mar3, WE Mar5, MO Mar10, WE Mar12, MO Mar17
+      const displayDays = result.map((o) =>
+        adapter.formatByString(o.displayTimezone.start.value, 'yyyy-MM-dd'),
+      );
+
+      expect(displayDays).to.deep.equal([
+        '2025-03-03',
+        '2025-03-05',
+        '2025-03-10',
+        '2025-03-12',
+        '2025-03-17',
+      ]);
+
+      // Sanity: COUNT respected
+      expect(result).to.have.length(5);
     });
   });
 });
