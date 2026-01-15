@@ -11,7 +11,12 @@ import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { useStore } from '@base-ui/utils/store/useStore';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
@@ -146,11 +151,13 @@ export const AgendaView = React.memo(
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
+    // Selector hooks
+    const store = useEventCalendarStoreContext();
+    const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+
     // Feature hooks
     const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
-
-    const today = adapter.now('default');
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
@@ -172,7 +179,7 @@ export const AgendaView = React.memo(
               <DayHeaderCell
                 id={`DayHeaderCell-${date.key}`}
                 aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
-                data-current={adapter.isSameDay(date.value, today) ? '' : undefined}
+                data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
               >
                 <DayNumberCell>{adapter.format(date.value, 'dayOfMonth')}</DayNumberCell>
                 <WeekDayCell>
