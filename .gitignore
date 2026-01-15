@@ -3,6 +3,7 @@
 .idea
 .vscode
 .cursor
+.claude/settings.local.json
 
 __diff_output__
 .DS_STORE

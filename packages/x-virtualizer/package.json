@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-virtualizer",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "author": "MUI Team",
   "description": "MUI virtualization library",
   "license": "MIT",
@@ -46,7 +46,7 @@
     "@mui/types": "^7.4.8",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "^6.1.2"
+    "rimraf": "6.1.2"
   },
   "engines": {
     "node": ">=14.0.0"

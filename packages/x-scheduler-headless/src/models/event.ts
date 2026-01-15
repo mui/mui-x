@@ -150,6 +150,10 @@ export interface SchedulerEvent {
    */
   end: TemporalSupportedObject;
   /**
+   * The timezone of the event dates.
+   */
+  timezone?: TemporalTimezone;
+  /**
    * The id of the resource this event is associated with.
    * @default null
    */
@@ -329,6 +333,13 @@ export interface SchedulerProcessedDate {
    * The timestamp of the date.
    */
   timestamp: number;
+  /**
+   * Number of minutes since local midnight (0–1439).
+   *
+   * This value represents a visual position within a fixed 24h timeline grid
+   * and is intentionally independent from real-time duration (e.g. DST shifts).
+   */
+  minutesInDay: number;
 }
 
 /**

@@ -53,6 +53,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'line' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'radar' }&gt;"
+      }
+    },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
@@ -96,6 +102,13 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "plotType": {
       "type": { "name": "enum", "description": "'bar'<br>&#124;&nbsp;'line'" },
       "default": "'line'"
@@ -108,6 +121,12 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "union",
+        "description": "{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'line' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'scatter' }<br>&#124;&nbsp;{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'pie' }<br>&#124;&nbsp;{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'radar' }"
+      }
     },
     "valueFormatter": {
       "type": { "name": "func" },

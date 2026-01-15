@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { GridRootPropsContext } from '../../context/GridRootPropsContext';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';

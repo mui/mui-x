@@ -7,27 +7,21 @@ import {
   initialEvents,
   resources,
   TimezoneEvent,
-} from '../datasets/timezone-events';
+} from '../datasets/timezone-instant-based-events';
 
-export default function TimezoneDataset() {
-  // Temporary DX workaround.
-  // We plan to support `event.timezone` out of the box (Issue #20598).
+export default function TimezoneDatasetInstantBased() {
   const eventModelStructure: SchedulerEventModelStructure<TimezoneEvent> = {
     start: {
-      getter: (event) => new TZDate(event.startUtc, event.timezone),
+      getter: (event) => new TZDate(event.start, event.timezone),
       setter: (event, newValue) => {
-        const tz = (newValue as any).timeZone;
-        event.startUtc = newValue.toISOString();
-        event.timezone = tz;
+        event.start = newValue.toISOString();
         return event;
       },
     },
     end: {
-      getter: (event) => new TZDate(event.endUtc, event.timezone),
+      getter: (event) => new TZDate(event.end, event.timezone),
       setter: (event, newValue) => {
-        const tz = (newValue as any).timeZone;
-        event.endUtc = newValue.toISOString();
-        event.timezone = tz;
+        event.end = newValue.toISOString();
         return event;
       },
     },

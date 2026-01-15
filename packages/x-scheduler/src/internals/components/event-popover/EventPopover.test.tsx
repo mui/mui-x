@@ -25,7 +25,7 @@ import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .title('Running')
   .description('Morning run')
-  .singleDay('2025-05-26T07:30:00', 45)
+  .singleDay('2025-05-26T07:30:00Z', 45)
   .resource('r2')
   .build();
 
@@ -322,8 +322,8 @@ describe('<EventPopoverContent />', () => {
 
   describe('Event creation', () => {
     it('should change surface of the placeholder to day-grid when all-day is changed to true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00', 'default');
-      const end = adapter.date('2025-05-26T08:30:00', 'default');
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleSurfaceChange = spy();
 
       const creationOccurrence = EventBuilder.new(adapter)
@@ -365,8 +365,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should change surface of the placeholder to time-grid when all-day is changed to false', async () => {
-      const start = adapter.date('2025-05-26T07:30:00', 'default');
-      const end = adapter.date('2025-05-26T08:30:00', 'default');
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleSurfaceChange = spy();
 
       const creationOccurrence = EventBuilder.new(adapter)
@@ -409,8 +409,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should not change surfaceType when all day changed to true and lockSurfaceType=true', async () => {
-      const start = adapter.date('2025-05-26T07:30:00', 'default');
-      const end = adapter.date('2025-05-26T08:30:00', 'default');
+      const start = adapter.date('2025-05-26T07:30:00Z', 'default');
+      const end = adapter.date('2025-05-26T08:30:00Z', 'default');
       const handleSurfaceChange = spy();
 
       const creationOccurrence = EventBuilder.new(adapter)
@@ -451,8 +451,8 @@ describe('<EventPopoverContent />', () => {
     });
 
     it('should call createEvent with metaChanges + computed start/end on Submit', async () => {
-      const start = adapter.date('2025-06-10T09:00:00', 'default');
-      const end = adapter.date('2025-06-10T09:30:00', 'default');
+      const start = adapter.date('2025-06-10T09:00:00Z', 'default');
+      const end = adapter.date('2025-06-10T09:30:00Z', 'default');
       const placeholder: SchedulerOccurrencePlaceholderCreation = {
         type: 'creation',
         surfaceType: 'time-grid' as const,
@@ -518,7 +518,7 @@ describe('<EventPopoverContent />', () => {
       const originalRecurringEvent = EventBuilder.new()
         .title('Daily standup')
         .description('sync')
-        .singleDay('2025-06-11T10:00:00', 30)
+        .singleDay('2025-06-11T10:00:00Z', 30)
         .resource('r2')
         .recurrent('DAILY')
         .build();
@@ -1103,13 +1103,13 @@ describe('<EventPopoverContent />', () => {
         .id('non-recurring-1')
         .title('Task')
         .description('description')
-        .singleDay('2025-06-12T14:00:00')
+        .singleDay('2025-06-12T14:00:00Z')
         .build();
       const nonRecurringEventOccurrence = EventBuilder.new(adapter)
         .id(nonRecurringEvent.id)
         .title(nonRecurringEvent.title)
         .description(nonRecurringEvent.description)
-        .singleDay('2025-06-12T14:00:00')
+        .singleDay('2025-06-12T14:00:00Z')
         .toOccurrence();
 
       it('should call updateEvent with updated values on Submit', async () => {

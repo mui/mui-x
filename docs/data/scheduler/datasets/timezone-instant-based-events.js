@@ -1,4 +1,4 @@
-// Timezone Events Dataset
+// Timezone Events Dataset Instant-Based
 // Non-realistic set focused on edge cases of timezone handling.
 
 export const resources = [
@@ -18,32 +18,32 @@ export const initialEvents = [
   {
     id: 'ny-simple',
     title: 'NY event',
-    startUtc: '2025-03-10T13:00:00Z', // 09:00 NY → UTC+4
-    endUtc: '2025-03-10T14:00:00Z',
+    start: '2025-03-10T13:00:00Z', // 09:00 NY → UTC+4
+    end: '2025-03-10T14:00:00Z',
     timezone: 'America/New_York',
     resource: 'ny',
   },
   {
     id: 'paris-simple',
     title: 'Paris event',
-    startUtc: '2025-03-11T13:00:00Z', // 14:00 París → UTC+1
-    endUtc: '2025-03-11T14:00:00Z',
+    start: '2025-03-11T13:00:00Z', // 14:00 París → UTC+1
+    end: '2025-03-11T14:00:00Z',
     timezone: 'Europe/Paris',
     resource: 'paris',
   },
   {
     id: 'tokyo-simple',
     title: 'Tokyo event',
-    startUtc: '2025-03-11T21:00:00Z', // 06:00 Tokio → UTC+9
-    endUtc: '2025-03-11T21:30:00Z',
+    start: '2025-03-11T21:00:00Z', // 06:00 Tokio → UTC+9
+    end: '2025-03-11T21:30:00Z',
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
   },
   {
     id: 'la-simple',
     title: 'LA event',
-    startUtc: '2025-03-13T17:00:00Z', // 10:00 LA → UTC-7
-    endUtc: '2025-03-13T18:00:00Z',
+    start: '2025-03-13T17:00:00Z', // 10:00 LA → UTC-7
+    end: '2025-03-13T18:00:00Z',
     timezone: 'America/Los_Angeles',
     resource: 'la',
   },
@@ -56,8 +56,8 @@ export const initialEvents = [
   {
     id: 'ny-weekly',
     title: 'NY Weekly',
-    startUtc: '2025-03-05T17:00:00Z',
-    endUtc: '2025-03-05T18:00:00Z',
+    start: '2025-03-05T17:00:00Z',
+    end: '2025-03-05T18:00:00Z',
     timezone: 'America/New_York',
     resource: 'ny',
     rrule: { freq: 'WEEKLY', byDay: ['MO', 'WE'] },
@@ -67,8 +67,8 @@ export const initialEvents = [
   {
     id: 'monthly-paris-until',
     title: 'Paris Monthly Evening',
-    startUtc: '2025-03-15T17:00:00Z',
-    endUtc: '2025-03-15T18:00:00Z',
+    start: '2025-03-15T17:00:00Z',
+    end: '2025-03-15T18:00:00Z',
     timezone: 'Europe/Paris',
     resource: 'paris',
     rrule: {
@@ -83,8 +83,8 @@ export const initialEvents = [
   {
     id: 'daily-tokyo',
     title: 'Tokyo Sunrise Daily',
-    startUtc: '2025-02-28T22:00:00Z',
-    endUtc: '2025-02-28T22:45:00Z',
+    start: '2025-02-28T22:00:00Z',
+    end: '2025-02-28T22:45:00Z',
     timezone: 'Asia/Tokyo',
     resource: 'tokyo',
     rrule: { freq: 'DAILY' },
@@ -96,8 +96,8 @@ export const initialEvents = [
   {
     id: 'weekly-la-count',
     title: 'LA Weekly Afternoon',
-    startUtc: '2025-03-03T00:00:00Z',
-    endUtc: '2025-03-03T01:00:00Z',
+    start: '2025-03-03T00:00:00Z',
+    end: '2025-03-03T01:00:00Z',
     timezone: 'America/Los_Angeles',
     resource: 'la',
     rrule: {
@@ -112,11 +112,22 @@ export const initialEvents = [
   {
     id: 'syd-exdates',
     title: 'Sydney Weekly Skip One',
-    startUtc: '2025-03-14T02:00:00Z',
-    endUtc: '2025-03-14T03:00:00Z',
+    start: '2025-03-14T02:00:00Z',
+    end: '2025-03-14T03:00:00Z',
     timezone: 'Australia/Sydney',
     resource: 'sydney',
     rrule: { freq: 'WEEKLY', byDay: ['FR'] },
     exDates: ['2025-03-21T02:00:00Z'],
+  },
+  // Paris crossing the DST jump (Mar 30, 2025)
+  // 01:30 local → 03:30 local (the 02:00–03:00 hour does not exist)
+  // This renders from 01:30 to 03:30.
+  {
+    id: 'paris-cross-jump',
+    title: 'Paris crosses DST jump',
+    start: '2025-03-30T00:30:00Z',
+    end: '2025-03-30T01:30:00Z',
+    timezone: 'Europe/Paris',
+    resource: 'paris',
   },
 ];
