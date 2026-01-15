@@ -41,10 +41,10 @@ export interface BarChartProSlotProps
 
 export interface BarChartProProps
   extends
-    Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -87,7 +87,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     axisHighlightProps,
     legendProps,
     children,
-  } = useBarChartProps(other);
+  } = useBarChartProps(other as BarChartProps);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar',
@@ -95,6 +95,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   >(
     {
       ...chartContainerProps,
+      seriesConfig: props.seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,

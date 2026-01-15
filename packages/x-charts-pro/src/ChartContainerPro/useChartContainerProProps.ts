@@ -7,8 +7,10 @@ import {
 } from '@mui/x-charts/internals';
 import type * as React from 'react';
 import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import type { ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import type { ChartContainerProProps } from './ChartContainerPro';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import type { ChartDataProviderProProps } from '../ChartDataProviderPro';
 
 export type UseChartContainerProPropsReturnValue<
   TSeries extends ChartSeriesType,
@@ -37,10 +39,10 @@ export const useChartContainerProProps = <
     ...baseProps
   } = props as ChartContainerProProps<TSeries, AllPluginSignatures<TSeries>>;
 
-  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
-    baseProps,
-    ref,
-  );
+  const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<
+    TSeries,
+    TSignatures
+  >(baseProps as ChartContainerProps<TSeries, TSignatures>, ref);
 
   const chartDataProviderProProps = {
     ...chartDataProviderProps,
@@ -50,7 +52,7 @@ export const useChartContainerProProps = <
     zoomInteractionConfig,
     apiRef,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
+  } as unknown as ChartDataProviderProProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderProProps,
