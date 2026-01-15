@@ -654,14 +654,14 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       result.forEach((occ) => {
         expect(
-          adapter.isWithinRange(occ.dataTimezone.start.value, [visibleStart, visibleEnd]),
+          adapter.isWithinRange(occ.displayTimezone.start.value, [visibleStart, visibleEnd]),
         ).to.equal(true);
       });
       // Duration must remain exactly 48h
       result.forEach((occ) => {
         const hours = adapter.differenceInHours(
-          occ.dataTimezone.end.value,
-          occ.dataTimezone.start.value,
+          occ.displayTimezone.end.value,
+          occ.displayTimezone.start.value,
         );
         expect(hours).to.equal(48);
       });
