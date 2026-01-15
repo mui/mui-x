@@ -11,7 +11,7 @@ describe('processEvent', () => {
 
     const processed = processEvent(event, 'Pacific/Kiritimati', adapter);
 
-    expect(processed.modelInBuiltInFormat!.timezone).to.equal('America/New_York');
+    expect(processed.modelInBuiltInFormat.timezone).to.equal('America/New_York');
   });
   describe('displayTimezone', () => {
     it('converts start and end to the display timezone', () => {
