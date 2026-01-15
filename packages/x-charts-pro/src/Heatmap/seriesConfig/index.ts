@@ -9,6 +9,7 @@ import getColor from './getColor';
 import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
+import getItemAtPosition from './getItemAtPosition';
 import type { HeatmapPluginSignatures } from '../Heatmap.plugins';
 import keyboardFocusHandler from './keyboardFocusHandler';
 
@@ -24,5 +25,6 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap', HeatmapPlugin
   yExtremumGetter: getBaseExtremum,
   getSeriesWithDefaultValues,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  getItemAtPosition,
   keyboardFocusHandler,
 };
