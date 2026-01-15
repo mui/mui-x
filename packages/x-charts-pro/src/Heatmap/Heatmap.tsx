@@ -11,7 +11,6 @@ import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import {
   type ChartsAxisSlots,
   type ChartsAxisSlotProps,
-  type ChartSeriesConfig,
   type XAxis,
   type YAxis,
 } from '@mui/x-charts/internals';
@@ -151,7 +150,7 @@ const defaultColorMap = interpolateRgbBasis([
   '#084081',
 ]);
 
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
+const seriesConfig = { heatmap: heatmapSeriesConfig };
 
 function getDefaultDataForAxis(series: HeatmapProps['series'], dimension: number) {
   if (series?.[0]?.data === undefined || series[0].data.length === 0) {
