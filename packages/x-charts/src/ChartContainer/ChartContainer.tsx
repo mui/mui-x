@@ -66,6 +66,11 @@ ChartContainer.propTypes = {
     current: PropTypes.object,
   }),
   /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
+  /**
    * Configuration for the brush interaction.
    */
   brushConfig: PropTypes.shape({

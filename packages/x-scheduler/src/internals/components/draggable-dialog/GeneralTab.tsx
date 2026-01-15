@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
@@ -15,7 +15,7 @@ import {
   schedulerOccurrencePlaceholderSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { computeRange, ControlledValue } from './utils';
+import { computeRange, ControlledValue, hasProp } from './utils';
 
 const GeneralTabContent = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -51,7 +51,7 @@ const DateTimeFieldsRow = styled('div', {
 }));
 
 interface GeneralTabProps {
-  occurrence: SchedulerEventOccurrence;
+  occurrence: SchedulerRenderableEventOccurrence;
   errors: Record<string, string | string[]>;
   setErrors: (errors: Record<string, string | string[]>) => void;
   controlled: ControlledValue;
@@ -197,7 +197,7 @@ export function GeneralTab(props: GeneralTabProps) {
         <TextField
           name="description"
           label={translations.descriptionLabel}
-          defaultValue={occurrence.description}
+          defaultValue={hasProp(occurrence, 'description') ? occurrence.description : ''}
           multiline
           rows={5}
           fullWidth

@@ -15,11 +15,11 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
 import {
-  SchedulerEventOccurrence,
   RecurringEventFrequency,
   RecurringEventPresetKey,
   RecurringEventByDayValue,
   RecurringEventWeekDayCode,
+  SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -42,7 +42,7 @@ const RecurrenceTabContent = styled('div', {
 }));
 
 interface RecurrenceTabProps {
-  occurrence: SchedulerEventOccurrence;
+  occurrence: SchedulerRenderableEventOccurrence;
   controlled: ControlledValue;
   setControlled: React.Dispatch<React.SetStateAction<ControlledValue>>;
   value: string;

@@ -5,7 +5,7 @@ export interface TimeGridEventProps extends React.HTMLAttributes<HTMLDivElement>
   /**
    * The event occurrence to render.
    */
-  occurrence: useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition;
+  occurrence: useEventOccurrencesWithTimelinePosition.EventRenderableOccurrenceWithPosition;
   /**
    * The variant of the event, which determines its styling.
    */
