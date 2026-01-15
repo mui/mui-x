@@ -55,6 +55,8 @@
     },
     "onAxisClick": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onItemClick</code> instead to get access to both x- and y-axis values.",
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
@@ -65,6 +67,13 @@
       "signature": {
         "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
       }
     },
     "onTooltipItemChange": {
