@@ -28,7 +28,6 @@ export default function EventPopoverHeader({ children }: React.PropsWithChildren
   return (
     <EventPopoverHeaderRoot>
       <EventPopoverHeaderContent>{children}</EventPopoverHeaderContent>
-
       <X size={18} strokeWidth={2} />
     </EventPopoverHeaderRoot>
   );

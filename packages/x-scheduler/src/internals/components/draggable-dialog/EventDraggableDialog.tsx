@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Paper, { PaperProps } from '@mui/material/Paper';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -93,7 +93,7 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   );
 } as any as DialogProps['PaperComponent'];
 
-const EventDraggableDialog = createModal<SchedulerEventOccurrence>({
+const EventDraggableDialog = createModal<SchedulerRenderableEventOccurrence>({
   contextName: 'EventDraggableDialogContext',
 });
 

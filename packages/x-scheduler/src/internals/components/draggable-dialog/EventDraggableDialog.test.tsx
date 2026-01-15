@@ -8,7 +8,6 @@ import {
   StateWatcher,
   StoreSpy,
 } from 'test/utils/scheduler';
-
 import { screen, within } from '@mui/internal-test-utils';
 import {
   SchedulerResource,
