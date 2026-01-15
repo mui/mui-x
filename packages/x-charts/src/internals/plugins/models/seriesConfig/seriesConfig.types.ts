@@ -14,8 +14,14 @@ import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.type
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
+import { type GetItemAtPosition } from './getItemAtPosition.types';
+import { type ChartAnyPluginSignature } from '../plugin';
 
-export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
+export type ChartSeriesTypeConfig<
+  TSeriesType extends ChartSeriesType,
+  RequiredPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
+  OptionalPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
+> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
   /**
    * A processor to add series layout when the layout does not depend from other series.
@@ -33,6 +39,11 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
    * @returns {string} A unique string representation of the identifier.
    */
   identifierSerializer: IdentifierSerializer<TSeriesType>;
+  getItemAtPosition?: GetItemAtPosition<
+    TSeriesType,
+    RequiredPluginsSignatures,
+    OptionalPluginsSignatures
+  >;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
@@ -48,6 +59,14 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
       }
     : {});
 
-export type ChartSeriesConfig<TSeriesType extends ChartSeriesType> = {
-  [Key in TSeriesType]: ChartSeriesTypeConfig<Key>;
+export type ChartSeriesConfig<
+  TSeriesType extends ChartSeriesType,
+  RequiredPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
+  OptionalPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
+> = {
+  [Key in TSeriesType]: ChartSeriesTypeConfig<
+    Key,
+    RequiredPluginsSignatures,
+    OptionalPluginsSignatures
+  >;
 };
