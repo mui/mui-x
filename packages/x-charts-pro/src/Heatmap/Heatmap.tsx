@@ -128,6 +128,10 @@ export interface HeatmapProps
    */
   showToolbar?: boolean;
   /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius?: number;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -194,6 +198,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     enableKeyboardNavigation,
     hideLegend = true,
     showToolbar = false,
+    borderRadius,
   } = props;
 
   const id = useId();
@@ -279,7 +284,7 @@ const Heatmap = React.forwardRef(function Heatmap(
         )}
         <ChartsSurface ref={ref} sx={sx}>
           <g clipPath={`url(#${clipPathId})`}>
-            <HeatmapPlot slots={slots} slotProps={slotProps} />
+            <HeatmapPlot slots={slots} slotProps={slotProps} borderRadius={borderRadius} />
             <FocusedHeatmapCell />
             <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           </g>
@@ -307,6 +312,10 @@ Heatmap.propTypes = {
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius: PropTypes.number,
   /**
    * Configuration for the brush interaction.
    */
