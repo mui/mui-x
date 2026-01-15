@@ -1,0 +1,44 @@
+name: Sync label and title
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, edited]
+
+permissions: {}
+
+jobs:
+  check_label_title_sync:
+    runs-on: ubuntu-latest
+    name: Check label and title sync
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Check label matches title
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+
+            const title = pr.title.toLowerCase();
+            const existingLabels = pr.labels?.map((label) => label.name.toLowerCase()) || [];
+
+            // Determine expected label from title
+            let expectedLabel = null;
+            if (title.includes('-pro]')) {
+              expectedLabel = 'plan: Pro';
+            } else if (title.includes('-premium]')) {
+              expectedLabel = 'plan: Premium';
+            }
+
+            // If title has a plan indicator, verify the label is present
+            if (expectedLabel) {
+              if (!existingLabels.includes(expectedLabel.toLowerCase())) {
+                core.setFailed(`PR title contains "${expectedLabel.includes('pro') ? '-pro' : '-premium'}" but missing "${expectedLabel}" label. Please add the appropriate label.`);
+                return;
+              }
+              core.info(`✓ Label "${expectedLabel}" matches title`);
+            }
