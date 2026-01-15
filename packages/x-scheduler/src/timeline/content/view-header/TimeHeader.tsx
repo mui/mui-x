@@ -82,6 +82,8 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
     [adapter, viewConfig],
   );
 
+  const template = adapter.date('2020-01-01T00:00:00', 'default');
+
   return (
     <TimeHeaderRoot {...props}>
       {days.map((day) => (
@@ -90,10 +92,9 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
             {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
           </DayLabel>
           <TimeCellsRow>
-            {/* TODO: Make sure it works across DST */}
             {Array.from({ length: 24 }, (_, hour) => (
               <TimeCell key={hour} style={{ '--hour': hour } as React.CSSProperties}>
-                <TimeLabel>{formatTime(adapter.setHours(day.value, hour))}</TimeLabel>
+                <TimeLabel>{formatTime(adapter.setHours(template, hour))}</TimeLabel>
               </TimeCell>
             ))}
           </TimeCellsRow>

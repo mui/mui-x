@@ -35,6 +35,6 @@
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts-pro/src/ChartDataProviderPro/ChartDataProviderPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
   "cssComponent": false
 }

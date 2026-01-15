@@ -12,6 +12,8 @@ import {
   type ConvertSignaturesIntoPlugins,
   useChartBrush,
   type UseChartBrushSignature,
+  useChartKeyboardNavigation,
+  type UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -24,13 +26,14 @@ import {
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'heatmap'>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature,
   UseChartProExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export const HEATMAP_PLUGINS = [
@@ -42,4 +45,5 @@ export const HEATMAP_PLUGINS = [
   useChartProExport,
   useChartBrush,
   useChartProZoom,
+  useChartKeyboardNavigation,
 ] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;

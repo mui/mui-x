@@ -8,6 +8,7 @@ export { FunnelChart } from './FunnelChart';
 export const Unstable_FunnelChart = FunnelChart;
 export type { FunnelChartProps, FunnelSeries } from './FunnelChart';
 export * from './FunnelPlot';
+export * from './FocusedFunnelSection';
 export * from './funnel.types';
 export * from './categoryAxis.types';
 export * from './funnelSlots.types';

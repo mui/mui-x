@@ -81,7 +81,8 @@ yargs(hideBin(process.argv))
         })
         .option('release', {
           // #target-branch-reference
-          // to be done when we branch off for a new major (e.g. v9)
+          // Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch
+          // For example, when creating v9 from v8, `master -> v8.x`
           default: 'v8.x',
           describe: 'Ref which we want to release',
           type: 'string',
