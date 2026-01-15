@@ -18,4 +18,6 @@ export type {
   SankeyTooltipProps,
   SankeyTooltipClasses,
   SankeyTooltipContentClasses,
+  SankeyTooltipSlots,
+  SankeyTooltipSlotProps,
 } from './SankeyTooltip';

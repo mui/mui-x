@@ -4,4 +4,6 @@ export type {
   HeatmapTooltipProps,
   HeatmapTooltipClasses,
   HeatmapTooltipContentClasses,
+  HeatmapTooltipSlots,
+  HeatmapTooltipSlotProps,
 } from './HeatmapTooltip.types';

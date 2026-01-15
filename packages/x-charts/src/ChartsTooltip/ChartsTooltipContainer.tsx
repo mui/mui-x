@@ -68,7 +68,7 @@ export interface ChartsTooltipContainerProps<
   /**
    * Override or extend the styles applied to the component.
    */
-  classes?: Partial<ChartsTooltipClasses>;
+  classes?: Partial<ChartsTooltipContainerClasses>;
   /**
    * Determine if the tooltip should be placed on the pointer location or on the node.
    * @default 'pointer'

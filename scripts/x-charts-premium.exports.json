@@ -336,6 +336,8 @@
   { "name": "HeatmapTooltipContentClasses", "kind": "Interface" },
   { "name": "HeatmapTooltipContentProps", "kind": "Interface" },
   { "name": "HeatmapTooltipProps", "kind": "Interface" },
+  { "name": "HeatmapTooltipSlotProps", "kind": "Interface" },
+  { "name": "HeatmapTooltipSlots", "kind": "Interface" },
   { "name": "HeatmapValueType", "kind": "TypeAlias" },
   { "name": "HighlightElementClassKey", "kind": "TypeAlias" },
   { "name": "HighlightItemData", "kind": "TypeAlias" },

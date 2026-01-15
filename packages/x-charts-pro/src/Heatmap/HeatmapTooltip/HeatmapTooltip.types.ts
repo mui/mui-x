@@ -1,7 +1,13 @@
 import {
   type ChartsTooltipContainerProps,
   type ChartsTooltipClasses,
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
 } from '@mui/x-charts/ChartsTooltip';
+
+export interface HeatmapTooltipSlots extends ChartsTooltipSlots {}
+
+export interface HeatmapTooltipSlotProps extends ChartsTooltipSlotProps {}
 
 export interface HeatmapTooltipClasses extends ChartsTooltipClasses {}
 

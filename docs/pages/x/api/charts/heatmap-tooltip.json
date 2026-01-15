@@ -89,6 +89,14 @@
     "import { HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';",
     "import { HeatmapTooltip } from '@mui/x-charts-pro';"
   ],
+  "slots": [
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "axisValueCell",
