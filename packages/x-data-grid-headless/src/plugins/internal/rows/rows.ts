@@ -15,10 +15,6 @@ export interface RowsPluginState {
   rows: RowsState;
 }
 
-export interface RowsPluginApi<TRow = any> {
-  rows: RowsApi<TRow>;
-}
-
 export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
   initialState?: {
     rows?: Partial<RowsState>;
@@ -26,22 +22,22 @@ export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
 }
 
 const createRowsHooks = (store: Store<RowsPluginState>) => ({
-  rows: {
-    useRowIds: () => useStore(store, (state) => state.rows.dataRowIds),
-    useRowIdToModelLookup: () => useStore(store, (state) => state.rows.dataRowIdToModelLookup),
-    useTree: () => useStore(store, (state) => state.rows.tree),
-    useTreeDepths: () => useStore(store, (state) => state.rows.treeDepths),
-    useTotalRowCount: () => useStore(store, (state) => state.rows.totalRowCount),
-    useTotalTopLevelRowCount: () => useStore(store, (state) => state.rows.totalTopLevelRowCount),
-    useLoading: () => useStore(store, (state) => state.rows.loading),
-    useGroupingName: () => useStore(store, (state) => state.rows.groupingName),
-    useRow: (id: GridRowId) =>
-      useStore(store, (state) => state.rows.dataRowIdToModelLookup[id] ?? null),
-    useRowNode: (id: GridRowId) => useStore(store, (state) => state.rows.tree[id] ?? null),
-  },
+  useRowIds: () => useStore(store, (state) => state.rows.dataRowIds),
+  useRowIdToModelLookup: () => useStore(store, (state) => state.rows.dataRowIdToModelLookup),
+  useTree: () => useStore(store, (state) => state.rows.tree),
+  useTreeDepths: () => useStore(store, (state) => state.rows.treeDepths),
+  useTotalRowCount: () => useStore(store, (state) => state.rows.totalRowCount),
+  useTotalTopLevelRowCount: () => useStore(store, (state) => state.rows.totalTopLevelRowCount),
+  useLoading: () => useStore(store, (state) => state.rows.loading),
+  useGroupingName: () => useStore(store, (state) => state.rows.groupingName),
+  useRow: (id: GridRowId) =>
+    useStore(store, (state) => state.rows.dataRowIdToModelLookup[id] ?? null),
+  useRowNode: (id: GridRowId) => useStore(store, (state) => state.rows.tree[id] ?? null)
 });
 
-export type RowsPluginHooks = ReturnType<typeof createRowsHooks>;
+export interface RowsPluginApi<TRow = any> {
+  rows: RowsApi<TRow> & { hooks: ReturnType<typeof createRowsHooks> };
+}
 
 const rowsPlugin = {
   name: 'rows',
@@ -93,9 +89,10 @@ const rowsPlugin = {
       }
     }, [params.rowCount, store]);
 
-    return { rows: rowsApi };
+    const hooks = React.useMemo(() => createRowsHooks(store), [store]);
+
+    return { rows: { ...rowsApi, hooks } };
   },
-  createHooks: createRowsHooks,
-} satisfies Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions, RowsPluginHooks>;
+} satisfies Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
 
 export default rowsPlugin;

@@ -14,10 +14,6 @@ export interface ColumnsPluginState {
   columns: ColumnsState;
 }
 
-export interface ColumnsPluginApi {
-  columns: ColumnsApi;
-}
-
 export interface ColumnsPluginOptions<
   TData = any,
   TColumnMeta extends Record<string, any> = {},
@@ -61,18 +57,18 @@ const selectVisibleColumns = createSelectorMemoized(
 const selectColumn = createSelector(selectLookup, (lookup, field: string) => lookup[field]);
 
 const createColumnsHooks = (store: Store<ColumnsPluginState>) => ({
-  columns: {
-    useOrderedFields: () => useStore(store, selectOrderedFields),
-    useLookup: () => useStore(store, selectLookup),
-    useColumnVisibilityModel: () => useStore(store, selectColumnVisibilityModel),
-    useInitialColumnVisibilityModel: () => useStore(store, selectInitialColumnVisibilityModel),
-    useAllColumns: () => useStore(store, selectAllColumns),
-    useVisibleColumns: () => useStore(store, selectVisibleColumns),
-    useColumn: (field: string) => useStore(store, selectColumn, field),
-  },
+  useOrderedFields: () => useStore(store, selectOrderedFields),
+  useLookup: () => useStore(store, selectLookup),
+  useColumnVisibilityModel: () => useStore(store, selectColumnVisibilityModel),
+  useInitialColumnVisibilityModel: () => useStore(store, selectInitialColumnVisibilityModel),
+  useAllColumns: () => useStore(store, selectAllColumns),
+  useVisibleColumns: () => useStore(store, selectVisibleColumns),
+  useColumn: (field: string) => useStore(store, selectColumn, field),
 });
 
-export type ColumnsPluginHooks = ReturnType<typeof createColumnsHooks>;
+export interface ColumnsPluginApi {
+  columns: ColumnsApi & { hooks: ReturnType<typeof createColumnsHooks> };
+}
 
 const columnsPlugin = {
   name: 'columns',
@@ -115,15 +111,15 @@ const columnsPlugin = {
       }
     }, [params.columnVisibilityModel, columnsApi]);
 
-    return { columns: columnsApi };
+    const hooks = React.useMemo(() => createColumnsHooks(store), [store]);
+
+    return { columns: { ...columnsApi, hooks } };
   },
-  createHooks: createColumnsHooks,
 } satisfies Plugin<
   'columns',
   ColumnsPluginState,
   ColumnsPluginApi,
-  ColumnsPluginOptions,
-  ColumnsPluginHooks
+  ColumnsPluginOptions
 >;
 
 export default columnsPlugin;

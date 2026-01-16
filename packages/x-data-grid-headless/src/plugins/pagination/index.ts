@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { type Store, useStore } from '@base-ui/utils/store';
 import type { Plugin } from '../core/plugin';
 
@@ -23,29 +24,25 @@ interface PaginationState {
   };
 }
 
+const createPaginationHooks = (store: Store<PaginationState>) => ({
+  usePaginationModel: () => useStore(store, (state) => state.pagination.paginationModel),
+});
+
 interface PaginationApi {
   pagination: {
     setPage: (page: number) => void;
     setPageSize: (pageSize: number) => void;
     setModel: (model: PaginationModel) => void;
+    hooks: ReturnType<typeof createPaginationHooks>;
   };
 }
-
-const createPaginationHooks = (store: Store<PaginationState>) => ({
-  pagination: {
-    usePaginationModel: () => useStore(store, (state) => state.pagination.paginationModel),
-  },
-});
-
-export type PaginationPluginHooks = ReturnType<typeof createPaginationHooks>;
 
 const paginationPlugin: Plugin<
   'pagination',
   PaginationState,
   PaginationApi,
   PaginationOptions,
-  {}, // TColumnMeta - no column metadata
-  PaginationPluginHooks
+  {} // TColumnMeta - no column metadata
 > = {
   name: 'pagination',
   initialize: (params) => ({
@@ -57,18 +54,20 @@ const paginationPlugin: Plugin<
         },
     },
   }),
-  use: (_store, _params, _api) => {
+  use: (store, _params, _api) => {
     const setModel = (_model: PaginationModel) => {};
+
+    const hooks = React.useMemo(() => createPaginationHooks(store), [store]);
 
     return {
       pagination: {
-        setPage: (_page: number) => {},
-        setPageSize: (_pageSize: number) => {},
+        setPage: (_page) => {},
+        setPageSize: (_pageSize) => {},
         setModel,
+        hooks,
       },
     };
   },
-  createHooks: createPaginationHooks,
 };
 
 export default paginationPlugin;

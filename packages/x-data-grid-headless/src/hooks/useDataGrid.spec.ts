@@ -62,16 +62,16 @@ export function Example() {
   grid1.state.rows.tree;
 
   // Hooks - Internal plugins (rows, columns)
-  grid1.hooks.rows.useRowIds;
-  grid1.hooks.rows.useTree;
-  grid1.hooks.rows.useLoading;
-  grid1.hooks.columns.useOrderedFields;
-  grid1.hooks.columns.useVisibleColumns;
-  grid1.hooks.columns.useAllColumns;
+  grid1.api.rows.hooks.useRowIds;
+  grid1.api.rows.hooks.useTree;
+  grid1.api.rows.hooks.useLoading;
+  grid1.api.columns.hooks.useOrderedFields;
+  grid1.api.columns.hooks.useVisibleColumns;
+  grid1.api.columns.hooks.useAllColumns;
 
-  grid1.hooks.sorting.useSortModel;
+  grid1.api.sorting.hooks.useSortModel;
   // @ts-expect-error pagination hooks do not exist
-  grid1.hooks.pagination.usePaginationModel;
+  grid1.api.pagination.hooks.usePaginationModel;
 
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
@@ -101,15 +101,15 @@ export function Example() {
   grid2.api.pagination.setPage(1);
 
   // Hooks - Internal plugins (rows, columns)
-  grid2.hooks.rows.useRowIds;
-  grid2.hooks.rows.useTree;
-  grid2.hooks.rows.useRowIdToModelLookup;
-  grid2.hooks.columns.useOrderedFields;
-  grid2.hooks.columns.useVisibleColumns;
-  grid2.hooks.columns.useLookup;
+  grid2.api.rows.hooks.useRowIds;
+  grid2.api.rows.hooks.useTree;
+  grid2.api.rows.hooks.useRowIdToModelLookup;
+  grid2.api.columns.hooks.useOrderedFields;
+  grid2.api.columns.hooks.useVisibleColumns;
+  grid2.api.columns.hooks.useLookup;
 
-  grid2.hooks.sorting.useSortModel;
-  grid2.hooks.pagination.usePaginationModel;
+  grid2.api.sorting.hooks.useSortModel;
+  grid2.api.pagination.hooks.usePaginationModel;
 
   // Extract grid options type
   const plugins = [sortingPlugin, paginationPlugin] as const;
@@ -233,7 +233,6 @@ type PluginDependsOnPluginWithColumnMeta = Plugin<
   { pluginDependsOnPluginWithColumnMeta: { getDerived: () => string } },
   { enable?: boolean },
   { moreMeta?: boolean }, // column metadata
-  {}, // hooks
   {}, // required api
   readonly [typeof pluginWithColumnMeta] // depends on pluginWithColumnMeta
 >;

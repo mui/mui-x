@@ -2,13 +2,11 @@ import rowsPlugin, {
   type RowsPluginApi,
   type RowsPluginState,
   type RowsPluginOptions,
-  type RowsPluginHooks,
 } from './rows/rows';
 import columnsPlugin, {
   type ColumnsPluginApi,
   type ColumnsPluginState,
   type ColumnsPluginOptions,
-  type ColumnsPluginHooks,
 } from './columns/columns';
 
 export const internalPlugins = [rowsPlugin, columnsPlugin] as const;
@@ -21,5 +19,3 @@ export type InternalPluginsOptions<
   TRow = any,
   TColumnMeta extends Record<string, any> = {},
 > = RowsPluginOptions<TRow> & ColumnsPluginOptions<TRow, TColumnMeta>;
-
-export type InternalPluginsHooks = RowsPluginHooks & ColumnsPluginHooks;

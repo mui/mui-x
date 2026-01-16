@@ -25,9 +25,9 @@ export function TestDataGrid<TRow extends object>(props: {
     }
   }, [grid, props.apiRef]);
 
-  const rowIds = grid.hooks.rows.useRowIds();
-  const rowsData = grid.hooks.rows.useRowIdToModelLookup();
-  const visibleColumns = grid.hooks.columns.useVisibleColumns();
+  const rowIds = grid.api.rows.hooks.useRowIds();
+  const rowsData = grid.api.rows.hooks.useRowIdToModelLookup();
+  const visibleColumns = grid.api.columns.hooks.useVisibleColumns();
 
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>

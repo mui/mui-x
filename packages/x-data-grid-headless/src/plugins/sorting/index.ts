@@ -1,4 +1,5 @@
 import { type Store, useStore } from '@base-ui/utils/store';
+import * as React from 'react';
 import type { Plugin } from '../core/plugin';
 
 export type SortModel = Array<{
@@ -26,22 +27,19 @@ interface SortingState {
   };
 }
 
+const createSortingHooks = (store: Store<SortingState>) => ({
+  useSortModel: () => useStore(store, (state) => state.sorting.sortModel),
+});
+
 // API that will be merged into DataGridInstance.api
 interface SortingApi {
   sorting: {
     setSortModel: (model: SortModel) => void;
     getSortModel: () => SortModel;
     sortColumn: (field: string, direction: 'asc' | 'desc') => void;
+    hooks: ReturnType<typeof createSortingHooks>;
   };
 }
-
-const createSortingHooks = (store: Store<SortingState>) => ({
-  sorting: {
-    useSortModel: () => useStore(store, (state) => state.sorting.sortModel),
-  },
-});
-
-export type SortingPluginHooks = ReturnType<typeof createSortingHooks>;
 
 // Plugin implementation
 interface SortingColumnMeta {
@@ -53,8 +51,7 @@ const sortingPlugin: Plugin<
   SortingState,
   SortingApi,
   SortingOptions,
-  SortingColumnMeta,
-  SortingPluginHooks
+  SortingColumnMeta
 > = {
   name: 'sorting',
   initialize: (params) => ({
@@ -66,15 +63,17 @@ const sortingPlugin: Plugin<
     const setSortModel = (_model: SortModel) => {};
     const sortColumn = (_field: string, _direction: 'asc' | 'desc') => {};
 
+    const hooks = React.useMemo(() => createSortingHooks(store), [store]);
+
     return {
       sorting: {
         setSortModel,
         getSortModel: () => store.state.sorting.sortModel,
         sortColumn,
+        hooks,
       },
     };
   },
-  createHooks: createSortingHooks,
 };
 
 export default sortingPlugin;

@@ -4,16 +4,16 @@ import { InternalPluginsApi, InternalPluginsOptions, InternalPluginsState } from
 
 // Helper to extract params (options) from a plugin
 export type ExtractPluginParams<T> =
-  T extends Plugin<any, any, any, infer TParams, any, any, any, any> ? TParams : never;
+  T extends Plugin<any, any, any, infer TParams, any, any, any> ? TParams : never;
 
 // Helper to extract state from a plugin
 export type ExtractPluginState<T> =
-  T extends Plugin<any, infer TState, any, any, any, any, any, any> ? TState : never;
+  T extends Plugin<any, infer TState, any, any, any, any, any> ? TState : never;
 
 // Extract TDeps from Plugin type parameter (8th param)
 // Order: TName, TState, TApi, TParams, TColumnMeta, THooks, TRequiredApi, TDeps
 type ExtractPluginDeps<T> =
-  T extends Plugin<any, any, any, any, any, any, any, infer TDeps> ? TDeps : readonly [];
+  T extends Plugin<any, any, any, any, any, any, infer TDeps> ? TDeps : readonly [];
 
 // Check if TDeps is a concrete tuple (not just readonly AnyPlugin[])
 type HasConcreteDeps<TDeps> = TDeps extends readonly []
@@ -42,27 +42,26 @@ type SafeUnionToIntersection<T> = [T] extends [never] ? {} : UnionToIntersection
 
 // Union all plugin options (params) including dependencies
 export type PluginsOptions<
-  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
+  TPlugins extends readonly AnyPlugin[],
   TRow = any,
   TColumnMeta extends Record<string, any> = {},
 > = SafeUnionToIntersection<ExtractPluginParams<FlattenPluginsWithDeps<TPlugins>>> &
   InternalPluginsOptions<TRow, TColumnMeta>;
 
 // Union all plugin states including dependencies
-export type PluginsState<
-  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
-> = SafeUnionToIntersection<ExtractPluginState<FlattenPluginsWithDeps<TPlugins>>> &
+export type PluginsState<TPlugins extends readonly AnyPlugin[]> = SafeUnionToIntersection<
+  ExtractPluginState<FlattenPluginsWithDeps<TPlugins>>
+> &
   InternalPluginsState;
 
 // Union all plugin APIs including dependencies
-export type PluginsApi<
-  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
-  TRow = any,
-> = SafeUnionToIntersection<ExtractPluginApi<FlattenPluginsWithDeps<TPlugins>>> &
+export type PluginsApi<TPlugins extends readonly AnyPlugin[], TRow = any> = SafeUnionToIntersection<
+  ExtractPluginApi<FlattenPluginsWithDeps<TPlugins>>
+> &
   InternalPluginsApi<TRow>;
 
 // Union all plugin column metadata including dependencies
 // Creates a type like { sorting: { sortable?: boolean }, grouping: { groupable?: boolean } }
-export type PluginsColumnMeta<
-  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
-> = SafeUnionToIntersection<ExtractPluginColumnMeta<FlattenPluginsWithDeps<TPlugins>>>;
+export type PluginsColumnMeta<TPlugins extends readonly AnyPlugin[]> = SafeUnionToIntersection<
+  ExtractPluginColumnMeta<FlattenPluginsWithDeps<TPlugins>>
+>;
