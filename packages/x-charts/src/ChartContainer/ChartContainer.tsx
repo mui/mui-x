@@ -2,11 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, type ChartDataProviderProps } from '../ChartDataProvider';
+import {
+  ChartDataProvider,
+  type ChartDataProviderProps,
+  type ChartDataProviderSlotProps,
+  type ChartDataProviderSlots,
+} from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+
+export interface ChartContainerSlots extends ChartDataProviderSlots {}
+
+export interface ChartContainerSlotProps extends ChartDataProviderSlotProps {}
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -65,6 +74,11 @@ ChartContainer.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * Configuration for the brush interaction.
    */
@@ -160,6 +174,38 @@ ChartContainer.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.shape({
+        toLocaleString: PropTypes.func.isRequired,
+        toString: PropTypes.func.isRequired,
+        valueOf: PropTypes.func.isRequired,
+      }),
+      type: PropTypes.object.isRequired,
+    }),
+  ),
   /**
    * Localized text for chart components.
    */

@@ -220,6 +220,11 @@ LineChart.propTypes = {
     current: PropTypes.object,
   }),
   /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
+  /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'line' }
@@ -330,6 +335,34 @@ LineChart.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['line']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false

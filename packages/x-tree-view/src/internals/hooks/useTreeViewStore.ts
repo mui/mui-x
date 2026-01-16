@@ -1,3 +1,4 @@
+'use client';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useOnMount } from '@base-ui/utils/useOnMount';

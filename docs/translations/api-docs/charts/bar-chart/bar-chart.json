@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "axisHighlight": {
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
@@ -30,6 +33,9 @@
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "layout": { "description": "The direction of the bar elements." },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },

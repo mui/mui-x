@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
         "name": "shape",
@@ -51,6 +52,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }&gt;"
+      }
+    },
     "initialZoom": {
       "type": {
         "name": "arrayOf",

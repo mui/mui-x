@@ -25,6 +25,10 @@ import { useChartDataProviderPremiumProps } from './useChartDataProviderPremiumP
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-premium';
 
+export interface ChartDataProviderPremiumSlots extends ChartsSlotsPro {}
+
+export interface ChartDataProviderPremiumSlotProps extends ChartsSlotPropsPro {}
+
 export type ChartDataProviderPremiumProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
@@ -33,11 +37,11 @@ export type ChartDataProviderPremiumProps<
     /**
      * Slots to customize charts' components.
      */
-    slots?: Partial<ChartsSlotsPro>;
+    slots?: Partial<ChartDataProviderPremiumSlots>;
     /**
      * The props for the slots.
      */
-    slotProps?: Partial<ChartsSlotPropsPro>;
+    slotProps?: Partial<ChartDataProviderPremiumSlotProps>;
   };
 
 export const defaultSeriesConfigPremium: ChartSeriesConfig<

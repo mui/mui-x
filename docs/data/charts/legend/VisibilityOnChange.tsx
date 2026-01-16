@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import type { VisibilityIdentifier } from '@mui/x-charts/plugins';
 
 const series = [
-  { data: [20, 30, 25, 40, 30], label: 'Series A' },
-  { data: [15, 25, 20, 35, 20], label: 'Series B' },
-  { data: [10, 20, 15, 30, 25], label: 'Series C' },
+  { id: 'series-a', data: [20, 30, 25, 40, 30], label: 'Series A' },
+  { id: 'series-b', data: [15, 25, 20, 35, 20], label: 'Series B' },
+  { id: 'series-c', data: [10, 20, 15, 30, 25], label: 'Series C' },
 ];
 
 export default function VisibilityOnChange() {
@@ -25,6 +25,7 @@ export default function VisibilityOnChange() {
             toggleVisibilityOnClick: true,
           },
         }}
+        initialHiddenItems={[{ type: 'line', seriesId: 'series-a' }]}
         onHiddenItemsChange={(newHiddenItems) => setHiddenItems(newHiddenItems)}
       />
       <Typography variant="body2" textAlign="center">

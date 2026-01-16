@@ -16,7 +16,7 @@ export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
-export { useBarPlotData } from '../BarChart/useBarPlotData';
+export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';

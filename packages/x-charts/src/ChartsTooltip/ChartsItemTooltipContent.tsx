@@ -13,6 +13,8 @@ import {
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
 
+export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
+
 export interface ChartsItemTooltipContentProps {
   /**
    * Override or extend the styles applied to the component.
