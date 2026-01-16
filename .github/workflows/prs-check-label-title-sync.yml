@@ -43,7 +43,7 @@ jobs:
             }
 
             const missingLabels = expectedLabelsFromTitle.filter(
-              (label) => !existingLabels.includes(label)
+              (label) => !existingLabels.includes(label.toLowerCase())
             );
 
             if (
