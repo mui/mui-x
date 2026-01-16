@@ -1,5 +1,5 @@
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { useDrawingArea, useYAxisTicks } from '@mui/x-charts/hooks';
+import { useDrawingArea, useYAxes, useYAxisTicks } from '@mui/x-charts/hooks';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { ChartsYAxisProps } from '@mui/x-charts/models';
@@ -33,8 +33,10 @@ export default function CustomAxisTicks() {
 
 function YAxis(props: ChartsYAxisProps) {
   const { axisId } = props;
+  const { yAxisIds } = useYAxes();
   const drawingArea = useDrawingArea();
-  const ticks = useYAxisTicks(axisId);
+
+  const ticks = useYAxisTicks(axisId ?? yAxisIds[0]);
   const theme = useTheme();
 
   return (

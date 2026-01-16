@@ -74,12 +74,12 @@ export interface ChartsAxisSlots {
    */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
   /**
-   * Custom component for the x-axis. Only used if axis prop is 'x'.
+   * Custom component for the x-axis.
    * @default ChartsXAxis
    */
   xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
   /**
-   * Custom component for the y-axis. Only used if axis prop is 'y'.
+   * Custom component for the y-axis.
    * @default ChartsYAxis
    */
   yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
@@ -99,7 +99,7 @@ export interface ChartsAxisProps extends TickParams {
    * The id of the axis to render.
    * If undefined, it will be the first defined axis.
    */
-  axisId: AxisId;
+  axisId?: AxisId;
   /**
    * If true, the axis line is disabled.
    * @default false
