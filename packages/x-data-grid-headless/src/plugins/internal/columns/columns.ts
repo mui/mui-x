@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type Store, useStore, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { type Plugin } from '../../core/plugin';
+import { type Plugin, createPlugin } from '../../core/plugin';
 import {
   type ColumnsState,
   type ColumnsApi,
@@ -70,7 +70,9 @@ export interface ColumnsPluginApi {
   columns: ColumnsApi & { hooks: ReturnType<typeof createColumnsHooks> };
 }
 
-const columnsPlugin = {
+type ColumnsPlugin = Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
+
+const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
   initialize: (params) => {
     // Extract initialState.columns if it exists (it might be spread at top level)
@@ -115,11 +117,6 @@ const columnsPlugin = {
 
     return { columns: { ...columnsApi, hooks } };
   },
-} satisfies Plugin<
-  'columns',
-  ColumnsPluginState,
-  ColumnsPluginApi,
-  ColumnsPluginOptions
->;
+});
 
 export default columnsPlugin;

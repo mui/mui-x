@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { type Store, useStore } from '@base-ui/utils/store';
-import type { Plugin } from '../core/plugin';
+import { type Plugin, createPlugin } from '../core/plugin';
 
 export interface PaginationModel {
   page: number;
@@ -37,13 +37,15 @@ interface PaginationApi {
   };
 }
 
-const paginationPlugin: Plugin<
+type PaginationPlugin = Plugin<
   'pagination',
   PaginationState,
   PaginationApi,
   PaginationOptions,
   {} // TColumnMeta - no column metadata
-> = {
+>;
+
+const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
   initialize: (params) => ({
     pagination: {
@@ -68,6 +70,6 @@ const paginationPlugin: Plugin<
       },
     };
   },
-};
+});
 
 export default paginationPlugin;

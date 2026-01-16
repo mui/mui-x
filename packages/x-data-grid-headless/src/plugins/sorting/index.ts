@@ -1,6 +1,6 @@
 import { type Store, useStore } from '@base-ui/utils/store';
 import * as React from 'react';
-import type { Plugin } from '../core/plugin';
+import { type Plugin, createPlugin } from '../core/plugin';
 
 export type SortModel = Array<{
   field: string;
@@ -46,13 +46,9 @@ interface SortingColumnMeta {
   sortable?: boolean;
 }
 
-const sortingPlugin: Plugin<
-  'sorting',
-  SortingState,
-  SortingApi,
-  SortingOptions,
-  SortingColumnMeta
-> = {
+type SortingPlugin = Plugin<'sorting', SortingState, SortingApi, SortingOptions, SortingColumnMeta>;
+
+const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
   initialize: (params) => ({
     sorting: {
@@ -74,6 +70,6 @@ const sortingPlugin: Plugin<
       },
     };
   },
-};
+});
 
 export default sortingPlugin;

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type Store, useStore } from '@base-ui/utils/store';
-import { type Plugin } from '../../core/plugin';
+import { type Plugin, createPlugin } from '../../core/plugin';
 import {
   type RowsState,
   type RowsApi,
@@ -32,14 +32,16 @@ const createRowsHooks = (store: Store<RowsPluginState>) => ({
   useGroupingName: () => useStore(store, (state) => state.rows.groupingName),
   useRow: (id: GridRowId) =>
     useStore(store, (state) => state.rows.dataRowIdToModelLookup[id] ?? null),
-  useRowNode: (id: GridRowId) => useStore(store, (state) => state.rows.tree[id] ?? null)
+  useRowNode: (id: GridRowId) => useStore(store, (state) => state.rows.tree[id] ?? null),
 });
 
 export interface RowsPluginApi<TRow = any> {
   rows: RowsApi<TRow> & { hooks: ReturnType<typeof createRowsHooks> };
 }
 
-const rowsPlugin = {
+type RowsPlugin = Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
+
+const rowsPlugin = createPlugin<RowsPlugin>()({
   name: 'rows',
   initialize: (params) => ({
     rows: createRowsState(params.rows, params.getRowId, params.loading ?? false, params.rowCount),
@@ -93,6 +95,6 @@ const rowsPlugin = {
 
     return { rows: { ...rowsApi, hooks } };
   },
-} satisfies Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
+});
 
 export default rowsPlugin;
