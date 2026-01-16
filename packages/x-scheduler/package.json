@@ -58,9 +58,9 @@
     "@babel/runtime": "catalog:",
     "@base-ui/react": "^1.0.0",
     "@base-ui/utils": "^0.2.3",
-    "@mui/x-scheduler-headless": "workspace:*",
     "@floating-ui/react": "^0.27.16",
     "@mui/x-internals": "workspace:*",
+    "@mui/x-scheduler-headless": "workspace:*",
     "clsx": "catalog:",
     "lucide-react": "^0.562.0"
   },
@@ -85,6 +85,7 @@
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
