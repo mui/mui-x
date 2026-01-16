@@ -76,7 +76,10 @@ It does not modify the event data or change when an event occurs.
 
 ## Creating an event
 
-When creating events from the UI, the entered date/time is interpreted in the current `displayTimezone`, but the event is created with timezone: "default".
+When creating events from the UI, the entered date/time is interpreted in the current `displayTimezone`.
+The created event does not include an explicit timezone, so it defaults to "default" when processed.
+
+We may extend event creation in a future release to allow setting the event's original timezone explicitly (for example, through the UI), while still rendering all events in the selected `displayTimezone`.
 
 ## Recurring events and timezones
 
