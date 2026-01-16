@@ -48,7 +48,7 @@ export interface SchedulerTranslations {
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;
 
-  // EventPopover
+  // EventDraggableDialog
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;

@@ -12,7 +12,7 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import EventPopoverHeader from './EventPopoverHeader';
+import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
@@ -28,7 +28,7 @@ const ReadonlyContentRoot = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const EventPopoverActions = styled('div', {
+const EventDraggableDialogActions = styled('div', {
   name: 'MuiEventDraggableDialog',
   slot: 'Actions',
 })(({ theme }) => ({
@@ -37,7 +37,7 @@ const EventPopoverActions = styled('div', {
   padding: theme.spacing(2),
 }));
 
-const EventPopoverDateTimeContainer = styled('div', {
+const EventDraggableDialogDateTimeContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
   slot: 'DateTimeContainer',
 })(({ theme }) => ({
@@ -46,7 +46,7 @@ const EventPopoverDateTimeContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventPopoverTitle = styled('p', {
+const EventDraggableDialogTitle = styled('p', {
   name: 'MuiEventDraggableDialog',
   slot: 'Title',
 })(({ theme }) => ({
@@ -56,7 +56,7 @@ const EventPopoverTitle = styled('p', {
   color: 'var(--event-color-12)',
 }));
 
-const EventPopoverResourceContainer = styled('div', {
+const EventDraggableDialogResourceContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceContainer',
 })(({ theme }) => ({
@@ -65,7 +65,7 @@ const EventPopoverResourceContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventPopoverResourceLegendContainer = styled('div', {
+const EventDraggableDialogResourceLegendContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendContainer',
 })(({ theme }) => ({
@@ -86,7 +86,7 @@ const ResourceLegendColorDot = styled('span', {
   ...schedulerPaletteStyles,
 });
 
-const EventPopoverResourceTitle = styled('p', {
+const EventDraggableDialogResourceTitle = styled('p', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceTitle',
 })(({ theme }) => ({
@@ -136,11 +136,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <React.Fragment>
-      <EventPopoverHeader>
-        <EventPopoverTitle>{occurrence.title}</EventPopoverTitle>
+      <EventDraggableDialogHeader>
+        <EventDraggableDialogTitle>{occurrence.title}</EventDraggableDialogTitle>
 
-        <EventPopoverResourceContainer>
-          <EventPopoverResourceLegendContainer>
+        <EventDraggableDialogResourceContainer>
+          <EventDraggableDialogResourceLegendContainer>
             {resource?.eventColor && resource.eventColor !== color && (
               <ResourceLegendColorDot
                 className="ResourceLegendColor"
@@ -149,14 +149,14 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
 
             <ResourceLegendColorDot className="ResourceLegendColor" data-palette={color} />
-          </EventPopoverResourceLegendContainer>
-          <EventPopoverResourceTitle>
+          </EventDraggableDialogResourceLegendContainer>
+          <EventDraggableDialogResourceTitle>
             {resource?.title || translations.noResourceAriaLabel}
-          </EventPopoverResourceTitle>
-        </EventPopoverResourceContainer>
-      </EventPopoverHeader>
+          </EventDraggableDialogResourceTitle>
+        </EventDraggableDialogResourceContainer>
+      </EventDraggableDialogHeader>
       <ReadonlyContentRoot>
-        <EventPopoverDateTimeContainer>
+        <EventDraggableDialogDateTimeContainer>
           <Calendar size={16} strokeWidth={1.5} />
           <Typography variant="body2" component="p" noWrap>
             <time
@@ -182,7 +182,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               </time>
             )}
           </Typography>
-        </EventPopoverDateTimeContainer>
+        </EventDraggableDialogDateTimeContainer>
         <Typography variant="body2" color="text.secondary">
           {recurrenceLabel}
         </Typography>
@@ -190,11 +190,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
-      <EventPopoverActions>
+      <EventDraggableDialogActions>
         <Button variant="contained" type="button" onClick={onClose}>
           {translations.closeButtonLabel}
         </Button>
-      </EventPopoverActions>
+      </EventDraggableDialogActions>
     </React.Fragment>
   );
 }

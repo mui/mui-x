@@ -28,7 +28,7 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
-import EventPopoverHeader from './EventPopoverHeader';
+import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
@@ -226,7 +226,7 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent>
       <form onSubmit={handleSubmit}>
-        <EventPopoverHeader>
+        <EventDraggableDialogHeader>
           <TextField
             name="title"
             defaultValue={occurrence.title}
@@ -249,7 +249,7 @@ export function FormContent(props: FormContentProps) {
             onColorChange={handleColorChange}
             color={controlled.color}
           />
-        </EventPopoverHeader>
+        </EventDraggableDialogHeader>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={tabValue} onChange={handleTabChange}>
             <Tab label={translations.generalTabLabel} value="general" />
