@@ -114,7 +114,7 @@ export interface HeatmapProps
   tooltip?: ChartsTooltipProps;
   /**
    * If `true`, the legend is not rendered.
-   * @default true
+   * @default false
    */
   hideLegend?: boolean;
   /**
@@ -143,7 +143,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
-  const { sx, slots, slotProps, loading, hideLegend = true, showToolbar = false } = props;
+  const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
 
   const {
     chartDataProviderProProps,
@@ -231,7 +231,7 @@ Heatmap.propTypes = {
   height: PropTypes.number,
   /**
    * If `true`, the legend is not rendered.
-   * @default true
+   * @default false
    */
   hideLegend: PropTypes.bool,
   /**
