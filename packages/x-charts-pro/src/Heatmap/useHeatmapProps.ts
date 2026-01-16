@@ -5,9 +5,9 @@ import * as React from 'react';
 import type { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import {
+  ContinuousColorLegend,
   type ChartsLegendProps,
   type ChartsLegendSlotExtension,
-  ContinuousColorLegend,
 } from '@mui/x-charts/ChartsLegend';
 import type { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
@@ -119,10 +119,12 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     ...s,
   }));
 
+  const legendDirection = slotProps?.legend?.direction ?? 'vertical';
+  const legendPosition = slotProps?.legend?.position;
   const chartsWrapperProps: Omit<ChartsWrapperProps, 'children'> = {
     sx,
-    legendPosition: props.slotProps?.legend?.position,
-    legendDirection: props.slotProps?.legend?.direction,
+    legendPosition,
+    legendDirection,
     hideLegend,
   };
 
@@ -174,7 +176,8 @@ export function useHeatmapProps(props: UseHeatmapProps) {
   const legendProps: ChartsLegendProps | ChartsLegendSlotExtension = {
     slots: { ...slots, legend: slots?.legend ?? ContinuousColorLegend },
     slotProps: { legend: { labelPosition: 'extremes', ...slotProps?.legend } },
-    sx: slotProps?.legend?.direction === 'vertical' ? { height: 150 } : { width: '50%' },
+    direction: legendDirection,
+    sx: legendDirection === 'vertical' ? { height: 150 } : { width: '50%' },
   };
 
   return {
