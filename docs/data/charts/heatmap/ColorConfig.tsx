@@ -1,6 +1,7 @@
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { HeatmapValueType } from '@mui/x-charts-pro/models';
+import Box from '@mui/material/Box';
 
 const dataset = [
   {
@@ -103,22 +104,23 @@ const yData = dataset.flatMap(({ month }) => month);
 
 export default function ColorConfig() {
   return (
-    <Heatmap
-      height={400}
-      width={600}
-      xAxis={[{ data: xData }]}
-      yAxis={[{ data: yData, width: 80 }]}
-      series={[{ data }]}
-      zAxis={[
-        {
-          min: 20,
-          max: 300,
-          colorMap: {
-            type: 'continuous',
-            color: interpolateBlues,
+    <Box sx={{ width: '100%', maxWidth: 600 }}>
+      <Heatmap
+        height={400}
+        xAxis={[{ data: xData }]}
+        yAxis={[{ data: yData, width: 80 }]}
+        series={[{ data }]}
+        zAxis={[
+          {
+            min: 20,
+            max: 300,
+            colorMap: {
+              type: 'continuous',
+              color: interpolateBlues,
+            },
           },
-        },
-      ]}
-    />
+        ]}
+      />
+    </Box>
   );
 }
