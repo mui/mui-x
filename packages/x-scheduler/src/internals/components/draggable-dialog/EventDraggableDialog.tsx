@@ -104,7 +104,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   props: EventDraggableDialogProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { style, container, anchorRef, occurrence, onClose, open, ...other } = props;
+  const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
 
