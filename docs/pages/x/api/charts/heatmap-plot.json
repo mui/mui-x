@@ -1,5 +1,6 @@
 {
   "props": {
+    "borderRadius": { "type": { "name": "number" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },

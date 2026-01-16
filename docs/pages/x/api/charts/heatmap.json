@@ -18,6 +18,7 @@
       },
       "required": true
     },
+    "borderRadius": { "type": { "name": "number" } },
     "brushConfig": {
       "type": {
         "name": "shape",
