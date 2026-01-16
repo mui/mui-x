@@ -1,8 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
 import * as React from 'react';
-import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import { HeatmapPremium } from '@mui/x-charts-premium/HeatmapPremium';
 
 function App() {
   // prettier-ignore

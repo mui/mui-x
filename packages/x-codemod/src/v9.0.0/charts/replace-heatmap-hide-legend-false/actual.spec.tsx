@@ -1,6 +1,4 @@
 // @ts-nocheck
-import { Heatmap } from '@mui/x-charts-pro/Heatmap';
-import { HeatmapPremium } from '@mui/x-charts-premium/HeatmapPremium';
 
 <div>
   <Heatmap series={[{}]} hideLegend={true} />
