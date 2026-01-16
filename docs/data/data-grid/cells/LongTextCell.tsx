@@ -22,11 +22,14 @@ function ExpandableCell(params: GridRenderCellParams<any, string>) {
   const apiRef = useGridApiContext();
 
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('scrollPositionChange', () => {
-      setPopupOpen(false);
-      setHovered(false);
+    return apiRef.current.subscribeEvent('renderedRowsIntervalChange', (context) => {
+      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
+      if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
+        setPopupOpen(false);
+        setHovered(false);
+      }
     });
-  }, [apiRef]);
+  }, [apiRef, id]);
 
   const handleIconClick = () => {
     setPopupOpen(true);
