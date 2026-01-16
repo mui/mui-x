@@ -313,6 +313,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       });
 
       scrollTimeout.start(1000, triggerUpdateRenderContext);
+    } else {
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
     }
 
     return nextRenderContext;
