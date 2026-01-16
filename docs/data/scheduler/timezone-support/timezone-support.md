@@ -74,6 +74,10 @@ Scheduler renders all events in the timezone defined by the `displayTimezone` pr
 Changing `displayTimezone` only affects how event dates are displayed in the UI.
 It does not modify the event data or change when an event occurs.
 
+## Creating an event
+
+When creating events from the UI, the entered date/time is interpreted in the current `displayTimezone`, but the event is created with timezone: "default".
+
 ## Recurring events and timezones
 
 While single events are updated using pure instants, recurring events define
