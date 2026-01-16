@@ -39,7 +39,14 @@ const createPaginationHooks = (store: Store<PaginationState>) => ({
 
 export type PaginationPluginHooks = ReturnType<typeof createPaginationHooks>;
 
-const paginationPlugin = {
+const paginationPlugin: Plugin<
+  'pagination',
+  PaginationState,
+  PaginationApi,
+  PaginationOptions,
+  {}, // TColumnMeta - no column metadata
+  PaginationPluginHooks
+> = {
   name: 'pagination',
   initialize: (params) => ({
     pagination: {
@@ -62,12 +69,6 @@ const paginationPlugin = {
     };
   },
   createHooks: createPaginationHooks,
-} satisfies Plugin<
-  'pagination',
-  PaginationState,
-  PaginationApi,
-  PaginationOptions,
-  PaginationPluginHooks
->;
+};
 
 export default paginationPlugin;

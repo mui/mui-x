@@ -3,7 +3,12 @@ import type { UnionToIntersection } from 'type-fest';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store } from '@base-ui/utils/store';
 import { AnyPlugin, BaseApi, Plugin } from '../plugins/core/plugin';
-import { PluginsApi, PluginsOptions, PluginsState } from '../plugins/core/helpers';
+import {
+  PluginsApi,
+  PluginsColumnMeta,
+  PluginsOptions,
+  PluginsState,
+} from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
 import {
   internalPlugins,
@@ -13,24 +18,24 @@ import {
 } from '../plugins/internal';
 
 type UseDataGridOptions<
-  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
   TRow = any,
-> = PluginsOptions<TPlugins, TRow> & {
+> = PluginsOptions<TPlugins, TRow, PluginsColumnMeta<TPlugins>> & {
   plugins: TPlugins;
   initialState?: Partial<PluginsState<TPlugins>>;
 };
 
-type DataGridState<TPlugins extends readonly Plugin<any, any, any, any, any>[]> =
+type DataGridState<TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[]> =
   PluginsState<TPlugins>;
 
 type DataGridApi<
-  TPlugins extends readonly Plugin<any, any, any, any, any>[],
+  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
   TRow = any,
 > = PluginsApi<TPlugins, TRow>;
 
 type ExtractPluginHooks<T> = T extends { createHooks?: (...args: any[]) => infer H } ? H : {};
 
-type PluginsHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>[]> =
+type PluginsHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[]> =
   UnionToIntersection<
     {
       [K in keyof TPlugins]: ExtractPluginHooks<TPlugins[K]>;
@@ -38,11 +43,11 @@ type PluginsHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>
   > &
     InternalPluginsHooks;
 
-type DataGridHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any>[]> =
+type DataGridHooks<TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[]> =
   PluginsHooks<TPlugins>;
 
 interface DataGridInstance<
-  TPlugins extends readonly Plugin<any, any, any, any, any, any>[],
+  TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
   TRow = any,
 > {
   options: UseDataGridOptions<TPlugins, TRow>;
@@ -53,7 +58,7 @@ interface DataGridInstance<
 }
 
 export const useDataGrid = <
-  const TPlugins extends readonly Plugin<any, any, any, any, any, any>[],
+  const TPlugins extends readonly Plugin<any, any, any, any, any, any, any, any>[],
   TRow extends object = any,
 >(
   options: UseDataGridOptions<TPlugins, TRow>,

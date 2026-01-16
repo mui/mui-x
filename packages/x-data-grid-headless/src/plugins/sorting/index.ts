@@ -44,7 +44,18 @@ const createSortingHooks = (store: Store<SortingState>) => ({
 export type SortingPluginHooks = ReturnType<typeof createSortingHooks>;
 
 // Plugin implementation
-const sortingPlugin = {
+interface SortingColumnMeta {
+  sortable?: boolean;
+}
+
+const sortingPlugin: Plugin<
+  'sorting',
+  SortingState,
+  SortingApi,
+  SortingOptions,
+  SortingColumnMeta,
+  SortingPluginHooks
+> = {
   name: 'sorting',
   initialize: (params) => ({
     sorting: {
@@ -64,6 +75,6 @@ const sortingPlugin = {
     };
   },
   createHooks: createSortingHooks,
-} satisfies Plugin<'sorting', SortingState, SortingApi, SortingOptions, SortingPluginHooks>;
+};
 
 export default sortingPlugin;

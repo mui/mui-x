@@ -140,8 +140,182 @@ type Expect<T extends true> = T;
 type Equal<X, Y> =
   (<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2 ? true : false;
 
-// Test plugins with dependencies
+// Plugin Column Metadata Extension
+// Test that column definition is typed correctly based on plugins used
+export function ColumnMetadataTypingExample() {
+  const rows: User[] = [];
 
+  // Without any plugins - columns should not have plugin-specific metadata
+  const grid1 = useDataGrid({
+    rows,
+    columns: [
+      {
+        id: 'name',
+        field: 'name',
+        // @ts-expect-error plugins property should not exist without plugins
+        plugins: { sorting: { sortable: true } },
+      },
+    ],
+    plugins: [],
+  });
+
+  // With sorting plugin - columns should have plugins.sorting metadata available
+  const grid2 = useDataGrid({
+    rows,
+    columns: [
+      {
+        id: 'name',
+        field: 'name',
+        // ✓ plugins.sorting should be available with sortingPlugin
+        plugins: {
+          sorting: {
+            sortable: true,
+          },
+        },
+      },
+      {
+        id: 'email',
+        field: 'email',
+        // ✓ plugins is optional
+      },
+      {
+        id: 'email',
+        field: 'email',
+        plugins: {
+          sorting: {
+            // @ts-expect-error cannot use non-existing plugin property
+            nonExistingProperty: true,
+          },
+        },
+      },
+    ],
+    plugins: [sortingPlugin],
+  });
+
+  // With sorting plugin - should error on wrong plugin namespace
+  const grid3 = useDataGrid({
+    rows,
+    columns: [
+      {
+        id: 'name',
+        field: 'name',
+        plugins: {
+          sorting: { sortable: true },
+          // @ts-expect-error pagination column metadata not available
+          pagination: {},
+        },
+      },
+    ],
+    plugins: [sortingPlugin],
+  });
+
+  return;
+}
+
+// Test plugin column metadata with dependencies
+type PluginWithColumnMeta = Plugin<
+  'pluginWithColumnMeta',
+  { pluginWithColumnMeta: { value: string } },
+  { pluginWithColumnMeta: { getValue: () => string } },
+  { enable?: boolean },
+  { highlight?: boolean; priority?: number } // column metadata
+>;
+
+const pluginWithColumnMeta = createPlugin<PluginWithColumnMeta>()({
+  name: 'pluginWithColumnMeta',
+  initialize: () => ({ pluginWithColumnMeta: { value: 'test' } }),
+  use: () => ({ pluginWithColumnMeta: { getValue: () => 'test' } }),
+});
+
+type PluginDependsOnPluginWithColumnMeta = Plugin<
+  'pluginDependsOnPluginWithColumnMeta',
+  { pluginDependsOnPluginWithColumnMeta: { derived: string } },
+  { pluginDependsOnPluginWithColumnMeta: { getDerived: () => string } },
+  { enable?: boolean },
+  { moreMeta?: boolean }, // column metadata
+  {}, // hooks
+  {}, // required api
+  readonly [typeof pluginWithColumnMeta] // depends on pluginWithColumnMeta
+>;
+
+const pluginDependsOnPluginWithColumnMeta = createPlugin<PluginDependsOnPluginWithColumnMeta>()({
+  name: 'pluginDependsOnPluginWithColumnMeta',
+  dependencies: [pluginWithColumnMeta],
+  initialize: () => ({ pluginDependsOnPluginWithColumnMeta: { derived: 'derived' } }),
+  use: () => ({ pluginDependsOnPluginWithColumnMeta: { getDerived: () => 'derived' } }),
+});
+
+export function ColumnMetadataWithDependenciesExample() {
+  const rows: User[] = [];
+
+  // Plugin with column metadata
+  const grid1 = useDataGrid({
+    rows,
+    columns: [
+      {
+        id: 'name',
+        field: 'name',
+        plugins: {
+          // ✓ Column metadata from pluginWithColumnMeta
+          pluginWithColumnMeta: {
+            highlight: true,
+            priority: 1,
+          },
+        },
+      },
+    ],
+    plugins: [pluginWithColumnMeta],
+  });
+
+  // Plugin that depends on another plugin with column metadata
+  // Both plugin's column metadata should be available
+  const grid2 = useDataGrid({
+    rows,
+    columns: [
+      {
+        id: 'name',
+        field: 'name',
+        plugins: {
+          // ✓ Column metadata from dependency
+          pluginWithColumnMeta: {
+            highlight: true,
+            priority: 1,
+          },
+          // ✓ Column metadata from the plugin itself
+          pluginDependsOnPluginWithColumnMeta: {
+            moreMeta: true,
+          },
+        },
+      },
+      {
+        id: 'email',
+        field: 'email',
+        // ✓ Can omit plugins property entirely
+      },
+    ],
+    plugins: [pluginDependsOnPluginWithColumnMeta],
+  });
+
+  // Should error on column metadata from non-included plugins
+  const grid3 = useDataGrid({
+    rows,
+    columns: [
+      {
+        id: 'name',
+        field: 'name',
+        plugins: {
+          // @ts-expect-error sorting column metadata not available
+          pluginWithColumnMeta: { priority: true },
+        },
+      },
+    ],
+    plugins: [pluginWithColumnMeta],
+  });
+
+  return;
+}
+
+// Test plugins with dependencies
 type PluginA = Plugin<
   'pluginA',
   { pluginA: { a: string } },
