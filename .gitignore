@@ -32,6 +32,3 @@ CLAUDE.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# generated files from TypeScript compilation
-packages/**/src/**/*.js
