@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Calendar } from 'lucide-react';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -157,7 +157,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
       </EventPopoverHeader>
       <ReadonlyContentRoot>
         <EventPopoverDateTimeContainer>
-          <Calendar size={16} strokeWidth={1.5} />
+          <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
             <time
               dateTime={adapter.format(
