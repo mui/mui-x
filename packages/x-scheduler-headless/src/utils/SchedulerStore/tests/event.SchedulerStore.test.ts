@@ -348,6 +348,25 @@ storeClasses.forEach((storeClass) => {
           { ...newEvent, id: createdId },
         ]);
       });
+
+      it('should not inject timezone into the created event model', () => {
+        const onEventsChange = spy();
+
+        const store = new storeClass.Value(
+          {
+            events: [],
+            displayTimezone: 'Europe/Paris',
+            onEventsChange,
+          },
+          adapter,
+        );
+
+        const newEvent = EventBuilder.new().toCreationProperties();
+        const createdId = store.createEvent(newEvent);
+
+        expect(onEventsChange.calledOnce).to.equal(true);
+        expect(onEventsChange.lastCall.firstArg).to.deep.equal([{ ...newEvent, id: createdId }]);
+      });
     });
 
     describe('Method: duplicateEventOccurrence', () => {

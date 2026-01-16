@@ -13,6 +13,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
@@ -68,6 +69,7 @@ export function GeneralTab(props: GeneralTabProps) {
   const store = useSchedulerStoreContext();
 
   // Selector hooks
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
   const isPropertyReadOnly = useStore(
     store,
     schedulerEventSelectors.isPropertyReadOnly,
@@ -79,7 +81,7 @@ export function GeneralTab(props: GeneralTabProps) {
       return;
     }
 
-    const { start, end, surfaceType } = computeRange(adapter, next);
+    const { start, end, surfaceType } = computeRange(adapter, next, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;
