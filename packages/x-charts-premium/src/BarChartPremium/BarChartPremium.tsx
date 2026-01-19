@@ -90,8 +90,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiBarChartPremium' });
-  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, seriesConfig, ...other } =
-    props;
+  const { initialZoom, zoomData, onZoomChange, apiRef, showToolbar, ...other } = props;
 
   const {
     chartsWrapperProps,
@@ -114,7 +113,6 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   >(
     {
       ...chartContainerProps,
-      seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,
