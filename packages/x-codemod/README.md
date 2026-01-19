@@ -82,6 +82,27 @@ The corresponding sub-sections are listed below
 
 ### 🚀 `preset-safe` for Charts v9.0.0
 
+The `preset-safe` codemods for Charts.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-chart-api-import`](#rename-chart-api-import)
+
+#### `rename-chart-api-import`
+
+Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
+
+```diff
+-import type { ChartApi } from '@mui/x-charts/ChartContainer';
++import type { ChartApi } from '@mui/x-charts/context';
+```
+
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0

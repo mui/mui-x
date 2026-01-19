@@ -72,3 +72,14 @@ After running the codemods, make sure to test your application and that you don'
 
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
+
+## Type changes
+
+### ✅ `ChartApi` type moved to `@mui/x-charts/context`
+
+The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
+
+```diff
+-import type { ChartApi } from '@mui/x-charts/ChartContainer';
++import type { ChartApi } from '@mui/x-charts/context';
+```
