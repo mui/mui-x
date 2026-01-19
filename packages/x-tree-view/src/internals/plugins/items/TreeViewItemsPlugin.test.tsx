@@ -530,6 +530,59 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
+    describe('itemHeight prop', () => {
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is not defined', () => {
+        const view = render({
+          items: [{ id: '1' }],
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+      });
+
+      it('should set --TreeView-itemHeight CSS variable when itemHeight is defined', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          itemHeight: 24,
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('24px');
+      });
+
+      it('should apply itemHeight to all items including nested ones', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          itemHeight: 32,
+        });
+
+        expect(view.getItemRoot('1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '32px',
+        );
+        expect(view.getItemRoot('1.1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '32px',
+        );
+      });
+
+      it('should update --TreeView-itemHeight CSS variable when itemHeight prop changes', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          itemHeight: 24,
+        });
+
+        expect(view.getItemRoot('1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '24px',
+        );
+
+        view.setProps({ itemHeight: 48 });
+
+        expect(view.getItemRoot('1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '48px',
+        );
+      });
+    });
+
     describe('lazy loading (dataSource)', () => {
       it.skipIf(treeViewComponentName !== 'RichTreeViewPro')(
         'should not reset focus after lazy loading children when checkboxSelection is enabled',
