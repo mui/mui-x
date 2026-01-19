@@ -8,7 +8,6 @@ import {
   ModalState,
   ProviderProps,
   TriggerProps,
-  ModalEventType,
 } from './createModal.types';
 
 export function createModal<TData>(config: CreateModalConfig) {
@@ -48,16 +47,16 @@ export function createModal<TData>(config: CreateModalConfig) {
       eventManager.current.emit('close');
     });
 
-    const subscribe = React.useCallback((event: ModalEventType, handler: (data?: any) => void) => {
-      eventManager.current.on(event, handler);
+    const subscribeCloseHandler = React.useCallback((handler: () => void) => {
+      eventManager.current.on('close', handler);
       return () => {
-        eventManager.current.removeListener(event, handler);
+        eventManager.current.removeListener('close', handler);
       };
     }, []);
 
     const contextValue = React.useMemo(
-      () => ({ onOpen, onClose, isOpen: state.isOpen || false, subscribe }),
-      [onOpen, onClose, state.isOpen, subscribe],
+      () => ({ onOpen, onClose, isOpen: state.isOpen || false, subscribeCloseHandler }),
+      [onOpen, onClose, state.isOpen, subscribeCloseHandler],
     );
 
     return (

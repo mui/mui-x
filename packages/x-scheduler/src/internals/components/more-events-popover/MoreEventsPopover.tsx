@@ -34,6 +34,8 @@ const MoreEventsPopoverBody = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1),
+  width: 'fit-content',
+  minWidth: 200,
 }));
 
 interface MoreEventsData {
@@ -54,13 +56,13 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   // Context hooks
   const adapter = useAdapter();
-  const { subscribe } = useEventDraggableDialogContext();
+  const { subscribeCloseHandler } = useEventDraggableDialogContext();
 
   React.useEffect(() => {
-    subscribe('close', () => {
+    subscribeCloseHandler(() => {
       onClose();
     });
-  }, [subscribe, onClose]);
+  }, [subscribeCloseHandler, onClose]);
 
   return (
     <Popover open={open} anchorEl={anchor} onClose={onClose}>
