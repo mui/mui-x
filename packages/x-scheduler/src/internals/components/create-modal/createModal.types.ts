@@ -13,7 +13,11 @@ export type ContextValue<TData> = {
   onOpen: (anchorRef: React.RefObject<HTMLElement | null>, data: TData) => void;
   onClose: () => void;
   isOpen: boolean;
-  subscribeCloseHandler: (handler: (data?: any) => void) => () => void;
+  /**
+   * A component can subscribe to a modal close event and react to it
+   * e.g. Closing the `MoreEventsPopover` when an `EventDraggableDialog` closes
+   */
+  subscribeCloseHandler: (handler: () => void) => () => void;
 };
 
 export interface ProviderProps<TData> {
