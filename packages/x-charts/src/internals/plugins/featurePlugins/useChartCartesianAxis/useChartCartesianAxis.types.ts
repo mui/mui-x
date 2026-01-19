@@ -68,13 +68,19 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * @default false
    */
   disableAxisListener?: boolean;
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap?: number;
 }
 
 export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
-  UseChartCartesianAxisParameters<S> & {
-    defaultizedXAxis: DefaultedXAxis<S>[];
-    defaultizedYAxis: DefaultedYAxis<S>[];
-  };
+  UseChartCartesianAxisParameters<S> &
+    Required<Pick<UseChartCartesianAxisParameters<S>, 'axesGap'>> & {
+      defaultizedXAxis: DefaultedXAxis<S>[];
+      defaultizedYAxis: DefaultedYAxis<S>[];
+    };
 
 export interface DefaultedZoomSliderOptions extends Omit<
   NonNullable<Required<ZoomOptions['slider']>>,
@@ -99,6 +105,7 @@ export interface UseChartCartesianAxisState {
     zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
+    axesGap: number;
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
   };

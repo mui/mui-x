@@ -3,7 +3,9 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
-import { CheckIcon, ChevronRight, Settings } from 'lucide-react';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import CheckIcon from '@mui/icons-material/Check';
+import SettingsOutlined from '@mui/icons-material/SettingsOutlined';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -137,7 +139,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
       >
-        <Settings size={20} strokeWidth={1.5} />
+        <SettingsOutlined />
       </IconButton>
       <Menu
         id="preferences-menu"
@@ -163,7 +165,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
             <ListItemText>{option.label}</ListItemText>
             {preferences[option.preferenceKey] && (
               <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-                <CheckIcon size={16} strokeWidth={1.5} />
+                <CheckIcon fontSize="small" />
               </ListItemIcon>
             )}
           </MenuItem>
@@ -171,7 +173,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
         {showTimeFormatSubmenu && (
           <MenuItem onClick={handleTimeFormatClick}>
             <ListItemText>{translations.timeFormat}</ListItemText>
-            <ChevronRight size={14} strokeWidth={1.5} />
+            <ChevronRight fontSize="small" />
           </MenuItem>
         )}
         {showSpecificOptions && visibleOptions.length > 0 && <Divider />}
@@ -193,7 +195,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
               <ListItemText>{option.label}</ListItemText>
               {preferences[option.preferenceKey] && (
                 <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-                  <CheckIcon size={16} strokeWidth={1.5} />
+                  <CheckIcon fontSize="small" />
                 </ListItemIcon>
               )}
             </MenuItem>
@@ -218,7 +220,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           <ListItemText>{translations.amPm12h}</ListItemText>
           {preferences.ampm && (
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-              <CheckIcon size={16} strokeWidth={1.5} />
+              <CheckIcon fontSize="small" />
             </ListItemIcon>
           )}
         </MenuItem>
@@ -233,7 +235,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
           <ListItemText>{translations.hour24h}</ListItemText>
           {!preferences.ampm && (
             <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-              <CheckIcon size={16} strokeWidth={1.5} />
+              <CheckIcon fontSize="small" />
             </ListItemIcon>
           )}
         </MenuItem>
