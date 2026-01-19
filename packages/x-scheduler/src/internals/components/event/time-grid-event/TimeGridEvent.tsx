@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
-import { Repeat } from 'lucide-react';
+import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -126,7 +126,7 @@ const TimeGridEventTime = styled('time', {
   },
 }));
 
-const TimeGridEventRecurringIcon = styled(Repeat, {
+const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventRecurringIcon',
 })({
@@ -211,7 +211,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           </React.Fragment>
         )}
 
-        {isRecurring && <TimeGridEventRecurringIcon aria-hidden="true" />}
+        {isRecurring && <TimeGridEventRecurringIcon aria-hidden="true" fontSize="small" />}
       </React.Fragment>
     );
   }, [

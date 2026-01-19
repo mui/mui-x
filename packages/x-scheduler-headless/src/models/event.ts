@@ -3,6 +3,8 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
+export type { TemporalTimezone } from '../base-ui-copy/types';
+
 /**
  * Base shape for processed scheduler events.
  *
