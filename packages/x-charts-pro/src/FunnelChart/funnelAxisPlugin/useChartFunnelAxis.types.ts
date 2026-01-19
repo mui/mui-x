@@ -11,7 +11,7 @@ import {
 export type UseChartFunnelAxisSignature = ChartPluginSignature<{
   params: Omit<
     UseChartCartesianAxisParameters,
-    'onAxisClick' | 'onHighlightedAxisChange' | 'highlightedAxis'
+    'onAxisClick' | 'onHighlightedAxisChange' | 'highlightedAxis' | 'axesGap'
   > & {
     /**
      * The gap, in pixels, between funnel sections.
@@ -26,7 +26,13 @@ export type UseChartFunnelAxisSignature = ChartPluginSignature<{
      */
     onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
   };
-  defaultizedParams: UseChartCartesianAxisDefaultizedParameters & { gap: number };
+  defaultizedParams: Omit<
+    UseChartCartesianAxisDefaultizedParameters,
+    'onAxisClick' | 'onHighlightedAxisChange' | 'highlightedAxis' | 'axesGap'
+  > & {
+    gap: number;
+    onAxisClick?: (event: MouseEvent, data: null | ChartsAxisData) => void;
+  };
   state: Pick<UseChartCartesianAxisState, 'cartesianAxis'> & { funnel: { gap: number } };
   dependencies: [UseChartSeriesSignature<'funnel'>];
   optionalDependencies: [UseChartInteractionSignature];

@@ -9,6 +9,10 @@ import {
 } from '../ChartDataProviderPremium';
 import { useChartContainerPremiumProps } from './useChartContainerPremiumProps';
 
+export interface ChartContainerPremiumSlots {}
+
+export interface ChartContainerPremiumSlotProps {}
+
 export type ChartContainerPremiumProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,

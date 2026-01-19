@@ -10,13 +10,34 @@ import {
 } from '@mui/x-charts/internals';
 import { useRegisterPointerInteractions } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../hooks/useHeatmapSeries';
-import { HeatmapItem, type HeatmapItemProps } from './HeatmapItem';
+import { HeatmapItem, type HeatmapItemSlots, type HeatmapItemSlotProps } from './HeatmapItem';
 import { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';
 import { shouldRegisterPointerInteractionsGlobally } from './shouldRegisterPointerInteractionsGlobally';
 
-export interface HeatmapPlotProps extends Pick<HeatmapItemProps, 'slots' | 'slotProps'> {}
+export interface HeatmapPlotSlots extends HeatmapItemSlots {}
 
-function HeatmapPlot(props: HeatmapPlotProps) {
+export interface HeatmapPlotSlotProps extends HeatmapItemSlotProps {}
+
+export interface HeatmapPlotProps {
+  /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius?: number;
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: HeatmapPlotSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: HeatmapPlotSlotProps;
+}
+
+const MemoHeatmapItem = React.memo(HeatmapItem);
+
+function HeatmapPlot(props: HeatmapPlotProps): React.ReactNode {
   const store = useStore();
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
@@ -55,7 +76,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
           };
 
           return (
-            <HeatmapItem
+            <MemoHeatmapItem
               key={`${xIndex}_${yIndex}`}
               width={xScale.bandwidth()}
               height={yScale.bandwidth()}
@@ -69,6 +90,7 @@ function HeatmapPlot(props: HeatmapPlotProps) {
               slotProps={props.slotProps}
               isHighlighted={isHighlighted(item)}
               isFaded={isFaded(item)}
+              borderRadius={props.borderRadius}
             />
           );
         })}
@@ -87,6 +109,10 @@ HeatmapPlot.propTypes = {
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
+  /**
+   * The border radius of the heatmap cells in pixels.
+   */
+  borderRadius: PropTypes.number,
   /**
    * The props used for each component slot.
    * @default {}

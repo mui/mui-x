@@ -3,48 +3,25 @@ import { RecurringEventRecurrenceRule } from './recurringEvent';
 import type { SchedulerOccurrencePlaceholderExternalDragData } from './dragAndDrop';
 import type { SchedulerResourceId } from './resource';
 
-export interface SchedulerProcessedEvent {
+export type { TemporalTimezone } from '../base-ui-copy/types';
+
+/**
+ * Base shape for processed scheduler events.
+ *
+ * Contains properties that are required for rendering and user interaction,
+ * independently of whether the event represents a real persisted event
+ * or a temporary draft (placeholder, drag preview, creation flow).
+ */
+interface SchedulerProcessedEventBase {
   /**
    * The unique identifier of the event.
    */
   id: SchedulerEventId;
+
   /**
    * The title of the event.
    */
   title: string;
-  /**
-   * The description of the event.
-   */
-  description?: string;
-
-  /**
-   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
-   * Always expressed in the event data timezone.
-   */
-  dataTimezone: {
-    /**
-     * The start date and time of the event.
-     */
-    start: SchedulerProcessedDate;
-    /**
-     * The end date and time of the event.
-     */
-    end: SchedulerProcessedDate;
-    /**
-     * The timezone of the event dates.
-     * */
-    timezone: TemporalTimezone;
-    /**
-     * The recurrence rule for the event.
-     * If not defined, the event will have only one occurrence.
-     */
-    rrule?: RecurringEventRecurrenceRule;
-    /**
-     * Exception dates for the event.
-     * These dates will be excluded from the recurrence.
-     */
-    exDates?: TemporalSupportedObject[];
-  };
 
   /**
    * Values prepared for rendering and user interaction.
@@ -77,21 +54,80 @@ export interface SchedulerProcessedEvent {
   };
 
   /**
+   * Whether the event is an all-day event.
+   * @default false
+   */
+  allDay?: boolean;
+
+  /**
    * The id of the resource this event is associated with.
    */
   resource?: SchedulerResourceId | null;
 
   /**
-   * Whether the event is an all-day event.
-   * @default false
+   * A custom class name to apply to the event element.
    */
-  allDay?: boolean;
+  className?: string;
+}
+
+/**
+ * A processed scheduler event.
+ *
+ * This represents a real event that exists in the calendar and is fully
+ * normalized by the store for rendering and interactions.
+ *
+ * - Uses `displayTimezone` values for UI rendering.
+ * - Uses `dataTimezone` values for canonical logic (comparisons, recurrence expansion, etc.).
+ * - Always includes `modelInBuiltInFormat` (unlike drafts/placeholders).
+ */
+export interface SchedulerProcessedEvent extends SchedulerProcessedEventBase {
+  /**
+   * The description of the event.
+   */
+  description?: string;
+
+  /**
+   * Canonical data used for logic (recurrence expansion, comparisons, etc.)
+   * Always expressed in the event data timezone.
+   */
+
+  dataTimezone: {
+    /**
+     * The start date and time of the event.
+     */
+    start: SchedulerProcessedDate;
+    /**
+     * The end date and time of the event.
+     */
+    end: SchedulerProcessedDate;
+    /**
+     * The timezone of the event dates.
+     * */
+    timezone: TemporalTimezone;
+    /**
+     * The recurrence rule for the event.
+     * If not defined, the event will have only one occurrence.
+     */
+    rrule?: RecurringEventRecurrenceRule;
+    /**
+     * Exception dates for the event.
+     * These dates will be excluded from the recurrence.
+     */
+    exDates?: TemporalSupportedObject[];
+  };
+
+  /**
+   * The event model in the `SchedulerEvent` format.
+   */
+  modelInBuiltInFormat: SchedulerEvent;
+
   /**
    * Whether the event is read-only.
    * Readonly events cannot be modified using UI features such as popover editing or drag and drop.
    * @default false
    */
   readOnly?: boolean;
+
   /**
    * The id of the original event from which this event was split.
    * If provided, it must reference an existing event in the calendar.
@@ -99,20 +135,19 @@ export interface SchedulerProcessedEvent {
    * and no link to an original event will be created.
    */
   extractedFromId?: SchedulerEventId;
-  /**
-   * The event model in the `SchedulerEvent` format.
-   */
-  modelInBuiltInFormat: SchedulerEvent | null;
+
   /**
    * The color of the event.
    * Takes precedence over resource color if both are defined.
    */
   color?: SchedulerEventColor;
+
   /**
    * Whether the event is draggable.
    * If not defined, the event is draggable if the `areEventsDraggable` property is enabled.
    */
   draggable?: boolean;
+
   /**
    * Whether the event is resizable.
    * If `true`, both start and end can be resized.
@@ -122,11 +157,17 @@ export interface SchedulerProcessedEvent {
    * If not defined, the event is resizable if the `areEventsResizable` property is enabled.
    */
   resizable?: boolean | SchedulerEventSide;
-  /**
-   * A custom class name to apply to the event element.
-   */
-  className?: string;
 }
+
+/**
+ * A processed draft event used by temporary UI flows.
+ *
+ * This represents transient data such as placeholders and drag/resize previews.
+ * It shares the same base shape as processed events for rendering, but it is not
+ * a persisted calendar event and does not include canonical data (`dataTimezone`)
+ * nor a `modelInBuiltInFormat`.
+ */
+export interface SchedulerProcessedEventDraft extends SchedulerProcessedEventBase {}
 
 export interface SchedulerEvent {
   /**
@@ -218,6 +259,26 @@ export interface SchedulerEventOccurrence extends SchedulerProcessedEvent {
    */
   key: string;
 }
+
+/**
+ * A concrete occurrence placeholder derived from a `SchedulerEvent`.
+ * Used temporarily during creation, drag or resize interactions.
+ */
+export interface SchedulerEventOccurrencePlaceholder extends SchedulerProcessedEventDraft {
+  /**
+   * Unique key that can be passed to the React `key` property when looping through events.
+   */
+  key: string;
+}
+
+/**
+ * Union of all event occurrence types that can be rendered by the scheduler.
+ *
+ * Includes both real event occurrences and temporary placeholder occurrences.
+ */
+export type SchedulerRenderableEventOccurrence =
+  | SchedulerEventOccurrence
+  | SchedulerEventOccurrencePlaceholder;
 
 export type SchedulerEventId = string | number;
 

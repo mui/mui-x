@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Calendar } from 'lucide-react';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
   schedulerEventSelectors,
@@ -14,7 +14,7 @@ import {
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventPopoverHeader from './EventPopoverHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { getRecurrenceLabel } from './utils';
+import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 
@@ -99,7 +99,7 @@ const EventPopoverResourceTitle = styled('p', {
 }));
 
 type ReadonlyContentProps = {
-  occurrence: SchedulerEventOccurrence;
+  occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
 };
 
@@ -157,7 +157,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
       </EventPopoverHeader>
       <ReadonlyContentRoot>
         <EventPopoverDateTimeContainer>
-          <Calendar size={16} strokeWidth={1.5} />
+          <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
             <time
               dateTime={adapter.format(
@@ -186,7 +186,9 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
         <Typography variant="body2" color="text.secondary">
           {recurrenceLabel}
         </Typography>
-        <Typography variant="body2">{occurrence.description}</Typography>
+        {hasProp(occurrence, 'description') && !!occurrence.description ? (
+          <Typography variant="body2">{occurrence.description}</Typography>
+        ) : null}
       </ReadonlyContentRoot>
       <EventPopoverActions>
         <Button variant="contained" type="button" onClick={onClose}>
