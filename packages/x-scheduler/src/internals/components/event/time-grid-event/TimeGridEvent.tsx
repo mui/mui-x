@@ -198,8 +198,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           <TimeGridEventTitle>
             {occurrence.title}{' '}
             <TimeGridEventTime>
-              {formatTime(occurrence.displayTimezone.start.value)} -{' '}
-              {formatTime(occurrence.displayTimezone.end.value)}
+              {formatTime(occurrence.displayTimezone.start.value)}
             </TimeGridEventTime>
           </TimeGridEventTitle>
         ) : (
