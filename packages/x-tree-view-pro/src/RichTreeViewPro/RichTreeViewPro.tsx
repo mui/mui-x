@@ -307,6 +307,11 @@ RichTreeViewPro.propTypes = {
    * @default 12px
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.
@@ -417,6 +422,7 @@ RichTreeViewPro.propTypes = {
   /**
    * Whether virtualization is enabled.
    * If true, the DOM structure will be set to 'flat'.
+   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
    * @default false
    */
   virtualization: PropTypes.bool,

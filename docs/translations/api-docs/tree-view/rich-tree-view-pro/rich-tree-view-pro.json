@@ -112,6 +112,9 @@
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
+    "itemHeight": {
+      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
+    },
     "itemsReordering": {
       "description": "If <code>true</code>, the reordering of items is enabled."
     },
@@ -224,7 +227,7 @@
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
     },
     "virtualization": {
-      "description": "Whether virtualization is enabled. If true, the DOM structure will be set to &#39;flat&#39;."
+      "description": "Whether virtualization is enabled. If true, the DOM structure will be set to &#39;flat&#39;. If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization."
     }
   },
   "classDescriptions": {
