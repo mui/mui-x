@@ -5,6 +5,7 @@ import {
   RecurringEventRecurrenceRule,
   TemporalSupportedObject,
   SchedulerProcessedDate,
+  TemporalTimezone,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerTranslations } from '../../../models';
@@ -24,17 +25,21 @@ export interface ControlledValue {
 
 export type EndsSelection = 'never' | 'after' | 'until';
 
-export function computeRange(adapter: Adapter, next: ControlledValue) {
+export function computeRange(
+  adapter: Adapter,
+  next: ControlledValue,
+  displayTimezone: TemporalTimezone,
+) {
   if (next.allDay) {
     return {
       start:
         next.startDate === ''
-          ? adapter.now('default')
-          : adapter.startOfDay(adapter.date(next.startDate, 'default')),
+          ? adapter.now(displayTimezone)
+          : adapter.startOfDay(adapter.date(next.startDate, displayTimezone)),
       end:
         next.endDate === ''
-          ? adapter.now('default')
-          : adapter.endOfDay(adapter.date(next.endDate, 'default')),
+          ? adapter.now(displayTimezone)
+          : adapter.endOfDay(adapter.date(next.endDate, displayTimezone)),
       surfaceType: 'day-grid' as const,
     };
   }
@@ -42,12 +47,12 @@ export function computeRange(adapter: Adapter, next: ControlledValue) {
   return {
     start:
       next.startDate === '' || next.startTime === ''
-        ? adapter.now('default')
-        : adapter.date(`${next.startDate}T${next.startTime}`, 'default'),
+        ? adapter.now(displayTimezone)
+        : adapter.date(`${next.startDate}T${next.startTime}`, displayTimezone),
     end:
       next.endDate === '' || next.endTime === ''
-        ? adapter.now('default')
-        : adapter.date(`${next.endDate}T${next.endTime}`, 'default'),
+        ? adapter.now(displayTimezone)
+        : adapter.date(`${next.endDate}T${next.endTime}`, displayTimezone),
     surfaceType: 'time-grid' as const,
   };
 }

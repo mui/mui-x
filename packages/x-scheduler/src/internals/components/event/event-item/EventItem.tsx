@@ -3,7 +3,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useId } from '@base-ui/utils/useId';
 import { useStore } from '@base-ui/utils/store';
-import { Repeat } from 'lucide-react';
+import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import {
   schedulerEventSelectors,
   schedulerResourceSelectors,
@@ -84,13 +84,10 @@ const EventItemTime = styled('time', {
   },
 }));
 
-const EventItemRecurringIcon = styled(Repeat, {
+const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
 })({
-  width: 12,
-  height: 12,
-  strokeWidth: 1.5,
   color: 'var(--event-color-11)',
 });
 
@@ -173,7 +170,7 @@ export const EventItem = React.forwardRef(function EventItem(
                 <EventItemTitle>{occurrence.title}</EventItemTitle>
               </EventItemCardContent>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon aria-hidden="true" />}
+            {isRecurring && <EventItemRecurringIcon aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
 
@@ -183,7 +180,7 @@ export const EventItem = React.forwardRef(function EventItem(
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <EventItemTitle>{occurrence.title}</EventItemTitle>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon aria-hidden="true" />}
+            {isRecurring && <EventItemRecurringIcon aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
       case 'regular':
@@ -203,7 +200,7 @@ export const EventItem = React.forwardRef(function EventItem(
                 <EventItemTitle>{occurrence.title}</EventItemTitle>
               </EventItemCardContent>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon aria-hidden="true" />}
+            {isRecurring && <EventItemRecurringIcon aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
       default:

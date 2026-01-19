@@ -4,3 +4,4 @@ export { seriesPreviewPlotMap } from '../ChartZoomSlider/internals/seriesPreview
 export type { PreviewPlotProps } from '../ChartZoomSlider/internals/previews/PreviewPlot.types';
 export { defaultSeriesConfigPro } from '../ChartDataProviderPro/ChartDataProviderPro';
 export type { ProPluginsPerSeriesType } from '../context/ChartProApi';
+export { useHeatmapProps } from '../Heatmap/useHeatmapProps';

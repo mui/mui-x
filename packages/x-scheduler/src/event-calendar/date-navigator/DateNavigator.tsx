@@ -1,6 +1,9 @@
 'use client';
 import * as React from 'react';
-import { ChevronLeft, ChevronRight, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import MenuOpen from '@mui/icons-material/MenuOpen';
+import Menu from '@mui/icons-material/Menu';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -67,11 +70,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
           store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
         }
       >
-        {isSidePanelOpen ? (
-          <PanelLeftClose size={20} strokeWidth={1.5} />
-        ) : (
-          <PanelLeftOpen size={20} strokeWidth={1.5} />
-        )}
+        {isSidePanelOpen ? <MenuOpen /> : <Menu />}
       </IconButton>
       <DateNavigatorLabel aria-live="polite">
         {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
@@ -81,13 +80,13 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
           onClick={store.goToPreviousVisibleDate}
           aria-label={translations.previousTimeSpan(view)}
         >
-          <ChevronLeft size={24} strokeWidth={2} />
+          <ChevronLeft />
         </IconButton>
         <IconButton
           onClick={store.goToNextVisibleDate}
           aria-label={translations.nextTimeSpan(view)}
         >
-          <ChevronRight size={24} strokeWidth={2} />
+          <ChevronRight />
         </IconButton>
       </DateNavigatorButtonsContainer>
     </DateNavigatorRoot>
