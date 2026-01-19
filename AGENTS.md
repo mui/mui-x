@@ -31,18 +31,20 @@ pnpm markdownlint
 
 ```bash
 # Filter by project name (glob patterns supported)
-pnpm test:unit --project "x-data-grid" # exact match
-pnpm test:unit --project "x-charts*" # starts with
-pnpm test:unit --project "*-pro" # ends with
+# --run flag = run tests once and exit
+pnpm test:unit --project "x-data-grid" --run # exact match
+pnpm test:unit --project "x-charts*" --run # starts with
+pnpm test:unit --project "*-pro" --run # ends with
 ```
 
 ### Run unit tests in the browser
 
 ```bash
 # Filter by project name (glob patterns supported)
-pnpm test:browser --project "x-data-grid" # exact match
-pnpm test:browser --project "x-charts*" # starts with
-pnpm test:browser --project "*-pro" # ends with
+# --run flag = run tests once and exit
+pnpm test:browser --project "x-data-grid" --run # exact match
+pnpm test:browser --project "x-charts*" --run # starts with
+pnpm test:browser --project "*-pro" --run # ends with
 ```
 
 ### Writing new unit tests
