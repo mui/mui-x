@@ -8,7 +8,8 @@
       "Bash(pnpm run docs:llms:build:*)",
       "Bash(find:*)",
       "Bash(git add:*)",
-      "Bash(pnpm docs:llms:build:*)"
+      "Bash(pnpm docs:llms:build:*)",
+      "Bash(pnpm docs:typescript:formatted:*)"
     ],
     "deny": []
   }

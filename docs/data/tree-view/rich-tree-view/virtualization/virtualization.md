@@ -12,7 +12,8 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Basic usage
 
-Use the `virtualization` prop to enable virtualization on the `RichTreeViewPro` component:
+Use the `virtualization` prop to enable virtualization on the `RichTreeViewPro` component.
+Here is an example of a Tree View with 100 000 items:
 
 {{"demo": "BasicVirtualizedRichTreeViewPro.js"}}
 

@@ -75,6 +75,11 @@ export interface MinimalTreeViewState<
    * The id of the currently focused item.
    */
   focusedItemId: TreeViewItemId | null;
+  /**
+   * The default height of each item in the tree view.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: number | null;
 }
 
 export interface MinimalTreeViewParameters<
@@ -253,6 +258,11 @@ export interface MinimalTreeViewParameters<
    * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void;
+  /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight?: number;
 }
 
 /**

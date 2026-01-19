@@ -93,6 +93,7 @@ export interface RichTreeViewProStoreParameters<
   /**
    * Whether virtualization is enabled.
    * If true, the DOM structure will be set to 'flat'.
+   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
    * @default false
    */
   virtualization?: boolean;

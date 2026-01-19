@@ -39,6 +39,7 @@ export function useExtractRichTreeViewProParameters<
     onSelectedItemsChange,
     onItemSelectionToggle,
     onItemFocus,
+    itemHeight,
 
     // RichTreeViewStore parameters
     onItemLabelChange,
@@ -85,6 +86,7 @@ export function useExtractRichTreeViewProParameters<
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // RichTreeViewStore parameters
       onItemLabelChange,
@@ -126,6 +128,7 @@ export function useExtractRichTreeViewProParameters<
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // RichTreeViewStore parameters
       onItemLabelChange,

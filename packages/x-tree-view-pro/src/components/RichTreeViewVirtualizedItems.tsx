@@ -15,7 +15,7 @@ import {
   useTreeViewStyleContext,
 } from '@mui/x-tree-view/internals';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { DEFAULT_ITEM_HEIGHT, RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
 const VirtualizerContext = React.createContext<Virtualizer | null>(null);
 
@@ -45,6 +45,7 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
   }
 
   const items = useStore(store, expandedItemsIdSelectors);
+  const defaultItemHeight = useStore(store, itemsSelectors.itemHeight);
 
   const itemSlot = slots?.item as React.JSXElementConstructor<TreeItemProps> | undefined;
   const itemSlotProps = slotProps?.item;
@@ -62,7 +63,7 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
   const virtualizer = useVirtualizer({
     layout,
     dimensions: {
-      rowHeight: 32, // TODO: Make it configurable.
+      rowHeight: defaultItemHeight!, // The defaultItemHeight is always defined when virtualization is enabled.
     },
     virtualization: {},
 

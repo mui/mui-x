@@ -156,6 +156,17 @@ When it's set to true:
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
 
+## Item height
+
+Use the `itemHeight` prop to set the height of each item in the tree.
+If not provided, no height restriction is applied to the tree item content element.
+
+{{"demo": "ItemHeight.js"}}
+
+:::info
+When [virtualization](/x/react-tree-view/rich-tree-view/virtualization/) is enabled, the `itemHeight` defaults to `32px` if this prop is not defined.
+:::
+
 ## Track item clicks
 
 Use the `onItemClick` prop to track the clicked item:

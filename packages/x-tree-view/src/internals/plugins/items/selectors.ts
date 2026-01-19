@@ -95,4 +95,8 @@ export const itemsSelectors = {
   itemChildrenIndentation: createSelector(
     (state: MinimalTreeViewState<any, any>) => state.itemChildrenIndentation,
   ),
+  /**
+   * Gets the height of an individual item.
+   */
+  itemHeight: createSelector((state: MinimalTreeViewState<any, any>) => state.itemHeight),
 };

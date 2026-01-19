@@ -29,6 +29,7 @@ export function deriveStateFromParameters<
     multiSelect: parameters.multiSelect ?? false,
     checkboxSelection: parameters.checkboxSelection ?? false,
     selectionPropagation: parameters.selectionPropagation ?? EMPTY_OBJECT,
+    itemHeight: parameters.itemHeight ?? null,
   };
 }
 

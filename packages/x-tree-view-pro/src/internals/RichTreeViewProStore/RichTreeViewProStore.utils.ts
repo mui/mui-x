@@ -7,6 +7,7 @@ import { TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE } from '../plugins/lazyLoadin
 
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_ENABLED = () => true;
 const DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED = () => false;
+const DEFAULT_ITEM_HEIGHT_WITH_VIRTUALIZATION = 32;
 
 const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<any, any>) => ({
   lazyLoadedItems: parameters.dataSource ? TREE_VIEW_LAZY_LOADED_ITEMS_INITIAL_STATE : null,
@@ -16,6 +17,9 @@ const deriveStateFromParameters = (parameters: RichTreeViewProStoreParameters<an
     : DEFAULT_IS_ITEM_REORDERABLE_WHEN_DISABLED,
   domStructure: parameters.domStructure ?? (parameters.virtualization ? 'flat' : 'nested'),
   virtualization: parameters.virtualization ?? false,
+  itemHeight:
+    parameters.itemHeight ??
+    (parameters.virtualization ? DEFAULT_ITEM_HEIGHT_WITH_VIRTUALIZATION : null),
 });
 
 export const parametersToStateMapper: TreeViewParametersToStateMapper<

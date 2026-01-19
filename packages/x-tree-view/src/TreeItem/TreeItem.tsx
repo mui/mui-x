@@ -41,6 +41,7 @@ export const TreeItemContent = styled('div', {
   paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
   width: '100%',
+  height: 'var(--TreeView-itemHeight, unset)',
   boxSizing: 'border-box', // prevent width + padding to overflow
   position: 'relative',
   display: 'flex',
