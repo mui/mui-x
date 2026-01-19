@@ -39,6 +39,10 @@ function YAxis(props: ChartsYAxisProps) {
   const axisPosition = useYAxisPosition(axisId);
   const ticks = useYAxisTicks(axisId);
 
+  if (!axisPosition) {
+    return null;
+  }
+
   return (
     <React.Fragment>
       <line

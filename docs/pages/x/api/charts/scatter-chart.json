@@ -210,13 +210,13 @@
     },
     {
       "name": "xAxis",
-      "description": "Custom component for the x-axis. Only used if axis prop is 'x'.",
+      "description": "Custom component for the x-axis.",
       "default": "ChartsXAxis",
       "class": null
     },
     {
       "name": "yAxis",
-      "description": "Custom component for the y-axis. Only used if axis prop is 'y'.",
+      "description": "Custom component for the y-axis.",
       "default": "ChartsYAxis",
       "class": null
     }

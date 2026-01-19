@@ -149,8 +149,8 @@
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper.",
-    "xAxis": "Custom component for the x-axis. Only used if axis prop is &#39;x&#39;.",
-    "yAxis": "Custom component for the y-axis. Only used if axis prop is &#39;y&#39;.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis.",
     "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
     "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
   }
