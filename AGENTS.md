@@ -23,7 +23,6 @@ pnpm prettier:all # Format all files
 ```bash
 pnpm stylelint
 pnpm markdownlint
-pnpm proptypes
 ```
 
 ## Testing
@@ -61,6 +60,15 @@ pnpm --filter "@mui/x-data-grid" run typescript # single package
 pnpm --filter "@mui/x-data-grid*" run typescript # glob pattern (all data-grid packages)
 pnpm --filter "@mui/x-charts*" run typescript # all charts packages
 pnpm typescript # typecheck the entire monorepo
+```
+
+## Components documentation
+
+When editing React components or TypeScript types/interfaces in the `packages` folder, run the following script after you're done with the changes:
+
+```bash
+pnpm proptypes # generate PropTypes
+pnpm docs:api # generate/update the API documentation
 ```
 
 ## Other scripts
