@@ -233,7 +233,6 @@ type PluginDependsOnPluginWithColumnMeta = Plugin<
   { pluginDependsOnPluginWithColumnMeta: { getDerived: () => string } },
   { enable?: boolean },
   { moreMeta?: boolean }, // column metadata
-  {}, // required api
   readonly [typeof pluginWithColumnMeta] // depends on pluginWithColumnMeta
 >;
 
