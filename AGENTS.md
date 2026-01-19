@@ -83,4 +83,4 @@ Refer to `package.json` for other available scripts.
 ### Updating docs demos
 
 When updating demos in the `docs` folder, only update the `.tsx` files.
-To generate JS files, run `pnpm docs:typescript:formatted`.
+To generate `.js` files, run `pnpm docs:typescript:formatted`.
