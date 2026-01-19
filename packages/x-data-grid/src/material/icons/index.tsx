@@ -134,3 +134,8 @@ export const GridDownloadIcon = createSvgIcon(
   <path d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z" />,
   'Download',
 );
+
+export const GridOpenInFullIcon = createSvgIcon(
+  <path d="M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z" />,
+  'OpenInFull',
+);
