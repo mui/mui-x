@@ -1,4 +1,4 @@
-import type { BarChartPluginSignatures } from '@mui/x-charts/BarChart';
+import { type BarChartPluginSignatures } from '@mui/x-charts/BarChart';
 import { useBarChartProps } from '@mui/x-charts/internals';
 import { type ChartContainerProps } from '@mui/x-charts/ChartContainer';
 import { type BarChartPremiumProps } from './BarChartPremium';

@@ -34,10 +34,10 @@ export interface PieChartProSlotProps
 
 export interface PieChartProProps
   extends
-    Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig'>,
+    Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'pie', PieChartProPluginSignatures>,
-      'series' | 'plugins' | 'slots' | 'slotProps' | 'experimentalFeatures'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
