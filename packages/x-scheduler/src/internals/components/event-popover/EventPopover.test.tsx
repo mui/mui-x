@@ -512,6 +512,80 @@ describe('<EventPopoverContent />', () => {
       expect(payload.end).toEqualDateTime(end);
       expect(payload.rrule).to.deep.equal({ freq: 'DAILY', interval: 1 });
     });
+
+    it('should interpret form date/time in the displayTimezone when creating an event', async () => {
+      const displayTimezone = 'Pacific/Kiritimati';
+
+      const start = adapter.date('2025-06-10T09:00:00Z', 'default');
+      const end = adapter.date('2025-06-10T09:30:00Z', 'default');
+
+      const placeholder: SchedulerOccurrencePlaceholderCreation = {
+        type: 'creation',
+        surfaceType: 'time-grid' as const,
+        start,
+        end,
+        lockSurfaceType: false,
+        resourceId: null,
+      };
+
+      const creationOccurrence = EventBuilder.new(adapter)
+        .id('placeholder-id')
+        .span(start, end)
+        .title('')
+        .toOccurrence();
+
+      const onEventsChange = spy();
+      let createEventSpy;
+
+      const { user } = render(
+        <EventCalendarProvider
+          events={[]}
+          resources={resources}
+          onEventsChange={onEventsChange}
+          displayTimezone={displayTimezone}
+        >
+          <SchedulerStoreRunner
+            context={EventCalendarStoreContext}
+            onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
+          />
+          <StoreSpy
+            Context={EventCalendarStoreContext}
+            method="createEvent"
+            onSpyReady={(sp) => {
+              createEventSpy = sp;
+            }}
+          />
+          <Popover.Root open>
+            <EventPopoverContent {...defaultProps} occurrence={creationOccurrence} />
+          </Popover.Root>
+        </EventCalendarProvider>,
+      );
+
+      await user.type(screen.getByLabelText(/event title/i), 'My event');
+
+      await user.clear(screen.getByLabelText(/start date/i));
+      await user.type(screen.getByLabelText(/start date/i), '2025-06-10');
+      await user.clear(screen.getByLabelText(/start time/i));
+      await user.type(screen.getByLabelText(/start time/i), '09:00');
+
+      await user.clear(screen.getByLabelText(/end date/i));
+      await user.type(screen.getByLabelText(/end date/i), '2025-06-10');
+      await user.clear(screen.getByLabelText(/end time/i));
+      await user.type(screen.getByLabelText(/end time/i), '10:00');
+
+      await user.click(screen.getByRole('button', { name: /save changes/i }));
+
+      expect(createEventSpy?.calledOnce).to.equal(true);
+      const payload = createEventSpy.lastCall.firstArg;
+
+      // Form inputs are wall-time values.
+      // They must be interpreted in displayTimezone, not in 'default'.
+      const expectedStart = adapter.date('2025-06-10T09:00:00', displayTimezone);
+      const expectedEnd = adapter.date('2025-06-10T10:00:00', displayTimezone);
+
+      expect(payload.start).toEqualDateTime(expectedStart);
+      expect(payload.end).toEqualDateTime(expectedEnd);
+    });
   });
   describe('Event editing', () => {
     describe('Recurring events', () => {

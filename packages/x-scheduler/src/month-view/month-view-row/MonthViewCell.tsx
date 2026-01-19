@@ -11,7 +11,10 @@ import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
@@ -176,12 +179,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
+  // Selector hooks
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
-  const isToday = React.useMemo(
-    () => adapter.isSameDay(day.value, adapter.now('default')),
-    [adapter, day],
-  );
+  const isToday = adapter.isSameDay(day.value, now);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
