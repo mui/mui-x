@@ -28,6 +28,7 @@ import {
 } from '../ChartsTooltip';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { FocusedRadarMark } from './FocusedRadarMark';
 
 export interface RadarChartSlots
   extends
@@ -116,6 +117,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <RadarSeriesArea {...radarSeriesAreaProps} />
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks {...radarSeriesMarksProps} />
+          <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -151,6 +153,7 @@ RadarChart.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
@@ -204,6 +207,34 @@ RadarChart.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false

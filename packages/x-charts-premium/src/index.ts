@@ -51,4 +51,5 @@ export * from './plugins';
 // Premium components
 export * from './ChartsRenderer';
 export * from './ChartDataProviderPremium';
+export * from './ChartContainerPremium';
 export * from './BarChartPremium';

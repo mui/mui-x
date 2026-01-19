@@ -18,6 +18,7 @@ import {
   NOT_LOCALIZED_WEEK_DAYS_INDEXES,
   parsesByDayForMonthlyFrequency,
   parsesByDayForWeeklyFrequency,
+  startOfRRuleWeek,
 } from './internal-utils';
 
 /**
@@ -40,7 +41,16 @@ class RecurringEventExpander {
 
   private readonly rule: RecurringEventRecurrenceRule;
 
-  private readonly seriesStart: TemporalSupportedObject;
+  /*
+   * Day anchor for RRULE math (BYDAY/COUNT), always in data timezone.
+   */
+  private readonly seriesStartDay: TemporalSupportedObject;
+
+  /*
+   * Represents the original DTSTART wall-time (HH:mm) in the event/data timezone
+   * It is used to build occurrence instants via mergeDateAndTime().
+   */
+  private readonly dtStartInDataTz: TemporalSupportedObject;
 
   private readonly scanFirstDay: TemporalSupportedObject;
 
@@ -81,7 +91,13 @@ class RecurringEventExpander {
 
     this.dataTimezone = event.dataTimezone;
     this.rule = this.dataTimezone.rrule!;
-    this.seriesStart = adapter.startOfDay(this.dataTimezone.start.value);
+    this.dtStartInDataTz = adapter.setTimezone(
+      this.dataTimezone.start.value,
+      this.dataTimezone.timezone,
+    );
+    this.seriesStartDay = adapter.startOfDay(
+      adapter.setTimezone(this.dataTimezone.start.value, this.dataTimezone.timezone),
+    );
     this.interval = Math.max(1, this.rule.interval ?? 1);
 
     const dataTz = this.dataTimezone.timezone;
@@ -96,9 +112,9 @@ class RecurringEventExpander {
     // Pre-compute boundaries and exclusions
     this.exDateKeys = new Set(this.dataTimezone.exDates?.map((d) => getDateKey(d, adapter)));
     this.untilBoundary = this.rule.until ? adapter.startOfDay(this.rule.until) : null;
-    this.minDate = adapter.isBefore(this.seriesStart, this.scanFirstDay)
+    this.minDate = adapter.isBefore(this.seriesStartDay, this.scanFirstDay)
       ? this.scanFirstDay
-      : this.seriesStart;
+      : this.seriesStartDay;
 
     // Initialize frequency-specific data
     this.initializeFrequencyData();
@@ -116,7 +132,7 @@ class RecurringEventExpander {
     switch (this.rule.freq) {
       case 'WEEKLY': {
         const byDayCodes = parsesByDayForWeeklyFrequency(this.rule.byDay) ?? [
-          getWeekDayCode(this.adapter, this.seriesStart),
+          getWeekDayCode(this.adapter, this.dtStartInDataTz),
         ];
         this.sortedWeekDayCodes = byDayCodes.toSorted(
           (a, b) =>
@@ -136,7 +152,7 @@ class RecurringEventExpander {
         } else {
           this.monthlyTargetDay = this.rule.byMonthDay?.length
             ? this.rule.byMonthDay[0]
-            : this.adapter.getDate(this.seriesStart);
+            : this.adapter.getDate(this.seriesStartDay);
         }
         break;
       }
@@ -149,8 +165,8 @@ class RecurringEventExpander {
           );
         }
 
-        this.yearlyTargetMonth = this.adapter.getMonth(this.seriesStart);
-        this.yearlyTargetDay = this.adapter.getDate(this.seriesStart);
+        this.yearlyTargetMonth = this.adapter.getMonth(this.seriesStartDay);
+        this.yearlyTargetDay = this.adapter.getDate(this.seriesStartDay);
         break;
       }
       default:
@@ -171,11 +187,7 @@ class RecurringEventExpander {
       return;
     }
 
-    const occurrenceStartOriginal = mergeDateAndTime(
-      this.adapter,
-      day,
-      this.dataTimezone.start.value,
-    );
+    const occurrenceStartOriginal = mergeDateAndTime(this.adapter, day, this.dtStartInDataTz);
     const occurrenceEndOriginal = getOccurrenceEnd({
       adapter: this.adapter,
       event: this.event,
@@ -214,9 +226,9 @@ class RecurringEventExpander {
   private findFirstOccurrence(): TemporalSupportedObject | null {
     switch (this.rule.freq) {
       case 'DAILY': {
-        const daysDiff = this.adapter.differenceInDays(this.scanFirstDay, this.seriesStart);
+        const daysDiff = this.adapter.differenceInDays(this.scanFirstDay, this.seriesStartDay);
         const skipDays = daysDiff > 0 ? Math.floor(daysDiff / this.interval) * this.interval : 0;
-        let first = this.adapter.addDays(this.seriesStart, skipDays);
+        let first = this.adapter.addDays(this.seriesStartDay, skipDays);
 
         if (this.adapter.isBefore(first, this.scanFirstDay)) {
           first = this.adapter.addDays(first, this.interval);
@@ -225,8 +237,11 @@ class RecurringEventExpander {
         return first;
       }
       case 'WEEKLY': {
-        const seriesWeekStart = this.adapter.startOfWeek(this.seriesStart);
-        const scanWeekStart = this.adapter.startOfWeek(this.scanFirstDay);
+        // NOTE: For RRULE expansion we use RRULE week start (Monday),
+        // not adapter.startOfWeek() which is locale-driven and can start on Sunday.
+        const seriesWeekStart = startOfRRuleWeek(this.adapter, this.seriesStartDay);
+        const scanWeekStart = startOfRRuleWeek(this.adapter, this.scanFirstDay);
+
         const weeksDiff = this.adapter.differenceInWeeks(scanWeekStart, seriesWeekStart);
         const skipWeeks = weeksDiff > 0 ? Math.floor(weeksDiff / this.interval) * this.interval : 0;
         const startingWeek = this.adapter.addWeeks(seriesWeekStart, skipWeeks);
@@ -235,14 +250,14 @@ class RecurringEventExpander {
         if (first === null) {
           first = this.findFirstInWeek(
             this.adapter.addWeeks(startingWeek, this.interval),
-            this.seriesStart,
+            this.seriesStartDay,
           );
         }
 
         return first;
       }
       case 'MONTHLY': {
-        const seriesMonth = this.adapter.startOfMonth(this.seriesStart);
+        const seriesMonth = this.adapter.startOfMonth(this.seriesStartDay);
         const scanMonth = this.adapter.startOfMonth(this.scanFirstDay);
         const monthsDiff = this.adapter.differenceInMonths(scanMonth, seriesMonth);
         const skipMonths =
@@ -252,7 +267,7 @@ class RecurringEventExpander {
         return this.findFirstInMonth(startingMonth, this.minDate);
       }
       case 'YEARLY': {
-        const seriesYear = this.adapter.startOfYear(this.seriesStart);
+        const seriesYear = this.adapter.startOfYear(this.seriesStartDay);
         const scanYear = this.adapter.startOfYear(this.scanFirstDay);
         const yearsDiff = this.adapter.differenceInYears(scanYear, seriesYear);
         const skipYears = yearsDiff > 0 ? Math.floor(yearsDiff / this.interval) * this.interval : 0;
@@ -273,7 +288,8 @@ class RecurringEventExpander {
         return this.adapter.addDays(current, this.interval);
       }
       case 'WEEKLY': {
-        const weekStart = this.adapter.startOfWeek(current);
+        // NOTE: Use RRULE week boundaries instead of locale weeks (always starts on Monday), otherwise BYDAY like SU+TU can go backwards.
+        const weekStart = startOfRRuleWeek(this.adapter, current);
         const currentIndex = this.sortedWeekDayCodes!.indexOf(
           getWeekDayCode(this.adapter, current),
         );
@@ -281,7 +297,7 @@ class RecurringEventExpander {
         // Check remaining days in current week
         for (let i = currentIndex + 1; i < this.sortedWeekDayCodes!.length; i += 1) {
           const candidate = dayInWeek(this.adapter, weekStart, this.sortedWeekDayCodes![i]);
-          if (!this.adapter.isBefore(candidate, this.seriesStart)) {
+          if (!this.adapter.isBefore(candidate, this.seriesStartDay)) {
             return candidate;
           }
         }
@@ -289,16 +305,16 @@ class RecurringEventExpander {
         // Move to next interval week
         return this.findFirstInWeek(
           this.adapter.addWeeks(weekStart, this.interval),
-          this.seriesStart,
+          this.seriesStartDay,
         );
       }
       case 'MONTHLY': {
         const nextMonth = this.adapter.addMonths(this.adapter.startOfMonth(current), this.interval);
-        return this.findFirstInMonth(nextMonth, this.seriesStart);
+        return this.findFirstInMonth(nextMonth, this.seriesStartDay);
       }
       case 'YEARLY': {
         const nextYear = this.adapter.addYears(this.adapter.startOfYear(current), this.interval);
-        return this.findFirstInYear(nextYear, this.seriesStart);
+        return this.findFirstInYear(nextYear, this.seriesStartDay);
       }
       default:
         return null;
@@ -381,11 +397,11 @@ class RecurringEventExpander {
     let remainingCount = this.rule.count ?? Infinity;
     if (this.rule.count !== undefined && firstOccurrence !== null) {
       const dayBeforeFirst = this.adapter.addDays(firstOccurrence, -1);
-      if (!this.adapter.isBefore(dayBeforeFirst, this.seriesStart)) {
+      if (!this.adapter.isBefore(dayBeforeFirst, this.seriesStartDay)) {
         remainingCount = getRemainingOccurrences(
           this.adapter,
           this.rule,
-          this.seriesStart,
+          this.seriesStartDay,
           dayBeforeFirst,
           this.rule.count,
         );
