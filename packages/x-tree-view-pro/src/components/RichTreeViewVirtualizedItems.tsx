@@ -15,7 +15,7 @@ import {
   useTreeViewStyleContext,
 } from '@mui/x-tree-view/internals';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { DEFAULT_ITEM_HEIGHT, RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
 
 const VirtualizerContext = React.createContext<Virtualizer | null>(null);
 
