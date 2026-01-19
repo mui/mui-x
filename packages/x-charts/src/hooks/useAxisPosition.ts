@@ -14,14 +14,19 @@ export interface AxisPosition {
 /**
  * Get the position of the given X axis.
  * @param axisId The id of the X axis.
+ * @returns {AxisPosition | null} The position of the X axis or null if the axis does not exist.
  */
-export function useXAxisPosition(axisId: AxisId): AxisPosition {
+export function useXAxisPosition(axisId: AxisId): AxisPosition | null {
   const { xAxis: xAxes } = useXAxes();
   const drawingArea = useDrawingArea();
   const axis = xAxes[axisId];
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
+
+  if (!axis) {
+    return null;
+  }
 
   const defaultizedProps = {
     ...defaultProps,
@@ -53,14 +58,19 @@ export function useXAxisPosition(axisId: AxisId): AxisPosition {
 /**
  * Get the position of the given Y axis.
  * @param axisId The id of the Y axis.
+ * @returns {AxisPosition | null} The position of the Y axis or null if the axis does not exist.
  */
-export function useYAxisPosition(axisId: AxisId): AxisPosition {
+export function useYAxisPosition(axisId: AxisId): AxisPosition | null {
   const { yAxis: yAxes } = useYAxes();
   const drawingArea = useDrawingArea();
   const axis = yAxes[axisId];
 
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
+
+  if (!axis) {
+    return null;
+  }
 
   const defaultizedProps = {
     ...defaultProps,

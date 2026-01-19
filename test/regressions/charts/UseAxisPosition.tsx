@@ -33,7 +33,7 @@ function AxisPositionIndicator({
   const xPosition = useXAxisPosition(axis === 'x' ? axisId : 'x-bottom');
   const yPosition = useYAxisPosition(axis === 'y' ? axisId : 'y-left');
 
-  const position = axis === 'x' ? xPosition : yPosition;
+  const position = xPosition ?? yPosition!;
 
   return (
     <rect
