@@ -5,7 +5,7 @@
   1. Copy this file to AGENTS.local.md: `cp AGENTS.local.md.template AGENTS.local.md`
   2. AGENTS.local.md is gitignored - your personal preferences stay local
   3. Add your own notes, shortcuts, and context below
-  4. If you already have your own CLAUDE.md – just rename the file to AGENTS.local.md
+  4. If you already have your personal CLAUDE.md or AGENTS.md  – just rename the file to AGENTS.local.md
 
   HOW IT WORKS:
   - AGENTS.md (in the repo) contains shared team conventions and project knowledge
