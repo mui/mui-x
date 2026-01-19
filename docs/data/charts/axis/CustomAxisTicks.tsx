@@ -1,10 +1,5 @@
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import {
-  useDrawingArea,
-  useYAxes,
-  useYAxisPosition,
-  useYAxisTicks,
-} from '@mui/x-charts/hooks';
+import { useYAxes, useYAxisPosition, useYAxisTicks } from '@mui/x-charts/hooks';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { ChartsYAxisProps } from '@mui/x-charts/models';

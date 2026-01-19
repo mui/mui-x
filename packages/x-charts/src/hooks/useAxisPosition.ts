@@ -35,12 +35,12 @@ export function useXAxisPosition(axisId: AxisId): AxisPosition {
   if (position === 'bottom') {
     top = drawingArea.top + drawingArea.height + offset;
   } else {
-    top = drawingArea.top - offset;
+    top = drawingArea.top - axisHeight - offset;
   }
 
   const left = drawingArea.left;
   const bottom = top + axisHeight;
-  const right = drawingArea.left + drawingArea.right;
+  const right = drawingArea.left + drawingArea.width;
 
   return {
     left,
@@ -74,7 +74,7 @@ export function useYAxisPosition(axisId: AxisId): AxisPosition {
   if (position === 'right') {
     left = drawingArea.left + drawingArea.width + offset;
   } else {
-    left = drawingArea.left - offset;
+    left = drawingArea.left - axisWidth - offset;
   }
 
   const top = drawingArea.top;
