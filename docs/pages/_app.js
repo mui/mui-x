@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import { LicenseInfo } from '@mui/x-license';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
 import PageContext from 'docs/src/modules/components/PageContext';
+import DemoContext from 'docs/src/modules/components/DemoContext';
 import GoogleAnalytics from 'docs/src/modules/components/GoogleAnalytics';
 import { CodeCopyProvider } from '@mui/docs/CodeCopy';
 import { ThemeProvider } from 'docs/src/modules/components/ThemeContext';
@@ -73,44 +74,6 @@ function getMuiPackageVersion(packageName, commitRef) {
   }
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
-
-globalThis.muiDocConfig = {
-  csbIncludePeerDependencies: (deps, { versions }) => {
-    const newDeps = { ...deps };
-
-    // #npm-tag-reference
-    // TODO: Do we really need this? The condition does not make that much sense tbh!
-    // Check which version of `@mui/material` should be resolved when opening docs examples in StackBlitz or CodeSandbox
-    newDeps['@mui/material'] =
-      versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
-
-    if (newDeps['@mui/x-data-grid-generator']) {
-      newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
-    }
-    return newDeps;
-  },
-  csbGetVersions: (versions, { muiCommitRef }) => {
-    return {
-      ...versions,
-      '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
-      '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
-      '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
-      '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
-      '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
-      '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
-      '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
-      '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
-      '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
-      '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
-      '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
-      '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
-      '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
-      exceljs: 'latest',
-      '@base-ui-components/utils': 'latest',
-    };
-  },
-  postProcessImport,
-};
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -334,6 +297,52 @@ function AppWrapper(props) {
     };
   }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
+  // Demo context value - provides MUI X-specific configuration for demos
+  const demoContextValue = React.useMemo(() => {
+    return {
+      productDisplayName: 'MUI X',
+      // IframeWrapper: undefined means use default MaterialIframeWrapper
+      // getRootIndex: omitted - uses default Material UI template from CreateReactApp.ts
+      csb: {
+        primaryPackage: '@mui/material',
+        fallbackDependency: { name: '@mui/material', version: 'latest' },
+        // Moved from globalThis.muiDocConfig.csbIncludePeerDependencies
+        includePeerDependencies: (deps, { versions }) => {
+          const newDeps = { ...deps };
+          newDeps['@mui/material'] =
+            versions['@mui/material'] !== 'next' ? versions['@mui/material'] : 'latest';
+          if (newDeps['@mui/x-data-grid-generator']) {
+            newDeps['@mui/icons-material'] = versions['@mui/icons-material'];
+          }
+          return newDeps;
+        },
+        // Moved from globalThis.muiDocConfig.csbGetVersions
+        getVersions: (versions, { muiCommitRef }) => {
+          return {
+            ...versions,
+            '@mui/x-data-grid': getMuiPackageVersion('x-data-grid', muiCommitRef),
+            '@mui/x-data-grid-pro': getMuiPackageVersion('x-data-grid-pro', muiCommitRef),
+            '@mui/x-data-grid-premium': getMuiPackageVersion('x-data-grid-premium', muiCommitRef),
+            '@mui/x-data-grid-generator': getMuiPackageVersion('x-data-grid-generator', muiCommitRef),
+            '@mui/x-date-pickers': getMuiPackageVersion('x-date-pickers', muiCommitRef),
+            '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
+            '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
+            '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
+            '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
+            '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
+            '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
+            '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
+            '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
+            exceljs: 'latest',
+            '@base-ui-components/utils': 'latest',
+          };
+        },
+        // Moved from globalThis.muiDocConfig.postProcessImport
+        postProcessImport,
+      },
+    };
+  }, []);
+
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
   const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
@@ -354,12 +363,14 @@ function AppWrapper(props) {
           <CodeStylingProvider>
             <CodeVariantProvider>
               <PageContext.Provider value={pageContextValue}>
-                <ThemeWrapper>
-                  <DocsStyledEngineProvider cacheLtr={emotionCache}>
-                    {children}
-                    <GoogleAnalytics />
-                  </DocsStyledEngineProvider>
-                </ThemeWrapper>
+                <DemoContext.Provider value={demoContextValue}>
+                  <ThemeWrapper>
+                    <DocsStyledEngineProvider cacheLtr={emotionCache}>
+                      {children}
+                      <GoogleAnalytics />
+                    </DocsStyledEngineProvider>
+                  </ThemeWrapper>
+                </DemoContext.Provider>
               </PageContext.Provider>
             </CodeVariantProvider>
           </CodeStylingProvider>
