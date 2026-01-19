@@ -1,14 +1,14 @@
 # Project guidelines
 
-Check @AGENTS.local.md for personal preferences.
+Check `AGENTS.local.md` for personal preferences.
 
 ## Linting and formatting
 
 ### Linting
 
 ```bash
-pnpm eslint # Run ESLint with cache
-pnpm eslint:fix # Run ESLint and auto-fix issues
+pnpm eslint
+pnpm eslint:fix # Auto-fix issues
 ```
 
 ### Formatting
@@ -21,9 +21,9 @@ pnpm prettier:all # Format all files
 ### Other Linters
 
 ```bash
-pnpm stylelint # CSS/style linting
-pnpm markdownlint # Markdown linting
-pnpm proptypes # Generate/validate PropTypes
+pnpm stylelint
+pnpm markdownlint
+pnpm proptypes
 ```
 
 ## Testing
@@ -58,11 +58,11 @@ pnpm typescript # typecheck the entire monorepo
 
 ## Other scripts
 
-Refer to @package.json for other available scripts.
+Refer to `package.json` for other available scripts.
 
 ## Docs
 
 ### Updating docs demos
 
-When updating demos in @docs, only update the .tsx files.
+When updating demos in the `docs` folder, only update the `.tsx` files.
 To generate JS files, run `pnpm docs:typescript:formatted`.
