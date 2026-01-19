@@ -34,7 +34,7 @@ export function useCharts<
 >(
   inPlugins: ConvertSignaturesIntoPlugins<TSignatures>,
   props: Partial<UseChartBaseProps<TSignatures>>,
-  seriesConfig: ChartSeriesConfig<TSeriesType, TSignatures>,
+  seriesConfig: ChartSeriesConfig<TSeriesType>,
 ) {
   type TSignaturesWithCorePluginSignatures = readonly [
     ...ChartCorePluginSignatures,
@@ -94,7 +94,7 @@ export function useCharts<
       >,
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
-      seriesConfig: seriesConfig as ChartSeriesConfig<any, any>,
+      seriesConfig,
     });
 
     if (pluginResponse.publicAPI) {

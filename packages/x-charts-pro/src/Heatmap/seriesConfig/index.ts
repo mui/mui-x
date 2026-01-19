@@ -10,12 +10,11 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import getItemAtPosition from './getItemAtPosition';
-import type { HeatmapPluginSignatures } from '../Heatmap.plugins';
 import keyboardFocusHandler from './keyboardFocusHandler';
 
 cartesianSeriesTypes.addType('heatmap');
 
-export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap', HeatmapPluginSignatures> = {
+export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   seriesProcessor,
   colorProcessor: getColor,
   legendGetter: () => [],

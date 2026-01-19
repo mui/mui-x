@@ -1,4 +1,4 @@
-import type { ChartPluginSignature } from '../../models';
+import type { ChartPluginSignature, ChartSeriesTypeRequiredPlugins } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 
@@ -26,4 +26,5 @@ export type UseChartItemClickSignature<SeriesType extends ChartSeriesType = Char
     params: UseChartItemClickParameters<SeriesType>;
     defaultizedParams: UseChartItemClickParameters<SeriesType>;
     instance: UseChartItemClickInstance;
+    dependencies: ChartSeriesTypeRequiredPlugins<SeriesType>;
   }>;

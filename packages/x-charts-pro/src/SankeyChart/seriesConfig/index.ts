@@ -5,7 +5,6 @@ import { calculateSankeyLayout } from '../calculateSankeyLayout';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import identifierSerializer from './identifierSerializer';
-import type { SankeyChartPluginSignatures } from '../SankeyChart.plugins';
 
 // Simple passthrough functions for sankey chart
 const seriesProcessor = (series: any) => series;
@@ -23,7 +22,7 @@ const seriesLayout: SeriesLayoutGetter<'sankey'> = (series, drawingArea) => {
   };
 };
 
-export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey', SankeyChartPluginSignatures> = {
+export const sankeySeriesConfig: ChartSeriesTypeConfig<'sankey'> = {
   seriesProcessor,
   seriesLayout,
   colorProcessor,

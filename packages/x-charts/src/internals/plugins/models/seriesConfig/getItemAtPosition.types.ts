@@ -1,14 +1,9 @@
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
-import type { ChartInstance, ChartState } from '../chart';
+import type { ChartState } from '../chart';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import type { ChartAnyPluginSignature } from '../plugin';
+import type { ChartSeriesTypeRequiredPlugins } from './seriesConfig.types';
 
-export type GetItemAtPosition<
-  TSeriesType extends ChartSeriesType,
-  RequiredPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
-  OptionalPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
-> = (
-  state: ChartState<RequiredPluginsSignatures, OptionalPluginsSignatures>,
-  instance: ChartInstance<RequiredPluginsSignatures, OptionalPluginsSignatures>,
+export type GetItemAtPosition<TSeriesType extends ChartSeriesType> = (
+  state: ChartState<ChartSeriesTypeRequiredPlugins<TSeriesType>>,
   point: { x: number; y: number },
 ) => SeriesItemIdentifier<TSeriesType> | undefined;

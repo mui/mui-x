@@ -1,19 +1,9 @@
 'use client';
-import type { ChartAnyPluginSignature, ChartInstance, ChartState, ChartPlugin } from '../../models';
+import type { ChartPlugin } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { UseChartItemClickSignature } from './useChartItemClick.types';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import { getSVGPoint } from '../../../../internals/getSVGPoint';
-
-export type GetItemAtPosition = <
-  TSeriesType extends ChartSeriesType,
-  RequiredPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
-  OptionalPluginsSignatures extends readonly ChartAnyPluginSignature[] = [],
->(
-  state: ChartState<RequiredPluginsSignatures, OptionalPluginsSignatures>,
-  instance: ChartInstance<RequiredPluginsSignatures, OptionalPluginsSignatures>,
-  point: { x: number; y: number },
-) => SeriesItemIdentifier<TSeriesType> | undefined;
 
 export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
   params,
@@ -29,10 +19,15 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
   const getItemPosition = (event: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     const svgPoint = getSVGPoint(event?.currentTarget, event);
 
+    if (!instance.isPointInside(svgPoint.x, svgPoint.y)) {
+      return undefined;
+    }
+
     let item: SeriesItemIdentifier<ChartSeriesType> | undefined = undefined;
 
-    for (const seriesConfig of Object.values(store.state.series.seriesConfig)) {
-      item = seriesConfig.getItemAtPosition?.(store.state, instance, {
+    for (const seriesType of Object.keys(store.state.series.seriesConfig)) {
+      // @ts-ignore The type inference for store.state does not support generic yet
+      item = store.state.series.seriesConfig[seriesType].getItemAtPosition?.(store.state, {
         x: svgPoint.x,
         y: svgPoint.y,
       });

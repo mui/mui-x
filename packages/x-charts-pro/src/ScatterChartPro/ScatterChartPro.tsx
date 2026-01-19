@@ -98,14 +98,13 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
     legendProps,
     axisHighlightProps,
     children,
-  } = useScatterChartProps(other as ScatterChartProps);
+  } = useScatterChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'scatter',
     ScatterChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
-      seriesConfig: props.seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,

@@ -87,7 +87,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
     axisHighlightProps,
     legendProps,
     children,
-  } = useBarChartProps(other as BarChartProps);
+  } = useBarChartProps(other);
 
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'bar',
@@ -95,7 +95,6 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   >(
     {
       ...chartContainerProps,
-      seriesConfig: props.seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,

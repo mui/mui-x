@@ -92,14 +92,13 @@ const LineChartPro = React.forwardRef(function LineChartPro(
     lineHighlightPlotProps,
     legendProps,
     children,
-  } = useLineChartProps(other as LineChartProps);
+  } = useLineChartProps(other);
   const { chartDataProviderProProps, chartsSurfaceProps } = useChartContainerProProps<
     'line',
     LineChartProPluginSignatures
   >(
     {
       ...chartContainerProps,
-      seriesConfig: props.seriesConfig,
       initialZoom,
       zoomData,
       onZoomChange,
