@@ -87,7 +87,7 @@ The `preset-safe` codemods for Charts.
 <!-- #npm-tag-reference -->
 
 ```bash
-npx @mui/x-codemod@latest v9.0.0/charts/preset-safe <path|folder>
+npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
 ```
 
 The list includes these transformers
