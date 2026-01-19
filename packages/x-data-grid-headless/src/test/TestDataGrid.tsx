@@ -1,6 +1,5 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui/utils/store';
 import { ColumnDef, useDataGrid } from '../';
 import sortingPlugin from '../plugins/sorting';
 import paginationPlugin from '../plugins/pagination';
@@ -26,9 +25,9 @@ export function TestDataGrid<TRow extends object>(props: {
     }
   }, [grid, props.apiRef]);
 
-  const rowIds = useStore(grid.store, grid.api.rows.selectors.rowIds);
-  const rowsData = useStore(grid.store, grid.api.rows.selectors.rowIdToModelLookup);
-  const visibleColumns = useStore(grid.store, grid.api.columns.selectors.visibleColumns);
+  const rowIds = grid.store.use(grid.api.rows.selectors.rowIds);
+  const rowsData = grid.store.use(grid.api.rows.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.store.use(grid.api.columns.selectors.visibleColumns);
 
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>

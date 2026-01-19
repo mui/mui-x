@@ -39,7 +39,7 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/x-internals": "workspace:*",
-    "@base-ui/utils": "0.2.3",
+    "@base-ui/utils": "0.2.4",
     "prop-types": "catalog:",
     "type-fest": "catalog:"
   },

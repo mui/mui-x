@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@base-ui/utils": "0.2.3",
     "@mui/x-data-grid-headless": "workspace:@mui/x-data-grid-headless@*",
     "@mui/x-data-grid-headless-pro": "workspace:@mui/x-data-grid-headless-pro@*",
     "@mui/x-data-grid-headless-premium": "workspace:@mui/x-data-grid-headless-premium@*",

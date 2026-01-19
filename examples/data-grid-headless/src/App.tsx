@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useDataGrid } from '@mui/x-data-grid-headless';
-import { StoreInspector, useStore } from '@base-ui/utils/store';
 import sortingPlugin from '@mui/x-data-grid-headless/plugins/sorting';
 import paginationPlugin from '@mui/x-data-grid-headless/plugins/pagination';
 // import { useDataGridPro } from '@mui/x-data-grid-headless-pro';
@@ -109,9 +108,9 @@ function DataGrid() {
     plugins: [sortingPlugin, paginationPlugin],
   });
 
-  const rowIds = useStore(grid.store, grid.api.rows.selectors.rowIds);
-  const rowsData = useStore(grid.store, grid.api.rows.selectors.rowIdToModelLookup);
-  const visibleColumns = useStore(grid.store, grid.api.columns.selectors.visibleColumns);
+  const rowIds = grid.store.use(grid.api.rows.selectors.rowIds);
+  const rowsData = grid.store.use(grid.api.rows.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.store.use(grid.api.columns.selectors.visibleColumns);
 
   const handleRefreshRows = () => {
     setRows(generateSampleData(30));
@@ -129,9 +128,6 @@ function DataGrid() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ position: 'absolute', top: 0, right: 0, zIndex: 1000 }}>
-        <StoreInspector store={grid.store} />
-      </div>
       <div style={{ display: 'flex', gap: '8px' }}>
         <button
           type="button"

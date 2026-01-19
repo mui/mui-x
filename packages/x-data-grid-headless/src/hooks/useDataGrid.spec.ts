@@ -59,7 +59,7 @@ export function Example() {
   grid1.api.pagination.setPage(1);
 
   // Internal plugins state is available
-  grid1.state.rows.tree;
+  grid1.store.getState().rows.tree;
 
   // Selectors - Internal plugins (rows, columns)
   grid1.api.rows.selectors.rowIds;
