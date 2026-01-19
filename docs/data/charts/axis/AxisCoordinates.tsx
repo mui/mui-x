@@ -38,17 +38,18 @@ export default function AxisCoordinates() {
         },
       ]}
       xAxis={[
-        { id: 'x-bottom-1', data: xAxisData, height: 60, position: 'bottom' },
+        { id: 'x-bottom-1', data: xAxisData, height: 60 },
         { id: 'x-bottom-2', data: xAxisData, height: 30, position: 'bottom' },
         { id: 'x-top-1', data: xAxisData, height: 60, position: 'top' },
         { id: 'x-top-2', data: xAxisData, height: 30, position: 'top' },
       ]}
       yAxis={[
-        { id: 'y-left-1', width: 60, position: 'left' },
+        { id: 'y-left-1', width: 60 },
         { id: 'y-left-2', width: 30, position: 'left' },
         { id: 'y-right-1', width: 60, position: 'right' },
         { id: 'y-right-2', width: 30, position: 'right' },
       ]}
+      axesGap={8}
       width={500}
       height={500}
     >
@@ -97,7 +98,8 @@ function AxisPositionIndicator({
         y={coordinates.top}
         width={coordinates.right - coordinates.left}
         height={coordinates.bottom - coordinates.top}
-        fill={`${color}33`}
+        fill={color}
+        fillOpacity={0.2}
         stroke={color}
         strokeWidth={2}
       />

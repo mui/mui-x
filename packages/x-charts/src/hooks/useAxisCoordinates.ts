@@ -1,8 +1,8 @@
 import { useThemeProps } from '@mui/material/styles';
-import { useDrawingArea } from './useDrawingArea';
+import { type ChartDrawingArea, useDrawingArea } from './useDrawingArea';
 import { useXAxes, useYAxes } from './useAxis';
 import { defaultProps } from '../ChartsXAxis/utilities';
-import { type AxisId } from '../models/axis';
+import { type AxisId, type ComputedXAxis, type ComputedYAxis } from '../models/axis';
 
 export interface AxisCoordinates {
   left: number;
@@ -11,36 +11,22 @@ export interface AxisCoordinates {
   bottom: number;
 }
 
-/**
- * Get the coordinates of the given X axis.
- * @param axisId The id of the X axis.
- * @returns {AxisCoordinates | null} The coordinates of the X axis or null if the axis does not exist.
- */
-export function useXAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
-  const { xAxis: xAxes } = useXAxes();
-  const drawingArea = useDrawingArea();
-  const axis = xAxes[axisId];
+export function getXAxisCoordinates(
+  drawingArea: ChartDrawingArea,
+  computedAxis: { position?: ComputedXAxis['position']; offset: number; height: number },
+): AxisCoordinates | null {
+  const { position, offset, height: axisHeight } = computedAxis;
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
-  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
-
-  if (!axis) {
+  if (position === 'none') {
     return null;
   }
 
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
-
-  const { position, offset, height: axisHeight } = defaultizedProps;
-
   let top;
 
-  if (position === 'bottom') {
-    top = drawingArea.top + drawingArea.height + offset;
-  } else {
+  if (position === 'top') {
     top = drawingArea.top - axisHeight - offset;
+  } else {
+    top = drawingArea.top + drawingArea.height + offset;
   }
 
   const left = drawingArea.left;
@@ -56,28 +42,37 @@ export function useXAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
 }
 
 /**
- * Returns the coordinates of the given Y axis.
- * @param axisId The id of the Y axis.
- * @returns {AxisCoordinates | null} The coordinates of the Y axis or null if the axis does not exist.
+ * Get the coordinates of the given X axis.
+ * @param axisId The id of the X axis.
+ * @returns {AxisCoordinates | null} The coordinates of the X axis or null if the axis does not exist or has position: 'none'.
  */
-export function useYAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
-  const { yAxis: yAxes } = useYAxes();
+export function useXAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
+  const { xAxis: xAxes } = useXAxes();
   const drawingArea = useDrawingArea();
-  const axis = yAxes[axisId];
+  const axis = xAxes[axisId];
 
+  // FIXME(v9): Remove
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
-  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
+  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
 
   if (!axis) {
     return null;
   }
 
-  const defaultizedProps = {
-    ...defaultProps,
-    ...themedProps,
-  };
+  const defaultizedProps = { ...defaultProps, ...themedProps };
 
-  const { position, offset, width: axisWidth } = defaultizedProps;
+  return getXAxisCoordinates(drawingArea, defaultizedProps);
+}
+
+export function getYAxisCoordinates(
+  drawingArea: ChartDrawingArea,
+  computedAxis: { position?: ComputedYAxis['position']; offset: number; width: number },
+): AxisCoordinates | null {
+  const { position, offset, width: axisWidth } = computedAxis;
+
+  if (position === 'none') {
+    return null;
+  }
 
   let left;
 
@@ -97,4 +92,30 @@ export function useYAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
     right,
     bottom,
   };
+}
+
+/**
+ * Returns the coordinates of the given Y axis.
+ * @param axisId The id of the Y axis.
+ * @returns {AxisCoordinates | null} The coordinates of the Y axis or null if the axis does not exist or has position: 'none'.
+ */
+export function useYAxisCoordinates(axisId: AxisId): AxisCoordinates | null {
+  const { yAxis: yAxes } = useYAxes();
+  const drawingArea = useDrawingArea();
+  const axis = yAxes[axisId];
+
+  // FIXME(v9): Remove
+  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
+
+  if (!axis) {
+    return null;
+  }
+
+  const defaultizedProps = {
+    ...defaultProps,
+    ...themedProps,
+  };
+
+  return getYAxisCoordinates(drawingArea, defaultizedProps);
 }
