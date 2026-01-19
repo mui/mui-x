@@ -23,6 +23,7 @@ pnpm prettier:all # Format all files
 ```bash
 pnpm stylelint # when editing CSS/style files
 pnpm markdownlint # when editing markdown files
+pnpm generate:exports # when editing code in `packages/x-charts*`
 ```
 
 ## Testing
