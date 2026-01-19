@@ -1,5 +1,10 @@
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
-import { useDrawingArea, useYAxes, useYAxisTicks } from '@mui/x-charts/hooks';
+import {
+  useDrawingArea,
+  useYAxes,
+  useYAxisPosition,
+  useYAxisTicks,
+} from '@mui/x-charts/hooks';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { ChartsYAxisProps } from '@mui/x-charts/models';
@@ -32,24 +37,24 @@ export default function CustomAxisTicks() {
 }
 
 function YAxis(props: ChartsYAxisProps) {
-  const { axisId } = props;
-  const { yAxisIds } = useYAxes();
-  const drawingArea = useDrawingArea();
-
-  const ticks = useYAxisTicks(axisId ?? yAxisIds[0]);
   const theme = useTheme();
+  const { yAxisIds } = useYAxes();
+  const axisId = props.axisId ?? yAxisIds[0];
+
+  const axisPosition = useYAxisPosition(axisId);
+  const ticks = useYAxisTicks(axisId);
 
   return (
     <React.Fragment>
       <line
-        x1={drawingArea.left}
-        x2={drawingArea.left}
-        y1={drawingArea.top}
-        y2={drawingArea.top + drawingArea.height}
+        x1={axisPosition.left}
+        x2={axisPosition.left}
+        y1={axisPosition.top}
+        y2={axisPosition.bottom}
         stroke={theme.palette.common.white}
       />
       {ticks.map((tick, index) => (
-        <g key={index} transform={`translate(${drawingArea.left}, ${tick.offset})`}>
+        <g key={index} transform={`translate(${axisPosition.left}, ${tick.offset})`}>
           <line x1={-4} x2={4} stroke={theme.palette.common.white} />
 
           <text
