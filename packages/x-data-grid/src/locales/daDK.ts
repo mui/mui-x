@@ -17,8 +17,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Luftig',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Fortryd',
+  toolbarRedo: 'Gentag',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',

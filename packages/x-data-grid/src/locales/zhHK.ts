@@ -17,8 +17,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: '舒服的',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: '復原',
+  toolbarRedo: '重做',
 
   // Columns selector toolbar button text
   toolbarColumns: '列',

@@ -17,8 +17,8 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'مريح',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'تراجع',
+  toolbarRedo: 'إعادة',
 
   // Columns selector toolbar button text
   toolbarColumns: 'الأعمدة',

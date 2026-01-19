@@ -37,8 +37,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Комфортний',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Скасувати',
+  toolbarRedo: 'Повторити',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Стовпці',

@@ -17,8 +17,8 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Kényelmes',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Visszavonás',
+  toolbarRedo: 'Újra',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Oszlopok',

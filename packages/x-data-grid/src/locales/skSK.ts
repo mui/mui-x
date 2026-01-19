@@ -17,8 +17,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Komfortná',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Späť',
+  toolbarRedo: 'Znova',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Stĺpce',

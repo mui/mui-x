@@ -17,8 +17,8 @@ const caESGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Còmoda',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Desfés',
+  toolbarRedo: 'Refés',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnes',

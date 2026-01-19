@@ -17,8 +17,8 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'স্বাচ্ছন্দ্যদায়ক',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'পূর্বাবস্থায় ফেরান',
+  toolbarRedo: 'পুনরায় করুন',
 
   // Columns selector toolbar button text
   toolbarColumns: 'কলাম',

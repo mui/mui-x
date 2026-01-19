@@ -17,8 +17,8 @@ const hyAMGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Հարմարավետ',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Հետսարկել',
+  toolbarRedo: 'Կրկնվել',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Սյունակներ',

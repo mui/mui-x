@@ -17,8 +17,8 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Comoda',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Annulla',
+  toolbarRedo: 'Ripeti',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colonne',

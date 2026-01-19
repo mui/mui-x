@@ -17,8 +17,8 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Rahat',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Geri al',
+  toolbarRedo: 'Yinele',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Sütunlar',

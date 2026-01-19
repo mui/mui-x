@@ -17,8 +17,8 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Cómoda',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Deshacer',
+  toolbarRedo: 'Rehacer',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',

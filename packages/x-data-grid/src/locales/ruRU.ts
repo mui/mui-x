@@ -37,8 +37,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Комфортная',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Отменить',
+  toolbarRedo: 'Повторить',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Столбцы',

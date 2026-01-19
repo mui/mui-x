@@ -17,8 +17,8 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Komfort',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Cofnij',
+  toolbarRedo: 'Ponów',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumny',

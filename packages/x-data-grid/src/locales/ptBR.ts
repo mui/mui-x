@@ -18,8 +18,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Confortável',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Desfazer',
+  toolbarRedo: 'Refazer',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colunas',

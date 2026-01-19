@@ -17,8 +17,8 @@ const viVNGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Rộng',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Hoàn tác',
+  toolbarRedo: 'Làm lại',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Cột',

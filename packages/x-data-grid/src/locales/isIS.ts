@@ -17,8 +17,8 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Rúmlegt',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Afturkalla',
+  toolbarRedo: 'Endurgera',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Dálkar',

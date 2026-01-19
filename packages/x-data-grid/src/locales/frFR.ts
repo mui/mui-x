@@ -17,8 +17,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'Confortable',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'Annuler',
+  toolbarRedo: 'Rétablir',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colonnes',

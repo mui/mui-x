@@ -17,8 +17,8 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarDensityComfortable: 'مناسب',
 
   // Undo/redo toolbar button text
-  // toolbarUndo: 'Undo',
-  // toolbarRedo: 'Redo',
+  toolbarUndo: 'واپس',
+  toolbarRedo: 'دوبارہ',
 
   // Columns selector toolbar button text
   toolbarColumns: 'کالمز',
