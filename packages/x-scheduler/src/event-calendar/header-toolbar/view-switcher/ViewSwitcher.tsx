@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { ChevronDown } from 'lucide-react';
+import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -113,7 +113,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
             aria-haspopup="true"
             aria-expanded={menuOpen ? 'true' : undefined}
           >
-            <ChevronDown size={16} strokeWidth={1.5} />
+            <ExpandMoreOutlined fontSize="small" />
           </IconButton>
           <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
             {dropdown.map((dropdownView) => (

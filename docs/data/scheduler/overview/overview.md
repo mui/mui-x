@@ -15,6 +15,10 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
+## Getting started
+
+- [Quickstart](/x/react-scheduler/quickstart/)
+
 ## Common features
 
 - [Event properties](/x/react-scheduler/event-properties/)
