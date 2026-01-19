@@ -73,31 +73,14 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## Heatmap: hideLegend default value changed ✅
+## Heatmap
+
+### `hideLegend` default value changed ✅
 
 The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
 
-**Migration steps:**
-
-- If you relied on the legend being hidden by default, you must now explicitly set `hideLegend={true}` on your `Heatmap` components to preserve the previous behavior.
-- A codemod is provided to update usages automatically. Run:
-
-```bash
-npx @mui/x-codemod@next v9.0.0/charts/heatmap-hide-legend-default <path>
+```diff
+ <Heatmap
++  hideLegend
+ />
 ```
-
-- If you use props spreading or dynamic props, review your code to ensure the legend visibility matches your intent.
-
-**Example before (v8):**
-
-```tsx
-<Heatmap ...otherProps />
-```
-
-**Example after (v9, to preserve v8 behavior):**
-
-```tsx
-<Heatmap hideLegend ...otherProps />
-```
-
-If you want the legend to be shown (the new default), no change is needed.
