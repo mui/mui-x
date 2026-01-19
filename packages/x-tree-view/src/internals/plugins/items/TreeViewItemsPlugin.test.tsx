@@ -583,6 +583,62 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
+    describe('domStructure prop', () => {
+      it.skipIf(!isRichTreeView)(
+        'should use nested DOM structure by default (children inside parent)',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+          });
+
+          const parentRoot = view.getItemRoot('1');
+          const childRoot = view.getItemRoot('1.1');
+
+          // In nested DOM structure, the child is a descendant of the parent
+          expect(parentRoot.contains(childRoot)).to.equal(true);
+        },
+      );
+
+      it.skipIf(!isRichTreeView)(
+        'should use flat DOM structure when domStructure="flat" (children as siblings)',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+            domStructure: 'flat',
+          });
+
+          const parentRoot = view.getItemRoot('1');
+          const childRoot = view.getItemRoot('1.1');
+
+          // In flat DOM structure, the child is NOT a descendant of the parent
+          expect(parentRoot.contains(childRoot)).to.equal(false);
+          // Both items should be siblings (same parent)
+          expect(parentRoot.parentElement).to.equal(childRoot.parentElement);
+        },
+      );
+
+      it.skipIf(!isRichTreeView)(
+        'should render deeply nested items correctly with flat DOM structure',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }] }] }],
+            defaultExpandedItems: ['1', '1.1'],
+            domStructure: 'flat',
+          });
+
+          const item1 = view.getItemRoot('1');
+          const item11 = view.getItemRoot('1.1');
+          const item111 = view.getItemRoot('1.1.1');
+
+          // All items should be siblings in flat structure
+          expect(item1.parentElement).to.equal(item11.parentElement);
+          expect(item11.parentElement).to.equal(item111.parentElement);
+        },
+      );
+    });
+
     describe('lazy loading (dataSource)', () => {
       it.skipIf(treeViewComponentName !== 'RichTreeViewPro')(
         'should not reset focus after lazy loading children when checkboxSelection is enabled',
