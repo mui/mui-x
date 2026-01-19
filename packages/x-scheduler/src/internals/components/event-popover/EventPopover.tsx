@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { Popover } from '@base-ui/react/popover';
 import { styled } from '@mui/material/styles';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -35,7 +35,7 @@ const EventPopoverPositioner = styled(Popover.Positioner, {
   ...schedulerPaletteStyles,
 }));
 
-const EventPopover = createPopover<SchedulerEventOccurrence>({
+const EventPopover = createPopover<SchedulerRenderableEventOccurrence>({
   contextName: 'EventPopoverContext',
 });
 

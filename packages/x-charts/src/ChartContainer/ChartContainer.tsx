@@ -2,11 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, type ChartDataProviderProps } from '../ChartDataProvider';
+import {
+  ChartDataProvider,
+  type ChartDataProviderProps,
+  type ChartDataProviderSlotProps,
+  type ChartDataProviderSlots,
+} from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+
+export interface ChartContainerSlots extends ChartDataProviderSlots {}
+
+export interface ChartContainerSlotProps extends ChartDataProviderSlotProps {}
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -65,6 +74,11 @@ ChartContainer.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * Configuration for the brush interaction.
    */

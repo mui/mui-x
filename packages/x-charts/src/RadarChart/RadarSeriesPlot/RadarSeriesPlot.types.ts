@@ -2,6 +2,10 @@ import type * as React from 'react';
 import { type RadarSeriesPlotClasses } from './radarSeriesPlotClasses';
 import { type RadarItemIdentifier } from '../../models/seriesType/radar';
 
+export interface RadarSeriesAreaClasses extends RadarSeriesPlotClasses {}
+
+export interface RadarSeriesMarksClasses extends RadarSeriesPlotClasses {}
+
 interface CommonRadarSeriesPlotProps {
   /**
    * The id of the series to display.

@@ -29,7 +29,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
   svgRef,
   instance,
 }) => {
-  const { xAxis, yAxis, dataset, onHighlightedAxisChange } = params;
+  const { xAxis, yAxis, dataset, onHighlightedAxisChange, axesGap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -78,10 +78,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     store.set('cartesianAxis', {
-      x: defaultizeXAxis(xAxis, dataset),
-      y: defaultizeYAxis(yAxis, dataset),
+      axesGap,
+      x: defaultizeXAxis(xAxis, dataset, axesGap),
+      y: defaultizeYAxis(yAxis, dataset, axesGap),
     });
-  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
+  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, axesGap, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -268,20 +269,23 @@ useChartCartesianAxis.params = {
   disableAxisListener: true,
   onHighlightedAxisChange: true,
   highlightedAxis: true,
+  axesGap: true,
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
+    axesGap: params.axesGap ?? 0,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, params.axesGap ?? 0),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, params.axesGap ?? 0),
   };
 };
 
 useChartCartesianAxis.getInitialState = (params) => ({
   cartesianAxis: {
+    axesGap: params.axesGap,
     x: params.defaultizedXAxis,
     y: params.defaultizedYAxis,
   },

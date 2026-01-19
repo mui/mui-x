@@ -454,7 +454,7 @@ export class SchedulerStore<
       return this.updateEvents({ updated: [updatedEvent] }).updated[0];
     }
 
-    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat!;
+    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
       ...cleanChanges,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence } from '../models';
+import { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
 import { useAdapter } from '../use-adapter/useAdapter';
 import { Adapter } from '../use-adapter/useAdapter.types';
 import { sortEventOccurrences } from '../sort-event-occurrences';
@@ -59,6 +59,14 @@ export namespace useEventOccurrencesWithTimelinePosition {
   export interface EventOccurrenceWithPosition extends SchedulerEventOccurrence {
     position: EventOccurrencePosition;
   }
+
+  export interface EventOccurrencePlaceholderWithPosition extends SchedulerEventOccurrencePlaceholder {
+    position: EventOccurrencePosition;
+  }
+
+  export type EventRenderableOccurrenceWithPosition =
+    | EventOccurrenceWithPosition
+    | EventOccurrencePlaceholderWithPosition;
 
   export interface ReturnValue {
     /**

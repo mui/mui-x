@@ -21,3 +21,7 @@ export type SelectorChartRawYAxisType = <
 ) => DefaultedYAxis[] | undefined;
 
 export const selectorChartRawYAxis: SelectorChartRawYAxisType = (state) => state.cartesianAxis?.y;
+
+export const selectorChartCartesianAxesGap = (
+  state: ChartState<[], [UseChartCartesianAxisSignature]>,
+) => state.cartesianAxis?.axesGap ?? 0;
