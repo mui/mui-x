@@ -28,7 +28,7 @@ pnpm proptypes
 
 ## Testing
 
-### Unit tests in JSDOM
+### Run unit tests in JSDOM
 
 ```bash
 # Filter by project name (glob patterns supported)
@@ -37,7 +37,7 @@ pnpm test:unit --project "x-charts*" # starts with
 pnpm test:unit --project "*-pro" # ends with
 ```
 
-### Unit tests in the browser
+### Run unit tests in the browser
 
 ```bash
 # Filter by project name (glob patterns supported)
@@ -45,6 +45,13 @@ pnpm test:browser --project "x-data-grid" # exact match
 pnpm test:browser --project "x-charts*" # starts with
 pnpm test:browser --project "*-pro" # ends with
 ```
+
+### Writing new unit tests
+
+#### Ensuring a test only runs in a specific environment
+
+- Use `it.skipIf(isJSDOM)` to skip when running unit tests
+- Use `it.skipIf(!isJSDOM)` to run only in browser mode.
 
 ## TypeScript
 
