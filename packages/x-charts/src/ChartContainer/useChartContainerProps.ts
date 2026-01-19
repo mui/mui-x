@@ -45,6 +45,7 @@ export const useChartContainerProps = <
     onHighlightChange,
     sx,
     title,
+    axesGap,
     xAxis,
     yAxis,
     zAxis,
@@ -61,6 +62,7 @@ export const useChartContainerProps = <
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
+    initialHiddenItems,
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
@@ -88,6 +90,7 @@ export const useChartContainerProps = <
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
+    axesGap,
     xAxis,
     yAxis,
     zAxis,
@@ -103,6 +106,7 @@ export const useChartContainerProps = <
     brushConfig,
     onHiddenItemsChange,
     hiddenItems,
+    initialHiddenItems,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,

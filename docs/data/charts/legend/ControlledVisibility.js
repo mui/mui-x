@@ -13,7 +13,9 @@ const data = [
 ];
 
 export default function ControlledVisibility() {
-  const [hiddenItems, setHiddenItems] = React.useState([]);
+  const [hiddenItems, setHiddenItems] = React.useState([
+    { type: 'pie', seriesId: 'custom', dataIndex: 0 },
+  ]);
 
   const handleShowAll = () => {
     setHiddenItems([]);

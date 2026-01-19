@@ -33,5 +33,11 @@
       "nodeName": "ticks label"
     },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
+  },
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label."
   }
 }

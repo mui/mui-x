@@ -1,5 +1,6 @@
 {
   "props": {
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "brushConfig": {
       "type": {
         "name": "shape",
@@ -36,6 +37,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: any, seriesId?: { toLocaleString: func, toString: func, valueOf: func }, type: object }&gt;"
+      }
+    },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
@@ -136,6 +143,10 @@
     "import { ChartContainer } from '@mui/x-charts';",
     "import { ChartContainer } from '@mui/x-charts-pro';",
     "import { ChartContainer } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null }
   ],
   "classes": [],
   "spread": true,

@@ -14,5 +14,9 @@
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "funnelSection": "Custom component for funnel section.",
+    "funnelSectionLabel": "Custom component for funnel section label."
+  }
 }

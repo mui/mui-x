@@ -41,14 +41,22 @@ export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPrevi
       {seriesOrder.map((seriesId) => {
         const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
+        const xAxis = xAxes[xAxisId ?? defaultXAxisId];
+        const yAxis = yAxes[yAxisId ?? defaultYAxisId];
+
+        // This series is not attached to the current axis, skip it.
+        if (xAxis?.id !== axisId && yAxis?.id !== axisId) {
+          return null;
+        }
+
         const colorGetter = scatterSeriesConfig.colorProcessor(
           series[seriesId],
-          xAxes[xAxisId ?? defaultXAxisId],
-          yAxes[yAxisId ?? defaultYAxisId],
+          xAxis,
+          yAxis,
           zAxes[zAxisId ?? defaultZAxisId],
         );
-        const xScale = xAxes[xAxisId ?? defaultXAxisId].scale;
-        const yScale = yAxes[yAxisId ?? defaultYAxisId].scale;
+        const xScale = xAxis.scale;
+        const yScale = yAxis.scale;
 
         return (
           <ScatterPreviewItems
