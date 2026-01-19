@@ -6,8 +6,6 @@ import {
   defaultVisibleDate,
 } from '../datasets/personal-agenda';
 
-// WIP!!! Mostly used to check fetching behavior with the store caching mechanism.
-
 const flatResources = agendaResources.map((r) => ({
   id: r.id,
   title: r.title,
@@ -115,8 +113,6 @@ const resolveUpdate = async (_params) => {
 export default function BasicDataSource() {
   const fetchData = async (start, end) => {
     const generated = generateRandomEventsInRange(start, end, flatResources);
-
-    // console.log('Fetching events for range:', start, end);
 
     return new Promise((resolve) => {
       setTimeout(() => {

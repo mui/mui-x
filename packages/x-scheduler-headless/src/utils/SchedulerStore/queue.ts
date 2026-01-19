@@ -120,8 +120,10 @@ export class SchedulerDataManager {
     const fetchQueue = Array.from(this.queuedRequests.entries());
     const fetchPromises: Promise<void>[] = [];
 
-    // const startIndex = Math.max(0, fetchQueue.length - loopLength);
-    for (const [rangeKey, range] of fetchQueue) {
+    const startIndex = Math.max(0, fetchQueue.length - loopLength);
+    const itemsToProcess = fetchQueue.slice(startIndex);
+
+    for (const [rangeKey, range] of itemsToProcess) {
       this.queuedRequests.delete(rangeKey);
       this.pendingRequests.set(rangeKey, range);
 
