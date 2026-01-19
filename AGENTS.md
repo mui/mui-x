@@ -21,8 +21,8 @@ pnpm prettier:all # Format all files
 ### Other Linters
 
 ```bash
-pnpm stylelint
-pnpm markdownlint
+pnpm stylelint # when editing CSS/style files
+pnpm markdownlint # when editing markdown files
 ```
 
 ## Testing
