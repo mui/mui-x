@@ -82,6 +82,30 @@ The corresponding sub-sections are listed below
 
 ### 🚀 `preset-safe` for Charts v9.0.0
 
+The `preset-safe` codemods for Charts.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`rename-axis-tooltip-hook`](#rename-axis-tooltip-hook)
+
+#### `rename-axis-tooltip-hook`
+
+Renames the `useAxisTooltip` hook to `useAxesTooltip`, and the related types `UseAxisTooltipReturnValue` and `UseAxisTooltipParams` to `UseAxesTooltipReturnValue` and `UseAxesTooltipParams` respectively.
+
+```diff
+-import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
++import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
+
+-import { useAxisTooltip } from '@mui/x-charts/ChartsTooltip';
++import { useAxesTooltip } from '@mui/x-charts/ChartsTooltip';
+```
+
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0
