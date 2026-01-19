@@ -24,6 +24,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -81,6 +82,7 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // State hooks
   const [tabValue, setTabValue] = React.useState('general');
@@ -117,7 +119,7 @@ export function FormContent(props: FormContentProps) {
       return;
     }
 
-    const { start, end, surfaceType } = computeRange(adapter, next);
+    const { start, end, surfaceType } = computeRange(adapter, next, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;
@@ -149,7 +151,7 @@ export function FormContent(props: FormContentProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { start, end } = computeRange(adapter, controlled);
+    const { start, end } = computeRange(adapter, controlled, displayTimezone);
 
     const form = new FormData(event.currentTarget);
 

@@ -23,7 +23,26 @@
     "import { RadarGrid } from '@mui/x-charts-pro';",
     "import { RadarGrid } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "divider",
+      "className": "MuiRadarGrid-divider",
+      "description": "Styles applied to every divider element.",
+      "isGlobal": false
+    },
+    {
+      "key": "radial",
+      "className": "MuiRadarGrid-radial",
+      "description": "Styles applied to every radial line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "stripe",
+      "className": "MuiRadarGrid-stripe",
+      "description": "Styles applied to every stripe element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiRadarGrid",
   "filename": "/packages/x-charts/src/RadarChart/RadarGrid/RadarGrid.tsx",
   "inheritance": null,

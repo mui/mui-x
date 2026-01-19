@@ -61,8 +61,7 @@
     "@floating-ui/react": "^0.27.16",
     "@mui/x-internals": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
-    "clsx": "catalog:",
-    "lucide-react": "^0.562.0"
+    "clsx": "catalog:"
   },
   "peerDependencies": {
     "@emotion/react": "^11.9.0",

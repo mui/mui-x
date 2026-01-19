@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Heatmap, HeatmapCellProps } from '@mui/x-charts-pro/Heatmap';
+import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import {
   AxisValueFormatterContext,
   HeatmapValueType,
@@ -85,7 +85,8 @@ export default function ZoomHeatmap() {
           },
         ]}
         series={[{ data: seriesData }]}
-        slots={{ cell: HeatmapCell, tooltip: Tooltip }}
+        borderRadius={4}
+        slots={{ tooltip: Tooltip }}
       />
       <Typography variant="caption">Source: GitHub</Typography>
     </Stack>
@@ -143,8 +144,4 @@ function TooltipContent() {
       </Typography>
     </Stack>
   );
-}
-
-function HeatmapCell({ ownerState, ...props }: HeatmapCellProps) {
-  return <rect {...props} rx={4} ry={4} fill={ownerState.color} />;
 }

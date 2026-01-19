@@ -14,4 +14,10 @@ export * from './sankeyHighlightHooks';
 export * from '../hooks/useSankeySeries';
 export { type SankeyPlotClasses, sankeyPlotClasses } from './sankeyClasses';
 export { SankeyTooltip, SankeyTooltipContent } from './SankeyTooltip';
-export type { SankeyTooltipProps } from './SankeyTooltip';
+export type {
+  SankeyTooltipProps,
+  SankeyTooltipClasses,
+  SankeyTooltipContentClasses,
+  SankeyTooltipSlots,
+  SankeyTooltipSlotProps,
+} from './SankeyTooltip';

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { CheckIcon, ChevronDown } from 'lucide-react';
+import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
+import CheckIcon from '@mui/icons-material/Check';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
@@ -151,7 +152,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
         aria-controls={open ? 'resource-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        endIcon={<ChevronDown size={14} />}
+        endIcon={<ExpandMoreRounded fontSize="small" />}
       >
         <ResourceMenuTriggerContent resource={resource} color={color} />
         <span>{resource ? resource.label : translations.labelInvalidResource}</span>
@@ -185,7 +186,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
             <ListItemText>{resourceOption.label}</ListItemText>
             {resourceId === resourceOption.value && (
               <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
-                <CheckIcon size={16} strokeWidth={1.5} />
+                <CheckIcon fontSize="small" />
               </ListItemIcon>
             )}
           </MenuItem>
@@ -204,7 +205,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
               aria-label={colorOption}
               data-palette={colorOption}
             >
-              {color === colorOption && <CheckIcon size={14} strokeWidth={1.5} />}
+              {color === colorOption && <CheckIcon fontSize="small" />}
             </ResourceMenuColorRadioButton>
           ))}
         </Box>
