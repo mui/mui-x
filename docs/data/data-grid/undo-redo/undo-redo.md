@@ -11,13 +11,15 @@ It tracks registered events, listens for keyboard events and adds toolbar button
 
 ## Basic usage
 
-The undo/redo feature is enabled when at least one event handler is registered and `historyStackSize` is greater than 0.
+The undo/redo feature is enabled when at least one history event handler is registered and `historyStackSize` is greater than 0 (default is 30).
 The toolbar automatically displays undo and redo buttons when the feature is active.
 
 Users can:
 
 - Undo an action using <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Z</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Z</kbd></kbd> on macOS)
 - Redo an action using <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Z</kbd></kbd> and <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Y</kbd></kbd> (<kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Shift</kbd>+<kbd class="key">Z</kbd></kbd> and <kbd><kbd class="key">⌘ Command</kbd>+<kbd class="key">Y</kbd></kbd> on macOS)
+
+In the following demo, undo-redo is available for the "edit" and "paste" operations.
 
 {{"demo": "BasicUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -29,7 +31,7 @@ To disable the undo/redo feature, set `historyStackSize` to `0`:
 <DataGridPremium historyStackSize={0} />
 ```
 
-This prevents any history from being tracked and hides the undo/redo buttons from the toolbar.
+This removes existing history, prevents any further history from being tracked, and hides the undo/redo buttons from the toolbar.
 
 {{"demo": "ToggleUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -49,16 +51,16 @@ To remove the toolbar buttons for undo and redo while keeping the keyboard contr
 />
 ```
 
-## Event handlers
+## History event handlers
 
-The Data Grid tracks changes and stores the data that can be used to revert those changes based on the provided history event handlers.
+The Data Grid tracks changes and stores the data that can be used to revert those changes based on the provided history event handlers. Each handler must correspond to one of the [Data Grid events](/x/react-data-grid/events/#catalog-of-events).
 
 A history event handler is an object that defines how to `store()`, `undo()`, `redo()`, and `validate()` the ability to undo or redo an action.
 
 ```tsx
 interface GridHistoryEventHandler<T = any> {
   // Store the data when the event occurs.
-  // Returns null to skip adding the current change to the stack (to control undo step granularity)
+  // Return `null` to skip adding the current change to the stack (to control undo step granularity)
   store: (...params: any[]) => T | null;
 
   // Undo the action
@@ -68,7 +70,7 @@ interface GridHistoryEventHandler<T = any> {
   redo: (data: T) => void | Promise<void>;
 
   // Validate whether the operation can be performed
-  // Can be omitted if validation is not needed for the current event handler
+  // Can be omitted if validation is not needed for the current history event handler
   validate?: (data: T, operation: 'undo' | 'redo') => boolean;
 }
 ```
@@ -89,7 +91,7 @@ When not using a [Data Source](/x/react-data-grid/server-side-data/), the follow
 
 When using a Data Source, `clipboardPasteEnd` is not tracked and the other two events are only tracked if your Data Source is set up to support [editing](/x/react-data-grid/server-side-data/#updating-server-side-data) (by providing the `updateRow` method).
 
-If you use a Data Source that doesn't have an `updateRow` method, then the event handler list is empty and the feature is disabled.
+If you use a Data Source that doesn't have an `updateRow` method, then the history event handler list is empty and the feature is disabled.
 
 :::warning
 Default handlers invalidate the stack if the data is not visible to the user anymore due to filtering, grouping, page change, etc.
@@ -102,9 +104,9 @@ Remove the `updateRow` method to see the toolbar adjustment.
 
 {{"demo": "DataSourceUndoRedo.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Custom event handlers
+## Custom history event handlers
 
-Provide your own map of the event handlers via the `historyEventHandlers` prop to change the default handlers or to track more events and add them to the undo/redo stack.
+Provide your own map of the history event handlers via the `historyEventHandlers` prop to change the default handlers or to track more events and add them to the undo/redo stack.
 Use default handler exports (like `createCellEditHistoryHandler()`) to create a map that can combine:
 
 - default handlers
@@ -113,7 +115,7 @@ Use default handler exports (like `createCellEditHistoryHandler()`) to create a 
 
 ### Customizing default handlers
 
-The following demo shows how to keep the default clipboard paste event handler and customize the cell edit handler to:
+The following demo shows how to keep the default clipboard paste history event handler and customize the cell edit handler to:
 
 - Keep undo/redo operations valid even when the cell is on a different page
 - Automatically navigate to the correct page when undoing/redoing
