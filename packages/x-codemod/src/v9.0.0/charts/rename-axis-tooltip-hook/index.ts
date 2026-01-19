@@ -14,7 +14,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   renameImports({
     j,
     root,
-    packageNames: ['@mui/x-charts', '@mui/x-charts-pro'],
+    packageNames: ['@mui/x-charts', '@mui/x-charts-pro', '@mui/x-charts-premium'],
     imports: [
       {
         oldEndpoint: 'ChartsTooltip',
