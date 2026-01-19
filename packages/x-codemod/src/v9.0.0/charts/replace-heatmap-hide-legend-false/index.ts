@@ -21,5 +21,6 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     componentNames: ['Heatmap', 'HeatmapPremium'],
     propName: 'hideLegend',
     propValue: true,
+    position: 'start',
   }).toSource(printOptions);
 }

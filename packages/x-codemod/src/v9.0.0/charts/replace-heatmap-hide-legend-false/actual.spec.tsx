@@ -7,4 +7,6 @@
   <HeatmapPremium series={[{}]} hideLegend={false} />
   <Heatmap series={[{}]} />
   <HeatmapPremium series={[{}]} />
+  <Heatmap {...otherProps} />
+  <HeatmapPremium {...otherProps} />
 </div>;

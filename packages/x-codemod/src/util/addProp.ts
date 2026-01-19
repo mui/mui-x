@@ -3,9 +3,22 @@ import type { Collection, JSCodeshift } from 'jscodeshift';
 interface RemovePropsArgs {
   j: JSCodeshift;
   root: Collection<any>;
+  /**
+   * Names of the components to add the prop to.
+   */
   componentNames: string[];
+  /**
+   * Name of the prop to add.
+   */
   propName: string;
+  /**
+   * Value of the prop to add.
+   */
   propValue: any;
+  /**
+   * Whether to add the prop at the start or the end of the props list.
+   */
+  position: 'start' | 'end';
 }
 
 /**
@@ -13,7 +26,14 @@ interface RemovePropsArgs {
  *
  * Can be configured to only add the prop if it is absent.
  */
-export default function addProp({ j, root, componentNames, propName, propValue }: RemovePropsArgs) {
+export default function addProp({
+  j,
+  root,
+  componentNames,
+  propName,
+  propValue,
+  position,
+}: RemovePropsArgs) {
   return root
     .find(j.JSXElement)
     .filter((path) => {
@@ -25,7 +45,9 @@ export default function addProp({ j, root, componentNames, propName, propValue }
       });
 
       if (!hasProp) {
-        path.value.openingElement.attributes?.push(
+        const fn = position === 'start' ? ('unshift' as const) : ('push' as const);
+
+        path.value.openingElement.attributes?.[fn](
           j.jsxAttribute(
             j.jsxIdentifier(propName),
             typeof propValue === 'boolean' && propValue
