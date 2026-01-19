@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { Eye, EyeClosed } from 'lucide-react';
+import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -83,9 +84,9 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
         sx={{ ml: 'auto' }}
       >
         {isVisible ? (
-          <Eye size={16} strokeWidth={1.5} />
+          <VisibilityOutlined fontSize="small" />
         ) : (
-          <EyeClosed size={16} strokeWidth={1.5} />
+          <VisibilityOffOutlined fontSize="small" />
         )}
       </IconButton>
     </ResourcesLegendItemRoot>

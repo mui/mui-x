@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { X } from 'lucide-react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import { Popover } from '@base-ui/react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
@@ -89,7 +89,7 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
             <Popover.Close
               render={
                 <IconButton aria-label={translations.closeButtonAriaLabel} size="small">
-                  <X size={16} strokeWidth={1.5} />
+                  <CloseRounded fontSize="small" />
                 </IconButton>
               }
             />
