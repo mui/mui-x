@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Popover } from '@base-ui/react';
-import { X } from 'lucide-react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { useTranslations } from '../../utils/TranslationsContext';
@@ -37,7 +37,7 @@ export default function EventPopoverHeader({ children }: React.PropsWithChildren
         aria-label={translations.closeButtonAriaLabel}
         render={<IconButton size="small" />}
       >
-        <X size={18} strokeWidth={2} />
+        <CloseRounded fontSize="small" />
       </Popover.Close>
     </EventPopoverHeaderRoot>
   );
