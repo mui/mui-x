@@ -6,6 +6,7 @@ import useForkRef from '@mui/utils/useForkRef';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
+import { vars } from '../constants/cssVariables';
 import { GridRowEventLookup } from '../models/events';
 import { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
@@ -345,6 +346,15 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
           height={rowHeight}
           field={column.field}
           align={column.align}
+          skeletonProps={{
+            style: {
+              marginLeft:
+                indexRelativeToAllColumns === 0 && rowNode.depth > 0
+                  ? // TODO: Make the factor configurable
+                    vars.spacing(rowNode.depth * 2)
+                  : '0px',
+            },
+          }}
         />
       );
     }

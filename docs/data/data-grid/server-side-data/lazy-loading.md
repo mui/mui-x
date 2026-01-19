@@ -108,17 +108,23 @@ The following demo showcases how the loading mode can change as described above,
 
 {{"demo": "ServerSideLazyLoadingModeUpdate.js", "bg": "inline"}}
 
-## Nested lazy loading 🚧
+## Nested lazy loading
 
-:::warning
-This feature isn't available yet, but it is planned—you can 👍 upvote [this GitHub issue](https://github.com/mui/mui-x/issues/14527) to help us prioritize it.
-Please don't hesitate to leave a comment there to describe your needs, especially if you have a use case we should address or you're facing specific pain points with your current solution.
-:::
+To use lazy loading for the nested data (tree data or row grouping), pass the `lazyLoading` flag to the Data Grid and the `dataSource` prop to the Data Grid.
 
-With this feature, you would be able to use the `lazyLoading` flag in use cases that also involve tree data and/or row grouping.
+The nested lazy loading doesn't support the "infinite loading" mode, and you must provide the row count upfront for all the parents including the root, this is to avoid the unnecessary flickers during the loading process.
 
-Before it is implemented internally you can use the [row pinning](/x/react-data-grid/row-pinning/) feature to implement nested lazy loading with a few limitations.
-Check the [server-side data recipes](/x/react-data-grid/server-side-data/recipes/) section for a working example.
+### With tree data
+
+The demo below exhibits the behavior of the nested lazy loading with tree data.
+
+{{"demo": "ServerSideTreeDataNestedLazyLoading.js", "bg": "inline"}}
+
+### With row grouping
+
+The demo below exhibits the behavior of the nested lazy loading with row grouping.
+
+{{"demo": "ServerSideRowGroupingNestedLazyLoading.js", "bg": "inline"}}
 
 ## Error handling
 

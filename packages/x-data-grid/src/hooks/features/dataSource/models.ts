@@ -50,7 +50,7 @@ export interface GridDataSourceApiBase {
 
 export interface GridDataSourceBaseOptions {
   cacheOptions?: GridDataSourceCacheDefaultConfig;
-  fetchRowChildren?: (parents: GridRowId[]) => void;
+  fetchRowChildren?: (parentId: GridRowId, fetchParams: GridGetRowsParams) => void;
   clearDataSourceState?: () => void;
   handleEditRow?: (params: GridUpdateRowParams, updatedRow: GridRowModel) => void;
 }

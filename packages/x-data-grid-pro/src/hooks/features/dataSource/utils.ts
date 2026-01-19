@@ -7,6 +7,7 @@ import {
   GridRowTreeConfig,
 } from '@mui/x-data-grid';
 import { GridPrivateApiPro } from '../../../models';
+import { GridGetRowsParamsPro } from './models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 
@@ -28,6 +29,8 @@ export class NestedDataManager {
   private queuedRequests: Set<GridRowId> = new Set();
 
   private settledRequests: Set<GridRowId> = new Set();
+
+  private fetchParams: Map<GridRowId, GridGetRowsParamsPro> = new Map();
 
   private api: GridPrivateApiPro;
 
@@ -58,14 +61,17 @@ export class NestedDataManager {
       const id = fetchQueue[i];
       this.queuedRequests.delete(id);
       this.pendingRequests.add(id);
-      this.api.fetchRowChildren(id);
+      this.api.fetchRowChildren(id, this.fetchParams.get(id));
     }
   };
 
-  public queue = async (ids: GridRowId[]) => {
+  public queue = async (ids: GridRowId[], fetchParams?: GridGetRowsParamsPro[]) => {
     const loadingIds: Record<GridRowId, boolean> = {};
-    ids.forEach((id) => {
+    ids.forEach((id, index) => {
       this.queuedRequests.add(id);
+      if (fetchParams?.[index]) {
+        this.fetchParams.set(id, fetchParams[index]);
+      }
       loadingIds[id] = true;
     });
     this.api.setState((state) => ({

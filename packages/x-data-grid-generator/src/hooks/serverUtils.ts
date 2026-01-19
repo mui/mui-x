@@ -614,11 +614,14 @@ export const processTreeDataRows = (
   let childRowsWithDescendantCounts = childRows.map((row) => {
     const descendants = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, -1);
     const descendantCount = descendants.length;
+    const children = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, 1);
+    const childrenCount = children.length;
     if (descendantCount > 0 && queryOptions.aggregationModel) {
       // Parent row, compute aggregation
       return {
         ...row,
         descendantCount,
+        childrenCount,
         ...applyAggregation(
           queryOptions.aggregationModel,
           columnsWithDefaultColDef,
@@ -627,7 +630,7 @@ export const processTreeDataRows = (
         ),
       };
     }
-    return { ...row, descendantCount } as GridRowModel;
+    return { ...row, descendantCount, childrenCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {
@@ -649,15 +652,23 @@ export const processTreeDataRows = (
     );
   }
 
-  if (queryOptions.paginationModel && (queryOptions.groupKeys.length === 0 || nestedPagination)) {
-    // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
-    // Except when nested pagination is enabled, in which case we paginate the children of the current group node
-    const { pageSize, page } = queryOptions.paginationModel;
-    if (pageSize < childRowsWithDescendantCounts.length) {
+  // Apply pagination using start/end if provided, otherwise fall back to paginationModel
+  if (queryOptions.groupKeys.length === 0 || nestedPagination) {
+    if (queryOptions.start !== undefined && queryOptions.end !== undefined) {
+      // Use start/end for range-based pagination (needed for nested lazy loading)
       childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
-        page * pageSize,
-        (page + 1) * pageSize,
+        queryOptions.start,
+        queryOptions.end + 1,
       );
+    } else if (queryOptions.paginationModel) {
+      // Fall back to paginationModel for backward compatibility
+      const { pageSize, page } = queryOptions.paginationModel;
+      if (pageSize < childRowsWithDescendantCounts.length) {
+        childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
+          page * pageSize,
+          page * pageSize + pageSize,
+        );
+      }
     }
   }
 
@@ -676,6 +687,7 @@ export const processRowGroupingRows = (
   queryOptions: ServerSideQueryOptions,
   serverOptions: ServerOptions,
   columnsWithDefaultColDef: GridColDef[],
+  nestedPagination: boolean,
 ): Promise<NestedDataRowsResponse> => {
   const { minDelay = 100, maxDelay = 300 } = serverOptions;
   const pathKey = 'path';
@@ -764,11 +776,14 @@ export const processRowGroupingRows = (
       ({ id }) => typeof id !== 'string' || !id.startsWith('auto-generated-parent-'),
     );
     const descendantCount = descendants.length;
+    const children = findTreeDataRowChildren(filteredRows, row[pathKey], pathKey, 1);
+    const childrenCount = children.length;
     if (descendantCount > 0 && queryOptions.aggregationModel) {
       // Parent row, compute aggregation
       return {
         ...row,
         descendantCount,
+        childrenCount,
         ...applyAggregation(
           queryOptions.aggregationModel,
           columnsWithDefaultColDef,
@@ -777,7 +792,7 @@ export const processRowGroupingRows = (
         ),
       };
     }
-    return { ...row, descendantCount } as GridRowModel;
+    return { ...row, descendantCount, childrenCount } as GridRowModel;
   });
 
   if (queryOptions.sortModel) {
@@ -800,14 +815,23 @@ export const processRowGroupingRows = (
     );
   }
 
-  if (queryOptions.paginationModel && queryOptions.groupKeys.length === 0) {
-    // Only paginate root rows, grid should refetch root rows when `paginationModel` updates
-    const { pageSize, page } = queryOptions.paginationModel;
-    if (pageSize < childRowsWithDescendantCounts.length) {
+  // Apply pagination using start/end if provided, otherwise fall back to paginationModel
+  if (queryOptions.groupKeys.length === 0 || nestedPagination) {
+    if (queryOptions.start !== undefined && queryOptions.end !== undefined) {
+      // Use start/end for range-based pagination (needed for nested lazy loading)
       childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
-        page * pageSize,
-        (page + 1) * pageSize,
+        queryOptions.start,
+        queryOptions.end + 1,
       );
+    } else if (queryOptions.paginationModel) {
+      // Fall back to paginationModel for backward compatibility
+      const { pageSize, page } = queryOptions.paginationModel;
+      if (pageSize < childRowsWithDescendantCounts.length) {
+        childRowsWithDescendantCounts = childRowsWithDescendantCounts.slice(
+          page * pageSize,
+          (page + 1) * pageSize,
+        );
+      }
     }
   }
 
