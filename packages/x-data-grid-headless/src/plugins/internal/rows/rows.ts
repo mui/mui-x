@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { type Store, useStore } from '@base-ui/utils/store';
+import { createSelector } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
 import {
   type RowsState,
@@ -21,22 +21,39 @@ export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
   };
 }
 
-const createRowsHooks = (store: Store<RowsPluginState>) => ({
-  useRowIds: () => useStore(store, (state) => state.rows.dataRowIds),
-  useRowIdToModelLookup: () => useStore(store, (state) => state.rows.dataRowIdToModelLookup),
-  useTree: () => useStore(store, (state) => state.rows.tree),
-  useTreeDepths: () => useStore(store, (state) => state.rows.treeDepths),
-  useTotalRowCount: () => useStore(store, (state) => state.rows.totalRowCount),
-  useTotalTopLevelRowCount: () => useStore(store, (state) => state.rows.totalTopLevelRowCount),
-  useLoading: () => useStore(store, (state) => state.rows.loading),
-  useGroupingName: () => useStore(store, (state) => state.rows.groupingName),
-  useRow: (id: GridRowId) =>
-    useStore(store, (state) => state.rows.dataRowIdToModelLookup[id] ?? null),
-  useRowNode: (id: GridRowId) => useStore(store, (state) => state.rows.tree[id] ?? null),
-});
+const selectRowIds = createSelector((state: RowsPluginState) => state.rows.dataRowIds);
+const selectRowIdToModelLookup = createSelector(
+  (state: RowsPluginState) => state.rows.dataRowIdToModelLookup,
+);
+const selectTree = createSelector((state: RowsPluginState) => state.rows.tree);
+const selectTreeDepths = createSelector((state: RowsPluginState) => state.rows.treeDepths);
+const selectTotalRowCount = createSelector((state: RowsPluginState) => state.rows.totalRowCount);
+const selectTotalTopLevelRowCount = createSelector(
+  (state: RowsPluginState) => state.rows.totalTopLevelRowCount,
+);
+const selectLoading = createSelector((state: RowsPluginState) => state.rows.loading);
+const selectGroupingName = createSelector((state: RowsPluginState) => state.rows.groupingName);
+const selectRow = createSelector(
+  selectRowIdToModelLookup,
+  (lookup, id: GridRowId) => lookup[id] ?? null,
+);
+const selectRowNode = createSelector(selectTree, (tree, id: GridRowId) => tree[id] ?? null);
+
+const rowsSelectors = {
+  rowIds: selectRowIds,
+  rowIdToModelLookup: selectRowIdToModelLookup,
+  tree: selectTree,
+  treeDepths: selectTreeDepths,
+  totalRowCount: selectTotalRowCount,
+  totalTopLevelRowCount: selectTotalTopLevelRowCount,
+  loading: selectLoading,
+  groupingName: selectGroupingName,
+  row: selectRow,
+  rowNode: selectRowNode,
+};
 
 export interface RowsPluginApi<TRow = any> {
-  rows: RowsApi<TRow> & { hooks: ReturnType<typeof createRowsHooks> };
+  rows: RowsApi<TRow> & { selectors: typeof rowsSelectors };
 }
 
 type RowsPlugin = Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
@@ -91,9 +108,7 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       }
     }, [params.rowCount, store]);
 
-    const hooks = React.useMemo(() => createRowsHooks(store), [store]);
-
-    return { rows: { ...rowsApi, hooks } };
+    return { rows: { ...rowsApi, selectors: rowsSelectors } };
   },
 });
 

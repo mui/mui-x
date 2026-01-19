@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { ColumnDef, useDataGrid } from '../';
 import sortingPlugin from '../plugins/sorting';
 import paginationPlugin from '../plugins/pagination';
@@ -25,9 +26,9 @@ export function TestDataGrid<TRow extends object>(props: {
     }
   }, [grid, props.apiRef]);
 
-  const rowIds = grid.api.rows.hooks.useRowIds();
-  const rowsData = grid.api.rows.hooks.useRowIdToModelLookup();
-  const visibleColumns = grid.api.columns.hooks.useVisibleColumns();
+  const rowIds = useStore(grid.store, grid.api.rows.selectors.rowIds);
+  const rowsData = useStore(grid.store, grid.api.rows.selectors.rowIdToModelLookup);
+  const visibleColumns = useStore(grid.store, grid.api.columns.selectors.visibleColumns);
 
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>
@@ -65,7 +66,7 @@ export function TestDataGrid<TRow extends object>(props: {
                 borderBottom: '1px solid #e0e0e0',
               }}
             >
-              {visibleColumns.map((column: (typeof visibleColumns)[0], index) => {
+              {visibleColumns.map((column: (typeof visibleColumns)[0], index: number) => {
                 const value = row[column.field as keyof TRow];
                 return (
                   <td

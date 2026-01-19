@@ -61,17 +61,17 @@ export function Example() {
   // Internal plugins state is available
   grid1.state.rows.tree;
 
-  // Hooks - Internal plugins (rows, columns)
-  grid1.api.rows.hooks.useRowIds;
-  grid1.api.rows.hooks.useTree;
-  grid1.api.rows.hooks.useLoading;
-  grid1.api.columns.hooks.useOrderedFields;
-  grid1.api.columns.hooks.useVisibleColumns;
-  grid1.api.columns.hooks.useAllColumns;
+  // Selectors - Internal plugins (rows, columns)
+  grid1.api.rows.selectors.rowIds;
+  grid1.api.rows.selectors.tree;
+  grid1.api.rows.selectors.loading;
+  grid1.api.columns.selectors.orderedFields;
+  grid1.api.columns.selectors.visibleColumns;
+  grid1.api.columns.selectors.allColumns;
 
-  grid1.api.sorting.hooks.useSortModel;
-  // @ts-expect-error pagination hooks do not exist
-  grid1.api.pagination.hooks.usePaginationModel;
+  grid1.api.sorting.selectors.sortModel;
+  // @ts-expect-error pagination selectors do not exist
+  grid1.api.pagination.selectors.paginationModel;
 
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
@@ -100,16 +100,16 @@ export function Example() {
   grid2.api.sorting.sortColumn('name', 'asc');
   grid2.api.pagination.setPage(1);
 
-  // Hooks - Internal plugins (rows, columns)
-  grid2.api.rows.hooks.useRowIds;
-  grid2.api.rows.hooks.useTree;
-  grid2.api.rows.hooks.useRowIdToModelLookup;
-  grid2.api.columns.hooks.useOrderedFields;
-  grid2.api.columns.hooks.useVisibleColumns;
-  grid2.api.columns.hooks.useLookup;
+  // Selectors - Internal plugins (rows, columns)
+  grid2.api.rows.selectors.rowIds;
+  grid2.api.rows.selectors.tree;
+  grid2.api.rows.selectors.rowIdToModelLookup;
+  grid2.api.columns.selectors.orderedFields;
+  grid2.api.columns.selectors.visibleColumns;
+  grid2.api.columns.selectors.lookup;
 
-  grid2.api.sorting.hooks.useSortModel;
-  grid2.api.pagination.hooks.usePaginationModel;
+  grid2.api.sorting.selectors.sortModel;
+  grid2.api.pagination.selectors.paginationModel;
 
   // Extract grid options type
   const plugins = [sortingPlugin, paginationPlugin] as const;

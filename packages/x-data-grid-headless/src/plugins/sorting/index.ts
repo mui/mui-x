@@ -1,5 +1,4 @@
-import { type Store, useStore } from '@base-ui/utils/store';
-import * as React from 'react';
+import { createSelector } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../core/plugin';
 
 export type SortModel = Array<{
@@ -27,9 +26,11 @@ interface SortingState {
   };
 }
 
-const createSortingHooks = (store: Store<SortingState>) => ({
-  useSortModel: () => useStore(store, (state) => state.sorting.sortModel),
-});
+const selectSortModel = createSelector((state: SortingState) => state.sorting.sortModel);
+
+const sortingSelectors = {
+  sortModel: selectSortModel,
+};
 
 // API that will be merged into DataGridInstance.api
 interface SortingApi {
@@ -37,7 +38,7 @@ interface SortingApi {
     setSortModel: (model: SortModel) => void;
     getSortModel: () => SortModel;
     sortColumn: (field: string, direction: 'asc' | 'desc') => void;
-    hooks: ReturnType<typeof createSortingHooks>;
+    selectors: typeof sortingSelectors;
   };
 }
 
@@ -59,14 +60,12 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     const setSortModel = (_model: SortModel) => {};
     const sortColumn = (_field: string, _direction: 'asc' | 'desc') => {};
 
-    const hooks = React.useMemo(() => createSortingHooks(store), [store]);
-
     return {
       sorting: {
         setSortModel,
         getSortModel: () => store.state.sorting.sortModel,
         sortColumn,
-        hooks,
+        selectors: sortingSelectors,
       },
     };
   },

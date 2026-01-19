@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { type Store, useStore } from '@base-ui/utils/store';
+import { createSelector } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../core/plugin';
 
 export interface PaginationModel {
@@ -24,16 +23,20 @@ interface PaginationState {
   };
 }
 
-const createPaginationHooks = (store: Store<PaginationState>) => ({
-  usePaginationModel: () => useStore(store, (state) => state.pagination.paginationModel),
-});
+const selectPaginationModel = createSelector(
+  (state: PaginationState) => state.pagination.paginationModel,
+);
+
+const paginationSelectors = {
+  paginationModel: selectPaginationModel,
+};
 
 interface PaginationApi {
   pagination: {
     setPage: (page: number) => void;
     setPageSize: (pageSize: number) => void;
     setModel: (model: PaginationModel) => void;
-    hooks: ReturnType<typeof createPaginationHooks>;
+    selectors: typeof paginationSelectors;
   };
 }
 
@@ -56,17 +59,15 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
         },
     },
   }),
-  use: (store, _params, _api) => {
+  use: (_store, _params, _api) => {
     const setModel = (_model: PaginationModel) => {};
-
-    const hooks = React.useMemo(() => createPaginationHooks(store), [store]);
 
     return {
       pagination: {
         setPage: (_page) => {},
         setPageSize: (_pageSize) => {},
         setModel,
-        hooks,
+        selectors: paginationSelectors,
       },
     };
   },
