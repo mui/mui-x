@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
         "name": "shape",
@@ -31,6 +32,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "hiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedAxis": {
       "type": {
@@ -45,6 +52,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'bar' }&gt;"
+      }
+    },
     "layout": {
       "type": { "name": "enum", "description": "'horizontal'<br>&#124;&nbsp;'vertical'" },
       "default": "'vertical'"
@@ -62,6 +75,13 @@
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
+      }
+    },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
@@ -85,6 +105,13 @@
         "describedArgs": ["event", "barItemIdentifier"]
       }
     },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "renderer": {
       "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
       "default": "'svg-single'"
@@ -96,6 +123,12 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'bar' }"
+      }
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {

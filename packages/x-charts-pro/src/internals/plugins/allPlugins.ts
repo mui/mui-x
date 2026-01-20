@@ -17,6 +17,8 @@ import {
   type UseChartPolarAxisSignature,
   useChartBrush,
   type UseChartBrushSignature,
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import { useChartProExport, type UseChartProExportSignature } from './useChartProExport';
 import { useChartProZoom, type UseChartProZoomSignature } from './useChartProZoom';
@@ -24,13 +26,15 @@ import { useChartProZoom, type UseChartProZoomSignature } from './useChartProZoo
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
 ];
 
 export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
@@ -44,20 +48,24 @@ export const ALL_PLUGINS = [
   useChartCartesianAxis,
   useChartPolarAxis,
   useChartHighlight,
+  useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
+  useChartVisibilityManager,
 ];
 
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
   UseChartBrushSignature,
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<TSeries>,
   UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
 ];
 
 export type DefaultPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
@@ -70,6 +78,8 @@ export const DEFAULT_PLUGINS = [
   useChartInteraction,
   useChartCartesianAxis,
   useChartHighlight,
+  useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
+  useChartVisibilityManager,
 ];

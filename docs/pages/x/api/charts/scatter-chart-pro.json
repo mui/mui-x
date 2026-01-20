@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
         "name": "shape",
@@ -32,6 +33,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "hiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'scatter' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
@@ -40,6 +47,12 @@
       }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'scatter' }&gt;"
+      }
+    },
     "initialZoom": {
       "type": {
         "name": "arrayOf",
@@ -61,6 +74,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -73,6 +93,13 @@
       "signature": {
         "type": "function(event: MouseEvent, scatterItemIdentifier: ScatterItemIdentifier) => void",
         "describedArgs": ["event", "scatterItemIdentifier"]
+      }
+    },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
       }
     },
     "onZoomChange": {
@@ -93,6 +120,12 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: number<br>&#124;&nbsp;string, type: 'scatter' }"
+      }
     },
     "voronoiMaxRadius": {
       "type": { "name": "union", "description": "'item'<br>&#124;&nbsp;number" }

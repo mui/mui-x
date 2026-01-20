@@ -148,6 +148,23 @@ export interface SchedulerState<TEvent extends object = any> {
    * The event that has been copied or cut, if any.
    */
   copiedEvent: { id: SchedulerEventId; action: 'cut' | 'copy' } | null;
+  /**
+   * Whether the store is currently loading events from the data source.
+   */
+  isLoading: boolean;
+  /**
+   * The errors that occurred during data fetching.
+   */
+  errors: Error[];
+}
+
+export interface SchedulerDataSource<TEvent extends object> {
+  getEvents: (start: TemporalSupportedObject, end: TemporalSupportedObject) => Promise<TEvent[]>;
+  updateEvents: (parameters: {
+    deleted: SchedulerEventId[];
+    updated: SchedulerEventId[];
+    created: SchedulerEventId[];
+  }) => Promise<{ success: boolean }>;
 }
 
 export interface SchedulerParameters<TEvent extends object, TResource extends object> {
@@ -254,6 +271,11 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    */
   readOnly?: boolean;
   /**
+   * Data source for fetching events asynchronously.
+   * If provided, the `events` prop will be ignored.
+   */
+  dataSource?: SchedulerDataSource<TEvent>;
+  /*
    * Configures how events are created.
    * If `false`, event creation is disabled.
    * If `true`, event creation is enabled with default configuration.

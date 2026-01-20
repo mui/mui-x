@@ -1,4 +1,5 @@
 import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getPreviousNonEmptySeries';
+import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
 import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
@@ -13,15 +14,30 @@ type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   dataIndex: number;
 } | null;
 
+type StateParameters<TSeriesType extends ChartSeriesType> = Pick<
+  ChartState<[UseChartKeyboardNavigationSignature], [], TSeriesType>,
+  'series'
+>;
 export function createGetNextIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, allows cycling from the last item to the first one.
+   */
+  allowCycles: boolean = false,
+) {
   return function getNextIndexFocusedItem(
     currentItem: FocusedItemIdentifier<InSeriesType> | null,
-    state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
-    const processedSeries = selectorChartSeriesProcessed(state);
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type as OutSeriesType | undefined;
     if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
@@ -38,11 +54,19 @@ export function createGetNextIndexFocusedItem<
       seriesId = nextSeries.seriesId;
     }
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+
+    let dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex + 1;
+    if (allowCycles) {
+      dataIndex = dataIndex % maxLength;
+    } else {
+      dataIndex = Math.min(maxLength - 1, dataIndex);
+    }
+
     return {
       type,
       seriesId,
-      dataIndex: ((currentItem?.dataIndex ?? -1) + 1) % dataLength,
+      dataIndex,
     };
   };
 }
@@ -50,12 +74,23 @@ export function createGetNextIndexFocusedItem<
 export function createGetPreviousIndexFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+  /**
+   * If true, allows cycling from the last item to the first one.
+   */
+  allowCycles: boolean = false,
+) {
   return function getPreviousIndexFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-    state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
-    const processedSeries = selectorChartSeriesProcessed(state);
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type as OutSeriesType | undefined;
     if (!type || seriesId == null || !seriesHasData(processedSeries, type, seriesId)) {
@@ -72,11 +107,19 @@ export function createGetPreviousIndexFocusedItem<
       seriesId = previousSeries.seriesId;
     }
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const maxLength = getMaxSeriesLength(processedSeries, compatibleSeriesTypes);
+
+    let dataIndex = currentItem?.dataIndex == null ? maxLength - 1 : currentItem.dataIndex - 1;
+    if (allowCycles) {
+      dataIndex = (maxLength + dataIndex) % maxLength;
+    } else {
+      dataIndex = Math.max(0, dataIndex);
+    }
+
     return {
       type,
       seriesId,
-      dataIndex: (dataLength + (currentItem?.dataIndex ?? 1) - 1) % dataLength,
+      dataIndex,
     };
   };
 }
@@ -84,13 +127,19 @@ export function createGetPreviousIndexFocusedItem<
 export function createGetNextSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+) {
   return function getNextSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-
-    state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
-    const processedSeries = selectorChartSeriesProcessed(state);
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type as OutSeriesType;
 
@@ -107,12 +156,12 @@ export function createGetNextSeriesFocusedItem<
     type = nextSeries.type;
     seriesId = nextSeries.seriesId;
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const dataIndex = currentItem?.dataIndex == null ? 0 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: Math.min(dataLength - 1, currentItem?.dataIndex ?? 0),
+      dataIndex,
     };
   };
 }
@@ -120,12 +169,19 @@ export function createGetNextSeriesFocusedItem<
 export function createGetPreviousSeriesFocusedItem<
   InSeriesType extends Exclude<ChartSeriesType, 'sankey'>,
   OutSeriesType extends Exclude<ChartSeriesType, 'sankey'> = InSeriesType,
->(compatibleSeriesTypes: Set<OutSeriesType>) {
+>(
+  /**
+   * The set of series types compatible with this navigation action.
+   */
+  compatibleSeriesTypes: Set<OutSeriesType>,
+) {
   return function getPreviousSeriesFocusedItem(
     currentItem: SeriesItemIdentifier<InSeriesType> | null,
-    state: ChartState<[UseChartKeyboardNavigationSignature], []>,
+    state: StateParameters<InSeriesType>,
   ): ReturnedItem<OutSeriesType> {
-    const processedSeries = selectorChartSeriesProcessed(state);
+    const processedSeries = selectorChartSeriesProcessed(
+      state as ChartState<[UseChartKeyboardNavigationSignature], []>,
+    );
     let seriesId = currentItem?.seriesId;
     let type = currentItem?.type as OutSeriesType;
 
@@ -141,12 +197,13 @@ export function createGetPreviousSeriesFocusedItem<
     type = previousSeries.type;
     seriesId = previousSeries.seriesId;
 
-    const dataLength = processedSeries[type]!.series[seriesId].data.length;
+    const data = processedSeries[type]!.series[seriesId].data;
+    const dataIndex = currentItem?.dataIndex == null ? data.length - 1 : currentItem.dataIndex;
 
     return {
       type,
       seriesId,
-      dataIndex: Math.min(dataLength - 1, currentItem?.dataIndex ?? 0),
+      dataIndex,
     };
   };
 }

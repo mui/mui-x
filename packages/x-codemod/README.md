@@ -57,6 +57,53 @@ through jscodeshift's `printOptions` command line argument
 npx @mui/x-codemod <transform> <path> --jscodeshift="--printOptions='{\"quote\":\"double\"}'"
 ```
 
+## v9.0.0
+
+### 🚀 `preset-safe` for v9.0.0
+
+A combination of all important transformers for migrating v8 to v9.
+⚠️ This codemod should be run only once.
+It runs codemods for all MUI X packages.
+To run codemods for a specific package, refer to the respective section.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/preset-safe <path|folder>
+```
+
+The corresponding sub-sections are listed below
+
+<!-- - [`preset-safe-for-tree-view`](#preset-safe-for-tree-view-v900) -->
+<!-- - [`preset-safe-for-data-grid`](#preset-safe-for-data-grid-v900) -->
+<!-- - [`preset-safe-for-pickers`](#preset-safe-for-pickers-v900) -->
+
+- [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
+
+### 🚀 `preset-safe` for Charts v9.0.0
+
+The `preset-safe` codemods for Charts.
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
+```
+
+The list includes these transformers
+
+- [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
+
+#### `replace-heatmap-hide-legend-false`
+
+The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
+
+```diff
+ <Heatmap
++  hideLegend
+ />
+```
+
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0

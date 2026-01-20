@@ -4,4 +4,5 @@ export * from '@mui/x-charts-pro/hooks';
 
 export * from './animation';
 
+export * from './useChartPremiumApiRef';
 export * from './useRangeBarSeries';

@@ -1,3 +1,3 @@
-packages/x-charts* @mui/xcharts
-docs/data/charts @mui/xcharts @prakhargupta1
+packages/x-charts* @JCQuintas @alexfauquette @bernardobelchior
+docs/data/charts @JCQuintas @alexfauquette @bernardobelchior
 CHANGELOG.md @mui/explore @mui/xcharts @mui/xgrid @mui/infra

@@ -93,6 +93,7 @@ export default datePickersApiPages;
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),
+    'migration/migration-date-pickers-v8',
     'migration/migration-date-pickers-v7',
     'migration/migration-date-pickers-v6',
     'migration/migration-date-pickers-v5',

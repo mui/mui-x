@@ -1,37 +1,48 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { Field } from '@base-ui/react/field';
-import { Form } from '@base-ui/react/form';
-import { Input } from '@base-ui/react/input';
-import { Separator } from '@base-ui/react/separator';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import TextField from '@mui/material/TextField';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
 import {
   SchedulerEventColor,
-  SchedulerEventOccurrence,
   SchedulerEventUpdatedProperties,
   SchedulerProcessedDate,
   SchedulerResourceId,
   RecurringEventFrequency,
   RecurringEventRecurrenceRule,
+  SchedulerRenderableEventOccurrence,
 } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
+  schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { Tabs } from '@base-ui/react/tabs';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { computeRange, ControlledValue, validateRange } from './utils';
+import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
+const FormActions = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'FormActions',
+})(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  padding: theme.spacing(2),
+}));
+
 interface FormContentProps {
-  occurrence: SchedulerEventOccurrence;
+  occurrence: SchedulerRenderableEventOccurrence;
   onClose: () => void;
 }
 
@@ -61,9 +72,11 @@ export function FormContent(props: FormContentProps) {
     occurrence.displayTimezone.rrule,
     occurrence.displayTimezone.start,
   );
+  const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
 
   // State hooks
-  const [errors, setErrors] = React.useState<Form.Props['errors']>({});
+  const [tabValue, setTabValue] = React.useState('general');
+  const [errors, setErrors] = React.useState<Record<string, string | string[]>>({});
   const [controlled, setControlled] = React.useState<ControlledValue>(() => {
     const fmtDate = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'yyyy-MM-dd');
     const fmtTime = (d: SchedulerProcessedDate) => adapter.formatByString(d.value, 'HH:mm');
@@ -78,7 +91,7 @@ export function FormContent(props: FormContentProps) {
       endTime: fmtTime(occurrence.displayTimezone.end),
       resourceId: occurrence.resource ?? null,
       allDay: !!occurrence.allDay,
-      color: occurrence.color ?? null,
+      color: hasProp(occurrence, 'color') ? occurrence.color : null,
       recurrenceSelection: defaultRecurrencePresetKey,
       rruleDraft: {
         freq: (base?.freq ?? 'DAILY') as RecurringEventFrequency,
@@ -96,7 +109,7 @@ export function FormContent(props: FormContentProps) {
       return;
     }
 
-    const { start, end, surfaceType } = computeRange(adapter, next);
+    const { start, end, surfaceType } = computeRange(adapter, next, displayTimezone);
     const surfaceTypeToUse = rawPlaceholder.lockSurfaceType
       ? rawPlaceholder.surfaceType
       : surfaceType;
@@ -128,7 +141,7 @@ export function FormContent(props: FormContentProps) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { start, end } = computeRange(adapter, controlled);
+    const { start, end } = computeRange(adapter, controlled, displayTimezone);
 
     const form = new FormData(event.currentTarget);
 
@@ -195,22 +208,28 @@ export function FormContent(props: FormContentProps) {
     onClose();
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setTabValue(newValue);
+  };
+
   return (
-    <Form errors={errors} onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <EventPopoverHeader>
-        <Field.Root className="EventPopoverFieldRoot" name="title">
-          <Field.Label className="EventPopoverTitle">
-            <Input
-              className="EventPopoverTitleInput"
-              type="text"
-              defaultValue={occurrence.title}
-              aria-label={translations.eventTitleAriaLabel}
-              required
-              readOnly={isPropertyReadOnly('title')}
-            />
-          </Field.Label>
-          <Field.Error className="EventPopoverRequiredFieldError" />
-        </Field.Root>
+        <TextField
+          name="title"
+          defaultValue={occurrence.title}
+          required
+          slotProps={{
+            input: {
+              readOnly: isPropertyReadOnly('title'),
+              'aria-label': translations.eventTitleAriaLabel,
+            },
+          }}
+          error={!!errors.title}
+          helperText={errors.title}
+          fullWidth
+          size="small"
+        />
         <ResourceMenu
           readOnly={isPropertyReadOnly('resource')}
           resourceId={controlled.resourceId}
@@ -219,40 +238,35 @@ export function FormContent(props: FormContentProps) {
           color={controlled.color}
         />
       </EventPopoverHeader>
-      <Tabs.Root defaultValue="general">
-        <Tabs.List className="EventPopoverTabsList">
-          <Tabs.Tab value="general" className="EventPopoverTabTrigger Ghost">
-            {translations.generalTabLabel}
-          </Tabs.Tab>
-          <Tabs.Tab value="recurrence" className="EventPopoverTabTrigger Ghost">
-            {translations.recurrenceTabLabel}
-          </Tabs.Tab>
-        </Tabs.List>
-        <GeneralTab
-          occurrence={occurrence}
-          setErrors={setErrors}
-          controlled={controlled}
-          setControlled={setControlled}
-        />
-        <RecurrenceTab
-          occurrence={occurrence}
-          controlled={controlled}
-          setControlled={setControlled}
-        />
-      </Tabs.Root>
-      <Separator className="EventPopoverSeparator" />
-      <div className="EventPopoverActions">
-        <button
-          className={clsx('SecondaryErrorButton', 'Button')}
-          type="button"
-          onClick={handleDelete}
-        >
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={tabValue} onChange={handleTabChange}>
+          <Tab label={translations.generalTabLabel} value="general" />
+          <Tab label={translations.recurrenceTabLabel} value="recurrence" />
+        </Tabs>
+      </Box>
+      <GeneralTab
+        occurrence={occurrence}
+        errors={errors}
+        setErrors={setErrors}
+        controlled={controlled}
+        setControlled={setControlled}
+        value={tabValue}
+      />
+      <RecurrenceTab
+        occurrence={occurrence}
+        controlled={controlled}
+        setControlled={setControlled}
+        value={tabValue}
+      />
+      <Divider />
+      <FormActions>
+        <Button color="error" type="button" onClick={handleDelete}>
           {translations.deleteEvent}
-        </button>
-        <button className={clsx('NeutralButton', 'Button')} type="submit">
+        </Button>
+        <Button variant="contained" type="submit">
           {translations.saveChanges}
-        </button>
-      </div>
-    </Form>
+        </Button>
+      </FormActions>
+    </form>
   );
 }
