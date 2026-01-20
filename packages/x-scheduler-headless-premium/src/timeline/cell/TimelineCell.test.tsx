@@ -1,6 +1,6 @@
-import { Timeline } from '@mui/x-scheduler-headless/timeline';
+import { Timeline } from '@mui/x-scheduler-headless-premium/timeline';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
-import { TimelineProvider } from '@mui/x-scheduler-headless/timeline-provider';
+import { TimelineProvider } from '@mui/x-scheduler-headless-premium/timeline-provider';
 
 describe('<Timeline.Cell />', () => {
   const { render } = createSchedulerRenderer();

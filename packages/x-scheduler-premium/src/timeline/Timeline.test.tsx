@@ -1,5 +1,5 @@
 import { screen } from '@mui/internal-test-utils';
-import { Timeline } from '@mui/x-scheduler/timeline';
+import { Timeline } from '@mui/x-scheduler-premium/timeline';
 import {
   adapter,
   createSchedulerRenderer,
@@ -7,7 +7,8 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
 } from 'test/utils/scheduler';
-import { SchedulerEvent, SchedulerResource, TimelineView } from '@mui/x-scheduler-headless/models';
+import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler-headless/models';
+import { TimelineView } from '@mui/x-scheduler-headless-premium/models';
 
 const baseResources: SchedulerResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },

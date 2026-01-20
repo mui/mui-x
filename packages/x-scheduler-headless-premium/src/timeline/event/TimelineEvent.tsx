@@ -2,16 +2,23 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
+import {
+  useButton,
+  useRenderElement,
+  BaseUIComponentProps,
+  NonNativeButtonProps,
+} from '@mui/x-scheduler-headless/base-ui-copy';
+import {
+  SchedulerEventId,
+  SchedulerEventOccurrence,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-headless/models';
+import { useDraggableEvent } from '@mui/x-scheduler-headless/utils/draggable-event';
 import { generateOccurrenceFromEvent } from '../../utils/event-utils';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps, NonNativeButtonProps } from '../../base-ui-copy/utils/types';
-import { useButton } from '../../base-ui-copy/utils/useButton';
-import { SchedulerEventId, SchedulerEventOccurrence, TemporalSupportedObject } from '../../models';
 import { useAdapter } from '../../use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
-import { useDraggableEvent } from '../../utils/useDraggableEvent';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
 import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { TimelineEventContext } from './TimelineEventContext';

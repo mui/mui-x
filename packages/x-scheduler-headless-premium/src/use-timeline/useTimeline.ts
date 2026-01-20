@@ -2,7 +2,7 @@
 import { useOnMount } from '@base-ui/utils/useOnMount';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { useAdapter } from '../use-adapter/useAdapter';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { TimelineStore } from './TimelineStore';
 import { TimelineParameters } from './TimelineStore.types';
 

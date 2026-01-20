@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 
 export const TimelineCell = React.forwardRef(function TimelineCell(
   componentProps: TimelineCell.Props,

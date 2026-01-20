@@ -1,10 +1,10 @@
-import { TimelineView } from '../models';
-import { TimelinePreferences } from '../models/preferences';
 import {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
-} from '../utils/SchedulerStore';
+} from '@mui/x-scheduler-headless/utils/SchedulerStore';
+import { TimelineView } from '../models/view';
+import { TimelinePreferences } from '../models/preferences';
 
 export interface TimelineState extends SchedulerState {
   /**
