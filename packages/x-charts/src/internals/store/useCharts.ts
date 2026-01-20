@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
 import { Store } from '@mui/x-internals/store';

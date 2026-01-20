@@ -34,12 +34,21 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../base-ui-copy/utils/createBaseUIEventDetails';
+import { SchedulerLazyLoadingPlugin } from './plugins/SchedulerLazyLoadingPlugin';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
 export const DEFAULT_SCHEDULER_PREFERENCES: SchedulerPreferences = {
   ampm: true,
+};
+
+const MOCK_EVENT_STATE = {
+  eventIdList: [],
+  eventModelLookup: new Map(),
+  eventModelStructure: {},
+  processedEventLookup: new Map(),
+  eventModelList: [],
 };
 
 /**
@@ -51,7 +60,7 @@ export class SchedulerStore<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > extends Store<State> {
-  protected parameters: Parameters;
+  public parameters: Parameters;
 
   private initialParameters: Parameters | null = null;
 
@@ -60,6 +69,8 @@ export class SchedulerStore<
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected timeoutManager = new TimeoutManager();
+
+  public lazyLoading: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters> | undefined;
 
   public constructor(
     parameters: Parameters,
@@ -70,8 +81,10 @@ export class SchedulerStore<
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
 
     const schedulerInitialState: SchedulerState<TEvent> = {
-      ...stateFromParameters,
-      ...buildEventsState(parameters, adapter, stateFromParameters.displayTimezone),
+      ...SchedulerStore.deriveStateFromParameters(parameters, adapter),
+      ...(parameters.dataSource
+        ? MOCK_EVENT_STATE
+        : buildEventsState(parameters, adapter, stateFromParameters.displayTimezone)),
       ...buildResourcesState(parameters),
       preferences: DEFAULT_SCHEDULER_PREFERENCES,
       adapter,
@@ -85,6 +98,8 @@ export class SchedulerStore<
         parameters.visibleDate ??
         parameters.defaultVisibleDate ??
         adapter.startOfDay(adapter.now(stateFromParameters.displayTimezone)),
+      errors: [],
+      ...(parameters.dataSource ? { isLoading: true } : { isLoading: false }),
     };
 
     const initialState = mapper.getInitialState(schedulerInitialState, parameters, adapter);
@@ -136,6 +151,7 @@ export class SchedulerStore<
    * Updates the state of the calendar based on the new parameters provided to the root component.
    */
   public updateStateFromParameters = (parameters: Parameters, adapter: Adapter) => {
+    // TODO: Move the lazy loading plugin
     const updateModel: SchedulerModelUpdater<State, Parameters> = (
       mutableNewState,
       controlledProp,
@@ -176,16 +192,16 @@ export class SchedulerStore<
     ) as Partial<State>;
 
     if (
-      parameters.events !== this.parameters.events ||
-      parameters.eventModelStructure !== this.parameters.eventModelStructure ||
-      adapter !== this.state.adapter
+      !parameters.dataSource &&
+      (parameters.events !== this.parameters.events ||
+        parameters.eventModelStructure !== this.parameters.eventModelStructure ||
+        adapter !== this.state.adapter)
     ) {
       Object.assign(
         newSchedulerState,
         buildEventsState(parameters, adapter, newSchedulerState.displayTimezone!),
       );
     }
-
     newSchedulerState.nowUpdatedEveryMinute = adapter.now(newSchedulerState.displayTimezone!);
 
     if (
@@ -287,6 +303,16 @@ export class SchedulerStore<
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
+    queueMicrotask(() =>
+      this.lazyLoading?.updateEventsFromDataSource(
+        {
+          deleted: deletedParam ?? [],
+          updated,
+          created: createdIds,
+        },
+        newEvents,
+      ),
+    );
 
     return {
       deleted: deletedParam ?? [],
@@ -454,7 +480,7 @@ export class SchedulerStore<
       return this.updateEvents({ updated: [updatedEvent] }).updated[0];
     }
 
-    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat!;
+    const { id, ...copiedEventWithoutId } = original.modelInBuiltInFormat;
     const createdEvent: SchedulerEventCreationProperties = {
       ...copiedEventWithoutId,
       ...cleanChanges,

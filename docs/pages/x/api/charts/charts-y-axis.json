@@ -44,6 +44,32 @@
     "import { ChartsYAxis } from '@mui/x-charts-pro';",
     "import { ChartsYAxis } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
+    }
+  ],
   "classes": [],
   "spread": true,
   "themeDefaultProps": null,

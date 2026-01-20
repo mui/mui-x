@@ -1,7 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarAxis, ChartsWrapper
+components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarAxis, ChartsWrapper, FocusedRadarMark
 ---
 
 # Charts - Radar

@@ -4,17 +4,21 @@ import { getNextNonEmptySeries } from './getNextNonEmptySeries';
 const barSeries = {
   type: 'bar' as const,
   stackedData: [],
+  visibleStackedData: [],
   valueFormatter: () => '',
   color: '',
   layout: 'horizontal' as const,
   minBarSize: 10,
+  hidden: false,
 };
 
 const lineSeries = {
   type: 'line' as const,
   stackedData: [],
+  visibleStackedData: [],
   valueFormatter: () => '',
   color: '',
+  hidden: false,
 };
 
 const singleSeries: ProcessedSeries<'bar'> = {

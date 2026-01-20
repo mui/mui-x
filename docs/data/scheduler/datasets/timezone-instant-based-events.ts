@@ -137,4 +137,15 @@ export const initialEvents: TimezoneEvent[] = [
     rrule: { freq: 'WEEKLY', byDay: ['FR'] },
     exDates: ['2025-03-21T02:00:00Z'],
   },
+  // Paris crossing the DST jump (Mar 30, 2025)
+  // 01:30 local → 03:30 local (the 02:00–03:00 hour does not exist)
+  // This renders from 01:30 to 03:30.
+  {
+    id: 'paris-cross-jump',
+    title: 'Paris crosses DST jump',
+    start: '2025-03-30T00:30:00Z',
+    end: '2025-03-30T01:30:00Z',
+    timezone: 'Europe/Paris',
+    resource: 'paris',
+  },
 ];

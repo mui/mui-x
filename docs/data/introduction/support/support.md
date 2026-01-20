@@ -50,6 +50,8 @@ You can browse the documentation, find an example close to your use case, and th
 You can use a starter template to build a reproduction case with:
 
 <!-- #target-branch-reference -->
+<!-- Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch -->
+<!-- For example, when creating v9 from v8, `master -> v8.x` -->
 
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
