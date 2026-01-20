@@ -46,8 +46,10 @@ Position management relies on the [`grid-template` CSS property](https://develop
 If you create a custom legend component, you need to set the CSS property `grid-area` to `'legend'` to position your component correctly.
 
 :::warning
-The `position` property is only available in `slotProps`, not in the props for `ChartsLegend`.
-In the latter case, you can place the legend wherever you prefer.
+For [self-contained charts](/x/react-charts/quickstart/#self-contained-charts), the `position` property is available in `slotProps.legend`.
+
+When [composing custom charts](/x/react-charts/quickstart/#composable-charts), this behavior is handled by the `legendPosition` prop of the `ChartsWrapper`.
+Or you can place the legend wherever you prefer.
 :::
 
 {{"demo": "LegendPosition.js", "hideToolbar": true, "bg": "playground"}}
