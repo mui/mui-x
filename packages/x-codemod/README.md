@@ -92,6 +92,18 @@ npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
 
 The list includes these transformers
 
+- [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
+
+#### `replace-heatmap-hide-legend-false`
+
+The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
+
+```diff
+ <Heatmap
++  hideLegend
+ />
+```
+
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0

@@ -1,29 +1,35 @@
-import path, { basename } from 'path';
 import jscodeshift from 'jscodeshift';
+import path from 'path';
 import transform from './index';
+import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
 import readFile from '../../../util/readFile';
 
-const allFiles: {
-  testConfig: { location: string; specFiles: { actual: string; expected: string }[] };
-}[] = [
-  // Add others here as they are created
+const allFiles = [
+  // Add other transforms here as they are created
+  replaceHeatmapHideLegend,
 ];
 
-const parsedConfigs = allFiles
+const parsedFiles = allFiles
   .map((mod) =>
-    mod.testConfig.specFiles.map(({ actual, expected }) => {
-      return {
-        name: `${basename(mod.testConfig.location)}/${actual.replace('.spec.tsx', '').replace('actual-', '')}`,
-        actual: readFile(path.join(mod.testConfig.location, actual)),
-        expected: readFile(path.join(mod.testConfig.location, expected)),
-      };
+    mod.testConfig.specFiles.map((file) => {
+      file.name = `${mod.testConfig.name}/${file.name}`;
+      return file;
     }),
   )
   .flat();
 
+const testCases = [
+  ...parsedFiles,
+  {
+    name: 'preset-safe/own-files',
+    actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
+    expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+  },
+];
+
 describe('v9.0.0/charts', () => {
   describe('preset-safe', () => {
-    describe.each(parsedConfigs)('transforms $name correctly', (file) => {
+    describe.each(testCases)('transforms $name correctly', (file) => {
       it('transforms code as needed', () => {
         const actual = transform(
           {
@@ -47,6 +53,37 @@ describe('v9.0.0/charts', () => {
         );
 
         const expected = file.expected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
+    });
+
+    describe('all files together', () => {
+      const combinedActual = testCases.map((file) => file.actual).join('\n\n');
+      const combinedExpected = testCases.map((file) => file.expected).join('\n\n');
+
+      it('transforms code as needed', () => {
+        const actual = transform(
+          {
+            source: combinedActual,
+          },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
+
+        const expected = combinedExpected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
+
+      it('should be idempotent for expression', () => {
+        const actual = transform(
+          {
+            source: combinedExpected,
+          },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
+
+        const expected = combinedExpected;
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
     });

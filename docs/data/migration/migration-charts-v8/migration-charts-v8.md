@@ -95,3 +95,16 @@ The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect
 
 The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
 The `multipleAxes` parameter has been removed since the hook now always supports multiple axes.
+
+## Heatmap
+
+### `hideLegend` default value changed ✅
+
+The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9.
+This improves consistency across chart components and developer experience.
+
+```diff
+ <Heatmap
++  hideLegend
+ />
+```

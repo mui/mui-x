@@ -71,7 +71,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     onHighlightChange,
     enableKeyboardNavigation,
     borderRadius,
-    hideLegend = true,
+    hideLegend,
   } = props;
 
   const id = useId();
