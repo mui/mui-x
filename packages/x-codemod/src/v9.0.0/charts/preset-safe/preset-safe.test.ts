@@ -6,17 +6,17 @@ import * as renameAxisTooltipHook from '../rename-axis-tooltip-hook';
 
 const allFiles = [renameAxisTooltipHook]
   .map((mod) =>
-    mod.config.specFiles.map(({ actual, expected }) => {
+    mod.testConfig.specFiles.map(({ actual, expected }) => {
       return {
-        name: `${basename(mod.config.location)}/${actual.replace('.spec.tsx', '').replace('actual-', '')}`,
-        actual: readFile(path.join(mod.config.location, actual)),
-        expected: readFile(path.join(mod.config.location, expected)),
+        name: `${basename(mod.testConfig.location)}/${actual.replace('.spec.tsx', '').replace('actual-', '')}`,
+        actual: readFile(path.join(mod.testConfig.location, actual)),
+        expected: readFile(path.join(mod.testConfig.location, expected)),
       };
     }),
   )
   .flat();
 
-describe('v8.0.0/charts', () => {
+describe('v9.0.0/charts', () => {
   describe('preset-safe', () => {
     describe.each(allFiles)('transforms $name correctly', (file) => {
       it('transforms code as needed', () => {

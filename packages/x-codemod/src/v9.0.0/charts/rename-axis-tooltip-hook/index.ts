@@ -37,7 +37,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   return root.toSource(printOptions);
 }
 
-export const config = {
+export const testConfig = {
   location: import.meta.dirname,
   specFiles: [
     {

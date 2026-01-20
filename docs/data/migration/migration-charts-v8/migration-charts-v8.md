@@ -84,10 +84,14 @@ The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect
 +import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
 
  function CustomTooltip() {
+   // If you want to keep only one axis
 -  const tooltipData = useAxisTooltip();
++  const tooltipData = useAxesTooltip()[0] ?? null;
+   // If you use all the axes
+-  const tooltipData = useAxisTooltip({ multipleAxes: true });
 +  const tooltipData = useAxesTooltip();
-   // ...
  }
 ```
 
-The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object. The `multipleAxes` parameter has been removed since the hook now always supports multiple axes.
+The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
+The `multipleAxes` parameter has been removed since the hook now always supports multiple axes.
