@@ -64,6 +64,23 @@ function DetailPanelWrapper({ rowId, onHeightChange, children }) {
   return <div ref={ref}>{childrenWithLoaded}</div>;
 }
 
+const detailPanelColumns = [
+  { field: 'name', headerName: 'Product', flex: 1 },
+  {
+    field: 'quantity',
+    headerName: 'Quantity',
+    align: 'center',
+    type: 'number',
+  },
+  { field: 'unitPrice', headerName: 'Unit Price', type: 'number' },
+  {
+    field: 'total',
+    headerName: 'Total',
+    type: 'number',
+    valueGetter: (value, row) => row.quantity * row.unitPrice,
+  },
+];
+
 function DetailPanelContent({ row: rowProp, onLoaded }) {
   const [isLoading, setLoading] = React.useState(true);
   const [products, setProducts] = React.useState([]);
@@ -107,22 +124,7 @@ function DetailPanelContent({ row: rowProp, onLoaded }) {
           <DataGridPro
             density="compact"
             loading={isLoading}
-            columns={[
-              { field: 'name', headerName: 'Product', flex: 1 },
-              {
-                field: 'quantity',
-                headerName: 'Quantity',
-                align: 'center',
-                type: 'number',
-              },
-              { field: 'unitPrice', headerName: 'Unit Price', type: 'number' },
-              {
-                field: 'total',
-                headerName: 'Total',
-                type: 'number',
-                valueGetter: (value, row) => row.quantity * row.unitPrice,
-              },
-            ]}
+            columns={detailPanelColumns}
             rows={products}
             sx={{ flex: 1 }}
             hideFooter
