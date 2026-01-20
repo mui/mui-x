@@ -111,6 +111,7 @@ const TimeGridEventTitle = styled(Typography, {
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  paddingRight: theme.spacing(1.5),
   height: 'fit-content',
   '@container (max-height: 20px)': {
     fontSize: '11px',
@@ -142,15 +143,16 @@ const TimeGridEventTime = styled('time', {
 const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventRecurringIcon',
-})({
+})(({ theme }) => ({
   position: 'absolute',
   right: 3,
   bottom: 3,
+  padding: theme.spacing(0.25),
   color: 'var(--event-color-11)',
   '@container (max-width: 50px)': {
     display: 'none',
   },
-});
+}));
 
 const TimeGridEventResizeHandler = styled(CalendarGrid.TimeEventResizeHandler, {
   name: 'MuiEventCalendar',
