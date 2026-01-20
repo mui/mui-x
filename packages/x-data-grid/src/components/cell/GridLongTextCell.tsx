@@ -20,6 +20,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     root: ['longTextCell'],
     content: ['longTextCellContent'],
     expandButton: ['longTextCellExpandButton'],
+    collapseButton: ['longTextCellCollapseButton'],
     popup: ['longTextCellPopup'],
   };
 
@@ -53,7 +54,8 @@ const GridLongTextCellPopupContent = styled('div', {
 })(({ theme }) => ({
   ...theme.typography.body2,
   letterSpacing: 'normal',
-  padding: '15.5px 9px',
+  paddingBlock: 15.5,
+  paddingInline: 9,
   maxHeight: 52 * 3,
   overflow: 'auto',
   whiteSpace: 'pre-wrap',
@@ -62,19 +64,39 @@ const GridLongTextCellPopupContent = styled('div', {
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
 }));
 
-const GridLongTextCellExpandButtonRoot = styled('div', {
+const GridLongTextCellCornerButton = styled('button', {
   name: 'MuiDataGrid',
-  slot: 'LongTextCellExpandButton',
+  slot: 'LongTextCellCornerButton',
 })(({ theme }) => ({
+  lineHeight: 0,
   position: 'absolute',
   bottom: 0,
   right: 0,
+  border: '1px solid',
+  color: (theme.vars || theme).palette.text.secondary,
+  borderColor: (theme.vars || theme).palette.divider,
   backgroundColor: (theme.vars || theme).palette.background.paper,
-  border: `1px solid ${(theme.vars || theme).palette.divider}`,
   borderRadius: 0,
-  '& .MuiIconButton-root': {
-    padding: 2,
-    borderRadius: 0,
+  fontSize: '0.875rem',
+  padding: 2,
+  '&:focus-visible': {
+    outline: 'none',
+  },
+  '&:hover': {
+    backgroundColor: (theme.vars || theme).palette.background.paper,
+    color: (theme.vars || theme).palette.text.primary,
+  },
+  [`&.${gridClasses.longTextCellExpandButton}`]: {
+    right: -10,
+    opacity: 0,
+    [`.${gridClasses.longTextCell}:hover &`]: {
+      opacity: 1,
+    },
+  },
+  [`&.${gridClasses.longTextCellCollapseButton}`]: {
+    bottom: 2,
+    right: 2,
+    border: 'none',
   },
 }));
 
@@ -89,79 +111,57 @@ const GridLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, 
 export interface GridLongTextCellProps extends GridRenderCellParams<any, string | null> {}
 
 function GridLongTextCell(props: GridLongTextCellProps) {
-  const { id, field, value = '', colDef, hasFocus } = props;
-  // Access disableAutoExpand from colDef (custom property)
-  const disableAutoExpand = (colDef as any).disableAutoExpand ?? false;
+  const { id, value = '', colDef, hasFocus } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
 
-  const [hovered, setHovered] = React.useState(false);
-  const [manualPopupOpen, setManualPopupOpen] = React.useState(false);
+  const [popupOpen, setPopupOpen] = React.useState(false);
   const cellRef = React.useRef<HTMLDivElement>(null);
 
-  // Auto-expand popup when cell is focused (unless disabled)
-  const autoPopupOpen = !disableAutoExpand && hasFocus;
-  const popupOpen = autoPopupOpen || manualPopupOpen;
-
-  // Close manual popup when focus moves away
   React.useEffect(() => {
-    if (!hasFocus && manualPopupOpen) {
-      setManualPopupOpen(false);
-      setHovered(false);
+    if (!hasFocus) {
+      setPopupOpen(false);
     }
-  }, [hasFocus, manualPopupOpen]);
+  }, [hasFocus]);
 
-  // Close popup when row scrolls out of view
   React.useEffect(() => {
     return apiRef.current.subscribeEvent('renderedRowsIntervalChange', (context) => {
       const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
       if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
-        setManualPopupOpen(false);
-        setHovered(false);
+        setPopupOpen(false);
       }
     });
   }, [apiRef, id]);
 
   const handleExpandClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    setManualPopupOpen(true);
+    setPopupOpen(true);
   };
 
   const handleClickAway = () => {
-    if (manualPopupOpen) {
-      setManualPopupOpen(false);
-      setHovered(false);
+    setPopupOpen(false);
+  };
+
+  const handleCollapseClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setPopupOpen(false);
+    apiRef.current.getCellElement(id, colDef.field)?.focus();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape' && popupOpen) {
+      setPopupOpen(false);
+      event.stopPropagation();
     }
   };
-
-  const handleMouseEnter = () => {
-    setHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    if (!manualPopupOpen) {
-      setHovered(false);
-    }
-  };
-
-  const showExpandButton = disableAutoExpand && hovered && !manualPopupOpen;
 
   return (
-    <GridLongTextCellRoot
-      ref={cellRef}
-      className={classes.root}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
+    <GridLongTextCellRoot ref={cellRef} className={classes.root} onKeyDown={handleKeyDown}>
       <GridLongTextCellContent className={classes.content}>{value}</GridLongTextCellContent>
-      {showExpandButton && (
-        <GridLongTextCellExpandButtonRoot className={classes.expandButton}>
-          <rootProps.slots.baseIconButton size="small" onClick={handleExpandClick}>
-            <rootProps.slots.longTextCellExpandIcon />
-          </rootProps.slots.baseIconButton>
-        </GridLongTextCellExpandButtonRoot>
-      )}
+      <GridLongTextCellCornerButton className={classes.expandButton} onClick={handleExpandClick}>
+        <rootProps.slots.longTextCellExpandIcon fontSize="inherit" />
+      </GridLongTextCellCornerButton>
       <GridLongTextCellPopper
         as={rootProps.slots.basePopper}
         ownerState={rootProps}
@@ -182,11 +182,27 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         }}
       >
         <GridLongTextCellPopupContent
-          sx={{
-            '--_width': `calc(${colDef.computedWidth}px + 7ch)`, // the extra 7ch accounts for ellipsis word
+          tabIndex={-1}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') {
+              event.stopPropagation();
+              setPopupOpen(false);
+              apiRef.current.getCellElement(id, colDef.field)?.focus();
+            }
           }}
+          style={
+            {
+              '--_width': `calc(${colDef.computedWidth}px + 7ch)`, // the extra 7ch accounts for ellipsis word
+            } as React.CSSProperties
+          }
         >
           {value}
+          <GridLongTextCellCornerButton
+            className={classes.collapseButton}
+            onClick={handleCollapseClick}
+          >
+            <rootProps.slots.longTextCellCollapseIcon fontSize="inherit" />
+          </GridLongTextCellCornerButton>
         </GridLongTextCellPopupContent>
       </GridLongTextCellPopper>
     </GridLongTextCellRoot>

@@ -255,6 +255,7 @@ The following are the native column types with their required value types:
 | Column type          | Value type                 |
 | :------------------- | :------------------------- |
 | `'string'` (default) | `string`                   |
+| `'longText'`         | `string`                   |
 | `'number'`           | `number`                   |
 | `'date'`             | `Date() object`            |
 | `'dateTime'`         | `Date() object`            |

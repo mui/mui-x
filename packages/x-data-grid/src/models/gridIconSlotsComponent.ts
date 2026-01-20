@@ -196,4 +196,9 @@ export interface GridIconSlotsComponent {
    * @default GridOpenInFullIcon
    */
   longTextCellExpandIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the long text cell popup to collapse the content.
+   * @default GridNorthWestIcon
+   */
+  longTextCellCollapseIcon: React.JSXElementConstructor<IconProps>;
 }

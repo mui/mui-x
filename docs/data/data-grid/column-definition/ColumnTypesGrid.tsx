@@ -90,9 +90,13 @@ function ActionsCell(props: GridRenderCellParams) {
 }
 
 const columns: GridColDef<Row>[] = [
-  { field: 'name', type: 'string', editable: true },
+  { field: 'name', type: 'string' },
+  {
+    field: 'bio',
+    type: 'longText',
+    width: 200,
+  },
   { field: 'age', type: 'number' },
-  { field: 'bio', type: 'longText', width: 200, editable: true },
   { field: 'dateCreated', type: 'date', width: 130 },
   { field: 'lastLogin', type: 'dateTime', width: 180 },
   { field: 'isAdmin', type: 'boolean', width: 120 },

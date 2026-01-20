@@ -452,6 +452,10 @@ export interface GridClasses {
    */
   longTextCellExpandButton: string;
   /**
+   * Styles applied to the long text cell collapse button.
+   */
+  longTextCellCollapseButton: string;
+  /**
    * Styles applied to the long text cell popup.
    */
   longTextCellPopup: string;
@@ -1052,6 +1056,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'longTextCell',
   'longTextCellContent',
   'longTextCellExpandButton',
+  'longTextCellCollapseButton',
   'longTextCellPopup',
   'editLongTextCell',
   'editLongTextCellPopup',
