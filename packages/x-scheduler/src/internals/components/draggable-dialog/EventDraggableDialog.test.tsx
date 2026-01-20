@@ -548,9 +548,7 @@ describe('<EventDraggableDialogContent open />', () => {
               createEventSpy = sp;
             }}
           />
-          <Popover.Root open>
-            <EventPopoverContent {...defaultProps} occurrence={creationOccurrence} />
-          </Popover.Root>
+          <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
         </EventCalendarProvider>,
       );
 
