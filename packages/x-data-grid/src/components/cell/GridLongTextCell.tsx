@@ -218,11 +218,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
               apiRef.current.getCellElement(id, colDef.field)?.focus();
             }
           }}
-          style={
-            {
-              '--_width': `calc(${colDef.computedWidth}px + 7ch)`, // the extra 7ch accounts for ellipsis word
-            } as React.CSSProperties
-          }
+          style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
         >
           {value}
           <GridLongTextCellCornerButton
