@@ -1,6 +1,7 @@
+import path from 'path';
 import type { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
-
-const packageNames = ['@mui/x-charts', '@mui/x-charts-pro', '@mui/x-charts-premium'];
+import readFile from '../../../util/readFile';
+import { renameImports } from '../../../util/renameImports';
 
 export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftAPI, options: any) {
   const j = api.jscodeshift;
@@ -9,68 +10,33 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   const printOptions = options.printOptions || {
     quote: 'single',
     trailingComma: true,
-    wrapColumn: 40,
   };
 
-  // Find all import declarations from @mui/x-charts*/ChartContainer
-  const chartContainerImportRegex = new RegExp(`^(${packageNames.join('|')})/ChartContainer$`);
-
-  root.find(j.ImportDeclaration).forEach((path) => {
-    const importSource = path.node.source.value?.toString() ?? '';
-    if (!chartContainerImportRegex.test(importSource)) {
-      return;
-    }
-
-    const specifiers = path.node.specifiers || [];
-    const chartApiSpecifiers: typeof specifiers = [];
-    const otherSpecifiers: typeof specifiers = [];
-
-    specifiers.forEach((specifier) => {
-      if (
-        specifier.type === 'ImportSpecifier' &&
-        specifier.imported.type === 'Identifier' &&
-        specifier.imported.name === 'ChartApi'
-      ) {
-        chartApiSpecifiers.push(specifier);
-      } else {
-        otherSpecifiers.push(specifier);
-      }
-    });
-
-    // If no ChartApi import found, skip
-    if (chartApiSpecifiers.length === 0) {
-      return;
-    }
-
-    // Get the package name (e.g., @mui/x-charts)
-    const packageName = importSource.replace('/ChartContainer', '');
-    const newImportSource = `${packageName}/context`;
-
-    // If all specifiers are ChartApi, just update the import source
-    if (otherSpecifiers.length === 0) {
-      path.node.source = j.stringLiteral(newImportSource);
-    } else {
-      // Otherwise, remove ChartApi from the original import and create a new import
-      path.node.specifiers = otherSpecifiers;
-
-      // Create a new import declaration for ChartApi
-      const newImport = j.importDeclaration(chartApiSpecifiers, j.stringLiteral(newImportSource));
-
-      // Insert the new import after the current one
-      path.insertAfter(newImport);
-    }
+  renameImports({
+    j,
+    root,
+    packageNames: ['@mui/x-charts', '@mui/x-charts-pro', '@mui/x-charts-premium'],
+    imports: [
+      {
+        oldEndpoint: 'ChartContainer',
+        newEndpoint: 'context',
+        importsMapping: {
+          ChartApi: 'ChartApi',
+        },
+      },
+    ],
   });
 
   return root.toSource(printOptions);
 }
 
-export const config = {
-  location: import.meta.dirname,
+export const testConfig = {
+  name: 'rename-chart-api-import',
   specFiles: [
     {
-      actual: 'actual-pro-imports.spec.tsx',
-      expected: 'expected-pro-imports.spec.tsx',
+      name: 'imports',
+      actual: readFile(path.join(import.meta.dirname, 'actual-imports.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected-imports.spec.tsx')),
     },
-    { actual: 'actual-nested-imports.spec.tsx', expected: 'expected-nested-imports.spec.tsx' },
   ],
 };
