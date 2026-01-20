@@ -68,20 +68,19 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
   React.useEffect(() => {
     const handleResize = () => {
       updatePosition(false);
+      resetDrag();
     };
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [updatePosition]);
+  }, [updatePosition, resetDrag]);
 
   return (
     <Paper
       {...other}
       ref={nodeRef}
       sx={{
-        position: 'relative',
-        inset: 0,
         p: 2,
         borderWidth: 0,
         borderTopWidth: 1,
