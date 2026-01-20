@@ -13,7 +13,7 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { useFormatTime } from '../../../hooks/useFormatTime';
+import { useFormatTime } from '../../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
 
 const EventItemCard = styled('div', {

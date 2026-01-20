@@ -6,10 +6,7 @@ import { useStore } from '@base-ui/utils/store';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
-import {
-  EventPopoverProvider,
-  EventPopoverTrigger,
-} from '@mui/x-scheduler/internals/components/event-popover';
+import { EventPopoverProvider, EventPopoverTrigger } from '@mui/x-scheduler/components';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';

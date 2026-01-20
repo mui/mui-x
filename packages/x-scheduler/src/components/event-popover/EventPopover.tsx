@@ -14,7 +14,7 @@ import {
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
 } from './EventPopover.types';
-import { getDataPaletteProps } from '../../utils/color-utils';
+import { getDataPaletteProps } from '../../../utils/color-utils';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 import { createPopover } from '../create-popover';
 import ReadonlyContent from './ReadonlyContent';

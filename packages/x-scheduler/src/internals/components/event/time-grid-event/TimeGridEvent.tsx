@@ -7,8 +7,8 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
-import { EventDragPreview } from '../../event-drag-preview';
-import { useFormatTime } from '../../../hooks/useFormatTime';
+import { EventDragPreview } from '../../../../components/event-drag-preview';
+import { useFormatTime } from '../../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
 
 const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {

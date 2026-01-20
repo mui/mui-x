@@ -15,7 +15,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventPopoverHeader from './EventPopoverHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
-import { useFormatTime } from '../../hooks/useFormatTime';
+import { useFormatTime } from '../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const ReadonlyContentRoot = styled('div', {

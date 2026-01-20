@@ -21,7 +21,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../event-popover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
-import { useFormatTime } from '../../hooks/useFormatTime';
+import { useFormatTime } from '../../../hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 
 const FIXED_CELL_WIDTH = 68;

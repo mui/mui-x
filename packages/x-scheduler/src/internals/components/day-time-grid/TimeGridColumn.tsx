@@ -14,7 +14,7 @@ import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-he
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import { EventPopoverTrigger } from '../event-popover';
 import { useEventPopoverContext } from '../event-popover/EventPopover';
-import { useFormatTime } from '../../hooks/useFormatTime';
+import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 
 const HOUR_HEIGHT = 46;
