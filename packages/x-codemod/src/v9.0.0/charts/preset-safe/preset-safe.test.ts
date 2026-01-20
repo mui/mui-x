@@ -1,40 +1,91 @@
-import path from 'path';
 import jscodeshift from 'jscodeshift';
+import path from 'path';
 import transform from './index';
+import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
 import readFile from '../../../util/readFile';
 
-function read(fileName) {
-  return readFile(path.join(__dirname, fileName));
-}
+const allFiles = [
+  // Add other transforms here as they are created
+  replaceHeatmapHideLegend,
+];
+
+const parsedFiles = allFiles
+  .map((mod) =>
+    mod.testConfig.specFiles.map((file) => {
+      file.name = `${mod.testConfig.name}/${file.name}`;
+      return file;
+    }),
+  )
+  .flat();
+
+const testCases = [
+  ...parsedFiles,
+  {
+    name: 'preset-safe/own-files',
+    actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
+    expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+  },
+];
 
 describe('v9.0.0/charts', () => {
   describe('preset-safe', () => {
-    it('transforms code as needed', () => {
-      const actual = transform(
-        {
-          source: read('./actual.spec.tsx'),
-          path: require.resolve('./actual.spec.tsx'),
-        },
-        { jscodeshift: jscodeshift.withParser('tsx') },
-        {},
-      );
+    describe.each(testCases)('transforms $name correctly', (file) => {
+      it('transforms code as needed', () => {
+        const actual = transform(
+          {
+            source: file.actual,
+          },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
 
-      const expected = read('./expected.spec.tsx');
-      expect(actual).to.equal(expected, 'The transformed version should be correct');
+        const expected = file.expected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
+
+      it('should be idempotent for expression', () => {
+        const actual = transform(
+          {
+            source: file.expected,
+          },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
+
+        const expected = file.expected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
     });
 
-    it('should be idempotent for expression', () => {
-      const actual = transform(
-        {
-          source: read('./expected.spec.tsx'),
-          path: require.resolve('./expected.spec.tsx'),
-        },
-        { jscodeshift: jscodeshift.withParser('tsx') },
-        {},
-      );
+    describe('all files together', () => {
+      const combinedActual = testCases.map((file) => file.actual).join('\n\n');
+      const combinedExpected = testCases.map((file) => file.expected).join('\n\n');
 
-      const expected = read('./expected.spec.tsx');
-      expect(actual).to.equal(expected, 'The transformed version should be correct');
+      it('transforms code as needed', () => {
+        const actual = transform(
+          {
+            source: combinedActual,
+          },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
+
+        const expected = combinedExpected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
+
+      it('should be idempotent for expression', () => {
+        const actual = transform(
+          {
+            source: combinedExpected,
+          },
+          { jscodeshift: jscodeshift.withParser('tsx') },
+          {},
+        );
+
+        const expected = combinedExpected;
+        expect(actual).to.equal(expected, 'The transformed version should be correct');
+      });
     });
   });
 });
