@@ -239,7 +239,10 @@ type PluginDependsOnPluginWithColumnMeta = Plugin<
 const pluginDependsOnPluginWithColumnMeta = createPlugin<PluginDependsOnPluginWithColumnMeta>()({
   name: 'pluginDependsOnPluginWithColumnMeta',
   dependencies: [pluginWithColumnMeta],
-  getInitialState: (state) => ({ ...state, pluginDependsOnPluginWithColumnMeta: { derived: 'derived' } }),
+  getInitialState: (state) => ({
+    ...state,
+    pluginDependsOnPluginWithColumnMeta: { derived: 'derived' },
+  }),
   use: () => ({ pluginDependsOnPluginWithColumnMeta: { getDerived: () => 'derived' } }),
 });
 
@@ -422,7 +425,7 @@ const pluginD = createPlugin<PluginD>()({
     state.pluginA.a;
     // @ts-expect-error Not declared as dependency
     state.pluginB.b;
-    return { ...state, pluginD: { d: 'D' } }
+    return { ...state, pluginD: { d: 'D' } };
   },
   use: (_store, params, api) => {
     // @ts-expect-error pluginA is not declared as a dependency

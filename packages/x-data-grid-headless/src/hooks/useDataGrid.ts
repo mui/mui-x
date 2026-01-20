@@ -58,9 +58,7 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
       accumulatedState = plugin.getInitialState(accumulatedState, options as any);
     });
 
-    const store = new Store<DataGridState<TPlugins>>(
-      accumulatedState as DataGridState<TPlugins>,
-    );
+    const store = new Store<DataGridState<TPlugins>>(accumulatedState as DataGridState<TPlugins>);
 
     return {
       pluginRegistry: registry,
