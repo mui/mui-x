@@ -8,7 +8,10 @@ import {
   GridApiPremium,
 } from '@mui/x-data-grid-premium';
 import { useDemoData } from '@mui/x-data-grid-generator';
-import { createCustomCellEditHandler, createCustomClipboardPasteHistoryHandler } from './customHistoryEventHandlers';
+import {
+  createCustomCellEditHandler,
+  createCustomClipboardPasteHistoryHandler,
+} from './customHistoryEventHandlers';
 
 export default function CustomHandlers() {
   const { data } = useDemoData({

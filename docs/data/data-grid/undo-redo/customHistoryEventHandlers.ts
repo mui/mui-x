@@ -166,8 +166,7 @@ export function createCustomClipboardPasteHistoryHandler(
           return false;
         }
 
-        const expectedRow =
-          direction === 'undo' ? newRows.get(rowId)! : oldRows.get(rowId)!;
+        const expectedRow = direction === 'undo' ? newRows.get(rowId)! : oldRows.get(rowId)!;
 
         for (const field of Object.keys(expectedRow)) {
           if (!isDeepEqual(row[field], expectedRow[field])) {
