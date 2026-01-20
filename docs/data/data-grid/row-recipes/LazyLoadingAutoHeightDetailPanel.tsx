@@ -11,7 +11,13 @@ import {
   randomTraderName,
   randomId,
 } from '@mui/x-data-grid-generator';
-import { DataGridPro, DataGridProProps, GridColDef, GridRowId, GridRowParams } from '@mui/x-data-grid-pro';
+import {
+  DataGridPro,
+  DataGridProProps,
+  GridColDef,
+  GridRowId,
+  GridRowParams,
+} from '@mui/x-data-grid-pro';
 
 type Products = Awaited<ReturnType<typeof getProducts>>;
 
@@ -39,7 +45,11 @@ interface DetailPanelWrapperProps {
   children: React.ReactNode;
 }
 
-function DetailPanelWrapper({ rowId, onHeightChange, children }: DetailPanelWrapperProps) {
+function DetailPanelWrapper({
+  rowId,
+  onHeightChange,
+  children,
+}: DetailPanelWrapperProps) {
   const ref = React.useRef<HTMLDivElement>(null);
   const isLoadedRef = React.useRef(false);
 
@@ -69,11 +79,19 @@ function DetailPanelWrapper({ rowId, onHeightChange, children }: DetailPanelWrap
     : children;
 
   return <div ref={ref}>{childrenWithLoaded}</div>;
-};
+}
 
-function DetailPanelContent({ row: rowProp, onLoaded }: { row: Customer; onLoaded?: () => void }) {
+function DetailPanelContent({
+  row: rowProp,
+  onLoaded,
+}: {
+  row: Customer;
+  onLoaded?: () => void;
+}) {
   const [isLoading, setLoading] = React.useState(true);
-  const [products, setProducts] = React.useState<Awaited<ReturnType<typeof getProducts>>>([]);
+  const [products, setProducts] = React.useState<
+    Awaited<ReturnType<typeof getProducts>>
+  >([]);
 
   const detailPanelDataCache = React.useContext(DetailPanelDataCache);
 
@@ -164,24 +182,26 @@ export default function LazyLoadingAutoHeightDetailPanel() {
   const detailPanelDataCache = React.useRef(new Map<GridRowId, Products>()).current;
 
   // Height cache for detail panels - prevents scroll jumps when panels remount
-  const [detailPanelHeights, setDetailPanelHeights] = React.useState<Map<GridRowId, number>>(
-    new Map(),
-  );
+  const [detailPanelHeights, setDetailPanelHeights] = React.useState<
+    Map<GridRowId, number>
+  >(new Map());
 
   // Height change handler - if the grid is not loaded yet, ignore reduction of the height to prevent scroll jumps.
   // Once the content is loaded, accept all height changes including reductions (e.g., from filtering).
-  const handleDetailPanelHeightChange = React.useCallback((rowId: GridRowId, height: number, isLoaded: boolean) => {
-    setDetailPanelHeights((prev) => {
-      const currentHeight = prev.get(rowId);
-      if (!isLoaded && currentHeight !== undefined && height <= currentHeight) {
-        return prev;
-      }
-      const next = new Map(prev);
-      next.set(rowId, height);
-      return next;
-    });
-  }, []);
-
+  const handleDetailPanelHeightChange = React.useCallback(
+    (rowId: GridRowId, height: number, isLoaded: boolean) => {
+      setDetailPanelHeights((prev) => {
+        const currentHeight = prev.get(rowId);
+        if (!isLoaded && currentHeight !== undefined && height <= currentHeight) {
+          return prev;
+        }
+        const next = new Map(prev);
+        next.set(rowId, height);
+        return next;
+      });
+    },
+    [],
+  );
 
   const handleDetailPanelExpansionChange = React.useCallback<
     NonNullable<DataGridProProps['onDetailPanelExpandedRowIdsChange']>
@@ -210,17 +230,18 @@ export default function LazyLoadingAutoHeightDetailPanel() {
     [detailPanelDataCache],
   );
 
-  const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] = React.useCallback(
-    (params: GridRowParams<Customer>) => (
-      <DetailPanelWrapper 
-        rowId={params.row.id} 
-        onHeightChange={handleDetailPanelHeightChange}
-      >
-        <DetailPanelContent row={params.row} />
-      </DetailPanelWrapper>
-    ),
-    [handleDetailPanelHeightChange],
-  );
+  const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] =
+    React.useCallback(
+      (params: GridRowParams<Customer>) => (
+        <DetailPanelWrapper
+          rowId={params.row.id}
+          onHeightChange={handleDetailPanelHeightChange}
+        >
+          <DetailPanelContent row={params.row} />
+        </DetailPanelWrapper>
+      ),
+      [handleDetailPanelHeightChange],
+    );
 
   const getDetailPanelHeight = React.useCallback(
     (params: { row: Customer }) => {
