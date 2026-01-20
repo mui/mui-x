@@ -44,7 +44,7 @@ type SafeUnionToIntersection<T> = [T] extends [never] ? {} : UnionToIntersection
 export type PluginsOptions<
   TPlugins extends readonly AnyPlugin[],
   TRow = any,
-  TColumnMeta extends Record<string, any> = {},
+  TColumnMeta = {},
 > = SafeUnionToIntersection<ExtractPluginParams<FlattenPluginsWithDeps<TPlugins>>> &
   InternalPluginsOptions<TRow, TColumnMeta>;
 
@@ -61,7 +61,7 @@ export type PluginsApi<TPlugins extends readonly AnyPlugin[], TRow = any> = Safe
   InternalPluginsApi<TRow>;
 
 // Union all plugin column metadata including dependencies
-// Creates a type like { sorting: { sortable?: boolean }, grouping: { groupable?: boolean } }
+// Merges plugin column metadata like: { sortable?: boolean } & { groupable?: boolean }
 export type PluginsColumnMeta<TPlugins extends readonly AnyPlugin[]> = SafeUnionToIntersection<
   ExtractPluginColumnMeta<FlattenPluginsWithDeps<TPlugins>>
 >;

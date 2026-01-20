@@ -15,7 +15,5 @@ export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> & ColumnsPlugin
 
 export type InternalPluginsState = RowsPluginState & ColumnsPluginState;
 
-export type InternalPluginsOptions<
-  TRow = any,
-  TColumnMeta extends Record<string, any> = {},
-> = RowsPluginOptions<TRow> & ColumnsPluginOptions<TRow, TColumnMeta>;
+export type InternalPluginsOptions<TRow = any, TColumnMeta = {}> = RowsPluginOptions<TRow> &
+  ColumnsPluginOptions<TRow, TColumnMeta>;

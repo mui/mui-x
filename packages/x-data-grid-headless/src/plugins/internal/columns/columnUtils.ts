@@ -32,7 +32,7 @@ export interface ColumnsInitialState {
 // Options
 // ================================
 
-export interface ColumnsOptions<TData = any, TColumnMeta extends Record<string, any> = {}> {
+export interface ColumnsOptions<TData = any, TColumnMeta = {}> {
   columns: ColumnDef<TData, TColumnMeta>[];
   columnVisibilityModel?: ColumnVisibilityModel;
 }

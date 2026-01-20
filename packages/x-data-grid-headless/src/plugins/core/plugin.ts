@@ -14,10 +14,10 @@ export type ExtractPluginApi<T> =
 
 // Extract column metadata from a plugin
 export type ExtractPluginColumnMeta<T> =
-  T extends Plugin<infer TName, any, any, any, infer TColumnMeta, any>
+  T extends Plugin<any, any, any, any, infer TColumnMeta, any>
     ? [TColumnMeta] extends [Record<string, never>]
       ? never
-      : { [K in TName]: TColumnMeta }
+      : TColumnMeta
     : never;
 
 // Extract API from an array of plugins (dependencies)

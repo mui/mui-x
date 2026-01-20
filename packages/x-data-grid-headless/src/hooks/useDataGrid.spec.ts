@@ -152,58 +152,33 @@ export function ColumnMetadataTypingExample() {
       {
         id: 'name',
         field: 'name',
-        // @ts-expect-error plugins property should not exist without plugins
-        plugins: { sorting: { sortable: true } },
+        // @ts-expect-error sortable should not exist without sorting plugin
+        sortable: true,
       },
     ],
     plugins: [],
   });
 
-  // With sorting plugin - columns should have plugins.sorting metadata available
+  // With sorting plugin - columns should have sortable metadata available
   const grid2 = useDataGrid({
     rows,
     columns: [
       {
         id: 'name',
         field: 'name',
-        // ✓ plugins.sorting should be available with sortingPlugin
-        plugins: {
-          sorting: {
-            sortable: true,
-          },
-        },
+        // ✓ sortable is available with sortingPlugin
+        sortable: true,
       },
       {
         id: 'email',
         field: 'email',
-        // ✓ plugins is optional
+        // ✓ sortable is optional
       },
       {
-        id: 'email',
-        field: 'email',
-        plugins: {
-          sorting: {
-            // @ts-expect-error cannot use non-existing plugin property
-            nonExistingProperty: true,
-          },
-        },
-      },
-    ],
-    plugins: [sortingPlugin],
-  });
-
-  // With sorting plugin - should error on wrong plugin namespace
-  const grid3 = useDataGrid({
-    rows,
-    columns: [
-      {
-        id: 'name',
-        field: 'name',
-        plugins: {
-          sorting: { sortable: true },
-          // @ts-expect-error pagination column metadata not available
-          pagination: {},
-        },
+        id: 'age',
+        field: 'age',
+        // @ts-expect-error cannot use non-existing plugin property
+        nonExistingProperty: true,
       },
     ],
     plugins: [sortingPlugin],
@@ -256,13 +231,9 @@ export function ColumnMetadataWithDependenciesExample() {
       {
         id: 'name',
         field: 'name',
-        plugins: {
-          // ✓ Column metadata from pluginWithColumnMeta
-          pluginWithColumnMeta: {
-            highlight: true,
-            priority: 1,
-          },
-        },
+        // ✓ Column metadata from pluginWithColumnMeta
+        highlight: true,
+        priority: 1,
       },
     ],
     plugins: [pluginWithColumnMeta],
@@ -276,22 +247,15 @@ export function ColumnMetadataWithDependenciesExample() {
       {
         id: 'name',
         field: 'name',
-        plugins: {
-          // ✓ Column metadata from dependency
-          pluginWithColumnMeta: {
-            highlight: true,
-            priority: 1,
-          },
-          // ✓ Column metadata from the plugin itself
-          pluginDependsOnPluginWithColumnMeta: {
-            moreMeta: true,
-          },
-        },
+        // ✓ Column metadata from dependency + plugin itself
+        highlight: true,
+        priority: 1,
+        moreMeta: true,
       },
       {
         id: 'email',
         field: 'email',
-        // ✓ Can omit plugins property entirely
+        // ✓ All metadata is optional
       },
     ],
     plugins: [pluginDependsOnPluginWithColumnMeta],
@@ -304,10 +268,8 @@ export function ColumnMetadataWithDependenciesExample() {
       {
         id: 'name',
         field: 'name',
-        plugins: {
-          // @ts-expect-error sorting column metadata not available
-          pluginWithColumnMeta: { priority: true },
-        },
+        // @ts-expect-error moreMeta not available
+        moreMeta: true,
       },
     ],
     plugins: [pluginWithColumnMeta],
