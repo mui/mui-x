@@ -42,8 +42,8 @@ export function TestDataGrid<TRow extends object>(props: {
                 borderBottom: '2px solid #e0e0e0',
                 fontWeight: 600,
                 fontSize: '14px',
-                width: column.width || 150,
-                minWidth: column.width || 150,
+                width: column.size || 150,
+                minWidth: column.size || 150,
               }}
             >
               {column.header || column.id}
@@ -76,8 +76,8 @@ export function TestDataGrid<TRow extends object>(props: {
                     style={{
                       padding: '12px 16px',
                       fontSize: '14px',
-                      width: column.width || 150,
-                      minWidth: column.width || 150,
+                      width: column.size || 150,
+                      minWidth: column.size || 150,
                     }}
                   >
                     {value != null ? String(value) : ''}

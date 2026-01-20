@@ -3,7 +3,7 @@ type BaseColumnDef<TData> = {
   id: string;
   field?: keyof TData;
   header?: string;
-  width?: number;
+  size?: number;
 };
 
 // Column definition with plugin metadata

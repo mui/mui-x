@@ -7,7 +7,7 @@ import { type ColumnDef } from '../../../columnDef/columnDef';
 
 export interface ColumnState extends ColumnDef<any> {
   hasBeenResized?: boolean;
-  computedWidth?: number;
+  computedSize?: number;
 }
 
 export type ColumnLookup = {
@@ -49,7 +49,7 @@ export interface ColumnsApi {
   update: (columns: ColumnDef<any>[]) => void;
   setVisibilityModel: (model: ColumnVisibilityModel) => void;
   setVisibility: (field: string, isVisible: boolean) => void;
-  setWidth: (field: string, width: number) => void;
+  setSize: (field: string, size: number) => void;
   setIndex: (field: string, targetIndex: number) => void;
 }
 
@@ -57,12 +57,12 @@ export interface ColumnsApi {
 // Default Column Values
 // ================================
 
-const DEFAULT_COLUMN_WIDTH = 100;
+const DEFAULT_COLUMN_SIZE = 100;
 
 function getDefaultColumnState(field: string): Partial<ColumnState> {
   return {
     field,
-    width: DEFAULT_COLUMN_WIDTH,
+    size: DEFAULT_COLUMN_SIZE,
     hasBeenResized: false,
   };
 }
@@ -211,13 +211,13 @@ export function createColumnsApi<TData>(
     }
   };
 
-  const setColumnWidth = (field: string, width: number): void => {
+  const setColumnSize = (field: string, size: number): void => {
     const columnsState = store.state.columns;
     const column = columnsState.lookup[field];
     if (column) {
       const newColumn: ColumnState = {
         ...column,
-        width,
+        size,
         hasBeenResized: true,
       };
 
@@ -262,7 +262,7 @@ export function createColumnsApi<TData>(
     update: updateColumns,
     setVisibilityModel: setColumnVisibilityModel,
     setVisibility: setColumnVisibility,
-    setWidth: setColumnWidth,
+    setSize: setColumnSize,
     setIndex: setColumnIndex,
   };
 }
