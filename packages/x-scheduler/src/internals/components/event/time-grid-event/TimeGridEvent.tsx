@@ -42,6 +42,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   gap: theme.spacing(0.25),
   justifyContent: 'flex-start',
   alignContent: 'flex-start',
+  minHeight: 11.5,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
@@ -55,6 +56,10 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
+  },
+  '&[data-under-fifteen-minutes="true"]': {
+    padding: theme.spacing(0.05, 1),
+    fontSize: '0.75rem',
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-color-5)',
@@ -107,6 +112,10 @@ const TimeGridEventTitle = styled(Typography, {
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
   height: 'fit-content',
+  '@container (max-height: 20px)': {
+    fontSize: '11px',
+    lineHeight: '11px',
+  },
   ...linesClampStyles(1),
 }));
 
@@ -123,6 +132,10 @@ const TimeGridEventTime = styled('time', {
   },
   '@container (max-width: 50px & max-height: 50px)': {
     display: 'none',
+  },
+  '@container (max-height: 20px)': {
+    fontSize: '11px',
+    lineHeight: '11px',
   },
 }));
 
@@ -190,6 +203,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   const durationMinutes = durationMs / 60000;
   const isBetween30and60Minutes = durationMinutes >= 30 && durationMinutes < 60;
   const isLessThan30Minutes = durationMinutes < 30;
+  const isLessThan15Minutes = durationMinutes < 15;
 
   const content = React.useMemo(() => {
     return (
@@ -243,6 +257,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
         data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
+        data-under-fifteen-minutes={isLessThan15Minutes || undefined}
         data-palette={color}
         {...sharedProps}
       >
@@ -259,6 +274,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       data-under-hour={isLessThan30Minutes || isBetween30and60Minutes || undefined}
       data-draggable={isDraggable || undefined}
+      data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
       data-palette={color}
       {...sharedProps}
