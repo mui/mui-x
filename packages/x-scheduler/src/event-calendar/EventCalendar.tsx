@@ -156,7 +156,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     <EventCalendarStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
-          <EventDraggableDialogProvider containerRef={rootRef}>
+          <EventDraggableDialogProvider>
             <EventCalendarRoot {...other} ref={handleRootRef}>
               <DateNavigator />
 

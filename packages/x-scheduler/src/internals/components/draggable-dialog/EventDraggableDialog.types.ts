@@ -18,7 +18,6 @@ export interface EventDraggableDialogProps extends DialogProps {
 }
 
 export interface EventDraggableDialogProviderProps {
-  containerRef?: React.RefObject<HTMLElement | null>;
   children: React.ReactNode;
 }
 

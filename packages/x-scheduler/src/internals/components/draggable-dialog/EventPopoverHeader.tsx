@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { X } from 'lucide-react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import { styled } from '@mui/material/styles';
 
 const EventDraggableDialogHeaderRoot = styled('header', {
@@ -28,7 +28,7 @@ export default function EventDraggableDialogHeader({ children }: React.PropsWith
   return (
     <EventDraggableDialogHeaderRoot>
       <EventDraggableDialogHeaderContent>{children}</EventDraggableDialogHeaderContent>
-      <X size={18} strokeWidth={2} />
+      <CloseRounded fontSize="small" />
     </EventDraggableDialogHeaderRoot>
   );
 }
