@@ -1837,12 +1837,6 @@ importers:
 
   packages/x-scheduler-headless-premium:
     dependencies:
-      '@atlaskit/pragmatic-drag-and-drop':
-        specifier: ^1.7.7
-        version: 1.7.7
-      '@atlaskit/pragmatic-drag-and-drop-auto-scroll':
-        specifier: ^2.1.2
-        version: 2.1.2
       '@babel/runtime':
         specifier: 'catalog:'
         version: 7.28.4
@@ -1864,12 +1858,12 @@ importers:
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
+      '@mui/x-scheduler-headless':
+        specifier: workspace:*
+        version: link:../x-scheduler-headless/build
       prop-types:
         specifier: 'catalog:'
         version: 15.8.1
-      tabbable:
-        specifier: ^6.3.0
-        version: 6.3.0
     devDependencies:
       '@date-fns/tz':
         specifier: 'catalog:'
