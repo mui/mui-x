@@ -125,14 +125,36 @@ function GridLongTextCell(props: GridLongTextCellProps) {
     }
   }, [hasFocus]);
 
+  // Close popup when cell scrolls out of view
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('renderedRowsIntervalChange', (context) => {
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-      if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
-        setPopupOpen(false);
+    if (!popupOpen) {
+      return undefined;
+    }
+    const unsubscribeRows = apiRef.current.subscribeEvent(
+      'renderedRowsIntervalChange',
+      (context) => {
+        const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
+        if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
+          setPopupOpen(false);
+        }
+      },
+    );
+    const unsubscribeCols = apiRef.current.subscribeEvent('scrollPositionChange', (params) => {
+      if (params.renderContext) {
+        const colIndex = apiRef.current.getColumnIndexRelativeToVisibleColumns(colDef.field);
+        if (
+          colIndex < params.renderContext.firstColumnIndex ||
+          colIndex >= params.renderContext.lastColumnIndex
+        ) {
+          setPopupOpen(false);
+        }
       }
     });
-  }, [apiRef, id]);
+    return () => {
+      unsubscribeRows();
+      unsubscribeCols();
+    };
+  }, [apiRef, id, colDef.field, popupOpen]);
 
   const handleExpandClick = (event: React.MouseEvent) => {
     event.stopPropagation();
