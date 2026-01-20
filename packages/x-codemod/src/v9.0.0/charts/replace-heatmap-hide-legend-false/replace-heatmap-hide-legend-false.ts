@@ -8,9 +8,7 @@ describe('v9.0.0/charts', () => {
     describe.each(allFiles)('$name', (file) => {
       it('transforms code as needed', () => {
         const actual = transform(
-          {
-            source: file.actual,
-          },
+          { source: file.actual },
           { jscodeshift: jscodeshift.withParser('tsx') },
           {},
         );
@@ -21,9 +19,7 @@ describe('v9.0.0/charts', () => {
 
       it('should be idempotent', () => {
         const actual = transform(
-          {
-            source: file.expected,
-          },
+          { source: file.expected },
           { jscodeshift: jscodeshift.withParser('tsx') },
           {},
         );

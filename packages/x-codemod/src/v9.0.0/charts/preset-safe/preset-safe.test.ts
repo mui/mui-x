@@ -63,9 +63,7 @@ describe('v9.0.0/charts', () => {
 
       it('transforms code as needed', () => {
         const actual = transform(
-          {
-            source: combinedActual,
-          },
+          { source: combinedActual },
           { jscodeshift: jscodeshift.withParser('tsx') },
           {},
         );
@@ -76,9 +74,7 @@ describe('v9.0.0/charts', () => {
 
       it('should be idempotent for expression', () => {
         const actual = transform(
-          {
-            source: combinedExpected,
-          },
+          { source: combinedExpected },
           { jscodeshift: jscodeshift.withParser('tsx') },
           {},
         );
