@@ -75,7 +75,7 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ### Hooks
 
-#### ✅ Rename `useAxisTooltip` hook
+#### Rename `useAxisTooltip` hook
 
 The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
 

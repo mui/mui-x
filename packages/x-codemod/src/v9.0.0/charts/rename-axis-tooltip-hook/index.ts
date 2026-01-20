@@ -36,14 +36,3 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
 
   return root.toSource(printOptions);
 }
-
-export const testConfig = {
-  location: import.meta.dirname,
-  specFiles: [
-    {
-      actual: 'actual-root-imports.spec.tsx',
-      expected: 'expected-root-imports.spec.tsx',
-    },
-    { actual: 'actual-nested-imports.spec.tsx', expected: 'expected-nested-imports.spec.tsx' },
-  ],
-};

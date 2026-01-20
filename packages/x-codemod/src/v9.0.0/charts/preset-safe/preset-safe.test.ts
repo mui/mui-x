@@ -2,9 +2,14 @@ import path, { basename } from 'path';
 import jscodeshift from 'jscodeshift';
 import transform from './index';
 import readFile from '../../../util/readFile';
-import * as renameAxisTooltipHook from '../rename-axis-tooltip-hook';
 
-const allFiles = [renameAxisTooltipHook]
+const allFiles: {
+  testConfig: { location: string; specFiles: { actual: string; expected: string }[] };
+}[] = [
+  // Add others here as they are created
+];
+
+const parsedConfigs = allFiles
   .map((mod) =>
     mod.testConfig.specFiles.map(({ actual, expected }) => {
       return {
@@ -18,7 +23,7 @@ const allFiles = [renameAxisTooltipHook]
 
 describe('v9.0.0/charts', () => {
   describe('preset-safe', () => {
-    describe.each(allFiles)('transforms $name correctly', (file) => {
+    describe.each(parsedConfigs)('transforms $name correctly', (file) => {
       it('transforms code as needed', () => {
         const actual = transform(
           {
