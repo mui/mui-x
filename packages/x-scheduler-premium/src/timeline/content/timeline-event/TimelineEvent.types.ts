@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
+import type { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless-premium/use-event-occurrences-with-timeline-position';
 
 export interface TimelineEventProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

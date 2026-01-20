@@ -1,9 +1,9 @@
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless/timeline';
+import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/timeline';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
+import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { getDataPaletteProps } from '@mui/x-scheduler/utils';
 
 const TimelineRow = styled(TimelinePrimitive.Row, {

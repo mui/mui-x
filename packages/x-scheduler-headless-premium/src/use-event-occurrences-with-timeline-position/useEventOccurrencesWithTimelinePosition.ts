@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { SchedulerEventOccurrence, SchedulerEventOccurrencePlaceholder } from '../models';
-import { useAdapter } from '../use-adapter/useAdapter';
-import { Adapter } from '../use-adapter/useAdapter.types';
-import { sortEventOccurrences } from '../sort-event-occurrences';
+import { useAdapter, Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { sortEventOccurrences } from '@mui/x-scheduler-headless/sort-event-occurrences';
+import {
+  SchedulerEventOccurrence,
+  SchedulerEventOccurrencePlaceholder,
+} from '@mui/x-scheduler-headless/models';
 
 /**
  * Places event occurrences for a timeline UI.

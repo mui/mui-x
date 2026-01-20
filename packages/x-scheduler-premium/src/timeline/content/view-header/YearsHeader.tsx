@@ -2,8 +2,8 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store/useStore';
 import { useAdapter, Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
-import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
+import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 
