@@ -1,4 +1,8 @@
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
+import {
+  GridCellEditStopReasons,
+  GridRenderEditCellParams,
+  useGridApiContext,
+} from '@mui/x-data-grid-premium';
 import Select, { SelectProps } from '@mui/material/Select';
 import { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,13 +16,27 @@ function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
   const apiRef = useGridApiContext();
 
   const handleChange: SelectProps['onChange'] = async (event) => {
-    await apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    apiRef.current.stopCellEditMode({ id, field });
+    const isValid = await apiRef.current.setEditCellValue(
+      { id, field, value: event.target.value },
+      event,
+    );
+
+    if (isValid) {
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent('cellEditStop', {
+        ...params,
+        reason: GridCellEditStopReasons.enterKeyDown,
+      });
+    }
   };
 
   const handleClose: MenuProps['onClose'] = (event, reason) => {
     if (reason === 'backdropClick') {
-      apiRef.current.stopCellEditMode({ id, field });
+      const params = apiRef.current.getCellParams(id, field);
+      apiRef.current.publishEvent('cellEditStop', {
+        ...params,
+        reason: GridCellEditStopReasons.cellFocusOut,
+      });
     }
   };
 

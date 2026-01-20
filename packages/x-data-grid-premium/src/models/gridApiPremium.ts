@@ -29,6 +29,7 @@ import {
   GridChartsIntegrationApi,
   GridChartsIntegrationPrivateApi,
 } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import type { GridHistoryApi } from '../hooks/features/history/gridHistoryInterfaces';
 
 /**
  * The api of Data Grid Premium.
@@ -50,6 +51,7 @@ export interface GridApiPremium
     GridAiAssistantApi,
     GridSidebarApi,
     GridChartsIntegrationApi,
+    GridHistoryApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
