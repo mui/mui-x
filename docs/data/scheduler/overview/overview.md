@@ -30,6 +30,7 @@ This package is not published yet.
 ## Event Calendar
 
 - [Event Calendar](/x/react-scheduler/event-calendar/) ([full screen demo](/x/react-scheduler/full-screen-event-calendar/))
+- [Lazy Loading](/x/react-scheduler/lazy-loading/)
 - [Week View](/x/react-scheduler/week-view/)
 - [Day View](/x/react-scheduler/day-view/)
 - [Month View](/x/react-scheduler/month-view/)
