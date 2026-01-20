@@ -54,14 +54,14 @@ export default function AxisCoordinates() {
       height={500}
     >
       <LinePlot />
-      <AxisPositionIndicator axisId="x-bottom-1" axis="x" color={colors[0]} />
-      <AxisPositionIndicator axisId="x-bottom-2" axis="x" color={colors[1]} />
-      <AxisPositionIndicator axisId="x-top-1" axis="x" color={colors[2]} />
-      <AxisPositionIndicator axisId="x-top-2" axis="x" color={colors[3]} />
-      <AxisPositionIndicator axisId="y-left-1" axis="y" color={colors[4]} />
-      <AxisPositionIndicator axisId="y-left-2" axis="y" color={colors[5]} />
-      <AxisPositionIndicator axisId="y-right-1" axis="y" color={colors[6]} />
-      <AxisPositionIndicator axisId="y-right-2" axis="y" color={colors[7]} />
+      <XAxisPositionIndicator axisId="x-bottom-1" color={colors[0]} />
+      <XAxisPositionIndicator axisId="x-bottom-2" color={colors[1]} />
+      <XAxisPositionIndicator axisId="x-top-1" color={colors[2]} />
+      <XAxisPositionIndicator axisId="x-top-2" color={colors[3]} />
+      <YAxisPositionIndicator axisId="y-left-1" color={colors[4]} />
+      <YAxisPositionIndicator axisId="y-left-2" color={colors[5]} />
+      <YAxisPositionIndicator axisId="y-right-1" color={colors[6]} />
+      <YAxisPositionIndicator axisId="y-right-2" color={colors[7]} />
       {/* Render the actual axes */}
       <ChartsXAxis axisId="x-bottom" />
       <ChartsXAxis axisId="x-top" />
@@ -71,15 +71,51 @@ export default function AxisCoordinates() {
   );
 }
 
-function AxisPositionIndicator({ axisId, axis, color }) {
-  const theme = useTheme();
-  const xPosition = useXAxisCoordinates(axis === 'x' ? axisId : 'x-bottom');
-  const yPosition = useYAxisCoordinates(axis === 'y' ? axisId : 'y-left');
+function XAxisPositionIndicator({ axisId, color }) {
+  const xPosition = useXAxisCoordinates(axisId);
   const xAxis = useXAxis(axisId);
-  const yAxis = useYAxis(axisId);
-  const axisPosition = axis === 'x' ? xAxis.position : yAxis.position;
 
-  const coordinates = xPosition ?? yPosition;
+  if (!xPosition) {
+    return null;
+  }
+
+  return (
+    <AxisPositionIndicator
+      axisId={axisId}
+      position={xAxis.position ?? 'bottom'}
+      direction="x"
+      coordinates={xPosition}
+      color={color}
+    />
+  );
+}
+
+function YAxisPositionIndicator({ axisId, color }) {
+  const yPosition = useYAxisCoordinates(axisId);
+  const yAxis = useYAxis(axisId);
+
+  if (!yPosition) {
+    return null;
+  }
+
+  return (
+    <AxisPositionIndicator
+      axisId={axisId}
+      position={yAxis.position ?? 'left'}
+      direction="y"
+      coordinates={yPosition}
+      color={color}
+    />
+  );
+}
+
+function AxisPositionIndicator({ axisId, position, direction, coordinates, color }) {
+  const theme = useTheme();
+
+  if (position === 'none') {
+    return null;
+  }
+
   const centerX = coordinates.left + (coordinates.right - coordinates.left) / 2;
   const centerY = coordinates.top + (coordinates.bottom - coordinates.top) / 2;
 
@@ -103,8 +139,8 @@ function AxisPositionIndicator({ axisId, axis, color }) {
         dominantBaseline="central"
         textAnchor="middle"
         transform={
-          axis === 'y'
-            ? `rotate(${axisPosition === 'right' ? 90 : -90} ${centerX} ${centerY})`
+          direction === 'y'
+            ? `rotate(${position === 'right' ? 90 : -90} ${centerX} ${centerY})`
             : undefined
         }
         fill={theme.palette.text.primary}
