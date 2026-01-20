@@ -158,6 +158,10 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     columnMenuSlotProps?.slots,
   ]);
 
+  // If we don't have a "known" default column menu (i.e. a custom menu component
+  // without `defaultSlots` / `defaultSlotProps` statics), we treat it as opaque
+  // and assume it has items, so we always show the column menu icon.
+  // Only the built-in/default menu path can hide the icon when there are no items.
   const hasColumnMenuItems = !hasKnownDefaultColumnMenu || columnMenuItemKeys.length > 0;
 
   const isDraggable = !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder;
