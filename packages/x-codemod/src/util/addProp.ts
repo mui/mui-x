@@ -1,6 +1,6 @@
 import type { Collection, JSCodeshift } from 'jscodeshift';
 
-interface RemovePropsArgs {
+interface AddPropsArgs {
   j: JSCodeshift;
   root: Collection<any>;
   /**
@@ -33,7 +33,7 @@ export default function addProp({
   propName,
   propValue,
   position,
-}: RemovePropsArgs) {
+}: AddPropsArgs) {
   return root
     .find(j.JSXElement)
     .filter((path) => {

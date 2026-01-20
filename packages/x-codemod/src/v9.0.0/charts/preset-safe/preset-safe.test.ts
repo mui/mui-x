@@ -7,7 +7,7 @@ function read(fileName) {
   return readFile(path.join(__dirname, fileName));
 }
 
-describe('v8.0.0/charts', () => {
+describe('v9.0.0/charts', () => {
   describe('preset-safe', () => {
     it('transforms code as needed', () => {
       const actual = transform(

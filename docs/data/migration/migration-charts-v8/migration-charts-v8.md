@@ -77,7 +77,8 @@ Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for
 
 ### `hideLegend` default value changed ✅
 
-The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
+The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9.
+This improves consistency across chart components and developer experience.
 
 ```diff
  <Heatmap
