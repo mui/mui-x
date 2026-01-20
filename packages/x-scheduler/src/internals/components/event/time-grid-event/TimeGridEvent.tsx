@@ -59,7 +59,6 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   },
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0.05, 1),
-    fontSize: '0.75rem',
   },
   '&:focus-visible': {
     outline: '2px solid var(--event-color-5)',
@@ -99,6 +98,10 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   zIndex: 2,
   padding: theme.spacing(0.5, 2, 0.5, 1.5),
   containerType: 'size',
+  minHeight: 11.5,
+  '&[data-under-fifteen-minutes="true"]': {
+    padding: theme.spacing(0.05, 1),
+  },
   ...schedulerPaletteStyles,
 }));
 
@@ -151,6 +154,12 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   color: 'var(--event-color-11)',
   '@container (max-width: 50px)': {
     display: 'none',
+  },
+  '@container (max-height: 12px)': {
+    fontSize: 14,
+    lineHeight: 14,
+    padding: 0,
+    bottom: 0,
   },
 }));
 
