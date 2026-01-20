@@ -58,15 +58,11 @@ export interface ColumnsApi {
 // ================================
 
 const DEFAULT_COLUMN_WIDTH = 100;
-const DEFAULT_MIN_WIDTH = 50;
-const DEFAULT_MAX_WIDTH = Infinity;
 
 function getDefaultColumnState(field: string): Partial<ColumnState> {
   return {
     field,
     width: DEFAULT_COLUMN_WIDTH,
-    minWidth: DEFAULT_MIN_WIDTH,
-    maxWidth: DEFAULT_MAX_WIDTH,
     hasBeenResized: false,
   };
 }
