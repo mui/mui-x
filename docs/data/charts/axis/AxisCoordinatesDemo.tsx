@@ -8,8 +8,9 @@ import {
   useXAxisCoordinates,
   useYAxis,
   useYAxisCoordinates,
+  type AxisCoordinates,
 } from '@mui/x-charts/hooks';
-
+import { AxisId } from '@mui/x-charts/internals';
 import { useTheme } from '@mui/material/styles';
 
 const lineData = [2, 5, 3, 8, 4];
@@ -26,7 +27,7 @@ const colors = [
   '#06d6a0', // green
 ];
 
-export default function AxisCoordinates() {
+export default function AxisCoordinatesDemo() {
   return (
     <ChartContainer
       series={[
@@ -71,7 +72,13 @@ export default function AxisCoordinates() {
   );
 }
 
-function XAxisPositionIndicator({ axisId, color }) {
+function XAxisPositionIndicator({
+  axisId,
+  color,
+}: {
+  axisId: AxisId;
+  color: string;
+}) {
   const xPosition = useXAxisCoordinates(axisId);
   const xAxis = useXAxis(axisId);
 
@@ -90,7 +97,13 @@ function XAxisPositionIndicator({ axisId, color }) {
   );
 }
 
-function YAxisPositionIndicator({ axisId, color }) {
+function YAxisPositionIndicator({
+  axisId,
+  color,
+}: {
+  axisId: AxisId;
+  color: string;
+}) {
   const yPosition = useYAxisCoordinates(axisId);
   const yAxis = useYAxis(axisId);
 
@@ -109,7 +122,19 @@ function YAxisPositionIndicator({ axisId, color }) {
   );
 }
 
-function AxisPositionIndicator({ axisId, position, direction, coordinates, color }) {
+function AxisPositionIndicator({
+  axisId,
+  position,
+  direction,
+  coordinates,
+  color,
+}: {
+  axisId: AxisId;
+  position: 'top' | 'bottom' | 'left' | 'right' | 'none';
+  direction: 'x' | 'y';
+  coordinates: AxisCoordinates;
+  color: string;
+}) {
   const theme = useTheme();
 
   if (position === 'none') {

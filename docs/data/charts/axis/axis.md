@@ -249,7 +249,7 @@ You can obtain the coordinates of the axis by calling the `useXAxisCoordinates` 
 
 Below is an example of how to use the these hooks to get the coordinates of several axes and render rectangles delineating their area.
 
-{{"demo": "AxisCoordinates.js"}}
+{{"demo": "AxisCoordinatesDemo.js"}}
 
 ## Grouped axes
 
