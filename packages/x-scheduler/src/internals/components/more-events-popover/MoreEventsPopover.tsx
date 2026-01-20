@@ -135,8 +135,10 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   );
 }
 
-interface MoreEventsPopoverTriggerProps
-  extends Omit<React.ComponentProps<typeof Popover.Trigger>, 'onClick'> {
+interface MoreEventsPopoverTriggerProps extends Omit<
+  React.ComponentProps<typeof Popover.Trigger>,
+  'onClick'
+> {
   occurrences: SchedulerEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }

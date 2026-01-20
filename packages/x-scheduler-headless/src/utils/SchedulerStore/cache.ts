@@ -47,9 +47,9 @@ type CachedEvent<T> = {
   expiry: number;
 };
 
-export class SchedulerDataSourceCacheDefault<TEvent extends object>
-  implements SchedulerDataSourceCache<TEvent>
-{
+export class SchedulerDataSourceCacheDefault<
+  TEvent extends object,
+> implements SchedulerDataSourceCache<TEvent> {
   // The Registry of Truth: Which time intervals do we have?
   private loadedRanges: CachedRange[] = [];
 
