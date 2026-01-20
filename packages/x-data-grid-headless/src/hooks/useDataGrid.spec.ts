@@ -223,7 +223,7 @@ type PluginWithColumnMeta = Plugin<
 
 const pluginWithColumnMeta = createPlugin<PluginWithColumnMeta>()({
   name: 'pluginWithColumnMeta',
-  initialize: () => ({ pluginWithColumnMeta: { value: 'test' } }),
+  getInitialState: (state) => ({ ...state, pluginWithColumnMeta: { value: 'test' } }),
   use: () => ({ pluginWithColumnMeta: { getValue: () => 'test' } }),
 });
 
@@ -239,7 +239,7 @@ type PluginDependsOnPluginWithColumnMeta = Plugin<
 const pluginDependsOnPluginWithColumnMeta = createPlugin<PluginDependsOnPluginWithColumnMeta>()({
   name: 'pluginDependsOnPluginWithColumnMeta',
   dependencies: [pluginWithColumnMeta],
-  initialize: () => ({ pluginDependsOnPluginWithColumnMeta: { derived: 'derived' } }),
+  getInitialState: (state) => ({ ...state, pluginDependsOnPluginWithColumnMeta: { derived: 'derived' } }),
   use: () => ({ pluginDependsOnPluginWithColumnMeta: { getDerived: () => 'derived' } }),
 });
 
@@ -323,7 +323,15 @@ type PluginA = Plugin<
 
 const pluginA = createPlugin<PluginA>()({
   name: 'pluginA',
-  initialize: (params) => ({ pluginA: { a: params.aValue ?? 'A' } }),
+  getInitialState: (state, params) => {
+    // @ts-expect-error Not initialized yet
+    state.pluginA;
+
+    // Can access internal plugins state here
+    state.rows.tree;
+    state.columns.orderedFields;
+    return { ...state, pluginA: { a: params.aValue ?? 'A' } };
+  },
   use: (_store, params) => ({
     pluginA: { getA: () => (params.enableA !== false ? 'A' : 'disabled') },
   }),
@@ -338,7 +346,13 @@ type PluginB = Plugin<
 
 const pluginB = createPlugin<PluginB>()({
   name: 'pluginB',
-  initialize: () => ({ pluginB: { b: 'B' } }),
+  getInitialState: (state) => {
+    // Can access internal plugins state here
+    state.rows.tree;
+    state.columns.orderedFields;
+
+    return { ...state, pluginB: { b: 'B' } };
+  },
   use: (_store, params, api) => {
     // @ts-expect-error pluginA is not declared as a dependency
     api.pluginA;
@@ -357,7 +371,19 @@ type PluginC = Plugin<
 const pluginC = createPlugin<PluginC>()({
   name: 'pluginC',
   dependencies: [pluginA, pluginB],
-  initialize: (params) => ({ pluginC: { c: params.cPrefix ?? 'C' } }),
+  getInitialState: (state, params) => {
+    // Can access internal plugins state here
+    state.rows.tree;
+    state.columns.orderedFields;
+
+    // Can access dependencies' state here
+    state.pluginA.a;
+    state.pluginB.b;
+    // @ts-expect-error pluginD is not a dependency
+    state.pluginD.d;
+
+    return { ...state, pluginC: { c: params.cPrefix ?? 'C' } };
+  },
   use: (_store, params, api) => {
     // api.pluginA and api.pluginB are automatically typed from dependencies
     return {
@@ -385,7 +411,19 @@ type PluginD = Plugin<
 // Use `import type` for optional plugins - type-only imports don't affect bundle
 const pluginD = createPlugin<PluginD>()({
   name: 'pluginD',
-  initialize: () => ({ pluginD: { d: 'D' } }),
+  getInitialState: (state) => {
+    // Can access internal plugins state here
+    state.rows.tree;
+    state.columns.orderedFields;
+
+    // @ts-expect-error Not declared as dependency
+    state.pluginD.d;
+    // @ts-expect-error Not declared as dependency
+    state.pluginA.a;
+    // @ts-expect-error Not declared as dependency
+    state.pluginB.b;
+    return { ...state, pluginD: { d: 'D' } }
+  },
   use: (_store, params, api) => {
     // @ts-expect-error pluginA is not declared as a dependency
     api.pluginA;

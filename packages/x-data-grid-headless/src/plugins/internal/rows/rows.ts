@@ -60,7 +60,8 @@ type RowsPlugin = Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptio
 
 const rowsPlugin = createPlugin<RowsPlugin>()({
   name: 'rows',
-  initialize: (params) => ({
+  getInitialState: (state, params) => ({
+    ...state,
     rows: createRowsState(params.rows, params.getRowId, params.loading ?? false, params.rowCount),
   }),
   use: (store, params, _api) => {

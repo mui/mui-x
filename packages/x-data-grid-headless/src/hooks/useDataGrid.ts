@@ -10,7 +10,7 @@ import {
   PluginsState,
 } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
-import { internalPlugins, InternalPluginsApi, InternalPluginsState } from '../plugins/internal';
+import { internalPlugins, InternalPluginsApi } from '../plugins/internal';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
@@ -49,28 +49,17 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
   const { pluginRegistry, stateStore } = useRefWithInit(() => {
     const registry = new PluginRegistry(internalPlugins, options.plugins);
 
-    const baseStateParts: Record<string, any>[] = [];
+    let accumulatedState: Record<string, any> = { ...options.initialState };
     internalPlugins.forEach((plugin) => {
-      const pluginState = plugin.initialize({
-        ...options,
-        ...options.initialState,
-      } as any);
-      baseStateParts.push(pluginState as Record<string, any>);
+      accumulatedState = plugin.getInitialState(accumulatedState as any, options as any);
     });
-    const baseState = Object.assign({}, ...baseStateParts) as InternalPluginsState;
 
-    const userPluginStateParts: Record<string, any>[] = [];
     registry.forEachUserPlugin((plugin) => {
-      const pluginState = plugin.initialize({
-        ...options,
-        ...options.initialState,
-      } as any);
-      userPluginStateParts.push(pluginState as Record<string, any>);
+      accumulatedState = plugin.getInitialState(accumulatedState, options as any);
     });
-    const userPluginState = Object.assign({}, ...userPluginStateParts);
 
     const store = new Store<DataGridState<TPlugins>>(
-      Object.assign({}, baseState, userPluginState) as DataGridState<TPlugins>,
+      accumulatedState as DataGridState<TPlugins>,
     );
 
     return {

@@ -51,7 +51,8 @@ type SortingPlugin = Plugin<'sorting', SortingState, SortingApi, SortingOptions,
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
-  initialize: (params) => ({
+  getInitialState: (state, params) => ({
+    ...state,
     sorting: {
       sortModel: params.initialState?.sorting?.sortModel ?? params.sortModel ?? [],
     },

@@ -41,6 +41,26 @@ export type ExtractAllDependenciesApi<TDeps extends readonly AnyPlugin[]> = TDep
       ExtractAllDependenciesApi<Rest>
   : {};
 
+// Extract state from plugin
+export type ExtractPluginState<T> =
+  T extends Plugin<any, infer TState, any, any, any, any> ? TState : never;
+
+// Recursively extract all state from dependencies including transitive deps
+export type ExtractAllDependenciesState<TDeps extends readonly AnyPlugin[]> =
+  TDeps extends readonly [infer First extends AnyPlugin, ...infer Rest extends readonly AnyPlugin[]]
+    ? ExtractPluginState<First> &
+        (First extends { dependencies: infer D }
+          ? D extends readonly AnyPlugin[]
+            ? ExtractAllDependenciesState<D>
+            : {}
+          : {}) &
+        ExtractAllDependenciesState<Rest>
+    : {};
+
+// The state available to a plugin's getInitialState method
+export type AvailableState<TDeps extends readonly AnyPlugin[]> = InternalPluginsState &
+  ExtractAllDependenciesState<TDeps>;
+
 // Plugin registry API available inside plugins
 export interface PluginRegistryApi {
   hasPlugin<TPlugin extends AnyPlugin>(
@@ -60,7 +80,10 @@ export interface Plugin<
 > {
   name: TName;
   dependencies?: TDeps;
-  initialize: (params: TParams) => TState;
+  getInitialState: (
+    state: AvailableState<TDeps>,
+    params: TParams,
+  ) => AvailableState<TDeps> & TState;
   use: (
     store: Store<TState & InternalPluginsState>,
     params: TParams & InternalPluginsOptions,
@@ -80,8 +103,12 @@ type PluginColumnMeta<T> = T extends Plugin<any, any, any, any, infer C, any> ? 
 // Usage: createPlugin<PluginType>()(pluginImpl) - the double call allows TDeps inference
 export function createPlugin<TPlugin extends AnyPlugin>() {
   return <const TDeps extends readonly AnyPlugin[] = readonly []>(
-    plugin: Omit<TPlugin, 'dependencies' | 'use'> & {
+    plugin: Omit<TPlugin, 'dependencies' | 'use' | 'getInitialState'> & {
       dependencies?: TDeps;
+      getInitialState: (
+        state: AvailableState<TDeps>,
+        params: ExtractPluginParams<TPlugin>,
+      ) => AvailableState<TDeps> & ExtractPluginState<TPlugin>;
       use: (
         store: Store<ExtractPluginState<TPlugin> & InternalPluginsState>,
         params: ExtractPluginParams<TPlugin> & InternalPluginsOptions,
@@ -98,10 +125,6 @@ export function createPlugin<TPlugin extends AnyPlugin>() {
   > => plugin as any;
 }
 
-// Extract state from plugin for use in createPlugin
-type ExtractPluginState<T> =
-  T extends Plugin<any, infer TState, any, any, any, any> ? TState : never;
-
-// Extract params from plugin for use in createPlugin
+// Extract params from plugin
 type ExtractPluginParams<T> =
   T extends Plugin<any, any, any, infer TParams, any, any> ? TParams : never;

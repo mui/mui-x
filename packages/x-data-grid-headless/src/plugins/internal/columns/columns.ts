@@ -74,10 +74,10 @@ type ColumnsPlugin = Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, Col
 
 const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
-  initialize: (params) => {
-    // Extract initialState.columns if it exists (it might be spread at top level)
-    const initialStateColumns = (params as any).initialState?.columns;
+  getInitialState: (state, params) => {
+    const initialStateColumns = params.initialState?.columns;
     return {
+      ...state,
       columns: createColumnsState(
         params.columns,
         params.columnVisibilityModel ?? {},
