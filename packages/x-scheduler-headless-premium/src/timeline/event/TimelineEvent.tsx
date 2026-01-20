@@ -13,14 +13,16 @@ import {
   SchedulerEventOccurrence,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
-import { useDraggableEvent } from '@mui/x-scheduler-headless/utils/draggable-event';
-import { generateOccurrenceFromEvent } from '../../utils/event-utils';
-import { useAdapter } from '../../use-adapter';
+import {
+  useDraggableEvent,
+  generateOccurrenceFromEvent,
+  useElementPositionInCollection,
+} from '@mui/x-scheduler-headless/utils';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useTimelineEventRowContext } from '../event-row/TimelineEventRowContext';
 import { TimelineEventCssVars } from './TimelineEventCssVars';
-import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { TimelineEventContext } from './TimelineEventContext';
 import { timelineViewSelectors } from '../../timeline-selectors';
 

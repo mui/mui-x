@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
+import type { useDraggableEvent } from '@mui/x-scheduler-headless/utils';
 import type { TimelineEvent } from './TimelineEvent';
-import type { useDraggableEvent } from '../../utils/useDraggableEvent';
 
 export interface TimelineEventContext extends useDraggableEvent.ContextValue {
   /**

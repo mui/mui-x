@@ -1,13 +1,13 @@
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
-import { TimelinePreferences, TimelineView } from '../models';
-import { Adapter } from '../use-adapter';
+import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '../utils/SchedulerStore';
+} from '@mui/x-scheduler-headless/utils';
+import { createChangeEventDetails } from '@mui/x-scheduler-headless/base-ui-copy';
+import { TimelinePreferences, TimelineView } from '../models';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
-import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 import { TimelineLazyLoadingPlugin } from './plugins/TimelineLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];

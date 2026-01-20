@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import { schedulerOccurrenceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { timelineViewSelectors } from '../../timeline-selectors';
-import { schedulerOccurrenceSelectors } from '../../scheduler-selectors';
-import { SchedulerResourceId } from '../../models';
 
 export const TimelineSubGrid = React.forwardRef(function TimelineSubGrid(
   componentProps: TimelineSubGrid.Props,

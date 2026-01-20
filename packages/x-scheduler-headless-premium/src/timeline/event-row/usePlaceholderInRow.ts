@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
+import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-headless/utils';
+import { processDate } from '@mui/x-scheduler-headless/process-date';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
-import { schedulerEventSelectors } from '../../scheduler-selectors';
-import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
-import { processDate } from '../../process-date';
-import { useAdapter } from '../../use-adapter';
 
 export function usePlaceholderInRow(
   parameters: usePlaceholderInRow.Parameters,

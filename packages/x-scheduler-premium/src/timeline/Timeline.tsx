@@ -6,9 +6,9 @@ import {
   useExtractTimelineParameters,
   useTimeline,
 } from '@mui/x-scheduler-headless-premium/use-timeline';
-// import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
+// import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium//timeline-selectors';
 import { TimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
-// import { TimelineView } from '@mui/x-scheduler-headless/models';
+// import { TimelineView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 // import { ViewSwitcher } from '@mui/x-scheduler/event-calendar/header-toolbar/view-switcher';
 import { TimelineProps } from './Timeline.types';

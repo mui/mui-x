@@ -1,12 +1,11 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
+import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { timelineViewSelectors } from '../../timeline-selectors';
 import { TimelineRootCssVars } from './TimelineRootCssVars';
-import { schedulerResourceSelectors } from '../../scheduler-selectors';
 
 export const TimelineRoot = React.forwardRef(function TimelineRoot(
   componentProps: TimelineRoot.Props,

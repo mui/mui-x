@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { TimelineParameters, useTimeline } from '../use-timeline';
 import { TimelineStoreContext } from '../use-timeline-store-context/useTimelineStoreContext';
-import { SchedulerStoreContext } from '../use-scheduler-store-context/useSchedulerStoreContext';
 
 export function TimelineProvider<TEvent extends object, TResource extends object>(
   props: TimelineProvider.Props<TEvent, TResource>,

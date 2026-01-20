@@ -1,12 +1,10 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
-import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
+import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-headless/utils';
+import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
-import { useEvent } from '../../utils/useEvent';
 import { TimelineEventPlaceholderCssVars } from './TimelineEventPlaceholderCssVars';
-import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
 import { timelineViewSelectors } from '../../timeline-selectors';
 
 export const TimelineEventPlaceholder = React.forwardRef(function TimelineEventPlaceholder(

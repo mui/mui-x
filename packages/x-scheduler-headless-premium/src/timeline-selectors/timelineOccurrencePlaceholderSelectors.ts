@@ -1,6 +1,6 @@
 import { createSelector } from '@base-ui/utils/store';
+import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { TimelineState as State } from '../use-timeline';
-import { SchedulerResourceId } from '../models';
 import { timelineViewSelectors } from './timelineViewSelectors';
 
 export const timelineOccurrencePlaceholderSelectors = {

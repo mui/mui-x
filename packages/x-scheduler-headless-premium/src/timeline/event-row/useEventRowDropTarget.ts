@@ -2,12 +2,19 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useStore } from '@base-ui/utils/store';
-import { useAdapter } from '../../use-adapter/useAdapter';
-import { SchedulerResourceId, SchedulerEvent, TemporalSupportedObject } from '../../models';
-import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import {
+  SchedulerResourceId,
+  SchedulerEvent,
+  TemporalSupportedObject,
+} from '@mui/x-scheduler-headless/models';
+import { useDropTarget } from '@mui/x-scheduler-headless/utils';
+import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
+import {
+  EVENT_DRAG_PRECISION_MINUTE,
+  EVENT_DRAG_PRECISION_MS,
+} from '@mui/x-scheduler-headless/constants';
 import { TimelineEventRowContext } from './TimelineEventRowContext';
-import { useDropTarget } from '../../utils/useDropTarget';
-import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { timelineViewSelectors } from '../../timeline-selectors';
 

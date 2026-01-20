@@ -1,4 +1,4 @@
-import { SchedulerLazyLoadingPlugin } from '../../utils/SchedulerStore/plugins/SchedulerLazyLoadingPlugin';
+import { SchedulerLazyLoadingPlugin } from '@mui/x-scheduler-headless/utils';
 import { TimelineState, TimelineParameters } from '../TimelineStore.types';
 
 export class TimelineLazyLoadingPlugin<
