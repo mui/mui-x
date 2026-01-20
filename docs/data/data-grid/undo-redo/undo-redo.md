@@ -115,12 +115,12 @@ Use default handler exports (like `createCellEditHistoryHandler()`) to create a 
 
 ### Customizing default handlers
 
-The following demo shows how to keep the default clipboard paste history event handler and customize the cell edit handler to:
+The following demo shows how to customize the cell edit and clipboard paste handlers to:
 
 - Keep undo/redo operations valid even when the cell is on a different page
 - Automatically navigate to the correct page when undoing/redoing
 
-{{"demo": "CustomCellUpdateHandler.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "CustomHandlers.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Creating a new handler
 
