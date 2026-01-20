@@ -42,7 +42,7 @@ export function getXAxisCoordinates(
 }
 
 /**
- * Get the coordinates of the given X axis.
+ * Get the coordinates of the given X axis. The coordinates are relative to the SVG's origin.
  * @param axisId The id of the X axis.
  * @returns {AxisCoordinates | null} The coordinates of the X axis or null if the axis does not exist or has position: 'none'.
  */
@@ -95,7 +95,7 @@ export function getYAxisCoordinates(
 }
 
 /**
- * Returns the coordinates of the given Y axis.
+ * Returns the coordinates of the given Y axis. The coordinates are relative to the SVG's origin.
  * @param axisId The id of the Y axis.
  * @returns {AxisCoordinates | null} The coordinates of the Y axis or null if the axis does not exist or has position: 'none'.
  */
