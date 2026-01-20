@@ -18,6 +18,7 @@
       },
       "required": true
     },
+    "borderRadius": { "type": { "name": "number" } },
     "brushConfig": {
       "type": {
         "name": "shape",
@@ -31,7 +32,7 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" }, "default": "true" },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -67,6 +68,13 @@
         "describedArgs": ["highlightedItem"]
       }
     },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {
@@ -84,6 +92,12 @@
     "tooltip": {
       "type": { "name": "object" },
       "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap', xIndex?: number, yIndex?: number }"
+      }
     },
     "width": { "type": { "name": "number" } },
     "zAxis": {
@@ -110,13 +124,94 @@
     "import { Heatmap } from '@mui/x-charts-pro/Heatmap';",
     "import { Heatmap } from '@mui/x-charts-pro';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "cell",
-      "className": "MuiHeatmap-cell",
-      "description": "Styles applied to the heatmap cells.",
-      "isGlobal": false
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
     },
+    {
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "cell",
+      "description": "The component that renders the heatmap cell.",
+      "default": "HeatmapCell",
+      "class": "MuiHeatmap-cell"
+    },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "legend",
+      "description": "Custom component for the legend.",
+      "default": "ContinuousColorLegendProps",
+      "class": null
+    },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
+  ],
+  "classes": [
     {
       "key": "faded",
       "className": "MuiHeatmap-faded",

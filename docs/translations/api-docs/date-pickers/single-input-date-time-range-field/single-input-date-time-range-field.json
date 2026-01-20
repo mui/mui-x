@@ -175,5 +175,11 @@
     "value": { "description": "The selected value. Used when the component is controlled." },
     "variant": { "description": "The variant to use." }
   },
-  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } },
+  "slotDescriptions": {
+    "clearButton": "Button to clear the value.",
+    "clearIcon": "Icon to display in the button used to clean the value.",
+    "inputAdornment": "Component displayed on the start or end input adornment used to open the Picker.",
+    "textField": "Form control with an input to render the value."
+  }
 }

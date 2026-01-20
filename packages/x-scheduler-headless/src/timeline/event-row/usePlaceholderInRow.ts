@@ -37,26 +37,19 @@ export function usePlaceholderInRow(
     const endProcessed = processDate(rawPlaceholder.end, adapter);
     const timezone = adapter.getTimezone(rawPlaceholder.start);
     const sharedProperties = {
+      id: 'occurrence-placeholder',
       key: 'occurrence-placeholder',
-      // TODO: Issue #20675 We are forced to return this info, we have to review the data model for placeholders
-      dataTimezone: {
-        start: startProcessed,
-        end: endProcessed,
-        timezone,
-      },
+      title: originalEvent ? originalEvent.title : '',
       displayTimezone: {
         start: startProcessed,
         end: endProcessed,
         timezone,
       },
-      modelInBuiltInFormat: null,
     };
 
     if (rawPlaceholder.type === 'creation') {
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
-        title: '',
         position: {
           firstIndex: 1,
           lastIndex: maxIndex,
@@ -67,7 +60,6 @@ export function usePlaceholderInRow(
     if (rawPlaceholder.type === 'external-drag') {
       return {
         ...sharedProperties,
-        id: 'occurrence-placeholder',
         title: rawPlaceholder.eventData.title ?? '',
         position: {
           firstIndex: 1,
@@ -84,11 +76,10 @@ export function usePlaceholderInRow(
     };
 
     return {
-      ...originalEvent!,
       ...sharedProperties,
       position,
     };
-  }, [adapter, rawPlaceholder, occurrences, maxIndex, originalEvent]);
+  }, [rawPlaceholder, adapter, originalEvent, occurrences, maxIndex]);
 }
 
 export namespace usePlaceholderInRow {
@@ -100,5 +91,5 @@ export namespace usePlaceholderInRow {
   }
 
   export type ReturnValue =
-    useEventOccurrencesWithTimelinePosition.EventOccurrenceWithPosition | null;
+    useEventOccurrencesWithTimelinePosition.EventOccurrencePlaceholderWithPosition | null;
 }

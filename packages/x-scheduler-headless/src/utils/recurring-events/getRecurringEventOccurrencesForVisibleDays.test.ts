@@ -140,7 +140,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       const visibleStart = adapter.date('2025-01-05T00:00:00Z', 'default');
       // All-day multi-day spanning Jan 03-06
       const event = EventBuilder.new()
-        .span('2025-01-03', '2025-01-06', { allDay: true })
+        .span('2025-01-03T00:00:00Z', '2025-01-06T00:00:00Z', { allDay: true })
         .rrule({ freq: 'DAILY', interval: 7 })
         .toProcessed();
 
@@ -319,6 +319,48 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
           'default',
         ),
       ).to.throw();
+    });
+    it('does not go backwards when BYDAY includes SU + another day with enUS week start and COUNT', () => {
+      // DTSTART: Sunday Mar 2, 2025
+      const dtstart = adapter.date('2025-03-02T09:00:00Z', 'default'); // SU
+      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 20);
+
+      const event = EventBuilder.new(adapter)
+        .singleDay(dtstart)
+        .rrule({ freq: 'WEEKLY', byDay: ['TU', 'SU'], count: 5 })
+        .toProcessed();
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'default',
+      );
+
+      // Expected occurrences in chronological order:
+      // SU 2, TU 4, SU 9, TU 11, SU 16
+      const days = result.map((o) =>
+        adapter.formatByString(o.displayTimezone.start.value, 'yyyy-MM-dd'),
+      );
+      expect(days).to.deep.equal([
+        '2025-03-02',
+        '2025-03-04',
+        '2025-03-09',
+        '2025-03-11',
+        '2025-03-16',
+      ]);
+
+      // And ensure they are strictly increasing (no backwards/duplicates)
+      for (let i = 1; i < result.length; i += 1) {
+        expect(
+          adapter.isAfter(
+            result[i].displayTimezone.start.value,
+            result[i - 1].displayTimezone.start.value,
+          ),
+        ).to.equal(true);
+      }
     });
   });
 
@@ -534,7 +576,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const event = EventBuilder.new(adapter)
         .singleDay('2024-01-10T23:00:00Z')
-        .withTimezone('America/New_York')
+        .withDataTimezone('America/New_York')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
@@ -561,8 +603,9 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
       // Recurrence must still belong to the original day (Tokyo's day), not Madrid's previous day.
 
       const event = EventBuilder.new(adapter)
-        .singleDay('2025-01-10T00:30:00Z', 30)
-        .withTimezone('Asia/Tokyo')
+        // 2025-01-10 00:30 JST → 2025-01-09T15:30:00Z
+        .singleDay('2025-01-09T15:30:00Z', 30)
+        .withDataTimezone('Asia/Tokyo')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
@@ -580,7 +623,10 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       // Only three occurrences, still belonging to Jan 10
       expect(result).to.have.length(3);
-      expect(adapter.getDate(result[0].dataTimezone.start.value)).to.equal(10);
+      // Check local day in the data timezone (Tokyo)
+      expect(
+        adapter.getDate(adapter.setTimezone(result[0].dataTimezone.start.value, 'Asia/Tokyo')),
+      ).to.equal(10);
     });
 
     it('preserves multi-day duration when converting occurrences to the display timezone', () => {
@@ -590,7 +636,7 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       const event = EventBuilder.new(adapter)
         .span('2025-03-01T08:00:00Z', '2025-03-03T08:00:00Z') // 48h
-        .withTimezone('America/Los_Angeles')
+        .withDataTimezone('America/Los_Angeles')
         .withDisplayTimezone('Europe/Madrid')
         .rrule({ freq: 'DAILY' })
         .toProcessed();
@@ -608,17 +654,57 @@ describe('recurring-events/getRecurringEventOccurrencesForVisibleDays', () => {
 
       result.forEach((occ) => {
         expect(
-          adapter.isWithinRange(occ.dataTimezone.start.value, [visibleStart, visibleEnd]),
+          adapter.isWithinRange(occ.displayTimezone.start.value, [visibleStart, visibleEnd]),
         ).to.equal(true);
       });
       // Duration must remain exactly 48h
       result.forEach((occ) => {
         const hours = adapter.differenceInHours(
-          occ.dataTimezone.end.value,
-          occ.dataTimezone.start.value,
+          occ.displayTimezone.end.value,
+          occ.displayTimezone.start.value,
         );
         expect(hours).to.equal(48);
       });
+    });
+
+    it('weekly BYDAY + COUNT stays correct when data tz day differs from display tz day', () => {
+      // Pick a time that is Sunday in LA but Monday in Paris:
+      // 2025-03-03T00:30Z = 2025-03-02 16:30 in America/Los_Angeles (Sunday)
+      //                 = 2025-03-03 01:30 in Europe/Paris (Monday)
+      const event = EventBuilder.new(adapter)
+        .singleDay('2025-03-03T00:30:00Z', 60)
+        .withDataTimezone('America/Los_Angeles')
+        .withDisplayTimezone('Europe/Paris')
+        .rrule({ freq: 'WEEKLY', byDay: ['SU', 'TU'], count: 5 })
+        .toProcessed();
+
+      const visibleStart = adapter.date('2025-03-01T00:00:00Z', 'default');
+      const visibleEnd = adapter.addDays(visibleStart, 25);
+
+      const result = getRecurringEventOccurrencesForVisibleDays(
+        event,
+        visibleStart,
+        visibleEnd,
+        adapter,
+        'Europe/Paris',
+      );
+
+      // In data tz (LA): SU Mar2, TU Mar4, SU Mar9, TU Mar11, SU Mar16
+      // In display tz (Paris): MO Mar3, WE Mar5, MO Mar10, WE Mar12, MO Mar17
+      const displayDays = result.map((o) =>
+        adapter.formatByString(o.displayTimezone.start.value, 'yyyy-MM-dd'),
+      );
+
+      expect(displayDays).to.deep.equal([
+        '2025-03-03',
+        '2025-03-05',
+        '2025-03-10',
+        '2025-03-12',
+        '2025-03-17',
+      ]);
+
+      // Sanity: COUNT respected
+      expect(result).to.have.length(5);
     });
   });
 });

@@ -6,6 +6,8 @@ import { ChartsYAxis } from '../ChartsYAxis';
 import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
 
+export type { ChartsAxisSlots, ChartsAxisSlotProps };
+
 export interface ChartsAxisProps {
   /**
    * Overridable component slots.

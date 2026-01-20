@@ -1,8 +1,15 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
-import { CheckIcon, ChevronDown } from 'lucide-react';
-import { Menu } from '@base-ui/react/menu';
+import ExpandMoreRounded from '@mui/icons-material/ExpandMoreRounded';
+import CheckIcon from '@mui/icons-material/Check';
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
+import Box from '@mui/material/Box';
 import { EVENT_COLORS } from '@mui/x-scheduler-headless/constants';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import {
@@ -12,7 +19,49 @@ import {
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useStore } from '@base-ui/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { getColorClassName } from '../../utils/color-utils';
+import { schedulerPaletteStyles } from '../../utils/tokens';
+
+const ResourceMenuLegendContainer = styled('div', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceMenuLegendContainer',
+})(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(0.5),
+}));
+
+const ResourceMenuColorDot = styled('span', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceMenuColorDot',
+})({
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  flexShrink: 0,
+  backgroundColor: 'var(--event-color-9)',
+  ...schedulerPaletteStyles,
+});
+
+const ResourceMenuColorRadioButton = styled('button', {
+  name: 'MuiEventPopover',
+  slot: 'ResourceMenuColorRadioButton',
+})({
+  width: 24,
+  height: 24,
+  borderRadius: '50%',
+  border: 'none',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'var(--event-color-9)',
+  color: 'var(--event-color-1)',
+  '&:disabled': {
+    cursor: 'not-allowed',
+    opacity: 0.5,
+  },
+  ...schedulerPaletteStyles,
+});
 
 interface ResourceSelectProps {
   readOnly?: boolean;
@@ -44,13 +93,13 @@ function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
   );
 
   return (
-    <div className="EventPopoverResourceLegendContainer">
-      <span className={clsx('ResourceLegendColor', getColorClassName(resourceColor))} />
+    <ResourceMenuLegendContainer>
+      <ResourceMenuColorDot className="ResourceLegendColor" data-palette={resourceColor} />
 
       {color && resourceColor !== color && (
-        <span className={clsx('ResourceLegendColor', getColorClassName(color))} />
+        <ResourceMenuColorDot className="ResourceLegendColor" data-palette={color} />
       )}
-    </div>
+    </ResourceMenuLegendContainer>
   );
 }
 
@@ -84,76 +133,83 @@ export default function ResourceMenu(props: ResourceSelectProps) {
     [resourcesOptions, resourceId],
   );
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <Menu.Root>
-      <Menu.Trigger
-        className="Button Ghost EventPopoverMenuTrigger"
+    <React.Fragment>
+      <Button
+        onClick={handleClick}
         aria-label={translations.resourceLabel}
+        aria-controls={open ? 'resource-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        endIcon={<ExpandMoreRounded fontSize="small" />}
       >
         <ResourceMenuTriggerContent resource={resource} color={color} />
         <span>{resource ? resource.label : translations.labelInvalidResource}</span>
-        <ChevronDown size={14} />
-      </Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Positioner align="start" className="EventPopoverSelectPositioner">
-          <Menu.Popup className="EventPopoverSelectPopup">
-            <Menu.Group>
-              <Menu.GroupLabel className="MenuGroupLabel">Resources</Menu.GroupLabel>
-              <Menu.RadioGroup
-                value={resourceId}
-                onValueChange={onResourceChange}
-                disabled={readOnly}
-              >
-                {resourcesOptions.map((resourceOption) => (
-                  <Menu.RadioItem
-                    key={resourceOption.value}
-                    value={resourceOption.value}
-                    className="EventPopoverMenuItem"
-                    aria-label={resourceOption.label}
-                  >
-                    <div className="EventPopoverMenuItemTitleWrapper">
-                      <span
-                        className={clsx(
-                          'ResourceLegendColor',
-                          getColorClassName(resourceOption.eventColor),
-                        )}
-                      />
-                      <span className="EventPopoverSelectItemText">{resourceOption.label}</span>
-                    </div>
-                    <Menu.RadioItemIndicator className="CheckboxIndicator">
-                      <CheckIcon size={16} strokeWidth={1.5} />
-                    </Menu.RadioItemIndicator>
-                  </Menu.RadioItem>
-                ))}
-              </Menu.RadioGroup>
-            </Menu.Group>
-            <Menu.Group>
-              <Menu.GroupLabel className="MenuGroupLabel">Colors</Menu.GroupLabel>
-              <Menu.RadioGroup
-                value={color}
-                onValueChange={onColorChange}
-                disabled={readOnly}
-                className="ColorRadioGroup"
-              >
-                {EVENT_COLORS.map((colorOption) => (
-                  <Menu.RadioItem
-                    key={colorOption}
-                    value={colorOption}
-                    className="EventPopoverColorMenuItem"
-                    aria-label={colorOption}
-                  >
-                    <div className={clsx('ColorRadioItemCircle', getColorClassName(colorOption))}>
-                      <Menu.RadioItemIndicator className="CheckboxIndicator">
-                        <CheckIcon size={14} strokeWidth={1.5} />
-                      </Menu.RadioItemIndicator>
-                    </div>
-                  </Menu.RadioItem>
-                ))}
-              </Menu.RadioGroup>
-            </Menu.Group>
-          </Menu.Popup>
-        </Menu.Positioner>
-      </Menu.Portal>
-    </Menu.Root>
+      </Button>
+      <Menu
+        id="resource-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <ListSubheader>Resources</ListSubheader>
+        {resourcesOptions.map((resourceOption) => (
+          <MenuItem
+            key={resourceOption.value}
+            disabled={readOnly}
+            selected={resourceId === resourceOption.value}
+            onClick={() => {
+              onResourceChange(resourceOption.value as SchedulerResourceId);
+              handleClose();
+            }}
+            aria-label={resourceOption.label}
+          >
+            <ListItemIcon>
+              <ResourceMenuColorDot
+                className="ResourceLegendColor"
+                data-palette={resourceOption.eventColor}
+              />
+            </ListItemIcon>
+            <ListItemText>{resourceOption.label}</ListItemText>
+            {resourceId === resourceOption.value && (
+              <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
+                <CheckIcon fontSize="small" />
+              </ListItemIcon>
+            )}
+          </MenuItem>
+        ))}
+        <ListSubheader>Colors</ListSubheader>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, px: 2, pb: 1 }}>
+          {EVENT_COLORS.map((colorOption) => (
+            <ResourceMenuColorRadioButton
+              key={colorOption}
+              type="button"
+              disabled={readOnly}
+              onClick={() => {
+                onColorChange(colorOption);
+                handleClose();
+              }}
+              aria-label={colorOption}
+              data-palette={colorOption}
+            >
+              {color === colorOption && <CheckIcon fontSize="small" />}
+            </ResourceMenuColorRadioButton>
+          ))}
+        </Box>
+      </Menu>
+    </React.Fragment>
   );
 }
