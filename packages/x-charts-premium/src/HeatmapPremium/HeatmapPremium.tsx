@@ -26,7 +26,7 @@ export const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmapPremium' });
-  const { sx, slots, slotProps, loading, hideLegend = true, showToolbar = false } = props;
+  const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
 
   const {
     chartDataProviderPremiumProps,

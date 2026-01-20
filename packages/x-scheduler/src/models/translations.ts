@@ -101,4 +101,7 @@ export interface SchedulerTranslations {
   radioGroupAriaLabel: string;
   thisAndFollowing: string;
   title: string;
+
+  // General
+  loading: string;
 }

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useIsoLayoutEffect } from '@base-ui/utils/useIsoLayoutEffect';
 import { useStore } from '@base-ui/utils/store';
@@ -11,7 +12,10 @@ import { SchedulerEventOccurrence, SchedulerProcessedDate } from '@mui/x-schedul
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { TimeGridColumn } from './TimeGridColumn';
@@ -261,6 +265,18 @@ const DayTimeGridGrid = styled('div', {
   },
 }));
 
+// TODO: Replace with a proper loading overlay component that is shared across views
+const DayTimeGridLoadingOverlay = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'DayTimeGridLoadingOverlay',
+})(({ theme }) => ({
+  position: 'absolute',
+  fontSize: theme.typography.body1.fontSize,
+  padding: 2,
+  color: theme.palette.text.secondary,
+  zIndex: 1,
+}));
+
 export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
@@ -282,6 +298,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const showCurrentTimeIndicator = useStore(store, schedulerNowSelectors.showCurrentTimeIndicator);
+  const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
 
   // Feature hooks
   const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
@@ -419,6 +436,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
             </DayTimeGridTimeAxis>
 
             <DayTimeGridGrid>
+              {isLoading && (
+                <DayTimeGridLoadingOverlay>{translations.loading}</DayTimeGridLoadingOverlay>
+              )}
               {occurrences.days.map((day, index) => (
                 <TimeGridColumn
                   key={day.key}

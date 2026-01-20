@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
+import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
@@ -10,15 +12,15 @@ import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { eventCalendarAgendaSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
+import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { AGENDA_VIEW_DAYS_AMOUNT } from '@mui/x-scheduler-headless/constants';
 import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { useStore } from '@base-ui/utils/store';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
+import { useTranslations } from '../internals/utils/TranslationsContext';
 import '../index.css';
 import {
   EventDraggableDialogProvider,
@@ -130,6 +132,18 @@ const EventsList = styled('ul', {
   },
 }));
 
+// TODO: Replace with a proper loading overlay component that is shared across views
+const AgendaViewLoadingOverlay = styled(Typography, {
+  name: 'MuiEventCalendar',
+  slot: 'AgendaViewLoadingOverlay',
+})(({ theme }) => ({
+  position: 'absolute',
+  fontSize: theme.typography.body1.fontSize,
+  padding: 2,
+  color: theme.palette.text.secondary,
+  zIndex: 1,
+}));
+
 const AGENDA_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
     state.adapter.addDays(
@@ -149,18 +163,23 @@ export const AgendaView = React.memo(
   ) {
     // Context hooks
     const adapter = useAdapter();
+    const translations = useTranslations();
+    const store = useEventCalendarStoreContext();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
     const handleRef = useMergedRefs(forwardedRef, containerRef);
 
     // Selector hooks
-    const store = useEventCalendarStoreContext();
     const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
 
     // Feature hooks
     const { days } = useEventCalendarView(AGENDA_VIEW_CONFIG);
     const occurrencesMap = useEventOccurrencesGroupedByDay({ days });
+
+    // Selector hooks
+    const isLoading = useStore(store, schedulerOtherSelectors.isLoading);
+
     const daysWithOccurrences = React.useMemo(
       () =>
         days.map((date) => {
@@ -172,6 +191,8 @@ export const AgendaView = React.memo(
 
     return (
       <AgendaViewRoot {...props} ref={handleRef}>
+        {isLoading && <AgendaViewLoadingOverlay>{translations.loading}</AgendaViewLoadingOverlay>}
+
         {daysWithOccurrences.map(({ date, occurrences }) => (
           <AgendaViewRow
             key={date.key}
