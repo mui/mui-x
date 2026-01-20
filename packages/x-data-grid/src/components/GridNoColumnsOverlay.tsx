@@ -9,7 +9,7 @@ import { gridColumnFieldsSelector, useGridSelector } from '../hooks';
 
 const GridNoColumnsOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
   function GridNoColumnsOverlay(props, ref) {
-    const rootProps = useGridRootProps();
+    const { disableColumnSelector, slots, slotProps } = useGridRootProps();
     const apiRef = useGridApiContext();
     const columns = useGridSelector(apiRef, gridColumnFieldsSelector);
 
@@ -17,19 +17,19 @@ const GridNoColumnsOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
       apiRef.current.showPreferences(GridPreferencePanelsValue.columns);
     };
 
-    const showManageColumnsButton = !rootProps.disableColumnSelector && columns.length > 0;
+    const showManageColumnsButton = !disableColumnSelector && columns.length > 0;
 
     return (
       <GridOverlay {...props} ref={ref}>
         {apiRef.current.getLocaleText('noColumnsOverlayLabel')}
         {showManageColumnsButton && (
-          <rootProps.slots.baseButton
+          <slots.baseButton
             size="small"
-            {...rootProps.slotProps?.baseButton}
+            {...slotProps?.baseButton}
             onClick={handleOpenManageColumns}
           >
             {apiRef.current.getLocaleText('noColumnsOverlayManageColumns')}
-          </rootProps.slots.baseButton>
+          </slots.baseButton>
         )}
       </GridOverlay>
     );

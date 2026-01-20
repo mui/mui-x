@@ -42,7 +42,7 @@ type GridChartsPanelDataFieldProps = {
 };
 
 type OwnerState = GridChartsPanelDataFieldProps &
-  Pick<DataGridPremiumProcessedProps, 'classes'> & {
+  Omit<DataGridPremiumProcessedProps, 'rows'> & {
     dropPosition: DropPosition;
     section: GridChartsIntegrationSection;
   };
@@ -146,7 +146,7 @@ export function AggregationSelect({
   aggFunc: string;
   field: FieldTransferObject['field'];
 }) {
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, aggregationFunctions, dataSource } = useGridRootProps();
   const [aggregationMenuOpen, setAggregationMenuOpen] = React.useState(false);
   const aggregationMenuTriggerRef = React.useRef<HTMLDivElement>(null);
   const aggregationMenuTriggerId = useId();
@@ -171,12 +171,12 @@ export function AggregationSelect({
     () => [
       ...(pivotActive ? [] : [AGGREGATION_FUNCTION_NONE]),
       ...getAvailableAggregationFunctions({
-        aggregationFunctions: rootProps.aggregationFunctions,
+        aggregationFunctions,
         colDef: colDef(field),
-        isDataSource: !!rootProps.dataSource,
+        isDataSource: !!dataSource,
       }),
     ],
-    [colDef, field, pivotActive, rootProps.aggregationFunctions, rootProps.dataSource],
+    [colDef, field, pivotActive, aggregationFunctions, dataSource],
   );
 
   const handleClick = React.useCallback(
@@ -207,12 +207,12 @@ export function AggregationSelect({
 
   return availableAggregationFunctions.length > 0 ? (
     <React.Fragment>
-      <rootProps.slots.baseChip
+      <slots.baseChip
         label={getAggregationFunctionLabel({
           apiRef,
           aggregationRule: {
             aggregationFunctionName: aggFunc,
-            aggregationFunction: rootProps.aggregationFunctions[aggFunc] || {},
+            aggregationFunction: aggregationFunctions[aggFunc] || {},
           },
         })}
         size="small"
@@ -230,29 +230,29 @@ export function AggregationSelect({
         target={aggregationMenuTriggerRef.current}
         position="bottom-start"
       >
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={aggregationMenuId}
           aria-labelledby={aggregationMenuTriggerId}
           autoFocusItem
-          {...rootProps.slotProps?.baseMenuList}
+          {...slotProps?.baseMenuList}
         >
           {availableAggregationFunctions.map((func) => (
-            <rootProps.slots.baseMenuItem
+            <slots.baseMenuItem
               key={func}
               selected={aggFunc === func}
               onClick={() => handleClick(func)}
-              {...rootProps.slotProps?.baseMenuItem}
+              {...slotProps?.baseMenuItem}
             >
               {getAggregationFunctionLabel({
                 apiRef,
                 aggregationRule: {
                   aggregationFunctionName: func,
-                  aggregationFunction: rootProps.aggregationFunctions[func] || {},
+                  aggregationFunction: aggregationFunctions[func] || {},
                 },
               })}
-            </rootProps.slots.baseMenuItem>
+            </slots.baseMenuItem>
           ))}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   ) : null;
@@ -272,9 +272,10 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
     onDragStart,
     onDragEnd,
   } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const [dropPosition, setDropPosition] = React.useState<DropPosition>(null);
-  const ownerState = { ...props, classes: rootProps.classes, dropPosition, section };
+  const ownerState = { ...props, ...rootProps, dropPosition, section };
   const classes = useUtilityClasses(ownerState);
   const apiRef = useGridPrivateApiContext();
   const aggregationModel = useGridSelector(apiRef, gridAggregationModelSelector);
@@ -347,10 +348,10 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
   const hideable = section !== null;
 
   return (
-    <rootProps.slots.baseTooltip
+    <slots.baseTooltip
       title={disabled ? apiRef.current.getLocaleText('chartsFieldBlocked') : undefined}
       enterDelay={1000}
-      {...rootProps.slotProps?.baseTooltip}
+      {...slotProps?.baseTooltip}
     >
       <GridChartsPanelDataFieldRoot
         ownerState={ownerState}
@@ -364,17 +365,17 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
         disabled={!!disabled}
       >
         <GridChartsPanelDataFieldDragIcon ownerState={ownerState} className={classes.dragIcon}>
-          <rootProps.slots.columnReorderIcon fontSize="small" />
+          <slots.columnReorderIcon fontSize="small" />
         </GridChartsPanelDataFieldDragIcon>
 
         {hideable ? (
           <GridChartsPanelDataFieldCheckbox
             ownerState={ownerState}
             className={classes.checkbox}
-            as={rootProps.slots.baseCheckbox}
+            as={slots.baseCheckbox}
             size="small"
             density="compact"
-            {...rootProps.slotProps?.baseCheckbox}
+            {...slotProps?.baseCheckbox}
             checked={selected || false}
             onChange={() => onChange && onChange(field, section)}
             label={children}
@@ -404,7 +405,7 @@ function GridChartsPanelDataField(props: GridChartsPanelDataFieldProps) {
           />
         </GridChartsPanelDataFieldActionContainer>
       </GridChartsPanelDataFieldRoot>
-    </rootProps.slots.baseTooltip>
+    </slots.baseTooltip>
   );
 }
 

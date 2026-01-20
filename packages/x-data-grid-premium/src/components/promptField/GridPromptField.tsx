@@ -7,7 +7,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { IS_SPEECH_RECOGNITION_SUPPORTED } from '../../utils/speechRecognition';
 
 function GridPromptField(props: PromptFieldProps) {
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
   const apiRef = useGridApiContext();
   let placeholder = apiRef.current.getLocaleText('promptFieldPlaceholder');
 
@@ -25,7 +25,7 @@ function GridPromptField(props: PromptFieldProps) {
           }
         }}
         render={({ ref, ...controlProps }, state) => (
-          <rootProps.slots.baseTextField
+          <slots.baseTextField
             {...controlProps}
             fullWidth
             inputRef={ref}
@@ -41,7 +41,7 @@ function GridPromptField(props: PromptFieldProps) {
             slotProps={{
               input: {
                 startAdornment: IS_SPEECH_RECOGNITION_SUPPORTED ? (
-                  <rootProps.slots.baseTooltip
+                  <slots.baseTooltip
                     title={
                       state.recording
                         ? apiRef.current.getLocaleText('promptFieldStopRecording')
@@ -53,26 +53,24 @@ function GridPromptField(props: PromptFieldProps) {
                       edge="start"
                       color={state.recording ? 'primary' : 'default'}
                     >
-                      <rootProps.slots.promptSpeechRecognitionIcon fontSize="small" />
+                      <slots.promptSpeechRecognitionIcon fontSize="small" />
                     </PromptFieldRecord>
-                  </rootProps.slots.baseTooltip>
+                  </slots.baseTooltip>
                 ) : (
-                  <rootProps.slots.baseTooltip
+                  <slots.baseTooltip
                     title={apiRef.current.getLocaleText('promptFieldSpeechRecognitionNotSupported')}
                   >
-                    <rootProps.slots.promptSpeechRecognitionOffIcon fontSize="small" />
-                  </rootProps.slots.baseTooltip>
+                    <slots.promptSpeechRecognitionOffIcon fontSize="small" />
+                  </slots.baseTooltip>
                 ),
                 endAdornment: (
-                  <rootProps.slots.baseTooltip
-                    title={apiRef.current.getLocaleText('promptFieldSend')}
-                  >
+                  <slots.baseTooltip title={apiRef.current.getLocaleText('promptFieldSend')}>
                     <span>
                       <PromptFieldSend size="small" edge="end" color="primary">
-                        <rootProps.slots.promptSendIcon fontSize="small" />
+                        <slots.promptSendIcon fontSize="small" />
                       </PromptFieldSend>
                     </span>
-                  </rootProps.slots.baseTooltip>
+                  </slots.baseTooltip>
                 ),
                 ...controlProps.slotProps?.input,
               },

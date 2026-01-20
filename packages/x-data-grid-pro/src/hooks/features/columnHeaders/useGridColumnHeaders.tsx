@@ -28,7 +28,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
-type OwnerState = DataGridProProcessedProps;
+type OwnerState = Omit<DataGridProProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -68,7 +68,7 @@ export const useGridColumnHeadersPro = (props: UseGridColumnHeadersProps) => {
     headerFiltersElementRef: headerFiltersRef,
   });
   const headerFilterMenuRef = React.useRef<HTMLButtonElement | null>(null);
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const disableHeaderFiltering = !rootProps.headerFilters;
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);

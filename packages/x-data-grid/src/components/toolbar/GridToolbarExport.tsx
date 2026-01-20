@@ -43,11 +43,11 @@ export interface GridToolbarExportProps {
 
 function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
   const { hideMenu, options, ...other } = props;
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={() => {
         apiRef.current.exportDataAsCsv(options);
         hideMenu?.();
@@ -55,7 +55,7 @@ function GridCsvExportMenuItem(props: GridCsvExportMenuItemProps) {
       {...other}
     >
       {apiRef.current.getLocaleText('toolbarExportCSV')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }
 
@@ -82,11 +82,11 @@ GridCsvExportMenuItem.propTypes = {
 
 function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
   const { hideMenu, options, ...other } = props;
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={() => {
         apiRef.current.exportDataAsPrint(options);
         hideMenu?.();
@@ -94,7 +94,7 @@ function GridPrintExportMenuItem(props: GridPrintExportMenuItemProps) {
       {...other}
     >
       {apiRef.current.getLocaleText('toolbarExportPrint')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }
 

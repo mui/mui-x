@@ -58,7 +58,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
   );
   const [applying, setIsApplying] = React.useState(false);
   const id = useId();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps, filterDebounceMs } = useGridRootProps();
 
   const onFilterChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -67,13 +67,13 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
       setFilterValueState(value);
 
       setIsApplying(true);
-      filterTimeout.start(rootProps.filterDebounceMs, () => {
+      filterTimeout.start(filterDebounceMs, () => {
         const date = new Date(value);
         applyValue({ ...item, value: Number.isNaN(date.getTime()) ? undefined : date });
         setIsApplying(false);
       });
     },
-    [applyValue, item, rootProps.filterDebounceMs, filterTimeout],
+    [applyValue, item, filterDebounceMs, filterTimeout],
   );
 
   React.useEffect(() => {
@@ -83,7 +83,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseTextField
+      <slots.baseTextField
         fullWidth
         id={id}
         label={apiRef.current.getLocaleText('filterPanelInputLabel')}
@@ -96,9 +96,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
         slotProps={{
           ...rootSlotProps,
           input: {
-            endAdornment: applying ? (
-              <rootProps.slots.loadIcon fontSize="small" color="action" />
-            ) : null,
+            endAdornment: applying ? <slots.loadIcon fontSize="small" color="action" /> : null,
             ...rootSlotProps?.input,
           },
           htmlInput: {
@@ -107,7 +105,7 @@ function GridFilterInputDate(props: GridFilterInputDateProps) {
             ...rootSlotProps?.htmlInput,
           },
         }}
-        {...rootProps.slotProps?.baseTextField}
+        {...rootPropsSlotProps?.baseTextField}
         {...other}
         {...slotProps?.root}
       />

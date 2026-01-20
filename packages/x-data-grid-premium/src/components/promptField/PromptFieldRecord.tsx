@@ -41,7 +41,7 @@ type SpeechRecognitionOptions = {
 const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
   function PromptFieldRecord(props, ref) {
     const { render, className, onClick, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const { state, lang, onRecordingChange, onValueChange, onSubmit, onError } =
       usePromptFieldContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
@@ -134,10 +134,10 @@ const PromptFieldRecord = forwardRef<HTMLButtonElement, PromptFieldRecordProps>(
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseIconButton,
+      slots.baseIconButton,
       render,
       {
-        ...rootProps.slotProps?.baseIconButton,
+        ...slotProps?.baseIconButton,
         className: resolvedClassName,
         disabled: state.disabled,
         ...other,

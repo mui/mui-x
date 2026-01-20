@@ -19,7 +19,7 @@ import type { GridRowId } from '../../models/gridRows';
 import { type GridRowSelectionModel } from '../../models/gridRowSelectionModel';
 import { createRowSelectionManager } from '../../models/gridRowSelectionManager';
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -36,8 +36,20 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
     const { field, colDef, ...other } = props;
     const [, forceUpdate] = React.useState(false);
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
-    const ownerState = { classes: rootProps.classes };
+    const {
+      isRowSelectable,
+      keepNonExistentRowsSelected,
+      pagination,
+      paginationMode,
+      checkboxSelectionVisibleOnly,
+      slots,
+      slotProps,
+      signature,
+      disableMultipleRowSelection,
+      checkboxSelection,
+      classes: classesRootProps,
+    } = useGridRootProps();
+    const ownerState = { classes: classesRootProps };
     const classes = useUtilityClasses(ownerState);
     const tabIndexState = useGridSelector(apiRef, gridTabIndexColumnHeaderSelector);
     const selection = useGridSelector(apiRef, gridRowSelectionStateSelector);
@@ -48,7 +60,6 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
     );
 
     const filteredSelection = React.useMemo(() => {
-      const isRowSelectable = rootProps.isRowSelectable;
       if (typeof isRowSelectable !== 'function') {
         return selection;
       }
@@ -60,7 +71,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       // selection.type === 'include'
       const selectionModel: GridRowSelectionModel = { type: 'include', ids: new Set<GridRowId>() };
       for (const id of selection.ids) {
-        if (rootProps.keepNonExistentRowsSelected) {
+        if (keepNonExistentRowsSelected) {
           selectionModel.ids.add(id);
         }
         // The row might have been deleted
@@ -73,14 +84,12 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
         }
       }
       return selectionModel;
-    }, [apiRef, rootProps.isRowSelectable, rootProps.keepNonExistentRowsSelected, selection]);
+    }, [apiRef, isRowSelectable, keepNonExistentRowsSelected, selection]);
 
     // All the rows that could be selected / unselected by toggling this checkbox
     const selectionCandidates = React.useMemo(() => {
       const rowIds =
-        !rootProps.pagination ||
-        !rootProps.checkboxSelectionVisibleOnly ||
-        rootProps.paginationMode === 'server'
+        !pagination || !checkboxSelectionVisibleOnly || paginationMode === 'server'
           ? visibleRowIds
           : paginatedVisibleRowIds;
 
@@ -101,9 +110,9 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
       return candidates;
     }, [
       apiRef,
-      rootProps.pagination,
-      rootProps.paginationMode,
-      rootProps.checkboxSelectionVisibleOnly,
+      pagination,
+      paginationMode,
+      checkboxSelectionVisibleOnly,
       paginatedVisibleRowIds,
       visibleRowIds,
     ]);
@@ -178,7 +187,7 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
     );
 
     return (
-      <rootProps.slots.baseCheckbox
+      <slots.baseCheckbox
         indeterminate={isIndeterminate}
         checked={isChecked && !isIndeterminate}
         onChange={handleChange}
@@ -188,8 +197,14 @@ const GridHeaderCheckbox = forwardRef<HTMLButtonElement, GridColumnHeaderParams>
         }}
         tabIndex={tabIndex}
         onKeyDown={handleKeyDown}
-        disabled={!isMultipleRowSelectionEnabled(rootProps)}
-        {...rootProps.slotProps?.baseCheckbox}
+        disabled={
+          !isMultipleRowSelectionEnabled({
+            signature,
+            disableMultipleRowSelection,
+            checkboxSelection,
+          })
+        }
+        {...slotProps?.baseCheckbox}
         {...other}
         ref={ref}
       />

@@ -10,7 +10,7 @@ import { useCollapsibleContext } from './CollapsibleContext';
 
 export type CollapsibleTriggerProps = React.HTMLAttributes<HTMLButtonElement>;
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & { open: boolean };
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'> & { open: boolean };
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -67,9 +67,10 @@ const CollapsibleIcon = styled('div', {
 
 function CollapsibleTrigger(props: CollapsibleTriggerProps) {
   const { children, className, ...other } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
   const { open, onOpenChange, panelId } = useCollapsibleContext();
-  const ownerState = { classes: rootProps.classes, open };
+  const ownerState = { ...rootProps, open };
   const classes = useUtilityClasses(ownerState);
 
   return (
@@ -84,7 +85,7 @@ function CollapsibleTrigger(props: CollapsibleTriggerProps) {
     >
       {children}
       <CollapsibleIcon ownerState={ownerState} className={classes.icon}>
-        <rootProps.slots.collapsibleIcon />
+        <slots.collapsibleIcon />
       </CollapsibleIcon>
     </CollapsibleTriggerRoot>
   );

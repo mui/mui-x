@@ -10,7 +10,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export type GridIconButtonContainerProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -34,7 +34,7 @@ const GridIconButtonContainerRoot = styled('div', {
 export const GridIconButtonContainer = forwardRef<HTMLDivElement, GridIconButtonContainerProps>(
   function GridIconButtonContainer(props, ref) {
     const { className, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (

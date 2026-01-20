@@ -44,6 +44,8 @@ import {
 } from '../../../utils/cellBorderUtils';
 import { PinnedColumnPosition } from '../../../internals/constants';
 
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
+
 interface HeaderInfo {
   groupId: GridColumnGroup['groupId'] | null;
   width: number;
@@ -75,8 +77,6 @@ export interface GetHeadersParams {
   maxLastColumn?: number;
 }
 
-type OwnerState = DataGridProcessedProps;
-
 export const GridColumnHeaderRow = styled('div', {
   name: 'MuiDataGrid',
   slot: 'ColumnHeaderRow',
@@ -104,7 +104,7 @@ export const useGridColumnHeaders = (props: UseGridColumnHeadersProps) => {
   const [resizeCol, setResizeCol] = React.useState('');
 
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const columnGroupsModel = useGridSelector(apiRef, gridColumnGroupsUnwrappedModelSelector);
   const columnPositions = useGridSelector(apiRef, gridColumnPositionsSelector);
   const renderContext = useGridSelector(apiRef, gridRenderContextColumnsSelector);

@@ -15,7 +15,7 @@ import {
   gridDataSourceLoadingIdSelector,
 } from '../hooks/features/dataSource/gridDataSourceSelector';
 
-type OwnerState = DataGridProProcessedProps;
+type OwnerState = Pick<DataGridProProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -52,8 +52,8 @@ interface GridTreeDataGroupingCellIconProps extends Pick<
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const { rowNode, id, field, descendantCount } = props;
 
   const isDataLoading = useGridSelector(apiRef, gridDataSourceLoadingIdSelector, id);
@@ -72,20 +72,18 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
     event.stopPropagation(); // TODO remove event.stopPropagation
   };
 
-  const Icon = rowNode.childrenExpanded
-    ? rootProps.slots.treeDataCollapseIcon
-    : rootProps.slots.treeDataExpandIcon;
+  const Icon = rowNode.childrenExpanded ? slots.treeDataCollapseIcon : slots.treeDataExpandIcon;
 
   if (isDataLoading) {
     return (
       <div className={classes.loadingContainer}>
-        <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
+        <slots.baseCircularProgress size="1rem" color="inherit" />
       </div>
     );
   }
 
   return descendantCount === -1 || descendantCount > 0 ? (
-    <rootProps.slots.baseIconButton
+    <slots.baseIconButton
       size="small"
       onClick={handleClick}
       tabIndex={-1}
@@ -94,28 +92,28 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
           ? apiRef.current.getLocaleText('treeDataCollapse')
           : apiRef.current.getLocaleText('treeDataExpand')
       }
-      {...rootProps?.slotProps?.baseIconButton}
+      {...slotProps?.baseIconButton}
     >
-      <rootProps.slots.baseTooltip title={error?.message ?? null}>
-        <rootProps.slots.baseBadge variant="dot" color="error" invisible={!error}>
+      <slots.baseTooltip title={error?.message ?? null}>
+        <slots.baseBadge variant="dot" color="error" invisible={!error}>
           <Icon fontSize="inherit" />
-        </rootProps.slots.baseBadge>
-      </rootProps.slots.baseTooltip>
-    </rootProps.slots.baseIconButton>
+        </slots.baseBadge>
+      </slots.baseTooltip>
+    </slots.baseIconButton>
   ) : null;
 }
 
 export function GridDataSourceTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const { id, field, formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2 } = props;
 
-  const rootProps = useGridRootProps();
+  const { dataSource, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridPrivateApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   let descendantCount = 0;
   if (row) {
-    descendantCount = rootProps.dataSource?.getChildrenCount?.(row) ?? 0;
+    descendantCount = dataSource?.getChildrenCount?.(row) ?? 0;
   }
 
   return (

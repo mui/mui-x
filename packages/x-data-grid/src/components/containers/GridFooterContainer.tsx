@@ -13,7 +13,7 @@ export type GridFooterContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -39,7 +39,7 @@ const GridFooterContainerRoot = styled('div', {
 const GridFooterContainer = forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooterContainer(props, ref) {
     const { className, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (

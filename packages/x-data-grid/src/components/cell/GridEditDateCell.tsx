@@ -98,8 +98,8 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   }, [valueProp, isDateTime]);
 
   const [valueState, setValueState] = React.useState(valueTransformed);
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
+  const { slots, classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const parseValueToDate = React.useCallback((value: string) => {
@@ -156,7 +156,7 @@ function GridEditDateCell(props: GridEditDateCellProps) {
   }, [hasFocus]);
   return (
     <StyledInputBase
-      as={rootProps.slots.baseInput}
+      as={slots.baseInput}
       inputRef={inputRef}
       fullWidth
       className={classes.root}

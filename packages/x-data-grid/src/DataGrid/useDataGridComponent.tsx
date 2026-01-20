@@ -114,7 +114,7 @@ export const useDataGridComponent = (
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
   useGridEditing(apiRef, props, configuration);
-  useGridFocus(apiRef, props);
+  useGridFocus(apiRef);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props, configuration);
   useGridSorting(apiRef, props);

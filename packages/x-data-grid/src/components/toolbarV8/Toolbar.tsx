@@ -20,7 +20,7 @@ export type ToolbarProps = React.HTMLAttributes<HTMLDivElement> & {
   render?: RenderProp<React.ComponentProps<typeof ToolbarRoot>>;
 };
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 type Item = {
   id: string;
@@ -66,8 +66,8 @@ const ToolbarRoot = styled('div', {
  */
 const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props, ref) {
   const { render, className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: classesRootProps, label } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: classesRootProps });
 
   const [focusableItemId, setFocusableItemId] = React.useState<string | null>(null);
   const [items, setItems] = React.useState<Item[]>([]);
@@ -227,7 +227,7 @@ const Toolbar = forwardRef<HTMLDivElement, ToolbarProps>(function Toolbar(props,
   const element = useComponentRenderer(ToolbarRoot, render, {
     role: 'toolbar',
     'aria-orientation': 'horizontal',
-    'aria-label': rootProps.label || undefined,
+    'aria-label': label || undefined,
     className: clsx(classes.root, className),
     ...other,
     ref,

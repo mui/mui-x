@@ -21,7 +21,7 @@ export type GridRowCountProps = React.HTMLAttributes<HTMLDivElement> &
     sx?: SxProps<Theme>;
   };
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -46,8 +46,8 @@ const GridRowCount = forwardRef<HTMLDivElement, GridRowCountProps>(
   function GridRowCount(props, ref) {
     const { className, rowCount, visibleRowCount, ...other } = props;
     const apiRef = useGridApiContext();
-    const ownerState = useGridRootProps();
-    const classes = useUtilityClasses(ownerState);
+    const { rows, ...rootProps } = useGridRootProps();
+    const classes = useUtilityClasses(rootProps);
 
     if (rowCount === 0) {
       return null;
@@ -61,7 +61,7 @@ const GridRowCount = forwardRef<HTMLDivElement, GridRowCountProps>(
     return (
       <GridRowCountRoot
         className={clsx(classes.root, className)}
-        ownerState={ownerState}
+        ownerState={rootProps}
         {...other}
         ref={ref}
       >

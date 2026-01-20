@@ -15,12 +15,12 @@ import { CollapsiblePanel } from '../../collapsible/CollapsiblePanel';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { EMPTY_CHART_INTEGRATION_CONTEXT_STATE } from '../../../hooks/features/chartsIntegration/useGridChartsIntegration';
 
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
+
 interface GridChartsPanelCustomizeProps {
   activeChartId: string;
   sections: GridChartsConfigurationSection[];
 }
-
-type OwnerState = DataGridPremiumProcessedProps;
 
 const GridChartsPanelCustomizeRoot = styled(GridShadowScrollArea)({
   height: '100%',
@@ -54,7 +54,8 @@ const GridChartsPanelCustomizePanelTitle = styled('div', {
 export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
   const { activeChartId, sections } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const { chartStateLookup, setChartState } = useGridChartsIntegrationContext();
 
   const {
@@ -99,7 +100,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
               const isDisabled = opt.isDisabled?.(context) ?? false;
               if (opt.type === 'boolean') {
                 return (
-                  <rootProps.slots.baseSwitch
+                  <slots.baseSwitch
                     key={key}
                     checked={Boolean(configuration[key] ?? opt.default)}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -108,13 +109,13 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                     size="small"
                     label={opt.label}
                     disabled={isDisabled}
-                    {...rootProps.slotProps?.baseSwitch}
+                    {...slotProps?.baseSwitch}
                   />
                 );
               }
               if (opt.type === 'select') {
                 return (
-                  <rootProps.slots.baseSelect
+                  <slots.baseSelect
                     key={key}
                     fullWidth
                     size="small"
@@ -129,23 +130,23 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                         ...opt.htmlAttributes,
                       },
                     }}
-                    {...rootProps.slotProps?.baseSelect}
+                    {...slotProps?.baseSelect}
                   >
                     {(opt.options || []).map((option) => (
-                      <rootProps.slots.baseSelectOption
+                      <slots.baseSelectOption
                         key={option.value}
                         value={option.value}
                         native={false}
                       >
                         {option.content}
-                      </rootProps.slots.baseSelectOption>
+                      </slots.baseSelectOption>
                     ))}
-                  </rootProps.slots.baseSelect>
+                  </slots.baseSelect>
                 );
               }
               // string or number
               return (
-                <rootProps.slots.baseTextField
+                <slots.baseTextField
                   key={key}
                   aria-label={opt.label}
                   placeholder={opt.label}
@@ -159,7 +160,7 @@ export function GridChartsPanelCustomize(props: GridChartsPanelCustomizeProps) {
                       ...opt.htmlAttributes,
                     },
                   }}
-                  {...rootProps.slotProps?.baseTextField}
+                  {...slotProps?.baseTextField}
                   value={(configuration[key] ?? opt.default ?? '').toString()}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                     handleChange(

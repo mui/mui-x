@@ -24,12 +24,18 @@ const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, 
 
 function GridPagination() {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const {
+    paginationMode,
+    loading,
+    pageSizeOptions: rootPropsPageSizeOptions,
+    paginationModel: rootPropsPaginationModel,
+    autoPageSize,
+    slots,
+    slotProps,
+  } = useGridRootProps();
   const paginationModel = useGridSelector(apiRef, gridPaginationModelSelector);
   const rowCount = useGridSelector(apiRef, gridPaginationRowCountSelector);
   const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
-  const { paginationMode, loading } = rootProps;
 
   const disabled = rowCount === -1 && paginationMode === 'server' && loading;
 
@@ -57,8 +63,8 @@ function GridPagination() {
   );
 
   const isPageSizeIncludedInPageSizeOptions = (pageSize: number) => {
-    for (let i = 0; i < rootProps.pageSizeOptions.length; i += 1) {
-      const option = rootProps.pageSizeOptions[i];
+    for (let i = 0; i < rootPropsPageSizeOptions.length; i += 1) {
+      const option = rootPropsPageSizeOptions[i];
       if (typeof option === 'number') {
         if (option === pageSize) {
           return true;
@@ -74,10 +80,10 @@ function GridPagination() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const warnedOnceMissingInPageSizeOptions = React.useRef(false);
 
-    const pageSize = rootProps.paginationModel?.pageSize ?? paginationModel.pageSize;
+    const pageSize = rootPropsPaginationModel?.pageSize ?? paginationModel.pageSize;
     if (
       !warnedOnceMissingInPageSizeOptions.current &&
-      !rootProps.autoPageSize &&
+      !autoPageSize &&
       !isPageSizeIncludedInPageSizeOptions(pageSize)
     ) {
       console.warn(
@@ -92,12 +98,12 @@ function GridPagination() {
   }
 
   const pageSizeOptions = isPageSizeIncludedInPageSizeOptions(paginationModel.pageSize)
-    ? rootProps.pageSizeOptions
+    ? rootPropsPageSizeOptions
     : [];
 
   return (
     <GridPaginationRoot
-      as={rootProps.slots.basePagination}
+      as={slots.basePagination}
       count={rowCount}
       page={computedPage}
       rowsPerPageOptions={pageSizeOptions}
@@ -105,7 +111,7 @@ function GridPagination() {
       onPageChange={handlePageChange}
       onRowsPerPageChange={handlePageSizeChange}
       disabled={disabled}
-      {...rootProps.slotProps?.basePagination}
+      {...slotProps?.basePagination}
     />
   );
 }

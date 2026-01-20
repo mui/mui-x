@@ -32,7 +32,7 @@ type MenuPosition =
   | 'top'
   | undefined;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -65,7 +65,8 @@ export interface GridMenuProps extends Pick<PopperProps, 'className' | 'onExited
 function GridMenu(props: GridMenuProps) {
   const { open, target, onClose, children, position, className, onExited, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const classes = useUtilityClasses(rootProps);
   const variablesClass = useCSSVariablesClass();
 
@@ -101,7 +102,7 @@ function GridMenu(props: GridMenuProps) {
 
   return (
     <GridMenuRoot
-      as={rootProps.slots.basePopper}
+      as={slots.basePopper}
       className={clsx(classes.root, className, variablesClass)}
       ownerState={rootProps}
       open={open}
@@ -113,7 +114,7 @@ function GridMenu(props: GridMenuProps) {
       clickAwayMouseEvent="onMouseDown"
       onKeyDown={handleKeyDown}
       {...other}
-      {...rootProps.slotProps?.basePopper}
+      {...slotProps?.basePopper}
     >
       {children}
     </GridMenuRoot>

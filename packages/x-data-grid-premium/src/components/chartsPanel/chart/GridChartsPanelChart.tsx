@@ -13,7 +13,7 @@ export interface GridChartsPanelChartProps {
   onChartTypeChange: (type: string) => void;
 }
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -86,11 +86,12 @@ const GridChartTypeButton = styled('button', {
 
 function GridChartsPanelChart(props: GridChartsPanelChartProps) {
   const { schema, selectedChartType, onChartTypeChange } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slotProps } = rootProps;
   const classes = useUtilityClasses(rootProps);
 
   return (
-    <GridChartsManagementRoot ownerState={rootProps} className={classes.root}>
+    <GridChartsManagementRoot className={classes.root} ownerState={rootProps}>
       <GridChartTypeRoot className={classes.chartTypeRoot}>
         {Object.entries(schema).map(([type, config]) => (
           <GridChartTypeButton
@@ -98,7 +99,7 @@ function GridChartsPanelChart(props: GridChartsPanelChartProps) {
             className={classes.button}
             isSelected={type === selectedChartType}
             onClick={() => onChartTypeChange(type)}
-            {...rootProps.slotProps?.baseButton}
+            {...slotProps?.baseButton}
           >
             <config.icon style={{ width: 32, height: 32 }} />
             {config.label}

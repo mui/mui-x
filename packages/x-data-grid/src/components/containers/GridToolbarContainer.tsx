@@ -15,7 +15,7 @@ export type GridToolbarContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   sx?: SxProps<Theme>;
 };
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -46,7 +46,7 @@ const GridToolbarContainerRoot = styled(Toolbar, {
 const GridToolbarContainer = forwardRef<HTMLDivElement, GridToolbarContainerProps>(
   function GridToolbarContainer(props, ref) {
     const { className, children, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
     if (!children) {
       return null;

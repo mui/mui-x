@@ -21,9 +21,7 @@ export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-type OwnerState = GridColumnSortButtonProps & {
-  classes?: DataGridProcessedProps['classes'];
-};
+type OwnerState = GridColumnSortButtonProps & Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -69,11 +67,12 @@ function getIcon(
 function GridColumnSortButton(props: GridColumnSortButtonProps) {
   const { direction, index, sortingOrder, disabled, className, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const ownerState = { ...props, classes: rootProps.classes };
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
+  const ownerState = { ...rootProps, ...props };
   const classes = useUtilityClasses(ownerState);
 
-  const iconElement = getIcon(rootProps.slots, direction, classes.icon, sortingOrder);
+  const iconElement = getIcon(slots, direction, classes.icon, sortingOrder);
 
   if (!iconElement) {
     return null;
@@ -81,13 +80,13 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
 
   const iconButton = (
     <GridColumnSortButtonRoot
-      as={rootProps.slots.baseIconButton}
+      as={slots.baseIconButton}
       ownerState={ownerState}
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
       disabled={disabled}
       className={clsx(classes.root, className)}
-      {...rootProps.slotProps?.baseIconButton}
+      {...slotProps?.baseIconButton}
       {...other}
     >
       {iconElement}
@@ -95,21 +94,21 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
   );
 
   return (
-    <rootProps.slots.baseTooltip
+    <slots.baseTooltip
       title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       enterDelay={1000}
-      {...rootProps.slotProps?.baseTooltip}
+      {...slotProps?.baseTooltip}
     >
       <span>
         {index != null && (
-          <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
+          <slots.baseBadge badgeContent={index} color="default" overlap="circular">
             {iconButton}
-          </rootProps.slots.baseBadge>
+          </slots.baseBadge>
         )}
 
         {index == null && iconButton}
       </span>
-    </rootProps.slots.baseTooltip>
+    </slots.baseTooltip>
   );
 }
 

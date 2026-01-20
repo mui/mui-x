@@ -10,7 +10,7 @@ import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -38,7 +38,7 @@ const ColumnHeaderInnerTitle = forwardRef<HTMLDivElement, React.HTMLAttributes<H
     // Tooltip adds aria-label to the props, which is not needed since the children prop is a string
     // See https://github.com/mui/mui-x/pull/14482
     const { className, 'aria-label': ariaLabel, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (
@@ -61,7 +61,7 @@ export interface GridColumnHeaderTitleProps {
 // No React.memo here as if we display the sort icon, we need to recalculate the isOver
 function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   const { label, description } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const titleRef = React.useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = React.useState('');
 
@@ -77,14 +77,11 @@ function GridColumnHeaderTitle(props: GridColumnHeaderTitleProps) {
   }, [description, label]);
 
   return (
-    <rootProps.slots.baseTooltip
-      title={description || tooltip}
-      {...rootProps.slotProps?.baseTooltip}
-    >
+    <slots.baseTooltip title={description || tooltip} {...slotProps?.baseTooltip}>
       <ColumnHeaderInnerTitle onMouseOver={handleMouseOver} ref={titleRef}>
         {label}
       </ColumnHeaderInnerTitle>
-    </rootProps.slots.baseTooltip>
+    </slots.baseTooltip>
   );
 }
 

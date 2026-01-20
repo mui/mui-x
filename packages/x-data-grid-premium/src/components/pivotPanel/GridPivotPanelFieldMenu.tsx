@@ -27,7 +27,7 @@ type MenuDivider = {
 
 function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
   const { field, modelKey } = props;
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
   const [open, setOpen] = React.useState(false);
   const apiRef = useGridPrivateApiContext();
   const isAvailableField = modelKey === null;
@@ -55,52 +55,52 @@ function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
       {
         key: 'up',
         label: apiRef.current.getLocaleText('pivotMenuMoveUp'),
-        icon: <rootProps.slots.pivotMenuMoveUpIcon />,
+        icon: <slots.pivotMenuMoveUpIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'down',
         label: apiRef.current.getLocaleText('pivotMenuMoveDown'),
-        icon: <rootProps.slots.pivotMenuMoveDownIcon />,
+        icon: <slots.pivotMenuMoveDownIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
       {
         key: 'top',
         label: apiRef.current.getLocaleText('pivotMenuMoveToTop'),
-        icon: <rootProps.slots.pivotMenuMoveToTopIcon />,
+        icon: <slots.pivotMenuMoveToTopIcon />,
         disabled: !canMoveUp,
       },
       {
         key: 'bottom',
         label: apiRef.current.getLocaleText('pivotMenuMoveToBottom'),
-        icon: <rootProps.slots.pivotMenuMoveToBottomIcon />,
+        icon: <slots.pivotMenuMoveToBottomIcon />,
         disabled: !canMoveDown,
       },
       { divider: true },
       {
         key: 'rows',
         label: apiRef.current.getLocaleText('pivotMenuRows'),
-        icon: modelKey === 'rows' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />,
+        icon: modelKey === 'rows' ? <slots.pivotMenuCheckIcon /> : <span />,
       },
       {
         key: 'columns',
         label: apiRef.current.getLocaleText('pivotMenuColumns'),
-        icon: modelKey === 'columns' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />,
+        icon: modelKey === 'columns' ? <slots.pivotMenuCheckIcon /> : <span />,
       },
       {
         key: 'values',
         label: apiRef.current.getLocaleText('pivotMenuValues'),
-        icon: modelKey === 'values' ? <rootProps.slots.pivotMenuCheckIcon /> : <span />,
+        icon: modelKey === 'values' ? <slots.pivotMenuCheckIcon /> : <span />,
       },
       { divider: true },
       {
         key: null,
         label: apiRef.current.getLocaleText('pivotMenuRemove'),
-        icon: <rootProps.slots.pivotMenuRemoveIcon />,
+        icon: <slots.pivotMenuRemoveIcon />,
       },
     ];
-  }, [isAvailableField, apiRef, rootProps, canMoveUp, canMoveDown, modelKey]);
+  }, [isAvailableField, apiRef, slots, canMoveUp, canMoveDown, modelKey]);
 
   const handleClick = () => {
     setOpen(!open);
@@ -160,9 +160,9 @@ function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
 
   return (
     <React.Fragment>
-      <rootProps.slots.baseIconButton
+      <slots.baseIconButton
         size="small"
-        {...rootProps.slotProps?.baseIconButton}
+        {...slotProps?.baseIconButton}
         id={triggerId}
         aria-haspopup="true"
         aria-controls={open ? menuId : undefined}
@@ -172,11 +172,11 @@ function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
         ref={triggerRef}
       >
         {isAvailableField ? (
-          <rootProps.slots.pivotMenuAddIcon fontSize="small" />
+          <slots.pivotMenuAddIcon fontSize="small" />
         ) : (
-          <rootProps.slots.columnMenuIcon fontSize="small" />
+          <slots.columnMenuIcon fontSize="small" />
         )}
-      </rootProps.slots.baseIconButton>
+      </slots.baseIconButton>
 
       <GridMenu
         target={triggerRef.current}
@@ -184,28 +184,28 @@ function GridPivotPanelFieldMenu(props: GridPivotPanelFieldMenuProps) {
         onClose={handleClose}
         position="bottom-start"
       >
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={menuId}
           aria-labelledby={triggerId}
           autoFocusItem
-          {...rootProps.slotProps?.baseMenuList}
+          {...slotProps?.baseMenuList}
         >
           {getMenuItems().map((item, index) =>
             'divider' in item ? (
-              <rootProps.slots.baseDivider key={`divider-${index}`} />
+              <slots.baseDivider key={`divider-${index}`} />
             ) : (
-              <rootProps.slots.baseMenuItem
+              <slots.baseMenuItem
                 key={item.key}
                 disabled={item.disabled}
                 onClick={() => handleMove(item.key)}
                 iconStart={item.icon}
-                {...rootProps.slotProps?.baseMenuItem}
+                {...slotProps?.baseMenuItem}
               >
                 {item.label}
-              </rootProps.slots.baseMenuItem>
+              </slots.baseMenuItem>
             ),
           )}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );

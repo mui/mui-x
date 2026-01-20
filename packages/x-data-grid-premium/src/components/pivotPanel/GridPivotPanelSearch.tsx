@@ -14,7 +14,7 @@ export type GridPivotPanelSearchProps = Pick<
   onClear: () => void;
 };
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -35,7 +35,8 @@ const GridPivotPanelSearchContainer = styled('div', {
 
 function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
   const { onClear, value, onChange } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
 
@@ -46,8 +47,8 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
   };
 
   return (
-    <GridPivotPanelSearchContainer ownerState={rootProps} className={classes.container}>
-      <rootProps.slots.baseTextField
+    <GridPivotPanelSearchContainer className={classes.container} ownerState={rootProps}>
+      <slots.baseTextField
         size="small"
         aria-label={apiRef.current.getLocaleText('pivotSearchControlLabel')}
         placeholder={apiRef.current.getLocaleText('pivotSearchControlPlaceholder')}
@@ -55,23 +56,23 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
         fullWidth
         slotProps={{
           input: {
-            startAdornment: <rootProps.slots.pivotSearchIcon fontSize="small" />,
+            startAdornment: <slots.pivotSearchIcon fontSize="small" />,
             endAdornment: value ? (
-              <rootProps.slots.baseIconButton
+              <slots.baseIconButton
                 edge="end"
                 size="small"
                 onClick={onClear}
                 aria-label={apiRef.current.getLocaleText('pivotSearchControlClear')}
               >
-                <rootProps.slots.pivotSearchClearIcon fontSize="small" />
-              </rootProps.slots.baseIconButton>
+                <slots.pivotSearchClearIcon fontSize="small" />
+              </slots.baseIconButton>
             ) : null,
           },
           htmlInput: {
             role: 'searchbox',
           },
         }}
-        {...rootProps.slotProps?.baseTextField}
+        {...slotProps?.baseTextField}
         value={value}
         onChange={onChange}
       />

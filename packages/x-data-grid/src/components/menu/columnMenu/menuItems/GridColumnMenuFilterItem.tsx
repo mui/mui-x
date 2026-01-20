@@ -7,7 +7,7 @@ import { useGridRootProps } from '../../../../hooks/utils/useGridRootProps';
 function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { disableColumnFilter, slots } = useGridRootProps();
 
   const showFilter = React.useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -17,17 +17,17 @@ function GridColumnMenuFilterItem(props: GridColumnMenuItemProps) {
     [apiRef, colDef.field, onClick],
   );
 
-  if (rootProps.disableColumnFilter || !colDef.filterable) {
+  if (disableColumnFilter || !colDef.filterable) {
     return null;
   }
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={showFilter}
-      iconStart={<rootProps.slots.columnMenuFilterIcon fontSize="small" />}
+      iconStart={<slots.columnMenuFilterIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('columnMenuFilter')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }
 

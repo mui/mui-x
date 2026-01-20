@@ -9,7 +9,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -41,7 +41,7 @@ export interface GridPanelWrapperProps
 const GridPanelWrapper = forwardRef<HTMLDivElement, GridPanelWrapperProps>(
   function GridPanelWrapper(props, ref) {
     const { className, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
     const classes = useUtilityClasses(rootProps);
 
     return (

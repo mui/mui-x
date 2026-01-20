@@ -33,29 +33,30 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps) => {
   const { colDef, open, columnMenuId, columnMenuButtonId, iconButtonRef } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
-  const ownerState = { ...props, classes: rootProps.classes };
+  const { toggleColumnMenu } = apiRef.current;
+  const { classes: classesRootProps, slots, slotProps } = useGridRootProps();
+  const ownerState = { ...props, classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const handleMenuIconClick = React.useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
       event.stopPropagation();
-      apiRef.current.toggleColumnMenu(colDef.field);
+      toggleColumnMenu(colDef.field);
     },
-    [apiRef, colDef.field],
+    [toggleColumnMenu, colDef.field],
   );
 
   const columnName = colDef.headerName ?? colDef.field;
 
   return (
     <div className={classes.root}>
-      <rootProps.slots.baseTooltip
+      <slots.baseTooltip
         title={apiRef.current.getLocaleText('columnMenuLabel')}
         enterDelay={1000}
-        {...rootProps.slotProps?.baseTooltip}
+        {...slotProps?.baseTooltip}
       >
-        <rootProps.slots.baseIconButton
+        <slots.baseIconButton
           ref={iconButtonRef}
           tabIndex={-1}
           className={classes.button}
@@ -66,11 +67,11 @@ export const ColumnHeaderMenuIcon = React.memo((props: ColumnHeaderMenuIconProps
           aria-expanded={open}
           aria-controls={open ? columnMenuId : undefined}
           id={columnMenuButtonId}
-          {...rootProps.slotProps?.baseIconButton}
+          {...slotProps?.baseIconButton}
         >
-          <rootProps.slots.columnMenuIcon fontSize="inherit" />
-        </rootProps.slots.baseIconButton>
-      </rootProps.slots.baseTooltip>
+          <slots.columnMenuIcon fontSize="inherit" />
+        </slots.baseIconButton>
+      </slots.baseTooltip>
     </div>
   );
 });

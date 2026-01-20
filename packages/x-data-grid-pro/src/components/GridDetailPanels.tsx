@@ -20,8 +20,8 @@ const useUtilityClasses = () => {
 };
 
 export function GridDetailPanels(props: GridDetailPanelsProps) {
-  const rootProps = useGridRootProps();
-  if (!rootProps.getDetailPanelContent) {
+  const { getDetailPanelContent } = useGridRootProps();
+  if (!getDetailPanelContent) {
     return null;
   }
   return React.createElement(GridDetailPanelsImpl, props);

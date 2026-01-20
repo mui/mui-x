@@ -13,7 +13,7 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { DataGridProProcessedProps } from '../models/dataGridProProps';
 
-type OwnerState = DataGridProProcessedProps;
+type OwnerState = Pick<DataGridProProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -38,9 +38,9 @@ interface GridTreeDataGroupingCellProps extends GridRenderCellParams<any, any, a
 function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
   const { id, field, formattedValue, rowNode, hideDescendantCount, offsetMultiplier = 2 } = props;
 
-  const rootProps = useGridRootProps();
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const filteredDescendantCountLookup = useGridSelector(
     apiRef,
     gridFilteredDescendantCountLookupSelector,
@@ -48,9 +48,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
 
   const filteredDescendantCount = filteredDescendantCountLookup[rowNode.id] ?? 0;
 
-  const Icon = rowNode.childrenExpanded
-    ? rootProps.slots.treeDataCollapseIcon
-    : rootProps.slots.treeDataExpandIcon;
+  const Icon = rowNode.childrenExpanded ? slots.treeDataCollapseIcon : slots.treeDataExpandIcon;
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     apiRef.current.setRowChildrenExpansion(id, !rowNode.childrenExpanded);
@@ -65,7 +63,7 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
     >
       <div className={classes.toggle}>
         {filteredDescendantCount > 0 && (
-          <rootProps.slots.baseIconButton
+          <slots.baseIconButton
             size="small"
             onClick={handleClick}
             tabIndex={-1}
@@ -74,10 +72,10 @@ function GridTreeDataGroupingCell(props: GridTreeDataGroupingCellProps) {
                 ? apiRef.current.getLocaleText('treeDataCollapse')
                 : apiRef.current.getLocaleText('treeDataExpand')
             }
-            {...rootProps?.slotProps?.baseIconButton}
+            {...slotProps?.baseIconButton}
           >
             <Icon fontSize="inherit" />
-          </rootProps.slots.baseIconButton>
+          </slots.baseIconButton>
         )}
       </div>
       <span>

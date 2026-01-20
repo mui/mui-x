@@ -64,6 +64,7 @@ export const useGridDataSourceLazyLoader = (
     );
   }, [privateApiRef, props.lazyLoading, props.dataSource]);
 
+  const { lazyLoadingRequestThrottleMs } = props;
   const [lazyLoadingRowsUpdateStrategyActive, setLazyLoadingRowsUpdateStrategyActive] =
     React.useState(false);
   const renderedRowsIntervalCache = React.useRef(INTERVAL_CACHE_INITIAL_STATE);
@@ -427,8 +428,8 @@ export const useGridDataSourceLazyLoader = (
   );
 
   const throttledHandleRenderedRowsIntervalChange = React.useMemo(
-    () => throttle(handleRenderedRowsIntervalChange, props.lazyLoadingRequestThrottleMs),
-    [props.lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
+    () => throttle(handleRenderedRowsIntervalChange, lazyLoadingRequestThrottleMs),
+    [lazyLoadingRequestThrottleMs, handleRenderedRowsIntervalChange],
   );
 
   React.useEffect(() => {

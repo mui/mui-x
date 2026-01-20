@@ -66,7 +66,7 @@ export interface GridHeaderFilterCellProps extends Pick<GridStateColDef, 'header
   showRightBorder: boolean;
 }
 
-type OwnerState = DataGridProProcessedProps & {
+type OwnerState = Pick<DataGridProProcessedProps, 'classes'> & {
   colDef: GridColDef;
   pinnedPosition?: PinnedColumnPosition;
   showRightBorder: boolean;
@@ -166,7 +166,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   const apiRef = useGridPrivateApiContext();
   const isRtl = useRtl();
   const columnFields = useGridSelector(apiRef, gridVisibleColumnFieldsSelector);
-  const rootProps = useGridRootProps();
+  const { classes: classesRootProps } = useGridRootProps();
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -325,7 +325,7 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
   );
 
   const ownerState: OwnerState = {
-    ...rootProps,
+    classes: classesRootProps,
     pinnedPosition,
     colDef,
     showLeftBorder,

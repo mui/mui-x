@@ -26,16 +26,16 @@ export interface GridLoadingOverlayProps extends GridOverlayProps {
 const LOADING_VARIANTS: Record<
   GridLoadingOverlayVariant,
   {
-    component: (rootProps: DataGridProcessedProps) => React.ComponentType;
+    component: (slots: DataGridProcessedProps['slots']) => React.ComponentType;
     style: React.CSSProperties;
   }
 > = {
   'circular-progress': {
-    component: (rootProps: DataGridProcessedProps) => rootProps.slots.baseCircularProgress,
+    component: (slots: DataGridProcessedProps['slots']) => slots.baseCircularProgress,
     style: {},
   },
   'linear-progress': {
-    component: (rootProps: DataGridProcessedProps) => rootProps.slots.baseLinearProgress,
+    component: (slots: DataGridProcessedProps['slots']) => slots.baseLinearProgress,
     style: { display: 'block' },
   },
   skeleton: {
@@ -48,10 +48,10 @@ const GridLoadingOverlay = forwardRef<HTMLDivElement, GridLoadingOverlayProps>(
   function GridLoadingOverlay(props, ref) {
     const { variant = 'linear-progress', noRowsVariant = 'skeleton', style, ...other } = props;
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const { slots } = useGridRootProps();
     const rowsCount = useGridSelector(apiRef, gridRowCountSelector);
     const activeVariant = LOADING_VARIANTS[rowsCount === 0 ? noRowsVariant : variant];
-    const Component = activeVariant.component(rootProps);
+    const Component = activeVariant.component(slots);
 
     return (
       <GridOverlay style={{ ...activeVariant.style, ...style }} {...other} ref={ref}>

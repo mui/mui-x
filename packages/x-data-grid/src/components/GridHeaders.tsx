@@ -24,7 +24,7 @@ import { gridColumnMenuSelector } from '../hooks/features/columnMenu/columnMenuS
 
 function GridHeaders() {
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
 
   const visibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const filterColumnLookup = useGridSelector(apiRef, gridFilterActiveItemsLookupSelector);
@@ -61,7 +61,7 @@ function GridHeaders() {
   const columnsContainerRef = apiRef.current.columnHeadersContainerRef;
 
   return (
-    <rootProps.slots.columnHeaders
+    <slots.columnHeaders
       ref={columnsContainerRef}
       visibleColumns={visibleColumns}
       filterColumnLookup={filterColumnLookup}
@@ -75,7 +75,7 @@ function GridHeaders() {
       columnVisibility={columnVisibility}
       columnGroupsHeaderStructure={columnGroupsHeaderStructure}
       hasOtherElementInTabSequence={hasOtherElementInTabSequence}
-      {...rootProps.slotProps?.columnHeaders}
+      {...slotProps?.columnHeaders}
     />
   );
 }

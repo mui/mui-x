@@ -32,7 +32,7 @@ export type PromptFieldSendProps = Omit<GridSlotProps['baseIconButton'], 'classN
 const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
   function PromptFieldSend(props, ref) {
     const { render, className, onClick, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const { state, onSubmit } = usePromptFieldContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
@@ -42,10 +42,10 @@ const PromptFieldSend = forwardRef<HTMLButtonElement, PromptFieldSendProps>(
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseIconButton,
+      slots.baseIconButton,
       render,
       {
-        ...rootProps.slotProps?.baseIconButton,
+        ...slotProps?.baseIconButton,
         className: resolvedClassName,
         disabled: state.disabled || state.recording || !state.value.trim(),
         ...other,

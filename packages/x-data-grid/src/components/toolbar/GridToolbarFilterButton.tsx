@@ -22,7 +22,7 @@ import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridPanelContext } from '../panel/GridPanelContext';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -64,7 +64,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     const tooltipProps = slotProps.tooltip || {};
     const badgeProps = slotProps.badge || {};
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const { rows, ...rootProps } = useGridRootProps();
+    const { slots, slotProps: rootPropsSlotProps, disableColumnFilter } = rootProps;
     const activeFilters = useGridSelector(apiRef, gridFilterActiveItemsSelector);
     const lookup = useGridSelector(apiRef, gridColumnLookupSelector);
     const preferencePanel = useGridSelector(apiRef, gridPreferencePanelStateSelector);
@@ -133,19 +134,19 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
     };
 
     // Disable the button if the corresponding is disabled
-    if (rootProps.disableColumnFilter) {
+    if (disableColumnFilter) {
       return null;
     }
 
     const isOpen = preferencePanel.open && preferencePanel.panelId === filterPanelId;
     return (
-      <rootProps.slots.baseTooltip
+      <slots.baseTooltip
         title={tooltipContentNode}
         enterDelay={1000}
-        {...rootProps.slotProps?.baseTooltip}
+        {...rootPropsSlotProps?.baseTooltip}
         {...tooltipProps}
       >
-        <rootProps.slots.baseButton
+        <slots.baseButton
           id={filterButtonId}
           size="small"
           aria-label={apiRef.current.getLocaleText('toolbarFiltersLabel')}
@@ -153,16 +154,16 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           aria-expanded={isOpen}
           aria-haspopup
           startIcon={
-            <rootProps.slots.baseBadge
+            <slots.baseBadge
               badgeContent={activeFilters.length}
               color="primary"
-              {...rootProps.slotProps?.baseBadge}
+              {...rootPropsSlotProps?.baseBadge}
               {...badgeProps}
             >
-              <rootProps.slots.openFilterButtonIcon />
-            </rootProps.slots.baseBadge>
+              <slots.openFilterButtonIcon />
+            </slots.baseBadge>
           }
-          {...rootProps.slotProps?.baseButton}
+          {...rootPropsSlotProps?.baseButton}
           {...buttonProps}
           onClick={toggleFilter}
           onPointerUp={(event) => {
@@ -174,8 +175,8 @@ const GridToolbarFilterButton = forwardRef<HTMLButtonElement, GridToolbarFilterB
           ref={handleRef}
         >
           {apiRef.current.getLocaleText('toolbarFilters')}
-        </rootProps.slots.baseButton>
-      </rootProps.slots.baseTooltip>
+        </slots.baseButton>
+      </slots.baseTooltip>
     );
   },
 );

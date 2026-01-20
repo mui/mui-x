@@ -16,8 +16,7 @@ import { gridEditRowsStateSelector, isEventTargetInPortal, vars } from '@mui/x-d
 import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
-type OwnerState = {
-  classes?: DataGridProProcessedProps['classes'];
+type OwnerState = Omit<DataGridProProcessedProps, 'rows'> & {
   isDraggable: boolean;
 };
 
@@ -42,7 +41,8 @@ const RowReorderIcon = styled('svg', {
 
 function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { isRowReorderable, rowReordering, slots } = rootProps;
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
   const cellValue =
@@ -52,11 +52,10 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
-  const isRowReorderable = rootProps.isRowReorderable;
   // TODO: remove sortModel check once row reorder is compatible
   const isDraggable = React.useMemo(() => {
     const baseCondition =
-      !!rootProps.rowReordering && !sortModel.length && Object.keys(editRowsState).length === 0;
+      !!rowReordering && !sortModel.length && Object.keys(editRowsState).length === 0;
 
     if (!baseCondition) {
       return false;
@@ -67,16 +66,9 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     }
 
     return true;
-  }, [
-    rootProps.rowReordering,
-    isRowReorderable,
-    sortModel,
-    editRowsState,
-    params.row,
-    params.rowNode,
-  ]);
+  }, [rowReordering, isRowReorderable, sortModel, editRowsState, params.row, params.rowNode]);
 
-  const ownerState = { isDraggable, classes: rootProps.classes };
+  const ownerState = { isDraggable, ...rootProps };
   const classes = useUtilityClasses(ownerState);
 
   const publish = React.useCallback(
@@ -159,7 +151,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   return (
     <div ref={cellRef} className={classes.root} draggable={isDraggable} {...draggableEventHandlers}>
       <RowReorderIcon
-        as={rootProps.slots.rowReorderIcon}
+        as={slots.rowReorderIcon}
         ownerState={ownerState}
         className={classes.icon}
         fontSize="small"

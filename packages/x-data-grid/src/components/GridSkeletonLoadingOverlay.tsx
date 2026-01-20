@@ -37,7 +37,7 @@ const SkeletonOverlay = styled('div', {
   overflow: 'clip', // y axis is hidden while the x axis is allowed to overflow
 });
 
-type OwnerState = { classes: DataGridProcessedProps['classes'] };
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 type GridSkeletonLoadingOverlayInnerProps = React.HTMLAttributes<HTMLDivElement> & {
   skeletonRowsCount: number;
@@ -61,10 +61,14 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
   HTMLDivElement,
   GridSkeletonLoadingOverlayInnerProps
 >(function GridSkeletonLoadingOverlayInner(props, forwardedRef) {
-  const rootProps = useGridRootProps();
-  const { slots } = rootProps;
+  const {
+    classes: classesRootProps,
+    slots,
+    showCellVerticalBorder,
+    pinnedColumnsSectionSeparator,
+  } = useGridRootProps();
   const isRtl = useRtl();
-  const classes = useUtilityClasses({ classes: rootProps.classes });
+  const classes = useUtilityClasses({ classes: classesRootProps });
   const ref = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, forwardedRef);
   const apiRef = useGridApiContext();
@@ -133,15 +137,15 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           pinnedPosition,
           sectionIndex,
           sectionLength,
-          rootProps.showCellVerticalBorder,
+          showCellVerticalBorder,
           gridHasFiller,
-          rootProps.pinnedColumnsSectionSeparator,
+          pinnedColumnsSectionSeparator,
         );
         const showLeftBorder = shouldCellShowLeftBorder(
           pinnedPosition,
           sectionIndex,
-          rootProps.showCellVerticalBorder,
-          rootProps.pinnedColumnsSectionSeparator,
+          showCellVerticalBorder,
+          pinnedColumnsSectionSeparator,
         );
         const isLastColumn = colIndex === columns.length - 1;
         const isFirstPinnedRight = isPinnedRight && sectionIndex === 0;
@@ -210,8 +214,8 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     dimensions.viewportOuterSize.width,
     dimensions.rowHeight,
     positions,
-    rootProps.showCellVerticalBorder,
-    rootProps.pinnedColumnsSectionSeparator,
+    showCellVerticalBorder,
+    pinnedColumnsSectionSeparator,
     slots,
     visibleColumns,
     showFirstRowBorder,

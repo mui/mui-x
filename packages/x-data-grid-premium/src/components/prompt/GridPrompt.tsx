@@ -20,7 +20,7 @@ import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = Prompt & { onRerun: () => void };
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'> & {
   variant?: 'success' | 'error' | 'processing';
   showChanges: boolean;
 };
@@ -198,10 +198,11 @@ const PromptChangesToggleIcon = styled('svg', {
 
 function GridPrompt(props: GridPromptProps) {
   const { value, response, helperText, variant, onRerun } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
   const [showChanges, setShowChanges] = React.useState(false);
   const ownerState = {
-    classes: rootProps.classes,
+    ...rootProps,
     variant,
     showChanges,
   };
@@ -222,10 +223,10 @@ function GridPrompt(props: GridPromptProps) {
         description: apiRef.current.getLocaleText('promptChangeGroupDescription')(
           getColumnName(group.column),
         ),
-        icon: rootProps.slots.promptGroupIcon,
+        icon: slots.promptGroupIcon,
       }));
     },
-    [apiRef, getColumnName, rootProps.slots.promptGroupIcon],
+    [apiRef, getColumnName, slots.promptGroupIcon],
   );
 
   const getAggregationChanges = React.useCallback(
@@ -239,10 +240,10 @@ function GridPrompt(props: GridPromptProps) {
           getColumnName(column),
           aggregation[column],
         ),
-        icon: rootProps.slots.promptAggregationIcon,
+        icon: slots.promptAggregationIcon,
       }));
     },
-    [apiRef, getColumnName, rootProps.slots.promptAggregationIcon],
+    [apiRef, getColumnName, slots.promptAggregationIcon],
   );
 
   const getFilterChanges = React.useCallback(
@@ -292,11 +293,11 @@ function GridPrompt(props: GridPromptProps) {
             filterOperator,
             filterValue as string,
           ),
-          icon: rootProps.slots.promptFilterIcon,
+          icon: slots.promptFilterIcon,
         };
       });
     },
-    [apiRef, columns, getColumnName, rootProps.slots.promptFilterIcon],
+    [apiRef, columns, getColumnName, slots.promptFilterIcon],
   );
 
   const getSortingChanges = React.useCallback(
@@ -307,13 +308,10 @@ function GridPrompt(props: GridPromptProps) {
           getColumnName(sort.column),
           sort.direction,
         ),
-        icon:
-          sort.direction === 'asc'
-            ? rootProps.slots.promptSortAscIcon
-            : rootProps.slots.promptSortDescIcon,
+        icon: sort.direction === 'asc' ? slots.promptSortAscIcon : slots.promptSortDescIcon,
       }));
     },
-    [apiRef, getColumnName, rootProps.slots.promptSortAscIcon, rootProps.slots.promptSortDescIcon],
+    [apiRef, getColumnName, slots.promptSortAscIcon, slots.promptSortDescIcon],
   );
 
   const getPivotingChanges = React.useCallback(
@@ -325,7 +323,7 @@ function GridPrompt(props: GridPromptProps) {
       const changes = [
         {
           label: apiRef.current.getLocaleText('promptChangePivotEnableLabel'),
-          icon: rootProps.slots.promptPivotIcon,
+          icon: slots.promptPivotIcon,
           description: apiRef.current.getLocaleText('promptChangePivotEnableDescription'),
         },
       ];
@@ -335,7 +333,7 @@ function GridPrompt(props: GridPromptProps) {
           label: apiRef.current.getLocaleText('promptChangePivotColumnsLabel')(
             pivoting.columns.length,
           ),
-          icon: rootProps.slots.columnMenuManageColumnsIcon,
+          icon: slots.columnMenuManageColumnsIcon,
           description: pivoting.columns
             .map((column) =>
               apiRef.current.getLocaleText('promptChangePivotColumnsDescription')(
@@ -350,7 +348,7 @@ function GridPrompt(props: GridPromptProps) {
       if (pivoting.rows.length) {
         changes.push({
           label: apiRef.current.getLocaleText('promptChangePivotRowsLabel')(pivoting.rows.length),
-          icon: rootProps.slots.densityStandardIcon,
+          icon: slots.densityStandardIcon,
           description: pivoting.rows.map((column) => getColumnName(column)).join(`, `),
         });
       }
@@ -360,7 +358,7 @@ function GridPrompt(props: GridPromptProps) {
           label: apiRef.current.getLocaleText('promptChangePivotValuesLabel')(
             pivoting.values.length,
           ),
-          icon: rootProps.slots.promptAggregationIcon,
+          icon: slots.promptAggregationIcon,
           description: pivoting.values
             .map((aggregation) =>
               Object.keys(aggregation).map((column) =>
@@ -376,7 +374,7 @@ function GridPrompt(props: GridPromptProps) {
 
       return changes;
     },
-    [apiRef, getColumnName, rootProps.slots],
+    [apiRef, getColumnName, slots],
   );
 
   const getChartChanges = React.useCallback(
@@ -387,10 +385,10 @@ function GridPrompt(props: GridPromptProps) {
           chart.dimensions.length,
           chart.values.length,
         ),
-        icon: rootProps.slots.promptChartsIcon,
+        icon: slots.promptChartsIcon,
       };
     },
-    [apiRef, rootProps.slots.promptChartsIcon],
+    [apiRef, slots.promptChartsIcon],
   );
 
   const changeList = React.useMemo(() => {
@@ -435,21 +433,21 @@ function GridPrompt(props: GridPromptProps) {
   ]);
 
   return (
-    <PromptItem ownerState={ownerState} className={classes.root}>
-      <PromptIconContainer ownerState={ownerState} className={classes.iconContainer}>
+    <PromptItem className={classes.root} ownerState={ownerState}>
+      <PromptIconContainer className={classes.iconContainer} ownerState={ownerState}>
         {!response && variant !== 'error' ? (
-          <rootProps.slots.baseCircularProgress size={20} />
+          <slots.baseCircularProgress size={20} />
         ) : (
           <PromptIcon
-            as={rootProps.slots.promptIcon}
+            as={slots.promptIcon}
             ownerState={ownerState}
             className={classes.icon}
             fontSize="small"
           />
         )}
       </PromptIconContainer>
-      <PromptContent ownerState={ownerState} className={classes.content}>
-        <PromptText ownerState={ownerState} className={classes.text}>
+      <PromptContent className={classes.content} ownerState={ownerState}>
+        <PromptText className={classes.text} ownerState={ownerState}>
           {value}
         </PromptText>
         <PromptFeedback ownerState={ownerState} className={classes.feedback}>
@@ -458,15 +456,15 @@ function GridPrompt(props: GridPromptProps) {
         {changeList.length > 0 ? (
           <React.Fragment>
             <PromptChangesToggle
-              ownerState={ownerState}
               className={classes.changesToggle}
+              ownerState={ownerState}
               aria-expanded={showChanges}
               aria-controls={changesListId}
               onClick={() => setShowChanges(!showChanges)}
             >
               {apiRef.current.getLocaleText('promptAppliedChanges')}
               <PromptChangesToggleIcon
-                as={rootProps.slots.promptChangesToggleIcon}
+                as={slots.promptChangesToggleIcon}
                 ownerState={ownerState}
                 fontSize="small"
               />
@@ -474,31 +472,24 @@ function GridPrompt(props: GridPromptProps) {
             {showChanges && (
               <PromptChangeList
                 id={changesListId}
-                ownerState={ownerState}
                 className={classes.changeList}
+                ownerState={ownerState}
               >
                 {changeList.map((change) => (
-                  <rootProps.slots.baseTooltip key={change.label} title={change.description}>
-                    <rootProps.slots.baseChip
-                      label={change.label}
-                      icon={<change.icon />}
-                      size="small"
-                    />
-                  </rootProps.slots.baseTooltip>
+                  <slots.baseTooltip key={change.label} title={change.description}>
+                    <slots.baseChip label={change.label} icon={<change.icon />} size="small" />
+                  </slots.baseTooltip>
                 ))}
               </PromptChangeList>
             )}
           </React.Fragment>
         ) : null}
       </PromptContent>
-      <rootProps.slots.baseTooltip
-        title={apiRef.current.getLocaleText('promptRerun')}
-        enterDelay={500}
-      >
-        <rootProps.slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>
-          <rootProps.slots.promptRerunIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
-      </rootProps.slots.baseTooltip>
+      <slots.baseTooltip title={apiRef.current.getLocaleText('promptRerun')} enterDelay={500}>
+        <slots.baseIconButton size="small" className={classes.action} onClick={onRerun}>
+          <slots.promptRerunIcon fontSize="small" />
+        </slots.baseIconButton>
+      </slots.baseTooltip>
     </PromptItem>
   );
 }

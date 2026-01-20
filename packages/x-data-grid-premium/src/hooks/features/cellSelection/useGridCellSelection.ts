@@ -56,18 +56,19 @@ export const useGridCellSelection = (
     | 'cellSelection'
     | 'cellSelectionModel'
     | 'onCellSelectionModelChange'
-    | 'pagination'
-    | 'paginationMode'
     | 'ignoreValueFormatterDuringExport'
     | 'clipboardCopyCellDelimiter'
     | 'columnHeaderHeight'
+    | 'headerFilterHeight'
+    | 'listView'
+    | 'columnGroupHeaderHeight'
   >,
 ) => {
-  const hasRootReference = apiRef.current.rootElementRef.current !== null;
   const cellWithVirtualFocus = React.useRef<GridCellCoordinates>(null);
   const lastMouseDownCell = React.useRef<GridCellCoordinates>(null);
   const mousePosition = React.useRef<{ x: number; y: number }>(null);
   const autoScrollRAF = React.useRef<number>(null);
+  const mouseUpListenerDocument = React.useRef<Document | null>(null);
   const totalHeaderHeight = getTotalHeaderHeight(apiRef, props);
 
   const ignoreValueFormatterProp = props.ignoreValueFormatterDuringExport;
@@ -165,7 +166,7 @@ export const useGridCellSelection = (
     GridCellSelectionApi['getSelectedCellsAsArray']
   >(() => {
     const selectionModel = apiRef.current.getCellSelectionModel();
-    const currentVisibleRows = getVisibleRows(apiRef, props);
+    const currentVisibleRows = getVisibleRows(apiRef);
     const sortedEntries = currentVisibleRows.rows.reduce(
       (result, row) => {
         if (row.id in selectionModel) {
@@ -193,7 +194,7 @@ export const useGridCellSelection = (
       },
       [],
     );
-  }, [apiRef, props]);
+  }, [apiRef]);
 
   const cellSelectionApi: GridCellSelectionApi = {
     isCellSelected,
@@ -259,6 +260,7 @@ export const useGridCellSelection = (
       );
 
       const document = ownerDocument(apiRef.current.rootElementRef?.current);
+      mouseUpListenerDocument.current = document;
       document.addEventListener('mouseup', handleMouseUp, { once: true });
     },
     [apiRef, handleMouseUp, hasClickedValidCellForRangeSelection],
@@ -476,15 +478,14 @@ export const useGridCellSelection = (
   }, [apiRef, props.cellSelectionModel]);
 
   React.useEffect(() => {
-    const rootRef = apiRef.current.rootElementRef?.current;
-
     return () => {
       stopAutoScroll();
 
-      const document = ownerDocument(rootRef);
-      document.removeEventListener('mouseup', handleMouseUp);
+      if (mouseUpListenerDocument.current) {
+        mouseUpListenerDocument.current.removeEventListener('mouseup', handleMouseUp);
+      }
     };
-  }, [apiRef, hasRootReference, handleMouseUp, stopAutoScroll]);
+  }, [handleMouseUp, stopAutoScroll]);
 
   const checkIfCellIsSelected = React.useCallback<GridPipeProcessor<'isCellSelected'>>(
     (isSelected, { id, field }) => {

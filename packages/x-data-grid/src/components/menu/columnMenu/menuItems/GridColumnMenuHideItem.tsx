@@ -8,7 +8,7 @@ import { gridVisibleColumnDefinitionsSelector } from '../../../../hooks/features
 function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   const { colDef, onClick } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { disableColumnSelector, slots } = useGridRootProps();
 
   const visibleColumns = gridVisibleColumnDefinitionsSelector(apiRef);
   const columnsWithMenu = visibleColumns.filter((col) => col.disableColumnMenu !== true);
@@ -31,7 +31,7 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
     [apiRef, colDef.field, onClick, disabled],
   );
 
-  if (rootProps.disableColumnSelector) {
+  if (disableColumnSelector) {
     return null;
   }
 
@@ -40,13 +40,13 @@ function GridColumnMenuHideItem(props: GridColumnMenuItemProps) {
   }
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={toggleColumn}
       disabled={disabled}
-      iconStart={<rootProps.slots.columnMenuHideIcon fontSize="small" />}
+      iconStart={<slots.columnMenuHideIcon fontSize="small" />}
     >
       {apiRef.current.getLocaleText('columnMenuHideColumn')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }
 

@@ -13,7 +13,7 @@ type GridAiAssistantPanelConversationProps = {
   conversation: Conversation;
 };
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -45,7 +45,7 @@ const AiAssistantPanelConversationList = styled('ol', {
 
 function GridAiAssistantPanelConversation(props: GridAiAssistantPanelConversationProps) {
   const { conversation } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const ref = React.useRef<HTMLDivElement>(null);
   const apiRef = useGridApiContext();

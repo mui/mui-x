@@ -32,7 +32,7 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
   function ToolbarButton(props, ref) {
     const { render, onKeyDown, onFocus, disabled, 'aria-disabled': ariaDisabled, ...other } = props;
     const id = useId();
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const handleRef = useForkRef(buttonRef, ref);
     const {
@@ -76,8 +76,8 @@ const ToolbarButton = forwardRef<HTMLButtonElement, ToolbarButtonProps>(
       previousAriaDisabled.current = ariaDisabled;
     }, [ariaDisabled, id, onItemDisabled]);
 
-    const element = useComponentRenderer(rootProps.slots.baseIconButton, render, {
-      ...rootProps.slotProps?.baseIconButton,
+    const element = useComponentRenderer(slots.baseIconButton, render, {
+      ...slotProps?.baseIconButton,
       tabIndex: focusableItemId === id ? 0 : -1,
       ...other,
       disabled,

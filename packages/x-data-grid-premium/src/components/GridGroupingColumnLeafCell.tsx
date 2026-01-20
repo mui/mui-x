@@ -4,13 +4,13 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 function GridGroupingColumnLeafCell(props: GridRenderCellParams) {
   const { rowNode } = props;
-  const rootProps = useGridRootProps();
+  const { rowGroupingColumnMode } = useGridRootProps();
 
   return (
     <div
       style={{
         marginLeft:
-          rootProps.rowGroupingColumnMode === 'multiple'
+          rowGroupingColumnMode === 'multiple'
             ? vars.spacing(1)
             : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}

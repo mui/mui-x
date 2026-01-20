@@ -17,7 +17,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const { item, applyValue, type, apiRef, focusElementRef, slotProps, ...other } = props;
 
   const id = useId();
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
 
   const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
@@ -62,7 +62,7 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     return null;
   }
 
-  const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
+  const BaseAutocomplete = slots.baseAutocomplete as React.JSXElementConstructor<
     AutocompleteProps<ValueOptions, true, false, true>
   >;
 

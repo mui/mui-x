@@ -74,7 +74,7 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
       ...other
     } = props;
 
-    const rootProps = useGridRootProps();
+    const { disableColumnResize } = useGridRootProps();
     const headerCellRef = React.useRef<HTMLDivElement>(null);
 
     const handleRef = useForkRef(headerCellRef, ref);
@@ -121,7 +121,7 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
           {columnMenuIconButton}
         </div>
         <GridColumnHeaderSeparator
-          resizable={!rootProps.disableColumnResize && !!resizable}
+          resizable={!disableColumnResize && !!resizable}
           resizing={isResizing}
           height={height}
           side={separatorSide}

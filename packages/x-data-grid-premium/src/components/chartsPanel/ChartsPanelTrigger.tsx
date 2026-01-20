@@ -42,7 +42,7 @@ export type ChartsPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'classNa
 const ChartsPanelTrigger = forwardRef<HTMLButtonElement, ChartsPanelTriggerProps>(
   function ChartsPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
     const apiRef = useGridApiContext();
@@ -56,10 +56,10 @@ const ChartsPanelTrigger = forwardRef<HTMLButtonElement, ChartsPanelTriggerProps
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseButton,
+      slots.baseButton,
       render,
       {
-        ...rootProps.slotProps?.baseButton,
+        ...slotProps?.baseButton,
         id: buttonId,
         // TODO: Hook up the panel/trigger IDs to the charts configuration panel
         'aria-haspopup': 'true',

@@ -34,7 +34,7 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
     const buttonProps = slotProps.button || {};
     const tooltipProps = slotProps.tooltip || {};
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const { slots, slotProps: rootPropsSlotProps, disableDensitySelector } = useGridRootProps();
     const density = useGridSelector(apiRef, gridDensitySelector);
     const densityButtonId = useId();
     const densityMenuId = useId();
@@ -45,17 +45,17 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
 
     const densityOptions: GridDensityOption[] = [
       {
-        icon: <rootProps.slots.densityCompactIcon />,
+        icon: <slots.densityCompactIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityCompact'),
         value: 'compact',
       },
       {
-        icon: <rootProps.slots.densityStandardIcon />,
+        icon: <slots.densityStandardIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityStandard'),
         value: 'standard',
       },
       {
-        icon: <rootProps.slots.densityComfortableIcon />,
+        icon: <slots.densityComfortableIcon />,
         label: apiRef.current.getLocaleText('toolbarDensityComfortable'),
         value: 'comfortable',
       },
@@ -64,13 +64,13 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
     const startIcon = React.useMemo<React.ReactElement<any>>(() => {
       switch (density) {
         case 'compact':
-          return <rootProps.slots.densityCompactIcon />;
+          return <slots.densityCompactIcon />;
         case 'comfortable':
-          return <rootProps.slots.densityComfortableIcon />;
+          return <slots.densityComfortableIcon />;
         default:
-          return <rootProps.slots.densityStandardIcon />;
+          return <slots.densityStandardIcon />;
       }
-    }, [density, rootProps]);
+    }, [density, slots]);
 
     const handleDensitySelectorOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
       setOpen((prevOpen) => !prevOpen);
@@ -85,30 +85,30 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
     };
 
     // Disable the button if the corresponding is disabled
-    if (rootProps.disableDensitySelector) {
+    if (disableDensitySelector) {
       return null;
     }
 
     const densityElements = densityOptions.map<React.ReactElement<any>>((option, index) => (
-      <rootProps.slots.baseMenuItem
+      <slots.baseMenuItem
         key={index}
         onClick={() => handleDensityUpdate(option.value)}
         selected={option.value === density}
         iconStart={option.icon}
       >
         {option.label}
-      </rootProps.slots.baseMenuItem>
+      </slots.baseMenuItem>
     ));
 
     return (
       <React.Fragment>
-        <rootProps.slots.baseTooltip
+        <slots.baseTooltip
           title={apiRef.current.getLocaleText('toolbarDensityLabel')}
           enterDelay={1000}
-          {...rootProps.slotProps?.baseTooltip}
+          {...rootPropsSlotProps?.baseTooltip}
           {...tooltipProps}
         >
-          <rootProps.slots.baseButton
+          <slots.baseButton
             size="small"
             startIcon={startIcon}
             aria-label={apiRef.current.getLocaleText('toolbarDensityLabel')}
@@ -116,28 +116,28 @@ const GridToolbarDensitySelector = forwardRef<HTMLButtonElement, GridToolbarDens
             aria-expanded={open}
             aria-controls={open ? densityMenuId : undefined}
             id={densityButtonId}
-            {...rootProps.slotProps?.baseButton}
+            {...rootPropsSlotProps?.baseButton}
             {...buttonProps}
             onClick={handleDensitySelectorOpen}
             ref={handleRef}
           >
             {apiRef.current.getLocaleText('toolbarDensity')}
-          </rootProps.slots.baseButton>
-        </rootProps.slots.baseTooltip>
+          </slots.baseButton>
+        </slots.baseTooltip>
         <GridMenu
           open={open}
           target={buttonRef.current}
           onClose={handleDensitySelectorClose}
           position="bottom-end"
         >
-          <rootProps.slots.baseMenuList
+          <slots.baseMenuList
             id={densityMenuId}
             className={gridClasses.menuList}
             aria-labelledby={densityButtonId}
             autoFocusItem={open}
           >
             {densityElements}
-          </rootProps.slots.baseMenuList>
+          </slots.baseMenuList>
         </GridMenu>
       </React.Fragment>
     );

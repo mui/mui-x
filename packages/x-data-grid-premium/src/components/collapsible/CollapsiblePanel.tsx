@@ -11,7 +11,7 @@ import { useCollapsibleContext } from './CollapsibleContext';
 
 export type CollapsiblePanelProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -37,7 +37,7 @@ const CollapsiblePanelRoot = styled('div', {
 
 function CollapsiblePanel(props: CollapsiblePanelProps) {
   const { 'aria-label': ariaLabel, children, className, ...other } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const id = useId();
   const { open } = useCollapsibleContext();

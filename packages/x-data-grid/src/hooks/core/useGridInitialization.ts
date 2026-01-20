@@ -25,6 +25,4 @@ export const useGridInitialization = <PrivateApi extends GridPrivateApiCommon>(
   useGridPipeProcessing(privateApiRef);
   useGridStrategyProcessing(privateApiRef);
   useGridLocaleText(privateApiRef, props);
-
-  privateApiRef.current.register('private', { rootProps: props });
 };

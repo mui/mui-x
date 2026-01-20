@@ -15,7 +15,7 @@ import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';
 import { GridAiAssistantPanelConversationsMenu } from './GridAiAssistantPanelConversationsMenu';
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -122,7 +122,8 @@ const AiAssistantPanelFooter = styled('div', {
 });
 
 function GridAiAssistantPanel() {
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps, aiAssistantSuggestions } = rootProps;
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
   const activeConversation = useGridSelector(apiRef, gridAiAssistantActiveConversationSelector);
@@ -161,42 +162,42 @@ function GridAiAssistantPanel() {
             {conversationTitle}
           </AiAssistantPanelConversationTitle>
         </AiAssistantPanelTitleContainer>
-        <rootProps.slots.baseTooltip
+        <slots.baseTooltip
           title={apiRef.current.getLocaleText('aiAssistantPanelNewConversation')}
           enterDelay={500}
         >
           <span>
-            <rootProps.slots.baseIconButton
-              {...rootProps.slotProps?.baseIconButton}
+            <slots.baseIconButton
+              {...slotProps?.baseIconButton}
               disabled={!conversations.length || !activeConversation?.prompts.length}
               onClick={createConversation}
             >
-              <rootProps.slots.aiAssistantPanelNewConversationIcon fontSize="small" />
-            </rootProps.slots.baseIconButton>
+              <slots.aiAssistantPanelNewConversationIcon fontSize="small" />
+            </slots.baseIconButton>
           </span>
-        </rootProps.slots.baseTooltip>
+        </slots.baseTooltip>
         <GridAiAssistantPanelConversationsMenu />
-        <rootProps.slots.baseIconButton
-          {...rootProps.slotProps?.baseIconButton}
+        <slots.baseIconButton
+          {...slotProps?.baseIconButton}
           aria-label={apiRef.current.getLocaleText('aiAssistantPanelClose')}
           onClick={apiRef.current.hidePreferences}
         >
-          <rootProps.slots.aiAssistantPanelCloseIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
+          <slots.aiAssistantPanelCloseIcon fontSize="small" />
+        </slots.baseIconButton>
       </AiAssistantPanelHeader>
       <AiAssistantPanelBody className={classes.body} ownerState={rootProps}>
         {activeConversation && activeConversation.prompts.length > 0 ? (
           <GridAiAssistantPanelConversation conversation={activeConversation} />
         ) : (
-          <AiAssistantPanelEmptyText ownerState={rootProps} className={classes.emptyText}>
+          <AiAssistantPanelEmptyText className={classes.emptyText} ownerState={rootProps}>
             {apiRef.current.getLocaleText('aiAssistantPanelEmptyConversation')}
           </AiAssistantPanelEmptyText>
         )}
       </AiAssistantPanelBody>
       <AiAssistantPanelFooter className={classes.footer} ownerState={rootProps}>
         <GridPromptField onSubmit={apiRef.current.aiAssistant.processPrompt} />
-        {rootProps.aiAssistantSuggestions && rootProps.aiAssistantSuggestions.length > 0 && (
-          <GridAiAssistantPanelSuggestions suggestions={rootProps.aiAssistantSuggestions} />
+        {aiAssistantSuggestions && aiAssistantSuggestions.length > 0 && (
+          <GridAiAssistantPanelSuggestions suggestions={aiAssistantSuggestions} />
         )}
       </AiAssistantPanelFooter>
     </AiAssistantPanelRoot>

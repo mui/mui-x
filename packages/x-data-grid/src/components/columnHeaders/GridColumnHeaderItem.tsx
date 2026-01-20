@@ -120,7 +120,17 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     pinnedOffset,
   } = props;
   const apiRef = useGridPrivateApiContext();
-  const rootProps = useGridRootProps();
+  const {
+    disableColumnReorder,
+    classes: classesRootProps,
+    disableColumnMenu,
+    slots,
+    slotProps,
+    sortingOrder: rootPropsSortingOrder,
+    disableColumnSorting,
+    disableColumnFilter,
+    disableColumnResize,
+  } = useGridRootProps();
   const isRtl = useRtl();
   const headerCellRef = React.useRef<HTMLDivElement>(null);
   const columnMenuId = useId();
@@ -128,7 +138,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
   const iconButtonRef = React.useRef<HTMLButtonElement>(null);
   const [showColumnMenuIcon, setShowColumnMenuIcon] = React.useState(columnMenuOpen);
 
-  const isDraggable = !rootProps.disableColumnReorder && !disableReorder && !colDef.disableReorder;
+  const isDraggable = !disableColumnReorder && !disableReorder && !colDef.disableReorder;
 
   let headerComponent: React.ReactNode;
   if (colDef.renderHeader) {
@@ -137,7 +147,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
 
   const ownerState = {
     ...props,
-    classes: rootProps.classes,
+    classes: classesRootProps,
     showRightBorder,
     showLeftBorder,
   };
@@ -207,7 +217,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
     setShowColumnMenuIcon(false);
   }, []);
 
-  const columnMenuIconButton = !rootProps.disableColumnMenu && !colDef.disableColumnMenu && (
+  const columnMenuIconButton = !disableColumnMenu && !colDef.disableColumnMenu && (
     <ColumnHeaderMenuIcon
       colDef={colDef}
       columnMenuId={columnMenuId!}
@@ -224,36 +234,34 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       field={colDef.field}
       open={columnMenuOpen}
       target={iconButtonRef.current}
-      ContentComponent={rootProps.slots.columnMenu}
-      contentComponentProps={rootProps.slotProps?.columnMenu}
+      ContentComponent={slots.columnMenu}
+      contentComponentProps={slotProps?.columnMenu}
       onExited={handleExited}
     />
   );
 
-  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootProps.sortingOrder;
+  const sortingOrder: readonly GridSortDirection[] = colDef.sortingOrder ?? rootPropsSortingOrder;
   const showSortIcon =
-    (colDef.sortable || sortDirection != null) &&
-    !colDef.hideSortIcons &&
-    !rootProps.disableColumnSorting;
+    (colDef.sortable || sortDirection != null) && !colDef.hideSortIcons && !disableColumnSorting;
 
   const columnTitleIconButtons = (
     <React.Fragment>
-      {!rootProps.disableColumnFilter && (
-        <rootProps.slots.columnHeaderFilterIconButton
+      {!disableColumnFilter && (
+        <slots.columnHeaderFilterIconButton
           field={colDef.field}
           counter={filterItemsCounter}
-          {...rootProps.slotProps?.columnHeaderFilterIconButton}
+          {...slotProps?.columnHeaderFilterIconButton}
         />
       )}
 
       {showSortIcon && (
-        <rootProps.slots.columnHeaderSortIcon
+        <slots.columnHeaderSortIcon
           field={colDef.field}
           direction={sortDirection}
           index={sortIndex}
           sortingOrder={sortingOrder}
           disabled={!colDef.sortable}
-          {...rootProps.slotProps?.columnHeaderSortIcon}
+          {...slotProps?.columnHeaderSortIcon}
         />
       )}
     </React.Fragment>
@@ -310,7 +318,7 @@ function GridColumnHeaderItem(props: GridColumnHeaderItemProps) {
       columnTitleIconButtons={columnTitleIconButtons}
       headerClassName={clsx(headerClassName, isLast && gridClasses['columnHeader--last'])}
       label={label}
-      resizable={!rootProps.disableColumnResize && !!colDef.resizable}
+      resizable={!disableColumnResize && !!colDef.resizable}
       data-field={colDef.field}
       columnMenu={columnMenu}
       draggableContainerProps={draggableEventHandlers}

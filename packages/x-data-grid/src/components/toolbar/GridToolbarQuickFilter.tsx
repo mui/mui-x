@@ -46,7 +46,7 @@ export type GridToolbarQuickFilterProps = {
   };
 };
 
-type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {
+type OwnerState = Omit<DataGridProcessedProps, 'rows'> & {
   expanded: boolean;
 };
 
@@ -106,9 +106,10 @@ const GridQuickFilterTextField = styled(
  */
 function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps } = rootProps;
   const ownerState = {
-    classes: rootProps.classes,
+    ...rootProps,
     expanded: false,
   };
   const classes = useUtilityClasses(ownerState);
@@ -130,7 +131,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
           <GridQuickFilterRoot {...quickFilterProps} className={clsx(classes.root, className)}>
             <QuickFilterTrigger
               render={(triggerProps) => (
-                <rootProps.slots.baseTooltip
+                <slots.baseTooltip
                   title={apiRef.current.getLocaleText('toolbarQuickFilterLabel')}
                   enterDelay={0} // Prevents tooltip lagging behind transitioning trigger element
                 >
@@ -141,15 +142,15 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                     color="default"
                     aria-disabled={state.expanded}
                   >
-                    <rootProps.slots.quickFilterIcon fontSize="small" />
+                    <slots.quickFilterIcon fontSize="small" />
                   </GridQuickFilterTrigger>
-                </rootProps.slots.baseTooltip>
+                </slots.baseTooltip>
               )}
             />
             <QuickFilterControl
               render={({ ref, slotProps: controlSlotProps, ...controlProps }) => (
                 <GridQuickFilterTextField
-                  as={rootProps.slots.baseTextField}
+                  as={slots.baseTextField}
                   className={classes.control}
                   ownerState={currentOwnerState}
                   inputRef={ref}
@@ -158,19 +159,19 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                   size="small"
                   slotProps={{
                     input: {
-                      startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
+                      startAdornment: <slots.quickFilterIcon fontSize="small" />,
                       endAdornment: controlProps.value ? (
                         <QuickFilterClear
                           render={
-                            <rootProps.slots.baseIconButton
+                            <slots.baseIconButton
                               size="small"
                               edge="end"
                               aria-label={apiRef.current.getLocaleText(
                                 'toolbarQuickFilterDeleteIconLabel',
                               )}
                             >
-                              <rootProps.slots.quickFilterClearIcon fontSize="small" />
-                            </rootProps.slots.baseIconButton>
+                              <slots.quickFilterClearIcon fontSize="small" />
+                            </slots.baseIconButton>
                           }
                         />
                       ) : null,
@@ -178,7 +179,7 @@ function GridToolbarQuickFilter(props: GridToolbarQuickFilterProps) {
                     },
                     ...controlSlotProps,
                   }}
-                  {...rootProps.slotProps?.baseTextField}
+                  {...rootPropsSlotProps?.baseTextField}
                   {...controlProps}
                   {...slotProps?.root}
                   {...other}

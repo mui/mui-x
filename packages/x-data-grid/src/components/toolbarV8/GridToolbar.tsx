@@ -26,7 +26,7 @@ interface GridToolbarInternalProps {
 
 export type GridToolbarProps = GridSlotProps['toolbar'] & GridToolbarInternalProps;
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Pick<DataGridProcessedProps, 'classes'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -62,15 +62,10 @@ const Label = styled('span', {
 
 function GridToolbarDivider(props: GridSlotProps['baseDivider']) {
   const { className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: rootPropsClasses, slots } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   return (
-    <Divider
-      as={rootProps.slots.baseDivider}
-      orientation="vertical"
-      className={classes.divider}
-      {...other}
-    />
+    <Divider as={slots.baseDivider} orientation="vertical" className={classes.divider} {...other} />
   );
 }
 
@@ -85,8 +80,8 @@ GridToolbarDivider.propTypes = {
 
 function GridToolbarLabel(props: React.HTMLAttributes<HTMLSpanElement>) {
   const { className, ...other } = props;
-  const rootProps = useGridRootProps();
-  const classes = useUtilityClasses(rootProps);
+  const { classes: rootPropsClasses } = useGridRootProps();
+  const classes = useUtilityClasses({ classes: rootPropsClasses });
   return <Label className={classes.label} {...other} />;
 }
 
@@ -101,7 +96,8 @@ function GridToolbar(props: GridToolbarProps) {
     ...other
   } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { label, disableColumnSelector, disableColumnFilter, slots, slotProps } =
+    useGridRootProps();
   const [exportMenuOpen, setExportMenuOpen] = React.useState(false);
   const exportMenuTriggerRef = React.useRef<HTMLButtonElement>(null);
   const exportMenuId = useId();
@@ -114,46 +110,40 @@ function GridToolbar(props: GridToolbarProps) {
 
   return (
     <Toolbar {...other}>
-      {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
+      {label && <GridToolbarLabel>{label}</GridToolbarLabel>}
 
-      {!rootProps.disableColumnSelector && (
-        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
+      {!disableColumnSelector && (
+        <slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
           <ColumnsPanelTrigger render={<ToolbarButton />}>
-            <rootProps.slots.columnSelectorIcon fontSize="small" />
+            <slots.columnSelectorIcon fontSize="small" />
           </ColumnsPanelTrigger>
-        </rootProps.slots.baseTooltip>
+        </slots.baseTooltip>
       )}
 
-      {!rootProps.disableColumnFilter && (
-        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
+      {!disableColumnFilter && (
+        <slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
           <FilterPanelTrigger
             render={(triggerProps, state) => (
               <ToolbarButton
                 {...triggerProps}
                 color={state.filterCount > 0 ? 'primary' : 'default'}
               >
-                <rootProps.slots.baseBadge
-                  badgeContent={state.filterCount}
-                  color="primary"
-                  variant="dot"
-                >
-                  <rootProps.slots.openFilterButtonIcon fontSize="small" />
-                </rootProps.slots.baseBadge>
+                <slots.baseBadge badgeContent={state.filterCount} color="primary" variant="dot">
+                  <slots.openFilterButtonIcon fontSize="small" />
+                </slots.baseBadge>
               </ToolbarButton>
             )}
           />
-        </rootProps.slots.baseTooltip>
+        </slots.baseTooltip>
       )}
 
       {additionalItems}
 
-      {showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
-        <GridToolbarDivider />
-      )}
+      {showExportMenu && (!disableColumnFilter || !disableColumnSelector) && <GridToolbarDivider />}
 
       {showExportMenu && (
         <React.Fragment>
-          <rootProps.slots.baseTooltip
+          <slots.baseTooltip
             title={apiRef.current.getLocaleText('toolbarExport')}
             disableInteractive={exportMenuOpen}
           >
@@ -165,9 +155,9 @@ function GridToolbar(props: GridToolbarProps) {
               aria-expanded={exportMenuOpen ? 'true' : undefined}
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
             >
-              <rootProps.slots.exportIcon fontSize="small" />
+              <slots.exportIcon fontSize="small" />
             </ToolbarButton>
-          </rootProps.slots.baseTooltip>
+          </slots.baseTooltip>
 
           <GridMenu
             target={exportMenuTriggerRef.current}
@@ -175,15 +165,15 @@ function GridToolbar(props: GridToolbarProps) {
             onClose={closeExportMenu}
             position="bottom-end"
           >
-            <rootProps.slots.baseMenuList
+            <slots.baseMenuList
               id={exportMenuId}
               aria-labelledby={exportMenuTriggerId}
               autoFocusItem
-              {...rootProps.slotProps?.baseMenuList}
+              {...slotProps?.baseMenuList}
             >
               {!printOptions?.disableToolbarButton && (
                 <ExportPrint
-                  render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
+                  render={<slots.baseMenuItem {...slotProps?.baseMenuItem} />}
                   options={printOptions}
                   onClick={closeExportMenu}
                 >
@@ -192,7 +182,7 @@ function GridToolbar(props: GridToolbarProps) {
               )}
               {!csvOptions?.disableToolbarButton && (
                 <ExportCsv
-                  render={<rootProps.slots.baseMenuItem {...rootProps.slotProps?.baseMenuItem} />}
+                  render={<slots.baseMenuItem {...slotProps?.baseMenuItem} />}
                   options={csvOptions}
                   onClick={closeExportMenu}
                 >
@@ -200,7 +190,7 @@ function GridToolbar(props: GridToolbarProps) {
                 </ExportCsv>
               )}
               {additionalExportMenuItems?.(closeExportMenu)}
-            </rootProps.slots.baseMenuList>
+            </slots.baseMenuList>
           </GridMenu>
         </React.Fragment>
       )}

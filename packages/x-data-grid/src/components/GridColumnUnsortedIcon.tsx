@@ -11,13 +11,13 @@ export const GridColumnUnsortedIcon = React.memo(function GridColumnHeaderSortIc
   props: GridColumnUnsortedIconProps,
 ) {
   const { sortingOrder, ...other } = props;
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
   const [nextSortDirection] = sortingOrder;
 
   const Icon =
     nextSortDirection === 'asc'
-      ? rootProps.slots.columnSortedAscendingIcon
-      : rootProps.slots.columnSortedDescendingIcon;
+      ? slots.columnSortedAscendingIcon
+      : slots.columnSortedDescendingIcon;
 
   return Icon ? <Icon {...other} /> : null;
 });

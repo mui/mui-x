@@ -29,7 +29,7 @@ export type GridActionsCellItemProps = GridActionsCellItemCommonProps &
   );
 
 const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((props, ref) => {
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
 
   if (!props.showInMenu) {
     const { label, icon, showInMenu, onClick, ...other } = props;
@@ -39,17 +39,17 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
     };
 
     return (
-      <rootProps.slots.baseIconButton
+      <slots.baseIconButton
         size="small"
         role="menuitem"
         aria-label={label}
         {...other}
         onClick={handleClick}
-        {...rootProps.slotProps?.baseIconButton}
+        {...slotProps?.baseIconButton}
         ref={ref as React.RefObject<HTMLButtonElement>}
       >
         {React.cloneElement(icon!, { fontSize: 'small' })}
-      </rootProps.slots.baseIconButton>
+      </slots.baseIconButton>
     );
   }
 
@@ -63,14 +63,9 @@ const GridActionsCellItem = forwardRef<HTMLElement, GridActionsCellItemProps>((p
   };
 
   return (
-    <rootProps.slots.baseMenuItem
-      ref={ref}
-      {...(other as any)}
-      onClick={handleClick}
-      iconStart={icon}
-    >
+    <slots.baseMenuItem ref={ref} {...(other as any)} onClick={handleClick} iconStart={icon}>
       {label}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 });
 

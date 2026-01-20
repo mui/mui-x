@@ -36,7 +36,7 @@ function isKeyboardEvent(event: React.SyntheticEvent): event is React.KeyboardEv
 }
 
 function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
-  const rootProps = useGridRootProps();
+  const { slots, slotProps: rootPropsSlotProps, editMode } = useGridRootProps();
   const {
     id,
     value: valueProp,
@@ -55,7 +55,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
     isProcessingProps,
     error,
     onValueChange,
-    initialOpen = rootProps.editMode === GridEditModes.Cell,
+    initialOpen = editMode === GridEditModes.Cell,
     slotProps,
     ...other
   } = props;
@@ -65,7 +65,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [open, setOpen] = React.useState(initialOpen);
 
-  const baseSelectProps = rootProps.slotProps?.baseSelect || {};
+  const baseSelectProps = rootPropsSlotProps?.baseSelect || {};
   const isSelectNative = baseSelectProps.native ?? false;
 
   useEnhancedEffect(() => {
@@ -108,7 +108,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   };
 
   const handleClose = (event: React.KeyboardEvent, reason: string) => {
-    if (rootProps.editMode === GridEditModes.Row) {
+    if (editMode === GridEditModes.Row) {
       setOpen(false);
       return;
     }
@@ -136,7 +136,7 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
   }
 
   return (
-    <rootProps.slots.baseSelect
+    <slots.baseSelect
       ref={ref}
       value={valueProp}
       onChange={handleChange}
@@ -153,23 +153,23 @@ function GridEditSingleSelectCell(props: GridEditSingleSelectCellProps) {
       }}
       {...other}
       {...slotProps?.root}
-      {...rootProps.slotProps?.baseSelect}
+      {...rootPropsSlotProps?.baseSelect}
     >
       {valueOptions.map((valueOption) => {
         const value = getOptionValue(valueOption);
 
         return (
-          <rootProps.slots.baseSelectOption
-            {...(rootProps.slotProps?.baseSelectOption || {})}
+          <slots.baseSelectOption
+            {...(rootPropsSlotProps?.baseSelectOption || {})}
             native={isSelectNative}
             key={value}
             value={value}
           >
             {getOptionLabel(valueOption)}
-          </rootProps.slots.baseSelectOption>
+          </slots.baseSelectOption>
         );
       })}
-    </rootProps.slots.baseSelect>
+    </slots.baseSelect>
   );
 }
 

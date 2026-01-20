@@ -13,7 +13,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -55,7 +55,8 @@ export interface GridEditInputCellProps extends GridRenderEditCellParams {
 }
 
 const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((props, ref) => {
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
 
   const {
     id,
@@ -123,7 +124,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
 
   return (
     <GridEditInputCellRoot
-      as={rootProps.slots.baseInput}
+      as={slots.baseInput}
       inputRef={inputRef}
       className={classes.root}
       ownerState={rootProps}
@@ -132,7 +133,7 @@ const GridEditInputCell = forwardRef<HTMLInputElement, GridEditInputCellProps>((
       value={valueState ?? ''}
       onChange={handleChange}
       endAdornment={
-        isProcessingProps ? <rootProps.slots.loadIcon fontSize="small" color="action" /> : undefined
+        isProcessingProps ? <slots.loadIcon fontSize="small" color="action" /> : undefined
       }
       {...other}
       {...slotProps?.root}

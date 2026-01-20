@@ -75,7 +75,7 @@ export interface GridColumnsManagementProps {
   getTogglableColumns?: (columns: GridColDef[]) => GridColDef['field'][];
 }
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -101,7 +101,8 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     gridInitialColumnVisibilityModelSelector,
   );
   const columnVisibilityModel = useGridSelector(apiRef, gridColumnVisibilityModelSelector);
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { columnFilterDebounceMs: rootPropsColumnFilterDebounceMs, slots, slotProps } = rootProps;
   const [searchValue, setSearchValue] = React.useState('');
   const classes = useUtilityClasses(rootProps);
   const columnDefinitions = useGridSelector(apiRef, gridColumnDefinitionsSelector);
@@ -121,7 +122,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     toggleAllMode = 'all',
     getTogglableColumns,
     searchInputProps,
-    searchDebounceMs = rootProps.columnFilterDebounceMs,
+    searchDebounceMs = rootPropsColumnFilterDebounceMs,
   } = props;
 
   const debouncedFilter = React.useMemo(
@@ -254,7 +255,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
     <React.Fragment>
       <GridColumnsManagementHeader className={classes.header} ownerState={rootProps}>
         <SearchInput
-          as={rootProps.slots.baseTextField}
+          as={slots.baseTextField}
           ownerState={rootProps}
           placeholder={apiRef.current.getLocaleText('columnsManagementSearchTitle')}
           inputRef={searchInputRef}
@@ -264,9 +265,9 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           type="search"
           slotProps={{
             input: {
-              startAdornment: <rootProps.slots.quickFilterIcon fontSize="small" />,
+              startAdornment: <slots.quickFilterIcon fontSize="small" />,
               endAdornment: (
-                <rootProps.slots.baseIconButton
+                <slots.baseIconButton
                   size="small"
                   aria-label={apiRef.current.getLocaleText('columnsManagementDeleteIconLabel')}
                   style={
@@ -281,10 +282,10 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
                   tabIndex={-1}
                   onClick={handleSearchReset}
                   edge="end"
-                  {...rootProps.slotProps?.baseIconButton}
+                  {...slotProps?.baseIconButton}
                 >
-                  <rootProps.slots.quickFilterClearIcon fontSize="small" />
-                </rootProps.slots.baseIconButton>
+                  <slots.quickFilterClearIcon fontSize="small" />
+                </slots.baseIconButton>
               ),
             },
             htmlInput: {
@@ -293,7 +294,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
           }}
           autoComplete="off"
           fullWidth
-          {...rootProps.slotProps?.baseTextField}
+          {...slotProps?.baseTextField}
           {...searchInputProps}
         />
       </GridColumnsManagementHeader>
@@ -301,7 +302,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
         <GridColumnsManagementBody className={classes.root} ownerState={rootProps}>
           {currentColumns.map((column) => (
             <GridColumnsManagementRow
-              as={rootProps.slots.baseCheckbox}
+              as={slots.baseCheckbox}
               key={column.field}
               className={classes.row}
               disabled={column.hideable === false || pivotActive}
@@ -312,7 +313,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               label={column.headerName || column.field}
               density="compact"
               fullWidth
-              {...rootProps.slotProps?.baseCheckbox}
+              {...slotProps?.baseCheckbox}
             />
           ))}
           {currentColumns.length === 0 && (
@@ -325,7 +326,7 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
       {!disableShowHideToggle || !disableResetButton ? (
         <GridColumnsManagementFooter ownerState={rootProps} className={classes.footer}>
           {!disableShowHideToggle ? (
-            <rootProps.slots.baseCheckbox
+            <slots.baseCheckbox
               disabled={hideableColumns.length === 0 || pivotActive}
               checked={allHideableColumnsVisible}
               indeterminate={!allHideableColumnsVisible && !allHideableColumnsHidden}
@@ -333,20 +334,20 @@ function GridColumnsManagement(props: GridColumnsManagementProps) {
               name={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               label={apiRef.current.getLocaleText('columnsManagementShowHideAllText')}
               density="compact"
-              {...rootProps.slotProps?.baseCheckbox}
+              {...slotProps?.baseCheckbox}
             />
           ) : (
             <span />
           )}
 
           {!disableResetButton ? (
-            <rootProps.slots.baseButton
+            <slots.baseButton
               onClick={() => apiRef.current.setColumnVisibilityModel(initialColumnVisibilityModel)}
               disabled={isResetDisabled || pivotActive}
-              {...rootProps.slotProps?.baseButton}
+              {...slotProps?.baseButton}
             >
               {apiRef.current.getLocaleText('columnsManagementReset')}
-            </rootProps.slots.baseButton>
+            </slots.baseButton>
           ) : null}
         </GridColumnsManagementFooter>
       ) : null}

@@ -11,7 +11,7 @@ import { gridSidebarContentSelector } from '../../hooks/features/sidebar';
 
 export type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -38,7 +38,7 @@ const SidebarRoot = styled(ResizablePanel, {
 function Sidebar(props: SidebarProps) {
   const { className, children, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { value, sidebarId, labelId } = useGridSelector(apiRef, gridSidebarContentSelector);
 

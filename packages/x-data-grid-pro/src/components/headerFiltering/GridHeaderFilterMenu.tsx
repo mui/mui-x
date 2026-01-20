@@ -37,7 +37,7 @@ function GridHeaderFilterMenu({
   clearFilterItem,
 }: GridHeaderFilterMenuProps) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { slots } = useGridRootProps();
 
   const hideMenu = React.useCallback(() => {
     apiRef.current.hideHeaderFilterMenu();
@@ -49,19 +49,19 @@ function GridHeaderFilterMenu({
 
   return (
     <GridMenu position="bottom-end" open={open} target={target} onClose={hideMenu}>
-      <rootProps.slots.baseMenuList aria-labelledby={labelledBy} id={id}>
+      <slots.baseMenuList aria-labelledby={labelledBy} id={id}>
         {showClearItem && [
-          <rootProps.slots.baseMenuItem
+          <slots.baseMenuItem
             key="filter-menu-clear-filter"
-            iconStart={<rootProps.slots.columnMenuClearIcon fontSize="small" />}
+            iconStart={<slots.columnMenuClearIcon fontSize="small" />}
             onClick={() => {
               clearFilterItem();
               hideMenu();
             }}
           >
             {apiRef.current.getLocaleText('headerFilterClear')}
-          </rootProps.slots.baseMenuItem>,
-          <rootProps.slots.baseDivider key="filter-menu-divider" />,
+          </slots.baseMenuItem>,
+          <slots.baseDivider key="filter-menu-divider" />,
         ]}
         {operators.map((op) => {
           const selected = op.value === item.operator;
@@ -72,11 +72,9 @@ function GridHeaderFilterMenu({
             );
 
           return (
-            <rootProps.slots.baseMenuItem
+            <slots.baseMenuItem
               key={`${field}-${op.value}`}
-              iconStart={
-                selected ? <rootProps.slots.menuItemCheckIcon fontSize="small" /> : <span />
-              }
+              iconStart={selected ? <slots.menuItemCheckIcon fontSize="small" /> : <span />}
               onClick={() => {
                 applyFilterChanges({ ...item, operator: op.value });
                 hideMenu();
@@ -84,10 +82,10 @@ function GridHeaderFilterMenu({
               autoFocus={selected ? open : false}
             >
               {label}
-            </rootProps.slots.baseMenuItem>
+            </slots.baseMenuItem>
           );
         })}
-      </rootProps.slots.baseMenuList>
+      </slots.baseMenuList>
     </GridMenu>
   );
 }

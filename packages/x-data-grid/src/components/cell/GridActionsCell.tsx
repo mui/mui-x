@@ -61,7 +61,7 @@ function GridActionsCell(props: GridActionsCellProps) {
   const isRtl = useRtl();
   const menuId = useId();
   const buttonId = useId();
-  const rootProps = useGridRootProps();
+  const { slots, slotProps } = useGridRootProps();
 
   const actions: React.ReactElement<GridActionsCellItemProps>[] = [];
   React.Children.forEach(children, (child) => {
@@ -224,7 +224,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
       )}
 
       {menuButtons.length > 0 && buttonId && (
-        <rootProps.slots.baseIconButton
+        <slots.baseIconButton
           ref={buttonRef}
           id={buttonId}
           aria-label={apiRef.current.getLocaleText('actionsCellMore')}
@@ -236,15 +236,15 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
           onClick={toggleMenu}
           touchRippleRef={handleTouchRippleRef(buttonId)}
           tabIndex={focusedButtonIndex === iconButtons.length ? tabIndex : -1}
-          {...rootProps.slotProps?.baseIconButton}
+          {...slotProps?.baseIconButton}
         >
-          <rootProps.slots.moreActionsIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
+          <slots.moreActionsIcon fontSize="small" />
+        </slots.baseIconButton>
       )}
 
       {menuButtons.length > 0 && (
         <GridMenu open={open} target={buttonRef.current} position={position} onClose={hideMenu}>
-          <rootProps.slots.baseMenuList
+          <slots.baseMenuList
             id={menuId}
             className={gridClasses.menuList}
             aria-labelledby={buttonId}
@@ -253,7 +253,7 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
             {menuButtons.map((button, index) =>
               React.cloneElement(button, { key: index, closeMenu: hideMenu }),
             )}
-          </rootProps.slots.baseMenuList>
+          </slots.baseMenuList>
         </GridMenu>
       )}
     </div>

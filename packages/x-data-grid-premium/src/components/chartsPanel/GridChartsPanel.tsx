@@ -16,6 +16,8 @@ import { gridChartsIntegrationActiveChartIdSelector } from '../../hooks/features
 import { useGridChartsIntegrationContext } from '../../hooks/utils/useGridChartIntegration';
 import { GridChartsPanelData } from './data/GridChartsPanelData';
 
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
+
 export interface GridChartsPanelProps {
   /**
    * The schema of the charts configuration.
@@ -30,8 +32,6 @@ export interface GridChartsPanelProps {
    */
   getColumnName?: (field: string) => string | undefined;
 }
-
-type OwnerState = DataGridPremiumProcessedProps;
 
 const GridChartsPanelHeader = styled('div', {
   name: 'MuiDataGrid',
@@ -80,7 +80,8 @@ function GridChartsPanelChartSelector(props: {
   chartEntries: [string, ChartState][];
 }) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const { activeChartId, chartEntries } = props;
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -100,7 +101,7 @@ function GridChartsPanelChartSelector(props: {
         ref={triggerRef}
       >
         {activeChart?.[1]?.label}
-        <rootProps.slots.promptChangesToggleIcon fontSize="small" />
+        <slots.promptChangesToggleIcon fontSize="small" />
       </GridChartsPanelChartSelection>
       <GridMenu
         open={open}
@@ -108,14 +109,14 @@ function GridChartsPanelChartSelector(props: {
         onClose={() => setOpen(false)}
         position="bottom-start"
       >
-        <rootProps.slots.baseMenuList
+        <slots.baseMenuList
           id={menuId}
           aria-labelledby={triggerId}
           autoFocusItem
-          {...rootProps.slotProps?.baseMenuList}
+          {...slotProps?.baseMenuList}
         >
           {chartEntries.map(([chartId, chartState]) => (
-            <rootProps.slots.baseMenuItem
+            <slots.baseMenuItem
               key={chartId}
               value={chartId}
               onClick={() => {
@@ -123,12 +124,12 @@ function GridChartsPanelChartSelector(props: {
                 setOpen(false);
               }}
               selected={chartId === activeChartId}
-              {...rootProps.slotProps?.baseMenuItem}
+              {...slotProps?.baseMenuItem}
             >
               {chartState.label || chartId}
-            </rootProps.slots.baseMenuItem>
+            </slots.baseMenuItem>
           ))}
-        </rootProps.slots.baseMenuList>
+        </slots.baseMenuList>
       </GridMenu>
     </React.Fragment>
   );
@@ -176,7 +177,8 @@ GridChartsPanelChartSelector.propTypes = {
 
 function GridChartsPanel(props: GridChartsPanelProps) {
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const { schema = {} } = props;
   const activeChartId = useGridSelector(apiRef, gridChartsIntegrationActiveChartIdSelector);
   const { chartStateLookup } = useGridChartsIntegrationContext();
@@ -253,41 +255,41 @@ function GridChartsPanel(props: GridChartsPanelProps) {
           <GridChartsPanelTitle ownerState={rootProps}>Charts</GridChartsPanelTitle>
         )}
         {chartEntries.length > 0 && (
-          <rootProps.slots.baseTooltip title={rootProps.localeText.chartsSyncButtonLabel}>
-            <rootProps.slots.baseToggleButton
+          <slots.baseTooltip title={apiRef.current.getLocaleText('chartsSyncButtonLabel')}>
+            <slots.baseToggleButton
               value="sync"
-              aria-label={rootProps.localeText.chartsSyncButtonLabel}
+              aria-label={apiRef.current.getLocaleText('chartsSyncButtonLabel')}
               selected={chartStateLookup[activeChartId]?.synced}
               onClick={() => {
                 handleChartSyncChange(!chartStateLookup[activeChartId]?.synced);
               }}
             >
               {chartStateLookup[activeChartId]?.synced ? (
-                <rootProps.slots.chartsSyncIcon fontSize="small" />
+                <slots.chartsSyncIcon fontSize="small" />
               ) : (
-                <rootProps.slots.chartsSyncDisabledIcon fontSize="small" />
+                <slots.chartsSyncDisabledIcon fontSize="small" />
               )}
-            </rootProps.slots.baseToggleButton>
-          </rootProps.slots.baseTooltip>
+            </slots.baseToggleButton>
+          </slots.baseTooltip>
         )}
-        <rootProps.slots.baseIconButton
+        <slots.baseIconButton
           onClick={() => {
             apiRef.current.setChartsPanelOpen(false);
           }}
           aria-label={apiRef.current.getLocaleText('chartsCloseButton')}
-          {...rootProps.slotProps?.baseIconButton}
+          {...slotProps?.baseIconButton}
         >
-          <rootProps.slots.sidebarCloseIcon fontSize="small" />
-        </rootProps.slots.baseIconButton>
+          <slots.sidebarCloseIcon fontSize="small" />
+        </slots.baseIconButton>
       </GridChartsPanelHeader>
       {chartEntries.length > 0 ? (
-        <rootProps.slots.baseTabs
+        <slots.baseTabs
           items={tabItems}
           value={activeTab}
           onChange={(_event, value) => {
             setActiveTab(value);
           }}
-          {...rootProps.slotProps?.baseTabs}
+          {...slotProps?.baseTabs}
         />
       ) : (
         <GridOverlay>{apiRef.current.getLocaleText('chartsNoCharts')}</GridOverlay>

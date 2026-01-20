@@ -13,32 +13,37 @@ import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 const GridFooter = forwardRef<HTMLDivElement, GridFooterContainerProps>(
   function GridFooter(props, ref) {
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const {
+      slots,
+      slotProps,
+      hideFooterSelectedRowCount,
+      hideFooterRowCount,
+      pagination,
+      hideFooterPagination,
+    } = useGridRootProps();
     const totalTopLevelRowCount = useGridSelector(apiRef, gridTopLevelRowCountSelector);
     const selectedRowCount = useGridSelector(apiRef, gridRowSelectionCountSelector);
     const visibleTopLevelRowCount = useGridSelector(apiRef, gridFilteredTopLevelRowCountSelector);
 
     const selectedRowCountElement =
-      !rootProps.hideFooterSelectedRowCount && selectedRowCount > 0 ? (
+      !hideFooterSelectedRowCount && selectedRowCount > 0 ? (
         <GridSelectedRowCount selectedRowCount={selectedRowCount} />
       ) : (
         <div />
       );
 
     const rowCountElement =
-      !rootProps.hideFooterRowCount && !rootProps.pagination ? (
-        <rootProps.slots.footerRowCount
-          {...rootProps.slotProps?.footerRowCount}
+      !hideFooterRowCount && !pagination ? (
+        <slots.footerRowCount
+          {...slotProps?.footerRowCount}
           rowCount={totalTopLevelRowCount}
           visibleRowCount={visibleTopLevelRowCount}
         />
       ) : null;
 
-    const paginationElement = rootProps.pagination &&
-      !rootProps.hideFooterPagination &&
-      rootProps.slots.pagination && (
-        <rootProps.slots.pagination {...rootProps.slotProps?.pagination} />
-      );
+    const paginationElement = pagination && !hideFooterPagination && slots.pagination && (
+      <slots.pagination {...slotProps?.pagination} />
+    );
 
     return (
       <GridFooterContainer {...props} ref={ref}>

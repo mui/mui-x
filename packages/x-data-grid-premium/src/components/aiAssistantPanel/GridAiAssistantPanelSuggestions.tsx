@@ -11,7 +11,7 @@ type GridAiAssistantPanelSuggestionsProps = {
   suggestions: PromptSuggestion[];
 };
 
-type OwnerState = Pick<DataGridPremiumProcessedProps, 'classes'>;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -61,19 +61,19 @@ const AiAssistantPanelSuggestionsLabel = styled('div', {
 
 function GridAiAssistantPanelSuggestions(props: GridAiAssistantPanelSuggestionsProps) {
   const { suggestions } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots } = rootProps;
   const apiRef = useGridApiContext();
-  const ownerState = { classes: rootProps.classes };
-  const classes = useUtilityClasses(ownerState);
+  const classes = useUtilityClasses(rootProps);
 
   return (
-    <AiAssistantPanelSuggestionsRoot className={classes.root} ownerState={ownerState}>
-      <AiAssistantPanelSuggestionsLabel className={classes.label} ownerState={ownerState}>
+    <AiAssistantPanelSuggestionsRoot className={classes.root} ownerState={rootProps}>
+      <AiAssistantPanelSuggestionsLabel className={classes.label} ownerState={rootProps}>
         {apiRef.current.getLocaleText('aiAssistantSuggestions')}
       </AiAssistantPanelSuggestionsLabel>
-      <AiAssistantPanelSuggestionsList className={classes.list} ownerState={ownerState}>
+      <AiAssistantPanelSuggestionsList className={classes.list} ownerState={rootProps}>
         {suggestions.map((suggestion) => (
-          <rootProps.slots.baseChip
+          <slots.baseChip
             key={suggestion.value}
             label={suggestion.value}
             className={classes.item}

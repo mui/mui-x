@@ -32,7 +32,7 @@ export type QuickFilterClearProps = Omit<GridSlotProps['baseIconButton'], 'class
 const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
   function QuickFilterClear(props, ref) {
     const { render, className, onClick, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const { state, clearValue } = useQuickFilterContext();
     const resolvedClassName = typeof className === 'function' ? className(state) : className;
 
@@ -42,10 +42,10 @@ const QuickFilterClear = forwardRef<HTMLButtonElement, QuickFilterClearProps>(
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseIconButton,
+      slots.baseIconButton,
       render,
       {
-        ...rootProps.slotProps?.baseIconButton,
+        ...slotProps?.baseIconButton,
         className: resolvedClassName,
         tabIndex: -1,
         ...other,

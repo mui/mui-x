@@ -7,7 +7,7 @@ import { GridSidebarValue } from '../../../hooks/features/sidebar';
 
 export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
   const { onClick } = props;
-  const rootProps = useGridRootProps();
+  const { slots, disablePivoting } = useGridRootProps();
   const apiRef = useGridApiContext();
   const isPivotPanelOpen = useGridSelector(apiRef, gridPivotPanelOpenSelector);
 
@@ -16,17 +16,17 @@ export function GridColumnMenuPivotItem(props: GridColumnMenuItemProps) {
     apiRef.current.showSidebar(GridSidebarValue.Pivot);
   };
 
-  if (rootProps.disablePivoting) {
+  if (disablePivoting) {
     return null;
   }
 
   return (
-    <rootProps.slots.baseMenuItem
+    <slots.baseMenuItem
       onClick={openPivotSettings}
-      iconStart={<rootProps.slots.pivotIcon fontSize="small" />}
+      iconStart={<slots.pivotIcon fontSize="small" />}
       disabled={isPivotPanelOpen}
     >
       {apiRef.current.getLocaleText('columnMenuManagePivot')}
-    </rootProps.slots.baseMenuItem>
+    </slots.baseMenuItem>
   );
 }

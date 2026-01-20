@@ -68,8 +68,8 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const id = useId();
   const [valueState, setValueState] = React.useState(value);
-  const rootProps = useGridRootProps();
-  const ownerState = { classes: rootProps.classes };
+  const { slots, slotProps, classes: classesRootProps } = useGridRootProps();
+  const ownerState = { classes: classesRootProps };
   const classes = useUtilityClasses(ownerState);
 
   const handleChange = React.useCallback(
@@ -98,13 +98,13 @@ function GridEditBooleanCell(props: GridEditBooleanCellProps) {
 
   return (
     <label htmlFor={id} className={clsx(classes.root, className)} {...other}>
-      <rootProps.slots.baseCheckbox
+      <slots.baseCheckbox
         id={id}
         inputRef={inputRef}
         checked={Boolean(valueState)}
         onChange={handleChange}
         size="small"
-        {...rootProps.slotProps?.baseCheckbox}
+        {...slotProps?.baseCheckbox}
       />
     </label>
   );

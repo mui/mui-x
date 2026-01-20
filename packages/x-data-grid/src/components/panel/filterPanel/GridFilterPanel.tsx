@@ -76,7 +76,7 @@ const getGridFilter = (col: GridStateColDef): GridFilterItem => ({
 const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
   function GridFilterPanel(props, ref) {
     const apiRef = useGridApiContext();
-    const rootProps = useGridRootProps();
+    const { slots, slotProps, disableMultipleColumnsFiltering } = useGridRootProps();
     const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
     const filterableColumns = useGridSelector(apiRef, gridFilterableColumnDefinitionsSelector);
     const filterableColumnsLookup = useGridSelector(apiRef, gridFilterableColumnLookupSelector);
@@ -274,29 +274,28 @@ const GridFilterPanel = forwardRef<HTMLDivElement, GridFilterPanelProps>(
             />
           ))}
         </GridPanelContent>
-        {!rootProps.disableMultipleColumnsFiltering &&
-        !(disableAddFilterButton && disableRemoveAllButton) ? (
+        {!disableMultipleColumnsFiltering && !(disableAddFilterButton && disableRemoveAllButton) ? (
           <GridPanelFooter>
             {!disableAddFilterButton ? (
-              <rootProps.slots.baseButton
+              <slots.baseButton
                 onClick={addNewFilter}
-                startIcon={<rootProps.slots.filterPanelAddIcon />}
-                {...rootProps.slotProps?.baseButton}
+                startIcon={<slots.filterPanelAddIcon />}
+                {...slotProps?.baseButton}
               >
                 {apiRef.current.getLocaleText('filterPanelAddFilter')}
-              </rootProps.slots.baseButton>
+              </slots.baseButton>
             ) : (
               <span />
             )}
 
             {!disableRemoveAllButton && validFilters.length > 0 ? (
-              <rootProps.slots.baseButton
+              <slots.baseButton
                 onClick={handleRemoveAll}
-                startIcon={<rootProps.slots.filterPanelRemoveAllIcon />}
-                {...rootProps.slotProps?.baseButton}
+                startIcon={<slots.filterPanelRemoveAllIcon />}
+                {...slotProps?.baseButton}
               >
                 {apiRef.current.getLocaleText('filterPanelRemoveAll')}
-              </rootProps.slots.baseButton>
+              </slots.baseButton>
             ) : null}
           </GridPanelFooter>
         ) : null}

@@ -9,7 +9,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type SidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;
 
-type OwnerState = DataGridPremiumProcessedProps;
+type OwnerState = Omit<DataGridPremiumProcessedProps, 'rows'>;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -32,7 +32,7 @@ const SidebarHeaderRoot = styled('div', {
 
 function SidebarHeader(props: SidebarHeaderProps) {
   const { className, children, ...other } = props;
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
 
   return (

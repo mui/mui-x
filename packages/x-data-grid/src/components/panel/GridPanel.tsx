@@ -14,7 +14,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { NotRendered } from '../../utils/assert';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = Omit<DataGridProcessedProps, 'rows'>;
 
 export interface GridPanelClasses {
   /** Styles applied to the root element. */
@@ -64,7 +64,8 @@ const GridPanelContent = styled('div', {
 const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
   const { children, className, classes: classesProp, onClose, ...other } = props;
   const apiRef = useGridApiContext();
-  const rootProps = useGridRootProps();
+  const { rows, ...rootProps } = useGridRootProps();
+  const { slots, slotProps } = rootProps;
   const classes = gridPanelClasses;
   const [isPlaced, setIsPlaced] = React.useState(false);
   const variablesClass = useCSSVariablesClass();
@@ -100,7 +101,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
 
   return (
     <GridPanelRoot
-      as={rootProps.slots.basePopper}
+      as={slots.basePopper}
       ownerState={rootProps}
       placement="bottom-end"
       className={clsx(classes.panel, className, variablesClass)}
@@ -112,7 +113,7 @@ const GridPanel = forwardRef<HTMLDivElement, GridPanelProps>((props, ref) => {
       clickAwayTouchEvent={false}
       focusTrap
       {...other}
-      {...rootProps.slotProps?.basePopper}
+      {...slotProps?.basePopper}
       target={props.target ?? fallbackTarget}
       ref={ref}
     >

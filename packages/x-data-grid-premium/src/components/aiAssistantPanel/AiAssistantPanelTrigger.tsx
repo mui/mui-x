@@ -47,7 +47,7 @@ export type AiAssistantPanelTriggerProps = Omit<GridSlotProps['baseButton'], 'cl
 const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTriggerProps>(
   function AiAssistantPanelTrigger(props, ref) {
     const { render, className, onClick, onPointerUp, ...other } = props;
-    const rootProps = useGridRootProps();
+    const { slots, slotProps } = useGridRootProps();
     const buttonId = useId();
     const panelId = useId();
     const apiRef = useGridApiContext();
@@ -76,10 +76,10 @@ const AiAssistantPanelTrigger = forwardRef<HTMLButtonElement, AiAssistantPanelTr
     };
 
     const element = useComponentRenderer(
-      rootProps.slots.baseButton,
+      slots.baseButton,
       render,
       {
-        ...rootProps.slotProps?.baseButton,
+        ...slotProps?.baseButton,
         id: buttonId,
         'aria-haspopup': 'true',
         'aria-expanded': open ? 'true' : undefined,
