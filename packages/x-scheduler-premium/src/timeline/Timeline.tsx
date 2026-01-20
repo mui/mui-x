@@ -2,9 +2,12 @@
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
 // import { useStore } from '@base-ui/utils/store';
-import { useExtractTimelineParameters, useTimeline } from '@mui/x-scheduler-headless/use-timeline';
+import {
+  useExtractTimelineParameters,
+  useTimeline,
+} from '@mui/x-scheduler-headless-premium/use-timeline';
 // import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
-import { TimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
+import { TimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 // import { TimelineView } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 // import { ViewSwitcher } from '@mui/x-scheduler/event-calendar/header-toolbar/view-switcher';

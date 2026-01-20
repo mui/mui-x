@@ -3,9 +3,9 @@ import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store/useStore';
 import { Adapter, useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
-import { timelineViewSelectors } from '@mui/x-scheduler-headless/timeline-selectors';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { useTimelineStoreContext } from '@mui/x-scheduler-headless/use-timeline-store-context';
+import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 
 const MonthsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
