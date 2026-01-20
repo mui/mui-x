@@ -5,5 +5,9 @@
     "noImplicitAny": false,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "../../test/utils/addChaiAssertions.ts"]
+  "include": [
+    "src/**/*",
+    "../../test/utils/addChaiAssertions.ts",
+    "../x-scheduler-headless-premium/src/use-timeline/plugins"
+  ]
 }

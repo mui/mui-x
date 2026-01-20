@@ -1926,12 +1926,12 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../x-scheduler-headless-premium/build
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
-      lucide-react:
-        specifier: ^0.562.0
-        version: 0.562.0(react@19.2.3)
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
