@@ -1,6 +1,9 @@
 {
   "componentDescription": "It sets up the data providers as well as the `<svg>` for the chart.\n\nThis is a combination of both the `ChartDataProvider` and `ChartsSurface` components.",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
@@ -27,6 +30,9 @@
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "localeText": { "description": "Localized text for chart components." },
     "margin": {
@@ -79,6 +85,12 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "radiusAxis": {
       "description": "The configuration of the radial-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
@@ -93,6 +105,7 @@
     },
     "slotProps": { "description": "The props for the slots." },
     "slots": { "description": "Slots to customize charts&#39; components." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "voronoiMaxRadius": {
       "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
@@ -107,5 +120,6 @@
     },
     "zAxis": { "description": "The configuration of the z-axes." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": { "baseButton": "", "baseIconButton": "" }
 }

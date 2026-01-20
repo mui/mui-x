@@ -1,7 +1,7 @@
 ---
 title: React Sankey chart
 productId: x-charts
-components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent
+components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent, SankeyDataProvider, FocusedSankeyNode, FocusedSankeyLink
 ---
 
 # Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
@@ -11,6 +11,12 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent
 :::info
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::
+
+## Overview
+
+The Sankey chart is a type of flow diagram that visualizes the flow of data between different nodes.
+
+{{"demo": "SankeyOverview.js"}}
 
 ## Basics
 

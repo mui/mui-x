@@ -29,7 +29,6 @@ describe('PieChart - click event', () => {
           onItemClick={() => {}}
         />,
       );
-      // eslint-disable-next-line testing-library/no-container
       const slices = container.querySelectorAll<HTMLElement>('path.MuiPieArc-root');
 
       expect(Array.from(slices).map((slice) => slice.getAttribute('cursor'))).to.deep.equal([

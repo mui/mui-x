@@ -2,11 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, type ChartDataProviderProps } from '../ChartDataProvider';
+import {
+  ChartDataProvider,
+  type ChartDataProviderProps,
+  type ChartDataProviderSlotProps,
+  type ChartDataProviderSlots,
+} from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+
+export interface ChartContainerSlots extends ChartDataProviderSlots {}
+
+export interface ChartContainerSlotProps extends ChartDataProviderSlotProps {}
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -65,6 +74,11 @@ ChartContainer.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * Configuration for the brush interaction.
    */
@@ -161,6 +175,38 @@ ChartContainer.propTypes = {
    */
   id: PropTypes.string,
   /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.shape({
+        toLocaleString: PropTypes.func.isRequired,
+        toString: PropTypes.func.isRequired,
+        valueOf: PropTypes.func.isRequired,
+      }),
+      type: PropTypes.object.isRequired,
+    }),
+  ),
+  /**
    * Localized text for chart components.
    */
   localeText: PropTypes.object,
@@ -212,6 +258,12 @@ ChartContainer.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
@@ -972,6 +1024,15 @@ ChartContainer.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+  }),
   /**
    * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
    * If set to `'item'`, the radius is the `markerSize`.

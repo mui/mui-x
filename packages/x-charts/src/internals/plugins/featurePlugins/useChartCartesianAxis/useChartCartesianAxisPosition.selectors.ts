@@ -75,7 +75,7 @@ export const selectorBarItemAtPosition = createSelector(
           // The point is inside the band for this series
           const svgPointContinuousCoordinate =
             aSeries.layout === 'horizontal' ? svgPoint.x : svgPoint.y;
-          const bar = aSeries.stackedData[dataIndex];
+          const bar = aSeries.visibleStackedData[dataIndex];
           const start = continuousAxis.scale(bar[0]);
           const end = continuousAxis.scale(bar[1]);
 

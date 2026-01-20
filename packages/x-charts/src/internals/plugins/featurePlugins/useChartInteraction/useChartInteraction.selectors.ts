@@ -29,3 +29,8 @@ export const selectorChartsLastInteraction = createSelector(
   selectInteraction,
   (interaction) => interaction?.lastUpdate,
 );
+
+export const selectorChartsPointerType = createSelector(
+  selectInteraction,
+  (interaction) => interaction?.pointerType ?? null,
+);

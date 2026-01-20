@@ -1,3 +1,8 @@
 import '../typeOverloads';
 
-export { ChartDataProviderPro, type ChartDataProviderProProps } from './ChartDataProviderPro';
+export {
+  ChartDataProviderPro,
+  type ChartDataProviderProProps,
+  type ChartDataProviderProSlots,
+  type ChartDataProviderProSlotProps,
+} from './ChartDataProviderPro';
