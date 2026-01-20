@@ -48,9 +48,9 @@ const GridLongTextCellContent = styled('div', {
   flex: 1,
 });
 
-const GridLongTextCellPopupContent = styled('div', {
+const GridLongTextCellPopperContent = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'LongTextCellPopupContent',
+  slot: 'LongTextCellPopperContent',
 })(({ theme }) => ({
   ...theme.typography.body2,
   letterSpacing: 'normal',
@@ -70,7 +70,7 @@ const GridLongTextCellCornerButton = styled('button', {
 })(({ theme }) => ({
   lineHeight: 0,
   position: 'absolute',
-  bottom: 0,
+  bottom: 1,
   right: 0,
   border: '1px solid',
   color: (theme.vars || theme).palette.text.secondary,
@@ -87,7 +87,7 @@ const GridLongTextCellCornerButton = styled('button', {
     color: (theme.vars || theme).palette.text.primary,
   },
   [`&.${gridClasses.longTextCellExpandButton}`]: {
-    right: -10,
+    right: -9,
     opacity: 0,
     [`.${gridClasses.longTextCell}:hover &`]: {
       opacity: 1,
@@ -181,7 +181,12 @@ function GridLongTextCell(props: GridLongTextCellProps) {
   return (
     <GridLongTextCellRoot ref={cellRef} className={classes.root} onKeyDown={handleKeyDown}>
       <GridLongTextCellContent className={classes.content}>{value}</GridLongTextCellContent>
-      <GridLongTextCellCornerButton className={classes.expandButton} onClick={handleExpandClick}>
+      <GridLongTextCellCornerButton
+        aria-label="expand"
+        tabIndex={-1}
+        className={classes.expandButton}
+        onClick={handleExpandClick}
+      >
         <rootProps.slots.longTextCellExpandIcon fontSize="inherit" />
       </GridLongTextCellCornerButton>
       <GridLongTextCellPopper
@@ -203,7 +208,8 @@ function GridLongTextCell(props: GridLongTextCellProps) {
           ],
         }}
       >
-        <GridLongTextCellPopupContent
+        {/* Required React element as a child because `rootProps.slots.basePopper` uses ClickAwayListener internally */}
+        <GridLongTextCellPopperContent
           tabIndex={-1}
           onKeyDown={(event) => {
             if (event.key === 'Escape') {
@@ -220,12 +226,13 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         >
           {value}
           <GridLongTextCellCornerButton
+            aria-label="collapse"
             className={classes.collapseButton}
             onClick={handleCollapseClick}
           >
             <rootProps.slots.longTextCellCollapseIcon fontSize="inherit" />
           </GridLongTextCellCornerButton>
-        </GridLongTextCellPopupContent>
+        </GridLongTextCellPopperContent>
       </GridLongTextCellPopper>
     </GridLongTextCellRoot>
   );

@@ -18,6 +18,7 @@ import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
+import MUITextareaAutosize from '@mui/material/TextareaAutosize';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
@@ -529,6 +530,11 @@ function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments =
   return result;
 }
 
+const BaseTextarea = forwardRef<any, P['baseTextarea']>(function BaseTextarea(props, ref) {
+  const { material, ...other } = props;
+  return <MUITextareaAutosize {...other} {...material} ref={ref} />;
+});
+
 const transformOrigin = {
   'bottom-start': 'top left',
   'bottom-end': 'top right',
@@ -791,6 +797,7 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: BaseCircularProgress,
   baseDivider: BaseDivider,
   baseInput: BaseInput,
+  baseTextarea: BaseTextarea,
   baseLinearProgress: BaseLinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,

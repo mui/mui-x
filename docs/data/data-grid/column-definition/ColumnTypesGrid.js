@@ -76,6 +76,11 @@ function ActionsCell(props) {
 
 const columns = [
   { field: 'name', type: 'string' },
+  {
+    field: 'bio',
+    type: 'longText',
+    width: 200,
+  },
   { field: 'age', type: 'number' },
   { field: 'dateCreated', type: 'date', width: 130 },
   { field: 'lastLogin', type: 'dateTime', width: 180 },
@@ -112,7 +117,6 @@ const columns = [
       return options;
     },
   },
-  { field: 'bio', type: 'longText', width: 200 },
   {
     field: 'actions',
     type: 'actions',

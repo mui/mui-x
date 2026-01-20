@@ -3,7 +3,6 @@ import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '@mui/material/styles';
-import InputBase, { InputBaseProps } from '@mui/material/InputBase';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
@@ -26,6 +25,20 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
+const GridEditLongTextCellTextarea = styled(NotRendered<GridSlotProps['baseTextarea']>, {
+  name: 'MuiDataGrid',
+  slot: 'EditLongTextCellTextarea',
+})<{ ownerState: OwnerState }>(({ theme }) => ({
+  width: '100%',
+  textarea: { resize: 'vertical' },
+  padding: 0,
+  ...theme.typography.body2,
+  letterSpacing: 'normal',
+  outline: 'none',
+  background: 'transparent',
+  border: 'none',
+}));
+
 const GridEditLongTextCellRoot = styled('div', {
   name: 'MuiDataGrid',
   slot: 'EditLongTextCell',
@@ -37,17 +50,28 @@ const GridEditLongTextCellRoot = styled('div', {
   position: 'relative',
 });
 
+const GridEditLongTextCellValue = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'EditLongTextCellValue',
+})({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  width: '100%',
+  paddingInline: 10,
+});
+
 const GridEditLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, {
   name: 'MuiDataGrid',
-  slot: 'LongTextCellPopper',
+  slot: 'EditLongTextCellPopper',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: vars.zIndex.menu,
   background: (theme.vars || theme).palette.background.paper,
 }));
 
-const GridEditLongTextCellPopupContent = styled('div', {
+const GridEditLongTextCellPopperContent = styled('div', {
   name: 'MuiDataGrid',
-  slot: 'EditLongTextCellPopupContent',
+  slot: 'EditLongTextCellPopperContent',
 })(({ theme }) => ({
   ...theme.typography.body2,
   letterSpacing: 'normal',
@@ -77,7 +101,7 @@ export interface GridEditLongTextCellProps extends GridRenderEditCellParams<any,
 }
 
 function GridEditLongTextCell(props: GridEditLongTextCellProps) {
-  const { id, value, field, colDef, hasFocus } = props;
+  const { id, value, field, colDef, hasFocus, cellMode } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -88,41 +112,56 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
 
   const meta = apiRef.current.unstable_getEditCellMeta(id, field);
 
+  // Only show popup when this cell has focus
+  // This fixes editMode="row" where all cells enter edit mode simultaneously
+  const showPopup = hasFocus && Boolean(anchorEl);
+
   React.useEffect(() => {
     if (meta?.changeReason !== 'debouncedSetEditCellValue') {
       setValueState(value);
     }
   }, [meta, value]);
 
-  // Close popup (stop edit) when row scrolls out of view
+  React.useEffect(() => {});
+
+  // Close popup (stop edit) when cell scrolls out of view
   React.useEffect(() => {
-    return apiRef.current.subscribeEvent('renderedRowsIntervalChange', (context) => {
-      const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-      if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
-        apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
+    if (!showPopup) {
+      return undefined;
+    }
+    const unsubscribeRows = apiRef.current.subscribeEvent(
+      'renderedRowsIntervalChange',
+      (context) => {
+        const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
+        if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
+          apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
+        }
+      },
+    );
+    const unsubscribeCols = apiRef.current.subscribeEvent('scrollPositionChange', (params) => {
+      if (params.renderContext) {
+        const colIndex = apiRef.current.getColumnIndexRelativeToVisibleColumns(colDef.field);
+        if (
+          colIndex < params.renderContext.firstColumnIndex ||
+          colIndex >= params.renderContext.lastColumnIndex
+        ) {
+          apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
+        }
       }
     });
-  }, [apiRef, id, field]);
-
-  // Only show popup when this cell has focus
-  // This fixes editMode="row" where all cells enter edit mode simultaneously
-  const showPopup = hasFocus && Boolean(anchorEl);
+    return () => {
+      unsubscribeRows();
+      unsubscribeCols();
+    };
+  }, [apiRef, id, field, colDef.field, showPopup]);
 
   return (
-    <GridEditLongTextCellRoot ref={setAnchorEl} className={classes.root}>
-      {/* Show ellipsis text when not focused (row editing mode) */}
-      {!hasFocus && (
-        <div
-          style={{
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            width: '100%',
-          }}
-        >
-          {valueState}
-        </div>
-      )}
+    <GridEditLongTextCellRoot
+      tabIndex={cellMode === 'edit' && rootProps.editMode === 'row' ? 0 : undefined}
+      ref={setAnchorEl}
+      className={classes.root}
+    >
+      <GridEditLongTextCellValue>{valueState}</GridEditLongTextCellValue>
       <GridEditLongTextCellPopper
         as={rootProps.slots.basePopper}
         ownerState={rootProps}
@@ -140,13 +179,12 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
           ],
         }}
       >
-        <GridEditLongTextCellPopupContent
-          sx={{
-            '--_width': `calc(${colDef.computedWidth}px + 7ch)`, // the extra 7ch accounts for ellipsis word
-          }}
+        {/* Required React element as a child because `rootProps.slots.basePopper` uses ClickAwayListener internally */}
+        <GridEditLongTextCellPopperContent
+          style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
         >
           <GridEditLongTextarea {...props} valueState={valueState} setValueState={setValueState} />
-        </GridEditLongTextCellPopupContent>
+        </GridEditLongTextCellPopperContent>
       </GridEditLongTextCellPopper>
     </GridEditLongTextCellRoot>
   );
@@ -154,20 +192,21 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
 
 function GridEditLongTextarea(props: GridEditLongTextCellProps) {
   const { id, field, debounceMs = 200, onValueChange, valueState, setValueState, hasFocus } = props;
-  const inputRef = React.useRef<HTMLTextAreaElement>(null);
+  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const apiRef = useGridApiContext();
+  const rootProps = useGridRootProps();
 
   useEnhancedEffect(() => {
-    if (hasFocus && inputRef.current) {
-      inputRef.current.focus();
+    if (hasFocus && textareaRef.current) {
+      textareaRef.current.focus();
       // Move cursor to end of text
-      const length = inputRef.current.value.length;
-      inputRef.current.setSelectionRange(length, length);
+      const length = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(length, length);
     }
   }, [hasFocus]);
 
-  const handleChange = React.useCallback<NonNullable<InputBaseProps['onChange']>>(
-    async (event) => {
+  const handleChange = React.useCallback(
+    async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = event.target.value;
 
       const column = apiRef.current.getColumn(field);
@@ -184,7 +223,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       );
 
       if (onValueChange) {
-        await onValueChange(event as React.ChangeEvent<HTMLTextAreaElement>, newValue);
+        await onValueChange(event, newValue);
       }
     },
     [apiRef, debounceMs, field, id, onValueChange, setValueState],
@@ -193,38 +232,26 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (event.key === 'Enter') {
-        if (event.ctrlKey || event.metaKey) {
-          // Ctrl/Cmd+Enter: save and exit
-          apiRef.current.stopCellEditMode({ id, field });
-          event.preventDefault();
+        if (!event.ctrlKey && !event.metaKey) {
+          // Plain Enter: let textarea handle newline, stop propagation to prevent grid from exiting edit
+          event.stopPropagation();
         }
-        // Plain Enter: let textarea handle newline, stop propagation to prevent grid from exiting edit
-        event.stopPropagation();
       }
-      if (event.key === 'Escape') {
-        // Escape: cancel edit
+      if (rootProps.editMode === 'cell' && event.key === 'Escape') {
         apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
-        event.stopPropagation();
       }
     },
-    [apiRef, field, id],
+    [apiRef, field, id, rootProps.editMode],
   );
   return (
-    <InputBase
-      inputRef={inputRef}
-      multiline
-      autoFocus
+    <GridEditLongTextCellTextarea
+      as={rootProps.slots.baseTextarea}
+      ownerState={rootProps}
+      ref={textareaRef}
       minRows={3}
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
-      sx={(theme) => ({
-        width: '100%',
-        textarea: { resize: 'vertical' },
-        padding: 0,
-        ...theme.typography.body2,
-        letterSpacing: 'normal',
-      })}
     />
   );
 }

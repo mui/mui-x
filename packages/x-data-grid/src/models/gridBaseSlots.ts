@@ -251,6 +251,19 @@ export type InputProps = CommonProps & {
   };
 };
 
+export type TextareaProps = CommonProps & {
+  ref?: React.Ref<HTMLTextAreaElement>;
+  inputRef?: React.Ref<HTMLTextAreaElement>;
+  fullWidth?: boolean;
+  value?: string;
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement>;
+  disabled?: boolean;
+  autoFocus?: boolean;
+  minRows?: number;
+  maxRows?: number;
+};
+
 export type SelectProps = CommonProps & {
   ref?: Ref;
   id?: string;
