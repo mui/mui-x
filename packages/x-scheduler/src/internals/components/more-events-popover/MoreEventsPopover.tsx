@@ -76,10 +76,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
       </MoreEventsPopoverHeader>
       <MoreEventsPopoverBody>
         {occurrences.map((occurrence) => (
-          <EventDraggableDialogTrigger occurrence={occurrence}>
+          <EventDraggableDialogTrigger occurrence={occurrence} key={occurrence.key}>
             <EventItem
               variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
-              key={occurrence.key}
               occurrence={occurrence}
               date={day}
               ariaLabelledBy={`PopoverHeader-${day.key}`}
