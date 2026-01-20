@@ -163,7 +163,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 
   return (
     <EventTimelineContent ref={handleRef} {...props}>
-      <EventDraggableDialogProvider containerRef={containerRef}>
+      <EventDraggableDialogProvider>
         <EventTimelineGrid
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
         >
