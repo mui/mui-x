@@ -81,9 +81,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
     legendProps,
     highlight,
     children,
-    // The `as` is a hack because the pro charts has more plugins than community.
-    // To fix that, useRadarChartProps should accept a generic.
-  } = useRadarChartProps(props as RadarChartProps);
+  } = useRadarChartProps(props);
 
   const Tooltip = props.slots?.tooltip ?? ChartsTooltip;
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;

@@ -48,7 +48,7 @@ export interface RadarChartSlotProps
 
 export interface RadarChartProps
   extends
-    RadarDataProviderProps,
+    Omit<RadarDataProviderProps, 'plugins'>,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
