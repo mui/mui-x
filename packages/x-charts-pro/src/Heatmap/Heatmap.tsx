@@ -230,7 +230,6 @@ Heatmap.propTypes = {
   height: PropTypes.number,
   /**
    * If `true`, the legend is not rendered.
-   * @default false
    */
   hideLegend: PropTypes.bool,
   /**
