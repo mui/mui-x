@@ -11,7 +11,12 @@
     "rootDir": "./src",
     "types": ["../../mui-env.d.ts"]
   },
-  "references": [{ "path": "../x-internals/tsconfig.build.json" }],
+  "references": [
+    { "path": "../x-scheduler/tsconfig.build.json" },
+    { "path": "../x-scheduler-headless/tsconfig.build.json" },
+    { "path": "../x-scheduler-headless-premium/tsconfig.build.json" },
+    { "path": "../x-internals/tsconfig.build.json" }
+  ],
   "include": ["src/**/*.ts*"],
   "exclude": ["src/**/*.spec.ts*", "src/**/*.test.ts*", "src/tests/**/*"]
 }
