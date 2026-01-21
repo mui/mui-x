@@ -85,3 +85,39 @@ This improves consistency across chart components and developer experience.
 +  hideLegend
  />
 ```
+
+## Removed deprecated types and APIs
+
+The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
+
+### Series types
+
+The following type aliases have been removed from `@mui/x-charts/models`:
+
+- `CartesianSeriesType` - Use `AllSeriesType<CartesianChartSeriesType>` directly if needed
+- `DefaultizedCartesianSeriesType` - Use `DefaultizedSeriesType<CartesianChartSeriesType>` directly if needed
+- `StackableSeriesType` - Use `DefaultizedSeriesType<StackableChartSeriesType>` directly if needed
+
+```diff
+-import { CartesianSeriesType } from '@mui/x-charts/models';
++import { AllSeriesType } from '@mui/x-charts/models';
++import type { CartesianChartSeriesType } from '@mui/x-charts/internals';
++
++type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
+```
+
+### Series helper functions
+
+The following helper functions have been removed:
+
+- `isDefaultizedBarSeries()` - Check `series.type === 'bar'` directly
+- `isBarSeries()` - Check `series.type === 'bar'` directly
+
+```diff
+-import { isBarSeries } from '@mui/x-charts/models';
+-
+-if (isBarSeries(series)) {
++if (series.type === 'bar') {
+   // Handle bar series
+ }
+```
