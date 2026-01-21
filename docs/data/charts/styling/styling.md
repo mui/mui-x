@@ -25,7 +25,7 @@ This is the base color used to render its components.
 
 ### Built-in color palettes
 
-The library provides three built-in color palettes to automatically assign colors to series.
+The library provides several built-in color palettes to automatically assign colors to series.
 If a series doesn't have a `color` prop, the chart assigns a color based on the series' index.
 
 You can set a custom color palette using the `colors` prop on chart components (or `ChartContainer` when composing a custom component).
