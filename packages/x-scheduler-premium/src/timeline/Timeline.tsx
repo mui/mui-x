@@ -61,8 +61,8 @@ export const Timeline = React.forwardRef(function EventTimeline<
   const view = useStore(store, timelineViewSelectors.view);
   const views = useStore(store, timelineViewSelectors.views);
 
-  const handleViewChange = (event: SelectChangeEvent, child: React.ReactNode) => {
-    store.setView(event.target.value as TimelineView, event as unknown as Event);
+  const handleViewChange = (event: SelectChangeEvent) => {
+    store.setView(event.target.value as TimelineView, event as Event);
   };
 
   return (
