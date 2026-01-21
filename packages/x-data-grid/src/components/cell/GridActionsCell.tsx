@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useRtl } from '@mui/system/RtlProvider';
 import useId from '@mui/utils/useId';
 import { warnOnce } from '@mui/x-internals/warning';
-import { GridRowParams } from '@mui/x-data-grid-pro';
+import { GridRowParams } from '../../models/params/gridRowParams';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { gridClasses } from '../../constants/gridClasses';
 import { GridMenu, GridMenuProps } from '../menu/GridMenu';
@@ -51,10 +51,18 @@ interface GridActionsCellProps<
    * Use this callback to prevent the menu from closing.
    *
    * @param {GridRowParams<R>} params Row parameters.
-   * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
+   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
    * @returns {boolean} if the menu should be closed.
    */
-  onMenuClose?: (params: GridRowParams<R>, event: React.MouseEvent<HTMLElement>) => boolean;
+  onMenuClose?: (
+    params: GridRowParams<R>,
+    event:
+      | React.MouseEvent<HTMLElement>
+      | React.KeyboardEvent
+      | MouseEvent
+      | TouchEvent
+      | undefined,
+  ) => boolean;
 }
 
 function GridActionsCell<
