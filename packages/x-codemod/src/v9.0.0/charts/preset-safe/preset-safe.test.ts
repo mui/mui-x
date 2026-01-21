@@ -1,15 +1,9 @@
 import jscodeshift from 'jscodeshift';
 import path from 'path';
-import transform from './index';
-import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
+import transform, { testConfig } from './index';
 import readFile from '../../../util/readFile';
 
-const allFiles = [
-  // Add other transforms here as they are created
-  replaceHeatmapHideLegend,
-];
-
-const parsedFiles = allFiles
+const parsedFiles = testConfig.allModules
   .map((mod) =>
     mod.testConfig.specFiles.map((file) => {
       file.name = `${mod.testConfig.name}/${file.name}`;
