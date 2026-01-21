@@ -264,7 +264,7 @@ const entries = [
       },
       {
         title: 'Charts – Color scales',
-        url: '/x/react-charts/styling/#values-color',
+        url: '/x/react-charts/styling/#value-based-colors',
       },
     ],
   },
