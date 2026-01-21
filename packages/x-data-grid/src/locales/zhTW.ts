@@ -16,6 +16,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '舒適',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '復原',
+  toolbarRedo: '重做',
+
   // Columns selector toolbar button text
   toolbarColumns: '欄位',
   toolbarColumnsLabel: '選擇欄位',

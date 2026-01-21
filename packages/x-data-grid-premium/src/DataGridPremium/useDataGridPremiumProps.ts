@@ -6,6 +6,7 @@ import {
   GRID_DEFAULT_LOCALE_TEXT,
   DataGridProProps,
   GridSignature,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
 import { computeSlots } from '@mui/x-data-grid-pro/internals';
 import {
@@ -18,6 +19,8 @@ import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';
 import { defaultGetAggregationPosition } from '../hooks/features/aggregation/gridAggregationUtils';
+import { DEFAULT_HISTORY_VALIDATION_EVENTS } from '../hooks/features/history/constants';
+import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
 interface GetDataGridPremiumPropsDefaultValues extends DataGridPremiumProps {}
 
@@ -61,6 +64,9 @@ export const DATA_GRID_PREMIUM_PROPS_DEFAULT_VALUES: DataGridPremiumPropsWithDef
   disablePivoting: false,
   aiAssistant: false,
   chartsIntegration: false,
+  historyStackSize: 30,
+  historyEventHandlers: {} as Record<GridEvents, GridHistoryEventHandler<any>>,
+  historyValidationEvents: DEFAULT_HISTORY_VALIDATION_EVENTS,
 };
 
 const defaultSlots = DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS;
