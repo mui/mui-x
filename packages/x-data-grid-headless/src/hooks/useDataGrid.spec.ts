@@ -73,6 +73,9 @@ export function Example() {
   // @ts-expect-error pagination selectors do not exist
   grid1.api.pagination.selectors.paginationModel;
 
+  // Should be able to call selectors imperatively
+  grid1.api.rows.selectors.rowIds(grid1.store.getState());
+
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
     rows: [] as User[],
