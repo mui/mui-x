@@ -169,15 +169,16 @@ async function selectTargetBranch(majorVersion) {
       repo: REPO,
       branch: majorVersionBranch(majorVersion),
     });
-    console.log(`Branch ${response.data.name} exists.`);
     const useVersionBranch = await confirm({
-      message: `The branch ${majorVersionBranch(majorVersion)} exists. Do you want to use it as the base for the release? (No will use master)`,
+      message: `The branch ${response.data.name} exists. Do you want to use it as the base for the release? (No will use master)`,
       default: true,
     });
     return useVersionBranch;
   } catch (error) {
     if (error.status === 404) {
-      console.log(`Branch v${majorVersion}.x does not exist. Using master as the base.`);
+      console.log(
+        `Branch ${majorVersionBranch(majorVersion)} does not exist. Using master as the base.`,
+      );
       return false;
     }
     throw error;
