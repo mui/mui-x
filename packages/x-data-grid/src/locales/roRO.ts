@@ -16,6 +16,10 @@ const roROGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Lat',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Anulează',
+  toolbarRedo: 'Refă',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Coloane',
   toolbarColumnsLabel: 'Afișează selecție coloane',

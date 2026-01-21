@@ -1,6 +1,7 @@
 import {
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
+  identifierCleanerSeriesIdDataIndex,
 } from '@mui/x-charts/internals';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
@@ -22,4 +23,5 @@ export const funnelSeriesConfig: ChartSeriesTypeConfig<'funnel'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };
