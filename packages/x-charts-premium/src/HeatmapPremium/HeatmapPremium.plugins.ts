@@ -14,6 +14,8 @@ import {
   type UseChartBrushSignature,
   useChartKeyboardNavigation,
   type UseChartKeyboardNavigationSignature,
+  useChartItemClick,
+  type UseChartItemClickSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -31,6 +33,7 @@ export type HeatmapPremiumPluginSignatures = [
   UseChartProExportSignature,
   UseChartBrushSignature,
   UseChartProZoomSignature,
+  UseChartItemClickSignature<'heatmap'>,
   UseChartKeyboardNavigationSignature,
 ];
 
@@ -43,5 +46,6 @@ export const HEATMAP_PREMIUM_PLUGINS = [
   useChartProExport,
   useChartBrush,
   useChartProZoom,
+  useChartItemClick,
   useChartKeyboardNavigation,
 ] as ConvertSignaturesIntoPlugins<HeatmapPremiumPluginSignatures>;

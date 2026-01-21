@@ -16,6 +16,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'استاندارد',
   toolbarDensityComfortable: 'راحت',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واگرد',
+  toolbarRedo: 'ازنو',
+
   // Columns selector toolbar button text
   toolbarColumns: 'ستون‌ها',
   toolbarColumnsLabel: 'ستون‌ها را انتخاب کنید',
