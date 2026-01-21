@@ -97,3 +97,4 @@ export * from './createSvgIcon';
 export * from './constants';
 export * from './scales';
 export * from './identifierSerializer';
+export * from './identifierCleaner';
