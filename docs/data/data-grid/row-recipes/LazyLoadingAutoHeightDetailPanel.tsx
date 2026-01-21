@@ -18,6 +18,7 @@ import {
   GridRowId,
   GridRowParams,
 } from '@mui/x-data-grid-pro';
+import { DetailPanelWrapper, useDetailPanelCache } from './detailPanelCache';
 
 type Products = Awaited<ReturnType<typeof getProducts>>;
 
@@ -36,49 +37,6 @@ async function getProducts(orderId: Customer['id']) {
     quantity: randomInt(1, 5),
     unitPrice: randomPrice(1, 1000),
   }));
-}
-
-// Wrapper component that tracks detail panel height via ResizeObserver
-interface DetailPanelWrapperProps {
-  rowId: GridRowId;
-  onHeightChange: (rowId: GridRowId, height: number, isLoaded: boolean) => void;
-  children: React.ReactNode;
-}
-
-function DetailPanelWrapper({
-  rowId,
-  onHeightChange,
-  children,
-}: DetailPanelWrapperProps) {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const isLoadedRef = React.useRef(false);
-
-  React.useEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return () => {};
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      const height = entries[0].contentRect.height;
-      if (height > 0) {
-        onHeightChange(rowId, height, isLoadedRef.current);
-      }
-    });
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [rowId, onHeightChange]);
-
-  const handleLoaded = React.useCallback(() => {
-    isLoadedRef.current = true;
-  }, []);
-
-  const childrenWithLoaded = React.isValidElement(children)
-    ? React.cloneElement(children, { onLoaded: handleLoaded } as any)
-    : children;
-
-  return <div ref={ref}>{childrenWithLoaded}</div>;
 }
 
 const detailPanelColumns: GridColDef[] = [
@@ -110,7 +68,10 @@ function DetailPanelContent({
     Awaited<ReturnType<typeof getProducts>>
   >([]);
 
-  const detailPanelDataCache = React.useContext(DetailPanelDataCache);
+  const detailPanelDataCache = React.useContext(DetailPanelDataCache) as Map<
+    GridRowId,
+    Products
+  >;
 
   React.useEffect(() => {
     let isMounted = true;
@@ -181,55 +142,19 @@ for (let i = 0; i < 30; i += 1) {
 type Customer = (typeof rows)[number];
 
 export default function LazyLoadingAutoHeightDetailPanel() {
-  const detailPanelDataCache = React.useRef(new Map<GridRowId, Products>()).current;
+  const {
+    detailPanelDataCache,
+    detailPanelHeights,
+    handleDetailPanelHeightChange,
+    handleDetailPanelExpansionChange,
+  } = useDetailPanelCache<Products>();
 
-  // Height cache for detail panels - prevents scroll jumps when panels remount
-  const [detailPanelHeights, setDetailPanelHeights] = React.useState<
-    Map<GridRowId, number>
-  >(new Map());
-
-  // Height change handler - if the grid is not loaded yet, ignore reduction of the height to prevent scroll jumps.
-  // Once the content is loaded, accept all height changes including reductions (e.g., from filtering).
-  const handleDetailPanelHeightChange = React.useCallback(
-    (rowId: GridRowId, height: number, isLoaded: boolean) => {
-      setDetailPanelHeights((prev) => {
-        const currentHeight = prev.get(rowId);
-        if (!isLoaded && currentHeight !== undefined && height <= currentHeight) {
-          return prev;
-        }
-        const next = new Map(prev);
-        next.set(rowId, height);
-        return next;
-      });
+  const getDetailPanelHeight = React.useCallback(
+    (params: { row: Customer }) => {
+      const cachedHeight = detailPanelHeights.get(params.row.id);
+      return cachedHeight ?? ('auto' as const);
     },
-    [],
-  );
-
-  const handleDetailPanelExpansionChange = React.useCallback<
-    NonNullable<DataGridProProps['onDetailPanelExpandedRowIdsChange']>
-  >(
-    (newExpandedRowIds) => {
-      // Only keep cached data for detail panels that are still expanded
-      for (const [id] of detailPanelDataCache) {
-        if (!newExpandedRowIds.has(id)) {
-          detailPanelDataCache.delete(id);
-        }
-      }
-
-      // Clear height cache for closed panels
-      setDetailPanelHeights((prev) => {
-        const next = new Map(prev);
-        let changed = false;
-        for (const rowId of prev.keys()) {
-          if (!newExpandedRowIds.has(rowId)) {
-            next.delete(rowId);
-            changed = true;
-          }
-        }
-        return changed ? next : prev;
-      });
-    },
-    [detailPanelDataCache],
+    [detailPanelHeights],
   );
 
   const getDetailPanelContent: DataGridProProps['getDetailPanelContent'] =
@@ -244,14 +169,6 @@ export default function LazyLoadingAutoHeightDetailPanel() {
       ),
       [handleDetailPanelHeightChange],
     );
-
-  const getDetailPanelHeight = React.useCallback(
-    (params: { row: Customer }) => {
-      const cachedHeight = detailPanelHeights.get(params.row.id);
-      return cachedHeight ?? ('auto' as const);
-    },
-    [detailPanelHeights],
-  );
 
   return (
     <Box sx={{ width: '100%', height: 400 }}>

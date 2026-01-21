@@ -12,6 +12,7 @@ import {
   randomId,
 } from '@mui/x-data-grid-generator';
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DetailPanelWrapper, useDetailPanelCache } from './detailPanelCache';
 
 const DetailPanelDataCache = React.createContext(new Map());
 
@@ -28,40 +29,6 @@ async function getProducts(orderId) {
     quantity: randomInt(1, 5),
     unitPrice: randomPrice(1, 1000),
   }));
-}
-
-// Wrapper component that tracks detail panel height via ResizeObserver
-
-function DetailPanelWrapper({ rowId, onHeightChange, children }) {
-  const ref = React.useRef(null);
-  const isLoadedRef = React.useRef(false);
-
-  React.useEffect(() => {
-    const element = ref.current;
-    if (!element) {
-      return () => {};
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      const height = entries[0].contentRect.height;
-      if (height > 0) {
-        onHeightChange(rowId, height, isLoadedRef.current);
-      }
-    });
-
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [rowId, onHeightChange]);
-
-  const handleLoaded = React.useCallback(() => {
-    isLoadedRef.current = true;
-  }, []);
-
-  const childrenWithLoaded = React.isValidElement(children)
-    ? React.cloneElement(children, { onLoaded: handleLoaded })
-    : children;
-
-  return <div ref={ref}>{childrenWithLoaded}</div>;
 }
 
 const detailPanelColumns = [
@@ -154,51 +121,19 @@ for (let i = 0; i < 30; i += 1) {
 }
 
 export default function LazyLoadingAutoHeightDetailPanel() {
-  const detailPanelDataCache = React.useRef(new Map()).current;
+  const {
+    detailPanelDataCache,
+    detailPanelHeights,
+    handleDetailPanelHeightChange,
+    handleDetailPanelExpansionChange,
+  } = useDetailPanelCache();
 
-  // Height cache for detail panels - prevents scroll jumps when panels remount
-  const [detailPanelHeights, setDetailPanelHeights] = React.useState(new Map());
-
-  // Height change handler - if the grid is not loaded yet, ignore reduction of the height to prevent scroll jumps.
-  // Once the content is loaded, accept all height changes including reductions (e.g., from filtering).
-  const handleDetailPanelHeightChange = React.useCallback(
-    (rowId, height, isLoaded) => {
-      setDetailPanelHeights((prev) => {
-        const currentHeight = prev.get(rowId);
-        if (!isLoaded && currentHeight !== undefined && height <= currentHeight) {
-          return prev;
-        }
-        const next = new Map(prev);
-        next.set(rowId, height);
-        return next;
-      });
+  const getDetailPanelHeight = React.useCallback(
+    (params) => {
+      const cachedHeight = detailPanelHeights.get(params.row.id);
+      return cachedHeight ?? 'auto';
     },
-    [],
-  );
-
-  const handleDetailPanelExpansionChange = React.useCallback(
-    (newExpandedRowIds) => {
-      // Only keep cached data for detail panels that are still expanded
-      for (const [id] of detailPanelDataCache) {
-        if (!newExpandedRowIds.has(id)) {
-          detailPanelDataCache.delete(id);
-        }
-      }
-
-      // Clear height cache for closed panels
-      setDetailPanelHeights((prev) => {
-        const next = new Map(prev);
-        let changed = false;
-        for (const rowId of prev.keys()) {
-          if (!newExpandedRowIds.has(rowId)) {
-            next.delete(rowId);
-            changed = true;
-          }
-        }
-        return changed ? next : prev;
-      });
-    },
-    [detailPanelDataCache],
+    [detailPanelHeights],
   );
 
   const getDetailPanelContent = React.useCallback(
@@ -211,14 +146,6 @@ export default function LazyLoadingAutoHeightDetailPanel() {
       </DetailPanelWrapper>
     ),
     [handleDetailPanelHeightChange],
-  );
-
-  const getDetailPanelHeight = React.useCallback(
-    (params) => {
-      const cachedHeight = detailPanelHeights.get(params.row.id);
-      return cachedHeight ?? 'auto';
-    },
-    [detailPanelHeights],
   );
 
   return (
