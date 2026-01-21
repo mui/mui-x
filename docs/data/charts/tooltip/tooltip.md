@@ -8,16 +8,17 @@ components: ChartsTooltip, ChartsAxisTooltipContent, ChartsItemTooltipContent, C
 
 <p class="description">Use a tooltip to display additional data when users interact with chart items.</p>
 
-In all chart components, the tooltip is accessible via the `tooltip` slot.
-If you're composing a custom component, you can use the `ChartsTooltip` component.
+In all chart components, you can access the tooltip via the `tooltip` slot.
+If you're composing a custom component, use the `ChartsTooltip` component.
 
 ## Tooltip trigger
 
-The tooltip can be triggered by two kinds of events:
+You can trigger the tooltip with two kinds of events:
 
-- `'item'`: When the user's mouse hovers over an item on the chart, the tooltip displays data about this specific item
-- `'axis'`: The user's mouse position is associated with a value of the x-axis. The tooltip displays data about all series at this specific x value
-- `'none'`: Disable the tooltip
+- `'item'`: When you hover over an item on the chart, the tooltip displays data about that specific item
+- `'axis'`: Your mouse position is associated with a value of the x-axis.
+  The tooltip displays data about all series at that specific x value
+- `'none'`: Disables the tooltip
 
 To pass this trigger attribute to the tooltip, use `slotProps.tooltip.trigger`.
 
@@ -37,7 +38,7 @@ The demo below shows:
 
 ### Advanced formatting
 
-The series `valueFormatter` provides a context as its second argument containing a `dataIndex` property that you can use to calculate other data-related values.
+The series `valueFormatter` function receives a context as its second argument containing a `dataIndex` property that you can use to calculate other data-related values.
 
 The demo below uses `dataIndex` to add each team's rank in the tooltip.
 
@@ -100,7 +101,7 @@ To display the series with a blank space, return an empty string.
 ## Position
 
 By default, the tooltip is placed relative to the pointer position.
-If the pointer is not available, it is placed relative to the node instead (for example, the bar in a bar chart).
+If the pointer is not available, it's placed relative to the node instead (for example, the bar in a bar chart).
 
 You can modify this behavior with the `anchor`, `position`, and `placement` props.
 
@@ -139,19 +140,19 @@ To apply the same style as above, use the `sx` prop of the tooltip itself, which
 
 {{"demo": "TooltipStyle.js"}}
 
-Another option is to disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
+You can also disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
 In that case, the tooltip renders as a child of the chart, and CSS rules apply as expected.
 
 ## Using a custom tooltip
 
-For advanced use cases, you may need to create your own tooltip.
-You can replace the default tooltip in single-component charts by using slots.
+For advanced use cases, you can create your own tooltip.
+Replace the default tooltip in single-component charts by using slots.
 
 ```jsx
 <LineChart slots={{ tooltip: CustomItemTooltip }} />
 ```
 
-When composing a custom component, you can use your component inside `ChartDataProvider`.
+When composing a custom component, use your component inside `ChartDataProvider`.
 
 ```jsx
 <ChartDataProvider>
@@ -208,7 +209,7 @@ It accepts a prop `trigger = 'item' | 'axis'` that defines when the Popper shoul
 The `useItemTooltip()` hook provides information about the current item the user is interacting with.
 It contains:
 
-- `identifier`: An object that identifies the item, which often contains its series type, series ID, and data index
+- `identifier`: An object that identifies the item, which often contains its series type, series ID, and data index.
 - `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#values-color)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
@@ -219,7 +220,7 @@ It contains:
 The `useAxesTooltip()` hook returns information about the current axes the user is interacting with and the relevant series.
 For each axis, it contains:
 
-- `identifier`: An object that identifies the axis, which often contains its series type, series ID, and data index
+- `identifier`: An object that identifies the axis, which often contains its series type, series ID, and data index.
 - `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#values-color)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
