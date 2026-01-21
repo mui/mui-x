@@ -601,6 +601,139 @@ DataGridPremiumRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
+   */
+  historyEventHandlers: PropTypes.object,
+  /**
+   * The maximum size of the history stack.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyStackSize: PropTypes.number,
+  /**
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']
+   */
+  historyValidationEvents: PropTypes.arrayOf(
+    PropTypes.oneOf([
+      'activeChartIdChange',
+      'activeStrategyProcessorChange',
+      'aggregationLookupSet',
+      'aggregationModelChange',
+      'aiAssistantActiveConversationIndexChange',
+      'aiAssistantConversationsChange',
+      'cellClick',
+      'cellDoubleClick',
+      'cellDragEnter',
+      'cellDragOver',
+      'cellEditStart',
+      'cellEditStop',
+      'cellFocusIn',
+      'cellFocusOut',
+      'cellKeyDown',
+      'cellKeyUp',
+      'cellModeChange',
+      'cellModesModelChange',
+      'cellMouseDown',
+      'cellMouseOver',
+      'cellMouseUp',
+      'cellSelectionChange',
+      'chartSynchronizationStateChange',
+      'clipboardCopy',
+      'clipboardPasteEnd',
+      'clipboardPasteStart',
+      'columnGroupHeaderBlur',
+      'columnGroupHeaderFocus',
+      'columnGroupHeaderKeyDown',
+      'columnHeaderBlur',
+      'columnHeaderClick',
+      'columnHeaderContextMenu',
+      'columnHeaderDoubleClick',
+      'columnHeaderDragEnd',
+      'columnHeaderDragEndNative',
+      'columnHeaderDragEnter',
+      'columnHeaderDragOver',
+      'columnHeaderDragStart',
+      'columnHeaderEnter',
+      'columnHeaderFocus',
+      'columnHeaderKeyDown',
+      'columnHeaderLeave',
+      'columnHeaderOut',
+      'columnHeaderOver',
+      'columnIndexChange',
+      'columnOrderChange',
+      'columnResize',
+      'columnResizeStart',
+      'columnResizeStop',
+      'columnsChange',
+      'columnSeparatorDoubleClick',
+      'columnSeparatorMouseDown',
+      'columnVisibilityModelChange',
+      'columnWidthChange',
+      'debouncedResize',
+      'densityChange',
+      'detailPanelsExpandedRowIdsChange',
+      'excelExportStateChange',
+      'fetchRows',
+      'filteredRowsSet',
+      'filterModelChange',
+      'headerFilterBlur',
+      'headerFilterClick',
+      'headerFilterKeyDown',
+      'headerFilterMouseDown',
+      'headerSelectionCheckboxChange',
+      'menuClose',
+      'menuOpen',
+      'paginationMetaChange',
+      'paginationModelChange',
+      'pinnedColumnsChange',
+      'pivotModeChange',
+      'pivotModelChange',
+      'pivotPanelOpenChange',
+      'preferencePanelClose',
+      'preferencePanelOpen',
+      'redo',
+      'renderedRowsIntervalChange',
+      'resize',
+      'rootMount',
+      'rowClick',
+      'rowCountChange',
+      'rowDoubleClick',
+      'rowDragEnd',
+      'rowDragOver',
+      'rowDragStart',
+      'rowEditStart',
+      'rowEditStop',
+      'rowExpansionChange',
+      'rowGroupingModelChange',
+      'rowModesModelChange',
+      'rowMouseEnter',
+      'rowMouseLeave',
+      'rowMouseOut',
+      'rowMouseOver',
+      'rowOrderChange',
+      'rowSelectionChange',
+      'rowSelectionCheckboxChange',
+      'rowsScrollEnd',
+      'rowsScrollEndIntersection',
+      'rowsSet',
+      'scrollPositionChange',
+      'sidebarClose',
+      'sidebarOpen',
+      'sortedRowsSet',
+      'sortModelChange',
+      'stateChange',
+      'strategyAvailabilityChange',
+      'undo',
+      'unmount',
+      'viewportInnerSizeChange',
+      'virtualScrollerContentSizeChange',
+      'virtualScrollerTouchMove',
+      'virtualScrollerWheel',
+    ]).isRequired,
+  ),
+  /**
    * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
    * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
@@ -1014,6 +1147,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onPrompt: PropTypes.func,
   /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo: PropTypes.func,
+  /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -1113,6 +1250,10 @@ DataGridPremiumRaw.propTypes = {
    * @ignore - do not document.
    */
   onStateChange: PropTypes.func,
+  /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo: PropTypes.func,
   /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
