@@ -160,6 +160,10 @@ export interface GridLocaleText {
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
 
+  // Long text cell
+  longTextCellExpandLabel: string;
+  longTextCellCollapseLabel: string;
+
   // Actions cell more text
   actionsCellMore: string;
 

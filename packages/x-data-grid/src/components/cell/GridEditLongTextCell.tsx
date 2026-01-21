@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '@mui/material/styles';
@@ -19,7 +20,10 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 
   const slots = {
     root: ['editLongTextCell'],
+    value: ['editLongTextCellValue'],
     popup: ['editLongTextCellPopup'],
+    popperContent: ['editLongTextCellPopperContent'],
+    textarea: ['editLongTextCellTextarea'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -98,10 +102,35 @@ export interface GridEditLongTextCellProps extends GridRenderEditCellParams<any,
     event: React.ChangeEvent<HTMLTextAreaElement>,
     newValue: string,
   ) => Promise<void> | void;
+  /**
+   * Props passed to internal components.
+   */
+  slotProps?: {
+    /**
+     * Props passed to the root element.
+     */
+    root?: React.HTMLAttributes<HTMLDivElement>;
+    /**
+     * Props passed to the value element.
+     */
+    value?: React.HTMLAttributes<HTMLDivElement>;
+    /**
+     * Props passed to the popper element.
+     */
+    popper?: Partial<GridSlotProps['basePopper']>;
+    /**
+     * Props passed to the popper content element.
+     */
+    popperContent?: React.HTMLAttributes<HTMLDivElement>;
+    /**
+     * Props passed to the textarea element.
+     */
+    textarea?: Partial<GridSlotProps['baseTextarea']>;
+  };
 }
 
 function GridEditLongTextCell(props: GridEditLongTextCellProps) {
-  const { id, value, field, colDef, hasFocus, cellMode } = props;
+  const { id, value, field, colDef, hasFocus, cellMode, slotProps } = props;
 
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
@@ -159,16 +188,21 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
     <GridEditLongTextCellRoot
       tabIndex={cellMode === 'edit' && rootProps.editMode === 'row' ? 0 : undefined}
       ref={setAnchorEl}
-      className={classes.root}
+      {...slotProps?.root}
+      className={clsx(classes.root, slotProps?.root?.className)}
     >
-      <GridEditLongTextCellValue>{valueState}</GridEditLongTextCellValue>
+      <GridEditLongTextCellValue
+        {...slotProps?.value}
+        className={clsx(classes.value, slotProps?.value?.className)}
+      >
+        {valueState}
+      </GridEditLongTextCellValue>
       <GridEditLongTextCellPopper
         as={rootProps.slots.basePopper}
         ownerState={rootProps}
         open={showPopup}
         target={anchorEl}
         placement="bottom-start"
-        className={classes.popup}
         flip
         material={{
           modifiers: [
@@ -178,9 +212,13 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
             },
           ],
         }}
+        {...slotProps?.popper}
+        className={clsx(classes.popup, slotProps?.popper?.className)}
       >
         {/* Required React element as a child because `rootProps.slots.basePopper` uses ClickAwayListener internally */}
         <GridEditLongTextCellPopperContent
+          {...slotProps?.popperContent}
+          className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
           style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
         >
           <GridEditLongTextarea {...props} valueState={valueState} setValueState={setValueState} />
@@ -191,10 +229,20 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
 }
 
 function GridEditLongTextarea(props: GridEditLongTextCellProps) {
-  const { id, field, debounceMs = 200, onValueChange, valueState, setValueState, hasFocus } = props;
+  const {
+    id,
+    field,
+    debounceMs = 200,
+    onValueChange,
+    valueState,
+    setValueState,
+    hasFocus,
+    slotProps,
+  } = props;
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
+  const classes = useUtilityClasses(rootProps);
 
   useEnhancedEffect(() => {
     if (hasFocus && textareaRef.current) {
@@ -251,6 +299,8 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
+      {...slotProps?.textarea}
+      className={clsx(classes.textarea, slotProps?.textarea?.className)}
     />
   );
 }

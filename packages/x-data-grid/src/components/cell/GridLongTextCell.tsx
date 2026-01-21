@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
@@ -22,6 +23,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
     expandButton: ['longTextCellExpandButton'],
     collapseButton: ['longTextCellCollapseButton'],
     popup: ['longTextCellPopup'],
+    popperContent: ['longTextCellPopperContent'],
   };
 
   return composeClasses(slots, getDataGridUtilityClass, classes);
@@ -108,10 +110,40 @@ const GridLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, 
   background: (theme.vars || theme).palette.background.paper,
 }));
 
-export interface GridLongTextCellProps extends GridRenderCellParams<any, string | null> {}
+export interface GridLongTextCellProps extends GridRenderCellParams<any, string | null> {
+  /**
+   * Props passed to internal components.
+   */
+  slotProps?: {
+    /**
+     * Props passed to the root element.
+     */
+    root?: React.HTMLAttributes<HTMLDivElement>;
+    /**
+     * Props passed to the content element.
+     */
+    content?: React.HTMLAttributes<HTMLDivElement>;
+    /**
+     * Props passed to the expand button element.
+     */
+    expandButton?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+    /**
+     * Props passed to the collapse button element.
+     */
+    collapseButton?: React.ButtonHTMLAttributes<HTMLButtonElement>;
+    /**
+     * Props passed to the popper element.
+     */
+    popper?: Partial<GridSlotProps['basePopper']>;
+    /**
+     * Props passed to the popper content element.
+     */
+    popperContent?: React.HTMLAttributes<HTMLDivElement>;
+  };
+}
 
 function GridLongTextCell(props: GridLongTextCellProps) {
-  const { id, value = '', colDef, hasFocus } = props;
+  const { id, value = '', colDef, hasFocus, slotProps } = props;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -179,12 +211,23 @@ function GridLongTextCell(props: GridLongTextCellProps) {
   };
 
   return (
-    <GridLongTextCellRoot ref={cellRef} className={classes.root} onKeyDown={handleKeyDown}>
-      <GridLongTextCellContent className={classes.content}>{value}</GridLongTextCellContent>
+    <GridLongTextCellRoot
+      ref={cellRef}
+      {...slotProps?.root}
+      className={clsx(classes.root, slotProps?.root?.className)}
+      onKeyDown={handleKeyDown}
+    >
+      <GridLongTextCellContent
+        {...slotProps?.content}
+        className={clsx(classes.content, slotProps?.content?.className)}
+      >
+        {value}
+      </GridLongTextCellContent>
       <GridLongTextCellCornerButton
-        aria-label="expand"
+        aria-label={apiRef.current.getLocaleText('longTextCellExpandLabel')}
         tabIndex={-1}
-        className={classes.expandButton}
+        {...slotProps?.expandButton}
+        className={clsx(classes.expandButton, slotProps?.expandButton?.className)}
         onClick={handleExpandClick}
       >
         <rootProps.slots.longTextCellExpandIcon fontSize="inherit" />
@@ -195,7 +238,6 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         open={popupOpen}
         target={cellRef.current}
         placement="bottom-start"
-        className={classes.popup}
         onClickAway={handleClickAway}
         clickAwayMouseEvent="onMouseDown"
         flip
@@ -207,6 +249,8 @@ function GridLongTextCell(props: GridLongTextCellProps) {
             },
           ],
         }}
+        {...slotProps?.popper}
+        className={clsx(classes.popup, slotProps?.popper?.className)}
       >
         {/* Required React element as a child because `rootProps.slots.basePopper` uses ClickAwayListener internally */}
         <GridLongTextCellPopperContent
@@ -218,12 +262,15 @@ function GridLongTextCell(props: GridLongTextCellProps) {
               apiRef.current.getCellElement(id, colDef.field)?.focus();
             }
           }}
+          {...slotProps?.popperContent}
+          className={clsx(classes.popperContent, slotProps?.popperContent?.className)}
           style={{ '--_width': `${colDef.computedWidth}px` } as React.CSSProperties}
         >
           {value}
           <GridLongTextCellCornerButton
-            aria-label="collapse"
-            className={classes.collapseButton}
+            aria-label={apiRef.current.getLocaleText('longTextCellCollapseLabel')}
+            {...slotProps?.collapseButton}
+            className={clsx(classes.collapseButton, slotProps?.collapseButton?.className)}
             onClick={handleCollapseClick}
           >
             <rootProps.slots.longTextCellCollapseIcon fontSize="inherit" />
