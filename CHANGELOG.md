@@ -86,6 +86,7 @@ Internal changes.
 - [code-infra] Update `master` to `v8` references (#20864) @JCQuintas
 - [code-infra] Update v8 branch tags (#20926) @JCQuintas
 - [code-infra] V8 changes in master (#20919) @JCQuintas
+- [code-infra] Allow user to select target branch if it exists for current major (#21005) @JCQuintas
 
 ## 8.25.0
 
