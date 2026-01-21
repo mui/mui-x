@@ -32,4 +32,3 @@ export {
   type AxisCoordinates,
 } from './useAxisCoordinates';
 export * from './useAxisTicks';
-export * from './useAxisPosition';
