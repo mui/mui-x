@@ -85,3 +85,20 @@ This improves consistency across chart components and developer experience.
 +  hideLegend
  />
 ```
+
+## Hooks
+
+### `use[Type]Series()` with empty array
+
+When hooks `use[Type]Series()` received an empty array, they were returning all the available series of the given type.
+In v9 they return an empty array.
+
+```js
+// In v8
+useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
+useBarSeries([]); // Returns [{ id: "id-1", ... }, { id: "id-2", ... }, ...]
+
+// In v9
+useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
+useBarSeries([]); // Returns []
+```
