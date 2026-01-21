@@ -229,7 +229,7 @@ The `useItemTooltip()` hook provides information about the current item the user
 It contains:
 
 - `identifier`: An object that identifies the item, which often contains its series type, series ID, and data index.
-- `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#values-color)
+- `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#value-based-colors)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
 {{"demo": "CustomTooltipContent.js"}}
@@ -240,7 +240,7 @@ The `useAxesTooltip()` hook returns information about the current axes the user 
 For each axis, it contains:
 
 - `identifier`: An object that identifies the axis, which often contains its series type, series ID, and data index.
-- `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#values-color)
+- `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#value-based-colors)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
 {{"demo": "CustomAxisTooltipContent.js"}}
