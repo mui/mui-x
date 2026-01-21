@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled, useThemeProps } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -99,6 +100,11 @@ const EventCalendarMonthCalendarPlaceholder = styled('section', {
   color: theme.palette.grey[500],
 }));
 
+const EventCalendarErrorContainer = styled(Alert, {
+  name: 'MuiEventCalendar',
+  slot: 'ErrorContainer',
+})({});
+
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
   TResource extends object,
@@ -117,6 +123,8 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const view = useStore(store, eventCalendarViewSelectors.view);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
+  const errors = useStore(store, schedulerOtherSelectors.errors);
+
   const {
     // TODO: Move inside useEventCalendar so that standalone view can benefit from it (#19293).
     translations,
@@ -124,6 +132,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   } = forwardedProps;
 
   let content: React.ReactNode;
+
   switch (view) {
     case 'week':
       content = <WeekView />;
@@ -174,7 +183,12 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
               >
                 {content}
               </EventCalendarContent>
-
+              {errors?.length > 0 &&
+                errors.map((error, index) => (
+                  <EventCalendarErrorContainer severity="error" key={index}>
+                    {error.message}
+                  </EventCalendarErrorContainer>
+                ))}
               {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
             </EventCalendarMainPanel>
           </EventCalendarRoot>

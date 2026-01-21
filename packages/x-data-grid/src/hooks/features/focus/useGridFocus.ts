@@ -13,11 +13,12 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { isNavigationKey } from '../../../utils/keyboardUtils';
+import { isNavigationKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
+import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -66,6 +67,31 @@ export const useGridFocus = (
     (id, field) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === id && focusedCell?.field === field) {
+        /**
+         * Check if the state matches the actual DOM focus. They can get out of sync after `updateRows()` remounts the cell.
+         */
+        if (apiRef.current.getCellMode(id, field) !== 'view') {
+          return;
+        }
+
+        const cellElement = apiRef.current.getCellElement(id, field);
+        if (!cellElement) {
+          return;
+        }
+
+        const doc = ownerDocument(apiRef.current.rootElementRef!.current);
+        if (cellElement.contains(doc.activeElement!)) {
+          return;
+        }
+
+        if (doesSupportPreventScroll()) {
+          cellElement.focus({ preventScroll: true });
+        } else {
+          const scrollPosition = apiRef.current.getScrollPosition();
+          cellElement.focus();
+          apiRef.current.scroll(scrollPosition);
+        }
+
         return;
       }
 
@@ -280,6 +306,7 @@ export const useGridFocus = (
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
       if (
+        isPasteShortcut(event) ||
         event.key === 'Enter' ||
         event.key === 'Tab' ||
         event.key === 'Shift' ||

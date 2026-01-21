@@ -17,6 +17,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfortabelt',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Angre',
+  toolbarRedo: 'Gjer om',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
   toolbarColumnsLabel: 'Vel kolonner',

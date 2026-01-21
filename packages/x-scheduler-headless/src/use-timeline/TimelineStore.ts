@@ -8,6 +8,7 @@ import {
 } from '../utils/SchedulerStore';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
+import { TimelineLazyLoadingPlugin } from './plugins/TimelineLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: TimelineView[] = ['time', 'days', 'weeks', 'months', 'years'];
 export const DEFAULT_VIEW: TimelineView = 'time';
@@ -56,6 +57,8 @@ export class TimelineStore<TEvent extends object, TResource extends object> exte
         return null;
       });
     }
+
+    this.lazyLoading = new TimelineLazyLoadingPlugin(this);
   }
 
   private assertViewValidity(view: TimelineView) {
