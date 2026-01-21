@@ -39,21 +39,23 @@ interface GridActionsCellProps<
   suppressChildrenValidation?: boolean;
   /**
    * Callback to fire before the menu gets opened.
+   * Use this callback to prevent the menu from opening.
    *
-   * @param {GridRowParams<R>} params Information about the menu's row.
-   * @param {React.MouseEvent<HTMLElement>} event The pointer event triggering this callback.
-   * @returns {boolean | null | undefined | void} if the menu should be opened. If `null` or `undefined `, defaults to `true`.
+   * @param {GridRowParams<R>} params Row parameters.
+   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
+   * @returns {boolean} if the menu should be opened.
    */
   onMenuOpen?: (
     params: GridRowParams<R>,
     event: React.MouseEvent<HTMLElement>,
-  ) => boolean | null | undefined | void;
+  ) => boolean;
   /**
    * Callback to fire before the menu gets closed.
+   * Use this callback to prevent the menu from closing.
    *
-   * @param {GridRowParams<R>} params Information about the menu's row.
-   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The pointer event triggering this callback.
-   * @returns {boolean | null | undefined | void} if the menu should be closed. If `null` or `undefined `, defaults to `true`.
+   * @param {GridRowParams<R>} params Row parameters.
+   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
+   * @returns {boolean} if the menu should be closed.
    */
   onMenuClose?: (
     params: GridRowParams<R>,
@@ -63,7 +65,7 @@ interface GridActionsCellProps<
       | MouseEvent
       | TouchEvent
       | undefined,
-  ) => boolean | null | undefined | void;
+  ) => boolean;
 }
 
 function GridActionsCell<
@@ -103,6 +105,7 @@ function GridActionsCell<
   const menuId = useId();
   const buttonId = useId();
   const rootProps = useGridRootProps();
+  const rowParams = apiRef.current.getRowParams(id);
 
   const actions: React.ReactElement<GridActionsCellItemProps>[] = [];
   React.Children.forEach(children, (child) => {
@@ -172,11 +175,8 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   }, [focusedButtonIndex, numberOfButtons]);
 
   const showMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (onMenuOpen) {
-      const params = apiRef.current.getRowParams(id);
-      if (!(onMenuOpen(params, event) ?? true)) {
-        return;
-      }
+    if (onMenuOpen && !onMenuOpen(rowParams, event)) {
+      return;
     }
     setOpen(true);
     setFocusedButtonIndex(numberOfButtons - 1);
@@ -186,14 +186,12 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   const hideMenu = (
     event?: React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent,
   ) => {
-    if (onMenuClose) {
-      const params = apiRef.current.getRowParams(id);
-      if (!(onMenuClose(params, event) ?? true)) {
-        return;
-      }
+    if (onMenuClose && !onMenuClose(rowParams, event)) {
+      return;
     }
     setOpen(false);
   };
+
   const toggleMenu = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     event.preventDefault();
@@ -211,14 +209,14 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
 
   const handleButtonClick =
     (index: number, onClick?: React.MouseEventHandler): React.MouseEventHandler =>
-    (event) => {
-      setFocusedButtonIndex(index);
-      ignoreCallToFocus.current = true;
+      (event) => {
+        setFocusedButtonIndex(index);
+        ignoreCallToFocus.current = true;
 
-      if (onClick) {
-        onClick(event);
-      }
-    };
+        if (onClick) {
+          onClick(event);
+        }
+      };
 
   const handleRootKeyDown = (event: React.KeyboardEvent) => {
     if (numberOfButtons <= 1) {
@@ -262,9 +260,9 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   const attributes =
     numberOfButtons > 0
       ? {
-          role: 'menu',
-          onKeyDown: handleRootKeyDown,
-        }
+        role: 'menu',
+        onKeyDown: handleRootKeyDown,
+      }
       : undefined;
 
   return (
