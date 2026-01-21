@@ -45,8 +45,8 @@ function YAxis(props) {
   return (
     <React.Fragment>
       <line
-        x1={axisCoordinates.left + 4}
-        x2={axisCoordinates.left + 4}
+        x1={axisCoordinates.right}
+        x2={axisCoordinates.right}
         y1={axisCoordinates.top}
         y2={axisCoordinates.bottom}
         stroke={theme.palette.common.white}
@@ -54,7 +54,7 @@ function YAxis(props) {
       {ticks.map((tick, index) => (
         <g
           key={index}
-          transform={`translate(${axisCoordinates.left + 4}, ${tick.offset})`}
+          transform={`translate(${axisCoordinates.right}, ${tick.offset})`}
         >
           <line x1={-4} x2={4} stroke={theme.palette.common.white} />
           <text
