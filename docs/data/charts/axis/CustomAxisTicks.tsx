@@ -50,14 +50,14 @@ function YAxis(props: ChartsYAxisProps) {
         x2={axisCoordinates.right}
         y1={axisCoordinates.top}
         y2={axisCoordinates.bottom}
-        stroke={theme.palette.common.white}
+        stroke={(theme.vars || theme).palette.text.primary}
       />
       {ticks.map((tick, index) => (
         <g
           key={index}
           transform={`translate(${axisCoordinates.right}, ${tick.offset})`}
         >
-          <line x1={-4} x2={4} stroke={theme.palette.common.white} />
+          <line x1={-4} x2={4} stroke={(theme.vars || theme).palette.text.primary} />
 
           <text
             x={8}
