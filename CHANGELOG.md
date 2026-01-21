@@ -5,6 +5,137 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.25.1
+
+_Jan 21, 2026_
+
+We'd like to extend a big thank you to the 15 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+Special thanks go out to these community members for their valuable contributions:
+@Copilot, @jhe-iqbis
+
+The following team members contributed to this release:
+@alexfauquette, @arminmeh, @bernardobelchior, @brijeshb42, @cherniavskii, @flaviendelangle, @Janpot, @JCQuintas, @mapache-salvaje, @noraleonte, @rita-codes, @romgrk, @siriwatknp
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.25.1`
+
+- [DataGrid] Add `onMenuOpen()` and `onMenuClose()` event handlers in `GridActionsCell` (#20924) @jhe-iqbis
+- [DataGrid] Fix: update scrollbar when virtualization is disabled (#20929) @romgrk
+
+#### `@mui/x-data-grid-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.25.1`.
+
+#### `@mui/x-data-grid-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.25.1`, plus:
+
+- [DataGridPremium] Undo and redo (#20594) @arminmeh
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.25.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.25.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.25.1`
+
+- [charts] Add Legend actions (#20404) @JCQuintas
+- [charts] Add `axesGap` props to put space between axes (#20904) @alexfauquette
+- [charts] Add `cleanIdentifier` function to charts series instance (#20832) @JCQuintas
+- [charts] Add `initialHiddenItems` prop to set initial state (#20894) @JCQuintas
+- [charts] Control the item tooltip (#20617) @alexfauquette
+- [charts] Enable keyboard navigation in radar chart (#20765) @alexfauquette
+- [charts] Export plugins from premium (#20866) @JCQuintas
+- [charts] Fix node anchor on iOS (#20848) @alexfauquette
+- [charts] Fix test inconsistency in charts (#20907) @JCQuintas
+- [charts] Fix tooltip position for stacked line series (#20901) @alexfauquette
+- [charts] Memoize HeatmapItem to avoid re-render when fading/highlighting (#20865) @bernardobelchior
+- [charts] Revert `touch-action: pan-y` removal when zoom is disabled (#20852) @bernardobelchior
+- [charts] Use React event handler to detect pointer type (#20849) @alexfauquette
+- [charts][docs] Revise the Charts Composition doc (#20032) @mapache-salvaje
+- [charts][docs] Revise the Charts Localization doc (#20800) @mapache-salvaje
+- [charts][docs] Revise the Charts Stacking doc (#20830) @mapache-salvaje
+
+#### `@mui/x-charts-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.25.1`, plus:
+
+- [charts-pro] Add `onItemClick` to the heatmap (#20817) @alexfauquette
+- [charts-pro] Add border radius to Heatmap (#20931) @bernardobelchior
+- [charts-pro] Add keyboard navigation to funnel (#20766) @alexfauquette
+- [charts-pro] Add keyboard navigation to heatmap (#20786) @alexfauquette
+- [charts-pro] Add keyboard navigation to sankey (#20777) @alexfauquette
+- [charts-pro] Fix crash when two same-direction axes have a zoom preview (#20916) @bernardobelchior
+- [charts-pro] Prefer global pointer interaction tracker in Heatmap (#20697) @bernardobelchior
+- [charts-pro] Support composition for Sankey (#20604) @alexfauquette
+- [charts-pro] Update default value of `hideLegend` prop in `Heatmap` (#20961) @Copilot
+
+#### `@mui/x-charts-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.25.1`, plus:
+
+- [charts-premium] Add `ChartContainerPremium` (#20910) @bernardobelchior
+- [charts-premium] Add `HeatmapPremium` (#20930) @bernardobelchior
+- [charts-premium] Fix `ChartDataProviderPremium` tests (#20868) @bernardobelchior
+
+### Tree View
+
+#### `@mui/x-tree-view@8.25.1`
+
+- [tree view] Fix `props.id` not passed to the root element (#20891) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.25.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.25.1`
+
+Internal changes.
+
+### Docs
+
+- [docs] Add focus highlight in composition snipets (#20614) @alexfauquette
+- [docs] Fix Waterfall Chart documentation badge from Pro to Premium (#20888) @Copilot
+- [docs] Fix broken links on Data Grid Editing sub-pages (#20911) @arminmeh
+- [docs] Fix horizontal overflow in heatmap docs (#20968) @bernardobelchior
+- [docs] Increase chart axis size in docs to fit in Ubuntu Firefox (#20844) @bernardobelchior
+- [docs] Simplify heatmap zoom demo (#20851) @bernardobelchior
+- [scheduler][docs] Create the Quickstart page (#20913) @flaviendelangle
+
+### Core
+
+- [code-infra] Fix `material-ui/disallow-react-api-in-server-components` (#20909) @JCQuintas
+- [code-infra] Fix `renameImports` codemod not preserving comments (#20977) @JCQuintas
+- [code-infra] Fix the label comparison to use lower case (#20934) @brijeshb42
+- [code-infra] Github action to sync title and label (#20922) @brijeshb42
+- [code-infra] Ignore scheduler demo with random data (#20982) @JCQuintas
+- [code-infra] Prepare for v9 (#20860) @JCQuintas
+- [code-infra] Update codeowners (#20886) @JCQuintas
+- [code-infra] V9 preparation (#20928) @JCQuintas
+- [code-infra][docs] V9 charts migration doc kickoff (#20973) @JCQuintas
+- [docs-infra] Fix missing slots section on API page (#20915) @Janpot
+- [docs-infra] Fix two broken links (#20914) @Janpot
+- [internal] Remove local Claude settings from the repo (#20853) @cherniavskii
+- [internal] Set up shared instructions for coding agents (#20932) @cherniavskii
+
+### Miscellaneous
+
+- [Data Grid] Add a recipe for handling long text cell (#20754) @siriwatknp
+- [release] v8.25.0 (#20917) @cherniavskii
+
 ## 8.25.0
 
 <!-- generated comparing v8.24.0..master -->

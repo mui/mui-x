@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.25.0",
+  "version": "8.25.1",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "bin": "./codemod.js",
