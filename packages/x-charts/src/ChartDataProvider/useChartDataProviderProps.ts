@@ -2,6 +2,7 @@
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import type { ChartDataProviderProps } from './ChartDataProvider';
 import { type ChartProviderProps } from '../context/ChartProvider';
+import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 import {
   type ChartAnyPluginSignature,
   type MergeSignaturesProperty,
@@ -20,7 +21,15 @@ export const useChartDataProviderProps = <
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiChartDataProvider' });
 
-  const { children, localeText, plugins = DEFAULT_PLUGINS, slots, slotProps, ...other } = props;
+  const {
+    children,
+    localeText,
+    plugins = DEFAULT_PLUGINS,
+    slots,
+    slotProps,
+    seriesConfig = defaultSeriesConfig,
+    ...other
+  } = props;
 
   const theme = useTheme();
 
@@ -28,6 +37,7 @@ export const useChartDataProviderProps = <
     plugins: plugins as ChartProviderProps<TSignatures>['plugins'],
     pluginParams: {
       theme: theme.palette.mode,
+      seriesConfig,
       ...other,
     } as unknown as MergeSignaturesProperty<
       [...ChartCorePluginSignatures, ...TSignatures],

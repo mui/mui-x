@@ -1,6 +1,5 @@
 'use client';
 
-import { defaultSeriesConfig } from '../../utils/defaultSeriesConfig';
 import { type ChartPlugin } from '../../models';
 import { type UseChartSeriesConfigSignature } from './useChartSeriesConfig.types';
 
@@ -16,8 +15,8 @@ useChartSeriesConfig.params = {
 
 useChartSeriesConfig.getDefaultizedParams = ({ params }) => ({
   ...params,
-  // ChartProvider always provides a default seriesConfig, so it will never be undefined
-  seriesConfig: params.seriesConfig ?? defaultSeriesConfig,
+  // The default seriesConfig is provided by ChartDataProvider or chart components
+  seriesConfig: params.seriesConfig!,
 });
 
 useChartSeriesConfig.getInitialState = ({ seriesConfig }) => {
