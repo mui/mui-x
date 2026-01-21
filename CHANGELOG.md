@@ -9,7 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 _Jan 21, 2026_
 
-We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+We'd like to extend a big thank you to the 6 contributors who made this release possible. Here are some highlights ✨:
 
 - 🔄 Data Grid now supports undo and redo actions. See the [Undo and redo](https://mui.com/x/react-data-grid/undo-redo/) page for details about out-of-the-box support and customization options.
 - 🐞 Bugfixes
@@ -18,62 +18,62 @@ Special thanks go out to these community members for their valuable contribution
 @jhe-iqbis
 
 The following team members contributed to this release:
-@arminmeh, @flaviendelangle, @JCQuintas, @romgrk
+@arminmeh, @cherniavskii, @flaviendelangle, @JCQuintas, @romgrk
 
 ### Data Grid
 
-#### `@mui/x-data-grid@8.25.1`
+#### `@mui/x-data-grid@8.26.0`
 
 - [DataGrid] Add `onMenuOpen()` and `onMenuClose()` event handlers in `GridActionsCell` (#20994) @jhe-iqbis
 - [DataGrid] Fix scroll position when virtualization is disabled (#20958) @romgrk
 
-#### `@mui/x-data-grid-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-data-grid-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-data-grid@8.25.1`.
+Same changes as in `@mui/x-data-grid@8.26.0`.
 
-#### `@mui/x-data-grid-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-data-grid-premium@8.26.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.25.1`, plus:
+Same changes as in `@mui/x-data-grid-pro@8.26.0`, plus:
 
 - [DataGridPremium] Undo and redo (#20993) @arminmeh
 
 ### Date and Time Pickers
 
-#### `@mui/x-date-pickers@8.25.1`
+#### `@mui/x-date-pickers@8.26.0`
 
 Internal changes.
 
-#### `@mui/x-date-pickers-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-date-pickers-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-date-pickers@8.25.1`.
+Same changes as in `@mui/x-date-pickers@8.26.0`.
 
 ### Charts
 
-#### `@mui/x-charts@8.25.1`
+#### `@mui/x-charts@8.26.0`
 
 Internal changes.
 
-#### `@mui/x-charts-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-charts-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-charts@8.25.1`.
+Same changes as in `@mui/x-charts@8.26.0`.
 
-#### `@mui/x-charts-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+#### `@mui/x-charts-premium@8.26.0` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-charts-pro@8.25.1`.
+Same changes as in `@mui/x-charts-pro@8.26.0`.
 
 ### Tree View
 
-#### `@mui/x-tree-view@8.25.1`
+#### `@mui/x-tree-view@8.26.0`
 
 - [tree view] Fix `props.id` not passed to the root element (#20976) @flaviendelangle
 
-#### `@mui/x-tree-view-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+#### `@mui/x-tree-view-pro@8.26.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
-Same changes as in `@mui/x-tree-view@8.25.1`.
+Same changes as in `@mui/x-tree-view@8.26.0`.
 
 ### Codemod
 
-#### `@mui/x-codemod@8.25.1`
+#### `@mui/x-codemod@8.26.0`
 
 Internal changes.
 
@@ -87,6 +87,7 @@ Internal changes.
 - [code-infra] Update v8 branch tags (#20926) @JCQuintas
 - [code-infra] V8 changes in master (#20919) @JCQuintas
 - [code-infra] Allow user to select target branch if it exists for current major (#21005) @JCQuintas
+- [internal] Set up shared instructions for coding agents (#21000) @cherniavskii
 
 ## 8.25.0
 
