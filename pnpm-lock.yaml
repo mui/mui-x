@@ -566,6 +566,12 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../packages/x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-headless-premium/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../packages/x-tree-view/build
@@ -2458,6 +2464,12 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../../packages/x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-scheduler-headless-premium/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../../packages/x-tree-view/build
