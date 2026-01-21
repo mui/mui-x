@@ -1212,6 +1212,14 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
     },
+    "editLongTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell root element"
+    },
+    "editLongTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popup"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1265,6 +1273,26 @@
     "iconSeparator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator icon element"
+    },
+    "longTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell root element"
+    },
+    "longTextCellCollapseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell collapse button"
+    },
+    "longTextCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell content element"
+    },
+    "longTextCellExpandButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell expand button"
+    },
+    "longTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popup"
     },
     "main": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1689,6 +1717,7 @@
     "baseSkeleton": "The custom Skeleton component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",
     "baseTabs": "The custom Tabs component used in the grid.",
+    "baseTextarea": "The custom Textarea component used in the grid for multiline text editing.",
     "baseTextField": "The custom TextField component used in the grid.",
     "baseToggleButton": "The custom ToggleButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
@@ -1738,6 +1767,8 @@
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "longTextCellCollapseIcon": "Icon displayed on the long text cell popup to collapse the content.",
+    "longTextCellExpandIcon": "Icon displayed on the long text cell to expand the content.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
