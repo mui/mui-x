@@ -4,7 +4,6 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -74,7 +73,7 @@ export interface FunnelChartProps
   axisHighlight?: ChartsAxisHighlightProps;
 }
 
-const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelSeriesConfig };
+const seriesConfig = { funnel: funnelSeriesConfig };
 
 const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,

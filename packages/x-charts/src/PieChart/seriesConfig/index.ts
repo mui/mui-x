@@ -8,6 +8,7 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
+import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
 
 export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   colorProcessor: getColor,
@@ -19,4 +20,5 @@ export const pieSeriesConfig: ChartSeriesTypeConfig<'pie'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };
