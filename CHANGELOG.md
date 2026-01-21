@@ -9,9 +9,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 <!-- generated comparing v8.25.0..v8.x -->
 _Jan 21, 2026_
 
-We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
-
-TODO INSERT HIGHLIGHTS
+We'd like to extend a big thank you to the 3 contributors who made this release possible.
 
 The following team members contributed to this release:
 @flaviendelangle, @JCQuintas, @romgrk
