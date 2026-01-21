@@ -68,7 +68,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {showViewSwitcher && (
             <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
           )}
-          <Button variant="outlined" onClick={store.goToToday}>
+          <Button variant="contained" onClick={store.goToToday}>
             {translations.today}
           </Button>
         </HeaderToolbarPrimaryActionWrapper>
