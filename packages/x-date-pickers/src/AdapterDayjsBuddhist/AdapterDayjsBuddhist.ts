@@ -11,76 +11,17 @@ import { FieldFormatTokenMap, AdapterFormats, AdapterOptions } from '../models';
 
 dayjs.extend(buddhistEraPlugin);
 
-// Buddhist Era offset
 const BUDDHIST_YEAR_OFFSET = 543;
 
-const formatTokenMap: FieldFormatTokenMap = {
-  // Year
-  YY: 'year',
-  YYYY: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-  // Buddhist Era year
+const buddhistTokens: FieldFormatTokenMap = {
   BB: 'year',
   BBBB: { sectionType: 'year', contentType: 'digit', maxLength: 4 },
-
-  // Month
-  M: { sectionType: 'month', contentType: 'digit', maxLength: 2 },
-  MM: 'month',
-  MMM: { sectionType: 'month', contentType: 'letter' },
-  MMMM: { sectionType: 'month', contentType: 'letter' },
-
-  // Day of the month
-  D: { sectionType: 'day', contentType: 'digit', maxLength: 2 },
-  DD: 'day',
-  Do: { sectionType: 'day', contentType: 'digit-with-letter' },
-
-  // Day of the week
-  d: { sectionType: 'weekDay', contentType: 'digit', maxLength: 2 },
-  dd: { sectionType: 'weekDay', contentType: 'letter' },
-  ddd: { sectionType: 'weekDay', contentType: 'letter' },
-  dddd: { sectionType: 'weekDay', contentType: 'letter' },
-
-  // Meridiem
-  A: 'meridiem',
-  a: 'meridiem',
-
-  // Hours
-  H: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  HH: 'hours',
-  h: { sectionType: 'hours', contentType: 'digit', maxLength: 2 },
-  hh: 'hours',
-
-  // Minutes
-  m: { sectionType: 'minutes', contentType: 'digit', maxLength: 2 },
-  mm: 'minutes',
-
-  // Seconds
-  s: { sectionType: 'seconds', contentType: 'digit', maxLength: 2 },
-  ss: 'seconds',
 };
 
-const defaultFormats: AdapterFormats = {
+const buddhistFormats: Partial<AdapterFormats> = {
   year: 'BBBB',
-  month: 'MMMM',
-  monthShort: 'MMM',
-  dayOfMonth: 'D',
-  dayOfMonthFull: 'Do',
-  weekday: 'dddd',
-  weekdayShort: 'dd',
-  hours24h: 'HH',
-  hours12h: 'hh',
-  meridiem: 'A',
-  minutes: 'mm',
-  seconds: 'ss',
-
   fullDate: 'D MMM BBBB',
   keyboardDate: 'DD/MM/BBBB',
-  shortDate: 'D MMM',
-  normalDate: 'D MMMM',
-  normalDateWithWeekday: 'ddd, D MMM',
-
-  fullTime12h: 'hh:mm A',
-  fullTime24h: 'HH:mm',
-
   keyboardDateTime12h: 'DD/MM/BBBB hh:mm A',
   keyboardDateTime24h: 'DD/MM/BBBB HH:mm',
 };
@@ -98,9 +39,9 @@ declare module '@mui/x-date-pickers/models' {
  */
 export class AdapterDayjsBuddhist extends AdapterDayjs {
   constructor({ locale, formats }: AdapterOptions<string, never> = {}) {
-    super({ locale, formats: { ...defaultFormats, ...formats } });
+    super({ locale, formats: { ...buddhistFormats, ...formats } });
     this.lib = 'dayjs-buddhist';
-    this.formatTokenMap = formatTokenMap;
+    this.formatTokenMap = { ...this.formatTokenMap, ...buddhistTokens };
   }
 
   /**
