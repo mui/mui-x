@@ -18,7 +18,7 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { EventPopoverProvider } from '../event-popover';
+import { EventPopoverProvider } from '../../../components/event-popover/EventPopover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../hooks/useFormatTime';

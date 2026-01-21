@@ -20,7 +20,7 @@ import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-c
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventPopoverContent } from './EventPopover';
-import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
+import { RecurringScopeDialog } from '../../internals/components/scope-dialog/ScopeDialog';
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
   .title('Running')

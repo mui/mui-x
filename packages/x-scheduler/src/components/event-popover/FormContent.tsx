@@ -25,7 +25,7 @@ import {
   schedulerOtherSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
 import EventPopoverHeader from './EventPopoverHeader';
 import ResourceMenu from './ResourceMenu';

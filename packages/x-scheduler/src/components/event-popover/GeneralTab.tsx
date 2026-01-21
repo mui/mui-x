@@ -15,7 +15,7 @@ import {
   schedulerOccurrencePlaceholderSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
 
 const GeneralTabContent = styled('div', {

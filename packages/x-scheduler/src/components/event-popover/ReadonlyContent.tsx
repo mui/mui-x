@@ -13,10 +13,10 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import EventPopoverHeader from './EventPopoverHeader';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
-import { useFormatTime } from '../../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../utils/tokens';
+import { useFormatTime } from '../../hooks/useFormatTime';
+import { schedulerPaletteStyles } from '../../internals/utils/tokens';
 
 const ReadonlyContentRoot = styled('div', {
   name: 'MuiEventPopover',

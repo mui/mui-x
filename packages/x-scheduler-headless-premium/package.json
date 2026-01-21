@@ -13,7 +13,6 @@
     "./timeline": "./src/timeline/index.ts",
     "./timeline-provider": "./src/timeline-provider/index.ts",
     "./timeline-selectors": "./src/timeline-selectors/index.ts",
-    "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
     "./use-timeline": "./src/use-timeline/index.ts",
     "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts"
   },

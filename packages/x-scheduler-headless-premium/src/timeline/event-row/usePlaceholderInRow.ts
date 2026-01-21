@@ -4,8 +4,8 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-headless/utils';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
-import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurrences-with-timeline-position';
 import { timelineOccurrencePlaceholderSelectors } from '../../timeline-selectors';
 
 export function usePlaceholderInRow(

@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { differenceInMinutes } from 'date-fns/differenceInMinutes';
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { Timeline } from '@mui/x-scheduler/timeline';
+import { Timeline } from '@mui/x-scheduler-premium/timeline';
 import { StandaloneEvent } from '@mui/x-scheduler/standalone-event';
 
 // TODO: Estimate if we can avoid all imports from the headless package.

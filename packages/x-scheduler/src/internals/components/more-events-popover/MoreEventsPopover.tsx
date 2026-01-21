@@ -13,7 +13,7 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createPopover } from '../create-popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
-import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
+import { formatWeekDayMonthAndDayOfMonth } from '../../../utils/date-utils';
 
 const MoreEventsPopoverPositioner = styled(Popover.Positioner)(({ theme }) => ({
   maxWidth: 300,

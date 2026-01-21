@@ -3,7 +3,7 @@ import { Popover } from '@base-ui/react';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { useTranslations } from '../../utils/TranslationsContext';
+import { useTranslations } from '../../internals/utils/TranslationsContext';
 
 const EventPopoverHeaderRoot = styled('header', {
   name: 'MuiEventPopover',

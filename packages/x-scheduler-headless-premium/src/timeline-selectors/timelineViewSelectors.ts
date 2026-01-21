@@ -1,6 +1,6 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { TemporalAdapter } from '@mui/x-scheduler-headless/base-ui-copy';
-import { TimelineState as State } from '../use-timeline';
+import type { TimelineState as State } from '../use-timeline';
 import { TemporalSupportedObject, TimelineView } from '../models';
 
 const TIMELINE_VIEW_CONFIGS: Record<

@@ -8,8 +8,8 @@ import {
   TemporalTimezone,
 } from '@mui/x-scheduler-headless/models';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { SchedulerTranslations } from '../../../models';
-import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
+import { SchedulerTranslations } from '../../models';
+import { formatDayOfMonthAndMonthFullLetter } from '../../internals/utils/date-utils';
 
 export interface ControlledValue {
   startDate: string;

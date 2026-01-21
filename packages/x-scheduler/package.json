@@ -15,13 +15,15 @@
   },
   "exports": {
     "./agenda-view": "./src/agenda-view/index.ts",
+    "./components": "./src/components/index.ts",
     "./day-view": "./src/day-view/index.ts",
     "./event-calendar": "./src/event-calendar/index.ts",
+    "./hooks": "./src/hooks/index.ts",
     "./models": "./src/models/index.ts",
     "./month-view": "./src/month-view/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
-    "./timeline": "./src/timeline/index.ts",
     "./translations": "./src/translations/index.ts",
+    "./utils": "./src/utils/index.ts",
     "./week-view": "./src/week-view/index.ts"
   },
   "sideEffects": false,

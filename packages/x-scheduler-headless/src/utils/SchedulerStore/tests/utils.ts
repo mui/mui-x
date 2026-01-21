@@ -1,7 +1,7 @@
 import { EventCalendarStore } from '../../../use-event-calendar';
-import { TimelineStore } from '../../../use-timeline';
 
 export const storeClasses = [
   { name: 'EventCalendarStore', Value: EventCalendarStore },
-  { name: 'TimelineStore', Value: TimelineStore },
+  // TODO: Find a way to test TimelineStore in the premium package using the same tests
+  // { name: 'TimelineStore', Value: TimelineStore },
 ];

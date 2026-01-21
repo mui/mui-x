@@ -12,8 +12,10 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { EventPopoverTrigger } from '../event-popover';
-import { useEventPopoverContext } from '../event-popover/EventPopover';
+import {
+  EventPopoverTrigger,
+  useEventPopoverContext,
+} from '../../../components/event-popover/EventPopover';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 
