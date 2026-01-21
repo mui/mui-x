@@ -155,6 +155,31 @@ async function findForkOwner() {
 }
 
 /**
+ * Check if version branch exists and asks the user to confirm if we should use it or master
+ *
+ * @param {string} majorVersion - The major version to check
+ * @returns {Promise<boolean>} Whether the branch exists
+ */
+async function selectTargetBranch(majorVersion) {
+  try {
+    const response = await octokit.rest.repos.getBranch({
+      owner: ORG,
+      repo: REPO,
+      branch: `v${majorVersion}.x`,
+    });
+    console.log(`Branch ${response.data.name} exists.`);
+    const useVersionBranch = await confirm({
+      message: `The branch v${majorVersion}.x exists. Do you want to use it as the base for the release? (No will use master)`,
+      default: true,
+    });
+    return useVersionBranch;
+  } catch (error) {
+    console.log(`Branch v${majorVersion}.x does not exist.`);
+    return false;
+  }
+}
+
+/**
  * Find the remote name of the fork for the repo
  * @returns {Promise<string>} The name of the remote
  */
@@ -890,6 +915,8 @@ async function main() {
     const previousVersion = latestTag.startsWith('v') ? latestTag.slice(1) : latestTag;
     console.log(`Latest tag for major version ${majorVersion}: ${previousVersion}`);
 
+    const shouldUseMasterBranch = await selectTargetBranch(majorVersion);
+
     // If no arguments provided, use interactive menu to select version type
     // Initialize prerelease variables (used for alpha/beta versions)
     let prereleaseType = '';
@@ -933,7 +960,7 @@ async function main() {
     console.log(`New version: ${newVersion}`);
 
     // Determine which branch to update based on the selected major version
-    if (majorVersion === latestMajorVersion) {
+    if (shouldUseMasterBranch) {
       console.log('Updating the upstream master branch for current major version...');
       await execa('git', ['fetch', upstreamRemote, 'master']);
     } else {
@@ -950,7 +977,7 @@ async function main() {
 
     // Determine the source branch based on the selected major version
     let branchSource;
-    if (majorVersion === latestMajorVersion) {
+    if (shouldUseMasterBranch) {
       branchSource = `${upstreamRemote}/master`;
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     } else {
@@ -987,7 +1014,7 @@ async function main() {
       generator,
       newVersion,
       previousVersion,
-      majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`,
+      shouldUseMasterBranch ? 'master' : `v${majorVersion}.x`,
     );
 
     // Add the new changelog entry to the CHANGELOG.md file
@@ -1025,7 +1052,7 @@ async function main() {
     console.log('Opening a PR...');
     try {
       // Determine the base branch based on the selected major version
-      const baseBranch = majorVersion === latestMajorVersion ? 'master' : `v${majorVersion}.x`;
+      const baseBranch = shouldUseMasterBranch ? 'master' : `v${majorVersion}.x`;
 
       // Get the origin owner (username or organization)
       const forkOwner = await findForkOwner();
