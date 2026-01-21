@@ -7,13 +7,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function AdapterBuddhist() {
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjsBuddhist}
-      adapterLocale="th"
-      dateFormats={{
-        keyboardDate: 'DD/MM/BBBB',
-      }}
-    >
+    <LocalizationProvider dateAdapter={AdapterDayjsBuddhist} adapterLocale="th">
       <DateTimePicker
         label="AdapterDayjsBuddhist"
         defaultValue={dayjs(new Date(2022, 1, 1, 12))}

@@ -77,7 +77,7 @@ describe('<AdapterDayjsBuddhist />', () => {
     describe('with Thai locale', () => {
       const { render, adapter } = createPickerRenderer({
         adapterName: 'dayjs-buddhist',
-        locale: 'th',
+        locale: { code: 'th' },
       });
 
       const { renderWithProps } = buildFieldInteractions({
@@ -91,8 +91,8 @@ describe('<AdapterDayjsBuddhist />', () => {
           value: adapter.date(testDate),
         });
 
-        // Thai locale format with Buddhist year
-        expectFieldValueV7(view.getSectionsContainer(), '15/05/2561 09:35 ก่อนเที่ยง');
+        // Thai locale uses 24h format (no meridiem)
+        expectFieldValueV7(view.getSectionsContainer(), '15/05/2561 09:35');
       });
     });
   });

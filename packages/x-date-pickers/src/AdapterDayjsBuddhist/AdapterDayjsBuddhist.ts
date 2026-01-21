@@ -72,17 +72,17 @@ const defaultFormats: AdapterFormats = {
   minutes: 'mm',
   seconds: 'ss',
 
-  fullDate: 'll',
-  keyboardDate: 'L',
-  shortDate: 'MMM D',
+  fullDate: 'D MMM BBBB',
+  keyboardDate: 'DD/MM/BBBB',
+  shortDate: 'D MMM',
   normalDate: 'D MMMM',
-  normalDateWithWeekday: 'ddd, MMM D',
+  normalDateWithWeekday: 'ddd, D MMM',
 
   fullTime12h: 'hh:mm A',
   fullTime24h: 'HH:mm',
 
-  keyboardDateTime12h: 'L hh:mm A',
-  keyboardDateTime24h: 'L HH:mm',
+  keyboardDateTime12h: 'DD/MM/BBBB hh:mm A',
+  keyboardDateTime24h: 'DD/MM/BBBB HH:mm',
 };
 
 declare module '@mui/x-date-pickers/models' {
