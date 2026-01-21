@@ -3,6 +3,7 @@ import { ErrorBoundary, createRenderer, screen } from '@mui/internal-test-utils'
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSvgRef } from './useSvgRef';
 import { ChartProvider } from '../context/ChartProvider';
+import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 function UseSvgRef() {
   const ref = useSvgRef();
@@ -40,7 +41,9 @@ describe('useSvgRef', () => {
   it('should not throw an error when parent context is present', async () => {
     function RenderDrawingProvider() {
       return (
-        <ChartProvider pluginParams={{ width: 200, height: 200 }}>
+        <ChartProvider
+          pluginParams={{ width: 200, height: 200, seriesConfig: defaultSeriesConfig }}
+        >
           <UseSvgRef />
         </ChartProvider>
       );
