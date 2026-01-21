@@ -2,9 +2,20 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
+import ChevronLeft from '@mui/icons-material/ChevronLeft';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import MenuOpen from '@mui/icons-material/MenuOpen';
+import Menu from '@mui/icons-material/Menu';
 import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import IconButton from '@mui/material/IconButton';
+import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import {
+  eventCalendarPreferenceSelectors,
+  eventCalendarViewSelectors,
+} from '@mui/x-scheduler-headless/event-calendar-selectors';
+import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
@@ -15,36 +26,47 @@ const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbar',
 })(({ theme }) => ({
-  gridColumn: '2 / -1',
-  display: 'grid',
-  gridTemplateColumns: 'subgrid',
-  alignItems: 'center',
+  display: 'flex',
   gap: theme.spacing(2),
+  justifyContent: 'space-between',
+  alignItems: 'center',
   width: '100%',
-  ...theme.typography.body2,
-  '&[data-single-primary-action="true"]': {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
+  flexWrap: 'wrap',
 }));
 
 const HeaderToolbarActions = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbarActions',
-})(() => ({
-  display: 'flex',
-}));
-
-const HeaderToolbarPrimaryActionWrapper = styled('div', {
-  name: 'MuiEventCalendar',
-  slot: 'HeaderToolbarPrimaryActionWrapper',
 })(({ theme }) => ({
-  flexGrow: 1,
   display: 'flex',
   gap: theme.spacing(2),
-  justifyContent: 'center',
-  gridColumn: 2,
-  justifySelf: 'end',
+}));
+
+const DateNavigatorButtonsContainer = styled(ButtonGroup, {
+  name: 'MuiEventCalendar',
+  slot: 'DateNavigatorButtonsContainer',
+})({});
+
+const HeaderToolbarLeft = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'HeaderToolbarLeft',
+})(({ theme }) => ({
+  gridTemplateColumns: 'subgrid',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+
+  gap: theme.spacing(2),
+}));
+
+const HeaderToolbarLabel = styled('p', {
+  name: 'MuiEventCalendar',
+  slot: 'HeaderToolbarLabel',
+})(({ theme }) => ({
+  margin: 0,
+  ...theme.typography.h6,
+  fontWeight: theme.typography.fontWeightBold,
+  lineHeight: 1.4,
 }));
 
 export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
@@ -54,25 +76,50 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+  const adapter = useAdapter();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
   const view = useStore(store, eventCalendarViewSelectors.view);
+  const visibleDate = useStore(store, schedulerOtherSelectors.visibleDate);
+  const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   const showViewSwitcher = views.length > 1;
 
   return (
     <HeaderToolbarRoot ref={forwardedRef} data-single-primary-action={!showViewSwitcher} {...props}>
+      <HeaderToolbarLeft ref={forwardedRef} role="navigation" {...props}>
+        <IconButton
+          aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
+          onClick={(event) =>
+            store.setPreferences({ isSidePanelOpen: !isSidePanelOpen }, event.nativeEvent)
+          }
+        >
+          {isSidePanelOpen ? <MenuOpen /> : <Menu />}
+        </IconButton>
+        <HeaderToolbarLabel aria-live="polite">
+          {adapter.format(visibleDate, 'monthFullLetter')}{' '}
+          {adapter.format(visibleDate, 'yearPadded')}
+        </HeaderToolbarLabel>
+      </HeaderToolbarLeft>
       <HeaderToolbarActions>
-        <HeaderToolbarPrimaryActionWrapper>
-          {showViewSwitcher && (
-            <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
-          )}
-          <Button variant="contained" onClick={store.goToToday}>
-            {translations.today}
-          </Button>
-        </HeaderToolbarPrimaryActionWrapper>
         <PreferencesMenu />
+
+        <DateNavigatorButtonsContainer>
+          <Button
+            onClick={store.goToPreviousVisibleDate}
+            aria-label={translations.previousTimeSpan(view)}
+          >
+            <ChevronLeft />
+          </Button>
+          <Button onClick={store.goToToday}>{translations.today}</Button>
+          <Button onClick={store.goToNextVisibleDate} aria-label={translations.nextTimeSpan(view)}>
+            <ChevronRight />
+          </Button>
+        </DateNavigatorButtonsContainer>
+        {showViewSwitcher && (
+          <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
+        )}
       </HeaderToolbarActions>
     </HeaderToolbarRoot>
   );

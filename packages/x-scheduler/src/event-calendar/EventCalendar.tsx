@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled, useThemeProps } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
@@ -23,7 +24,6 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
-import { DateNavigator } from './date-navigator';
 import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 import { schedulerTokens } from '../internals/utils/tokens';
 
@@ -35,9 +35,8 @@ const EventCalendarRoot = styled('div', {
   ...schedulerTokens,
   // Layout
   width: '100%',
-  display: 'grid',
-  gridTemplateColumns: '280px 1fr',
-  gridTemplateRows: 'auto 1fr',
+  display: 'flex',
+  flexDirection: 'column',
   gap: theme.spacing(2),
   height: '100%',
 }));
@@ -47,7 +46,7 @@ const EventCalendarSidePanel = styled('aside', {
   slot: 'SidePanel',
 })(({ theme }) => ({
   width: '100%',
-  minWidth: 0,
+  minWidth: 250,
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -57,11 +56,8 @@ const EventCalendarMainPanel = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'MainPanel',
 })(({ theme }) => ({
-  gridRow: 2,
-  gridColumn: '1 / -1',
-  display: 'grid',
-  gridTemplateColumns: 'subgrid',
-  flexDirection: 'column',
+  display: 'flex',
+  flexGrow: 1,
   gap: theme.spacing(2),
   minHeight: 0,
   '&[data-view="month"]': {
@@ -103,7 +99,11 @@ const EventCalendarMonthCalendarPlaceholder = styled('section', {
 const EventCalendarErrorContainer = styled(Alert, {
   name: 'MuiEventCalendar',
   slot: 'ErrorContainer',
-})({});
+})({
+  position: 'absolute',
+  bottom: 16,
+  right: 16,
+});
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
@@ -158,12 +158,10 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
           <EventCalendarRoot {...other} ref={handleRootRef}>
-            <DateNavigator />
-
             <HeaderToolbar />
 
             <EventCalendarMainPanel data-view={view}>
-              {isSidePanelOpen && (
+              <Collapse in={isSidePanelOpen} orientation="horizontal">
                 <EventCalendarSidePanel>
                   <EventCalendarMonthCalendarPlaceholder
                     // TODO: Add localization
@@ -173,7 +171,7 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
                   </EventCalendarMonthCalendarPlaceholder>
                   <ResourcesLegend />
                 </EventCalendarSidePanel>
-              )}
+              </Collapse>
 
               <EventCalendarContent
                 data-view={view}
@@ -183,15 +181,16 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
               >
                 {content}
               </EventCalendarContent>
-              {errors?.length > 0 &&
-                errors.map((error, index) => (
-                  <EventCalendarErrorContainer severity="error" key={index}>
-                    {error.message}
-                  </EventCalendarErrorContainer>
-                ))}
+
               {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
             </EventCalendarMainPanel>
           </EventCalendarRoot>
+          {errors?.length > 0 &&
+            errors.map((error, index) => (
+              <EventCalendarErrorContainer severity="error" key={index}>
+                {error.message}
+              </EventCalendarErrorContainer>
+            ))}
         </TranslationsProvider>
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>
