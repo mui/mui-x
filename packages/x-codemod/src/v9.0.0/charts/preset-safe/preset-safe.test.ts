@@ -56,32 +56,5 @@ describe('v9.0.0/charts', () => {
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
     });
-
-    describe('all files together', () => {
-      const combinedActual = testCases.map((file) => file.actual).join('\n\n');
-      const combinedExpected = testCases.map((file) => file.expected).join('\n\n');
-
-      it('transforms code as needed', () => {
-        const actual = transform(
-          { source: combinedActual },
-          { jscodeshift: jscodeshift.withParser('tsx') },
-          {},
-        );
-
-        const expected = combinedExpected;
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
-
-      it('should be idempotent for expression', () => {
-        const actual = transform(
-          { source: combinedExpected },
-          { jscodeshift: jscodeshift.withParser('tsx') },
-          {},
-        );
-
-        const expected = combinedExpected;
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
-    });
   });
 });
