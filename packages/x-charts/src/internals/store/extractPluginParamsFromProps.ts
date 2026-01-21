@@ -30,7 +30,7 @@ export const extractPluginParamsFromProps = <
   Object.keys(props).forEach((propName) => {
     const prop = props[propName as keyof typeof props] as any;
 
-    if (paramsLookup[propName as keyof PluginParams]) {
+    if (paramsLookup[propName as keyof PluginParams] && prop !== undefined) {
       pluginParams[propName as keyof PluginParams] = prop;
     }
   });

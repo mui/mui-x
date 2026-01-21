@@ -76,6 +76,7 @@ export * from './commonNextFocusItem';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export * from './plugins/utils/defaultSeriesConfig';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';

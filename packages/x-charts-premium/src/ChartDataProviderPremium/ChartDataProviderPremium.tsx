@@ -33,7 +33,7 @@ export type ChartDataProviderPremiumProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = ChartDataProviderProProps<TSeries, TSignatures> &
-  ChartProviderProps<TSeries, TSignatures>['pluginParams'] & {
+  ChartProviderProps<TSignatures>['pluginParams'] & {
     /**
      * Slots to customize charts' components.
      */
