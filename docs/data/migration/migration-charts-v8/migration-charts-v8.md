@@ -90,7 +90,7 @@ This improves consistency across chart components and developer experience.
 
 ### `use[Type]Series()` with empty array
 
-When hooks `use[Type]Series()` received an empty array, they were returning all the available series of the given type.
+When `use[Type]Series()` hooks received an empty array, they returned all the available series of the given type.
 In v9 they return an empty array.
 
 ```js
