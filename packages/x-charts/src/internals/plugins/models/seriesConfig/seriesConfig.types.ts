@@ -2,6 +2,7 @@ import type { SeriesProcessor } from './seriesProcessor.types';
 import type {
   CartesianChartSeriesType,
   ChartSeriesType,
+  ChartsSeriesConfig,
   PolarChartSeriesType,
 } from '../../../../models/seriesType/config';
 import type { ColorProcessor } from './colorProcessor.types';
@@ -14,6 +15,16 @@ import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.type
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
+import { type GetItemAtPosition } from './getItemAtPosition.types';
+import { type UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
+import { type UseChartPolarAxisSignature } from '../../featurePlugins/useChartPolarAxis';
+
+export type ChartSeriesTypeRequiredPlugins<TSeriesType extends ChartSeriesType> =
+  ChartsSeriesConfig[TSeriesType] extends { axisType: 'cartesian' }
+    ? [UseChartCartesianAxisSignature]
+    : ChartsSeriesConfig[TSeriesType] extends { axisType: 'polar' }
+      ? [UseChartPolarAxisSignature]
+      : [];
 
 export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   seriesProcessor: SeriesProcessor<TSeriesType>;
@@ -33,6 +44,7 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
    * @returns {string} A unique string representation of the identifier.
    */
   identifierSerializer: IdentifierSerializer<TSeriesType>;
+  getItemAtPosition?: GetItemAtPosition<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;
