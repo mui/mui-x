@@ -68,7 +68,7 @@ export function applyRecurringUpdateFollowing(
   const occurrenceDayStart = adapter.startOfDay(occurrenceStart);
   const untilDate = adapter.addDays(occurrenceDayStart, -1);
 
-  const originalRule = originalEvent.dataTimezone.rrule as RecurringEventRecurrenceRule;
+  const originalRule = originalEvent.dataTimezone.rrule!;
   const { count, until, ...baseRule } = originalRule;
 
   // 2) New event: apply changes, decide RRULE for the new series
@@ -82,11 +82,11 @@ export function applyRecurringUpdateFollowing(
   const newEventId = `${originalEvent.id}::${getDateKey(newStart, adapter)}`;
 
   const newEvent: SchedulerEvent = {
-    ...originalEvent.modelInBuiltInFormat!,
+    ...originalEvent.modelInBuiltInFormat,
     ...changes,
     id: newEventId,
     rrule: newRRule,
-    extractedFromId: originalEvent.id,
+    extractedFromId: originalEvent.modelInBuiltInFormat.id,
   };
 
   // 3) If UNTIL falls before DTSTART, the original series has no remaining occurrences -> drop it, otherwise truncate it.

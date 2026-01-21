@@ -89,7 +89,76 @@
     "import { HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';",
     "import { HeatmapTooltip } from '@mui/x-charts-pro';"
   ],
-  "classes": [],
+  "slots": [
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    }
+  ],
+  "classes": [
+    {
+      "key": "axisValueCell",
+      "className": "MuiHeatmapTooltip-axisValueCell",
+      "description": "Styles applied to the axisValueCell element. Only available for axis tooltip.",
+      "isGlobal": false
+    },
+    {
+      "key": "cell",
+      "className": "MuiHeatmapTooltip-cell",
+      "description": "Styles applied to the cell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "labelCell",
+      "className": "MuiHeatmapTooltip-labelCell",
+      "description": "Styles applied to the labelCell element.",
+      "isGlobal": false
+    },
+    {
+      "key": "mark",
+      "className": "MuiHeatmapTooltip-mark",
+      "description": "Styles applied to the mark element.",
+      "isGlobal": false
+    },
+    {
+      "key": "markContainer",
+      "className": "MuiHeatmapTooltip-markContainer",
+      "description": "Styles applied to the markContainer element.",
+      "isGlobal": false
+    },
+    {
+      "key": "paper",
+      "className": "MuiHeatmapTooltip-paper",
+      "description": "Styles applied to the paper element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiHeatmapTooltip-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "row",
+      "className": "MuiHeatmapTooltip-row",
+      "description": "Styles applied to the row element.",
+      "isGlobal": false
+    },
+    {
+      "key": "table",
+      "className": "MuiHeatmapTooltip-table",
+      "description": "Styles applied to the table element.",
+      "isGlobal": false
+    },
+    {
+      "key": "valueCell",
+      "className": "MuiHeatmapTooltip-valueCell",
+      "description": "Styles applied to the valueCell element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiHeatmapTooltip",
   "filename": "/packages/x-charts-pro/src/Heatmap/HeatmapTooltip/HeatmapTooltip.tsx",
   "inheritance": null,

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-pro",
-  "version": "8.23.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Charts components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -67,7 +67,7 @@
     "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
     "csstype": "catalog:",
-    "rasterizehtml": "^1.4.0",
+    "rasterizehtml": "1.4.0",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rimraf": "catalog:"

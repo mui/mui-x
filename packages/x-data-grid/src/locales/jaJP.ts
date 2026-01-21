@@ -16,6 +16,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '広め',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '元に戻す',
+  toolbarRedo: 'やり直す',
+
   // Columns selector toolbar button text
   toolbarColumns: '列一覧',
   toolbarColumnsLabel: '列選択',
@@ -112,7 +116,7 @@ const jaJPGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': '以上',
   'headerFilterOperator<': '未満',
   'headerFilterOperator<=': '以下',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'フィルターを削除',
 
   // Filter values text
   filterValueAny: 'いずれか',
@@ -129,8 +133,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'ソート解除',
   columnMenuSortAsc: '昇順ソート',
   columnMenuSortDesc: '降順ソート',
-  // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManagePivot: 'ピボットを管理',
+  columnMenuManageCharts: 'チャートを管理',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}件のフィルターを適用中`,
@@ -183,18 +187,13 @@ const jaJPGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'ページあたりの行数:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} of ${count !== -1 ? count : `${to}以上`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `${estimated}前後` : `${to}以上`;
+    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return '最初のページへ';
@@ -255,16 +254,16 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // chartsChartNotSelected: 'Select a chart type to configure its options',
   // chartsTabChart: 'Chart',
   // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
+  chartsTabCustomize: 'カスタマイズ',
   // chartsCloseButton: 'Close charts configuration',
   // chartsSyncButtonLabel: 'Sync chart',
   // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
+  chartsSearchLabel: 'フィールドを検索する',
   // chartsSearchClear: 'Clear search',
   // chartsNoFields: 'No fields',
   // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
+  chartsCategories: 'カテゴリ',
+  chartsSeries: 'シリーズ',
   // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
   // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
   // chartsMenuMoveUp: 'Move up',
@@ -277,27 +276,27 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
+  aiAssistantPanelTitle: 'AIアシスタント',
+  aiAssistantPanelClose: 'AIアシスタントパネルを閉じる',
+  aiAssistantPanelNewConversation: '新しい会話を開始する',
+  aiAssistantPanelConversationHistory: '会話の履歴',
   // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantSuggestions: '提案',
 
   // Prompt field
-  // promptFieldLabel: 'Prompt',
-  // promptFieldPlaceholder: 'Type a prompt…',
+  promptFieldLabel: 'プロンプト',
+  promptFieldPlaceholder: 'プロンプトを入力...',
   // promptFieldPlaceholderWithRecording: 'Type or record a prompt…',
   // promptFieldPlaceholderListening: 'Listening for prompt…',
   // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
-  // promptFieldSend: 'Send',
-  // promptFieldRecord: 'Record',
-  // promptFieldStopRecording: 'Stop recording',
+  promptFieldSend: '送信',
+  promptFieldRecord: '録音',
+  promptFieldStopRecording: '録音を止める',
 
   // Prompt
-  // promptRerun: 'Run again',
-  // promptProcessing: 'Processing…',
-  // promptAppliedChanges: 'Applied changes',
+  promptRerun: '再試行',
+  promptProcessing: '実行中…',
+  promptAppliedChanges: '変更を適用済み',
 
   // Prompt changes
   // promptChangeGroupDescription: (column: string) => `Group by ${column}`,

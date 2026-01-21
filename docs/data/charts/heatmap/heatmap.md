@@ -1,7 +1,7 @@
 ---
 title: React Heatmap chart
 productId: x-charts
-components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent
+components: Heatmap, HeatmapPlot, HeatmapTooltip, HeatmapTooltipContent, FocusedHeatmapCell
 ---
 
 # Charts - Heatmap [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
@@ -56,6 +56,18 @@ To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses
 In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
 
 {{"demo": "HighlightClasses.js"}}
+
+## Click event
+
+Use `onItemClick` to know which cell is clicked by user.
+
+The first argument is the click event.
+The second one is the item identifier.
+It contains the properties `xIndex` and `yIndex` that are the indexes of the clicked cell along the x- and y-axes respectively.
+
+If this cell has associated data, the `dataIndex` property indicates the position of the cell's data within the series' `data` array.
+
+{{"demo": "HeatmapCellClick.js"}}
 
 ## Common features
 

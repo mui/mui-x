@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
     "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
@@ -49,6 +50,19 @@
         }
       }
     },
+    "onItemClick": {
+      "description": "The callback fired when an item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The click event." },
+        "item": { "name": "item", "description": "The clicked item." }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": {
@@ -65,6 +79,7 @@
       "description": "The configuration of the tooltip.",
       "seeMoreText": "See {{link}} for more details."
     },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -79,7 +94,6 @@
     "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
   },
   "classDescriptions": {
-    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the heatmap cells" },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -94,5 +108,27 @@
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${heatmapClasses.series}-${seriesId}</code>.",
       "nodeName": "the root element for a specified series"
     }
+  },
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
+    "baseDivider": "",
+    "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
+    "baseTooltip": "",
+    "cell": "The component that renders the heatmap cell.",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
+    "legend": "Custom component for the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
   }
 }
