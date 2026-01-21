@@ -33,7 +33,7 @@ describe('EventCalendar', () => {
     expect(mondayEvent).not.to.equal(null);
     expect(tuesdayEvent).not.to.equal(null);
 
-    expect(mondayEvent.textContent).to.equal('Running7:30 AM');
+    expect(mondayEvent.textContent).to.equal('Running 7:30 AM');
     expect(tuesdayEvent.textContent).to.equal('Weekly4:00 PM - 5:00 PM');
 
     expect(mondayEvent.getAttribute('aria-labelledby')).to.include('header-cell-1');

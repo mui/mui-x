@@ -72,6 +72,7 @@ export interface HeatmapSlotProps
 }
 
 export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
+
 export interface HeatmapProps
   extends
     Omit<
@@ -87,9 +88,19 @@ export interface HeatmapProps
       | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
+      | 'onAxisClick'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+  /**
+   * The function called for onClick events.
+   * The second argument contains information about all line/bar elements at the current mouse position.
+   * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
+   * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   *
+   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
+   */
+  onAxisClick?: ChartContainerProProps<'heatmap', HeatmapPluginSignatures>['onAxisClick'];
   /**
    * The configuration of the x-axes.
    * If not provided, a default axis config is used.
@@ -114,7 +125,6 @@ export interface HeatmapProps
   tooltip?: ChartsTooltipProps;
   /**
    * If `true`, the legend is not rendered.
-   * @default true
    */
   hideLegend?: boolean;
   /**
@@ -143,7 +153,7 @@ const Heatmap = React.forwardRef(function Heatmap(
   ref: React.Ref<SVGSVGElement>,
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiHeatmap' });
-  const { sx, slots, slotProps, loading, hideLegend = true, showToolbar = false } = props;
+  const { sx, slots, slotProps, loading, hideLegend, showToolbar = false } = props;
 
   const {
     chartDataProviderProProps,
@@ -231,7 +241,6 @@ Heatmap.propTypes = {
   height: PropTypes.number,
   /**
    * If `true`, the legend is not rendered.
-   * @default true
    */
   hideLegend: PropTypes.bool,
   /**
@@ -287,6 +296,8 @@ Heatmap.propTypes = {
    * The second argument contains information about all line/bar elements at the current mouse position.
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element.
    * @param {null | ChartsAxisData} data The data about the clicked axis and items associated with it.
+   *
+   * @deprecated Use `onItemClick` instead to get access to both x- and y-axis values.
    */
   onAxisClick: PropTypes.func,
   /**
@@ -295,6 +306,13 @@ Heatmap.propTypes = {
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
+  /**
+   * The callback fired when an item is clicked.
+   *
+   * @param {React.MouseEvent<SVGSVGElement, MouseEvent>} event The click event.
+   * @param {SeriesItemIdentifier<SeriesType>} item The clicked item.
+   */
+  onItemClick: PropTypes.func,
   /**
    * The callback fired when the tooltip item changes.
    *

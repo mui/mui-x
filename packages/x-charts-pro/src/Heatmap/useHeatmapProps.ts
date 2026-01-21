@@ -2,7 +2,6 @@ import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import useId from '@mui/utils/useId';
 import { interpolateRgbBasis } from '@mui/x-charts-vendor/d3-interpolate';
 import * as React from 'react';
-import type { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
 import {
   type ChartsLegendProps,
@@ -21,7 +20,7 @@ import { type HeatmapPlotProps } from './HeatmapPlot';
 
 export type UseHeatmapProps = HeatmapProps;
 
-const seriesConfig: ChartSeriesConfig<'heatmap'> = { heatmap: heatmapSeriesConfig };
+const seriesConfig = { heatmap: heatmapSeriesConfig };
 
 // The GnBu: https://github.com/d3/d3-scale-chromatic/blob/main/src/sequential-multi/GnBu.js
 const defaultColorMap = interpolateRgbBasis([
@@ -71,7 +70,7 @@ export function useHeatmapProps(props: UseHeatmapProps) {
     onHighlightChange,
     enableKeyboardNavigation,
     borderRadius,
-    hideLegend = true,
+    hideLegend,
   } = props;
 
   const id = useId();
