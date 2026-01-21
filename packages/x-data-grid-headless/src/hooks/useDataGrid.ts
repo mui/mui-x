@@ -39,7 +39,8 @@ function createPublicStore<TState>(store: ReadonlyStore<TState>): DataGridStore<
 
 interface DataGridInstance<TPlugins extends readonly AnyPlugin[], TRow = any> {
   options: UseDataGridOptions<TPlugins, TRow>;
-  store: DataGridStore<DataGridState<TPlugins>>;
+  use: <Value>(selector: (state: DataGridState<TPlugins>) => Value) => Value;
+  getState: () => DataGridState<TPlugins>;
   api: DataGridApi<TPlugins, TRow>;
 }
 
@@ -92,7 +93,8 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
   const publicStore = React.useMemo(() => createPublicStore(stateStore), [stateStore]);
 
   return {
-    store: publicStore,
+    getState: publicStore.getState,
+    use: publicStore.use,
     api,
     options,
   };

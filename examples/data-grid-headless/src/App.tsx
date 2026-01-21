@@ -108,9 +108,9 @@ function DataGrid() {
     plugins: [sortingPlugin, paginationPlugin],
   });
 
-  const rowIds = grid.store.use(grid.api.rows.selectors.rowIds);
-  const rowsData = grid.store.use(grid.api.rows.selectors.rowIdToModelLookup);
-  const visibleColumns = grid.store.use(grid.api.columns.selectors.visibleColumns);
+  const rowIds = grid.use(grid.api.rows.selectors.rowIds);
+  const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.use(grid.api.columns.selectors.visibleColumns);
 
   const handleRefreshRows = () => {
     setRows(generateSampleData(30));

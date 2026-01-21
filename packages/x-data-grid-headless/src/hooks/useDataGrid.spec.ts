@@ -59,7 +59,7 @@ export function Example() {
   grid1.api.pagination.setPage(1);
 
   // Internal plugins state is available
-  grid1.store.getState().rows.tree;
+  grid1.getState().rows.tree;
 
   // Selectors - Internal plugins (rows, columns)
   grid1.api.rows.selectors.rowIds;
@@ -74,7 +74,7 @@ export function Example() {
   grid1.api.pagination.selectors.paginationModel;
 
   // Should be able to call selectors imperatively
-  grid1.api.rows.selectors.rowIds(grid1.store.getState());
+  grid1.api.rows.selectors.rowIds(grid1.getState());
 
   // With both sorting and pagination plugins
   const grid2 = useDataGrid({
