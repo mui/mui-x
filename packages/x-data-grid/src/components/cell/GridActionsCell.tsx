@@ -45,10 +45,7 @@ interface GridActionsCellProps<
    * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
    * @returns {boolean} if the menu should be opened.
    */
-  onMenuOpen?: (
-    params: GridRowParams<R>,
-    event: React.MouseEvent<HTMLElement>,
-  ) => boolean;
+  onMenuOpen?: (params: GridRowParams<R>, event: React.MouseEvent<HTMLElement>) => boolean;
   /**
    * Callback to fire before the menu gets closed.
    * Use this callback to prevent the menu from closing.
@@ -57,10 +54,7 @@ interface GridActionsCellProps<
    * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
    * @returns {boolean} if the menu should be closed.
    */
-  onMenuClose?: (
-    params: GridRowParams<R>,
-    event: React.MouseEvent<HTMLElement>,
-  ) => boolean;
+  onMenuClose?: (params: GridRowParams<R>, event: React.MouseEvent<HTMLElement>) => boolean;
 }
 
 function GridActionsCell<
@@ -204,14 +198,14 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
 
   const handleButtonClick =
     (index: number, onClick?: React.MouseEventHandler): React.MouseEventHandler =>
-      (event) => {
-        setFocusedButtonIndex(index);
-        ignoreCallToFocus.current = true;
+    (event) => {
+      setFocusedButtonIndex(index);
+      ignoreCallToFocus.current = true;
 
-        if (onClick) {
-          onClick(event);
-        }
-      };
+      if (onClick) {
+        onClick(event);
+      }
+    };
 
   const handleRootKeyDown = (event: React.KeyboardEvent) => {
     if (numberOfButtons <= 1) {
@@ -255,9 +249,9 @@ If this is intentional, you can suppress this warning by passing the \`suppressC
   const attributes =
     numberOfButtons > 0
       ? {
-        role: 'menu',
-        onKeyDown: handleRootKeyDown,
-      }
+          role: 'menu',
+          onKeyDown: handleRootKeyDown,
+        }
       : undefined;
 
   return (
