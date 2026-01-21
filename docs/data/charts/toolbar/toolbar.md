@@ -8,32 +8,19 @@ components: Toolbar, ToolbarButton, ChartsToolbarPro, ChartsToolbarZoomInTrigger
 
 <p class="description">Add a toolbar to charts for quick access to common features.</p>
 
-Charts provide a toolbar that you can enable to give users quick access to certain features.
-
+You can enable a toolbar on charts to give users quick access to certain features.
 The toolbar is available on scatter, bar, line, pie, and radar charts.
 
 To enable the toolbar, set the `showToolbar` prop to `true` on the chart component.
 
 :::info
 The toolbar is only displayed if there are actions available.
-
-For example, if the chart is not zoomable, the zoom buttons will not be displayed.
+For example, if the chart doesn't have zooming enabled, then the zoom buttons don't appear.
 :::
 
 {{"demo": "ChartsToolbar.js"}}
 
-## Customization
-
-The toolbar is highly customizable and built to integrate with any design system.
-
-:::info
-If you're replacing the toolbar with a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
-
-This class is used by `ChartsWrapper` to place the toolbar relative to the legend and the chart.
-If you're composing a custom component without `ChartsWrapper`, you can ignore this information.
-:::
-
-### Slots
+## Custom toolbar elements
 
 You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.
 You can use this to replace the default buttons with components from your design system.
@@ -42,11 +29,10 @@ If you're composing a custom component, you can provide these basic components a
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 
-### Render prop
+## Custom element rendering
 
 You can use the `render` prop to customize the rendering of the toolbar's elements.
-
-You can pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
+Pass a React element to the `render` prop of the `ToolbarButton` component to replace the default button with your own component.
 
 This is useful when you want to render a custom component but use the toolbar's [accessibility](#accessibility) features, such as keyboard navigation and ARIA attributes, without implementing them yourself.
 
@@ -60,26 +46,32 @@ Alternatively, you can pass a function to the `render` prop, which receives the 
 <ToolbarButton render={(props, state) => <MyButton {...props} />} />
 ```
 
-You can see an example in the [composition](#composition) section.
+The section below provides an example of this.
 
-### Composition
+## Fully custom toolbar
 
-If you want to further customize the toolbar's functionality, you can partially or entirely replace it with a custom implementation.
-
-You can achieve this by providing a custom component to the `toolbar` slot.
+You can partially or entirely replace the toolbar with a custom implementation to further customize its functionality.
+To do so, provide a custom component to the `toolbar` slot.
 
 You can use components such as `Toolbar` and `ToolbarButton` to build your own toolbar using the default components as a base, or create your own custom toolbar from scratch.
 
 {{"demo": "ChartsToolbarCustomToolbar.js"}}
 
+:::info
+If you're replacing the toolbar with a custom one, the container should have the CSS class `chartsToolbarClasses.root`.
+
+The `ChartsWrapper` component uses this class to place the toolbar relative to the legend and the chart.
+If you're composing a custom component without `ChartsWrapper`, you can ignore this information.
+:::
+
 ## Accessibility
 
-The component follows the [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
+`Toolbar` follows the [WAI-ARIA authoring practices](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/).
 
 ### ARIA
 
-- The element rendered by the `Toolbar` component has the `toolbar` role
-- The element rendered by the `Toolbar` component has `aria-orientation` set to `horizontal`
+- The `Toolbar` component renders an element with the `toolbar` role
+- The `Toolbar` component renders an element with `aria-orientation` set to `horizontal`
 - You must apply a text label or an `aria-label` attribute to `ToolbarButton`
 
 ### Keyboard
