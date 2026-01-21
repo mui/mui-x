@@ -42,7 +42,7 @@ interface GridActionsCellProps<
    * Use this callback to prevent the menu from opening.
    *
    * @param {GridRowParams<R>} params Row parameters.
-   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
+   * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
    * @returns {boolean} if the menu should be opened.
    */
   onMenuOpen?: (
@@ -54,17 +54,12 @@ interface GridActionsCellProps<
    * Use this callback to prevent the menu from closing.
    *
    * @param {GridRowParams<R>} params Row parameters.
-   * @param {React.MouseEvent<HTMLElement> | React.KeyboardEvent | MouseEvent | TouchEvent | undefined} event The event triggering this callback.
+   * @param {React.MouseEvent<HTMLElement>} event The event triggering this callback.
    * @returns {boolean} if the menu should be closed.
    */
   onMenuClose?: (
     params: GridRowParams<R>,
-    event:
-      | React.MouseEvent<HTMLElement>
-      | React.KeyboardEvent
-      | MouseEvent
-      | TouchEvent
-      | undefined,
+    event: React.MouseEvent<HTMLElement>,
   ) => boolean;
 }
 
