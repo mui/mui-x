@@ -5,19 +5,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## 8.25.1
-<!-- generated comparing v8.25.0..v8.x -->
+## 8.26.0
+
 _Jan 21, 2026_
 
-We'd like to extend a big thank you to the 3 contributors who made this release possible.
+We'd like to extend a big thank you to the 5 contributors who made this release possible. Here are some highlights ✨:
+
+- 🔄 Data Grid now supports undo and redo actions. See the [Undo and redo](https://mui.com/x/react-data-grid/undo-redo/) page for details about out-of-the-box support and customization options.
+- 🐞 Bugfixes
+
+Special thanks go out to these community members for their valuable contributions:
+@jhe-iqbis
 
 The following team members contributed to this release:
-@flaviendelangle, @JCQuintas, @romgrk
+@arminmeh, @flaviendelangle, @JCQuintas, @romgrk
 
 ### Data Grid
 
 #### `@mui/x-data-grid@8.25.1`
 
+- [DataGrid] Add `onMenuOpen()` and `onMenuClose()` event handlers in `GridActionsCell` (#20994) @jhe-iqbis
 - [DataGrid] Fix scroll position when virtualization is disabled (#20958) @romgrk
 
 #### `@mui/x-data-grid-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
@@ -26,7 +33,9 @@ Same changes as in `@mui/x-data-grid@8.25.1`.
 
 #### `@mui/x-data-grid-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
 
-Same changes as in `@mui/x-data-grid-pro@8.25.1`.
+Same changes as in `@mui/x-data-grid-pro@8.25.1`, plus:
+
+- [DataGridPremium] Undo and redo (#20993) @arminmeh
 
 ### Date and Time Pickers
 
@@ -67,6 +76,10 @@ Same changes as in `@mui/x-tree-view@8.25.1`.
 #### `@mui/x-codemod@8.25.1`
 
 Internal changes.
+
+### Docs
+
+- [docs] Recipe for lazy loading DataGrid's detail panels with auto height (#20995) @arminmeh
 
 ### Core
 
