@@ -443,6 +443,7 @@
   { "name": "tickFrequencies", "kind": "Variable" },
   { "name": "TickFrequency", "kind": "TypeAlias" },
   { "name": "TickFrequencyDefinition", "kind": "TypeAlias" },
+  { "name": "TickItemType", "kind": "TypeAlias" },
   { "name": "Toolbar", "kind": "Variable" },
   { "name": "ToolbarButton", "kind": "Variable" },
   { "name": "ToolbarButtonProps", "kind": "TypeAlias" },

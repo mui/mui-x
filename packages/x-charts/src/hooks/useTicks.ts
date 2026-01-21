@@ -64,11 +64,26 @@ const offsetRatio = {
 
 export type TickItem = {
   /**
-   * This property is undefined only if it's the tick closing the last band
+   * The value of the tick.
+   * It is only undefined if it's the tick closing the last band.
    */
   value?: any;
+  /**
+   * The formatted value of the tick.
+   * It is only undefined if it's the tick closing the last band.
+   */
   formattedValue?: string;
+  /**
+   * The offset in pixels relative to the SVG origin.
+   * For an x-axis, it is relative to the left side of the SVG.
+   * For a y-axis, it is relative to the top side of the SVG.
+   */
   offset: number;
+  /**
+   * The offset in pixels relative to the tick position.
+   * For an x-axis, a positive value means the label is shifted to the right of the tick.
+   * For a y-axis, a positive value means the label is shifted downwards from the tick.
+   */
   labelOffset: number;
 };
 
