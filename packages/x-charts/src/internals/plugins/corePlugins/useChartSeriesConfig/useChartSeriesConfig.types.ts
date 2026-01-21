@@ -7,7 +7,7 @@ export interface UseChartSeriesConfigParameters {
    * The configuration for the series types.
    * This is used to define how each series type should be processed, colored, and displayed.
    */
-  seriesConfig: ChartSeriesConfig<any>;
+  seriesConfig?: ChartSeriesConfig<any>;
 }
 
 export type UseChartSeriesConfigDefaultizedParameters = UseChartSeriesConfigParameters & {

@@ -27,8 +27,8 @@ export type ChartDataProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
 > = React.PropsWithChildren<
-  ChartProviderProps<TSeries, TSignatures>['pluginParams'] &
-    Pick<ChartProviderProps<TSeries, TSignatures>, 'seriesConfig' | 'plugins'>
+  ChartProviderProps<TSignatures>['pluginParams'] &
+    Pick<ChartProviderProps<TSignatures>, 'plugins'>
 > &
   ChartsLocalizationProviderProps & {
     /**
@@ -76,7 +76,7 @@ function ChartDataProvider<
     useChartDataProviderProps(props);
 
   return (
-    <ChartProvider<TSeries, TSignatures> {...chartProviderProps}>
+    <ChartProvider<TSignatures> {...chartProviderProps}>
       <ChartsLocalizationProvider localeText={localeText}>
         <ChartsSlotsProvider
           slots={slots}

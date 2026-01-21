@@ -6,7 +6,7 @@ import {
   type SeriesProcessorParams,
   type SeriesProcessorResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
-import { type UseSeriesConfigSignature } from '../useChartSeriesConfig';
+import { type UseChartSeriesConfigSignature } from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -82,5 +82,5 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
     instance: UseChartSeriesInstance;
-    dependencies: [UseSeriesConfigSignature<SeriesType>];
+    dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;

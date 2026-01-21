@@ -116,7 +116,7 @@ function RadarDataProvider<
       margin={defaultizedMargin}
       colors={colors}
       skipAnimation={skipAnimation}
-      plugins={(plugins ?? RADAR_PLUGINS) as ChartProviderProps<'radar', TSignatures>['plugins']}
+      plugins={(plugins ?? RADAR_PLUGINS) as ChartProviderProps<TSignatures>['plugins']}
       rotationAxis={rotationAxes}
       radiusAxis={radiusAxis}
       seriesConfig={RADAR_SERIES_CONFIG}

@@ -20,21 +20,12 @@ export const useChartDataProviderProps = <
   // eslint-disable-next-line material-ui/mui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiChartDataProvider' });
 
-  const {
-    children,
-    localeText,
-    plugins = DEFAULT_PLUGINS,
-    seriesConfig,
-    slots,
-    slotProps,
-    ...other
-  } = props;
+  const { children, localeText, plugins = DEFAULT_PLUGINS, slots, slotProps, ...other } = props;
 
   const theme = useTheme();
 
-  const chartProviderProps: ChartProviderProps<TSeries, TSignatures> = {
-    plugins: plugins as ChartProviderProps<TSeries, TSignatures>['plugins'],
-    seriesConfig,
+  const chartProviderProps: ChartProviderProps<TSignatures> = {
+    plugins: plugins as ChartProviderProps<TSignatures>['plugins'],
     pluginParams: {
       theme: theme.palette.mode,
       ...other,

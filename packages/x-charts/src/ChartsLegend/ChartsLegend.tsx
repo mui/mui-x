@@ -18,7 +18,7 @@ import {
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export interface ChartsLegendProps {
   /**
