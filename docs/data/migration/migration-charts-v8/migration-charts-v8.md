@@ -85,3 +85,11 @@ This improves consistency across chart components and developer experience.
 +  hideLegend
  />
 ```
+
+## Moving `seriesId` to `string` only
+
+The `seriesId` were supporting `number | string`.
+The v9 will only support `string`.
+
+This type modification impacts the objects in the `series` props.
+But also the `highlightedItem` and `tooltipItem`.
