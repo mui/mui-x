@@ -6,9 +6,9 @@ import {
 } from './useChartExperimentalFeature';
 import { type UseChartIdSignature, useChartId, type UseChartIdParameters } from './useChartId';
 import {
-  type UseSeriesConfigSignature,
-  useSeriesConfig,
-  type UseSeriesConfigParameters,
+  type UseChartSeriesConfigSignature,
+  useChartSeriesConfig,
+  type UseChartSeriesConfigParameters,
 } from './useChartSeriesConfig';
 import { type UseChartSeriesSignature, useChartSeries } from './useChartSeries';
 import {
@@ -23,7 +23,7 @@ import type { ChartSeriesType } from '../../../models/seriesType/config';
  */
 export const CHART_CORE_PLUGINS = [
   useChartId,
-  useSeriesConfig,
+  useChartSeriesConfig,
   useChartExperimentalFeatures,
   useChartDimensions,
   useChartSeries,
@@ -33,7 +33,7 @@ export const CHART_CORE_PLUGINS = [
 
 export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = ChartSeriesType> = [
   UseChartIdSignature,
-  UseSeriesConfigSignature<TSeriesType>,
+  UseChartSeriesConfigSignature<TSeriesType>,
   UseChartExperimentalFeaturesSignature,
   UseChartDimensionsSignature,
   UseChartSeriesSignature<TSeriesType>,
@@ -42,4 +42,4 @@ export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = Char
 ];
 
 export interface ChartCorePluginParameters
-  extends UseChartIdParameters, UseSeriesConfigParameters {}
+  extends UseChartIdParameters, UseChartSeriesConfigParameters {}

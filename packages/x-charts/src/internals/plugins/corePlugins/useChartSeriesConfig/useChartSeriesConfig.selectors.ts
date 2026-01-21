@@ -1,8 +1,8 @@
 import { createSelector } from '@mui/x-internals/store';
 import { type ChartRootSelector } from '../../utils/selectors';
-import { type UseSeriesConfigSignature } from './useChartSeriesConfig.types';
+import { type UseChartSeriesConfigSignature } from './useChartSeriesConfig.types';
 
-export const selectorChartSeriesConfigState: ChartRootSelector<UseSeriesConfigSignature> = (
+export const selectorChartSeriesConfigState: ChartRootSelector<UseChartSeriesConfigSignature> = (
   state,
 ) => state.seriesConfig;
 

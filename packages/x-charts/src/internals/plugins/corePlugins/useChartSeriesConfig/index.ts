@@ -1,7 +1,7 @@
-export { useSeriesConfig } from './useChartSeriesConfig';
+export { useChartSeriesConfig } from './useChartSeriesConfig';
 export type {
-  UseSeriesConfigSignature,
-  UseSeriesConfigParameters,
-  UseSeriesConfigDefaultizedParameters,
+  UseChartSeriesConfigSignature,
+  UseChartSeriesConfigParameters,
+  UseChartSeriesConfigDefaultizedParameters,
 } from './useChartSeriesConfig.types';
 export * from './useChartSeriesConfig.selectors';

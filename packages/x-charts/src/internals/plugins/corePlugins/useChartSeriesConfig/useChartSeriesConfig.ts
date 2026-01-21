@@ -1,29 +1,28 @@
 'use client';
 
-import { defaultSeriesConfig } from './defaultSeriesConfig';
 import { type ChartPlugin } from '../../models';
-import { type UseSeriesConfigSignature } from './useChartSeriesConfig.types';
+import { type UseChartSeriesConfigSignature } from './useChartSeriesConfig.types';
 
-export const useSeriesConfig: ChartPlugin<UseSeriesConfigSignature> = () => {
+export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = () => {
   // The seriesConfig is static and doesn't change after initialization
   // It's stored in the initial state and accessed via selectors
   return {};
 };
 
-useSeriesConfig.params = {
+useChartSeriesConfig.params = {
   seriesConfig: true,
 };
 
-useSeriesConfig.getDefaultizedParams = ({ params }) => ({
+useChartSeriesConfig.getDefaultizedParams = ({ params }) => ({
   ...params,
   // The default value will be provided by ChartProvider when no seriesConfig is passed
-  seriesConfig: params.seriesConfig ?? defaultSeriesConfig,
+  seriesConfig: params.seriesConfig,
 });
 
-useSeriesConfig.getInitialState = ({ seriesConfig }) => {
+useChartSeriesConfig.getInitialState = ({ seriesConfig }) => {
   return {
     seriesConfig: {
-      config: seriesConfig ?? defaultSeriesConfig,
+      config: seriesConfig,
     },
   };
 };

@@ -12,6 +12,7 @@ import { useChartTooltip } from '../../internals/plugins/featurePlugins/useChart
 import { useChartInteraction } from '../../internals/plugins/featurePlugins/useChartInteraction';
 import { useChartZAxis } from '../../internals/plugins/featurePlugins/useChartZAxis';
 import { useChartHighlight } from '../../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight';
+import { defaultSeriesConfig } from './defaultSeriesConfig';
 
 // For consistency with the v7, the cartesian axes are set by default.
 // To remove them, you can provide a `plugins` props.
@@ -32,7 +33,10 @@ function ChartProvider<TSignatures extends readonly ChartAnyPluginSignature[]>(
     pluginParams = {},
   } = props;
 
-  const { contextValue } = useCharts<TSignatures>(plugins, pluginParams);
+  const { contextValue } = useCharts<TSignatures>(plugins, {
+    seriesConfig: defaultSeriesConfig,
+    ...pluginParams,
+  });
 
   return <ChartContext.Provider value={contextValue}>{children}</ChartContext.Provider>;
 }
