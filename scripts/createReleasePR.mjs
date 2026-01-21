@@ -174,8 +174,11 @@ async function selectTargetBranch(majorVersion) {
     });
     return useVersionBranch;
   } catch (error) {
-    console.log(`Branch v${majorVersion}.x does not exist.`);
-    return false;
+    if (error.status === 404) {
+      console.log(`Branch v${majorVersion}.x does not exist. Using master as the base.`);
+      return false;
+    }
+    throw error;
   }
 }
 
