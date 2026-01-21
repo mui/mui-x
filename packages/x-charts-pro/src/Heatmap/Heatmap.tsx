@@ -44,11 +44,11 @@ import { useHeatmapProps } from './useHeatmapProps';
 
 export interface HeatmapSlots
   extends
-  ChartsAxisSlots,
-  ChartsOverlaySlots,
-  HeatmapItemSlots,
-  ChartsToolbarProSlots,
-  Partial<ChartsSlotsPro> {
+    ChartsAxisSlots,
+    ChartsOverlaySlots,
+    HeatmapItemSlots,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {
   /**
    * Custom component for the tooltip.
    * @default ChartsTooltipRoot
@@ -62,12 +62,12 @@ export interface HeatmapSlots
 }
 export interface HeatmapSlotProps
   extends
-  ChartsAxisSlotProps,
-  ChartsOverlaySlotProps,
-  HeatmapItemSlotProps,
-  ChartsLegendSlotProps,
-  ChartsToolbarProSlotProps,
-  Partial<ChartsSlotPropsPro> {
+    ChartsAxisSlotProps,
+    ChartsOverlaySlotProps,
+    HeatmapItemSlotProps,
+    ChartsLegendSlotProps,
+    ChartsToolbarProSlotProps,
+    Partial<ChartsSlotPropsPro> {
   tooltip?: Partial<HeatmapTooltipProps>;
 }
 
@@ -75,24 +75,24 @@ export type HeatmapSeries = MakeOptional<HeatmapSeriesType, 'type'>;
 
 export interface HeatmapProps
   extends
-  Omit<
-    ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
-    | 'series'
-    | 'plugins'
-    | 'xAxis'
-    | 'yAxis'
-    | 'axesGap'
-    | 'skipAnimation'
-    | 'slots'
-    | 'slotProps'
-    | 'experimentalFeatures'
-    | 'highlightedAxis'
-    | 'onHighlightedAxisChange'
-    | 'seriesConfig'
-    | 'onAxisClick'
-  >,
-  Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-  Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<
+      ChartContainerProProps<'heatmap', HeatmapPluginSignatures>,
+      | 'series'
+      | 'plugins'
+      | 'xAxis'
+      | 'yAxis'
+      | 'axesGap'
+      | 'skipAnimation'
+      | 'slots'
+      | 'slotProps'
+      | 'experimentalFeatures'
+      | 'highlightedAxis'
+      | 'onHighlightedAxisChange'
+      | 'seriesConfig'
+      | 'onAxisClick'
+    >,
+    Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
   /**
    * The function called for onClick events.
    * The second argument contains information about all line/bar elements at the current mouse position.

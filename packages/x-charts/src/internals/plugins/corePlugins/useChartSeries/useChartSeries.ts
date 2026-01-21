@@ -34,7 +34,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
   );
 
   const cleanIdentifier: CleanIdentifierFunction = useEventCallback((identifier) =>
-    cleanIdentifierFn(seriesConfig, identifier),
+    cleanIdentifierFn(store.state.seriesConfig.config, identifier),
   );
 
   return {
