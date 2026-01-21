@@ -80,7 +80,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             const {
               xAxisId = defaultXAxisId,
               yAxisId = defaultYAxisId,
-              stackedData,
+              visibleStackedData,
               data,
               disableHighlight,
               shape = 'circle',
@@ -107,7 +107,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             }
 
             const x = xScale(xData[highlightedIndex]);
-            const y = yScale(stackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
+            const y = yScale(visibleStackedData[highlightedIndex][1])!; // This should not be undefined since y should not be a band scale
 
             if (!instance.isPointInside(x, y)) {
               return null;

@@ -1,7 +1,7 @@
 ---
 title: React Sankey chart
 productId: x-charts
-components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent
+components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent, SankeyDataProvider, FocusedSankeyNode, FocusedSankeyLink
 ---
 
 # Charts - Sankey [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')🧪
@@ -11,6 +11,12 @@ components: SankeyChart, SankeyPlot, SankeyTooltip, SankeyTooltipContent
 :::info
 This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
 :::
+
+## Overview
+
+The Sankey chart is a type of flow diagram that visualizes the flow of data between different nodes.
+
+{{"demo": "SankeyOverview.js"}}
 
 ## Basics
 
@@ -223,4 +229,42 @@ You can import the default tooltip, or only its content as follows:
 
 ```js
 import { SankeyTooltip, SankeyTooltipContent } from '@mui/x-charts/SankeyChart',
+```
+
+## Composition
+
+Use the `<SankeyDataProvider />` to provide `series` props for composition.
+
+In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
+
+- For items:
+  - `<SankeyNodePlot />` renders all the sankey nodes.
+  - `<SankeyLinkPlot />` renders all the sankey links.
+- For items label:
+  - `<SankeyNodeLabelPlot />` renders the nodes label.
+  - `<SankeyLinkLabelPlot />` renders the links label.
+- For keyboard interaction:
+  - `<FocusedSankeyNode />` renders the focus visual element for node
+  - `<FocusedSankeyLink />` renders the focus visual element for link
+
+Here's how the Sankey Chart is composed:
+
+```jsx
+<SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
+  <ChartsWrapper {...chartsWrapperProps}>
+    <ChartsSurface {...chartsSurfaceProps}>
+      <SankeyLinkPlot onClick={onLinkClick} />
+      <SankeyNodePlot onClick={onNodeClick} />
+
+      <SankeyLinkLabelPlot />
+      <SankeyNodeLabelPlot />
+
+      <FocusedSankeyNode />
+      <FocusedSankeyLink />
+
+      <ChartsOverlay {...overlayProps} />
+    </ChartsSurface>
+    <ChartsTooltip trigger="item" />
+  </ChartsWrapper>
+</SankeyDataProvider>
 ```

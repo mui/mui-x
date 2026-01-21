@@ -180,6 +180,32 @@
     "import { DateTimeField } from '@mui/x-date-pickers';",
     "import { DateTimeField } from '@mui/x-date-pickers-pro';"
   ],
+  "slots": [
+    {
+      "name": "clearButton",
+      "description": "Button to clear the value.",
+      "default": "IconButton",
+      "class": null
+    },
+    {
+      "name": "clearIcon",
+      "description": "Icon to display in the button used to clean the value.",
+      "default": "ClearIcon",
+      "class": null
+    },
+    {
+      "name": "inputAdornment",
+      "description": "Component displayed on the start or end input adornment used to open the Picker.",
+      "default": "InputAdornment",
+      "class": null
+    },
+    {
+      "name": "textField",
+      "description": "Form control with an input to render the value.",
+      "default": "<PickersTextField />, or <TextField /> from '@mui/material' if `enableAccessibleFieldDOMStructure` is `false`.",
+      "class": null
+    }
+  ],
   "classes": [
     {
       "key": "root",

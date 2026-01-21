@@ -1,3 +1,4 @@
+'use client';
 import { useTheme, useThemeProps } from '@mui/material/styles';
 import resolveProps from '@mui/utils/resolveProps';
 import useSlotProps from '@mui/utils/useSlotProps';

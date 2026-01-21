@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { TreeViewPublicAPI } from '@mui/x-tree-view/internals';
 import { TreeViewDefaultItemModelProperties, TreeViewValidItem } from '@mui/x-tree-view/models';

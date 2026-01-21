@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { GridConfigurationContext } from '../../components/GridConfigurationContext';
 import { GridConfiguration } from '../../models/configuration/gridConfiguration';

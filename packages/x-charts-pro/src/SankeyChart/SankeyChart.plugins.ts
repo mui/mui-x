@@ -4,6 +4,8 @@ import {
   type UseChartTooltipSignature,
   useChartInteraction,
   type UseChartInteractionSignature,
+  useChartKeyboardNavigation,
+  type UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
@@ -12,10 +14,11 @@ import {
 import { useSankeyHighlight, type UseSankeyHighlightSignature } from './plugins';
 
 export type SankeyChartPluginSignatures = [
-  UseChartTooltipSignature,
+  UseChartTooltipSignature<'sankey'>,
   UseChartInteractionSignature,
   UseSankeyHighlightSignature,
   UseChartProExportSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export const SANKEY_CHART_PLUGINS: ConvertSignaturesIntoPlugins<SankeyChartPluginSignatures> = [
@@ -23,4 +26,5 @@ export const SANKEY_CHART_PLUGINS: ConvertSignaturesIntoPlugins<SankeyChartPlugi
   useChartInteraction,
   useSankeyHighlight,
   useChartProExport,
+  useChartKeyboardNavigation,
 ];

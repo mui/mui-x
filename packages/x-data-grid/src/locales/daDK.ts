@@ -5,8 +5,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rækker',
   noResultsOverlayLabel: 'Ingen resultater',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Ingen kolonner',
+  noColumnsOverlayManageColumns: 'Administrer kolonner',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -15,6 +15,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Fortryd',
+  toolbarRedo: 'Gentag',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
@@ -113,7 +117,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større end eller lig med',
   'headerFilterOperator<': 'Mindre end',
   'headerFilterOperator<=': 'Mindre end eller lig med',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Ryd filter',
 
   // Filter values text
   filterValueAny: 'hvilken som helst',

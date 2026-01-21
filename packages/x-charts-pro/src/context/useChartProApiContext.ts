@@ -3,7 +3,7 @@ import { type ChartProApi } from './ChartProApi';
 
 /**
  * The `useChartProApiContext` hook provides access to the chart API.
- * This is only available when the chart is rendered within a chart or a `ChartDataProvider` component.
+ * This is only available when the chart is rendered within a chart or a `ChartDataProviderPro` component.
  * If you want to access the chart API outside those components, you should use the `apiRef` prop instead.
  * @example
  * const apiRef = useChartProApiContext<ChartProApi<'bar'>>();

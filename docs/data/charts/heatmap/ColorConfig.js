@@ -1,3 +1,4 @@
+import Stack from '@mui/material/Stack';
 import { interpolateBlues } from 'd3-scale-chromatic';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 
@@ -95,27 +96,28 @@ const data = dataset.flatMap(({ london, paris, newYork, seoul }, monthIndex) => 
   [3, monthIndex, seoul],
 ]);
 
-const xData = ['London', 'Paris', 'NewYork', 'Seoul'];
+const xData = ['London', 'Paris', 'New York', 'Seoul'];
 const yData = dataset.flatMap(({ month }) => month);
 
 export default function ColorConfig() {
   return (
-    <Heatmap
-      height={400}
-      width={600}
-      xAxis={[{ data: xData }]}
-      yAxis={[{ data: yData, width: 80 }]}
-      series={[{ data }]}
-      zAxis={[
-        {
-          min: 20,
-          max: 300,
-          colorMap: {
-            type: 'continuous',
-            color: interpolateBlues,
+    <Stack width="100%">
+      <Heatmap
+        height={400}
+        xAxis={[{ data: xData }]}
+        yAxis={[{ data: yData, width: 80 }]}
+        series={[{ data }]}
+        zAxis={[
+          {
+            min: 20,
+            max: 300,
+            colorMap: {
+              type: 'continuous',
+              color: interpolateBlues,
+            },
           },
-        },
-      ]}
-    />
+        ]}
+      />
+    </Stack>
   );
 }
