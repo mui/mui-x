@@ -1,4 +1,4 @@
-import { type AllSeriesType } from '../../../../models/seriesType';
+import { type AllSeriesType, type SeriesItemIdentifier } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
 import { type ChartPluginSignature, type SeriesLayoutGetterResult } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
@@ -66,7 +66,9 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
 ) => string;
 
-export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(identifier: T) => T;
+export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
+  identifier: T,
+) => SeriesItemIdentifier<T['type']>;
 
 export interface UseChartSeriesInstance {
   /**
