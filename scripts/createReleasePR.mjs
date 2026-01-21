@@ -56,6 +56,8 @@ const REPO = 'mui-x';
 const getRemoteRegex = (owner) =>
   new RegExp(String.raw`([\/:])${owner}\/${REPO}(\.git)?\s+\(push\)`);
 
+const majorVersionBranch = (majorVersion) => `v${majorVersion}.x`;
+
 /**
  * Command line arguments for the script
  * @typedef {object} ArgvOptions
@@ -165,11 +167,11 @@ async function selectTargetBranch(majorVersion) {
     const response = await octokit.rest.repos.getBranch({
       owner: ORG,
       repo: REPO,
-      branch: `v${majorVersion}.x`,
+      branch: majorVersionBranch(majorVersion),
     });
     console.log(`Branch ${response.data.name} exists.`);
     const useVersionBranch = await confirm({
-      message: `The branch v${majorVersion}.x exists. Do you want to use it as the base for the release? (No will use master)`,
+      message: `The branch ${majorVersionBranch(majorVersion)} exists. Do you want to use it as the base for the release? (No will use master)`,
       default: true,
     });
     return useVersionBranch;
@@ -614,7 +616,7 @@ async function generateChangelog(generator, newVersion, lastVersion, releaseBran
     return await generator({
       octokit,
       nextVersion: newVersion,
-      lastRelease: `v${lastVersion}`,
+      lastRelease: majorVersionBranch(lastVersion),
       release: releaseBranch,
       returnEntry: true,
     });
@@ -967,8 +969,8 @@ async function main() {
       console.log('Updating the upstream master branch for current major version...');
       await execa('git', ['fetch', upstreamRemote, 'master']);
     } else {
-      console.log(`Updating the upstream v${majorVersion}.x branch...`);
-      await execa('git', ['fetch', upstreamRemote, `v${majorVersion}.x`]);
+      console.log(`Updating the upstream ${majorVersionBranch(majorVersion)} branch...`);
+      await execa('git', ['fetch', upstreamRemote, majorVersionBranch(majorVersion)]);
     }
 
     // Create a new branch with the new version
@@ -984,7 +986,7 @@ async function main() {
       branchSource = `${upstreamRemote}/master`;
       console.log(`Creating branch from master for current major version: ${branchSource}`);
     } else {
-      branchSource = `${upstreamRemote}/v${majorVersion}.x`;
+      branchSource = `${upstreamRemote}/${majorVersionBranch(majorVersion)}`;
       console.log(`Creating branch from version branch: ${branchSource}`);
     }
 
@@ -1017,7 +1019,7 @@ async function main() {
       generator,
       newVersion,
       previousVersion,
-      shouldUseMasterBranch ? 'master' : `v${majorVersion}.x`,
+      shouldUseMasterBranch ? 'master' : majorVersionBranch(majorVersion),
     );
 
     // Add the new changelog entry to the CHANGELOG.md file
@@ -1055,7 +1057,7 @@ async function main() {
     console.log('Opening a PR...');
     try {
       // Determine the base branch based on the selected major version
-      const baseBranch = shouldUseMasterBranch ? 'master' : `v${majorVersion}.x`;
+      const baseBranch = shouldUseMasterBranch ? 'master' : majorVersionBranch(majorVersion);
 
       // Get the origin owner (username or organization)
       const forkOwner = await findForkOwner();
@@ -1072,7 +1074,7 @@ async function main() {
 
       // Step 1: Apply labels to the PR
       // Add 'release' label and a version label in the format 'v8.x'
-      const versionLabel = `v${majorVersion}.x`;
+      const versionLabel = majorVersionBranch(majorVersion);
       await addLabelsToPR(prNumber, ['release', versionLabel]);
 
       // Step 2: Get all members of the 'mui/x' team from GitHub (excluding the PR author)
