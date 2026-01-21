@@ -248,7 +248,6 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       as={rootProps.slots.baseTextarea}
       ownerState={rootProps}
       ref={textareaRef}
-      minRows={3}
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
