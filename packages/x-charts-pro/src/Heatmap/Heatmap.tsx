@@ -249,7 +249,7 @@ Heatmap.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -368,7 +368,7 @@ Heatmap.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['heatmap']).isRequired,
     xIndex: PropTypes.number,
     yIndex: PropTypes.number,
