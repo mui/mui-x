@@ -14,8 +14,10 @@ export interface ColumnsPluginState {
   columns: ColumnsState;
 }
 
-export interface ColumnsPluginOptions<TData = any, TColumnMeta = {}>
-  extends ColumnsOptions<TData, TColumnMeta> {
+export interface ColumnsPluginOptions<TData = any, TColumnMeta = {}> extends ColumnsOptions<
+  TData,
+  TColumnMeta
+> {
   initialState?: {
     columns?: Partial<ColumnsState>;
   };

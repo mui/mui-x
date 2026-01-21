@@ -27,7 +27,8 @@ import { FocusedFunnelSection } from './FocusedFunnelSection';
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'

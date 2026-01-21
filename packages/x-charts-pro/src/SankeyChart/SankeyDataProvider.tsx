@@ -8,11 +8,10 @@ import { sankeySeriesConfig } from './seriesConfig';
 
 const seriesConfig = { sankey: sankeySeriesConfig };
 
-export interface SankeyDataProviderProps
-  extends Omit<
-    ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
-    'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
-  > {
+export interface SankeyDataProviderProps extends Omit<
+  ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
+  'plugins' | 'series' | 'slotProps' | 'slots' | 'dataset' | 'hideLegend' | 'skipAnimation'
+> {
   children?: React.ReactNode;
   series: readonly SankeySeriesType[];
 }
