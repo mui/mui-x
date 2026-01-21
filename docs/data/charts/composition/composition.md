@@ -135,7 +135,7 @@ The demo below lets you switch between a chart with discrete dimensions (`width=
 This includes:
 
 - The `xAxis` and `yAxis` props—see [Axis](/x/react-charts/axis/) for details
-- The `colors` prop—see [Styling—Color palette](/x/react-charts/styling/#color-palette) for details
+- The `colors` prop—see [Styling—Color palette](/x/react-charts/styling/#built-in-color-palettes) for details
 - The `series` and `dataset` props
 
 #### Series

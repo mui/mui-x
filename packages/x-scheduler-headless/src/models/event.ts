@@ -336,7 +336,8 @@ export interface SchedulerOccurrencePlaceholderCreation extends SchedulerOccurre
   lockSurfaceType?: boolean;
 }
 
-export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderInternalDragOrResize
+  extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
@@ -355,7 +356,8 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
   originalOccurrence: SchedulerEventOccurrence;
 }
 
-export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOccurrencePlaceholderBase {
+export interface SchedulerOccurrencePlaceholderExternalDrag
+  extends SchedulerOccurrencePlaceholderBase {
   /**
    * The type of placeholder.
    */
