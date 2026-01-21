@@ -59,7 +59,7 @@ You can use the `AdapterDayjsBuddhist` adapter, which is based on [dayjs](https:
 
 {{"demo": "AdapterBuddhist.js"}}
 
-The Buddhist Era calendar is used in Thailand and other Southeast Asian countries. It uses the same months and days as the Gregorian calendar but with a year offset of 543 (e.g., 2024 CE = 2567 BE).
+The Buddhist Era calendar is used in Thailand and other Southeast Asian countries. It uses the same months and days as the Gregorian calendar but with a year offset of 543, for example, 2024 CE = 2567 BE.
 
 ## Unsupported libraries
 
