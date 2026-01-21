@@ -10,6 +10,7 @@
   },
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
+    "./models": "./src/models/index.ts",
     "./timeline": "./src/timeline/index.ts",
     "./timeline-provider": "./src/timeline-provider/index.ts",
     "./timeline-selectors": "./src/timeline-selectors/index.ts",

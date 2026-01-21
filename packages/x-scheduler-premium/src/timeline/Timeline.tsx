@@ -1,16 +1,17 @@
 'use client';
 import * as React from 'react';
 import { styled, useThemeProps } from '@mui/material/styles';
-// import { useStore } from '@base-ui/utils/store';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { useStore } from '@base-ui/utils/store';
 import {
   useExtractTimelineParameters,
   useTimeline,
 } from '@mui/x-scheduler-headless-premium/use-timeline';
-// import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium//timeline-selectors';
+import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
 import { TimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
-// import { TimelineView } from '@mui/x-scheduler-headless-premium/models';
+import { TimelineView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-// import { ViewSwitcher } from '@mui/x-scheduler/event-calendar/header-toolbar/view-switcher';
 import { TimelineProps } from './Timeline.types';
 import { TimelineContent } from './content';
 import '../index.css';
@@ -53,15 +54,25 @@ export const Timeline = React.forwardRef(function EventTimeline<
   >(props);
   const store = useTimeline(parameters);
 
-  // const view = useStore(store, timelineViewSelectors.view);
-  // const views = useStore(store, timelineViewSelectors.views);
+  const view = useStore(store, timelineViewSelectors.view);
+  const views = useStore(store, timelineViewSelectors.views);
+
+  const handleViewChange = (event: SelectChangeEvent, child: React.ReactNode) => {
+    store.setView(event.target.value as TimelineView, event as unknown as Event);
+  };
 
   return (
     <TimelineStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <EventTimelineRoot ref={forwardedRef} {...forwardedProps}>
           <EventTimelineHeaderToolbar>
-            {/* <ViewSwitcher<TimelineView> views={views} view={view} onViewChange={store.setView} /> */}
+            <Select value={view} onChange={handleViewChange} size="small">
+              {views.map((v) => (
+                <MenuItem key={v} value={v}>
+                  {v}
+                </MenuItem>
+              ))}
+            </Select>
           </EventTimelineHeaderToolbar>
           <TimelineContent />
         </EventTimelineRoot>

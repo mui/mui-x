@@ -16,6 +16,7 @@
   "exports": {
     "./base-ui-copy": "./src/base-ui-copy/index.ts",
     "./build-is-valid-drop-target": "./src/build-is-valid-drop-target/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./calendar-grid": "./src/calendar-grid/index.ts",
     "./constants": "./src/constants/index.ts",
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",

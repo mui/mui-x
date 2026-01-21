@@ -234,8 +234,8 @@ describe('<Timeline />', () => {
 
       expect(rootElement.style.getPropertyValue('--unit-width')).to.contain('time-cell-width');
 
-      const daysSwitchControl = screen.getByRole('button', { name: /days/i });
-      expect(daysSwitchControl).not.to.equal(null);
+      const viewSelect = screen.getByRole('combobox');
+      expect(viewSelect).not.to.equal(null);
 
       renderTimeline({
         view: 'days',
