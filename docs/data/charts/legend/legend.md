@@ -154,7 +154,7 @@ Another demo in [HTML components docs](/x/react-charts/components/#html-componen
 
 ## Color legend
 
-To display legend associated to a [colorMap](https://mui.com/x/react-charts/styling/#values-color), you can use:
+To display legend associated to a [colorMap](https://mui.com/x/react-charts/styling/#value-based-colors), you can use:
 
 - `<ContinuousColorLegend />` if you're using `colorMap.type='continuous'`
 - `<PiecewiseColorLegend />` if you're using `colorMap.type='piecewise'`.
