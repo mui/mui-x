@@ -15,6 +15,7 @@ import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.type
 import { type SeriesLayoutGetter } from './seriesLayout.types';
 import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
+import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
 import { type UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../featurePlugins/useChartPolarAxis';
@@ -40,10 +41,17 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
   keyboardFocusHandler?: KeyboardFocusHandler<TSeriesType>;
   /**
    * A function to serialize the series item identifier into a unique string.
-   * @param {ChartsSeriesConfig[TSeriesType]['itemIdentifier']} identifier The series item identifier.
+   * @param {SeriesItemIdentifier<TSeriesType>} identifier The series item identifier.
    * @returns {string} A unique string representation of the identifier.
    */
   identifierSerializer: IdentifierSerializer<TSeriesType>;
+  /**
+   * A function to clean a series item identifier, returning only the properties
+   * relevant to the series type.
+   * @param {Partial<SeriesItemIdentifier<TSeriesType>> & { type: TSeriesType }} identifier The partial identifier to clean.
+   * @returns {SeriesItemIdentifier<TSeriesType>} A cleaned identifier with only the relevant properties.
+   */
+  identifierCleaner: IdentifierCleaner<TSeriesType>;
   getItemAtPosition?: GetItemAtPosition<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
