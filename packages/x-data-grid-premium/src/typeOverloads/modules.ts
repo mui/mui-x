@@ -175,10 +175,12 @@ declare module '@mui/x-data-grid-pro' {
   interface GridEventLookup extends GridEventLookupPremium {}
 
   interface GridPipeProcessingLookup
-    extends GridPipeProcessingLookupPro, GridPipeProcessingLookupPremium {}
+    extends GridPipeProcessingLookupPro,
+      GridPipeProcessingLookupPremium {}
 
   interface GridControlledStateEventLookup
-    extends GridControlledStateEventLookupPro, GridControlledStateEventLookupPremium {}
+    extends GridControlledStateEventLookupPro,
+      GridControlledStateEventLookupPremium {}
 
   interface GridRenderCellParams<R, V, F> extends GridRenderCellParamsPremium<R, V, F> {}
 

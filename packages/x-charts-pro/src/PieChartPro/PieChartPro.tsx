@@ -25,16 +25,16 @@ import {
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface PieChartProSlots
-  extends Omit<PieChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
+  extends Omit<PieChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface PieChartProSlotProps
-  extends
-    Omit<PieChartSlotProps, 'toolbar'>,
+  extends Omit<PieChartSlotProps, 'toolbar'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface PieChartProProps
-  extends
-    Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
+  extends Omit<PieChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'pie', PieChartProPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'

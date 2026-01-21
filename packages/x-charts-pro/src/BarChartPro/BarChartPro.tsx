@@ -32,16 +32,16 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { BAR_CHART_PRO_PLUGINS, type BarChartProPluginSignatures } from './BarChartPro.plugins';
 
 export interface BarChartProSlots
-  extends Omit<BarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
+  extends Omit<BarChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface BarChartProSlotProps
-  extends
-    Omit<BarChartSlotProps, 'toolbar'>,
+  extends Omit<BarChartSlotProps, 'toolbar'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface BarChartProProps
-  extends
-    Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
+  extends Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'

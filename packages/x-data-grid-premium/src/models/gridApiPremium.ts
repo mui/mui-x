@@ -36,8 +36,7 @@ import type { GridHistoryApi } from '../hooks/features/history/gridHistoryInterf
  * TODO: Do not redefine manually the pro features
  */
 export interface GridApiPremium
-  extends
-    GridApiCommon<GridStatePremium, GridInitialStatePremium>,
+  extends GridApiCommon<GridStatePremium, GridInitialStatePremium>,
     GridRowProApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
@@ -57,8 +56,7 @@ export interface GridApiPremium
     GridColumnReorderApi {}
 
 export interface GridPrivateApiPremium
-  extends
-    GridApiPremium,
+  extends GridApiPremium,
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,

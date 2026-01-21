@@ -21,10 +21,11 @@ import { useUtilityClasses } from './chartsSurfaceClasses';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 
-export interface ChartsSurfaceProps extends Omit<
-  React.SVGProps<SVGSVGElement>,
-  'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-> {
+export interface ChartsSurfaceProps
+  extends Omit<
+    React.SVGProps<SVGSVGElement>,
+    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
+  > {
   className?: string;
   title?: string;
   desc?: string;

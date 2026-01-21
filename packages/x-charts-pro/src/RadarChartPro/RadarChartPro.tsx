@@ -32,16 +32,16 @@ import {
 import { type ChartsSlotPropsPro, type ChartsSlotsPro } from '../internals/material';
 
 export interface RadarChartProSlots
-  extends Omit<RadarChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
+  extends Omit<RadarChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface RadarChartProSlotProps
-  extends
-    Omit<RadarChartSlotProps, 'toolbar'>,
+  extends Omit<RadarChartSlotProps, 'toolbar'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {}
 
 export interface RadarChartProProps
-  extends
-    Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
+  extends Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       RadarDataProviderProps<RadarChartProPluginSignatures>,
       'slots' | 'slotProps' | 'experimentalFeatures'

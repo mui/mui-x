@@ -50,10 +50,8 @@ export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeat
   charts?: boolean;
 }
 
-export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing extends Pick<
-  DataGridPropsWithComplexDefaultValueBeforeProcessing,
-  'localeText'
-> {
+export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
+  extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
   /**
    * Overridable components.
    */
@@ -63,17 +61,16 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing ext
 /**
  * The props users can give to the `DataGridPremiumProps` component.
  */
-export interface DataGridPremiumProps<R extends GridValidRowModel = any> extends Omit<
-  Partial<DataGridPremiumPropsWithDefaultValue<R>> &
-    DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
-    DataGridPremiumPropsWithoutDefaultValue<R>,
-  DataGridPremiumForcedPropsKey
-> {}
+export interface DataGridPremiumProps<R extends GridValidRowModel = any>
+  extends Omit<
+    Partial<DataGridPremiumPropsWithDefaultValue<R>> &
+      DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
+      DataGridPremiumPropsWithoutDefaultValue<R>,
+    DataGridPremiumForcedPropsKey
+  > {}
 
-export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing extends Pick<
-  DataGridPropsWithComplexDefaultValueAfterProcessing,
-  'localeText'
-> {
+export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
+  extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
   slots: GridPremiumSlotsComponent;
 }
 
@@ -81,8 +78,7 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing exte
  * The props of the Data Grid Premium component after the pre-processing phase.
  */
 export interface DataGridPremiumProcessedProps
-  extends
-    DataGridPremiumPropsWithDefaultValue,
+  extends DataGridPremiumPropsWithDefaultValue,
     DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
     DataGridPremiumPropsWithoutDefaultValue {}
 
@@ -94,7 +90,8 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
 export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue<R>, DataGridPremiumSharedPropsWithDefaultValue {
+  extends DataGridProPropsWithDefaultValue<R>,
+    DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -178,12 +175,11 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
   historyValidationEvents: GridEvents[];
 }
 
-export interface DataGridPremiumPropsWithoutDefaultValue<
-  R extends GridValidRowModel = any,
-> extends Omit<
-  DataGridProPropsWithoutDefaultValue<R>,
-  'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
-> {
+export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
+  extends Omit<
+    DataGridProPropsWithoutDefaultValue<R>,
+    'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
+  > {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */

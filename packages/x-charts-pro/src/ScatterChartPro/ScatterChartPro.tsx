@@ -34,10 +34,11 @@ import {
 } from '../ChartsToolbarPro/Toolbar.types';
 
 export interface ScatterChartProSlots
-  extends Omit<ScatterChartSlots, 'toolbar'>, ChartsToolbarProSlots, Partial<ChartsSlotsPro> {}
+  extends Omit<ScatterChartSlots, 'toolbar'>,
+    ChartsToolbarProSlots,
+    Partial<ChartsSlotsPro> {}
 export interface ScatterChartProSlotProps
-  extends
-    Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
+  extends Omit<ScatterChartSlotProps, 'toolbar' | 'tooltip'>,
     ChartsToolbarProSlotProps,
     Partial<ChartsSlotPropsPro> {
   /**
@@ -48,8 +49,7 @@ export interface ScatterChartProSlotProps
 }
 
 export interface ScatterChartProProps
-  extends
-    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
+  extends Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
