@@ -4,6 +4,7 @@ import { type UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesLayout, applySeriesProcessors } from './processSeries';
 import { selectorChartDrawingArea } from '../useChartDimensions';
 import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
+import { selectorChartSeriesConfig } from '../useSeriesConfig';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
@@ -11,11 +12,6 @@ export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature
 export const selectorChartDefaultizedSeries = createSelector(
   selectorChartSeriesState,
   (seriesState) => seriesState.defaultizedSeries,
-);
-
-export const selectorChartSeriesConfig = createSelector(
-  selectorChartSeriesState,
-  (seriesState) => seriesState.seriesConfig,
 );
 
 /**

@@ -10,11 +10,7 @@ import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
 import { serializeIdentifier as serializeIdentifierFn } from './serializeIdentifier';
 
-export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
-  params,
-  store,
-  seriesConfig,
-}) => {
+export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
 
   // The effect do not track any value defined synchronously during the 1st render by hooks called after `useChartSeries`
@@ -25,14 +21,14 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({
       defaultizedSeries: defaultizeSeries({
         series,
         colors: typeof colors === 'function' ? colors(theme) : colors,
-        seriesConfig,
+        seriesConfig: store.state.seriesConfig.config,
       }),
       dataset,
     });
-  }, [colors, dataset, series, theme, seriesConfig, store]);
+  }, [colors, dataset, series, theme, store]);
 
   const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
-    serializeIdentifierFn(seriesConfig, identifier),
+    serializeIdentifierFn(store.state.seriesConfig.config, identifier),
   );
 
   return {
@@ -58,10 +54,10 @@ useChartSeries.getDefaultizedParams = ({ params }) => ({
   theme: params.theme ?? 'light',
 });
 
-useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, _, seriesConfig) => {
+useChartSeries.getInitialState = ({ series = [], colors, theme, dataset }, currentState) => {
+  const seriesConfig = currentState.seriesConfig.config;
   return {
     series: {
-      seriesConfig,
       defaultizedSeries: defaultizeSeries({
         series,
         colors: typeof colors === 'function' ? colors(theme) : colors,

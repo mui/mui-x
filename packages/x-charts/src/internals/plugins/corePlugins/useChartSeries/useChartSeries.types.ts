@@ -1,15 +1,12 @@
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import {
-  type ChartPluginSignature,
-  type ChartSeriesConfig,
-  type SeriesLayoutGetterResult,
-} from '../../models';
+import { type ChartPluginSignature, type SeriesLayoutGetterResult } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
   type SeriesProcessorParams,
   type SeriesProcessorResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
+import { type UseSeriesConfigSignature } from '../useSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -61,7 +58,6 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<T>;
-    seriesConfig: ChartSeriesConfig<T>;
     dataset?: Readonly<DatasetType>;
   };
 }
@@ -86,4 +82,5 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
     instance: UseChartSeriesInstance;
+    dependencies: [UseSeriesConfigSignature<SeriesType>];
   }>;

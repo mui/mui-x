@@ -3,7 +3,6 @@ import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
-  selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
   selectorChartSeriesLayout,
   type SeriesLayout,
@@ -37,6 +36,7 @@ import {
 import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
+import { selectorChartSeriesConfig } from '../../corePlugins/useSeriesConfig';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 

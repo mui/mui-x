@@ -29,6 +29,7 @@ export * from './plugins/corePlugins/useChartId';
 export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/corePlugins/useChartInteractionListener';
+export * from './plugins/corePlugins/useSeriesConfig';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
