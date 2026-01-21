@@ -11,7 +11,7 @@ export type UseChartContainerPropsReturnValue<
   TSeries extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
-  chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
@@ -64,7 +64,7 @@ export const useChartContainerProps = <
     hiddenItems,
     initialHiddenItems,
     ...other
-  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
@@ -74,7 +74,7 @@ export const useChartContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'> = {
+  const chartDataProviderProps = {
     margin,
     series,
     colors,
@@ -110,7 +110,7 @@ export const useChartContainerProps = <
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,
-  } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderProps,
