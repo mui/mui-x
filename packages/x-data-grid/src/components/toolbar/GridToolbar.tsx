@@ -15,6 +15,11 @@ import { GridToolbarLabel } from '../toolbarV8/GridToolbar';
 
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
   /**
+   * Show the history controls (undo/redo buttons).
+   * @default true
+   */
+  showHistoryControls?: boolean;
+  /**
    * Show the quick filter component.
    * @default true
    */
@@ -86,6 +91,11 @@ GridToolbar.propTypes = {
     quickFilterParser: PropTypes.func,
     slotProps: PropTypes.object,
   }),
+  /**
+   * Show the history controls (undo/redo buttons).
+   * @default true
+   */
+  showHistoryControls: PropTypes.bool,
   /**
    * Show the quick filter component.
    * @default true

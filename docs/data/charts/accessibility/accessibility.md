@@ -71,7 +71,7 @@ components: {
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by line, bar, pie, scatter, and sparkline charts.
+This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, and sankey.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
@@ -90,7 +90,11 @@ Each series type has its own component:
 
 ```js
 import { FocusedBar } from '@mui/x-charts/BarChart';
-import { FocusedPieArc } from '@mui/x-charts/BarChart';
+import { FocusedPieArc } from '@mui/x-charts/PieChart';
 import { FocusedLineMark } from '@mui/x-charts/LineChart';
 import { FocusedScatterMark } from '@mui/x-charts/ScatterChart';
+import { FocusedRadarMark } from '@mui/x-charts/RadarChart';
+import { FocusedHeatmapCell } from '@mui/x-charts-pro/Heatmap';
+import { FocusedFunnelSection } from '@mui/x-charts-pro/FunnelChart';
+import { FocusedSankeyLink, FocusedSankeyNode } from '@mui/x-charts-pro/SankeyChart';
 ```

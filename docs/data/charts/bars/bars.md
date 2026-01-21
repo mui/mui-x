@@ -308,6 +308,7 @@ Here's how the Bar Chart is composed:
         <BarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
+        <FocusedBar />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />
