@@ -5,6 +5,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 8.25.1
+<!-- generated comparing v8.25.0..v8.x -->
+_Jan 21, 2026_
+
+We'd like to extend a big thank you to the 3 contributors who made this release possible. Here are some highlights ✨:
+
+TODO INSERT HIGHLIGHTS
+
+The following team members contributed to this release:
+@flaviendelangle, @JCQuintas, @romgrk
+
+### Data Grid
+
+#### `@mui/x-data-grid@8.25.1`
+
+- [DataGrid] Fix scroll position when virtualization is disabled (#20958) @romgrk
+
+#### `@mui/x-data-grid-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-data-grid@8.25.1`.
+
+#### `@mui/x-data-grid-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-data-grid-pro@8.25.1`.
+
+### Date and Time Pickers
+
+#### `@mui/x-date-pickers@8.25.1`
+
+Internal changes.
+
+#### `@mui/x-date-pickers-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-date-pickers@8.25.1`.
+
+### Charts
+
+#### `@mui/x-charts@8.25.1`
+
+Internal changes.
+
+#### `@mui/x-charts-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-charts@8.25.1`.
+
+#### `@mui/x-charts-premium@8.25.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
+Same changes as in `@mui/x-charts-pro@8.25.1`.
+
+### Tree View
+
+#### `@mui/x-tree-view@8.25.1`
+
+- [tree view] Fix `props.id` not passed to the root element (#20976) @flaviendelangle
+
+#### `@mui/x-tree-view-pro@8.25.1` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
+
+Same changes as in `@mui/x-tree-view@8.25.1`.
+
+### Codemod
+
+#### `@mui/x-codemod@8.25.1`
+
+Internal changes.
+
+### Core
+
+- [code-infra] Update `master` to `v8` references (#20864) @JCQuintas
+- [code-infra] Update v8 branch tags (#20926) @JCQuintas
+- [code-infra] V8 changes in master (#20919) @JCQuintas
+
 ## 8.25.0
 
 <!-- generated comparing v8.24.0..master -->
