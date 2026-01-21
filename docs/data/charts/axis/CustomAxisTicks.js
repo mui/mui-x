@@ -1,5 +1,5 @@
 import { BarChart } from '@mui/x-charts/BarChart';
-import { useYAxes, useYAxisPosition, useYAxisTicks } from '@mui/x-charts/hooks';
+import { useYAxes, useYAxisCoordinates, useYAxisTicks } from '@mui/x-charts/hooks';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 
@@ -35,24 +35,27 @@ function YAxis(props) {
   const { yAxisIds } = useYAxes();
   const axisId = props.axisId ?? yAxisIds[0];
 
-  const axisPosition = useYAxisPosition(axisId);
+  const axisCoordinates = useYAxisCoordinates(axisId);
   const ticks = useYAxisTicks(axisId);
 
-  if (!axisPosition) {
+  if (!axisCoordinates) {
     return null;
   }
 
   return (
     <React.Fragment>
       <line
-        x1={axisPosition.left}
-        x2={axisPosition.left}
-        y1={axisPosition.top}
-        y2={axisPosition.bottom}
+        x1={axisCoordinates.left}
+        x2={axisCoordinates.left}
+        y1={axisCoordinates.top}
+        y2={axisCoordinates.bottom}
         stroke={theme.palette.common.white}
       />
       {ticks.map((tick, index) => (
-        <g key={index} transform={`translate(${axisPosition.left}, ${tick.offset})`}>
+        <g
+          key={index}
+          transform={`translate(${axisCoordinates.left}, ${tick.offset})`}
+        >
           <line x1={-4} x2={4} stroke={theme.palette.common.white} />
           <text
             x={8}
