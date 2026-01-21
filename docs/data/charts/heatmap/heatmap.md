@@ -65,7 +65,7 @@ The first argument is the click event.
 The second one is the item identifier.
 It contains the properties `xIndex` and `yIndex` that are the indexes of the clicked cell along the x- and y-axes respectively.
 
-If data is associated to this cell, the `dataIndex` property provides the index in series `data` array of the cell.
+If this cell has associated data, the `dataIndex` property indicates the position of the cell's data within the series' `data` array.
 
 {{"demo": "HeatmapCellClick.js"}}
 
