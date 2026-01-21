@@ -4,7 +4,7 @@ import { type UseChartSeriesSignature } from './useChartSeries.types';
 import { applySeriesLayout, applySeriesProcessors } from './processSeries';
 import { selectorChartDrawingArea } from '../useChartDimensions';
 import { selectorIsItemVisibleGetter } from '../../featurePlugins/useChartVisibilityManager';
-import { selectorChartSeriesConfig } from '../useChartSeriesConfig';
+import { selectorChartSeriesConfig } from '../useChartSeriesConfig/useChartSeriesConfig.selectors';
 
 export const selectorChartSeriesState: ChartRootSelector<UseChartSeriesSignature> = (state) =>
   state.series;
