@@ -126,6 +126,10 @@ export default withDeploymentConfig({
       module: {
         ...config.module,
         rules: config.module.rules.concat([
+          {
+            test: /\.glsl$/,
+            type: 'asset/source',
+          },
           // used in some /getting-started/templates
           {
             test: /\.md$/,

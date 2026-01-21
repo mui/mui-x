@@ -42,7 +42,18 @@ export const alias = [
 export default defineConfig({
   // If enabling babel plugins, ensure the tests in CI are stable
   // https://github.com/mui/mui-x/pull/18341
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'glsl-as-raw',
+      transform(code, id) {
+        if (id.endsWith('.glsl')) {
+          return `export default ${JSON.stringify(code)}`;
+        }
+        return null;
+      },
+    },
+  ],
   // We seem to need both this and the `env` property below to make it work.
   define: {
     'process.env.NODE_ENV': '"test"',

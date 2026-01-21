@@ -32,6 +32,9 @@ import { useChartContainerProps } from '../ChartContainer/useChartContainerProps
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { BarChartPluginSignatures } from './BarChart.plugins';
 import { FocusedBar } from './FocusedBar';
+import testShader from './test.glsl';
+
+console.log(testShader);
 
 export interface BarChartSlots
   extends
