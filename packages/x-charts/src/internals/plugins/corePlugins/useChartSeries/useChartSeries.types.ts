@@ -66,6 +66,8 @@ export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
   identifier: T,
 ) => string;
 
+export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(identifier: T) => T;
+
 export interface UseChartSeriesInstance {
   /**
    * Function to serialize a series item identifier into a unique string.
@@ -74,6 +76,14 @@ export interface UseChartSeriesInstance {
    * @returns A unique string representing the identifier.
    */
   serializeIdentifier: SerializeIdentifierFunction;
+  /**
+   * Function to clean a series item identifier, returning only the properties
+   * relevant to the series type.
+   *
+   * @param identifier The partial identifier to clean.
+   * @returns A cleaned identifier with only the relevant properties.
+   */
+  cleanIdentifier: CleanIdentifierFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =

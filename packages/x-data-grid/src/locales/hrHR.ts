@@ -16,6 +16,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standardno',
   toolbarDensityComfortable: 'Udobno',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Poništi',
+  toolbarRedo: 'Ponovi',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Stupci',
   toolbarColumnsLabel: 'Odaberite stupce',

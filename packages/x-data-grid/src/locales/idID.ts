@@ -16,6 +16,10 @@ export const idIDGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standar',
   toolbarDensityComfortable: 'Nyaman',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Urungkan',
+  toolbarRedo: 'Ulangi',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolom',
   toolbarColumnsLabel: 'Pilih kolom',

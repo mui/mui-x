@@ -35,6 +35,10 @@ const beBYGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Стандартны',
   toolbarDensityComfortable: 'Камфортны',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Адмяніць',
+  toolbarRedo: 'Паўтарыць',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Слупкі',
   toolbarColumnsLabel: 'Выберыце слупкі',

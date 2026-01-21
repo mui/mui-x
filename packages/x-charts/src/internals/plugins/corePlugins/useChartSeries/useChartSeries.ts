@@ -3,12 +3,14 @@ import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstR
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type ChartPlugin } from '../../models';
 import {
+  type CleanIdentifierFunction,
   type SerializeIdentifierFunction,
   type UseChartSeriesSignature,
 } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
 import { serializeIdentifier as serializeIdentifierFn } from './serializeIdentifier';
+import { cleanIdentifier as cleanIdentifierFn } from './cleanIdentifier';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
@@ -31,9 +33,14 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     serializeIdentifierFn(store.state.seriesConfig.config, identifier),
   );
 
+  const cleanIdentifier: CleanIdentifierFunction = useEventCallback((identifier) =>
+    cleanIdentifierFn(seriesConfig, identifier),
+  );
+
   return {
     instance: {
       serializeIdentifier,
+      cleanIdentifier,
     },
   };
 };

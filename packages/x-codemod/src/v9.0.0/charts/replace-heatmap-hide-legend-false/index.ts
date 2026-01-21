@@ -1,5 +1,7 @@
+import path from 'path';
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 import addProp from '../../../util/addProp';
+import readFile from '../../../util/readFile';
 
 /**
  * Codemod for v9.0.0: Updates <Heatmap /> usages to explicitly set hideLegend={true}
@@ -24,3 +26,14 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
     position: 'start',
   }).toSource(printOptions);
 }
+
+export const testConfig = {
+  name: 'replace-heatmap-hide-legend-false',
+  specFiles: [
+    {
+      name: 'imports',
+      actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+    },
+  ],
+};
