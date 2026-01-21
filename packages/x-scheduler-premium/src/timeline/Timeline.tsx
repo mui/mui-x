@@ -71,9 +71,9 @@ export const Timeline = React.forwardRef(function EventTimeline<
         <EventTimelineRoot ref={forwardedRef} {...forwardedProps}>
           <EventTimelineHeaderToolbar>
             <Select value={view} onChange={handleViewChange} size="small">
-              {views.map((v) => (
-                <MenuItem key={v} value={v}>
-                  {v}
+              {views.map((viewItem) => (
+                <MenuItem key={viewItem} value={viewItem}>
+                  {viewItem}
                 </MenuItem>
               ))}
             </Select>
