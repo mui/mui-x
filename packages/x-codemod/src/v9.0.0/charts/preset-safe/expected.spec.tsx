@@ -7,6 +7,10 @@ import * as React from 'react';
 // For example, if one codemod changes a prop name, another codemod modifying its value should work too.
 // Don't hesitate to add props on existing components.
 
-function App() {
-  // prettier-ignore
-}
+// prettier-ignore
+<div>
+  <Heatmap series={[{}]} hideLegend />
+  <HeatmapPremium series={[{}]} hideLegend={false} />
+  <Heatmap hideLegend series={[{}]} />
+  <HeatmapPremium hideLegend {...otherProps} />
+</div>;
