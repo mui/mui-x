@@ -166,7 +166,7 @@ PieArcLabel.propTypes = {
   endAngle: PropTypes.number.isRequired,
   formattedArcLabel: PropTypes.string,
   hidden: PropTypes.bool,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  id: PropTypes.string.isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
