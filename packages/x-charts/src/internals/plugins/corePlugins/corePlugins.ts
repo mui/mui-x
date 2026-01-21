@@ -9,7 +9,7 @@ import {
   type UseSeriesConfigSignature,
   useSeriesConfig,
   type UseSeriesConfigParameters,
-} from './useSeriesConfig';
+} from './useChartSeriesConfig';
 import { type UseChartSeriesSignature, useChartSeries } from './useChartSeries';
 import {
   type UseChartInteractionListenerSignature,

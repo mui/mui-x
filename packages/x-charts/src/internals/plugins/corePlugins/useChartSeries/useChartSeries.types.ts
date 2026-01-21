@@ -6,7 +6,7 @@ import {
   type SeriesProcessorParams,
   type SeriesProcessorResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
-import { type UseSeriesConfigSignature } from '../useSeriesConfig';
+import { type UseSeriesConfigSignature } from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**

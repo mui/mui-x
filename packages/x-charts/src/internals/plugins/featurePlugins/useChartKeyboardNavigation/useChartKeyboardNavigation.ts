@@ -3,7 +3,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import { selectorChartSeriesConfig } from '../../corePlugins/useSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';

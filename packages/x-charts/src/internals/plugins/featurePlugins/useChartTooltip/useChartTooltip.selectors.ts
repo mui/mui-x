@@ -36,7 +36,7 @@ import {
 import type { ComputeResult as ComputePolarResult } from '../useChartPolarAxis/computeAxisValue';
 import type { ChartOptionalRootSelector } from '../../utils/selectors';
 import type { UseChartTooltipSignature } from './useChartTooltip.types';
-import { selectorChartSeriesConfig } from '../../corePlugins/useSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 const selectTooltip: ChartOptionalRootSelector<UseChartTooltipSignature> = (state) => state.tooltip;
 

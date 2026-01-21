@@ -1,8 +1,8 @@
 'use client';
 
-import { defaultSeriesConfig } from '../../defaultSeriesConfig';
+import { defaultSeriesConfig } from './defaultSeriesConfig';
 import { type ChartPlugin } from '../../models';
-import { type UseSeriesConfigSignature } from './useSeriesConfig.types';
+import { type UseSeriesConfigSignature } from './useChartSeriesConfig.types';
 
 export const useSeriesConfig: ChartPlugin<UseSeriesConfigSignature> = () => {
   // The seriesConfig is static and doesn't change after initialization

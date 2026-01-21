@@ -40,7 +40,7 @@ import { type CartesianChartSeriesType } from '../../../../models/seriesType/con
 import { calculateFinalDomain, calculateInitialDomainAndTickNumber } from './domain';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
-import { selectorChartSeriesConfig } from '../../corePlugins/useSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();

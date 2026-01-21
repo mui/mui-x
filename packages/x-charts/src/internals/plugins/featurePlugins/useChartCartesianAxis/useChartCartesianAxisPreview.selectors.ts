@@ -26,7 +26,7 @@ import { ZOOM_SLIDER_PREVIEW_SIZE } from '../../../constants';
 import { getRange } from './getAxisScale';
 import { zoomScaleRange } from './zoom';
 import { isOrdinalScale } from '../../../scaleGuards';
-import { selectorChartSeriesConfig } from '../../corePlugins/useSeriesConfig';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 function createPreviewDrawingArea(
   axisDirection: 'x' | 'y',
