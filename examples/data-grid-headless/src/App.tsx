@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useDataGrid } from '@mui/x-data-grid-headless';
+import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
 import sortingPlugin from '@mui/x-data-grid-headless/plugins/sorting';
 import paginationPlugin from '@mui/x-data-grid-headless/plugins/pagination';
 // import { useDataGridPro } from '@mui/x-data-grid-headless-pro';
@@ -84,12 +84,12 @@ function generateSampleData(count: number): RowData[] {
 
 // Generate sample columns with random order
 function generateColumns() {
-  const allColumns = [
-    { id: 'id', field: 'id' as keyof RowData, header: 'ID', width: 80 },
-    { id: 'name', field: 'name' as keyof RowData, header: 'Name', width: 200 },
-    { id: 'email', field: 'email' as keyof RowData, header: 'Email', width: 250 },
-    { id: 'age', field: 'age' as keyof RowData, header: 'Age', width: 100 },
-    { id: 'department', field: 'department' as keyof RowData, header: 'Department', width: 150 },
+  const allColumns: ColumnDef<RowData>[] = [
+    { id: 'id', field: 'id' as keyof RowData, header: 'ID', size: 80 },
+    { id: 'name', field: 'name' as keyof RowData, header: 'Name', size: 200 },
+    { id: 'email', field: 'email' as keyof RowData, header: 'Email', size: 250 },
+    { id: 'age', field: 'age' as keyof RowData, header: 'Age', size: 100 },
+    { id: 'department', field: 'department' as keyof RowData, header: 'Department', size: 150 },
   ];
 
   // Shuffle columns to randomize order
@@ -166,8 +166,8 @@ function DataGrid() {
                     borderBottom: '2px solid #e0e0e0',
                     fontWeight: 600,
                     fontSize: '14px',
-                    width: column.width || 150,
-                    minWidth: column.width || 150,
+                    width: column.size || 150,
+                    minWidth: column.size || 150,
                   }}
                 >
                   {column.header || column.id}
@@ -197,8 +197,8 @@ function DataGrid() {
                         style={{
                           padding: '12px 16px',
                           fontSize: '14px',
-                          width: column.width || 150,
-                          minWidth: column.width || 150,
+                          width: column.size || 150,
+                          minWidth: column.size || 150,
                         }}
                       >
                         {value != null ? String(value) : ''}
