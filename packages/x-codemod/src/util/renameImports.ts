@@ -151,12 +151,17 @@ export function renameImports(parameters: RenameImportsParameters) {
       const newEndpoint = getMatchingNestedImport(path, parameters)!.newEndpoint;
       const newPathStr = pathStr.replace(oldEndpoint, newEndpoint!);
 
-      return j.importDeclaration(
+      const newNode = j.importDeclaration(
         // Copy over the existing import specifiers
         path.node.specifiers,
         // Replace the source with our new source
         j.stringLiteral(newPathStr),
       );
+
+      // Preserve comments from the original node
+      newNode.comments = path.node.comments;
+
+      return newNode;
     });
 
   // Rename the import usage

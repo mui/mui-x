@@ -23,8 +23,11 @@
     /* Path mapping */
     "paths": {
       "@mui/x-data-grid-headless": ["../../packages/x-data-grid-headless/src"],
+      "@mui/x-data-grid-headless/*": ["../../packages/x-data-grid-headless/src/*"],
       "@mui/x-data-grid-headless-pro": ["../../packages/x-data-grid-headless-pro/src"],
-      "@mui/x-data-grid-headless-premium": ["../../packages/x-data-grid-headless-premium/src"]
+      "@mui/x-data-grid-headless-pro/*": ["../../packages/x-data-grid-headless-pro/src/*"],
+      "@mui/x-data-grid-headless-premium": ["../../packages/x-data-grid-headless-premium/src"],
+      "@mui/x-data-grid-headless-premium/*": ["../../packages/x-data-grid-headless-premium/src/*"]
     }
   },
   "include": ["src"],

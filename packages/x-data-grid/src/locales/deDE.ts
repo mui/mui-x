@@ -17,6 +17,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Breit',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Rückgängig',
+  toolbarRedo: 'Wiederholen',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Spalten',
   toolbarColumnsLabel: 'Zeige Spaltenauswahl',

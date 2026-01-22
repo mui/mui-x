@@ -1,11 +1,9 @@
 import jscodeshift from 'jscodeshift';
-import transform from './index';
-import * as renameChartApiImport from '../rename-chart-api-import';
+import path from 'path';
+import transform, { testConfig } from './index';
+import readFile from '../../../util/readFile';
 
-const allFiles = [
-  // Add other transforms here as they are created
-  renameChartApiImport,
-]
+const parsedFiles = testConfig.allModules
   .map((mod) =>
     mod.testConfig.specFiles.map((file) => {
       file.name = `${mod.testConfig.name}/${file.name}`;
@@ -14,9 +12,18 @@ const allFiles = [
   )
   .flat();
 
+const testCases = [
+  ...parsedFiles,
+  {
+    name: 'preset-safe/own-files',
+    actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
+    expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+  },
+];
+
 describe('v9.0.0/charts', () => {
   describe('preset-safe', () => {
-    describe.each(allFiles)('transforms $name correctly', (file) => {
+    describe.each(testCases)('transforms $name correctly', (file) => {
       it('transforms code as needed', () => {
         const actual = transform(
           {

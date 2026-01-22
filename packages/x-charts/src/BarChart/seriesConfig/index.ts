@@ -8,6 +8,7 @@ import tooltipGetter, { axisTooltipGetter } from './bar/tooltip';
 import tooltipItemPositionGetter from './bar/tooltipPosition';
 import { getSeriesWithDefaultValues } from './bar/getSeriesWithDefaultValues';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
+import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
 
 export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   seriesProcessor,
@@ -21,4 +22,5 @@ export const barSeriesConfig: ChartSeriesTypeConfig<'bar'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

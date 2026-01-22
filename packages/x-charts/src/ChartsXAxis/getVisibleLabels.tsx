@@ -1,12 +1,12 @@
 'use client';
-import { type TickItemType } from '../hooks/useTicks';
+import { type TickItem } from '../hooks/useTicks';
 import { type ChartsXAxisProps, type ComputedXAxis } from '../models/axis';
 import { getMinXTranslation } from '../internals/geometry';
 import { type ChartsTextStyle } from '../internals/getWordsByLines';
 import { batchMeasureStrings } from '../internals/domUtils';
 
 /* Returns a set of indices of the tick labels that should be visible.  */
-export function getVisibleLabels<T extends TickItemType>(
+export function getVisibleLabels<T extends TickItem>(
   xTicks: T[],
   {
     tickLabelStyle: style,
@@ -79,7 +79,7 @@ export function getVisibleLabels<T extends TickItemType>(
   );
 }
 
-function getTickLabelSize<T extends TickItemType>(
+function getTickLabelSize<T extends TickItem>(
   sizeMap: Map<string | number, { width: number; height: number }>,
   tick: T,
 ) {
@@ -101,7 +101,7 @@ function getTickLabelSize<T extends TickItemType>(
   return { width, height };
 }
 
-function measureTickLabels<T extends TickItemType>(ticks: T[], style: ChartsTextStyle | undefined) {
+function measureTickLabels<T extends TickItem>(ticks: T[], style: ChartsTextStyle | undefined) {
   const strings = new Set<string>();
 
   for (const tick of ticks) {
