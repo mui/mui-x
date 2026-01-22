@@ -18,7 +18,6 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventsCell',
 })(({ theme }) => ({
-  borderRight: `1px solid ${theme.palette.divider}`,
   flexGrow: 1,
   flexShrink: 0,
   flexBasis: 0,

@@ -51,7 +51,6 @@ const HeaderToolbarLeft = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'HeaderToolbarLeft',
 })(({ theme }) => ({
-  gridTemplateColumns: 'subgrid',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-start',
