@@ -71,8 +71,6 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
     range,
     rowCount: items.length,
 
-    // autoHeight: false,
-
     renderRow: (params) => (
       <RichTreeViewItem
         itemSlot={itemSlot}
@@ -104,7 +102,7 @@ export function RichTreeViewVirtualizedItems<TProps extends object>(
 
   return (
     <VirtualizerContext.Provider value={virtualizer}>
-      <Root {...rootProps} sx={{}}>
+      <Root {...rootProps}>
         <div className="List--filler" {...contentProps} />
         <div className="List--positioner" {...positionerProps} />
         <ListContent />
