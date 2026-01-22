@@ -59,7 +59,7 @@ const ChartContainerPremium = React.forwardRef(function ChartContainerPremium<
     useChartContainerPremiumProps<TSeries, TSignatures>(props, ref);
 
   return (
-    <ChartDataProviderPremium {...chartDataProviderPremiumProps}>
+    <ChartDataProviderPremium<TSeries, TSignatures> {...chartDataProviderPremiumProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProviderPremium>
   );
