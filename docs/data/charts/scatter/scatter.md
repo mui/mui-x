@@ -100,7 +100,7 @@ Here are three ways to set z value to 5.
 
 :::
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -192,6 +192,7 @@ Here's how the Scatter Chart is composed:
         {/* Elements able to overflow the drawing area. */}
         <ScatterPlot />
       </g>
+      <FocusedScatterMark />
       <ChartsOverlay />
       <ChartsAxisHighlight />
     </ChartsSurface>

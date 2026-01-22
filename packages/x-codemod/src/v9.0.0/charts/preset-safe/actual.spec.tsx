@@ -4,8 +4,13 @@ import * as React from 'react';
 
 // Use this space to add tests that touch multiple codemods in the preset-safe package
 // It is important to ensure that the codemods don't conflict with each other
-// For example, if one codemod changes a prop name, another codemod should not be trying to change the same prop name to something else
+// For example, if one codemod changes a prop name, another codemod modifying its value should work too.
+// Don't hesitate to add props on existing components.
 
-function App() {
-  // prettier-ignore
-}
+// prettier-ignore
+<div>
+  <Heatmap series={[{}]} hideLegend />
+  <HeatmapPremium series={[{}]} hideLegend={false} />
+  <Heatmap series={[{}]} />
+  <HeatmapPremium {...otherProps} />
+</div>;

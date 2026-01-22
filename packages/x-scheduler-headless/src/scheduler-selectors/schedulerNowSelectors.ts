@@ -1,6 +1,6 @@
 import { createSelector } from '@base-ui/utils/store';
 import { TemporalSupportedObject } from '../models';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 export const schedulerNowSelectors = {
   showCurrentTimeIndicator: createSelector((state: State) => state.showCurrentTimeIndicator),

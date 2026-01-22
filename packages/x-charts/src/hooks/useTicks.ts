@@ -62,7 +62,7 @@ const offsetRatio = {
   middle: 0.5,
 } as const;
 
-export type TickItemType = {
+export type TickItem = {
   /**
    * This property is undefined only if it's the tick closing the last band
    */
@@ -328,7 +328,7 @@ export function getTicks(options: GetTicksOptions) {
     typeof tickInterval === 'object' ? tickInterval : getDefaultTicks(scale, tickNumber);
 
   // Ticks inside the drawing area
-  const visibleTicks: TickItemType[] = [];
+  const visibleTicks: TickItem[] = [];
 
   for (let i = 0; i < ticks.length; i += 1) {
     const value = ticks[i];
@@ -371,7 +371,7 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 
 export function useTicks(
   options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
-): TickItemType[] {
+): TickItem[] {
   const {
     scale,
     tickNumber,

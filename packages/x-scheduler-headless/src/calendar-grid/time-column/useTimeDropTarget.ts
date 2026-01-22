@@ -5,7 +5,7 @@ import { useAdapter } from '../../use-adapter/useAdapter';
 import { SchedulerEvent, TemporalSupportedObject } from '../../models';
 import { buildIsValidDropTarget } from '../../build-is-valid-drop-target';
 import { CalendarGridTimeColumnContext } from './CalendarGridTimeColumnContext';
-import { useDropTarget } from '../../utils/useDropTarget';
+import { useDropTarget } from '../../internals/utils/useDropTarget';
 import { EVENT_DRAG_PRECISION_MINUTE, EVENT_DRAG_PRECISION_MS } from '../../constants';
 import { schedulerEventSelectors } from '../../scheduler-selectors';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';

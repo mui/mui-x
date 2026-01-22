@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Timeline } from '@mui/x-scheduler/timeline';
+import { Timeline } from '@mui/x-scheduler-premium/timeline';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
 const events: SchedulerEvent[] = [

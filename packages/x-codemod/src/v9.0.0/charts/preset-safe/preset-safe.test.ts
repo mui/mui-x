@@ -1,15 +1,9 @@
 import jscodeshift from 'jscodeshift';
 import path from 'path';
-import transform from './index';
-import * as replaceHeatmapHideLegend from '../replace-heatmap-hide-legend-false';
+import transform, { testConfig } from './index';
 import readFile from '../../../util/readFile';
 
-const allFiles = [
-  // Add other transforms here as they are created
-  replaceHeatmapHideLegend,
-];
-
-const parsedFiles = allFiles
+const parsedFiles = testConfig.allModules
   .map((mod) =>
     mod.testConfig.specFiles.map((file) => {
       file.name = `${mod.testConfig.name}/${file.name}`;
@@ -53,37 +47,6 @@ describe('v9.0.0/charts', () => {
         );
 
         const expected = file.expected;
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
-    });
-
-    describe('all files together', () => {
-      const combinedActual = testCases.map((file) => file.actual).join('\n\n');
-      const combinedExpected = testCases.map((file) => file.expected).join('\n\n');
-
-      it('transforms code as needed', () => {
-        const actual = transform(
-          {
-            source: combinedActual,
-          },
-          { jscodeshift: jscodeshift.withParser('tsx') },
-          {},
-        );
-
-        const expected = combinedExpected;
-        expect(actual).to.equal(expected, 'The transformed version should be correct');
-      });
-
-      it('should be idempotent for expression', () => {
-        const actual = transform(
-          {
-            source: combinedExpected,
-          },
-          { jscodeshift: jscodeshift.withParser('tsx') },
-          {},
-        );
-
-        const expected = combinedExpected;
         expect(actual).to.equal(expected, 'The transformed version should be correct');
       });
     });
