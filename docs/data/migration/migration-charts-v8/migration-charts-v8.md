@@ -93,6 +93,15 @@ The following type aliases have been removed from `@mui/x-charts/models`:
 +type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
 ```
 
+### ✅ `ChartApi` type moved to `@mui/x-charts/context`
+
+The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
+
+```diff
+-import type { ChartApi } from '@mui/x-charts/ChartContainer';
++import type { ChartApi } from '@mui/x-charts/context';
+```
+
 ### Series helper functions
 
 The following helper functions have been removed:
