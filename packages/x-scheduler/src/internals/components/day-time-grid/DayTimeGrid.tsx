@@ -28,14 +28,6 @@ const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
 const HOURS_IN_DAY = 24;
 
-// Helper functions for shared styles
-const getDividerBorder = (theme: any) => `1px solid ${theme.palette.divider}`;
-const getChildBorderRightStyle = (theme: any) => ({
-  '& > *:not(:last-child)': {
-    borderRight: getDividerBorder(theme),
-  },
-});
-
 const DayTimeGridContainer = styled(CalendarGrid.Root, {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridContainer',
@@ -47,7 +39,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
   display: 'flex',
   flexDirection: 'column',
   overflow: 'hidden',
-  border: getDividerBorder(theme),
+  border: `1px solid ${theme.palette.divider}`,
   borderRadius: theme.shape.borderRadius,
   maxHeight: '100%',
 }));
@@ -77,7 +69,7 @@ const DayTimeGridHeaderRow = styled(CalendarGrid.HeaderRow, {
   display: 'grid',
   gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
-  borderBottom: getDividerBorder(theme),
+  borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const DayTimeGridAllDayEventsGrid = styled('div', {
@@ -87,10 +79,10 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'var(--fixed-cell-width) repeat(var(--column-count), 1fr) fit-content(100%)',
   width: '100%',
-  borderBottom: getDividerBorder(theme),
+  borderBottom: `1px solid ${theme.palette.divider}`,
   /* Only show border on header cell when there's no scrollbar */
   '&:not([data-has-scroll]) .MuiEventCalendar-DayTimeGridAllDayEventsHeaderCell': {
-    borderRight: getDividerBorder(theme),
+    borderRight: `1px solid ${theme.palette.divider}`,
   },
   '&[data-has-scroll] .ScrollablePlaceholder': {
     overflowY: 'scroll',
@@ -132,7 +124,9 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   gridRow: 1,
   width: '100%',
   height: '100%',
-  ...getChildBorderRightStyle(theme),
+  '& > *:not(:last-child)': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
 }));
 
 const DayTimeGridAllDayEventsCell = styled('div', {
@@ -256,7 +250,7 @@ const DayTimeGridTimeAxisCell = styled('div', {
     position: 'absolute',
     left: 'var(--fixed-cell-width)',
     right: 0,
-    borderBottom: getDividerBorder(theme),
+    borderBottom: `1px solid ${theme.palette.divider}`,
     top: 'calc(var(--hour) * var(--hour-height))',
     zIndex: 1,
   },
@@ -282,7 +276,9 @@ const DayTimeGridGrid = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
-  ...getChildBorderRightStyle(theme),
+  '& > *:not(:last-child)': {
+    borderRight: `1px solid ${theme.palette.divider}`,
+  },
 }));
 
 // TODO: Replace with a proper loading overlay component that is shared across views
