@@ -88,6 +88,7 @@ export interface HeatmapProps
       | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
+      | 'seriesConfig'
       | 'onAxisClick'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -330,11 +331,6 @@ Heatmap.propTypes = {
    * An array of [[HeatmapSeries]] objects.
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
-  /**
-   * The configuration helpers used to compute attributes according to the series type.
-   * @ignore Unstable props for internal usage.
-   */
-  seriesConfig: PropTypes.object,
   /**
    * If true, shows the default chart toolbar.
    * @default false
