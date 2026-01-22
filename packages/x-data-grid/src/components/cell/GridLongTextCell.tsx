@@ -123,6 +123,12 @@ const GridLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, 
 
 export interface GridLongTextCellProps extends GridRenderCellParams<any, string | null> {
   /**
+   * A function to customize the content rendered in the popup.
+   * @param {string | null} value The cell value.
+   * @returns {React.ReactNode} The content to render in the popup.
+   */
+  renderContent?: (value: string | null) => React.ReactNode;
+  /**
    * Props passed to internal components.
    */
   slotProps?: {
@@ -154,7 +160,7 @@ export interface GridLongTextCellProps extends GridRenderCellParams<any, string 
 }
 
 function GridLongTextCell(props: GridLongTextCellProps) {
-  const { id, value = '', colDef, hasFocus, slotProps } = props;
+  const { id, value = '', colDef, hasFocus, slotProps, renderContent } = props;
   const minViewHeight = (colDef as GridLongTextColDef).minViewHeight;
   const maxViewHeight =
     (colDef as GridLongTextColDef).maxViewHeight ?? LONG_TEXT_CELL_DEFAULT_MAX_VIEW_HEIGHT;
@@ -283,10 +289,11 @@ function GridLongTextCell(props: GridLongTextCellProps) {
               '--_width': `${colDef.computedWidth}px`,
               '--_minHeight': toHeightValue(minViewHeight),
               '--_maxHeight': toHeightValue(maxViewHeight),
+              ...slotProps?.popperContent?.style,
             } as React.CSSProperties
           }
         >
-          {value}
+          {renderContent ? renderContent(value) : value}
           <GridLongTextCellCornerButton
             aria-label={apiRef.current.getLocaleText('longTextCellCollapseLabel')}
             {...slotProps?.collapseButton}
