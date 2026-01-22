@@ -4,7 +4,7 @@ import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless-premium
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
-import { getDataPaletteProps } from '@mui/x-scheduler/utils';
+import { getDataPaletteProps } from '@mui/x-scheduler/internals';
 
 const TimelineRow = styled(TimelinePrimitive.Row, {
   name: 'MuiEventTimeline',

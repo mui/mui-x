@@ -5,8 +5,7 @@ import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
-import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/utils';
-import { useFormatTime } from '@mui/x-scheduler/hooks';
+import { formatWeekDayMonthAndDayOfMonth, useFormatTime } from '@mui/x-scheduler/internals';
 
 const TimeHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',

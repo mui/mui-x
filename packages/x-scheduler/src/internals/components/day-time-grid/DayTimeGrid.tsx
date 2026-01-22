@@ -18,10 +18,10 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { EventPopoverProvider } from '../../../components/event-popover/EventPopover';
+import { EventPopoverProvider } from '../../../internals/components/event-popover/EventPopover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
-import { useFormatTime } from '../../../hooks/useFormatTime';
+import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 
 const FIXED_CELL_WIDTH = 68;

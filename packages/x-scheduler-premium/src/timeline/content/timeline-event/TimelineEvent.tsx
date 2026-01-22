@@ -6,8 +6,7 @@ import { useId } from '@base-ui/utils/useId';
 import { Timeline } from '@mui/x-scheduler-headless-premium/timeline';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
-import { getDataPaletteProps } from '@mui/x-scheduler/utils';
-import { EventDragPreview } from '@mui/x-scheduler/components';
+import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { TimelineEventProps } from './TimelineEvent.types';
 
 const TimelineEventRoot = styled('div', {

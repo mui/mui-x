@@ -11,7 +11,7 @@ import { DayGridEvent } from '../event';
 import {
   EventPopoverTrigger,
   useEventPopoverContext,
-} from '../../../components/event-popover/EventPopover';
+} from '../../../internals/components/event-popover/EventPopover';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 
 const EVENT_HEIGHT = 22;

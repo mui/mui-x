@@ -27,9 +27,9 @@ import {
   schedulerEventSelectors,
   schedulerRecurringEventSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
+import { useTranslations } from '../../utils/TranslationsContext';
 import { ControlledValue, EndsSelection, getEndsSelectionFromRRule } from './utils';
-import { formatDayOfMonthAndMonthFullLetter } from '../../internals/utils/date-utils';
+import { formatDayOfMonthAndMonthFullLetter } from '../../utils/date-utils';
 
 const RecurrenceTabContent = styled('div', {
   name: 'MuiEventPopover',

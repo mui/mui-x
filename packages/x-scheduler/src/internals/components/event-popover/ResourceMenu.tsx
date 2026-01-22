@@ -18,8 +18,8 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { useStore } from '@base-ui/utils/store';
-import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { schedulerPaletteStyles } from '../../internals/utils/tokens';
+import { useTranslations } from '../../utils/TranslationsContext';
+import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const ResourceMenuLegendContainer = styled('div', {
   name: 'MuiEventPopover',

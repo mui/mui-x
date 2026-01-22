@@ -21,7 +21,7 @@ import {
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { useTranslations } from '../internals/utils/TranslationsContext';
-import { EventPopoverProvider, EventPopoverTrigger } from '../components';
+import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components';
 import '../index.css';
 
 const AgendaViewRoot = styled('div', {

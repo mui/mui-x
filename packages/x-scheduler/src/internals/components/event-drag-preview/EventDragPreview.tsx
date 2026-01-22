@@ -4,7 +4,7 @@ import { RenderDragPreviewParameters } from '@mui/x-scheduler-headless/models';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { getDataPaletteProps } from '../../utils/color-utils';
-import { schedulerPaletteStyles } from '../../internals/utils/tokens';
+import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const EventDragPreviewRoot = styled('div', {
   name: 'MuiEventDragPreview',

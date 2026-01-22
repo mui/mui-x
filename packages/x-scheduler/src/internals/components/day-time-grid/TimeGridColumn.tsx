@@ -15,8 +15,8 @@ import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
 import {
   EventPopoverTrigger,
   useEventPopoverContext,
-} from '../../../components/event-popover/EventPopover';
-import { useFormatTime } from '../../../hooks/useFormatTime';
+} from '../../../internals/components/event-popover/EventPopover';
+import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 
 const HOUR_HEIGHT = 46;
