@@ -33,13 +33,13 @@ export const useChartDataProviderProps = <
 
   const theme = useTheme();
 
-  const chartProviderProps: ChartProviderProps<TSignatures> = {
-    plugins: plugins as ChartProviderProps<TSignatures>['plugins'],
+  const chartProviderProps: ChartProviderProps<TSeries, TSignatures> = {
+    plugins: plugins as ChartProviderProps<TSeries, TSignatures>['plugins'],
     pluginParams: {
       theme: theme.palette.mode,
       seriesConfig,
       ...other,
-    } as MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>,
+    } as MergeSignaturesProperty<[...ChartCorePluginSignatures<TSeries>, ...TSignatures], 'params'>,
   };
 
   return {

@@ -14,7 +14,7 @@ describe('useDataset', () => {
 
   it('should return undefined when no dataset is provided', () => {
     render(
-      <ChartProvider
+      <ChartProvider<'bar'>
         pluginParams={{
           series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
           width: 200,
@@ -37,7 +37,7 @@ describe('useDataset', () => {
     ];
 
     render(
-      <ChartProvider
+      <ChartProvider<'line'>
         pluginParams={{
           dataset,
           series: [

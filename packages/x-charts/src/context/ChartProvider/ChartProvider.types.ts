@@ -10,6 +10,7 @@ import type {
 } from '../../internals/plugins/models';
 import type { ChartCorePluginSignatures } from '../../internals/plugins/corePlugins';
 import type { UseChartBaseProps } from '../../internals/store/useCharts.types';
+import type { ChartSeriesType } from '../../models/seriesType/config';
 
 export type ChartContextValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
@@ -37,14 +38,19 @@ export type ChartContextValue<
   chartRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
-export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
-  UseChartBaseProps<TSignatures> &
-    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+export type ChartPluginParams<
+  TSeriesType extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
+> = UseChartBaseProps<TSignatures> &
+  MergeSignaturesProperty<[...ChartCorePluginSignatures<TSeriesType>, ...TSignatures], 'params'>;
 
-export interface ChartProviderProps<TSignatures extends readonly ChartAnyPluginSignature[] = []> {
+export interface ChartProviderProps<
+  TSeriesType extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[],
+> {
   /**
    * Array of plugins used to add features to the chart.
    */
   plugins?: ConvertSignaturesIntoPlugins<TSignatures>;
-  pluginParams?: ChartPluginParams<TSignatures>;
+  pluginParams?: ChartPluginParams<TSeriesType, TSignatures>;
 }

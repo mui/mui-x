@@ -39,7 +39,7 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <ChartProvider
+      <ChartProvider<'bar'>
         pluginParams={{
           series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
           width: 200,
