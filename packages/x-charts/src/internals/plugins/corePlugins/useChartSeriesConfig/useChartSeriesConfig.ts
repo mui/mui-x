@@ -7,8 +7,8 @@ import {
   type SerializeIdentifierFunction,
   type CleanIdentifierFunction,
 } from './useChartSeriesConfig.types';
-import { serializeIdentifier as serializeIdentifierFn } from './serializeIdentifier';
-import { cleanIdentifier as cleanIdentifierFn } from './cleanIdentifier';
+import { serializeIdentifier as serializeIdentifierFn } from './utils/serializeIdentifier';
+import { cleanIdentifier as cleanIdentifierFn } from './utils/cleanIdentifier';
 
 export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = ({ store }) => {
   const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
