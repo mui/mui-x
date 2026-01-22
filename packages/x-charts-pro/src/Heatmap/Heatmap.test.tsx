@@ -1,5 +1,4 @@
-import { page, userEvent } from 'vitest/browser';
-import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
+import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { clearLicenseStatusCache, LicenseInfo } from '@mui/x-license';
 import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -99,6 +98,9 @@ describe('Heatmap - onItemClick', () => {
   } as const;
 
   it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
+    // This import doesn't work with JSDOM as it relies on browser APIs
+    const { userEvent } = await import('vitest/browser');
+
     const onItemClick = vi.fn();
     const { container } = render(<Heatmap {...config} onItemClick={onItemClick} />);
 
