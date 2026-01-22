@@ -1,0 +1,71 @@
+{
+  "name": "@mui/x-scheduler-headless-premium",
+  "version": "0.0.1-alpha.0",
+  "private": true,
+  "description": "The Premium plan edition of the headless version of the Scheduler component (MUI X).",
+  "author": "MUI Team",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-scheduler/",
+  "exports": {
+    "./models": "./src/models/index.ts",
+    "./timeline": "./src/timeline/index.ts",
+    "./timeline-provider": "./src/timeline-provider/index.ts",
+    "./timeline-selectors": "./src/timeline-selectors/index.ts",
+    "./use-timeline": "./src/use-timeline/index.ts",
+    "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "scheduler",
+    "event-calendar",
+    "calendar",
+    "timeline",
+    "agenda",
+    "planning",
+    "big-calendar"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-scheduler-headless-premium"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@base-ui/react": "^1.0.0",
+    "@base-ui/utils": "^0.2.3",
+    "@mui/x-scheduler-headless": "workspace:*",
+    "@mui/x-internals": "workspace:*",
+    "prop-types": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@date-fns/tz": "catalog:",
+    "@mui/internal-test-utils": "catalog:",
+    "@types/prop-types": "catalog:",
+    "@types/use-sync-external-store": "catalog:",
+    "date-fns": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

@@ -49,6 +49,8 @@
     "@mui/x-date-pickers-pro": "workspace:*",
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
+    "@mui/x-scheduler-headless-premium": "workspace:*",
+    "@mui/x-scheduler-premium": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
     "@mui/x-tree-view-pro": "workspace:*",
     "@react-spring/web": "catalog:",

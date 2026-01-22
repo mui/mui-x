@@ -19,9 +19,9 @@ import {
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
-import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components/event-popover';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
 import { useTranslations } from '../internals/utils/TranslationsContext';
+import { EventPopoverProvider, EventPopoverTrigger } from '../internals/components';
 import '../index.css';
 
 const AgendaViewRoot = styled('div', {
