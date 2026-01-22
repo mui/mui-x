@@ -6,7 +6,7 @@ import { type D3Scale } from '../models/axis';
 import { type ScatterClasses, useUtilityClasses } from './scatterClasses';
 import { useChartContext } from '../context/ChartProvider';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { type ColorGetter } from '../internals/plugins/models';
+import { type ColorGetter } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
   selectorChartIsSeriesFaded,
   selectorChartIsSeriesHighlighted,

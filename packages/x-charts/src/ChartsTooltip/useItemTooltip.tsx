@@ -12,7 +12,7 @@ import {
   type TooltipGetter,
   type TooltipGetterAxesConfig,
   type ColorProcessor,
-} from '../internals/plugins/models';
+} from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
 

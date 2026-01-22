@@ -1,4 +1,4 @@
-import type { TooltipItemPositionGetter } from '../../internals/plugins/models';
+import type { TooltipItemPositionGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'line'> = (params) => {
   const { series, identifier, axesConfig } = params;

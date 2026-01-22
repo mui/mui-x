@@ -1,4 +1,4 @@
-import { type ChartSeriesTypeConfig } from '../../internals/plugins/models';
+import { type ChartSeriesTypeConfig } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';
 import legendGetter from './legend';

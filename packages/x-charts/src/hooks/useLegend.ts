@@ -8,7 +8,7 @@ import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useC
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
-import { type ChartSeriesConfig } from '../internals/plugins/models';
+import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 function getSeriesToDisplay(
   series: ProcessedSeries,

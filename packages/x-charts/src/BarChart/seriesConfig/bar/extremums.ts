@@ -1,4 +1,4 @@
-import { type CartesianExtremumGetter } from '../../../internals/plugins/models';
+import type { CartesianExtremumGetter } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 import { findMinMax } from '../../../internals/findMinMax';
 
 const createResult = (data: any, direction: 'x' | 'y') => {
