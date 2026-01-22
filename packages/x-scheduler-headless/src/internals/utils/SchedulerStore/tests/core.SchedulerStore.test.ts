@@ -1,7 +1,10 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { SchedulerEvent } from '@mui/x-scheduler-headless/models';
 import { storeClasses } from './utils';
-import { schedulerEventSelectors, schedulerResourceSelectors } from '../../../../scheduler-selectors';
+import {
+  schedulerEventSelectors,
+  schedulerResourceSelectors,
+} from '../../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] as SchedulerEvent[] };
 

@@ -15,7 +15,10 @@ import {
   EventDropData,
   EventDropDataLookup,
 } from '../../build-is-valid-drop-target/buildIsValidDropTarget';
-import { SchedulerStoreInContext, useSchedulerStoreContext } from '../../use-scheduler-store-context';
+import {
+  SchedulerStoreInContext,
+  useSchedulerStoreContext,
+} from '../../use-scheduler-store-context';
 import {
   schedulerEventSelectors,
   schedulerOccurrencePlaceholderSelectors,
