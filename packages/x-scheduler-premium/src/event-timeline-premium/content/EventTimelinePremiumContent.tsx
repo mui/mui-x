@@ -171,7 +171,9 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               </EventTimelinePremiumTitleSubGridHeaderCell>
             </EventTimelinePremiumTitleSubGridHeaderRow>
             <EventTimelinePremiumTitleSubGrid>
-              {(resourceId) => <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />}
+              {(resourceId) => (
+                <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />
+              )}
             </EventTimelinePremiumTitleSubGrid>
           </EventTimelinePremiumTitleSubGridWrapper>
           <EventTimelinePremiumEventsSubGridWrapper>

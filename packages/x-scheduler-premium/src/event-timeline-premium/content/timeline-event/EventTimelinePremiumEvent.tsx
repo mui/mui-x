@@ -120,11 +120,17 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       {...sharedProps}
     >
       {isStartResizable && (
-        <EventTimelinePremiumEventResizeHandler side="start" className="EventTimelinePremiumEventResizeHandler" />
+        <EventTimelinePremiumEventResizeHandler
+          side="start"
+          className="EventTimelinePremiumEventResizeHandler"
+        />
       )}
       <span className="LinesClamp">{occurrence.title}</span>
       {isEndResizable && (
-        <EventTimelinePremiumEventResizeHandler side="end" className="EventTimelinePremiumEventResizeHandler" />
+        <EventTimelinePremiumEventResizeHandler
+          side="end"
+          className="EventTimelinePremiumEventResizeHandler"
+        />
       )}
     </EventTimelinePremium.Event>
   );

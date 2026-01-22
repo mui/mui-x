@@ -38,9 +38,7 @@ const ResourceLegendColor = styled('span', {
   backgroundColor: 'var(--event-color-9)',
 });
 
-export default function EventTimelinePremiumTitleCell(props: {
-  resourceId: SchedulerResourceId;
-}) {
+export default function EventTimelinePremiumTitleCell(props: { resourceId: SchedulerResourceId }) {
   const { resourceId } = props;
 
   // Context hooks
