@@ -71,4 +71,9 @@ describe('useSankeySeries', () => {
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries.id]);
   });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useSankeySeries([]), options);
+    expect(result.current).to.deep.equal([]);
+  });
 });
