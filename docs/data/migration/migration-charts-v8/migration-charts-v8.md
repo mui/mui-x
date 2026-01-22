@@ -138,3 +138,12 @@ This improves consistency across chart components and developer experience.
 +  hideLegend
  />
 ```
+
+## Legend
+
+### Property `type` become required
+
+The property `type` of `LegendItemParams` as been modified from optional to required.
+
+This type is used in the a returned value of `useLegend()`.
+Except if you created a custom legend you should not be impacted by this modification.
