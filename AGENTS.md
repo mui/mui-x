@@ -89,4 +89,8 @@ To generate `.js` files, run `pnpm docs:typescript:formatted`.
 
 ### Versioning
 
-When writing codemods, the codemods should be created in the directory of the source version. E.g., a codemod to migrate from v8 to v9 should be placed inside the `v8.0.0` directory. 
+When creating codemods, the code should be created in the directory of the source version. E.g., a codemod to migrate from v8 to v9 should be placed inside the `v8.0.0` directory.
+
+### Writing codemods
+
+When writing codemods, first check in the `src/util` folder of the `x-codemod` package if there are any utilities that can help you.
