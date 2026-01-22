@@ -1,13 +1,14 @@
 {
-  "name": "GridColDef",
+  "name": "GridLongTextColDef",
   "imports": [
-    "import { GridColDef } from '@mui/x-data-grid-premium'",
-    "import { GridColDef } from '@mui/x-data-grid-pro'",
-    "import { GridColDef } from '@mui/x-data-grid'"
+    "import { GridLongTextColDef } from '@mui/x-data-grid-premium'",
+    "import { GridLongTextColDef } from '@mui/x-data-grid-pro'",
+    "import { GridLongTextColDef } from '@mui/x-data-grid'"
   ],
-  "demos": "<ul><li><a href=\"/x/react-data-grid/column-definition/\">Column definition</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/column-definition/#special-properties\">Special column properties</a></li></ul>",
   "properties": {
     "field": { "type": { "description": "string" }, "required": true },
+    "type": { "type": { "description": "'longText'" }, "default": "'longText'", "required": true },
     "aggregable": {
       "type": { "description": "boolean" },
       "default": "true",
@@ -56,7 +57,11 @@
     "headerName": { "type": { "description": "string" } },
     "hideable": { "type": { "description": "boolean" }, "default": "true" },
     "hideSortIcons": { "type": { "description": "boolean" }, "default": "false" },
+    "maxRows": { "type": { "description": "number" } },
+    "maxViewHeight": { "type": { "description": "number | string" }, "default": "156" },
     "maxWidth": { "type": { "description": "number" }, "default": "Infinity" },
+    "minRows": { "type": { "description": "number" }, "default": "4" },
+    "minViewHeight": { "type": { "description": "number | string" } },
     "minWidth": { "type": { "description": "number" }, "default": "50" },
     "pastedValueParser": {
       "type": { "description": "GridPastedValueParser&lt;R, V, F&gt;" },
@@ -93,7 +98,6 @@
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
-    "type": { "type": { "description": "GridColType" }, "default": "'longText'" },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },

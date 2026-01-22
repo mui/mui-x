@@ -5,6 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '@mui/material/styles';
 import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import { GridLongTextColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -14,6 +15,8 @@ import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { vars } from '../../constants/cssVariables';
 
 type OwnerState = DataGridProcessedProps;
+
+const EDIT_LONG_TEXT_CELL_DEFAULT_MIN_ROWS = 4;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -232,6 +235,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
   const {
     id,
     field,
+    colDef,
     debounceMs = 200,
     onValueChange,
     valueState,
@@ -239,6 +243,8 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
     hasFocus,
     slotProps,
   } = props;
+  const minRows = (colDef as GridLongTextColDef).minRows ?? EDIT_LONG_TEXT_CELL_DEFAULT_MIN_ROWS;
+  const maxRows = (colDef as GridLongTextColDef).maxRows;
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -296,6 +302,8 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       as={rootProps.slots.baseTextarea}
       ownerState={rootProps}
       ref={textareaRef}
+      minRows={minRows}
+      maxRows={maxRows}
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

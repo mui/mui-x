@@ -469,6 +469,7 @@
   { "name": "GridLongTextCellCollapseIcon", "kind": "Variable" },
   { "name": "GridLongTextCellExpandIcon", "kind": "Variable" },
   { "name": "GridLongTextCellProps", "kind": "Interface" },
+  { "name": "GridLongTextColDef", "kind": "Interface" },
   { "name": "GridMenu", "kind": "Function" },
   { "name": "GridMenuIcon", "kind": "Variable" },
   { "name": "GridMenuParams", "kind": "Interface" },

@@ -9,6 +9,7 @@ export type {
   GridColumnsMeta,
   GridSingleSelectColDef,
   GridActionsColDef,
+  GridLongTextColDef,
   GetApplyQuickFilterFn,
   GridValueGetter,
   GridValueFormatter,
