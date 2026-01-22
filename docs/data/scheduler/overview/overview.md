@@ -38,4 +38,4 @@ This package is not published yet.
 
 ## Timeline Premium
 
-- [Timeline Premium](/x/react-scheduler/timeline-premium/) ([full screen demo](/x/react-scheduler/full-screen-timeline-premium/))
+- [Timeline Premium](/x/react-scheduler/event-timeline-premium/) ([full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/))

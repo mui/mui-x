@@ -3,14 +3,14 @@ import {
   EventCalendarStore,
 } from '@mui/x-scheduler-headless/use-event-calendar';
 import {
-  TimelinePremiumParameters,
-  TimelinePremiumStore,
-} from '@mui/x-scheduler-headless-premium/use-timeline-premium';
+  EventTimelinePremiumParameters,
+  EventTimelinePremiumStore,
+} from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
 import { adapter } from './adapters';
 
 export const DEFAULT_EVENT_CALENDAR_STATE = new EventCalendarStore({ events: [] }, adapter).state;
 
-export const DEFAULT_TIMELINE_PREMIUM_STATE = new TimelinePremiumStore({ events: [] }, adapter)
+export const DEFAULT_TIMELINE_PREMIUM_STATE = new EventTimelinePremiumStore({ events: [] }, adapter)
   .state;
 
 export const getEventCalendarStateFromParameters = <
@@ -23,12 +23,12 @@ export const getEventCalendarStateFromParameters = <
   return state;
 };
 
-export const getTimelinePremiumStateFromParameters = <
+export const getEventTimelinePremiumStateFromParameters = <
   TEvent extends object,
   TResource extends object,
 >(
-  parameters: TimelinePremiumParameters<TEvent, TResource>,
+  parameters: EventTimelinePremiumParameters<TEvent, TResource>,
 ) => {
-  const state = new TimelinePremiumStore(parameters, adapter).state;
+  const state = new EventTimelinePremiumStore(parameters, adapter).state;
   return state;
 };

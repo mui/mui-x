@@ -1,11 +1,11 @@
 import type { EventDropDataLookup } from '@mui/x-scheduler-headless/internals';
-import type { TimelinePremiumEvent } from '../timeline-premium/event/TimelinePremiumEvent';
-import type { TimelinePremiumEventResizeHandler } from '../timeline-premium/event-resize-handler/TimelinePremiumEventResizeHandler';
+import type { EventTimelinePremiumEvent } from '../event-timeline-premium/event/EventTimelinePremiumEvent';
+import type { EventTimelinePremiumEventResizeHandler } from '../event-timeline-premium/event-resize-handler/EventTimelinePremiumEventResizeHandler';
 
 declare module '@mui/x-scheduler-headless/internals' {
   interface EventDropDataLookup {
-    TimelinePremiumEvent: TimelinePremiumEvent.DragData;
-    TimelinePremiumEventResizeHandler: TimelinePremiumEventResizeHandler.DragData;
+    EventTimelinePremiumEvent: EventTimelinePremiumEvent.DragData;
+    EventTimelinePremiumEventResizeHandler: EventTimelinePremiumEventResizeHandler.DragData;
   }
 }
 

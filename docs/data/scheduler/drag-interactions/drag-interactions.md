@@ -27,7 +27,7 @@ When `areEventsResizable` is `true`, the event extremities can be dragged to cha
 
 ### Basic Timeline Premium
 
-{{"demo": "TimelinePremiumDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "EventTimelinePremiumDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Only allow dragging and resizing some events
 
@@ -143,4 +143,4 @@ To be able to drag an event to the outside, your events must be draggable, so `a
 
 ### Basic Timeline Premium
 
-{{"demo": "TimelinePremiumExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "EventTimelinePremiumExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
