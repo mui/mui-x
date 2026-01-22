@@ -44,10 +44,10 @@ export interface LineChartProSlotProps
 
 export interface LineChartProProps
   extends
-    Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<LineChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'line', LineChartProPluginSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps'
+      'series' | 'slots' | 'slotProps'
     > {
   /**
    * Overridable component slots.

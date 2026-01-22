@@ -243,6 +243,14 @@ If two or more axes share the same `position`, they're displayed in the order th
 
 {{"demo": "MultipleAxes.js"}}
 
+### Coordinates
+
+You can obtain the coordinates of the axis by calling the `useXAxisCoordinates` or `useYAxisCoordinates` hooks.
+
+Below is an example of how to use the these hooks to get the coordinates of several axes and render rectangles delineating their area.
+
+{{"demo": "AxisCoordinatesDemo.js"}}
+
 ## Grouped axes
 
 To group `band` or `point` axes together, provide a `groups` property in the axis definition.

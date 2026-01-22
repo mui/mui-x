@@ -8,6 +8,7 @@ import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
 import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
+import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
 
 export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   colorProcessor: getColor,
@@ -21,4 +22,5 @@ export const lineSeriesConfig: ChartSeriesTypeConfig<'line'> = {
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

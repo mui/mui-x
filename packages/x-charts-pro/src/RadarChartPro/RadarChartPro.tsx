@@ -41,10 +41,10 @@ export interface RadarChartProSlotProps
 
 export interface RadarChartProProps
   extends
-    Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<RadarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       RadarDataProviderProps<RadarChartProPluginSignatures>,
-      'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
+      'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
