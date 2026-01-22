@@ -16,10 +16,7 @@ import { TimelineView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { TimelineProps } from './Timeline.types';
 import { TimelineContent } from './content';
-import {
-  EventTimelineClasses,
-  getEventTimelineUtilityClass,
-} from './eventTimelineClasses';
+import { EventTimelineClasses, getEventTimelineUtilityClass } from './eventTimelineClasses';
 import { EventTimelineClassesContext } from './EventTimelineClassesContext';
 // TODO: Remove these CSS imports during the MUI X migration
 import '../styles/index.css';
