@@ -1,16 +1,16 @@
-import { Timeline } from '@mui/x-scheduler-headless-premium/timeline-premium';
+import { TimelinePremium } from '@mui/x-scheduler-headless-premium/timeline-premium';
 import { TimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/timeline-premium-provider';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
-describe('<Timeline.SubGrid />', () => {
+describe('<TimelinePremium.SubGrid />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(<Timeline.SubGrid />, () => ({
+  describeConformance(<TimelinePremium.SubGrid />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
         <TimelinePremiumProvider events={[]}>
-          <Timeline.Root>{node}</Timeline.Root>
+          <TimelinePremium.Root>{node}</TimelinePremium.Root>
         </TimelinePremiumProvider>,
       );
     },

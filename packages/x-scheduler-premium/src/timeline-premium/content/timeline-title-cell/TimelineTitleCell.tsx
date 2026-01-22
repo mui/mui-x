@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
-import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/timeline-premium';
+import { TimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/timeline-premium';
 import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-premium-store-context';
 import { getDataPaletteProps } from '@mui/x-scheduler/internals';
 
 const TimelineRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
   padding: theme.spacing(2),
@@ -18,7 +18,7 @@ const TimelineRow = styled(TimelinePrimitive.Row, {
 }));
 
 const TimelineTitleCellRoot = styled(TimelinePrimitive.Cell, {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TitleCell',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -28,7 +28,7 @@ const TimelineTitleCellRoot = styled(TimelinePrimitive.Cell, {
 }));
 
 const ResourceLegendColor = styled('span', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TitleCellLegendColor',
 })({
   width: 10,

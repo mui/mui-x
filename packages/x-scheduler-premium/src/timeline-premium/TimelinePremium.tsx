@@ -13,14 +13,14 @@ import { TimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/u
 import { TimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { TimelinePremiumProps } from './TimelinePremium.types';
-import { TimelineContent } from './content';
+import { TimelinePremiumContent } from './content';
 // TODO: Remove these CSS imports during the MUI X migration
 import '../styles/index.css';
 import '../styles/colors.css';
 import '../styles/tokens.css';
 import '../styles/utils.css';
 
-const EventTimelineRoot = styled('div', {
+const EventTimelinePremiumRoot = styled('div', {
   name: 'MuiEventTimelinePremium',
   slot: 'Root',
 })(({ theme }) => ({
@@ -37,7 +37,7 @@ const EventTimelineRoot = styled('div', {
   fontSize: theme.typography.body2.fontSize,
 }));
 
-const EventTimelineHeaderToolbar = styled('header', {
+const EventTimelinePremiumHeaderToolbar = styled('header', {
   name: 'MuiEventTimelinePremium',
   slot: 'HeaderToolbar',
 })({
@@ -71,8 +71,8 @@ export const TimelinePremium = React.forwardRef(function EventTimelinePremium<
   return (
     <TimelinePremiumStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
-        <EventTimelineRoot ref={forwardedRef} {...forwardedProps}>
-          <EventTimelineHeaderToolbar>
+        <EventTimelinePremiumRoot ref={forwardedRef} {...forwardedProps}>
+          <EventTimelinePremiumHeaderToolbar>
             <Select value={view} onChange={handleViewChange} size="small">
               {views.map((viewItem) => (
                 <MenuItem key={viewItem} value={viewItem}>
@@ -80,9 +80,9 @@ export const TimelinePremium = React.forwardRef(function EventTimelinePremium<
                 </MenuItem>
               ))}
             </Select>
-          </EventTimelineHeaderToolbar>
-          <TimelineContent />
-        </EventTimelineRoot>
+          </EventTimelinePremiumHeaderToolbar>
+          <TimelinePremiumContent />
+        </EventTimelinePremiumRoot>
       </SchedulerStoreContext.Provider>
     </TimelinePremiumStoreContext.Provider>
   );

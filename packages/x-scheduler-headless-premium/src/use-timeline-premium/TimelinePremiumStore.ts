@@ -8,7 +8,7 @@ import {
 import { createChangeEventDetails } from '@mui/x-scheduler-headless/base-ui-copy';
 import { TimelinePremiumPreferences, TimelinePremiumView } from '../models';
 import { TimelinePremiumState, TimelinePremiumParameters } from './TimelinePremiumStore.types';
-import { TimelineLazyLoadingPlugin } from './plugins/TimelineLazyLoadingPlugin';
+import { TimelinePremiumLazyLoadingPlugin } from './plugins/TimelinePremiumLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: TimelinePremiumView[] = ['time', 'days', 'weeks', 'months', 'years'];
 export const DEFAULT_VIEW: TimelinePremiumView = 'time';
@@ -54,7 +54,7 @@ export class TimelinePremiumStore<
   TimelinePremiumParameters<TEvent, TResource>
 > {
   public constructor(parameters: TimelinePremiumParameters<TEvent, TResource>, adapter: Adapter) {
-    super(parameters, adapter, 'Timeline', mapper);
+    super(parameters, adapter, 'TimelinePremium', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
@@ -64,7 +64,7 @@ export class TimelinePremiumStore<
       });
     }
 
-    this.lazyLoading = new TimelineLazyLoadingPlugin(this);
+    this.lazyLoading = new TimelinePremiumLazyLoadingPlugin(this);
   }
 
   private assertViewValidity(view: TimelinePremiumView) {
@@ -72,7 +72,7 @@ export class TimelinePremiumStore<
     if (!views.includes(view)) {
       throw new Error(
         [
-          `Timeline: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
+          `TimelinePremium: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
           'Please ensure that the requested view is included in the views array.',
         ].join('\n'),
       );

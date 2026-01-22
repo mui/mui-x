@@ -1,2 +1,2 @@
-export * from './TimelineContent';
-export * from './TimelineContent.types';
+export * from './TimelinePremiumContent';
+export * from './TimelinePremiumContent.types';

@@ -1,3 +1,3 @@
 import '../typeOverloads';
 
-export * as Timeline from './index.parts';
+export * as TimelinePremium from './index.parts';

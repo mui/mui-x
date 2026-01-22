@@ -10,7 +10,8 @@ import { adapter } from './adapters';
 
 export const DEFAULT_EVENT_CALENDAR_STATE = new EventCalendarStore({ events: [] }, adapter).state;
 
-export const DEFAULT_TIMELINE_STATE = new TimelinePremiumStore({ events: [] }, adapter).state;
+export const DEFAULT_TIMELINE_PREMIUM_STATE = new TimelinePremiumStore({ events: [] }, adapter)
+  .state;
 
 export const getEventCalendarStateFromParameters = <
   TEvent extends object,

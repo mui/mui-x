@@ -5,7 +5,7 @@ import type { TimelinePremiumEvent } from './TimelinePremiumEvent';
 
 export interface TimelinePremiumEventContext extends useDraggableEvent.ContextValue {
   /**
-   * Gets the drag data shared by the Timeline.Event and Timeline.EventResizeHandler parts.
+   * Gets the drag data shared by the TimelinePremium.Event and TimelinePremium.EventResizeHandler parts.
    * @param {{ clientX: number }} input The input object provided by the drag and drop library for the current event.
    * @returns {TimelinePremiumEvent.SharedDragData} The shared drag data.
    */
@@ -20,7 +20,7 @@ export function useTimelinePremiumEventContext() {
   const context = React.useContext(TimelinePremiumEventContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `TimelinePremiumEventContext` is missing. Timeline Event parts must be placed within <Timeline.Event />.',
+      'Scheduler: `TimelinePremiumEventContext` is missing. TimelinePremium Event parts must be placed within <TimelinePremium.Event />.',
     );
   }
   return context;

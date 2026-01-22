@@ -1,18 +1,21 @@
-import { Timeline } from '@mui/x-scheduler-headless-premium/timeline-premium';
+import { TimelinePremium } from '@mui/x-scheduler-headless-premium/timeline-premium';
 import { TimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/timeline-premium-provider';
 import { createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 
-describe('<Timeline.EventRow />', () => {
+describe('<TimelinePremium.EventRow />', () => {
   const { render } = createSchedulerRenderer();
 
-  describeConformance(<Timeline.EventRow resourceId="r1">{() => null}</Timeline.EventRow>, () => ({
-    refInstanceof: window.HTMLDivElement,
-    render(node) {
-      return render(
-        <TimelinePremiumProvider events={[]}>
-          <Timeline.Root>{node}</Timeline.Root>
-        </TimelinePremiumProvider>,
-      );
-    },
-  }));
+  describeConformance(
+    <TimelinePremium.EventRow resourceId="r1">{() => null}</TimelinePremium.EventRow>,
+    () => ({
+      refInstanceof: window.HTMLDivElement,
+      render(node) {
+        return render(
+          <TimelinePremiumProvider events={[]}>
+            <TimelinePremium.Root>{node}</TimelinePremium.Root>
+          </TimelinePremiumProvider>,
+        );
+      },
+    }),
+  );
 });

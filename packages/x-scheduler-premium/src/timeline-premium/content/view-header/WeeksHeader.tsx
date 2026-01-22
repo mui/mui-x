@@ -9,7 +9,7 @@ import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/internals';
 
 const WeeksHeaderRoot = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'WeeksHeaderRoot',
 })({
   display: 'flex',
@@ -18,7 +18,7 @@ const WeeksHeaderRoot = styled('div', {
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'WeeksHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
@@ -31,7 +31,7 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'WeeksHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -43,7 +43,7 @@ const DayLabel = styled('div', {
 }));
 
 const WeekDaysRow = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'WeeksHeaderDaysRow',
 })(({ theme }) => ({
   display: 'grid',
@@ -52,7 +52,7 @@ const WeekDaysRow = styled('div', {
 }));
 
 const WeekDayCell = styled('time', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'WeeksHeaderDayCell',
 })(({ theme }) => ({
   padding: theme.spacing(0.5),

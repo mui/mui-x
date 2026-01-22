@@ -5,7 +5,7 @@ import { useTimelinePremium } from '../use-timeline-premium';
 import { TimelinePremiumStoreContext } from '../use-timeline-premium-store-context/useTimelinePremiumStoreContext';
 
 export function TimelinePremiumProvider<TEvent extends object, TResource extends object>(
-  props: TimelineProvider.Props<TEvent, TResource>,
+  props: TimelinePremiumProvider.Props<TEvent, TResource>,
 ) {
   const { children, ...parameters } = props;
   const store = useTimelinePremium(parameters);
@@ -19,7 +19,7 @@ export function TimelinePremiumProvider<TEvent extends object, TResource extends
   );
 }
 
-export namespace TimelineProvider {
+export namespace TimelinePremiumProvider {
   export interface Props<
     TEvent extends object,
     TResource extends object,

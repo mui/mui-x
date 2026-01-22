@@ -3,14 +3,14 @@ import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
 import { useId } from '@base-ui/utils/useId';
-import { Timeline } from '@mui/x-scheduler-headless-premium/timeline-premium';
+import { TimelinePremium } from '@mui/x-scheduler-headless-premium/timeline-premium';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-premium-store-context';
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { TimelineEventProps } from './TimelineEvent.types';
 
 const TimelineEventRoot = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'Event',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -41,8 +41,8 @@ const TimelineEventRoot = styled('div', {
   },
 }));
 
-const TimelineEventResizeHandler = styled(Timeline.EventResizeHandler, {
-  name: 'MuiEventTimeline',
+const TimelineEventResizeHandler = styled(TimelinePremium.EventResizeHandler, {
+  name: 'MuiEventTimelinePremium',
   slot: 'EventResizeHandler',
 })({
   position: 'absolute',
@@ -100,14 +100,18 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   if (variant === 'placeholder') {
     return (
-      <Timeline.EventPlaceholder render={<TimelineEventRoot />} aria-hidden={true} {...sharedProps}>
+      <TimelinePremium.EventPlaceholder
+        render={<TimelineEventRoot />}
+        aria-hidden={true}
+        {...sharedProps}
+      >
         <span className="LinesClamp">{occurrence.title}</span>
-      </Timeline.EventPlaceholder>
+      </TimelinePremium.EventPlaceholder>
     );
   }
 
   return (
-    <Timeline.Event
+    <TimelinePremium.Event
       render={<TimelineEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
@@ -122,6 +126,6 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       {isEndResizable && (
         <TimelineEventResizeHandler side="end" className="TimelineEventResizeHandler" />
       )}
-    </Timeline.Event>
+    </TimelinePremium.Event>
   );
 });

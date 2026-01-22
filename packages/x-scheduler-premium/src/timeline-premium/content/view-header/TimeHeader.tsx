@@ -8,7 +8,7 @@ import { timelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/
 import { formatWeekDayMonthAndDayOfMonth, useFormatTime } from '@mui/x-scheduler/internals';
 
 const TimeHeaderRoot = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TimeHeaderRoot',
 })({
   display: 'flex',
@@ -16,7 +16,7 @@ const TimeHeaderRoot = styled('div', {
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TimeHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
@@ -29,7 +29,7 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('time', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TimeHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -41,7 +41,7 @@ const DayLabel = styled('time', {
 }));
 
 const TimeCellsRow = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TimeHeaderCellsRow',
 })(({ theme }) => ({
   padding: theme.spacing(0, 1),
@@ -50,7 +50,7 @@ const TimeCellsRow = styled('div', {
 }));
 
 const TimeCell = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TimeHeaderTimeCell',
 })(({ theme }) => ({
   padding: theme.spacing(1, 0),
@@ -58,7 +58,7 @@ const TimeCell = styled('div', {
 }));
 
 const TimeLabel = styled('time', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'TimeHeaderTimeLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,

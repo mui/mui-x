@@ -8,6 +8,6 @@
   "include": [
     "src/**/*",
     "../../test/utils/addChaiAssertions.ts",
-    "../x-scheduler-headless-premium/src/use-timeline/plugins"
+    "../x-scheduler-headless-premium/src/use-timeline-premium/plugins"
   ]
 }

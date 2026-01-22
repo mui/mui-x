@@ -1,23 +1,23 @@
-import { Timeline } from '@mui/x-scheduler-headless-premium/timeline-premium';
+import { TimelinePremium } from '@mui/x-scheduler-headless-premium/timeline-premium';
 import { TimelinePremiumProvider } from '@mui/x-scheduler-headless-premium/timeline-premium-provider';
 import { adapter, createSchedulerRenderer, describeConformance } from 'test/utils/scheduler';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 
-describe('<Timeline.EventResizeHandler />', () => {
+describe('<TimelinePremium.EventResizeHandler />', () => {
   const { render } = createSchedulerRenderer();
 
   const start = processDate(adapter.startOfDay(adapter.now('default')), adapter);
   const end = processDate(adapter.endOfDay(adapter.now('default')), adapter);
 
-  describeConformance(<Timeline.EventResizeHandler side="start" />, () => ({
+  describeConformance(<TimelinePremium.EventResizeHandler side="start" />, () => ({
     refInstanceof: window.HTMLDivElement,
     render(node) {
       return render(
         <TimelinePremiumProvider events={[]}>
-          <Timeline.Root>
-            <Timeline.EventRow resourceId="r1">
+          <TimelinePremium.Root>
+            <TimelinePremium.EventRow resourceId="r1">
               {() => (
-                <Timeline.Event
+                <TimelinePremium.Event
                   eventId="fake-id"
                   occurrenceKey="fake-key"
                   start={start}
@@ -25,10 +25,10 @@ describe('<Timeline.EventResizeHandler />', () => {
                   renderDragPreview={() => null}
                 >
                   {node}
-                </Timeline.Event>
+                </TimelinePremium.Event>
               )}
-            </Timeline.EventRow>
-          </Timeline.Root>
+            </TimelinePremium.EventRow>
+          </TimelinePremium.Root>
         </TimelinePremiumProvider>,
       );
     },
