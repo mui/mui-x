@@ -73,17 +73,40 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## Heatmap
+## Removed deprecated types and APIs
 
-### `hideLegend` default value changed ✅
+The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
 
-The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9.
-This improves consistency across chart components and developer experience.
+### Series types
+
+The following type aliases have been removed from `@mui/x-charts/models`:
+
+- `CartesianSeriesType` - Use `AllSeriesType<CartesianChartSeriesType>` directly if needed
+- `DefaultizedCartesianSeriesType` - Use `DefaultizedSeriesType<CartesianChartSeriesType>` directly if needed
+- `StackableSeriesType` - Use `DefaultizedSeriesType<StackableChartSeriesType>` directly if needed
 
 ```diff
- <Heatmap
-+  hideLegend
- />
+-import { CartesianSeriesType } from '@mui/x-charts/models';
++import { AllSeriesType } from '@mui/x-charts/models';
++import type { CartesianChartSeriesType } from '@mui/x-charts/internals';
++
++type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
+```
+
+### Series helper functions
+
+The following helper functions have been removed:
+
+- `isDefaultizedBarSeries()` - Check `series.type === 'bar'` directly
+- `isBarSeries()` - Check `series.type === 'bar'` directly
+
+```diff
+-import { isBarSeries } from '@mui/x-charts/models';
+-
+-if (isBarSeries(series)) {
++if (series.type === 'bar') {
+   // Handle bar series
+ }
 ```
 
 ## Hooks
@@ -101,4 +124,17 @@ useBarSeries([]); // Returns [{ id: "id-1", ... }, { id: "id-2", ... }, ...]
 // In v9
 useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
+```
+
+## Heatmap
+
+### `hideLegend` default value changed ✅
+
+The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9.
+This improves consistency across chart components and developer experience.
+
+```diff
+ <Heatmap
++  hideLegend
+ />
 ```
