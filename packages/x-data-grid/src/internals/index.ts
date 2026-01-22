@@ -2,7 +2,6 @@ export type {
   GridBaseColDef,
   GridStateColDef,
   GridSingleSelectColDef,
-  GridLongTextColDef,
 } from '../models/colDef/gridColDef';
 export { GridVirtualScroller } from '../components/virtualization/GridVirtualScroller';
 export { GridVirtualScrollerContent } from '../components/virtualization/GridVirtualScrollerContent';

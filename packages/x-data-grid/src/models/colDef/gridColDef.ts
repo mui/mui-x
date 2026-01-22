@@ -363,41 +363,6 @@ export interface GridSingleSelectColDef<
 }
 
 /**
- * Column Definition interface used for columns with the `longText` type.
- * @demos
- *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
- */
-export interface GridLongTextColDef<
-  R extends GridValidRowModel = any,
-  V = any,
-  F = V,
-> extends GridBaseColDef<R, V, F> {
-  /**
-   * The type of the column.
-   * @default 'longText'
-   */
-  type: 'longText';
-  /**
-   * Minimum height of the view popup. Number is converted to pixels.
-   */
-  minViewHeight?: number | string;
-  /**
-   * Maximum height of the view popup before scrolling. Number is converted to pixels.
-   * @default 156
-   */
-  maxViewHeight?: number | string;
-  /**
-   * Minimum number of rows for the textarea in edit mode.
-   * @default 4
-   */
-  minRows?: number;
-  /**
-   * Maximum number of rows for the textarea in edit mode.
-   */
-  maxRows?: number;
-}
-
-/**
  * Column Definition interface.
  * @demos
  *   - [Column definition](/x/react-data-grid/column-definition/)
@@ -405,8 +370,7 @@ export interface GridLongTextColDef<
 export type GridColDef<R extends GridValidRowModel = any, V = any, F = V> =
   | GridBaseColDef<R, V, F>
   | GridActionsColDef<R, V, F>
-  | GridSingleSelectColDef<R, V, F>
-  | GridLongTextColDef<R, V, F>;
+  | GridSingleSelectColDef<R, V, F>;
 
 /**
  * Column Definition interface used for the list view column.

@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
 import { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { GridLongTextColDef } from '../../models/colDef/gridColDef';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
@@ -51,15 +50,6 @@ const GridLongTextCellContent = styled('div', {
   flex: 1,
 });
 
-const LONG_TEXT_CELL_DEFAULT_MAX_VIEW_HEIGHT = 156; // ~3 grid rows
-
-function toHeightValue(value: number | string | undefined): string | undefined {
-  if (value === undefined) {
-    return undefined;
-  }
-  return typeof value === 'number' ? `${value}px` : value;
-}
-
 const GridLongTextCellPopperContent = styled('div', {
   name: 'MuiDataGrid',
   slot: 'LongTextCellPopperContent',
@@ -68,8 +58,7 @@ const GridLongTextCellPopperContent = styled('div', {
   letterSpacing: 'normal',
   paddingBlock: 15.5,
   paddingInline: 9,
-  minHeight: 'var(--_minHeight)',
-  maxHeight: `var(--_maxHeight, ${LONG_TEXT_CELL_DEFAULT_MAX_VIEW_HEIGHT}px)`,
+  maxHeight: 52 * 3,
   overflow: 'auto',
   whiteSpace: 'pre-wrap',
   wordBreak: 'break-word',
@@ -161,9 +150,6 @@ export interface GridLongTextCellProps extends GridRenderCellParams<any, string 
 
 function GridLongTextCell(props: GridLongTextCellProps) {
   const { id, value = '', colDef, hasFocus, slotProps, renderContent } = props;
-  const minViewHeight = (colDef as GridLongTextColDef).minViewHeight;
-  const maxViewHeight =
-    (colDef as GridLongTextColDef).maxViewHeight ?? LONG_TEXT_CELL_DEFAULT_MAX_VIEW_HEIGHT;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -287,8 +273,6 @@ function GridLongTextCell(props: GridLongTextCellProps) {
           style={
             {
               '--_width': `${colDef.computedWidth}px`,
-              '--_minHeight': toHeightValue(minViewHeight),
-              '--_maxHeight': toHeightValue(maxViewHeight),
               ...slotProps?.popperContent?.style,
             } as React.CSSProperties
           }
