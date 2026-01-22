@@ -1,4 +1,4 @@
-<TimelinePremium
+<EventTimelinePremium
   events={events}
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
