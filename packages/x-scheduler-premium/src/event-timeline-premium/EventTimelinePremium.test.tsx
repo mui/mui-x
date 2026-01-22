@@ -58,7 +58,7 @@ describe('<EventTimelinePremium />', () => {
       });
       // Check that we have one title cell per resource by counting the cells with IDs
       const resourceTitleCells = baseResources.map((resource) =>
-        document.getElementById(`TimelineTitleCell-${resource.id}`),
+        document.getElementById(`EventTimelinePremiumTitleCell-${resource.id}`),
       );
       expect(resourceTitleCells.filter(Boolean).length).to.equal(baseResources.length);
     });

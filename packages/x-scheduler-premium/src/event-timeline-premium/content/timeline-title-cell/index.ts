@@ -1,1 +1,1 @@
-export * from './TimelineTitleCell';
+export * from './EventTimelinePremiumTitleCell';

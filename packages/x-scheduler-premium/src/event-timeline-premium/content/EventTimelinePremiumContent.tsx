@@ -9,7 +9,7 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import { EventPopoverProvider, EventPopoverTrigger } from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
-import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
+import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
 
 const EventTimelinePremiumContentRoot = styled('section', {
@@ -171,7 +171,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
               </EventTimelinePremiumTitleSubGridHeaderCell>
             </EventTimelinePremiumTitleSubGridHeaderRow>
             <EventTimelinePremiumTitleSubGrid>
-              {(resourceId) => <TimelineTitleCell key={resourceId} resourceId={resourceId} />}
+              {(resourceId) => <EventTimelinePremiumTitleCell key={resourceId} resourceId={resourceId} />}
             </EventTimelinePremiumTitleSubGrid>
           </EventTimelinePremiumTitleSubGridWrapper>
           <EventTimelinePremiumEventsSubGridWrapper>
@@ -190,7 +190,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                           render={
                             <EventTimelinePremiumEvent
                               occurrence={occurrence}
-                              ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+                              ariaLabelledBy={`EventTimelinePremiumTitleCell-${occurrence.resource}`}
                               variant="regular"
                             />
                           }
@@ -199,7 +199,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                       {placeholder != null && (
                         <EventTimelinePremiumEvent
                           occurrence={placeholder}
-                          ariaLabelledBy={`TimelineTitleCell-${placeholder.resource}`}
+                          ariaLabelledBy={`EventTimelinePremiumTitleCell-${placeholder.resource}`}
                           variant="placeholder"
                         />
                       )}
