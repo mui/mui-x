@@ -9,7 +9,7 @@ import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { type MaskData, type ProcessedBarData, type ProcessedBarSeriesData } from './types';
 import { checkBarChartScaleErrors } from './checkBarChartScaleErrors';
 import { useBarSeriesContext } from '../hooks/useBarSeries';
-import { type SeriesProcessorResult } from '../internals/plugins/models/seriesConfig/seriesProcessor.types';
+import { type SeriesProcessorResult } from '../internals/plugins/models';
 import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useChartCartesianAxis.types';
 import { getBarDimensions } from '../internals/getBarDimensions';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';

@@ -1,4 +1,4 @@
-import { type SeriesProcessor } from '../../internals/plugins/models/seriesConfig';
+import { type SeriesProcessor } from '../../internals/plugins/models';
 import type { DefaultizedRadarSeriesType } from '../../models';
 import type { SeriesId } from '../../models/seriesType/common';
 

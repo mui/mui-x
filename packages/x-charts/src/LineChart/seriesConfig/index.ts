@@ -1,4 +1,4 @@
-import { type ChartSeriesTypeConfig } from '../../internals/plugins/models/seriesConfig';
+import { type ChartSeriesTypeConfig } from '../../internals/plugins/models';
 import { getExtremumX, getExtremumY } from './extremums';
 import seriesProcessor from './seriesProcessor';
 import getColor from './getColor';

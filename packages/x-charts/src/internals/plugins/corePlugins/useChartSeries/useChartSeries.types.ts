@@ -5,8 +5,8 @@ import { type ChartSeriesType, type DatasetType } from '../../../../models/serie
 import {
   type SeriesProcessorParams,
   type SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
-import { type UseChartSeriesConfigSignature } from '../useChartSeriesConfig';
+  type UseChartSeriesConfigSignature,
+} from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**

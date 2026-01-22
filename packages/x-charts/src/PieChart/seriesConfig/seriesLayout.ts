@@ -1,6 +1,6 @@
 import type { SeriesId } from '../../models';
 import type { PieSeriesLayout } from '../../models/seriesType/pie';
-import type { SeriesLayoutGetter } from '../../internals/plugins/models/seriesConfig/seriesLayout.types';
+import type { SeriesLayoutGetter } from '../../internals/plugins/models';
 import { getPercentageValue } from '../../internals/getPercentageValue';
 import { getPieCoordinates } from '../getPieCoordinates';
 

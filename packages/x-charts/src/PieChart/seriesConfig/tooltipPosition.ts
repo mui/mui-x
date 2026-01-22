@@ -1,5 +1,5 @@
 import { findMinMax } from '../../internals/findMinMax';
-import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
+import type { TooltipItemPositionGetter } from '../../internals/plugins/models';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'pie'> = (params) => {
   const { series, identifier, placement, seriesLayout } = params;

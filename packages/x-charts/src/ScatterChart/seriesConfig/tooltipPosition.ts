@@ -1,4 +1,4 @@
-import type { TooltipItemPositionGetter } from '../../internals/plugins/models/seriesConfig/tooltipItemPositionGetter.types';
+import type { TooltipItemPositionGetter } from '../../internals/plugins/models';
 
 const tooltipItemPositionGetter: TooltipItemPositionGetter<'scatter'> = (params) => {
   const { series, identifier, axesConfig } = params;

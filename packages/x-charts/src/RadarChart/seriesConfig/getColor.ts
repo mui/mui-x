@@ -1,4 +1,4 @@
-import { type ColorProcessor } from '../../internals/plugins/models/seriesConfig';
+import { type ColorProcessor } from '../../internals/plugins/models';
 import { getSeriesColorFn } from '../../internals/getSeriesColorFn';
 
 const getColor: ColorProcessor<'radar'> = (series) => {
