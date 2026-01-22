@@ -4,7 +4,7 @@ import type { CalendarGridTimeEvent } from '../calendar-grid/time-event/Calendar
 import type { CalendarGridTimeEventResizeHandler } from '../calendar-grid/time-event-resize-handler/CalendarGridTimeEventResizeHandler';
 import type { StandaloneEvent } from '../standalone-event';
 
-export interface EventDropDataLookupBase {
+interface EventDropDataLookupBase {
   CalendarGridTimeEvent: CalendarGridTimeEvent.DragData;
   CalendarGridTimeEventResizeHandler: CalendarGridTimeEventResizeHandler.DragData;
   CalendarGridDayEvent: CalendarGridDayEvent.DragData;
