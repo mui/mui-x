@@ -3,6 +3,10 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useStore } from '@base-ui/utils/store';
+import {
+  EventDraggableDialogProvider,
+  EventDraggableDialogTrigger,
+} from '@mui/x-scheduler/internals';
 import { Timeline as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/timeline';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
@@ -10,10 +14,6 @@ import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from '
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
 import { TimelineEvent } from './timeline-event';
-import {
-  EventDraggableDialogProvider,
-  EventDraggableDialogTrigger,
-} from '@mui/x-scheduler/internals';
 
 const EventTimelineContent = styled('section', {
   name: 'MuiEventTimeline',
