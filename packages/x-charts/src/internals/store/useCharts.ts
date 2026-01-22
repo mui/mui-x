@@ -61,7 +61,7 @@ export function useCharts<
   const instanceRef = React.useRef({} as ChartInstance<TSignatures>);
   const instance = instanceRef.current as ChartInstance<TSignatures>;
   const publicAPI = useChartApiInitialization<ChartPublicAPI<TSignatures>>(props.apiRef);
-  const innerChartRootRef = React.useRef<HTMLDivElement>(null);
+  const innerChartRootRef = React.useRef<Element>(null);
   const innerSvgRef = React.useRef<SVGSVGElement>(null);
 
   const storeRef = React.useRef<Store<ChartState<TSignaturesWithCorePluginSignatures>>>(null);

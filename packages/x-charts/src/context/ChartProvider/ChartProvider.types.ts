@@ -32,11 +32,11 @@ export type ChartContextValue<
   /**
    * The ref to the <svg />.
    */
-  svgRef: React.RefObject<SVGSVGElement | null>;
+  svgRef: React.RefObject<SVGSVGElement>;
   /**
    * The ref to the chart root element.
    */
-  chartRootRef: React.RefObject<HTMLDivElement | null>;
+  chartRootRef: React.RefObject<Element>;
 };
 
 export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
