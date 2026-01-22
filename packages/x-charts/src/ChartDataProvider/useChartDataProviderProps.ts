@@ -39,10 +39,7 @@ export const useChartDataProviderProps = <
       theme: theme.palette.mode,
       seriesConfig,
       ...other,
-    } as unknown as MergeSignaturesProperty<
-      [...ChartCorePluginSignatures, ...TSignatures],
-      'params'
-    >,
+    } as MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>,
   };
 
   return {
