@@ -84,6 +84,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
           <MenuItem
             key={viewItem}
             selected={view === viewItem}
+            aria-selected={view === viewItem}
             onClick={(event) => handleMenuItemClick(event, viewItem)}
           >
             {translations[viewItem]}
