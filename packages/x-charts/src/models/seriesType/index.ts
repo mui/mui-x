@@ -26,6 +26,7 @@ export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
     : ChartsSeriesConfig[T]['itemIdentifier'];
 
 export { type SeriesId } from './common';
+export type { CartesianChartSeriesType, StackableChartSeriesType } from './config';
 export * from './line';
 export * from './bar';
 export * from './scatter';
