@@ -1,6 +1,6 @@
 'use client';
 
-import { type ChartPlugin } from '../../models';
+import { type ChartPlugin, type ChartSeriesConfig } from '../../models';
 import { type UseChartSeriesConfigSignature } from './useChartSeriesConfig.types';
 
 export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = () => {
@@ -15,7 +15,7 @@ useChartSeriesConfig.params = {
 
 useChartSeriesConfig.getDefaultizedParams = ({ params }) => ({
   ...params,
-  seriesConfig: params.seriesConfig ?? {},
+  seriesConfig: params.seriesConfig ?? ({} as ChartSeriesConfig<any>),
 });
 
 useChartSeriesConfig.getInitialState = ({ seriesConfig }) => {

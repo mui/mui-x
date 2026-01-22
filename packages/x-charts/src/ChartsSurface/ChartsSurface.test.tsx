@@ -3,7 +3,6 @@ import { createRenderer } from '@mui/internal-test-utils';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartProvider } from '../context/ChartProvider';
-import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 // JSDOM doesn't implement SVGElement
 describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
@@ -13,9 +12,7 @@ describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
     const ref = React.createRef<SVGSVGElement>();
 
     render(
-      <ChartProvider
-        pluginParams={{ width: 100, height: 100, series: [], seriesConfig: defaultSeriesConfig }}
-      >
+      <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
         <ChartsSurface ref={ref}>
           <rect width={100} height={100} />
         </ChartsSurface>

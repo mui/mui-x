@@ -11,13 +11,13 @@ import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
   extends
-  Omit<ChartsSurfaceProps, 'children'>,
-  Omit<
-    MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-    'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures' | 'seriesConfig'
-  >,
-  Omit<GaugeProviderProps, 'children'>,
-  Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
+    Omit<ChartsSurfaceProps, 'children'>,
+    Omit<
+      MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
+      'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures' | 'seriesConfig'
+    >,
+    Omit<GaugeProviderProps, 'children'>,
+    Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
   children?: React.ReactNode;
 }
 

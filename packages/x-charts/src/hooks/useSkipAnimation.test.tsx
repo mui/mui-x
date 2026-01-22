@@ -2,14 +2,11 @@ import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { ChartProvider } from '../context/ChartProvider';
 import { useSkipAnimation } from './useSkipAnimation';
-import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 function createWrapper({ skipAnimation }: { skipAnimation?: boolean } = {}) {
   return function Wrapper({ children }: React.PropsWithChildren) {
     return (
-      <ChartProvider
-        pluginParams={{ skipAnimation, width: 100, height: 100, seriesConfig: defaultSeriesConfig }}
-      >
+      <ChartProvider pluginParams={{ skipAnimation, width: 100, height: 100 }}>
         {children}
       </ChartProvider>
     );

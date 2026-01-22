@@ -2,17 +2,18 @@ import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesConfig } from '../../models/seriesConfig';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 
-export interface UseChartSeriesConfigParameters {
+export interface UseChartSeriesConfigParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
    * The configuration for the series types.
    * This is used to define how each series type should be processed, colored, and displayed.
    */
-  seriesConfig?: ChartSeriesConfig<any>;
+  seriesConfig?: ChartSeriesConfig<T>;
 }
 
-export type UseChartSeriesConfigDefaultizedParameters = UseChartSeriesConfigParameters & {
-  seriesConfig: ChartSeriesConfig<any>;
-};
+export type UseChartSeriesConfigDefaultizedParameters<T extends ChartSeriesType = ChartSeriesType> =
+  UseChartSeriesConfigParameters<T> & {
+    seriesConfig: ChartSeriesConfig<T>;
+  };
 
 export interface UseChartSeriesConfigState<T extends ChartSeriesType = ChartSeriesType> {
   seriesConfig: {
@@ -22,7 +23,7 @@ export interface UseChartSeriesConfigState<T extends ChartSeriesType = ChartSeri
 
 export type UseChartSeriesConfigSignature<T extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
-    params: UseChartSeriesConfigParameters;
-    defaultizedParams: UseChartSeriesConfigDefaultizedParameters;
+    params: UseChartSeriesConfigParameters<T>;
+    defaultizedParams: UseChartSeriesConfigDefaultizedParameters<T>;
     state: UseChartSeriesConfigState<T>;
   }>;
