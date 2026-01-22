@@ -31,4 +31,7 @@ function innerBuddhistDescribeAdapter(
   });
 }
 
-export const describeBuddhistAdapter = createDescribe('Adapter methods', innerBuddhistDescribeAdapter);
+export const describeBuddhistAdapter = createDescribe(
+  'Adapter methods',
+  innerBuddhistDescribeAdapter,
+);
