@@ -95,7 +95,7 @@ The list includes these transformers
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
 
-#### `replace-heatmap-hide-legend-false`
+### `replace-heatmap-hide-legend-false`
 
 The default value of the `hideLegend` prop in the `Heatmap` component has changed from `true` to `false` in v9. This improves consistency across chart components and developer experience.
 
@@ -105,7 +105,32 @@ The default value of the `hideLegend` prop in the `Heatmap` component has change
  />
 ```
 
-#### `rename-chart-api-import`
+### `rename-axis-tooltip-hook`
+
+The `useAxisTooltip()` hook has been renamed to `useAxesTooltip()` to better reflect its functionality of handling multiple axes.
+
+```diff
+-import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
++import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
+```
+
+The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
+The `multipleAxes` parameter has been removed since the hook now always supports multiple axes.
+
+After running the codemod to do the renaming make sure to adapt the hook returned value to your needs.
+
+```diff
+ function CustomTooltip() {
+   // If you want to keep only one axis
+-  const tooltipData = useAxisTooltip();
++  const tooltipData = useAxesTooltip()[0] ?? null;
+   // If you use all the axes
+-  const tooltipData = useAxisTooltip({ multipleAxes: true });
++  const tooltipData = useAxesTooltip();
+ }
+```
+
+### `rename-chart-api-import`
 
 Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
 
