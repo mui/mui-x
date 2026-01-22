@@ -144,6 +144,8 @@ The hook now always returns an array of tooltip data (one entry per active axis)
 ```diff
 -import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
 +import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
+```
+
 Run the following command to do the renaming.
 
 ```bash
