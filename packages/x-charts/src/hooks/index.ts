@@ -32,4 +32,4 @@ export {
   type AxisCoordinates,
 } from './useAxisCoordinates';
 export * from './useAxisTicks';
-export { type TickItemType } from './useTicks';
+export { type TickItem } from './useTicks';

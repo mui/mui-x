@@ -570,7 +570,7 @@
   { "name": "strawberrySkyPaletteLight", "kind": "Variable" },
   { "name": "TickFrequency", "kind": "TypeAlias" },
   { "name": "TickFrequencyDefinition", "kind": "TypeAlias" },
-  { "name": "TickItemType", "kind": "TypeAlias" },
+  { "name": "TickItem", "kind": "TypeAlias" },
   { "name": "Unstable_FunnelChart", "kind": "Variable" },
   { "name": "Unstable_RadarChart", "kind": "Variable" },
   { "name": "Unstable_RadarDataProvider", "kind": "Variable" },
