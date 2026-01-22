@@ -1,14 +1,14 @@
 import { useThemeProps } from '@mui/material/styles';
 import { useXAxes, useYAxes } from './useAxis';
-import { type TickItemType, useTicks } from './useTicks';
+import { type TickItem, useTicks } from './useTicks';
 import { type AxisId } from '../models/axis';
 import { defaultProps } from '../ChartsXAxis/utilities';
 
 /**
  * Returns the ticks for the given X axis. Ticks outside the drawing area are not included.
- * @param axisId
+ * @param axisId The id of the X axis.
  */
-export function useXAxisTicks(axisId: AxisId): TickItemType[] {
+export function useXAxisTicks(axisId: AxisId): TickItem[] {
   const { xAxis: xAxes } = useXAxes();
   const axis = xAxes[axisId];
 
@@ -39,7 +39,7 @@ export function useXAxisTicks(axisId: AxisId): TickItemType[] {
  * Returns the ticks for the given Y axis. Ticks outside the drawing area are not included.
  * @param axisId The id of the Y axis.
  */
-export function useYAxisTicks(axisId: AxisId): TickItemType[] {
+export function useYAxisTicks(axisId: AxisId): TickItem[] {
   const { yAxis: yAxes } = useYAxes();
   const axis = yAxes[axisId];
 
