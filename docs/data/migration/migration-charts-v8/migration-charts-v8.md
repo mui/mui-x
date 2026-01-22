@@ -130,6 +130,8 @@ useBarSeries([]); // Returns []
 
 The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
 
+The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
+
 ```diff
 -import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
 +import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
