@@ -1,1 +1,1 @@
-export * from './TimelineEvent';
+export * from './EventTimelinePremiumEvent';

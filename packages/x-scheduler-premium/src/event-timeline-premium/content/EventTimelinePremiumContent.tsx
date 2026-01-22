@@ -10,7 +10,7 @@ import { EventPopoverProvider, EventPopoverTrigger } from '@mui/x-scheduler/inte
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
-import { TimelineEvent } from './timeline-event';
+import { EventTimelinePremiumEvent } from './timeline-event';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimelinePremium',
@@ -188,7 +188,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                           key={occurrence.key}
                           occurrence={occurrence}
                           render={
-                            <TimelineEvent
+                            <EventTimelinePremiumEvent
                               occurrence={occurrence}
                               ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
                               variant="regular"
@@ -197,7 +197,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                         />
                       ))}
                       {placeholder != null && (
-                        <TimelineEvent
+                        <EventTimelinePremiumEvent
                           occurrence={placeholder}
                           ariaLabelledBy={`TimelineTitleCell-${placeholder.resource}`}
                           variant="placeholder"

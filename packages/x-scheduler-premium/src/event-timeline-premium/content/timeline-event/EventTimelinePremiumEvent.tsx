@@ -7,9 +7,9 @@ import { EventTimelinePremium } from '@mui/x-scheduler-headless-premium/event-ti
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
-import { TimelineEventProps } from './TimelineEvent.types';
+import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 
-const TimelineEventRoot = styled('div', {
+const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimelinePremium',
   slot: 'Event',
 })(({ theme }) => ({
@@ -25,7 +25,7 @@ const TimelineEventRoot = styled('div', {
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  '&:hover .TimelineEventResizeHandler': {
+  '&:hover .EventTimelinePremiumEventResizeHandler': {
     opacity: 1,
   },
   '&::before': {
@@ -41,7 +41,7 @@ const TimelineEventRoot = styled('div', {
   },
 }));
 
-const TimelineEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
+const EventTimelinePremiumEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
   name: 'MuiEventTimelinePremium',
   slot: 'EventResizeHandler',
 })({
@@ -60,8 +60,8 @@ const TimelineEventResizeHandler = styled(EventTimelinePremium.EventResizeHandle
   },
 });
 
-export const TimelineEvent = React.forwardRef(function TimelineEvent(
-  props: TimelineEventProps,
+export const EventTimelinePremiumEvent = React.forwardRef(function EventTimelinePremiumEvent(
+  props: EventTimelinePremiumEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   const { occurrence, ariaLabelledBy, className, variant, id: idProp, style, ...other } = props;
@@ -101,7 +101,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
   if (variant === 'placeholder') {
     return (
       <EventTimelinePremium.EventPlaceholder
-        render={<TimelineEventRoot />}
+        render={<EventTimelinePremiumEventRoot />}
         aria-hidden={true}
         {...sharedProps}
       >
@@ -112,7 +112,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   return (
     <EventTimelinePremium.Event
-      render={<TimelineEventRoot />}
+      render={<EventTimelinePremiumEventRoot />}
       isDraggable={isDraggable}
       eventId={occurrence.id}
       occurrenceKey={occurrence.key}
@@ -120,11 +120,11 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       {...sharedProps}
     >
       {isStartResizable && (
-        <TimelineEventResizeHandler side="start" className="TimelineEventResizeHandler" />
+        <EventTimelinePremiumEventResizeHandler side="start" className="EventTimelinePremiumEventResizeHandler" />
       )}
       <span className="LinesClamp">{occurrence.title}</span>
       {isEndResizable && (
-        <TimelineEventResizeHandler side="end" className="TimelineEventResizeHandler" />
+        <EventTimelinePremiumEventResizeHandler side="end" className="EventTimelinePremiumEventResizeHandler" />
       )}
     </EventTimelinePremium.Event>
   );
