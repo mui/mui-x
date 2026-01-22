@@ -2,7 +2,15 @@ import type { Collection, JSCodeshift } from 'jscodeshift';
 
 interface RenamePropsArgs {
   root: Collection<any>;
+  /**
+   * Names of the components to target
+   * @example ["DataGrid", "DataGridPro"]
+   */
   componentNames: string[];
+  /**
+   * Translation mapping from component names to slot names
+   * @example { Root: "root", Input: "input" }
+   */
   translation: Record<string, string>;
   j: JSCodeshift;
 }
@@ -18,6 +26,10 @@ const getSlotsTranslation = (translations: Record<string, string>) => {
   return lowercasedTranslation;
 };
 
+/**
+ * Replace the components / componentsProps by their equivalent slots / slotProps.
+ * Only used for v6 -> v7 migration.
+ */
 export default function renameComponentsSlots({
   root,
   componentNames,
