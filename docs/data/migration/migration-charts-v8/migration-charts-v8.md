@@ -154,9 +154,6 @@ After running the codemod make sure to adapt the hook returned value to your nee
  }
 ```
 
-The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
-The `multipleAxes` parameter has been removed since the hook now always supports multiple axes.
-
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
