@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts-vendor",
-  "version": "8.23.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "Vendored dependencies for MUI X Charts.",
   "keywords": [
@@ -51,8 +51,8 @@
   "devDependencies": {
     "@babel/cli": "catalog:",
     "@babel/plugin-transform-runtime": "catalog:",
-    "babel-plugin-module-resolver": "^5.0.2",
-    "execa": "^9.6.0",
+    "babel-plugin-module-resolver": "5.0.2",
+    "execa": "9.6.1",
     "rimraf": "catalog:"
   },
   "publishConfig": {

@@ -28,6 +28,7 @@ import {
 } from '../ChartsTooltip';
 import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { FocusedRadarMark } from './FocusedRadarMark';
 
 export interface RadarChartSlots
   extends
@@ -47,7 +48,7 @@ export interface RadarChartSlotProps
 
 export interface RadarChartProps
   extends
-    RadarDataProviderProps,
+    Omit<RadarDataProviderProps, 'plugins'>,
     Omit<RadarGridProps, 'classes'>,
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
@@ -116,6 +117,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <RadarSeriesArea {...radarSeriesAreaProps} />
           {highlight === 'axis' && <RadarAxisHighlight />}
           <RadarSeriesMarks {...radarSeriesMarksProps} />
+          <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
         </ChartsSurface>
@@ -151,10 +153,38 @@ RadarChart.propTypes = {
    * @default 5
    */
   divisions: PropTypes.number,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ),
   /**
    * If `true`, the legend is not rendered.
    */
@@ -177,6 +207,34 @@ RadarChart.propTypes = {
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      type: PropTypes.oneOf(['radar']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -215,6 +273,11 @@ RadarChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -226,6 +289,12 @@ RadarChart.propTypes = {
    * @param {RadarItemIdentifier} radarItemIdentifier The radar item identifier.
    */
   onMarkClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The configuration of the radar scales.
    */
@@ -289,6 +358,15 @@ RadarChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    type: PropTypes.oneOf(['radar']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

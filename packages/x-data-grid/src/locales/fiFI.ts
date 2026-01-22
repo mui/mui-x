@@ -16,6 +16,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Vakio',
   toolbarDensityComfortable: 'Mukava',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Kumoa',
+  toolbarRedo: 'Tee uudelleen',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Sarakkeet',
   toolbarColumnsLabel: 'Valitse sarakkeet',

@@ -17,6 +17,74 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 
 const entries = [
   {
+    title: 'MUI X v8.2',
+    description: 'A roundup of all new features beyond v8.0.0.',
+    date: new Date(2025, 12, 1),
+    url: 'https://github.com/mui/mui-x/releases/tag/v8.23.0',
+    highlightList: [
+      {
+        title: 'Data Grid – Server-side pivoting [Premium]',
+        url: '/x/react-data-grid/pivoting/',
+      },
+      {
+        title: 'Data Grid –Row grouping that adapts as you explore [Premium]',
+        url: '/x/react-data-grid/row-grouping/',
+      },
+      {
+        title: 'Data Grid – Charts integration [Premium]',
+        url: '/x/react-data-grid/charts-integration/',
+      },
+      {
+        title: 'Data Grid – Export resilience [Premium]',
+        url: '/x/react-data-grid/export/',
+      },
+      {
+        title: 'Data Grid – Smoother reordering with clear affordances [Pro]',
+        url: '/x/react-data-grid/row-ordering/',
+      },
+      {
+        title: 'Data Grid – Pinned areas and scrolling polish',
+        url: '/x/react-data-grid/scrolling/',
+      },
+      {
+        title: 'Charts – Sankey chart [Pro]',
+        url: '/x/react-charts/sankey/',
+      },
+      {
+        title: 'Charts – Funnel chart polished presets [Pro]',
+        url: '/x/react-charts/funnel/',
+      },
+      {
+        title: 'Charts – Intuitive zooming and panning [Pro]',
+        url: '/x/react-charts/zoom-and-pan/',
+      },
+      {
+        title: 'Charts – Zoom slider with preview [Pro]',
+        url: '/x/react-charts/zoom-and-pan/#zoom-slider',
+      },
+      {
+        title: 'Charts – Brush selection',
+        url: '/x/react-charts/brush/',
+      },
+      {
+        title: 'Charts – Keyboard navigation and a11y improvements',
+        url: '/x/react-charts/accessibility/',
+      },
+      {
+        title: 'Date and Time Pickers – Better range defaults [Pro]',
+        url: '/x/react-date-pickers/base-concepts/',
+      },
+      {
+        title: 'Date and Time Pickers – Polished inputs across devices',
+        url: '/x/react-date-pickers/',
+      },
+      {
+        title: 'Tree View – Drag-and-drop support and other improvements',
+        url: '/x/react-tree-view/',
+      },
+    ],
+  },
+  {
     title: 'MUI X v8',
     description: 'Cutting-edge features, enhanced customization, and full support for native ESM.',
     date: new Date(2025, 3, 17),
@@ -31,7 +99,7 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#ask-your-table-ai-assistance-in-the-data-grid',
       },
       {
-        title: 'Data Grid – Server-side aggregation & Lazy loading [Premium/Pro]',
+        title: 'Data Grid – Server-side aggregation and Lazy loading [Premium/Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#server-side-aggregation-and-lazy-loading',
       },
       {
@@ -51,23 +119,23 @@ const entries = [
         url: 'https://mui.com/blog/mui-x-v8/#no-columns-overlay',
       },
       {
-        title: 'Date & Time Pickers – Time Range Picker [Pro]',
+        title: 'Date and Time Pickers – Time Range Picker [Pro]',
         url: 'https://mui.com/blog/mui-x-v8/#time-range-picker',
       },
       {
-        title: 'Date & Time Pickers – New view-switching strategy',
+        title: 'Date and Time Pickers – New view-switching strategy',
         url: 'https://mui.com/blog/mui-x-v8/#new-view-switching-strategy',
       },
       {
-        title: 'Date & Time Pickers – Clear "ownerState" for slots',
+        title: 'Date and Time Pickers – Clear "ownerState" for slots',
         url: 'https://mui.com/blog/mui-x-v8/#clear-ownerstate-for-slots',
       },
       {
-        title: 'Date & Time Pickers – Accessible DOM structure',
+        title: 'Date and Time Pickers – Accessible DOM structure',
         url: 'https://mui.com/blog/mui-x-v8/#accessible-dom-structure',
       },
       {
-        title: 'Date & Time Pickers – Keyboard editing on mobile pickers',
+        title: 'Date and Time Pickers – Keyboard editing on mobile pickers',
         url: 'https://mui.com/blog/mui-x-v8/#keyboard-editing-on-mobile-pickers',
       },
       {
@@ -159,7 +227,7 @@ const entries = [
         url: '/x/react-data-grid/overlays/#loading-overlay',
       },
       {
-        title: 'Rich Tree View – Drag & drop re-ordering',
+        title: 'Rich Tree View – Drag-and-drop re-ordering',
         url: '/x/react-tree-view/rich-tree-view/ordering/',
       },
       {
@@ -171,7 +239,7 @@ const entries = [
         url: '/x/react-charts/heatmap/',
       },
       {
-        title: 'Charts – Zoom & Pan',
+        title: 'Charts – Zoom and pan',
         url: '/x/react-charts/zoom-and-pan/',
       },
       {
@@ -196,7 +264,7 @@ const entries = [
       },
       {
         title: 'Charts – Color scales',
-        url: '/x/react-charts/styling/#values-color',
+        url: '/x/react-charts/styling/#value-based-colors',
       },
     ],
   },

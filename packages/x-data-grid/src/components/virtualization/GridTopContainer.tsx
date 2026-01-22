@@ -11,7 +11,10 @@ const useUtilityClasses = () => {
   return composeClasses(slots, getDataGridUtilityClass, {});
 };
 
-const Element = styled('div')({
+const Element = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   position: 'sticky',
   zIndex: 40,
   top: 0,

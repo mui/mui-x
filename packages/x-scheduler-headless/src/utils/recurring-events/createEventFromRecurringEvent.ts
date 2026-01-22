@@ -12,7 +12,7 @@ export function createEventFromRecurringEvent(
   changes: Partial<SchedulerEvent>,
 ): SchedulerEventCreationProperties {
   const createdEvent: SchedulerEventCreationProperties = {
-    ...originalEvent.modelInBuiltInFormat!,
+    ...originalEvent.modelInBuiltInFormat,
     ...changes,
     extractedFromId: originalEvent.id,
   };

@@ -7,6 +7,8 @@ import tooltipGetter from './tooltip';
 import getSeriesWithDefaultValues from './getSeriesWithDefaultValues';
 import tooltipItemPositionGetter from './tooltipPosition';
 import keyboardFocusHandler from './keyboardFocusHandler';
+import { identifierSerializerSeriesIdDataIndex } from '../../internals/identifierSerializer';
+import { identifierCleanerSeriesIdDataIndex } from '../../internals/identifierCleaner';
 
 export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   seriesProcessor,
@@ -18,4 +20,6 @@ export const scatterSeriesConfig: ChartSeriesTypeConfig<'scatter'> = {
   yExtremumGetter: getExtremumY,
   getSeriesWithDefaultValues,
   keyboardFocusHandler,
+  identifierSerializer: identifierSerializerSeriesIdDataIndex,
+  identifierCleaner: identifierCleanerSeriesIdDataIndex,
 };

@@ -160,6 +160,25 @@ With composition, you can use your component inside the `ChartDataProvider`.
 </ChartDataProvider>
 ```
 
+## Controlling item tooltip
+
+You can control the item tooltip with `tooltipItem` and `onTooltipItemChange`.
+
+When the item tooltip is controlled, the `anchor` is set to `'node'` if the pointer is outside of the chart.
+
+:::warning
+Make sure the tooltip `trigger` is set to `"item"`.
+Otherwise no tooltip will be shown.
+:::
+
+{{"demo": "ControlledTooltip.js"}}
+
+### Synchronizing item tooltip
+
+The item tooltip control can be used to sync tooltip between multiple charts.
+
+{{"demo": "SyncTooltip.js"}}
+
 ## Creating a tooltip
 
 To create your custom tooltip, the library exports some helpers which are explained in the following sections:
@@ -209,7 +228,7 @@ The `useItemTooltip()` hook provides the information about the current item the 
 It contains:
 
 - `identifier`: An object that identify the item. Which often contains its series type, series id, and data index.
-- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
+- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#value-based-colors).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
 {{"demo": "CustomTooltipContent.js"}}
@@ -220,7 +239,7 @@ The `useAxesTooltip()` hook returns the information about the current axes user 
 For each axis, it contains:
 
 - `identifier`: An object that identify the axis. Which often contains its series type, series id, and data index.
-- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#values-color).
+- `color`: The color used to display the item. This includes the impact of [color map](/x/react-charts/styling/#value-based-colors).
 - `label`, `value`, `formattedValue`: Values computed to simplify the tooltip creation.
 
 {{"demo": "CustomAxisTooltipContent.js"}}

@@ -1,0 +1,16 @@
+<Heatmap
+  height={400}
+  xAxis={[{ data: xData }]}
+  yAxis={[{ data: yData, width: 80 }]}
+  series={[{ data }]}
+  zAxis={[
+    {
+      min: 20,
+      max: 300,
+      colorMap: {
+        type: 'continuous',
+        color: interpolateBlues,
+      },
+    },
+  ]}
+/>
