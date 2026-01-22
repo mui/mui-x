@@ -1,9 +1,9 @@
-import { AllSeriesType, DefaultizedSeriesType } from '@mui/x-charts/models';
-
 import {
+  AllSeriesType,
+  DefaultizedSeriesType,
   CartesianChartSeriesType,
   StackableChartSeriesType,
-} from '@mui/x-charts/internals';
+} from '@mui/x-charts/models';
 
 function processCartesian(series: AllSeriesType<CartesianChartSeriesType>) {
   console.log(series);

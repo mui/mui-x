@@ -6,7 +6,13 @@ import { BarPlot, BarChart } from '@mui/x-charts/BarChart';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
-import { Position } from '@mui/x-charts/models';
+import {
+  Position,
+  AllSeriesType,
+  DefaultizedSeriesType,
+  CartesianChartSeriesType,
+  StackableChartSeriesType,
+} from '@mui/x-charts/models';
 import {
   useSeries,
   usePieSeries,
@@ -123,4 +129,25 @@ function App() {
         }
       }} />
   </div>;
+}
+
+function processCartesian(series: AllSeriesType<CartesianChartSeriesType>) {
+  console.log(series);
+}
+
+function processDefaultizedCartesian(series: DefaultizedSeriesType<CartesianChartSeriesType>) {
+  console.log(series);
+}
+
+function processStackable(series: DefaultizedSeriesType<StackableChartSeriesType>) {
+  console.log(series);
+}
+
+function processAll(series: AllSeriesType) {
+  if (series.type === 'bar') {
+    console.log('bar series');
+  }
+  if (series.type === 'bar') {
+    console.log('defaultized bar series');
+  }
 }

@@ -1,6 +1,6 @@
-import { isBarSeries, isDefaultizedBarSeries, AllSeriesType } from '@mui/x-charts';
+import { isBarSeries, isDefaultizedBarSeries } from '@mui/x-charts';
 
-function handleSeries(series: AllSeriesType) {
+function handleSeries(series: any) {
   if (isBarSeries(series)) {
     console.log('bar series');
   }

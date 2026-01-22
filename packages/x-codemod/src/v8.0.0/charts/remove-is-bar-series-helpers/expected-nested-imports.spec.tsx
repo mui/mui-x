@@ -1,6 +1,4 @@
-import { AllSeriesType } from '@mui/x-charts/models';
-
-function handleSeries(series: AllSeriesType) {
+function handleSeries(series: any) {
   if (series.type === 'bar') {
     console.log('bar series');
   }

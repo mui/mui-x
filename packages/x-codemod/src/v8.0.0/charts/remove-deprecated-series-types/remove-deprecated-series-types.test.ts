@@ -1,6 +1,6 @@
 import path from 'path';
 import jscodeshift from 'jscodeshift';
-import transform from '.';
+import transform from './index';
 import readFile from '../../../util/readFile';
 
 function read(fileName) {
@@ -10,13 +10,13 @@ function read(fileName) {
 const TEST_FILES = ['nested-imports', 'root-imports'];
 
 describe('v9.0.0/charts', () => {
-  describe('remove-is-bar-series-helpers', () => {
+  describe('remove-deprecated-series-types', () => {
     TEST_FILES.forEach((testFile) => {
       const actualPath = `./actual-${testFile}.spec.tsx`;
       const expectedPath = `./expected-${testFile}.spec.tsx`;
 
       describe(`${testFile.replace(/-/g, ' ')}`, () => {
-        it('transforms function calls as needed', () => {
+        it('transforms type references as needed', () => {
           const actual = transform(
             { source: read(actualPath) },
             { jscodeshift: jscodeshift.withParser('tsx') },

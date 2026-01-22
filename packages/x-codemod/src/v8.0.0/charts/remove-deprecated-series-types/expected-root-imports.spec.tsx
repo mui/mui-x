@@ -7,11 +7,11 @@ import * as React from 'react';
 // For example, if one codemod changes a prop name, another codemod modifying its value should work too.
 // Don't hesitate to add props on existing components.
 
-import { AllSeriesType, DefaultizedSeriesType } from '@mui/x-charts/models';
+import { AllSeriesType, DefaultizedSeriesType } from '@mui/x-charts';
 import {
   CartesianChartSeriesType,
   StackableChartSeriesType,
-} from '@mui/x-charts/internals';
+} from '@mui/x-charts';
 
 // prettier-ignore
 <div>
