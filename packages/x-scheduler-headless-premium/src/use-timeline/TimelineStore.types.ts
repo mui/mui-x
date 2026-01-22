@@ -2,7 +2,7 @@ import {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
-} from '@mui/x-scheduler-headless/utils';
+} from '@mui/x-scheduler-headless/internals';
 import { TimelineView } from '../models/view';
 import { TimelinePreferences } from '../models/preferences';
 

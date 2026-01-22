@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
-import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-headless/utils';
+import { useElementPositionInCollection, useEvent } from '@mui/x-scheduler-headless/internals';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';
 import { TimelineEventPlaceholderCssVars } from './TimelineEventPlaceholderCssVars';

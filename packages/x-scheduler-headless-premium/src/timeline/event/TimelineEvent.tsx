@@ -17,7 +17,7 @@ import {
   useDraggableEvent,
   generateOccurrenceFromEvent,
   useElementPositionInCollection,
-} from '@mui/x-scheduler-headless/utils';
+} from '@mui/x-scheduler-headless/internals';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '../../use-timeline-store-context';

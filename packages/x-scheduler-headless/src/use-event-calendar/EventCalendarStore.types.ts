@@ -8,7 +8,7 @@ import {
   SchedulerState,
   SchedulerParameters,
   SchedulerChangeEventDetails,
-} from '../utils/SchedulerStore';
+} from '../internals/utils/SchedulerStore';
 
 export interface EventCalendarState extends SchedulerState {
   /**

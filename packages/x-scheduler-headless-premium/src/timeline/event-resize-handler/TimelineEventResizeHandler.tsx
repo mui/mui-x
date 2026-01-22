@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useRenderElement, BaseUIComponentProps } from '@mui/x-scheduler-headless/base-ui-copy';
-import { useEventResizeHandler } from '@mui/x-scheduler-headless/utils';
+import { useEventResizeHandler } from '@mui/x-scheduler-headless/internals';
 import { SchedulerEventSide } from '@mui/x-scheduler-headless/models';
 import { useTimelineEventContext } from '../event/TimelineEventContext';
 import type { TimelineEvent } from '../event/TimelineEvent';

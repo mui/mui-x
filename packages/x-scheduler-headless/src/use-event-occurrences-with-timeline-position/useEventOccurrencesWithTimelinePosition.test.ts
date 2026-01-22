@@ -1,7 +1,7 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
 import { SchedulerProcessedEvent } from '@mui/x-scheduler-headless/models';
-import { getOccurrencesFromEvents } from '@mui/x-scheduler-headless/utils';
+import { getOccurrencesFromEvents } from '@mui/x-scheduler-headless/internals';
 import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
 
 describe('useDayListEventOccurrencesWithPosition', () => {

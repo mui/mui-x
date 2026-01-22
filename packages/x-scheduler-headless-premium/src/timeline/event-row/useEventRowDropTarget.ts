@@ -8,7 +8,7 @@ import {
   SchedulerEvent,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
-import { useDropTarget } from '@mui/x-scheduler-headless/utils';
+import { useDropTarget } from '@mui/x-scheduler-headless/internals';
 import { buildIsValidDropTarget } from '@mui/x-scheduler-headless/build-is-valid-drop-target';
 import {
   EVENT_DRAG_PRECISION_MINUTE,

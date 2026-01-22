@@ -4,7 +4,7 @@ import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '@mui/x-scheduler-headless/utils';
+} from '@mui/x-scheduler-headless/internals';
 import { createChangeEventDetails } from '@mui/x-scheduler-headless/base-ui-copy';
 import { TimelinePreferences, TimelineView } from '../models';
 import { TimelineState, TimelineParameters } from './TimelineStore.types';

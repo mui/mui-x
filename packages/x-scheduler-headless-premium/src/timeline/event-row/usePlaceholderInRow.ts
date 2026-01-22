@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useStore } from '@base-ui/utils/store/useStore';
 import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-headless/utils';
+import { isInternalDragOrResizePlaceholder } from '@mui/x-scheduler-headless/internals';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
