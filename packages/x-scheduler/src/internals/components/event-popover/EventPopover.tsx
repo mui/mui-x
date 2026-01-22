@@ -15,10 +15,10 @@ import {
   EventPopoverTriggerProps,
 } from './EventPopover.types';
 import { getDataPaletteProps } from '../../utils/color-utils';
-import { schedulerPaletteStyles } from '../../utils/tokens';
-import { createPopover } from '../create-popover';
 import ReadonlyContent from './ReadonlyContent';
 import { FormContent } from './FormContent';
+import { schedulerPaletteStyles } from '../../utils/tokens';
+import { createPopover } from '../create-popover';
 
 const EventPopoverPositioner = styled(Popover.Positioner, {
   name: 'MuiEventPopover',

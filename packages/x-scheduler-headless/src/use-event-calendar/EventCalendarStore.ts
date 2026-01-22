@@ -12,7 +12,7 @@ import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '../utils/SchedulerStore';
+} from '../internals/utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
 import { EventCalendarLazyLoadingPlugin } from './plugins/EventCalendarLazyLoadingPlugin';

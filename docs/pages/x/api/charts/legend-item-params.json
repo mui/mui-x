@@ -13,8 +13,8 @@
     "maxValue": { "type": { "description": "number | Date | null" }, "required": true },
     "minValue": { "type": { "description": "number | Date | null" }, "required": true },
     "seriesId": { "type": { "description": "SeriesId" }, "required": true },
+    "type": { "type": { "description": "ChartSeriesType" }, "required": true },
     "dataIndex": { "type": { "description": "number" } },
-    "itemId": { "type": { "description": "PieItemId" } },
-    "type": { "type": { "description": "ChartSeriesType" } }
+    "itemId": { "type": { "description": "PieItemId" } }
   }
 }

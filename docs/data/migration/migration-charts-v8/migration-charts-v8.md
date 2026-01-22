@@ -73,6 +73,14 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Moving `seriesId` to `string` only
+
+The `seriesId` were supporting `number | string`.
+The v9 will only support `string`.
+
+This type modification impacts the objects in the `series` props.
+But also the `highlightedItem` and `tooltipItem`.
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
@@ -139,10 +147,11 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
-## Moving `seriesId` to `string` only
+## Legend
 
-The `seriesId` were supporting `number | string`.
-The v9 will only support `string`.
+### Property `type` is now required
 
-This type modification impacts the objects in the `series` props.
-But also the `highlightedItem` and `tooltipItem`.
+The `type` property of `LegendItemParams` has been modified from optional to required.
+
+This type is used in the return value of `useLegend()`.
+If you haven't created a custom legend, you should not be impacted by this change.
