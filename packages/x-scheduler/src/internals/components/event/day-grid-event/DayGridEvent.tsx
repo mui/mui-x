@@ -19,7 +19,7 @@ import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-cale
 import { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { EventDragPreview } from '../../event-drag-preview';
+import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
 

@@ -25,7 +25,7 @@ import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
 import { DateNavigator } from './date-navigator';
 import { schedulerTokens } from '../internals/utils/tokens';
-import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 const EventCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',

@@ -16,6 +16,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Ångra',
+  toolbarRedo: 'Gör om',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumner',
   toolbarColumnsLabel: 'Välj kolumner',

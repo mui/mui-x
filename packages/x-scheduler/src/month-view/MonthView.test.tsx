@@ -9,7 +9,7 @@ import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
 import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { EventCalendar } from '../event-calendar';
-import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });

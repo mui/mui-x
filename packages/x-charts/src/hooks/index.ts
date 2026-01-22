@@ -26,3 +26,8 @@ export * from './useChartRootRef';
 export * from './useChartsLocalization';
 export * from './useBrush';
 export * from './useFocusedItem';
+export {
+  useXAxisCoordinates,
+  useYAxisCoordinates,
+  type AxisCoordinates,
+} from './useAxisCoordinates';

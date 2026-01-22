@@ -9,8 +9,8 @@ import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-even
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { DayGridEvent } from '../event';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
-import { EventDraggableDialogTrigger } from '../draggable-dialog';
-import { useEventDraggableDialogContext } from '../draggable-dialog/EventDraggableDialog';
+import { EventDraggableDialogTrigger } from '../event-draggable-dialog';
+import { useEventDraggableDialogContext } from '../event-draggable-dialog/EventDraggableDialog';
 
 const EVENT_HEIGHT = 22;
 

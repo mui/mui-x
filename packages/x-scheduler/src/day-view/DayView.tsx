@@ -13,7 +13,7 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { DayViewProps, StandaloneDayViewProps } from './DayView.types';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
-import { EventDraggableDialogProvider } from '../internals/components/draggable-dialog';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 const DAY_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>

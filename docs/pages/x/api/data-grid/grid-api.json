@@ -240,6 +240,13 @@
       "required": true,
       "isPremiumPlan": true
     },
+    "history": {
+      "type": {
+        "description": "{<br />  /**<br />   * Undo the last action.<br />   * @returns {Promise&lt;boolean&gt;} True if the operation was successful, false otherwise.<br />   */<br />  undo: () =&gt; Promise&lt;boolean&gt;<br />  /**<br />   * Redo the last undone action.<br />   * @returns {Promise&lt;boolean&gt;} True if the operation was successful, false otherwise.<br />   */<br />  redo: () =&gt; Promise&lt;boolean&gt;<br />  /**<br />   * Clear the entire history.<br />   */<br />  clear: () =&gt; void<br />  /**<br />   * @returns {boolean} True if there are undo steps available, false otherwise.<br />   */<br />  canUndo: () =&gt; boolean<br />  /**<br />   * @returns {boolean} True if there are redo steps available, false otherwise.<br />   */<br />  canRedo: () =&gt; boolean<br />}"
+      },
+      "required": true,
+      "isPremiumPlan": true
+    },
     "ignoreDiacritics": {
       "type": { "description": "DataGridProcessedProps['ignoreDiacritics']" },
       "required": true

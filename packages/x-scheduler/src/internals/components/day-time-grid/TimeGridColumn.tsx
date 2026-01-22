@@ -12,12 +12,12 @@ import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headles
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import { useFormatTime } from '../../hooks/useFormatTime';
+import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
 import {
   EventDraggableDialogTrigger,
   useEventDraggableDialogContext,
-} from '../draggable-dialog/EventDraggableDialog';
+} from '../event-draggable-dialog/EventDraggableDialog';
 
 const HOUR_HEIGHT = 46;
 

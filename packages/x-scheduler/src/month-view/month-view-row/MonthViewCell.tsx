@@ -22,8 +22,8 @@ import { MoreEventsPopoverTrigger } from '../../internals/components/more-events
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import { EventDraggableDialogTrigger } from '../../internals/components/draggable-dialog';
-import { useEventDraggableDialogContext } from '../../internals/components/draggable-dialog/EventDraggableDialog';
+import { EventDraggableDialogTrigger } from '../../internals/components/event-draggable-dialog';
+import { useEventDraggableDialogContext } from '../../internals/components/event-draggable-dialog/EventDraggableDialog';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
