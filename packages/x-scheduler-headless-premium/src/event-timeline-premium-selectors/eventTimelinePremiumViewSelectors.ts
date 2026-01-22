@@ -3,7 +3,7 @@ import { TemporalAdapter } from '@mui/x-scheduler-headless/base-ui-copy';
 import type { EventTimelinePremiumState as State } from '../use-event-timeline-premium';
 import { TemporalSupportedObject, EventTimelinePremiumView } from '../models';
 
-const TIMELINE_PREMIUM_VIEW_CONFIGS: Record<
+const EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS: Record<
   EventTimelinePremiumView,
   {
     unitCount: number;
@@ -58,7 +58,7 @@ export const eventTimelinePremiumViewSelectors = {
     (state: State) => state.visibleDate,
     (state: State) => state.view,
     (adapter, visibleDate, view) => {
-      const { getStartDate, getEndDate, unitCount } = TIMELINE_PREMIUM_VIEW_CONFIGS[view];
+      const { getStartDate, getEndDate, unitCount } = EVENT_TIMELINE_PREMIUM_VIEW_CONFIGS[view];
       const start = getStartDate(adapter, visibleDate);
       const end = getEndDate(adapter, start, unitCount);
 
