@@ -15,8 +15,7 @@ useChartSeriesConfig.params = {
 
 useChartSeriesConfig.getDefaultizedParams = ({ params }) => ({
   ...params,
-  // The default seriesConfig is provided by ChartDataProvider or chart components
-  seriesConfig: params.seriesConfig!,
+  seriesConfig: params.seriesConfig ?? {},
 });
 
 useChartSeriesConfig.getInitialState = ({ seriesConfig }) => {
