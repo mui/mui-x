@@ -3,7 +3,15 @@
 import * as React from 'react';
 import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { ChartContainer } from '@mui/x-charts';
-import { ChartContainerProps, ChartApi } from '@mui/x-charts/ChartContainer';
+import { LineChart } from '@mui/x-charts/LineChart';
+import {
+  CartesianSeriesType,
+  DefaultizedCartesianSeriesType,
+  StackableSeriesType,
+  AllSeriesType,
+  isBarSeries,
+  isDefaultizedBarSeries,
+} from '@mui/x-charts/models';
 
 // Use this space to add tests that touch multiple codemods in the preset-safe package
 // It is important to ensure that the codemods don't conflict with each other
@@ -21,4 +29,25 @@ import { ChartContainerProps, ChartApi } from '@mui/x-charts/ChartContainer';
   <LineChart series={[{ data: [1, 2, 3] }]} />
   <ChartsDataProvider series={[{ type: 'line', data: [1, 2, 3] }]} />
   <ChartContainer />
-</div>;
+</div>
+
+function processCartesian(series: CartesianSeriesType) {
+  console.log(series);
+}
+
+function processDefaultizedCartesian(series: DefaultizedCartesianSeriesType) {
+  console.log(series);
+}
+
+function processStackable(series: StackableSeriesType) {
+  console.log(series);
+}
+
+function processAll(series: AllSeriesType) {
+  if (isBarSeries(series)) {
+    console.log('bar series');
+  }
+  if (isDefaultizedBarSeries(series)) {
+    console.log('defaultized bar series');
+  }
+}
