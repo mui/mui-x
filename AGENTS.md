@@ -84,3 +84,9 @@ Refer to `package.json` for other available scripts.
 
 When updating demos in the `docs` folder, only update the `.tsx` files.
 To generate `.js` files, run `pnpm docs:typescript:formatted`.
+
+## Codemods
+
+### Versioning
+
+When writing codemods, the codemods should be created in the directory of the source version. E.g., a codemod to migrate from v8 to v9 should be placed inside the `v8.0.0` directory. 
