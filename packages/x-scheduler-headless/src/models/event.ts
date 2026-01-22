@@ -350,7 +350,7 @@ export interface SchedulerOccurrencePlaceholderInternalDragOrResize extends Sche
    */
   occurrenceKey: string;
   /**
-   * The data of the event to use when dropping the event outside of the Event Calendar or the Timeline Premium.
+   * The data of the event to use when dropping the event outside of the Event Calendar or the Event Timeline Premium.
    */
   originalOccurrence: SchedulerEventOccurrence;
 }
@@ -361,11 +361,11 @@ export interface SchedulerOccurrencePlaceholderExternalDrag extends SchedulerOcc
    */
   type: 'external-drag';
   /**
-   * The data of the event to insert in the Event Calendar or the Timeline Premium when dropped.
+   * The data of the event to insert in the Event Calendar or the Event Timeline Premium when dropped.
    */
   eventData: SchedulerOccurrencePlaceholderExternalDragData;
   /**
-   * Callback fired when the event is dropped into the Event Calendar or the Timeline Premium.
+   * Callback fired when the event is dropped into the Event Calendar or the Event Timeline Premium.
    */
   onEventDrop?: () => void;
 }
@@ -425,7 +425,7 @@ export type SchedulerEventPasteProperties = Partial<
   Pick<SchedulerEvent, 'start' | 'resource' | 'allDay'>
 >;
 
-// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Timeline Premium.
+// TODO: Consider splitting the interface in two, one for the Event Calendar and one for the Event Timeline Premium.
 /**
  * The type of surface the event is being rendered on.
  */

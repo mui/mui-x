@@ -40,7 +40,7 @@ export type RecurringEventByDayValue =
 
 /**
  * The recurrence rule to convert a single event into a series of occurrences.
- * This is a subset of the RFC 5545 RRULE specification that only contains the properties supported by the Event Calendar and the Timeline Premium components.
+ * This is a subset of the RFC 5545 RRULE specification that only contains the properties supported by the Event Calendar and the Event Timeline Premium components.
  * (read the full specification for more information: https://datatracker.ietf.org/doc/html/rfc5545).
  */
 export interface RecurringEventRecurrenceRule {
