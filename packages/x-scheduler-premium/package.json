@@ -49,7 +49,6 @@
     "@mui/x-scheduler": "workspace:*",
     "@mui/x-scheduler-headless": "workspace:*",
     "@mui/x-scheduler-headless-premium": "workspace:*",
-    "@floating-ui/react": "^0.27.16",
     "@mui/x-internals": "workspace:*",
     "clsx": "catalog:"
   },
