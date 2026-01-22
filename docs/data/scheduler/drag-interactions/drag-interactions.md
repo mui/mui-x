@@ -17,7 +17,7 @@ This package is not published yet.
 
 ## Drag and resize events
 
-You can enable the dragging and resizing of events within the Event Calendar or the Timeline using the `areEventsDraggable` and `areEventsResizable` props.
+You can enable the dragging and resizing of events within the Event Calendar or the Timeline Premium using the `areEventsDraggable` and `areEventsResizable` props.
 When `areEventsDraggable` is `true`, the events can be dragged to another point in time.
 When `areEventsResizable` is `true`, the event extremities can be dragged to change its duration.
 
@@ -25,9 +25,9 @@ When `areEventsResizable` is `true`, the event extremities can be dragged to cha
 
 {{"demo": "EventCalendarDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Basic Timeline
+### Basic Timeline Premium
 
-{{"demo": "TimelineDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "TimelinePremiumDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ### Only allow dragging and resizing some events
 
@@ -141,6 +141,6 @@ To be able to drag an event to the outside, your events must be draggable, so `a
 
 {{"demo": "EventCalendarExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
 
-### Basic Timeline
+### Basic Timeline Premium
 
-{{"demo": "TimelineExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}
+{{"demo": "TimelinePremiumExternalDragAndDrop.js", "bg": "inline", "defaultCodeOpen": false}}

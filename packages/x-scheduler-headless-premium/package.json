@@ -11,11 +11,11 @@
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
     "./models": "./src/models/index.ts",
-    "./timeline": "./src/timeline/index.ts",
-    "./timeline-provider": "./src/timeline-provider/index.ts",
-    "./timeline-selectors": "./src/timeline-selectors/index.ts",
-    "./use-timeline": "./src/use-timeline/index.ts",
-    "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts"
+    "./timeline-premium": "./src/timeline-premium/index.ts",
+    "./timeline-premium-provider": "./src/timeline-premium-provider/index.ts",
+    "./timeline-premium-selectors": "./src/timeline-premium-selectors/index.ts",
+    "./use-timeline-premium": "./src/use-timeline-premium/index.ts",
+    "./use-timeline-premium-store-context": "./src/use-timeline-premium-store-context/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

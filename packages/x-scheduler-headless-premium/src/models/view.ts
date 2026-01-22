@@ -1,1 +1,1 @@
-export type TimelineView = 'time' | 'days' | 'weeks' | 'months' | 'years';
+export type TimelinePremiumView = 'time' | 'days' | 'weeks' | 'months' | 'years';

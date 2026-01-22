@@ -52,7 +52,7 @@ const MOCK_EVENT_STATE = {
 };
 
 /**
- * Instance shared by the Event Calendar and the Timeline components.
+ * Instance shared by the Event Calendar and the Timeline Premium components.
  */
 export class SchedulerStore<
   TEvent extends object,
