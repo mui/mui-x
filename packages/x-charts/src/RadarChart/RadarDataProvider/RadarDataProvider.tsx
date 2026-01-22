@@ -115,7 +115,7 @@ function RadarDataProvider<
       margin={defaultizedMargin}
       colors={colors}
       skipAnimation={skipAnimation}
-      plugins={(plugins ?? RADAR_PLUGINS)}
+      plugins={plugins ?? RADAR_PLUGINS}
       rotationAxis={rotationAxes}
       radiusAxis={radiusAxis}
       seriesConfig={RADAR_SERIES_CONFIG}
