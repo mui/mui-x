@@ -7,6 +7,15 @@ import * as React from 'react';
 // For example, if one codemod changes a prop name, another codemod modifying its value should work too.
 // Don't hesitate to add props on existing components.
 
+import {
+  CartesianSeriesType,
+  DefaultizedCartesianSeriesType,
+  StackableSeriesType,
+  AllSeriesType,
+  isBarSeries,
+  isDefaultizedBarSeries,
+} from '@mui/x-charts/models';
+
 // prettier-ignore
 <div>
   <Heatmap series={[{}]} hideLegend />
