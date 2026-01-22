@@ -1,13 +1,5 @@
 {
-  "props": {
-    "borderRadius": { "type": { "name": "number" } },
-    "slotProps": { "type": { "name": "object" }, "default": "{}" },
-    "slots": {
-      "type": { "name": "object" },
-      "default": "{}",
-      "additionalInfo": { "slotsApi": true }
-    }
-  },
+  "props": {},
   "name": "HeatmapPlot",
   "imports": [
     "import { HeatmapPlot } from '@mui/x-charts-pro/Heatmap';",
