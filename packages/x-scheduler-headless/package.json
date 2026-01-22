@@ -36,7 +36,6 @@
     "./use-event-occurrences-with-day-grid-position": "./src/use-event-occurrences-with-day-grid-position/index.ts",
     "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
-    "./use-timeline": "./src/use-timeline/index.ts",
     "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts",
     "./use-draggable-dialog": "./src/use-draggable-dialog/index.ts"
   },
