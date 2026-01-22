@@ -141,9 +141,9 @@ This improves consistency across chart components and developer experience.
 
 ## Legend
 
-### Property `type` become required
+### Property `type` is now required
 
-The property `type` of `LegendItemParams` as been modified from optional to required.
+The `type` property of `LegendItemParams` has been modified from optional to required.
 
-This type is used in the a returned value of `useLegend()`.
-Except if you created a custom legend you should not be impacted by this modification.
+This type is used in the return value of `useLegend()`.
+If you haven't created a custom legend, you should not be impacted by this change.
