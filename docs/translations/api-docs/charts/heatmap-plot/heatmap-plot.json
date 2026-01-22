@@ -1,6 +1,10 @@
 {
   "componentDescription": "",
-  "propDescriptions": {},
+  "propDescriptions": {
+    "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." }
+  },
   "classDescriptions": {},
   "slotDescriptions": { "cell": "The component that renders the heatmap cell." }
 }
