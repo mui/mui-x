@@ -39,7 +39,7 @@ You can specify x and y ticks with the `xAxis` and `yAxis` props.
 ## Color mapping
 
 To customize the color mapping, use the `zAxis` configuration.
-You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#values-color).
+You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorConfig.js"}}
 

@@ -114,7 +114,7 @@ The `outlined` variant creates a more lightweight visual style.
 
 The funnel colors can be customized in two ways.
 
-1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each section of the funnel will be colored according to this palette.
+1. You can provide a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each section of the funnel will be colored according to this palette.
 2. You can provide a `color` property in `data` objects, which overrides the palette.
 
 {{"demo": "FunnelColor.js"}}
