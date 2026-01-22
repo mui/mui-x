@@ -1,7 +1,7 @@
 import { SchedulerEvent, SchedulerProcessedEvent } from '../models';
 import { processDate } from '../process-date';
 import { Adapter } from '../use-adapter';
-import { parseRRule, projectRRuleToTimezone } from '../utils/recurring-events';
+import { parseRRule, projectRRuleToTimezone } from '../internals/utils/recurring-events';
 import { TemporalTimezone } from '../base-ui-copy/types';
 
 export function processEvent(

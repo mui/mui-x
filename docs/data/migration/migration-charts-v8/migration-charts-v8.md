@@ -73,6 +73,68 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Removed deprecated types and APIs
+
+The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
+
+### Series types
+
+The following type aliases have been removed from `@mui/x-charts/models`:
+
+- `CartesianSeriesType` - Use `AllSeriesType<CartesianChartSeriesType>` directly if needed
+- `DefaultizedCartesianSeriesType` - Use `DefaultizedSeriesType<CartesianChartSeriesType>` directly if needed
+- `StackableSeriesType` - Use `DefaultizedSeriesType<StackableChartSeriesType>` directly if needed
+
+```diff
+-import { CartesianSeriesType } from '@mui/x-charts/models';
++import { AllSeriesType } from '@mui/x-charts/models';
++import type { CartesianChartSeriesType } from '@mui/x-charts/internals';
++
++type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
+```
+
+### ✅ `ChartApi` type moved to `@mui/x-charts/context`
+
+The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
+
+```diff
+-import type { ChartApi } from '@mui/x-charts/ChartContainer';
++import type { ChartApi } from '@mui/x-charts/context';
+```
+
+### Series helper functions
+
+The following helper functions have been removed:
+
+- `isDefaultizedBarSeries()` - Check `series.type === 'bar'` directly
+- `isBarSeries()` - Check `series.type === 'bar'` directly
+
+```diff
+-import { isBarSeries } from '@mui/x-charts/models';
+-
+-if (isBarSeries(series)) {
++if (series.type === 'bar') {
+   // Handle bar series
+ }
+```
+
+## Hooks
+
+### `use[Type]Series()` with empty array
+
+When `use[Type]Series()` hooks received an empty array, they returned all the available series of the given type.
+In v9 they return an empty array.
+
+```js
+// In v8
+useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
+useBarSeries([]); // Returns [{ id: "id-1", ... }, { id: "id-2", ... }, ...]
+
+// In v9
+useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
+useBarSeries([]); // Returns []
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -85,3 +147,12 @@ This improves consistency across chart components and developer experience.
 +  hideLegend
  />
 ```
+
+## Legend
+
+### Property `type` is now required
+
+The `type` property of `LegendItemParams` has been modified from optional to required.
+
+This type is used in the return value of `useLegend()`.
+If you haven't created a custom legend, you should not be impacted by this change.
