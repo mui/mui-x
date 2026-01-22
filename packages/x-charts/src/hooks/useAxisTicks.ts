@@ -21,7 +21,6 @@ export function useXAxisTicks(axisId: AxisId): TickItemType[] {
     ...themedProps,
   };
 
-  // TODO: Can we avoid the valueFormatter here? I'm pretty sure we can refactor it out.
   return useTicks({
     scale: axis.scale,
     tickNumber: axis.tickNumber,
@@ -53,7 +52,6 @@ export function useYAxisTicks(axisId: AxisId): TickItemType[] {
     ...themedProps,
   };
 
-  // TODO: Can we avoid the valueFormatter here? I'm pretty sure we can refactor it out.
   return useTicks({
     scale: axis.scale,
     tickNumber: axis.tickNumber,
