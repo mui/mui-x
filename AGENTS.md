@@ -86,6 +86,7 @@ When updating demos in the `docs` folder, only update the `.tsx` files.
 To generate `.js` files, run `pnpm docs:typescript:formatted`.
 
 ## Codemods
+
 Codemods are run by consumers of the MUI X libraries to migrate to newer versions of the libraries.
 
 ### Versioning
