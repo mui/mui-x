@@ -1404,9 +1404,21 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit long text cell root element"
     },
+    "editLongTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popper content"
+    },
     "editLongTextCellPopup": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the edit long text cell popup"
+    },
+    "editLongTextCellTextarea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell textarea"
+    },
+    "editLongTextCellValue": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell value element"
     },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1477,6 +1489,10 @@
     "longTextCellExpandButton": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the long text cell expand button"
+    },
+    "longTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popper content"
     },
     "longTextCellPopup": {
       "description": "Styles applied to {{nodeName}}.",

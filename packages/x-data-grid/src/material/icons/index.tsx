@@ -135,12 +135,12 @@ export const GridDownloadIcon = createSvgIcon(
   'Download',
 );
 
-export const GridOpenInFullIcon = createSvgIcon(
+export const GridLongTextCellExpandIcon = createSvgIcon(
   <path d="M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z" />,
   'OpenInFull',
 );
 
-export const GridNorthWestIcon = createSvgIcon(
+export const GridLongTextCellCollapseIcon = createSvgIcon(
   <path d="M5 15h2V8.41L18.59 20 20 18.59 8.41 7H15V5H5z" />,
   'NorthWest',
 );

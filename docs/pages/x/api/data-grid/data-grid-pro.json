@@ -1156,13 +1156,13 @@
     {
       "name": "longTextCellExpandIcon",
       "description": "Icon displayed on the long text cell to expand the content.",
-      "default": "GridOpenInFullIcon",
+      "default": "GridLongTextCellExpandIcon",
       "class": null
     },
     {
       "name": "longTextCellCollapseIcon",
       "description": "Icon displayed on the long text cell popup to collapse the content.",
-      "default": "GridNorthWestIcon",
+      "default": "GridLongTextCellCollapseIcon",
       "class": null
     },
     {
@@ -1726,9 +1726,27 @@
       "isGlobal": false
     },
     {
+      "key": "editLongTextCellPopperContent",
+      "className": "MuiDataGridPro-editLongTextCellPopperContent",
+      "description": "Styles applied to the edit long text cell popper content.",
+      "isGlobal": false
+    },
+    {
       "key": "editLongTextCellPopup",
       "className": "MuiDataGridPro-editLongTextCellPopup",
       "description": "Styles applied to the edit long text cell popup.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellTextarea",
+      "className": "MuiDataGridPro-editLongTextCellTextarea",
+      "description": "Styles applied to the edit long text cell textarea.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellValue",
+      "className": "MuiDataGridPro-editLongTextCellValue",
+      "description": "Styles applied to the edit long text cell value element.",
       "isGlobal": false
     },
     {
@@ -1837,6 +1855,12 @@
       "key": "longTextCellExpandButton",
       "className": "MuiDataGridPro-longTextCellExpandButton",
       "description": "Styles applied to the long text cell expand button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopperContent",
+      "className": "MuiDataGridPro-longTextCellPopperContent",
+      "description": "Styles applied to the long text cell popper content.",
       "isGlobal": false
     },
     {

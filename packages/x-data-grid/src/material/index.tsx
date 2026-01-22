@@ -65,8 +65,8 @@ import {
   GridLoadIcon,
   GridDeleteForeverIcon,
   GridDownloadIcon,
-  GridOpenInFullIcon,
-  GridNorthWestIcon,
+  GridLongTextCellExpandIcon,
+  GridLongTextCellCollapseIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -785,8 +785,8 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
-  longTextCellExpandIcon: GridOpenInFullIcon,
-  longTextCellCollapseIcon: GridNorthWestIcon,
+  longTextCellExpandIcon: GridLongTextCellExpandIcon,
+  longTextCellCollapseIcon: GridLongTextCellCollapseIcon,
 };
 
 const baseSlots: GridBaseSlots = {

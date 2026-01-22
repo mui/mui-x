@@ -193,12 +193,12 @@ export interface GridIconSlotsComponent {
   menuItemCheckIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed on the long text cell to expand the content.
-   * @default GridOpenInFullIcon
+   * @default GridLongTextCellExpandIcon
    */
   longTextCellExpandIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed on the long text cell popup to collapse the content.
-   * @default GridNorthWestIcon
+   * @default GridLongTextCellCollapseIcon
    */
   longTextCellCollapseIcon: React.JSXElementConstructor<IconProps>;
 }
