@@ -4,70 +4,30 @@ import { AdapterDayjsBuddhist } from '@mui/x-date-pickers/AdapterDayjsBuddhist';
 import {
   createPickerRenderer,
   expectFieldValueV7,
+  describeBuddhistAdapter,
   buildFieldInteractions,
 } from 'test/utils/pickers';
+import { AdapterFormats } from '@mui/x-date-pickers/models';
 import 'dayjs/locale/th';
 
-const BUDDHIST_YEAR_OFFSET = 543;
-
 describe('<AdapterDayjsBuddhist />', () => {
-  // Test date: 2018-10-30T11:44:00.000Z
-  const TEST_DATE_ISO_STRING = '2018-10-30T11:44:00.000Z';
+  describeBuddhistAdapter(AdapterDayjsBuddhist, {});
 
-  describe('Adapter methods', () => {
-    const adapter = new AdapterDayjsBuddhist();
-    const testDate = adapter.date(TEST_DATE_ISO_STRING) as Dayjs;
+  describe('Adapter localization', () => {
+    it('Formatting', () => {
+      const adapter = new AdapterDayjsBuddhist();
 
-    it('Method: getYear - should return Buddhist year', () => {
-      // 2018 + 543 = 2561
-      expect(adapter.getYear(testDate)).to.equal(2018 + BUDDHIST_YEAR_OFFSET);
-    });
+      const expectDate = (format: keyof AdapterFormats, expected: string) => {
+        const date = adapter.date('2020-02-01T23:44:00.000Z') as Dayjs;
 
-    it('Method: setYear - should accept Buddhist year', () => {
-      // Setting Buddhist year 2565 should result in Gregorian 2022
-      const newDate = adapter.setYear(testDate, 2565) as Dayjs;
-      expect(adapter.toJsDate(newDate).getFullYear()).to.equal(2022);
-      expect(adapter.getYear(newDate)).to.equal(2565);
-    });
+        expect(adapter.format(date, format)).to.equal(expected);
+      };
 
-    it('Method: parse - should parse Buddhist year format', () => {
-      const parsed = adapter.parse('01/02/2565', 'DD/MM/BBBB') as Dayjs;
-      expect(parsed).not.to.equal(null);
-      expect(adapter.isValid(parsed)).to.equal(true);
-      // Buddhist year 2565 = Gregorian 2022
-      expect(adapter.toJsDate(parsed).getFullYear()).to.equal(2022);
-      expect(adapter.getYear(parsed)).to.equal(2565);
-    });
-
-    it('Method: parse - should handle empty string', () => {
-      expect(adapter.parse('', 'DD/MM/BBBB')).to.equal(null);
-    });
-
-    it('Method: parse - should work with non-Buddhist format', () => {
-      const parsed = adapter.parse('01/02/2022', 'DD/MM/YYYY') as Dayjs;
-      expect(parsed).not.to.equal(null);
-      expect(adapter.toJsDate(parsed).getFullYear()).to.equal(2022);
-    });
-
-    it('Method: format - should format with Buddhist year', () => {
-      const formatted = adapter.formatByString(testDate, 'DD/MM/BBBB');
-      expect(formatted).to.equal('30/10/2561');
-    });
-
-    it('Method: isValid', () => {
-      expect(adapter.isValid(testDate)).to.equal(true);
-      expect(adapter.isValid(null)).to.equal(false);
-    });
-
-    it('Method: isSameYear - should compare correctly', () => {
-      const sameYear = adapter.date('2018-05-15T00:00:00.000Z') as Dayjs;
-      const differentYear = adapter.date('2019-10-30T00:00:00.000Z') as Dayjs;
-      expect(adapter.isSameYear(testDate, sameYear)).to.equal(true);
-      expect(adapter.isSameYear(testDate, differentYear)).to.equal(false);
-    });
-
-    it('should use BBBB format for year by default', () => {
-      expect(adapter.formats.year).to.equal('BBBB');
+      // 2020 + 543 = 2563
+      expectDate('fullDate', '1 Feb 2563');
+      expectDate('keyboardDate', '01/02/2563');
+      expectDate('keyboardDateTime12h', '01/02/2563 11:44 PM');
+      expectDate('keyboardDateTime24h', '01/02/2563 23:44');
     });
   });
 
