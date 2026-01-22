@@ -11,6 +11,7 @@ import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from '
 import { TimelineContentProps } from './TimelineContent.types';
 import TimelineTitleCell from './timeline-title-cell/TimelineTitleCell';
 import { TimelineEvent } from './timeline-event';
+import { useEventTimelineClasses } from '../EventTimelineClassesContext';
 
 const EventTimelineContent = styled('section', {
   name: 'MuiEventTimeline',
@@ -128,6 +129,7 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
 ) {
   // Context hooks
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -159,28 +161,33 @@ export const TimelineContent = React.forwardRef(function TimelineContent(
   }
 
   return (
-    <EventTimelineContent ref={handleRef} {...props}>
+    <EventTimelineContent ref={handleRef} className={classes.content} {...props}>
       <EventPopoverProvider containerRef={containerRef}>
         <EventTimelineGrid
+          className={classes.grid}
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
         >
-          <EventTimelineTitleSubGridWrapper>
-            <EventTimelineTitleSubGridHeaderRow>
-              <EventTimelineTitleSubGridHeaderCell>
+          <EventTimelineTitleSubGridWrapper className={classes.titleSubGridWrapper}>
+            <EventTimelineTitleSubGridHeaderRow className={classes.titleSubGridHeaderRow}>
+              <EventTimelineTitleSubGridHeaderCell className={classes.titleSubGridHeaderCell}>
                 Resource title
               </EventTimelineTitleSubGridHeaderCell>
             </EventTimelineTitleSubGridHeaderRow>
-            <EventTimelineTitleSubGrid>
+            <EventTimelineTitleSubGrid className={classes.titleSubGrid}>
               {(resourceId) => <TimelineTitleCell key={resourceId} resourceId={resourceId} />}
             </EventTimelineTitleSubGrid>
           </EventTimelineTitleSubGridWrapper>
-          <EventTimelineEventsSubGridWrapper>
-            <EventTimelineEventsSubGridHeaderRow>
+          <EventTimelineEventsSubGridWrapper className={classes.eventsSubGridWrapper}>
+            <EventTimelineEventsSubGridHeaderRow className={classes.eventsSubGridHeaderRow}>
               <TimelinePrimitive.Cell>{header}</TimelinePrimitive.Cell>
             </EventTimelineEventsSubGridHeaderRow>
-            <EventTimelineEventsSubGrid>
+            <EventTimelineEventsSubGrid className={classes.eventsSubGrid}>
               {(resourceId) => (
-                <EventTimelineEventsSubGridRow key={resourceId} resourceId={resourceId}>
+                <EventTimelineEventsSubGridRow
+                  key={resourceId}
+                  resourceId={resourceId}
+                  className={classes.eventsSubGridRow}
+                >
                   {({ occurrences, placeholder }) => (
                     <React.Fragment>
                       {occurrences.map((occurrence) => (

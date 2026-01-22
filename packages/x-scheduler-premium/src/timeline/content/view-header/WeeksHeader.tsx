@@ -7,6 +7,7 @@ import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timelin
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/internals';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const WeeksHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -72,6 +73,7 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, timelineViewSelectors.config);
@@ -99,18 +101,19 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   }, [adapter, viewConfig]);
 
   return (
-    <WeeksHeaderRoot {...props}>
+    <WeeksHeaderRoot className={classes.weeksHeaderRoot} {...props}>
       {weeks.map((week) => (
-        <TimeHeaderCell key={`${week[0].key}-week`}>
-          <DayLabel>
+        <TimeHeaderCell key={`${week[0].key}-week`} className={classes.weeksHeaderCell}>
+          <DayLabel className={classes.weeksHeaderDayLabel}>
             {formatWeekDayMonthAndDayOfMonth(week[0].value, adapter)} -{' '}
             {formatWeekDayMonthAndDayOfMonth(week[6].value, adapter)}
           </DayLabel>
-          <WeekDaysRow>
+          <WeekDaysRow className={classes.weeksHeaderDaysRow}>
             {week.map((day) => (
               <WeekDayCell
                 dateTime={day.key}
                 key={day.key}
+                className={classes.weeksHeaderDayCell}
                 data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
               >
                 {adapter.format(day.value, 'weekday1Letter')}

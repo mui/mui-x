@@ -6,6 +6,7 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-schedule
 import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const MonthsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -48,6 +49,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, timelineViewSelectors.config);
@@ -59,7 +61,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <MonthsHeaderRoot {...props}>
+    <MonthsHeaderRoot className={classes.monthsHeaderRoot} {...props}>
       {months.map((month, index) => {
         const monthNumber = adapter.getMonth(month.value);
 
@@ -67,6 +69,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
           <React.Fragment key={month.key}>
             {(monthNumber === 0 || index === 0) && (
               <YearLabel
+                className={classes.monthsHeaderYearLabel}
                 style={
                   {
                     gridColumn: `${index + 1} / span ${Math.min(12, months.length - index - 1) - monthNumber + 1}`,
@@ -76,7 +79,9 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
                 {adapter.getYear(month.value)}
               </YearLabel>
             )}
-            <MonthLabel>{adapter.format(month.value, 'month3Letters')}</MonthLabel>
+            <MonthLabel className={classes.monthsHeaderMonthLabel}>
+              {adapter.format(month.value, 'month3Letters')}
+            </MonthLabel>
           </React.Fragment>
         );
       })}

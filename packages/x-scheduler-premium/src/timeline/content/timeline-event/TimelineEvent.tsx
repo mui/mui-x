@@ -8,6 +8,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { TimelineEventProps } from './TimelineEvent.types';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const TimelineEventRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -68,6 +69,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
 
   // Context hooks
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -89,7 +91,7 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     'aria-labelledby': `${ariaLabelledBy} ${id}`,
-    className: clsx(className),
+    className: clsx(classes.event, className),
     style: {
       '--number-of-lines': 1,
       '--row-index': occurrence.position.firstIndex,
@@ -116,11 +118,17 @@ export const TimelineEvent = React.forwardRef(function TimelineEvent(
       {...sharedProps}
     >
       {isStartResizable && (
-        <TimelineEventResizeHandler side="start" className="TimelineEventResizeHandler" />
+        <TimelineEventResizeHandler
+          side="start"
+          className={clsx(classes.eventResizeHandler, 'TimelineEventResizeHandler')}
+        />
       )}
       <span className="LinesClamp">{occurrence.title}</span>
       {isEndResizable && (
-        <TimelineEventResizeHandler side="end" className="TimelineEventResizeHandler" />
+        <TimelineEventResizeHandler
+          side="end"
+          className={clsx(classes.eventResizeHandler, 'TimelineEventResizeHandler')}
+        />
       )}
     </Timeline.Event>
   );

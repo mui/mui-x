@@ -5,6 +5,7 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const DaysHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -90,6 +91,7 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, timelineViewSelectors.config);
@@ -101,19 +103,27 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <DaysHeaderRoot {...props}>
+    <DaysHeaderRoot className={classes.daysHeaderRoot} {...props}>
       {days.map((day, index) => (
-        <DayHeaderCell key={day.key}>
+        <DayHeaderCell key={day.key} className={classes.daysHeaderCell}>
           {(adapter.getDate(day.value) === 1 || index === 0) && (
-            <MonthStart>
-              <MonthStartLabel>{adapter.format(day.value, 'month3Letters')}</MonthStartLabel>
+            <MonthStart className={classes.daysHeaderMonthStart}>
+              <MonthStartLabel className={classes.daysHeaderMonthStartLabel}>
+                {adapter.format(day.value, 'month3Letters')}
+              </MonthStartLabel>
             </MonthStart>
           )}
-          <DayHeaderTime dateTime={day.key}>
-            <WeekDay data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
+          <DayHeaderTime dateTime={day.key} className={classes.daysHeaderTime}>
+            <WeekDay
+              className={classes.daysHeaderWeekDay}
+              data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+            >
               {adapter.format(day.value, 'weekday1Letter')}
             </WeekDay>
-            <DayNumber data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
+            <DayNumber
+              className={classes.daysHeaderDayNumber}
+              data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+            >
               {adapter.format(day.value, 'dayOfMonth')}
             </DayNumber>
           </DayHeaderTime>

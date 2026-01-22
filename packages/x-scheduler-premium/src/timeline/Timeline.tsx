@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { useStore } from '@base-ui/utils/store';
@@ -14,11 +16,63 @@ import { TimelineView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { TimelineProps } from './Timeline.types';
 import { TimelineContent } from './content';
+import {
+  EventTimelineClasses,
+  getEventTimelineUtilityClass,
+} from './eventTimelineClasses';
+import { EventTimelineClassesContext } from './EventTimelineClassesContext';
 // TODO: Remove these CSS imports during the MUI X migration
 import '../styles/index.css';
 import '../styles/colors.css';
 import '../styles/tokens.css';
 import '../styles/utils.css';
+
+const useUtilityClasses = (classes: Partial<EventTimelineClasses> | undefined) => {
+  const slots = {
+    root: ['root'],
+    headerToolbar: ['headerToolbar'],
+    content: ['content'],
+    grid: ['grid'],
+    titleSubGridWrapper: ['titleSubGridWrapper'],
+    titleSubGrid: ['titleSubGrid'],
+    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
+    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
+    eventsSubGridWrapper: ['eventsSubGridWrapper'],
+    eventsSubGrid: ['eventsSubGrid'],
+    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
+    eventsSubGridRow: ['eventsSubGridRow'],
+    titleCellRow: ['titleCellRow'],
+    titleCell: ['titleCell'],
+    titleCellLegendColor: ['titleCellLegendColor'],
+    event: ['event'],
+    eventResizeHandler: ['eventResizeHandler'],
+    timeHeaderRoot: ['timeHeaderRoot'],
+    timeHeaderCell: ['timeHeaderCell'],
+    timeHeaderDayLabel: ['timeHeaderDayLabel'],
+    timeHeaderCellsRow: ['timeHeaderCellsRow'],
+    timeHeaderTimeCell: ['timeHeaderTimeCell'],
+    timeHeaderTimeLabel: ['timeHeaderTimeLabel'],
+    daysHeaderRoot: ['daysHeaderRoot'],
+    daysHeaderCell: ['daysHeaderCell'],
+    daysHeaderTime: ['daysHeaderTime'],
+    daysHeaderWeekDay: ['daysHeaderWeekDay'],
+    daysHeaderDayNumber: ['daysHeaderDayNumber'],
+    daysHeaderMonthStart: ['daysHeaderMonthStart'],
+    daysHeaderMonthStartLabel: ['daysHeaderMonthStartLabel'],
+    weeksHeaderRoot: ['weeksHeaderRoot'],
+    weeksHeaderCell: ['weeksHeaderCell'],
+    weeksHeaderDayLabel: ['weeksHeaderDayLabel'],
+    weeksHeaderDaysRow: ['weeksHeaderDaysRow'],
+    weeksHeaderDayCell: ['weeksHeaderDayCell'],
+    monthsHeaderRoot: ['monthsHeaderRoot'],
+    monthsHeaderYearLabel: ['monthsHeaderYearLabel'],
+    monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
+    yearsHeaderRoot: ['yearsHeaderRoot'],
+    yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+  };
+
+  return composeClasses(slots, getEventTimelineUtilityClass, classes);
+};
 
 const EventTimelineRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -51,12 +105,12 @@ export const Timeline = React.forwardRef(function EventTimeline<
 >(inProps: TimelineProps<TEvent, TResource>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
 
-  const { parameters, forwardedProps } = useExtractTimelineParameters<
-    TEvent,
-    TResource,
-    typeof props
-  >(props);
+  const {
+    parameters,
+    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+  } = useExtractTimelineParameters<TEvent, TResource, typeof props>(props);
   const store = useTimeline(parameters);
+  const classes = useUtilityClasses(classesProp);
 
   const view = useStore(store, timelineViewSelectors.view);
   const views = useStore(store, timelineViewSelectors.views);
@@ -68,18 +122,24 @@ export const Timeline = React.forwardRef(function EventTimeline<
   return (
     <TimelineStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
-        <EventTimelineRoot ref={forwardedRef} {...forwardedProps}>
-          <EventTimelineHeaderToolbar>
-            <Select value={view} onChange={handleViewChange} size="small">
-              {views.map((viewItem) => (
-                <MenuItem key={viewItem} value={viewItem}>
-                  {viewItem}
-                </MenuItem>
-              ))}
-            </Select>
-          </EventTimelineHeaderToolbar>
-          <TimelineContent />
-        </EventTimelineRoot>
+        <EventTimelineClassesContext.Provider value={classes}>
+          <EventTimelineRoot
+            ref={forwardedRef}
+            className={clsx(classes.root, className)}
+            {...forwardedProps}
+          >
+            <EventTimelineHeaderToolbar className={classes.headerToolbar}>
+              <Select value={view} onChange={handleViewChange} size="small">
+                {views.map((viewItem) => (
+                  <MenuItem key={viewItem} value={viewItem}>
+                    {viewItem}
+                  </MenuItem>
+                ))}
+              </Select>
+            </EventTimelineHeaderToolbar>
+            <TimelineContent />
+          </EventTimelineRoot>
+        </EventTimelineClassesContext.Provider>
       </SchedulerStoreContext.Provider>
     </TimelineStoreContext.Provider>
   );

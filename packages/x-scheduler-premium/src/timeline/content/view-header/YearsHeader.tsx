@@ -6,6 +6,7 @@ import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timelin
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const YearsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -34,6 +35,7 @@ export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, timelineViewSelectors.config);
@@ -45,9 +47,11 @@ export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <YearsHeaderRoot {...props}>
+    <YearsHeaderRoot className={classes.yearsHeaderRoot} {...props}>
       {years.map((year) => (
-        <YearLabel key={year.key}>{adapter.getYear(year.value)}</YearLabel>
+        <YearLabel key={year.key} className={classes.yearsHeaderYearLabel}>
+          {adapter.getYear(year.value)}
+        </YearLabel>
       ))}
     </YearsHeaderRoot>
   );

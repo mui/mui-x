@@ -6,6 +6,7 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { timelineViewSelectors } from '@mui/x-scheduler-headless-premium/timeline-selectors';
 import { formatWeekDayMonthAndDayOfMonth, useFormatTime } from '@mui/x-scheduler/internals';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const TimeHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -69,6 +70,7 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, timelineViewSelectors.config);
@@ -84,16 +86,22 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   return (
-    <TimeHeaderRoot {...props}>
+    <TimeHeaderRoot className={classes.timeHeaderRoot} {...props}>
       {days.map((day) => (
-        <TimeHeaderCell key={day.key}>
-          <DayLabel dateTime={day.key}>
+        <TimeHeaderCell key={day.key} className={classes.timeHeaderCell}>
+          <DayLabel dateTime={day.key} className={classes.timeHeaderDayLabel}>
             {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
           </DayLabel>
-          <TimeCellsRow>
+          <TimeCellsRow className={classes.timeHeaderCellsRow}>
             {Array.from({ length: 24 }, (_, hour) => (
-              <TimeCell key={hour} style={{ '--hour': hour } as React.CSSProperties}>
-                <TimeLabel>{formatTime(adapter.setHours(template, hour))}</TimeLabel>
+              <TimeCell
+                key={hour}
+                className={classes.timeHeaderTimeCell}
+                style={{ '--hour': hour } as React.CSSProperties}
+              >
+                <TimeLabel className={classes.timeHeaderTimeLabel}>
+                  {formatTime(adapter.setHours(template, hour))}
+                </TimeLabel>
               </TimeCell>
             ))}
           </TimeCellsRow>

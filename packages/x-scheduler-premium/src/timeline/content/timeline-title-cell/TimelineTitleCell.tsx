@@ -5,6 +5,7 @@ import { SchedulerResourceId } from '@mui/x-scheduler-headless/models';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTimelineStoreContext } from '@mui/x-scheduler-headless-premium/use-timeline-store-context';
 import { getDataPaletteProps } from '@mui/x-scheduler/internals';
+import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
 
 const TimelineRow = styled(TimelinePrimitive.Row, {
   name: 'MuiEventTimeline',
@@ -43,15 +44,19 @@ export default function TimelineTitleCell(props: { resourceId: SchedulerResource
 
   // Context hooks
   const store = useTimelineStoreContext();
+  const classes = useEventTimelineClasses();
 
   // Selector hooks
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resourceId);
   const resource = useStore(store, schedulerResourceSelectors.processedResource, resourceId);
 
   return (
-    <TimelineRow>
-      <TimelineTitleCellRoot id={`TimelineTitleCell-${resourceId}`}>
-        <ResourceLegendColor {...getDataPaletteProps(eventColor)} />
+    <TimelineRow className={classes.titleCellRow}>
+      <TimelineTitleCellRoot id={`TimelineTitleCell-${resourceId}`} className={classes.titleCell}>
+        <ResourceLegendColor
+          className={classes.titleCellLegendColor}
+          {...getDataPaletteProps(eventColor)}
+        />
         {resource!.title}
       </TimelineTitleCellRoot>
     </TimelineRow>
