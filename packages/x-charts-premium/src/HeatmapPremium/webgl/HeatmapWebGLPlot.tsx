@@ -14,8 +14,8 @@ import {
   heatmapFragmentShaderSourceWithBorderRadius,
   heatmapVertexShaderSource,
 } from './shaders';
-import { initializeWebGLProgram, replaceShader } from './initializeWebGLProgram';
 import { useRerenderWebGLCanvasOnResize } from './useRerenderWebGLCanvasOnResize';
+import { WebGLProg } from './WebGLProg';
 
 export function HeatmapWebGLPlot({
   borderRadius,
@@ -32,7 +32,7 @@ export function HeatmapWebGLPlot({
   const isFaded = store.use(selectorChartsIsFadedCallback);
 
   const gl = useWebGLContext();
-  const programRef = React.useRef<WebGLProgram | null>(null);
+  const programRef = React.useRef<WebGLProg | null>(null);
   const dataLengthRef = React.useRef<number>(0);
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
   const renderScheduledRef = React.useRef<boolean>(false);
@@ -70,14 +70,18 @@ export function HeatmapWebGLPlot({
       return;
     }
 
-    programRef.current = initializeWebGLProgram(
-      gl,
-      heatmapVertexShaderSource,
+    const program = new WebGLProg(gl);
+    programRef.current = program;
+
+    program.attachVertexShader(heatmapVertexShaderSource);
+    program.attachFragmentShader(
       // The border radius shader looks odd when border radius is 0, so we use the shader without border radius in that case
       lastFragmentShaderRef.current === 'border-radius'
         ? heatmapFragmentShaderSourceWithBorderRadius
         : heatmapFragmentShaderSourceNoBorderRadius,
     );
+    program.link();
+    program.use();
   }, [gl]);
 
   React.useEffect(() => {
@@ -100,12 +104,17 @@ export function HeatmapWebGLPlot({
     }
 
     if (lastFragmentShaderRef.current === 'no-border-radius' && seriesBorderRadius > 0) {
-      replaceShader(gl, program, heatmapFragmentShaderSourceWithBorderRadius, gl.FRAGMENT_SHADER);
+      program.attachFragmentShader(heatmapFragmentShaderSourceWithBorderRadius);
       lastFragmentShaderRef.current = 'border-radius';
     } else if (lastFragmentShaderRef.current === 'border-radius' && !seriesBorderRadius) {
-      replaceShader(gl, program, heatmapFragmentShaderSourceNoBorderRadius, gl.FRAGMENT_SHADER);
+      program.attachFragmentShader(heatmapFragmentShaderSourceNoBorderRadius);
       lastFragmentShaderRef.current = 'no-border-radius';
+    } else {
+      return;
     }
+
+    program.link();
+    program.use();
 
     gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
     scheduleRender();
