@@ -1,6 +1,6 @@
 import { createPlugin, type Plugin } from '../plugins/core/plugin';
 import paginationPlugin, { type PaginationModel } from '../plugins/pagination';
-import sortingPlugin, { type SortModel } from '../plugins/sorting';
+import sortingPlugin, { type GridSortModel } from '../plugins/sorting';
 import { useDataGrid } from './useDataGrid';
 
 interface User {
@@ -30,10 +30,9 @@ export function Example() {
 
     // ✓ These properties are available (from sortingPlugin)
     sortModel: [{ field: 'name', sort: 'asc' }],
-    onSortModelChange: (_model: SortModel) => {
+    onSortModelChange: (_model: GridSortModel) => {
       // Handle sort model change
     },
-    enableSorting: true,
     enableMultiSort: false,
 
     // @ts-expect-error Property 'paginationModel' does not exist
@@ -87,7 +86,7 @@ export function Example() {
 
     // ✓ All properties available
     sortModel: [{ field: 'name', sort: 'asc' }],
-    onSortModelChange: (_model: SortModel) => {
+    onSortModelChange: (_model: GridSortModel) => {
       // Handle sort model change
     },
     paginationModel: { page: 0, pageSize: 10 },
@@ -502,11 +501,11 @@ export function PluginOptionsExample() {
     // ✓ PluginA options
     enableA: true,
     aValue: 'custom-A',
-    onAChange: (_value) => {},
+    onAChange: (_value) => { },
 
     // ✓ PluginB options
     bMode: 'fast',
-    onBEvent: () => {},
+    onBEvent: () => { },
 
     // ✓ PluginC options (also includes A and B options from dependencies)
     cPrefix: 'prefix-',
