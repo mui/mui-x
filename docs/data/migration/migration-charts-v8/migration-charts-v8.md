@@ -73,13 +73,12 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
-## Moving `seriesId` to `string` only
+## Change `seriesId` type to `string`
 
-The `seriesId` were supporting `number | string`.
-The v9 will only support `string`.
+The `seriesId` property accepted `number | string`.
+In v9, only `string` is accepted.
 
-This type modification impacts the objects in the `series` props.
-But also the `highlightedItem` and `tooltipItem`.
+This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
 
 ## Removed deprecated types and APIs
 
