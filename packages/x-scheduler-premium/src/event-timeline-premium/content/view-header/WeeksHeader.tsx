@@ -11,7 +11,7 @@ import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClasse
 
 const WeeksHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'WeeksHeaderRoot',
+  slot: 'WeeksHeader',
 })({
   display: 'flex',
   // TODO: update this calculation when we add the option to hide weekends
@@ -101,7 +101,7 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   }, [adapter, viewConfig]);
 
   return (
-    <WeeksHeaderRoot className={classes.weeksHeaderRoot} {...props}>
+    <WeeksHeaderRoot className={classes.weeksHeader} {...props}>
       {weeks.map((week) => (
         <TimeHeaderCell key={`${week[0].key}-week`} className={classes.weeksHeaderCell}>
           <DayLabel className={classes.weeksHeaderDayLabel}>

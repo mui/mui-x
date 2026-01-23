@@ -9,7 +9,7 @@ import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClasse
 
 const DaysHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'DaysHeaderRoot',
+  slot: 'DaysHeader',
 })({
   display: 'flex',
   width: 'calc(var(--unit-count) * var(--days-cell-width))',
@@ -103,7 +103,7 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <DaysHeaderRoot className={classes.daysHeaderRoot} {...props}>
+    <DaysHeaderRoot className={classes.daysHeader} {...props}>
       {days.map((day, index) => (
         <DayHeaderCell key={day.key} className={classes.daysHeaderCell}>
           {(adapter.getDate(day.value) === 1 || index === 0) && (

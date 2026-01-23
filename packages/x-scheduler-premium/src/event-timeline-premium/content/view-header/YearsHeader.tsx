@@ -10,7 +10,7 @@ import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClasse
 
 const YearsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'YearsHeaderRoot',
+  slot: 'YearsHeader',
 })({
   display: 'grid',
   gridTemplateColumns: 'repeat(var(--unit-count), minmax(var(--years-cell-width), 1fr))',
@@ -47,7 +47,7 @@ export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <YearsHeaderRoot className={classes.yearsHeaderRoot} {...props}>
+    <YearsHeaderRoot className={classes.yearsHeader} {...props}>
       {years.map((year) => (
         <YearLabel key={year.key} className={classes.yearsHeaderYearLabel}>
           {adapter.getYear(year.value)}

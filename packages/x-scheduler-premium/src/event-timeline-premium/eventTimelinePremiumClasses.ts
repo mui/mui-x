@@ -37,7 +37,7 @@ export interface EventTimelinePremiumClasses {
   /** Styles applied to event resize handler elements. */
   eventResizeHandler: string;
   /** Styles applied to the time header root element. */
-  timeHeaderRoot: string;
+  timeHeader: string;
   /** Styles applied to time header cell elements. */
   timeHeaderCell: string;
   /** Styles applied to the time header day label element. */
@@ -49,7 +49,7 @@ export interface EventTimelinePremiumClasses {
   /** Styles applied to time header time label elements. */
   timeHeaderTimeLabel: string;
   /** Styles applied to the days header root element. */
-  daysHeaderRoot: string;
+  daysHeader: string;
   /** Styles applied to days header cell elements. */
   daysHeaderCell: string;
   /** Styles applied to days header time elements. */
@@ -63,7 +63,7 @@ export interface EventTimelinePremiumClasses {
   /** Styles applied to days header month start label elements. */
   daysHeaderMonthStartLabel: string;
   /** Styles applied to the weeks header root element. */
-  weeksHeaderRoot: string;
+  weeksHeader: string;
   /** Styles applied to weeks header cell elements. */
   weeksHeaderCell: string;
   /** Styles applied to weeks header day label elements. */
@@ -73,13 +73,13 @@ export interface EventTimelinePremiumClasses {
   /** Styles applied to weeks header day cell elements. */
   weeksHeaderDayCell: string;
   /** Styles applied to the months header root element. */
-  monthsHeaderRoot: string;
+  monthsHeader: string;
   /** Styles applied to months header year label elements. */
   monthsHeaderYearLabel: string;
   /** Styles applied to months header month label elements. */
   monthsHeaderMonthLabel: string;
   /** Styles applied to the years header root element. */
-  yearsHeaderRoot: string;
+  yearsHeader: string;
   /** Styles applied to years header year label elements. */
   yearsHeaderYearLabel: string;
 }
@@ -110,28 +110,28 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'titleCellLegendColor',
     'event',
     'eventResizeHandler',
-    'timeHeaderRoot',
+    'timeHeader',
     'timeHeaderCell',
     'timeHeaderDayLabel',
     'timeHeaderCellsRow',
     'timeHeaderTimeCell',
     'timeHeaderTimeLabel',
-    'daysHeaderRoot',
+    'daysHeader',
     'daysHeaderCell',
     'daysHeaderTime',
     'daysHeaderWeekDay',
     'daysHeaderDayNumber',
     'daysHeaderMonthStart',
     'daysHeaderMonthStartLabel',
-    'weeksHeaderRoot',
+    'weeksHeader',
     'weeksHeaderCell',
     'weeksHeaderDayLabel',
     'weeksHeaderDaysRow',
     'weeksHeaderDayCell',
-    'monthsHeaderRoot',
+    'monthsHeader',
     'monthsHeaderYearLabel',
     'monthsHeaderMonthLabel',
-    'yearsHeaderRoot',
+    'yearsHeader',
     'yearsHeaderYearLabel',
   ],
 );

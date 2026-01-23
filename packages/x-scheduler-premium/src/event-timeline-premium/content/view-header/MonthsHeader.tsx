@@ -10,7 +10,7 @@ import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClasse
 
 const MonthsHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'MonthsHeaderRoot',
+  slot: 'MonthsHeader',
 })({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(var(--months-cell-width), 1fr))',
@@ -61,7 +61,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <MonthsHeaderRoot className={classes.monthsHeaderRoot} {...props}>
+    <MonthsHeaderRoot className={classes.monthsHeader} {...props}>
       {months.map((month, index) => {
         const monthNumber = adapter.getMonth(month.value);
 

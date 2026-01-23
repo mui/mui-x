@@ -10,7 +10,7 @@ import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClasse
 
 const TimeHeaderRoot = styled('div', {
   name: 'MuiEventTimeline',
-  slot: 'TimeHeaderRoot',
+  slot: 'TimeHeader',
 })({
   display: 'flex',
   minWidth: 'calc(var(--unit-count) * var(--time-cell-width))',
@@ -86,7 +86,7 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   return (
-    <TimeHeaderRoot className={classes.timeHeaderRoot} {...props}>
+    <TimeHeaderRoot className={classes.timeHeader} {...props}>
       {days.map((day) => (
         <TimeHeaderCell key={day.key} className={classes.timeHeaderCell}>
           <DayLabel dateTime={day.key} className={classes.timeHeaderDayLabel}>
