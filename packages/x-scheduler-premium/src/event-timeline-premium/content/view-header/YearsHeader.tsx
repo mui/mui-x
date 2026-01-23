@@ -6,10 +6,11 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
+import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const YearsHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
-  slot: 'YearsHeaderRoot',
+  name: 'MuiEventTimeline',
+  slot: 'YearsHeader',
 })({
   display: 'grid',
   gridTemplateColumns: 'repeat(var(--unit-count), minmax(var(--years-cell-width), 1fr))',
@@ -18,7 +19,7 @@ const YearsHeaderRoot = styled('div', {
 });
 
 const YearLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'YearsHeaderYearLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -34,6 +35,7 @@ export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
+  const classes = useEventTimelinePremiumClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -45,9 +47,11 @@ export function YearsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <YearsHeaderRoot {...props}>
+    <YearsHeaderRoot className={classes.yearsHeader} {...props}>
       {years.map((year) => (
-        <YearLabel key={year.key}>{adapter.getYear(year.value)}</YearLabel>
+        <YearLabel key={year.key} className={classes.yearsHeaderYearLabel}>
+          {adapter.getYear(year.value)}
+        </YearLabel>
       ))}
     </YearsHeaderRoot>
   );

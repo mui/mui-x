@@ -6,17 +6,18 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { formatWeekDayMonthAndDayOfMonth, useFormatTime } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const TimeHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
-  slot: 'TimeHeaderRoot',
+  name: 'MuiEventTimeline',
+  slot: 'TimeHeader',
 })({
   display: 'flex',
   minWidth: 'calc(var(--unit-count) * var(--time-cell-width))',
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
@@ -29,7 +30,7 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('time', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -41,7 +42,7 @@ const DayLabel = styled('time', {
 }));
 
 const TimeCellsRow = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderCellsRow',
 })(({ theme }) => ({
   padding: theme.spacing(0, 1),
@@ -50,7 +51,7 @@ const TimeCellsRow = styled('div', {
 }));
 
 const TimeCell = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderTimeCell',
 })(({ theme }) => ({
   padding: theme.spacing(1, 0),
@@ -58,7 +59,7 @@ const TimeCell = styled('div', {
 }));
 
 const TimeLabel = styled('time', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TimeHeaderTimeLabel',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -69,6 +70,7 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
+  const classes = useEventTimelinePremiumClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -84,16 +86,22 @@ export function TimeHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   return (
-    <TimeHeaderRoot {...props}>
+    <TimeHeaderRoot className={classes.timeHeader} {...props}>
       {days.map((day) => (
-        <TimeHeaderCell key={day.key}>
-          <DayLabel dateTime={day.key}>
+        <TimeHeaderCell key={day.key} className={classes.timeHeaderCell}>
+          <DayLabel dateTime={day.key} className={classes.timeHeaderDayLabel}>
             {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
           </DayLabel>
-          <TimeCellsRow>
+          <TimeCellsRow className={classes.timeHeaderCellsRow}>
             {Array.from({ length: 24 }, (_, hour) => (
-              <TimeCell key={hour} style={{ '--hour': hour } as React.CSSProperties}>
-                <TimeLabel>{formatTime(adapter.setHours(template, hour))}</TimeLabel>
+              <TimeCell
+                key={hour}
+                className={classes.timeHeaderTimeCell}
+                style={{ '--hour': hour } as React.CSSProperties}
+              >
+                <TimeLabel className={classes.timeHeaderTimeLabel}>
+                  {formatTime(adapter.setHours(template, hour))}
+                </TimeLabel>
               </TimeCell>
             ))}
           </TimeCellsRow>
