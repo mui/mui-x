@@ -18,7 +18,7 @@ function MyCustomLegend() {
       <tbody>
         {items.map((v) => {
           return (
-            <tr key={v.id}>
+            <tr key={v.seriesId}>
               <td aria-hidden>
                 <div
                   style={{
