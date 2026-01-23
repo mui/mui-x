@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import {
   useExtractEventCalendarParameters,
   EventCalendarState as State,
@@ -12,6 +11,7 @@ import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/even
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { createSelectorMemoized } from '@base-ui/utils/store';
 import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
 

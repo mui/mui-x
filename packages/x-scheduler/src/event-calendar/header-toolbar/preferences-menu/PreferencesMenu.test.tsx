@@ -1,7 +1,7 @@
 import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
-import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';
 
