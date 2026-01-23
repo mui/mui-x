@@ -151,8 +151,6 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
     }
   }, [meta, value]);
 
-  React.useEffect(() => {});
-
   // Close popup (stop edit) when cell scrolls out of view
   React.useEffect(() => {
     if (!showPopup) {
@@ -279,11 +277,9 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
 
   const handleKeyDown = React.useCallback(
     (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (event.key === 'Enter') {
-        if (!event.ctrlKey && !event.metaKey) {
-          // Plain Enter: let textarea handle newline, stop propagation to prevent grid from exiting edit
-          event.stopPropagation();
-        }
+      if (event.key === 'Enter' && event.shiftKey) {
+        // Shift+Enter: let textarea handle newline, stop propagation to prevent grid from exiting edit
+        event.stopPropagation();
       }
       if (rootProps.editMode === 'cell' && event.key === 'Escape') {
         apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
