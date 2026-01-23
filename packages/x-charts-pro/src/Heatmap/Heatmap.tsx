@@ -201,6 +201,7 @@ const Heatmap = React.forwardRef(function Heatmap(
     loading,
     highlightedItem,
     onHighlightChange,
+    onItemClick,
     enableKeyboardNavigation,
     hideLegend = true,
     showToolbar = false,
@@ -276,6 +277,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       onHighlightChange={onHighlightChange}
       enableKeyboardNavigation={enableKeyboardNavigation}
       onAxisClick={onAxisClick}
+      onItemClick={onItemClick}
       plugins={HEATMAP_PLUGINS}
     >
       <ChartsWrapper {...chartsWrapperProps}>
