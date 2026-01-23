@@ -82,6 +82,15 @@ export function HeatmapWebGLPlot({
     );
     program.link();
     program.use();
+
+    const quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
+    const quadBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, quadVertices, gl.STATIC_DRAW);
+
+    const aPosition = gl.getAttribLocation(program.program, 'a_position');
+    gl.enableVertexAttribArray(aPosition);
+    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
   }, [gl]);
 
   React.useEffect(() => {
@@ -92,7 +101,7 @@ export function HeatmapWebGLPlot({
     }
 
     // Setup resolution uniform
-    const uResolution = gl.getUniformLocation(program, 'u_resolution');
+    const uResolution = gl.getUniformLocation(program.program, 'u_resolution');
     gl.uniform2f(uResolution, drawingArea.width, drawingArea.height);
   }, [gl, drawingArea.width, drawingArea.height]);
 
@@ -116,7 +125,7 @@ export function HeatmapWebGLPlot({
     program.link();
     program.use();
 
-    gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
+    gl.uniform1f(gl.getUniformLocation(program.program, 'u_borderRadius'), seriesBorderRadius);
     scheduleRender();
   }, [gl, scheduleRender, seriesBorderRadius]);
 
@@ -166,7 +175,7 @@ export function HeatmapWebGLPlot({
       }
     }
 
-    const uDimensions = gl.getUniformLocation(program, 'u_dimensions');
+    const uDimensions = gl.getUniformLocation(program.program, 'u_dimensions');
     gl.uniform2f(uDimensions, width, height);
 
     // Upload rectangle centers
@@ -174,7 +183,7 @@ export function HeatmapWebGLPlot({
     gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, centers, gl.STATIC_DRAW);
 
-    const aCenter = gl.getAttribLocation(program, 'a_center');
+    const aCenter = gl.getAttribLocation(program.program, 'a_center');
     gl.enableVertexAttribArray(aCenter);
     gl.vertexAttribPointer(aCenter, 2, gl.FLOAT, false, 0, 0);
 
@@ -186,7 +195,7 @@ export function HeatmapWebGLPlot({
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 
-    const aColor = gl.getAttribLocation(program, 'a_color');
+    const aColor = gl.getAttribLocation(program.program, 'a_color');
     gl.enableVertexAttribArray(aColor);
     gl.vertexAttribPointer(aColor, 4, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(aColor, 1);
@@ -196,7 +205,7 @@ export function HeatmapWebGLPlot({
     gl.bindBuffer(gl.ARRAY_BUFFER, saturationBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, saturations, gl.STATIC_DRAW);
 
-    const aSaturation = gl.getAttribLocation(program, 'a_saturation');
+    const aSaturation = gl.getAttribLocation(program.program, 'a_saturation');
     gl.enableVertexAttribArray(aSaturation);
     gl.vertexAttribPointer(aSaturation, 1, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(aSaturation, 1);

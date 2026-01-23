@@ -2,7 +2,7 @@
  * A small abstraction over WebGL programs.
  */
 export class WebGLProg {
-  private readonly program: WebGLProgram;
+  readonly program: WebGLProgram;
 
   constructor(public gl: WebGL2RenderingContext) {
     this.program = gl.createProgram();
@@ -12,17 +12,6 @@ export class WebGLProg {
     this.logErrors();
 
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    this.logErrors();
-
-    const quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
-
-    const quadBuffer = this.gl.createBuffer();
-    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, quadBuffer);
-    this.gl.bufferData(this.gl.ARRAY_BUFFER, quadVertices, this.gl.STATIC_DRAW);
-
-    const aPosition = this.gl.getAttribLocation(this.program, 'a_position');
-    this.gl.enableVertexAttribArray(aPosition);
-    this.gl.vertexAttribPointer(aPosition, 2, this.gl.FLOAT, false, 0, 0);
     this.logErrors();
   }
 
