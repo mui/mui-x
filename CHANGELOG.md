@@ -15,6 +15,8 @@ Release highlight ✨:
 
 ### Data Grid
 
+#### `@mui/x-data-grid-premium@8.26.1` [![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')
+
 - [DataGridPremium] Fix type import (#21033) @arminmeh
 
 ## 8.26.0
