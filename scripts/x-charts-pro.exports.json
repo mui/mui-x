@@ -395,6 +395,7 @@
   { "name": "MarkPlotProps", "kind": "Interface" },
   { "name": "MarkPlotSlotProps", "kind": "Interface" },
   { "name": "MarkPlotSlots", "kind": "Interface" },
+  { "name": "NumberValue", "kind": "TypeAlias" },
   { "name": "orangePalette", "kind": "Variable" },
   { "name": "orangePaletteDark", "kind": "Variable" },
   { "name": "orangePaletteLight", "kind": "Variable" },

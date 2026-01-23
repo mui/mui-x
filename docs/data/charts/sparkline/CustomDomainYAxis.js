@@ -42,8 +42,8 @@ export default function CustomDomainYAxis() {
   const domainLimit =
     domainLimitKey === 'function'
       ? (min, max) => ({
-          min: extend(min, 10),
-          max: extend(max, 10),
+          min: extend(+min, 10),
+          max: extend(+max, 10),
         })
       : domainLimitKey;
   return (
