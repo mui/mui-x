@@ -148,6 +148,8 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
 
   const meta = apiRef.current.unstable_getEditCellMeta(id, field);
 
+  const popupId = `${id}-${field}-longtext-edit-popup`;
+
   // Only show popup when this cell has focus
   // This fixes editMode="row" where all cells enter edit mode simultaneously
   const showPopup = hasFocus && Boolean(anchorEl);
@@ -162,6 +164,8 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
     <GridEditLongTextCellRoot
       tabIndex={cellMode === 'edit' && rootProps.editMode === 'row' ? 0 : undefined}
       ref={setAnchorEl}
+      aria-controls={showPopup ? popupId : undefined}
+      aria-expanded={showPopup}
       {...slotProps?.root}
       className={clsx(classes.root, slotProps?.root?.className)}
     >
@@ -174,6 +178,9 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
       <GridEditLongTextCellPopper
         as={rootProps.slots.basePopper}
         ownerState={rootProps}
+        id={popupId}
+        role="dialog"
+        aria-label={colDef.headerName || field}
         open={showPopup}
         target={anchorEl}
         placement="bottom-start"
@@ -207,6 +214,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
   const {
     id,
     field,
+    colDef,
     debounceMs = 200,
     onValueChange,
     valueState,
@@ -271,6 +279,7 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
       as={rootProps.slots.baseTextarea}
       ownerState={rootProps}
       ref={textareaRef}
+      aria-label={colDef.headerName || field}
       value={valueState ?? ''}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

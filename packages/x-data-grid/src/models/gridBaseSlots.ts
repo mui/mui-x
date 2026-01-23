@@ -206,6 +206,7 @@ export type PaginationProps = CommonProps & {
 };
 
 export type PopperProps = CommonProps & {
+  role?: string;
   ref?: Ref<HTMLDivElement>;
   open: boolean;
   children?: React.ReactNode;

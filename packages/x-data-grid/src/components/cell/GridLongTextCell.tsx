@@ -157,6 +157,7 @@ export interface GridLongTextCellProps extends GridRenderCellParams<any, string 
 
 function GridLongTextCell(props: GridLongTextCellProps) {
   const { id, value = '', colDef, hasFocus, slotProps, renderContent } = props;
+  const popupId = `${id}-${colDef.field}-longtext-popup`;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -215,6 +216,8 @@ function GridLongTextCell(props: GridLongTextCellProps) {
       <GridLongTextCellCornerButton
         aria-label={apiRef.current.getLocaleText('longTextCellExpandLabel')}
         aria-haspopup="dialog"
+        aria-controls={popupOpen ? popupId : undefined}
+        aria-expanded={popupOpen}
         tabIndex={-1}
         {...slotProps?.expandButton}
         className={clsx(classes.expandButton, slotProps?.expandButton?.className)}
@@ -223,6 +226,9 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         <rootProps.slots.longTextCellExpandIcon fontSize="inherit" />
       </GridLongTextCellCornerButton>
       <GridLongTextCellPopper
+        id={popupId}
+        role="dialog"
+        aria-label={colDef.headerName || colDef.field}
         as={rootProps.slots.basePopper}
         ownerState={rootProps}
         open={popupOpen}
