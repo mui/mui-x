@@ -17,7 +17,7 @@ const chartConfig: LineChartProps = {
     { data: profit, label: 'Profit', yAxisId: 'profit-axis', color: '#2e96ff' },
   ],
   height: 300,
-}
+};
 
 export default function AxisIdStyling() {
   return (
@@ -25,14 +25,14 @@ export default function AxisIdStyling() {
       sx={{
         // Style the axis with id "revenue-axis"
         [`& .${axisClasses.root}[data-axis-id="revenue-axis"] .${axisClasses.label}`]:
-        {
-          fill: '#02b2af',
-        },
+          {
+            fill: '#02b2af',
+          },
         // Style the axis with id "profit-axis"
         [`& .${axisClasses.root}[data-axis-id="profit-axis"] .${axisClasses.label}`]:
-        {
-          fill: '#2e96ff',
-        },
+          {
+            fill: '#2e96ff',
+          },
       }}
       {...chartConfig}
     />
