@@ -74,8 +74,7 @@ const GridEditLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper'
   zIndex: vars.zIndex.menu,
   background: (theme.vars || theme).palette.background.paper,
   '&[data-popper-reference-hidden]': {
-    visibility: 'hidden',
-    pointerEvents: 'none',
+    opacity: 0, // use opacity to preserve focus.
   },
 }));
 
@@ -94,6 +93,7 @@ const GridEditLongTextCellPopperContent = styled('div', {
   width: 'var(--_width)',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
   boxShadow: (theme.vars || theme).shadows[4],
+  boxSizing: 'border-box',
 }));
 
 export interface GridEditLongTextCellProps extends GridRenderEditCellParams<any, string | null> {
@@ -221,7 +221,9 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
 
   useEnhancedEffect(() => {
     if (hasFocus && textareaRef.current) {
-      textareaRef.current.focus();
+      // preventScroll: the popper is portaled into the GridRow, so focusing
+      // without it triggers the browser to scroll the grid container which is undesirable.
+      textareaRef.current.focus({ preventScroll: true });
       // Move cursor to end of text
       const length = textareaRef.current.value.length;
       textareaRef.current.setSelectionRange(length, length);
