@@ -186,3 +186,24 @@ The `type` property of `LegendItemParams` has been modified from optional to req
 
 This type is used in the return value of `useLegend()`.
 If you haven't created a custom legend, you should not be impacted by this change.
+
+## Styling
+
+### Chart class names updated
+
+The following CSS class prefixes have been renamed to include the "Chart" suffix for consistency:
+
+| Old class prefix | New class prefix   |
+| :--------------- | :----------------- |
+| `MuiScatter-`    | `MuiScatterChart-` |
+| `MuiBar-`        | `MuiBarChart-`     |
+
+If you're using these classes in your styles, update them accordingly:
+
+```diff
+-`.MuiScatter-root`
++`.MuiScatterChart-root`
+
+-`.MuiBar-root`
++`.MuiBarChart-root`
+```
