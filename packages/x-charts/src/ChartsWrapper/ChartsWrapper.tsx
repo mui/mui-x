@@ -182,7 +182,7 @@ const Root = styled('div', {
  */
 function ChartsWrapper(props: ChartsWrapperProps) {
   const { children, sx, extendVertically } = props;
-  const chartRootRef = useChartRootRef<HTMLDivElement>();
+  const chartRootRef = useChartRootRef();
 
   const store = useStore();
 

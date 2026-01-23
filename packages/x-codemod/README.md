@@ -96,7 +96,6 @@ The list includes these transformers
 
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
-- [`add-use-chart-root-ref-type-argument`](#add-use-chart-root-ref-type-argument)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -140,16 +139,6 @@ Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-
 ```diff
 -import type { ChartApi } from '@mui/x-charts/ChartContainer';
 +import type { ChartApi } from '@mui/x-charts/context';
-```
-
-#### `add-use-chart-root-ref-type-argument`
-
-The `useChartRootRef()` supports generic in v9.
-The codemod set the generic to match the v8 type definition.
-
-```diff
-- useChartRootRef()
-+ useChartRootRef<HTMLDivElement>()
 ```
 
 ## v8.0.0

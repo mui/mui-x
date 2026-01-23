@@ -6,7 +6,7 @@ import { useChartContext } from '../context/ChartProvider';
  * Get the ref for the root chart element.
  * @returns The root chart element ref.
  */
-export function useChartRootRef<T extends Element>() {
+export function useChartRootRef<T extends Element = HTMLDivElement>() {
   const context = useChartContext();
 
   return context.chartRootRef as React.RefObject<T | null>;

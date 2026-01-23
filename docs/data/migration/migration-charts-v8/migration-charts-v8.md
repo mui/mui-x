@@ -135,17 +135,6 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
-### `useChartRootRef()` get elements type as a generic ✅
-
-The signature of `useChartRootRef()` got modified as follow:
-
-```diff
-- useChartRootRef(): React.RefObject<HTMLDivElement | null>
-+ useChartRootRef<T extends Element>(): React.RefObject<T | null>
-```
-
-This allow you to either pass the root ref to a div with `useChartRootRef<HTMLDivElement>()` or an SVG with `useChartRootRef<SVGSVGElement>()`.
-
 ### Rename `useAxisTooltip` hook
 
 The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.

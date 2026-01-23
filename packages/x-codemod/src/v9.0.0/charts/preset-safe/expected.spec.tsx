@@ -14,5 +14,3 @@ import * as React from 'react';
   <Heatmap hideLegend series={[{}]} />
   <HeatmapPremium hideLegend {...otherProps} />
 </div>;
-
-useChartRootRef<HTMLDivElement>();

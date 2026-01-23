@@ -14,5 +14,3 @@ import * as React from 'react';
   <Heatmap series={[{}]} />
   <HeatmapPremium {...otherProps} />
 </div>;
-
-useChartRootRef();
