@@ -6,3 +6,4 @@ export * from './useEventResizeHandler';
 export * from './useElementPositionInCollection';
 export * from './useEvent';
 export * from './useDraggableEvent';
+export { getWeekDayCode } from './recurring-events';
