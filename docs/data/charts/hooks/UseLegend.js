@@ -16,7 +16,7 @@ function BasicUseLegendExample() {
       <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
         {items.map((item) => (
           <li
-            key={item.seriesId}
+            key={`${item.seriesId}-${item.dataIndex}`}
             style={{ display: 'flex', alignItems: 'center', gap: 8 }}
           >
             <div
