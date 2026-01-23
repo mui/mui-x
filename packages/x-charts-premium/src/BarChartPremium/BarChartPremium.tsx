@@ -126,7 +126,9 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPremium {...chartDataProviderProProps}>
+    <ChartDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
+      {...chartDataProviderProProps}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
