@@ -8,7 +8,7 @@ import type { useEventOccurrencesWithDayGridPosition } from '../../use-event-occ
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
-import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
+import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInDay(
   day: TemporalSupportedObject,

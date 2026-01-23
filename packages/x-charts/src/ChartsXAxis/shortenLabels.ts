@@ -1,18 +1,18 @@
 import { clampAngle } from '../internals/clampAngle';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
-import { type TickItemType } from '../hooks/useTicks';
+import { type TickItem } from '../hooks/useTicks';
 import { type ChartsXAxisProps } from '../models/axis';
 import { type ChartDrawingArea } from '../hooks/useDrawingArea';
 
 export function shortenLabels(
-  visibleLabels: Set<TickItemType>,
+  visibleLabels: Set<TickItem>,
   drawingArea: Pick<ChartDrawingArea, 'left' | 'width' | 'right'>,
   maxHeight: number,
   isRtl: boolean,
   tickLabelStyle: ChartsXAxisProps['tickLabelStyle'],
 ) {
-  const shortenedLabels = new Map<TickItemType, string>();
+  const shortenedLabels = new Map<TickItem, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
   // Multiplying the space available to the left of the text position by leftBoundFactor returns the max width of the text.

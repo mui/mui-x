@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { useStore } from '../../../store/useStore';
-import { selectorChartSeriesConfig } from './useChartSeries.selectors';
+import { selectorChartSeriesConfig } from '../useChartSeriesConfig';
 import { type ColorProcessor } from '../../models/seriesConfig';
 
 export type ColorProcessorsConfig<T extends ChartSeriesType> = {

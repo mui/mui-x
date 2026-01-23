@@ -25,9 +25,9 @@ export const useChartItemClick: ChartPlugin<UseChartItemClickSignature> = ({
 
     let item: SeriesItemIdentifier<ChartSeriesType> | undefined = undefined;
 
-    for (const seriesType of Object.keys(store.state.series.seriesConfig)) {
+    for (const seriesType of Object.keys(store.state.seriesConfig.config)) {
       // @ts-ignore The type inference for store.state does not support generic yet
-      item = store.state.series.seriesConfig[seriesType].getItemAtPosition?.(store.state, {
+      item = store.state.seriesConfig.config[seriesType].getItemAtPosition?.(store.state, {
         x: svgPoint.x,
         y: svgPoint.y,
       });

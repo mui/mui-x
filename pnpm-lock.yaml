@@ -569,6 +569,12 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../packages/x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-headless-premium/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../packages/x-tree-view/build
@@ -1743,9 +1749,6 @@ importers:
       '@emotion/styled':
         specifier: ^11.8.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
-      '@floating-ui/react':
-        specifier: ^0.27.16
-        version: 0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@mui/x-internals':
         specifier: workspace:*
         version: link:../x-internals/build
@@ -1836,6 +1839,112 @@ importers:
       date-fns:
         specifier: 'catalog:'
         version: 4.1.0
+      react:
+        specifier: 'catalog:'
+        version: 19.2.3
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.3(react@19.2.3)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.2
+    publishDirectory: build
+
+  packages/x-scheduler-headless-premium:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@base-ui/react':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@base-ui/utils':
+        specifier: ^0.2.3
+        version: 0.2.4(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      '@mui/x-scheduler-headless':
+        specifier: workspace:*
+        version: link:../x-scheduler-headless/build
+      prop-types:
+        specifier: 'catalog:'
+        version: 15.8.1
+    devDependencies:
+      '@date-fns/tz':
+        specifier: 'catalog:'
+        version: 1.4.1
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: 2.0.18-canary.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.16)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.16)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
+      date-fns:
+        specifier: 'catalog:'
+        version: 4.1.0
+      react:
+        specifier: 'catalog:'
+        version: 19.2.3
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.3(react@19.2.3)
+      rimraf:
+        specifier: 'catalog:'
+        version: 6.1.2
+    publishDirectory: build
+
+  packages/x-scheduler-premium:
+    dependencies:
+      '@babel/runtime':
+        specifier: 'catalog:'
+        version: 7.28.4
+      '@base-ui/react':
+        specifier: ^1.0.0
+        version: 1.0.0(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@base-ui/utils':
+        specifier: ^0.2.3
+        version: 0.2.4(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@emotion/react':
+        specifier: ^11.9.0
+        version: 11.14.0(@types/react@19.2.7)(react@19.2.3)
+      '@emotion/styled':
+        specifier: ^11.8.1
+        version: 11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
+      '@mui/x-internals':
+        specifier: workspace:*
+        version: link:../x-internals/build
+      '@mui/x-scheduler':
+        specifier: workspace:*
+        version: link:../x-scheduler/build
+      '@mui/x-scheduler-headless':
+        specifier: workspace:*
+        version: link:../x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../x-scheduler-headless-premium/build
+      clsx:
+        specifier: 'catalog:'
+        version: 2.1.1
+    devDependencies:
+      '@mui/internal-test-utils':
+        specifier: 'catalog:'
+        version: 2.0.18-canary.0(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@playwright/test@1.57.0)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/utils@4.0.16)(chai@6.2.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.1(@types/node@24.5.2)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1))(vitest@4.0.16)
+      '@mui/material':
+        specifier: 'catalog:'
+        version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@mui/system':
+        specifier: 'catalog:'
+        version: 7.3.7(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3))(@types/react@19.2.7)(react@19.2.3)
+      '@types/prop-types':
+        specifier: 'catalog:'
+        version: 15.7.15
+      '@types/use-sync-external-store':
+        specifier: 'catalog:'
+        version: 1.5.0
       react:
         specifier: 'catalog:'
         version: 19.2.3
@@ -2091,6 +2200,12 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../packages/x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-headless-premium/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:*
+        version: link:../packages/x-scheduler-premium/build
       '@react-spring/web':
         specifier: 'catalog:'
         version: 10.0.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2349,6 +2464,12 @@ importers:
       '@mui/x-scheduler-headless':
         specifier: workspace:*
         version: link:../../packages/x-scheduler-headless/build
+      '@mui/x-scheduler-headless-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-scheduler-headless-premium/build
+      '@mui/x-scheduler-premium':
+        specifier: workspace:*
+        version: link:../../packages/x-scheduler-premium/build
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../../packages/x-tree-view/build

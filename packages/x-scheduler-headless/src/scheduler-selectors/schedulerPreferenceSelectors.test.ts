@@ -1,7 +1,7 @@
 import { adapter } from 'test/utils/scheduler';
 import { schedulerPreferenceSelectors } from './schedulerPreferenceSelectors';
-import { storeClasses } from '../utils/SchedulerStore/tests/utils';
-import { DEFAULT_SCHEDULER_PREFERENCES } from '../utils/SchedulerStore';
+import { storeClasses } from '../internals/utils/SchedulerStore/tests/utils';
+import { DEFAULT_SCHEDULER_PREFERENCES } from '../internals/utils/SchedulerStore';
 
 storeClasses.forEach((storeClass) => {
   describe('schedulerPreferenceSelectors', () => {
