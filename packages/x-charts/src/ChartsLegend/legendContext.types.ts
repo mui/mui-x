@@ -16,15 +16,9 @@ interface LegendItemContextBase {
 
 export interface LegendItemParams
   extends
-    Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
-    Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
-    LegendItemContextBase {
-  /**
-   * The identifier of the legend element.
-   * Used for internal purpose such as `key` props
-   * @deprecated use `seriesId` and `dataIndex` instead
-   */
-  id: number | string;
+  Partial<Omit<SeriesLegendItemContext, 'type' | keyof LegendItemContextBase>>,
+  Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
+  LegendItemContextBase {
   /**
    * The type of the series
    */
