@@ -5,7 +5,7 @@ import { selectorChartsTooltipItem } from '../internals/plugins/featurePlugins/u
 import { useStore } from '../internals/store/useStore';
 import { useRotationAxes, useXAxes, useYAxes } from '../hooks/useAxis';
 import { useZAxes } from '../hooks/useZAxis';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import {
   type ItemTooltip,
   type ItemTooltipWithMultipleValues,

@@ -29,6 +29,7 @@ export * from './plugins/corePlugins/useChartId';
 export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/corePlugins/useChartInteractionListener';
+export * from './plugins/corePlugins/useChartSeriesConfig';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
@@ -76,6 +77,7 @@ export * from './commonNextFocusItem';
 export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export * from './plugins/utils/defaultSeriesConfig';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';

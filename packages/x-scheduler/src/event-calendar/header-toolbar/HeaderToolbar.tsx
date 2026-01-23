@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
@@ -66,7 +65,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       <HeaderToolbarActions>
         <HeaderToolbarPrimaryActionWrapper>
           {showViewSwitcher && (
-            <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
+            <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
           )}
           <Button variant="outlined" onClick={store.goToToday}>
             {translations.today}
