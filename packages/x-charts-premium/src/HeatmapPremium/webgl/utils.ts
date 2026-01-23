@@ -1,57 +1,39 @@
-/**
- * Initializes a WebGL program with given vertex and fragment shader sources.
- */
-export function initializeWebGLProgram(
+export function compileShader(
   gl: WebGL2RenderingContext,
-  vertexShaderSource: string,
-  fragmentShaderSource: string,
+  shaderSource: string,
+  shaderType: WebGL2RenderingContext['FRAGMENT_SHADER'] | WebGL2RenderingContext['VERTEX_SHADER'],
 ) {
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER)!;
-  gl.shaderSource(vertexShader, vertexShaderSource);
-  gl.compileShader(vertexShader);
+  const shader = gl.createShader(shaderType)!;
+  gl.shaderSource(shader, shaderSource);
+  gl.compileShader(shader);
 
-  if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-    console.error('Shader compilation error:', gl.getShaderInfoLog(vertexShader));
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
   }
 
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)!;
-  gl.shaderSource(fragmentShader, fragmentShaderSource);
-  gl.compileShader(fragmentShader);
+  return shader;
+}
 
-  if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-    console.error('Shader compilation error:', gl.getShaderInfoLog(fragmentShader));
-  }
-
-  const program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error('Program linking error:', gl.getProgramInfoLog(program));
-  }
-
-  gl.useProgram(program);
-
-  if (gl.getError()) {
-    console.error('WebGL error during program setup');
-  }
-
+export function uploadQuadBuffer(gl: WebGL2RenderingContext) {
   const quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]);
 
-  const quadBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
   gl.bufferData(gl.ARRAY_BUFFER, quadVertices, gl.STATIC_DRAW);
+
+  return buffer;
+}
+
+export function bindQuadBuffer(
+  gl: WebGL2RenderingContext,
+  program: WebGLProgram,
+  quadBuffer: WebGLBuffer,
+) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
 
   const aPosition = gl.getAttribLocation(program, 'a_position');
   gl.enableVertexAttribArray(aPosition);
   gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-
-  // Enable blending for transparency
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-  return program;
 }
 
 export function attachShader(
@@ -69,11 +51,6 @@ export function attachShader(
   }
 
   gl.attachShader(program, shader);
-  gl.linkProgram(program);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    console.error('Program linking error:', gl.getProgramInfoLog(program));
-  }
 }
 
 export function logWebGLErrors(gl: WebGL2RenderingContext) {

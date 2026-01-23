@@ -15,13 +15,31 @@ import {
   heatmapVertexShaderSource,
 } from './shaders';
 import { useWebGLResizeObserver } from './useWebGLResizeObserver';
-import { attachShader, initializeWebGLProgram } from './utils';
+import {
+  attachShader,
+  bindQuadBuffer,
+  compileShader,
+  logWebGLErrors,
+  uploadQuadBuffer,
+} from './utils';
 
 export function HeatmapWebGLPlot({
   borderRadius,
 }: {
   borderRadius?: number;
 }): React.JSX.Element | null {
+  const gl = useWebGLContext();
+
+  if (!gl) {
+    return null;
+  }
+
+  return <HeatmapWebGLPlotImpl gl={gl} borderRadius={borderRadius ?? 0} />;
+}
+
+function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius: number }) {
+  const { gl, borderRadius } = props;
+
   const drawingArea = useDrawingArea();
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
@@ -31,18 +49,21 @@ export function HeatmapWebGLPlot({
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
   const isFaded = store.use(selectorChartsIsFadedCallback);
 
-  const gl = useWebGLContext();
-  const programRef = React.useRef<WebGLProgram | null>(null);
+  const [vertexShader] = React.useState<WebGLShader>(() =>
+    compileShader(gl, heatmapVertexShaderSource, gl.VERTEX_SHADER),
+  );
+  const [program] = React.useState<WebGLProgram>(() => {
+    const p = gl.createProgram();
+    gl.attachShader(p, vertexShader);
+    return p;
+  });
+  const [quadBuffer] = React.useState(() => uploadQuadBuffer(gl));
   const dataLengthRef = React.useRef<number>(0);
   const seriesToDisplay = series?.series[series.seriesOrder[0]];
   const renderScheduledRef = React.useRef<boolean>(false);
 
   const render = React.useCallback(() => {
     renderScheduledRef.current = false;
-
-    if (!gl) {
-      return;
-    }
 
     // Clear and draw
     gl.clearColor(0, 0, 0, 0.0);
@@ -61,70 +82,66 @@ export function HeatmapWebGLPlot({
   // On resize render directly to avoid a frame where the canvas is blank
   useWebGLResizeObserver(render);
 
-  const width = xScale.bandwidth();
-  const height = yScale.bandwidth();
-  const seriesBorderRadius = Math.min(borderRadius ?? 0, width / 2, height / 2);
-  const lastFragmentShaderRef = React.useRef<'no-border-radius' | 'border-radius'>(
-    seriesBorderRadius > 0 ? 'border-radius' : 'no-border-radius',
-  );
   React.useEffect(() => {
-    if (!gl) {
-      return;
-    }
-
-    programRef.current = initializeWebGLProgram(
-      gl,
-      heatmapVertexShaderSource,
-      // The border radius shader looks odd when border radius is 0, so we use the shader without border radius in that case
-      lastFragmentShaderRef.current === 'border-radius'
-        ? heatmapFragmentShaderSourceWithBorderRadius
-        : heatmapFragmentShaderSourceNoBorderRadius,
-    );
+    /* Enable blending for transparency
+     * These are global to the WebGL context and need to be set only once */
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
   }, [gl]);
 
-  React.useEffect(() => {
-    const program = programRef.current;
+  const width = xScale.bandwidth();
+  const height = yScale.bandwidth();
 
-    if (!gl || !program) {
-      return;
-    }
-
-    // Setup resolution uniform
-    const uResolution = gl.getUniformLocation(program, 'u_resolution');
-    gl.uniform2f(uResolution, drawingArea.width, drawingArea.height);
-  }, [gl, drawingArea.width, drawingArea.height]);
+  // A border radius cannot be larger than half the width or height of the rectangle
+  const seriesBorderRadius = Math.min(borderRadius ?? 0, width / 2, height / 2);
+  const lastSeriesBorderRadiusRef = React.useRef<number>(seriesBorderRadius > 0 ? 0 : 1);
 
   React.useEffect(() => {
-    const program = programRef.current;
+    const shouldAttachNewShader = lastSeriesBorderRadiusRef.current > 0 !== seriesBorderRadius > 0;
+    lastSeriesBorderRadiusRef.current = seriesBorderRadius;
 
-    if (!gl || !program) {
-      return;
-    }
+    if (shouldAttachNewShader) {
+      const shaderSource =
+        seriesBorderRadius > 0
+          ? heatmapFragmentShaderSourceWithBorderRadius
+          : heatmapFragmentShaderSourceNoBorderRadius;
 
-    if (lastFragmentShaderRef.current === 'no-border-radius' && seriesBorderRadius > 0) {
-      attachShader(gl, program, heatmapFragmentShaderSourceWithBorderRadius, gl.FRAGMENT_SHADER);
-      lastFragmentShaderRef.current = 'border-radius';
+      gl.getAttachedShaders(program)?.forEach((shader) => {
+        if (shader === vertexShader) {
+          return;
+        }
+        gl.detachShader(program, shader);
+        gl.deleteShader(shader);
+      });
 
-      // Need to use the program again after attaching a new shader
+      attachShader(gl, program, shaderSource, gl.FRAGMENT_SHADER);
+
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Program linking error:', gl.getProgramInfoLog(program));
+      }
+
+      // Not a hook
       // eslint-disable-next-line react-compiler/react-compiler
       gl.useProgram(program);
-    } else if (lastFragmentShaderRef.current === 'border-radius' && !seriesBorderRadius) {
-      attachShader(gl, program, heatmapFragmentShaderSourceNoBorderRadius, gl.FRAGMENT_SHADER);
-      lastFragmentShaderRef.current = 'no-border-radius';
-
-      // Need to use the program again after attaching a new shader
-      // eslint-disable-next-line react-compiler/react-compiler
-      gl.useProgram(program);
+      logWebGLErrors(gl);
     }
+
+    bindQuadBuffer(gl, program, quadBuffer);
 
     gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
     scheduleRender();
-  }, [gl, scheduleRender, seriesBorderRadius]);
+  }, [gl, program, quadBuffer, scheduleRender, seriesBorderRadius, vertexShader]);
 
   React.useEffect(() => {
-    const program = programRef.current;
+    // Setup resolution uniform
+    const uResolution = gl.getUniformLocation(program, 'u_resolution');
+    gl.uniform2f(uResolution, drawingArea.width, drawingArea.height);
+  }, [gl, drawingArea.width, drawingArea.height, program, seriesBorderRadius]);
 
-    if (!gl || !program || !seriesToDisplay) {
+  React.useEffect(() => {
+    if (!seriesToDisplay) {
       dataLengthRef.current = 0;
       return;
     }
@@ -209,11 +226,14 @@ export function HeatmapWebGLPlot({
     height,
     isFaded,
     isHighlighted,
+    program,
     scheduleRender,
     seriesToDisplay,
     width,
     xScale,
     yScale,
+    /* This must re-render when seriesBorderRadius changes so the correct buffers are bound and uploaded */
+    seriesBorderRadius,
   ]);
 
   React.useEffect(() => {
