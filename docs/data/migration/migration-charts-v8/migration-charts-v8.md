@@ -233,7 +233,7 @@ If you're using the `sx` prop or `styled()`:
 
 ## Components
 
-### `ChartsSurface` renamed to `ChartsSvgSurface`
+### ✅ `ChartsSurface` renamed to `ChartsSvgSurface`
 
 The `ChartsSurface` component has been renamed to `ChartsSvgSurface` to make it clearer that it renders an SVG element.
 This is especially important when using composition, as it helps distinguish the SVG container from other surface types.
@@ -261,4 +261,10 @@ And the classes object:
 ```diff
 -import { chartsSurfaceClasses } from '@mui/x-charts/ChartsSurface';
 +import { chartsSvgSurfaceClasses } from '@mui/x-charts/ChartsSvgSurface';
+```
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-charts-surface <path|folder>
 ```

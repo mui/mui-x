@@ -94,6 +94,7 @@ The list includes these transformers
 
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
+- [`rename-charts-surface`](#rename-charts-surface)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -137,6 +138,23 @@ Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-
 ```diff
 -import type { ChartApi } from '@mui/x-charts/ChartContainer';
 +import type { ChartApi } from '@mui/x-charts/context';
+```
+
+### `rename-charts-surface`
+
+Renames the `ChartsSurface` component to `ChartsSvgSurface` to make it clearer that it renders an SVG element.
+
+```diff
+-import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
+-import { chartsSurfaceClasses, ChartsSurfaceClasses } from '@mui/x-charts/ChartsSurface';
++import { ChartsSvgSurface, ChartsSvgSurfaceProps } from '@mui/x-charts/ChartsSvgSurface';
++import { chartsSvgSurfaceClasses, ChartsSvgSurfaceClasses } from '@mui/x-charts/ChartsSvgSurface';
+```
+
+<!-- #npm-tag-reference -->
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-charts-surface <path|folder>
 ```
 
 ## v8.0.0
