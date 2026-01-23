@@ -23,7 +23,7 @@ function getDevicePixelContentBoxSize(entry: ResizeObserverEntry) {
  * These last two conditions aren't supported by Safari, so `onResize` won't be called in these cases on Safari.
  * @param onResize
  */
-export function useRerenderWebGLCanvasOnResize(onResize: () => void) {
+export function useWebGLResizeObserver(onResize: () => void) {
   const gl = useWebGLContext();
 
   React.useEffect(() => {

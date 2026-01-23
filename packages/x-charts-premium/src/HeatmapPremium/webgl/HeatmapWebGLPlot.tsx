@@ -14,7 +14,7 @@ import {
   heatmapFragmentShaderSourceWithBorderRadius,
   heatmapVertexShaderSource,
 } from './shaders';
-import { useRerenderWebGLCanvasOnResize } from './useRerenderWebGLCanvasOnResize';
+import { useWebGLResizeObserver } from './useWebGLResizeObserver';
 import { WebGLProg } from './WebGLProg';
 
 export function HeatmapWebGLPlot({
@@ -59,7 +59,7 @@ export function HeatmapWebGLPlot({
   }, []);
 
   // On resize render directly to avoid a frame where the canvas is blank
-  useRerenderWebGLCanvasOnResize(render);
+  useWebGLResizeObserver(render);
 
   const seriesBorderRadius = borderRadius ?? 0;
   const lastFragmentShaderRef = React.useRef<'no-border-radius' | 'border-radius'>(
