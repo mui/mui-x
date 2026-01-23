@@ -73,6 +73,13 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Change `seriesId` type to `string`
+
+The `seriesId` property accepted `number | string`.
+In v9, only `string` is accepted.
+
+This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.

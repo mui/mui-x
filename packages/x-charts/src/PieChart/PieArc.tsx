@@ -9,7 +9,7 @@ import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { type PieItemId } from '../models';
+import { type SeriesId } from '../models';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -30,7 +30,7 @@ export interface PieArcClasses {
 export type PieArcClassKey = keyof PieArcClasses;
 
 interface PieArcOwnerState {
-  id: PieItemId;
+  id: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -179,7 +179,7 @@ PieArc.propTypes = {
   cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
   endAngle: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  id: PropTypes.string.isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isFocused: PropTypes.bool.isRequired,
