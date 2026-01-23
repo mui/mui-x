@@ -17,7 +17,6 @@ const legendGetter: LegendGetter<'funnel'> = (params) => {
         type: 'funnel',
         markType: item.labelMarkType ?? series[seriesId].labelMarkType,
         seriesId,
-        id,
         itemId: id,
         dataIndex,
         color: item.color,

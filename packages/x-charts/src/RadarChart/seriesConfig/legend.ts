@@ -13,7 +13,6 @@ const legendGetter: LegendGetter<'radar'> = (params) => {
 
     acc.push({
       type: 'radar',
-      id: seriesId,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,
