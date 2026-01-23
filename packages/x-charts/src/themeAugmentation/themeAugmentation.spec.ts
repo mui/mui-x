@@ -64,22 +64,22 @@ createTheme({
         constent: { color: 'red' },
       },
     },
-    MuiChartsSurface: {
+    MuiChartsSvgSurface: {
       defaultProps: {
         title: 'title',
-        // @ts-expect-error invalid MuiChartsSurface prop
+        // @ts-expect-error invalid MuiChartsSvgSurface prop
         someRandomProp: true,
       },
       styleOverrides: {
         root: { backgroundColor: 'red' },
-        // @ts-expect-error invalid MuiChartsSurface class key
+        // @ts-expect-error invalid MuiChartsSvgSurface class key
         constent: { color: 'red' },
       },
     },
     MuiChartDataProvider: {
       defaultProps: {
         experimentalFeatures: { preferStrictDomainInLineCharts: true },
-        // @ts-expect-error invalid MuiChartsSurface prop
+        // @ts-expect-error invalid MuiChartsSvgSurface prop
         someRandomProp: true,
       },
     },

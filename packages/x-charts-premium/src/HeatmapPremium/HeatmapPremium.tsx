@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import {
   FocusedHeatmapCell,
   HeatmapPlot,
@@ -50,7 +50,7 @@ export const HeatmapPremium = React.forwardRef(function HeatmapPremium(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
+        <ChartsSvgSurface ref={ref} sx={sx}>
           <g {...clipPathGroupProps}>
             <HeatmapPlot {...heatmapPlotProps} />
             <FocusedHeatmapCell />
@@ -60,7 +60,7 @@ export const HeatmapPremium = React.forwardRef(function HeatmapPremium(
           <ChartsClipPath {...clipPathProps} />
           <ChartsBrushOverlay />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>

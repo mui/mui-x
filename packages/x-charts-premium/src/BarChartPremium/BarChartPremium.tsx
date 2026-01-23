@@ -11,7 +11,7 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { BarPlot, type BarSeries } from '@mui/x-charts/BarChart';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -132,7 +132,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
@@ -145,7 +145,7 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
           <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>

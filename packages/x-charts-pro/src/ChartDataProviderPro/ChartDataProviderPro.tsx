@@ -65,10 +65,10 @@ export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line
  *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
  *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
  * >
- *   <ChartsSurface>
+ *   <ChartsSvgSurface>
  *      <BarPlot />
  *      <ChartsXAxis axisId="x-axis" />
- *   </ChartsSurface>
+ *   </ChartsSvgSurface>
  *   {'Custom Legend Component'}
  * </ChartDataProviderPro>
  * ```

@@ -5,7 +5,7 @@ import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import * as React from 'react';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import {
   type PieChartProps,
   type PieChartSlotProps,
@@ -115,11 +115,11 @@ const PieChartPro = React.forwardRef<SVGSVGElement, PieChartProProps>(
               slotProps={slotProps}
             />
           )}
-          <ChartsSurface {...chartsSurfaceProps}>
+          <ChartsSvgSurface {...chartsSurfaceProps}>
             <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
             <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
             {children}
-          </ChartsSurface>
+          </ChartsSvgSurface>
           {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
         </ChartsWrapper>
       </ChartDataProviderPro>

@@ -20,7 +20,7 @@ export interface ChartsComponentNameToClassKey {
   MuiChartsGrid: ChartsGridClassKey;
   MuiChartsTooltip: ChartsTooltipClassKey;
 
-  MuiChartsSurface: 'root';
+  MuiChartsSvgSurface: 'root';
 
   // BarChart components
   MuiBarElement: BarElementClassKey;

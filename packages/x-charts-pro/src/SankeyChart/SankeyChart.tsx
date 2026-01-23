@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import type { MakeOptional } from '@mui/x-internals/types';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
@@ -68,13 +68,13 @@ const SankeyChart = React.forwardRef(function SankeyChart(
   return (
     <SankeyDataProvider series={series as SankeySeriesType[]} {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <SankeyPlot {...sankeyPlotProps} />
           <ChartsOverlay {...overlayProps} />
           <FocusedSankeyNode />
           <FocusedSankeyLink />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
     </SankeyDataProvider>

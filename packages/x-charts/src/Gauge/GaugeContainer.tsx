@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsSvgSurface, type ChartsSvgSurfaceProps } from '../ChartsSvgSurface';
 import { GaugeProvider, type GaugeProviderProps } from './GaugeProvider';
 import { ChartProvider } from '../context/ChartProvider';
 import { type MergeSignaturesProperty } from '../internals/plugins/models';
@@ -11,7 +11,7 @@ import { defaultizeMargin } from '../internals/defaultizeMargin';
 
 export interface GaugeContainerProps
   extends
-    Omit<ChartsSurfaceProps, 'children'>,
+    Omit<ChartsSvgSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
       'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures' | 'seriesConfig'
@@ -76,7 +76,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
         cx={cx}
         cy={cy}
       >
-        <ChartsSurface
+        <ChartsSvgSurface
           title={title}
           desc={desc}
           role="meter"
@@ -87,7 +87,7 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
           ref={ref}
         >
           <GStyled aria-hidden="true">{children}</GStyled>
-        </ChartsSurface>
+        </ChartsSvgSurface>
       </GaugeProvider>
     </ChartProvider>
   );

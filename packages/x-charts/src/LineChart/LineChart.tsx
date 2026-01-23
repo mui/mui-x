@@ -49,7 +49,7 @@ import {
 import { useLineChartProps } from './useLineChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartsSvgSurface } from '../ChartsSvgSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { LineChartPluginSignatures } from './LineChart.plugins';
 import type { ChartsToolbarSlots, ChartsToolbarSlotProps } from '../Toolbar';
@@ -187,7 +187,7 @@ const LineChart = React.forwardRef(function LineChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <AreaPlot {...areaPlotProps} />
@@ -204,7 +204,7 @@ const LineChart = React.forwardRef(function LineChart(
           <LineHighlightPlot {...lineHighlightPlotProps} />
           <ChartsClipPath {...clipPathProps} />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>

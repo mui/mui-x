@@ -11,7 +11,7 @@ import {
   type ChartsOverlaySlots,
 } from '../ChartsOverlay/ChartsOverlay';
 import { useRadarChartProps } from './useRadarChartProps';
-import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { ChartsSvgSurface, type ChartsSvgSurfaceProps } from '../ChartsSvgSurface';
 import { ChartsWrapper, type ChartsWrapperProps } from '../ChartsWrapper';
 import { RadarGrid, type RadarGridProps } from './RadarGrid';
 import {
@@ -53,7 +53,7 @@ export interface RadarChartProps
     Omit<Partial<RadarAxisHighlightProps>, 'classes'>,
     Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
     Pick<ChartsWrapperProps, 'sx'>,
-    Omit<ChartsSurfaceProps, 'sx'>,
+    Omit<ChartsSvgSurfaceProps, 'sx'>,
     Pick<RadarSeriesPlotProps, 'onAreaClick' | 'onMarkClick'> {
   /**
    * If `true`, the legend is not rendered.
@@ -111,7 +111,7 @@ const RadarChart = React.forwardRef(function RadarChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        <ChartsSvgSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea {...radarSeriesAreaProps} />
@@ -120,7 +120,7 @@ const RadarChart = React.forwardRef(function RadarChart(
           <FocusedRadarMark />
           <ChartsOverlay {...overlayProps} />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </RadarDataProvider>

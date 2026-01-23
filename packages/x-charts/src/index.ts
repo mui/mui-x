@@ -23,7 +23,7 @@ export * from './ScatterChart';
 export * from './SparkLineChart';
 export * from './Gauge';
 export * from './RadarChart';
-export * from './ChartsSurface';
+export * from './ChartsSvgSurface';
 export { ChartContainer } from './ChartContainer';
 export type {
   ChartContainerProps,

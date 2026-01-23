@@ -2,13 +2,13 @@ import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import composeClasses from '@mui/utils/composeClasses';
 
-export interface ChartsSurfaceClasses {
+export interface ChartsSvgSurfaceClasses {
   /** Styles applied to the root element. */
   root: string;
 }
 
 function getSurfaceUtilityClass(slot: string) {
-  return generateUtilityClass('MuiChartsSurface', slot);
+  return generateUtilityClass('MuiChartsSvgSurface', slot);
 }
 
 export const useUtilityClasses = () => {
@@ -17,7 +17,7 @@ export const useUtilityClasses = () => {
   return composeClasses(slots, getSurfaceUtilityClass);
 };
 
-export const chartsSurfaceClasses: ChartsSurfaceClasses = generateUtilityClasses(
-  'MuiChartsSurface',
+export const chartsSvgSurfaceClasses: ChartsSvgSurfaceClasses = generateUtilityClasses(
+  'MuiChartsSvgSurface',
   ['root'],
 );

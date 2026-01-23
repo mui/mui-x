@@ -22,7 +22,7 @@ import {
   type ChartsOverlaySlotProps,
   type ChartsOverlaySlots,
 } from '../ChartsOverlay';
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartsSvgSurface } from '../ChartsSvgSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
@@ -163,12 +163,12 @@ const PieChart = React.forwardRef(function PieChart(
             slotProps={slotProps}
           />
         )}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
           <FocusedPieArc />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!loading && <Tooltip trigger="item" {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>
