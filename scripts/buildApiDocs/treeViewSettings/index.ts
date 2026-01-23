@@ -67,7 +67,11 @@ export default treeViewApiPages;
   getApiPages: () => findApiPages('docs/pages/x/api/tree-view'),
   getComponentInfo,
   translationLanguages: LANGUAGES,
-  skipComponent() {
+  skipComponent(filename) {
+    if (filename.includes('/components/')) {
+      return true;
+    }
+
     return false;
   },
   skipAnnotatingComponentDefinition: true,

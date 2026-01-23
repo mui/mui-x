@@ -5,17 +5,18 @@ import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const DaysHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
-  slot: 'DaysHeaderRoot',
+  name: 'MuiEventTimeline',
+  slot: 'DaysHeader',
 })({
   display: 'flex',
   width: 'calc(var(--unit-count) * var(--days-cell-width))',
 });
 
 const DayHeaderCell = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderCell',
 })(({ theme }) => ({
   width: 'var(--days-cell-width)',
@@ -32,7 +33,7 @@ const DayHeaderCell = styled('div', {
 }));
 
 const DayHeaderTime = styled('time', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderTime',
 })({
   display: 'flex',
@@ -41,7 +42,7 @@ const DayHeaderTime = styled('time', {
 });
 
 const WeekDay = styled('span', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderWeekDay',
 })(({ theme }) => ({
   margin: 0,
@@ -53,7 +54,7 @@ const WeekDay = styled('span', {
 }));
 
 const DayNumber = styled('span', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderDayNumber',
 })(({ theme }) => ({
   margin: 0,
@@ -63,7 +64,7 @@ const DayNumber = styled('span', {
 }));
 
 const MonthStart = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderMonthStart',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
@@ -80,7 +81,7 @@ const MonthStart = styled('div', {
 }));
 
 const MonthStartLabel = styled('p', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderMonthStartLabel',
 })({
   transform: 'rotate(-90deg)',
@@ -90,6 +91,7 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
+  const classes = useEventTimelinePremiumClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -101,19 +103,27 @@ export function DaysHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <DaysHeaderRoot {...props}>
+    <DaysHeaderRoot className={classes.daysHeader} {...props}>
       {days.map((day, index) => (
-        <DayHeaderCell key={day.key}>
+        <DayHeaderCell key={day.key} className={classes.daysHeaderCell}>
           {(adapter.getDate(day.value) === 1 || index === 0) && (
-            <MonthStart>
-              <MonthStartLabel>{adapter.format(day.value, 'month3Letters')}</MonthStartLabel>
+            <MonthStart className={classes.daysHeaderMonthStart}>
+              <MonthStartLabel className={classes.daysHeaderMonthStartLabel}>
+                {adapter.format(day.value, 'month3Letters')}
+              </MonthStartLabel>
             </MonthStart>
           )}
-          <DayHeaderTime dateTime={day.key}>
-            <WeekDay data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
+          <DayHeaderTime dateTime={day.key} className={classes.daysHeaderTime}>
+            <WeekDay
+              className={classes.daysHeaderWeekDay}
+              data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+            >
               {adapter.format(day.value, 'weekday1Letter')}
             </WeekDay>
-            <DayNumber data-weekend={isWeekend(adapter, day.value) ? '' : undefined}>
+            <DayNumber
+              className={classes.daysHeaderDayNumber}
+              data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
+            >
               {adapter.format(day.value, 'dayOfMonth')}
             </DayNumber>
           </DayHeaderTime>

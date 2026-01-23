@@ -6,10 +6,11 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-schedule
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
+import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const MonthsHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
-  slot: 'MonthsHeaderRoot',
+  name: 'MuiEventTimeline',
+  slot: 'MonthsHeader',
 })({
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(var(--months-cell-width), 1fr))',
@@ -18,7 +19,7 @@ const MonthsHeaderRoot = styled('div', {
 });
 
 const YearLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'MonthsHeaderYearLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -33,7 +34,7 @@ const YearLabel = styled('div', {
 }));
 
 const MonthLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'MonthsHeaderMonthLabel',
 })(({ theme }) => ({
   gridRow: 2,
@@ -48,6 +49,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
+  const classes = useEventTimelinePremiumClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -59,7 +61,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   );
 
   return (
-    <MonthsHeaderRoot {...props}>
+    <MonthsHeaderRoot className={classes.monthsHeader} {...props}>
       {months.map((month, index) => {
         const monthNumber = adapter.getMonth(month.value);
 
@@ -67,6 +69,7 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
           <React.Fragment key={month.key}>
             {(monthNumber === 0 || index === 0) && (
               <YearLabel
+                className={classes.monthsHeaderYearLabel}
                 style={
                   {
                     gridColumn: `${index + 1} / span ${Math.min(12, months.length - index - 1) - monthNumber + 1}`,
@@ -76,7 +79,9 @@ export function MonthsHeader(props: React.HTMLAttributes<HTMLDivElement>) {
                 {adapter.getYear(month.value)}
               </YearLabel>
             )}
-            <MonthLabel>{adapter.format(month.value, 'month3Letters')}</MonthLabel>
+            <MonthLabel className={classes.monthsHeaderMonthLabel}>
+              {adapter.format(month.value, 'month3Letters')}
+            </MonthLabel>
           </React.Fragment>
         );
       })}

@@ -530,6 +530,115 @@ describeTreeView<TreeViewAnyStore>(
       });
     });
 
+    describe('itemHeight prop', () => {
+      it('should not set --TreeView-itemHeight CSS variable when itemHeight is not defined', () => {
+        const view = render({
+          items: [{ id: '1' }],
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('');
+      });
+
+      it('should set --TreeView-itemHeight CSS variable when itemHeight is defined', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          itemHeight: 24,
+        });
+
+        const itemRoot = view.getItemRoot('1');
+        expect(itemRoot.style.getPropertyValue('--TreeView-itemHeight')).to.equal('24px');
+      });
+
+      it('should apply itemHeight to all items including nested ones', () => {
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          defaultExpandedItems: ['1'],
+          itemHeight: 32,
+        });
+
+        expect(view.getItemRoot('1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '32px',
+        );
+        expect(view.getItemRoot('1.1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '32px',
+        );
+      });
+
+      it('should update --TreeView-itemHeight CSS variable when itemHeight prop changes', () => {
+        const view = render({
+          items: [{ id: '1' }],
+          itemHeight: 24,
+        });
+
+        expect(view.getItemRoot('1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '24px',
+        );
+
+        view.setProps({ itemHeight: 48 });
+
+        expect(view.getItemRoot('1').style.getPropertyValue('--TreeView-itemHeight')).to.equal(
+          '48px',
+        );
+      });
+    });
+
+    describe('domStructure prop', () => {
+      it.skipIf(!isRichTreeView)(
+        'should use nested DOM structure by default (children inside parent)',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+          });
+
+          const parentRoot = view.getItemRoot('1');
+          const childRoot = view.getItemRoot('1.1');
+
+          // In nested DOM structure, the child is a descendant of the parent
+          expect(parentRoot.contains(childRoot)).to.equal(true);
+        },
+      );
+
+      it.skipIf(!isRichTreeView)(
+        'should use flat DOM structure when domStructure="flat" (children as siblings)',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1' }] }],
+            defaultExpandedItems: ['1'],
+            domStructure: 'flat',
+          });
+
+          const parentRoot = view.getItemRoot('1');
+          const childRoot = view.getItemRoot('1.1');
+
+          // In flat DOM structure, the child is NOT a descendant of the parent
+          expect(parentRoot.contains(childRoot)).to.equal(false);
+          // Both items should be siblings (same parent)
+          expect(parentRoot.parentElement).to.equal(childRoot.parentElement);
+        },
+      );
+
+      it.skipIf(!isRichTreeView)(
+        'should render deeply nested items correctly with flat DOM structure',
+        () => {
+          const view = render({
+            items: [{ id: '1', children: [{ id: '1.1', children: [{ id: '1.1.1' }] }] }],
+            defaultExpandedItems: ['1', '1.1'],
+            domStructure: 'flat',
+          });
+
+          const item1 = view.getItemRoot('1');
+          const item11 = view.getItemRoot('1.1');
+          const item111 = view.getItemRoot('1.1.1');
+
+          // All items should be siblings in flat structure
+          expect(item1.parentElement).to.equal(item11.parentElement);
+          expect(item11.parentElement).to.equal(item111.parentElement);
+        },
+      );
+    });
+
     describe('lazy loading (dataSource)', () => {
       it.skipIf(treeViewComponentName !== 'RichTreeViewPro')(
         'should not reset focus after lazy loading children when checkboxSelection is enabled',

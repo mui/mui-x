@@ -39,10 +39,12 @@ export function useExtractRichTreeViewParameters<
     onSelectedItemsChange,
     onItemSelectionToggle,
     onItemFocus,
+    itemHeight,
 
     // RichTreeViewStore parameters
     onItemLabelChange,
     isItemEditable,
+    domStructure,
 
     // Forwarded props
     ...forwardedProps
@@ -75,10 +77,12 @@ export function useExtractRichTreeViewParameters<
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // RichTreeViewStore parameters
       onItemLabelChange,
       isItemEditable,
+      domStructure,
     }),
     [
       // Shared parameters
@@ -106,10 +110,12 @@ export function useExtractRichTreeViewParameters<
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // RichTreeViewStore parameters
       onItemLabelChange,
       isItemEditable,
+      domStructure,
     ],
   );
 

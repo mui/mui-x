@@ -63,7 +63,7 @@ AnimatedLine.propTypes = {
     color: PropTypes.string.isRequired,
     gradientId: PropTypes.string,
     hidden: PropTypes.bool,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    id: PropTypes.string.isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
   }).isRequired,

@@ -14,13 +14,16 @@ export interface BarElementSlots {
    * The component that renders the bar.
    * @default BarElementPath
    */
-  bar?: React.ElementType<BarProps>;
+  bar?: React.JSXElementConstructor<BarProps>;
 }
 export interface BarElementSlotProps {
   bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
-export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarElementProps = Omit<
+  BarElementOwnerState,
+  'isFaded' | 'isHighlighted' | 'isFocused'
+> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     /**
      * The props used for each component slot.
@@ -82,7 +85,7 @@ function BarElement(props: BarElementProps) {
     ),
   );
 
-  const ownerState = {
+  const ownerState: BarElementOwnerState = {
     id,
     dataIndex,
     classes: innerClasses,
