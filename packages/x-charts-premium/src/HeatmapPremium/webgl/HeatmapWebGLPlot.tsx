@@ -61,7 +61,9 @@ export function HeatmapWebGLPlot({
   // On resize render directly to avoid a frame where the canvas is blank
   useWebGLResizeObserver(render);
 
-  const seriesBorderRadius = borderRadius ?? 0;
+  const width = xScale.bandwidth();
+  const height = yScale.bandwidth();
+  const seriesBorderRadius = Math.min(borderRadius ?? 0, width / 2, height / 2);
   const lastFragmentShaderRef = React.useRef<'no-border-radius' | 'border-radius'>(
     seriesBorderRadius > 0 ? 'border-radius' : 'no-border-radius',
   );
@@ -102,15 +104,18 @@ export function HeatmapWebGLPlot({
     if (lastFragmentShaderRef.current === 'no-border-radius' && seriesBorderRadius > 0) {
       attachShader(gl, program, heatmapFragmentShaderSourceWithBorderRadius, gl.FRAGMENT_SHADER);
       lastFragmentShaderRef.current = 'border-radius';
+
+      // Need to use the program again after attaching a new shader
+      // eslint-disable-next-line react-compiler/react-compiler
+      gl.useProgram(program);
     } else if (lastFragmentShaderRef.current === 'border-radius' && !seriesBorderRadius) {
       attachShader(gl, program, heatmapFragmentShaderSourceNoBorderRadius, gl.FRAGMENT_SHADER);
       lastFragmentShaderRef.current = 'no-border-radius';
-    } else {
-      return;
-    }
 
-    // eslint-disable-next-line react-compiler/react-compiler
-    gl.useProgram(program);
+      // Need to use the program again after attaching a new shader
+      // eslint-disable-next-line react-compiler/react-compiler
+      gl.useProgram(program);
+    }
 
     gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
     scheduleRender();
@@ -131,8 +136,6 @@ export function HeatmapWebGLPlot({
 
     const xDomain = xScale.domain();
     const yDomain = yScale.domain();
-    const width = xScale.bandwidth();
-    const height = yScale.bandwidth();
 
     for (let dataIndex = 0; dataIndex < seriesToDisplay.data.length; dataIndex += 1) {
       const [xIndex, yIndex, value] = seriesToDisplay.data[dataIndex];
@@ -203,10 +206,12 @@ export function HeatmapWebGLPlot({
     drawingArea.left,
     drawingArea.top,
     gl,
+    height,
     isFaded,
     isHighlighted,
     scheduleRender,
     seriesToDisplay,
+    width,
     xScale,
     yScale,
   ]);
