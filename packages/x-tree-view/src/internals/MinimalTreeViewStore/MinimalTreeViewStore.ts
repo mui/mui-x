@@ -226,5 +226,5 @@ export class MinimalTreeViewStore<
 }
 
 function isSyntheticEvent(event: any): event is React.SyntheticEvent {
-  return event.isPropagationStopped !== undefined;
+  return event?.isPropagationStopped !== undefined;
 }
