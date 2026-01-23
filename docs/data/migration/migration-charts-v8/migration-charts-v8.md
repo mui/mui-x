@@ -197,6 +197,7 @@ The following CSS class prefixes have been renamed to include the "Chart" suffix
 | :--------------- | :----------------- |
 | `MuiScatter-`    | `MuiScatterChart-` |
 | `MuiBar-`        | `MuiBarChart-`     |
+| `MuiHeatmap-`    | `MuiHeatmapChart-` |
 
 If you're using these classes in your styles, update them accordingly:
 
@@ -206,4 +207,7 @@ If you're using these classes in your styles, update them accordingly:
 
 -`.MuiBar-root`
 +`.MuiBarChart-root`
+
+-`.MuiHeatmap-cell`
++`.MuiHeatmapChart-cell`
 ```

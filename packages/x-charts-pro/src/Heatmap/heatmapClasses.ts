@@ -22,10 +22,10 @@ export function getHeatmapUtilityClass(slot: string) {
   if (['highlighted', 'faded'].includes(slot)) {
     return generateUtilityClass('Charts', slot);
   }
-  return generateUtilityClass('MuiHeatmap', slot);
+  return generateUtilityClass('MuiHeatmapChart', slot);
 }
 export const heatmapClasses: HeatmapClasses = {
-  ...generateUtilityClasses('MuiHeatmap', ['cell', 'series']),
+  ...generateUtilityClasses('MuiHeatmapChart', ['cell', 'series']),
   highlighted: 'Charts-highlighted',
   faded: 'Charts-faded',
 };
