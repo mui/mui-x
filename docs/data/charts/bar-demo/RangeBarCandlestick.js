@@ -46,6 +46,7 @@ const tooltipDollarFormatter = new Intl.NumberFormat(undefined, {
 
 const min = dataset.reduce((acc, cur) => Math.min(acc, cur.low), Infinity);
 const max = dataset.reduce((acc, cur) => Math.max(acc, cur.high), -Infinity);
+const yDomain = niceDomain('linear', [min, max]);
 
 const xAxis = [
   {
@@ -67,11 +68,7 @@ const yAxis = [
   {
     id: 'y',
     scaleType: 'linear',
-    domainLimit: () => {
-      const domain = niceDomain('linear', [min, max]);
-
-      return { min: domain[0].valueOf(), max: domain[1].valueOf() };
-    },
+    domainLimit: () => ({ min: yDomain[0], max: yDomain[1] }),
     valueFormatter: (value) => tickLabelDollarFormatter.format(value),
   },
 ];
