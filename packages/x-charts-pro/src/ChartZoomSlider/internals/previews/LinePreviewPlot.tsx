@@ -44,7 +44,13 @@ export interface PreviewLineElementProps extends Omit<
  * Preview of the line element for the zoom preview.
  * Based on LineElement and AnimatedLine.
  */
-function PreviewLineElement({ seriesId, color, gradientId, onClick, ...other }: PreviewLineElementProps) {
+function PreviewLineElement({
+  seriesId,
+  color,
+  gradientId,
+  onClick,
+  ...other
+}: PreviewLineElementProps) {
   return (
     <path
       stroke={gradientId ? `url(#${gradientId})` : color}

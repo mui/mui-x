@@ -33,7 +33,9 @@ export const lineHighlightElementClasses: LineHighlightElementClasses = generate
   ['root'],
 );
 
-const useUtilityClasses = (ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>) => {
+const useUtilityClasses = (
+  ownerState: Pick<LineHighlightElementCommonProps, 'classes' | 'seriesId'>,
+) => {
   const { classes, seriesId } = ownerState;
   const slots = {
     root: ['root', `series-${seriesId}`],

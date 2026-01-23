@@ -11,7 +11,13 @@ export function FocusedPieArc(
   props: Partial<
     Omit<
       PieArcProps,
-      'startAngle' | 'endAngle' | 'seriesId' | 'dataIndex' | 'isFaded' | 'isHighlighted' | 'isFocused'
+      | 'startAngle'
+      | 'endAngle'
+      | 'seriesId'
+      | 'dataIndex'
+      | 'isFaded'
+      | 'isHighlighted'
+      | 'isFocused'
     >
   >,
 ) {

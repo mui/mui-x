@@ -52,7 +52,13 @@ export interface PreviewAreaElementProps extends Omit<
  * Preview of the area element for the zoom preview.
  * Based on AreaElement and AnimatedArea.
  */
-function PreviewAreaElement({ seriesId, color, gradientId, onClick, ...other }: PreviewAreaElementProps) {
+function PreviewAreaElement({
+  seriesId,
+  color,
+  gradientId,
+  onClick,
+  ...other
+}: PreviewAreaElementProps) {
   return (
     <path
       fill={gradientId ? `url(#${gradientId})` : color}
