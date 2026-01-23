@@ -109,6 +109,9 @@ export function HeatmapWebGLPlot({
       return;
     }
 
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(program);
+
     gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
     scheduleRender();
   }, [gl, scheduleRender, seriesBorderRadius]);
