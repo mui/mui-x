@@ -1,7 +1,11 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { GridRenderEditCellParams, useGridApiContext, useGridRootProps } from '@mui/x-data-grid-premium';
+import {
+  GridRenderEditCellParams,
+  useGridApiContext,
+  useGridRootProps,
+} from '@mui/x-data-grid-premium';
 import { useRowEditHandlers } from '../hooks/useRowEditHandlers';
 
 function EditBoolean(props: GridRenderEditCellParams<any, boolean>) {

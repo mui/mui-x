@@ -100,7 +100,10 @@ export function useEditDropdownState(params: UseEditDropdownStateParams) {
         setOpen(false);
 
         const newValue = getValue(event);
-        const isValid = await apiRef.current.setEditCellValue({ id, field, value: newValue }, event);
+        const isValid = await apiRef.current.setEditCellValue(
+          { id, field, value: newValue },
+          event,
+        );
 
         // In cell edit mode, selecting closes the menu and exits edit mode
         // In row edit mode, selecting only closes the menu (already done above)
