@@ -44,12 +44,12 @@ export default function ServerSideRowGroupingNestedLazyLoading() {
       rowGrouping: {
         model: ['company', 'director'],
       },
-      pagination: {                                                                                                                                                                                                                        
-        paginationModel: {                                                                                                                                                                                                                 
-          pageSize: 5,                                                                                                                                                                                                                     
-        },                                                                                                                                                                                                                                 
-        rowCount: 0,                                                                                                                                                                                                                       
-      }, 
+      pagination: {
+        paginationModel: {
+          pageSize: 5,
+        },
+        rowCount: 0,
+      },
     },
   });
 
