@@ -511,9 +511,15 @@ Try changing the sort order or hiding columns, then click export to see how it a
 
 ### Excel export with formula support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-This recipe demonstrates how to use a third-party spreadsheet library [HyperFormula](https://hyperformula.handsontable.com/) for spreadsheet-like formula calculations that are preserved in Excel exports using the `excelValueGetter` column definition property and `escapeFormulas: false` in Excel export options.
+The Data Grid API for columns like `valueGetter` could be used to implement formula support in the userland.
+
+The recipe below demonstrates the usage of a third-party spreadsheet library [HyperFormula](https://hyperformula.handsontable.com/) for to add support of formulas in the Data Grid. The formula are also preserved in Excel export using the `excelValueGetter`.
 
 {{"demo": "ExcelFormulaSupport.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The library [HyperFormula](https://hyperformula.handsontable.com/) is a third-party library with it's own license terms and it is not included in the Data Grid package. You need to install it manually.
+:::
 
 ## apiRef
 
