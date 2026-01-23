@@ -10,7 +10,6 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import {
   useExtractEventCalendarParameters,
   EventCalendarState as State,
@@ -20,6 +19,7 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventPopoverProvider } from '../internals/components/event-popover/EventPopover';
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';

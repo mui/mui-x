@@ -6,7 +6,7 @@ import {
   useExtractEventCalendarParameters,
   EventCalendarState as State,
 } from '@mui/x-scheduler-headless/use-event-calendar';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { useEventCalendarView } from '@mui/x-scheduler-headless/use-event-calendar-view';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';

@@ -7,7 +7,7 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventCalendar } from '../event-calendar';
 
 describe('<MonthView />', () => {

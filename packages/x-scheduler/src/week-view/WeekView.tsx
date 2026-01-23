@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { EventCalendarViewConfig } from '@mui/x-scheduler-headless/models';
 import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import {
   useExtractEventCalendarParameters,
   EventCalendarState as State,

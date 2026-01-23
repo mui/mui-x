@@ -17,7 +17,7 @@ import {
 } from '@mui/x-scheduler-headless/models';
 import { Popover } from '@base-ui/react/popover';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendarProvider } from '../EventCalendarProvider';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventPopoverContent } from './EventPopover';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
