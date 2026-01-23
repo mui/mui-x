@@ -214,7 +214,7 @@ export const useGridDataSourceNestedLazyLoader = (
         return;
       }
 
-      const newChildren = [];
+      const newChildren: GridRowId[] = [];
 
       for (let i = 0; i < childrenCount; i += 1) {
         const skeletonId = getSkeletonNestedRowId(i, parentId);
@@ -310,7 +310,7 @@ export const useGridDataSourceNestedLazyLoader = (
             groupingKey,
           };
         } else {
-          const children = [];
+          const children: GridRowId[] = [];
           for (let j = 0; j < childrenCount; j += 1) {
             const skeletonId = getSkeletonNestedRowId(j, rowId);
             children.push(skeletonId);
