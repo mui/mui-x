@@ -7,10 +7,11 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { SchedulerProcessedDate } from '@mui/x-scheduler-headless/models';
 import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/internals';
+import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const WeeksHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
-  slot: 'WeeksHeaderRoot',
+  name: 'MuiEventTimeline',
+  slot: 'WeeksHeader',
 })({
   display: 'flex',
   // TODO: update this calculation when we add the option to hide weekends
@@ -18,7 +19,7 @@ const WeeksHeaderRoot = styled('div', {
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
@@ -31,7 +32,7 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -43,7 +44,7 @@ const DayLabel = styled('div', {
 }));
 
 const WeekDaysRow = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDaysRow',
 })(({ theme }) => ({
   display: 'grid',
@@ -52,7 +53,7 @@ const WeekDaysRow = styled('div', {
 }));
 
 const WeekDayCell = styled('time', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDayCell',
 })(({ theme }) => ({
   padding: theme.spacing(0.5),
@@ -72,6 +73,7 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventTimelinePremiumStoreContext();
+  const classes = useEventTimelinePremiumClasses();
 
   // Selector hooks
   const viewConfig = useStore(store, eventTimelinePremiumViewSelectors.config);
@@ -99,18 +101,19 @@ export function WeeksHeader(props: React.HTMLAttributes<HTMLDivElement>) {
   }, [adapter, viewConfig]);
 
   return (
-    <WeeksHeaderRoot {...props}>
+    <WeeksHeaderRoot className={classes.weeksHeader} {...props}>
       {weeks.map((week) => (
-        <TimeHeaderCell key={`${week[0].key}-week`}>
-          <DayLabel>
+        <TimeHeaderCell key={`${week[0].key}-week`} className={classes.weeksHeaderCell}>
+          <DayLabel className={classes.weeksHeaderDayLabel}>
             {formatWeekDayMonthAndDayOfMonth(week[0].value, adapter)} -{' '}
             {formatWeekDayMonthAndDayOfMonth(week[6].value, adapter)}
           </DayLabel>
-          <WeekDaysRow>
+          <WeekDaysRow className={classes.weeksHeaderDaysRow}>
             {week.map((day) => (
               <WeekDayCell
                 dateTime={day.key}
                 key={day.key}
+                className={classes.weeksHeaderDayCell}
                 data-weekend={isWeekend(adapter, day.value) ? '' : undefined}
               >
                 {adapter.format(day.value, 'weekday1Letter')}

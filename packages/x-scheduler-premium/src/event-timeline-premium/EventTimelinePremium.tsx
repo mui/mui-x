@@ -1,6 +1,8 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { useStore } from '@base-ui/utils/store';
@@ -14,14 +16,66 @@ import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/mode
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
+import {
+  EventTimelinePremiumClasses,
+  getEventTimelinePremiumUtilityClass,
+} from './eventTimelinePremiumClasses';
+import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
 // TODO: Remove these CSS imports during the MUI X migration
 import '../styles/index.css';
 import '../styles/colors.css';
 import '../styles/tokens.css';
 import '../styles/utils.css';
 
+const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
+  const slots = {
+    root: ['root'],
+    headerToolbar: ['headerToolbar'],
+    content: ['content'],
+    grid: ['grid'],
+    titleSubGridWrapper: ['titleSubGridWrapper'],
+    titleSubGrid: ['titleSubGrid'],
+    titleSubGridHeaderRow: ['titleSubGridHeaderRow'],
+    titleSubGridHeaderCell: ['titleSubGridHeaderCell'],
+    eventsSubGridWrapper: ['eventsSubGridWrapper'],
+    eventsSubGrid: ['eventsSubGrid'],
+    eventsSubGridHeaderRow: ['eventsSubGridHeaderRow'],
+    eventsSubGridRow: ['eventsSubGridRow'],
+    titleCellRow: ['titleCellRow'],
+    titleCell: ['titleCell'],
+    titleCellLegendColor: ['titleCellLegendColor'],
+    event: ['event'],
+    eventResizeHandler: ['eventResizeHandler'],
+    timeHeader: ['timeHeader'],
+    timeHeaderCell: ['timeHeaderCell'],
+    timeHeaderDayLabel: ['timeHeaderDayLabel'],
+    timeHeaderCellsRow: ['timeHeaderCellsRow'],
+    timeHeaderTimeCell: ['timeHeaderTimeCell'],
+    timeHeaderTimeLabel: ['timeHeaderTimeLabel'],
+    daysHeader: ['daysHeader'],
+    daysHeaderCell: ['daysHeaderCell'],
+    daysHeaderTime: ['daysHeaderTime'],
+    daysHeaderWeekDay: ['daysHeaderWeekDay'],
+    daysHeaderDayNumber: ['daysHeaderDayNumber'],
+    daysHeaderMonthStart: ['daysHeaderMonthStart'],
+    daysHeaderMonthStartLabel: ['daysHeaderMonthStartLabel'],
+    weeksHeader: ['weeksHeader'],
+    weeksHeaderCell: ['weeksHeaderCell'],
+    weeksHeaderDayLabel: ['weeksHeaderDayLabel'],
+    weeksHeaderDaysRow: ['weeksHeaderDaysRow'],
+    weeksHeaderDayCell: ['weeksHeaderDayCell'],
+    monthsHeader: ['monthsHeader'],
+    monthsHeaderYearLabel: ['monthsHeaderYearLabel'],
+    monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
+    yearsHeader: ['yearsHeader'],
+    yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+  };
+
+  return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
+};
+
 const EventTimelinePremiumRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
   '--time-cell-width': '64px',
@@ -38,7 +92,7 @@ const EventTimelinePremiumRoot = styled('div', {
 }));
 
 const EventTimelinePremiumHeaderToolbar = styled('header', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'HeaderToolbar',
 })({
   display: 'flex',
@@ -52,14 +106,16 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   inProps: EventTimelinePremiumProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiEventTimelinePremium' });
+  // We don't want the plan suffix in the theme, otherwise we couldn't share the theme entry across packages
+  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
 
-  const { parameters, forwardedProps } = useExtractEventTimelinePremiumParameters<
-    TEvent,
-    TResource,
-    typeof props
-  >(props);
+  const {
+    parameters,
+    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+  } = useExtractEventTimelinePremiumParameters<TEvent, TResource, typeof props>(props);
   const store = useEventTimelinePremium(parameters);
+  const classes = useUtilityClasses(classesProp);
 
   const view = useStore(store, eventTimelinePremiumViewSelectors.view);
   const views = useStore(store, eventTimelinePremiumViewSelectors.views);
@@ -71,18 +127,24 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   return (
     <EventTimelinePremiumStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
-        <EventTimelinePremiumRoot ref={forwardedRef} {...forwardedProps}>
-          <EventTimelinePremiumHeaderToolbar>
-            <Select value={view} onChange={handleViewChange} size="small">
-              {views.map((viewItem) => (
-                <MenuItem key={viewItem} value={viewItem}>
-                  {viewItem}
-                </MenuItem>
-              ))}
-            </Select>
-          </EventTimelinePremiumHeaderToolbar>
-          <EventTimelinePremiumContent />
-        </EventTimelinePremiumRoot>
+        <EventTimelinePremiumClassesContext.Provider value={classes}>
+          <EventTimelinePremiumRoot
+            ref={forwardedRef}
+            className={clsx(classes.root, className)}
+            {...forwardedProps}
+          >
+            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
+              <Select value={view} onChange={handleViewChange} size="small">
+                {views.map((viewItem) => (
+                  <MenuItem key={viewItem} value={viewItem}>
+                    {viewItem}
+                  </MenuItem>
+                ))}
+              </Select>
+            </EventTimelinePremiumHeaderToolbar>
+            <EventTimelinePremiumContent />
+          </EventTimelinePremiumRoot>
+        </EventTimelinePremiumClassesContext.Provider>
       </SchedulerStoreContext.Provider>
     </EventTimelinePremiumStoreContext.Provider>
   );

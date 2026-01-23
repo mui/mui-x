@@ -1,5 +1,5 @@
 import type { ChartSeriesType } from '../../../../../models/seriesType/config';
-import type { ChartSeriesConfig } from '../../../models';
+import type { ChartSeriesConfig } from '../types';
 
 /**
  * Serializes a series item identifier into a unique string using the appropriate serializer

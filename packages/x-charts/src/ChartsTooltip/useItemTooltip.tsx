@@ -11,8 +11,8 @@ import {
   type ItemTooltipWithMultipleValues,
   type TooltipGetter,
   type TooltipGetterAxesConfig,
-} from '../internals/plugins/models/seriesConfig/tooltipGetter.types';
-import { type ColorProcessor } from '../internals/plugins/models/seriesConfig';
+  type ColorProcessor,
+} from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
 
