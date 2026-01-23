@@ -24,7 +24,7 @@ export type BarElementProps = Omit<
   BarElementOwnerState,
   'isFaded' | 'isHighlighted' | 'isFocused'
 > &
-  Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
+  Omit<React.SVGProps<SVGRectElement>, 'ref'> & {
     /**
      * The props used for each component slot.
      * @default {}
@@ -49,7 +49,7 @@ export type BarElementProps = Omit<
 
 function BarElement(props: BarElementProps) {
   const {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -69,8 +69,8 @@ function BarElement(props: BarElementProps) {
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
-    () => ({ type: 'bar' as const, seriesId: id, dataIndex }),
-    [id, dataIndex],
+    () => ({ type: 'bar' as const, seriesId, dataIndex }),
+    [seriesId, dataIndex],
   );
   const interactionProps = useInteractionItemProps(itemIdentifier);
   const { isFaded, isHighlighted } = useItemHighlighted(itemIdentifier);
@@ -78,15 +78,15 @@ function BarElement(props: BarElementProps) {
     React.useMemo(
       () => ({
         type: 'bar',
-        seriesId: id,
+        seriesId,
         dataIndex,
       }),
-      [id, dataIndex],
+      [seriesId, dataIndex],
     ),
   );
 
   const ownerState: BarElementOwnerState = {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
@@ -105,7 +105,7 @@ function BarElement(props: BarElementProps) {
     externalForwardedProps: other,
     additionalProps: {
       ...interactionProps,
-      id,
+      seriesId,
       dataIndex,
       color,
       x,
@@ -137,8 +137,8 @@ BarElement.propTypes = {
   // ----------------------------------------------------------------------
   classes: PropTypes.object,
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+  seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   /**
    * The props used for each component slot.
