@@ -151,12 +151,6 @@ Renames the `ChartsSurface` component to `ChartsSvgSurface` to make it clearer t
 +import { chartsSvgSurfaceClasses, ChartsSvgSurfaceClasses } from '@mui/x-charts/ChartsSvgSurface';
 ```
 
-<!-- #npm-tag-reference -->
-
-```bash
-npx @mui/x-codemod@next v9.0.0/charts/rename-charts-surface <path|folder>
-```
-
 ## v8.0.0
 
 ### 🚀 `preset-safe` for v8.0.0
