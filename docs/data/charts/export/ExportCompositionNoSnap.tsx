@@ -13,7 +13,7 @@ import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import Typography from '@mui/material/Typography';
 
 function CustomChartWrapper({ children }: React.PropsWithChildren) {
-  const chartRootRef = useChartRootRef();
+  const chartRootRef = useChartRootRef<HTMLDivElement>();
 
   return (
     <div

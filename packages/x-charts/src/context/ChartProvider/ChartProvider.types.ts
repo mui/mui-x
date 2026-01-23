@@ -32,16 +32,16 @@ export type ChartContextValue<
   /**
    * The ref to the <svg />.
    */
-  svgRef: React.RefObject<SVGSVGElement>;
+  svgRef: React.RefObject<SVGSVGElement | null>;
   /**
    * The ref to the chart root element.
    */
-  chartRootRef: React.RefObject<Element>;
+  chartRootRef: React.RefObject<Element | null>;
 };
 
 export type ChartPluginParams<TSignatures extends readonly ChartAnyPluginSignature[]> =
   UseChartBaseProps<TSignatures> &
-    MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
+  MergeSignaturesProperty<[...ChartCorePluginSignatures, ...TSignatures], 'params'>;
 
 export interface ChartProviderProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
