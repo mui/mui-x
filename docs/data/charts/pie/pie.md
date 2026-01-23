@@ -43,7 +43,7 @@ You can transform any pie chart into a donut chart by setting the `innerRadius` 
 
 The pie colors can be customized in two ways.
 
-1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each arc of the pie will be colored according to this palette.
+1. You can provide a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each arc of the pie will be colored according to this palette.
 2. You can provide a `color` property in `data` objects which overrides the palette.
 
 ```jsx
@@ -166,6 +166,7 @@ Here's how the Pie Chart is composed:
     <ChartsLegend />
     <ChartsSurface>
       <PiePlot />
+      <FocusedPieArc />
       <ChartsOverlay />
     </ChartsSurface>
     <ChartsTooltip trigger="item" />

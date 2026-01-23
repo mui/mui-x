@@ -108,6 +108,8 @@ export default chartsApiPages;
       'x-charts-premium/src/BarChartPremium/RangeBar/AnimatedRangeBarElement.tsx',
       'x-charts-premium/src/ChartsRenderer/ChartsRenderer.tsx',
       'x-charts-premium/src/ChartsRenderer/components/PaletteOption.tsx',
+      // TODO: document in https://github.com/mui/mui-x/pull/20756
+      'x-charts-premium/src/HeatmapPremium/HeatmapPremium.tsx',
     ].some((invalidPath) => filename.endsWith(invalidPath));
   },
   skipAnnotatingComponentDefinition: true,
@@ -124,6 +126,7 @@ export default chartsApiPages;
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),
+    'migration/migration-charts-v9',
     'migration/migration-charts-v8',
     'migration/migration-charts-v7',
     'migration/migration-charts-v6',

@@ -2,10 +2,10 @@ import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const series = [
-  { id: 0, data: [10], label: 'Series A' },
-  { id: 1, data: [15], label: 'Series B' },
-  { id: 2, data: [20], label: 'Series C' },
-  { id: 3, data: [10], label: 'Series D' },
+  { id: 'id-0', data: [10], label: 'Series A' },
+  { id: 'id-1', data: [15], label: 'Series B' },
+  { id: 'id-2', data: [20], label: 'Series C' },
+  { id: 'id-3', data: [10], label: 'Series D' },
 ];
 
 export default function LegendMarkType() {

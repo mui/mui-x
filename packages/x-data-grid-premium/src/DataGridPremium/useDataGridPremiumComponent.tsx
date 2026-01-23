@@ -117,6 +117,7 @@ import {
   chartsIntegrationStateInitializer,
   useGridChartsIntegration,
 } from '../hooks/features/chartsIntegration/useGridChartsIntegration';
+import { historyStateInitializer, useGridHistory } from '../hooks/features/history/useGridHistory';
 
 export const useDataGridPremiumComponent = (
   apiRef: RefObject<GridPrivateApiPremium>,
@@ -201,6 +202,7 @@ export const useDataGridPremiumComponent = (
   useGridInitializeState(listViewStateInitializer, apiRef, props);
   useGridInitializeState(aiAssistantStateInitializer, apiRef, props);
   useGridInitializeState(chartsIntegrationStateInitializer, apiRef, props);
+  useGridInitializeState(historyStateInitializer, apiRef, props);
 
   useGridSidebar(apiRef, props);
   useGridPivoting(apiRef, props, inProps.columns, inProps.rows);
@@ -250,6 +252,7 @@ export const useDataGridPremiumComponent = (
   useGridListView(apiRef, props);
   useGridAiAssistant(apiRef, props);
   useGridChartsIntegration(apiRef, props);
+  useGridHistory(apiRef, props);
   useGridPivotingExportState(apiRef);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.

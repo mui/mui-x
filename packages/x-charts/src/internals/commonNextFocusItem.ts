@@ -1,12 +1,12 @@
 import { getPreviousNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getPreviousNonEmptySeries';
 import { getMaxSeriesLength } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getMaxSeriesLength';
-import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries';
 import type { UseChartKeyboardNavigationSignature } from './plugins/featurePlugins/useChartKeyboardNavigation';
 import { getNextNonEmptySeries } from './plugins/featurePlugins/useChartKeyboardNavigation/utils/getNextNonEmptySeries';
 import type { ChartState } from './plugins/models/chart';
 import { seriesHasData } from './seriesHasData';
 import type { ChartSeriesType } from '../models/seriesType/config';
 import type { FocusedItemIdentifier, SeriesId, SeriesItemIdentifier } from '../models/seriesType';
+import { selectorChartSeriesProcessed } from './plugins/corePlugins/useChartSeries/useChartSeries.selectors';
 
 type ReturnedItem<OutSeriesType extends ChartSeriesType> = {
   type: OutSeriesType;

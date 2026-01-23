@@ -193,6 +193,11 @@ ScatterChart.propTypes = {
     current: PropTypes.object,
   }),
   /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
+  /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
@@ -267,7 +272,7 @@ ScatterChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['scatter']).isRequired,
     }),
   ),
@@ -281,7 +286,7 @@ ScatterChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -312,7 +317,7 @@ ScatterChart.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['scatter']).isRequired,
     }),
   ),
@@ -417,7 +422,7 @@ ScatterChart.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['scatter']).isRequired,
   }),
   /**

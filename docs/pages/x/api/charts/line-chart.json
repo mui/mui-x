@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
         "name": "shape",
@@ -38,7 +39,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
       }
     },
     "hideLegend": { "type": { "name": "bool" } },
@@ -49,16 +50,13 @@
       }
     },
     "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: number, seriesId?: number<br>&#124;&nbsp;string, type: 'line' }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'line' }&gt;"
       }
     },
     "loading": { "type": { "name": "bool" }, "default": "false" },
@@ -118,7 +116,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'line' }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'line' }"
       }
     },
     "width": { "type": { "name": "number" } },

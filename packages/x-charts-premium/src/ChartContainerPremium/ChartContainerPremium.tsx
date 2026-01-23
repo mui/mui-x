@@ -9,6 +9,10 @@ import {
 } from '../ChartDataProviderPremium';
 import { useChartContainerPremiumProps } from './useChartContainerPremiumProps';
 
+export interface ChartContainerPremiumSlots {}
+
+export interface ChartContainerPremiumSlotProps {}
+
 export type ChartContainerPremiumProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
@@ -55,7 +59,7 @@ const ChartContainerPremium = React.forwardRef(function ChartContainerPremium<
     useChartContainerPremiumProps<TSeries, TSignatures>(props, ref);
 
   return (
-    <ChartDataProviderPremium {...chartDataProviderPremiumProps}>
+    <ChartDataProviderPremium<TSeries, TSignatures> {...chartDataProviderPremiumProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProviderPremium>
   );

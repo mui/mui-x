@@ -8,10 +8,6 @@
     "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
     "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
     "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
-    "id": {
-      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the axis ID: <code>.${axisClasses.id}-${axisId}</code>.",
-      "nodeName": "the root element for the axis with the given ID"
-    },
     "label": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the group containing the axis label"
@@ -33,5 +29,11 @@
       "nodeName": "ticks label"
     },
     "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
+  },
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label."
   }
 }

@@ -30,6 +30,10 @@
     "import { ChartDataProvider } from '@mui/x-charts-pro';",
     "import { ChartDataProvider } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null }
+  ],
   "classes": [],
   "spread": false,
   "themeDefaultProps": false,

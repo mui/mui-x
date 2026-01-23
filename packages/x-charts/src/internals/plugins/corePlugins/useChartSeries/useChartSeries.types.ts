@@ -1,15 +1,12 @@
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import {
-  type ChartPluginSignature,
-  type ChartSeriesConfig,
-  type SeriesLayoutGetterResult,
-} from '../../models';
+import { type ChartPluginSignature, type SeriesLayoutGetterResult } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
   type SeriesProcessorParams,
   type SeriesProcessorResult,
 } from '../../models/seriesConfig/seriesProcessor.types';
+import { type UseChartSeriesConfigSignature } from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -61,23 +58,8 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<T>;
-    seriesConfig: ChartSeriesConfig<T>;
     dataset?: Readonly<DatasetType>;
   };
-}
-
-export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => string;
-
-export interface UseChartSeriesInstance {
-  /**
-   * Function to serialize a series item identifier into a unique string.
-   *
-   * @param identifier The identifier to serialize.
-   * @returns A unique string representing the identifier.
-   */
-  serializeIdentifier: SerializeIdentifierFunction;
 }
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
@@ -85,5 +67,5 @@ export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSe
     params: UseChartSeriesParameters;
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
-    instance: UseChartSeriesInstance;
+    dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;

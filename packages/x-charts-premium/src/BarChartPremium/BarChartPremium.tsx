@@ -2,7 +2,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { type BarChartProProps } from '@mui/x-charts-pro/BarChartPro';
+import {
+  type BarChartProProps,
+  type BarChartProSlotProps,
+  type BarChartProSlots,
+} from '@mui/x-charts-pro/BarChartPro';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
@@ -35,7 +39,24 @@ seriesPreviewPlotMap.set('rangeBar', RangeBarPreviewPlot);
 
 export type RangeBarSeries = RangeBarSeriesType;
 
-export interface BarChartPremiumProps extends Omit<BarChartProProps, 'series' | 'onItemClick'> {
+export interface BarChartPremiumSlots extends BarChartProSlots {}
+
+export interface BarChartPremiumSlotProps extends BarChartProSlotProps {}
+
+export interface BarChartPremiumProps extends Omit<
+  BarChartProProps,
+  'series' | 'onItemClick' | 'slots' | 'slotProps'
+> {
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: BarChartPremiumSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: BarChartPremiumSlotProps;
   /**
    * Callback fired when a bar or range bar item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -105,7 +126,9 @@ const BarChartPremium = React.forwardRef(function BarChartPremium(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPremium {...chartDataProviderProProps}>
+    <ChartDataProviderPremium<'bar' | 'rangeBar', BarChartPremiumPluginSignatures>
+      {...chartDataProviderProProps}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -142,6 +165,11 @@ BarChartPremium.propTypes = {
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
@@ -226,7 +254,7 @@ BarChartPremium.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ),
@@ -250,7 +278,7 @@ BarChartPremium.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -281,7 +309,7 @@ BarChartPremium.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ),
@@ -416,7 +444,7 @@ BarChartPremium.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['bar']).isRequired,
   }),
   /**

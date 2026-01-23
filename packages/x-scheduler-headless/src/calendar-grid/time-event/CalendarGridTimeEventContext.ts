@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import type { CalendarGridTimeEvent } from './CalendarGridTimeEvent';
-import type { useDraggableEvent } from '../../utils/useDraggableEvent';
+import type { useDraggableEvent } from '../../internals/utils/useDraggableEvent';
 
 export interface CalendarGridTimeEventContext extends useDraggableEvent.ContextValue {
   /**

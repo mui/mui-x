@@ -16,6 +16,10 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Προκαθορισμένο',
   toolbarDensityComfortable: 'Πλατύ',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Αναίρεση',
+  toolbarRedo: 'Επανάληψη',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Στήλες',
   toolbarColumnsLabel: 'Επιλέξτε στήλες',

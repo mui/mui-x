@@ -72,7 +72,7 @@
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
-    "@mui/types": "^7.4.8",
+    "@mui/types": "7.4.10",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
