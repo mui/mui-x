@@ -9,6 +9,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-p
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+import { eventTimelinePremiumClasses } from '../../eventTimelinePremiumClasses';
 
 const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimeline',
@@ -26,7 +27,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
-  '&:hover .EventTimelinePremiumEventResizeHandler': {
+  [`&:hover .${eventTimelinePremiumClasses.eventResizeHandler}`]: {
     opacity: 1,
   },
   '&::before': {
@@ -41,6 +42,19 @@ const EventTimelinePremiumEventRoot = styled('div', {
     pointerEvents: 'none',
   },
 }));
+
+const EventTimelinePremiumEventLinesClamp = styled('span', {
+  name: 'MuiEventTimeline',
+  slot: 'EventLinesClamp',
+})({
+  display: '-webkit-box',
+  WebkitLineClamp: 'var(--number-of-lines)',
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  wordBreak: 'break-word',
+  overflowWrap: 'break-word',
+});
 
 const EventTimelinePremiumEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
   name: 'MuiEventTimeline',
@@ -107,7 +121,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         aria-hidden={true}
         {...sharedProps}
       >
-        <span className="LinesClamp">{occurrence.title}</span>
+        <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>{occurrence.title}</EventTimelinePremiumEventLinesClamp>
       </EventTimelinePremium.EventPlaceholder>
     );
   }
@@ -124,14 +138,14 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
       {isStartResizable && (
         <EventTimelinePremiumEventResizeHandler
           side="start"
-          className={clsx(classes.eventResizeHandler, 'EventTimelinePremiumEventResizeHandler')}
+          className={classes.eventResizeHandler}
         />
       )}
-      <span className="LinesClamp">{occurrence.title}</span>
+      <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>{occurrence.title}</EventTimelinePremiumEventLinesClamp>
       {isEndResizable && (
         <EventTimelinePremiumEventResizeHandler
           side="end"
-          className={clsx(classes.eventResizeHandler, 'EventTimelinePremiumEventResizeHandler')}
+          className={classes.eventResizeHandler}
         />
       )}
     </EventTimelinePremium.Event>

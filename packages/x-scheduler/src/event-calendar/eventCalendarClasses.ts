@@ -136,6 +136,8 @@ export interface EventCalendarClasses {
   dayTimeGridAllDayEventsCellEvents: string;
   /** Styles applied to day time grid all day event container elements. */
   dayTimeGridAllDayEventContainer: string;
+  /** Styles applied to the day time grid scrollable placeholder element. */
+  dayTimeGridScrollablePlaceholder: string;
   /** Styles applied to day grid event elements. */
   dayGridEvent: string;
   /** Styles applied to day grid event placeholder elements. */
@@ -152,6 +154,8 @@ export interface EventCalendarClasses {
   dayGridEventCardWrapper: string;
   /** Styles applied to day grid event card content elements. */
   dayGridEventCardContent: string;
+  /** Styles applied to day grid event lines clamp elements. */
+  dayGridEventLinesClamp: string;
   /** Styles applied to event color indicator elements. */
   eventColorIndicator: string;
   /** Styles applied to time grid event elements. */
@@ -180,6 +184,8 @@ export interface EventCalendarClasses {
   resourceLegendColor: string;
   /** Styles applied to event item card content elements. */
   eventItemCardContent: string;
+  /** Styles applied to event item lines clamp elements. */
+  eventItemLinesClamp: string;
 }
 
 export type EventCalendarClassKey = keyof EventCalendarClasses;
@@ -258,6 +264,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridCurrentTimeLabel',
     'dayTimeGridAllDayEventsCellEvents',
     'dayTimeGridAllDayEventContainer',
+    'dayTimeGridScrollablePlaceholder',
     'dayGridEvent',
     'dayGridEventPlaceholder',
     'dayGridEventTitle',
@@ -266,6 +273,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayGridEventResizeHandler',
     'dayGridEventCardWrapper',
     'dayGridEventCardContent',
+    'dayGridEventLinesClamp',
     'eventColorIndicator',
     'timeGridEvent',
     'timeGridEventPlaceholder',
@@ -280,5 +288,6 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'eventItemRecurringIcon',
     'resourceLegendColor',
     'eventItemCardContent',
+    'eventItemLinesClamp',
   ],
 );

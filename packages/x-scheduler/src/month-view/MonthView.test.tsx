@@ -7,6 +7,7 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar/eventCalendarClasses';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventCalendar } from '../event-calendar';
 
@@ -140,7 +141,7 @@ describe('<MonthView />', () => {
         return screen
           .getAllByRole('gridcell')
           .find((cell) => within(cell).queryByText(new RegExp(`^${date.toString()}`)))!
-          .querySelectorAll('.EventContainer');
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell

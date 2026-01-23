@@ -201,7 +201,11 @@ export const MonthView = React.memo(
     );
 
     return (
-      <MonthViewRoot {...props} ref={handleRef} className={clsx(props.className, classes.monthView)}>
+      <MonthViewRoot
+        {...props}
+        ref={handleRef}
+        className={clsx(props.className, classes.monthView)}
+      >
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>
             <MonthViewGrid className={classes.monthViewGrid}>

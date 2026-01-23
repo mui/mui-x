@@ -173,7 +173,10 @@ const EventColorIndicator = styled('span', {
   marginTop: 2,
 });
 
-const LinesClamp = styled('span')({
+const DayGridEventLinesClamp = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'DayGridEventLinesClamp',
+})({
   display: '-webkit-box',
   WebkitLineClamp: 'var(--number-of-lines)',
   WebkitBoxOrient: 'vertical',
@@ -245,11 +248,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       case 'placeholder':
         return (
           <React.Fragment>
-            <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <DayGridEventLinesClamp className={classes.dayGridEventLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <DayGridEventTitle className={classes.dayGridEventTitle}>
                 {occurrence.title}
               </DayGridEventTitle>
-            </LinesClamp>
+            </DayGridEventLinesClamp>
             {isRecurring && (
               <DayGridEventRecurringIcon
                 className={classes.dayGridEventRecurringIcon}
@@ -272,7 +275,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                   : translations.noResourceAriaLabel
               }
             />
-            <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <DayGridEventLinesClamp className={classes.dayGridEventLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <DayGridEventCardContent className={classes.dayGridEventCardContent}>
                 <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
@@ -282,7 +285,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                   {occurrence.title}
                 </DayGridEventTitle>
               </DayGridEventCardContent>
-            </LinesClamp>
+            </DayGridEventLinesClamp>
             {isRecurring && (
               <DayGridEventRecurringIcon
                 className={classes.dayGridEventRecurringIcon}
@@ -319,7 +322,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       ...styleProp,
     } as React.CSSProperties,
     ...other,
-    className: clsx(className, 'EventContainer', occurrence.className),
+    className: clsx(className, occurrence.className),
   };
 
   if (variant === 'placeholder') {

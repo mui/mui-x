@@ -134,7 +134,11 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   }
 
   return (
-    <PreferencesMenuRoot ref={handleRef} {...props} className={clsx(props.className, classes.preferencesMenu)}>
+    <PreferencesMenuRoot
+      ref={handleRef}
+      {...props}
+      className={clsx(props.className, classes.preferencesMenu)}
+    >
       <IconButton
         aria-label={translations.preferencesMenu}
         onClick={handleClick}

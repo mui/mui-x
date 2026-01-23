@@ -8,6 +8,7 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar/eventCalendarClasses';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
 const multiDayEvent = EventBuilder.new()
@@ -47,7 +48,7 @@ describe('<WeekView />', () => {
               `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
             );
           })!
-          .querySelectorAll('.EventContainer');
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell

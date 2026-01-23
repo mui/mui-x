@@ -25,6 +25,7 @@ import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
+import { eventCalendarClasses } from '../../../event-calendar/eventCalendarClasses';
 
 const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
@@ -82,22 +83,24 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
   width: '100%',
   borderBottom: `1px solid ${theme.palette.divider}`,
   gridTemplateColumnsFull: 'var(--fixed-cell-width) minmax(0, 1fr) fit-content(100%)',
-  '&[data-has-scroll] .ScrollablePlaceholder': {
+  [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
     overflowY: 'scroll',
     scrollbarGutter: 'stable',
     height: '100%',
     scrollbarColor: `${theme.palette.action.hover} ${theme.palette.action.hover}`,
   },
-  '&[data-weekend][data-has-scroll] .ScrollablePlaceholder': {
+  [`&[data-weekend][data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
     scrollbarColor: `${theme.palette.action.hover} ${theme.palette.action.hover}`,
   },
   /* Webkit (Chrome, Safari, Edge) */
-  '&[data-has-scroll] .ScrollablePlaceholder::-webkit-scrollbar': {
-    background: 'transparent',
-  },
-  '&[data-weekend][data-has-scroll] .ScrollablePlaceholder::-webkit-scrollbar': {
-    background: theme.palette.action.hover,
-  },
+  [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}::-webkit-scrollbar`]:
+    {
+      background: 'transparent',
+    },
+  [`&[data-weekend][data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}::-webkit-scrollbar`]:
+    {
+      background: theme.palette.action.hover,
+    },
 }));
 
 const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
@@ -251,9 +254,6 @@ const DayTimeGridTimeAxisText = styled('time', {
   lineHeight: 'calc(100% / 24)',
   color: theme.palette.text.secondary,
   whiteSpace: 'nowrap',
-  '&.HiddenHourLabel': {
-    opacity: 0,
-  },
 }));
 
 const DayTimeGridGrid = styled('div', {
@@ -370,7 +370,11 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   return (
-    <DayTimeGridContainer ref={handleRef} {...other} className={clsx(className, classes.dayTimeGridContainer)}>
+    <DayTimeGridContainer
+      ref={handleRef}
+      {...other}
+      className={clsx(className, classes.dayTimeGridContainer)}
+    >
       <EventPopoverProvider containerRef={containerRef}>
         <DayTimeGridHeader className={classes.dayTimeGridHeader}>
           <DayTimeGridHeaderRow
@@ -425,7 +429,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               <DayGridCell key={day.key} day={day} row={occurrences} />
             ))}
           </DayTimeGridAllDayEventsRow>
-          <div className="ScrollablePlaceholder" />
+          <div className={classes.dayTimeGridScrollablePlaceholder} />
         </DayTimeGridAllDayEventsGrid>
 
         <DayTimeGridRoot className={classes.dayTimeGrid}>

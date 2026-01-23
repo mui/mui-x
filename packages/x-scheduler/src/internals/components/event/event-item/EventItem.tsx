@@ -113,7 +113,10 @@ const EventItemCardContent = styled('p', {
   lineHeight: '20px',
 });
 
-const LinesClamp = styled('span')({
+const EventItemLinesClamp = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'EventItemLinesClamp',
+})({
   display: '-webkit-box',
   WebkitLineClamp: 'var(--number-of-lines)',
   WebkitBoxOrient: 'vertical',
@@ -131,7 +134,14 @@ export const EventItem = React.forwardRef(function EventItem(
   props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, id: idProp, variant = 'regular', className, ...other } = props;
+  const {
+    occurrence,
+    ariaLabelledBy,
+    id: idProp,
+    variant = 'regular',
+    className,
+    ...other
+  } = props;
 
   // Context hooks
   const translations = useTranslations();
@@ -166,7 +176,7 @@ export const EventItem = React.forwardRef(function EventItem(
                   : translations.noResourceAriaLabel
               }
             />
-            <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <EventItemLinesClamp className={classes.eventItemLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <EventItemTime className={classes.eventItemTime} data-compact>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
@@ -175,7 +185,7 @@ export const EventItem = React.forwardRef(function EventItem(
                   {occurrence.title}
                 </EventItemTitle>
               </EventItemCardContent>
-            </LinesClamp>
+            </EventItemLinesClamp>
             {isRecurring && (
               <EventItemRecurringIcon
                 className={classes.eventItemRecurringIcon}
@@ -189,9 +199,9 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'filled':
         return (
           <React.Fragment>
-            <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <EventItemLinesClamp className={classes.eventItemLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
-            </LinesClamp>
+            </EventItemLinesClamp>
             {isRecurring && (
               <EventItemRecurringIcon
                 className={classes.eventItemRecurringIcon}
@@ -213,14 +223,14 @@ export const EventItem = React.forwardRef(function EventItem(
                   : translations.noResourceAriaLabel
               }
             />
-            <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <EventItemLinesClamp className={classes.eventItemLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <MultiDayDateLabel occurrence={occurrence} formatTime={formatTime} />
                 <EventItemTitle className={classes.eventItemTitle}>
                   {occurrence.title}
                 </EventItemTitle>
               </EventItemCardContent>
-            </LinesClamp>
+            </EventItemLinesClamp>
             {isRecurring && (
               <EventItemRecurringIcon
                 className={classes.eventItemRecurringIcon}

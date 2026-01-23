@@ -126,9 +126,6 @@ const EventsList = styled('ul', {
   flexDirection: 'column',
   padding: theme.spacing(1),
   flexGrow: 1,
-  '& .EventRecurringIcon': {
-    position: 'static',
-  },
 }));
 
 // TODO: Replace with a proper loading overlay component that is shared across views
@@ -190,7 +187,11 @@ export const AgendaView = React.memo(
     );
 
     return (
-      <AgendaViewRoot {...props} ref={handleRef} className={clsx(props.className, classes.agendaView)}>
+      <AgendaViewRoot
+        {...props}
+        ref={handleRef}
+        className={clsx(props.className, classes.agendaView)}
+      >
         <EventPopoverProvider containerRef={containerRef}>
           {isLoading && (
             <AgendaViewLoadingOverlay className={classes.agendaViewLoadingOverlay}>

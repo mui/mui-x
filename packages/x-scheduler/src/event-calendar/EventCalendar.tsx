@@ -100,6 +100,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     dayTimeGridCurrentTimeLabel: ['dayTimeGridCurrentTimeLabel'],
     dayTimeGridAllDayEventsCellEvents: ['dayTimeGridAllDayEventsCellEvents'],
     dayTimeGridAllDayEventContainer: ['dayTimeGridAllDayEventContainer'],
+    dayTimeGridScrollablePlaceholder: ['dayTimeGridScrollablePlaceholder'],
     dayGridEvent: ['dayGridEvent'],
     dayGridEventPlaceholder: ['dayGridEventPlaceholder'],
     dayGridEventTitle: ['dayGridEventTitle'],
@@ -108,6 +109,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     dayGridEventResizeHandler: ['dayGridEventResizeHandler'],
     dayGridEventCardWrapper: ['dayGridEventCardWrapper'],
     dayGridEventCardContent: ['dayGridEventCardContent'],
+    dayGridEventLinesClamp: ['dayGridEventLinesClamp'],
     eventColorIndicator: ['eventColorIndicator'],
     timeGridEvent: ['timeGridEvent'],
     timeGridEventPlaceholder: ['timeGridEventPlaceholder'],
@@ -122,6 +124,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     eventItemRecurringIcon: ['eventItemRecurringIcon'],
     resourceLegendColor: ['resourceLegendColor'],
     eventItemCardContent: ['eventItemCardContent'],
+    eventItemLinesClamp: ['eventItemLinesClamp'],
   };
 
   return composeClasses(slots, getEventCalendarUtilityClass, classes);
