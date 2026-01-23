@@ -1,13 +1,12 @@
 'use client';
 import * as React from 'react';
-import type { ChartSeriesConfig } from '@mui/x-charts/internals';
 import type { ChartContainerProProps } from '../ChartContainerPro';
 import type { SankeySeriesType } from './sankey.types';
 import { SANKEY_CHART_PLUGINS, type SankeyChartPluginSignatures } from './SankeyChart.plugins';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { sankeySeriesConfig } from './seriesConfig';
 
-const seriesConfig: ChartSeriesConfig<'sankey'> = { sankey: sankeySeriesConfig };
+const seriesConfig = { sankey: sankeySeriesConfig };
 
 export interface SankeyDataProviderProps extends Omit<
   ChartContainerProProps<'sankey', SankeyChartPluginSignatures>,
