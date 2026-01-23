@@ -118,7 +118,9 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps}>
+    <ChartDataProviderPro<'scatter', ScatterChartProPluginSignatures>
+      {...chartDataProviderProProps}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}

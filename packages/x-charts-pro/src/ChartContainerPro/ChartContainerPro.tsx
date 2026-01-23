@@ -57,7 +57,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   >(props, ref);
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps}>
+    <ChartDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProviderPro>
   );

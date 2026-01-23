@@ -7,16 +7,34 @@ import type {
 } from 'jscodeshift';
 
 interface ImportConfig {
+  /**
+   * The old endpoint relative to the package name.
+   * @example 'TreeView' in '@mui/x-tree-view/TreeView'
+   */
   oldEndpoint?: string;
+  /**
+   * The new endpoint relative to the package name.
+   * @example 'SimpleTreeView' in '@mui/x-tree-view/SimpleTreeView'
+   */
   newEndpoint?: string;
-  skipRoot?: boolean;
+  /**
+   * The mapping of old identifier names to new identifier names.
+   * @example { TreeView: 'SimpleTreeView', TreeItem: 'SimpleTreeItem' }
+   */
   importsMapping: Record<string, string>;
 }
 
 interface RenameImportsParameters {
   j: JSCodeshift;
   root: Collection<any>;
+  /**
+   * The list of packages impacted by the renaming.
+   * @example ['@mui/x-date-pickers', '@mui/x-date-pickers-pro']
+   */
   packageNames: string[];
+  /**
+   * The list of renaming configurations to apply.
+   */
   imports: ImportConfig[];
 }
 
@@ -49,12 +67,13 @@ const getMatchingRootImport = (
   parameters: RenameImportsParameters,
 ) => {
   return parameters.imports.find((importConfig) => {
-    return (
-      !importConfig.skipRoot && importConfig.importsMapping.hasOwnProperty(path.node.imported.name)
-    );
+    return importConfig.importsMapping.hasOwnProperty(path.node.imported.name);
   });
 };
 
+/**
+ * Rename import paths, identifiers and usages based on a renaming configuration.
+ */
 export function renameImports(parameters: RenameImportsParameters) {
   const { j, root } = parameters;
 

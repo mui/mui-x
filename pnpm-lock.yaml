@@ -2070,6 +2070,9 @@ importers:
       '@mui/x-tree-view':
         specifier: workspace:*
         version: link:../x-tree-view/build
+      '@mui/x-virtualizer':
+        specifier: workspace:*
+        version: link:../x-virtualizer/build
       '@types/react-transition-group':
         specifier: 'catalog:'
         version: 4.4.12(@types/react@19.2.7)

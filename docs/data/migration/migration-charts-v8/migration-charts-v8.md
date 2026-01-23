@@ -100,6 +100,15 @@ The following type aliases have been removed from `@mui/x-charts/models`:
 +type CartesianSeriesType = AllSeriesType<CartesianChartSeriesType>;
 ```
 
+### ✅ `ChartApi` type moved to `@mui/x-charts/context`
+
+The `ChartApi` type export has been moved from `@mui/x-charts/ChartContainer` to `@mui/x-charts/context`.
+
+```diff
+-import type { ChartApi } from '@mui/x-charts/ChartContainer';
++import type { ChartApi } from '@mui/x-charts/context';
+```
+
 ### Series helper functions
 
 The following helper functions have been removed:
@@ -131,6 +140,36 @@ useBarSeries([]); // Returns [{ id: "id-1", ... }, { id: "id-2", ... }, ...]
 // In v9
 useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
+```
+
+### Rename `useAxisTooltip` hook
+
+The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+
+The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
+
+```diff
+-import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
++import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
+```
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
+```
+
+After running the codemod make sure to adapt the hook returned value to your needs.
+
+```diff
+ function CustomTooltip() {
+   // If you want to keep only one axis
+-  const tooltipData = useAxisTooltip();
++  const tooltipData = useAxesTooltip()[0] ?? null;
+   // If you use all the axes
+-  const tooltipData = useAxisTooltip({ multipleAxes: true });
++  const tooltipData = useAxesTooltip();
+ }
 ```
 
 ## Heatmap
