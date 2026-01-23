@@ -65,7 +65,12 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
-    <DateNavigatorRoot ref={forwardedRef} className={classes.dateNavigator} role="navigation" {...props}>
+    <DateNavigatorRoot
+      ref={forwardedRef}
+      className={classes.dateNavigator}
+      role="navigation"
+      {...props}
+    >
       <IconButton
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         onClick={(event) =>

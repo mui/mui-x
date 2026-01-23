@@ -231,7 +231,9 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           </TimeGridEventTitle>
         ) : (
           <React.Fragment>
-            <TimeGridEventTitle className={classes.timeGridEventTitle}>{occurrence.title}</TimeGridEventTitle>
+            <TimeGridEventTitle className={classes.timeGridEventTitle}>
+              {occurrence.title}
+            </TimeGridEventTitle>
             <TimeGridEventTime className={classes.timeGridEventTime} data-lines-clamp>
               {formatTime(occurrence.displayTimezone.start.value)} -{' '}
               {formatTime(occurrence.displayTimezone.end.value)}
@@ -239,7 +241,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
           </React.Fragment>
         )}
 
-        {isRecurring && <TimeGridEventRecurringIcon className={classes.timeGridEventRecurringIcon} aria-hidden="true" fontSize="small" />}
+        {isRecurring && (
+          <TimeGridEventRecurringIcon
+            className={classes.timeGridEventRecurringIcon}
+            aria-hidden="true"
+            fontSize="small"
+          />
+        )}
       </React.Fragment>
     );
   }, [
@@ -296,9 +304,13 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >
-      {isStartResizable && <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />}
+      {isStartResizable && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
+      )}
       {content}
-      {isEndResizable && <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />}
+      {isEndResizable && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
+      )}
     </TimeGridEventRoot>
   );
 });

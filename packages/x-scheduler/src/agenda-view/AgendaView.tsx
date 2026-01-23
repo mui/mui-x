@@ -191,7 +191,11 @@ export const AgendaView = React.memo(
     return (
       <AgendaViewRoot className={classes.agendaView} {...props} ref={handleRef}>
         <EventPopoverProvider containerRef={containerRef}>
-          {isLoading && <AgendaViewLoadingOverlay className={classes.agendaViewLoadingOverlay}>{translations.loading}</AgendaViewLoadingOverlay>}
+          {isLoading && (
+            <AgendaViewLoadingOverlay className={classes.agendaViewLoadingOverlay}>
+              {translations.loading}
+            </AgendaViewLoadingOverlay>
+          )}
 
           {daysWithOccurrences.map(({ date, occurrences }) => (
             <AgendaViewRow
@@ -206,9 +210,14 @@ export const AgendaView = React.memo(
                 aria-label={`${adapter.format(date.value, 'weekday')} ${adapter.format(date.value, 'dayOfMonth')}`}
                 data-current={adapter.isSameDay(date.value, now) ? '' : undefined}
               >
-                <DayNumberCell className={classes.agendaViewDayNumberCell}>{adapter.format(date.value, 'dayOfMonth')}</DayNumberCell>
+                <DayNumberCell className={classes.agendaViewDayNumberCell}>
+                  {adapter.format(date.value, 'dayOfMonth')}
+                </DayNumberCell>
                 <WeekDayCell className={classes.agendaViewWeekDayCell}>
-                  <AgendaWeekDayNameLabel className={classes.agendaViewWeekDayNameLabel} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+                  <AgendaWeekDayNameLabel
+                    className={classes.agendaViewWeekDayNameLabel}
+                    style={{ '--number-of-lines': 1 } as React.CSSProperties}
+                  >
                     {adapter.format(date.value, 'weekday')}
                   </AgendaWeekDayNameLabel>
                   <AgendaYearAndMonthLabel

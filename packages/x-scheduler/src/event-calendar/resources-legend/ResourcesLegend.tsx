@@ -73,8 +73,13 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
 
   return (
     <ResourcesLegendItemRoot className={classes.resourcesLegendItem}>
-      <ResourcesLegendItemColorDot className={classes.resourcesLegendItemColorDot} data-palette={eventColor} />
-      <ResourcesLegendItemName className={classes.resourcesLegendItemName}>{resource.title}</ResourcesLegendItemName>
+      <ResourcesLegendItemColorDot
+        className={classes.resourcesLegendItemColorDot}
+        data-palette={eventColor}
+      />
+      <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
+        {resource.title}
+      </ResourcesLegendItemName>
       <IconButton
         size="small"
         onClick={(event) => onToggle(resource.id, event)}

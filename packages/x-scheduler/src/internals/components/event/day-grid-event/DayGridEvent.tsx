@@ -246,9 +246,17 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         return (
           <React.Fragment>
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-              <DayGridEventTitle className={classes.dayGridEventTitle}>{occurrence.title}</DayGridEventTitle>
+              <DayGridEventTitle className={classes.dayGridEventTitle}>
+                {occurrence.title}
+              </DayGridEventTitle>
             </LinesClamp>
-            {isRecurring && <DayGridEventRecurringIcon className={classes.dayGridEventRecurringIcon} aria-hidden="true" fontSize="small" />}
+            {isRecurring && (
+              <DayGridEventRecurringIcon
+                className={classes.dayGridEventRecurringIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            )}
           </React.Fragment>
         );
 
@@ -270,10 +278,18 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                   <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
                 </DayGridEventTime>
-                <DayGridEventTitle className={classes.dayGridEventTitle} as="span">{occurrence.title}</DayGridEventTitle>
+                <DayGridEventTitle className={classes.dayGridEventTitle} as="span">
+                  {occurrence.title}
+                </DayGridEventTitle>
               </DayGridEventCardContent>
             </LinesClamp>
-            {isRecurring && <DayGridEventRecurringIcon className={classes.dayGridEventRecurringIcon} aria-hidden="true" fontSize="small" />}
+            {isRecurring && (
+              <DayGridEventRecurringIcon
+                className={classes.dayGridEventRecurringIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            )}
           </DayGridEventCardWrapper>
         );
       default:
@@ -308,7 +324,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   if (variant === 'placeholder') {
     return (
-      <DayGridEventPlaceholder aria-hidden={true} {...sharedProps} className={clsx(classes.dayGridEventPlaceholder, sharedProps.className)}>
+      <DayGridEventPlaceholder
+        aria-hidden={true}
+        {...sharedProps}
+        className={clsx(classes.dayGridEventPlaceholder, sharedProps.className)}
+      >
         {content}
       </DayGridEventPlaceholder>
     );
@@ -324,9 +344,13 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       {...sharedProps}
       className={clsx(classes.dayGridEvent, sharedProps.className)}
     >
-      {isStartResizable && <DayGridEventResizeHandler className={classes.dayGridEventResizeHandler} side="start" />}
+      {isStartResizable && (
+        <DayGridEventResizeHandler className={classes.dayGridEventResizeHandler} side="start" />
+      )}
       {content}
-      {isEndResizable && <DayGridEventResizeHandler className={classes.dayGridEventResizeHandler} side="end" />}
+      {isEndResizable && (
+        <DayGridEventResizeHandler className={classes.dayGridEventResizeHandler} side="end" />
+      )}
     </DayGridEventRoot>
   );
 });

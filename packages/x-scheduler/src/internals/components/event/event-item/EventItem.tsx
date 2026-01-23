@@ -171,10 +171,18 @@ export const EventItem = React.forwardRef(function EventItem(
                 <EventItemTime className={classes.eventItemTime} data-compact>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                 </EventItemTime>
-                <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
+                <EventItemTitle className={classes.eventItemTitle}>
+                  {occurrence.title}
+                </EventItemTitle>
               </EventItemCardContent>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon className={classes.eventItemRecurringIcon} aria-hidden="true" fontSize="small" />}
+            {isRecurring && (
+              <EventItemRecurringIcon
+                className={classes.eventItemRecurringIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            )}
           </React.Fragment>
         );
 
@@ -184,7 +192,13 @@ export const EventItem = React.forwardRef(function EventItem(
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon className={classes.eventItemRecurringIcon} aria-hidden="true" fontSize="small" />}
+            {isRecurring && (
+              <EventItemRecurringIcon
+                className={classes.eventItemRecurringIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            )}
           </React.Fragment>
         );
       case 'regular':
@@ -202,10 +216,18 @@ export const EventItem = React.forwardRef(function EventItem(
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <MultiDayDateLabel occurrence={occurrence} formatTime={formatTime} />
-                <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
+                <EventItemTitle className={classes.eventItemTitle}>
+                  {occurrence.title}
+                </EventItemTitle>
               </EventItemCardContent>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon className={classes.eventItemRecurringIcon} aria-hidden="true" fontSize="small" />}
+            {isRecurring && (
+              <EventItemRecurringIcon
+                className={classes.eventItemRecurringIcon}
+                aria-hidden="true"
+                fontSize="small"
+              />
+            )}
           </React.Fragment>
         );
       default:
@@ -224,7 +246,9 @@ export const EventItem = React.forwardRef(function EventItem(
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
     >
-      <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>{content}</EventItemCardWrapper>
+      <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
+        {content}
+      </EventItemCardWrapper>
     </EventItemCard>
   );
 });
@@ -252,7 +276,11 @@ function MultiDayDateLabel(props: {
     );
   }
   if (occurrence.allDay) {
-    return <EventItemTime className={classes.eventItemTime} as="span">{translations.allDay}</EventItemTime>;
+    return (
+      <EventItemTime className={classes.eventItemTime} as="span">
+        {translations.allDay}
+      </EventItemTime>
+    );
   }
   return (
     <EventItemTime className={classes.eventItemTime}>

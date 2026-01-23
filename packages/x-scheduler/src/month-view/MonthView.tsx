@@ -206,17 +206,26 @@ export const MonthView = React.memo(
             <MonthViewGrid className={classes.monthViewGrid}>
               <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
                 {showWeekNumber && (
-                  <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
+                  <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>
+                    {translations.weekAbbreviation}
+                  </MonthViewWeekHeaderCell>
                 )}
                 {weeks[0].map((weekDay) => (
-                  <MonthViewHeaderCell className={classes.monthViewHeaderCell} key={weekDay.key} date={weekDay} skipDataCurrent>
+                  <MonthViewHeaderCell
+                    className={classes.monthViewHeaderCell}
+                    key={weekDay.key}
+                    date={weekDay}
+                    skipDataCurrent
+                  >
                     {adapter.formatByString(weekDay.value, 'ccc')}
                   </MonthViewHeaderCell>
                 ))}
               </MonthViewHeader>
               <MonthViewBody className={classes.monthViewBody}>
                 {isLoading && (
-                  <MonthViewLoadingOverlay className={classes.monthViewLoadingOverlay}>{translations.loading}</MonthViewLoadingOverlay>
+                  <MonthViewLoadingOverlay className={classes.monthViewLoadingOverlay}>
+                    {translations.loading}
+                  </MonthViewLoadingOverlay>
                 )}
 
                 {weeks.map((week, weekIdx) => (

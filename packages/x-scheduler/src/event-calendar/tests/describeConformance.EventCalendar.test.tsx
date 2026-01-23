@@ -1,7 +1,4 @@
-import {
-  EventCalendar,
-  eventCalendarClasses as classes,
-} from '@mui/x-scheduler/event-calendar';
+import { EventCalendar, eventCalendarClasses as classes } from '@mui/x-scheduler/event-calendar';
 import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,

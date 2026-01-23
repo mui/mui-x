@@ -187,7 +187,11 @@ function ColumnInteractiveLayer({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <DayTimeGridColumnInteractiveLayer className={classes.dayTimeGridColumnInteractiveLayer} ref={columnRef} {...eventCreationProps}>
+    <DayTimeGridColumnInteractiveLayer
+      className={classes.dayTimeGridColumnInteractiveLayer}
+      ref={columnRef}
+      {...eventCreationProps}
+    >
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger
           key={occurrence.key}
@@ -214,7 +218,9 @@ function CurrentTimeLabel() {
   const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
 
   return (
-    <DayTimeGridCurrentTimeLabel className={classes.dayTimeGridCurrentTimeLabel} aria-hidden="true">{currentTimeLabel}</DayTimeGridCurrentTimeLabel>
+    <DayTimeGridCurrentTimeLabel className={classes.dayTimeGridCurrentTimeLabel} aria-hidden="true">
+      {currentTimeLabel}
+    </DayTimeGridCurrentTimeLabel>
   );
 }
 

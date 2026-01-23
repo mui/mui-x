@@ -276,7 +276,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             day={day}
             nativeButton={true}
             render={
-              <MonthViewMoreEvents className={classes.monthViewMoreEvents} size="small" aria-label={translations.hiddenEvents(hiddenCount)}>
+              <MonthViewMoreEvents
+                className={classes.monthViewMoreEvents}
+                size="small"
+                aria-label={translations.hiddenEvents(hiddenCount)}
+              >
                 {translations.hiddenEvents(hiddenCount)}
               </MonthViewMoreEvents>
             }

@@ -63,7 +63,12 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showViewSwitcher = views.length > 1;
 
   return (
-    <HeaderToolbarRoot ref={forwardedRef} className={classes.headerToolbar} data-single-primary-action={!showViewSwitcher} {...props}>
+    <HeaderToolbarRoot
+      ref={forwardedRef}
+      className={classes.headerToolbar}
+      data-single-primary-action={!showViewSwitcher}
+      {...props}
+    >
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         <HeaderToolbarPrimaryActionWrapper className={classes.headerToolbarPrimaryActionWrapper}>
           {showViewSwitcher && (

@@ -372,7 +372,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
     <DayTimeGridContainer className={classes.dayTimeGridContainer} ref={handleRef} {...other}>
       <EventPopoverProvider containerRef={containerRef}>
         <DayTimeGridHeader className={classes.dayTimeGridHeader}>
-          <DayTimeGridHeaderRow className={classes.dayTimeGridHeaderRow} as={CalendarGrid.HeaderRow}>
+          <DayTimeGridHeaderRow
+            className={classes.dayTimeGridHeaderRow}
+            as={CalendarGrid.HeaderRow}
+          >
             <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
             {days.map((day) => (
               <CalendarGrid.HeaderCell
@@ -426,7 +429,10 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
         <DayTimeGridRoot className={classes.dayTimeGrid}>
           <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
-            <DayTimeGridScrollableContent className={classes.dayTimeGridScrollableContent} as={CalendarGrid.TimeScrollableContent}>
+            <DayTimeGridScrollableContent
+              className={classes.dayTimeGridScrollableContent}
+              as={CalendarGrid.TimeScrollableContent}
+            >
               <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
                 {Array.from({ length: 24 }, (_, hour) => (
                   <DayTimeGridTimeAxisCell
@@ -447,7 +453,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
               <DayTimeGridGrid className={classes.dayTimeGridGrid}>
                 {isLoading && (
-                  <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>{translations.loading}</DayTimeGridLoadingOverlay>
+                  <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>
+                    {translations.loading}
+                  </DayTimeGridLoadingOverlay>
                 )}
 
                 {occurrences.days.map((day, index) => (
