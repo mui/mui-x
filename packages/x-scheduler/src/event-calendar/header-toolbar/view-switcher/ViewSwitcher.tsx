@@ -8,7 +8,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
-import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
+import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../internals/utils/TranslationsContext';
 
 const ViewSwitcherRoot = styled('div', {
@@ -16,21 +16,22 @@ const ViewSwitcherRoot = styled('div', {
   slot: 'ViewSwitcher',
 })({});
 
-export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
-  views: T[];
-  view: T;
-  onViewChange: (view: T, event: Event) => void;
+export interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
+  views: CalendarView[];
+  view: CalendarView;
+  onViewChange: (view: CalendarView, event: Event) => void;
 }
 
-type ViewSwitcherComponent = <T extends string>(
-  props: ViewSwitcherProps<T> & {
+type ViewSwitcherComponent = (
+  props: ViewSwitcherProps & {
     ref?: React.ForwardedRef<HTMLDivElement>;
   },
 ) => React.ReactElement | null;
 
-export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
-  T extends TimelineView | CalendarView,
->(props: ViewSwitcherProps<T>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
+export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
+  props: ViewSwitcherProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
   const { views, onViewChange, view, ...other } = props;
 
   const containerRef = React.useRef<HTMLElement | null>(null);
@@ -41,7 +42,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
   const menuOpen = Boolean(anchorEl);
 
   const handleToggleChange = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>, newView: T | null) => {
+    (event: React.MouseEvent<HTMLElement>, newView: CalendarView | null) => {
       if (newView) {
         onViewChange(newView, event.nativeEvent);
       }
@@ -57,7 +58,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, newView: T) => {
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, newView: CalendarView) => {
     onViewChange(newView, event.nativeEvent);
     handleMenuClose();
   };
@@ -67,14 +68,14 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
   const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
 
   const [state, setState] = React.useState<{
-    dropdownView: T | null;
-    prevView: T | null;
-    prevViews: T[];
+    dropdownView: CalendarView | null;
+    prevView: CalendarView | null;
+    prevViews: CalendarView[];
   }>({ dropdownView: dropdown[0], prevView: view, prevViews: views });
 
   // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
   if (state.prevView !== view || state.prevViews !== views) {
-    let newDropdownView: T | null;
+    let newDropdownView: CalendarView | null;
     if (dropdown.includes(view)) {
       newDropdownView = view;
     } else if (state.dropdownView != null && views.includes(state.dropdownView)) {
