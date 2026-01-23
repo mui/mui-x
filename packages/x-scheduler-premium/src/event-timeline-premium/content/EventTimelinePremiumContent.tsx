@@ -14,7 +14,7 @@ import { EventTimelinePremiumEvent } from './timeline-event';
 import { useEventTimelinePremiumClasses } from '../EventTimelinePremiumClassesContext';
 
 const EventTimelinePremiumContentRoot = styled('section', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'Content',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -24,7 +24,7 @@ const EventTimelinePremiumContentRoot = styled('section', {
 }));
 
 const EventTimelinePremiumGrid = styled(TimelinePrimitive.Root, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'Grid',
 })({
   height: '100%',
@@ -35,7 +35,7 @@ const EventTimelinePremiumGrid = styled(TimelinePrimitive.Root, {
 });
 
 const EventTimelinePremiumTitleSubGridWrapper = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleSubGridWrapper',
 })(({ theme }) => ({
   gridColumn: 1,
@@ -46,7 +46,7 @@ const EventTimelinePremiumTitleSubGridWrapper = styled('div', {
 }));
 
 const EventTimelinePremiumTitleSubGrid = styled(TimelinePrimitive.SubGrid, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleSubGrid',
 })({
   gridColumn: 1,
@@ -56,7 +56,7 @@ const EventTimelinePremiumTitleSubGrid = styled(TimelinePrimitive.SubGrid, {
 });
 
 const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleSubGridHeaderRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
@@ -65,7 +65,7 @@ const EventTimelinePremiumTitleSubGridHeaderRow = styled(TimelinePrimitive.Row, 
 }));
 
 const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelinePrimitive.Cell, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleSubGridHeaderCell',
 })(({ theme }) => ({
   fontWeight: theme.typography.fontWeightMedium,
@@ -77,7 +77,7 @@ const EventTimelinePremiumTitleSubGridHeaderCell = styled(TimelinePrimitive.Cell
 }));
 
 const EventTimelinePremiumEventsSubGridWrapper = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'EventsSubGridWrapper',
 })({
   overflowX: 'auto',
@@ -89,7 +89,7 @@ const EventTimelinePremiumEventsSubGridWrapper = styled('div', {
 });
 
 const EventTimelinePremiumEventsSubGrid = styled(TimelinePrimitive.SubGrid, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'EventsSubGrid',
 })({
   display: 'grid',
@@ -98,7 +98,7 @@ const EventTimelinePremiumEventsSubGrid = styled(TimelinePrimitive.SubGrid, {
 });
 
 const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'EventsSubGridHeaderRow',
 })(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.divider}`,
@@ -106,7 +106,7 @@ const EventTimelinePremiumEventsSubGridHeaderRow = styled(TimelinePrimitive.Row,
 }));
 
 const EventTimelinePremiumEventsSubGridRow = styled(TimelinePrimitive.EventRow, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'EventsSubGridRow',
 })(({ theme }) => ({
   width: 'calc(var(--unit-count) * var(--unit-width))',

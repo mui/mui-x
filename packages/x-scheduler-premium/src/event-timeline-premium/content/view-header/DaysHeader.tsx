@@ -8,7 +8,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-p
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const DaysHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderRoot',
 })({
   display: 'flex',
@@ -16,7 +16,7 @@ const DaysHeaderRoot = styled('div', {
 });
 
 const DayHeaderCell = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderCell',
 })(({ theme }) => ({
   width: 'var(--days-cell-width)',
@@ -33,7 +33,7 @@ const DayHeaderCell = styled('div', {
 }));
 
 const DayHeaderTime = styled('time', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderTime',
 })({
   display: 'flex',
@@ -42,7 +42,7 @@ const DayHeaderTime = styled('time', {
 });
 
 const WeekDay = styled('span', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderWeekDay',
 })(({ theme }) => ({
   margin: 0,
@@ -54,7 +54,7 @@ const WeekDay = styled('span', {
 }));
 
 const DayNumber = styled('span', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderDayNumber',
 })(({ theme }) => ({
   margin: 0,
@@ -64,7 +64,7 @@ const DayNumber = styled('span', {
 }));
 
 const MonthStart = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderMonthStart',
 })(({ theme }) => ({
   fontSize: theme.typography.caption.fontSize,
@@ -81,7 +81,7 @@ const MonthStart = styled('div', {
 }));
 
 const MonthStartLabel = styled('p', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'DaysHeaderMonthStartLabel',
 })({
   transform: 'rotate(-90deg)',

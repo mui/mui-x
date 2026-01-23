@@ -11,7 +11,7 @@ import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.type
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const EventTimelinePremiumEventRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'Event',
 })(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
@@ -43,7 +43,7 @@ const EventTimelinePremiumEventRoot = styled('div', {
 }));
 
 const EventTimelinePremiumEventResizeHandler = styled(EventTimelinePremium.EventResizeHandler, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'EventResizeHandler',
 })({
   position: 'absolute',

@@ -75,7 +75,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
 };
 
 const EventTimelinePremiumRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'Root',
 })(({ theme }) => ({
   '--time-cell-width': '64px',
@@ -92,7 +92,7 @@ const EventTimelinePremiumRoot = styled('div', {
 }));
 
 const EventTimelinePremiumHeaderToolbar = styled('header', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'HeaderToolbar',
 })({
   display: 'flex',
@@ -106,7 +106,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   inProps: EventTimelinePremiumProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiEventTimelinePremium' });
+  const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
 
   const {
     parameters,

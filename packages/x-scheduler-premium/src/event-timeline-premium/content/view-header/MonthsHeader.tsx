@@ -9,7 +9,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-p
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const MonthsHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'MonthsHeaderRoot',
 })({
   display: 'grid',
@@ -19,7 +19,7 @@ const MonthsHeaderRoot = styled('div', {
 });
 
 const YearLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'MonthsHeaderYearLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -34,7 +34,7 @@ const YearLabel = styled('div', {
 }));
 
 const MonthLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'MonthsHeaderMonthLabel',
 })(({ theme }) => ({
   gridRow: 2,

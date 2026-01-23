@@ -10,7 +10,7 @@ import { formatWeekDayMonthAndDayOfMonth } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const WeeksHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderRoot',
 })({
   display: 'flex',
@@ -19,7 +19,7 @@ const WeeksHeaderRoot = styled('div', {
 });
 
 const TimeHeaderCell = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderCell',
 })(({ theme }) => ({
   flexGrow: 1,
@@ -32,7 +32,7 @@ const TimeHeaderCell = styled('div', {
 }));
 
 const DayLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDayLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),
@@ -44,7 +44,7 @@ const DayLabel = styled('div', {
 }));
 
 const WeekDaysRow = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDaysRow',
 })(({ theme }) => ({
   display: 'grid',
@@ -53,7 +53,7 @@ const WeekDaysRow = styled('div', {
 }));
 
 const WeekDayCell = styled('time', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'WeeksHeaderDayCell',
 })(({ theme }) => ({
   padding: theme.spacing(0.5),

@@ -9,7 +9,7 @@ import { processDate } from '@mui/x-scheduler-headless/process-date';
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const YearsHeaderRoot = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'YearsHeaderRoot',
 })({
   display: 'grid',
@@ -19,7 +19,7 @@ const YearsHeaderRoot = styled('div', {
 });
 
 const YearLabel = styled('div', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'YearsHeaderYearLabel',
 })(({ theme }) => ({
   padding: theme.spacing(1),

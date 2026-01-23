@@ -26,7 +26,7 @@ describe('<EventTimelinePremium /> - Describe Conformance', () => {
       classes,
       inheritComponent: 'div',
       render,
-      muiName: 'MuiEventTimelinePremium',
+      muiName: 'MuiEventTimeline',
       refInstanceof: window.HTMLDivElement,
       skip: ['componentProp', 'componentsProp', 'themeVariants'],
     }),

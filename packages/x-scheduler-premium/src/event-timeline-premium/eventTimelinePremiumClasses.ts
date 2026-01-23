@@ -87,11 +87,11 @@ export interface EventTimelinePremiumClasses {
 export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
 
 export function getEventTimelinePremiumUtilityClass(slot: string) {
-  return generateUtilityClass('MuiEventTimelinePremium', slot);
+  return generateUtilityClass('MuiEventTimeline', slot);
 }
 
 export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generateUtilityClasses(
-  'MuiEventTimelinePremium',
+  'MuiEventTimeline',
   [
     'root',
     'headerToolbar',

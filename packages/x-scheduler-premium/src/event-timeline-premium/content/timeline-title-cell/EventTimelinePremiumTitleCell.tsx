@@ -8,7 +8,7 @@ import { getDataPaletteProps } from '@mui/x-scheduler/internals';
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 
 const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleCellRow',
 })(({ theme }) => ({
   padding: theme.spacing(2),
@@ -19,7 +19,7 @@ const EventTimelinePremiumTitleCellRow = styled(TimelinePrimitive.Row, {
 }));
 
 const EventTimelinePremiumTitleCellRoot = styled(TimelinePrimitive.Cell, {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleCell',
 })(({ theme }) => ({
   fontSize: theme.typography.body2.fontSize,
@@ -29,7 +29,7 @@ const EventTimelinePremiumTitleCellRoot = styled(TimelinePrimitive.Cell, {
 }));
 
 const ResourceLegendColor = styled('span', {
-  name: 'MuiEventTimelinePremium',
+  name: 'MuiEventTimeline',
   slot: 'TitleCellLegendColor',
 })({
   width: 10,
