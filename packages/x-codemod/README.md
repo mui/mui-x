@@ -93,7 +93,7 @@ npx @mui/x-codemod@next v9.0.0/charts/preset-safe <path|folder>
 The list includes these transformers
 
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
-- [`rename-chart-api-import`](#rename-chart-api-import)
+- [`rename-id-to-series-id`](#rename-id-to-series-id)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -137,6 +137,15 @@ Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-
 ```diff
 -import type { ChartApi } from '@mui/x-charts/ChartContainer';
 +import type { ChartApi } from '@mui/x-charts/context';
+```
+
+#### `rename-id-to-series-id`
+
+Rename the props `id` to `seriesId`.
+
+```diff
+<PieArc id='series-a' />
+<PieArc seriesId='series-a' />
 ```
 
 ## v8.0.0

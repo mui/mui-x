@@ -80,6 +80,10 @@ In v9, only `string` is accepted.
 
 This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
 
+## Renaming `id` to `seriesId` ✅
+
+Some components used for composition got their prop `id` renamed `seriesId` to improve clarify.
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
