@@ -2,7 +2,7 @@ import {
   EventCalendarParameters,
   EventCalendarStore,
 } from '@mui/x-scheduler-headless/use-event-calendar';
-import { TimelineParameters, TimelineStore } from '@mui/x-scheduler-headless/use-timeline';
+import { TimelineParameters, TimelineStore } from '@mui/x-scheduler-headless-premium/use-timeline';
 import { adapter } from './adapters';
 
 export const DEFAULT_EVENT_CALENDAR_STATE = new EventCalendarStore({ events: [] }, adapter).state;

@@ -39,7 +39,7 @@ You can specify x and y ticks with the `xAxis` and `yAxis` props.
 ## Color mapping
 
 To customize the color mapping, use the `zAxis` configuration.
-You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#values-color).
+You can either use the piecewise or continuous [color mapping](https://mui.com/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorConfig.js"}}
 
@@ -56,6 +56,18 @@ To modify this styling, use the `heatmapClasses.highlighted` and `heatmapClasses
 In the following demo, we replace the highlight saturation by a border radius and reduce the saturation of the faded cells.
 
 {{"demo": "HighlightClasses.js"}}
+
+## Click event
+
+Use `onItemClick` to know which cell is clicked by user.
+
+The first argument is the click event.
+The second one is the item identifier.
+It contains the properties `xIndex` and `yIndex` that are the indexes of the clicked cell along the x- and y-axes respectively.
+
+If this cell has associated data, the `dataIndex` property indicates the position of the cell's data within the series' `data` array.
+
+{{"demo": "HeatmapCellClick.js"}}
 
 ## Common features
 

@@ -18,6 +18,7 @@
       },
       "required": true
     },
+    "borderRadius": { "type": { "name": "number" } },
     "brushConfig": {
       "type": {
         "name": "shape",
@@ -31,7 +32,7 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" }, "default": "true" },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
       "type": {
         "name": "shape",
@@ -55,6 +56,8 @@
     },
     "onAxisClick": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onItemClick</code> instead to get access to both x- and y-axis values.",
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
@@ -65,6 +68,13 @@
       "signature": {
         "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
       }
     },
     "onTooltipItemChange": {

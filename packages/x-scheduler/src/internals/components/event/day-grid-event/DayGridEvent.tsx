@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { createSelector, useStore } from '@base-ui/utils/store';
-import { Repeat } from 'lucide-react';
+import RepeatRounded from '@mui/icons-material/RepeatRounded';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import {
   SchedulerEventSide,
@@ -19,7 +19,7 @@ import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-cale
 import { DayGridEventProps } from './DayGridEvent.types';
 import { isOccurrenceAllDayOrMultipleDay } from '../../../utils/event-utils';
 import { useTranslations } from '../../../utils/TranslationsContext';
-import { EventDragPreview } from '../../event-drag-preview';
+import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
 
@@ -101,15 +101,12 @@ const DayGridEventTime = styled('time', {
   },
 }));
 
-const DayGridEventRecurringIcon = styled(Repeat, {
+const DayGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventRecurringIcon',
 })({
-  width: 12,
-  height: 12,
-  strokeWidth: 1.5,
   position: 'absolute',
-  bottom: 3,
+  bottom: 1,
   right: 3,
   color: 'var(--event-color-11)',
 });
@@ -249,7 +246,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
               <DayGridEventTitle>{occurrence.title}</DayGridEventTitle>
             </LinesClamp>
-            {isRecurring && <DayGridEventRecurringIcon aria-hidden="true" />}
+            {isRecurring && <DayGridEventRecurringIcon aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
 
@@ -273,7 +270,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                 <DayGridEventTitle as="span">{occurrence.title}</DayGridEventTitle>
               </DayGridEventCardContent>
             </LinesClamp>
-            {isRecurring && <DayGridEventRecurringIcon aria-hidden="true" />}
+            {isRecurring && <DayGridEventRecurringIcon aria-hidden="true" fontSize="small" />}
           </DayGridEventCardWrapper>
         );
       default:

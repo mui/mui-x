@@ -18,7 +18,7 @@ import {
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export interface ChartsLegendProps {
   /**
@@ -128,8 +128,6 @@ const ChartsLegend = consumeSlots(
 
           if (toggleVisibilityOnClick) {
             instance.toggleItemVisibility({
-              // TODO: Remove in v9
-              // @ts-expect-error item always has type defined.
               type: item.type,
               seriesId: item.seriesId,
               dataIndex: item.dataIndex,
@@ -151,8 +149,6 @@ const ChartsLegend = consumeSlots(
       >
         {data.items.map((item, i) => {
           const isVisible = isItemVisible(seriesConfig, {
-            // TODO: Remove in v9
-            // @ts-expect-error item always has type defined.
             type: item.type,
             seriesId: item.seriesId,
             dataIndex: item.dataIndex,

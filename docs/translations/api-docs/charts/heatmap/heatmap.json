@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
     "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
@@ -47,6 +48,13 @@
           "name": "highlightedItem",
           "description": "The newly highlighted item."
         }
+      }
+    },
+    "onItemClick": {
+      "description": "The callback fired when an item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The click event." },
+        "item": { "name": "item", "description": "The clicked item." }
       }
     },
     "onTooltipItemChange": {

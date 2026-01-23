@@ -7,7 +7,7 @@ import { useEventOccurrencesWithTimelinePosition } from '../../use-event-occurre
 import { eventCalendarOccurrencePlaceholderSelectors } from '../../event-calendar-selectors';
 import { processDate } from '../../process-date';
 import { useAdapter } from '../../use-adapter';
-import { isInternalDragOrResizePlaceholder } from '../../utils/drag-utils';
+import { isInternalDragOrResizePlaceholder } from '../../internals/utils/drag-utils';
 
 export function useCalendarGridPlaceholderInRange(
   parameters: useCalendarGridPlaceholderInRange.Parameters,

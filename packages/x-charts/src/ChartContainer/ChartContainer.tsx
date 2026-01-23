@@ -46,17 +46,17 @@ export type ChartContainerProps<
  * </ChartContainer>
  * ```
  */
-const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends ChartSeriesType>(
-  props: ChartContainerProps<TSeries>,
-  ref: React.Ref<SVGSVGElement>,
-) {
-  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
-    props,
-    ref,
-  );
+const ChartContainer = React.forwardRef(function ChartContainer<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartContainerProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps<
+    TSeries,
+    TSignatures
+  >(props, ref);
 
   return (
-    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProps}>
+    <ChartDataProvider {...chartDataProviderProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );

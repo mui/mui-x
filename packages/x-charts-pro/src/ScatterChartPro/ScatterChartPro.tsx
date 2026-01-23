@@ -49,12 +49,10 @@ export interface ScatterChartProSlotProps
 
 export interface ScatterChartProProps
   extends
-    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
-      | 'plugins'
-      | 'seriesConfig'
       | 'onItemClick'
       | 'slots'
       | 'slotProps'
@@ -120,7 +118,9 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps}>
+    <ChartDataProviderPro<'scatter', ScatterChartProPluginSignatures>
+      {...chartDataProviderProProps}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}

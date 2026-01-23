@@ -12,9 +12,10 @@ import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '../utils/SchedulerStore';
+} from '../internals/utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
+import { EventCalendarLazyLoadingPlugin } from './plugins/EventCalendarLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -88,6 +89,8 @@ export class EventCalendarStore<
         return null;
       });
     }
+
+    this.lazyLoading = new EventCalendarLazyLoadingPlugin<TEvent, TResource>(this);
   }
 
   private assertViewValidity(view: CalendarView) {

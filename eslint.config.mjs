@@ -25,7 +25,12 @@ const GRID_PACKAGES = [
 ];
 const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
-const SCHEDULER_PACKAGES = ['x-scheduler', 'x-scheduler-headless'];
+const SCHEDULER_PACKAGES = [
+  'x-scheduler',
+  'x-scheduler-headless',
+  'x-scheduler-premium',
+  'x-scheduler-headless-premium',
+];
 
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
@@ -74,7 +79,9 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-tree-view',
   '@mui/x-tree-view-pro',
   '@mui/x-scheduler',
+  '@mui/x-scheduler-premium',
   '@mui/x-scheduler-headless',
+  '@mui/x-scheduler-headless-premium',
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -401,6 +408,8 @@ export default defineConfig(
     files: [
       'packages/x-scheduler/**/*{.tsx,.ts,.js}',
       'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-premium/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-headless-premium/**/*{.tsx,.ts,.js}',
     ],
     rules: {
       // Base UI lint rules
@@ -423,7 +432,9 @@ export default defineConfig(
     'x-date-pickers',
     'x-date-pickers-pro',
     'x-scheduler',
+    'x-scheduler-premium',
     'x-scheduler-headless',
+    'x-scheduler-headless-premium',
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
@@ -484,7 +495,9 @@ export default defineConfig(
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     files: [
       `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-premium/src/**/*${EXTENSION_TS}`,
       `packages/x-scheduler-headless/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-headless-premium/src/**/*${EXTENSION_TS}`,
       `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {
