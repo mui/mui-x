@@ -4,7 +4,7 @@ import type {
   ChartSeriesType,
   ChartsSeriesConfig,
   PolarChartSeriesType,
-} from '../../../../models/seriesType/config';
+} from '../../../../../models/seriesType/config';
 import type { ColorProcessor } from './colorProcessor.types';
 import type { CartesianExtremumGetter } from './cartesianExtremumGetter.types';
 import type { LegendGetter } from './legendGetter.types';
@@ -13,12 +13,12 @@ import { type PolarExtremumGetter } from './polarExtremumGetter.types';
 import { type GetSeriesWithDefaultValues } from './getSeriesWithDefaultValues.types';
 import { type TooltipItemPositionGetter } from './tooltipItemPositionGetter.types';
 import { type SeriesLayoutGetter } from './seriesLayout.types';
-import { type KeyboardFocusHandler } from '../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
+import { type KeyboardFocusHandler } from '../../../featurePlugins/useChartKeyboardNavigation/keyboardFocusHandler.types';
 import { type IdentifierSerializer } from './identifierSerializer.types';
 import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
-import { type UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
-import { type UseChartPolarAxisSignature } from '../../featurePlugins/useChartPolarAxis';
+import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
+import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
 
 export type ChartSeriesTypeRequiredPlugins<TSeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[TSeriesType] extends { axisType: 'cartesian' }
