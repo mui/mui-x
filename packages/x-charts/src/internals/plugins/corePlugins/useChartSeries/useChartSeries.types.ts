@@ -1,12 +1,13 @@
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import { type ChartPluginSignature, type SeriesLayoutGetterResult } from '../../models';
+import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
+  type SeriesLayoutGetterResult,
   type SeriesProcessorParams,
   type SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
-import { type UseChartSeriesConfigSignature } from '../useChartSeriesConfig';
+  type UseChartSeriesConfigSignature,
+} from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**

@@ -1,10 +1,10 @@
-import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { SeriesItemIdentifier } from '../../../../../models/seriesType';
 import type {
   ChartSeriesDefaultized,
   ChartSeriesType,
   ChartsSeriesConfig,
-} from '../../../../models/seriesType/config';
-import { type SeriesId } from '../../../../models/seriesType/common';
+} from '../../../../../models/seriesType/config';
+import { type SeriesId } from '../../../../../models/seriesType/common';
 import {
   type AxisId,
   type ChartsRotationAxisProps,
@@ -12,8 +12,8 @@ import {
   type PolarAxisDefaultized,
   type ComputedXAxis,
   type ComputedYAxis,
-} from '../../../../models/axis';
-import { type ChartsLabelMarkProps } from '../../../../ChartsLabel/ChartsLabelMark';
+} from '../../../../../models/axis';
+import { type ChartsLabelMarkProps } from '../../../../../ChartsLabel/ChartsLabelMark';
 import { type ColorGetter } from './colorProcessor.types';
 
 export interface ItemTooltip<T extends ChartSeriesType> {

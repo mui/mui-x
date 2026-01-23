@@ -1,6 +1,6 @@
 import { cleanIdentifier } from './cleanIdentifier';
 import { lineSeriesConfig } from '../../../../../LineChart/seriesConfig';
-import type { ChartSeriesConfig } from '../../../models';
+import type { ChartSeriesConfig } from '../types';
 
 describe('cleanIdentifier', () => {
   const seriesConfig = {

@@ -1,5 +1,5 @@
 import { type ChartPluginSignature } from '../../models';
-import { type ChartSeriesConfig } from '../../models/seriesConfig';
+import { type ChartSeriesConfig } from './types/seriesConfig.types';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { type SeriesItemIdentifier } from '../../../../models/seriesType';
 
