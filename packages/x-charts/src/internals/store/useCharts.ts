@@ -14,8 +14,6 @@ import { CHART_CORE_PLUGINS, type ChartCorePluginSignatures } from '../plugins/c
 import { type UseChartBaseProps } from './useCharts.types';
 import { type UseChartInteractionState } from '../plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import { extractPluginParamsFromProps } from './extractPluginParamsFromProps';
-import { type ChartSeriesType } from '../../models/seriesType/config';
-import { type ChartSeriesConfig } from '../plugins/models/seriesConfig';
 
 let globalId = 0;
 
@@ -26,15 +24,10 @@ let globalId = 0;
  *
  * @param inPlugins All the plugins that will be used in the chart.
  * @param props The props passed to the chart.
- * @param seriesConfig The set of helpers used for series-specific computation.
  */
-export function useCharts<
-  TSeriesType extends ChartSeriesType,
-  TSignatures extends readonly ChartAnyPluginSignature[],
->(
+export function useCharts<TSignatures extends readonly ChartAnyPluginSignature[] = []>(
   inPlugins: ConvertSignaturesIntoPlugins<TSignatures>,
   props: Partial<UseChartBaseProps<TSignatures>>,
-  seriesConfig: ChartSeriesConfig<TSeriesType>,
 ) {
   type TSignaturesWithCorePluginSignatures = readonly [
     ...ChartCorePluginSignatures,
@@ -75,10 +68,7 @@ export function useCharts<
 
     plugins.forEach((plugin) => {
       if (plugin.getInitialState) {
-        Object.assign(
-          initialState,
-          plugin.getInitialState(pluginParams, initialState, seriesConfig),
-        );
+        Object.assign(initialState, plugin.getInitialState(pluginParams, initialState));
       }
     });
     storeRef.current = new Store<ChartState<TSignaturesWithCorePluginSignatures>>(initialState);
@@ -94,7 +84,6 @@ export function useCharts<
       >,
       svgRef: innerSvgRef,
       chartRootRef: innerChartRootRef,
-      seriesConfig,
     });
 
     if (pluginResponse.publicAPI) {
