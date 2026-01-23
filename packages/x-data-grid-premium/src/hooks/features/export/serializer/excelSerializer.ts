@@ -106,6 +106,30 @@ export const serializeRowUnsafe = (
       });
     }
 
+    // Check if the column has a custom excelValueGetter
+    if (column.excelValueGetter) {
+      const excelValue = column.excelValueGetter(
+        apiRef.current.getRowValue(row, column),
+        row,
+        column,
+        apiRef,
+      );
+
+      // Handle formula strings (starting with '=')
+      if (typeof excelValue === 'string' && excelValue.startsWith('=')) {
+        if (options.escapeFormulas) {
+          // Escape the formula by prefixing with apostrophe
+          serializedRow[column.field] = `'${excelValue}`;
+        } else {
+          // Export as Excel formula object (without the leading '=')
+          serializedRow[column.field] = { formula: excelValue.slice(1) };
+        }
+      } else if (excelValue != null) {
+        serializedRow[column.field] = excelValue as any;
+      }
+      return;
+    }
+
     let cellValue: string | undefined;
 
     switch (column.type) {

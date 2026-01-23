@@ -509,6 +509,12 @@ The exported data includes any filters and sorting that users have applied.
 Try changing the sort order or hiding columns, then click export to see how it affects the output.
 :::
 
+### Excel export with formula support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+This recipe demonstrates how to use a third-party spreadsheet library [HyperFormula](https://hyperformula.handsontable.com/) for spreadsheet-like formula calculations that are preserved in Excel exports using the `excelValueGetter` column definition property and `escapeFormulas: false` in Excel export options.
+
+{{"demo": "ExcelFormulaSupport.js", "bg": "inline", "defaultCodeOpen": false}}
+
 ## apiRef
 
 The Data Grid exposes a set of methods via the `apiRef` object that are used internally in the implementation of the export feature.

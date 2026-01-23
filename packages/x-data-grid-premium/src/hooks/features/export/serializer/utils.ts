@@ -8,7 +8,7 @@ export const getExcelJs = async () => {
 };
 
 export interface SerializedRow {
-  row: Record<string, undefined | number | boolean | string | Date>;
+  row: Record<string, undefined | number | boolean | string | Date | { formula: string }>;
   dataValidation: Record<string, Excel.DataValidation>;
   outlineLevel: number;
   mergedCells: { leftIndex: number; rightIndex: number }[];
