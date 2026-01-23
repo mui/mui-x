@@ -1,16 +1,9 @@
 'use client';
 import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
-import useEventCallback from '@mui/utils/useEventCallback';
 import { type ChartPlugin } from '../../models';
-import {
-  type CleanIdentifierFunction,
-  type SerializeIdentifierFunction,
-  type UseChartSeriesSignature,
-} from './useChartSeries.types';
+import { type UseChartSeriesSignature } from './useChartSeries.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
 import { defaultizeSeries } from './processSeries';
-import { serializeIdentifier as serializeIdentifierFn } from './serializeIdentifier';
-import { cleanIdentifier as cleanIdentifierFn } from './cleanIdentifier';
 
 export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, store }) => {
   const { series, dataset, theme, colors } = params;
@@ -29,20 +22,7 @@ export const useChartSeries: ChartPlugin<UseChartSeriesSignature> = ({ params, s
     });
   }, [colors, dataset, series, theme, store]);
 
-  const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>
-    serializeIdentifierFn(store.state.seriesConfig.config, identifier),
-  );
-
-  const cleanIdentifier: CleanIdentifierFunction = useEventCallback((identifier) =>
-    cleanIdentifierFn(store.state.seriesConfig.config, identifier),
-  );
-
-  return {
-    instance: {
-      serializeIdentifier,
-      cleanIdentifier,
-    },
-  };
+  return {};
 };
 
 useChartSeries.params = {

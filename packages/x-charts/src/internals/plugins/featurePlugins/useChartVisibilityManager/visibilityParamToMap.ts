@@ -1,5 +1,5 @@
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
-import { serializeIdentifier } from '../../corePlugins/useChartSeries/serializeIdentifier';
+import { serializeIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/serializeIdentifier';
 import type { ChartSeriesConfig } from '../../models';
 import type { VisibilityIdentifier, VisibilityMap } from './useChartVisibilityManager.types';
 
