@@ -7,6 +7,8 @@ import {
   useStore,
   useWebGLContext,
 } from '@mui/x-charts/internals';
+import useEventCallback from '@mui/utils/useEventCallback';
+import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { useHeatmapSeriesContext } from '../../hooks';
 import { parseColor } from './parseColor';
 import {
@@ -29,22 +31,28 @@ export function HeatmapWebGLPlot({
   borderRadius?: number;
 }): React.JSX.Element | null {
   const gl = useWebGLContext();
+  const series = useHeatmapSeriesContext();
 
-  if (!gl) {
+  const seriesToDisplay = series?.series[series.seriesOrder[0]];
+
+  if (!gl || !seriesToDisplay) {
     return null;
   }
 
-  return <HeatmapWebGLPlotImpl gl={gl} borderRadius={borderRadius ?? 0} />;
+  return <HeatmapWebGLPlotImpl gl={gl} borderRadius={borderRadius ?? 0} series={seriesToDisplay} />;
 }
 
-function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius: number }) {
-  const { gl, borderRadius } = props;
+function HeatmapWebGLPlotImpl(props: {
+  gl: WebGL2RenderingContext;
+  borderRadius: number;
+  series: DefaultizedHeatmapSeriesType;
+}) {
+  const { gl, borderRadius, series } = props;
 
   const drawingArea = useDrawingArea();
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
   const colorScale = useZColorScale()!;
-  const series = useHeatmapSeriesContext();
   const store = useStore();
   const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
   const isFaded = store.use(selectorChartsIsFadedCallback);
@@ -58,8 +66,7 @@ function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius:
     return p;
   });
   const [quadBuffer] = React.useState(() => uploadQuadBuffer(gl));
-  const dataLengthRef = React.useRef<number>(0);
-  const seriesToDisplay = series?.series[series.seriesOrder[0]];
+  const dataLength = series.data.length;
   const renderScheduledRef = React.useRef<boolean>(false);
 
   const render = React.useCallback(() => {
@@ -69,11 +76,10 @@ function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius:
     gl.clearColor(0, 0, 0, 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    if (dataLengthRef.current > 0) {
-      // Draw all rectangles with one instanced draw call
-      gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLengthRef.current);
-    }
-  }, [gl]);
+    // Draw all rectangles with one instanced draw call
+    // TODO: Can `dataLength` be wrong if the series data has null/undefined entries?
+    gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
+  }, [dataLength, gl]);
 
   const scheduleRender = React.useCallback(() => {
     renderScheduledRef.current = true;
@@ -96,66 +102,40 @@ function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius:
   const seriesBorderRadius = Math.min(borderRadius ?? 0, width / 2, height / 2);
   const lastSeriesBorderRadiusRef = React.useRef<number>(seriesBorderRadius > 0 ? 0 : 1);
 
-  React.useEffect(() => {
-    const shouldAttachNewShader = lastSeriesBorderRadiusRef.current > 0 !== seriesBorderRadius > 0;
-    lastSeriesBorderRadiusRef.current = seriesBorderRadius;
+  const setupResolutionUniform = useEventCallback(() => {
+    gl.uniform2f(
+      gl.getUniformLocation(program, 'u_resolution'),
+      drawingArea.width,
+      drawingArea.height,
+    );
+  });
 
-    if (shouldAttachNewShader) {
-      const shaderSource =
-        seriesBorderRadius > 0
-          ? heatmapFragmentShaderSourceWithBorderRadius
-          : heatmapFragmentShaderSourceNoBorderRadius;
+  const setupBorderRadiusUniform = useEventCallback(() => {
+    gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
+  });
 
-      gl.getAttachedShaders(program)?.forEach((shader) => {
-        if (shader === vertexShader) {
-          return;
-        }
-        gl.detachShader(program, shader);
-        gl.deleteShader(shader);
-      });
+  const setupRectDimensionsUniform = useEventCallback(() => {
+    gl.uniform2f(gl.getUniformLocation(program, 'u_dimensions'), width, height);
+  });
 
-      attachShader(gl, program, shaderSource, gl.FRAGMENT_SHADER);
-
-      gl.linkProgram(program);
-
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('Program linking error:', gl.getProgramInfoLog(program));
-      }
-
-      // Not a hook
-      // eslint-disable-next-line react-compiler/react-compiler
-      gl.useProgram(program);
-      logWebGLErrors(gl);
-    }
-
+  const setupUniforms = useEventCallback(() => {
     bindQuadBuffer(gl, program, quadBuffer);
 
-    gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
-    scheduleRender();
-  }, [gl, program, quadBuffer, scheduleRender, seriesBorderRadius, vertexShader]);
+    setupBorderRadiusUniform();
+    setupResolutionUniform();
+    setupRectDimensionsUniform();
+  });
 
-  React.useEffect(() => {
-    // Setup resolution uniform
-    const uResolution = gl.getUniformLocation(program, 'u_resolution');
-    gl.uniform2f(uResolution, drawingArea.width, drawingArea.height);
-  }, [gl, drawingArea.width, drawingArea.height, program, seriesBorderRadius]);
-
-  React.useEffect(() => {
-    if (!seriesToDisplay) {
-      dataLengthRef.current = 0;
-      return;
-    }
-
-    dataLengthRef.current = seriesToDisplay.data.length;
-    const centers = new Float32Array(seriesToDisplay.data.length * 2);
-    const colors = new Float32Array(seriesToDisplay.data.length * 4);
-    const saturations = new Float32Array(seriesToDisplay.data.length);
+  const setupAttributes = useEventCallback(() => {
+    const centers = new Float32Array(series.data.length * 2);
+    const colors = new Float32Array(series.data.length * 4);
+    const saturations = new Float32Array(series.data.length);
 
     const xDomain = xScale.domain();
     const yDomain = yScale.domain();
 
-    for (let dataIndex = 0; dataIndex < seriesToDisplay.data.length; dataIndex += 1) {
-      const [xIndex, yIndex, value] = seriesToDisplay.data[dataIndex];
+    for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
+      const [xIndex, yIndex, value] = series.data[dataIndex];
 
       const x = xScale(xDomain[xIndex]);
       const y = yScale(yDomain[yIndex]);
@@ -175,15 +155,12 @@ function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius:
       colors[dataIndex * 4 + 2] = rgbColor[2];
       colors[dataIndex * 4 + 3] = 1.0;
 
-      if (isHighlighted({ seriesId: seriesToDisplay.id, dataIndex })) {
+      if (isHighlighted({ seriesId: series.id, dataIndex })) {
         saturations[dataIndex] = 0.2;
-      } else if (isFaded({ seriesId: seriesToDisplay.id, dataIndex })) {
+      } else if (isFaded({ seriesId: series.id, dataIndex })) {
         saturations[dataIndex] = -0.2;
       }
     }
-
-    const uDimensions = gl.getUniformLocation(program, 'u_dimensions');
-    gl.uniform2f(uDimensions, width, height);
 
     // Upload rectangle centers
     const centerBuffer = gl.createBuffer();
@@ -216,8 +193,72 @@ function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius:
     gl.enableVertexAttribArray(aSaturation);
     gl.vertexAttribPointer(aSaturation, 1, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(aSaturation, 1);
+  });
+
+  React.useEffect(() => {
+    const shouldAttachNewShader = lastSeriesBorderRadiusRef.current > 0 !== seriesBorderRadius > 0;
+    lastSeriesBorderRadiusRef.current = seriesBorderRadius;
+
+    if (shouldAttachNewShader) {
+      const shaderSource =
+        seriesBorderRadius > 0
+          ? heatmapFragmentShaderSourceWithBorderRadius
+          : heatmapFragmentShaderSourceNoBorderRadius;
+
+      gl.getAttachedShaders(program)?.forEach((shader) => {
+        const shaderType = gl.getShaderParameter(shader, gl.SHADER_TYPE);
+
+        if (shaderType === gl.FRAGMENT_SHADER) {
+          gl.detachShader(program, shader);
+          gl.deleteShader(shader);
+        }
+      });
+
+      attachShader(gl, program, shaderSource, gl.FRAGMENT_SHADER);
+
+      gl.linkProgram(program);
+
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.error('Program linking error:', gl.getProgramInfoLog(program));
+      }
+
+      // Not a hook
+      // eslint-disable-next-line react-compiler/react-compiler
+      gl.useProgram(program);
+      logWebGLErrors(gl);
+
+      setupUniforms();
+      setupAttributes();
+    } else {
+      setupBorderRadiusUniform();
+    }
 
     scheduleRender();
+  }, [
+    gl,
+    program,
+    scheduleRender,
+    seriesBorderRadius,
+    setupAttributes,
+    setupBorderRadiusUniform,
+    setupUniforms,
+  ]);
+
+  React.useEffect(() => {
+    setupResolutionUniform();
+    scheduleRender();
+  }, [drawingArea.width, drawingArea.height, setupResolutionUniform, scheduleRender]);
+
+  React.useEffect(() => {
+    setupRectDimensionsUniform();
+    scheduleRender();
+  }, [width, height, setupRectDimensionsUniform, scheduleRender]);
+
+  React.useEffect(() => {
+    setupAttributes();
+    scheduleRender();
+    // TODO: I don't like that these dependencies aren't caught automatically by ESLint
+    // Check if I can improve something here
   }, [
     colorScale,
     drawingArea.left,
@@ -228,12 +269,11 @@ function HeatmapWebGLPlotImpl(props: { gl: WebGL2RenderingContext; borderRadius:
     isHighlighted,
     program,
     scheduleRender,
-    seriesToDisplay,
+    series,
+    setupAttributes,
     width,
     xScale,
     yScale,
-    /* This must re-render when seriesBorderRadius changes so the correct buffers are bound and uploaded */
-    seriesBorderRadius,
   ]);
 
   React.useEffect(() => {
