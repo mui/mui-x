@@ -17,7 +17,7 @@ This package is not published yet.
 
 ## Drag and resize events
 
-You can enable the dragging and resizing of events within the Event Calendar or the Event Timeline Premium using the `areEventsDraggable` and `areEventsResizable` props.
+You can enable the dragging and resizing of events within the Event Calendar or the Event Timeline using the `areEventsDraggable` and `areEventsResizable` props.
 When `areEventsDraggable` is `true`, the events can be dragged to another point in time.
 When `areEventsResizable` is `true`, the event extremities can be dragged to change its duration.
 
