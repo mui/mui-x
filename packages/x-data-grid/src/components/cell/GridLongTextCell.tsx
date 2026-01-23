@@ -94,7 +94,7 @@ const GridLongTextCellCornerButton = styled('button', {
   [`&.${gridClasses.longTextCellExpandButton}`]: {
     right: -9,
     opacity: 0,
-    [`.${gridClasses.longTextCell}:hover &`]: {
+    [`.${gridClasses.longTextCell}:hover &, .${gridClasses.longTextCell}.Mui-focused &`]: {
       opacity: 1,
     },
   },
@@ -186,19 +186,25 @@ function GridLongTextCell(props: GridLongTextCellProps) {
     apiRef.current.getCellElement(id, colDef.field)?.focus();
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Escape' && popupOpen) {
-      setPopupOpen(false);
-      event.stopPropagation();
-    }
-  };
+  React.useEffect(() => {
+    return apiRef.current.subscribeEvent('cellKeyDown', (params, event) => {
+      if (params.id !== id || params.field !== colDef.field) {
+        return;
+      }
+      if (event.key === ' ') {
+        setPopupOpen((prev) => !prev);
+      }
+      if (event.key === 'Escape') {
+        setPopupOpen(false);
+      }
+    });
+  }, [apiRef, id, colDef.field]);
 
   return (
     <GridLongTextCellRoot
       ref={cellRef}
       {...slotProps?.root}
-      className={clsx(classes.root, slotProps?.root?.className)}
-      onKeyDown={handleKeyDown}
+      className={clsx(classes.root, hasFocus && 'Mui-focused', slotProps?.root?.className)}
     >
       <GridLongTextCellContent
         {...slotProps?.content}
@@ -208,6 +214,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
       </GridLongTextCellContent>
       <GridLongTextCellCornerButton
         aria-label={apiRef.current.getLocaleText('longTextCellExpandLabel')}
+        aria-haspopup="dialog"
         tabIndex={-1}
         {...slotProps?.expandButton}
         className={clsx(classes.expandButton, slotProps?.expandButton?.className)}
