@@ -9,6 +9,7 @@ import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-p
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+
 const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimelinePremium',
   slot: 'Event',

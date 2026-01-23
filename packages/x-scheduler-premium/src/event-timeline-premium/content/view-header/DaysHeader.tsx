@@ -6,6 +6,7 @@ import { getDayList } from '@mui/x-scheduler-headless/get-day-list';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
+
 const DaysHeaderRoot = styled('div', {
   name: 'MuiEventTimelinePremium',
   slot: 'DaysHeaderRoot',
