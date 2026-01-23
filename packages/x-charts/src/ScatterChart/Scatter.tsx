@@ -49,9 +49,9 @@ export interface ScatterProps {
   slotProps?: ScatterSlotProps;
 }
 
-export interface ScatterSlots extends ScatterMarkerSlots { }
+export interface ScatterSlots extends ScatterMarkerSlots {}
 
-export interface ScatterSlotProps extends ScatterMarkerSlotProps { }
+export interface ScatterSlotProps extends ScatterMarkerSlotProps {}
 
 /**
  * Demos:

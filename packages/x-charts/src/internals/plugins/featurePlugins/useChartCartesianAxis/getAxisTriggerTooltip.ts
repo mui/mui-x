@@ -1,5 +1,8 @@
 import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartSeriesConfig, type AxisTooltipGetter } from '../../corePlugins/useChartSeriesConfig';
+import {
+  type ChartSeriesConfig,
+  type AxisTooltipGetter,
+} from '../../corePlugins/useChartSeriesConfig';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
 import { type AxisId } from '../../../../models/axis';
