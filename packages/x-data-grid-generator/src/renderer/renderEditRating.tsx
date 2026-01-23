@@ -5,7 +5,7 @@ import Rating from '@mui/material/Rating';
 import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
 
 function EditRating(props: GridRenderEditCellParams<any, number>) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
 
   const apiRef = useGridApiContext();
 
@@ -20,7 +20,7 @@ function EditRating(props: GridRenderEditCellParams<any, number>) {
   };
 
   const handleRef = (element: HTMLElement | null) => {
-    if (element) {
+    if (element && hasFocus) {
       if (value) {
         element.querySelector<HTMLElement>(`input[value="${Math.round(value)}"]`)!.focus();
       } else {
