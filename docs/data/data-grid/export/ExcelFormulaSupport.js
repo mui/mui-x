@@ -15,6 +15,7 @@ import {
 import { GridToolbarDivider } from '@mui/x-data-grid/internals';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { alpha } from '@mui/material/styles';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import Dialog from '@mui/material/Dialog';
@@ -35,11 +36,15 @@ const baseColumns = [
   { field: 'sum', headerName: 'Sum', width: 100, type: 'formula' },
 ];
 
-const buttonSx = {
-  backgroundColor: '#F3F3F3',
-  border: '1px solid #D4D4D4',
+const getButtonSx = (theme) => ({
+  backgroundColor:
+    theme.palette.mode === 'dark'
+      ? theme.palette.grey[800]
+      : theme.palette.grey[100],
+  border: '1px solid',
+  borderColor: theme.palette.divider,
   borderRadius: '4px',
-  color: '#333',
+  color: theme.palette.text.primary,
   fontFamily: '"Calibri", "Segoe UI", sans-serif',
   fontSize: '12px',
   fontWeight: 500,
@@ -47,10 +52,16 @@ const buttonSx = {
   px: 2,
   height: '34px',
   '&:hover': {
-    backgroundColor: '#E8E8E8',
-    borderColor: '#C0C0C0',
+    backgroundColor:
+      theme.palette.mode === 'dark'
+        ? theme.palette.grey[700]
+        : theme.palette.grey[200],
+    borderColor:
+      theme.palette.mode === 'dark'
+        ? theme.palette.grey[600]
+        : theme.palette.grey[400],
   },
-};
+});
 
 function CustomToolbar(props) {
   const { formulaBarProps, onAddRow, onAddColumn, excelOptions } = props;
@@ -245,20 +256,35 @@ export default function ExcelFormulaSupport() {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseColumnDialog} sx={buttonSx}>
+            <Button
+              onClick={handleCloseColumnDialog}
+              sx={(theme) => getButtonSx(theme)}
+            >
               Cancel
             </Button>
             <Button
               onClick={handleAddColumn}
               disabled={!canAddColumn}
-              sx={{
-                ...buttonSx,
-                backgroundColor: canAddColumn ? '#4472C4' : '#F3F3F3',
-                color: canAddColumn ? '#fff' : '#333',
-                '&:hover': {
-                  backgroundColor: canAddColumn ? '#3861a8' : '#E8E8E8',
-                },
-                mr: 0.5,
+              sx={(theme) => {
+                const baseButtonSx = getButtonSx(theme);
+                const disabledBg =
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.grey[800]
+                    : theme.palette.grey[100];
+                const disabledHoverBg =
+                  theme.palette.mode === 'dark'
+                    ? theme.palette.grey[700]
+                    : theme.palette.grey[200];
+
+                return {
+                  ...baseButtonSx,
+                  backgroundColor: canAddColumn ? '#4472C4' : disabledBg,
+                  color: canAddColumn ? '#fff' : theme.palette.text.primary,
+                  '&:hover': {
+                    backgroundColor: canAddColumn ? '#3861a8' : disabledHoverBg,
+                  },
+                  mr: 0.5,
+                };
               }}
             >
               Add
@@ -293,9 +319,12 @@ export default function ExcelFormulaSupport() {
               },
             },
           }}
-          sx={{
+          sx={(theme) => ({
             '& .MuiDataGrid-columnHeader': {
-              backgroundColor: '#F3F3F3',
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[800]
+                  : theme.palette.grey[100],
             },
             '& .MuiDataGrid-columnHeaderTitle': {
               fontWeight: 600,
@@ -303,14 +332,18 @@ export default function ExcelFormulaSupport() {
             '& .row-number-cell': {
               display: 'flex',
               justifyContent: 'center',
-              backgroundColor: '#F3F3F3',
-              color: '#000',
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.grey[800]
+                  : theme.palette.grey[100],
+              color: theme.palette.text.primary,
               fontWeight: 600,
             },
             '& .MuiDataGrid-cell:focus': {
               outline: '2px solid #4472C4',
               outlineOffset: '-2px',
-              backgroundColor: '#D6DCE5',
+              backgroundColor:
+                theme.palette.mode === 'dark' ? alpha('#4472C4', 0.3) : '#D6DCE5',
             },
             '& .MuiDataGrid-cell:focus-within': {
               outline: '2px solid #4472C4',
@@ -318,7 +351,7 @@ export default function ExcelFormulaSupport() {
             '& .Mui-selected, .MuiDataGrid-row:hover': {
               backgroundColor: 'transparent !important',
             },
-          }}
+          })}
         />
       </HyperFormulaContext.Provider>
     </Box>

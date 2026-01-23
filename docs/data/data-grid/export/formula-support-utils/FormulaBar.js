@@ -13,63 +13,72 @@ export function FormulaBar(props) {
 
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         display: 'flex',
         alignItems: 'stretch',
         my: 1,
-        border: '1px solid #D4D4D4',
+        border: '1px solid',
+        borderColor: theme.palette.divider,
         borderRadius: '4px',
         overflow: 'hidden',
         '&:focus-within': {
           borderColor: '#4472C4',
         },
-      }}
+      })}
     >
       {/* Name Box - shows current cell reference like "A1" */}
       <Box
-        sx={{
+        sx={(theme) => ({
           width: '50px',
-          backgroundColor: '#F3F3F3',
-          borderRight: '1px solid #D4D4D4',
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? theme.palette.grey[800]
+              : theme.palette.grey[100],
+          borderRight: '1px solid',
+          borderColor: theme.palette.divider,
           fontFamily: '"Calibri", "Segoe UI", sans-serif',
           fontSize: '11px',
           fontWeight: 500,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#333',
+          color: theme.palette.text.primary,
           userSelect: 'none',
-        }}
+        })}
       >
         {cellRef}
       </Box>
 
       {/* fx label */}
       <Box
-        sx={{
+        sx={(theme) => ({
           px: 0.5,
-          backgroundColor: '#F3F3F3',
-          borderRight: '1px solid #D4D4D4',
+          backgroundColor:
+            theme.palette.mode === 'dark'
+              ? theme.palette.grey[800]
+              : theme.palette.grey[100],
+          borderRight: '1px solid',
+          borderColor: theme.palette.divider,
           fontFamily: '"Calibri", "Segoe UI", sans-serif',
           fontSize: '15px',
           fontStyle: 'italic',
-          color: '#555',
+          color: theme.palette.text.secondary,
           fontWeight: 600,
           display: 'flex',
           alignItems: 'center',
           minWidth: '32px',
           justifyContent: 'center',
-        }}
+        })}
       >
         fx
       </Box>
 
       {/* Formula input field */}
       <FormulaTextField
-        sx={{
+        sx={(theme) => ({
           flex: 1,
           '& .MuiOutlinedInput-root': {
-            backgroundColor: '#fff',
+            backgroundColor: theme.palette.background.paper,
             fontFamily: '"Calibri", "Segoe UI", sans-serif',
             fontSize: '11px',
             borderRadius: 0,
@@ -82,7 +91,7 @@ export function FormulaBar(props) {
             py: 0.75,
             px: 1,
           },
-        }}
+        })}
         variant="outlined"
         size="small"
         fullWidth
