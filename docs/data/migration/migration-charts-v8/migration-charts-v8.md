@@ -193,3 +193,40 @@ The `type` property of `LegendItemParams` has been modified from optional to req
 
 This type is used in the return value of `useLegend()`.
 If you haven't created a custom legend, you should not be impacted by this change.
+
+## Axis
+
+### Styling axes by ID
+
+The `axisClasses.id` class and the dynamically generated `MuiChartsAxis-id-{axisId}` classes have been removed.
+To style a specific axis by its ID, use the `data-axis-id` attribute selector instead.
+
+This change improves maintainability by using data attributes rather than dynamic class name suffixes.
+
+```diff
+-import { axisClasses } from '@mui/x-charts/ChartsAxis';
+-
+-// CSS selector
+-`.MuiChartsAxis-id-myXAxis`
+-// Or using axisClasses
+-`.${axisClasses.id}-myXAxis`
++import { axisClasses } from '@mui/x-charts/ChartsAxis';
++
++// CSS selector
++`.MuiChartsAxis-root[data-axis-id="myXAxis"]`
++// Or using axisClasses
++`.${axisClasses.root}[data-axis-id="myXAxis"]`
+```
+
+If you're using the `sx` prop or `styled()`:
+
+```diff
+ <LineChart
+   sx={{
+-    [`& .MuiChartsAxis-id-myXAxis`]: {
++    [`& .MuiChartsAxis-root[data-axis-id="myXAxis"]`]: {
+       // Your custom styles
+     },
+   }}
+ />
+```

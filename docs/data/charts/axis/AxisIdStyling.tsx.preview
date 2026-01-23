@@ -1,0 +1,15 @@
+<LineChart
+  sx={{
+    // Style the axis with id "revenue-axis"
+    [`& .${axisClasses.root}[data-axis-id="revenue-axis"] .${axisClasses.label}`]:
+      {
+        fill: '#02b2af',
+      },
+    // Style the axis with id "profit-axis"
+    [`& .${axisClasses.root}[data-axis-id="profit-axis"] .${axisClasses.label}`]:
+      {
+        fill: '#2e96ff',
+      },
+  }}
+  {...chartConfig}
+/>
