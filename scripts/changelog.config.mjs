@@ -1,7 +1,7 @@
 export default /** @type {import('@mui/internal-code-infra/changelog').ChangelogConfig} */ ({
   format: {
     version: '{{version}}',
-    changelogMessage: '{{message}} (#{{prNumber}}) @{{author}}',
+    changelogMessage: '{{rawMessage}} @{{author}}',
     sectionTitle: {
       forPackage: '`{{package}}@{{version}}`{{planBadge}}',
     },
@@ -60,6 +60,8 @@ export default /** @type {import('@mui/internal-code-infra/changelog').Changelog
         test: 'miscellaneous',
         l10n: 'miscellaneous',
         docs: 'docs',
+        recipe: 'miscellaneous',
+        internal: 'core',
         'scope: code-infra': 'core',
         'scope: docs-infra': 'core',
         'scope: support-infra': 'core',
@@ -80,10 +82,10 @@ export default /** @type {import('@mui/internal-code-infra/changelog').Changelog
         if (titleLabels.length > 0) {
           return titleLabels
             .map((label) => {
-              if (label.endsWith('-pro')) {
+              if (label.endsWith('-pro') || label.endsWith('Pro')) {
                 return 'plan: Pro';
               }
-              if (label.endsWith('-premium')) {
+              if (label.endsWith('-premium') || label.endsWith('Premium')) {
                 return 'plan: Premium';
               }
               if (label === 'docs') {
@@ -91,6 +93,15 @@ export default /** @type {import('@mui/internal-code-infra/changelog').Changelog
               }
               if (label === 'codemod') {
                 return 'scope: codemod';
+              }
+              if (label === 'code-infra') {
+                return 'scope: code-infra';
+              }
+              if (label === 'docs-infra') {
+                return 'scope: docs-infra';
+              }
+              if (label === 'support-infra') {
+                return 'scope: support-infra';
               }
               return false;
             })
@@ -105,7 +116,7 @@ export default /** @type {import('@mui/internal-code-infra/changelog').Changelog
       mappings: {
         'data grid': '@mui/x-data-grid',
         'date pickers': '@mui/x-date-pickers',
-        'date and time pickers': '@mui/x-date-pickers',
+        'Date and Time Pickers': '@mui/x-date-pickers',
         'date and pickers': '@mui/x-date-pickers',
         pickers: '@mui/x-date-pickers',
         charts: '@mui/x-charts',
@@ -131,7 +142,7 @@ export default /** @type {import('@mui/internal-code-infra/changelog').Changelog
     sections: {
       order: {
         'data grid': -20,
-        'date and time pickers': -15,
+        'Date and Time Pickers': -15,
         'date pickers': -15,
         pickers: -15,
         charts: -10,
@@ -146,9 +157,9 @@ export default /** @type {import('@mui/internal-code-infra/changelog').Changelog
       titles: {
         '@mui/x-data-grid': 'data grid',
         'data-grid': 'data grid',
-        '@mui/x-date-pickers': 'date and time pickers',
-        'date-pickers': 'date and time pickers',
-        pickers: 'date and time pickers',
+        '@mui/x-date-pickers': 'Date and Time Pickers',
+        'date-pickers': 'Date and Time Pickers',
+        pickers: 'Date and Time Pickers',
         '@mui/x-charts': 'charts',
         charts: 'charts',
         '@mui/x-tree-view': 'tree view',
