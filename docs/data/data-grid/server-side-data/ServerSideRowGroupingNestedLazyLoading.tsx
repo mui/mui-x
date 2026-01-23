@@ -34,7 +34,7 @@ export default function ServerSideRowGroupingNestedLazyLoading() {
         };
       },
       getGroupKey: (row) => row.group,
-      getChildrenCount: (row) => row.descendantCount,
+      getChildrenCount: (row) => row.childrenCount,
     };
   }, [fetchRows]);
 
@@ -44,6 +44,12 @@ export default function ServerSideRowGroupingNestedLazyLoading() {
       rowGrouping: {
         model: ['company', 'director'],
       },
+      pagination: {                                                                                                                                                                                                                        
+        paginationModel: {                                                                                                                                                                                                                 
+          pageSize: 5,                                                                                                                                                                                                                     
+        },                                                                                                                                                                                                                                 
+        rowCount: 0,                                                                                                                                                                                                                       
+      }, 
     },
   });
 
@@ -56,6 +62,7 @@ export default function ServerSideRowGroupingNestedLazyLoading() {
         initialState={initialState}
         disablePivoting
         lazyLoading
+        pageSizeOptions={[5, 10, 50]}
       />
     </div>
   );

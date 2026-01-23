@@ -5,4 +5,5 @@
   initialState={initialState}
   disablePivoting
   lazyLoading
+  pageSizeOptions={[5, 10, 50]}
 />
