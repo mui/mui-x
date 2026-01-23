@@ -117,7 +117,7 @@ function LineHighlightPlot(props: LineHighlightPlotProps) {
             return (
               <Element
                 key={`${seriesId}`}
-                id={seriesId}
+                seriesId={seriesId}
                 color={colorGetter(highlightedIndex)}
                 x={x}
                 y={y}
