@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import {
   DEFAULT_PREFERENCES_MENU_CONFIG,
   DEFAULT_VIEW,
@@ -49,6 +49,8 @@ describe('Core - EventCalendarStore', () => {
         views: DEFAULT_VIEWS,
         visibleDate: adapter.startOfDay(adapter.now('default')),
         visibleResources: {},
+        isLoading: false,
+        errors: [],
       };
 
       expect(store.state).to.deep.equal(expectedState);

@@ -1,4 +1,4 @@
-import { createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelectorMemoized } from '@base-ui/utils/store';
 import { EventCalendarState as State } from '../use-event-calendar';
 import {
   schedulerEventSelectors,

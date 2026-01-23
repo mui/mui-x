@@ -1,4 +1,4 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import {
   RecurringEventPresetKey,
   RecurringEventRecurrenceRule,
@@ -6,8 +6,12 @@ import {
   SchedulerProcessedDate,
   TemporalSupportedObject,
 } from '../models';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
-import { computeMonthlyOrdinal, getWeekDayCode, serializeRRule } from '../utils/recurring-events';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
+import {
+  computeMonthlyOrdinal,
+  getWeekDayCode,
+  serializeRRule,
+} from '../internals/utils/recurring-events';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 export const schedulerRecurringEventSelectors = {

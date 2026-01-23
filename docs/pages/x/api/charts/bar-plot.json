@@ -1,9 +1,5 @@
 {
   "props": {
-    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
-    "barLabelPlacement": {
-      "type": { "name": "enum", "description": "'outside'<br>&#124;&nbsp;'inside'" }
-    },
     "borderRadius": { "type": { "name": "number" } },
     "onItemClick": {
       "type": { "name": "func" },
@@ -11,6 +7,10 @@
         "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
+    },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "default": "'svg-single'"
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },

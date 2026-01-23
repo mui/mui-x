@@ -1546,11 +1546,13 @@
     "panel": "Panel component wrapping the filters and columns panels.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
+    "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
-    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
+    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "undoIcon": "Icon displayed on the undo button in the toolbar."
   }
 }

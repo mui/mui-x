@@ -1,13 +1,11 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
-import {
-  selectorChartSeriesConfig,
-  selectorChartSeriesProcessed,
-} from '../../corePlugins/useChartSeries';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { type UseChartPolarAxisSignature } from './useChartPolarAxis.types';
 import { type ChartState } from '../../models/chart';
 import { computeAxisValue } from './computeAxisValue';
 import type { ChartDrawingArea } from '../../../../hooks/useDrawingArea';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 
 export const selectorChartPolarAxisState = (state: ChartState<[], [UseChartPolarAxisSignature]>) =>
   state.polarAxis;

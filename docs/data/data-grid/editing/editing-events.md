@@ -2,8 +2,8 @@
 
 <p class="description">Using editing events.</p>
 
-The interactions that [start](#start-editing) and [stop](#stop-editing) trigger `'cellEditStart'` and `'cellEditStop'` [events](/x/react-data-grid/events/), respectively.
-For [row editing](#row-editing), the events are `'rowEditStart'` and `'rowEditStop'`.
+The interactions that [start](/x/react-data-grid/editing/#start-editing) and [stop](/x/react-data-grid/editing/#stop-editing) trigger `'cellEditStart'` and `'cellEditStop'` [events](/x/react-data-grid/events/), respectively.
+For [row editing](/x/react-data-grid/editing/#row-editing), the events are `'rowEditStart'` and `'rowEditStop'`.
 You can control how these events are handled to customize editing behavior.
 
 For convenience, you can also listen to these events using their respective props:

@@ -18,7 +18,6 @@ import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRend
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   params,
   store,
-  seriesConfig,
   svgRef,
   instance,
 }) => {
@@ -56,11 +55,12 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
         gap: gap ?? 0,
       },
       cartesianAxis: {
-        x: defaultizeXAxis(xAxis, dataset),
-        y: defaultizeYAxis(yAxis, dataset),
+        axesGap: 0,
+        x: defaultizeXAxis(xAxis, dataset, 0),
+        y: defaultizeYAxis(yAxis, dataset, 0),
       },
     });
-  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store, gap]);
+  }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -189,8 +189,8 @@ useChartFunnelAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
     gap: params.gap ?? 0,
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, 0),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, 0),
   };
 };
 
@@ -200,6 +200,7 @@ useChartFunnelAxis.getInitialState = (params) => {
       gap: params.gap ?? 0,
     },
     cartesianAxis: {
+      axesGap: 0,
       x: params.defaultizedXAxis,
       y: params.defaultizedYAxis,
     },

@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import { useStore } from '@base-ui-components/utils/store';
+import { useStore } from '@base-ui/utils/store';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
 import { useAdapter } from '../../use-adapter/useAdapter';
 import { useCalendarGridTimeColumnContext } from '../time-column/CalendarGridTimeColumnContext';
-import { useElementPositionInCollection } from '../../utils/useElementPositionInCollection';
+import { useElementPositionInCollection } from '../../internals/utils/useElementPositionInCollection';
 import { CalendarGridCurrentTimeIndicatorCssVars } from './CalendarGridCurrentTimeIndicatorCssVars';
-import { mergeDateAndTime } from '../../utils/date-utils';
+import { mergeDateAndTime } from '../../internals/utils/date-utils';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
 import { processDate } from '../../process-date';

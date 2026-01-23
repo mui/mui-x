@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-codemod",
-  "version": "8.22.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "Codemod scripts for MUI X.",
   "bin": "./codemod.js",
@@ -37,7 +37,7 @@
     "yargs": "catalog:"
   },
   "devDependencies": {
-    "@types/jscodeshift": "^17.3.0",
+    "@types/jscodeshift": "17.3.0",
     "dayjs": "catalog:",
     "moment-timezone": "catalog:",
     "rimraf": "catalog:"

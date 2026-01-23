@@ -18,6 +18,9 @@
       "description": "Whether the items should be focusable when disabled."
     },
     "disableSelection": { "description": "Whether selection is disabled." },
+    "domStructure": {
+      "description": "When equal to &#39;flat&#39;, the tree is rendered as a flat list (children are rendered as siblings of their parents). When equal to &#39;nested&#39;, the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children). Nested DOM structure is not compatible with collapse / expansion animations."
+    },
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
@@ -59,8 +62,21 @@
       }
     },
     "isItemEditable": { "description": "Determine if a given item can be edited." },
+    "isItemSelectionDisabled": {
+      "description": "Used to determine if a given item should have selection disabled.",
+      "typeDescriptions": {
+        "item": { "name": "item", "description": "The item to check." },
+        "boolean": {
+          "name": "boolean",
+          "description": "<code>true</code> if the item should have selection disabled."
+        }
+      }
+    },
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
+    },
+    "itemHeight": {
+      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
     },
     "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {

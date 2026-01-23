@@ -1,6 +1,6 @@
 import { adapter } from 'test/utils/scheduler';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
-import { storeClasses } from '../utils/SchedulerStore/tests/utils';
+import { storeClasses } from '../internals/utils/SchedulerStore/tests/utils';
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {

@@ -63,14 +63,21 @@ export const useGridDataSourcePremium = (
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const groupingModelSize = gridRowGroupingSanitizedModelSelector(apiRef).length;
   const setStrategyAvailability = React.useCallback(() => {
-    const targetStrategy =
+    const currentStrategy =
       props.treeData || (!props.disableRowGrouping && groupingModelSize > 0)
         ? DataSourceRowsUpdateStrategy.GroupedData
         : DataSourceRowsUpdateStrategy.Default;
 
+    const prevStrategy =
+      currentStrategy === DataSourceRowsUpdateStrategy.GroupedData
+        ? DataSourceRowsUpdateStrategy.Default
+        : DataSourceRowsUpdateStrategy.GroupedData;
+
+    apiRef.current.setStrategyAvailability(GridStrategyGroup.DataSource, prevStrategy, () => false);
+
     apiRef.current.setStrategyAvailability(
       GridStrategyGroup.DataSource,
-      targetStrategy,
+      currentStrategy,
       props.dataSource && !props.lazyLoading ? () => true : () => false,
     );
   }, [

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
-import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { EMPTY_ARRAY, EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { CompositeList, type CompositeMetadata } from '../list/CompositeList';
 import { useCompositeRoot } from './useCompositeRoot';
 import { CompositeRootContext } from './CompositeRootContext';

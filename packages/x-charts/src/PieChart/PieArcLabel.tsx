@@ -7,7 +7,7 @@ import { styled } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useAnimatePieArcLabel } from '../hooks/animation/useAnimatePieArcLabel';
-import { type PieItemId } from '../models/seriesType/pie';
+import { type SeriesId } from '../models';
 
 export interface PieArcLabelClasses {
   /** Styles applied to the root element. */
@@ -28,7 +28,7 @@ export interface PieArcLabelClasses {
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
-  id: PieItemId;
+  id: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -96,6 +96,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
     paddingAngle: number;
     skipAnimation: boolean;
     formattedArcLabel?: string | null;
+    hidden?: boolean;
   };
 
 const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
@@ -115,6 +116,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
       isHighlighted,
       isFaded,
       skipAnimation,
+      hidden,
       ...other
     } = props;
 
@@ -140,7 +142,12 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     });
 
     return (
-      <PieArcLabelRoot className={classes.root} {...other} {...animatedProps}>
+      <PieArcLabelRoot
+        className={classes.root}
+        {...other}
+        {...animatedProps}
+        opacity={hidden ? 0 : 1}
+      >
         {formattedArcLabel}
       </PieArcLabelRoot>
     );
@@ -158,7 +165,8 @@ PieArcLabel.propTypes = {
   cornerRadius: PropTypes.number.isRequired,
   endAngle: PropTypes.number.isRequired,
   formattedArcLabel: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  hidden: PropTypes.bool,
+  id: PropTypes.string.isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,

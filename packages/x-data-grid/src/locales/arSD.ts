@@ -16,6 +16,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'قياسي',
   toolbarDensityComfortable: 'مريح',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'تراجع',
+  toolbarRedo: 'إعادة',
+
   // Columns selector toolbar button text
   toolbarColumns: 'الأعمدة',
   toolbarColumnsLabel: 'حدد أعمدة',
@@ -29,7 +33,7 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'بحث...',
+  toolbarQuickFilterPlaceholder: 'بحث…',
   toolbarQuickFilterLabel: 'بحث',
   toolbarQuickFilterDeleteIconLabel: 'أزال',
 

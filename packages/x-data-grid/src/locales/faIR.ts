@@ -16,6 +16,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'استاندارد',
   toolbarDensityComfortable: 'راحت',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واگرد',
+  toolbarRedo: 'ازنو',
+
   // Columns selector toolbar button text
   toolbarColumns: 'ستون‌ها',
   toolbarColumnsLabel: 'ستون‌ها را انتخاب کنید',
@@ -29,7 +33,7 @@ const faIRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'جستجو...',
+  toolbarQuickFilterPlaceholder: 'جستجو…',
   toolbarQuickFilterLabel: 'جستجو',
   toolbarQuickFilterDeleteIconLabel: 'حذف',
 

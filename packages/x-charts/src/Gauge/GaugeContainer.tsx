@@ -14,14 +14,17 @@ export interface GaugeContainerProps
     Omit<ChartsSurfaceProps, 'children'>,
     Omit<
       MergeSignaturesProperty<ChartCorePluginSignatures, 'params'>,
-      'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures'
+      'series' | 'dataset' | 'colors' | 'theme' | 'experimentalFeatures' | 'seriesConfig'
     >,
     Omit<GaugeProviderProps, 'children'>,
     Omit<React.SVGProps<SVGSVGElement>, 'width' | 'height'> {
   children?: React.ReactNode;
 }
 
-const GStyled = styled('g')(({ theme }) => ({
+const GStyled = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   '& text': {
     fill: (theme.vars || theme).palette.text.primary,
   },
@@ -58,7 +61,8 @@ const GaugeContainer = React.forwardRef(function GaugeContainer(
         height: inHeight,
         margin: defaultizeMargin(margin, { left: 10, right: 10, top: 10, bottom: 10 }),
       }}
-      plugins={[]}
+      // We just use some of the core plugins for dimension management.
+      plugins={[] as any}
     >
       <GaugeProvider
         value={value}

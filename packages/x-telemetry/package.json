@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.19.0",
+  "version": "8.20.0",
   "author": "MUI Team",
   "description": "MUI X Telemetry.",
   "license": "SEE LICENSE IN LICENSE",
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@types/device-uuid": "^1.0.3",
+    "@types/device-uuid": "1.0.3",
     "rimraf": "catalog:"
   },
   "engines": {

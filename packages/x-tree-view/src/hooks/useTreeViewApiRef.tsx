@@ -1,12 +1,8 @@
 'use client';
-import * as React from 'react';
-import { TreeViewAnyPluginSignature, TreeViewPublicAPI } from '../internals/models';
-import { RichTreeViewPluginSignatures } from '../RichTreeView/RichTreeView.plugins';
+import { useRichTreeViewApiRef } from './useRichTreeViewApiRef';
 
 /**
  * Hook that instantiates a [[TreeViewApiRef]].
- * @deprecated Use `useRichTreeViewApiRef`, `useRichTreeViewProApiRef` or `useSimpleTreeViewApiRef` instead.
+ * @deprecated Use `useRichTreeViewApiRef()`, `useRichTreeViewProApiRef()` or `useSimpleTreeViewApiRef()` instead.
  */
-export const useTreeViewApiRef = <
-  TSignatures extends readonly TreeViewAnyPluginSignature[] = RichTreeViewPluginSignatures,
->() => React.useRef(undefined) as React.RefObject<TreeViewPublicAPI<TSignatures> | undefined>;
+export const useTreeViewApiRef = useRichTreeViewApiRef;

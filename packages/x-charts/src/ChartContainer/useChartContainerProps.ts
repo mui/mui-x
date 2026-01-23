@@ -11,7 +11,7 @@ export type UseChartContainerPropsReturnValue<
   TSeries extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
-  chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
@@ -35,6 +35,8 @@ export const useChartContainerProps = <
     onAxisClick,
     highlightedAxis,
     onHighlightedAxisChange,
+    tooltipItem,
+    onTooltipItemChange,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
@@ -43,6 +45,7 @@ export const useChartContainerProps = <
     onHighlightChange,
     sx,
     title,
+    axesGap,
     xAxis,
     yAxis,
     zAxis,
@@ -57,8 +60,11 @@ export const useChartContainerProps = <
     experimentalFeatures,
     enableKeyboardNavigation,
     brushConfig,
+    onHiddenItemsChange,
+    hiddenItems,
+    initialHiddenItems,
     ...other
-  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
@@ -68,7 +74,7 @@ export const useChartContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'> = {
+  const chartDataProviderProps = {
     margin,
     series,
     colors,
@@ -79,9 +85,12 @@ export const useChartContainerProps = <
     onAxisClick,
     highlightedAxis,
     onHighlightedAxisChange,
+    tooltipItem,
+    onTooltipItemChange,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
+    axesGap,
     xAxis,
     yAxis,
     zAxis,
@@ -95,10 +104,13 @@ export const useChartContainerProps = <
     experimentalFeatures,
     enableKeyboardNavigation,
     brushConfig,
+    onHiddenItemsChange,
+    hiddenItems,
+    initialHiddenItems,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,
-  } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderProps,

@@ -7,7 +7,26 @@
     "import { RadarAxisHighlight } from '@mui/x-charts-pro';",
     "import { RadarAxisHighlight } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "dot",
+      "className": "MuiRadarAxisHighlight-dot",
+      "description": "Styles applied to every highlight dot.",
+      "isGlobal": false
+    },
+    {
+      "key": "line",
+      "className": "MuiRadarAxisHighlight-line",
+      "description": "Styles applied to the highlighted axis line element.",
+      "isGlobal": false
+    },
+    {
+      "key": "root",
+      "className": "MuiRadarAxisHighlight-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "muiName": "MuiRadarAxisHighlight",
   "filename": "/packages/x-charts/src/RadarChart/RadarAxisHighlight/RadarAxisHighlight.tsx",
   "inheritance": null,

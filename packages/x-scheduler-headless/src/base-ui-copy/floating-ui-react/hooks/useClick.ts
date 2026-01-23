@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { useAnimationFrame } from '@base-ui-components/utils/useAnimationFrame';
-import { useTimeout } from '@base-ui-components/utils/useTimeout';
-import { EMPTY_OBJECT } from '@base-ui-components/utils/empty';
+import { useAnimationFrame } from '@base-ui/utils/useAnimationFrame';
+import { useTimeout } from '@base-ui/utils/useTimeout';
+import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import type { ElementProps, FloatingRootContext } from '../types';
 import { isMouseLikePointerType, isTypeableElement } from '../utils';
 import { createChangeEventDetails } from '../../utils/createBaseUIEventDetails';

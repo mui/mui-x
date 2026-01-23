@@ -1,33 +1,41 @@
-import { GridRenderEditCellParams, useGridApiContext } from '@mui/x-data-grid-premium';
-import Select, { SelectProps } from '@mui/material/Select';
-import { MenuProps } from '@mui/material/Menu';
+'use client';
+import * as React from 'react';
+import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { INCOTERM_OPTIONS } from '../services/static-data';
+import { useEditDropdownState } from '../hooks/useEditDropdownState';
 
 function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
 
-  const apiRef = useGridApiContext();
+  const {
+    open,
+    setOpen,
+    inputRef,
+    shouldAutoOpen,
+    handleSelectKeyDown,
+    handleSelectMenuClose,
+    handleSelectMenuListKeyDown,
+    createSelectChangeHandler,
+  } = useEditDropdownState({ id, field, hasFocus });
 
-  const handleChange: SelectProps['onChange'] = async (event) => {
-    await apiRef.current.setEditCellValue({ id, field, value: event.target.value as any }, event);
-    apiRef.current.stopCellEditMode({ id, field });
-  };
-
-  const handleClose: MenuProps['onClose'] = (event, reason) => {
-    if (reason === 'backdropClick') {
-      apiRef.current.stopCellEditMode({ id, field });
-    }
-  };
+  const handleChange = createSelectChangeHandler((event) => event.target.value);
 
   return (
     <Select
       value={value}
       onChange={handleChange}
+      onKeyDown={handleSelectKeyDown}
+      onOpen={() => setOpen(true)}
+      inputRef={inputRef}
       MenuProps={{
-        onClose: handleClose,
+        onClose: handleSelectMenuClose,
+        MenuListProps: {
+          onKeyDown: handleSelectMenuListKeyDown,
+        },
       }}
       sx={{
         height: '100%',
@@ -37,9 +45,9 @@ function EditIncoterm(props: GridRenderEditCellParams<any, string | null>) {
           pl: 1,
         },
       }}
-      autoFocus
+      autoFocus={shouldAutoOpen}
       fullWidth
-      open
+      open={open}
     >
       {INCOTERM_OPTIONS.map((option) => {
         const tooltip = option.slice(option.indexOf('(') + 1, option.indexOf(')'));

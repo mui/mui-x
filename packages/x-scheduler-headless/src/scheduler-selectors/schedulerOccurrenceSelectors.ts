@@ -1,15 +1,15 @@
-import { createSelector, createSelectorMemoized } from '@base-ui-components/utils/store';
-import { EMPTY_ARRAY } from '@base-ui-components/utils/empty';
+import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
+import { EMPTY_ARRAY } from '@base-ui/utils/empty';
 import {
   SchedulerEventOccurrence,
   SchedulerProcessedDate,
   SchedulerResource,
   TemporalSupportedObject,
 } from '../models';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { getOccurrencesFromEvents } from '../utils/event-utils';
+import { getOccurrencesFromEvents } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(
@@ -94,7 +94,7 @@ const occurrencesGroupedByResourceMapSelector = createSelectorMemoized(
 
 export const schedulerOccurrenceSelectors = {
   // TODO: Pass the occurrence key instead of the start and end dates once the occurrences are stored in the state.
-  isStartedOrEnded: createSelector(
+  isStartedOrEnded: createSelectorMemoized(
     (state: State) => state.adapter,
     (state: State) => state.nowUpdatedEveryMinute,
     (adapter, now, start: SchedulerProcessedDate, end: SchedulerProcessedDate) => {

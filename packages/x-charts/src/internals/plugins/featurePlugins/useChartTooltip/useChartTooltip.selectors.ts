@@ -3,22 +3,24 @@ import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
-  selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
   selectorChartSeriesLayout,
   type SeriesLayout,
 } from '../../corePlugins/useChartSeries';
-import { type TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
+import {
+  type TooltipPositionGetterAxesConfig,
+  type ChartSeriesConfig,
+  selectorChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
 } from '../useChartCartesianAxis/useChartCartesianAxisRendering.selectors';
 import {
   selectorChartsKeyboardItem,
-  selectorChartsKeyboardItemIsDefined,
+  selectorChartsHasFocusedItem,
 } from '../useChartKeyboardNavigation';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import type { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
 import type {
   AxisId,
   ChartsRadiusAxisProps,
@@ -61,8 +63,7 @@ export const selectorChartsTooltipItem = createSelector(
 export const selectorChartsTooltipItemIsDefined = createSelector(
   selectorChartsLastInteraction,
   selectorChartsTooltipPointerItemIsDefined,
-  selectorChartsKeyboardItemIsDefined,
-
+  selectorChartsHasFocusedItem,
   (lastInteraction, pointerItemIsDefined, keyboardItemIsDefined) =>
     lastInteraction === 'keyboard' ? keyboardItemIsDefined : pointerItemIsDefined,
 );

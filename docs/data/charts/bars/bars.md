@@ -135,7 +135,7 @@ The bar charts use by priority:
 2. The band axis color
 3. The series color
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -273,6 +273,23 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 
 {{"demo": "BarAnimation.js"}}
 
+## Performance
+
+Bar charts can display many bars, which can impact performance. The default rendering of bars use SVG `rect` elements, which can be slow for a large number of bars.
+
+To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
+However, this comes with the following trade-offs:
+
+- CSS styling of single bars is no longer possible;
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
+- No animation when highlighting or fading bars;
+- The event of the `onItemClick` handler is a `MouseEvent` instead of a `React.MouseEvent`. To avoid breaking changes, the type of `onItemClick` was not changed, but you can import a type overload to fix it: `import type {} from '@mui/x-charts/moduleAugmentation/barChartBatchRendererOnItemClick'`;
+- It is not available for [range bar charts](/x/react-charts/range-bar/).
+
+The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
+
+{{"demo": "BarBatchRenderer.js"}}
+
 ## Composition
 
 Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
@@ -291,6 +308,7 @@ Here's how the Bar Chart is composed:
         <BarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
+        <FocusedBar />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />

@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
-import { useStore } from '@base-ui-components/utils/store';
-import { Popover } from '@base-ui-components/react/popover';
-import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { useStore } from '@base-ui/utils/store';
+import { Popover } from '@base-ui/react/popover';
+import { styled } from '@mui/material/styles';
+import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
 import {
   schedulerEventSelectors,
   schedulerOtherSelectors,
@@ -14,13 +14,28 @@ import {
   EventPopoverProviderProps,
   EventPopoverTriggerProps,
 } from './EventPopover.types';
-import { getColorClassName } from '../../utils/color-utils';
-import { createPopover } from '../create-popover';
-import './EventPopover.css';
+import { getDataPaletteProps } from '../../utils/color-utils';
 import ReadonlyContent from './ReadonlyContent';
 import { FormContent } from './FormContent';
+import { schedulerPaletteStyles } from '../../utils/tokens';
+import { createPopover } from '../create-popover';
 
-const EventPopover = createPopover<SchedulerEventOccurrence>({
+const EventPopoverPositioner = styled(Popover.Positioner, {
+  name: 'MuiEventPopover',
+  slot: 'Positioner',
+})(({ theme }) => ({
+  width: '100%',
+  maxWidth: 460,
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  zIndex: theme.zIndex.modal,
+  boxShadow: theme.shadows[4],
+  overflow: 'hidden',
+  ...schedulerPaletteStyles,
+}));
+
+const EventPopover = createPopover<SchedulerRenderableEventOccurrence>({
   contextName: 'EventPopoverContext',
 });
 
@@ -31,7 +46,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   props: EventPopoverProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { className, style, container, anchor, occurrence, onClose, ...other } = props;
+  const { style, container, anchor, occurrence, onClose, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
 
@@ -40,13 +55,13 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
 
   return (
-    <div ref={forwardedRef} className={className} {...other}>
+    <div ref={forwardedRef} {...other}>
       <Popover.Portal container={container}>
-        <Popover.Positioner
+        <EventPopoverPositioner
           sideOffset={8}
           anchor={anchor}
           disableAnchorTracking
-          className={clsx('PopoverPositioner', 'EventPopoverPositioner', getColorClassName(color))}
+          {...getDataPaletteProps(color)}
         >
           <Popover.Popup finalFocus={{ current: anchor }}>
             {isEventReadOnly ? (
@@ -55,7 +70,7 @@ export const EventPopoverContent = React.forwardRef(function EventPopoverContent
               <FormContent occurrence={occurrence} onClose={onClose} />
             )}
           </Popover.Popup>
-        </Popover.Positioner>
+        </EventPopoverPositioner>
       </Popover.Portal>
     </div>
   );

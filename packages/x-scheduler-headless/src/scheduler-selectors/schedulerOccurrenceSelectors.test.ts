@@ -3,7 +3,7 @@ import {
   DEFAULT_TESTING_VISIBLE_DATE,
   DEFAULT_TESTING_VISIBLE_DATE_STR,
   EventBuilder,
-  getTimelineStateFromParameters,
+  getEventTimelinePremiumStateFromParameters,
 } from 'test/utils/scheduler';
 import { SchedulerResource } from '../models';
 import { processDate } from '../process-date';
@@ -12,7 +12,7 @@ import { schedulerOccurrenceSelectors } from './schedulerOccurrenceSelectors';
 describe('schedulerOccurrenceSelectors', () => {
   describe('isStartedOrEnded', () => {
     it('should return started=false and ended=false when now is before start', () => {
-      const state = getTimelineStateFromParameters({ events: [] });
+      const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T08:00:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
@@ -25,7 +25,7 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should return started=true and ended=false when now is equal to start', () => {
-      const state = getTimelineStateFromParameters({ events: [] });
+      const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:00:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
@@ -38,7 +38,7 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should return started=true and ended=false when now is between start and end', () => {
-      const state = getTimelineStateFromParameters({ events: [] });
+      const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T10:30:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
@@ -51,7 +51,7 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should return started=true and ended=false when now is equal to end', () => {
-      const state = getTimelineStateFromParameters({ events: [] });
+      const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T11:00:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
@@ -64,7 +64,7 @@ describe('schedulerOccurrenceSelectors', () => {
     });
 
     it('should return started=true and ended=true when now is after end', () => {
-      const state = getTimelineStateFromParameters({ events: [] });
+      const state = getEventTimelinePremiumStateFromParameters({ events: [] });
       state.nowUpdatedEveryMinute = adapter.date('2025-07-03T12:00:00Z', 'default');
 
       const start = processDate(adapter.date('2025-07-03T10:00:00Z', 'default'), adapter);
@@ -92,7 +92,7 @@ describe('schedulerOccurrenceSelectors', () => {
     const end = adapter.addDays(DEFAULT_TESTING_VISIBLE_DATE, 2);
 
     it('should return empty when there are no resources', () => {
-      const state = getTimelineStateFromParameters({ events: [], resources: [] });
+      const state = getEventTimelinePremiumStateFromParameters({ events: [], resources: [] });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
       expect(response).to.have.length(0);
     });
@@ -105,7 +105,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(R1.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event], resources: [R1] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event],
+        resources: [R1],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response).to.have.length(1);
@@ -123,7 +126,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(R1.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event], resources: [R1, R2] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event],
+        resources: [R1, R2],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response[0].occurrences).to.have.length(1);
@@ -135,7 +141,10 @@ describe('schedulerOccurrenceSelectors', () => {
       const R2 = makeResource('A', 'Alpha');
       const R3 = makeResource('M', 'Moon');
 
-      const state = getTimelineStateFromParameters({ events: [], resources: [R1, R3, R2] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [],
+        resources: [R1, R3, R2],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response.map((item) => item.resource.title)).to.deep.equal(['Alpha', 'Moon', 'Zoo']);
@@ -153,7 +162,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(R1.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event1, event2], resources: [R1] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event1, event2],
+        resources: [R1],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response[0].occurrences).to.have.length(2);
@@ -170,7 +182,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(R1.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event1, event2], resources: [R1] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event1, event2],
+        resources: [R1],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response[0].occurrences).to.have.length(1);
@@ -192,7 +207,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(child2.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event], resources: [parent] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event],
+        resources: [parent],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response.map((item) => item.resource.id)).to.deep.equal(['P', 'C1', 'C2']);
@@ -208,7 +226,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(R1.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event], resources: [R1] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event],
+        resources: [R1],
+      });
       // TODO: Use props.defaultVisibleResources when available
       state.visibleResources = { [R1.id]: false };
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
@@ -227,7 +248,10 @@ describe('schedulerOccurrenceSelectors', () => {
         .resource(c.id)
         .build();
 
-      const state = getTimelineStateFromParameters({ events: [event], resources: [root] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event],
+        resources: [root],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response.map((r) => r.resource.id)).to.deep.equal(['R', 'A', 'B', 'C']);
@@ -239,7 +263,10 @@ describe('schedulerOccurrenceSelectors', () => {
 
       const event = EventBuilder.new().singleDay('2024-03-01T09:00:00Z').resource(R1.id).build();
 
-      const state = getTimelineStateFromParameters({ events: [event], resources: [R1] });
+      const state = getEventTimelinePremiumStateFromParameters({
+        events: [event],
+        resources: [R1],
+      });
       const response = schedulerOccurrenceSelectors.groupedByResourceList(state, start, end);
 
       expect(response[0].occurrences).to.have.length(0);

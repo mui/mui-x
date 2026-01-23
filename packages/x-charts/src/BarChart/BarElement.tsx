@@ -14,13 +14,16 @@ export interface BarElementSlots {
    * The component that renders the bar.
    * @default BarElementPath
    */
-  bar?: React.ElementType<BarProps>;
+  bar?: React.JSXElementConstructor<BarProps>;
 }
 export interface BarElementSlotProps {
   bar?: SlotComponentPropsFromProps<BarProps, {}, BarElementOwnerState>;
 }
 
-export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighlighted'> &
+export type BarElementProps = Omit<
+  BarElementOwnerState,
+  'isFaded' | 'isHighlighted' | 'isFocused'
+> &
   Omit<React.SVGProps<SVGRectElement>, 'ref' | 'id'> & {
     /**
      * The props used for each component slot.
@@ -41,6 +44,7 @@ export type BarElementProps = Omit<BarElementOwnerState, 'isFaded' | 'isHighligh
     height: number;
     layout: 'horizontal' | 'vertical';
     skipAnimation: boolean;
+    hidden?: boolean;
   };
 
 function BarElement(props: BarElementProps) {
@@ -61,6 +65,7 @@ function BarElement(props: BarElementProps) {
     yOrigin,
     width,
     height,
+    hidden,
     ...other
   } = props;
   const itemIdentifier = React.useMemo(
@@ -72,7 +77,7 @@ function BarElement(props: BarElementProps) {
   const isFocused = useIsItemFocused(
     React.useMemo(
       () => ({
-        seriesType: 'bar',
+        type: 'bar',
         seriesId: id,
         dataIndex,
       }),
@@ -80,7 +85,7 @@ function BarElement(props: BarElementProps) {
     ),
   );
 
-  const ownerState = {
+  const ownerState: BarElementOwnerState = {
     id,
     dataIndex,
     classes: innerClasses,
@@ -116,6 +121,7 @@ function BarElement(props: BarElementProps) {
       fill: color,
       skipAnimation,
       layout,
+      hidden,
     },
     className: classes.root,
     ownerState,

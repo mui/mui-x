@@ -230,7 +230,7 @@ DateTimeRangePicker.propTypes = {
    * @param {TValue} value The value that was just accepted.
    * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
    * - `validationError`: validation result of the current value
-   * - `source`: source of the acceptance. One of 'field' | 'picker' | 'unknown'
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
    * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept: PropTypes.func,

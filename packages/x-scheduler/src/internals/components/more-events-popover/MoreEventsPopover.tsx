@@ -1,6 +1,9 @@
 import * as React from 'react';
-import { X } from 'lucide-react';
-import { Popover } from '@base-ui-components/react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import { Popover } from '@base-ui/react';
+import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
@@ -10,8 +13,40 @@ import { EventItem } from '../event/event-item/EventItem';
 import { createPopover } from '../create-popover';
 import { ArrowSvg } from './arrow/ArrowSvg';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
-import './MoreEventsPopover.css';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
+
+const MoreEventsPopoverPositioner = styled(Popover.Positioner)(({ theme }) => ({
+  maxWidth: 300,
+  width: '100%',
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  zIndex: theme.zIndex.modal,
+  boxShadow: theme.shadows[4],
+}));
+
+const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: theme.spacing(1),
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const MoreEventsPopoverTitle = styled(Typography)(({ theme }) => ({
+  fontSize: theme.typography.body2.fontSize,
+  fontWeight: theme.typography.fontWeightMedium,
+  color: theme.palette.text.primary,
+  lineHeight: 1.5,
+  margin: 0,
+}));
+
+const MoreEventsPopoverBody = styled('div')(({ theme }) => ({
+  padding: theme.spacing(1),
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(1),
+}));
 
 interface MoreEventsData {
   occurrences: SchedulerEventOccurrence[];
@@ -35,32 +70,31 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
 
   return (
     <Popover.Portal container={container}>
-      <Popover.Positioner
-        anchor={anchor}
-        sideOffset={8}
-        className="PopoverPositioner MoreEventsPopoverPositioner"
-      >
+      <MoreEventsPopoverPositioner anchor={anchor} sideOffset={8}>
         <Popover.Popup>
-          <Popover.Arrow className="PopoverArrow">
+          <Popover.Arrow>
             <ArrowSvg />
           </Popover.Arrow>
-
-          <div
-            className="MoreEventsPopoverHeader"
+          <MoreEventsPopoverHeader
             id={`PopoverHeader-${day.key}`}
             aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
           >
-            <Popover.Title className="MoreEventsPopoverTitle">
-              {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
-            </Popover.Title>
+            <Popover.Title
+              render={
+                <MoreEventsPopoverTitle>
+                  {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
+                </MoreEventsPopoverTitle>
+              }
+            />
             <Popover.Close
-              aria-label={translations.closeButtonAriaLabel}
-              className="EventPopoverCloseButton NeutralTextButton"
-            >
-              <X size={16} strokeWidth={1.5} />
-            </Popover.Close>
-          </div>
-          <div className="MoreEventsPopoverContent">
+              render={
+                <IconButton aria-label={translations.closeButtonAriaLabel} size="small">
+                  <CloseRounded fontSize="small" />
+                </IconButton>
+              }
+            />
+          </MoreEventsPopoverHeader>
+          <MoreEventsPopoverBody>
             {occurrences.map((occurrence) => (
               <EventItem
                 variant={
@@ -72,9 +106,9 @@ export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) 
                 ariaLabelledBy={`PopoverHeader-${day.key}`}
               />
             ))}
-          </div>
+          </MoreEventsPopoverBody>
         </Popover.Popup>
-      </Popover.Positioner>
+      </MoreEventsPopoverPositioner>
     </Popover.Portal>
   );
 }

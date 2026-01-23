@@ -41,7 +41,7 @@ jobs:
         with:
           run_install: false
       - name: Use Node.js 22.x
-        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: 22.18.0
           cache: 'pnpm' # https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#caching-packages-dependencies
@@ -49,7 +49,7 @@ jobs:
       # Ensure we are running on the prod version of our libs
       - run: pnpm --filter "@mui/x-charts-premium..." build
       - name: Run benchmarks
-        uses: CodSpeedHQ/action@346a2d8a8d9d38909abd0bc3d23f773110f076ad
+        uses: CodSpeedHQ/action@94b88560ad3ed11ed5e92a321518a47c35a1fed5
         with:
           mode: instrumentation
           run: pnpm --filter @mui-x-internal/performance-charts test:performance

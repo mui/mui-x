@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-internal-gestures",
-  "version": "0.3.6",
+  "version": "0.4.0",
   "description": "The core engine of GestureEvents, a modern and robust multi-pointer gesture detection library for JavaScript.",
   "author": "MUI Team",
   "license": "MIT",

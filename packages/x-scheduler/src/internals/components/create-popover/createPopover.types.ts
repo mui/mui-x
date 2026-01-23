@@ -1,4 +1,4 @@
-import { Popover } from '@base-ui-components/react';
+import { Popover } from '@base-ui/react';
 
 export interface PopoverState<TAnchorData> {
   isOpen: boolean;

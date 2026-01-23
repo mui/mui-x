@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
-import { Popover } from '@base-ui-components/react/popover';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { Popover } from '@base-ui/react/popover';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
+import { menuItemClasses } from '@mui/material/MenuItem';
 import {
   ContextValue,
   CreatePopoverConfig,
@@ -64,6 +65,20 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
       setState({ isOpen: false, anchor: null, data: null });
     });
 
+    const handleOpenChange = useStableCallback(
+      (_open: boolean, eventDetails: Popover.Root.ChangeEventDetails) => {
+        // Prevents from closing a Base UI Popover when opening a Material Menu inside it.
+        // TODO: Clean the Popover implementation (we should probably avoid mixing Material UI and Base UI popover-based components).
+        if (
+          eventDetails.reason === 'focus-out' &&
+          document.activeElement?.classList.contains(menuItemClasses.root)
+        ) {
+          return;
+        }
+        close();
+      },
+    );
+
     const contextValue = React.useMemo<ContextValue<TAnchorData>>(
       () => ({
         open,
@@ -75,7 +90,7 @@ export function createPopover<TAnchorData>(config: CreatePopoverConfig) {
 
     return (
       <Context.Provider value={contextValue}>
-        <Popover.Root open={state.isOpen} onOpenChange={close} modal={modal}>
+        <Popover.Root open={state.isOpen} onOpenChange={handleOpenChange} modal={modal}>
           {children}
           {state.anchor &&
             state.data &&

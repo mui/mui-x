@@ -15,28 +15,32 @@ export { scatterSeriesConfig as scatterSeriesConfig } from '../ScatterChart/seri
 export { useLineChartProps } from '../LineChart/useLineChartProps';
 export { useAreaPlotData } from '../LineChart/useAreaPlotData';
 export { useLinePlotData } from '../LineChart/useLinePlotData';
-export { useBarChartProps } from '../BarChart/useBarChartProps';
-export { useBarPlotData } from '../BarChart/useBarPlotData';
+export * from '../BarChart/useBarChartProps';
+export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
 export { useSkipAnimation } from '../hooks/useSkipAnimation';
+export { useRegisterPointerInteractions } from './plugins/featurePlugins/shared/useRegisterPointerInteractions';
 
 // plugins
 export * from './plugins/corePlugins/useChartId';
 export * from './plugins/corePlugins/useChartSeries';
 export * from './plugins/corePlugins/useChartDimensions';
 export * from './plugins/corePlugins/useChartInteractionListener';
+export * from './plugins/corePlugins/useChartSeriesConfig';
 export * from './plugins/featurePlugins/useChartZAxis';
 export * from './plugins/featurePlugins/useChartCartesianAxis';
 export * from './plugins/featurePlugins/useChartPolarAxis';
 export * from './plugins/featurePlugins/useChartTooltip';
 export * from './plugins/featurePlugins/useChartInteraction';
 export * from './plugins/featurePlugins/useChartHighlight';
+export * from './plugins/featurePlugins/useChartVisibilityManager';
 export * from './plugins/featurePlugins/useChartKeyboardNavigation';
 export * from './plugins/featurePlugins/useChartClosestPoint';
 export * from './plugins/featurePlugins/useChartBrush';
+export * from './plugins/featurePlugins/useChartItemClick';
 export * from './plugins/utils/selectors';
 export { getAxisTriggerTooltip as getCartesianAxisTriggerTooltip } from './plugins/featurePlugins/useChartCartesianAxis/getAxisTriggerTooltip';
 export { getAxisIndex as getCartesianAxisIndex } from './plugins/featurePlugins/useChartCartesianAxis/getAxisValue';
@@ -69,8 +73,11 @@ export * from './dateHelpers';
 export * from './invertScale';
 export * from './scaleGuards';
 export * from './findMinMax';
+export * from './commonNextFocusItem';
+export { getSeriesColorFn } from './getSeriesColorFn';
 export { checkBarChartScaleErrors } from '../BarChart/checkBarChartScaleErrors';
 export { getBandSize } from './getBandSize';
+export * from './plugins/utils/defaultSeriesConfig';
 
 // contexts
 export { getAxisExtrema } from './plugins/featurePlugins/useChartCartesianAxis/getAxisExtrema';
@@ -90,3 +97,5 @@ export * from './createSvgIcon';
 
 export * from './constants';
 export * from './scales';
+export * from './identifierSerializer';
+export * from './identifierCleaner';

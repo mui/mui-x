@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view",
-  "version": "8.22.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The community edition of the MUI X Tree View components.",
   "license": "MIT",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui-components/utils": "0.1.2",
+    "@base-ui/utils": "^0.2.3",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "catalog:",

@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
-import { TreeViewPublicAPI } from '../internals/models';
-import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
-import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
-import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
-import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
-import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
-import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
-import { UseTreeViewLazyLoadingSignature } from '../internals/plugins/useTreeViewLazyLoading';
+import { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
 
 export interface UseTreeItemParameters {
   /**
@@ -19,6 +12,11 @@ export interface UseTreeItemParameters {
    * @default false
    */
   disabled?: boolean;
+  /**
+   * If `true`, the item cannot be selected.
+   * @default false
+   */
+  disableSelection?: boolean;
   /**
    * The id of the item.
    * Must be unique.
@@ -142,10 +140,7 @@ export interface UseTreeItemStatus {
   error: boolean;
 }
 
-export interface UseTreeItemReturnValue<
-  TSignatures extends UseTreeItemMinimalPlugins,
-  TOptionalSignatures extends UseTreeItemOptionalPlugins,
-> {
+export interface UseTreeItemReturnValue<TStore extends TreeViewAnyStore> {
   /**
    * Resolver for the context provider's props.
    * @returns {UseTreeItemContextProviderProps} Props that should be spread on the context provider slot.
@@ -245,22 +240,5 @@ export interface UseTreeItemReturnValue<
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+  publicAPI: TreeViewPublicAPI<TStore>;
 }
-
-/**
- * Plugins that need to be present in the Tree View in order for `UseTreeItem` to work correctly.
- */
-export type UseTreeItemMinimalPlugins = readonly [
-  UseTreeViewSelectionSignature,
-  UseTreeViewExpansionSignature,
-  UseTreeViewItemsSignature,
-  UseTreeViewFocusSignature,
-  UseTreeViewKeyboardNavigationSignature,
-  UseTreeViewLabelSignature,
-];
-
-/**
- * Plugins that `UseTreeItem` can use if they are present, but are not required.
- */
-export type UseTreeItemOptionalPlugins = readonly [UseTreeViewLazyLoadingSignature];

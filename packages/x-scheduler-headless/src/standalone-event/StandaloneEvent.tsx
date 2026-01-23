@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { draggable } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { disableNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/disable-native-drag-preview';
-import { useStableCallback } from '@base-ui-components/utils/useStableCallback';
+import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useButton } from '../base-ui-copy/utils/useButton';
 import { useRenderElement } from '../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps, NonNativeButtonProps } from '../base-ui-copy/utils/types';
 import { SchedulerOccurrencePlaceholderExternalDragData } from '../models';
-import { useDragPreview } from '../utils/useDragPreview';
+import { useDragPreview } from '../internals/utils/useDragPreview';
 
 export const StandaloneEvent = React.forwardRef(function StandaloneEvent(
   componentProps: StandaloneEvent.Props,

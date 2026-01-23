@@ -1,7 +1,7 @@
 ---
 title: React Radar chart
 productId: x-charts
-components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarAxis, ChartsWrapper
+components: RadarChart, RadarChartPro, RadarGrid, RadarSeriesArea, RadarSeriesMarks, RadarSeriesPlot, RadarMetricLabels, RadarAxisHighlight, RadarAxis, ChartsWrapper, FocusedRadarMark
 ---
 
 # Charts - Radar
@@ -146,6 +146,7 @@ In addition to the common chart components available for [composition](/x/react-
   - `<RadarSeriesMarks />` renders series marks.
 - For interaction:
   - `<RadarAxisHighlight />` renders line and marks along the highlighted axis.
+  - `<FocusedRadarMark />` renders the focus visual element when using keyboard navigation.
 
 :::info
 The `<RadarSeriesPlot />` renders all series together, such that the area of the second series is on top of the marks of the first one.
@@ -170,6 +171,7 @@ Here's how the Radar Chart is composed:
       <RadarSeriesArea />
       <RadarAxisHighlight />
       <RadarSeriesMarks />
+      <FocusedRadarMark />
       {/* Other components */}
       <ChartsOverlay />
     </ChartsSurface>

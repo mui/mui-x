@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { TreeItemIconProps } from './TreeItemIcon.types';
-import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
 import { TreeViewCollapseIcon, TreeViewExpandIcon } from '../icons';
 
 function pickIcon(

@@ -15,7 +15,7 @@ const AreaPlotRoot = styled('g', {
   slot: 'Root',
 })({});
 
-interface AreaPreviewPlotProps extends PreviewPlotProps {}
+interface AreaPreviewPlotProps extends Pick<PreviewPlotProps, 'axisId'> {}
 
 export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   const completedData = useAreaPreviewData(axisId);
