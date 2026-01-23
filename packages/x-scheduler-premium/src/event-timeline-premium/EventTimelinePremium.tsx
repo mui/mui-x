@@ -16,15 +16,18 @@ import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/mode
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
-import { EventTimelineClasses, getEventTimelineUtilityClass } from './eventTimelineClasses';
-import { EventTimelineClassesContext } from './EventTimelineClassesContext';
+import {
+  EventTimelinePremiumClasses,
+  getEventTimelinePremiumUtilityClass,
+} from './eventTimelinePremiumClasses';
+import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
 // TODO: Remove these CSS imports during the MUI X migration
 import '../styles/index.css';
 import '../styles/colors.css';
 import '../styles/tokens.css';
 import '../styles/utils.css';
 
-const useUtilityClasses = (classes: Partial<EventTimelineClasses> | undefined) => {
+const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
     root: ['root'],
     headerToolbar: ['headerToolbar'],
@@ -68,11 +71,11 @@ const useUtilityClasses = (classes: Partial<EventTimelineClasses> | undefined) =
     yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
   };
 
-  return composeClasses(slots, getEventTimelineUtilityClass, classes);
+  return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
 };
 
 const EventTimelinePremiumRoot = styled('div', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'Root',
 })(({ theme }) => ({
   '--time-cell-width': '64px',
@@ -89,7 +92,7 @@ const EventTimelinePremiumRoot = styled('div', {
 }));
 
 const EventTimelinePremiumHeaderToolbar = styled('header', {
-  name: 'MuiEventTimeline',
+  name: 'MuiEventTimelinePremium',
   slot: 'HeaderToolbar',
 })({
   display: 'flex',
@@ -103,7 +106,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   inProps: EventTimelinePremiumProps<TEvent, TResource>,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const props = useThemeProps({ props: inProps, name: 'MuiEventTimeline' });
+  const props = useThemeProps({ props: inProps, name: 'MuiEventTimelinePremium' });
 
   const {
     parameters,
@@ -122,7 +125,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
   return (
     <EventTimelinePremiumStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
-        <EventTimelineClassesContext.Provider value={classes}>
+        <EventTimelinePremiumClassesContext.Provider value={classes}>
           <EventTimelinePremiumRoot
             ref={forwardedRef}
             className={clsx(classes.root, className)}
@@ -139,7 +142,7 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
             </EventTimelinePremiumHeaderToolbar>
             <EventTimelinePremiumContent />
           </EventTimelinePremiumRoot>
-        </EventTimelineClassesContext.Provider>
+        </EventTimelinePremiumClassesContext.Provider>
       </SchedulerStoreContext.Provider>
     </EventTimelinePremiumStoreContext.Provider>
   );

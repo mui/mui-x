@@ -11,7 +11,7 @@ import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from '
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
 import { EventTimelinePremiumEvent } from './timeline-event';
-import { useEventTimelineClasses } from '../EventTimelineClassesContext';
+import { useEventTimelinePremiumClasses } from '../EventTimelinePremiumClassesContext';
 
 const EventTimelinePremiumContentRoot = styled('section', {
   name: 'MuiEventTimelinePremium',
@@ -129,7 +129,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 ) {
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelineClasses();
+  const classes = useEventTimelinePremiumClasses();
 
   // Ref hooks
   const containerRef = React.useRef<HTMLElement | null>(null);

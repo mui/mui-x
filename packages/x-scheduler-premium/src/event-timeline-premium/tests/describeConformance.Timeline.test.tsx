@@ -1,6 +1,6 @@
 import {
   EventTimelinePremium,
-  eventTimelineClasses as classes,
+  eventTimelinePremiumClasses as classes,
 } from '@mui/x-scheduler-premium/event-timeline-premium';
 import {
   createSchedulerRenderer,
@@ -26,7 +26,7 @@ describe('<EventTimelinePremium /> - Describe Conformance', () => {
       classes,
       inheritComponent: 'div',
       render,
-      muiName: 'MuiEventTimeline',
+      muiName: 'MuiEventTimelinePremium',
       refInstanceof: window.HTMLDivElement,
       skip: ['componentProp', 'componentsProp', 'themeVariants'],
     }),

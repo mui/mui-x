@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 
-export interface EventTimelineClasses {
+export interface EventTimelinePremiumClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the header toolbar element. */
@@ -84,14 +84,14 @@ export interface EventTimelineClasses {
   yearsHeaderYearLabel: string;
 }
 
-export type EventTimelineClassKey = keyof EventTimelineClasses;
+export type EventTimelinePremiumClassKey = keyof EventTimelinePremiumClasses;
 
-export function getEventTimelineUtilityClass(slot: string) {
-  return generateUtilityClass('MuiEventTimeline', slot);
+export function getEventTimelinePremiumUtilityClass(slot: string) {
+  return generateUtilityClass('MuiEventTimelinePremium', slot);
 }
 
-export const eventTimelineClasses: EventTimelineClasses = generateUtilityClasses(
-  'MuiEventTimeline',
+export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generateUtilityClasses(
+  'MuiEventTimelinePremium',
   [
     'root',
     'headerToolbar',

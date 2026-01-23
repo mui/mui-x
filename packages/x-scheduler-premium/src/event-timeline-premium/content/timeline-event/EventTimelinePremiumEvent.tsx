@@ -8,8 +8,7 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { getDataPaletteProps, EventDragPreview } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumEventProps } from './EventTimelinePremiumEvent.types';
-import { useEventTimelineClasses } from '../../EventTimelineClassesContext';
-
+import { useEventTimelinePremiumClasses } from '../../EventTimelinePremiumClassesContext';
 const EventTimelinePremiumEventRoot = styled('div', {
   name: 'MuiEventTimelinePremium',
   slot: 'Event',
@@ -69,7 +68,7 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
 
   // Context hooks
   const store = useEventTimelinePremiumStoreContext();
-  const classes = useEventTimelineClasses();
+  const classes = useEventTimelinePremiumClasses();
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
