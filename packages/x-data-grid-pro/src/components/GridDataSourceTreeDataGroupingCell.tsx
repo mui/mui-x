@@ -80,7 +80,7 @@ function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) 
     ? rootProps.slots.treeDataCollapseIcon
     : rootProps.slots.treeDataExpandIcon;
 
-  if (isDataLoading) {
+  if (isDataLoading && !rootProps.lazyLoading) {
     return (
       <div className={classes.loadingContainer}>
         <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />

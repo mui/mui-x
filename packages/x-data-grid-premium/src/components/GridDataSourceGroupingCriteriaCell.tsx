@@ -76,7 +76,7 @@ function GridGroupingCriteriaCellIcon(props: GridGroupingCriteriaCellIconProps) 
     ? rootProps.slots.groupingCriteriaCollapseIcon
     : rootProps.slots.groupingCriteriaExpandIcon;
 
-  if (isDataLoading) {
+  if (isDataLoading && !rootProps.lazyLoading) {
     return (
       <div className={classes.loadingContainer}>
         <rootProps.slots.baseCircularProgress size="1rem" color="inherit" />
