@@ -213,7 +213,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   props: DayGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, variant, style: styleProp, ...other } = props;
+  const { occurrence, variant, style: styleProp, className, ...other } = props;
 
   // Context hooks
   const translations = useTranslations();
@@ -311,7 +311,6 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
-    className: clsx('EventContainer', occurrence.className),
     'data-variant': variant,
     'data-palette': color,
     style: {
@@ -320,6 +319,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       ...styleProp,
     } as React.CSSProperties,
     ...other,
+    className: clsx(className, 'EventContainer', occurrence.className),
   };
 
   if (variant === 'placeholder') {

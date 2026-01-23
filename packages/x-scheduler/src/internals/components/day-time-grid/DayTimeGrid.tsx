@@ -16,6 +16,7 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { EventPopoverProvider } from '../../../internals/components/event-popover/EventPopover';
@@ -283,7 +284,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   props: DayTimeGridProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { days, ...other } = props;
+  const { days, className, ...other } = props;
 
   // Context hooks
   const adapter = useAdapter();
@@ -369,7 +370,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   );
 
   return (
-    <DayTimeGridContainer className={classes.dayTimeGridContainer} ref={handleRef} {...other}>
+    <DayTimeGridContainer ref={handleRef} {...other} className={clsx(className, classes.dayTimeGridContainer)}>
       <EventPopoverProvider containerRef={containerRef}>
         <DayTimeGridHeader className={classes.dayTimeGridHeader}>
           <DayTimeGridHeaderRow

@@ -131,7 +131,7 @@ export const EventItem = React.forwardRef(function EventItem(
   props: EventItemProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, ariaLabelledBy, id: idProp, variant = 'regular', ...other } = props;
+  const { occurrence, ariaLabelledBy, id: idProp, variant = 'regular', className, ...other } = props;
 
   // Context hooks
   const translations = useTranslations();
@@ -240,11 +240,11 @@ export const EventItem = React.forwardRef(function EventItem(
     <EventItemCard
       ref={forwardedRef}
       id={id}
-      className={clsx(classes.eventItemCard, occurrence.className)}
       data-variant={variant}
       data-palette={color}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
+      className={clsx(className, classes.eventItemCard, occurrence.className)}
     >
       <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>
         {content}

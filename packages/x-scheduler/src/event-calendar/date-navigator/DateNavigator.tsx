@@ -14,6 +14,7 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { useEventCalendarClasses } from '../EventCalendarClassesContext';
@@ -67,9 +68,9 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   return (
     <DateNavigatorRoot
       ref={forwardedRef}
-      className={classes.dateNavigator}
       role="navigation"
       {...props}
+      className={clsx(props.className, classes.dateNavigator)}
     >
       <IconButton
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}

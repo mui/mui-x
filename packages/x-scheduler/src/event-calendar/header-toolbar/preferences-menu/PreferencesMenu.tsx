@@ -23,6 +23,7 @@ import {
   eventCalendarPreferenceSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import clsx from 'clsx';
 import { useTranslations } from '../../../internals/utils/TranslationsContext';
 import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
 
@@ -133,7 +134,7 @@ export const PreferencesMenu = React.forwardRef(function PreferencesMenu(
   }
 
   return (
-    <PreferencesMenuRoot ref={handleRef} className={classes.preferencesMenu} {...props}>
+    <PreferencesMenuRoot ref={handleRef} {...props} className={clsx(props.className, classes.preferencesMenu)}>
       <IconButton
         aria-label={translations.preferencesMenu}
         onClick={handleClick}

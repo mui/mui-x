@@ -17,6 +17,7 @@ import {
   schedulerNowSelectors,
   schedulerOtherSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { AgendaViewProps, StandaloneAgendaViewProps } from './AgendaView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventItem } from '../internals/components/event/event-item/EventItem';
@@ -189,7 +190,7 @@ export const AgendaView = React.memo(
     );
 
     return (
-      <AgendaViewRoot className={classes.agendaView} {...props} ref={handleRef}>
+      <AgendaViewRoot {...props} ref={handleRef} className={clsx(props.className, classes.agendaView)}>
         <EventPopoverProvider containerRef={containerRef}>
           {isLoading && (
             <AgendaViewLoadingOverlay className={classes.agendaViewLoadingOverlay}>

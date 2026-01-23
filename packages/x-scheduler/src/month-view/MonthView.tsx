@@ -18,6 +18,7 @@ import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/even
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventOccurrencesGroupedByDay } from '@mui/x-scheduler-headless/use-event-occurrences-grouped-by-day';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { MonthViewProps, StandaloneMonthViewProps } from './MonthView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { EventPopoverProvider } from '../internals/components/event-popover/EventPopover';
@@ -200,7 +201,7 @@ export const MonthView = React.memo(
     );
 
     return (
-      <MonthViewRoot className={classes.monthView} {...props} ref={handleRef}>
+      <MonthViewRoot {...props} ref={handleRef} className={clsx(props.className, classes.monthView)}>
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>
             <MonthViewGrid className={classes.monthViewGrid}>

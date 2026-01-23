@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
+import clsx from 'clsx';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
@@ -65,9 +66,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   return (
     <HeaderToolbarRoot
       ref={forwardedRef}
-      className={classes.headerToolbar}
       data-single-primary-action={!showViewSwitcher}
       {...props}
+      className={clsx(props.className, classes.headerToolbar)}
     >
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         <HeaderToolbarPrimaryActionWrapper className={classes.headerToolbarPrimaryActionWrapper}>

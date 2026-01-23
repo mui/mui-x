@@ -10,6 +10,7 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
+import clsx from 'clsx';
 import { ResourcesLegendProps } from './ResourcesLegend.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { schedulerPaletteStyles } from '../../internals/utils/tokens';
@@ -124,9 +125,9 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   return (
     <ResourcesLegendRoot
       ref={forwardedRef}
-      className={classes.resourcesLegend}
       aria-label={translations.resourcesLegendSectionLabel}
       {...props}
+      className={clsx(props.className, classes.resourcesLegend)}
     >
       {resources.map((resource) => (
         <ResourcesLegendItem
