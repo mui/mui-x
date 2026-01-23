@@ -120,7 +120,7 @@ The demo below exhibits the behavior of the nested lazy loading with tree data.
 
 {{"demo": "ServerSideTreeDataNestedLazyLoading.js", "bg": "inline"}}
 
-### With row grouping
+### With row grouping [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
 The demo below exhibits the behavior of the nested lazy loading with row grouping.
 
