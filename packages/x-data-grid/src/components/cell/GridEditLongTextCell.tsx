@@ -8,6 +8,8 @@ import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
@@ -71,6 +73,10 @@ const GridEditLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper'
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: vars.zIndex.menu,
   background: (theme.vars || theme).palette.background.paper,
+  '&[data-popper-reference-hidden]': {
+    visibility: 'hidden',
+    pointerEvents: 'none',
+  },
 }));
 
 const GridEditLongTextCellPopperContent = styled('div', {
@@ -135,6 +141,7 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
+  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
   const [valueState, setValueState] = React.useState(value);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -150,37 +157,6 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
       setValueState(value);
     }
   }, [meta, value]);
-
-  // Close popup (stop edit) when cell scrolls out of view
-  React.useEffect(() => {
-    if (!showPopup) {
-      return undefined;
-    }
-    const unsubscribeRows = apiRef.current.subscribeEvent(
-      'renderedRowsIntervalChange',
-      (context) => {
-        const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-        if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
-          apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
-        }
-      },
-    );
-    const unsubscribeCols = apiRef.current.subscribeEvent('scrollPositionChange', (params) => {
-      if (params.renderContext) {
-        const colIndex = apiRef.current.getColumnIndexRelativeToVisibleColumns(colDef.field);
-        if (
-          colIndex < params.renderContext.firstColumnIndex ||
-          colIndex >= params.renderContext.lastColumnIndex
-        ) {
-          apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
-        }
-      }
-    });
-    return () => {
-      unsubscribeRows();
-      unsubscribeCols();
-    };
-  }, [apiRef, id, field, colDef.field, showPopup]);
 
   return (
     <GridEditLongTextCellRoot
@@ -203,10 +179,11 @@ function GridEditLongTextCell(props: GridEditLongTextCellProps) {
         placement="bottom-start"
         flip
         material={{
+          container: anchorEl?.closest('[role="row"]'),
           modifiers: [
             {
               name: 'offset',
-              options: { offset: [-1, -2 - (anchorEl?.offsetHeight ?? 0)] },
+              options: { offset: [-1, -rowHeight] },
             },
           ],
         }}

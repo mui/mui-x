@@ -7,6 +7,8 @@ import { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
+import { useGridSelector } from '../../hooks/utils/useGridSelector';
+import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
@@ -64,6 +66,7 @@ const GridLongTextCellPopperContent = styled('div', {
   wordBreak: 'break-word',
   width: 'var(--_width)',
   border: `1px solid ${(theme.vars || theme).palette.divider}`,
+  boxSizing: 'border-box',
 }));
 
 const GridLongTextCellCornerButton = styled('button', {
@@ -108,6 +111,10 @@ const GridLongTextCellPopper = styled(NotRendered<GridSlotProps['basePopper']>, 
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   zIndex: vars.zIndex.menu,
   background: (theme.vars || theme).palette.background.paper,
+  '&[data-popper-reference-hidden]': {
+    visibility: 'hidden',
+    pointerEvents: 'none',
+  },
 }));
 
 export interface GridLongTextCellProps extends GridRenderCellParams<any, string | null> {
@@ -153,6 +160,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
+  const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
 
   const [popupOpen, setPopupOpen] = React.useState(false);
   const cellRef = React.useRef<HTMLDivElement>(null);
@@ -162,37 +170,6 @@ function GridLongTextCell(props: GridLongTextCellProps) {
       setPopupOpen(false);
     }
   }, [hasFocus]);
-
-  // Close popup when cell scrolls out of view
-  React.useEffect(() => {
-    if (!popupOpen) {
-      return undefined;
-    }
-    const unsubscribeRows = apiRef.current.subscribeEvent(
-      'renderedRowsIntervalChange',
-      (context) => {
-        const rowIndex = apiRef.current.getRowIndexRelativeToVisibleRows(id);
-        if (rowIndex < context.firstRowIndex || rowIndex >= context.lastRowIndex) {
-          setPopupOpen(false);
-        }
-      },
-    );
-    const unsubscribeCols = apiRef.current.subscribeEvent('scrollPositionChange', (params) => {
-      if (params.renderContext) {
-        const colIndex = apiRef.current.getColumnIndexRelativeToVisibleColumns(colDef.field);
-        if (
-          colIndex < params.renderContext.firstColumnIndex ||
-          colIndex >= params.renderContext.lastColumnIndex
-        ) {
-          setPopupOpen(false);
-        }
-      }
-    });
-    return () => {
-      unsubscribeRows();
-      unsubscribeCols();
-    };
-  }, [apiRef, id, colDef.field, popupOpen]);
 
   const handleExpandClick = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -248,10 +225,11 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         clickAwayMouseEvent="onMouseDown"
         flip
         material={{
+          container: cellRef.current?.closest('[role="row"]'),
           modifiers: [
             {
               name: 'offset',
-              options: { offset: [-10, -1 - (cellRef.current?.offsetHeight ?? 0)] },
+              options: { offset: [-10, -rowHeight] },
             },
           ],
         }}
