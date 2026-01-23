@@ -24,6 +24,7 @@ import { EventPopoverProvider } from '../internals/components/event-popover/Even
 import { useTranslations } from '../internals/utils/TranslationsContext';
 import MonthViewWeekRow from './month-view-row/MonthViewWeekRow';
 import { MoreEventsPopoverProvider } from '../internals/components/more-events-popover';
+import { useEventCalendarClasses } from '../event-calendar/EventCalendarClassesContext';
 import '../index.css';
 
 const FIXED_CELL_WIDTH = 28;
@@ -150,6 +151,7 @@ export const MonthView = React.memo(
     const adapter = useAdapter();
     const translations = useTranslations();
     const store = useEventCalendarStoreContext();
+    const classes = useEventCalendarClasses();
 
     // Ref hooks
     const containerRef = React.useRef<HTMLElement | null>(null);
@@ -198,23 +200,23 @@ export const MonthView = React.memo(
     );
 
     return (
-      <MonthViewRoot {...props} ref={handleRef}>
+      <MonthViewRoot className={classes.monthView} {...props} ref={handleRef}>
         <EventPopoverProvider containerRef={containerRef}>
           <MoreEventsPopoverProvider containerRef={containerRef}>
-            <MonthViewGrid>
-              <MonthViewHeader ownerState={{ showWeekNumber }}>
+            <MonthViewGrid className={classes.monthViewGrid}>
+              <MonthViewHeader className={classes.monthViewHeader} ownerState={{ showWeekNumber }}>
                 {showWeekNumber && (
-                  <MonthViewWeekHeaderCell>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
+                  <MonthViewWeekHeaderCell className={classes.monthViewWeekHeaderCell}>{translations.weekAbbreviation}</MonthViewWeekHeaderCell>
                 )}
                 {weeks[0].map((weekDay) => (
-                  <MonthViewHeaderCell key={weekDay.key} date={weekDay} skipDataCurrent>
+                  <MonthViewHeaderCell className={classes.monthViewHeaderCell} key={weekDay.key} date={weekDay} skipDataCurrent>
                     {adapter.formatByString(weekDay.value, 'ccc')}
                   </MonthViewHeaderCell>
                 ))}
               </MonthViewHeader>
-              <MonthViewBody>
+              <MonthViewBody className={classes.monthViewBody}>
                 {isLoading && (
-                  <MonthViewLoadingOverlay>{translations.loading}</MonthViewLoadingOverlay>
+                  <MonthViewLoadingOverlay className={classes.monthViewLoadingOverlay}>{translations.loading}</MonthViewLoadingOverlay>
                 )}
 
                 {weeks.map((week, weekIdx) => (

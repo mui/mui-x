@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../internals/utils/TranslationsContext';
+import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
 
 const ViewSwitcherRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -37,6 +38,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
@@ -92,7 +94,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   }
 
   return (
-    <ViewSwitcherRoot ref={handleRef} {...other}>
+    <ViewSwitcherRoot ref={handleRef} className={classes.viewSwitcher} {...other}>
       <ToggleButtonGroup value={view} exclusive onChange={handleToggleChange} size="small">
         {visible.map((visibleView) => (
           <ToggleButton key={visibleView} value={visibleView}>

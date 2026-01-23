@@ -24,6 +24,7 @@ import { useEventPopoverContext } from '../../internals/components/event-popover
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
+import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
 
 const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
   name: 'MuiEventCalendar',
@@ -163,6 +164,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
   const { open: startEditing } = useEventPopoverContext();
 
   // Selector hooks
@@ -193,7 +195,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
-    <MonthViewCellNumber className="MonthViewCellNumber">
+    <MonthViewCellNumber className={`MonthViewCellNumber ${classes.monthViewCellNumber}`}>
       {isFirstDayOfMonth
         ? formatMonthAndDayOfMonth(day.value, adapter)
         : adapter.format(day.value, 'dayOfMonth')}
@@ -223,6 +225,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
 
   return (
     <MonthViewCellRoot
+      className={classes.monthViewCell}
       ref={handleRef}
       key={day.key}
       value={day.value}
@@ -235,7 +238,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       {hasDayView ? (
         <MonthViewCellNumberButton
           type="button"
-          className="MonthViewCellNumberButton"
+          className={`MonthViewCellNumberButton ${classes.monthViewCellNumberButton}`}
           onClick={(event) => store.switchToDay(day.value, event)}
           tabIndex={0}
         >
@@ -244,7 +247,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
       ) : (
         cellNumberContent
       )}
-      <MonthViewCellEvents>
+      <MonthViewCellEvents className={classes.monthViewCellEvents}>
         {visibleOccurrences.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
@@ -273,14 +276,14 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
             day={day}
             nativeButton={true}
             render={
-              <MonthViewMoreEvents size="small" aria-label={translations.hiddenEvents(hiddenCount)}>
+              <MonthViewMoreEvents className={classes.monthViewMoreEvents} size="small" aria-label={translations.hiddenEvents(hiddenCount)}>
                 {translations.hiddenEvents(hiddenCount)}
               </MonthViewMoreEvents>
             }
           />
         )}
         {placeholder != null && (
-          <MonthViewPlaceholderEventContainer>
+          <MonthViewPlaceholderEventContainer className={classes.monthViewPlaceholderContainer}>
             <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </MonthViewPlaceholderEventContainer>
         )}

@@ -23,6 +23,7 @@ import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
+import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
 
 const FIXED_CELL_WIDTH = 68;
 const HOUR_HEIGHT = 46;
@@ -45,7 +46,7 @@ const DayTimeGridContainer = styled(CalendarGrid.Root, {
 
 const DayTimeGridRoot = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'DayTimeGridRoot',
+  slot: 'DayTimeGrid',
 })({
   display: 'flex',
   flexDirection: 'column',
@@ -288,6 +289,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
 
   // Ref hooks
   const bodyRef = React.useRef<HTMLDivElement>(null);
@@ -355,23 +357,23 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
-    <DayTimeGridHeaderContent>
+    <DayTimeGridHeaderContent className={classes.dayTimeGridHeaderContent}>
       {/* TODO: Add the 3 letter week day format to the adapter */}
-      <DayTimeGridHeaderDayName>
+      <DayTimeGridHeaderDayName className={classes.dayTimeGridHeaderDayName}>
         {adapter.formatByString(day.value, 'ccc')}
       </DayTimeGridHeaderDayName>
-      <DayTimeGridHeaderDayNumber>
+      <DayTimeGridHeaderDayNumber className={classes.dayTimeGridHeaderDayNumber}>
         {adapter.format(day.value, 'dayOfMonth')}
       </DayTimeGridHeaderDayNumber>
     </DayTimeGridHeaderContent>
   );
 
   return (
-    <DayTimeGridContainer ref={handleRef} {...other}>
+    <DayTimeGridContainer className={classes.dayTimeGridContainer} ref={handleRef} {...other}>
       <EventPopoverProvider containerRef={containerRef}>
-        <DayTimeGridHeader>
-          <DayTimeGridHeaderRow as={CalendarGrid.HeaderRow}>
-            <DayTimeGridAllDayEventsCell />
+        <DayTimeGridHeader className={classes.dayTimeGridHeader}>
+          <DayTimeGridHeaderRow className={classes.dayTimeGridHeaderRow} as={CalendarGrid.HeaderRow}>
+            <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
             {days.map((day) => (
               <CalendarGrid.HeaderCell
                 key={day.key}
@@ -380,6 +382,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
               >
                 {hasDayView ? (
                   <DayTimeGridHeaderButton
+                    className={classes.dayTimeGridHeaderButton}
                     type="button"
                     onClick={(event) => store.switchToDay(day.value, event)}
                     tabIndex={0}
@@ -395,16 +398,19 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
         </DayTimeGridHeader>
 
         <DayTimeGridAllDayEventsGrid
+          className={classes.dayTimeGridAllDayEventsGrid}
           ref={allDayHeaderWrapperRef}
           data-weekend={lastIsWeekend || undefined}
         >
           <DayTimeGridAllDayEventsHeaderCell
+            className={classes.dayTimeGridAllDayEventsHeaderCell}
             id="DayTimeGridAllDayEventsHeaderCell"
             role="columnheader"
           >
             {translations.allDay}
           </DayTimeGridAllDayEventsHeaderCell>
           <DayTimeGridAllDayEventsRow
+            className={classes.dayTimeGridAllDayEventsRow}
             as={CalendarGrid.DayRow}
             start={start}
             end={end}
@@ -418,16 +424,18 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
           <div className="ScrollablePlaceholder" />
         </DayTimeGridAllDayEventsGrid>
 
-        <DayTimeGridRoot>
-          <DayTimeGridBody ref={bodyRef}>
-            <DayTimeGridScrollableContent as={CalendarGrid.TimeScrollableContent}>
-              <DayTimeGridTimeAxis aria-hidden="true">
+        <DayTimeGridRoot className={classes.dayTimeGrid}>
+          <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
+            <DayTimeGridScrollableContent className={classes.dayTimeGridScrollableContent} as={CalendarGrid.TimeScrollableContent}>
+              <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
                 {Array.from({ length: 24 }, (_, hour) => (
                   <DayTimeGridTimeAxisCell
+                    className={classes.dayTimeGridTimeAxisCell}
                     key={hour}
                     style={{ '--hour': hour } as React.CSSProperties}
                   >
                     <DayTimeGridTimeAxisText
+                      className={classes.dayTimeGridTimeAxisText}
                       as="time"
                       data-hidden={shouldHideHour(hour) || undefined}
                     >
@@ -437,9 +445,9 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                 ))}
               </DayTimeGridTimeAxis>
 
-              <DayTimeGridGrid>
+              <DayTimeGridGrid className={classes.dayTimeGridGrid}>
                 {isLoading && (
-                  <DayTimeGridLoadingOverlay>{translations.loading}</DayTimeGridLoadingOverlay>
+                  <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>{translations.loading}</DayTimeGridLoadingOverlay>
                 )}
 
                 {occurrences.days.map((day, index) => (

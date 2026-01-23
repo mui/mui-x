@@ -22,6 +22,7 @@ import { useTranslations } from '../../../utils/TranslationsContext';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
+import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -217,6 +218,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
   // Context hooks
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const isDraggable = useStore(store, schedulerEventSelectors.isDraggable, occurrence.id);
@@ -244,16 +246,17 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
         return (
           <React.Fragment>
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-              <DayGridEventTitle>{occurrence.title}</DayGridEventTitle>
+              <DayGridEventTitle className={classes.dayGridEventTitle}>{occurrence.title}</DayGridEventTitle>
             </LinesClamp>
-            {isRecurring && <DayGridEventRecurringIcon aria-hidden="true" fontSize="small" />}
+            {isRecurring && <DayGridEventRecurringIcon className={classes.dayGridEventRecurringIcon} aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
 
       case 'compact':
         return (
-          <DayGridEventCardWrapper>
+          <DayGridEventCardWrapper className={classes.dayGridEventCardWrapper}>
             <EventColorIndicator
+              className={classes.eventColorIndicator}
               role="img"
               aria-label={
                 resource?.title
@@ -262,15 +265,15 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
               }
             />
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-              <DayGridEventCardContent>
-                <DayGridEventTime>
+              <DayGridEventCardContent className={classes.dayGridEventCardContent}>
+                <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                   <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
                 </DayGridEventTime>
-                <DayGridEventTitle as="span">{occurrence.title}</DayGridEventTitle>
+                <DayGridEventTitle className={classes.dayGridEventTitle} as="span">{occurrence.title}</DayGridEventTitle>
               </DayGridEventCardContent>
             </LinesClamp>
-            {isRecurring && <DayGridEventRecurringIcon aria-hidden="true" fontSize="small" />}
+            {isRecurring && <DayGridEventRecurringIcon className={classes.dayGridEventRecurringIcon} aria-hidden="true" fontSize="small" />}
           </DayGridEventCardWrapper>
         );
       default:
@@ -285,6 +288,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     resource?.title,
     translations,
     formatTime,
+    classes,
   ]);
 
   const sharedProps = {
@@ -304,7 +308,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
 
   if (variant === 'placeholder') {
     return (
-      <DayGridEventPlaceholder aria-hidden={true} {...sharedProps}>
+      <DayGridEventPlaceholder aria-hidden={true} {...sharedProps} className={clsx(classes.dayGridEventPlaceholder, sharedProps.className)}>
         {content}
       </DayGridEventPlaceholder>
     );
@@ -318,10 +322,11 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       renderDragPreview={(parameters) => <EventDragPreview {...parameters} />}
       aria-hidden={variant === 'invisible'}
       {...sharedProps}
+      className={clsx(classes.dayGridEvent, sharedProps.className)}
     >
-      {isStartResizable && <DayGridEventResizeHandler side="start" />}
+      {isStartResizable && <DayGridEventResizeHandler className={classes.dayGridEventResizeHandler} side="start" />}
       {content}
-      {isEndResizable && <DayGridEventResizeHandler side="end" />}
+      {isEndResizable && <DayGridEventResizeHandler className={classes.dayGridEventResizeHandler} side="end" />}
     </DayGridEventRoot>
   );
 });

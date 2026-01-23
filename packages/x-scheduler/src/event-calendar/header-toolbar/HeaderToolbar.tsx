@@ -9,6 +9,7 @@ import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { PreferencesMenu } from './preferences-menu';
+import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
@@ -53,6 +54,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -61,9 +63,9 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showViewSwitcher = views.length > 1;
 
   return (
-    <HeaderToolbarRoot ref={forwardedRef} data-single-primary-action={!showViewSwitcher} {...props}>
-      <HeaderToolbarActions>
-        <HeaderToolbarPrimaryActionWrapper>
+    <HeaderToolbarRoot ref={forwardedRef} className={classes.headerToolbar} data-single-primary-action={!showViewSwitcher} {...props}>
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
+        <HeaderToolbarPrimaryActionWrapper className={classes.headerToolbarPrimaryActionWrapper}>
           {showViewSwitcher && (
             <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
           )}

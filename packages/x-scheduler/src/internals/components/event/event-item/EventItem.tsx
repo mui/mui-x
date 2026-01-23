@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import { useId } from '@base-ui/utils/useId';
 import { useStore } from '@base-ui/utils/store';
@@ -15,6 +16,7 @@ import { EventItemProps } from './EventItem.types';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
+import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -134,6 +136,7 @@ export const EventItem = React.forwardRef(function EventItem(
   // Context hooks
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
 
   // State hooks
   const id = useId(idProp);
@@ -155,6 +158,7 @@ export const EventItem = React.forwardRef(function EventItem(
         return (
           <React.Fragment>
             <ResourceLegendColor
+              className={classes.resourceLegendColor}
               role="img"
               aria-label={
                 resource?.title
@@ -163,14 +167,14 @@ export const EventItem = React.forwardRef(function EventItem(
               }
             />
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-              <EventItemCardContent>
-                <EventItemTime data-compact>
+              <EventItemCardContent className={classes.eventItemCardContent}>
+                <EventItemTime className={classes.eventItemTime} data-compact>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
                 </EventItemTime>
-                <EventItemTitle>{occurrence.title}</EventItemTitle>
+                <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
               </EventItemCardContent>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon aria-hidden="true" fontSize="small" />}
+            {isRecurring && <EventItemRecurringIcon className={classes.eventItemRecurringIcon} aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
 
@@ -178,15 +182,16 @@ export const EventItem = React.forwardRef(function EventItem(
         return (
           <React.Fragment>
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-              <EventItemTitle>{occurrence.title}</EventItemTitle>
+              <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon aria-hidden="true" fontSize="small" />}
+            {isRecurring && <EventItemRecurringIcon className={classes.eventItemRecurringIcon} aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
       case 'regular':
         return (
           <React.Fragment>
             <ResourceLegendColor
+              className={classes.resourceLegendColor}
               role="img"
               aria-label={
                 resource?.title
@@ -195,31 +200,31 @@ export const EventItem = React.forwardRef(function EventItem(
               }
             />
             <LinesClamp style={{ '--number-of-lines': 1 } as React.CSSProperties}>
-              <EventItemCardContent>
+              <EventItemCardContent className={classes.eventItemCardContent}>
                 <MultiDayDateLabel occurrence={occurrence} formatTime={formatTime} />
-                <EventItemTitle>{occurrence.title}</EventItemTitle>
+                <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
               </EventItemCardContent>
             </LinesClamp>
-            {isRecurring && <EventItemRecurringIcon aria-hidden="true" fontSize="small" />}
+            {isRecurring && <EventItemRecurringIcon className={classes.eventItemRecurringIcon} aria-hidden="true" fontSize="small" />}
           </React.Fragment>
         );
       default:
         throw new Error('Unsupported variant provided to EventItem component.');
     }
-  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring]);
+  }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring, classes]);
 
   return (
     // TODO: Use button
     <EventItemCard
       ref={forwardedRef}
       id={id}
-      className={occurrence.className}
+      className={clsx(classes.eventItemCard, occurrence.className)}
       data-variant={variant}
       data-palette={color}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
     >
-      <EventItemCardWrapper data-variant={variant}>{content}</EventItemCardWrapper>
+      <EventItemCardWrapper className={classes.eventItemCardWrapper} data-variant={variant}>{content}</EventItemCardWrapper>
     </EventItemCard>
   );
 });
@@ -232,13 +237,14 @@ function MultiDayDateLabel(props: {
 
   const adapter = useAdapter();
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
 
   if (
     !adapter.isSameDay(occurrence.displayTimezone.start.value, occurrence.displayTimezone.end.value)
   ) {
     const format = `${adapter.formats.dayOfMonth} ${adapter.formats.month3Letters}`;
     return (
-      <EventItemTime as="span">
+      <EventItemTime className={classes.eventItemTime} as="span">
         {translations.eventItemMultiDayLabel(
           adapter.formatByString(occurrence.displayTimezone.end.value, format),
         )}
@@ -246,10 +252,10 @@ function MultiDayDateLabel(props: {
     );
   }
   if (occurrence.allDay) {
-    return <EventItemTime as="span">{translations.allDay}</EventItemTime>;
+    return <EventItemTime className={classes.eventItemTime} as="span">{translations.allDay}</EventItemTime>;
   }
   return (
-    <EventItemTime>
+    <EventItemTime className={classes.eventItemTime}>
       <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
       <span> - {formatTime(occurrence.displayTimezone.end.value)}</span>
     </EventItemTime>
