@@ -284,6 +284,15 @@ The example below has a yellow tick color for the last group and blue text for t
 
 Beyond the axis definition, there are several other ways to further customize how axes are rendered:
 
+### Styling axes by ID
+
+To target a specific axis by its ID, use the `data-axis-id` attribute as a selector.
+This is useful when you have multiple axes and want to style them differently.
+
+In the example below, the revenue axis label is styled with a teal color and the profit axis label with a blue color to match their respective series.
+
+{{"demo": "AxisIdStyling.js"}}
+
 ### Fixing tick label overflow issues
 
 When your tick labels are too long, they're clipped to avoid overflowing.
