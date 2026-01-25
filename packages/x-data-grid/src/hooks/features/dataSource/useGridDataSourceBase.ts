@@ -324,9 +324,30 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     cache,
     events: {
       strategyAvailabilityChange: handleStrategyActivityChange,
-      sortModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
-      filterModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
-      paginationModelChange: runIf(standardRowsUpdateStrategyActive, () => debouncedFetchRows()),
+      sortModelChange: runIf(standardRowsUpdateStrategyActive, () => {
+        // When using the grouped data strategy, keeping children expanded can prevent the grid from
+        // reflecting changes in the returned row order (e.g. after server-side sorting).
+        // We prefer correctness of ordering for sort/filter/pagination changes.
+        if (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData) {
+          debouncedFetchRows(undefined, { keepChildrenExpanded: false, skipCache: true });
+          return;
+        }
+        debouncedFetchRows();
+      }),
+      filterModelChange: runIf(standardRowsUpdateStrategyActive, () => {
+        if (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData) {
+          debouncedFetchRows(undefined, { keepChildrenExpanded: false, skipCache: true });
+          return;
+        }
+        debouncedFetchRows();
+      }),
+      paginationModelChange: runIf(standardRowsUpdateStrategyActive, () => {
+        if (currentStrategy === DataSourceRowsUpdateStrategy.GroupedData) {
+          debouncedFetchRows(undefined, { keepChildrenExpanded: false, skipCache: true });
+          return;
+        }
+        debouncedFetchRows();
+      }),
     },
   };
 };

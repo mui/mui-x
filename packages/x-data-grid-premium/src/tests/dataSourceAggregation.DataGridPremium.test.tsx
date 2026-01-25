@@ -242,4 +242,45 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
       expect(fetchRowsSpy.callCount).to.equal(4);
     });
   });
+
+  it('should apply the server-side sorting when row grouping is enabled', async () => {
+    const { user } = render(
+      <TestDataSourceAggregation
+        dataSourceCache={null}
+        initialState={{
+          rowGrouping: { model: ['company'] },
+        }}
+        defaultGroupingExpansionDepth={-1}
+        dataSetOptions={{
+          dataSet: 'Movies',
+          maxColumns: undefined,
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(1);
+    });
+
+    const titleFieldIndex = apiRef.current!.state.columns.orderedFields.indexOf('title');
+    const grossFieldIndex = apiRef.current!.state.columns.orderedFields.indexOf('gross');
+    expect(titleFieldIndex).to.be.greaterThan(-1);
+    expect(grossFieldIndex).to.be.greaterThan(-1);
+
+    const firstLeafTitleBefore = getCell(1, titleFieldIndex).textContent;
+
+    // Sort by Gross (server-side)
+    await user.click(getColumnHeaderCell(grossFieldIndex));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    expect(fetchRowsSpy.lastCall.args[0].sortModel).to.deep.equal([
+      { field: 'gross', sort: 'asc' },
+    ]);
+
+    const firstLeafTitleAfter = getCell(1, titleFieldIndex).textContent;
+    expect(firstLeafTitleAfter).not.to.equal(firstLeafTitleBefore);
+  });
 });
