@@ -111,7 +111,7 @@ export function describeSchedulerStoreCoreTests(storeClass: SchedulerStoreClassD
             },
             adapter,
           );
-        }).toWarnDev(['Scheduler: A component is changing the default visibleDate state']);
+        }).toWarnDev(['MUI: A component is changing the default visibleDate state']);
 
         expect(store.state.visibleDate).toEqualDateTime(defaultDate);
       });
@@ -128,7 +128,7 @@ export function describeSchedulerStoreCoreTests(storeClass: SchedulerStoreClassD
         const newDate = adapter.date('2025-07-10T00:00:00Z', 'default');
         expect(() => {
           store.updateStateFromParameters({ ...DEFAULT_PARAMS, visibleDate: newDate }, adapter);
-        }).toWarnDev('Scheduler: A component is changing the uncontrolled visibleDate state');
+        }).toWarnDev('MUI: A component is changing the uncontrolled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(newDate);
       });
@@ -146,7 +146,7 @@ export function describeSchedulerStoreCoreTests(storeClass: SchedulerStoreClassD
             },
             adapter,
           );
-        }).toWarnDev('Scheduler: A component is changing the controlled visibleDate state');
+        }).toWarnDev('MUI: A component is changing the controlled visibleDate state');
 
         expect(store.state.visibleDate).toEqualDateTime(visibleDate);
       });

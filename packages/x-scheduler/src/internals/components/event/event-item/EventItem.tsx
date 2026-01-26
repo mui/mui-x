@@ -250,7 +250,7 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       default:
-        throw new Error('Unsupported variant provided to EventItem component.');
+        throw new Error('MUI: Unsupported variant provided to EventItem component.');
     }
   }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring, classes]);
 
