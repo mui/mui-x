@@ -26,7 +26,6 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
-import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 import { schedulerTokens } from '../internals/utils/tokens';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 import { EventCalendarClasses, getEventCalendarUtilityClass } from './eventCalendarClasses';
@@ -46,6 +45,9 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     headerToolbar: ['headerToolbar'],
     headerToolbarActions: ['headerToolbarActions'],
     headerToolbarPrimaryActionWrapper: ['headerToolbarPrimaryActionWrapper'],
+    headerToolbarLeft: ['headerToolbarLeft'],
+    headerToolbarLabel: ['headerToolbarLabel'],
+    headerToolbarDateNavigator: ['headerToolbarDateNavigator'],
     viewSwitcher: ['viewSwitcher'],
     preferencesMenu: ['preferencesMenu'],
     resourcesLegend: ['resourcesLegend'],
