@@ -14,6 +14,7 @@ import { StandaloneWeekViewProps, WeekViewProps } from './WeekView.types';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 import { DayTimeGrid } from '../internals/components/day-time-grid/DayTimeGrid';
 import '../index.css';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 const WEEK_VIEW_CONFIG: EventCalendarViewConfig = {
   siblingVisibleDateGetter: ({ state, delta }) =>
@@ -68,7 +69,9 @@ export const StandaloneWeekView = React.forwardRef(function StandaloneWeekView<
 
   return (
     <EventCalendarProvider {...parameters}>
-      <WeekView ref={forwardedRef} {...forwardedProps} />
+      <EventDraggableDialogProvider>
+        <WeekView ref={forwardedRef} {...forwardedProps} />
+      </EventDraggableDialogProvider>
     </EventCalendarProvider>
   );
 }) as StandaloneWeekViewComponent;

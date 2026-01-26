@@ -22,7 +22,7 @@ import { useTranslations } from '../../utils/TranslationsContext';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const ResourceMenuLegendContainer = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuLegendContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -31,7 +31,7 @@ const ResourceMenuLegendContainer = styled('div', {
 }));
 
 const ResourceMenuColorDot = styled('span', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorDot',
 })({
   width: 8,
@@ -43,7 +43,7 @@ const ResourceMenuColorDot = styled('span', {
 });
 
 const ResourceMenuColorRadioButton = styled('button', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorRadioButton',
 })({
   width: 24,

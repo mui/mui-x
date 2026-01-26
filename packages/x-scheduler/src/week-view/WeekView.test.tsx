@@ -8,6 +8,7 @@ import {
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
 import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
 const multiDayEvent = EventBuilder.new()
@@ -34,7 +35,9 @@ describe('<WeekView />', () => {
           events={[EventBuilder.new().span('2025-05-05Z', '2025-05-07Z', { allDay: true }).build()]}
           resources={[]}
         >
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -64,7 +67,9 @@ describe('<WeekView />', () => {
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -83,7 +88,9 @@ describe('<WeekView />', () => {
     it('should place invisible events on the same grid row as the main event', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -121,7 +128,9 @@ describe('<WeekView />', () => {
 
       render(
         <EventCalendarProvider events={overlappingEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -149,7 +158,9 @@ describe('<WeekView />', () => {
     it('should render all-day events with correct grid column span', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 

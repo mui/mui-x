@@ -19,7 +19,6 @@ import {
 import clsx from 'clsx';
 import { DayTimeGridProps } from './DayTimeGrid.types';
 import { useTranslations } from '../../utils/TranslationsContext';
-import { EventPopoverProvider } from '../../../internals/components/event-popover/EventPopover';
 import { TimeGridColumn } from './TimeGridColumn';
 import { DayGridCell } from './DayGridCell';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
@@ -367,103 +366,98 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
       {...other}
       className={clsx(className, classes.dayTimeGridContainer)}
     >
-      <EventPopoverProvider containerRef={containerRef}>
-        <DayTimeGridHeader className={classes.dayTimeGridHeader}>
-          <DayTimeGridHeaderRow
-            className={classes.dayTimeGridHeaderRow}
-            as={CalendarGrid.HeaderRow}
-          >
-            <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
-            {days.map((day) => (
-              <CalendarGrid.HeaderCell
-                key={day.key}
-                date={day}
-                ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
-              >
-                {hasDayView ? (
-                  <DayTimeGridHeaderButton
-                    className={classes.dayTimeGridHeaderButton}
-                    type="button"
-                    onClick={(event) => store.switchToDay(day.value, event)}
-                    tabIndex={0}
-                  >
-                    {renderHeaderContent(day)}
-                  </DayTimeGridHeaderButton>
-                ) : (
-                  renderHeaderContent(day)
-                )}
-              </CalendarGrid.HeaderCell>
-            ))}
-          </DayTimeGridHeaderRow>
-        </DayTimeGridHeader>
-
-        <DayTimeGridAllDayEventsGrid
-          className={classes.dayTimeGridAllDayEventsGrid}
-          ref={allDayHeaderWrapperRef}
-          data-weekend={lastIsWeekend || undefined}
-        >
-          <DayTimeGridAllDayEventsHeaderCell
-            className={classes.dayTimeGridAllDayEventsHeaderCell}
-            id="DayTimeGridAllDayEventsHeaderCell"
-            role="columnheader"
-          >
-            {translations.allDay}
-          </DayTimeGridAllDayEventsHeaderCell>
-          <DayTimeGridAllDayEventsRow
-            className={classes.dayTimeGridAllDayEventsRow}
-            as={CalendarGrid.DayRow}
-            start={start}
-            end={end}
-            role="row"
-            style={{ '--column-count': days.length } as React.CSSProperties}
-          >
-            {occurrences.days.map((day) => (
-              <DayGridCell key={day.key} day={day} row={occurrences} />
-            ))}
-          </DayTimeGridAllDayEventsRow>
-          <div className={classes.dayTimeGridScrollablePlaceholder} />
-        </DayTimeGridAllDayEventsGrid>
-
-        <DayTimeGridRoot className={classes.dayTimeGrid}>
-          <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
-            <DayTimeGridScrollableContent
-              className={classes.dayTimeGridScrollableContent}
-              as={CalendarGrid.TimeScrollableContent}
+      <DayTimeGridHeader className={classes.dayTimeGridHeader}>
+        <DayTimeGridHeaderRow className={classes.dayTimeGridHeaderRow} as={CalendarGrid.HeaderRow}>
+          <DayTimeGridAllDayEventsCell className={classes.dayTimeGridAllDayEventsCell} />
+          {days.map((day) => (
+            <CalendarGrid.HeaderCell
+              key={day.key}
+              date={day}
+              ariaLabelFormat={`${adapter.formats.weekday} ${adapter.formats.dayOfMonth}`}
             >
-              <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
-                {Array.from({ length: 24 }, (_, hour) => (
-                  <DayTimeGridTimeAxisCell
-                    className={classes.dayTimeGridTimeAxisCell}
-                    key={hour}
-                    style={{ '--hour': hour } as React.CSSProperties}
-                  >
-                    <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
-                      {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
-                    </DayTimeGridTimeAxisText>
-                  </DayTimeGridTimeAxisCell>
-                ))}
-              </DayTimeGridTimeAxis>
+              {hasDayView ? (
+                <DayTimeGridHeaderButton
+                  className={classes.dayTimeGridHeaderButton}
+                  type="button"
+                  onClick={(event) => store.switchToDay(day.value, event)}
+                  tabIndex={0}
+                >
+                  {renderHeaderContent(day)}
+                </DayTimeGridHeaderButton>
+              ) : (
+                renderHeaderContent(day)
+              )}
+            </CalendarGrid.HeaderCell>
+          ))}
+        </DayTimeGridHeaderRow>
+      </DayTimeGridHeader>
 
-              <DayTimeGridGrid className={classes.dayTimeGridGrid}>
-                {isLoading && (
-                  <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>
-                    {translations.loading}
-                  </DayTimeGridLoadingOverlay>
-                )}
+      <DayTimeGridAllDayEventsGrid
+        className={classes.dayTimeGridAllDayEventsGrid}
+        ref={allDayHeaderWrapperRef}
+        data-weekend={lastIsWeekend || undefined}
+      >
+        <DayTimeGridAllDayEventsHeaderCell
+          className={classes.dayTimeGridAllDayEventsHeaderCell}
+          id="DayTimeGridAllDayEventsHeaderCell"
+          role="columnheader"
+        >
+          {translations.allDay}
+        </DayTimeGridAllDayEventsHeaderCell>
+        <DayTimeGridAllDayEventsRow
+          className={classes.dayTimeGridAllDayEventsRow}
+          as={CalendarGrid.DayRow}
+          start={start}
+          end={end}
+          role="row"
+          style={{ '--column-count': days.length } as React.CSSProperties}
+        >
+          {occurrences.days.map((day) => (
+            <DayGridCell key={day.key} day={day} row={occurrences} />
+          ))}
+        </DayTimeGridAllDayEventsRow>
+        <div className={classes.dayTimeGridScrollablePlaceholder} />
+      </DayTimeGridAllDayEventsGrid>
 
-                {occurrences.days.map((day, index) => (
-                  <TimeGridColumn
-                    key={day.key}
-                    day={day}
-                    index={index}
-                    showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
-                  />
-                ))}
-              </DayTimeGridGrid>
-            </DayTimeGridScrollableContent>
-          </DayTimeGridBody>
-        </DayTimeGridRoot>
-      </EventPopoverProvider>
+      <DayTimeGridRoot className={classes.dayTimeGrid}>
+        <DayTimeGridBody className={classes.dayTimeGridBody} ref={bodyRef}>
+          <DayTimeGridScrollableContent
+            className={classes.dayTimeGridScrollableContent}
+            as={CalendarGrid.TimeScrollableContent}
+          >
+            <DayTimeGridTimeAxis className={classes.dayTimeGridTimeAxis} aria-hidden="true">
+              {Array.from({ length: 24 }, (_, hour) => (
+                <DayTimeGridTimeAxisCell
+                  className={classes.dayTimeGridTimeAxisCell}
+                  key={hour}
+                  style={{ '--hour': hour } as React.CSSProperties}
+                >
+                  <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
+                    {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
+                  </DayTimeGridTimeAxisText>
+                </DayTimeGridTimeAxisCell>
+              ))}
+            </DayTimeGridTimeAxis>
+
+            <DayTimeGridGrid className={classes.dayTimeGridGrid}>
+              {isLoading && (
+                <DayTimeGridLoadingOverlay className={classes.dayTimeGridLoadingOverlay}>
+                  {translations.loading}
+                </DayTimeGridLoadingOverlay>
+              )}
+
+              {occurrences.days.map((day, index) => (
+                <TimeGridColumn
+                  key={day.key}
+                  day={day}
+                  index={index}
+                  showCurrentTimeIndicator={showCurrentTimeIndicator && isTodayInView}
+                />
+              ))}
+            </DayTimeGridGrid>
+          </DayTimeGridScrollableContent>
+        </DayTimeGridBody>
+      </DayTimeGridRoot>
     </DayTimeGridContainer>
   );
 });
