@@ -43,9 +43,9 @@ const HeaderToolbarActions = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const DateNavigatorButtonsContainer = styled(ButtonGroup, {
+const HeaderToolbarDateNavigator = styled(ButtonGroup, {
   name: 'MuiEventCalendar',
-  slot: 'DateNavigatorButtonsContainer',
+  slot: 'HeaderToolbarDateNavigator',
 })({});
 
 const HeaderToolbarLeft = styled('div', {
@@ -116,7 +116,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         <PreferencesMenu />
 
-        <DateNavigatorButtonsContainer className={classes.dateNavigatorButtonsContainer}>
+        <HeaderToolbarDateNavigator className={classes.headerToolbarDateNavigator}>
           <Button
             onClick={store.goToPreviousVisibleDate}
             aria-label={translations.previousTimeSpan(view)}
@@ -127,7 +127,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           <Button onClick={store.goToNextVisibleDate} aria-label={translations.nextTimeSpan(view)}>
             <ChevronRight />
           </Button>
-        </DateNavigatorButtonsContainer>
+        </HeaderToolbarDateNavigator>
         {showViewSwitcher && (
           <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
         )}
