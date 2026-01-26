@@ -88,7 +88,7 @@ export function describeSchedulerEventSelectorTests(storeClass: SchedulerStoreCl
             events: [defaultEvent],
             areEventsDraggable: true,
             eventModelStructure: {
-              start: { getter: (event) => event.start },
+              start: { getter: (event: { start: unknown }) => event.start },
             },
           },
           adapter,
@@ -102,7 +102,7 @@ export function describeSchedulerEventSelectorTests(storeClass: SchedulerStoreCl
             events: [defaultEvent],
             areEventsDraggable: true,
             eventModelStructure: {
-              end: { getter: (event) => event.end },
+              end: { getter: (event: { end: unknown }) => event.end },
             },
           },
           adapter,
@@ -291,7 +291,7 @@ export function describeSchedulerEventSelectorTests(storeClass: SchedulerStoreCl
             events: [defaultEvent],
             areEventsResizable: true,
             eventModelStructure: {
-              start: { getter: (event) => event.start },
+              start: { getter: (event: { start: unknown }) => event.start },
             },
           },
           adapter,
@@ -306,7 +306,7 @@ export function describeSchedulerEventSelectorTests(storeClass: SchedulerStoreCl
             events: [defaultEvent],
             areEventsResizable: true,
             eventModelStructure: {
-              end: { getter: (event) => event.end },
+              end: { getter: (event: { end: unknown }) => event.end },
             },
           },
           adapter,
