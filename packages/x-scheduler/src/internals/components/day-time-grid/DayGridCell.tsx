@@ -13,6 +13,7 @@ import {
   useEventPopoverContext,
 } from '../../../internals/components/event-popover/EventPopover';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
 
 const EVENT_HEIGHT = 22;
 
@@ -62,6 +63,7 @@ export function DayGridCell(props: DayGridCellProps) {
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
   const { open: startEditing } = useEventPopoverContext();
 
   // Ref hooks
@@ -95,6 +97,7 @@ export function DayGridCell(props: DayGridCellProps) {
 
   return (
     <DayTimeGridAllDayEventsCell
+      className={classes.dayTimeGridAllDayEventsCell}
       ref={cellRef}
       value={day.value}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
@@ -108,7 +111,7 @@ export function DayGridCell(props: DayGridCellProps) {
       data-weekend={isWeekend(adapter, day.value) || undefined}
       {...eventCreationProps}
     >
-      <DayTimeGridAllDayEventsCellEvents>
+      <DayTimeGridAllDayEventsCellEvents className={classes.dayTimeGridAllDayEventsCellEvents}>
         {day.withPosition.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
@@ -125,7 +128,7 @@ export function DayGridCell(props: DayGridCellProps) {
           );
         })}
         {placeholder != null && (
-          <DayTimeGridAllDayEventContainer>
+          <DayTimeGridAllDayEventContainer className={classes.dayTimeGridAllDayEventContainer}>
             <DayGridEvent occurrence={placeholder} variant="placeholder" />
           </DayTimeGridAllDayEventContainer>
         )}
