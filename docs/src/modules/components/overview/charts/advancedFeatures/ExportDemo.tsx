@@ -67,9 +67,10 @@ function Export() {
                 }
                 return dateFormatter(value);
               },
+              tickLabelStyle: { fontWeight: 400 },
             },
           ]}
-          yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
+          yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40, tickLabelStyle: { fontWeight: 400 } }]}
           slotProps={{ tooltip: { disablePortal: true } }}
         />
       </div>

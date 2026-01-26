@@ -76,6 +76,7 @@ const commonAxisConfig = {
   scaleType: 'band' as const,
   disableTicks: true,
   disableLine: true,
+  tickLabelStyle: { fontWeight: 400 },
 };
 
 function CustomCell(props: any) {

@@ -9,8 +9,13 @@ import data from 'docsx/data/charts/dataset/transistorCPUdata';
 import ChartDemoWrapper from '../ChartDemoWrapper';
 
 const chartSetting = {
-  yAxis: [{ width: 50, scaleType: 'log' as const }],
-  xAxis: [{ valueFormatter: (v: number | null) => (v ? v.toString() : '') }],
+  yAxis: [{ width: 50, scaleType: 'log' as const, tickLabelStyle: { fontWeight: 400 } }],
+  xAxis: [
+    {
+      valueFormatter: (v: number | null) => (v ? v.toString() : ''),
+      tickLabelStyle: { fontWeight: 400 },
+    },
+  ],
 };
 
 const constructors = ['Intel', 'Apple', 'AMD'];

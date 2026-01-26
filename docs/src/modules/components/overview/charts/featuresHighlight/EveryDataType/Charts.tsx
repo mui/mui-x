@@ -66,11 +66,12 @@ export function LineAndBar() {
           dataKey: 'x',
           disableTicks: true,
           valueFormatter: (value) => String(value),
+          tickLabelStyle: { fontWeight: 400 },
         },
       ]}
       yAxis={[
-        { width: 3, disableTicks: true },
-        { id: 'ratio', position: 'none' },
+        { width: 3, disableTicks: true, tickLabelStyle: { fontWeight: 400 } },
+        { id: 'ratio', position: 'none', tickLabelStyle: { fontWeight: 400 } },
       ]}
     >
       <ChartsSurface

@@ -32,7 +32,15 @@ export default function BarChartDemo() {
         margin={5}
         height={100}
         borderRadius={4}
-        xAxis={[{ dataKey: 'weekDay', scaleType: 'band', valueFormatter, disableTicks: true }]}
+        xAxis={[
+          {
+            dataKey: 'weekDay',
+            scaleType: 'band',
+            valueFormatter,
+            disableTicks: true,
+            tickLabelStyle: { fontWeight: 400 },
+          },
+        ]}
         yAxis={[{ position: 'none' }]}
       />
     </React.Fragment>

@@ -44,8 +44,16 @@ export default function BarChartDemo(props: { selected: SelectOptions }) {
       borderRadius={2}
       colors={['var(--palette-color-1)', 'var(--palette-color-3)', 'var(--palette-color-4)']}
       series={props.selected === 'stacking' ? series.map((s) => ({ ...s, stack: 'same' })) : series}
-      xAxis={[{ scaleType: 'band', dataKey: 'x', height: 0, disableTicks: true }]}
-      yAxis={[{ width: 0, disableTicks: true }]}
+      xAxis={[
+        {
+          scaleType: 'band',
+          dataKey: 'x',
+          height: 0,
+          disableTicks: true,
+          tickLabelStyle: { fontWeight: 400 },
+        },
+      ]}
+      yAxis={[{ width: 0, disableTicks: true, tickLabelStyle: { fontWeight: 400 } }]}
       slots={{ tooltip: () => null }}
       highlightedItem={highlightedItem}
       onHighlightChange={setHighlightedItem}

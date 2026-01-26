@@ -96,7 +96,7 @@ function valueFormatter(value: number | null) {
 }
 
 const chartSetting = {
-  yAxis: [{ width: 30 }],
+  yAxis: [{ width: 30, tickLabelStyle: { fontWeight: 400 } }],
 };
 
 function Bar() {
@@ -105,7 +105,7 @@ function Bar() {
       <Typography align="center">Avg. annual rainfall in Seoul (in mm)</Typography>
       <BarChart
         dataset={dataset}
-        xAxis={[{ dataKey: 'month' }]}
+        xAxis={[{ dataKey: 'month', tickLabelStyle: { fontWeight: 400 } }]}
         series={[{ dataKey: 'seoul', label: 'Seoul rainfall', valueFormatter }]}
         grid={{ horizontal: true }}
         sx={{

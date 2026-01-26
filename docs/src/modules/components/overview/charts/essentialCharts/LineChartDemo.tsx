@@ -76,13 +76,14 @@ function valueFormatter(value: number | null) {
 }
 
 const chartSetting = {
-  yAxis: [{ width: 40, valueFormatter, min: -5 }],
+  yAxis: [{ width: 40, valueFormatter, min: -5, tickLabelStyle: { fontWeight: 400 } }],
   xAxis: [
     {
       dataKey: 'year',
       valueFormatter: (v: number | null) => (v ? v.toString() : ''),
       domainLimit: 'strict' as const,
       height: 28,
+      tickLabelStyle: { fontWeight: 400 },
     },
   ],
 };

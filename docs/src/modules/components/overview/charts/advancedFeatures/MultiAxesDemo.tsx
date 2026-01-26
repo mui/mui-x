@@ -65,11 +65,12 @@ function MultiAxes() {
             label: 'Month',
             valueFormatter: (value, context) =>
               context.location === 'tick' ? value.slice(0, 3) : value,
+            tickLabelStyle: { fontWeight: 400 },
           },
         ]}
         yAxis={[
-          { id: 'leftAxis', width: 54 },
-          { id: 'rightAxis', position: 'right', width: 54 },
+          { id: 'leftAxis', width: 54, tickLabelStyle: { fontWeight: 400 } },
+          { id: 'rightAxis', position: 'right', width: 54, tickLabelStyle: { fontWeight: 400 } },
         ]}
         dataset={dataset}
       >

@@ -60,9 +60,10 @@ function ZoomAndPan() {
               }
               return dateFormatter(value);
             },
+            tickLabelStyle: { fontWeight: 400 },
           },
         ]}
-        yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40 }]}
+        yAxis={[{ id: 'y-axis', tickNumber: 5, width: 40, tickLabelStyle: { fontWeight: 400 } }]}
         initialZoom={[{ axisId: 'x-axis', start: 60, end: 100 }]}
         slotProps={{ tooltip: { disablePortal: true } }}
         showToolbar

@@ -118,6 +118,7 @@ export default function DownloadDemo() {
               tickNumber: 5,
               valueFormatter: (value: Date, context) =>
                 context.location === 'tick' ? shortMonthYearFormatter(value) : dateFormatter(value),
+              tickLabelStyle: { fontWeight: 400 },
             },
           ]}
           yAxis={[
@@ -126,6 +127,7 @@ export default function DownloadDemo() {
               zoom: true,
               max: selectedFormat === 'relative' ? 100 : undefined,
               valueFormatter: IntlNumber.format,
+              tickLabelStyle: { fontWeight: 400 },
             },
           ]}
           margin={{ left: 0, bottom: 0 }}

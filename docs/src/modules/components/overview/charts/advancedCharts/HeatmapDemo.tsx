@@ -69,7 +69,7 @@ function HeatmapDemoContent() {
                   ? shortDayFormatter(value)
                   : dateFormatter(value);
               },
-              tickLabelStyle: { angle: 45 },
+              tickLabelStyle: { angle: 45, fontWeight: 400 },
               height: 70,
             },
           ]}
@@ -80,6 +80,7 @@ function HeatmapDemoContent() {
               tickLabelInterval: (_, index) => index % 2 === 0,
               valueFormatter: (value) => `${value}h`,
               width: 60,
+              tickLabelStyle: { fontWeight: 400 },
             },
           ]}
           series={[{ data: bikeData as unknown as HeatmapValueType[], label: 'Bicycle count' }]}
