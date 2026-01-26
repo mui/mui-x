@@ -18,12 +18,12 @@ import {
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
+import { EventDraggableDialogTrigger } from '../../internals/components/event-draggable-dialog';
+import { useEventDraggableDialogContext } from '../../internals/components/event-draggable-dialog/EventDraggableDialog';
 import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
 import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
 
@@ -168,8 +168,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+  const { onOpen: startEditing } = useEventDraggableDialogContext();
   const classes = useEventCalendarClasses();
-  const { open: startEditing } = useEventPopoverContext();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -224,7 +224,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
-    startEditing(cellRef.current, placeholder);
+    startEditing(cellRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
@@ -260,35 +260,26 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           }
 
           return (
-            <EventPopoverTrigger
-              key={occurrence.key}
-              occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                  }
-                />
-              }
-            />
+            <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <DayGridEvent
+                occurrence={occurrence}
+                variant={
+                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                }
+              />
+            </EventDraggableDialogTrigger>
           );
         })}
         {hiddenCount > 0 && (
-          <MoreEventsPopoverTrigger
-            occurrences={day.withPosition}
-            day={day}
-            nativeButton={true}
-            render={
-              <MonthViewMoreEvents
-                className={classes.monthViewMoreEvents}
-                size="small"
-                aria-label={translations.hiddenEvents(hiddenCount)}
-              >
-                {translations.hiddenEvents(hiddenCount)}
-              </MonthViewMoreEvents>
-            }
-          />
+          <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
+            <MonthViewMoreEvents
+              size="small"
+              aria-label={translations.hiddenEvents(hiddenCount)}
+              className={classes.monthViewMoreEvents}
+            >
+              {translations.hiddenEvents(hiddenCount)}
+            </MonthViewMoreEvents>
+          </MoreEventsPopoverTrigger>
         )}
         {placeholder != null && (
           <MonthViewPlaceholderEventContainer className={classes.monthViewPlaceholderContainer}>
