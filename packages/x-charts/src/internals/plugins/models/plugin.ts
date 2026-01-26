@@ -24,7 +24,7 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
   /**
    * Reference to the chart root element.
    */
-  chartRootRef: React.RefObject<HTMLDivElement | null>;
+  chartRootRef: React.RefObject<Element | null>;
   /**
    * All the plugins that are used in the chart.
    */

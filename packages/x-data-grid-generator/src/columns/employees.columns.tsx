@@ -25,6 +25,7 @@ import {
   renderRating,
   renderEditRating,
   renderEditCountry,
+  renderEditBoolean,
 } from '../renderer';
 import { COUNTRY_ISO_OPTIONS_SORTED, CountryIsoOption } from '../services/static-data';
 import { GridColDefGenerator } from '../services/gridColDefGenerator';
@@ -162,6 +163,7 @@ export const getEmployeeColumns = (): GridColDefGenerator[] => [
     generateData: randomBoolean,
     type: 'boolean',
     width: 150,
+    renderEditCell: renderEditBoolean,
     editable: true,
   },
   {

@@ -5,11 +5,12 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { eventCalendarViewSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { CalendarView } from '@mui/x-scheduler-headless/models';
+import clsx from 'clsx';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { PreferencesMenu } from './preferences-menu';
+import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
@@ -54,6 +55,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   // Context hooks
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -62,11 +64,16 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showViewSwitcher = views.length > 1;
 
   return (
-    <HeaderToolbarRoot ref={forwardedRef} data-single-primary-action={!showViewSwitcher} {...props}>
-      <HeaderToolbarActions>
-        <HeaderToolbarPrimaryActionWrapper>
+    <HeaderToolbarRoot
+      ref={forwardedRef}
+      data-single-primary-action={!showViewSwitcher}
+      {...props}
+      className={clsx(props.className, classes.headerToolbar)}
+    >
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
+        <HeaderToolbarPrimaryActionWrapper className={classes.headerToolbarPrimaryActionWrapper}>
           {showViewSwitcher && (
-            <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
+            <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
           )}
           <Button variant="outlined" onClick={store.goToToday}>
             {translations.today}

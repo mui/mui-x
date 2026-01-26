@@ -1,7 +1,9 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled, useThemeProps } from '@mui/material/styles';
+import composeClasses from '@mui/utils/composeClasses';
 import Alert from '@mui/material/Alert';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
@@ -26,6 +28,107 @@ import { ResourcesLegend } from './resources-legend';
 import { DateNavigator } from './date-navigator';
 import { schedulerTokens } from '../internals/utils/tokens';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
+import { EventCalendarClasses, getEventCalendarUtilityClass } from './eventCalendarClasses';
+import { EventCalendarClassesContext } from './EventCalendarClassesContext';
+
+const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) => {
+  const slots = {
+    root: ['root'],
+    sidePanel: ['sidePanel'],
+    mainPanel: ['mainPanel'],
+    content: ['content'],
+    monthCalendarPlaceholder: ['monthCalendarPlaceholder'],
+    errorContainer: ['errorContainer'],
+    dateNavigator: ['dateNavigator'],
+    dateNavigatorLabel: ['dateNavigatorLabel'],
+    dateNavigatorButtonsContainer: ['dateNavigatorButtonsContainer'],
+    headerToolbar: ['headerToolbar'],
+    headerToolbarActions: ['headerToolbarActions'],
+    headerToolbarPrimaryActionWrapper: ['headerToolbarPrimaryActionWrapper'],
+    viewSwitcher: ['viewSwitcher'],
+    preferencesMenu: ['preferencesMenu'],
+    resourcesLegend: ['resourcesLegend'],
+    resourcesLegendItem: ['resourcesLegendItem'],
+    resourcesLegendItemColorDot: ['resourcesLegendItemColorDot'],
+    resourcesLegendItemName: ['resourcesLegendItemName'],
+    agendaView: ['agendaView'],
+    agendaViewRow: ['agendaViewRow'],
+    agendaViewDayHeaderCell: ['agendaViewDayHeaderCell'],
+    agendaViewDayNumberCell: ['agendaViewDayNumberCell'],
+    agendaViewWeekDayCell: ['agendaViewWeekDayCell'],
+    agendaViewWeekDayNameLabel: ['agendaViewWeekDayNameLabel'],
+    agendaViewYearAndMonthLabel: ['agendaViewYearAndMonthLabel'],
+    agendaViewEventsList: ['agendaViewEventsList'],
+    agendaViewLoadingOverlay: ['agendaViewLoadingOverlay'],
+    monthView: ['monthView'],
+    monthViewGrid: ['monthViewGrid'],
+    monthViewHeader: ['monthViewHeader'],
+    monthViewHeaderCell: ['monthViewHeaderCell'],
+    monthViewWeekHeaderCell: ['monthViewWeekHeaderCell'],
+    monthViewBody: ['monthViewBody'],
+    monthViewLoadingOverlay: ['monthViewLoadingOverlay'],
+    monthViewRow: ['monthViewRow'],
+    monthViewWeekNumberCell: ['monthViewWeekNumberCell'],
+    monthViewCell: ['monthViewCell'],
+    monthViewCellNumber: ['monthViewCellNumber'],
+    monthViewCellNumberButton: ['monthViewCellNumberButton'],
+    monthViewCellEvents: ['monthViewCellEvents'],
+    monthViewMoreEvents: ['monthViewMoreEvents'],
+    monthViewPlaceholderContainer: ['monthViewPlaceholderContainer'],
+    dayTimeGridContainer: ['dayTimeGridContainer'],
+    dayTimeGrid: ['dayTimeGrid'],
+    dayTimeGridHeader: ['dayTimeGridHeader'],
+    dayTimeGridHeaderRow: ['dayTimeGridHeaderRow'],
+    dayTimeGridAllDayEventsGrid: ['dayTimeGridAllDayEventsGrid'],
+    dayTimeGridAllDayEventsRow: ['dayTimeGridAllDayEventsRow'],
+    dayTimeGridAllDayEventsCell: ['dayTimeGridAllDayEventsCell'],
+    dayTimeGridAllDayEventsHeaderCell: ['dayTimeGridAllDayEventsHeaderCell'],
+    dayTimeGridHeaderContent: ['dayTimeGridHeaderContent'],
+    dayTimeGridHeaderButton: ['dayTimeGridHeaderButton'],
+    dayTimeGridHeaderDayName: ['dayTimeGridHeaderDayName'],
+    dayTimeGridHeaderDayNumber: ['dayTimeGridHeaderDayNumber'],
+    dayTimeGridBody: ['dayTimeGridBody'],
+    dayTimeGridScrollableContent: ['dayTimeGridScrollableContent'],
+    dayTimeGridTimeAxis: ['dayTimeGridTimeAxis'],
+    dayTimeGridTimeAxisCell: ['dayTimeGridTimeAxisCell'],
+    dayTimeGridTimeAxisText: ['dayTimeGridTimeAxisText'],
+    dayTimeGridGrid: ['dayTimeGridGrid'],
+    dayTimeGridLoadingOverlay: ['dayTimeGridLoadingOverlay'],
+    dayTimeGridColumn: ['dayTimeGridColumn'],
+    dayTimeGridColumnInteractiveLayer: ['dayTimeGridColumnInteractiveLayer'],
+    dayTimeGridCurrentTimeIndicator: ['dayTimeGridCurrentTimeIndicator'],
+    dayTimeGridCurrentTimeLabel: ['dayTimeGridCurrentTimeLabel'],
+    dayTimeGridAllDayEventsCellEvents: ['dayTimeGridAllDayEventsCellEvents'],
+    dayTimeGridAllDayEventContainer: ['dayTimeGridAllDayEventContainer'],
+    dayTimeGridScrollablePlaceholder: ['dayTimeGridScrollablePlaceholder'],
+    dayGridEvent: ['dayGridEvent'],
+    dayGridEventPlaceholder: ['dayGridEventPlaceholder'],
+    dayGridEventTitle: ['dayGridEventTitle'],
+    dayGridEventTime: ['dayGridEventTime'],
+    dayGridEventRecurringIcon: ['dayGridEventRecurringIcon'],
+    dayGridEventResizeHandler: ['dayGridEventResizeHandler'],
+    dayGridEventCardWrapper: ['dayGridEventCardWrapper'],
+    dayGridEventCardContent: ['dayGridEventCardContent'],
+    dayGridEventLinesClamp: ['dayGridEventLinesClamp'],
+    eventColorIndicator: ['eventColorIndicator'],
+    timeGridEvent: ['timeGridEvent'],
+    timeGridEventPlaceholder: ['timeGridEventPlaceholder'],
+    timeGridEventTitle: ['timeGridEventTitle'],
+    timeGridEventTime: ['timeGridEventTime'],
+    timeGridEventRecurringIcon: ['timeGridEventRecurringIcon'],
+    timeGridEventResizeHandler: ['timeGridEventResizeHandler'],
+    eventItemCard: ['eventItemCard'],
+    eventItemCardWrapper: ['eventItemCardWrapper'],
+    eventItemTitle: ['eventItemTitle'],
+    eventItemTime: ['eventItemTime'],
+    eventItemRecurringIcon: ['eventItemRecurringIcon'],
+    resourceLegendColor: ['resourceLegendColor'],
+    eventItemCardContent: ['eventItemCardContent'],
+    eventItemLinesClamp: ['eventItemLinesClamp'],
+  };
+
+  return composeClasses(slots, getEventCalendarUtilityClass, classes);
+};
 
 const EventCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -114,12 +217,12 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
 ) {
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
-  const { parameters, forwardedProps } = useExtractEventCalendarParameters<
-    TEvent,
-    TResource,
-    typeof props
-  >(props);
+  const {
+    parameters,
+    forwardedProps: { className, classes: classesProp, ...forwardedProps },
+  } = useExtractEventCalendarParameters<TEvent, TResource, typeof props>(props);
   const store = useEventCalendar(parameters);
+  const classes = useUtilityClasses(classesProp);
   const view = useStore(store, eventCalendarViewSelectors.view);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
   const errors = useStore(store, schedulerOtherSelectors.errors);
@@ -156,42 +259,54 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
     <EventCalendarStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
-          <EventDraggableDialogProvider>
-            <EventCalendarRoot {...other} ref={handleRootRef}>
-              <DateNavigator />
+          <EventCalendarClassesContext.Provider value={classes}>
+            <EventDraggableDialogProvider>
+              <EventCalendarRoot
+                className={clsx(classes.root, className)}
+                {...other}
+                ref={handleRootRef}
+              >
+                <DateNavigator />
 
-              <HeaderToolbar />
+                <HeaderToolbar />
 
-              <EventCalendarMainPanel data-view={view}>
-                {isSidePanelOpen && (
-                  <EventCalendarSidePanel>
-                    <EventCalendarMonthCalendarPlaceholder
-                      // TODO: Add localization
-                      aria-label="Month calendar"
-                    >
-                      Month Calendar
-                    </EventCalendarMonthCalendarPlaceholder>
-                    <ResourcesLegend />
-                  </EventCalendarSidePanel>
-                )}
+                <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
+                  {isSidePanelOpen && (
+                    <EventCalendarSidePanel className={classes.sidePanel}>
+                      <EventCalendarMonthCalendarPlaceholder
+                        className={classes.monthCalendarPlaceholder}
+                        // TODO: Add localization
+                        aria-label="Month calendar"
+                      >
+                        Month Calendar
+                      </EventCalendarMonthCalendarPlaceholder>
+                      <ResourcesLegend />
+                    </EventCalendarSidePanel>
+                  )}
 
-                <EventCalendarContent
-                  data-view={view}
-                  data-side-panel-open={isSidePanelOpen}
-                  // TODO: Add localization
-                  aria-label="Calendar content"
-                >
-                  {content}
-                </EventCalendarContent>
-                {errors?.length > 0 &&
-                  errors.map((error, index) => (
-                    <EventCalendarErrorContainer severity="error" key={index}>
-                      {error.message}
-                    </EventCalendarErrorContainer>
-                  ))}
-              </EventCalendarMainPanel>
-            </EventCalendarRoot>
-          </EventDraggableDialogProvider>
+                  <EventCalendarContent
+                    className={classes.content}
+                    data-view={view}
+                    data-side-panel-open={isSidePanelOpen}
+                    // TODO: Add localization
+                    aria-label="Calendar content"
+                  >
+                    {content}
+                  </EventCalendarContent>
+                  {errors?.length > 0 &&
+                    errors.map((error, index) => (
+                      <EventCalendarErrorContainer
+                        className={classes.errorContainer}
+                        severity="error"
+                        key={index}
+                      >
+                        {error.message}
+                      </EventCalendarErrorContainer>
+                    ))}
+                </EventCalendarMainPanel>
+              </EventCalendarRoot>
+            </EventDraggableDialogProvider>
+          </EventCalendarClassesContext.Provider>
         </TranslationsProvider>
       </SchedulerStoreContext.Provider>
     </EventCalendarStoreContext.Provider>

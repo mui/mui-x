@@ -15,9 +15,9 @@ import {
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDraggableDialogContent } from './EventDraggableDialog';
+import { EventCalendarProvider } from '../EventCalendarProvider';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 
 const DEFAULT_EVENT: SchedulerEvent = EventBuilder.new()
