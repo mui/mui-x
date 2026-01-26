@@ -6,13 +6,13 @@ export { PluginRegistry } from './core/pluginRegistry';
 
 // Sorting plugin
 export { default as sortingPlugin } from './sorting/sorting';
+export { sortingSelectors } from './sorting/selectors';
 export {
-  sortingSelectors,
   gridStringOrNumberComparator,
   gridNumberComparator,
   gridDateComparator,
   getNextGridSortDirection,
-} from './sorting/sorting';
+} from './sorting/utils';
 export type {
   GridSortDirection,
   GridSortModel,
@@ -27,7 +27,7 @@ export type {
   SortColumnLookup,
   SortingSelectors,
   ComputeSortedRowIdsOptions,
-} from './sorting/sorting';
+} from './sorting/types';
 
 // Pagination plugin
 export { default as paginationPlugin } from './pagination';

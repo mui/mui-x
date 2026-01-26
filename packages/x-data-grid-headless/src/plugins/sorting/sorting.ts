@@ -21,34 +21,6 @@ import type {
   ComputeSortedRowIdsOptions,
 } from './types';
 
-// Re-export types
-export type {
-  GridSortDirection,
-  GridSortModel,
-  GridSortItem,
-  GridComparatorFn,
-  GridComparatorFnFactory,
-  GridSortCellParams,
-  SortingState,
-  SortingOptions,
-  SortingApi,
-  SortingColumnMeta,
-  SortColumnLookup,
-  SortingSelectors,
-  ComputeSortedRowIdsOptions,
-} from './types';
-
-// Re-export utilities
-export {
-  gridStringOrNumberComparator,
-  gridNumberComparator,
-  gridDateComparator,
-  getNextGridSortDirection,
-} from './utils';
-
-// Re-export selectors
-export { sortingSelectors } from './selectors';
-
 // ================================
 // Plugin Options Type (combined)
 // ================================
