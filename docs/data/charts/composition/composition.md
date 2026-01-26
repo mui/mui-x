@@ -92,13 +92,13 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   width={500}
   height={300}
 >
-  {children} // Only SVG component here
+  {children} // Only SVG components here
 </ChartsContainer>
 ```
 
 ### Chart Wrapper usage
 
-Charts are often constructed of a graphic with a legend.
+Charts often consist of a graphic and a legend.
 `ChartsWrapper` helps position those elements in a grid structure.
 
 The children should have a CSS `gridArea` property set to `'chart'`, `'legend'`, or `'toolbar'`.
@@ -323,6 +323,13 @@ If you're not using the axis highlight or the tooltip, consider disabling this f
 ```
 
 :::
+
+## Layering
+
+Use `ChartsLayerContainer` and `ChartsSvgLayer` to create multiple layers of elements that share the same coordinate system.
+This is useful for managing the vertical stacking of alternating HTML or SVG elements.
+
+{{"demo": "Layering.js"}}
 
 ## Examples
 

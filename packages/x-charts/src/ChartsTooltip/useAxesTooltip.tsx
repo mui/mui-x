@@ -54,7 +54,7 @@ export interface UseAxesTooltipParams {
   directions?: ('x' | 'y' | 'rotation')[];
 }
 
-interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
+export interface SeriesItem<T extends CartesianChartSeriesType | PolarChartSeriesType> {
   seriesId: SeriesId;
   color: string;
   value: ChartsSeriesConfig[T]['valueType'];

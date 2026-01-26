@@ -1,1 +1,2 @@
-export { ChartsWebGLLayer } from './ChartsWebGLLayer';
+// Re-export automatically generated, to customize, simply remove this line.
+export * from '@mui/x-charts/ChartsWebGlLayer';
