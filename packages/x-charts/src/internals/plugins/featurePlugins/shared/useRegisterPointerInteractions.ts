@@ -53,7 +53,11 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
       if (lastItem) {
         lastItemRef.current = undefined;
         instance.removeTooltipItem(lastItem);
-        instance.clearHighlight();
+
+        if ('clearHighlight' in instance) {
+          instance.clearHighlight();
+        }
+
         onItemLeaveRef();
       }
     }
@@ -76,7 +80,11 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
       if (item) {
         instance.setLastUpdateSource('pointer');
         instance.setTooltipItem(item);
-        instance.setHighlight(item);
+
+        if ('setHighlight' in instance) {
+          instance.setHighlight(item);
+        }
+
         onItemEnterRef();
         lastItemRef.current = item;
       } else {

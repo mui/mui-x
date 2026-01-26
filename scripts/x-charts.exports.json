@@ -439,6 +439,7 @@
   { "name": "ScatterSlots", "kind": "Interface" },
   { "name": "ScatterValueType", "kind": "TypeAlias" },
   { "name": "SeriesId", "kind": "TypeAlias" },
+  { "name": "SeriesItem", "kind": "Interface" },
   { "name": "SeriesItemIdentifier", "kind": "TypeAlias" },
   { "name": "SeriesItemIdentifierWithData", "kind": "TypeAlias" },
   { "name": "SeriesLegendItemContext", "kind": "Interface" },
