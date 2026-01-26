@@ -1,7 +1,7 @@
-import { createRenderer, ErrorBoundary, reactMajor, screen } from '@mui/internal-test-utils';
+import { createRenderer, ErrorBoundary, fireEvent, reactMajor, screen } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
-import { getCell, getRow } from 'test/utils/helperFn';
+import { getCell, getRow, openLongTextViewPopup } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGrid /> - Slots', () => {
@@ -184,5 +184,76 @@ describe('<DataGrid /> - Slots', () => {
         </div>,
       );
     }).not.toErrorDev();
+  });
+
+  describe('column type: longText', () => {
+    const longTextProps = {
+      rows: [{ id: 0, bio: 'Long text content' }],
+      columns: [{ field: 'bio', type: 'longText' as const }],
+    };
+
+    it('should render custom longTextCellExpandIcon slot', async () => {
+      function CustomExpandIcon() {
+        return <span data-testid="custom-expand-icon">+</span>;
+      }
+
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} slots={{ longTextCellExpandIcon: CustomExpandIcon }} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      expect(screen.getByTestId('custom-expand-icon')).not.to.equal(null);
+    });
+
+    describe('popup', () => {
+      it('should render custom longTextCellCollapseIcon slot', async () => {
+        function CustomCollapseIcon() {
+          return <span data-testid="custom-collapse-icon">-</span>;
+        }
+
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...longTextProps} slots={{ longTextCellCollapseIcon: CustomCollapseIcon }} />
+          </div>,
+        );
+
+        const cell = getCell(0, 0);
+        await openLongTextViewPopup(cell, user, 'spacebar');
+
+        expect(screen.getByTestId('custom-collapse-icon')).not.to.equal(null);
+      });
+
+      it('should use locale text for button labels', async () => {
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...longTextProps}
+              localeText={{
+                longTextCellExpandLabel: 'Custom Expand',
+                longTextCellCollapseLabel: 'Custom Collapse',
+              }}
+            />
+          </div>,
+        );
+
+        const cell = getCell(0, 0);
+        await user.click(cell);
+
+        const expandButton = cell.querySelector(
+          'button[aria-haspopup="dialog"]',
+        ) as HTMLButtonElement;
+        expect(expandButton.getAttribute('aria-label')).to.include('Custom Expand');
+
+        fireEvent.keyDown(expandButton, { key: ' ' });
+
+        const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
+        const collapseButton = popup.querySelector('button')!;
+        expect(collapseButton).to.have.attribute('aria-label', 'Custom Collapse');
+      });
+    });
   });
 });
