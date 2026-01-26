@@ -5,8 +5,8 @@
   <PieArcPlot id={'test'} />
   <PieArcLabel id="test" />
   <PieArcLabelPlot id="test" />
-  <AnimatedPieArcElement id={'test'} />
   <BarElement id="test" />
+  <AnimatedRangeBarElement id={'test'} />
   <AnimatedArea id="test" />
   <AnimatedLine id="test" />
   <MarkElement id={'test'} />
