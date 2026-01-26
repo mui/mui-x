@@ -17,14 +17,14 @@ import type {
  * Returns a number if one or both values are null, or null if both are non-null.
  * Nulls are sorted first (before non-null values).
  */
-const gridNullComparator = (v1: any, v2: any): number | null => {
-  if (v1 == null && v2 != null) {
+const gridNullComparator = (value1: any, value2: any): number | null => {
+  if (value1 == null && value2 != null) {
     return -1;
   }
-  if (v2 == null && v1 != null) {
+  if (value2 == null && value1 != null) {
     return 1;
   }
-  if (v1 == null && v2 == null) {
+  if (value1 == null && value2 == null) {
     return 0;
   }
   return null;
@@ -36,7 +36,6 @@ const collator = new Intl.Collator();
  * Comparator for string or number values.
  * Strings are compared using locale-aware collation.
  * Numbers are compared numerically.
- * Null values are sorted first.
  */
 export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) => {
   const nullResult = gridNullComparator(value1, value2);
@@ -52,7 +51,6 @@ export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) =
 
 /**
  * Comparator for number values.
- * Null values are sorted first.
  */
 export const gridNumberComparator: GridComparatorFn = (value1, value2) => {
   const nullResult = gridNullComparator(value1, value2);
@@ -65,7 +63,6 @@ export const gridNumberComparator: GridComparatorFn = (value1, value2) => {
 
 /**
  * Comparator for date values.
- * Null values are sorted first.
  */
 export const gridDateComparator: GridComparatorFn = (value1, value2) => {
   const nullResult = gridNullComparator(value1, value2);
@@ -88,9 +85,9 @@ export const gridDateComparator: GridComparatorFn = (value1, value2) => {
 
 /**
  * Get the next sort direction in the cycle.
- * @param sortingOrder The order of sort directions to cycle through.
- * @param current The current sort direction.
- * @returns The next sort direction in the cycle.
+ * @param {readonly GridSortDirection[]} sortingOrder The order of sort directions to cycle through.
+ * @param {GridSortDirection} current The current sort direction.
+ * @returns {GridSortDirection} The next sort direction in the cycle.
  */
 export const getNextGridSortDirection = (
   sortingOrder: readonly GridSortDirection[],
@@ -106,26 +103,26 @@ export const getNextGridSortDirection = (
 /**
  * Upsert a sort item into the sort model.
  * If the item has sort: null, it is removed from the model.
- * @param sortModel The current sort model.
- * @param field The field to upsert.
- * @param sortItem The new sort item (or undefined to remove).
- * @returns The updated sort model.
+ * @param {GridSortModel} sortModel The current sort model.
+ * @param {string} field The field to upsert.
+ * @param {GridSortItem | undefined} sortItem The new sort item (or undefined to remove).
+ * @returns {GridSortModel} The updated sort model.
  */
 export const upsertSortModel = (
   sortModel: GridSortModel,
   field: string,
   sortItem: GridSortItem | undefined,
 ): GridSortModel => {
-  const existingIdx = sortModel.findIndex((item) => item.field === field);
+  const fieldIndex = sortModel.findIndex((item) => item.field === field);
   const newSortModel = [...sortModel];
 
-  if (existingIdx > -1) {
+  if (fieldIndex > -1) {
     if (sortItem == null || sortItem.sort == null) {
       // Remove the item
-      newSortModel.splice(existingIdx, 1);
+      newSortModel.splice(fieldIndex, 1);
     } else {
       // Update the item
-      newSortModel.splice(existingIdx, 1, sortItem);
+      newSortModel.splice(fieldIndex, 1, sortItem);
     }
   } else if (sortItem != null && sortItem.sort != null) {
     // Add new item
@@ -154,17 +151,25 @@ interface ParsedSortItem {
   getValue: (row: any, id: GridRowId) => any;
 }
 
-// Check if a sortComparator is a factory function (returns comparator based on direction)
-// vs a direct comparator function.
-// Factory functions have 1 parameter (direction), direct comparators have 4 (v1, v2, params1, params2).
+/**
+ * Check if a sortComparator is a factory function (returns comparator based on direction)
+ * vs a direct comparator function.
+ * Factory functions have 1 parameter (direction), direct comparators have 4 (v1, v2, params1, params2).
+ * @param {GridComparatorFn | ((direction: GridSortDirection) => GridComparatorFn | undefined)} fn The comparator function to check.
+ * @returns {boolean} True if the comparator is a factory function, false if it is a direct comparator function.
+ */
 const isComparatorFactory = (
   fn: GridComparatorFn | ((direction: GridSortDirection) => GridComparatorFn | undefined),
 ): fn is (direction: GridSortDirection) => GridComparatorFn | undefined => {
   return fn.length <= 1;
 };
 
-// Normalize sortComparator to always be a factory function internally.
-// If it's a direct comparator, wrap it to apply direction modifier.
+/**
+ * Normalize sortComparator to always be a factory function internally.
+ * If it's a direct comparator, wrap it to apply direction modifier.
+ * @param {GridComparatorFn | ((direction: GridSortDirection) => GridComparatorFn | undefined)} sortComparator The sort comparator to normalize.
+ * @returns {((direction: GridSortDirection) => GridComparatorFn | undefined)} The normalized sort comparator.
+ */
 const normalizeToComparatorFactory = (
   sortComparator:
     | GridComparatorFn
@@ -184,7 +189,13 @@ const normalizeToComparatorFactory = (
   };
 };
 
-// Parse a sort item into a comparator function.
+/**
+ * Parse a sort item into a comparator function.
+ * @param {GridSortItem} sortItem The sort item to parse.
+ * @param {(field) => (ColumnInfo & SortingColumnMeta) | undefined} getColumn The function to get the column.
+ * @param {string} field The field to get the column for.
+ * @returns {ParsedSortItem | null} The parsed sort item. Returns null if the sort item is not valid.
+ */
 const parseSortItem = (
   sortItem: GridSortItem,
   getColumn: (field: string) => (ColumnInfo & SortingColumnMeta) | undefined,
