@@ -121,7 +121,7 @@ SankeyChart.propTypes = {
   highlightedItem: PropTypes.oneOfType([
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       subType: PropTypes.oneOf([
         /**
          * Subtype to differentiate between node and link
@@ -131,7 +131,7 @@ SankeyChart.propTypes = {
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       subType: PropTypes.oneOf([
         /**
@@ -225,7 +225,7 @@ SankeyChart.propTypes = {
   tooltipItem: PropTypes.oneOfType([
     PropTypes.shape({
       nodeId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       subType: PropTypes.oneOf([
         /**
          * Subtype to differentiate between node and link
@@ -235,7 +235,7 @@ SankeyChart.propTypes = {
       type: PropTypes.oneOf(['sankey']).isRequired,
     }),
     PropTypes.shape({
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       sourceId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       subType: PropTypes.oneOf([
         /**

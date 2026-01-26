@@ -1,7 +1,7 @@
-import type { ComputedXAxis, ComputedYAxis } from '../../../../models/axis';
-import type { DefaultizedSeriesType } from '../../../../models/seriesType';
-import type { ZAxisDefaultized } from '../../../../models/z-axis';
-import type { ChartSeriesType } from '../../../../models/seriesType/config';
+import type { ComputedXAxis, ComputedYAxis } from '../../../../../models/axis';
+import type { DefaultizedSeriesType } from '../../../../../models/seriesType';
+import type { ZAxisDefaultized } from '../../../../../models/z-axis';
+import type { ChartSeriesType } from '../../../../../models/seriesType/config';
 
 /**
  * Map data index to a color.

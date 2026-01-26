@@ -955,8 +955,8 @@ importers:
         version: 6.1.2
     optionalDependencies:
       rasterizehtml:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.4.1
+        version: 1.4.1
     publishDirectory: build
 
   packages/x-charts-pro:
@@ -1018,8 +1018,8 @@ importers:
         version: 6.1.2
     optionalDependencies:
       rasterizehtml:
-        specifier: ^1.4.0
-        version: 1.4.0
+        specifier: ^1.4.1
+        version: 1.4.1
     publishDirectory: build
 
   packages/x-charts-vendor:
@@ -4382,7 +4382,7 @@ packages:
   '@mui/base@5.0.0-beta.40-1':
     resolution: {integrity: sha512-agKXuNNy0bHUmeU7pNmoZwNFr7Hiyhojkb9+2PVyDG5+6RafYuyMgbrav8CndsB7KUc/U51JAw9vKNDLYBzaUA==}
     engines: {node: '>=12.0.0'}
-    deprecated: This package has been replaced by @base-ui-components/react
+    deprecated: This package has been replaced by @base-ui/react
     peerDependencies:
       '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
       react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -8606,8 +8606,8 @@ packages:
   inline-style-parser@0.2.6:
     resolution: {integrity: sha512-gtGXVaBdl5mAes3rPcMedEBm12ibjt1kDMFfheul1wUAOVEJW60voNdMVzVkfLN06O7ZaD/rxhfKgtlgtTbMjg==}
 
-  inlineresources@1.1.0:
-    resolution: {integrity: sha512-hmb6QWAg6zx1yxj8znuSiiON4w2LlebCnYvIrE8fzDBKD7Nb4UKg7gaqp22pe2aTn4fcjgHYlqu5VzLVrSqvEw==}
+  inlineresources@1.2.0:
+    resolution: {integrity: sha512-4nqegG4MexBhm9w1a14rueyd3SKfXroAJfFYaxIEkz+GKRchWzPzKnh8c3mCCIz7t7rtkmtGkLD8MqCpmcNqZg==}
 
   inquirer@12.9.6:
     resolution: {integrity: sha512-603xXOgyfxhuis4nfnWaZrMaotNT0Km9XwwBNWUKbIDqeCY89jGr2F9YPEMiNhU6XjIP4VoWISMBFfcc5NgrTw==}
@@ -10457,8 +10457,8 @@ packages:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
 
-  rasterizehtml@1.4.0:
-    resolution: {integrity: sha512-rQhCo4A0CTl9V/Nm01RN3jEl//Qfhs29d1Vu+oES+xNrRX9y3cPjYyhcAOFPfExgg0j4BV6DPbzj7zfMpT1RLw==}
+  rasterizehtml@1.4.1:
+    resolution: {integrity: sha512-mcE6b5cKhQO0Qka9vduSQW/F/crQ7EUjrTpXDPAdcj9uNtYijBiNmUOxOrIuMMq7GO/X3CR6UckHTgh5ZVqqBA==}
 
   raw-body@3.0.0:
     resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
@@ -19588,7 +19588,7 @@ snapshots:
 
   inline-style-parser@0.2.6: {}
 
-  inlineresources@1.1.0:
+  inlineresources@1.2.0:
     dependencies:
       css-font-face-src: 1.0.0
       url: 0.11.4
@@ -21781,9 +21781,9 @@ snapshots:
 
   range-parser@1.2.1: {}
 
-  rasterizehtml@1.4.0:
+  rasterizehtml@1.4.1:
     dependencies:
-      inlineresources: 1.1.0
+      inlineresources: 1.2.0
       sane-domparser-error: 0.2.0
       url: 0.11.4
       xmlserializer: 0.6.1

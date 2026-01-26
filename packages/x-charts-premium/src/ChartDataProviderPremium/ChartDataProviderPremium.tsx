@@ -8,9 +8,9 @@ import {
   type ChartProviderProps,
   ChartsSlotsProvider,
   type ChartSeriesConfig,
-  defaultSlotsMaterial,
 } from '@mui/x-charts/internals';
 import { ChartsLocalizationProvider } from '@mui/x-charts/ChartsLocalizationProvider';
+import { defaultSlotsMaterial } from '@mui/x-charts-pro/internals';
 import { useLicenseVerifier } from '@mui/x-license/useLicenseVerifier';
 import {
   type ChartsSlotPropsPro,

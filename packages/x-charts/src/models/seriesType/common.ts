@@ -6,7 +6,7 @@ import { type AxisId } from '../axis';
 /**
  * The unique identifier of a series.
  */
-export type SeriesId = number | string;
+export type SeriesId = string;
 
 export type SeriesValueFormatterContext = {
   /**
