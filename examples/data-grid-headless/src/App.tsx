@@ -260,7 +260,7 @@ function DataGridColumnHeaders() {
   const grid = useDataGridContext();
   const virtualization = grid.api.virtualization;
   const columnsToRender = virtualization.hooks.useColumnsToRender();
-  const totalContentSize = virtualization.hooks.useTotalContentSize();
+  const columnsTotalWidth = virtualization.hooks.useColumnsTotalWidth();
   const scrollPosition = virtualization.hooks.useScrollPosition();
   const offsetLeft = virtualization.hooks.useOffsetLeft();
 
@@ -270,7 +270,7 @@ function DataGridColumnHeaders() {
       role="rowgroup"
       style={{
         position: 'relative',
-        minWidth: totalContentSize.width,
+        minWidth: columnsTotalWidth,
         height: HEADER_HEIGHT,
         backgroundColor: '#f5f5f5',
         borderBottom: '2px solid #e0e0e0',
@@ -419,9 +419,11 @@ function DataGridVirtualScrollbar({
         outline: 0,
       };
 
-  const innerStyle: React.CSSProperties = isVertical
-    ? { width: scrollbarSize, height: contentSize }
-    : { height: scrollbarSize, width: contentSize };
+  const innerStyle: React.CSSProperties = React.useMemo(() => {
+    return isVertical
+      ? { width: scrollbarSize, height: contentSize }
+      : { height: scrollbarSize, width: contentSize };
+  }, [isVertical, scrollbarSize, contentSize]);
 
   return (
     <div
@@ -455,7 +457,6 @@ function DataGrid() {
   const scrollerProps = virtualization.hooks.useScrollerProps();
   const contentProps = virtualization.hooks.useContentProps();
   const scrollAreaProps = virtualization.hooks.useScrollAreaProps();
-  const totalContentSize = virtualization.hooks.useTotalContentSize();
   const dimensions = virtualization.hooks.useDimensions();
 
   const scrollerRef = React.useRef<HTMLDivElement>(null);
@@ -532,6 +533,8 @@ function DataGrid() {
                 ...(scrollerProps.style as React.CSSProperties),
                 flex: 1,
                 overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               <div
@@ -539,8 +542,6 @@ function DataGrid() {
                 {...contentProps}
                 style={{
                   ...contentProps.style,
-                  width: totalContentSize.width,
-                  height: dimensions.rowsMeta.currentPageTotalHeight,
                   position: 'relative',
                 }}
               >

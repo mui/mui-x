@@ -52,7 +52,7 @@ interface VirtualizationHooks {
   useDimensions: () => Dimensions.State['dimensions'] & {
     rowsMeta: Dimensions.State['rowsMeta'];
   };
-  useTotalContentSize: () => { width: number; height: number };
+  useColumnsTotalWidth: () => ReturnType<typeof Dimensions.selectors.columnsTotalWidth>;
   useRowsToRender: <TRow = GridRowModel>() => RowToRender<TRow>[];
   useColumnsToRender: () => ColumnToRender[];
   useContainerProps: () => ReturnType<typeof LayoutDataGrid.selectors.containerProps>;
@@ -284,16 +284,8 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
       );
     };
 
-    const useTotalContentSizeHook = (): { width: number; height: number } => {
-      const visibleColumnsValue = useStore(store, api.columns.selectors.visibleColumns);
-      const dimensionsState = useStore(virtualizerStore, Dimensions.selectors.dimensions);
-
-      const width = React.useMemo(
-        () => visibleColumnsValue.reduce((sum, col) => sum + (col.size ?? DEFAULT_COLUMN_WIDTH), 0),
-        [visibleColumnsValue],
-      );
-
-      return { width, height: dimensionsState.contentSize.height };
+    const useColumnsTotalWidth: VirtualizationHooks['useColumnsTotalWidth'] = () => {
+      return useStore(virtualizerStore, Dimensions.selectors.columnsTotalWidth);
     };
 
     const useRowsToRenderHook = <TRow = GridRowModel>(): RowToRender<TRow>[] => {
@@ -383,7 +375,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
           useOffsetTop: useOffsetTopHook,
           useOffsetLeft: useOffsetLeftHook,
           useDimensions: useDimensionsHook,
-          useTotalContentSize: useTotalContentSizeHook,
+          useColumnsTotalWidth,
           useRowsToRender: useRowsToRenderHook,
           useColumnsToRender: useColumnsToRenderHook,
           useContainerProps: useContainerPropsHook,

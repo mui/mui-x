@@ -90,6 +90,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
         style: {
           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
           overflowY: autoHeight ? 'hidden' : undefined,
+          // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
         },
         role: 'presentation',
         // `tabIndex` shouldn't be used along role=presentation, but it fixes a Firefox bug
