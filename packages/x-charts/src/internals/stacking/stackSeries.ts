@@ -27,7 +27,7 @@ type FormatterParams<T> = {
 export type StackingGroupsType = {
   ids: SeriesId[];
   stackingOrder: (series: Series<any, any>) => number[];
-  stackingOffset: (series: Series<any, any>, order: Iterable<number>) => void;
+  stackingOffset: (series: Series<any, any>[], order: Iterable<number>) => void;
 }[];
 
 export const StackOrder = {
@@ -67,8 +67,7 @@ export const StackOffset = {
   /**
    * Positive values are stacked above zero, negative values are stacked below zero, and zero values are stacked at zero.
    * */
-  // @ts-expect-error, d3 types are wrong, our custom function implements the correct signature
-  diverging: offsetDiverging as (series: Series<any, any>, order: Iterable<number>) => void,
+  diverging: offsetDiverging,
   /**
    * Applies a zero baseline.
    * */
@@ -82,7 +81,7 @@ export const StackOffset = {
    * */
   wiggle: d3StackOffsetWiggle,
 } satisfies {
-  [key in StackOffsetType]: (series: Series<any, any>, order: Iterable<number>) => void;
+  [key in StackOffsetType]: (series: Series<any, any>[], order: Iterable<number>) => void;
 };
 
 /**
