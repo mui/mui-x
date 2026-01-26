@@ -60,7 +60,7 @@
     }
   },
   "optionalDependencies": {
-    "rasterizehtml": "^1.4.0"
+    "rasterizehtml": "^1.4.1"
   },
   "devDependencies": {
     "@mui/material": "catalog:",
