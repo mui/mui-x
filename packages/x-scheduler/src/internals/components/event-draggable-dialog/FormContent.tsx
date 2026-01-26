@@ -3,6 +3,8 @@ import * as React from 'react';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import DialogActions from '@mui/material/DialogActions';
+import MuiDialogContent from '@mui/material/DialogContent';
 import Divider from '@mui/material/Divider';
 import TextField from '@mui/material/TextField';
 import Tabs from '@mui/material/Tabs';
@@ -27,19 +29,27 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp, validateRange } from './utils';
-import EventPopoverHeader from './EventPopoverHeader';
+import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import ResourceMenu from './ResourceMenu';
 import { GeneralTab } from './GeneralTab';
 import { RecurrenceTab } from './RecurrenceTab';
 
 const FormActions = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'FormActions',
 })(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   padding: theme.spacing(2),
 }));
+
+const DialogContent = styled(MuiDialogContent, {
+  name: 'MuiEventDraggableDialog',
+  slot: 'DialogContent',
+})({
+  cursor: 'default',
+  userSelect: 'text',
+});
 
 interface FormContentProps {
   occurrence: SchedulerRenderableEventOccurrence;
@@ -196,6 +206,9 @@ export function FormContent(props: FormContentProps) {
         changes,
         onSubmit: onClose,
       });
+
+      // don't close the dialog
+      return;
     } else {
       store.updateEvent({ id: occurrence.id, ...metaChanges, start, end, rrule: rruleToSubmit });
     }
@@ -213,60 +226,64 @@ export function FormContent(props: FormContentProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <EventPopoverHeader>
-        <TextField
-          name="title"
-          defaultValue={occurrence.title}
-          required
-          slotProps={{
-            input: {
-              readOnly: isPropertyReadOnly('title'),
-              'aria-label': translations.eventTitleAriaLabel,
-            },
-          }}
-          error={!!errors.title}
-          helperText={errors.title}
-          fullWidth
-          size="small"
+    <DialogContent>
+      <form onSubmit={handleSubmit}>
+        <EventDraggableDialogHeader>
+          <TextField
+            name="title"
+            defaultValue={occurrence.title}
+            required
+            slotProps={{
+              input: {
+                readOnly: isPropertyReadOnly('title'),
+                'aria-label': translations.eventTitleAriaLabel,
+              },
+            }}
+            error={!!errors.title}
+            helperText={errors.title}
+            fullWidth
+            size="small"
+          />
+          <ResourceMenu
+            readOnly={isPropertyReadOnly('resource')}
+            resourceId={controlled.resourceId}
+            onResourceChange={handleResourceChange}
+            onColorChange={handleColorChange}
+            color={controlled.color}
+          />
+        </EventDraggableDialogHeader>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
+            <Tab label={translations.generalTabLabel} value="general" />
+            <Tab label={translations.recurrenceTabLabel} value="recurrence" />
+          </Tabs>
+        </Box>
+        <GeneralTab
+          occurrence={occurrence}
+          errors={errors}
+          setErrors={setErrors}
+          controlled={controlled}
+          setControlled={setControlled}
+          value={tabValue}
         />
-        <ResourceMenu
-          readOnly={isPropertyReadOnly('resource')}
-          resourceId={controlled.resourceId}
-          onResourceChange={handleResourceChange}
-          onColorChange={handleColorChange}
-          color={controlled.color}
+        <RecurrenceTab
+          occurrence={occurrence}
+          controlled={controlled}
+          setControlled={setControlled}
+          value={tabValue}
         />
-      </EventPopoverHeader>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={tabValue} onChange={handleTabChange}>
-          <Tab label={translations.generalTabLabel} value="general" />
-          <Tab label={translations.recurrenceTabLabel} value="recurrence" />
-        </Tabs>
-      </Box>
-      <GeneralTab
-        occurrence={occurrence}
-        errors={errors}
-        setErrors={setErrors}
-        controlled={controlled}
-        setControlled={setControlled}
-        value={tabValue}
-      />
-      <RecurrenceTab
-        occurrence={occurrence}
-        controlled={controlled}
-        setControlled={setControlled}
-        value={tabValue}
-      />
-      <Divider />
-      <FormActions>
-        <Button color="error" type="button" onClick={handleDelete}>
-          {translations.deleteEvent}
-        </Button>
-        <Button variant="contained" type="submit">
-          {translations.saveChanges}
-        </Button>
-      </FormActions>
-    </form>
+        <Divider />
+        <DialogActions>
+          <FormActions>
+            <Button color="error" type="button" onClick={handleDelete}>
+              {translations.deleteEvent}
+            </Button>
+            <Button variant="contained" type="submit">
+              {translations.saveChanges}
+            </Button>
+          </FormActions>
+        </DialogActions>
+      </form>
+    </DialogContent>
   );
 }
