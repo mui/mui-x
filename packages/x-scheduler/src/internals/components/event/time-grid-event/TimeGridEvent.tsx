@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
@@ -11,6 +12,7 @@ import { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../../utils/tokens';
+import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
 
 const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
   display: '-webkit-box',
@@ -189,10 +191,11 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
   props: TimeGridEventProps,
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
-  const { occurrence, variant, ...other } = props;
+  const { occurrence, variant, className, ...other } = props;
 
   // Context hooks
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const isRecurring = useStore(store, schedulerEventSelectors.isRecurring, occurrence.id);
@@ -220,23 +223,31 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     return (
       <React.Fragment>
         {isLessThan30Minutes || isBetween30and60Minutes ? (
-          <TimeGridEventTitle>
+          <TimeGridEventTitle className={classes.timeGridEventTitle}>
             {occurrence.title}{' '}
-            <TimeGridEventTime>
+            <TimeGridEventTime className={classes.timeGridEventTime}>
               {formatTime(occurrence.displayTimezone.start.value)}
             </TimeGridEventTime>
           </TimeGridEventTitle>
         ) : (
           <React.Fragment>
-            <TimeGridEventTitle>{occurrence.title}</TimeGridEventTitle>
-            <TimeGridEventTime data-lines-clamp>
+            <TimeGridEventTitle className={classes.timeGridEventTitle}>
+              {occurrence.title}
+            </TimeGridEventTitle>
+            <TimeGridEventTime className={classes.timeGridEventTime} data-lines-clamp>
               {formatTime(occurrence.displayTimezone.start.value)} -{' '}
               {formatTime(occurrence.displayTimezone.end.value)}
             </TimeGridEventTime>
           </React.Fragment>
         )}
 
-        {isRecurring && <TimeGridEventRecurringIcon aria-hidden="true" fontSize="small" />}
+        {isRecurring && (
+          <TimeGridEventRecurringIcon
+            className={classes.timeGridEventRecurringIcon}
+            aria-hidden="true"
+            fontSize="small"
+          />
+        )}
       </React.Fragment>
     );
   }, [
@@ -247,18 +258,19 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
     occurrence.displayTimezone.end.value,
     formatTime,
     isRecurring,
+    classes,
   ]);
 
   const sharedProps = {
     start: occurrence.displayTimezone.start,
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
-    className: occurrence.className,
     style: {
       '--first-index': occurrence.position.firstIndex,
       '--last-index': occurrence.position.lastIndex,
     } as React.CSSProperties,
     ...other,
+    className: clsx(className, occurrence.className),
   };
 
   if (variant === 'placeholder') {
@@ -271,6 +283,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
         data-palette={color}
         {...sharedProps}
+        className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
       >
         {content}
       </TimeGridEventPlaceholder>
@@ -289,10 +302,15 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-recurrent={isRecurring || undefined}
       data-palette={color}
       {...sharedProps}
+      className={clsx(classes.timeGridEvent, sharedProps.className)}
     >
-      {isStartResizable && <TimeGridEventResizeHandler side="start" />}
+      {isStartResizable && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="start" />
+      )}
       {content}
-      {isEndResizable && <TimeGridEventResizeHandler side="end" />}
+      {isEndResizable && (
+        <TimeGridEventResizeHandler className={classes.timeGridEventResizeHandler} side="end" />
+      )}
     </TimeGridEventRoot>
   );
 });

@@ -6,3 +6,5 @@ export { defaultSeriesConfigPro } from '../ChartDataProviderPro/ChartDataProvide
 export type { ProPluginsPerSeriesType } from '../context/ChartProApi';
 export { useHeatmapProps } from '../Heatmap/useHeatmapProps';
 export { defaultSlotsMaterial } from './material';
+export * from '../Heatmap/HeatmapSVGPlot';
+export type * from '../Heatmap/Heatmap.types';

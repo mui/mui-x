@@ -14,7 +14,7 @@ export function useEventTimelinePremiumStoreContext<
   const context = React.useContext(EventTimelinePremiumStoreContext);
   if (context == null) {
     throw new Error(
-      'useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component',
+      'MUI: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component',
     );
   }
 
