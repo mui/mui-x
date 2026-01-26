@@ -75,7 +75,7 @@ describe.skipIf(isJSDOM)('parseColor', () => {
   describe('rgba color formats', () => {
     it('should parse rgba with alpha', () => {
       const result = parseColor('rgba(255, 0, 0, 0.5)');
-      expect(result).to.deep.equal([1, 0, 0, 1]);
+      expect(result).to.deep.equal([1, 0, 0, 0.5]);
     });
 
     it('should parse rgba with full opacity', () => {
@@ -85,12 +85,14 @@ describe.skipIf(isJSDOM)('parseColor', () => {
 
     it('should parse rgba with zero opacity', () => {
       const result = parseColor('rgba(0, 0, 255, 0)');
-      expect(result).to.deep.equal([0, 0, 1, 1]);
+      expect(result).to.deep.equal([0, 0, 1, 0]);
     });
 
     it('should parse rgba without spaces', () => {
       const result = parseColor('rgba(128,128,128,0.75)');
-      expect(result).to.deep.equal([0.5019607843137255, 0.5019607843137255, 0.5019607843137255, 1]);
+      expect(result).to.deep.equal([
+        0.5019607843137255, 0.5019607843137255, 0.5019607843137255, 0.75,
+      ]);
     });
   });
 

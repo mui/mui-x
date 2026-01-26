@@ -14,7 +14,7 @@ export function parseColor(color: string) {
   let result = parseColorUsingRegex(color);
 
   if (result == null) {
-    result = parseRgbColor(color);
+    result = parseRgbaColor(color);
   }
 
   if (result == null) {
@@ -55,7 +55,7 @@ function parseColorUsingRegex(color: string): [number, number, number, number] |
 
 // Parses rgb() and rgba() formats
 const rgbaRegex = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+)\s*)?\)$/i;
-function parseRgbColor(color: string): [number, number, number, number] | null {
+function parseRgbaColor(color: string): [number, number, number, number] | null {
   const match = color.match(rgbaRegex);
 
   if (!match) {
@@ -65,12 +65,17 @@ function parseRgbColor(color: string): [number, number, number, number] | null {
   const r = parseInt(match[1], 10);
   const g = parseInt(match[2], 10);
   const b = parseInt(match[3], 10);
+  const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
 
   if (r > 255 || g > 255 || b > 255) {
     return null;
   }
 
-  return [r / 255, g / 255, b / 255, 1];
+  if (a < 0 || a > 1) {
+    return null;
+  }
+
+  return [r / 255, g / 255, b / 255, a];
 }
 
 let canvas: HTMLCanvasElement | OffscreenCanvas;
