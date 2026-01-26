@@ -136,7 +136,7 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
-  // https://github.com/mui/mui-x/pull/20993
+  // https://github.com/mui/mui-x/issues/21063
   it('should not steal focus from input elements in Dialog', async () => {
     function DialogCell() {
       const [open, setOpen] = React.useState(false);
