@@ -1,14 +1,9 @@
 #!/usr/bin/env node
 
-import childProcess from 'child_process';
 import { promises as fs } from 'fs';
 import path from 'path';
 import yargs, { ArgumentsCamelCase, CommandModule } from 'yargs';
-
-const jscodeshiftPackage = require('jscodeshift/package.json');
-
-const jscodeshiftDirectory = path.dirname(require.resolve('jscodeshift'));
-const jscodeshiftExecutable = path.join(jscodeshiftDirectory, jscodeshiftPackage.bin.jscodeshift);
+import { run as jscodeshiftRun } from 'jscodeshift/src/Runner';
 
 interface Flags {
   parser?: string;
@@ -44,25 +39,26 @@ async function runTransform(
     }
   }
 
-  const args = [
-    // can't directly spawn `jscodeshiftExecutable` due to https://github.com/facebook/jscodeshift/issues/424
-    jscodeshiftExecutable,
-    '--transform',
-    transformerPath,
-    ...codemodFlags,
-    '--extensions',
-    'js,ts,jsx,tsx',
-    '--parser',
-    flags.parser || 'tsx',
-    '--ignore-pattern',
-    '**/node_modules/**',
-    ...flags.jscodeshift,
-  ];
+  // Parse additional jscodeshift options from flags
+  const additionalOptions: Record<string, unknown> = {};
+  codemodFlags.forEach((flag) => {
+    const match = flag.match(/^--([^=]+)(?:=(.*))?$/);
+    if (match) {
+      const [, key, value] = match;
+      additionalOptions[key] = value ?? true;
+    }
+  });
 
-  args.push(...files);
+  const options = {
+    extensions: 'js,ts,jsx,tsx',
+    parser: flags.parser || 'tsx',
+    ignorePattern: ['**/node_modules/**'],
+    verbose: 2,
+    ...additionalOptions,
+  };
 
   // eslint-disable-next-line no-console -- debug information
-  console.log(`Executing command: jscodeshift ${args.join(' ')}`);
+  console.log(`Running jscodeshift with transform: ${transformerPath}`);
   console.warn(`
 ====================================
 IMPORTANT NOTICE ABOUT CODEMOD USAGE
@@ -71,13 +67,14 @@ Not all use cases are covered by codemods. In some scenarios, like props spreadi
 
 For example, if a codemod tries to rename a prop, but this prop is hidden with the spread operator, it won't be transformed as expected.
 <DatePicker {...pickerProps} />
-  
+
 After running the codemods, make sure to test your application and that you don't have any formatting or console errors.
 `);
-  const jscodeshiftProcess = childProcess.spawnSync('node', args, { stdio: 'inherit' });
 
-  if (jscodeshiftProcess.error) {
-    throw jscodeshiftProcess.error;
+  const result = await jscodeshiftRun(transformerPath, files, options);
+
+  if (result.error > 0) {
+    process.exit(1);
   }
 }
 
