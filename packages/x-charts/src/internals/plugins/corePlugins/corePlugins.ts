@@ -1,9 +1,6 @@
 import { type UseChartAnimationSignature, useChartAnimation } from './useChartAnimation';
 import { type UseChartDimensionsSignature, useChartDimensions } from './useChartDimensions';
-import {
-  type UseChartElementRefSignature,
-  useChartElementRef,
-} from './useChartElementRef';
+import { type UseChartElementRefSignature, useChartElementRef } from './useChartElementRef';
 import {
   type UseChartExperimentalFeaturesSignature,
   useChartExperimentalFeatures,
