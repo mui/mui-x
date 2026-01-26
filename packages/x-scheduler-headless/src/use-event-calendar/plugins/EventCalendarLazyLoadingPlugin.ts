@@ -1,4 +1,4 @@
-import { SchedulerLazyLoadingPlugin } from '../../utils/SchedulerStore/plugins/SchedulerLazyLoadingPlugin';
+import { SchedulerLazyLoadingPlugin } from '../../internals/utils/SchedulerStore/plugins/SchedulerLazyLoadingPlugin';
 import { EventCalendarStore } from '../EventCalendarStore';
 import { EventCalendarState, EventCalendarParameters } from '../EventCalendarStore.types';
 

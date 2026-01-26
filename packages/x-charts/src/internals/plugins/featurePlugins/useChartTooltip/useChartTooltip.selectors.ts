@@ -3,12 +3,15 @@ import type { SeriesItemIdentifier } from '../../../../models/seriesType';
 import type { ChartSeriesDefaultized, ChartSeriesType } from '../../../../models/seriesType/config';
 import {
   type ProcessedSeries,
-  selectorChartSeriesConfig,
   selectorChartSeriesProcessed,
   selectorChartSeriesLayout,
   type SeriesLayout,
 } from '../../corePlugins/useChartSeries';
-import { type TooltipPositionGetterAxesConfig } from '../../models/seriesConfig/tooltipItemPositionGetter.types';
+import {
+  type TooltipPositionGetterAxesConfig,
+  type ChartSeriesConfig,
+  selectorChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
@@ -18,7 +21,6 @@ import {
   selectorChartsHasFocusedItem,
 } from '../useChartKeyboardNavigation';
 import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
-import type { ChartSeriesConfig } from '../../models/seriesConfig/seriesConfig.types';
 import type {
   AxisId,
   ChartsRadiusAxisProps,

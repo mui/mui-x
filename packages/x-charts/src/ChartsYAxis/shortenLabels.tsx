@@ -3,17 +3,17 @@ import { clampAngle } from '../internals/clampAngle';
 import { doesTextFitInRect, ellipsize } from '../internals/ellipsize';
 import { getStringSize } from '../internals/domUtils';
 import { type ChartDrawingArea } from '../hooks';
-import { type TickItemType } from '../hooks/useTicks';
+import { type TickItem } from '../hooks/useTicks';
 import { type ChartsYAxisProps } from '../models';
 
 export function shortenLabels(
-  visibleLabels: TickItemType[],
+  visibleLabels: TickItem[],
   drawingArea: Pick<ChartDrawingArea, 'top' | 'height' | 'bottom'>,
   maxWidth: number,
   isRtl: boolean,
   tickLabelStyle: ChartsYAxisProps['tickLabelStyle'],
 ) {
-  const shortenedLabels = new Map<TickItemType, string>();
+  const shortenedLabels = new Map<TickItem, string>();
   const angle = clampAngle(tickLabelStyle?.angle ?? 0);
 
   let topBoundFactor = 1;
