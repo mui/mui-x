@@ -32,7 +32,7 @@ The same can be applied to axis values when a tooltip is triggered by `'axis'`.
 The demo below shows:
 
 - Time axis values formatted to show only the year
-- Series values formatted in U.S. Dollars
+- Series values formatted in US dollars
 
 {{"demo": "Formatting.js"}}
 
@@ -95,7 +95,7 @@ This removes the header showing the x-axis value from the tooltip.
 
 ### Series
 
-To hide a series, the formatted value should be `null`.
+To hide a series, set the formatted value to `null`.
 To display the series with a blank space, return an empty string.
 
 ## Position
@@ -117,12 +117,9 @@ You can pass these props to the tooltip using `slotProps.tooltip`, or directly t
 
 ## Style modification
 
-You can style the tooltip using CSS classes, similar to other elements.
-However, there is one caveat regarding the use of [portals](https://react.dev/reference/react-dom/createPortal).
-
-The tooltip renders as a child of the document's body element.
-From a DOM perspective, it's not inside the chart.
-Using the chart's `sx` prop as follows does not work:
+Similar to other chart elements, you can style the tooltip using CSS classes.
+However, there is one caveat regarding the use of [portals](https://react.dev/reference/react-dom/createPortal):
+The tooltip renders as a child of the document's body element.This means that from a DOM perspective, it's not inside the chart, so using the chart's `sx` prop as follows does not work:
 
 ```tsx
 import { chartsTooltipClasses } from '@mui/x-charts';
@@ -141,18 +138,18 @@ To apply the same style as above, use the `sx` prop of the tooltip itself, which
 {{"demo": "TooltipStyle.js"}}
 
 You can also disable the portal by setting `slotProps.tooltip.disablePortal` to `true`.
-In that case, the tooltip renders as a child of the chart, and CSS rules apply as expected.
+In that case, the tooltip renders as a child of the chart, and CSS rules are applied as expected.
 
 ## Using a custom tooltip
 
-For advanced use cases, you can create your own tooltip.
-Replace the default tooltip in single-component charts by using slots.
+You can create your own fully custom tooltip for advanced use cases.
+Use `slots` to replace the default tooltip in single-component charts:
 
 ```jsx
 <LineChart slots={{ tooltip: CustomItemTooltip }} />
 ```
 
-When composing a custom component, use your component inside `ChartDataProvider`.
+When composing a custom component, use your component inside `ChartDataProvider`:
 
 ```jsx
 <ChartDataProvider>
@@ -161,7 +158,7 @@ When composing a custom component, use your component inside `ChartDataProvider`
 </ChartDataProvider>
 ```
 
-## Controlling item tooltip
+## Controlling the item tooltip
 
 You can control the item tooltip with `tooltipItem` and `onTooltipItemChange`.
 
@@ -176,13 +173,13 @@ Otherwise no tooltip will be shown.
 
 ### Synchronizing item tooltip
 
-The item tooltip control can be used to sync tooltip between multiple charts.
+The item tooltip control can be used to sync tooltips between multiple charts.
 
 {{"demo": "SyncTooltip.js"}}
 
 ## Creating a tooltip
 
-To create your custom tooltip, the library exports some helpers, which are explained in the following sections:
+To aid in creating a custom tooltip, the library exports helpers which are explained in the sections that follow:
 
 - `ChartsTooltipContainer`: A wrapper providing the open/close state and the position of the tooltip
 - `ChartsItemTooltipContent`: Renders the content of the default item tooltip
@@ -229,7 +226,7 @@ The `useItemTooltip()` hook provides information about the current item the user
 It contains:
 
 - `identifier`: An object that identifies the item, which often contains its series type, series ID, and data index.
-- `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#value-based-colors)
+- `color`: The color used to display the item, which includes the impact of [`colorMap`](/x/react-charts/styling/#value-based-colors)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
 {{"demo": "CustomTooltipContent.js"}}
@@ -240,7 +237,7 @@ The `useAxesTooltip()` hook returns information about the current axes the user 
 For each axis, it contains:
 
 - `identifier`: An object that identifies the axis, which often contains its series type, series ID, and data index.
-- `color`: The color used to display the item, which includes the impact of [color map](/x/react-charts/styling/#value-based-colors)
+- `color`: The color used to display the item, which includes the impact of [`colorMap`](/x/react-charts/styling/#value-based-colors)
 - `label`, `value`, `formattedValue`: Values computed to simplify tooltip creation
 
 {{"demo": "CustomAxisTooltipContent.js"}}
