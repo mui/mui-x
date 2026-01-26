@@ -1,7 +1,9 @@
-import { BarChart } from '@mui/x-charts/BarChart';
-import { useYAxes, useYAxisCoordinates, useYAxisTicks } from '@mui/x-charts/hooks';
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { useYAxes, useYAxisCoordinates, useYAxisTicks } from '@mui/x-charts/hooks';
+
+import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 
 const labels = [
   'Server Products',
@@ -23,11 +25,21 @@ const chartSetting = {
   layout: 'horizontal',
   xAxis: [{ id: 'x' }],
   yAxis: [{ id: 'y', scaleType: 'band', data: labels, width: 4 }],
-  series: [{ data }],
 };
 
 export default function CustomAxisTicks() {
-  return <BarChart {...chartSetting} slots={{ yAxis: YAxis }} />;
+  const theme = useTheme();
+  const seriesColor = rainbowSurgePalette(theme.palette.mode)[
+    theme.palette.mode === 'dark' ? 0 : 1
+  ];
+
+  return (
+    <BarChart
+      {...chartSetting}
+      slots={{ yAxis: YAxis }}
+      series={[{ data, color: seriesColor }]}
+    />
+  );
 }
 
 function YAxis(props) {

@@ -1,1 +1,5 @@
-<BarChart {...chartSetting} slots={{ yAxis: YAxis }} />
+<BarChart
+  {...chartSetting}
+  slots={{ yAxis: YAxis }}
+  series={[{ data, color: seriesColor }]}
+/>
