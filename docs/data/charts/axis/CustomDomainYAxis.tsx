@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import { BarChart } from '@mui/x-charts/BarChart';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import type { NumberValue } from '@mui/x-charts/models';
 
 const settings = {
   height: 220,
@@ -46,9 +45,9 @@ export default function CustomDomainYAxis() {
           {
             domainLimit:
               domainLimit === 'function'
-                ? (min: NumberValue, max: NumberValue) => ({
-                  min: extend(+min, 10),
-                  max: extend(+max, 10),
+                ? (min, max) => ({
+                  min: extend(min.valueOf(), 10),
+                  max: extend(max.valueOf(), 10),
                 })
                 : domainLimit,
           },

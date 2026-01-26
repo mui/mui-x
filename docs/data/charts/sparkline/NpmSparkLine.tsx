@@ -5,7 +5,6 @@ import { SparkLineChart, SparkLineChartProps } from '@mui/x-charts/SparkLineChar
 import { areaElementClasses, lineElementClasses } from '@mui/x-charts/LineChart';
 import { chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import Box from '@mui/material/Box';
-import type { NumberValue } from '@mui/x-charts/models';
 import data from './weekly-downloads.json';
 
 const downloads = data.map((item) => item.downloads);
@@ -17,9 +16,9 @@ const settings: SparkLineChartProps = {
   margin: { bottom: 0, top: 5, left: 4, right: 0 },
   xAxis: { id: 'week-axis', data: weeks },
   yAxis: {
-    domainLimit: (_, maxValue: NumberValue) => ({
+    domainLimit: (_, maxValue) => ({
       min: -maxValue / 6, //  Hack to add 5px bellow 0 like npm.
-      max: +maxValue,
+      max: maxValue,
     }),
   },
   sx: {
