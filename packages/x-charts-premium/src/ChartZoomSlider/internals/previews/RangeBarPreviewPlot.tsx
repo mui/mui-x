@@ -29,7 +29,7 @@ export function RangeBarPreviewPlot(props: PreviewPlotProps) {
             return (
               <BarElement
                 key={dataIndex}
-                id={seriesId}
+                seriesId={seriesId}
                 dataIndex={dataIndex}
                 color={color}
                 skipAnimation

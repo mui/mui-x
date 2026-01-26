@@ -75,7 +75,7 @@ function LinePlot(props: LinePlotProps) {
         return (
           <LineElement
             key={seriesId}
-            id={seriesId}
+            seriesId={seriesId}
             d={d}
             color={color}
             gradientId={gradientId}
