@@ -220,9 +220,6 @@ catalogs:
       specifier: ^18.0.0
       version: 18.0.0
 
-overrides:
-  ast-types: ^0.14.2
-
 importers:
 
   .:
@@ -590,9 +587,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.90.19
         version: 5.90.20(react@19.2.3)
-      ast-types:
-        specifier: ^0.14.2
-        version: 0.14.2
       autoprefixer:
         specifier: 'catalog:'
         version: 10.4.23(postcss@8.5.6)
@@ -6658,6 +6652,10 @@ packages:
 
   ast-types@0.14.2:
     resolution: {integrity: sha512-O0yuUDnZeQDL+ncNGlJ78BiO4jnYI3bvMsD5prT0/nsgijG/LpNBIr63gTjVTNsiGkgQhiyCShTgxt8oXOrklA==}
+    engines: {node: '>=4'}
+
+  ast-types@0.16.1:
+    resolution: {integrity: sha512-6t10qk83GOG8p0vKmaCr8eiilZwO171AvbROMtvvNiwrTly62t+7XkA8RdIIVbpMhCASAsxgAzdRSwh6nw/5Dg==}
     engines: {node: '>=4'}
 
   ast-v8-to-istanbul@0.3.8:
@@ -16452,7 +16450,7 @@ snapshots:
 
   '@types/jscodeshift@17.3.0':
     dependencies:
-      ast-types: 0.14.2
+      ast-types: 0.16.1
       recast: 0.23.11
 
   '@types/json-schema@7.0.15': {}
@@ -17350,6 +17348,10 @@ snapshots:
   ast-types-flow@0.0.8: {}
 
   ast-types@0.14.2:
+    dependencies:
+      tslib: 2.8.1
+
+  ast-types@0.16.1:
     dependencies:
       tslib: 2.8.1
 
@@ -22061,7 +22063,7 @@ snapshots:
 
   recast@0.23.11:
     dependencies:
-      ast-types: 0.14.2
+      ast-types: 0.16.1
       esprima: 4.0.1
       source-map: 0.6.1
       tiny-invariant: 1.3.3

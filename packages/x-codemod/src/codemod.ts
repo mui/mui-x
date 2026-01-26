@@ -41,7 +41,7 @@ async function runTransform(
 
   // Parse additional jscodeshift options from flags
   const additionalOptions: Record<string, unknown> = {};
-  codemodFlags.forEach((flag) => {
+  [...codemodFlags, ...flags.jscodeshift].forEach((flag) => {
     const match = flag.match(/^--([^=]+)(?:=(.*))?$/);
     if (match) {
       const [, key, value] = match;
@@ -52,7 +52,7 @@ async function runTransform(
   const options = {
     extensions: 'js,ts,jsx,tsx',
     parser: flags.parser || 'tsx',
-    ignorePattern: ['**/node_modules/**'],
+    ignorePattern: ['**/node_modules/**', ...((additionalOptions.ignorePattern as string[]) || [])],
     verbose: 2,
     ...additionalOptions,
   };

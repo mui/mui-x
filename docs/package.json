@@ -56,7 +56,6 @@
     "@react-spring/web": "catalog:",
     "@tanstack/query-core": "^5.90.19",
     "@tanstack/react-query": "^5.90.19",
-    "ast-types": "^0.14.2",
     "autoprefixer": "catalog:",
     "babel-plugin-optimize-clsx": "catalog:",
     "babel-plugin-preval": "^5.1.0",
