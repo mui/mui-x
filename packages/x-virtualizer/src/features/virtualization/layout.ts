@@ -88,6 +88,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       (context, autoHeight, needsHorizontalScrollbar) => ({
         ref: context.scrollerRef,
         style: {
+          // TODO: fall back to overflow: 'auto' if no overflowX or overflowY is set?
           overflowX: !needsHorizontalScrollbar ? 'hidden' : undefined,
           overflowY: autoHeight ? 'hidden' : undefined,
           // TODO: should include display: 'flex', flexDirection: 'column' since the Content has flexBasis and flexShrink?
