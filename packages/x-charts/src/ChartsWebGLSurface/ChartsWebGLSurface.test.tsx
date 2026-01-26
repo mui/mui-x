@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
-import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { WebGLProvider, useWebGLContext } from './WebGLContext';
+import { ChartDataProvider } from '../ChartDataProvider';
+import { ChartsWrapper } from '../ChartsWrapper';
+import { ChartsWebGLSurface, useWebGLContext } from './ChartsWebGLSurface';
 
 describe('<WebGLProvider />', () => {
   const { render } = createRenderer();
@@ -29,9 +29,9 @@ describe('<WebGLProvider />', () => {
         xAxis={[{ id: 'x', data: [1, 2, 3] }]}
       >
         <ChartsWrapper>
-          <WebGLProvider data-testid="webgl-canvas">
+          <ChartsWebGLSurface data-testid="webgl-canvas">
             <TestComponent />
-          </WebGLProvider>
+          </ChartsWebGLSurface>
         </ChartsWrapper>
       </ChartDataProvider>,
     );

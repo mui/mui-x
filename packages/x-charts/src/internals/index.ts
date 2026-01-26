@@ -4,7 +4,7 @@ export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
 export * from '../BarChart/BarClipPath';
-export * from './components/WebGLContext';
+export * from '../ChartsWebGLSurface/ChartsWebGLSurface';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';

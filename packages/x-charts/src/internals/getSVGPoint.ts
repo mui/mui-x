@@ -3,9 +3,12 @@
  * @param svg The SVG element
  * @param event The mouseEvent to transform
  */
-export function getSVGPoint(svg: SVGSVGElement, event: Pick<MouseEvent, 'clientX' | 'clientY'>) {
-  const pt = svg.createSVGPoint();
-  pt.x = event.clientX;
-  pt.y = event.clientY;
-  return pt.matrixTransform(svg.getScreenCTM()!.inverse());
+export function getSVGPoint(svg: HTMLElement, event: Pick<MouseEvent, 'clientX' | 'clientY'>) {
+  const rect = svg.getBoundingClientRect();
+  const style = getComputedStyle(svg);
+  const transform = new DOMMatrix(style.transform);
+
+  const point = new DOMPoint(event.clientX - rect.left, event.clientY - rect.top);
+
+  return point.matrixTransform(transform.inverse());
 }

@@ -6,8 +6,8 @@ import { type HighlightItemData, type UseChartHighlightSignature } from './useCh
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
 import {
-  getSeriesHighlightedDataIndex,
-  getSeriesUnfadedDataIndex,
+  getSeriesHighlightedItem,
+  getSeriesUnfadedItem,
   isSeriesFaded,
   isSeriesHighlighted,
 } from './highlightStates';
@@ -16,10 +16,10 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/u
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
 
-export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
+export const selectorChartsHighlightScopePerSeriesId = createSelector(
   selectorChartSeriesProcessed,
-  (processedSeries): Map<SeriesId, Partial<HighlightScope<any>> | undefined> => {
-    const map = new Map<SeriesId, Partial<HighlightScope<any>> | undefined>();
+  (processedSeries): Map<SeriesId, Partial<HighlightScope> | undefined> => {
+    const map = new Map<SeriesId, Partial<HighlightScope> | undefined>();
 
     Object.keys(processedSeries).forEach((seriesType) => {
       const seriesData = processedSeries[seriesType as ChartSeriesType];
@@ -98,13 +98,13 @@ export const selectorChartIsSeriesFaded = createSelector(
 export const selectorChartSeriesUnfadedItem = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  getSeriesUnfadedDataIndex,
+  getSeriesUnfadedItem,
 );
 
 export const selectorChartSeriesHighlightedItem = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  getSeriesHighlightedDataIndex,
+  getSeriesHighlightedItem,
 );
 
 export const selectorChartsIsFaded = createSelector(
