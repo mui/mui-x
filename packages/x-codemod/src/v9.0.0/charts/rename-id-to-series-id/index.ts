@@ -42,8 +42,8 @@ export const testConfig = {
   specFiles: [
     {
       name: 'rename id to seriesId',
-      actual: readFile(path.join(import.meta.dirname, 'actual-imports.spec.tsx')),
-      expected: readFile(path.join(import.meta.dirname, 'expected-imports.spec.tsx')),
+      actual: readFile(path.join(__dirname, 'actual-imports.spec.tsx')),
+      expected: readFile(path.join(__dirname, 'expected-imports.spec.tsx')),
     },
   ],
 };

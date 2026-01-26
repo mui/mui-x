@@ -16,8 +16,8 @@ const testCases = [
   ...parsedFiles,
   {
     name: 'preset-safe/own-files',
-    actual: readFile(path.join(import.meta.dirname, 'actual.spec.tsx')),
-    expected: readFile(path.join(import.meta.dirname, 'expected.spec.tsx')),
+    actual: readFile(path.join(__dirname, 'actual.spec.tsx')),
+    expected: readFile(path.join(__dirname, 'expected.spec.tsx')),
   },
 ];
 

@@ -35,8 +35,8 @@ export const testConfig = {
   specFiles: [
     {
       name: 'imports',
-      actual: readFile(path.join(import.meta.dirname, 'actual-imports.spec.tsx')),
-      expected: readFile(path.join(import.meta.dirname, 'expected-imports.spec.tsx')),
+      actual: readFile(path.join(__dirname, 'actual-imports.spec.tsx')),
+      expected: readFile(path.join(__dirname, 'expected-imports.spec.tsx')),
     },
   ],
 };
