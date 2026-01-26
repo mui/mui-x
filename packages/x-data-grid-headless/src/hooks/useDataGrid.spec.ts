@@ -1,6 +1,11 @@
-import { createPlugin, type Plugin } from '../plugins/core/plugin';
-import paginationPlugin, { type PaginationModel } from '../plugins/pagination';
-import sortingPlugin, { type GridSortModel } from '../plugins/sorting';
+import {
+  createPlugin,
+  sortingPlugin,
+  paginationPlugin,
+  type Plugin,
+  type GridSortModel,
+  type PaginationModel,
+} from '../plugins';
 import { useDataGrid } from './useDataGrid';
 
 interface User {

@@ -2,14 +2,15 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store, useStore, ReadonlyStore } from '@base-ui/utils/store';
-import { AnyPlugin, BaseApi } from '../plugins/core/plugin';
 import {
-  PluginsApi,
-  PluginsColumnMeta,
-  PluginsOptions,
-  PluginsState,
-} from '../plugins/core/helpers';
-import { PluginRegistry } from '../plugins/core/pluginRegistry';
+  type AnyPlugin,
+  type BaseApi,
+  type PluginsApi,
+  type PluginsColumnMeta,
+  type PluginsOptions,
+  type PluginsState,
+  PluginRegistry,
+} from '../plugins';
 import { internalPlugins, InternalPluginsApi } from '../plugins/internal';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
