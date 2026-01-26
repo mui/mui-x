@@ -1,6 +1,7 @@
 import { type ChartPluginSignature } from '../../models';
-import { type ChartSeriesConfig } from '../../models/seriesConfig';
+import { type ChartSeriesConfig } from './types/seriesConfig.types';
 import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import { type SeriesItemIdentifier } from '../../../../models/seriesType';
 
 export interface UseChartSeriesConfigParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -21,9 +22,36 @@ export interface UseChartSeriesConfigState<T extends ChartSeriesType = ChartSeri
   };
 }
 
+export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
+  identifier: T,
+) => string;
+
+export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
+  identifier: T,
+) => SeriesItemIdentifier<T['type']>;
+
+export interface UseChartSeriesConfigInstance {
+  /**
+   * Function to serialize a series item identifier into a unique string.
+   *
+   * @param identifier The identifier to serialize.
+   * @returns A unique string representing the identifier.
+   */
+  serializeIdentifier: SerializeIdentifierFunction;
+  /**
+   * Function to clean a series item identifier, returning only the properties
+   * relevant to the series type.
+   *
+   * @param identifier The partial identifier to clean.
+   * @returns A cleaned identifier with only the relevant properties.
+   */
+  cleanIdentifier: CleanIdentifierFunction;
+}
+
 export type UseChartSeriesConfigSignature<T extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartSeriesConfigParameters<T>;
     defaultizedParams: UseChartSeriesConfigDefaultizedParameters<T>;
     state: UseChartSeriesConfigState<T>;
+    instance: UseChartSeriesConfigInstance;
   }>;

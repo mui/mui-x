@@ -7,8 +7,8 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { EventCalendar } from '../event-calendar';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
@@ -140,7 +140,7 @@ describe('<MonthView />', () => {
         return screen
           .getAllByRole('gridcell')
           .find((cell) => within(cell).queryByText(new RegExp(`^${date.toString()}`)))!
-          .querySelectorAll('.EventContainer');
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell

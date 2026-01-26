@@ -14,8 +14,10 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import clsx from 'clsx';
 import { DateNavigatorProps } from './DateNavigator.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
+import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const DateNavigatorRoot = styled('header', {
   name: 'MuiEventCalendar',
@@ -56,6 +58,7 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const view = useStore(store, eventCalendarViewSelectors.view);
@@ -63,7 +66,12 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
 
   return (
-    <DateNavigatorRoot ref={forwardedRef} role="navigation" {...props}>
+    <DateNavigatorRoot
+      ref={forwardedRef}
+      role="navigation"
+      {...props}
+      className={clsx(props.className, classes.dateNavigator)}
+    >
       <IconButton
         aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
         onClick={(event) =>
@@ -72,10 +80,10 @@ export const DateNavigator = React.forwardRef(function DateNavigator(
       >
         {isSidePanelOpen ? <MenuOpen /> : <Menu />}
       </IconButton>
-      <DateNavigatorLabel aria-live="polite">
+      <DateNavigatorLabel className={classes.dateNavigatorLabel} aria-live="polite">
         {adapter.format(visibleDate, 'monthFullLetter')} {adapter.format(visibleDate, 'yearPadded')}
       </DateNavigatorLabel>
-      <DateNavigatorButtonsContainer>
+      <DateNavigatorButtonsContainer className={classes.dateNavigatorButtonsContainer}>
         <IconButton
           onClick={store.goToPreviousVisibleDate}
           aria-label={translations.previousTimeSpan(view)}

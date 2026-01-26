@@ -31,12 +31,6 @@ export interface MinimalTreeViewState<
    */
   itemChildrenIndexesLookup: { [parentItemId: string]: { [itemId: string]: number } };
   /**
-   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
-   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
-   * Nested DOM structure is not compatible with collapse / expansion animations.
-   */
-  domStructure: 'flat' | 'nested';
-  /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    */
@@ -81,6 +75,11 @@ export interface MinimalTreeViewState<
    * The id of the currently focused item.
    */
   focusedItemId: TreeViewItemId | null;
+  /**
+   * The default height of each item in the tree view.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: number | null;
 }
 
 export interface MinimalTreeViewParameters<
@@ -259,6 +258,11 @@ export interface MinimalTreeViewParameters<
    * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemFocus?: (event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void;
+  /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight?: number;
 }
 
 /**

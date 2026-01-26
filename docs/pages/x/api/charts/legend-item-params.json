@@ -7,7 +7,6 @@
   ],
   "properties": {
     "color": { "type": { "description": "string" }, "required": true },
-    "id": { "type": { "description": "number | string" }, "required": true },
     "label": { "type": { "description": "string" }, "required": true },
     "markType": { "type": { "description": "ChartsLabelMarkProps['type']" }, "required": true },
     "maxValue": { "type": { "description": "number | Date | null" }, "required": true },

@@ -40,6 +40,8 @@ import {
   renderEditProgress,
   renderEditStatus,
   renderEditIncoterm,
+  renderEditBoolean,
+  renderEditCountry,
 } from '../renderer';
 import {
   CONTRACT_TYPE_OPTIONS,
@@ -114,6 +116,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     generateData: generateIsFilled,
     type: 'boolean',
     width: 80,
+    renderEditCell: renderEditBoolean,
     editable,
   },
   {
@@ -243,6 +246,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     type: 'singleSelect',
     generateData: randomCountry,
     renderCell: renderCountry,
+    renderEditCell: renderEditCountry,
     valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
     valueParser: (value) => {
       if (typeof value === 'string') {

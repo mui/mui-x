@@ -4,7 +4,7 @@ import type { DefaultizedBarSeriesType } from '../../../models';
 import { getStackingGroups } from '../../../internals/stacking';
 import { type DatasetElementType, type DatasetType } from '../../../models/seriesType/config';
 import { type SeriesId } from '../../../models/seriesType/common';
-import { type SeriesProcessor } from '../../../internals/plugins/models';
+import type { SeriesProcessor } from '../../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 type BarDataset = DatasetType<number | null>;
 

@@ -18,6 +18,7 @@ import {
 } from '../../../internals/components/event-popover/EventPopover';
 import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
 
 const HOUR_HEIGHT = 46;
 
@@ -94,6 +95,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
   const { day, showCurrentTimeIndicator, index } = props;
 
   const adapter = useAdapter();
+  const classes = useEventCalendarClasses();
   const start = React.useMemo(() => adapter.startOfDay(day.value), [adapter, day]);
   const end = React.useMemo(() => adapter.endOfDay(day.value), [adapter, day]);
   const { occurrences, maxIndex } = useEventOccurrencesWithTimelinePosition({
@@ -103,6 +105,7 @@ export function TimeGridColumn(props: TimeGridColumnProps) {
 
   return (
     <DayTimeGridColumn
+      className={classes.dayTimeGridColumn}
       start={start}
       end={end}
       addPropertiesToDroppedEvent={addPropertiesToDroppedEvent}
@@ -139,6 +142,7 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
   const { open: startEditing } = useEventPopoverContext();
 
   // Ref hooks
@@ -183,7 +187,11 @@ function ColumnInteractiveLayer({
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <DayTimeGridColumnInteractiveLayer ref={columnRef} {...eventCreationProps}>
+    <DayTimeGridColumnInteractiveLayer
+      className={classes.dayTimeGridColumnInteractiveLayer}
+      ref={columnRef}
+      {...eventCreationProps}
+    >
       {occurrences.map((occurrence) => (
         <EventPopoverTrigger
           key={occurrence.key}
@@ -193,7 +201,7 @@ function ColumnInteractiveLayer({
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
-        <DayTimeGridCurrentTimeIndicator>
+        <DayTimeGridCurrentTimeIndicator className={classes.dayTimeGridCurrentTimeIndicator}>
           {index === 0 && <CurrentTimeLabel />}
         </DayTimeGridCurrentTimeIndicator>
       ) : null}
@@ -203,13 +211,16 @@ function ColumnInteractiveLayer({
 
 function CurrentTimeLabel() {
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
   const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
   const formatTime = useFormatTime();
 
   const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
 
   return (
-    <DayTimeGridCurrentTimeLabel aria-hidden="true">{currentTimeLabel}</DayTimeGridCurrentTimeLabel>
+    <DayTimeGridCurrentTimeLabel className={classes.dayTimeGridCurrentTimeLabel} aria-hidden="true">
+      {currentTimeLabel}
+    </DayTimeGridCurrentTimeLabel>
   );
 }
 
