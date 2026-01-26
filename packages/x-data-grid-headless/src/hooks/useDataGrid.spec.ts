@@ -501,11 +501,11 @@ export function PluginOptionsExample() {
     // ✓ PluginA options
     enableA: true,
     aValue: 'custom-A',
-    onAChange: (_value) => { },
+    onAChange: (_value) => {},
 
     // ✓ PluginB options
     bMode: 'fast',
-    onBEvent: () => { },
+    onBEvent: () => {},
 
     // ✓ PluginC options (also includes A and B options from dependencies)
     cPrefix: 'prefix-',

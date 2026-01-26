@@ -83,9 +83,7 @@ export function TestDataGrid<TRow extends object>(props: {
 
   return (
     <div>
-      {props.showConfig !== false && (
-        <ConfigPanel config={config} onConfigChange={setConfig} />
-      )}
+      {props.showConfig !== false && <ConfigPanel config={config} onConfigChange={setConfig} />}
       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>
         <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f5f5f5', zIndex: 1 }}>
           <tr>
@@ -256,7 +254,9 @@ function ConfigPanel(props: {
             <select
               value={getCurrentSortingOrderLabel()}
               onChange={(event) => {
-                const selected = sortingOrderOptions.find((opt) => opt.label === event.target.value);
+                const selected = sortingOrderOptions.find(
+                  (opt) => opt.label === event.target.value,
+                );
                 if (selected) {
                   updateSortingConfig({ sortingOrder: selected.value });
                 }

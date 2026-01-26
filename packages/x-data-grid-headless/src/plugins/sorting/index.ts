@@ -127,10 +127,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     /**
      * Compute sorted row IDs without updating state.
      */
-    const computeSortedRowIds = (
-      rowIds?: GridRowId[],
-      sortModel?: GridSortModel,
-    ): GridRowId[] => {
+    const computeSortedRowIds = (rowIds?: GridRowId[], sortModel?: GridSortModel): GridRowId[] => {
       const idsToSort = rowIds ?? getAllRowIds();
       const modelToUse = sortModel ?? store.state.sorting.sortModel;
 
@@ -245,7 +242,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         newDirection === null ? undefined : { field, sort: newDirection };
 
       // Determine if we should do multi-sort
-      const shouldMultiSort = multiSort ?? (params.enableMultiSort !== false);
+      const shouldMultiSort = multiSort ?? params.enableMultiSort !== false;
 
       let newSortModel: GridSortModel;
       if (shouldMultiSort) {

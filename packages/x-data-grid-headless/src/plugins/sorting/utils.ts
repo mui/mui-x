@@ -142,7 +142,9 @@ export const upsertSortModel = (
 interface ColumnInfo {
   field?: string | number | symbol;
   id?: string;
-  sortComparator?: GridComparatorFn | ((direction: GridSortDirection) => GridComparatorFn | undefined);
+  sortComparator?:
+    | GridComparatorFn
+    | ((direction: GridSortDirection) => GridComparatorFn | undefined);
   sortValueGetter?: (row: any) => any;
 }
 
@@ -164,7 +166,9 @@ const isComparatorFactory = (
 // Normalize sortComparator to always be a factory function internally.
 // If it's a direct comparator, wrap it to apply direction modifier.
 const normalizeToComparatorFactory = (
-  sortComparator: GridComparatorFn | ((direction: GridSortDirection) => GridComparatorFn | undefined),
+  sortComparator:
+    | GridComparatorFn
+    | ((direction: GridSortDirection) => GridComparatorFn | undefined),
 ): ((direction: GridSortDirection) => GridComparatorFn | undefined) => {
   if (isComparatorFactory(sortComparator)) {
     return sortComparator;
