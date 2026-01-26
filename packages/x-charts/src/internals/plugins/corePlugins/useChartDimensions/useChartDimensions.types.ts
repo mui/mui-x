@@ -64,6 +64,11 @@ export interface UseChartDimensionsState {
      * The SVG height in px provided by props.
      */
     propsHeight: number | undefined;
+    /**
+     * Whether the chart has been hydrated (client-side rendering is complete).
+     * Used to trigger recomputation of auto-sized axes.
+     */
+    isHydrated: boolean;
   };
 }
 
