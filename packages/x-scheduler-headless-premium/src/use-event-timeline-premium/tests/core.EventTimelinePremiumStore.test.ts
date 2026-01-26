@@ -3,7 +3,6 @@ import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 import { EventTimelinePremiumStore } from '../EventTimelinePremiumStore';
 
-// Run the shared SchedulerStore core tests against EventTimelinePremiumStore
 describeSchedulerStoreCoreTests({
   name: 'EventTimelinePremiumStore',
   Value: EventTimelinePremiumStore,
@@ -11,8 +10,7 @@ describeSchedulerStoreCoreTests({
 
 const DEFAULT_PARAMS = { events: [] };
 
-// EventTimelinePremiumStore specific tests
-describe('Core - EventTimelinePremiumStore (Specific)', () => {
+describe('Core - EventTimelinePremiumStore', () => {
   describe('create', () => {
     createRenderer({ clockConfig: new Date(2012, 4, 3, 14, 30, 15, 743) });
 
