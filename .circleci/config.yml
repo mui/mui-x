@@ -189,7 +189,7 @@ jobs:
           name: 'No dynamic date library import in the Pickers built types?'
           command: |
             pnpm lerna run --include-dependencies --scope "@mui/x-date-pickers*" build
-            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts packages/{x-date-pickers,x-date-pickers-pro}/build
+            if grep -nr 'import("luxon")\|import("dayjs")\|import("moment")' --exclude Adapter*.d.ts --exclude Adapter*.d.mts --exclude Adapter*.d.cts packages/{x-date-pickers,x-date-pickers-pro}/build
             then
                 exit 1
             else
