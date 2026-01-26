@@ -21,6 +21,7 @@ import { type ChartDataProviderProProps } from '@mui/x-charts-pro/ChartDataProvi
 import { rangeBarSeriesConfig } from '../BarChartPremium/RangeBar/seriesConfig';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderPremiumProps } from './useChartDataProviderPremiumProps';
+import { ohlcSeriesConfig } from '../CandlestickChart/seriesConfig';
 
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-premium';
@@ -45,10 +46,11 @@ export type ChartDataProviderPremiumProps<
   };
 
 export const defaultSeriesConfigPremium: ChartSeriesConfig<
-  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie'
+  'bar' | 'rangeBar' | 'scatter' | 'line' | 'pie' | 'ohlc'
 > = {
   ...defaultSeriesConfigPro,
   rangeBar: rangeBarSeriesConfig,
+  ohlc: ohlcSeriesConfig,
 };
 
 /**
