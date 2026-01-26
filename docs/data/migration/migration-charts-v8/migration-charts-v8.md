@@ -80,6 +80,24 @@ In v9, only `string` is accepted.
 
 This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
 
+## Renaming `id` to `seriesId` ✅
+
+Some components used for composition got their prop `id` renamed `seriesId` to improve clarity.
+
+Here is the list of slots and components that are impacted by the renaming:
+
+| slot          | Component                                |
+| :------------ | :--------------------------------------- |
+| pieArc        | PieArc                                   |
+|               | PieArcPlot                               |
+| pieArcLabel   | PieArcLabel                              |
+|               | PieArcLabelPlot                          |
+| bar           | BarElement, AnimatedRangeBarElementProps |
+| area          | AnimatedArea, AreaElement                |
+| line          | AnimatedLine, LineElement                |
+| mark          | MarkElement                              |
+| lineHighlight | LineHighlightElement                     |
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.

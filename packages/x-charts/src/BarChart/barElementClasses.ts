@@ -20,7 +20,7 @@ export interface BarElementClasses {
 export type BarElementClassKey = keyof BarElementClasses;
 
 export interface BarElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
@@ -41,9 +41,9 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
 ]);
 
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
+  const { classes, seriesId, isHighlighted, isFaded } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarElementUtilityClass, classes);

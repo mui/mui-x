@@ -41,18 +41,18 @@ export function parseRRule(
     const value = rawValue?.trim().toUpperCase();
 
     if (!key || !value) {
-      throw new Error(`Scheduler: Invalid RRULE part: "${part}"`);
+      throw new Error(`MUI: Invalid RRULE part: "${part}"`);
     }
 
     if (!SUPPORTED_RRULE_KEYS.has(key)) {
-      throw new Error(`Scheduler: Unsupported RRULE property: "${key}"`);
+      throw new Error(`MUI: Unsupported RRULE property: "${key}"`);
     }
 
     rruleObject[key] = value;
   }
 
   if (!rruleObject.FREQ) {
-    throw new Error('Scheduler: RRULE must include a FREQ property.');
+    throw new Error('MUI: RRULE must include a FREQ property.');
   }
 
   const rrule: RecurringEventRecurrenceRule = {
@@ -62,7 +62,7 @@ export function parseRRule(
   if (rruleObject.INTERVAL) {
     const interval = Number(rruleObject.INTERVAL);
     if (Number.isNaN(interval) || interval < 1) {
-      throw new Error(`Scheduler: Invalid INTERVAL value: "${rruleObject.INTERVAL}"`);
+      throw new Error(`MUI: Invalid INTERVAL value: "${rruleObject.INTERVAL}"`);
     }
     rrule.interval = interval;
   }
@@ -75,7 +75,7 @@ export function parseRRule(
   if (rruleObject.BYMONTHDAY) {
     const days = rruleObject.BYMONTHDAY.split(',').map((d) => Number(d.trim()));
     if (days.some((d) => Number.isNaN(d) || d < 1 || d > 31)) {
-      throw new Error(`Scheduler: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
+      throw new Error(`MUI: Invalid BYMONTHDAY values: "${rruleObject.BYMONTHDAY}"`);
     }
     rrule.byMonthDay = days.toSorted((a, b) => a - b);
   }
@@ -83,7 +83,7 @@ export function parseRRule(
   if (rruleObject.BYMONTH) {
     const months = rruleObject.BYMONTH.split(',').map((m) => Number(m.trim()));
     if (months.some((m) => Number.isNaN(m) || m < 1 || m > 12)) {
-      throw new Error(`Scheduler: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
+      throw new Error(`MUI: Invalid BYMONTH values: "${rruleObject.BYMONTH}"`);
     }
     rrule.byMonth = months.toSorted((a, b) => a - b);
   }
@@ -91,7 +91,7 @@ export function parseRRule(
   if (rruleObject.COUNT) {
     const count = Number(rruleObject.COUNT);
     if (Number.isNaN(count) || count < 1) {
-      throw new Error(`Scheduler: Invalid COUNT value: "${rruleObject.COUNT}"`);
+      throw new Error(`MUI: Invalid COUNT value: "${rruleObject.COUNT}"`);
     }
     rrule.count = count;
   }
@@ -100,7 +100,7 @@ export function parseRRule(
     const parsed = adapter.parse(rruleObject.UNTIL, getAdapterCache(adapter).untilFormat, timezone);
 
     if (!adapter.isValid(parsed)) {
-      throw new Error(`Scheduler: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
+      throw new Error(`MUI: Invalid UNTIL date: "${rruleObject.UNTIL}"`);
     }
 
     rrule.until = parsed;
