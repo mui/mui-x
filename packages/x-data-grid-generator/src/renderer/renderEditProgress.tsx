@@ -54,7 +54,7 @@ function ValueLabelComponent(props: any) {
 }
 
 function EditProgress(props: GridRenderEditCellParams<any, number>) {
-  const { id, value, field } = props;
+  const { id, value, field, hasFocus } = props;
   const [valueState, setValueState] = React.useState(Number(value));
 
   const apiRef = useGridApiContext();
@@ -81,7 +81,7 @@ function EditProgress(props: GridRenderEditCellParams<any, number>) {
   }, [value]);
 
   const handleRef: SliderProps['ref'] = (element) => {
-    if (element) {
+    if (element && hasFocus) {
       element.querySelector<HTMLElement>('[type="range"]')!.focus();
     }
   };
