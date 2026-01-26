@@ -36,6 +36,6 @@ This package is not published yet.
 - [Month View](/x/react-scheduler/month-view/)
 - [Agenda View](/x/react-scheduler/agenda-view/)
 
-## Timeline
+## Event Timeline Premium
 
-- [Timeline](/x/react-scheduler/timeline/) ([full screen demo](/x/react-scheduler/full-screen-timeline/))
+- [Event Timeline Premium](/x/react-scheduler/event-timeline-premium/) ([full screen demo](/x/react-scheduler/full-screen-event-timeline-premium/))

@@ -120,6 +120,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
     <YAxisRoot
       transform={`translate(${position === 'right' ? left + width + offset : left - offset}, 0)`}
       className={classes.root}
+      data-axis-id={defaultizedProps.id}
       sx={sx}
     >
       {!disableLine && <Line y1={top} y2={top + height} className={classes.line} {...lineProps} />}

@@ -25,6 +25,7 @@ export interface BarElementOwnerState {
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
   classes?: Partial<BarElementClasses>;
 }
 

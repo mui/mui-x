@@ -1,10 +1,7 @@
 import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions';
-import {
-  selectorChartSeriesConfig,
-  selectorChartSeriesProcessed,
-} from '../../corePlugins/useChartSeries';
+import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries';
 import { computeAxisValue } from './computeAxisValue';
 import {
   type ExtremumFilter,
@@ -38,11 +35,14 @@ import { getNormalizedAxisScale, getRange } from './getAxisScale';
 import { isOrdinalScale } from '../../../scaleGuards';
 import { zoomScaleRange } from './zoom';
 import { getAxisExtrema } from './getAxisExtrema';
-import { type ChartSeriesConfig } from '../../models';
 import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import { calculateFinalDomain, calculateInitialDomainAndTickNumber } from './domain';
 import { type SeriesId } from '../../../../models/seriesType/common';
 import { Flatbush } from '../../../Flatbush';
+import {
+  selectorChartSeriesConfig,
+  type ChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 
 export const createZoomMap = (zoom: readonly ZoomData[]) => {
   const zoomItemMap = new Map<AxisId, ZoomData>();

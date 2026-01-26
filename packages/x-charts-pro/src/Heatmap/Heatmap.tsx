@@ -88,6 +88,7 @@ export interface HeatmapProps
       | 'experimentalFeatures'
       | 'highlightedAxis'
       | 'onHighlightedAxisChange'
+      | 'seriesConfig'
       | 'onAxisClick'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
@@ -249,7 +250,7 @@ Heatmap.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -331,11 +332,6 @@ Heatmap.propTypes = {
    */
   series: PropTypes.arrayOf(PropTypes.object).isRequired,
   /**
-   * The configuration helpers used to compute attributes according to the series type.
-   * @ignore Unstable props for internal usage.
-   */
-  seriesConfig: PropTypes.object,
-  /**
    * If true, shows the default chart toolbar.
    * @default false
    */
@@ -368,7 +364,7 @@ Heatmap.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['heatmap']).isRequired,
     xIndex: PropTypes.number,
     yIndex: PropTypes.number,

@@ -73,6 +73,13 @@ After running the codemods, make sure to test your application and that you don'
 Feel free to [open an issue](https://github.com/mui/mui-x/issues/new/choose) for support if you need help to proceed with your migration.
 :::
 
+## Change `seriesId` type to `string`
+
+The `seriesId` property accepted `number | string`.
+In v9, only `string` is accepted.
+
+This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
@@ -135,6 +142,36 @@ useBarSeries(['id-1']); // Returns [{ id: "id-1", ... }]
 useBarSeries([]); // Returns []
 ```
 
+### Rename `useAxisTooltip` hook
+
+The `useAxisTooltip` hook has been renamed to `useAxesTooltip` to better reflect its functionality of handling multiple axes.
+
+The hook now always returns an array of tooltip data (one entry per active axis) instead of a single object.
+
+```diff
+-import { useAxisTooltip, UseAxisTooltipReturnValue, UseAxisTooltipParams } from '@mui/x-charts';
++import { useAxesTooltip, UseAxesTooltipReturnValue, UseAxesTooltipParams } from '@mui/x-charts';
+```
+
+Run the following command to do the renaming.
+
+```bash
+npx @mui/x-codemod@next v9.0.0/charts/rename-axis-tooltip-hook <path|folder>
+```
+
+After running the codemod make sure to adapt the hook returned value to your needs.
+
+```diff
+ function CustomTooltip() {
+   // If you want to keep only one axis
+-  const tooltipData = useAxisTooltip();
++  const tooltipData = useAxesTooltip()[0] ?? null;
+   // If you use all the axes
+-  const tooltipData = useAxisTooltip({ multipleAxes: true });
++  const tooltipData = useAxesTooltip();
+ }
+```
+
 ## Heatmap
 
 ### `hideLegend` default value changed ✅
@@ -150,9 +187,53 @@ This improves consistency across chart components and developer experience.
 
 ## Legend
 
-### Property `type` is now required
-
-The `type` property of `LegendItemParams` has been modified from optional to required.
+### `LegendItemParams` Modification
 
 This type is used in the return value of `useLegend()`.
 If you haven't created a custom legend, you should not be impacted by this change.
+
+#### Property `type` is now required
+
+The `type` property of `LegendItemParams` has been modified from optional to required.
+
+#### Property `id` is removed
+
+The `id` property of `LegendItemParams` was deprecated in v8 and is removed in v9.
+You should use the `seriesId` and `dataIndex` instead.
+
+## Axis
+
+### Styling axes by ID
+
+The `axisClasses.id` class and the dynamically generated `MuiChartsAxis-id-{axisId}` classes have been removed.
+To style a specific axis by its ID, use the `data-axis-id` attribute selector instead.
+
+This change improves maintainability by using data attributes rather than dynamic class name suffixes.
+
+```diff
+-import { axisClasses } from '@mui/x-charts/ChartsAxis';
+-
+-// CSS selector
+-`.MuiChartsAxis-id-myXAxis`
+-// Or using axisClasses
+-`.${axisClasses.id}-myXAxis`
++import { axisClasses } from '@mui/x-charts/ChartsAxis';
++
++// CSS selector
++`.MuiChartsAxis-root[data-axis-id="myXAxis"]`
++// Or using axisClasses
++`.${axisClasses.root}[data-axis-id="myXAxis"]`
+```
+
+If you're using the `sx` prop or `styled()`:
+
+```diff
+ <LineChart
+   sx={{
+-    [`& .MuiChartsAxis-id-myXAxis`]: {
++    [`& .MuiChartsAxis-root[data-axis-id="myXAxis"]`]: {
+       // Your custom styles
+     },
+   }}
+ />
+```

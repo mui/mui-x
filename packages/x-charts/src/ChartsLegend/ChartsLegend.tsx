@@ -18,7 +18,6 @@ import {
   type UseChartVisibilityManagerSignature,
 } from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 import { useStore } from '../internals/store/useStore';
-import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeries';
 
 export interface ChartsLegendProps {
   /**
@@ -111,7 +110,6 @@ const ChartsLegend = consumeSlots(
     const data = useLegend();
     const { instance } = useChartContext<[UseChartVisibilityManagerSignature]>();
     const store = useStore<[UseChartVisibilityManagerSignature]>();
-    const seriesConfig = store.use(selectorChartSeriesConfig);
     const isItemVisible = store.use(selectorIsItemVisibleGetter);
     const { direction, onItemClick, className, classes, toggleVisibilityOnClick, ...other } = props;
 
@@ -148,7 +146,7 @@ const ChartsLegend = consumeSlots(
         ownerState={props}
       >
         {data.items.map((item, i) => {
-          const isVisible = isItemVisible(seriesConfig, {
+          const isVisible = isItemVisible({
             type: item.type,
             seriesId: item.seriesId,
             dataIndex: item.dataIndex,

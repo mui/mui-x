@@ -2,10 +2,14 @@ import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import type {
   UseChartVisibilityManagerSignature,
   VisibilityIdentifier,
+  VisibilityMap,
 } from './useChartVisibilityManager.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import { isIdentifierVisible } from './isIdentifierVisible';
-import type { ChartSeriesConfig } from '../../models';
+import {
+  selectorChartSeriesConfig,
+  type ChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
+import { serializeIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/serializeIdentifier';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 /**
@@ -25,13 +29,21 @@ export const selectorVisibilityMap = createSelector(
   (visibilityManager) => visibilityManager?.visibilityMap ?? EMPTY_VISIBILITY_MAP,
 );
 
+const selectorIsItemVisibleFn = <T extends ChartSeriesType>(
+  visibilityMap: VisibilityMap,
+  seriesConfig: ChartSeriesConfig<T>,
+) => {
+  return (identifier: VisibilityIdentifier<T>) => {
+    const uniqueId = serializeIdentifier(seriesConfig, identifier);
+    return !visibilityMap.has(uniqueId);
+  };
+};
+
 /**
  * Selector that returns a function which returns whether an item is visible.
  */
 export const selectorIsItemVisibleGetter = createSelectorMemoized(
   selectorVisibilityMap,
-  (visibilityMap) => {
-    return (seriesConfig: ChartSeriesConfig<ChartSeriesType>, identifier: VisibilityIdentifier) =>
-      isIdentifierVisible(visibilityMap, identifier, seriesConfig);
-  },
+  selectorChartSeriesConfig,
+  selectorIsItemVisibleFn,
 );

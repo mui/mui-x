@@ -447,27 +447,27 @@ SparkLineChart.propTypes = {
     PropTypes.oneOfType([
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['line']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['scatter']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['pie']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['radar']).isRequired,
       }),
     ]).isRequired,
@@ -488,7 +488,7 @@ SparkLineChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -520,27 +520,27 @@ SparkLineChart.propTypes = {
     PropTypes.oneOfType([
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['bar']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['line']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['scatter']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['pie']).isRequired,
       }),
       PropTypes.shape({
         dataIndex: PropTypes.number,
-        seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+        seriesId: PropTypes.string,
         type: PropTypes.oneOf(['radar']).isRequired,
       }),
     ]).isRequired,
@@ -650,27 +650,27 @@ SparkLineChart.propTypes = {
   tooltipItem: PropTypes.oneOfType([
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['bar']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['line']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['scatter']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number.isRequired,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['pie']).isRequired,
     }),
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      seriesId: PropTypes.string.isRequired,
       type: PropTypes.oneOf(['radar']).isRequired,
     }),
   ]),
