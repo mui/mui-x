@@ -1,17 +1,8 @@
 'use client';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
-<<<<<<<< HEAD:packages/x-charts-premium/src/ChartsWebGlLayer/ChartsWebGlLayer.tsx
 import { selectorChartSvgHeight, selectorChartSvgWidth, useStore } from '@mui/x-charts/internals';
 import { useDrawingArea, useChartRootRef } from '@mui/x-charts/hooks';
-========
-import { useChartRootRef, useDrawingArea } from '../hooks';
-import {
-  selectorChartSvgHeight,
-  selectorChartSvgWidth,
-} from '../internals/plugins/corePlugins/useChartDimensions';
-import { useStore } from '../internals/store/useStore';
->>>>>>>> cb6c80c8f2 ([charts-premium] Add `ChartsLayers` component):packages/x-charts/src/ChartsWebGlLayer/ChartsWebGlLayer.tsx
 
 const ChartsWebGLContext = React.createContext<WebGL2RenderingContext | null>(null);
 
@@ -112,7 +103,6 @@ function CanvasPositioner({ children }: React.PropsWithChildren) {
         position: 'absolute',
         inset: 0,
         pointerEvents: 'none',
-        /* Ensures the canvas occupies the same space as the SVG */
         maxWidth: svgWidth,
         maxHeight: svgHeight,
         width: '100%',
