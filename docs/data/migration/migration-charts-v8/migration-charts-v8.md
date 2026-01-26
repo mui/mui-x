@@ -240,7 +240,7 @@ If you're using the `sx` prop or `styled()`:
 
 ## Components
 
-### ✅ `ChartsSurface` renamed to `ChartsSvgSurface`
+### `ChartsSurface` renamed to `ChartsSvgSurface` ✅
 
 The `ChartsSurface` component has been renamed to `ChartsSvgSurface` to make it clearer that it renders an SVG element.
 This is especially important when using composition, as it helps distinguish the SVG container from other surface types.
