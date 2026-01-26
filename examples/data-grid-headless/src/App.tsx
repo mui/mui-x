@@ -234,9 +234,8 @@ function DataGridRenderZone() {
   const columnsToRender = virtualization.hooks.useColumnsToRender();
   const offsetTop = virtualization.hooks.useOffsetTop();
   const offsetLeft = virtualization.hooks.useOffsetLeft();
-  const renderContext = virtualization.hooks.useRenderContext();
 
-  const renderZoneTop = offsetTop || renderContext.firstRowIndex * ROW_HEIGHT;
+  const renderZoneTop = offsetTop;
 
   return (
     <div
@@ -328,7 +327,6 @@ function DataGridVirtualScrollbar({
 }: DataGridVirtualScrollbarProps) {
   const grid = useDataGridContext();
   const dimensions = grid.api.virtualization.hooks.useDimensions();
-  const totalContentSize = grid.api.virtualization.hooks.useTotalContentSize();
 
   const scrollbarRef = React.useRef<HTMLDivElement>(null);
   const isLocked = React.useRef(false);
@@ -342,9 +340,7 @@ function DataGridVirtualScrollbar({
   const handleScrollbarRef = useForkRef(scrollbarRef, scrollbarProps.ref);
 
   const propertyScroll = isVertical ? 'scrollTop' : 'scrollLeft';
-  const contentSize = isVertical
-    ? dimensions.rowsMeta.currentPageTotalHeight
-    : totalContentSize.width;
+  const contentSize = dimensions.contentSize[isVertical ? 'height' : 'width'];
 
   const handleScrollerScroll = React.useCallback(() => {
     const scroller = scrollerRef.current;
@@ -465,8 +461,8 @@ function DataGrid() {
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const handleScrollerRef = useForkRef(scrollerRef, scrollerProps.ref);
 
-  const hasScrollY = totalContentSize.height > (dimensions.viewportInnerSize.height || 0);
-  const hasScrollX = totalContentSize.width > (dimensions.viewportInnerSize.width || 0);
+  const hasScrollY = dimensions.hasScrollY;
+  const hasScrollX = dimensions.hasScrollX;
 
   const handleRefreshRows = () => {
     setRows(generateSampleData(rows.length));

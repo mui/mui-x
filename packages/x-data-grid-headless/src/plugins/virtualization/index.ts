@@ -31,7 +31,6 @@ export interface VirtualizationOptions {
   columnBufferPx?: number;
   rowHeight?: number;
   initialState?: {
-    virtualization?: Partial<VirtualizationState['virtualization']>;
     scroll?: { top: number; left: number };
   };
 }
@@ -47,13 +46,10 @@ export interface VirtualizationState {
 const selectVirtualization = createSelector((state: VirtualizationState) => state.virtualization);
 
 interface VirtualizationHooks {
-  useRenderContext: () => ReturnType<typeof Virtualization.selectors.renderContext>;
   useScrollPosition: () => { top: number; left: number };
   useOffsetTop: () => number;
   useOffsetLeft: () => number;
-  useDimensions: () => {
-    contentHeight: Dimensions.State['dimensions']['contentSize']['height'];
-    viewportInnerSize: Dimensions.State['dimensions']['viewportInnerSize'];
+  useDimensions: () => Dimensions.State['dimensions'] & {
     rowsMeta: Dimensions.State['rowsMeta'];
   };
   useTotalContentSize: () => { width: number; height: number };
@@ -76,18 +72,8 @@ export interface VirtualizationApi {
   virtualization: {
     setVirtualization: (enabled: boolean) => void;
     setColumnVirtualization: (enabled: boolean) => void;
-    handleScroll: (
-      scrollPosition: { top: number; left: number },
-      viewportSize: { width: number; height: number },
-    ) => void;
     getScrollPosition: () => { top: number; left: number };
     getOffsetTop: () => number;
-    getDimensions: () => {
-      contentHeight: number;
-      viewportInnerSize: Dimensions.State['dimensions']['viewportInnerSize'];
-      rowsMeta: { positions: number[]; currentPageTotalHeight: number };
-    };
-    setRootRef: (element: HTMLElement | null) => void;
     forceUpdateRenderContext: () => void;
     getVirtualizerStore: () => Store<BaseState>;
     hooks: VirtualizationHooks;
@@ -136,8 +122,6 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
     const rowBufferPx = params.rowBufferPx ?? 150;
     const columnBufferPx = params.columnBufferPx ?? 150;
     const autoHeight = params.autoHeight ?? false;
-
-    const rootRef = React.useRef<HTMLElement | null>(null);
 
     const rowIds = api.rows.selectors.rowIds(store.state);
     const rowLookup = api.rows.selectors.rowIdToModelLookup(store.state);
@@ -229,31 +213,6 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
       [store],
     );
 
-    const handleScroll = React.useCallback(
-      (
-        scrollPosition: { top: number; left: number },
-        viewportSize: { width: number; height: number },
-      ) => {
-        const rootSize = {
-          width: viewportSize.width,
-          height: viewportSize.height,
-        };
-
-        if (
-          virtualizerStore.state.rootSize.width !== rootSize.width ||
-          virtualizerStore.state.rootSize.height !== rootSize.height
-        ) {
-          virtualizerStore.update({ rootSize });
-          virtualizerApi.updateDimensions(true);
-        }
-
-        // TODO: Why do we need to update the scroll position here?
-        virtualizerStore.state.virtualization.scrollPosition.current = scrollPosition;
-        virtualizerApi.forceUpdateRenderContext();
-      },
-      [virtualizerStore, virtualizerApi],
-    );
-
     const getScrollPosition = React.useCallback(() => {
       return Virtualization.selectors.scrollPosition(virtualizerStore.state).current;
     }, [virtualizerStore]);
@@ -266,34 +225,6 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
       return Virtualization.selectors.offsetTop(virtualizerStore.state);
     }, [virtualizerStore]);
 
-    const getDimensions = React.useCallback(() => {
-      const dimensions = Dimensions.selectors.dimensions(
-        virtualizerStore.state as unknown as BaseState,
-      );
-      const rowsMeta = Dimensions.selectors.rowsMeta(
-        virtualizerStore.state as unknown as BaseState,
-      );
-      return {
-        contentHeight: dimensions.contentSize.height,
-        viewportInnerSize: dimensions.viewportInnerSize,
-        rowsMeta,
-      };
-    }, [virtualizerStore]);
-
-    const setRootRef = React.useCallback(
-      (element: HTMLElement | null) => {
-        rootRef.current = element;
-        if (element) {
-          const bounds = element.getBoundingClientRect();
-          virtualizerStore.update({
-            rootSize: { width: bounds.width, height: bounds.height },
-          });
-          virtualizerApi.updateDimensions(true);
-        }
-      },
-      [virtualizerStore, virtualizerApi],
-    );
-
     const forceUpdateRenderContext = React.useCallback(() => {
       virtualizerApi.forceUpdateRenderContext();
     }, [virtualizerApi]);
@@ -305,10 +236,6 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
     React.useEffect(() => {
       setColumnVirtualization(!params.disableColumnVirtualization);
     }, [params.disableColumnVirtualization, setColumnVirtualization]);
-
-    const useRenderContextHook: VirtualizationHooks['useRenderContext'] = () => {
-      return useStore(virtualizerStore, Virtualization.selectors.renderContext);
-    };
 
     const useScrollPositionHook = (): { top: number; left: number } => {
       const scrollPositionState = useStore(
@@ -350,8 +277,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
 
       return React.useMemo(
         () => ({
-          contentHeight: dimensionsState.contentSize.height,
-          viewportInnerSize: dimensionsState.viewportInnerSize,
+          ...dimensionsState,
           rowsMeta: rowsMetaValue,
         }),
         [dimensionsState, rowsMetaValue],
@@ -448,15 +374,11 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
       virtualization: {
         setVirtualization,
         setColumnVirtualization,
-        handleScroll,
         getScrollPosition,
         getOffsetTop,
-        getDimensions,
-        setRootRef,
         forceUpdateRenderContext,
         getVirtualizerStore,
         hooks: {
-          useRenderContext: useRenderContextHook,
           useScrollPosition: useScrollPositionHook,
           useOffsetTop: useOffsetTopHook,
           useOffsetLeft: useOffsetLeftHook,
