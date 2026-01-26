@@ -8,3 +8,5 @@ export * from './describeSchedulerOtherSelectorTests';
 export * from './describeSchedulerPreferenceSelectorTests';
 export * from './describeSchedulerRecurringEventSelectorTests';
 export * from './describeSchedulerResourceSelectorTests';
+export * from './describeSchedulerEventSelectorTests';
+export * from './describeSchedulerOccurrenceSelectorTests';
