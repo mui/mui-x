@@ -145,8 +145,8 @@ Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-
 Rename the props `id` to `seriesId`.
 
 ```diff
-<PieArc id='series-a' />
-<PieArc seriesId='series-a' />
+- <PieArc id='series-a' />
++ <PieArc seriesId='series-a' />
 ```
 
 Here is the list of slots and components that are impacted by the renaming:
