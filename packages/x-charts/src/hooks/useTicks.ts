@@ -70,7 +70,7 @@ export type TickItem = {
   value?: any;
   /**
    * The formatted value of the tick.
-   * It is only undefined if it's the tick closing the last band.
+   * It is only `undefined` if it's the tick closing the last band.
    */
   formattedValue?: string;
   /**
