@@ -37,21 +37,40 @@ export const WebGLProvider = React.forwardRef<
     const canvas = canvasRef.current;
 
     if (!canvas) {
-      return;
+      return undefined;
     }
 
-    const ctx = canvas.getContext('webgl2', {
-      /* Fixes blurry lines when drawing sharp edges */
-      antialias: false,
-      /* Required so we can export the WebGL plot */
-      preserveDrawingBuffer: true,
-    });
+    const handleContextLost = (event: Event) => {
+      // Must prevent default otherwise the context won't be marked as restorable
+      // https://registry.khronos.org/webgl/extensions/WEBGL_lose_context/
+      event.preventDefault();
+      setContext(null);
+    };
+    const initializeContext = () => {
+      const ctx = canvas.getContext('webgl2', {
+        /* Fixes blurry lines when drawing sharp edges */
+        antialias: false,
+        /* Required so we can export the WebGL plot */
+        preserveDrawingBuffer: true,
+      });
 
-    if (!ctx) {
-      return;
-    }
+      if (!ctx) {
+        return;
+      }
 
-    setContext(ctx);
+      setContext(ctx);
+    };
+
+    canvas.addEventListener('webglcontextlost', handleContextLost);
+
+    canvas.addEventListener('webglcontextrestored', initializeContext);
+
+    initializeContext();
+
+    return () => {
+      canvas.removeEventListener('webglcontextlost', handleContextLost);
+      canvas.removeEventListener('webglcontextrestored', initializeContext);
+    };
   }, [chartRoot]);
 
   if (!chartRoot) {
