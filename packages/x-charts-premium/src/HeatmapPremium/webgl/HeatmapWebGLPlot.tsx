@@ -102,23 +102,23 @@ function HeatmapWebGLPlotImpl(props: {
   const seriesBorderRadius = Math.min(borderRadius ?? 0, width / 2, height / 2);
   const lastSeriesBorderRadiusRef = React.useRef<number>(seriesBorderRadius > 0 ? 0 : 1);
 
-  const setupResolutionUniform = useEventCallback(() => {
+  const setupResolutionUniform = React.useCallback(() => {
     gl.uniform2f(
       gl.getUniformLocation(program, 'u_resolution'),
       drawingArea.width,
       drawingArea.height,
     );
-  });
+  }, [drawingArea.height, drawingArea.width, gl, program]);
 
-  const setupBorderRadiusUniform = useEventCallback(() => {
+  const setupBorderRadiusUniform = React.useCallback(() => {
     gl.uniform1f(gl.getUniformLocation(program, 'u_borderRadius'), seriesBorderRadius);
-  });
+  }, [gl, program, seriesBorderRadius]);
 
-  const setupRectDimensionsUniform = useEventCallback(() => {
+  const setupRectDimensionsUniform = React.useCallback(() => {
     gl.uniform2f(gl.getUniformLocation(program, 'u_dimensions'), width, height);
-  });
+  }, [gl, height, program, width]);
 
-  const setupUniforms = useEventCallback(() => {
+  const setupUniformsEvent = useEventCallback(() => {
     bindQuadBuffer(gl, program, quadBuffer);
 
     setupBorderRadiusUniform();
@@ -126,7 +126,7 @@ function HeatmapWebGLPlotImpl(props: {
     setupRectDimensionsUniform();
   });
 
-  const setupAttributes = useEventCallback(() => {
+  const setupAttributes = React.useCallback(() => {
     const centers = new Float32Array(series.data.length * 2);
     const colors = new Float32Array(series.data.length * 4);
     const saturations = new Float32Array(series.data.length);
@@ -193,7 +193,22 @@ function HeatmapWebGLPlotImpl(props: {
     gl.enableVertexAttribArray(aSaturation);
     gl.vertexAttribPointer(aSaturation, 1, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(aSaturation, 1);
-  });
+  }, [
+    colorScale,
+    drawingArea.left,
+    drawingArea.top,
+    gl,
+    height,
+    isFaded,
+    isHighlighted,
+    program,
+    series.data,
+    series.id,
+    width,
+    xScale,
+    yScale,
+  ]);
+  const setupAttributesEvent = useEventCallback(() => setupAttributes());
 
   React.useEffect(() => {
     const shouldAttachNewShader = lastSeriesBorderRadiusRef.current > 0 !== seriesBorderRadius > 0;
@@ -227,8 +242,8 @@ function HeatmapWebGLPlotImpl(props: {
       gl.useProgram(program);
       logWebGLErrors(gl);
 
-      setupUniforms();
-      setupAttributes();
+      setupUniformsEvent();
+      setupAttributesEvent();
     } else {
       setupBorderRadiusUniform();
     }
@@ -239,42 +254,26 @@ function HeatmapWebGLPlotImpl(props: {
     program,
     scheduleRender,
     seriesBorderRadius,
-    setupAttributes,
     setupBorderRadiusUniform,
-    setupUniforms,
+    // We use the event callback versions here because we only want this effect to trigger when the border radius changes
+    setupAttributesEvent,
+    setupUniformsEvent,
   ]);
 
   React.useEffect(() => {
     setupResolutionUniform();
     scheduleRender();
-  }, [drawingArea.width, drawingArea.height, setupResolutionUniform, scheduleRender]);
+  }, [setupResolutionUniform, scheduleRender]);
 
   React.useEffect(() => {
     setupRectDimensionsUniform();
     scheduleRender();
-  }, [width, height, setupRectDimensionsUniform, scheduleRender]);
+  }, [setupRectDimensionsUniform, scheduleRender]);
 
   React.useEffect(() => {
     setupAttributes();
     scheduleRender();
-    // TODO: I don't like that these dependencies aren't caught automatically by ESLint
-    // Check if I can improve something here
-  }, [
-    colorScale,
-    drawingArea.left,
-    drawingArea.top,
-    gl,
-    height,
-    isFaded,
-    isHighlighted,
-    program,
-    scheduleRender,
-    series,
-    setupAttributes,
-    width,
-    xScale,
-    yScale,
-  ]);
+  }, [scheduleRender, setupAttributes]);
 
   React.useEffect(() => {
     if (renderScheduledRef.current) {
