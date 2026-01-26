@@ -237,3 +237,7 @@ If you're using the `sx` prop or `styled()`:
    }}
  />
 ```
+
+### Theme default props removed
+
+The usage of the [theme default props](/material-ui/customization/theme-components/#theme-default-props) is removed for `'MuiChartsXAxis'` and `'MuiChartsYAxis'`.

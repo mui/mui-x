@@ -5,11 +5,9 @@ export interface ChartsComponents<Theme = unknown> {
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsAxis'];
   };
   MuiChartsXAxis?: {
-    defaultProps?: ComponentsProps['MuiChartsXAxis'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsXAxis'];
   };
   MuiChartsYAxis?: {
-    defaultProps?: ComponentsProps['MuiChartsYAxis'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsYAxis'];
   };
   MuiChartsAxisHighlight?: {

@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { useThemeProps, useTheme, styled } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import type { ChartsYAxisProps, ComputedAxis, ScaleName } from '../models/axis';
 import { ChartsSingleYAxisTicks } from './ChartsSingleYAxisTicks';
 import { ChartsGroupedYAxisTicks } from './ChartsGroupedYAxisTicks';
@@ -32,9 +32,7 @@ export function ChartsYAxisImpl({ axis, ...inProps }: ChartsYAxisImplProps) {
   const { scale: yScale, tickNumber, reverse, ordinalTimeTicks, ...settings } = axis;
   const isHydrated = useIsHydrated();
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
-  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
-  const defaultizedProps = { ...defaultProps, ...themedProps };
+  const defaultizedProps = { ...defaultProps, ...settings, ...inProps };
 
   const {
     position,

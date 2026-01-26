@@ -1,6 +1,6 @@
 'use client';
 import useSlotProps from '@mui/utils/useSlotProps';
-import { useThemeProps, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import { type ChartsXAxisProps } from '../models/axis';
 import { ChartsText, type ChartsTextProps } from '../ChartsText';
@@ -13,12 +13,10 @@ export function useAxisTicksProps(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
   const { scale: xScale, tickNumber, reverse, ...settings } = xAxis[inProps.axisId ?? xAxisIds[0]];
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
-  const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsXAxis' });
-
   const defaultizedProps = {
     ...defaultProps,
-    ...themedProps,
+    ...settings,
+    ...inProps,
   };
 
   const { position, tickLabelStyle, slots, slotProps } = defaultizedProps;
