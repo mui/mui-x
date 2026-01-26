@@ -52,6 +52,7 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   slot: 'DayTimeGridCurrentTimeIndicator',
 })(({ theme }) => ({
   position: 'absolute',
+  zIndex: 2,
   top: 'var(--y-position)',
   left: 0,
   right: -1,
