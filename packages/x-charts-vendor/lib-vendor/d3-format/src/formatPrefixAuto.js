@@ -9,7 +9,7 @@ var _formatDecimal = require("./formatDecimal.js");
 var prefixExponent;
 function _default(x, p) {
   var d = (0, _formatDecimal.formatDecimalParts)(x, p);
-  if (!d) return x + "";
+  if (!d) return exports.prefixExponent = prefixExponent = undefined, x.toPrecision(p);
   var coefficient = d[0],
     exponent = d[1],
     i = exponent - (exports.prefixExponent = prefixExponent = Math.max(-8, Math.min(8, Math.floor(exponent / 3))) * 3) + 1,
