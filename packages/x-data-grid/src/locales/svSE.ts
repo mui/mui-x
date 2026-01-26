@@ -167,6 +167,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
 
+  // Long text cell
+  // longTextCellExpandLabel: 'Expand',
+  // longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: 'mer',
 

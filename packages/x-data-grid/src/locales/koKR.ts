@@ -162,6 +162,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
 
+  // Long text cell
+  // longTextCellExpandLabel: 'Expand',
+  // longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: '더보기',
 

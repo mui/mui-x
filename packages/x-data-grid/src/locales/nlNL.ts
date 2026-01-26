@@ -167,6 +167,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'waar',
   booleanCellFalseLabel: 'onwaar',
 
+  // Long text cell
+  // longTextCellExpandLabel: 'Expand',
+  // longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: 'meer',
 

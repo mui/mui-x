@@ -162,6 +162,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'igen',
   booleanCellFalseLabel: 'nem',
 
+  // Long text cell
+  // longTextCellExpandLabel: 'Expand',
+  // longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: 'további',
 

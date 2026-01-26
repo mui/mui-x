@@ -165,6 +165,10 @@ const isISGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
 
+  // Long text cell
+  // longTextCellExpandLabel: 'Expand',
+  // longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: 'meira',
 

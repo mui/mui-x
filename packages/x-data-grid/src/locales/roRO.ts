@@ -167,6 +167,10 @@ const roROGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Da',
   booleanCellFalseLabel: 'Nu',
 
+  // Long text cell
+  // longTextCellExpandLabel: 'Expand',
+  // longTextCellCollapseLabel: 'Collapse',
+
   // Actions cell more text
   actionsCellMore: 'Mai multe',
 
