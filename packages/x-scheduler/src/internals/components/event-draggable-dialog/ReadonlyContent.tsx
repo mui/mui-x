@@ -12,14 +12,14 @@ import {
   schedulerResourceSelectors,
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
-import EventPopoverHeader from './EventPopoverHeader';
+import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
 import { schedulerPaletteStyles } from '../../utils/tokens';
 
 const ReadonlyContentRoot = styled('div', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ReadonlyContent',
 })(({ theme }) => ({
   padding: theme.spacing(3),
@@ -28,8 +28,8 @@ const ReadonlyContentRoot = styled('div', {
   gap: theme.spacing(2),
 }));
 
-const EventPopoverActions = styled('div', {
-  name: 'MuiEventPopover',
+const EventDraggableDialogActions = styled('div', {
+  name: 'MuiEventDraggableDialog',
   slot: 'Actions',
 })(({ theme }) => ({
   display: 'flex',
@@ -37,8 +37,8 @@ const EventPopoverActions = styled('div', {
   padding: theme.spacing(2),
 }));
 
-const EventPopoverDateTimeContainer = styled('div', {
-  name: 'MuiEventPopover',
+const EventDraggableDialogDateTimeContainer = styled('div', {
+  name: 'MuiEventDraggableDialog',
   slot: 'DateTimeContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -46,8 +46,8 @@ const EventPopoverDateTimeContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventPopoverTitle = styled('p', {
-  name: 'MuiEventPopover',
+const EventDraggableDialogTitle = styled('p', {
+  name: 'MuiEventDraggableDialog',
   slot: 'Title',
 })(({ theme }) => ({
   margin: 0,
@@ -56,8 +56,8 @@ const EventPopoverTitle = styled('p', {
   color: 'var(--event-color-12)',
 }));
 
-const EventPopoverResourceContainer = styled('div', {
-  name: 'MuiEventPopover',
+const EventDraggableDialogResourceContainer = styled('div', {
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -65,8 +65,8 @@ const EventPopoverResourceContainer = styled('div', {
   gap: theme.spacing(1),
 }));
 
-const EventPopoverResourceLegendContainer = styled('div', {
-  name: 'MuiEventPopover',
+const EventDraggableDialogResourceLegendContainer = styled('div', {
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendContainer',
 })(({ theme }) => ({
   display: 'flex',
@@ -75,7 +75,7 @@ const EventPopoverResourceLegendContainer = styled('div', {
 }));
 
 const ResourceLegendColorDot = styled('span', {
-  name: 'MuiEventPopover',
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendColor',
 })({
   width: 8,
@@ -86,8 +86,8 @@ const ResourceLegendColorDot = styled('span', {
   ...schedulerPaletteStyles,
 });
 
-const EventPopoverResourceTitle = styled('p', {
-  name: 'MuiEventPopover',
+const EventDraggableDialogResourceTitle = styled('p', {
+  name: 'MuiEventDraggableDialog',
   slot: 'ResourceTitle',
 })(({ theme }) => ({
   margin: 0,
@@ -136,11 +136,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <React.Fragment>
-      <EventPopoverHeader>
-        <EventPopoverTitle>{occurrence.title}</EventPopoverTitle>
+      <EventDraggableDialogHeader>
+        <EventDraggableDialogTitle>{occurrence.title}</EventDraggableDialogTitle>
 
-        <EventPopoverResourceContainer>
-          <EventPopoverResourceLegendContainer>
+        <EventDraggableDialogResourceContainer>
+          <EventDraggableDialogResourceLegendContainer>
             {resource?.eventColor && resource.eventColor !== color && (
               <ResourceLegendColorDot
                 className="ResourceLegendColor"
@@ -149,14 +149,14 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             )}
 
             <ResourceLegendColorDot className="ResourceLegendColor" data-palette={color} />
-          </EventPopoverResourceLegendContainer>
-          <EventPopoverResourceTitle>
+          </EventDraggableDialogResourceLegendContainer>
+          <EventDraggableDialogResourceTitle>
             {resource?.title || translations.noResourceAriaLabel}
-          </EventPopoverResourceTitle>
-        </EventPopoverResourceContainer>
-      </EventPopoverHeader>
+          </EventDraggableDialogResourceTitle>
+        </EventDraggableDialogResourceContainer>
+      </EventDraggableDialogHeader>
       <ReadonlyContentRoot>
-        <EventPopoverDateTimeContainer>
+        <EventDraggableDialogDateTimeContainer>
           <CalendarMonthRounded fontSize="small" />
           <Typography variant="body2" component="p" noWrap>
             <time
@@ -182,7 +182,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
               </time>
             )}
           </Typography>
-        </EventPopoverDateTimeContainer>
+        </EventDraggableDialogDateTimeContainer>
         <Typography variant="body2" color="text.secondary">
           {recurrenceLabel}
         </Typography>
@@ -190,11 +190,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
           <Typography variant="body2">{occurrence.description}</Typography>
         ) : null}
       </ReadonlyContentRoot>
-      <EventPopoverActions>
+      <EventDraggableDialogActions>
         <Button variant="contained" type="button" onClick={onClose}>
           {translations.closeButtonLabel}
         </Button>
-      </EventPopoverActions>
+      </EventDraggableDialogActions>
     </React.Fragment>
   );
 }

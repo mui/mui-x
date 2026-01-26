@@ -9,7 +9,7 @@
     },
     "faded": { "description": "Override the arc attributes when it is faded." },
     "highlighted": { "description": "Override the arc attributes when it is highlighted." },
-    "id": { "description": "The id of this series." },
+    "seriesId": { "description": "The id of this series." },
     "innerRadius": {
       "description": "The radius between circle center and the beginning of the arc."
     },
