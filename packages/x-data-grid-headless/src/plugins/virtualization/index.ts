@@ -46,39 +46,6 @@ export interface VirtualizationState {
 
 const selectVirtualization = createSelector((state: VirtualizationState) => state.virtualization);
 
-interface ContainerProps {
-  ref: React.Ref<HTMLDivElement>;
-}
-
-interface ScrollerProps {
-  ref: React.Ref<HTMLDivElement>;
-  style: React.CSSProperties;
-  role: string;
-  tabIndex?: number;
-}
-
-interface ContentProps {
-  style: React.CSSProperties;
-}
-
-interface PositionerProps {
-  style: React.CSSProperties;
-}
-
-interface ScrollbarVerticalProps {
-  ref: React.Ref<HTMLDivElement>;
-  scrollPosition: { current: { top: number; left: number } };
-}
-
-interface ScrollbarHorizontalProps {
-  ref: React.Ref<HTMLDivElement>;
-  scrollPosition: { current: { top: number; left: number } };
-}
-
-interface ScrollAreaProps {
-  scrollPosition: { current: { top: number; left: number } };
-}
-
 interface VirtualizationHooks {
   useRenderContext: () => ReturnType<typeof Virtualization.selectors.renderContext>;
   useScrollPosition: () => { top: number; left: number };
@@ -92,13 +59,17 @@ interface VirtualizationHooks {
   useTotalContentSize: () => { width: number; height: number };
   useRowsToRender: <TRow = GridRowModel>() => RowToRender<TRow>[];
   useColumnsToRender: () => ColumnToRender[];
-  useContainerProps: () => ContainerProps;
-  useScrollerProps: () => ScrollerProps;
-  useContentProps: () => ContentProps;
-  usePositionerProps: () => PositionerProps;
-  useScrollbarVerticalProps: () => ScrollbarVerticalProps;
-  useScrollbarHorizontalProps: () => ScrollbarHorizontalProps;
-  useScrollAreaProps: () => ScrollAreaProps;
+  useContainerProps: () => ReturnType<typeof LayoutDataGrid.selectors.containerProps>;
+  useScrollerProps: () => ReturnType<typeof LayoutDataGrid.selectors.scrollerProps>;
+  useContentProps: () => ReturnType<typeof LayoutDataGrid.selectors.contentProps>;
+  usePositionerProps: () => ReturnType<typeof LayoutDataGrid.selectors.positionerProps>;
+  useScrollbarVerticalProps: () => ReturnType<
+    typeof LayoutDataGrid.selectors.scrollbarVerticalProps
+  >;
+  useScrollbarHorizontalProps: () => ReturnType<
+    typeof LayoutDataGrid.selectors.scrollbarHorizontalProps
+  >;
+  useScrollAreaProps: () => ReturnType<typeof LayoutDataGrid.selectors.scrollAreaProps>;
 }
 
 export interface VirtualizationApi {
@@ -276,6 +247,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
           virtualizerApi.updateDimensions(true);
         }
 
+        // TODO: Why do we need to update the scroll position here?
         virtualizerStore.state.virtualization.scrollPosition.current = scrollPosition;
         virtualizerApi.forceUpdateRenderContext();
       },
@@ -443,34 +415,32 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
       }, [virtualizationState.enabledForColumns, renderContext, visibleColumnsValue]);
     };
 
-    const useContainerPropsHook = (): ContainerProps => {
+    const useContainerPropsHook: VirtualizationHooks['useContainerProps'] = () => {
       return useStore(virtualizerStore, LayoutDataGrid.selectors.containerProps);
     };
 
-    const useScrollerPropsHook = (): ScrollerProps => {
-      return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollerProps) as ScrollerProps;
+    const useScrollerPropsHook: VirtualizationHooks['useScrollerProps'] = () => {
+      return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollerProps);
     };
 
-    const useContentPropsHook = (): ContentProps => {
-      return useStore(virtualizerStore, LayoutDataGrid.selectors.contentProps) as ContentProps;
+    const useContentPropsHook: VirtualizationHooks['useContentProps'] = () => {
+      return useStore(virtualizerStore, LayoutDataGrid.selectors.contentProps);
     };
 
-    const usePositionerPropsHook = (): PositionerProps => {
-      return useStore(
-        virtualizerStore,
-        LayoutDataGrid.selectors.positionerProps,
-      ) as PositionerProps;
+    const usePositionerPropsHook: VirtualizationHooks['usePositionerProps'] = () => {
+      return useStore(virtualizerStore, LayoutDataGrid.selectors.positionerProps);
     };
 
-    const useScrollbarVerticalPropsHook = (): ScrollbarVerticalProps => {
+    const useScrollbarVerticalPropsHook: VirtualizationHooks['useScrollbarVerticalProps'] = () => {
       return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollbarVerticalProps);
     };
 
-    const useScrollbarHorizontalPropsHook = (): ScrollbarHorizontalProps => {
-      return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollbarHorizontalProps);
-    };
+    const useScrollbarHorizontalPropsHook: VirtualizationHooks['useScrollbarHorizontalProps'] =
+      () => {
+        return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollbarHorizontalProps);
+      };
 
-    const useScrollAreaPropsHook = (): ScrollAreaProps => {
+    const useScrollAreaPropsHook: VirtualizationHooks['useScrollAreaProps'] = () => {
       return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollAreaProps);
     };
 

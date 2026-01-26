@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mui/utils": "catalog:",
     "@mui/x-data-grid-headless": "workspace:@mui/x-data-grid-headless@*",
     "@mui/x-data-grid-headless-pro": "workspace:@mui/x-data-grid-headless-pro@*",
     "@mui/x-data-grid-headless-premium": "workspace:@mui/x-data-grid-headless-premium@*",

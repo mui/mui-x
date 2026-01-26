@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useForkRef from '@mui/utils/useForkRef';
 import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
 import sortingPlugin from '@mui/x-data-grid-headless/plugins/sorting';
 import paginationPlugin from '@mui/x-data-grid-headless/plugins/pagination';
@@ -312,88 +313,130 @@ function DataGridColumnHeaders() {
   );
 }
 
-function DataGridScrollbarVertical({
-  scrollbarRef,
-  hasScrollX,
-}: {
-  scrollbarRef: React.RefObject<HTMLDivElement | null>;
-  hasScrollX: boolean;
-}) {
-  const grid = useDataGridContext();
-  const { hooks } = grid.api.virtualization;
-  const scrollbarVerticalProps = hooks.useScrollbarVerticalProps();
-  const totalContentSize = hooks.useTotalContentSize();
+type ScrollbarPosition = 'vertical' | 'horizontal';
 
-  return (
-    <div
-      className="DataGrid-scrollbarVertical"
-      {...scrollbarVerticalProps}
-      ref={(el) => {
-        scrollbarRef.current = el;
-        const propsRef = scrollbarVerticalProps.ref;
-        if (typeof propsRef === 'function') {
-          propsRef(el);
-        } else if (propsRef && typeof propsRef === 'object') {
-          (propsRef as React.RefObject<HTMLDivElement | null>).current = el;
-        }
-      }}
-      tabIndex={-1}
-      aria-hidden="true"
-      style={{
+interface DataGridVirtualScrollbarProps {
+  position: ScrollbarPosition;
+  scrollerRef: React.RefObject<HTMLDivElement | null>;
+  hasOppositeScrollbar: boolean;
+}
+
+function DataGridVirtualScrollbar({
+  position,
+  scrollerRef,
+  hasOppositeScrollbar,
+}: DataGridVirtualScrollbarProps) {
+  const grid = useDataGridContext();
+  const dimensions = grid.api.virtualization.hooks.useDimensions();
+  const totalContentSize = grid.api.virtualization.hooks.useTotalContentSize();
+
+  const scrollbarRef = React.useRef<HTMLDivElement>(null);
+  const isLocked = React.useRef(false);
+  const lastPosition = React.useRef(0);
+
+  const isVertical = position === 'vertical';
+  const scrollbarProps = isVertical
+    ? grid.api.virtualization.hooks.useScrollbarVerticalProps()
+    : grid.api.virtualization.hooks.useScrollbarHorizontalProps();
+
+  const handleScrollbarRef = useForkRef(scrollbarRef, scrollbarProps.ref);
+
+  const propertyScroll = isVertical ? 'scrollTop' : 'scrollLeft';
+  const contentSize = isVertical
+    ? dimensions.rowsMeta.currentPageTotalHeight
+    : totalContentSize.width;
+
+  const handleScrollerScroll = React.useCallback(() => {
+    const scroller = scrollerRef.current;
+    const scrollbar = scrollbarRef.current;
+    if (!scroller || !scrollbar) {
+      return;
+    }
+
+    const scrollerPosition = scroller[propertyScroll];
+    if (scrollerPosition === lastPosition.current) {
+      return;
+    }
+    lastPosition.current = scrollerPosition;
+
+    if (isLocked.current) {
+      isLocked.current = false;
+      return;
+    }
+    isLocked.current = true;
+
+    scrollbar[propertyScroll] = scrollerPosition;
+  }, [scrollerRef, propertyScroll]);
+
+  const handleScrollbarScroll = React.useCallback(() => {
+    const scroller = scrollerRef.current;
+    const scrollbar = scrollbarRef.current;
+    if (!scroller || !scrollbar) {
+      return;
+    }
+
+    if (isLocked.current) {
+      isLocked.current = false;
+      return;
+    }
+    isLocked.current = true;
+
+    scroller[propertyScroll] = scrollbar[propertyScroll];
+  }, [scrollerRef, propertyScroll]);
+
+  React.useEffect(() => {
+    const scroller = scrollerRef.current;
+    const scrollbar = scrollbarRef.current;
+    if (!scroller || !scrollbar) {
+      return undefined;
+    }
+
+    const options: AddEventListenerOptions = { passive: true };
+    scroller.addEventListener('scroll', handleScrollerScroll, options);
+    scrollbar.addEventListener('scroll', handleScrollbarScroll, options);
+
+    return () => {
+      scroller.removeEventListener('scroll', handleScrollerScroll);
+      scrollbar.removeEventListener('scroll', handleScrollbarScroll);
+    };
+  }, [handleScrollerScroll, handleScrollbarScroll, scrollerRef]);
+
+  const style: React.CSSProperties = isVertical
+    ? {
         position: 'absolute',
         top: HEADER_HEIGHT,
         right: 0,
         width: SCROLLBAR_SIZE,
-        height: `calc(100% - ${HEADER_HEIGHT}px - ${hasScrollX ? SCROLLBAR_SIZE : 0}px)`,
+        height: `calc(100% - ${HEADER_HEIGHT}px - ${hasOppositeScrollbar ? SCROLLBAR_SIZE : 0}px)`,
         overflowY: 'auto',
         overflowX: 'hidden',
         outline: 0,
-      }}
-    >
-      <div style={{ width: SCROLLBAR_SIZE, height: totalContentSize.height }} />
-    </div>
-  );
-}
-
-function DataGridScrollbarHorizontal({
-  scrollbarRef,
-  hasScrollY,
-}: {
-  scrollbarRef: React.RefObject<HTMLDivElement | null>;
-  hasScrollY: boolean;
-}) {
-  const grid = useDataGridContext();
-  const { hooks } = grid.api.virtualization;
-  const scrollbarHorizontalProps = hooks.useScrollbarHorizontalProps();
-  const totalContentSize = hooks.useTotalContentSize();
-
-  return (
-    <div
-      className="DataGrid-scrollbarHorizontal"
-      {...scrollbarHorizontalProps}
-      ref={(el) => {
-        scrollbarRef.current = el;
-        const propsRef = scrollbarHorizontalProps.ref;
-        if (typeof propsRef === 'function') {
-          propsRef(el);
-        } else if (propsRef && typeof propsRef === 'object') {
-          (propsRef as React.RefObject<HTMLDivElement | null>).current = el;
-        }
-      }}
-      tabIndex={-1}
-      aria-hidden="true"
-      style={{
+      }
+    : {
         position: 'absolute',
         bottom: 0,
         left: 0,
-        width: `calc(100% - ${hasScrollY ? SCROLLBAR_SIZE : 0}px)`,
+        width: `calc(100% - ${hasOppositeScrollbar ? SCROLLBAR_SIZE : 0}px)`,
         height: SCROLLBAR_SIZE,
         overflowY: 'hidden',
         overflowX: 'auto',
         outline: 0,
-      }}
+      };
+
+  const innerStyle: React.CSSProperties = isVertical
+    ? { width: SCROLLBAR_SIZE, height: contentSize }
+    : { height: SCROLLBAR_SIZE, width: contentSize };
+
+  return (
+    <div
+      className={`DataGrid-scrollbar${isVertical ? 'Vertical' : 'Horizontal'}`}
+      {...scrollbarProps}
+      ref={handleScrollbarRef}
+      tabIndex={-1}
+      aria-hidden="true"
+      style={style}
     >
-      <div style={{ height: SCROLLBAR_SIZE, width: totalContentSize.width }} />
+      <div style={innerStyle} />
     </div>
   );
 }
@@ -410,106 +453,20 @@ function DataGrid() {
     plugins,
   });
 
-  const { hooks } = grid.api.virtualization;
+  const virtualization = grid.api.virtualization;
 
-  const containerProps = hooks.useContainerProps();
-  const scrollerProps = hooks.useScrollerProps();
-  const contentProps = hooks.useContentProps();
-  const scrollAreaProps = hooks.useScrollAreaProps();
-  const totalContentSize = hooks.useTotalContentSize();
-  const dimensions = hooks.useDimensions();
+  const containerProps = virtualization.hooks.useContainerProps();
+  const scrollerProps = virtualization.hooks.useScrollerProps();
+  const contentProps = virtualization.hooks.useContentProps();
+  const scrollAreaProps = virtualization.hooks.useScrollAreaProps();
+  const totalContentSize = virtualization.hooks.useTotalContentSize();
+  const dimensions = virtualization.hooks.useDimensions();
 
   const scrollerRef = React.useRef<HTMLDivElement>(null);
-  const scrollbarVerticalRef = React.useRef<HTMLDivElement>(null);
-  const scrollbarHorizontalRef = React.useRef<HTMLDivElement>(null);
-  const isScrollLocked = React.useRef(false);
+  const handleScrollerRef = useForkRef(scrollerRef, scrollerProps.ref);
 
   const hasScrollY = totalContentSize.height > (dimensions.viewportInnerSize.height || 0);
   const hasScrollX = totalContentSize.width > (dimensions.viewportInnerSize.width || 0);
-
-  const handleScrollerScroll = React.useCallback(() => {
-    if (isScrollLocked.current) {
-      isScrollLocked.current = false;
-      return;
-    }
-    isScrollLocked.current = true;
-
-    const scroller = scrollerRef.current;
-    if (!scroller) {
-      return;
-    }
-
-    if (scrollbarVerticalRef.current) {
-      scrollbarVerticalRef.current.scrollTop = scroller.scrollTop;
-    }
-    if (scrollbarHorizontalRef.current) {
-      scrollbarHorizontalRef.current.scrollLeft = scroller.scrollLeft;
-    }
-  }, []);
-
-  const handleScrollbarVerticalScroll = React.useCallback(() => {
-    if (isScrollLocked.current) {
-      isScrollLocked.current = false;
-      return;
-    }
-    isScrollLocked.current = true;
-
-    const scroller = scrollerRef.current;
-    const scrollbar = scrollbarVerticalRef.current;
-    if (scroller && scrollbar) {
-      scroller.scrollTop = scrollbar.scrollTop;
-    }
-  }, []);
-
-  const handleScrollbarHorizontalScroll = React.useCallback(() => {
-    if (isScrollLocked.current) {
-      isScrollLocked.current = false;
-      return;
-    }
-    isScrollLocked.current = true;
-
-    const scroller = scrollerRef.current;
-    const scrollbar = scrollbarHorizontalRef.current;
-    if (scroller && scrollbar) {
-      scroller.scrollLeft = scrollbar.scrollLeft;
-    }
-  }, []);
-
-  React.useEffect(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller) {
-      return undefined;
-    }
-
-    scroller.addEventListener('scroll', handleScrollerScroll, { passive: true });
-    return () => {
-      scroller.removeEventListener('scroll', handleScrollerScroll);
-    };
-  }, [handleScrollerScroll]);
-
-  React.useEffect(() => {
-    const scrollbar = scrollbarVerticalRef.current;
-    if (!scrollbar) {
-      return undefined;
-    }
-
-    scrollbar.addEventListener('scroll', handleScrollbarVerticalScroll, { passive: true });
-    return () => {
-      scrollbar.removeEventListener('scroll', handleScrollbarVerticalScroll);
-    };
-  }, [handleScrollbarVerticalScroll]);
-
-  React.useEffect(() => {
-    const scrollbar = scrollbarHorizontalRef.current;
-    if (!scrollbar) {
-      return undefined;
-    }
-
-    scrollbar.addEventListener('scroll', handleScrollbarHorizontalScroll, { passive: true });
-    return () => {
-      scrollbar.removeEventListener('scroll', handleScrollbarHorizontalScroll);
-    };
-  }, [handleScrollbarHorizontalScroll]);
 
   const handleRefreshRows = () => {
     setRows(generateSampleData(rows.length));
@@ -573,17 +530,9 @@ function DataGrid() {
             <div
               className="DataGrid-virtualScroller"
               {...scrollerProps}
-              ref={(el) => {
-                scrollerRef.current = el;
-                const propsRef = scrollerProps.ref;
-                if (typeof propsRef === 'function') {
-                  propsRef(el);
-                } else if (propsRef && typeof propsRef === 'object') {
-                  (propsRef as React.RefObject<HTMLDivElement | null>).current = el;
-                }
-              }}
+              ref={handleScrollerRef}
               style={{
-                ...scrollerProps.style,
+                ...(scrollerProps.style as React.CSSProperties),
                 flex: 1,
                 overflow: 'auto',
               }}
@@ -594,6 +543,7 @@ function DataGrid() {
                 style={{
                   ...contentProps.style,
                   width: totalContentSize.width,
+                  height: dimensions.rowsMeta.currentPageTotalHeight,
                   position: 'relative',
                 }}
               >
@@ -616,15 +566,17 @@ function DataGrid() {
             />
           )}
           {hasScrollY && (
-            <DataGridScrollbarVertical
-              scrollbarRef={scrollbarVerticalRef}
-              hasScrollX={hasScrollX}
+            <DataGridVirtualScrollbar
+              position="vertical"
+              scrollerRef={scrollerRef}
+              hasOppositeScrollbar={hasScrollX}
             />
           )}
           {hasScrollX && (
-            <DataGridScrollbarHorizontal
-              scrollbarRef={scrollbarHorizontalRef}
-              hasScrollY={hasScrollY}
+            <DataGridVirtualScrollbar
+              position="horizontal"
+              scrollerRef={scrollerRef}
+              hasOppositeScrollbar={hasScrollY}
             />
           )}
         </div>
