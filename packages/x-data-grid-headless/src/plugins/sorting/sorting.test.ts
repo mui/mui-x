@@ -563,5 +563,37 @@ describe('Sorting Plugin', () => {
       // Should return null since no valid sort items
       expect(applier).toBeNull();
     });
+
+    it('should skip columns with sortable: false', () => {
+      const rows = [
+        { id: 1, name: 'Charlie' },
+        { id: 2, name: 'Alice' },
+      ];
+      const getRow = (id: number | string) => rows.find((r) => r.id === id);
+
+      const applier = buildSortingApplier({
+        sortModel: [{ field: 'name', sort: 'asc' }],
+        getColumn: () => ({ field: 'name', id: 'name', sortable: false }),
+        getRow,
+      });
+      // Should return null since column is not sortable
+      expect(applier).toBeNull();
+    });
+
+    it('should sort columns with sortable: true', () => {
+      const rows = [
+        { id: 1, name: 'Charlie' },
+        { id: 2, name: 'Alice' },
+      ];
+      const getRow = (id: number | string) => rows.find((r) => r.id === id);
+
+      const applier = buildSortingApplier({
+        sortModel: [{ field: 'name', sort: 'asc' }],
+        getColumn: () => ({ field: 'name', id: 'name', sortable: true }),
+        getRow,
+      });
+      expect(applier).not.toBeNull();
+      expect(applier!([1, 2])).toEqual([2, 1]); // Alice, Charlie
+    });
   });
 });

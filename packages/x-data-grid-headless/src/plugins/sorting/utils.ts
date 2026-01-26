@@ -190,7 +190,7 @@ const parseSortItem = (
   getColumn: (field: string) => (ColumnInfo & SortingColumnMeta) | undefined,
 ): ParsedSortItem | null => {
   const column = getColumn(sortItem.field);
-  if (!column || sortItem.sort === null) {
+  if (!column || sortItem.sort === null || column.sortable === false) {
     return null;
   }
 

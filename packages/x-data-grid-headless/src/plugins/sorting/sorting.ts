@@ -195,6 +195,12 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       multiSort?: boolean,
     ): void => {
       const column = getColumn(field);
+
+      // Skip if column is not sortable
+      if (column?.sortable === false) {
+        return;
+      }
+
       const sortModel = store.state.sorting.sortModel;
       const existingItem = sortModel.find((item) => item.field === field);
 

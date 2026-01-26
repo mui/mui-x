@@ -2,7 +2,7 @@ import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import { useDataGrid, ColumnDef } from '../..';
-import { sortingPlugin, paginationPlugin } from '..';
+import { sortingPlugin, paginationPlugin, SortingColumnMeta } from '..';
 
 type TestRow = { id: number; name: string; age: number };
 
@@ -23,7 +23,7 @@ type GridApi = ReturnType<
 
 interface TestGridProps {
   rows?: TestRow[];
-  columns?: ColumnDef<TestRow>[];
+  columns?: ColumnDef<TestRow, SortingColumnMeta>[];
   apiRef?: React.RefObject<GridApi | null>;
   sortModel?: Parameters<typeof useDataGrid>[0]['sortModel'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
@@ -193,6 +193,24 @@ describe('Sorting Plugin - Integration Tests', () => {
 
         const sortModel = apiRef.current?.api.sorting.getSortModel();
         expect(sortModel).toEqual([{ field: 'age', sort: 'desc' }]);
+      });
+
+      it('should not sort column when sortable is false', async () => {
+        const apiRef = React.createRef<GridApi | null>();
+        const columns: ColumnDef<TestRow, SortingColumnMeta>[] = [
+          { id: 'name', field: 'name', sortable: false },
+          { id: 'age', field: 'age' },
+        ];
+        const { container } = render(<TestGrid apiRef={apiRef} columns={columns} />);
+
+        await act(async () => {
+          apiRef.current?.api.sorting.sortColumn('name', 'asc');
+        });
+
+        // sortModel should remain empty
+        expect(apiRef.current?.api.sorting.getSortModel()).toEqual([]);
+        // rows should remain in original order
+        expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
       });
     });
 
