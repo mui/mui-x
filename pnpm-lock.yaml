@@ -1037,7 +1037,7 @@ importers:
         specifier: ^4.0.9
         version: 4.0.9
       '@types/d3-shape':
-        specifier: ^3.1.7
+        specifier: ^3.1.8
         version: 3.1.8
       '@types/d3-time':
         specifier: ^3.0.4
@@ -1055,7 +1055,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       d3-format:
-        specifier: ^3.1.0
+        specifier: ^3.1.2
         version: 3.1.2
       d3-interpolate:
         specifier: ^3.0.1
