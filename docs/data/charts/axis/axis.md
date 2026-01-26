@@ -313,6 +313,11 @@ In the demo below, adjust the angle slider to see how the axis height automatica
 
 {{"demo": "AxisAutoSizeRotated.js"}}
 
+Auto-sizing also works with grouped axes.
+When an axis has `groups` defined, the auto-size calculation accounts for each group level's tick labels and tick sizes.
+
+{{"demo": "GroupedAxesAutoSize.js"}}
+
 :::info
 Auto-sizing is computed on the client side after hydration.
 During server-side rendering (SSR), the axis uses the default size until the client-side measurement is complete.
