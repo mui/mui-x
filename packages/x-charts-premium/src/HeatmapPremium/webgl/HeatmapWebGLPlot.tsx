@@ -76,8 +76,6 @@ function HeatmapWebGLPlotImpl(props: {
     gl.clearColor(0, 0, 0, 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // Draw all rectangles with one instanced draw call
-    // TODO: Can `dataLength` be wrong if the series data has null/undefined entries?
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
   }, [dataLength, gl]);
 
