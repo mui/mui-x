@@ -26,6 +26,8 @@ const selectorSeriesState = (
 const selectorSeriesConfigState = (state: ChartState<[UseChartSeriesConfigSignature]>) =>
   state.seriesConfig;
 
+const EMPTY_SIZES: Record<AxisId, number> = {};
+
 /**
  * Selector that computes auto-sizes for X axes that have `height: 'auto'`.
  * Returns a map of axis ID to computed height.
@@ -36,11 +38,21 @@ export const selectorChartXAxisAutoSizes = createSelectorMemoized(
   selectorSeriesState,
   selectorSeriesConfigState,
   function selectorChartXAxisAutoSizes(xAxes, isHydrated, seriesState, seriesConfigState) {
+    // Early return if no axes have auto-sizing - avoid expensive computations
+    const hasAutoAxis = xAxes?.some((axis) => axis.height === 'auto');
+    if (!hasAutoAxis) {
+      return EMPTY_SIZES;
+    }
+
     const sizes: Record<AxisId, number> = {};
 
-    // If series state or config is not available, skip extrema computation
+    // Only compute formatted series if we have auto axes that need extrema
+    const needsExtrema = xAxes?.some(
+      (axis) =>
+        axis.height === 'auto' && axis.scaleType !== 'band' && axis.scaleType !== 'point',
+    );
     const formattedSeries =
-      seriesState && seriesConfigState
+      needsExtrema && seriesState && seriesConfigState
         ? applySeriesProcessors(
             seriesState.defaultizedSeries,
             seriesConfigState.config,
@@ -96,11 +108,21 @@ export const selectorChartYAxisAutoSizes = createSelectorMemoized(
   selectorSeriesState,
   selectorSeriesConfigState,
   function selectorChartYAxisAutoSizes(yAxes, isHydrated, seriesState, seriesConfigState) {
+    // Early return if no axes have auto-sizing - avoid expensive computations
+    const hasAutoAxis = yAxes?.some((axis) => axis.width === 'auto');
+    if (!hasAutoAxis) {
+      return EMPTY_SIZES;
+    }
+
     const sizes: Record<AxisId, number> = {};
 
-    // If series state or config is not available, skip extrema computation
+    // Only compute formatted series if we have auto axes that need extrema
+    const needsExtrema = yAxes?.some(
+      (axis) =>
+        axis.width === 'auto' && axis.scaleType !== 'band' && axis.scaleType !== 'point',
+    );
     const formattedSeries =
-      seriesState && seriesConfigState
+      needsExtrema && seriesState && seriesConfigState
         ? applySeriesProcessors(
             seriesState.defaultizedSeries,
             seriesConfigState.config,
