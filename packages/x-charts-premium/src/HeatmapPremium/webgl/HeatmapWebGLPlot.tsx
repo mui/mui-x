@@ -229,12 +229,15 @@ function HeatmapWebGLPlotImpl(props: {
         }
       });
 
-      attachShader(gl, program, shaderSource, gl.FRAGMENT_SHADER);
+      const fragmentShader = attachShader(gl, program, shaderSource, gl.FRAGMENT_SHADER);
 
       gl.linkProgram(program);
 
+      // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#dont_check_shader_compile_status_unless_linking_fails
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error('Program linking error:', gl.getProgramInfoLog(program));
+        console.error(`Program linking failed: ${gl.getProgramInfoLog(program)}`);
+        console.error(`Vertex shader info-log: ${gl.getShaderInfoLog(vertexShader)}`);
+        console.error(`Fragment shader info-log: ${gl.getShaderInfoLog(fragmentShader)}`);
       }
 
       // Not a hook
@@ -258,6 +261,7 @@ function HeatmapWebGLPlotImpl(props: {
     // We use the event callback versions here because we only want this effect to trigger when the border radius changes
     setupAttributesEvent,
     setupUniformsEvent,
+    vertexShader,
   ]);
 
   React.useEffect(() => {

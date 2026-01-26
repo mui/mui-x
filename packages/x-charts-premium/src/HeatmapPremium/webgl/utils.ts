@@ -7,10 +7,6 @@ export function compileShader(
   gl.shaderSource(shader, shaderSource);
   gl.compileShader(shader);
 
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
-  }
-
   return shader;
 }
 
@@ -46,18 +42,23 @@ export function attachShader(
   gl.shaderSource(shader, shaderSource);
   gl.compileShader(shader);
 
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
-  }
-
   gl.attachShader(program, shader);
+
+  return shader;
 }
 
+/**
+ * Logs WebGL errors to the console in development mode.
+ */
 export function logWebGLErrors(gl: WebGL2RenderingContext) {
-  let error = gl.getError();
+  /* Only log errors in dev because it has a performance cost:
+   * https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices#avoid_blocking_api_calls_in_production */
+  if (process.env.NODE_ENV !== 'production') {
+    let error = gl.getError();
 
-  while (error !== gl.NO_ERROR) {
-    console.error('WebGL error:', error);
-    error = gl.getError();
+    while (error !== gl.NO_ERROR) {
+      console.error('WebGL error:', error);
+      error = gl.getError();
+    }
   }
 }
