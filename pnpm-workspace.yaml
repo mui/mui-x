@@ -7,13 +7,13 @@ packages:
   - examples/*
 
 catalog:
-  '@babel/cli': ^7.28.3
-  '@babel/core': ^7.28.5
+  '@babel/cli': ^7.28.6
+  '@babel/core': ^7.28.6
   '@babel/plugin-transform-react-constant-elements': ^7.27.1
   '@babel/plugin-transform-runtime': ^7.28.5
   '@babel/preset-typescript': ^7.28.5
-  '@babel/runtime': ^7.28.4
-  '@babel/traverse': ^7.28.5
+  '@babel/runtime': ^7.28.6
+  '@babel/traverse': ^7.28.6
   '@date-fns/tz': ^1.2.0
   '@emotion/cache': ^11.14.0
   '@emotion/react': ^11.14.0
