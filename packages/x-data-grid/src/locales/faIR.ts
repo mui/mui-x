@@ -168,8 +168,8 @@ const faIRGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'غلط',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'بازکردن پنل جزئیات',
+  longTextCellCollapseLabel: 'بستن پنل جزئیات',
 
   // Actions cell more text
   actionsCellMore: 'بیشتر',

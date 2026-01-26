@@ -168,8 +168,8 @@ const itITGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'falso',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Espandi',
+  longTextCellCollapseLabel: 'Comprimi',
 
   // Actions cell more text
   actionsCellMore: 'più',

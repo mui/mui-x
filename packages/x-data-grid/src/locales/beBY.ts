@@ -197,8 +197,8 @@ const beBYGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'няпраўда',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Разгарнуць',
+  longTextCellCollapseLabel: 'Згарнуць',
 
   // Actions cell more text
   actionsCellMore: 'больш',

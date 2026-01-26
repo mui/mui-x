@@ -194,8 +194,8 @@ const skSKGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'nie',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Rozbaliť',
+  longTextCellCollapseLabel: 'Zbaliť',
 
   // Actions cell more text
   actionsCellMore: 'viac',

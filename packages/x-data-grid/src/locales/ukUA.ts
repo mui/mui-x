@@ -198,8 +198,8 @@ const ukUAGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'ні',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Показати',
+  longTextCellCollapseLabel: 'Приховати',
 
   // Actions cell more text
   actionsCellMore: 'більше',

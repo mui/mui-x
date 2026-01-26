@@ -168,8 +168,8 @@ const elGRGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'όχι',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Ανάπτυξη',
+  longTextCellCollapseLabel: 'Σύμπτυξη',
 
   // Actions cell more text
   actionsCellMore: 'περισσότερα',

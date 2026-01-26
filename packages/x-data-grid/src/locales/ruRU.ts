@@ -198,8 +198,8 @@ const ruRUGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'ложь',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Развернуть',
+  longTextCellCollapseLabel: 'Свернуть',
 
   // Actions cell more text
   actionsCellMore: 'ещё',

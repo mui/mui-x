@@ -167,8 +167,8 @@ const nnNOGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'usant',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Vis',
+  longTextCellCollapseLabel: 'Gøym',
 
   // Actions cell more text
   actionsCellMore: 'meir',

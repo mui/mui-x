@@ -166,8 +166,8 @@ const bgBGGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'не',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Разгъване',
+  longTextCellCollapseLabel: 'Свиване',
 
   // Actions cell more text
   actionsCellMore: 'още',

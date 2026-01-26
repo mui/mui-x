@@ -169,8 +169,8 @@ const deDEGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'Nein',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Aufklappen',
+  longTextCellCollapseLabel: 'Zuklappen',
 
   // Actions cell more text
   actionsCellMore: 'Mehr',

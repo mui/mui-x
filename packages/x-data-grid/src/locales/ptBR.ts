@@ -169,8 +169,8 @@ const ptBRGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'não',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Recolher',
 
   // Actions cell more text
   actionsCellMore: 'mais',

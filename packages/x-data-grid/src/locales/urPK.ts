@@ -166,8 +166,8 @@ const urPKGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'نہیں',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'پھیلائیں',
+  longTextCellCollapseLabel: 'تنگ کریں',
 
   // Actions cell more text
   actionsCellMore: 'ذیادہ',

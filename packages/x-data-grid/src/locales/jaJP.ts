@@ -163,8 +163,8 @@ const jaJPGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: '偽',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: '展開',
+  longTextCellCollapseLabel: '折りたたみ',
 
   // Actions cell more text
   actionsCellMore: 'もっと見る',

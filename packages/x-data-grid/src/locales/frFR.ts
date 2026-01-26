@@ -168,8 +168,8 @@ const frFRGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'faux',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Afficher',
+  longTextCellCollapseLabel: 'Masquer',
 
   // Actions cell more text
   actionsCellMore: 'Plus',

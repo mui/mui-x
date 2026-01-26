@@ -163,8 +163,8 @@ export const idIDGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'tidak',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Perluas',
+  longTextCellCollapseLabel: 'Ciutkan',
 
   // Actions cell more text
   actionsCellMore: 'lainnya',

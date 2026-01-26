@@ -168,8 +168,8 @@ const esESGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'no',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Contraer',
 
   // Actions cell more text
   actionsCellMore: 'más',

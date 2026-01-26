@@ -168,8 +168,8 @@ const caESGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: 'no',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: 'Expandeix',
+  longTextCellCollapseLabel: 'Contrau',
 
   // Actions cell more text
   actionsCellMore: 'més',

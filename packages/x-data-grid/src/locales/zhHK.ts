@@ -166,8 +166,8 @@ const zhHKGrid: Partial<GridLocaleText> = {
   booleanCellFalseLabel: '不',
 
   // Long text cell
-  // longTextCellExpandLabel: 'Expand',
-  // longTextCellCollapseLabel: 'Collapse',
+  longTextCellExpandLabel: '擴張',
+  longTextCellCollapseLabel: '坍塌',
 
   // Actions cell more text
   actionsCellMore: '更多的',
