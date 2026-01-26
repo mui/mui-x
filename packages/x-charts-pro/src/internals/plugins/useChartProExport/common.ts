@@ -30,10 +30,7 @@ export function applyStyles(
 /**
  * Copies the content of all canvases from the original element to the cloned element.
  */
-export function copyCanvasesContent(
-  original: HTMLElement | SVGElement,
-  clone: HTMLElement | SVGElement,
-) {
+export function copyCanvasesContent(original: Element, clone: Element) {
   const originalCanvases = original.querySelectorAll('canvas');
   const cloneCanvases = clone.querySelectorAll('canvas');
 
