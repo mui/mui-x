@@ -26,8 +26,8 @@ import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
 import { DateNavigator } from './date-navigator';
-import { RecurringScopeDialog } from '../internals/components/scope-dialog/ScopeDialog';
 import { schedulerTokens } from '../internals/utils/tokens';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 import { EventCalendarClasses, getEventCalendarUtilityClass } from './eventCalendarClasses';
 import { EventCalendarClassesContext } from './EventCalendarClassesContext';
 
@@ -97,6 +97,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     dayTimeGridColumn: ['dayTimeGridColumn'],
     dayTimeGridColumnInteractiveLayer: ['dayTimeGridColumnInteractiveLayer'],
     dayTimeGridCurrentTimeIndicator: ['dayTimeGridCurrentTimeIndicator'],
+    dayTimeGridCurrentTimeIndicatorCircle: ['dayTimeGridCurrentTimeIndicatorCircle'],
     dayTimeGridCurrentTimeLabel: ['dayTimeGridCurrentTimeLabel'],
     dayTimeGridAllDayEventsCellEvents: ['dayTimeGridAllDayEventsCellEvents'],
     dayTimeGridAllDayEventContainer: ['dayTimeGridAllDayEventContainer'],
@@ -225,7 +226,6 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const classes = useUtilityClasses(classesProp);
   const view = useStore(store, eventCalendarViewSelectors.view);
   const isSidePanelOpen = useStore(store, eventCalendarPreferenceSelectors.isSidePanelOpen);
-  const isScopeDialogOpen = useStore(store, schedulerOtherSelectors.isScopeDialogOpen);
   const errors = useStore(store, schedulerOtherSelectors.errors);
 
   const {
@@ -261,51 +261,52 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
           <EventCalendarClassesContext.Provider value={classes}>
-            <EventCalendarRoot
-              className={clsx(classes.root, className)}
-              {...other}
-              ref={handleRootRef}
-            >
-              <DateNavigator />
+            <EventDraggableDialogProvider>
+              <EventCalendarRoot
+                className={clsx(classes.root, className)}
+                {...other}
+                ref={handleRootRef}
+              >
+                <DateNavigator />
 
-              <HeaderToolbar />
+                <HeaderToolbar />
 
-              <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
-                {isSidePanelOpen && (
-                  <EventCalendarSidePanel className={classes.sidePanel}>
-                    <EventCalendarMonthCalendarPlaceholder
-                      className={classes.monthCalendarPlaceholder}
-                      // TODO: Add localization
-                      aria-label="Month calendar"
-                    >
-                      Month Calendar
-                    </EventCalendarMonthCalendarPlaceholder>
-                    <ResourcesLegend />
-                  </EventCalendarSidePanel>
-                )}
+                <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
+                  {isSidePanelOpen && (
+                    <EventCalendarSidePanel className={classes.sidePanel}>
+                      <EventCalendarMonthCalendarPlaceholder
+                        className={classes.monthCalendarPlaceholder}
+                        // TODO: Add localization
+                        aria-label="Month calendar"
+                      >
+                        Month Calendar
+                      </EventCalendarMonthCalendarPlaceholder>
+                      <ResourcesLegend />
+                    </EventCalendarSidePanel>
+                  )}
 
-                <EventCalendarContent
-                  className={classes.content}
-                  data-view={view}
-                  data-side-panel-open={isSidePanelOpen}
-                  // TODO: Add localization
-                  aria-label="Calendar content"
-                >
-                  {content}
-                </EventCalendarContent>
-                {errors?.length > 0 &&
-                  errors.map((error, index) => (
-                    <EventCalendarErrorContainer
-                      className={classes.errorContainer}
-                      severity="error"
-                      key={index}
-                    >
-                      {error.message}
-                    </EventCalendarErrorContainer>
-                  ))}
-                {isScopeDialogOpen && <RecurringScopeDialog containerRef={rootRef} />}
-              </EventCalendarMainPanel>
-            </EventCalendarRoot>
+                  <EventCalendarContent
+                    className={classes.content}
+                    data-view={view}
+                    data-side-panel-open={isSidePanelOpen}
+                    // TODO: Add localization
+                    aria-label="Calendar content"
+                  >
+                    {content}
+                  </EventCalendarContent>
+                  {errors?.length > 0 &&
+                    errors.map((error, index) => (
+                      <EventCalendarErrorContainer
+                        className={classes.errorContainer}
+                        severity="error"
+                        key={index}
+                      >
+                        {error.message}
+                      </EventCalendarErrorContainer>
+                    ))}
+                </EventCalendarMainPanel>
+              </EventCalendarRoot>
+            </EventDraggableDialogProvider>
           </EventCalendarClassesContext.Provider>
         </TranslationsProvider>
       </SchedulerStoreContext.Provider>

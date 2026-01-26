@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Popover } from '@base-ui/react/popover';
 import { SchedulerRenderableEventOccurrence } from '@mui/x-scheduler-headless/models';
+import { DialogProps } from '@mui/material/Dialog';
 
-export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface EventDraggableDialogProps extends DialogProps {
   /**
    * The event occurrence to display in the popover.
    */
@@ -10,22 +10,18 @@ export interface EventPopoverProps extends React.HTMLAttributes<HTMLDivElement> 
   /**
    * The anchor element for the popover positioning.
    */
-  anchor: HTMLElement;
-  /**
-   * The container element for the popover portal.
-   */
-  container: HTMLElement | null;
+  anchorRef: React.RefObject<HTMLElement | null>;
   /**
    * Handles the close action of the popover.
    */
   onClose: () => void;
 }
 
-export interface EventPopoverProviderProps {
-  containerRef: React.RefObject<HTMLElement | null>;
+export interface EventDraggableDialogProviderProps {
   children: React.ReactNode;
 }
 
-export interface EventPopoverTriggerProps extends Popover.Trigger.Props {
+export interface EventDraggableDialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
   occurrence: SchedulerRenderableEventOccurrence;
+  children: React.ReactNode;
 }

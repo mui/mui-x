@@ -130,6 +130,8 @@ export interface EventCalendarClasses {
   dayTimeGridColumnInteractiveLayer: string;
   /** Styles applied to the day time grid current time indicator element. */
   dayTimeGridCurrentTimeIndicator: string;
+  /** Styles applied to the day time grid current time indicator circle element. */
+  dayTimeGridCurrentTimeIndicatorCircle: string;
   /** Styles applied to the day time grid current time label element. */
   dayTimeGridCurrentTimeLabel: string;
   /** Styles applied to day time grid all day events cell events container elements. */
@@ -261,6 +263,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridColumn',
     'dayTimeGridColumnInteractiveLayer',
     'dayTimeGridCurrentTimeIndicator',
+    'dayTimeGridCurrentTimeIndicatorCircle',
     'dayTimeGridCurrentTimeLabel',
     'dayTimeGridAllDayEventsCellEvents',
     'dayTimeGridAllDayEventContainer',

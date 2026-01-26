@@ -6,21 +6,17 @@ import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import { EVENT_CREATION_PRECISION_MINUTE } from '@mui/x-scheduler-headless/constants';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
-import { schedulerNowSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { useEventOccurrencesWithTimelinePosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-timeline-position';
 import { eventCalendarOccurrencePlaceholderSelectors } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { TimeGridEvent } from '../event/time-grid-event/TimeGridEvent';
-import {
-  EventPopoverTrigger,
-  useEventPopoverContext,
-} from '../../../internals/components/event-popover/EventPopover';
-import { useFormatTime } from '../../../internals/hooks/useFormatTime';
 import { useEventCreationProps } from '../../hooks/useEventCreationProps';
+import {
+  EventDraggableDialogTrigger,
+  useEventDraggableDialogContext,
+} from '../event-draggable-dialog/EventDraggableDialog';
 import { useEventCalendarClasses } from '../../../event-calendar/EventCalendarClassesContext';
-
-const HOUR_HEIGHT = 46;
 
 const DayTimeGridColumn = styled(CalendarGrid.TimeColumn, {
   name: 'MuiEventCalendar',
@@ -56,39 +52,26 @@ const DayTimeGridCurrentTimeIndicator = styled(CalendarGrid.CurrentTimeIndicator
   slot: 'DayTimeGridCurrentTimeIndicator',
 })(({ theme }) => ({
   position: 'absolute',
+  zIndex: 2,
+  top: 'var(--y-position)',
   left: 0,
-  right: 0,
+  right: -1,
   height: 0,
   borderTop: `2px solid ${theme.palette.primary.main}`,
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    left: -5,
-    top: -5,
-    width: 8,
-    height: 8,
-    borderRadius: '50%',
-    backgroundColor: theme.palette.primary.main,
-  },
 }));
 
-const DayTimeGridCurrentTimeLabel = styled('span', {
+const DayTimeGridCurrentTimeIndicatorCircle = styled('span', {
   name: 'MuiEventCalendar',
-  slot: 'DayTimeGridCurrentTimeLabel',
+  slot: 'DayTimeGridCurrentTimeIndicatorCircle',
 })(({ theme }) => ({
   position: 'absolute',
-  right: `calc(100% + ${theme.spacing(0.25)})`,
-  top: '50%',
-  transform: 'translateY(-50%)',
-  fontSize: theme.typography.caption.fontSize,
-  fontWeight: theme.typography.fontWeightMedium,
-  color: theme.palette.primary.main,
-  whiteSpace: 'nowrap',
-  paddingRight: theme.spacing(2),
-  backgroundColor: theme.palette.background.paper,
-  height: HOUR_HEIGHT / 2,
-  display: 'flex',
-  alignItems: 'center',
+  zIndex: 1,
+  left: -5,
+  top: -5,
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.primary.main,
 }));
 
 export function TimeGridColumn(props: TimeGridColumnProps) {
@@ -142,8 +125,8 @@ function ColumnInteractiveLayer({
   // Context hooks
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
+  const { onOpen: startEditing } = useEventDraggableDialogContext();
   const classes = useEventCalendarClasses();
-  const { open: startEditing } = useEventPopoverContext();
 
   // Ref hooks
   const columnRef = React.useRef<HTMLDivElement | null>(null);
@@ -183,7 +166,7 @@ function ColumnInteractiveLayer({
     if (!isCreatingAnEvent || !placeholder || !columnRef.current) {
       return;
     }
-    startEditing(columnRef.current, placeholder);
+    startEditing(columnRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
@@ -193,34 +176,24 @@ function ColumnInteractiveLayer({
       {...eventCreationProps}
     >
       {occurrences.map((occurrence) => (
-        <EventPopoverTrigger
-          key={occurrence.key}
-          occurrence={occurrence}
-          render={<TimeGridEvent occurrence={occurrence} variant="regular" />}
-        />
+        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+          <TimeGridEvent occurrence={occurrence} variant="regular" />
+        </EventDraggableDialogTrigger>
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
-        <DayTimeGridCurrentTimeIndicator className={classes.dayTimeGridCurrentTimeIndicator}>
-          {index === 0 && <CurrentTimeLabel />}
+        <DayTimeGridCurrentTimeIndicator
+          className={classes.dayTimeGridCurrentTimeIndicator}
+          aria-hidden
+        >
+          {index === 0 && (
+            <DayTimeGridCurrentTimeIndicatorCircle
+              className={classes.dayTimeGridCurrentTimeIndicatorCircle}
+            />
+          )}
         </DayTimeGridCurrentTimeIndicator>
       ) : null}
     </DayTimeGridColumnInteractiveLayer>
-  );
-}
-
-function CurrentTimeLabel() {
-  const store = useEventCalendarStoreContext();
-  const classes = useEventCalendarClasses();
-  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
-  const formatTime = useFormatTime();
-
-  const currentTimeLabel = React.useMemo(() => formatTime(now), [now, formatTime]);
-
-  return (
-    <DayTimeGridCurrentTimeLabel className={classes.dayTimeGridCurrentTimeLabel} aria-hidden="true">
-      {currentTimeLabel}
-    </DayTimeGridCurrentTimeLabel>
   );
 }
 
