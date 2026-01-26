@@ -437,10 +437,7 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     key={hour}
                     style={{ '--hour': hour } as React.CSSProperties}
                   >
-                    <DayTimeGridTimeAxisText
-                      className={classes.dayTimeGridTimeAxisText}
-                      as="time"
-                    >
+                    <DayTimeGridTimeAxisText className={classes.dayTimeGridTimeAxisText} as="time">
                       {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
                     </DayTimeGridTimeAxisText>
                   </DayTimeGridTimeAxisCell>
