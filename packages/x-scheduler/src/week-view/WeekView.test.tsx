@@ -229,17 +229,6 @@ describe('<WeekView />', () => {
       expect(todayColumn).to.equal(null);
     });
 
-    it('hides hour labels close to the indicator', () => {
-      // 12:10 => the 12 hour label should be hidden
-      const visibleDate = adapter.date('2025-05-04T12:10:00Z', 'default');
-
-      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
-
-      // Time labels that should be hidden now use data-hidden attribute
-      const hiddenLabels = document.querySelectorAll('time[data-hidden]');
-      expect(hiddenLabels.length).to.be.greaterThan(0);
-    });
-
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
 
@@ -254,8 +243,6 @@ describe('<WeekView />', () => {
 
       const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
-      const hiddenLabels = document.querySelectorAll('time[data-hidden]');
-      expect(hiddenLabels.length).to.equal(0);
     });
   });
 });

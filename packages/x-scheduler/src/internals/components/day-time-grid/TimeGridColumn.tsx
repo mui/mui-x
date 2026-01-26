@@ -183,7 +183,7 @@ function ColumnInteractiveLayer({
       ))}
       {placeholder != null && <TimeGridEvent occurrence={placeholder} variant="placeholder" />}
       {showCurrentTimeIndicator ? (
-        <DayTimeGridCurrentTimeIndicator className={classes.dayTimeGridCurrentTimeIndicator}>
+        <DayTimeGridCurrentTimeIndicator className={classes.dayTimeGridCurrentTimeIndicator} aria-hidden>
           {index === 0 && (
             <DayTimeGridCurrentTimeIndicatorCircle
               className={classes.dayTimeGridCurrentTimeIndicatorCircle}

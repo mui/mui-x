@@ -347,14 +347,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
 
   const lastIsWeekend = isWeekend(adapter, days[days.length - 1].value);
 
-  const shouldHideHour = (hour: number) => {
-    if (!isTodayInView || !showCurrentTimeIndicator) {
-      return false;
-    }
-    const slotCenter = adapter.setMinutes(adapter.setHours(now, hour), 0);
-    return Math.abs(adapter.differenceInMinutes(now, slotCenter)) <= 25;
-  };
-
   const template = adapter.date('2020-01-01T00:00:00', 'default');
 
   const renderHeaderContent = (day: SchedulerProcessedDate) => (
@@ -448,7 +440,6 @@ export const DayTimeGrid = React.forwardRef(function DayTimeGrid(
                     <DayTimeGridTimeAxisText
                       className={classes.dayTimeGridTimeAxisText}
                       as="time"
-                      data-hidden={shouldHideHour(hour) || undefined}
                     >
                       {hour === 0 ? null : formatTime(adapter.setHours(template, hour))}
                     </DayTimeGridTimeAxisText>
