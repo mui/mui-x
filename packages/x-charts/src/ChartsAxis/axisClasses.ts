@@ -33,6 +33,8 @@ export interface ChartsAxisClasses {
   /**
    * Styles applied to the root element for the axis with the given ID.
    * Needs to be suffixed with the axis ID: `.${axisClasses.id}-${axisId}`.
+   *
+   * @deprecated Use the data attribute `data-axis-id` instead.
    */
   id: string;
 }

@@ -10,7 +10,8 @@
     "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
     "id": {
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the axis ID: <code>.${axisClasses.id}-${axisId}</code>.",
-      "nodeName": "the root element for the axis with the given ID"
+      "nodeName": "the root element for the axis with the given ID",
+      "deprecationInfo": "Use the data attribute <code>data-axis-id</code> instead."
     },
     "label": {
       "description": "Styles applied to {{nodeName}}.",
