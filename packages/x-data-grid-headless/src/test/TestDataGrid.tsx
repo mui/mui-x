@@ -1,20 +1,14 @@
 'use client';
 import * as React from 'react';
-import { ColumnDef, useDataGrid, SortingOptions, GridSortDirection } from '../';
-import sortingPlugin from '../plugins/sorting';
-import paginationPlugin from '../plugins/pagination';
-
-interface PluginConfig {
-  sorting?: SortingOptions & {
-    enabled?: boolean;
-  };
-}
+import { ColumnDef, useDataGrid } from '../';
+import { sortingPlugin, paginationPlugin } from '../plugins';
+import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 
 export function TestDataGrid<TRow extends object>(props: {
   rows: TRow[];
   columns: ColumnDef<TRow>[];
   getRowId?: (row: TRow) => string;
-  apiRef?: React.MutableRefObject<ReturnType<
+  apiRef?: React.RefObject<ReturnType<
     typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
   > | null>;
   showConfig?: boolean;
@@ -66,6 +60,10 @@ export function TestDataGrid<TRow extends object>(props: {
     grid.api.sorting.sortColumn(field, undefined, multiSort);
   };
 
+  const handleApplySorting = () => {
+    grid.api.sorting.applySorting();
+  };
+
   const getSortIcon = (field: string) => {
     const sortInfo = sortColumnLookup[field];
     if (!sortInfo || sortInfo.sortDirection === null) {
@@ -83,7 +81,13 @@ export function TestDataGrid<TRow extends object>(props: {
 
   return (
     <div>
-      {props.showConfig !== false && <ConfigPanel config={config} onConfigChange={setConfig} />}
+      {props.showConfig !== false && (
+        <ConfigPanel
+          config={config}
+          onConfigChange={setConfig}
+          onApplySorting={handleApplySorting}
+        />
+      )}
       <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>
         <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f5f5f5', zIndex: 1 }}>
           <tr>
@@ -147,132 +151,6 @@ export function TestDataGrid<TRow extends object>(props: {
           })}
         </tbody>
       </table>
-    </div>
-  );
-}
-
-// Configuration Panel Component
-function ConfigPanel(props: {
-  config: PluginConfig;
-  onConfigChange: (config: PluginConfig) => void;
-}) {
-  const { config, onConfigChange } = props;
-
-  const updateSortingConfig = (updates: Partial<PluginConfig['sorting']>) => {
-    onConfigChange({
-      ...config,
-      sorting: {
-        ...config.sorting,
-        ...updates,
-      },
-    });
-  };
-
-  const sortingOrderOptions: { label: string; value: readonly GridSortDirection[] }[] = [
-    { label: 'asc → desc → null', value: ['asc', 'desc', null] },
-    { label: 'desc → asc → null', value: ['desc', 'asc', null] },
-    { label: 'asc → desc (no null)', value: ['asc', 'desc'] },
-    { label: 'asc only', value: ['asc'] },
-    { label: 'desc only', value: ['desc'] },
-  ];
-
-  const getCurrentSortingOrderLabel = () => {
-    const current = config.sorting?.sortingOrder;
-    const match = sortingOrderOptions.find(
-      (opt) => JSON.stringify(opt.value) === JSON.stringify(current),
-    );
-    return match?.label || 'Custom';
-  };
-
-  return (
-    <div
-      style={{
-        padding: '16px',
-        marginBottom: '16px',
-        backgroundColor: '#f9f9f9',
-        borderRadius: '8px',
-        border: '1px solid #e0e0e0',
-      }}
-    >
-      <h3 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 600 }}>
-        Plugin Configuration
-      </h3>
-
-      {/* Sorting Section */}
-      <fieldset style={{ border: '1px solid #ddd', padding: '12px', borderRadius: '4px' }}>
-        <legend style={{ fontSize: '13px', fontWeight: 500, padding: '0 8px' }}>
-          Sorting Plugin
-        </legend>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
-            <input
-              type="checkbox"
-              checked={config.sorting?.enabled ?? true}
-              onChange={(event) => updateSortingConfig({ enabled: event.target.checked })}
-            />
-            Enable Sorting
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
-            <input
-              type="checkbox"
-              checked={config.sorting?.enableMultiSort ?? true}
-              onChange={(event) => updateSortingConfig({ enableMultiSort: event.target.checked })}
-              disabled={!config.sorting?.enabled}
-            />
-            Enable Multi-Sort (hold Shift + click)
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
-            <input
-              type="checkbox"
-              checked={config.sorting?.stableSort ?? false}
-              onChange={(event) => updateSortingConfig({ stableSort: event.target.checked })}
-              disabled={!config.sorting?.enabled}
-            />
-            Stable Sort (preserve previous sort order)
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
-            Sorting Mode:
-            <select
-              value={config.sorting?.sortingMode ?? 'auto'}
-              onChange={(event) =>
-                updateSortingConfig({ sortingMode: event.target.value as 'auto' | 'manual' })
-              }
-              disabled={!config.sorting?.enabled}
-              style={{ padding: '4px 8px', fontSize: '13px' }}
-            >
-              <option value="auto">Auto (sorts on change)</option>
-              <option value="manual">Manual (call applySorting)</option>
-            </select>
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
-            Sorting Order:
-            <select
-              value={getCurrentSortingOrderLabel()}
-              onChange={(event) => {
-                const selected = sortingOrderOptions.find(
-                  (opt) => opt.label === event.target.value,
-                );
-                if (selected) {
-                  updateSortingConfig({ sortingOrder: selected.value });
-                }
-              }}
-              disabled={!config.sorting?.enabled}
-              style={{ padding: '4px 8px', fontSize: '13px' }}
-            >
-              {sortingOrderOptions.map((opt) => (
-                <option key={opt.label} value={opt.label}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-      </fieldset>
     </div>
   );
 }
