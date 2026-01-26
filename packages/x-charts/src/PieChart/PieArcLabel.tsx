@@ -28,7 +28,7 @@ export interface PieArcLabelClasses {
 export type PieArcLabelClassKey = keyof PieArcLabelClasses;
 
 interface PieArcLabelOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
@@ -49,11 +49,11 @@ export const pieArcLabelClasses: PieArcLabelClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: PieArcLabelOwnerState) => {
-  const { classes, id, isFaded, isHighlighted, skipAnimation } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted, skipAnimation } = ownerState;
   const slots = {
     root: [
       'root',
-      `series-${id}`,
+      `series-${seriesId}`,
       isHighlighted && 'highlighted',
       isFaded && 'faded',
       !skipAnimation && 'animate',
@@ -86,7 +86,7 @@ const PieArcLabelRoot = styled('text', {
 }));
 
 export type PieArcLabelProps = PieArcLabelOwnerState &
-  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color' | 'id'> & {
+  Omit<React.SVGProps<SVGTextElement>, 'ref' | 'color'> & {
     startAngle: number;
     endAngle: number;
     innerRadius: number;
@@ -102,7 +102,7 @@ export type PieArcLabelProps = PieArcLabelOwnerState &
 const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
   function PieArcLabel(props, ref) {
     const {
-      id,
+      seriesId,
       classes: innerClasses,
       color,
       startAngle,
@@ -121,7 +121,7 @@ const PieArcLabel = React.forwardRef<SVGTextElement, PieArcLabelProps>(
     } = props;
 
     const ownerState = {
-      id,
+      seriesId,
       classes: innerClasses,
       color,
       isFaded,
@@ -166,12 +166,12 @@ PieArcLabel.propTypes = {
   endAngle: PropTypes.number.isRequired,
   formattedArcLabel: PropTypes.string,
   hidden: PropTypes.bool,
-  id: PropTypes.string.isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
+  seriesId: PropTypes.string.isRequired,
   skipAnimation: PropTypes.bool.isRequired,
   startAngle: PropTypes.number.isRequired,
 } as any;

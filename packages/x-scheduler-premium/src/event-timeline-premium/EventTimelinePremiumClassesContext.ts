@@ -9,7 +9,7 @@ export function useEventTimelinePremiumClasses(): EventTimelinePremiumClasses {
   const classes = React.useContext(EventTimelinePremiumClassesContext);
   if (!classes) {
     throw new Error(
-      'useEventTimelinePremiumClasses must be used within EventTimelinePremiumClassesContext.Provider',
+      'MUI: useEventTimelinePremiumClasses must be used within EventTimelinePremiumClassesContext.Provider',
     );
   }
   return classes;

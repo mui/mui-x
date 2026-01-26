@@ -95,6 +95,7 @@ The list includes these transformers
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
 - [`rename-charts-surface`](#rename-charts-surface)
+- [`rename-id-to-series-id`](#rename-id-to-series-id)
 
 ### `replace-heatmap-hide-legend-false`
 
@@ -150,6 +151,29 @@ Renames the `ChartsSurface` component to `ChartsSvgSurface` to make it clearer t
 +import { ChartsSvgSurface, ChartsSvgSurfaceProps } from '@mui/x-charts/ChartsSvgSurface';
 +import { chartsSvgSurfaceClasses, ChartsSvgSurfaceClasses } from '@mui/x-charts/ChartsSvgSurface';
 ```
+
+### `rename-id-to-series-id`
+
+Rename the props `id` to `seriesId`.
+
+```diff
+- <PieArc id='series-a' />
++ <PieArc seriesId='series-a' />
+```
+
+Here is the list of slots and components that are impacted by the renaming:
+
+| slot          | Component                                |
+| :------------ | :--------------------------------------- |
+| pieArc        | PieArc                                   |
+|               | PieArcPlot                               |
+| pieArcLabel   | PieArcLabel                              |
+|               | PieArcLabelPlot                          |
+| bar           | BarElement, AnimatedRangeBarElementProps |
+| area          | AnimatedArea, AreaElement                |
+| line          | AnimatedLine, LineElement                |
+| mark          | MarkElement                              |
+| lineHighlight | LineHighlightElement                     |
 
 ## v8.0.0
 

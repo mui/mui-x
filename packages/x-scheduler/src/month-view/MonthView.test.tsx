@@ -7,8 +7,9 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
-import { EventCalendar } from '../event-calendar';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
+import { EventCalendar, eventCalendarClasses } from '../event-calendar';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 
 describe('<MonthView />', () => {
   const { render } = createSchedulerRenderer({ clockConfig: new Date('2025-05-01') });
@@ -26,7 +27,9 @@ describe('<MonthView />', () => {
   it('should render the weekday headers, a cell for each day, and show the abbreviated month for day 1', () => {
     render(
       <EventCalendarProvider {...standaloneDefaults}>
-        <MonthView />
+        <EventDraggableDialogProvider>
+          <MonthView />
+        </EventDraggableDialogProvider>
       </EventCalendarProvider>,
     );
     const headerTexts = screen.getAllByRole('columnheader').map((header) => header.textContent);
@@ -40,7 +43,9 @@ describe('<MonthView />', () => {
   it('should render events in the correct cell', () => {
     render(
       <EventCalendarProvider {...standaloneDefaults}>
-        <MonthView />
+        <EventDraggableDialogProvider>
+          <MonthView />
+        </EventDraggableDialogProvider>
       </EventCalendarProvider>,
     );
 
@@ -61,7 +66,9 @@ describe('<MonthView />', () => {
         onViewChange={handleViewChange}
         onVisibleDateChange={handleVisibleDateChange}
       >
-        <MonthView />
+        <EventDraggableDialogProvider>
+          <MonthView />
+        </EventDraggableDialogProvider>
       </EventCalendarProvider>,
     );
     const button = screen.getByRole('button', { name: '15' });
@@ -78,7 +85,9 @@ describe('<MonthView />', () => {
   it('should render day numbers as plain text when the day view is not enabled', () => {
     render(
       <EventCalendarProvider {...standaloneDefaults} views={['week', 'month']}>
-        <MonthView />
+        <EventDraggableDialogProvider>
+          <MonthView />
+        </EventDraggableDialogProvider>
       </EventCalendarProvider>,
     );
     expect(screen.queryByRole('button', { name: '15' })).to.equal(null);
@@ -96,7 +105,9 @@ describe('<MonthView />', () => {
 
     render(
       <EventCalendarProvider events={manyEvents} resources={[]}>
-        <MonthView />
+        <EventDraggableDialogProvider>
+          <MonthView />
+        </EventDraggableDialogProvider>
       </EventCalendarProvider>,
     );
     expect(screen.getByText(/more/i)).not.to.equal(null);
@@ -132,7 +143,9 @@ describe('<MonthView />', () => {
           events={[EventBuilder.new().span('2025-05-04Z', '2025-05-07Z', { allDay: true }).build()]}
           resources={[]}
         >
-          <MonthView />
+          <EventDraggableDialogProvider>
+            <MonthView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -140,7 +153,7 @@ describe('<MonthView />', () => {
         return screen
           .getAllByRole('gridcell')
           .find((cell) => within(cell).queryByText(new RegExp(`^${date.toString()}`)))!
-          .querySelectorAll('.EventContainer');
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell
@@ -157,7 +170,9 @@ describe('<MonthView />', () => {
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <MonthView />
+          <EventDraggableDialogProvider>
+            <MonthView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -172,7 +187,9 @@ describe('<MonthView />', () => {
     it('should place invisible events on the same grid row as the main event', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <MonthView />
+          <EventDraggableDialogProvider>
+            <MonthView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -213,7 +230,9 @@ describe('<MonthView />', () => {
 
       render(
         <EventCalendarProvider events={overlappingEvents} resources={[]}>
-          <MonthView />
+          <EventDraggableDialogProvider>
+            <MonthView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -241,7 +260,9 @@ describe('<MonthView />', () => {
     it('should render all-day events with correct grid column span', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <MonthView />
+          <EventDraggableDialogProvider>
+            <MonthView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -258,7 +279,9 @@ describe('<MonthView />', () => {
     it('should render one visible event per row if event spans across multiple weeks', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <MonthView />
+          <EventDraggableDialogProvider>
+            <MonthView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 

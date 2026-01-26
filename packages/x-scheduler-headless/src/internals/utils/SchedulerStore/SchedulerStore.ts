@@ -169,7 +169,7 @@ export class SchedulerStore<
 
         if (initialIsControlled !== isControlled) {
           warnOnce([
-            `Scheduler: A component is changing the ${
+            `MUI: A component is changing the ${
               initialIsControlled ? '' : 'un'
             }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -179,7 +179,7 @@ export class SchedulerStore<
           ]);
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
           warnOnce([
-            `Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+            `MUI: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
             `To suppress this warning opt to use a controlled ${this.instanceName}.`,
           ]);
         }
@@ -342,9 +342,7 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (original.dataTimezone.rrule) {
-      throw new Error(
-        `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
-      );
+      throw new Error('MUI: this event is recurring. Use updateRecurringEvent(...) instead.');
     }
 
     this.updateEvents({
@@ -377,9 +375,7 @@ export class SchedulerStore<
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
     if (!original.dataTimezone.rrule) {
-      throw new Error(
-        `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
-      );
+      throw new Error('MUI: the original event is not recurring. Use updateEvent(...) instead.');
     }
 
     // IMPORTANT:
