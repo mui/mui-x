@@ -10,10 +10,10 @@ import { selectorIsBrushEnabled } from './useChartBrush.selectors';
 
 export const useChartBrush: ChartPlugin<UseChartBrushSignature> = ({
   store,
-  svgRef,
   instance,
   params,
 }) => {
+  const { svgRef } = instance;
   const isEnabled = store.use(selectorIsBrushEnabled);
 
   useEnhancedEffect(() => {

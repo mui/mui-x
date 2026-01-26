@@ -1,6 +1,10 @@
 import { type UseChartAnimationSignature, useChartAnimation } from './useChartAnimation';
 import { type UseChartDimensionsSignature, useChartDimensions } from './useChartDimensions';
 import {
+  type UseChartElementRefSignature,
+  useChartElementRef,
+} from './useChartElementRef';
+import {
   type UseChartExperimentalFeaturesSignature,
   useChartExperimentalFeatures,
 } from './useChartExperimentalFeature';
@@ -22,6 +26,7 @@ import type { ChartSeriesType } from '../../../models/seriesType/config';
  * These plugins are used by the Charts components.
  */
 export const CHART_CORE_PLUGINS = [
+  useChartElementRef,
   useChartId,
   useChartSeriesConfig,
   useChartExperimentalFeatures,
@@ -32,6 +37,7 @@ export const CHART_CORE_PLUGINS = [
 ] as const;
 
 export type ChartCorePluginSignatures<TSeriesType extends ChartSeriesType = ChartSeriesType> = [
+  UseChartElementRefSignature,
   UseChartIdSignature,
   UseChartSeriesConfigSignature<TSeriesType>,
   UseChartExperimentalFeaturesSignature,
