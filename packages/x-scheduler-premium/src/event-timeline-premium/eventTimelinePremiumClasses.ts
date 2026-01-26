@@ -36,6 +36,8 @@ export interface EventTimelinePremiumClasses {
   event: string;
   /** Styles applied to event resize handler elements. */
   eventResizeHandler: string;
+  /** Styles applied to event lines clamp elements. */
+  eventLinesClamp: string;
   /** Styles applied to the time header root element. */
   timeHeader: string;
   /** Styles applied to time header cell elements. */
@@ -110,6 +112,7 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'titleCellLegendColor',
     'event',
     'eventResizeHandler',
+    'eventLinesClamp',
     'timeHeader',
     'timeHeaderCell',
     'timeHeaderDayLabel',

@@ -80,7 +80,9 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
 
-### 🚀 `preset-safe` for Charts v9.0.0
+### Charts codemods
+
+#### 🚀 `preset-safe` for Charts v9.0.0
 
 The `preset-safe` codemods for Charts.
 
