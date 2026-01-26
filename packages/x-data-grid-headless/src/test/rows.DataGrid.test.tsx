@@ -4,8 +4,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { TestDataGrid } from './TestDataGrid';
 import { useDataGrid, ColumnDef } from '../';
-import sortingPlugin from '../plugins/sorting';
-import paginationPlugin from '../plugins/pagination';
+import { sortingPlugin, paginationPlugin } from '../plugins';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
