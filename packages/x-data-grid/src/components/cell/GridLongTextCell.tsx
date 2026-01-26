@@ -165,16 +165,39 @@ function GridLongTextCell(props: GridLongTextCellProps) {
 
   const [popupOpen, setPopupOpen] = React.useState(false);
   const cellRef = React.useRef<HTMLDivElement>(null);
+  const cornerButtonRef = React.useRef<HTMLButtonElement>(null);
 
   React.useEffect(() => {
+    if (hasFocus && !popupOpen) {
+      if (cornerButtonRef.current && cornerButtonRef.current !== document.activeElement) {
+        cornerButtonRef.current.focus();
+      }
+    }
     if (!hasFocus) {
       setPopupOpen(false);
     }
-  }, [hasFocus]);
+  }, [hasFocus, popupOpen]);
 
   const handleExpandClick = (event: React.MouseEvent) => {
+    // event.detail === 0 means keyboard-triggered click (Enter keyup on focused button)
+    // Ignore these to prevent popup from opening when focus moves to this cell via Enter
+    if (event.detail === 0) {
+      return;
+    }
     event.stopPropagation();
     setPopupOpen(true);
+  };
+
+  const handleExpandKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === ' ') {
+      event.preventDefault(); // Prevent native button click on keyup
+      event.stopPropagation(); // Prevent grid row selection
+      setPopupOpen((prev) => !prev);
+    }
+    if (event.key === 'Escape' && popupOpen) {
+      event.stopPropagation(); // Prevent grid cell navigation
+      setPopupOpen(false);
+    }
   };
 
   const handleClickAway = () => {
@@ -186,20 +209,6 @@ function GridLongTextCell(props: GridLongTextCellProps) {
     setPopupOpen(false);
     apiRef.current.getCellElement(id, colDef.field)?.focus();
   };
-
-  React.useEffect(() => {
-    return apiRef.current.subscribeEvent('cellKeyDown', (params, event) => {
-      if (params.id !== id || params.field !== colDef.field) {
-        return;
-      }
-      if (event.key === ' ') {
-        setPopupOpen((prev) => !prev);
-      }
-      if (event.key === 'Escape') {
-        setPopupOpen(false);
-      }
-    });
-  }, [apiRef, id, colDef.field]);
 
   return (
     <GridLongTextCellRoot
@@ -214,14 +223,17 @@ function GridLongTextCell(props: GridLongTextCellProps) {
         {value}
       </GridLongTextCellContent>
       <GridLongTextCellCornerButton
-        aria-label={apiRef.current.getLocaleText('longTextCellExpandLabel')}
+        ref={cornerButtonRef}
+        aria-label={`${value}, ${apiRef.current.getLocaleText('longTextCellExpandLabel')}`}
         aria-haspopup="dialog"
         aria-controls={popupOpen ? popupId : undefined}
         aria-expanded={popupOpen}
-        tabIndex={-1}
+        aria-keyshortcuts="Space"
+        tabIndex={0}
         {...slotProps?.expandButton}
         className={clsx(classes.expandButton, slotProps?.expandButton?.className)}
         onClick={handleExpandClick}
+        onKeyDown={handleExpandKeyDown}
       >
         <rootProps.slots.longTextCellExpandIcon fontSize="inherit" />
       </GridLongTextCellCornerButton>
@@ -271,6 +283,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
           {renderContent ? renderContent(value) : value}
           <GridLongTextCellCornerButton
             aria-label={apiRef.current.getLocaleText('longTextCellCollapseLabel')}
+            aria-keyshortcuts="Escape"
             {...slotProps?.collapseButton}
             className={clsx(classes.collapseButton, slotProps?.collapseButton?.className)}
             onClick={handleCollapseClick}

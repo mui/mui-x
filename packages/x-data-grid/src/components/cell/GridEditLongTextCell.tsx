@@ -36,13 +36,13 @@ const GridEditLongTextCellTextarea = styled(NotRendered<GridSlotProps['baseTexta
   slot: 'EditLongTextCellTextarea',
 })<{ ownerState: OwnerState }>(({ theme }) => ({
   width: '100%',
-  textarea: { resize: 'vertical' },
   padding: 0,
   ...theme.typography.body2,
   letterSpacing: 'normal',
   outline: 'none',
   background: 'transparent',
   border: 'none',
+  resize: 'vertical',
 }));
 
 const GridEditLongTextCellRoot = styled('div', {
@@ -276,9 +276,9 @@ function GridEditLongTextarea(props: GridEditLongTextCellProps) {
   );
   return (
     <GridEditLongTextCellTextarea
+      ref={textareaRef}
       as={rootProps.slots.baseTextarea}
       ownerState={rootProps}
-      ref={textareaRef}
       aria-label={colDef.headerName || field}
       value={valueState ?? ''}
       onChange={handleChange}
