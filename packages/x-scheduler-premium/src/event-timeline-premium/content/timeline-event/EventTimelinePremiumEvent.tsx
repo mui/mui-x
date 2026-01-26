@@ -121,7 +121,9 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
         aria-hidden={true}
         {...sharedProps}
       >
-        <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>{occurrence.title}</EventTimelinePremiumEventLinesClamp>
+        <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
+          {occurrence.title}
+        </EventTimelinePremiumEventLinesClamp>
       </EventTimelinePremium.EventPlaceholder>
     );
   }
@@ -141,12 +143,11 @@ export const EventTimelinePremiumEvent = React.forwardRef(function EventTimeline
           className={classes.eventResizeHandler}
         />
       )}
-      <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>{occurrence.title}</EventTimelinePremiumEventLinesClamp>
+      <EventTimelinePremiumEventLinesClamp className={classes.eventLinesClamp}>
+        {occurrence.title}
+      </EventTimelinePremiumEventLinesClamp>
       {isEndResizable && (
-        <EventTimelinePremiumEventResizeHandler
-          side="end"
-          className={classes.eventResizeHandler}
-        />
+        <EventTimelinePremiumEventResizeHandler side="end" className={classes.eventResizeHandler} />
       )}
     </EventTimelinePremium.Event>
   );

@@ -176,7 +176,10 @@ export const EventItem = React.forwardRef(function EventItem(
                   : translations.noResourceAriaLabel
               }
             />
-            <EventItemLinesClamp className={classes.eventItemLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <EventItemLinesClamp
+              className={classes.eventItemLinesClamp}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <EventItemTime className={classes.eventItemTime} data-compact>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
@@ -199,7 +202,10 @@ export const EventItem = React.forwardRef(function EventItem(
       case 'filled':
         return (
           <React.Fragment>
-            <EventItemLinesClamp className={classes.eventItemLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <EventItemLinesClamp
+              className={classes.eventItemLinesClamp}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
               <EventItemTitle className={classes.eventItemTitle}>{occurrence.title}</EventItemTitle>
             </EventItemLinesClamp>
             {isRecurring && (
@@ -223,7 +229,10 @@ export const EventItem = React.forwardRef(function EventItem(
                   : translations.noResourceAriaLabel
               }
             />
-            <EventItemLinesClamp className={classes.eventItemLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <EventItemLinesClamp
+              className={classes.eventItemLinesClamp}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
               <EventItemCardContent className={classes.eventItemCardContent}>
                 <MultiDayDateLabel occurrence={occurrence} formatTime={formatTime} />
                 <EventItemTitle className={classes.eventItemTitle}>

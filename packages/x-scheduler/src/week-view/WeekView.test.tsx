@@ -7,8 +7,7 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { eventCalendarClasses } from '@mui/x-scheduler/event-calendar/eventCalendarClasses';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
 import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
 const multiDayEvent = EventBuilder.new()

@@ -248,7 +248,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
       case 'placeholder':
         return (
           <React.Fragment>
-            <DayGridEventLinesClamp className={classes.dayGridEventLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <DayGridEventLinesClamp
+              className={classes.dayGridEventLinesClamp}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
               <DayGridEventTitle className={classes.dayGridEventTitle}>
                 {occurrence.title}
               </DayGridEventTitle>
@@ -275,7 +278,10 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
                   : translations.noResourceAriaLabel
               }
             />
-            <DayGridEventLinesClamp className={classes.dayGridEventLinesClamp} style={{ '--number-of-lines': 1 } as React.CSSProperties}>
+            <DayGridEventLinesClamp
+              className={classes.dayGridEventLinesClamp}
+              style={{ '--number-of-lines': 1 } as React.CSSProperties}
+            >
               <DayGridEventCardContent className={classes.dayGridEventCardContent}>
                 <DayGridEventTime className={classes.dayGridEventTime}>
                   <span>{formatTime(occurrence.displayTimezone.start.value)}</span>
