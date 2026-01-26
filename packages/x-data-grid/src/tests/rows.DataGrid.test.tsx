@@ -7,6 +7,7 @@ import {
   ErrorBoundary,
   reactMajor,
   waitFor,
+  fireEvent,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { spy, stub } from 'sinon';
@@ -133,6 +134,47 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(0);
     await user.click(document.querySelector('input[name="input"]')!);
     expect(handleRowClick.callCount).to.equal(1);
+  });
+
+  // https://github.com/mui/mui-x/pull/20993
+  it('should not steal focus from input elements in Dialog', async () => {
+    function DialogCell() {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <div>
+          <button onClick={() => setOpen(true)} data-testid="open-dialog">
+            Open
+          </button>
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <input type="text" data-testid="dialog-input" />
+          </Dialog>
+        </div>
+      );
+    }
+
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[{ field: 'id', renderCell: () => <DialogCell /> }]}
+        />
+      </div>,
+    );
+
+    // Open the dialog
+    await user.click(screen.getByTestId('open-dialog'));
+
+    // Focus the input in the dialog
+    const dialogInput = screen.getByTestId('dialog-input');
+    dialogInput.focus();
+    expect(dialogInput).toHaveFocus();
+
+    // Simulate typing - this should NOT cause focus loss
+    fireEvent.keyDown(dialogInput, { key: 'a' });
+    expect(dialogInput).toHaveFocus();
+
+    fireEvent.keyDown(dialogInput, { key: 'b' });
+    expect(dialogInput).toHaveFocus();
   });
 
   // https://github.com/mui/mui-x/issues/8042
