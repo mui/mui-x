@@ -35,7 +35,7 @@ export type ChartContextValue<
   /**
    * The ref to the chart root element.
    */
-  chartRootRef: React.RefObject<HTMLDivElement | null>;
+  chartRootRef: React.RefObject<Element | null>;
 };
 
 export type ChartPluginParams<
