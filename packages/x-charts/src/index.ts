@@ -41,6 +41,8 @@ export * from './Toolbar';
 export * from './ChartsWrapper';
 export * from './ChartsBrushOverlay';
 export * from './utils';
+export * from './ChartsWebGLSurface';
+export * from './ChartsLayerContainer';
 
 // Locales should be imported from `@mui/x-charts/locales`
 // export * from './locales';

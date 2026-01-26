@@ -1,0 +1,16 @@
+{
+  "props": {},
+  "name": "ChartsLayerContainer",
+  "imports": [
+    "import { ChartsLayerContainer } from '@mui/x-charts/ChartsLayerContainer';",
+    "import { ChartsLayerContainer } from '@mui/x-charts';",
+    "import { ChartsLayerContainer } from '@mui/x-charts-pro';",
+    "import { ChartsLayerContainer } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsLayerContainer",
+  "filename": "/packages/x-charts/src/ChartsLayerContainer/ChartsLayerContainer.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
+  "cssComponent": false
+}

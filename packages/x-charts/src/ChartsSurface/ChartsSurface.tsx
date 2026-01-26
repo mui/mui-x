@@ -2,10 +2,8 @@
 import { styled, type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
-import { useSvgRef } from '../hooks/useSvgRef';
 import { useChartContext } from '../context/ChartProvider';
 import {
   selectorChartPropsHeight,
@@ -13,7 +11,6 @@ import {
   selectorChartSvgWidth,
   selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
-import { selectorChartsIsKeyboardNavigationEnabled } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
@@ -35,16 +32,16 @@ const ChartsSurfaceStyles = styled('svg', {
 })<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
   height: ownerState.height ?? '100%',
-  display: 'flex',
-  position: 'relative',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
+  position: 'absolute',
+  inset: 0,
+  // TODO: Is this needed?
   overflow: 'hidden',
+  // TODO: Is this needed?
   touchAction: 'pan-y',
+  // TODO: Is this needed?
   userSelect: 'none',
-  gridArea: 'chart',
   '&:focus': {
+    // TODO: Do we want to add tabindex=-1 to the SVG so that only the layer can be focused?
     outline: 'none', // By default don't show focus on the SVG container
   },
 }));
@@ -77,10 +74,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   const propsWidth = store.use(selectorChartPropsWidth);
   const propsHeight = store.use(selectorChartPropsHeight);
-  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
 
-  const svgRef = useSvgRef();
-  const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, className, title, desc, ...other } = themeProps;
@@ -90,10 +84,10 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   return (
     <ChartsSurfaceStyles
+      // TODO: Can I remove this?
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={clsx(classes.root, className)}
-      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
       {...other}
       onPointerEnter={(event) => {
         other.onPointerEnter?.(event);
@@ -107,7 +101,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
         other.onClick?.(event);
         instance.handleClick?.(event);
       }}
-      ref={handleRef}
+      ref={ref}
     >
       {title && <title>{title}</title>}
       {desc && <desc>{desc}</desc>}
