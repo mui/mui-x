@@ -113,6 +113,20 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   maxWidth?: number;
   /**
+   * The minimum width of the column in pixels when autosizing.
+   * If `autoSizingMinSize` is used together with `minWidth`, then `minWidth` is ignored in favor of `autoSizingMinSize` when autosizing.
+   * If only `autoSizingMinSize` is used, then manual resizing acts as if min size is not set.
+   * @default 0
+   */
+  autoSizingMinSize?: number;
+  /**
+   * The maximum width of the column in pixels when autosizing.
+   * If `autoSizingMaxSize` is used together with `maxWidth`, then `maxWidth` is ignored in favor of `autoSizingMaxSize` when autosizing.
+   * If only `autoSizingMaxSize` is used, then manual resizing acts as if max size is not set.
+   * @default Infinity
+   */
+  autoSizingMaxSize?: number;
+  /**
    * If `false`, removes the option to hide this column.
    * @default true
    */

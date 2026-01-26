@@ -273,11 +273,19 @@ function extractColumnWidths(
       }
     }
 
-    const hasColumnMin = column.minWidth !== -Infinity && column.minWidth !== undefined;
-    const hasColumnMax = column.maxWidth !== Infinity && column.maxWidth !== undefined;
+    let min = 0;
+    if (column.autoSizingMinSize !== undefined) {
+      min = column.autoSizingMinSize;
+    } else if (column.minWidth !== -Infinity && column.minWidth !== undefined) {
+      min = column.minWidth;
+    }
 
-    const min = hasColumnMin ? column.minWidth! : 0;
-    const max = hasColumnMax ? column.maxWidth! : Infinity;
+    let max = Infinity;
+    if (column.autoSizingMaxSize !== undefined) {
+      max = column.autoSizingMaxSize;
+    } else if (column.maxWidth !== Infinity && column.maxWidth !== undefined) {
+      max = column.maxWidth;
+    }
     const maxContent = filteredWidths.length === 0 ? 0 : Math.max(...filteredWidths);
 
     widthByField[column.field] = clamp(maxContent, min, max);

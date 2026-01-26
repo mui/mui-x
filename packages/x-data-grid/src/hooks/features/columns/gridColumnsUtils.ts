@@ -25,7 +25,14 @@ import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeade
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
-export const COLUMNS_DIMENSION_PROPERTIES = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
+export const COLUMNS_DIMENSION_PROPERTIES = [
+  'maxWidth',
+  'minWidth',
+  'width',
+  'flex',
+  'autoSizingMinSize',
+  'autoSizingMaxSize',
+] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];
 
