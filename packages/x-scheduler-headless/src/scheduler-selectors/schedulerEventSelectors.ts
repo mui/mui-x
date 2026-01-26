@@ -57,7 +57,7 @@ export const schedulerEventSelectors = {
     processedEventSelector,
     (event, eventId: SchedulerEventId) => {
       if (!event) {
-        throw new Error(`Scheduler: the original event was not found (id="${eventId}").`);
+        throw new Error(`MUI: the original event was not found (id="${eventId}").`);
       }
 
       return event;
