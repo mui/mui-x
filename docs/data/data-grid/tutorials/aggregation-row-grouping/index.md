@@ -9,6 +9,7 @@ description: Learn how to use aggregation functions and row grouping in the Data
 
 This tutorial walks you through building a Data Grid that demonstrates aggregation functions and row grouping using the MUI X Data Grid Premium.
 The primary purpose is to show how to group rows by column values and apply aggregation functions (such as sum, average, min, max) to analyze data within those groups.
+This tutorial also demonstrates the use of the [Data Source layer](/x/react-data-grid/server-side-data/), which streamlines the development of key Data Grid features when working with server-side data by providing an interface for communications between the Grid on the client and the data on the server.
 
 :::success
 If you'd rather skip the tutorial entirely, you can check out [the complete app code on GitHub](https://github.com/mui/mui-x/tree/master/examples/aggregation-row-grouping/).
@@ -26,6 +27,7 @@ The docs listed below may be useful if you're new to the MUI X Data Grid:
 
 - [Row grouping](/x/react-data-grid/row-grouping/)
 - [Aggregation](/x/react-data-grid/aggregation/)
+- [Server-side data with the Data Source layer](/x/react-data-grid/server-side-data/)
 - [Column definition](/x/react-data-grid/column-definition/)
 - [Pagination](/x/react-data-grid/pagination/)
 
@@ -693,6 +695,9 @@ import * as React from 'react';
 import {
   DataGridPremium,
   type GridColDef,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -846,37 +851,42 @@ const columns: GridColDef[] = [
 - `type: 'number'` tells the grid these columns contain numeric data, which is required for aggregation
 - `valueFormatter` formats the salary column to display as currency
 
-### 10. Set up data fetching
+### 10. Set up GridDataSource
 
-Since we're using client-side aggregation and row grouping, we'll fetch all the data at once.
-Add state and a fetch effect to the component:
+The `GridDataSource` tells the Grid how to fetch data using the Data Source layer.
+Add the following code to your component:
 
 ```tsx
 function EmployeeDataGrid() {
   const apiRef = useGridApiRef();
-  const [rows, setRows] = React.useState<Employee[]>([]);
-  const [loading, setLoading] = React.useState(true);
 
-  // Fetch data from the server
-  React.useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('http://localhost:3001/api/employees');
+  const dataSource: GridDataSource = React.useMemo(
+    () => ({
+      getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+        const urlParams = new URLSearchParams({
+          paginationModel: JSON.stringify(params.paginationModel),
+          sortModel: JSON.stringify(params.sortModel || []),
+          filterModel: JSON.stringify(params.filterModel || {}),
+        });
+
+        const response = await fetch(
+          `http://localhost:3001/api/employees?${urlParams.toString()}`,
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result: ApiResponse = await response.json();
-        setRows(result.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
+        const result: ApiResponse = await response.json();
+
+        return {
+          rows: result.data,
+          rowCount: result.total,
+        };
+      },
+    }),
+    [],
+  );
 
   return (
     // ... component JSX
@@ -887,10 +897,15 @@ function EmployeeDataGrid() {
 **What's happening here:**
 
 - `apiRef` is a reference to the grid API, needed for the `useKeepGroupedColumnsHidden` hook
-- `rows` state holds the employee data
-- `loading` state tracks the fetch status
-- The `useEffect` hook fetches all employee data when the component mounts
-- We fetch all data because aggregation and row grouping work best with the full dataset on the client side
+- `getRows` is an async function that the grid calls whenever it needs data
+- `params` contains pagination, sorting, and filtering information
+- The function constructs URL parameters, fetches data from the server, and returns it in the format the Grid expects
+- Wrap it in `React.useMemo` to prevent recreating the function on every render
+
+:::info
+This tutorial provides a basic implementation of the Data Source layer.
+For a deeper dive into server-side data handling, including advanced features like caching, request deduplication, and error handling, see the [server-side data tutorial](/x/react-data-grid/tutorials/server-side-data/).
+:::
 
 ### 11. Configure row grouping and aggregation
 
@@ -942,28 +957,26 @@ getAggregationPosition={(groupNode) =>
 Finally, render the Grid with your configuration:
 
 ```tsx
-<DataGridPremium
-  apiRef={apiRef}
-  rows={rows}
-  columns={columns}
-  loading={loading}
-  initialState={initialState}
-  pagination
-  pageSizeOptions={[10, 25, 50, 100]}
-  disableRowSelectionOnClick
-  getAggregationPosition={(groupNode) =>
-    groupNode.depth === -1 ? 'footer' : 'inline'
-  }
-/>
+      <DataGridPremium
+        apiRef={apiRef}
+        columns={columns}
+        dataSource={dataSource}
+        initialState={initialState}
+        pagination
+        pageSizeOptions={[10, 25, 50, 100]}
+        disableRowSelectionOnClick
+        getAggregationPosition={(groupNode) =>
+          groupNode.depth === -1 ? 'footer' : 'inline'
+        }
+      />
 ```
 
 **What's happening here:**
 
 - `DataGridPremium` is the Premium version of the Data Grid, required for aggregation and row grouping features
 - `apiRef` provides the grid API reference
-- `rows` contains the employee data
 - `columns` defines the column structure
-- `loading` shows a loading state while data is being fetched
+- `dataSource` provides your server-side data fetching logic
 - `initialState` configures the initial row grouping and aggregation
 - `pagination` enables pagination controls
 - `pageSizeOptions` lets users choose how many rows to see per page
@@ -979,6 +992,9 @@ import * as React from 'react';
 import {
   DataGridPremium,
   type GridColDef,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
   useGridApiRef,
   useKeepGroupedColumnsHidden,
 } from '@mui/x-data-grid-premium';
@@ -1026,29 +1042,34 @@ const columns: GridColDef[] = [
 
 function EmployeeDataGrid() {
   const apiRef = useGridApiRef();
-  const [rows, setRows] = React.useState<Employee[]>([]);
-  const [loading, setLoading] = React.useState(true);
 
-  // Fetch data from the server
-  React.useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('http://localhost:3001/api/employees');
+  const dataSource: GridDataSource = React.useMemo(
+    () => ({
+      getRows: async (params: GridGetRowsParams): Promise<GridGetRowsResponse> => {
+        const urlParams = new URLSearchParams({
+          paginationModel: JSON.stringify(params.paginationModel),
+          sortModel: JSON.stringify(params.sortModel || []),
+          filterModel: JSON.stringify(params.filterModel || {}),
+        });
+
+        const response = await fetch(
+          `http://localhost:3001/api/employees?${urlParams.toString()}`,
+        );
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const result: ApiResponse = await response.json();
-        setRows(result.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
+        const result: ApiResponse = await response.json();
+
+        return {
+          rows: result.data,
+          rowCount: result.total,
+        };
+      },
+    }),
+    [],
+  );
 
   const initialState = useKeepGroupedColumnsHidden({
     apiRef,
@@ -1078,9 +1099,8 @@ function EmployeeDataGrid() {
 
       <DataGridPremium
         apiRef={apiRef}
-        rows={rows}
         columns={columns}
-        loading={loading}
+        dataSource={dataSource}
         initialState={initialState}
         pagination
         pageSizeOptions={[10, 25, 50, 100]}
