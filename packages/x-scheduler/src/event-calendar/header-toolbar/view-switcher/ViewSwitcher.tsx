@@ -1,13 +1,15 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { TimelineView, CalendarView } from '@mui/x-scheduler-headless/models';
+import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { useTranslations } from '../../../internals/utils/TranslationsContext';
+import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
 
 const ViewSwitcherRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -16,26 +18,28 @@ const ViewSwitcherRoot = styled('div', {
   display: 'flex',
 });
 
-export interface ViewSwitcherProps<T> extends React.HTMLAttributes<HTMLDivElement> {
-  views: T[];
-  view: T;
-  onViewChange: (view: T, event: Event) => void;
+export interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
+  views: CalendarView[];
+  view: CalendarView;
+  onViewChange: (view: CalendarView, event: Event) => void;
 }
 
-type ViewSwitcherComponent = <T extends string>(
-  props: ViewSwitcherProps<T> & {
+type ViewSwitcherComponent = (
+  props: ViewSwitcherProps & {
     ref?: React.ForwardedRef<HTMLDivElement>;
   },
 ) => React.ReactElement | null;
 
-export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
-  T extends TimelineView | CalendarView,
->(props: ViewSwitcherProps<T>, forwardedRef: React.ForwardedRef<HTMLDivElement>) {
-  const { views, onViewChange, view, ...other } = props;
+export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
+  props: ViewSwitcherProps,
+  forwardedRef: React.ForwardedRef<HTMLDivElement>,
+) {
+  const { views, onViewChange, view, className, ...other } = props;
 
   const containerRef = React.useRef<HTMLElement | null>(null);
   const handleRef = useMergedRefs(forwardedRef, containerRef);
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -48,13 +52,13 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher<
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, newView: T) => {
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLElement>, newView: CalendarView) => {
     onViewChange(newView, event.nativeEvent);
     handleMenuClose();
   };
 
   return (
-    <ViewSwitcherRoot ref={handleRef} {...other}>
+    <ViewSwitcherRoot ref={handleRef} {...other} className={clsx(className, classes.viewSwitcher)}>
       <Button
         size="medium"
         variant="outlined"

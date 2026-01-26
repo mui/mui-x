@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import ChevronLeft from '@mui/icons-material/ChevronLeft';
@@ -16,11 +17,11 @@ import {
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
 import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
-import { CalendarView } from '@mui/x-scheduler-headless/models';
 import { HeaderToolbarProps } from './HeaderToolbar.types';
 import { ViewSwitcher } from './view-switcher';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { PreferencesMenu } from './preferences-menu';
+import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const HeaderToolbarRoot = styled('header', {
   name: 'MuiEventCalendar',
@@ -76,6 +77,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
   const adapter = useAdapter();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const views = useStore(store, eventCalendarViewSelectors.views);
@@ -86,8 +88,18 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
   const showViewSwitcher = views.length > 1;
 
   return (
-    <HeaderToolbarRoot ref={forwardedRef} data-single-primary-action={!showViewSwitcher} {...props}>
-      <HeaderToolbarLeft ref={forwardedRef} role="navigation" {...props}>
+    <HeaderToolbarRoot
+      ref={forwardedRef}
+      data-single-primary-action={!showViewSwitcher}
+      {...props}
+      className={clsx(props.className, classes.headerToolbar)}
+    >
+      <HeaderToolbarLeft
+        ref={forwardedRef}
+        role="navigation"
+        {...props}
+        className={classes.headerToolbarLeft}
+      >
         <IconButton
           aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
           onClick={(event) =>
@@ -101,10 +113,10 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {adapter.format(visibleDate, 'yearPadded')}
         </HeaderToolbarLabel>
       </HeaderToolbarLeft>
-      <HeaderToolbarActions>
+      <HeaderToolbarActions className={classes.headerToolbarActions}>
         <PreferencesMenu />
 
-        <DateNavigatorButtonsContainer>
+        <DateNavigatorButtonsContainer className={classes.dateNavigatorButtonsContainer}>
           <Button
             onClick={store.goToPreviousVisibleDate}
             aria-label={translations.previousTimeSpan(view)}
@@ -117,7 +129,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           </Button>
         </DateNavigatorButtonsContainer>
         {showViewSwitcher && (
-          <ViewSwitcher<CalendarView> views={views} view={view} onViewChange={store.setView} />
+          <ViewSwitcher views={views} view={view} onViewChange={store.setView} />
         )}
       </HeaderToolbarActions>
     </HeaderToolbarRoot>

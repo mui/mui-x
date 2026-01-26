@@ -1,6 +1,6 @@
 import { screen, within, fireEvent } from '@mui/internal-test-utils';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
 import { createSchedulerRenderer } from 'test/utils/scheduler';
+import { EventCalendarProvider } from '../../internals/components/EventCalendarProvider';
 import { HeaderToolbar } from './HeaderToolbar';
 
 describe('<ViewSwitcher />', () => {

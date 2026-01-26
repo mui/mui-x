@@ -124,9 +124,7 @@ class RecurringEventExpander {
     const hasCount = typeof this.rule.count === 'number' && this.rule.count > 0;
     const hasUntil = !!this.rule.until;
     if (hasCount && hasUntil) {
-      throw new Error(
-        'Scheduler: The recurring rule cannot have both the count and until properties.',
-      );
+      throw new Error('MUI: The recurring rule cannot have both the count and until properties.');
     }
 
     switch (this.rule.freq) {
@@ -143,7 +141,7 @@ class RecurringEventExpander {
       case 'MONTHLY': {
         if (this.rule.byDay?.length && this.rule.byMonthDay?.length) {
           throw new Error(
-            'Scheduler: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
+            'MUI: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
           );
         }
 
@@ -161,7 +159,7 @@ class RecurringEventExpander {
         // Any use of BYMONTH, BYMONTHDAY, BYDAY, or multiple values is not allowed.
         if (this.rule.byMonth?.length || this.rule.byMonthDay?.length || this.rule.byDay?.length) {
           throw new Error(
-            'Scheduler: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
+            'MUI: The yearly recurrences only support exact same date recurrence (month/day of DTSTART).',
           );
         }
 
@@ -277,7 +275,7 @@ class RecurringEventExpander {
       }
       default:
         throw new Error(
-          `Scheduler: Unknown frequency ${this.rule.freq}. Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".`,
+          `MUI: Unknown frequency ${this.rule.freq}. Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".`,
         );
     }
   }
