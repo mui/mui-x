@@ -4,11 +4,6 @@ import type { SchedulerStoreClassDescriptor } from './types';
 
 const DEFAULT_PARAMS = { events: [] };
 
-/**
- * Shared tests for SchedulerStore date behavior.
- * These tests verify the date navigation functionality that both EventCalendarStore
- * and EventTimelinePremiumStore inherit from SchedulerStore.
- */
 export function describeSchedulerStoreDateTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`SchedulerStore Date - ${storeClass.name}`, () => {
     describe('Method: goToToday', () => {

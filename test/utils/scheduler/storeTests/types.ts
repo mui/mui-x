@@ -2,7 +2,6 @@ import type { TemporalAdapter } from '@mui/x-scheduler-headless/base-ui-copy';
 
 /**
  * Descriptor for a store class to be tested with the shared SchedulerStore tests.
- * Both EventCalendarStore and EventTimelinePremiumStore should be tested with these.
  */
 export interface SchedulerStoreClassDescriptor {
   /**

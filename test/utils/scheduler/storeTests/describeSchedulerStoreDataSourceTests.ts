@@ -4,7 +4,6 @@ import type { SchedulerStoreClassDescriptor } from './types';
 
 const DEFAULT_PARAMS = { events: [] };
 
-// Basic types for testing
 interface TestEvent {
   id: string;
   start: Date;
@@ -27,11 +26,6 @@ const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => 
   });
 };
 
-/**
- * Shared tests for SchedulerStore data source/lazy loading behavior.
- * These tests verify the lazy loading functionality that both EventCalendarStore
- * and EventTimelinePremiumStore inherit from SchedulerStore.
- */
 export function describeSchedulerStoreDataSourceTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`SchedulerStore DataSource - ${storeClass.name}`, () => {
     it('should fetch events from data source when queueDataFetchForRange is called (lazy load)', async () => {

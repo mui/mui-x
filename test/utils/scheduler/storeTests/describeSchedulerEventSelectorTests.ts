@@ -6,11 +6,6 @@ import type { SchedulerStoreClassDescriptor } from './types';
 const defaultEvent = EventBuilder.new().id('event-1').build();
 const readOnlyEvent = EventBuilder.new().id('event-1').readOnly().build();
 
-/**
- * Shared tests for schedulerEventSelectors.
- * These tests verify the selector functionality that both EventCalendarStore
- * and EventTimelinePremiumStore use through SchedulerStore.
- */
 export function describeSchedulerEventSelectorTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`schedulerEventSelectors - ${storeClass.name}`, () => {
     describe('creationConfig', () => {

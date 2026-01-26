@@ -2,11 +2,6 @@ import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { adapter } from '../index';
 import type { SchedulerStoreClassDescriptor } from './types';
 
-/**
- * Shared tests for schedulerOtherSelectors.
- * These tests verify the selector functionality that both EventCalendarStore
- * and EventTimelinePremiumStore use through SchedulerStore.
- */
 export function describeSchedulerOtherSelectorTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`schedulerOtherSelectors - ${storeClass.name}`, () => {
     describe('visibleDate', () => {

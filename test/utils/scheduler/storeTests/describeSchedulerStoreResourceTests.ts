@@ -9,11 +9,6 @@ import type { SchedulerStoreClassDescriptor } from './types';
 
 const DEFAULT_PARAMS = { events: [] };
 
-/**
- * Shared tests for SchedulerStore resource behavior.
- * These tests verify the resource management functionality that both EventCalendarStore
- * and EventTimelinePremiumStore inherit from SchedulerStore.
- */
 export function describeSchedulerStoreResourceTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`SchedulerStore Resource - ${storeClass.name}`, () => {
     describe('prop: resourceModelStructure', () => {

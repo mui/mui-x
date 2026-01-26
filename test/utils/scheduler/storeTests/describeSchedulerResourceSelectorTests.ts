@@ -2,11 +2,6 @@ import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-
 import { adapter } from '../index';
 import type { SchedulerStoreClassDescriptor } from './types';
 
-/**
- * Shared tests for schedulerResourceSelectors.
- * These tests verify the selector functionality that both EventCalendarStore
- * and EventTimelinePremiumStore use through SchedulerStore.
- */
 export function describeSchedulerResourceSelectorTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`schedulerResourceSelectors - ${storeClass.name}`, () => {
     describe('processedResourceFlatList', () => {

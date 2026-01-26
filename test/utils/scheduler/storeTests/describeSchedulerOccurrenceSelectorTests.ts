@@ -19,11 +19,6 @@ const makeResource = (
   children,
 });
 
-/**
- * Shared tests for schedulerOccurrenceSelectors.
- * These tests verify the selector functionality that both EventCalendarStore
- * and EventTimelinePremiumStore use through SchedulerStore.
- */
 export function describeSchedulerOccurrenceSelectorTests(
   storeClass: SchedulerStoreClassDescriptor,
 ) {

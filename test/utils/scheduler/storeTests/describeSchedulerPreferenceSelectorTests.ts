@@ -3,11 +3,6 @@ import { DEFAULT_SCHEDULER_PREFERENCES } from '@mui/x-scheduler-headless/interna
 import { adapter } from '../index';
 import type { SchedulerStoreClassDescriptor } from './types';
 
-/**
- * Shared tests for schedulerPreferenceSelectors.
- * These tests verify the selector functionality that both EventCalendarStore
- * and EventTimelinePremiumStore use through SchedulerStore.
- */
 export function describeSchedulerPreferenceSelectorTests(
   storeClass: SchedulerStoreClassDescriptor,
 ) {

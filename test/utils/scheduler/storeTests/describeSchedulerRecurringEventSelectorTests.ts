@@ -5,11 +5,6 @@ import { getWeekDayCode } from '@mui/x-scheduler-headless/internals';
 import { adapter } from '../index';
 import type { SchedulerStoreClassDescriptor } from './types';
 
-/**
- * Shared tests for schedulerRecurringEventSelectors.
- * These tests verify the selector functionality that both EventCalendarStore
- * and EventTimelinePremiumStore use through SchedulerStore.
- */
 export function describeSchedulerRecurringEventSelectorTests(
   storeClass: SchedulerStoreClassDescriptor,
 ) {

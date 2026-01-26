@@ -8,11 +8,6 @@ import type { SchedulerStoreClassDescriptor } from './types';
 
 const DEFAULT_PARAMS = { events: [] as SchedulerEvent[] };
 
-/**
- * Shared tests for core SchedulerStore behavior.
- * These tests verify the shared functionality that both EventCalendarStore
- * and EventTimelinePremiumStore inherit from SchedulerStore.
- */
 export function describeSchedulerStoreCoreTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`SchedulerStore Core - ${storeClass.name}`, () => {
     describe('create', () => {

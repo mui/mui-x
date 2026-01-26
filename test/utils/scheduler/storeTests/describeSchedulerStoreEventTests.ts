@@ -8,11 +8,6 @@ import { schedulerEventSelectors } from '@mui/x-scheduler-headless/scheduler-sel
 import { adapter, EventBuilder } from '../index';
 import type { SchedulerStoreClassDescriptor } from './types';
 
-/**
- * Shared tests for SchedulerStore event behavior.
- * These tests verify the event management functionality that both EventCalendarStore
- * and EventTimelinePremiumStore inherit from SchedulerStore.
- */
 export function describeSchedulerStoreEventTests(storeClass: SchedulerStoreClassDescriptor) {
   describe(`SchedulerStore Event - ${storeClass.name}`, () => {
     describe('prop: eventModelStructure', () => {
