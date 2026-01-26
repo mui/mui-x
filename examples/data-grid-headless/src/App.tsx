@@ -169,7 +169,6 @@ function generateColumns() {
 
 const ROW_HEIGHT = 52;
 const HEADER_HEIGHT = 48;
-const SCROLLBAR_SIZE = 14;
 
 const plugins = [sortingPlugin, paginationPlugin, virtualizationPlugin] as const;
 type GridPlugins = typeof plugins;
@@ -191,6 +190,7 @@ function renderCell(column: ColumnToRender, row: RowToRender<RowData>) {
     <div
       key={column.id}
       className="DataGrid-cell"
+      // TODO: should come from the Elements API
       role="gridcell"
       style={{
         padding: '12px 16px',
@@ -235,8 +235,6 @@ function DataGridRenderZone() {
   const offsetTop = virtualization.hooks.useOffsetTop();
   const offsetLeft = virtualization.hooks.useOffsetLeft();
 
-  const renderZoneTop = offsetTop;
-
   return (
     <div
       className="DataGrid-virtualScrollerRenderZone"
@@ -245,7 +243,7 @@ function DataGridRenderZone() {
         position: 'absolute',
         top: 0,
         left: offsetLeft,
-        transform: `translate3d(0, ${renderZoneTop}px, 0)`,
+        transform: `translate3d(0, ${offsetTop}px, 0)`,
       }}
     >
       {rowsToRender.map((row) => {
@@ -397,13 +395,15 @@ function DataGridVirtualScrollbar({
     };
   }, [handleScrollerScroll, handleScrollbarScroll, scrollerRef]);
 
+  const scrollbarSize = dimensions.scrollbarSize;
+
   const style: React.CSSProperties = isVertical
     ? {
         position: 'absolute',
         top: HEADER_HEIGHT,
         right: 0,
-        width: SCROLLBAR_SIZE,
-        height: `calc(100% - ${HEADER_HEIGHT}px - ${hasOppositeScrollbar ? SCROLLBAR_SIZE : 0}px)`,
+        width: scrollbarSize,
+        height: `calc(100% - ${HEADER_HEIGHT}px - ${hasOppositeScrollbar ? scrollbarSize : 0}px)`,
         overflowY: 'auto',
         overflowX: 'hidden',
         outline: 0,
@@ -412,16 +412,16 @@ function DataGridVirtualScrollbar({
         position: 'absolute',
         bottom: 0,
         left: 0,
-        width: `calc(100% - ${hasOppositeScrollbar ? SCROLLBAR_SIZE : 0}px)`,
-        height: SCROLLBAR_SIZE,
+        width: `calc(100% - ${hasOppositeScrollbar ? scrollbarSize : 0}px)`,
+        height: scrollbarSize,
         overflowY: 'hidden',
         overflowX: 'auto',
         outline: 0,
       };
 
   const innerStyle: React.CSSProperties = isVertical
-    ? { width: SCROLLBAR_SIZE, height: contentSize }
-    : { height: SCROLLBAR_SIZE, width: contentSize };
+    ? { width: scrollbarSize, height: contentSize }
+    : { height: scrollbarSize, width: contentSize };
 
   return (
     <div
@@ -463,6 +463,7 @@ function DataGrid() {
 
   const hasScrollY = dimensions.hasScrollY;
   const hasScrollX = dimensions.hasScrollX;
+  const scrollbarSize = dimensions.scrollbarSize;
 
   const handleRefreshRows = () => {
     setRows(generateSampleData(rows.length));
@@ -555,8 +556,8 @@ function DataGrid() {
                 position: 'absolute',
                 bottom: 0,
                 right: 0,
-                width: SCROLLBAR_SIZE,
-                height: SCROLLBAR_SIZE,
+                width: scrollbarSize,
+                height: scrollbarSize,
                 backgroundColor: '#f5f5f5',
               }}
             />
