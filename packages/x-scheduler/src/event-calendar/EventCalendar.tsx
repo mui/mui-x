@@ -97,6 +97,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     dayTimeGridColumn: ['dayTimeGridColumn'],
     dayTimeGridColumnInteractiveLayer: ['dayTimeGridColumnInteractiveLayer'],
     dayTimeGridCurrentTimeIndicator: ['dayTimeGridCurrentTimeIndicator'],
+    dayTimeGridCurrentTimeIndicatorCircle: ['dayTimeGridCurrentTimeIndicatorCircle'],
     dayTimeGridCurrentTimeLabel: ['dayTimeGridCurrentTimeLabel'],
     dayTimeGridAllDayEventsCellEvents: ['dayTimeGridAllDayEventsCellEvents'],
     dayTimeGridAllDayEventContainer: ['dayTimeGridAllDayEventContainer'],
