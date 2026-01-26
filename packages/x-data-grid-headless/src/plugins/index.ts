@@ -18,6 +18,7 @@ export type {
   GridSortModel,
   GridSortItem,
   GridComparatorFn,
+  GridComparatorFnFactory,
   GridSortCellParams,
   SortingState,
   SortingOptions,
@@ -25,6 +26,7 @@ export type {
   SortingColumnMeta,
   SortColumnLookup,
   SortingSelectors,
+  ComputeSortedRowIdsOptions,
 } from './sorting/sorting';
 
 // Pagination plugin

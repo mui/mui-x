@@ -18,6 +18,7 @@ import type {
   SortingInternalOptions,
   SortingApi,
   SortingColumnMeta,
+  ComputeSortedRowIdsOptions,
 } from './types';
 
 // Re-export types
@@ -34,6 +35,7 @@ export type {
   SortingColumnMeta,
   SortColumnLookup,
   SortingSelectors,
+  ComputeSortedRowIdsOptions,
 } from './types';
 
 // Re-export utilities
@@ -126,10 +128,22 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
 
     /**
      * Compute sorted row IDs without updating state.
+     * This is the core sorting utility that can be used externally or internally.
+     *
+     * @param rowIds - Row IDs to sort. Defaults to all row IDs.
+     * @param sortModel - Sort model to apply. Defaults to current state.
+     * @param options - Additional options for sorting behavior.
+     * @returns Sorted row IDs array.
      */
-    const computeSortedRowIds = (rowIds?: GridRowId[], sortModel?: GridSortModel): GridRowId[] => {
+    const computeSortedRowIds = (
+      rowIds?: GridRowId[],
+      sortModel?: GridSortModel,
+      options?: ComputeSortedRowIdsOptions,
+    ): GridRowId[] => {
       const idsToSort = rowIds ?? getAllRowIds();
       const modelToUse = sortModel ?? store.state.sorting.sortModel;
+      const useStableSort = options?.stableSort ?? false;
+      const currentIds = options?.currentSortedRowIds ?? store.state.sorting.sortedRowIds;
 
       const sortingApplier = buildSortingApplier({
         sortModel: modelToUse,
@@ -137,15 +151,12 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         getRow,
       });
 
-      if (!sortingApplier) {
-        return idsToSort;
-      }
-
-      return sortingApplier(idsToSort);
+      return applySortingToRowIds(idsToSort, sortingApplier, useStableSort, currentIds);
     };
 
     /**
      * Apply sorting and update state.
+     * Uses computeSortedRowIds internally.
      */
     const applySorting = (): void => {
       // Skip if external sorting is enabled
@@ -153,21 +164,9 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         return;
       }
 
-      const rowIds = getAllRowIds();
-      const { sortModel, sortedRowIds: currentSortedRowIds } = store.state.sorting;
-
-      const sortingApplier = buildSortingApplier({
-        sortModel,
-        getColumn,
-        getRow,
+      const newSortedRowIds = computeSortedRowIds(undefined, undefined, {
+        stableSort: params.stableSort ?? false,
       });
-
-      const newSortedRowIds = applySortingToRowIds(
-        rowIds,
-        sortingApplier,
-        params.stableSort ?? false,
-        currentSortedRowIds,
-      );
 
       // Update state
       store.setState({

@@ -166,6 +166,16 @@ export interface SortingSelectors {
   isSorted: (state: SortingState) => boolean;
 }
 
+/**
+ * Options for computeSortedRowIds.
+ */
+export interface ComputeSortedRowIdsOptions {
+  /** Use stable sort - build on current sorted order instead of starting fresh. */
+  stableSort?: boolean;
+  /** Current sorted row IDs to use as base for stable sort. Defaults to state. */
+  currentSortedRowIds?: GridRowId[];
+}
+
 // The sorting plugin API.
 export interface SortingApi {
   sorting: {
@@ -178,11 +188,16 @@ export interface SortingApi {
     // Sort a column. Cycles through sortingOrder if direction is not provided.
     sortColumn: (field: string, direction?: GridSortDirection, multiSort?: boolean) => void;
 
-    // Apply sorting using the current sort model.
+    // Apply sorting using the current sort model. Uses computeSortedRowIds internally.
     applySorting: () => void;
 
     // Compute sorted row IDs without updating state.
-    computeSortedRowIds: (rowIds?: GridRowId[], sortModel?: GridSortModel) => GridRowId[];
+    // Core sorting utility that can be used for external sorting workflows.
+    computeSortedRowIds: (
+      rowIds?: GridRowId[],
+      sortModel?: GridSortModel,
+      options?: ComputeSortedRowIdsOptions,
+    ) => GridRowId[];
 
     // Selectors for accessing sorting state.
     selectors: SortingSelectors;
