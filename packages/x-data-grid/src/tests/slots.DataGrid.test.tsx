@@ -1,4 +1,10 @@
-import { createRenderer, ErrorBoundary, fireEvent, reactMajor, screen } from '@mui/internal-test-utils';
+import {
+  createRenderer,
+  ErrorBoundary,
+  fireEvent,
+  reactMajor,
+  screen,
+} from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { DataGrid, DataGridProps, GridOverlay } from '@mui/x-data-grid';
 import { getCell, getRow, openLongTextViewPopup } from 'test/utils/helperFn';

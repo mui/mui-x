@@ -189,7 +189,7 @@ function GridLongTextCell(props: GridLongTextCellProps) {
   };
 
   const handleExpandKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === ' ') {
+    if (event.key === ' ' && !event.shiftKey) {
       event.preventDefault(); // Prevent native button click on keyup
       event.stopPropagation(); // Prevent grid row selection
       setPopupOpen((prev) => !prev);

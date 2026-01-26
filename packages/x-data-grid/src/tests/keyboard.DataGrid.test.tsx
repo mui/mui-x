@@ -1061,7 +1061,9 @@ describe('<DataGrid /> - Keyboard', () => {
       const cell = getCell(0, 0);
       await openLongTextViewPopup(cell, user, 'spacebar');
 
-      const expandButton = cell.querySelector('button[aria-haspopup="dialog"]') as HTMLButtonElement;
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
       expect(expandButton).to.have.attribute('aria-expanded', 'true');
 
       // Press Escape to close
@@ -1086,6 +1088,29 @@ describe('<DataGrid /> - Keyboard', () => {
 
       // Focus should return to the cell
       expect(document.activeElement?.closest('[role="gridcell"]')).to.equal(cell);
+    });
+
+    it('should NOT open popup on Shift+Space (allows row selection)', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} checkboxSelection />
+        </div>,
+      );
+
+      const cell = getCell(0, 1); // bio column (index 1 due to checkbox column)
+      await user.click(cell);
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(document.activeElement).to.equal(expandButton);
+
+      // Shift+Space should NOT toggle popup
+      fireEvent.keyDown(expandButton, { key: ' ', shiftKey: true });
+
+      // Popup should NOT be open
+      expect(expandButton).to.have.attribute('aria-expanded', 'false');
+      expect(document.querySelector('.MuiDataGrid-longTextCellPopup')).to.equal(null);
     });
   });
 });
