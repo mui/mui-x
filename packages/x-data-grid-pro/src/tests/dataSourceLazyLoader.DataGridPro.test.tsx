@@ -14,7 +14,7 @@ import {
   useGridApiRef,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { TestCache } from '@mui/x-data-grid/internals';
 
@@ -22,7 +22,7 @@ import { TestCache } from '@mui/x-data-grid/internals';
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   const { render } = createRenderer();
   const defaultTransformGetRowsResponse = (response: GridGetRowsResponse) => response;
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   let transformGetRowsResponse: (response: GridGetRowsResponse) => GridGetRowsResponse;
   let apiRef: RefObject<GridApi | null>;
@@ -40,7 +40,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -110,14 +110,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   it('should load the first page initially', async () => {
     render(<TestDataSourceLazyLoader />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   it('should re-fetch the data once if multiple models have changed', async () => {
     const { setProps } = render(<TestDataSourceLazyLoader />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
 
     setProps({
@@ -126,7 +126,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -183,12 +183,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // reset the spy call count
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
 
       await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -197,25 +197,25 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
-      const initialSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const initialSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       expect(initialSearchParams.get('end')).to.equal('9');
 
       await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
 
-      const beforeSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const beforeSortSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       expect(beforeSortSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(3);
       });
 
-      const afterSortSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const afterSortSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       expect(afterSortSearchParams.get('end')).to.equal('9');
     });
 
@@ -227,9 +227,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await act(async () => apiRef.current?.scrollToIndexes({ rowIndex: 10 }));
 
       // wait until the rows are rendered
-      await waitFor(() => expect(fetchRowsSpy.callCount).to.equal(2));
+      await waitFor(() => expect(fetchRowsSpy).toHaveBeenCalledTimes(2));
 
-      const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const beforeFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // first row is not the first page anymore
       expect(beforeFilteringSearchParams.get('start')).to.equal('10');
 
@@ -246,10 +246,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(3);
       });
 
-      const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const afterFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // first row is the start of the first page
       expect(afterFilteringSearchParams.get('start')).to.equal('0');
     });
@@ -276,7 +276,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // reset the spy call count
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
 
       // make one small and one big scroll that makes sure that the bottom of the grid window is reached
       await act(async () => {
@@ -288,7 +288,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
 
       // Only one additional fetch should have been made
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -302,9 +302,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3); // grid is 4 rows high and the threshold is 60px, so 3 pages are loaded
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(3); // grid is 4 rows high and the threshold is 60px, so 3 pages are loaded
       });
-      const lastSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       expect(lastSearchParams.get('end')).to.equal('5'); // 6th row
     });
 
@@ -318,9 +318,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         />,
       );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
-      const lastSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const lastSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // 3rd and 4th row were requested but not added
       expect(lastSearchParams.get('start')).to.equal('2');
       expect(lastSearchParams.get('end')).to.equal('3');
@@ -336,13 +336,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
 
-      const beforeSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const beforeSortingSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // last row is not the first page anymore
       expect(beforeSortingSearchParams.get('end')).not.to.equal('9');
 
       await act(async () => apiRef.current?.sortColumn(mockServer.columns[0].field, 'asc'));
 
-      const afterSortingSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const afterSortingSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // last row is the end of the first page
       expect(afterSortingSearchParams.get('end')).to.equal('9');
     });
@@ -357,7 +357,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(10)).not.to.be.undefined);
 
-      const beforeFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const beforeFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // last row is not the first page anymore
       expect(beforeFilteringSearchParams.get('end')).not.to.equal('9');
 
@@ -373,7 +373,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
         });
       });
 
-      const afterFilteringSearchParams = new URL(fetchRowsSpy.lastCall.args[0]).searchParams;
+      const afterFilteringSearchParams = new URL(fetchRowsSpy.mock.lastCall[0]).searchParams;
       // last row is the end of the first page
       expect(afterFilteringSearchParams.get('end')).to.equal('9');
     });
@@ -426,19 +426,19 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       await waitFor(() => expect(getRow(0)).not.to.be.undefined);
 
       // reset the spy call count
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
 
       // reduce the rowCount to be more than the number of rows
       await act(async () => {
         apiRef.current?.setRowCount(80);
       });
-      expect(fetchRowsSpy.callCount).to.equal(0);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(0);
 
       // reduce the rowCount once more, but now to be less than the number of rows
       await act(async () => {
         apiRef.current?.setRowCount(20);
       });
-      await waitFor(() => expect(fetchRowsSpy.callCount).to.equal(1));
+      await waitFor(() => expect(fetchRowsSpy).toHaveBeenCalledTimes(1));
     });
 
     it('should allow setting the row count via API', async () => {
@@ -464,15 +464,15 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
   describe('Cache', () => {
     it('should combine cache chunks when possible to reduce the number of requests', async () => {
       const testCache = new TestCache();
-      const cacheGetSpy = spy(testCache, 'get');
+      const cacheGetSpy = vi.spyOn(testCache, 'get');
       render(<TestDataSourceLazyLoader dataSourceCache={testCache} />);
 
       await waitFor(() => {
-        expect(cacheGetSpy.called).to.equal(true);
+        expect(cacheGetSpy).toHaveBeenCalled();
       });
 
-      cacheGetSpy.resetHistory();
-      fetchRowsSpy.resetHistory();
+      cacheGetSpy.mockClear();
+      fetchRowsSpy.mockClear();
 
       act(() => {
         apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
@@ -482,9 +482,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       await waitFor(() => {
-        expect(cacheGetSpy.callCount).to.equal(3);
+        expect(cacheGetSpy).toHaveBeenCalledTimes(3);
       });
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
 
       act(() => {
         apiRef.current?.dataSource.fetchRows(GRID_ROOT_GROUP_ID, {
@@ -494,9 +494,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source lazy loader', () => {
       });
 
       await waitFor(() => {
-        expect(cacheGetSpy.callCount).to.equal(4);
+        expect(cacheGetSpy).toHaveBeenCalledTimes(4);
       });
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
   });
 });

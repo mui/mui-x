@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import {
   DataGrid,
   DataGridProps,
@@ -218,7 +218,7 @@ describe('<DataGrid /> - Filter panel', () => {
   });
 
   it('should reset value if the new operator has no input component', () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
 
     render(
       <TestCase
@@ -246,12 +246,12 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getSelectByName('Operator').value).to.equal('contains');
     expect(getColumnValues(0)).to.deep.equal(['Puma']);
 
-    expect(onFilterModelChange.callCount).to.equal(0);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(0);
 
     setOperatorValue('isEmpty');
 
-    expect(onFilterModelChange.callCount).to.equal(1);
-    expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+    expect(onFilterModelChange).toHaveBeenCalledTimes(1);
+    expect(onFilterModelChange.mock.lastCall[0].items[0].value).to.equal(undefined);
 
     expect(getSelectByName('Operator').value).to.equal('isEmpty');
   });
@@ -439,7 +439,7 @@ describe('<DataGrid /> - Filter panel', () => {
   });
 
   it('should close filter panel when removing the last filter', async () => {
-    const onFilterModelChange = spy();
+    const onFilterModelChange = vi.fn();
 
     render(
       <TestCase

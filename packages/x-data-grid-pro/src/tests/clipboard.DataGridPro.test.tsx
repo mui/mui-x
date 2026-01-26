@@ -1,7 +1,7 @@
 import { RefObject } from '@mui/x-internals/types';
 import { GridApi, useGridApiRef, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { SinonSpy, spy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 import { getCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 
@@ -39,17 +39,18 @@ describe('<DataGridPro /> - Clipboard', () => {
   }
 
   describe('copy to clipboard', () => {
-    let writeText: SinonSpy | undefined;
+    let writeText: MockInstance | undefined;
 
     afterEach(function afterEachHook() {
-      writeText?.restore();
+      writeText?.mockRestore();
+      vi.restoreAllMocks();
     });
 
     ['ctrlKey', 'metaKey'].forEach((key) => {
       it(`should copy the selected rows to the clipboard when ${key} + C is pressed`, () => {
         render(<Test disableRowSelectionOnClick />);
 
-        writeText = spy(navigator.clipboard, 'writeText');
+        writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
         act(() => apiRef.current?.selectRows([0, 1]));
         const cell = getCell(0, 0);
@@ -68,14 +69,14 @@ describe('<DataGridPro /> - Clipboard', () => {
         />,
       );
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       const cell = getCell(0, 0);
       cell.focus();
       fireUserEvent.mousePress(cell);
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
-      expect(writeText.lastCall.firstArg).to.equal('1 " 1');
+      expect(writeText).toHaveBeenLastCalledWith('1 " 1');
     });
 
     it('should not escape double quotes when copying rows to clipboard', () => {
@@ -90,7 +91,7 @@ describe('<DataGridPro /> - Clipboard', () => {
         />,
       );
 
-      writeText = spy(navigator.clipboard, 'writeText');
+      writeText = vi.spyOn(navigator.clipboard, 'writeText');
 
       act(() => apiRef.current?.selectRows([0, 1]));
       const cell = getCell(0, 0);

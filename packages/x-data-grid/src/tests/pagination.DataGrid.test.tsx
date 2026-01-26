@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { spy, SinonSpy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 import {
   createRenderer,
   fireEvent,
@@ -48,7 +48,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should not call onPaginationModelChange on initialisation', () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       render(
         <BaselineTestCase
@@ -58,7 +58,7 @@ describe('<DataGrid /> - Pagination', () => {
         />,
       );
 
-      expect(onPaginationModelChange.callCount).to.equal(0);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(0);
     });
 
     it('should allow to update the paginationModel from the outside', () => {
@@ -80,7 +80,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should call onPaginationModelChange and apply new page when clicking on next / previous button', () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       render(
         <BaselineTestCase
@@ -91,13 +91,13 @@ describe('<DataGrid /> - Pagination', () => {
       );
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0].page).to.equal(1);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
+      expect(onPaginationModelChange.mock.lastCall[0].page).to.equal(1);
       expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPaginationModelChange.callCount).to.equal(2);
-      expect(onPaginationModelChange.lastCall.args[0].page).to.equal(0);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(2);
+      expect(onPaginationModelChange.mock.lastCall[0].page).to.equal(0);
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
@@ -111,7 +111,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should call onPaginationModelChange and apply the new pageSize when clicking on a page size option and paginationModel is not controlled', () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       render(
         <BaselineTestCase
@@ -123,18 +123,18 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(4);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(2);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
+      expect(onPaginationModelChange.mock.lastCall[0].pageSize).to.equal(2);
       expect(getColumnValues(0)).to.deep.equal(['0', '1']);
     });
 
     it('should call onPaginationModelChange with the correct paginationModel when clicking on next / previous button when paginationModel is controlled', () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       function TestCase({
         handlePaginationModelChange,
       }: {
-        handlePaginationModelChange: SinonSpy;
+        handlePaginationModelChange: MockInstance;
       }) {
         const [paginationModel, setPaginationModel] = React.useState({ pageSize: 1, page: 0 });
         return (
@@ -152,16 +152,16 @@ describe('<DataGrid /> - Pagination', () => {
       render(<TestCase handlePaginationModelChange={onPaginationModelChange} />);
 
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 1, pageSize: 1 });
+      expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 1 });
       expect(getColumnValues(0)).to.deep.equal(['1']);
 
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 1 });
+      expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 0, pageSize: 1 });
       expect(getColumnValues(0)).to.deep.equal(['0']);
     });
 
     it('should call onPaginationModelChange when clicking on next / previous button in "server" mode', () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       render(
         <BaselineTestCase
@@ -173,10 +173,10 @@ describe('<DataGrid /> - Pagination', () => {
         />,
       );
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
-      expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 1, pageSize: 1 });
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
+      expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 1, pageSize: 1 });
       fireEvent.click(screen.getByRole('button', { name: /previous page/i }));
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 1 });
+      expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 0, pageSize: 1 });
     });
 
     it('should not change the state when clicking on next button and a `paginationModel` prop is provided', () => {
@@ -209,7 +209,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should go to last page when paginationModel is controlled and the current page is greater than the last page', async () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
       function TestCasePaginationFilteredData(props: Partial<DataGridProps>) {
         const [paginationModel, setPaginationModel] = React.useState({ page: 1, pageSize: 5 });
 
@@ -230,7 +230,7 @@ describe('<DataGrid /> - Pagination', () => {
         );
       }
       const { setProps } = render(<TestCasePaginationFilteredData />);
-      expect(onPaginationModelChange.callCount).to.equal(0);
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(0);
 
       setProps({
         filterModel: {
@@ -248,8 +248,8 @@ describe('<DataGrid /> - Pagination', () => {
       await waitFor(() => {
         expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3']);
       });
-      expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ page: 0, pageSize: 5 });
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
+      expect(onPaginationModelChange).toHaveBeenLastCalledWith({ page: 0, pageSize: 5 });
     });
 
     it('should scroll to the top of the page when changing page', () => {
@@ -280,7 +280,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should call onPaginationModelChange with the correct page when clicking on a page size option when paginationModel is controlled', () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       render(
         <BaselineTestCase
@@ -294,8 +294,8 @@ describe('<DataGrid /> - Pagination', () => {
       expect(screen.queryAllByRole('option').length).to.equal(3);
 
       fireEvent.click(screen.queryAllByRole('option')[1]);
-      expect(onPaginationModelChange.callCount).to.equal(1);
-      expect(onPaginationModelChange.lastCall.args[0]).to.deep.equal({ pageSize: 2, page: 0 });
+      expect(onPaginationModelChange).toHaveBeenCalledTimes(1);
+      expect(onPaginationModelChange).toHaveBeenLastCalledWith({ pageSize: 2, page: 0 });
     });
 
     it('should not change the pageSize state when clicking on a page size option when paginationModel prop is provided', () => {
@@ -464,7 +464,7 @@ describe('<DataGrid /> - Pagination', () => {
     });
 
     it('should update the amount of rows rendered and call onPageSizeChange when changing the table height', async () => {
-      const onPaginationModelChange = spy();
+      const onPaginationModelChange = vi.fn();
 
       const nbRows = 27;
 
@@ -505,7 +505,7 @@ describe('<DataGrid /> - Pagination', () => {
       rows = document.querySelectorAll('.MuiDataGrid-virtualScrollerRenderZone [role="row"]');
       expect(rows.length).to.equal(expectedViewportRowsLengthAfter);
 
-      expect(onPaginationModelChange.lastCall.args[0].pageSize).to.equal(
+      expect(onPaginationModelChange.mock.lastCall[0].pageSize).to.equal(
         expectedViewportRowsLengthAfter,
       );
     });

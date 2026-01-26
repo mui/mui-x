@@ -18,7 +18,7 @@ import {
   GridGroupingColDefOverrideParams,
   GridGroupNode,
 } from '@mui/x-data-grid-premium';
-import { spy } from 'sinon';
+
 import { isJSDOM } from 'test/utils/skipIf';
 
 interface BaselineProps extends DataGridPremiumProps {
@@ -519,7 +519,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
           isGroupExpandedByDefault={isGroupExpandedByDefault}
         />,
       );
-      expect(isGroupExpandedByDefault.callCount).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
+      expect(isGroupExpandedByDefault.mock.calls.length).to.equal(reactMajor >= 19 ? 6 : 12); // Should not be called on leaves
       const { childrenExpanded, ...node } = apiRef.current?.state.rows.tree[
         'auto-generated-row-category1/Cat A'
       ] as GridGroupNode;
@@ -736,7 +736,7 @@ describe('<DataGridPremium /> - Row grouping', () => {
         );
 
         fireUserEvent.mousePress(getCell(1, 0));
-        expect(renderIdCell.lastCall.firstArg.field).to.equal('id');
+        expect(renderIdCell.mock.lastCall![0].field).to.equal('id');
         expect(getCell(1, 0)).to.have.text('Focused: true');
       });
     });

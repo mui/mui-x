@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { stub, SinonStub, spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
@@ -139,8 +138,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
       await user.keyboard('{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange).toHaveBeenLastCalledWith({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall[1]).to.deep.equal({
         id: 2,
         field: 'currencyPair',
       });
@@ -245,8 +244,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 1, field: 'id' });
+      expect(spiedSelectCellsBetweenRange).toHaveBeenLastCalledWith({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall[1]).to.deep.equal({ id: 1, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowUp is pressed', async () => {
@@ -258,8 +257,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       });
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 1, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange).toHaveBeenLastCalledWith({ id: 1, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall[1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowLeft is pressed', async () => {
@@ -269,11 +268,11 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowLeft}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange).toHaveBeenLastCalledWith({
         id: 0,
         field: 'currencyPair',
       });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall[1]).to.deep.equal({ id: 0, field: 'id' });
     });
 
     it('should call selectCellRange when ArrowRight is pressed', async () => {
@@ -283,8 +282,8 @@ describe('<DataGridPremium /> - Cell selection', () => {
       cell.focus();
       await user.click(cell);
       await user.keyboard('{Shift>}{ArrowRight}{/Shift}');
-      expect(spiedSelectCellsBetweenRange.lastCall.args[0]).to.deep.equal({ id: 0, field: 'id' });
-      expect(spiedSelectCellsBetweenRange.lastCall.args[1]).to.deep.equal({
+      expect(spiedSelectCellsBetweenRange).toHaveBeenLastCalledWith({ id: 0, field: 'id' });
+      expect(spiedSelectCellsBetweenRange.mock.lastCall[1]).to.deep.equal({
         id: 0,
         field: 'currencyPair',
       });
@@ -302,7 +301,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
 
   describe('onCellSelectionModelChange', () => {
     it('should update the selection state when a cell is selected', async () => {
-      const onCellSelectionModelChange = spy();
+      const onCellSelectionModelChange = vi.fn();
       const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{}}
@@ -311,13 +310,13 @@ describe('<DataGridPremium /> - Cell selection', () => {
       );
       await user.click(getCell(0, 0));
 
-      expect(onCellSelectionModelChange.callCount).to.equal(1);
-      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({ '0': { id: true } });
+      expect(onCellSelectionModelChange).toHaveBeenCalledTimes(1);
+      expect(onCellSelectionModelChange).toHaveBeenLastCalledWith({ '0': { id: true } });
     });
 
     // Context: https://github.com/mui/mui-x/issues/14184
     it('should add the new cell selection range to the existing state', async () => {
-      const onCellSelectionModelChange = spy();
+      const onCellSelectionModelChange = vi.fn();
       const { user } = render(
         <TestDataGridSelection
           cellSelectionModel={{ '0': { id: true } }}
@@ -339,7 +338,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
       ]);
       await user.keyboard(isMac ? '{/Meta}' : '{/Control}');
 
-      expect(onCellSelectionModelChange.lastCall.args[0]).to.deep.equal({
+      expect(onCellSelectionModelChange).toHaveBeenLastCalledWith({
         '0': { id: true },
         '2': { id: true },
         '3': { id: true },
@@ -438,7 +437,7 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
 
     afterEach(() => {
-      (window.requestAnimationFrame as SinonStub).restore();
+      vi.restoreAllMocks();
     });
 
     it('should auto-scroll when the mouse approaches the bottom edge', async () => {

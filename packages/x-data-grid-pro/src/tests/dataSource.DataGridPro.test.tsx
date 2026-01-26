@@ -10,7 +10,7 @@ import {
   GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { getRow } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { TestCache } from '@mui/x-data-grid/internals';
@@ -19,12 +19,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -81,7 +81,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source', () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
       // wait until the rows are rendered
       await waitFor(() => expect(getRow(199)).not.to.be.undefined);

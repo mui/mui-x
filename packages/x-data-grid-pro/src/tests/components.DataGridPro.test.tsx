@@ -1,5 +1,5 @@
 import { createRenderer, EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -51,13 +51,13 @@ describe('<DataGridPro/> - Components', () => {
       ] as const
     ).forEach(([prop, event]) => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.cell`, async () => {
-        const propHandler = spy();
-        const eventHandler = spy();
+        const propHandler = vi.fn();
+        const eventHandler = vi.fn();
         render(<TestCase slotProps={{ cell: { [prop as any]: propHandler } }} />);
         apiRef.current?.subscribeEvent(event, eventHandler);
 
-        expect(propHandler.callCount).to.equal(0);
-        expect(eventHandler.callCount).to.equal(0);
+        expect(propHandler).toHaveBeenCalledTimes(0);
+        expect(eventHandler).toHaveBeenCalledTimes(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
@@ -71,28 +71,28 @@ describe('<DataGridPro/> - Components', () => {
         fireEvent[eventToFire](cell);
 
         await waitFor(() => {
-          expect(propHandler.callCount).to.equal(1);
+          expect(propHandler).toHaveBeenCalledTimes(1);
         });
-        expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
-        expect(eventHandler.callCount).to.equal(1);
+        expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
+        expect(eventHandler).toHaveBeenCalledTimes(1);
       });
     });
 
     it(`should still publish the 'cellKeyDown' event when overriding the 'onKeyDown' prop in slots.cell`, async () => {
-      const propHandler = spy();
-      const eventHandler = spy();
+      const propHandler = vi.fn();
+      const eventHandler = vi.fn();
       const { user } = render(<TestCase slotProps={{ cell: { onKeyDown: propHandler } }} />);
       apiRef.current?.subscribeEvent('cellKeyDown', eventHandler);
 
-      expect(propHandler.callCount).to.equal(0);
-      expect(eventHandler.callCount).to.equal(0);
+      expect(propHandler).toHaveBeenCalledTimes(0);
+      expect(eventHandler).toHaveBeenCalledTimes(0);
 
       await user.click(getCell(0, 0));
       await user.keyboard('a');
 
-      expect(propHandler.callCount).to.equal(1);
-      expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
-      expect(eventHandler.callCount).to.equal(1);
+      expect(propHandler).toHaveBeenCalledTimes(1);
+      expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
+      expect(eventHandler).toHaveBeenCalledTimes(1);
     });
 
     (
@@ -102,22 +102,22 @@ describe('<DataGridPro/> - Components', () => {
       ] as const
     ).forEach(([prop, event]) => {
       it(`should still publish the '${event}' event when overriding the '${prop}' prop in slots.row`, () => {
-        const propHandler = spy();
-        const eventHandler = spy();
+        const propHandler = vi.fn();
+        const eventHandler = vi.fn();
         render(<TestCase slotProps={{ row: { [prop as any]: propHandler } }} />);
         apiRef.current?.subscribeEvent(event, eventHandler);
 
-        expect(propHandler.callCount).to.equal(0);
-        expect(eventHandler.callCount).to.equal(0);
+        expect(propHandler).toHaveBeenCalledTimes(0);
+        expect(eventHandler).toHaveBeenCalledTimes(0);
 
         const eventToFire = prop.replace(/^on([A-Z])/, (match) =>
           match.slice(2).toLowerCase(),
         ) as EventType; // for example onDoubleClick -> doubleClick
         fireEvent[eventToFire](getRow(0));
 
-        expect(propHandler.callCount).to.equal(1);
-        expect(propHandler.lastCall.args[0]).not.to.equal(undefined);
-        expect(eventHandler.callCount).to.equal(1);
+        expect(propHandler).toHaveBeenCalledTimes(1);
+        expect(propHandler.mock.lastCall[0]).not.to.equal(undefined);
+        expect(eventHandler).toHaveBeenCalledTimes(1);
       });
     });
   });

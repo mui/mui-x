@@ -11,7 +11,7 @@ import {
   GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 import { getCell } from 'test/utils/helperFn';
 import { getKeyDefault } from '../hooks/features/dataSource/cache';
@@ -24,15 +24,15 @@ const dataSetOptions = { rowLength: 100, maxColumns: 1, editable: true };
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   const { render } = createRenderer();
-  const fetchRowsSpy = spy();
-  const editRowSpy = spy();
+  const fetchRowsSpy = vi.fn();
+  const editRowSpy = vi.fn();
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -104,49 +104,49 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   it('should re-fetch the data on filter change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
     setProps({
       filterModel: { items: [{ field: 'id', value: 'abc', operator: 'doesNotContain' }] },
     });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
     setProps({ sortModel: [{ field: 'id', sort: 'asc' }] });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
     setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   it('should re-fetch the data once if multiple models have changed', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
 
     setProps({
@@ -156,44 +156,44 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('Cache', () => {
     it('should cache the data using the default cache', async () => {
-      const pageChangeSpy = spy();
+      const pageChangeSpy = vi.fn();
       render(<TestDataSource onPaginationModelChange={pageChangeSpy} />);
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
-      expect(pageChangeSpy.callCount).to.equal(0);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(0);
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(1);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(1);
 
       act(() => {
         apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(2);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(2);
     });
 
     it('should cache the data using the custom cache', async () => {
       const testCache = new TestCache();
       render(<TestDataSource dataSourceCache={testCache} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
       expect(testCache.size()).to.equal(1);
     });
@@ -204,71 +204,71 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         <TestDataSource dataSourceCache={testCache} paginationModel={{ page: 0, pageSize: 20 }} />,
       );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
       expect(testCache.size()).to.equal(2); // 2 chunks of 10 rows
     });
 
     it('should use the cached data when the same query is made again', async () => {
       const testCache = new TestCache();
-      const pageChangeSpy = spy();
+      const pageChangeSpy = vi.fn();
       render(
         <TestDataSource dataSourceCache={testCache} onPaginationModelChange={pageChangeSpy} />,
       );
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
       expect(testCache.size()).to.equal(1);
-      expect(pageChangeSpy.callCount).to.equal(0);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(0);
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
       await waitFor(() => {
         expect(testCache.size()).to.equal(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(1);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(1);
 
       act(() => {
         apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
       expect(testCache.size()).to.equal(2);
-      expect(pageChangeSpy.callCount).to.equal(2);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(2);
     });
 
     it('should allow to disable the default cache', async () => {
-      const pageChangeSpy = spy();
+      const pageChangeSpy = vi.fn();
       render(<TestDataSource dataSourceCache={null} onPaginationModelChange={pageChangeSpy} />);
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
-      expect(pageChangeSpy.callCount).to.equal(0);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(0);
 
       act(() => {
         apiRef.current?.setPage(1);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
-      expect(pageChangeSpy.callCount).to.equal(1);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(1);
 
       act(() => {
         apiRef.current?.setPage(0);
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(3);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(3);
       });
-      expect(pageChangeSpy.callCount).to.equal(2);
+      expect(pageChangeSpy).toHaveBeenCalledTimes(2);
     });
 
     it('should bypass cache when "skipCache" is true', async () => {
@@ -277,7 +277,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
       // Wait for initial fetch
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
       expect(testCache.size()).to.equal(1);
 
@@ -287,7 +287,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       });
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
       // Cache should still be updated with new data
       expect(testCache.size()).to.equal(1);
@@ -299,22 +299,22 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
 
       // Should not trigger another fetch since data is cached
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(2);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
       });
     });
   });
 
   describe('Error handling', () => {
     it('should call `onDataSourceError` when the data source returns an error', async () => {
-      const onDataSourceError = spy();
+      const onDataSourceError = vi.fn();
       render(<TestDataSource onDataSourceError={onDataSourceError} shouldRequestsFail />);
       await waitFor(() => {
-        expect(onDataSourceError.callCount).to.equal(1);
+        expect(onDataSourceError).toHaveBeenCalledTimes(1);
       });
     });
 
     it('should not call `onDataSourceError` after unmount', async () => {
-      const onDataSourceError = spy();
+      const onDataSourceError = vi.fn();
       const { promise, reject } = Promise.withResolvers<GridGetRowsResponse>();
       const getRows = spy(() => promise);
       const dataSource: GridDataSource = {
@@ -336,18 +336,18 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
         </div>,
       );
       await waitFor(() => {
-        expect(getRows.called).to.equal(true);
+        expect(getRows).toHaveBeenCalled();
       });
       unmount();
       reject();
       await promise.catch(() => 'rejected');
-      expect(onDataSourceError.notCalled).to.equal(true);
+      expect(onDataSourceError.mock.calls.length === 0).to.equal(true);
     });
   });
 
   describe('Editing', () => {
     it('should call `editRow()` and clear the cache when a row is updated', async () => {
-      const clearSpy = spy();
+      const clearSpy = vi.fn();
       const cache = new Map<string, GridGetRowsResponse>();
       const dataSourceCache = {
         get: (key: GridGetRowsParams) => cache.get(getKeyDefault(key)),
@@ -366,7 +366,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
 
       await waitFor(() => {
@@ -376,18 +376,18 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
-      clearSpy.resetHistory();
+      clearSpy.mockClear();
 
       expect(cache.size).to.equal(1);
 
       // edit the cell
       await user.keyboard('{Enter} updated{Enter}');
 
-      expect(editRowSpy.callCount).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('updated');
+      expect(editRowSpy).toHaveBeenCalledTimes(1);
+      expect(editRowSpy.mock.lastCall[0].updatedRow.commodity).to.contain('updated');
 
       await waitFor(() => {
-        expect(clearSpy.callCount).to.equal(1);
+        expect(clearSpy).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -415,7 +415,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       );
 
       await waitFor(() => {
-        expect(fetchRowsSpy.callCount).to.equal(1);
+        expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
       });
 
       await waitFor(() => {
@@ -425,13 +425,13 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Data source', () => {
       await user.click(cell);
       expect(cell).toHaveFocus();
 
-      editRowSpy.resetHistory();
+      editRowSpy.mockClear();
 
       // edit the cell
       await user.keyboard('{Enter}{Enter}');
 
-      expect(editRowSpy.callCount).to.equal(1);
-      expect(editRowSpy.lastCall.args[0].updatedRow.commodity).to.contain('-edited');
+      expect(editRowSpy).toHaveBeenCalledTimes(1);
+      expect(editRowSpy.mock.lastCall[0].updatedRow.commodity).to.contain('-edited');
     });
   });
 });

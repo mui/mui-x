@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -328,19 +328,19 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 2x when sortedRowsSet is fired
     const expectedCallCount = reactMajor >= 19 ? 6 : 10;
 
-    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
 
     await user.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelContent.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelContent.mock.calls.length).to.equal(expectedCallCount);
 
     const getDetailPanelContent2 = spy(() => <div>Detail</div>);
     setProps({ getDetailPanelContent: getDetailPanelContent2 });
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelContent2.callCount).to.equal(2); // Called 2x by the effect
+    expect(getDetailPanelContent2).toHaveBeenCalledTimes(2); // Called 2x by the effect
     await user.click(screen.getByRole('button', { name: /previous page/i }));
-    expect(getDetailPanelContent2.callCount).to.equal(2);
+    expect(getDetailPanelContent2).toHaveBeenCalledTimes(2);
   });
 
   it('should cache the content of getDetailPanelHeight', async () => {
@@ -370,19 +370,19 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 2x when sortedRowsSet is fired
     const expectedCallCount = reactMajor >= 19 ? 6 : 10;
 
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
 
     await user.click(screen.getByRole('button', { name: /next page/i }));
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
 
     const getDetailPanelHeight2 = spy(() => 200);
     setProps({ getDetailPanelHeight: getDetailPanelHeight2 });
     await user.click(screen.getByRole('button', { name: 'Expand' }));
-    expect(getDetailPanelHeight2.callCount).to.equal(2); // Called 2x by the effect
+    expect(getDetailPanelHeight2).toHaveBeenCalledTimes(2); // Called 2x by the effect
     await user.click(screen.getByRole('button', { name: /previous page/i }));
-    expect(getDetailPanelHeight2.callCount).to.equal(2);
+    expect(getDetailPanelHeight2).toHaveBeenCalledTimes(2);
   });
 
   // Doesn't work with mocked window.getComputedStyle
@@ -443,12 +443,12 @@ describe('<DataGridPro /> - Detail panel', () => {
     // + 1x when sortedRowsSet is fired
     const expectedCallCount = reactMajor >= 19 ? 3 : 5;
 
-    expect(getDetailPanelHeight.callCount).to.equal(expectedCallCount);
-    expect(getDetailPanelHeight.lastCall.args[0].id).to.equal(0);
+    expect(getDetailPanelHeight.mock.calls.length).to.equal(expectedCallCount);
+    expect(getDetailPanelHeight.mock.lastCall[0].id).to.equal(0);
   });
 
   it('should not select the row when opening the detail panel', async () => {
-    const handleRowSelectionModelChange = spy();
+    const handleRowSelectionModelChange = vi.fn();
     const { user } = render(
       <TestCase
         getDetailPanelContent={() => <div>Detail</div>}
@@ -458,7 +458,7 @@ describe('<DataGridPro /> - Detail panel', () => {
     );
     expect(screen.queryByText('Detail')).to.equal(null);
     await user.click(getCell(1, 0));
-    expect(handleRowSelectionModelChange.callCount).to.equal(0);
+    expect(handleRowSelectionModelChange).toHaveBeenCalledTimes(0);
   });
 
   // See https://github.com/mui/mui-x/issues/4607
@@ -548,7 +548,7 @@ describe('<DataGridPro /> - Detail panel', () => {
 
   describe('prop: onDetailPanelsExpandedRowIds', () => {
     it('should call when a row is expanded or closed', async () => {
-      const handleDetailPanelsExpandedRowIdsChange = spy();
+      const handleDetailPanelsExpandedRowIdsChange = vi.fn();
       const { user } = render(
         <TestCase
           getDetailPanelContent={() => <div>Detail</div>}
@@ -556,19 +556,19 @@ describe('<DataGridPro /> - Detail panel', () => {
         />,
       );
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([0]));
+      expect(handleDetailPanelsExpandedRowIdsChange).toHaveBeenLastCalledWith(new Set([0]));
       await user.click(screen.getAllByRole('button', { name: 'Expand' })[0]); // Expand the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(
+      expect(handleDetailPanelsExpandedRowIdsChange).toHaveBeenLastCalledWith(
         new Set([0, 1]),
       );
       await user.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 1st row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([1]));
+      expect(handleDetailPanelsExpandedRowIdsChange).toHaveBeenLastCalledWith(new Set([1]));
       await user.click(screen.getAllByRole('button', { name: 'Collapse' })[0]); // Close the 2nd row
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
+      expect(handleDetailPanelsExpandedRowIdsChange).toHaveBeenLastCalledWith(new Set([]));
     });
 
     it('should not change the open detail panels when called while detailPanelsExpandedRowIds is the same', async () => {
-      const handleDetailPanelsExpandedRowIdsChange = spy();
+      const handleDetailPanelsExpandedRowIdsChange = vi.fn();
       const { user } = render(
         <TestCase
           getDetailPanelContent={({ id }) => <div>Row {id}</div>}
@@ -578,7 +578,7 @@ describe('<DataGridPro /> - Detail panel', () => {
       );
       expect(screen.getByText('Row 0')).not.to.equal(null);
       await user.click(screen.getByRole('button', { name: 'Collapse' }));
-      expect(handleDetailPanelsExpandedRowIdsChange.lastCall.args[0]).to.deep.equal(new Set([]));
+      expect(handleDetailPanelsExpandedRowIdsChange).toHaveBeenLastCalledWith(new Set([]));
       expect(screen.getByText('Row 0')).not.to.equal(null);
     });
   });

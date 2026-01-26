@@ -1,4 +1,4 @@
-import { spy, SinonSpy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent } from '@mui/internal-test-utils';
@@ -18,14 +18,14 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
     );
   }
 
-  let spyCreateObjectURL: SinonSpy;
+  let spyCreateObjectURL: MockInstance;
 
   beforeEach(() => {
-    spyCreateObjectURL = spy(globalThis.URL, 'createObjectURL');
+    spyCreateObjectURL = vi.spyOn(globalThis.URL, 'createObjectURL');
   });
 
   afterEach(() => {
-    spyCreateObjectURL.restore();
+    vi.restoreAllMocks();
   });
 
   describe('component: GridToolbar', () => {
@@ -34,8 +34,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
-      expect(spyCreateObjectURL.callCount).to.equal(1);
-      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+      expect(spyCreateObjectURL).toHaveBeenCalledTimes(1);
+      const csv = await spyCreateObjectURL.mock.lastCall![0].text();
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
@@ -44,8 +44,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Export' }));
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
-      expect(spyCreateObjectURL.callCount).to.equal(1);
-      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+      expect(spyCreateObjectURL).toHaveBeenCalledTimes(1);
+      const csv = await spyCreateObjectURL.mock.lastCall![0].text();
       expect(csv).to.equal(['id;Currency Pair', '0;USDGBP', '1;USDEUR', '2;GBPEUR'].join('\r\n'));
     });
 
@@ -85,8 +85,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
-      expect(spyCreateObjectURL.callCount).to.equal(1);
-      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+      expect(spyCreateObjectURL).toHaveBeenCalledTimes(1);
+      const csv = await spyCreateObjectURL.mock.lastCall![0].text();
 
       expect(csv).to.equal(
         [
@@ -122,8 +122,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
-      expect(spyCreateObjectURL.callCount).to.equal(1);
-      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+      expect(spyCreateObjectURL).toHaveBeenCalledTimes(1);
+      const csv = await spyCreateObjectURL.mock.lastCall![0].text();
 
       expect(csv).to.equal(['name', 'Name', '', '', '1234'].join('\r\n'));
     });
@@ -136,8 +136,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
-      expect(spyCreateObjectURL.callCount).to.equal(1);
-      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+      expect(spyCreateObjectURL).toHaveBeenCalledTimes(1);
+      const csv = await spyCreateObjectURL.mock.lastCall![0].text();
       expect(csv).to.equal(['id,Currency Pair', '0,USDGBP', '1,USDEUR', '2,GBPEUR'].join('\r\n'));
     });
 
@@ -152,8 +152,8 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Export', () => {
 
       expect(screen.queryByRole('menu')).not.to.equal(null);
       fireEvent.click(screen.getByRole('menuitem', { name: 'Download as CSV' }));
-      expect(spyCreateObjectURL.callCount).to.equal(1);
-      const csv = await spyCreateObjectURL.lastCall.firstArg.text();
+      expect(spyCreateObjectURL).toHaveBeenCalledTimes(1);
+      const csv = await spyCreateObjectURL.mock.lastCall![0].text();
       expect(csv).to.equal(['id;Currency Pair', '0;USDGBP', '1;USDEUR', '2;GBPEUR'].join('\r\n'));
     });
 

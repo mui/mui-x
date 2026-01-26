@@ -12,7 +12,7 @@ import {
 } from '@mui/x-data-grid-pro';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
-import { spy, SinonSpy } from 'sinon';
+import { vi, MockInstance } from 'vitest';
 
 /**
  * Creates a date that is compatible with years before 1901
@@ -70,7 +70,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       await user.type(input, '[Backspace>4]Puma');
 
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue).toHaveBeenLastCalledWith({
         id: 0,
         field: 'brand',
         value: 'Puma',
@@ -124,7 +124,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditInputCell({ ...params, onValueChange });
@@ -137,8 +137,8 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('textbox');
       await user.type(input, '[Backspace>4]Puma');
 
-      expect(onValueChange.callCount).to.equal(8);
-      expect(onValueChange.lastCall.args[1]).to.equal('Puma');
+      expect(onValueChange).toHaveBeenCalledTimes(8);
+      expect(onValueChange.mock.lastCall[1]).to.equal('Puma');
     });
   });
 
@@ -159,7 +159,7 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(input.value).to.equal('100');
 
       await user.type(input, '[Backspace>2]10');
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue).toHaveBeenLastCalledWith({
         id: 0,
         field: 'quantity',
         value: 110,
@@ -194,7 +194,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       await user.type(input, '[Backspace>2]10');
       await waitFor(() =>
-        expect(preProcessEditCellPropsSpy.lastCall.args[0].props.value).to.equal(110),
+        expect(preProcessEditCellPropsSpy.mock.lastCall[0].props.value).to.equal(110),
       );
     });
 
@@ -249,10 +249,10 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionEnd: Infinity,
       });
 
-      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
-      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
-      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
-      expect(spiedSetEditCellValue.lastCall.args[0].value?.toISOString()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].id).to.equal(0);
+      expect(spiedSetEditCellValue.mock.lastCall[0].field).to.equal('createdAt');
+      expect(spiedSetEditCellValue.mock.lastCall[0].debounceMs).to.equal(undefined);
+      expect(spiedSetEditCellValue.mock.lastCall[0].value?.toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
     });
@@ -269,7 +269,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: Infinity,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value).to.equal(null);
+      expect(spiedSetEditCellValue.mock.lastCall[0].value).to.equal(null);
     });
 
     it('should pass the value prop to the input', async () => {
@@ -292,7 +292,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should handle correctly dates with partial years', async () => {
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as MockInstance<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -307,7 +307,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 10,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(2021, 0, 5),
       );
 
@@ -316,7 +316,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 8,
         initialSelectionEnd: 10,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(2021, 0, 1),
       );
 
@@ -325,7 +325,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1, 0, 1),
       );
 
@@ -334,7 +334,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(19, 0, 1),
       );
 
@@ -343,7 +343,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(199, 0, 1),
       );
 
@@ -352,13 +352,13 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1),
       );
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditDateCell({ ...params, onValueChange });
@@ -374,8 +374,8 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionEnd: 10,
       });
 
-      expect(onValueChange.callCount).to.equal(1);
-      expect((onValueChange.lastCall.args[1]! as Date).toISOString()).to.equal(
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      expect((onValueChange.mock.lastCall[1]! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10).toISOString(),
       );
     });
@@ -402,10 +402,10 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionEnd: 16,
       });
 
-      expect(spiedSetEditCellValue.lastCall.args[0].id).to.equal(0);
-      expect(spiedSetEditCellValue.lastCall.args[0].field).to.equal('createdAt');
-      expect(spiedSetEditCellValue.lastCall.args[0].debounceMs).to.equal(undefined);
-      expect((spiedSetEditCellValue.lastCall.args[0].value! as Date).toISOString()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].id).to.equal(0);
+      expect(spiedSetEditCellValue.mock.lastCall[0].field).to.equal('createdAt');
+      expect(spiedSetEditCellValue.mock.lastCall[0].debounceMs).to.equal(undefined);
+      expect((spiedSetEditCellValue.mock.lastCall[0].value! as Date).toISOString()).to.equal(
         new Date(2022, 1, 10, 15, 30, 0).toISOString(),
       );
     });
@@ -419,7 +419,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
       const input = cell.querySelector('input')!;
       await user.type(input, '[Backspace]');
-      expect(spiedSetEditCellValue.lastCall.args[0].value).to.equal(null);
+      expect(spiedSetEditCellValue.mock.lastCall[0].value).to.equal(null);
     });
 
     it('should pass the value prop to the input', async () => {
@@ -442,7 +442,7 @@ describe('<DataGridPro /> - Edit components', () => {
 
     it('should handle correctly dates with partial years', async () => {
       const { user } = render(<TestCase />);
-      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as SinonSpy<
+      const spiedSetEditCellValue = spyApi(apiRef.current!, 'setEditCellValue') as MockInstance<
         [GridEditCellValueParams & { value: Date }]
       >;
 
@@ -457,7 +457,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 10,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(2021, 0, 5, 14, 30),
       );
 
@@ -466,7 +466,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 8,
         initialSelectionEnd: 10,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(2021, 0, 1, 14, 30),
       );
 
@@ -475,7 +475,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1, 0, 1, 14, 30),
       );
 
@@ -484,7 +484,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(19, 0, 1, 14, 30),
       );
 
@@ -493,7 +493,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(199, 0, 1, 14, 30),
       );
 
@@ -502,7 +502,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 0,
         initialSelectionEnd: 4,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 14, 30),
       );
 
@@ -511,7 +511,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 11,
         initialSelectionEnd: 16,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 30),
       );
 
@@ -520,7 +520,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 14,
         initialSelectionEnd: 16,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 2),
       );
 
@@ -529,7 +529,7 @@ describe('<DataGridPro /> - Edit components', () => {
         initialSelectionStart: 14,
         initialSelectionEnd: 16,
       });
-      expect(spiedSetEditCellValue.lastCall.args[0].value.getTime()).to.equal(
+      expect(spiedSetEditCellValue.mock.lastCall[0].value.getTime()).to.equal(
         generateDate(1999, 0, 1, 20, 25),
       );
     });
@@ -551,7 +551,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue).toHaveBeenLastCalledWith({
         id: 0,
         field: 'brand',
         value: 'Adidas',
@@ -578,7 +578,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue).toHaveBeenLastCalledWith({
         id: 0,
         field: 'brand',
         value: 1,
@@ -601,7 +601,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue).toHaveBeenLastCalledWith({
         id: 0,
         field: 'brand',
         value: 'Adidas',
@@ -622,7 +622,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditSingleSelectCell({ ...params, onValueChange });
@@ -633,12 +633,12 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(screen.queryAllByRole('option')[1]);
 
-      expect(onValueChange.callCount).to.equal(1);
-      expect(onValueChange.lastCall.args[1]).to.equal('Adidas');
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      expect(onValueChange.mock.lastCall[1]).to.equal('Adidas');
     });
 
     it('should call onCellEditStop', async () => {
-      const onCellEditStop = spy();
+      const onCellEditStop = vi.fn();
 
       const { user } = render(
         <div>
@@ -651,7 +651,7 @@ describe('<DataGridPro /> - Edit components', () => {
       await user.dblClick(cell);
       await user.click(document.getElementById('outside-grid')!);
 
-      expect(onCellEditStop.callCount).to.equal(1);
+      expect(onCellEditStop).toHaveBeenCalledTimes(1);
     });
 
     it('should not open the suggestions when Enter is pressed', async () => {
@@ -688,7 +688,7 @@ describe('<DataGridPro /> - Edit components', () => {
       expect(input.checked).to.equal(false);
 
       await user.click(input);
-      expect(spiedSetEditCellValue.lastCall.args[0]).to.deep.equal({
+      expect(spiedSetEditCellValue).toHaveBeenLastCalledWith({
         id: 0,
         field: 'isAdmin',
         value: true,
@@ -696,7 +696,7 @@ describe('<DataGridPro /> - Edit components', () => {
     });
 
     it('should call onValueChange if defined', async () => {
-      const onValueChange = spy();
+      const onValueChange = vi.fn();
 
       defaultData.columns[0].renderEditCell = (params) =>
         renderEditBooleanCell({ ...params, onValueChange });
@@ -709,8 +709,8 @@ describe('<DataGridPro /> - Edit components', () => {
       const input = within(cell).getByRole<HTMLInputElement>('checkbox');
       await user.click(input);
 
-      expect(onValueChange.callCount).to.equal(1);
-      expect(onValueChange.lastCall.args[1]).to.equal(true);
+      expect(onValueChange).toHaveBeenCalledTimes(1);
+      expect(onValueChange.mock.lastCall[1]).to.equal(true);
     });
   });
 });

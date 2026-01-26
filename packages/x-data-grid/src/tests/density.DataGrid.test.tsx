@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';
 import { DataGrid, DataGridProps, gridClasses, GridToolbar } from '@mui/x-data-grid';
@@ -106,7 +106,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Density', () => {
 
     // TODO: Remove when we remove the legacy GridToolbar
     it('should call `onDensityChange` prop when density gets updated', () => {
-      const onDensityChange = spy();
+      const onDensityChange = vi.fn();
       function Test() {
         return (
           <div style={{ width: 300, height: 300 }}>
@@ -124,7 +124,7 @@ describe.skipIf(isJSDOM)('<DataGrid /> - Density', () => {
       render(<Test />);
       fireEvent.click(screen.getByText('Density'));
       fireEvent.click(screen.getByText('Comfortable'));
-      expect(onDensityChange.callCount).to.equal(1);
+      expect(onDensityChange).toHaveBeenCalledTimes(1);
       expect(onDensityChange.firstCall.args[0]).to.equal('comfortable');
     });
   });

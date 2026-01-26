@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, fireEvent, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';
 import {
@@ -159,7 +159,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       //   - A.B
       // - B (leaf)
       // When `A.A` is dragged and dropped on "below" of "A.B", it should swap positions with "A.B" (same parent reorder)
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       render(
         <Test
           onRowOrderChange={handleRowOrderChange}
@@ -189,7 +189,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Wait for state updates to complete
       await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify A.A is now after A.B
@@ -214,7 +214,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       //   - A.B
       // - B (leaf)
       // When `A.A` is dragged and dropped on "above" of "B", it should become the second direct child of "A" (cross-parent reorder)
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       render(
         <Test
           onRowOrderChange={handleRowOrderChange}
@@ -247,7 +247,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Wait for state updates to complete
       await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify A.A is now after A.B (became the second child of A)
@@ -293,7 +293,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
   describe('Cross-parent reordering', () => {
     it('should move group with children to different parent', async () => {
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       render(<Test onRowOrderChange={handleRowOrderChange} />);
 
       // Move Work group (with Reports subgroup) from Documents to Pictures
@@ -314,7 +314,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify Work is now under Pictures in tree structure
@@ -325,7 +325,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
     });
 
     it('should move leaf from one parent to another', async () => {
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       render(<Test onRowOrderChange={handleRowOrderChange} />);
 
       // Move Resume.pdf from Personal to Pictures
@@ -347,7 +347,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       // Verify Resume.pdf is now under Pictures
@@ -406,7 +406,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
     it('should not allow to drop group on the above position on the next group when the previous node is a leaf', async () => {
       // This test ensures that the 'group-to-group-above-leaf-belongs-to-source' validation rule is applied correctly
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
 
       render(
         <Test
@@ -456,14 +456,14 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       // Verify operation was blocked
-      expect(handleRowOrderChange.callCount).to.equal(0);
+      expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('Drop "inside" operations', () => {
     describe('Drop inside leaf', () => {
       it('should convert leaf to parent when item dropped inside it', async () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
         const processedRows: GridRowModel[] = [];
 
         const handleProcessRowUpdate = (newRow: GridRowModel) => {
@@ -505,7 +505,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify LeafB became a group and LeafA is its child
@@ -517,7 +517,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       });
 
       it('should handle group dropped inside leaf', async () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
 
         render(
           <Test
@@ -560,7 +560,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         fireEvent(sourceCell, dragEndEvent);
 
         await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify Leaf became a group and Group is its child
@@ -574,7 +574,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
     describe('Drop inside group', () => {
       it('should drop leaf inside expanded group as first child', async () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
 
         render(
           <Test
@@ -603,7 +603,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify File.txt is now a child of Folder
@@ -627,7 +627,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       });
 
       it('should drop group inside group with all descendants', async () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
         const processRowUpdateCalls: any[] = [];
         const processRowUpdate = async (newRow: GridRowModel) => {
           processRowUpdateCalls.push(newRow);
@@ -664,7 +664,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify SourceFolder is now a child of TargetFolder
@@ -711,7 +711,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       });
 
       it('should prevent dropping group "inside" its own descendant', () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
 
         render(
           <Test
@@ -739,7 +739,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         // Verify operation was blocked
-        expect(handleRowOrderChange.callCount).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
 
         // Verify tree structure unchanged
         const rowTree = gridRowTreeSelector(apiRef!);
@@ -757,7 +757,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, grandchildCell, 'inside');
 
         // Verify this was also blocked
-        expect(handleRowOrderChange.callCount).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
 
         // Verify tree structure still unchanged
         const finalTree = gridRowTreeSelector(apiRef!);
@@ -765,7 +765,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       });
 
       it('should update paths correctly for deep hierarchy moves', async () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
         const updatedRows: GridRowModel[] = [];
         const customSetTreeDataPath = (path: readonly string[], row: GridRowModel) => {
           const updatedRow = {
@@ -805,7 +805,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         performDragOperation(sourceCell, targetCell, 'inside');
 
         await waitFor(() => {
-          expect(handleRowOrderChange.callCount).to.equal(1);
+          expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
         });
 
         // Verify Project new path
@@ -831,7 +831,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
   describe('Props behavior', () => {
     describe('isRowReorderable', () => {
       it('should prevent specific rows from being dragged', async () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
         const isRowReorderable = (params: IsRowReorderableParams) => params.row.id % 2 !== 0;
 
         render(
@@ -856,7 +856,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
     describe('isValidRowReorder', () => {
       it('should apply custom validation rules to restrict operations', () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
 
         // Custom rule: prevent moving items to root level
         const isValidRowReorder = (context: ReorderValidationContext) => {
@@ -895,11 +895,11 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         fireEvent(sourceCell, dragEndEvent);
 
         // Custom validation should block this operation
-        expect(handleRowOrderChange.callCount).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
       });
 
       it('should not bypass internal validation', () => {
-        const handleRowOrderChange = spy();
+        const handleRowOrderChange = vi.fn();
 
         // Even if custom validation allows it, internal validation should still apply
         const isValidRowReorder = () => true; // Allow everything
@@ -926,7 +926,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         fireEvent(sourceCell, dragEndEvent);
 
         // Internal validation should still block this
-        expect(handleRowOrderChange.callCount).to.equal(0);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
       });
     });
 
@@ -974,8 +974,8 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       });
 
       it('should show warning when setTreeDataPath is missing', async () => {
-        const warnSpy = spy();
-        const handleRowOrderChange = spy();
+        const warnSpy = vi.fn();
+        const handleRowOrderChange = vi.fn();
         const originalWarn = console.warn;
         console.warn = warnSpy;
 
@@ -1012,7 +1012,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
   describe('Events', () => {
     it('should fire rowOrderChange on successful reorder', async () => {
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       render(<Test onRowOrderChange={handleRowOrderChange} />);
 
       // Perform valid reorder (move Q1.pdf below Q2.pdf)
@@ -1034,7 +1034,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
 
       const eventParams = handleRowOrderChange.firstCall.args[0];
@@ -1043,7 +1043,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
     });
 
     it('should not fire event on cancelled operation', () => {
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       render(<Test onRowOrderChange={handleRowOrderChange} />);
 
       const allValues = getColumnValues(0);
@@ -1057,13 +1057,13 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       const dragEndEvent = createDragEndEvent(sourceCell, true);
       fireEvent(sourceCell, dragEndEvent);
 
-      expect(handleRowOrderChange.callCount).to.equal(0);
+      expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('Async Operations', () => {
     it('should handle processRowUpdate promises correctly', async () => {
-      const handleRowOrderChange = spy();
+      const handleRowOrderChange = vi.fn();
       const processRowUpdateCalls: any[] = [];
       let resolvePromise: (value: any) => void = () => {};
 
@@ -1091,7 +1091,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
       fireEvent(sourceCell, dragEndEvent);
 
       // Event should not fire immediately
-      expect(handleRowOrderChange.callCount).to.equal(0);
+      expect(handleRowOrderChange).toHaveBeenCalledTimes(0);
 
       // Resolve the promise
       if (processRowUpdateCalls.length > 0) {
@@ -1100,12 +1100,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
 
       // Now event should fire
       await waitFor(() => {
-        expect(handleRowOrderChange.callCount).to.equal(1);
+        expect(handleRowOrderChange).toHaveBeenCalledTimes(1);
       });
     });
 
     it('should handle processRowUpdate rejection gracefully', async () => {
-      const handleProcessRowUpdateError = spy();
+      const handleProcessRowUpdateError = vi.fn();
       let processRowUpdateCallCount = 0;
 
       const processRowUpdate = async (_newRow: any) => {
@@ -1139,7 +1139,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Tree data row reordering', () => {
         expect(processRowUpdateCallCount).to.be.greaterThan(0);
       });
 
-      expect(handleProcessRowUpdateError.callCount).to.be.greaterThan(0);
+      expect(handleProcessRowUpdateError).toHaveBeenCalled();
     });
 
     it('should handle batch operations for group moves', async () => {

@@ -1,4 +1,3 @@
-import { spy } from 'sinon';
 import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
 import { getCell } from 'test/utils/helperFn';
@@ -151,10 +150,10 @@ describe('<DataGrid /> - Cells', () => {
       </div>,
     );
     expect(getCell(0, 0)).to.have.text('Yes');
-    // expect(valueFormatter.lastCall.args[0]).to.have.keys('id', 'field', 'value', 'api');
-    expect(valueFormatter.lastCall.args[0]).to.equal(true);
-    expect(valueFormatter.lastCall.args[1]).to.deep.equal({ id: 0, isActive: true });
-    expect(valueFormatter.lastCall.args[2].field).to.equal('isActive');
+    // expect(valueFormatter.mock.lastCall[0]).to.have.keys('id', 'field', 'value', 'api');
+    expect(valueFormatter).toHaveBeenLastCalledWith(true);
+    expect(valueFormatter.mock.lastCall[1]).to.deep.equal({ id: 0, isActive: true });
+    expect(valueFormatter.mock.lastCall[2].field).to.equal('isActive');
   });
 
   it('should throw when focusing cell without updating the state', async () => {

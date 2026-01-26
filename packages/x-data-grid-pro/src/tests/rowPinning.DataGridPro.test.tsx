@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -759,8 +758,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate).toHaveBeenCalledTimes(1);
+    expect(processRowUpdate).toHaveBeenLastCalledWith({ id: 3, name: 'Marcus' });
   });
 
   // flaky in JSDOM
@@ -797,8 +796,8 @@ describe('<DataGridPro /> - Row pinning', () => {
     await user.keyboard('{Enter}');
 
     expect(cell.textContent).to.equal('Marcus');
-    expect(processRowUpdate.callCount).to.equal(1);
-    expect(processRowUpdate.lastCall.args[0]).to.deep.equal({ id: 3, name: 'Marcus' });
+    expect(processRowUpdate).toHaveBeenCalledTimes(1);
+    expect(processRowUpdate).toHaveBeenLastCalledWith({ id: 3, name: 'Marcus' });
   });
 
   it('should support `updateRows`', async () => {

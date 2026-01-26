@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, fireEvent, screen, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
 import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
@@ -158,7 +158,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
   });
 
   it('should call onRowOrderChange after the row stops being dragged', async () => {
-    const handleOnRowOrderChange = spy();
+    const handleOnRowOrderChange = vi.fn();
     function Test() {
       const rows = [
         { id: 0, brand: 'Nike' },
@@ -189,21 +189,21 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
-    expect(handleOnRowOrderChange.callCount).to.equal(0);
+    expect(handleOnRowOrderChange).toHaveBeenCalledTimes(0);
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
 
     await waitFor(() => {
-      expect(handleOnRowOrderChange.callCount).to.equal(1);
+      expect(handleOnRowOrderChange).toHaveBeenCalledTimes(1);
     });
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
   it('should prevent drag events propagation', () => {
-    const handleDragStart = spy();
-    const handleDragEnter = spy();
-    const handleDragOver = spy();
-    const handleDragEnd = spy();
+    const handleDragStart = vi.fn();
+    const handleDragEnter = vi.fn();
+    const handleDragOver = vi.fn();
+    const handleDragEnd = vi.fn();
     function Test() {
       const data = useBasicDemoData(3, 3);
 
@@ -232,9 +232,9 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const dragEndRowEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndRowEvent);
 
-    expect(handleDragStart.callCount).to.equal(0);
-    expect(handleDragOver.callCount).to.equal(0);
-    expect(handleDragEnd.callCount).to.equal(0);
+    expect(handleDragStart).toHaveBeenCalledTimes(0);
+    expect(handleDragOver).toHaveBeenCalledTimes(0);
+    expect(handleDragEnd).toHaveBeenCalledTimes(0);
   });
 
   it('should reorder rows correctly on any page when pagination is enabled', async () => {
@@ -247,7 +247,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
       { id: 5, brand: 'Converse' },
     ];
     const columns = [{ field: 'brand' }];
-    const onRowOrderChange = spy();
+    const onRowOrderChange = vi.fn();
     function Test() {
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -294,7 +294,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
     await waitFor(() => {
-      expect(onRowOrderChange.callCount).to.equal(1);
+      expect(onRowOrderChange).toHaveBeenCalledTimes(1);
     });
 
     expect(getRowsFieldContent('brand')).to.deep.equal(['Vans', 'Skechers', 'Converse']);
@@ -381,7 +381,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
       { field: 'category', width: 150 },
     ];
 
-    const onRowOrderChange = spy();
+    const onRowOrderChange = vi.fn();
     function Test() {
       return (
         <div style={{ width: 400, height: 300 }}>
@@ -429,7 +429,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     fireEvent(rowReorderCell, dragEndEvent);
 
     await waitFor(() => {
-      expect(onRowOrderChange.callCount).to.equal(1);
+      expect(onRowOrderChange).toHaveBeenCalledTimes(1);
     });
 
     // Verify that the row order has changed (Nike should now be between Adidas and Puma)

@@ -13,7 +13,7 @@ import {
   GridGroupNode,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -30,7 +30,7 @@ const serverOptions = { minDelay: 0, maxDelay: 0, verbose: false };
 // Needs layout
 describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   const { render } = createRenderer();
-  const fetchRowsSpy = spy();
+  const fetchRowsSpy = vi.fn();
 
   let apiRef: RefObject<GridApi | null>;
   let mockServer: ReturnType<typeof useMockServer>;
@@ -38,7 +38,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
     React.useLayoutEffect(() => {
-      fetchRowsSpy.resetHistory();
+      fetchRowsSpy.mockClear();
     }, []);
     return null;
   }
@@ -104,40 +104,40 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should fetch the data on initial render', async () => {
     render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
   });
 
   it('should re-fetch the data on filter change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
     setProps({ filterModel: { items: [{ field: 'name', value: 'John', operator: 'contains' }] } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   it('should re-fetch the data on sort change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
     setProps({ sortModel: [{ field: 'name', sort: 'asc' }] });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
   it('should re-fetch the data on pagination change', async () => {
     const { setProps } = render(<TestDataSource />);
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
     setProps({ paginationModel: { page: 1, pageSize: 10 } });
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -148,7 +148,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       throw new Error('apiRef.current.state is not defined');
     }
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
@@ -157,7 +157,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
@@ -185,7 +185,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     );
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(1);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     });
 
     await waitFor(() => {
@@ -200,7 +200,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
 
     // children are part of the tree
@@ -215,7 +215,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(3);
     });
 
     // children are still part of the tree
@@ -230,7 +230,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
   it('should collapse the nested data if refetching the root level with `keepChildrenExpanded` set to `false`', async () => {
     const { user } = render(<TestDataSource dataSourceCache={null} />);
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
     });
@@ -239,7 +239,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     await user.click(within(cell11).getByRole('button'));
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
 
     const cell11ChildrenCount = Number(cell11.innerText.split('(')[1].split(')')[0]);
@@ -252,7 +252,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(3);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(3);
     });
 
     expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
@@ -265,7 +265,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       throw new Error('apiRef.current.state is not defined');
     }
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
 
     await waitFor(() => {
       expect(Object.keys(apiRef.current!.state.rows.tree).length).to.equal(10 + 1);
@@ -279,7 +279,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
     });
 
     await waitFor(() => {
-      expect(fetchRowsSpy.callCount).to.equal(2);
+      expect(fetchRowsSpy).toHaveBeenCalledTimes(2);
     });
 
     const cell11 = getCell(0, 0);
@@ -296,7 +296,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Data source tree data', () => {
       throw new Error('apiRef.current.state is not defined');
     }
 
-    expect(fetchRowsSpy.callCount).to.equal(1);
+    expect(fetchRowsSpy).toHaveBeenCalledTimes(1);
     await waitFor(() => {
       expect(apiRef.current!.state.rows.groupsToFetch?.length).to.be.greaterThan(0);
     });

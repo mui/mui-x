@@ -12,7 +12,7 @@ import {
   GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPro /> - Lazy loader', () => {
@@ -57,21 +57,21 @@ describe('<DataGridPro /> - Lazy loader', () => {
 
   // Needs layout
   it.skipIf(isJSDOM)('should not call onFetchRows if the viewport is fully loaded', () => {
-    const handleFetchRows = spy();
+    const handleFetchRows = vi.fn();
     const rows = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }];
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} rows={rows} />);
-    expect(handleFetchRows.callCount).to.equal(0);
+    expect(handleFetchRows).toHaveBeenCalledTimes(0);
   });
 
   // Needs layout
   it.skipIf(isJSDOM)('should call onFetchRows when sorting is applied', () => {
-    const handleFetchRows = spy();
+    const handleFetchRows = vi.fn();
     render(<TestLazyLoader onFetchRows={handleFetchRows} rowCount={50} />);
 
-    expect(handleFetchRows.callCount).to.equal(1);
+    expect(handleFetchRows).toHaveBeenCalledTimes(1);
     // Should be 1. When tested in the browser it's called only 2 time
     fireEvent.click(getColumnHeaderCell(0));
-    expect(handleFetchRows.callCount).to.equal(2);
+    expect(handleFetchRows).toHaveBeenCalledTimes(2);
   });
 
   // Needs layout

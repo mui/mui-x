@@ -1,4 +1,4 @@
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
@@ -171,7 +171,7 @@ describe('<DataGridPro /> - Column pinning', () => {
   });
 
   it('should not allow to drop a column on top of a pinned column', () => {
-    const onPinnedColumnsChange = spy();
+    const onPinnedColumnsChange = vi.fn();
     render(
       <TestCase
         nbCols={3}
@@ -187,7 +187,7 @@ describe('<DataGridPro /> - Column pinning', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
 
-    expect(onPinnedColumnsChange.callCount).to.equal(0);
+    expect(onPinnedColumnsChange).toHaveBeenCalledTimes(0);
   });
 
   it('should filter out invalid columns when blocking a column from being dropped', () => {
@@ -261,22 +261,22 @@ describe('<DataGridPro /> - Column pinning', () => {
 
   describe('props: onPinnedColumnsChange', () => {
     it('should call when a column is pinned', async () => {
-      const handlePinnedColumnsChange = spy();
+      const handlePinnedColumnsChange = vi.fn();
       render(<TestCase onPinnedColumnsChange={handlePinnedColumnsChange} />);
       await act(() => apiRef.current?.pinColumn('currencyPair', GridPinnedColumnPosition.LEFT));
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange).toHaveBeenLastCalledWith({
         left: ['currencyPair'],
         right: [],
       });
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.RIGHT));
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange).toHaveBeenLastCalledWith({
         left: ['currencyPair'],
         right: ['price17M'],
       });
     });
 
     it('should not change the pinned columns when it is called', async () => {
-      const handlePinnedColumnsChange = spy();
+      const handlePinnedColumnsChange = vi.fn();
       render(
         <TestCase
           pinnedColumns={{ left: ['currencyPair'] }}
@@ -287,7 +287,7 @@ describe('<DataGridPro /> - Column pinning', () => {
       await act(() => apiRef.current?.pinColumn('price17M', GridPinnedColumnPosition.LEFT));
       await microtasks();
       expect($$(`[role="gridcell"].${gridClasses['cell--pinnedLeft']}`)).to.have.length(1);
-      expect(handlePinnedColumnsChange.lastCall.args[0]).to.deep.equal({
+      expect(handlePinnedColumnsChange).toHaveBeenLastCalledWith({
         left: ['currencyPair', 'price17M'],
         right: [],
       });

@@ -17,7 +17,7 @@ import {
   getRowValues,
   sleep,
 } from 'test/utils/helperFn';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { isJSDOM } from 'test/utils/skipIf';
 
 const ROWS = [
@@ -891,7 +891,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
   it.skipIf(isJSDOM)(
     'should not hide the pivot column on double click on the column separator',
     async () => {
-      const onColumnWidthChange = spy();
+      const onColumnWidthChange = vi.fn();
 
       const { user } = render(
         <Test
@@ -917,13 +917,13 @@ describe('<DataGridPremium /> - Pivoting', () => {
 
       const separators = $$(`.${gridClasses['columnSeparator--resizable']}`);
 
-      expect(onColumnWidthChange.callCount).to.equal(0);
+      expect(onColumnWidthChange).toHaveBeenCalledTimes(0);
 
       await user.dblClick(separators[1]);
 
-      expect(onColumnWidthChange.callCount).to.equal(1);
-      expect(onColumnWidthChange.args[0][0].colDef.field).to.equal('2024>->volume');
-      expect(onColumnWidthChange.args[0][0].width).to.equal(68);
+      expect(onColumnWidthChange).toHaveBeenCalledTimes(1);
+      expect(onColumnWidthChange.mock.calls[0][0].colDef.field).to.equal('2024>->volume');
+      expect(onColumnWidthChange.mock.calls[0][0].width).to.equal(68);
       expect(getColumnHeaderCell(1).offsetWidth).to.equal(68);
 
       await waitFor(() => {
