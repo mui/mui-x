@@ -275,3 +275,13 @@ Run the following command to do the renaming.
 ```bash
 npx @mui/x-codemod@next v9.0.0/charts/rename-charts-surface <path|folder>
 ```
+
+After runnig this codemod you will have to do manually the update for the for the theme configuration if you used it to modify `ChartsSurface` style
+
+```diff
+- MuiChartsSurface: {
++ MuiChartsSvgSurface: {
+      defaultProps: { /* ... */ },
+      styleOverrides: { /* ... */ },
+    },
+```
