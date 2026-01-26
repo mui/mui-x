@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { useYAxes, useYAxisCoordinates, useYAxisTicks } from '@mui/x-charts/hooks';
 
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
+import { useYAxes, useYAxisCoordinates, useYAxisTicks } from '@mui/x-charts/hooks';
 
 const labels = [
   'Server Products',
@@ -47,7 +47,10 @@ function YAxis(props) {
   const { yAxisIds } = useYAxes();
   const axisId = props.axisId ?? yAxisIds[0];
 
+  // The top, left, right, bottom of the axis according to the charts settings
   const axisCoordinates = useYAxisCoordinates(axisId);
+
+  // The array of ticks to place according to the settings
   const ticks = useYAxisTicks(axisId);
 
   if (!axisCoordinates) {

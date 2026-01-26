@@ -6,6 +6,7 @@ import { defaultProps } from '../ChartsXAxis/utilities';
 
 /**
  * Returns the ticks for the given X axis. Ticks outside the drawing area are not included.
+ * The ticks returned from this hook are not grouped, i.e., they don't follow the `groups` prop of the axis.
  * @param axisId The id of the X axis.
  */
 export function useXAxisTicks(axisId: AxisId): TickItem[] {
@@ -30,13 +31,14 @@ export function useXAxisTicks(axisId: AxisId): TickItem[] {
     tickLabelPlacement: defaultizedProps.tickLabelPlacement,
     tickSpacing: defaultizedProps.tickSpacing,
     direction: 'x',
-    // @ts-expect-error
-    ordinalTimeTicks: defaultizedProps.ordinalTimeTicks,
+    ordinalTimeTicks:
+      'ordinalTimeTicks' in defaultizedProps ? defaultizedProps.ordinalTimeTicks : undefined,
   });
 }
 
 /**
  * Returns the ticks for the given Y axis. Ticks outside the drawing area are not included.
+ * The ticks returned from this hook are not grouped, i.e., they don't follow the `groups` prop of the axis.
  * @param axisId The id of the Y axis.
  */
 export function useYAxisTicks(axisId: AxisId): TickItem[] {
