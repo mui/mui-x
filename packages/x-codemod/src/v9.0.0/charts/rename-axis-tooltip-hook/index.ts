@@ -44,13 +44,13 @@ export const testConfig = {
   specFiles: [
     {
       name: 'nested',
-      actual: readFile(path.join(__dirname, 'actual-nested-imports.spec.tsx')),
-      expected: readFile(path.join(__dirname, 'expected-nested-imports.spec.tsx')),
+      actual: readFile(path.join(import.meta.dirname, 'actual-nested-imports.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected-nested-imports.spec.tsx')),
     },
     {
       name: 'root',
-      actual: readFile(path.join(__dirname, 'actual-root-imports.spec.tsx')),
-      expected: readFile(path.join(__dirname, 'expected-root-imports.spec.tsx')),
+      actual: readFile(path.join(import.meta.dirname, 'actual-root-imports.spec.tsx')),
+      expected: readFile(path.join(import.meta.dirname, 'expected-root-imports.spec.tsx')),
     },
   ],
 };
