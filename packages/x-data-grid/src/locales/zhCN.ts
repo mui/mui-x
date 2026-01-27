@@ -163,6 +163,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
 
+  // Long text cell
+  longTextCellExpandLabel: '显示',
+  longTextCellCollapseLabel: '折叠',
+
   // Actions cell more text
   actionsCellMore: '更多',
 

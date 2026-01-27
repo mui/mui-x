@@ -165,6 +165,10 @@ const viVNGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Có',
   booleanCellFalseLabel: 'Không',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Mở rộng',
+  longTextCellCollapseLabel: 'Thu nhỏ',
+
   // Actions cell more text
   actionsCellMore: 'Thêm',
 
