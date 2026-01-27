@@ -81,12 +81,22 @@ export const useGridFocus = (
 
         const gridRoot = apiRef.current.rootElementRef!.current;
         const doc = ownerDocument(gridRoot);
+        const activeElement = doc.activeElement;
 
-        // If focus is outside the grid entirely (e.g., in a Portal/Dialog), don't steal focus.
+        // We can take focus if:
+        // - Focus is inside the grid, OR
+        // - Focus is "lost" (on body/documentElement/null, e.g., after cell remount during undo/redo)
+        // We should NOT take focus if it's intentionally outside the grid (e.g., in a Portal/Dialog).
         // React synthetic events bubble through the React component tree, not the DOM tree,
         // so events from Portal content can trigger this code even though focus is elsewhere.
-        // Avoids https://github.com/mui/mui-x/issues/21063
-        if (!gridRoot?.contains(doc.activeElement!)) {
+        // This avoids https://github.com/mui/mui-x/issues/21063
+        const allowTakingFocus =
+          !activeElement ||
+          activeElement === doc.body ||
+          activeElement === doc.documentElement ||
+          gridRoot?.contains(activeElement);
+
+        if (!allowTakingFocus) {
           return;
         }
 
