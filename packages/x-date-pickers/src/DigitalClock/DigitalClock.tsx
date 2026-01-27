@@ -236,6 +236,14 @@ export const DigitalClock = React.forwardRef(function DigitalClock(
     containerRef.current.scrollTop = offsetTop - 4;
   });
 
+  // Reset tracking when view loses focus
+  // so focus can be reapplied when user returns via keyboard
+  React.useEffect(() => {
+    if (!focusedView) {
+      lastActiveRef.current = null;
+    }
+  }, [focusedView]);
+
   const isTimeDisabled = React.useCallback(
     (valueToCheck: PickerValidDate) => {
       const isAfter = createIsAfterIgnoreDatePart(
