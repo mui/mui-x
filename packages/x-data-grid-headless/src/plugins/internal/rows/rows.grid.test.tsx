@@ -48,11 +48,7 @@ function TestGrid<TRow extends object>(props: TestGridProps<TRow>) {
             {visibleColumns.map((column, colIndex) => {
               const value = row[column.field as keyof TRow];
               return (
-                <div
-                  key={column.id}
-                  role="gridcell"
-                  data-colindex={colIndex}
-                >
+                <div key={column.id} role="gridcell" data-colindex={colIndex}>
                   {value != null ? String(value) : ''}
                 </div>
               );

@@ -64,8 +64,7 @@ export function TestDataGrid<TRow extends object>(props: {
     }
     // Use shift key for multi-sort when multiSortWithShiftKey is true (default)
     const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
-    const multiSort =
-      config.sorting?.enableMultiSort && (!requireShiftKey || event.shiftKey);
+    const multiSort = config.sorting?.enableMultiSort && (!requireShiftKey || event.shiftKey);
     grid.api.sorting.sortColumn(field, undefined, multiSort);
   };
 
