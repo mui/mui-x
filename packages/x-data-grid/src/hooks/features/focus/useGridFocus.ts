@@ -18,6 +18,7 @@ import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
+import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -66,6 +67,41 @@ export const useGridFocus = (
     (id, field) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === id && focusedCell?.field === field) {
+        /**
+         * Check if the state matches the actual DOM focus. They can get out of sync after `updateRows()` remounts the cell.
+         */
+        if (apiRef.current.getCellMode(id, field) !== 'view') {
+          return;
+        }
+
+        const cellElement = apiRef.current.getCellElement(id, field);
+        if (!cellElement) {
+          return;
+        }
+
+        const gridRoot = apiRef.current.rootElementRef!.current;
+        const doc = ownerDocument(gridRoot);
+
+        // If focus is outside the grid entirely (e.g., in a Portal/Dialog), don't steal focus.
+        // React synthetic events bubble through the React component tree, not the DOM tree,
+        // so events from Portal content can trigger this code even though focus is elsewhere.
+        // Avoids https://github.com/mui/mui-x/issues/21063
+        if (!gridRoot?.contains(doc.activeElement!)) {
+          return;
+        }
+
+        if (cellElement.contains(doc.activeElement!)) {
+          return;
+        }
+
+        if (doesSupportPreventScroll()) {
+          cellElement.focus({ preventScroll: true });
+        } else {
+          const scrollPosition = apiRef.current.getScrollPosition();
+          cellElement.focus();
+          apiRef.current.scroll(scrollPosition);
+        }
+
         return;
       }
 
