@@ -43,10 +43,10 @@ catalog:
   '@typescript-eslint/parser': ^8.53.1
   '@vitejs/plugin-react': ^5.1.2
   '@vitejs/plugin-react-swc': ^4.2.2
-  '@vitest/browser': ^4.0.16
-  '@vitest/browser-playwright': ^4.0.16
-  '@vitest/coverage-v8': ^4.0.16
-  '@vitest/ui': ^4.0.16
+  '@vitest/browser': ^4.0.18
+  '@vitest/browser-playwright': ^4.0.18
+  '@vitest/coverage-v8': ^4.0.18
+  '@vitest/ui': ^4.0.18
   autoprefixer: ^10.4.23
   babel-plugin-optimize-clsx: ^2.6.2
   babel-plugin-react-remove-properties: ^0.3.1
@@ -78,7 +78,7 @@ catalog:
   type-fest: ^5.3.1
   use-sync-external-store: ^1.6.0
   vite: ^7.3.1
-  vitest: ^4.0.16
+  vitest: ^4.0.18
   yargs: ^18.0.0
 
 engineStrict: true
