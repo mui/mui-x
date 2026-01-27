@@ -193,6 +193,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbalit',
+  longTextCellCollapseLabel: 'Sbalit',
+
   // Actions cell more text
   actionsCellMore: 'více',
 

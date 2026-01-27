@@ -23,6 +23,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         importsMapping: {
           ChartApi: 'ChartApi',
         },
+        splitUnmatchedSpecifiers: true,
       },
     ],
   });
