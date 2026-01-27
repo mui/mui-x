@@ -1,4 +1,4 @@
-import { SchedulerLazyLoadingPlugin } from '../../internals';
+import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
 import {
   EventTimelinePremiumState,
   EventTimelinePremiumParameters,
