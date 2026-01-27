@@ -1,4 +1,5 @@
 import { CSSObject } from '@mui/material/styles';
+import { red } from '@mui/material/colors';
 
 /**
  * CSS variable tokens for the scheduler.

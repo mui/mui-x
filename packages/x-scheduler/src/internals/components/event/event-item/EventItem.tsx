@@ -15,8 +15,8 @@ import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { EventItemProps } from './EventItem.types';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../../utils/tokens';
 import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { getPaletteStyles } from '../../../utils/newTokens';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
@@ -42,7 +42,8 @@ const EventItemCard = styled('div', {
     cursor: 'pointer',
     height: 'fit-content',
   },
-  ...schedulerPaletteStyles,
+  // ...schedulerPaletteStyles,
+  variants: [...getPaletteStyles()],
 }));
 
 const EventItemCardWrapper = styled('div', {
@@ -261,6 +262,7 @@ export const EventItem = React.forwardRef(function EventItem(
       id={id}
       data-variant={variant}
       data-palette={color}
+      palette={color}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
       className={clsx(className, classes.eventItemCard, occurrence.className)}
