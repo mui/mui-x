@@ -30,7 +30,7 @@ export function useWebGLResizeObserver(onResize: () => void) {
     const canvas = gl?.canvas;
 
     if (!(canvas instanceof HTMLCanvasElement)) {
-      return;
+      return undefined;
     }
 
     const observer = new ResizeObserver((entries) => {
@@ -56,5 +56,9 @@ export function useWebGLResizeObserver(onResize: () => void) {
     } catch {
       observer.observe(canvas, { box: 'content-box' });
     }
+
+    return () => {
+      observer.disconnect();
+    };
   }, [gl, gl?.canvas, onResize]);
 }
