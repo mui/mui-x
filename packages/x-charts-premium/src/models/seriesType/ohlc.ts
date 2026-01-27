@@ -7,19 +7,19 @@ import {
 import { type DefaultizedProps } from '@mui/x-internals/types';
 
 /**
- * Type representing the values of a single OHLC bar.
+ * Type representing the values of a single OHLC element.
  * The array contains four numbers in the following order:
- * [open, high, low, close].
+ * [date, open, high, low, close].
  */
-export type OHLCValueType = [number, number, number, number];
+export type OHLCValueType = [Date, number, number, number, number];
 
 export interface OHLCSeriesType
-  extends Omit<CommonSeriesType<OHLCValueType | null>, 'highlightScope'>, CartesianSeriesType {
+  extends Omit<CommonSeriesType<OHLCValueType>, 'highlightScope'>, CartesianSeriesType {
   type: 'ohlc';
   /**
    * The OHLC data points.
    */
-  data?: ReadonlyArray<OHLCValueType | null>;
+  data?: ReadonlyArray<OHLCValueType>;
   /**
    * The label to display on the tooltip or the legend. It can be a string or a function.
    */
@@ -39,6 +39,4 @@ export type OHLCItemIdentifier = {
 export interface DefaultizedOHLCSeriesType extends DefaultizedProps<
   OHLCSeriesType,
   CommonDefaultizedProps | 'color'
-> {
-  hidden: boolean;
-}
+> {}
