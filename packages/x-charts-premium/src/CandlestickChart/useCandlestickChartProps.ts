@@ -4,7 +4,7 @@ import { type ChartsGridProps } from '@mui/x-charts/ChartsGrid';
 import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
-import { type ChartsAxisProps } from '@mui/x-charts/internals';
+import { type ChartsAxisProps, type XAxis } from '@mui/x-charts/internals';
 import { type ChartContainerPremiumProps } from '../ChartContainerPremium';
 import { type CandlestickChartProps } from './CandlestickChart';
 import { type CandlestickPlotProps } from './CandlestickPlot';
@@ -44,6 +44,17 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
   const id = useId();
   const clipPathId = `${id}-clip-path`;
 
+  const xAxisWithDefault: XAxis[] | undefined = React.useMemo(
+    () =>
+      xAxis?.map((axis) => ({
+        scaleType: 'band',
+        // TODO: Should we also include hours?
+        ordinalTimeTicks: ['years', 'quarterly', 'months', 'biweekly', 'weeks', 'days'],
+        ...axis,
+      })),
+    [xAxis],
+  );
+
   const seriesWithDefault = React.useMemo(
     () =>
       series.map((s) => ({
@@ -62,7 +73,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
       margin,
       colors,
       dataset,
-      xAxis,
+      xAxis: xAxisWithDefault,
       yAxis,
       disableAxisListener: true,
       className,
