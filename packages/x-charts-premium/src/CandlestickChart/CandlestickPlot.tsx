@@ -131,8 +131,8 @@ function CandlestickWebGLPlotImpl({
   React.useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
-    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_width'), CANDLESTICK_WIDTH);
-  }, [gl, rectProgram]);
+    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_data_length'), dataLength);
+  }, [dataLength, gl, rectProgram]);
 
   React.useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
