@@ -119,7 +119,13 @@ export const CandlestickChart = React.forwardRef(function CandlestickChart(
           <ChartsClipPath {...clipPathProps} />
           {children}
         </ChartsSurface>
-        {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
+        {!props.loading && (
+          <Tooltip
+            // TODO: Do we want trigger item to be the default?
+            trigger="item"
+            {...props.slotProps?.tooltip}
+          />
+        )}
       </ChartsWrapper>
     </ChartDataProviderPremium>
   );
