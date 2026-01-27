@@ -39,7 +39,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   return root.toSource(printOptions);
 }
 
-export const testConfig = {
+export const testConfig = () => ({
   name: 'rename-axis-tooltip-hook',
   specFiles: [
     {
@@ -53,4 +53,4 @@ export const testConfig = {
       expected: readFile(path.join(import.meta.dirname, 'expected-root-imports.spec.tsx')),
     },
   ],
-};
+});
