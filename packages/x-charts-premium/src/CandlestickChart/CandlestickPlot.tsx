@@ -16,7 +16,11 @@ import {
   uploadQuadBuffer,
 } from '../HeatmapPremium/webgl/utils';
 import { useWebGLResizeObserver } from '../HeatmapPremium/webgl/useWebGLResizeObserver';
-import { candlestickFragmentShader, candlestickVertexShader } from './shaders';
+import {
+  candlestickFragmentShader,
+  candlestickLineVertexShader,
+  candlestickRectVertexShader,
+} from './shaders';
 
 export interface CandlestickPlotProps {}
 
@@ -41,10 +45,14 @@ function CandlestickWebGLPlot() {
   return <CandlestickWebGLPlotImpl gl={gl} series={seriesToDisplay} />;
 }
 
-function initializeProgram(gl: WebGL2RenderingContext) {
+function initializeProgram(
+  gl: WebGL2RenderingContext,
+  vertexShaderSource: string,
+  fragmentShaderSource: string,
+) {
   const program = gl.createProgram();
-  const vertexShader = compileShader(gl, candlestickVertexShader, gl.VERTEX_SHADER);
-  const fragmentShader = compileShader(gl, candlestickFragmentShader, gl.FRAGMENT_SHADER);
+  const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
+  const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
 
@@ -73,8 +81,12 @@ function CandlestickWebGLPlotImpl({
   // TODO: Validate this earlier in the processing pipeline
   const xScale = useXScale<ContinuousScaleName>();
   const yScale = useYScale<ContinuousScaleName>();
-
-  const [program] = React.useState<WebGLProgram>(() => initializeProgram(gl));
+  const [rectProgram] = React.useState<WebGLProgram>(() =>
+    initializeProgram(gl, candlestickRectVertexShader, candlestickFragmentShader),
+  );
+  const [lineProgram] = React.useState<WebGLProgram>(() =>
+    initializeProgram(gl, candlestickLineVertexShader, candlestickFragmentShader),
+  );
   const dataLength = series.data.length;
   const renderScheduledRef = React.useRef<boolean>(false);
 
@@ -85,8 +97,16 @@ function CandlestickWebGLPlotImpl({
     gl.clearColor(0, 0, 0, 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
+    // This isn't a hook
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(lineProgram);
+    gl.drawArraysInstanced(gl.LINES, 0, 2, dataLength);
+
+    // This isn't a hook
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(rectProgram);
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
-  }, [dataLength, gl]);
+  }, [dataLength, gl, lineProgram, rectProgram]);
 
   const scheduleRender = React.useCallback(() => {
     renderScheduledRef.current = true;
@@ -103,42 +123,70 @@ function CandlestickWebGLPlotImpl({
   }, [gl]);
 
   React.useEffect(() => {
-    // This isn't a hook
     // eslint-disable-next-line react-compiler/react-compiler
-    gl.useProgram(program);
+    gl.useProgram(rectProgram);
+    bindQuadBuffer(gl, rectProgram, uploadQuadBuffer(gl));
+
+    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_width'), CANDLESTICK_WIDTH);
     logWebGLErrors(gl);
-  }, [gl, program]);
+  }, [gl, rectProgram]);
 
   React.useEffect(() => {
-    // Setup constants
-    bindQuadBuffer(gl, program, uploadQuadBuffer(gl));
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(lineProgram);
 
-    gl.uniform1f(gl.getUniformLocation(program, 'u_width'), CANDLESTICK_WIDTH);
-  }, [gl, program]);
+    const lineVertices = new Float32Array([0, -1, 0, 1]);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, lineVertices, gl.STATIC_DRAW);
+
+    const aPosition = gl.getAttribLocation(lineProgram, 'a_position');
+    gl.enableVertexAttribArray(aPosition);
+    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+    logWebGLErrors(gl);
+  }, [gl, lineProgram]);
 
   React.useEffect(() => {
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(rectProgram);
     gl.uniform2f(
-      gl.getUniformLocation(program, 'u_resolution'),
+      gl.getUniformLocation(rectProgram, 'u_resolution'),
+      drawingArea.width,
+      drawingArea.height,
+    );
+
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(lineProgram);
+    gl.uniform2f(
+      gl.getUniformLocation(lineProgram, 'u_resolution'),
       drawingArea.width,
       drawingArea.height,
     );
 
     scheduleRender();
-  }, [drawingArea.height, drawingArea.width, gl, program, scheduleRender]);
+  }, [drawingArea.height, drawingArea.width, gl, lineProgram, rectProgram, scheduleRender]);
 
   React.useEffect(() => {
-    const centers = new Float32Array(series.data.length * 2);
-    const heights = new Float32Array(series.data.length);
+    const rectCenters = new Float32Array(series.data.length * 2);
+    const rectHeights = new Float32Array(series.data.length);
+    const lineCenters = new Float32Array(series.data.length * 2);
+    const lineHeights = new Float32Array(series.data.length);
     const colors = new Float32Array(series.data.length * 4);
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
       const [xValue, open, high, low, close] = series.data[dataIndex];
       const x = xScale(xValue);
-      const [bottom, top] = [yScale(open), yScale(close)].sort();
+      const [rectBottom, rectTop] = [yScale(open), yScale(close)].sort();
+      const [lineBottom, lineTop] = [yScale(low), yScale(high)];
 
-      centers[dataIndex * 2] = x + CANDLESTICK_WIDTH / 2;
-      centers[dataIndex * 2 + 1] = (top + bottom) / 2;
-      heights[dataIndex] = top - bottom;
+      rectCenters[dataIndex * 2] = x + CANDLESTICK_WIDTH / 2;
+      rectCenters[dataIndex * 2 + 1] = (rectTop + rectBottom) / 2;
+      rectHeights[dataIndex] = rectTop - rectBottom;
+
+      lineCenters[dataIndex * 2] = rectCenters[dataIndex * 2];
+      lineCenters[dataIndex * 2 + 1] = (lineTop + lineBottom) / 2;
+      lineHeights[dataIndex] = lineTop - lineBottom;
 
       if (close >= open) {
         // Bullish - green
@@ -155,38 +203,60 @@ function CandlestickWebGLPlotImpl({
       }
     }
 
-    // Setup center attribute
-    const centerBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, centerBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, centers, gl.STATIC_DRAW);
+    // Setup rect attributes
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(rectProgram);
 
-    const centerLocation = gl.getAttribLocation(program, 'a_center');
-    gl.enableVertexAttribArray(centerLocation);
-    gl.vertexAttribPointer(centerLocation, 2, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(centerLocation, 1); // One per instance
+    // Center attribute
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, rectCenters, gl.STATIC_DRAW);
 
-    // Setup height attribute
-    const heightBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, heightBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, heights, gl.STATIC_DRAW);
+    const rectCenterLocation = gl.getAttribLocation(rectProgram, 'a_center');
+    gl.enableVertexAttribArray(rectCenterLocation);
+    gl.vertexAttribPointer(rectCenterLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(rectCenterLocation, 1); // One per instance
 
-    const heightLocation = gl.getAttribLocation(program, 'a_height');
-    gl.enableVertexAttribArray(heightLocation);
-    gl.vertexAttribPointer(heightLocation, 1, gl.FLOAT, false, 0, 0);
-    gl.vertexAttribDivisor(heightLocation, 1); // One per instance
+    // Height attribute
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, rectHeights, gl.STATIC_DRAW);
 
-    // Setup color attribute
-    const colorBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+    const rectHeightLocation = gl.getAttribLocation(rectProgram, 'a_height');
+    gl.enableVertexAttribArray(rectHeightLocation);
+    gl.vertexAttribPointer(rectHeightLocation, 1, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(rectHeightLocation, 1); // One per instance
+
+    // Color attribute
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
 
-    const colorLocation = gl.getAttribLocation(program, 'a_color');
+    const colorLocation = gl.getAttribLocation(rectProgram, 'a_color');
     gl.enableVertexAttribArray(colorLocation);
     gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(colorLocation, 1); // One per instance
 
+    // Setup line attributes
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(lineProgram);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, lineCenters, gl.STATIC_DRAW);
+
+    const lineCenterLocation = gl.getAttribLocation(lineProgram, 'a_center');
+    gl.enableVertexAttribArray(lineCenterLocation);
+    gl.vertexAttribPointer(lineCenterLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(lineCenterLocation, 1); // One per instance
+
+    // Height attribute
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, lineHeights, gl.STATIC_DRAW);
+
+    const lineHeightLocation = gl.getAttribLocation(lineProgram, 'a_height');
+    gl.enableVertexAttribArray(lineHeightLocation);
+    gl.vertexAttribPointer(lineHeightLocation, 1, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribDivisor(lineHeightLocation, 1); // One per instance
+
     scheduleRender();
-  }, [gl, program, scheduleRender, series.data, xScale, yScale]);
+  }, [gl, lineProgram, rectProgram, scheduleRender, series.data, xScale, yScale]);
 
   React.useEffect(() => {
     if (renderScheduledRef.current) {
