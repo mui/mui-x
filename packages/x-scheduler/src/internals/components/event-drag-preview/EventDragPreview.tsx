@@ -14,7 +14,7 @@ const EventDragPreviewRoot = styled('div', {
   fontSize: theme.typography.body2.fontSize,
   backgroundColor: 'var(--event-color-8)',
   color: 'var(--event-color-1)',
-  variants: getPaletteVariants(),
+  variants: getPaletteVariants(theme),
 }));
 
 const fakeStore = {

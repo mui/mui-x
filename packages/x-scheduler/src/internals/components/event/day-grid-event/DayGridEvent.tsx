@@ -62,7 +62,7 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
         backgroundColor: 'var(--interactive-hover-bg)',
       },
     },
-    variants: getPaletteVariants(),
+    variants: getPaletteVariants(theme),
   }),
 );
 
@@ -72,7 +72,7 @@ const DayGridEventPlaceholder = styled(CalendarGrid.DayEventPlaceholder, {
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...(DayGridEventBaseStyles(theme) as any),
   zIndex: 2,
-  variants: getPaletteVariants(),
+  variants: getPaletteVariants(theme),
 }));
 
 const DayGridEventTitle = styled('p', {

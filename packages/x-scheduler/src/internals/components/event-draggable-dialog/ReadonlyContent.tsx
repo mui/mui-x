@@ -77,14 +77,14 @@ const EventDraggableDialogResourceLegendContainer = styled('div', {
 const ResourceLegendColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendColor',
-})<{ palette?: PaletteName }>({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   width: 8,
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-color-9)',
-  variants: getPaletteVariants(),
-});
+  variants: getPaletteVariants(theme),
+}));
 
 const EventDraggableDialogResourceTitle = styled('p', {
   name: 'MuiEventDraggableDialog',

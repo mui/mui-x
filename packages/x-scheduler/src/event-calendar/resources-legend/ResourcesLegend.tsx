@@ -42,14 +42,14 @@ const ResourcesLegendItemRoot = styled('div', {
 const ResourcesLegendItemColorDot = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegendItemColorDot',
-})<{ palette?: PaletteName }>({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   width: 8,
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-color-9)',
-  variants: getPaletteVariants(),
-});
+  variants: getPaletteVariants(theme),
+}));
 
 const ResourcesLegendItemName = styled(Typography, {
   name: 'MuiEventCalendar',

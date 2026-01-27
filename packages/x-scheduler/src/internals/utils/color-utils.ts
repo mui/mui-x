@@ -3,7 +3,7 @@ import { PaletteName } from './tokens';
 
 /**
  * Returns props object for applying palette color via the palette prop.
- * Use with components that have getPaletteVariants() applied.
+ * Use with components that have getPaletteVariants(theme) applied.
  */
 export function getPaletteProps(color: SchedulerEventColor): { palette: PaletteName } {
   return { palette: color as PaletteName };

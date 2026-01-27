@@ -42,7 +42,7 @@ const EventItemCard = styled('div', {
     cursor: 'pointer',
     height: 'fit-content',
   },
-  variants: getPaletteVariants(),
+  variants: getPaletteVariants(theme),
 }));
 
 const EventItemCardWrapper = styled('div', {

@@ -1,4 +1,4 @@
-import { CSSObject } from '@mui/material/styles';
+import { CSSObject, Theme } from '@mui/material/styles';
 import {
   red,
   pink,
@@ -36,9 +36,9 @@ export type PaletteName = keyof typeof colorPalettes;
 
 /**
  * Generates palette variants for MUI styled components.
- * Use with styled components: `variants: getPaletteVariants()`
+ * Use with styled components: `variants: getPaletteVariants(theme)`
  */
-export const getPaletteVariants = () => {
+export const getPaletteVariants = (theme: Theme) => {
   return Object.entries(colorPalettes).map(([colorName, colorValues]) => ({
     props: { palette: colorName as PaletteName },
     style: {
@@ -52,6 +52,18 @@ export const getPaletteVariants = () => {
       '--event-color-8': colorValues[700],
       '--event-color-9': colorValues[800],
       '--event-color-10': colorValues[900],
+      ...theme.applyStyles('dark', {
+        '--event-color-1': colorValues[900],
+        '--event-color-2': colorValues[800],
+        '--event-color-3': colorValues[700],
+        '--event-color-4': colorValues[600],
+        '--event-color-5': colorValues[500],
+        '--event-color-6': colorValues[400],
+        '--event-color-7': colorValues[300],
+        '--event-color-8': colorValues[200],
+        '--event-color-9': colorValues[100],
+        '--event-color-10': colorValues[50],
+      }),
     } as CSSObject,
   }));
 };

@@ -33,19 +33,19 @@ const ResourceMenuLegendContainer = styled('div', {
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorDot',
-})<{ palette?: PaletteName }>({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   width: 8,
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-color-9)',
-  variants: getPaletteVariants(),
-});
+  variants: getPaletteVariants(theme),
+}));
 
 const ResourceMenuColorRadioButton = styled('button', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorRadioButton',
-})<{ palette?: PaletteName }>({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   width: 24,
   height: 24,
   borderRadius: '50%',
@@ -60,8 +60,8 @@ const ResourceMenuColorRadioButton = styled('button', {
     cursor: 'not-allowed',
     opacity: 0.5,
   },
-  variants: getPaletteVariants(),
-});
+  variants: getPaletteVariants(theme),
+}));
 
 interface ResourceSelectProps {
   readOnly?: boolean;

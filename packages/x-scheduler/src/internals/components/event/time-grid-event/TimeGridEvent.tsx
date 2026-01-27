@@ -29,7 +29,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   slot: 'TimeGridEvent',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
+  backgroundColor: 'var(--event-color-1)',
   position: 'absolute',
   left: 'calc( ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
@@ -52,9 +52,8 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     cursor: 'grab',
   },
   '&[data-recurrent]': {
-    background:
-      'repeating-linear-gradient(-45deg, rgb(var(--event-color-4-rgb), 0.5) 0 12px, var(--event-color-3) 12px 22.5px)',
-    backgroundColor: 'var(--event-color-3)',
+    background: `repeating-linear-gradient(-45deg, rgb(var(--event-color-4), 0.5) 0 12px, var(--event-color-3) 12px 22.5px)`,
+    backgroundColor: 'var(--event-color-1)',
   },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
@@ -63,8 +62,11 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     padding: theme.spacing(0.05, 1),
   },
   '&:focus-visible': {
-    outline: '2px solid var(--event-color-5)',
+    outline: '2px solid var(--event-color-2)',
     outlineOffset: 2,
+  },
+  '&:hover': {
+    backgroundColor: 'var(--event-color-2)',
   },
   '&[role="button"]': {
     cursor: 'pointer',
@@ -78,10 +80,10 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     left: 0,
     width: 3,
     borderRadius: '4px 0 0 4px',
-    background: 'var(--event-color-10)',
+    background: 'var(--event-color-7)',
     pointerEvents: 'none',
   },
-  variants: getPaletteVariants(),
+  variants: getPaletteVariants(theme),
 }));
 
 const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
@@ -89,8 +91,8 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   slot: 'TimeGridEventPlaceholder',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-5)',
-  color: 'var(--event-color-10)',
+  backgroundColor: 'var(--event-color-2)',
+  color: 'var(--event-color-9)',
   position: 'absolute',
   left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
@@ -104,7 +106,7 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0.05, 1),
   },
-  variants: getPaletteVariants(),
+  variants: getPaletteVariants(theme),
 }));
 
 const TimeGridEventTitle = styled(Typography, {
