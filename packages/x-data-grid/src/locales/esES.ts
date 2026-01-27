@@ -167,6 +167,10 @@ const esESGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'si',
   booleanCellFalseLabel: 'no',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Contraer',
+
   // Actions cell more text
   actionsCellMore: 'más',
 

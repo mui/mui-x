@@ -165,6 +165,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'نعم',
   booleanCellFalseLabel: 'لا',
 
+  // Long text cell
+  longTextCellExpandLabel: 'توسيع',
+  longTextCellCollapseLabel: 'طوي',
+
   // Actions cell more text
   actionsCellMore: 'المزيد',
 

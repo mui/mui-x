@@ -5,6 +5,7 @@ export * from './gridDateColDef';
 export * from './gridNumericColDef';
 export * from './gridSingleSelectColDef';
 export * from './gridStringColDef';
+export * from './gridLongTextColDef';
 export * from './gridBooleanOperators';
 export * from './gridDateOperators';
 export * from './gridNumericOperators';

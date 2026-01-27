@@ -58,7 +58,8 @@ export function ChartAxisZoomSliderTrack({
   ...other
 }: ChartAxisZoomSliderTrackProps) {
   const ref = React.useRef<SVGRectElement>(null);
-  const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { svgRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const [isSelecting, setIsSelecting] = React.useState(false);
   const classes = useUtilityClasses({ axisDirection });
