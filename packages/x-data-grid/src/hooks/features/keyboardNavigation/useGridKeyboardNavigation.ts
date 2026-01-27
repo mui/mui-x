@@ -791,6 +791,9 @@ export const useGridKeyboardNavigation = (
           ) {
             break;
           }
+          if (colDef && colDef.type === 'longText') {
+            break;
+          }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {
             goToCell(
               colIndexBefore,

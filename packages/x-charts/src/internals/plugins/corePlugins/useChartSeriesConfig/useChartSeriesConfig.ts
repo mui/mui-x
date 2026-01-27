@@ -1,7 +1,7 @@
 'use client';
 
 import useEventCallback from '@mui/utils/useEventCallback';
-import { type ChartPlugin, type ChartSeriesConfig } from '../../models';
+import { type ChartPlugin } from '../../models';
 import {
   type UseChartSeriesConfigSignature,
   type SerializeIdentifierFunction,
@@ -9,6 +9,7 @@ import {
 } from './useChartSeriesConfig.types';
 import { serializeIdentifier as serializeIdentifierFn } from './utils/serializeIdentifier';
 import { cleanIdentifier as cleanIdentifierFn } from './utils/cleanIdentifier';
+import type { ChartSeriesConfig } from './types';
 
 export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = ({ store }) => {
   const serializeIdentifier: SerializeIdentifierFunction = useEventCallback((identifier) =>

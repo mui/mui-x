@@ -25,7 +25,6 @@ import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClasse
 import '../styles/index.css';
 import '../styles/colors.css';
 import '../styles/tokens.css';
-import '../styles/utils.css';
 
 const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undefined) => {
   const slots = {
@@ -46,6 +45,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     titleCellLegendColor: ['titleCellLegendColor'],
     event: ['event'],
     eventResizeHandler: ['eventResizeHandler'],
+    eventLinesClamp: ['eventLinesClamp'],
     timeHeader: ['timeHeader'],
     timeHeaderCell: ['timeHeaderCell'],
     timeHeaderDayLabel: ['timeHeaderDayLabel'],

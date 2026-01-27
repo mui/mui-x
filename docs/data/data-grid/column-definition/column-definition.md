@@ -255,6 +255,7 @@ The following are the native column types with their required value types:
 | Column type          | Value type                 |
 | :------------------- | :------------------------- |
 | `'string'` (default) | `string`                   |
+| `'longText'`         | `string`                   |
 | `'number'`           | `number`                   |
 | `'date'`             | `Date() object`            |
 | `'dateTime'`         | `Date() object`            |
@@ -263,6 +264,21 @@ The following are the native column types with their required value types:
 | `'actions'`          | Not applicable             |
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+
+### Long text keyboard interactions
+
+The `'longText'` column type supports keyboard interactions to expand, collapse, and edit content when the cell is focused via click or keyboard navigation.
+
+View mode (expand button focused):
+
+- <kbd class="key">Space</kbd> – Toggle popup
+- <kbd class="key">Escape</kbd> – Close popup
+
+Edit mode (textarea focused):
+
+- <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd> – Insert newline
+- <kbd class="key">Enter</kbd> – Commit changes
+- <kbd class="key">Escape</kbd> – Cancel editing
 
 ### Converting types
 

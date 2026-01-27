@@ -8,3 +8,4 @@ export type {
   CleanIdentifierFunction,
 } from './useChartSeriesConfig.types';
 export * from './useChartSeriesConfig.selectors';
+export * from './types';

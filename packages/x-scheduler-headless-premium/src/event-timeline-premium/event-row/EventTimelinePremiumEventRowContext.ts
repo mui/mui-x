@@ -26,7 +26,7 @@ export function useEventTimelinePremiumEventRowContext() {
   const context = React.useContext(EventTimelinePremiumEventRowContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `EventTimelinePremiumEventRowContext` is missing. <EventTimelinePremium.Event /> part must be placed within <EventTimelinePremium.EventRow />.',
+      'MUI: `EventTimelinePremiumEventRowContext` is missing. <EventTimelinePremium.Event /> part must be placed within <EventTimelinePremium.EventRow />.',
     );
   }
   return context;

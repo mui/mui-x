@@ -5,9 +5,11 @@ import type {
   VisibilityMap,
 } from './useChartVisibilityManager.types';
 import { type ChartOptionalRootSelector } from '../../utils/selectors';
-import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import {
+  selectorChartSeriesConfig,
+  type ChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 import { serializeIdentifier } from '../../corePlugins/useChartSeriesConfig/utils/serializeIdentifier';
-import type { ChartSeriesConfig } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 /**

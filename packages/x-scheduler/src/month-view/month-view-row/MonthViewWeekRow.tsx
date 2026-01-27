@@ -10,6 +10,7 @@ import { eventCalendarPreferenceSelectors } from '@mui/x-scheduler-headless/even
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MonthViewWeekRowProps } from './MonthViewWeekRow.types';
 import { MonthViewCell } from './MonthViewCell';
+import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
 
 const FIXED_CELL_WIDTH = 28;
 
@@ -45,6 +46,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
   const store = useEventCalendarStoreContext();
   const showWeekNumber = useStore(store, eventCalendarPreferenceSelectors.showWeekNumber);
   const translations = useTranslations();
+  const classes = useEventCalendarClasses();
   const occurrences = useEventOccurrencesWithDayGridPosition({ days, occurrencesMap });
   const weekNumber = adapter.getWeekNumber(days[0].value);
 
@@ -58,6 +60,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
 
   return (
     <MonthViewRow
+      className={classes.monthViewRow}
       key={weekNumber}
       start={start}
       end={end}
@@ -65,6 +68,7 @@ export default function MonthViewWeekRow(props: MonthViewWeekRowProps) {
     >
       {showWeekNumber && (
         <MonthViewWeekNumberCell
+          className={classes.monthViewWeekNumberCell}
           role="rowheader"
           aria-label={translations.weekNumberAriaLabel(weekNumber)}
         >
