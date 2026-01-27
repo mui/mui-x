@@ -359,3 +359,22 @@ export interface UpdateEventsParameters {
 }
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * Interface for the lazy loading plugin.
+ * Defined here so the base store can call methods on it without importing the premium plugin.
+ */
+export interface SchedulerLazyLoadingPluginInterface<TEvent extends object> {
+  queueDataFetchForRange: (
+    range: { start: TemporalSupportedObject; end: TemporalSupportedObject },
+    immediate?: boolean,
+  ) => Promise<void>;
+  updateEventsFromDataSource: (
+    params: {
+      deleted: SchedulerEventId[];
+      updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>;
+      created: SchedulerEventId[];
+    },
+    newEvents: TEvent[],
+  ) => Promise<void>;
+}

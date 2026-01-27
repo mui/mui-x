@@ -21,6 +21,7 @@ import {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
+  SchedulerLazyLoadingPluginInterface,
 } from './SchedulerStore.types';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
@@ -69,11 +70,7 @@ export class SchedulerStore<
 
   protected timeoutManager = new TimeoutManager();
 
-  /**
-   * Lazy loading plugin instance.
-   * Only set in premium stores (EventCalendarPremiumStore, EventTimelinePremiumStore).
-   */
-  public lazyLoading: any;
+  public lazyLoading: SchedulerLazyLoadingPluginInterface<TEvent> | undefined;
 
   public constructor(
     parameters: Parameters,
