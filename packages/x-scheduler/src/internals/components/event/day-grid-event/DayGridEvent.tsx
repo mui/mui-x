@@ -55,11 +55,13 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
     },
     '&[data-variant="compact"]': {
       height: 'fit-content',
+      backgroundColor: 'transparent',
+
       '&:active': {
-        backgroundColor: 'var(--interactive-active-bg)',
+        backgroundColor: 'transparent',
       },
       '&:hover': {
-        backgroundColor: 'var(--interactive-hover-bg)',
+        backgroundColor: theme.palette.action.hover,
       },
     },
     variants: getPaletteVariants(theme),
@@ -172,7 +174,7 @@ const EventColorIndicator = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-color-6)',
   marginTop: 2,
 });
 
