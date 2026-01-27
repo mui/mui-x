@@ -38,7 +38,7 @@ type ChartContainerPremiumComponent = <
  *
  * API:
  *
- * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ * - [ChartContainerPremium API](https://mui.com/x/api/charts/chart-container-premium/)
  *
  * @example
  * ```jsx
