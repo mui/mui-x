@@ -47,7 +47,7 @@ function TestGrid(props: TestGridProps) {
 
   React.useEffect(() => {
     if (apiRef) {
-      (apiRef as React.MutableRefObject<GridApi | null>).current = grid;
+      (apiRef as React.RefObject<GridApi | null>).current = grid;
     }
   }, [grid, apiRef]);
 
@@ -832,10 +832,7 @@ describe('Sorting Plugin - Integration Tests', () => {
       ];
 
       function FullNameTestGrid() {
-        const grid = useDataGrid<
-          [typeof sortingPlugin, typeof paginationPlugin],
-          RowWithFullName
-        >({
+        const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], RowWithFullName>({
           rows,
           columns,
           plugins: [sortingPlugin, paginationPlugin],
