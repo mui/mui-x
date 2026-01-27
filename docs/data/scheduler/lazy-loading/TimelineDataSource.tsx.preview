@@ -1,8 +1,7 @@
-<EventCalendarPremium
+<EventTimelinePremium
   events={[]}
   dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
   resources={flatResources}
-  areEventsDraggable
   defaultVisibleDate={defaultVisibleDate}
-  defaultPreferences={{ isSidePanelOpen: false }}
+  defaultView="days"
 />

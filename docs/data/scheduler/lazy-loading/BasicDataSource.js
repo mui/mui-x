@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+import { EventCalendarPremium } from '@mui/x-scheduler-premium/event-calendar-premium';
 
 import {
   resources as agendaResources,
@@ -123,7 +123,7 @@ export default function BasicDataSource() {
 
   return (
     <div style={{ height: '700px', width: '100%' }}>
-      <EventCalendar
+      <EventCalendarPremium
         events={[]}
         dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
         resources={flatResources}

@@ -1,7 +1,7 @@
 import { spy } from 'sinon';
 import { describe, expect, it } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
-import { storeClasses } from './utils';
+import { premiumStoreClasses } from './utils';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -28,7 +28,7 @@ const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => 
   });
 };
 
-storeClasses.forEach((storeClass) => {
+premiumStoreClasses.forEach((storeClass) => {
   describe(`${storeClass.name} - Data Source`, () => {
     it('should fetch events from data source when queueDataFetchForRange is called (lazy load)', async () => {
       const dataSource = {

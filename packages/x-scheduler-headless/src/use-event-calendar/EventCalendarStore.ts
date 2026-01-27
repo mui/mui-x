@@ -15,7 +15,6 @@ import {
 } from '../internals/utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
-import { EventCalendarLazyLoadingPlugin } from './plugins/EventCalendarLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -79,6 +78,8 @@ export class EventCalendarStore<
   EventCalendarState,
   EventCalendarParameters<TEvent, TResource>
 > {
+  private previousViewConfig: EventCalendarViewConfig | null = null;
+
   public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
     super(parameters, adapter, 'Event Calendar', mapper);
 
@@ -90,7 +91,38 @@ export class EventCalendarStore<
       });
     }
 
-    this.lazyLoading = new EventCalendarLazyLoadingPlugin<TEvent, TResource>(this);
+    // Emit viewConfigChanged event for premium lazy loading plugins
+    this.registerStoreEffect(
+      (state) => {
+        const visibleDays =
+          state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
+        const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
+        return { viewConfig: state.viewConfig, visibleDaysKey };
+      },
+      (previous, next) => {
+        if (previous.visibleDaysKey === next.visibleDaysKey) {
+          return;
+        }
+
+        const visibleDays =
+          next.viewConfig?.visibleDaysSelector?.(this.state as EventCalendarState) ?? [];
+
+        if (visibleDays.length === 0) {
+          return;
+        }
+
+        this.publishEvent(
+          'viewConfigChanged',
+          {
+            visibleDays,
+            isInitialLoad: this.previousViewConfig == null,
+          },
+          null,
+        );
+
+        this.previousViewConfig = next.viewConfig;
+      },
+    );
   }
 
   private assertViewValidity(view: CalendarView) {

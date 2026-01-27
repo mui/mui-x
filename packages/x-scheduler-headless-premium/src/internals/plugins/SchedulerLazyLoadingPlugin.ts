@@ -2,12 +2,15 @@ import {
   SchedulerEventId,
   TemporalSupportedObject,
   SchedulerEventUpdatedProperties,
-} from '../../../../models';
-import { SchedulerState, SchedulerParameters } from '../SchedulerStore.types';
-import { SchedulerStore } from '../SchedulerStore';
-import { SchedulerDataSourceCacheDefault } from '../cache';
-import { SchedulerDataManager } from '../queue';
-import { buildEventsState } from '../SchedulerStore.utils';
+} from '@mui/x-scheduler-headless/models';
+import {
+  SchedulerState,
+  SchedulerParameters,
+  SchedulerStore,
+  buildEventsState,
+} from '@mui/x-scheduler-headless/internals';
+import { SchedulerDataSourceCacheDefault } from '../utils/cache';
+import { SchedulerDataManager } from '../utils/queue';
 
 export class SchedulerLazyLoadingPlugin<
   TEvent extends object,
@@ -15,10 +18,10 @@ export class SchedulerLazyLoadingPlugin<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > {
-  private store: SchedulerStore<TEvent, TResource, State, Parameters>;
+  protected store: SchedulerStore<TEvent, TResource, State, Parameters>;
 
-  private dataManager: SchedulerDataManager | null = null;
-  private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
+  protected dataManager: SchedulerDataManager | null = null;
+  protected cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
   constructor(store: SchedulerStore<TEvent, TResource, State, Parameters>) {
     this.store = store;
@@ -29,6 +32,9 @@ export class SchedulerLazyLoadingPlugin<
         this.store.state.adapter,
         this.loadEventsFromDataSource,
       );
+
+      // Subscribe to eventsUpdated event for cache sync
+      this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
     }
   }
 
@@ -114,6 +120,26 @@ export class SchedulerLazyLoadingPlugin<
       this.store.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
     }
+  };
+
+  /**
+   * Handles the eventsUpdated event from the base store.
+   * Updates the cache and syncs with the data source.
+   */
+  private handleEventsUpdated = async (params: {
+    deleted: SchedulerEventId[];
+    updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>;
+    created: SchedulerEventId[];
+    newEvents: TEvent[];
+  }) => {
+    await this.updateEventsFromDataSource(
+      {
+        deleted: params.deleted,
+        updated: params.updated,
+        created: params.created,
+      },
+      params.newEvents,
+    );
   };
 
   public updateEventsFromDataSource = async (
