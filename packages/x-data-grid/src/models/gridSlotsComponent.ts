@@ -76,6 +76,11 @@ export interface GridBaseSlots {
    */
   baseInput: React.JSXElementConstructor<GridSlotProps['baseInput']>;
   /**
+   * The custom Textarea component used in the grid for multiline text editing.
+   * @default InputBase with multiline
+   */
+  baseTextarea: React.JSXElementConstructor<GridSlotProps['baseTextarea']>;
+  /**
    * The custom ToggleButton component used in the grid.
    * @default ToggleButton
    */

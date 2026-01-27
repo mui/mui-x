@@ -186,6 +186,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Da',
   booleanCellFalseLabel: 'Ne',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Proširiti',
+  longTextCellCollapseLabel: 'Skupiti',
+
   // Actions cell more text
   actionsCellMore: 'više',
 

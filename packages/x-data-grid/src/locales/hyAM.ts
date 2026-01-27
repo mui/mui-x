@@ -185,6 +185,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'այո',
   booleanCellFalseLabel: 'ոչ',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Բացել',
+  longTextCellCollapseLabel: 'Փակել',
+
   // Actions cell more text
   actionsCellMore: 'ավելին',
 
