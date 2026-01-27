@@ -48,9 +48,9 @@ const HeaderToolbarDateNavigator = styled(ButtonGroup, {
   slot: 'HeaderToolbarDateNavigator',
 })({});
 
-const HeaderToolbarLeft = styled('div', {
+const HeaderToolbarLeftElement = styled('div', {
   name: 'MuiEventCalendar',
-  slot: 'HeaderToolbarLeft',
+  slot: 'HeaderToolbarLeftElement',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -94,11 +94,11 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       {...props}
       className={clsx(props.className, classes.headerToolbar)}
     >
-      <HeaderToolbarLeft
+      <HeaderToolbarLeftElement
         ref={forwardedRef}
         role="navigation"
         {...props}
-        className={classes.headerToolbarLeft}
+        className={classes.headerToolbarLeftElement}
       >
         <IconButton
           aria-label={isSidePanelOpen ? translations.closeSidePanel : translations.openSidePanel}
@@ -112,7 +112,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
           {adapter.format(visibleDate, 'monthFullLetter')}{' '}
           {adapter.format(visibleDate, 'yearPadded')}
         </HeaderToolbarLabel>
-      </HeaderToolbarLeft>
+      </HeaderToolbarLeftElement>
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         <PreferencesMenu />
 

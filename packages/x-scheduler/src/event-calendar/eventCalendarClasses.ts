@@ -19,7 +19,7 @@ export interface EventCalendarClasses {
   /** Styles applied to the header toolbar actions element. */
   headerToolbarActions: string;
   /** Styles applied to the header toolbar left side element. */
-  headerToolbarLeft: string;
+  headerToolbarLeftElement: string;
   /** Styles applied to the header toolbar label element. */
   headerToolbarLabel: string;
   /** Styles applied to the header toolbar date navigator buttons container element. */
@@ -203,7 +203,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'errorContainer',
     'headerToolbar',
     'headerToolbarActions',
-    'headerToolbarLeft',
+    'headerToolbarLeftElement',
     'headerToolbarLabel',
     'headerToolbarDateNavigator',
     'viewSwitcher',

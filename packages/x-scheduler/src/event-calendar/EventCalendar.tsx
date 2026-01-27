@@ -45,7 +45,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     headerToolbar: ['headerToolbar'],
     headerToolbarActions: ['headerToolbarActions'],
     headerToolbarPrimaryActionWrapper: ['headerToolbarPrimaryActionWrapper'],
-    headerToolbarLeft: ['headerToolbarLeft'],
+    headerToolbarLeftElement: ['headerToolbarLeftElement'],
     headerToolbarLabel: ['headerToolbarLabel'],
     headerToolbarDateNavigator: ['headerToolbarDateNavigator'],
     viewSwitcher: ['viewSwitcher'],
