@@ -278,20 +278,20 @@ export const resources: SchedulerResource[] = [
   {
     title: 'Work',
     id: 'work',
-    eventColor: 'violet',
+    eventColor: 'deepPurple',
     children: [
       {
         title: 'eXplore Team',
         id: 'explore',
         eventColor: 'pink',
-        children: [{ title: 'Design meetings', id: 'design-meetings', eventColor: 'mauve' }],
+        children: [{ title: 'Design meetings', id: 'design-meetings', eventColor: 'grey' }],
       },
       { title: 'Data Grid Team', id: 'data-grid', eventColor: 'blue' },
     ],
   },
   { title: 'Holidays', id: 'holidays', eventColor: 'red' },
-  { title: 'Workout', id: 'workout', eventColor: 'jade' },
+  { title: 'Workout', id: 'workout', eventColor: 'teal' },
   { title: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
-  { title: 'Personal', id: 'personal', eventColor: 'orange' },
+  { title: 'Personal', id: 'personal', eventColor: 'deepOrange' },
   { title: 'Medical', id: 'medical', eventColor: 'indigo' },
 ];

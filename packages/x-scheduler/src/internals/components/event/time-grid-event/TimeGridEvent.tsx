@@ -11,7 +11,7 @@ import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
 import { TimeGridEventProps } from './TimeGridEvent.types';
 import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../../utils/tokens';
+import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
 
 const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
@@ -27,7 +27,7 @@ const linesClampStyles = (maximumLines: number = 1): React.CSSProperties => ({
 const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEvent',
-})(({ theme }) => ({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-color-3)',
   position: 'absolute',
@@ -78,19 +78,19 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     left: 0,
     width: 3,
     borderRadius: '4px 0 0 4px',
-    background: 'var(--event-color-12)',
+    background: 'var(--event-color-10)',
     pointerEvents: 'none',
   },
-  ...schedulerPaletteStyles,
+  variants: getPaletteVariants(),
 }));
 
 const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventPlaceholder',
-})(({ theme }) => ({
+})<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-color-5)',
-  color: 'var(--event-color-12)',
+  color: 'var(--event-color-10)',
   position: 'absolute',
   left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
@@ -104,7 +104,7 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   '&[data-under-fifteen-minutes="true"]': {
     padding: theme.spacing(0.05, 1),
   },
-  ...schedulerPaletteStyles,
+  variants: getPaletteVariants(),
 }));
 
 const TimeGridEventTitle = styled(Typography, {
@@ -112,7 +112,7 @@ const TimeGridEventTitle = styled(Typography, {
   slot: 'TimeGridEventTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-12)',
+  color: 'var(--event-color-10)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -129,7 +129,7 @@ const TimeGridEventTime = styled('time', {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventTime',
 })(({ theme }) => ({
-  color: 'var(--event-color-11)',
+  color: 'var(--event-color-7)',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -153,7 +153,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   right: 3,
   bottom: 3,
   padding: theme.spacing(0.25),
-  color: 'var(--event-color-11)',
+  color: 'var(--event-color-7)',
   '@container (max-width: 50px)': {
     display: 'none',
   },
@@ -281,7 +281,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
-        data-palette={color}
+        palette={color}
         {...sharedProps}
         className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
       >
@@ -300,7 +300,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-draggable={isDraggable || undefined}
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
-      data-palette={color}
+      palette={color}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >

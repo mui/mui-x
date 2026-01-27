@@ -283,18 +283,18 @@ export type SchedulerRenderableEventOccurrence =
 export type SchedulerEventId = string | number;
 
 export type SchedulerEventColor =
-  | 'primary'
-  | 'mauve'
-  | 'violet'
-  | 'cyan'
-  | 'jade'
   | 'red'
-  | 'lime'
-  | 'orange'
-  | 'yellow'
   | 'pink'
+  | 'deepPurple'
   | 'indigo'
-  | 'blue';
+  | 'blue'
+  | 'cyan'
+  | 'teal'
+  | 'green'
+  | 'lime'
+  | 'amber'
+  | 'deepOrange'
+  | 'grey';
 
 export type SchedulerEventSide = 'start' | 'end';
 

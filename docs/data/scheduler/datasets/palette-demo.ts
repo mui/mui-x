@@ -10,18 +10,18 @@ const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
 
 export const initialEvents: SchedulerEvent[] = [
   {
-    id: 'violet',
+    id: 'deepPurple',
     start: setHours(setDay(START_OF_FIRST_WEEK, 1), 2),
     end: setHours(setDay(START_OF_FIRST_WEEK, 1), 4),
-    title: 'violet',
-    resource: 'violet',
+    title: 'deepPurple',
+    resource: 'deepPurple',
   },
   {
-    id: 'jade',
+    id: 'teal',
     start: setHours(setDay(START_OF_FIRST_WEEK, 1), 5),
     end: setHours(setDay(START_OF_FIRST_WEEK, 1), 7),
-    title: 'jade',
-    resource: 'jade',
+    title: 'teal',
+    resource: 'teal',
   },
   {
     id: 'lime',
@@ -31,11 +31,11 @@ export const initialEvents: SchedulerEvent[] = [
     resource: 'lime',
   },
   {
-    id: 'orange',
+    id: 'deepOrange',
     start: setHours(setDay(START_OF_FIRST_WEEK, 2), 5),
     end: setHours(setDay(START_OF_FIRST_WEEK, 2), 7),
-    title: 'orange',
-    resource: 'orange',
+    title: 'deepOrange',
+    resource: 'deepOrange',
   },
   {
     id: 'cyan',
@@ -59,11 +59,11 @@ export const initialEvents: SchedulerEvent[] = [
     resource: 'indigo',
   },
   {
-    id: 'yellow',
+    id: 'amber',
     start: setHours(setDay(START_OF_FIRST_WEEK, 4), 5),
     end: setHours(setDay(START_OF_FIRST_WEEK, 4), 7),
-    title: 'yellow',
-    resource: 'yellow',
+    title: 'amber',
+    resource: 'amber',
   },
   {
     id: 'blue',
@@ -75,13 +75,13 @@ export const initialEvents: SchedulerEvent[] = [
 ];
 
 export const resources: SchedulerResource[] = [
-  { title: 'violet', id: 'violet', eventColor: 'violet' },
-  { title: 'jade', id: 'jade', eventColor: 'jade' },
+  { title: 'deepPurple', id: 'deepPurple', eventColor: 'deepPurple' },
+  { title: 'teal', id: 'teal', eventColor: 'teal' },
   { title: 'lime', id: 'lime', eventColor: 'lime' },
-  { title: 'orange', id: 'orange', eventColor: 'orange' },
+  { title: 'deepOrange', id: 'deepOrange', eventColor: 'deepOrange' },
   { title: 'cyan', id: 'cyan', eventColor: 'cyan' },
   { title: 'pink', id: 'pink', eventColor: 'pink' },
   { title: 'indigo', id: 'indigo', eventColor: 'indigo' },
-  { title: 'yellow', id: 'yellow', eventColor: 'yellow' },
+  { title: 'amber', id: 'amber', eventColor: 'amber' },
   { title: 'blue', id: 'blue', eventColor: 'blue' },
 ];

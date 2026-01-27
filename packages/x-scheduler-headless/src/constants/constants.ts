@@ -3,17 +3,18 @@ import { SchedulerEventColor, SchedulerEventCreationConfig } from '../models';
 export const EVENT_CREATION_PRECISION_MINUTE = 30;
 
 export const EVENT_COLORS: SchedulerEventColor[] = [
-  'primary',
-  'mauve',
-  'cyan',
-  'jade',
   'red',
-  'lime',
-  'orange',
-  'yellow',
   'pink',
+  'deepPurple',
   'indigo',
   'blue',
+  'cyan',
+  'teal',
+  'green',
+  'lime',
+  'amber',
+  'deepOrange',
+  'grey',
 ];
 
 export const EVENT_DRAG_PRECISION_MINUTE = 15;

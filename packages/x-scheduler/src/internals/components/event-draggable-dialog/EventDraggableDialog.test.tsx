@@ -263,8 +263,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/NoColor/i);
     expect(document.querySelector('.ResourceLegendColor')).to.have.attribute(
-      'data-palette',
-      'jade',
+      'palette',
+      'teal',
     );
   });
 
@@ -300,8 +300,8 @@ describe('<EventDraggableDialogContent open />', () => {
     expect(screen.getByRole('button', { name: /resource/i }).textContent).to.match(/no resource/i);
 
     expect(document.querySelector('.ResourceLegendColor')).to.have.attribute(
-      'data-palette',
-      'jade',
+      'palette',
+      'teal',
     );
 
     await user.click(screen.getByRole('button', { name: /save changes/i }));

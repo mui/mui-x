@@ -16,12 +16,12 @@ import { EventItemProps } from './EventItem.types';
 import { useTranslations } from '../../../utils/TranslationsContext';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
-import { getPaletteStyles } from '../../../utils/newTokens';
+import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 
 const EventItemCard = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'EventItemCard',
-})<{ 'data-variant'?: 'compact' | 'filled' | 'regular' }>(({ theme }) => ({
+})<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-color-3)',
@@ -35,15 +35,14 @@ const EventItemCard = styled('div', {
   },
   '&[data-variant="filled"]': {
     backgroundColor: 'var(--event-color-3)',
-    color: 'var(--event-color-12)',
+    color: 'var(--event-color-10)',
   },
   '&[data-variant="compact"]': {
     containerType: 'inline-size',
     cursor: 'pointer',
     height: 'fit-content',
   },
-  // ...schedulerPaletteStyles,
-  variants: [...getPaletteStyles()],
+  variants: getPaletteVariants(),
 }));
 
 const EventItemCardWrapper = styled('div', {
@@ -64,7 +63,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-12)',
+  color: 'var(--event-color-10)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -75,7 +74,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-11)',
+  color: 'var(--event-color-7)',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -91,7 +90,7 @@ const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
 })({
-  color: 'var(--event-color-11)',
+  color: 'var(--event-color-7)',
 });
 
 const ResourceLegendColor = styled('span', {
@@ -261,7 +260,6 @@ export const EventItem = React.forwardRef(function EventItem(
       ref={forwardedRef}
       id={id}
       data-variant={variant}
-      data-palette={color}
       palette={color}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}

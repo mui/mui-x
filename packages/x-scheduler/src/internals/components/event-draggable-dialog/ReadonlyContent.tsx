@@ -16,7 +16,7 @@ import EventDraggableDialogHeader from './EventDraggableDialogHeader';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { getRecurrenceLabel, hasProp } from './utils';
 import { useFormatTime } from '../../hooks/useFormatTime';
-import { schedulerPaletteStyles } from '../../utils/tokens';
+import { getPaletteVariants, PaletteName } from '../../utils/tokens';
 
 const ReadonlyContentRoot = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -53,7 +53,7 @@ const EventDraggableDialogTitle = styled('p', {
   margin: 0,
   fontSize: theme.typography.body1.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
-  color: 'var(--event-color-12)',
+  color: 'var(--event-color-10)',
 }));
 
 const EventDraggableDialogResourceContainer = styled('div', {
@@ -77,13 +77,13 @@ const EventDraggableDialogResourceLegendContainer = styled('div', {
 const ResourceLegendColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceLegendColor',
-})({
+})<{ palette?: PaletteName }>({
   width: 8,
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-color-9)',
-  ...schedulerPaletteStyles,
+  variants: getPaletteVariants(),
 });
 
 const EventDraggableDialogResourceTitle = styled('p', {
@@ -92,7 +92,7 @@ const EventDraggableDialogResourceTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
-  color: 'var(--event-color-11)',
+  color: 'var(--event-color-7)',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
@@ -144,11 +144,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             {resource?.eventColor && resource.eventColor !== color && (
               <ResourceLegendColorDot
                 className="ResourceLegendColor"
-                data-palette={resource.eventColor}
+                palette={resource.eventColor}
               />
             )}
 
-            <ResourceLegendColorDot className="ResourceLegendColor" data-palette={color} />
+            <ResourceLegendColorDot className="ResourceLegendColor" palette={color} />
           </EventDraggableDialogResourceLegendContainer>
           <EventDraggableDialogResourceTitle>
             {resource?.title || translations.noResourceAriaLabel}
