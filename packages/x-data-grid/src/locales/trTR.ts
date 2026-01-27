@@ -16,6 +16,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standart',
   toolbarDensityComfortable: 'Rahat',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Geri al',
+  toolbarRedo: 'Yinele',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Sütunlar',
   toolbarColumnsLabel: 'Sütun seç',
@@ -157,6 +161,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Evet',
   booleanCellFalseLabel: 'Hayır',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Genişlet',
+  longTextCellCollapseLabel: 'Gizle',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',

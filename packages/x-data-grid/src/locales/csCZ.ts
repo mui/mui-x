@@ -16,6 +16,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Zpět',
+  toolbarRedo: 'Znovu',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Sloupce',
   toolbarColumnsLabel: 'Vybrat sloupec',
@@ -188,6 +192,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbalit',
+  longTextCellCollapseLabel: 'Sbalit',
 
   // Actions cell more text
   actionsCellMore: 'více',

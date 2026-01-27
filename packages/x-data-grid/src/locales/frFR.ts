@@ -16,6 +16,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Confortable',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Annuler',
+  toolbarRedo: 'Rétablir',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Colonnes',
   toolbarColumnsLabel: 'Choisir les colonnes',
@@ -162,6 +166,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'vrai',
   booleanCellFalseLabel: 'faux',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Afficher',
+  longTextCellCollapseLabel: 'Masquer',
 
   // Actions cell more text
   actionsCellMore: 'Plus',

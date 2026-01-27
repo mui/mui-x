@@ -32,12 +32,9 @@
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" }, "default": "true" },
+    "hideLegend": { "type": { "name": "bool" } },
     "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
     "initialZoom": {
@@ -56,6 +53,8 @@
     },
     "onAxisClick": {
       "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onItemClick</code> instead to get access to both x- and y-axis values.",
       "signature": {
         "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
         "describedArgs": ["event", "data"]
@@ -66,6 +65,13 @@
       "signature": {
         "type": "function(highlightedItem: HighlightItemData | null) => void",
         "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
       }
     },
     "onTooltipItemChange": {
@@ -96,7 +102,7 @@
     "tooltipItem": {
       "type": {
         "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string, type: 'heatmap', xIndex?: number, yIndex?: number }"
+        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex?: number, yIndex?: number }"
       }
     },
     "width": { "type": { "name": "number" } },
@@ -196,6 +202,18 @@
       "name": "tooltip",
       "description": "Custom component for the tooltip.",
       "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
       "class": null
     },
     {

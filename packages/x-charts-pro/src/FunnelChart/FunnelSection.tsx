@@ -6,7 +6,7 @@ import { useItemHighlighted } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
 import { type FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
 
-export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> {
+export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;

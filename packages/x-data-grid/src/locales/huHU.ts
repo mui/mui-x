@@ -16,6 +16,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Normál',
   toolbarDensityComfortable: 'Kényelmes',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Visszavonás',
+  toolbarRedo: 'Újra',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Oszlopok',
   toolbarColumnsLabel: 'Oszlopok kiválasztása',
@@ -157,6 +161,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'igen',
   booleanCellFalseLabel: 'nem',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Kibontás',
+  longTextCellCollapseLabel: 'Összecsukás',
 
   // Actions cell more text
   actionsCellMore: 'további',

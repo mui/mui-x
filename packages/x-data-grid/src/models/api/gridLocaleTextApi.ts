@@ -19,6 +19,10 @@ export interface GridLocaleText {
   toolbarDensityStandard: string;
   toolbarDensityComfortable: string;
 
+  // Undo/redo toolbar button text
+  toolbarUndo: React.ReactNode;
+  toolbarRedo: React.ReactNode;
+
   // Columns selector toolbar button text
   toolbarColumns: React.ReactNode;
   toolbarColumnsLabel: string;
@@ -159,6 +163,10 @@ export interface GridLocaleText {
   // Boolean cell text
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
+
+  // Long text cell
+  longTextCellExpandLabel: string;
+  longTextCellCollapseLabel: string;
 
   // Actions cell more text
   actionsCellMore: string;

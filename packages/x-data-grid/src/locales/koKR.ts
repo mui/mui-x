@@ -16,6 +16,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '기본',
   toolbarDensityComfortable: '넓게',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '실행 취소',
+  toolbarRedo: '다시 실행',
+
   // Columns selector toolbar button text
   toolbarColumns: '열 목록',
   toolbarColumnsLabel: '열 선택',
@@ -157,6 +161,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
+
+  // Long text cell
+  longTextCellExpandLabel: '열기',
+  longTextCellCollapseLabel: '접기',
 
   // Actions cell more text
   actionsCellMore: '더보기',

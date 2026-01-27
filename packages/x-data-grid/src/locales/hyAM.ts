@@ -16,6 +16,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Ստանդարտ',
   toolbarDensityComfortable: 'Հարմարավետ',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Հետսարկել',
+  toolbarRedo: 'Կրկնվել',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Սյունակներ',
   toolbarColumnsLabel: 'Ընտրել սյունակներ',
@@ -180,6 +184,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'այո',
   booleanCellFalseLabel: 'ոչ',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Բացել',
+  longTextCellCollapseLabel: 'Փակել',
 
   // Actions cell more text
   actionsCellMore: 'ավելին',

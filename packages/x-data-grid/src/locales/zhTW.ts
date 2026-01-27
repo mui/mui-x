@@ -16,6 +16,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '舒適',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '復原',
+  toolbarRedo: '重做',
+
   // Columns selector toolbar button text
   toolbarColumns: '欄位',
   toolbarColumnsLabel: '選擇欄位',
@@ -157,6 +161,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
+
+  // Long text cell
+  longTextCellExpandLabel: '展開',
+  longTextCellCollapseLabel: '摺疊',
 
   // Actions cell more text
   actionsCellMore: '查看更多',

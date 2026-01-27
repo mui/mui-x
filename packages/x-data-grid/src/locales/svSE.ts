@@ -16,6 +16,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Ångra',
+  toolbarRedo: 'Gör om',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumner',
   toolbarColumnsLabel: 'Välj kolumner',
@@ -162,6 +166,10 @@ const svSEGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandera',
+  longTextCellCollapseLabel: 'Kollapsa',
 
   // Actions cell more text
   actionsCellMore: 'mer',

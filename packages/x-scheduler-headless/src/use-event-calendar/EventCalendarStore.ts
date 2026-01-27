@@ -12,9 +12,10 @@ import {
   DEFAULT_SCHEDULER_PREFERENCES,
   SchedulerParametersToStateMapper,
   SchedulerStore,
-} from '../utils/SchedulerStore';
+} from '../internals/utils/SchedulerStore';
 import { EventCalendarState, EventCalendarParameters } from './EventCalendarStore.types';
 import { createChangeEventDetails } from '../base-ui-copy/utils/createBaseUIEventDetails';
+import { EventCalendarLazyLoadingPlugin } from './plugins/EventCalendarLazyLoadingPlugin';
 
 export const DEFAULT_VIEWS: CalendarView[] = ['week', 'day', 'month', 'agenda'];
 export const DEFAULT_VIEW: CalendarView = 'week';
@@ -88,6 +89,8 @@ export class EventCalendarStore<
         return null;
       });
     }
+
+    this.lazyLoading = new EventCalendarLazyLoadingPlugin<TEvent, TResource>(this);
   }
 
   private assertViewValidity(view: CalendarView) {
@@ -95,7 +98,7 @@ export class EventCalendarStore<
     if (!views.includes(view)) {
       throw new Error(
         [
-          `Event Calendar: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
+          `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
           'Please ensure that the requested view is included in the views array.',
         ].join('\n'),
       );
@@ -148,7 +151,7 @@ export class EventCalendarStore<
     const siblingVisibleDateGetter = this.state.viewConfig?.siblingVisibleDateGetter;
     if (!siblingVisibleDateGetter) {
       warn(
-        'Event Calendar: No config found for the current view. Please use useInitializeView in your custom view.',
+        'MUI: No config found for the current view. Please use useInitializeView in your custom view.',
       );
       return;
     }

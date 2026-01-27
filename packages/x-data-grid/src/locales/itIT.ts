@@ -16,6 +16,10 @@ const itITGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Comoda',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Annulla',
+  toolbarRedo: 'Ripeti',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Colonne',
   toolbarColumnsLabel: 'Seleziona le colonne',
@@ -162,6 +166,10 @@ const itITGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'vero',
   booleanCellFalseLabel: 'falso',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Espandi',
+  longTextCellCollapseLabel: 'Comprimi',
 
   // Actions cell more text
   actionsCellMore: 'più',

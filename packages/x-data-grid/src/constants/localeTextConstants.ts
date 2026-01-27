@@ -15,6 +15,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Comfortable',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Undo',
+  toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Columns',
   toolbarColumnsLabel: 'Select columns',
@@ -161,6 +165,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Boolean cell text
   booleanCellTrueLabel: 'yes',
   booleanCellFalseLabel: 'no',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expand',
+  longTextCellCollapseLabel: 'Collapse',
 
   // Actions cell more text
   actionsCellMore: 'more',

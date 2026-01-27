@@ -16,6 +16,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'استاندارد',
   toolbarDensityComfortable: 'راحت',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واگرد',
+  toolbarRedo: 'ازنو',
+
   // Columns selector toolbar button text
   toolbarColumns: 'ستون‌ها',
   toolbarColumnsLabel: 'ستون‌ها را انتخاب کنید',
@@ -162,6 +166,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'صحیح',
   booleanCellFalseLabel: 'غلط',
+
+  // Long text cell
+  longTextCellExpandLabel: 'بازکردن پنل جزئیات',
+  longTextCellCollapseLabel: 'بستن پنل جزئیات',
 
   // Actions cell more text
   actionsCellMore: 'بیشتر',

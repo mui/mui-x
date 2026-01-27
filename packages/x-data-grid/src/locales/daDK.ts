@@ -16,6 +16,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Fortryd',
+  toolbarRedo: 'Gentag',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
   toolbarColumnsLabel: 'Vælg kolonner',
@@ -160,6 +164,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Udvid',
+  longTextCellCollapseLabel: 'Kollaps',
 
   // Actions cell more text
   actionsCellMore: 'mere',

@@ -16,6 +16,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '舒服的',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '復原',
+  toolbarRedo: '重做',
+
   // Columns selector toolbar button text
   toolbarColumns: '列',
   toolbarColumnsLabel: '選擇列',
@@ -160,6 +164,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '是的',
   booleanCellFalseLabel: '不',
+
+  // Long text cell
+  longTextCellExpandLabel: '擴張',
+  longTextCellCollapseLabel: '坍塌',
 
   // Actions cell more text
   actionsCellMore: '更多的',

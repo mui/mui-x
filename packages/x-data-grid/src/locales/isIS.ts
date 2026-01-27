@@ -16,6 +16,10 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Staðlað',
   toolbarDensityComfortable: 'Rúmlegt',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Afturkalla',
+  toolbarRedo: 'Endurgera',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Dálkar',
   toolbarColumnsLabel: 'Veldu dálka',
@@ -160,6 +164,10 @@ const isISGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Stækka',
+  longTextCellCollapseLabel: 'Minnka',
 
   // Actions cell more text
   actionsCellMore: 'meira',

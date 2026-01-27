@@ -16,6 +16,10 @@ const nbNOGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfortabelt',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Angre',
+  toolbarRedo: 'Gjør om',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
   toolbarColumnsLabel: 'Velg kolonner',
@@ -160,6 +164,10 @@ const nbNOGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sant',
   booleanCellFalseLabel: 'usant',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Utvid',
+  longTextCellCollapseLabel: 'Kollaps',
 
   // Actions cell more text
   actionsCellMore: 'mer',

@@ -16,6 +16,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Normaal',
   toolbarDensityComfortable: 'Breed',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Ongedaan maken',
+  toolbarRedo: 'Opnieuw',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolommen',
   toolbarColumnsLabel: 'Kies kolommen',
@@ -162,6 +166,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'waar',
   booleanCellFalseLabel: 'onwaar',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Uitklappen',
+  longTextCellCollapseLabel: 'Inklappen',
 
   // Actions cell more text
   actionsCellMore: 'meer',

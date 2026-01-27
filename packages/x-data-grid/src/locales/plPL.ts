@@ -16,6 +16,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfort',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Cofnij',
+  toolbarRedo: 'Ponów',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolumny',
   toolbarColumnsLabel: 'Zaznacz kolumny',
@@ -157,6 +161,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'tak',
   booleanCellFalseLabel: 'nie',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozwiń',
+  longTextCellCollapseLabel: 'Zwiń',
 
   // Actions cell more text
   actionsCellMore: 'więcej',

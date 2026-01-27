@@ -16,6 +16,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standardno',
   toolbarDensityComfortable: 'Udobno',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Poništi',
+  toolbarRedo: 'Ponovi',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Stupci',
   toolbarColumnsLabel: 'Odaberite stupce',
@@ -181,6 +185,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Da',
   booleanCellFalseLabel: 'Ne',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Proširiti',
+  longTextCellCollapseLabel: 'Skupiti',
 
   // Actions cell more text
   actionsCellMore: 'više',

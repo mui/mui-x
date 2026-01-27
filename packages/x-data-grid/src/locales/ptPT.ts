@@ -17,6 +17,10 @@ const ptPTGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Padrão',
   toolbarDensityComfortable: 'Confortável',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Anular',
+  toolbarRedo: 'Refazer',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Colunas',
   toolbarColumnsLabel: 'Selecione colunas',
@@ -163,6 +167,10 @@ const ptPTGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Colapsar',
 
   // Actions cell more text
   actionsCellMore: 'mais',

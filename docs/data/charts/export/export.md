@@ -36,7 +36,7 @@ You can override the `onBeforeExport` callback to change this behavior.
 
 ### Custom toolbar
 
-See [Toolbar—Composition](/x/react-charts/toolbar/#composition) for more information on how to create a custom toolbar.
+See the [Toolbar documentation](/x/react-charts/toolbar/#fully-custom-toolbar) for more information on how to create a custom toolbar.
 
 ## Image exporting
 

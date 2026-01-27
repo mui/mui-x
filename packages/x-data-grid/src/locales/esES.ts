@@ -16,6 +16,10 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Estándar',
   toolbarDensityComfortable: 'Cómoda',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Deshacer',
+  toolbarRedo: 'Rehacer',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',
   toolbarColumnsLabel: 'Seleccionar columnas',
@@ -162,6 +166,10 @@ const esESGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'si',
   booleanCellFalseLabel: 'no',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Contraer',
 
   // Actions cell more text
   actionsCellMore: 'más',

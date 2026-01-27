@@ -21,11 +21,8 @@ function waitForAnimationFrame() {
   return promise;
 }
 
-export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
-  chartRootRef,
-  svgRef,
-  instance,
-}) => {
+export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ instance }) => {
+  const { chartRootRef, svgRef } = instance;
   const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
 

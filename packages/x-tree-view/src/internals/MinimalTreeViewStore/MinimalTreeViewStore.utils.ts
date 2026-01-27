@@ -18,7 +18,6 @@ export function deriveStateFromParameters<
 >(parameters: MinimalTreeViewParameters<R, Multiple> & { isItemEditable?: any }) {
   return {
     disabledItemsFocusable: parameters.disabledItemsFocusable ?? false,
-    domStructure: 'nested' as const,
     itemChildrenIndentation: parameters.itemChildrenIndentation ?? '12px',
     providedTreeId: parameters.id,
     // TODO: Fix
@@ -30,6 +29,7 @@ export function deriveStateFromParameters<
     multiSelect: parameters.multiSelect ?? false,
     checkboxSelection: parameters.checkboxSelection ?? false,
     selectionPropagation: parameters.selectionPropagation ?? EMPTY_OBJECT,
+    itemHeight: parameters.itemHeight ?? null,
   };
 }
 

@@ -16,6 +16,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Štandartná',
   toolbarDensityComfortable: 'Komfortná',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Späť',
+  toolbarRedo: 'Znova',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Stĺpce',
   toolbarColumnsLabel: 'Vybrať stĺpce',
@@ -188,6 +192,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbaliť',
+  longTextCellCollapseLabel: 'Zbaliť',
 
   // Actions cell more text
   actionsCellMore: 'viac',

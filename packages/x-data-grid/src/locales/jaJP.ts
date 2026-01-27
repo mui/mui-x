@@ -16,6 +16,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '広め',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '元に戻す',
+  toolbarRedo: 'やり直す',
+
   // Columns selector toolbar button text
   toolbarColumns: '列一覧',
   toolbarColumnsLabel: '列選択',
@@ -157,6 +161,10 @@ const jaJPGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '偽',
+
+  // Long text cell
+  longTextCellExpandLabel: '展開',
+  longTextCellCollapseLabel: '折りたたみ',
 
   // Actions cell more text
   actionsCellMore: 'もっと見る',

@@ -16,6 +16,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Стандартна',
   toolbarDensityComfortable: 'Комфортна',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Отмяна',
+  toolbarRedo: 'Повтори',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Колони',
   toolbarColumnsLabel: 'Покажи селектора на колони',
@@ -160,6 +164,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'да',
   booleanCellFalseLabel: 'не',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Разгъване',
+  longTextCellCollapseLabel: 'Свиване',
 
   // Actions cell more text
   actionsCellMore: 'още',

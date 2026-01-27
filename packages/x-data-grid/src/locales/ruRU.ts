@@ -36,6 +36,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Стандартная',
   toolbarDensityComfortable: 'Комфортная',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Отменить',
+  toolbarRedo: 'Повторить',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Столбцы',
   toolbarColumnsLabel: 'Выделите столбцы',
@@ -192,6 +196,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Развернуть',
+  longTextCellCollapseLabel: 'Свернуть',
 
   // Actions cell more text
   actionsCellMore: 'ещё',

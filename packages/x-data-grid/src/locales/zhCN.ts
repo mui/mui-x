@@ -16,6 +16,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '标准',
   toolbarDensityComfortable: '稀疏',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '撤销',
+  toolbarRedo: '重做',
+
   // Columns selector toolbar button text
   toolbarColumns: '列',
   toolbarColumnsLabel: '选择列',
@@ -158,6 +162,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
+
+  // Long text cell
+  longTextCellExpandLabel: '显示',
+  longTextCellCollapseLabel: '折叠',
 
   // Actions cell more text
   actionsCellMore: '更多',

@@ -16,6 +16,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'درمیانہ',
   toolbarDensityComfortable: 'مناسب',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واپس',
+  toolbarRedo: 'دوبارہ',
+
   // Columns selector toolbar button text
   toolbarColumns: 'کالمز',
   toolbarColumnsLabel: 'کالمز کو منتخب کریں',
@@ -160,6 +164,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ہاں',
   booleanCellFalseLabel: 'نہیں',
+
+  // Long text cell
+  longTextCellExpandLabel: 'پھیلائیں',
+  longTextCellCollapseLabel: 'تنگ کریں',
 
   // Actions cell more text
   actionsCellMore: 'ذیادہ',
