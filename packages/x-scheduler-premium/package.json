@@ -10,7 +10,7 @@
   },
   "homepage": "https://mui.com/x/react-scheduler/",
   "exports": {
-    "./timeline": "./src/timeline/index.ts"
+    "./event-timeline-premium": "./src/event-timeline-premium/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

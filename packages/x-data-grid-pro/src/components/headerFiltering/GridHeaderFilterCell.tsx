@@ -141,6 +141,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   singleSelect: GridFilterInputSingleSelect,
   actions: null,
   custom: null,
+  longText: GridFilterInputValue,
 };
 
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {

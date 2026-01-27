@@ -33,7 +33,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
     const fadedOpacity = ownerState.isFaded ? 0.3 : 1;
 
     return (
-      <AppearingMask skipAnimation={skipAnimation} id={`${ownerState.id}-line-clip`}>
+      <AppearingMask skipAnimation={skipAnimation} seriesId={`${ownerState.seriesId}-line-clip`}>
         <path
           stroke={ownerState.gradientId ? `url(#${ownerState.gradientId})` : ownerState.color}
           strokeWidth={2}
@@ -41,7 +41,7 @@ const AnimatedLine = React.forwardRef<SVGPathElement, AnimatedLineProps>(
           fill="none"
           filter={ownerState.isHighlighted ? 'brightness(120%)' : undefined}
           opacity={ownerState.hidden ? 0 : fadedOpacity}
-          data-series={ownerState.id}
+          data-series={ownerState.seriesId}
           data-highlighted={ownerState.isHighlighted || undefined}
           data-faded={ownerState.isFaded || undefined}
           {...other}
@@ -63,9 +63,9 @@ AnimatedLine.propTypes = {
     color: PropTypes.string.isRequired,
     gradientId: PropTypes.string,
     hidden: PropTypes.bool,
-    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     isFaded: PropTypes.bool.isRequired,
     isHighlighted: PropTypes.bool.isRequired,
+    seriesId: PropTypes.string.isRequired,
   }).isRequired,
   /**
    * If `true`, animations are skipped.

@@ -105,16 +105,16 @@ With the component imported and events defined, you're now ready to render the E
 
 ### Import the component
 
-Import the Timeline component along with the `SchedulerEvent` and `SchedulerResource` types:
+Import the `EventTimelinePremium` component along with the `SchedulerEvent` and `SchedulerResource` types:
 
 ```js
-import { Timeline } from '@mui/x-scheduler/timeline';
+import { EventTimelinePremium } from '@mui/x-scheduler-premium/event-timeline-premium';
 import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 ```
 
 ### Define events and resources
 
-The Timeline component requires both events and resources.
+The `EventTimelinePremium` component requires both events and resources.
 Resources represent the entities (people, rooms, equipment) that events are assigned to:
 
 ```tsx
@@ -143,9 +143,9 @@ const resources: SchedulerResource[] = [
 
 ### Render the component
 
-With events and resources defined, render the Timeline component:
+With events and resources defined, render the `EventTimelinePremium` component:
 
-{{"demo": "RenderTimeline.js", "defaultCodeOpen": true, "bg": "inline"}}
+{{"demo": "RenderEventTimelinePremium.js", "defaultCodeOpen": true, "bg": "inline"}}
 
 ## TypeScript
 
@@ -175,4 +175,4 @@ const theme = createTheme({
 TODO: Uncomment once available
 
 <!-- - [EventCalendar](/x/api/scheduler/event-calendar/)
-- [Timeline](/x/api/scheduler/timeline/) -->
+- [EventTimelinePremium](/x/api/scheduler/event-timeline-premium/) -->

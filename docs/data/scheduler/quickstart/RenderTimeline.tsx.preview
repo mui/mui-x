@@ -1,5 +1,0 @@
-<Timeline
-  events={events}
-  resources={resources}
-  defaultVisibleDate={new Date(2024, 0, 15)}
-/>

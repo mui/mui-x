@@ -20,12 +20,6 @@ export interface LegendItemParams
     Partial<Omit<PiecewiseColorLegendItemContext, 'type' | keyof LegendItemContextBase>>,
     LegendItemContextBase {
   /**
-   * The identifier of the legend element.
-   * Used for internal purpose such as `key` props
-   * @deprecated use `seriesId` and `dataIndex` instead
-   */
-  id: number | string;
-  /**
    * The type of the series
    */
   type: ChartSeriesType;

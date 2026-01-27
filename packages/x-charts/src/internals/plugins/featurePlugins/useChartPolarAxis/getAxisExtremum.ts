@@ -1,8 +1,10 @@
 import { type AxisConfig } from '../../../../models/axis';
 import { type PolarChartSeriesType } from '../../../../models/seriesType/config';
-import { type ChartSeriesConfig } from '../../models/seriesConfig';
+import {
+  type ChartSeriesConfig,
+  type PolarExtremumGetterResult,
+} from '../../corePlugins/useChartSeriesConfig';
 import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
-import { type PolarExtremumGetterResult } from '../../models/seriesConfig/polarExtremumGetter.types';
 import { isPolarSeriesType } from '../../../isPolar';
 
 const axisExtremumCallback = <TSeriesType extends PolarChartSeriesType>(

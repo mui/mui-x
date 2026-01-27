@@ -1,4 +1,3 @@
-import type * as React from 'react';
 import { type Store } from '@mui/x-internals/store';
 import type {
   ChartAnyPluginSignature,
@@ -28,14 +27,6 @@ export type ChartContextValue<
    * The internal state of the chart.
    */
   store: Store<ChartState<TSignatures, TOptionalSignatures>>;
-  /**
-   * The ref to the <svg />.
-   */
-  svgRef: React.RefObject<SVGSVGElement | null>;
-  /**
-   * The ref to the chart root element.
-   */
-  chartRootRef: React.RefObject<HTMLDivElement | null>;
 };
 
 export type ChartPluginParams<

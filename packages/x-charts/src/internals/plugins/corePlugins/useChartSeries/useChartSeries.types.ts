@@ -1,12 +1,13 @@
-import { type AllSeriesType, type SeriesItemIdentifier } from '../../../../models/seriesType';
+import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import { type ChartPluginSignature, type SeriesLayoutGetterResult } from '../../models';
+import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
+  type SeriesLayoutGetterResult,
   type SeriesProcessorParams,
   type SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
-import { type UseChartSeriesConfigSignature } from '../useChartSeriesConfig';
+  type UseChartSeriesConfigSignature,
+} from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -62,37 +63,10 @@ export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType
   };
 }
 
-export type SerializeIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => string;
-
-export type CleanIdentifierFunction = <T extends { type: ChartSeriesType }>(
-  identifier: T,
-) => SeriesItemIdentifier<T['type']>;
-
-export interface UseChartSeriesInstance {
-  /**
-   * Function to serialize a series item identifier into a unique string.
-   *
-   * @param identifier The identifier to serialize.
-   * @returns A unique string representing the identifier.
-   */
-  serializeIdentifier: SerializeIdentifierFunction;
-  /**
-   * Function to clean a series item identifier, returning only the properties
-   * relevant to the series type.
-   *
-   * @param identifier The partial identifier to clean.
-   * @returns A cleaned identifier with only the relevant properties.
-   */
-  cleanIdentifier: CleanIdentifierFunction;
-}
-
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartSeriesParameters;
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
-    instance: UseChartSeriesInstance;
     dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;

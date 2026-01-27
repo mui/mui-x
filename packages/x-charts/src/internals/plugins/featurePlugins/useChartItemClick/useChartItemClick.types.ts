@@ -1,6 +1,7 @@
-import type { ChartPluginSignature, ChartSeriesTypeRequiredPlugins } from '../../models';
+import type { ChartPluginSignature } from '../../models';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
 import type { SeriesItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesTypeRequiredPlugins } from '../../corePlugins/useChartSeriesConfig';
 
 export interface UseChartItemClickParameters<SeriesType extends ChartSeriesType = ChartSeriesType> {
   /**

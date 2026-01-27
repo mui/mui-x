@@ -162,6 +162,10 @@ const plPLGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'tak',
   booleanCellFalseLabel: 'nie',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozwiń',
+  longTextCellCollapseLabel: 'Zwiń',
+
   // Actions cell more text
   actionsCellMore: 'więcej',
 

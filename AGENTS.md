@@ -91,7 +91,7 @@ Codemods are run by consumers of the MUI X libraries to migrate to newer versio
 
 ### Versioning
 
-When creating codemods, the code should be created in the directory of the source version. E.g., a codemod to migrate from v8 to v9 should be placed inside the `v8.0.0` directory.
+When creating codemods, the code should be created in the directory of the target version. E.g., a codemod to migrate from v8 to v9 should be placed inside the `v9.0.0` directory.
 
 ### Writing codemods
 
