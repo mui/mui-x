@@ -68,8 +68,6 @@ function initializeProgram(
   return program;
 }
 
-const CANDLESTICK_WIDTH = 10;
-
 function CandlestickWebGLPlotImpl({
   gl,
   series,
@@ -79,7 +77,7 @@ function CandlestickWebGLPlotImpl({
 }) {
   const drawingArea = useDrawingArea();
   // TODO: Validate this earlier in the processing pipeline
-  const xScale = useXScale<ContinuousScaleName>();
+  const xScale = useXScale<'band'>();
   const yScale = useYScale<ContinuousScaleName>();
   const [rectProgram] = React.useState<WebGLProgram>(() =>
     initializeProgram(gl, candlestickRectVertexShader, candlestickFragmentShader),
@@ -131,12 +129,6 @@ function CandlestickWebGLPlotImpl({
   React.useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
-    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_data_length'), dataLength);
-  }, [dataLength, gl, rectProgram]);
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-compiler/react-compiler
-    gl.useProgram(rectProgram);
     gl.uniform2f(
       gl.getUniformLocation(rectProgram, 'u_resolution'),
       drawingArea.width,
@@ -160,14 +152,33 @@ function CandlestickWebGLPlotImpl({
     const lineCenters = new Float32Array(series.data.length * 2);
     const lineHeights = new Float32Array(series.data.length);
     const colors = new Float32Array(series.data.length * 4);
+    const xDomain = xScale.domain();
+    const candleWidth = xScale.bandwidth();
 
     for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
-      const [xValue, open, high, low, close] = series.data[dataIndex];
-      const x = xScale(xValue);
+      const datum = series.data[dataIndex];
+
+      if (datum === null) {
+        // Set alpha to 0 to hide the candle
+        colors[dataIndex * 4 + 3] = 0.0;
+        continue;
+      }
+
+      const [open, high, low, close] = datum;
+      const xValue = xDomain[dataIndex];
+      const scaledX = xScale(xValue);
+
+      if (scaledX === undefined) {
+        // Set alpha to 0 to hide the candle
+        colors[dataIndex * 4 + 3] = 0.0;
+        continue;
+      }
+
+      const x = scaledX - drawingArea.left;
       const [rectBottom, rectTop] = [yScale(open), yScale(close)].sort();
       const [lineBottom, lineTop] = [yScale(low), yScale(high)];
 
-      rectCenters[dataIndex * 2] = x + CANDLESTICK_WIDTH / 2;
+      rectCenters[dataIndex * 2] = x;
       rectCenters[dataIndex * 2 + 1] = (rectTop + rectBottom) / 2;
       rectHeights[dataIndex] = rectTop - rectBottom;
 
@@ -194,6 +205,8 @@ function CandlestickWebGLPlotImpl({
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
     gl.bindVertexArray(rectVaoRef.current);
+
+    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_candle_width'), candleWidth);
 
     bindQuadBuffer(gl, rectProgram, uploadQuadBuffer(gl));
 
@@ -231,6 +244,8 @@ function CandlestickWebGLPlotImpl({
     gl.useProgram(lineProgram);
     gl.bindVertexArray(lineVaoRef.current);
 
+    gl.uniform1f(gl.getUniformLocation(lineProgram, 'u_candle_width'), candleWidth);
+
     const lineVertices = new Float32Array([0, -1, 0, 1]);
 
     const buffer = gl.createBuffer();
@@ -261,7 +276,18 @@ function CandlestickWebGLPlotImpl({
     gl.bindVertexArray(null);
 
     scheduleRender();
-  }, [gl, lineProgram, rectProgram, scheduleRender, series.data, xScale, yScale]);
+  }, [
+    dataLength,
+    drawingArea.left,
+    drawingArea.width,
+    gl,
+    lineProgram,
+    rectProgram,
+    scheduleRender,
+    series.data,
+    xScale,
+    yScale,
+  ]);
 
   React.useEffect(() => {
     if (renderScheduledRef.current) {
