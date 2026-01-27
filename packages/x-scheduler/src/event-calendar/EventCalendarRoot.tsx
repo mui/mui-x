@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
+import Collapse from '@mui/material/Collapse';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import {
   eventCalendarPreferenceSelectors,
@@ -17,7 +18,6 @@ import { DayView } from '../day-view/DayView';
 import { MonthView } from '../month-view';
 import { HeaderToolbar } from './header-toolbar';
 import { ResourcesLegend } from './resources-legend';
-import { DateNavigator } from './date-navigator';
 import { schedulerTokens } from '../internals/utils/tokens';
 import { useEventCalendarClasses } from './EventCalendarClassesContext';
 
@@ -34,9 +34,8 @@ const EventCalendarRootStyled = styled('div', {
   ...schedulerTokens,
   // Layout
   width: '100%',
-  display: 'grid',
-  gridTemplateColumns: '280px 1fr',
-  gridTemplateRows: 'auto 1fr',
+  display: 'flex',
+  flexDirection: 'column',
   gap: theme.spacing(2),
   height: '100%',
 }));
@@ -46,7 +45,7 @@ const EventCalendarSidePanel = styled('aside', {
   slot: 'SidePanel',
 })(({ theme }) => ({
   width: '100%',
-  minWidth: 0,
+  minWidth: 250,
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -56,11 +55,8 @@ const EventCalendarMainPanel = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'MainPanel',
 })(({ theme }) => ({
-  gridRow: 2,
-  gridColumn: '1 / -1',
-  display: 'grid',
-  gridTemplateColumns: 'subgrid',
-  flexDirection: 'column',
+  display: 'flex',
+  flexGrow: 1,
   gap: theme.spacing(2),
   minHeight: 0,
   '&[data-view="month"]': {
@@ -102,7 +98,11 @@ const EventCalendarMonthCalendarPlaceholder = styled('section', {
 const EventCalendarErrorContainer = styled(Alert, {
   name: 'MuiEventCalendar',
   slot: 'ErrorContainer',
-})({});
+})({
+  position: 'absolute',
+  bottom: 16,
+  right: 16,
+});
 
 /**
  * Internal component that renders the EventCalendar UI.
@@ -148,12 +148,10 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
         {...other}
         ref={handleRootRef}
       >
-        <DateNavigator />
-
         <HeaderToolbar />
 
         <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
-          {isSidePanelOpen && (
+          <Collapse in={isSidePanelOpen} orientation="horizontal">
             <EventCalendarSidePanel className={classes.sidePanel}>
               <EventCalendarMonthCalendarPlaceholder
                 className={classes.monthCalendarPlaceholder}
@@ -163,7 +161,7 @@ export const EventCalendarRoot = React.forwardRef<HTMLDivElement, EventCalendarR
               </EventCalendarMonthCalendarPlaceholder>
               <ResourcesLegend />
             </EventCalendarSidePanel>
-          )}
+          </Collapse>
 
           <EventCalendarContent
             className={classes.content}
