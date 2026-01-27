@@ -1,7 +1,0 @@
-<EventTimelinePremium
-  events={[]}
-  dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
-  resources={flatResources}
-  defaultVisibleDate={defaultVisibleDate}
-  defaultView="days"
-/>
