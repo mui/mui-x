@@ -18,10 +18,10 @@ export class SchedulerLazyLoadingPlugin<
   State extends SchedulerState,
   Parameters extends SchedulerParameters<TEvent, TResource>,
 > {
-  protected store: SchedulerStore<TEvent, TResource, State, Parameters>;
+  private store: SchedulerStore<TEvent, TResource, State, Parameters>;
 
-  protected dataManager: SchedulerDataManager | null = null;
-  protected cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
+  private dataManager: SchedulerDataManager | null = null;
+  private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
   constructor(store: SchedulerStore<TEvent, TResource, State, Parameters>) {
     this.store = store;

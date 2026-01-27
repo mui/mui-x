@@ -24,11 +24,13 @@ export class EventCalendarPremiumLazyLoadingPlugin<
           state.viewConfig?.visibleDaysSelector?.(state as EventCalendarState) ?? [];
 
         // Build a primitive key that is stable if the visible range didn't change.
+        // Adjust the mapping if your visibleDays items have a different shape.
         const visibleDaysKey = visibleDays.map((day) => day.key).join('|');
 
         return {
           viewConfig: state.viewConfig,
           visibleDaysKey,
+          isLoading: state.isLoading,
         };
       },
 
