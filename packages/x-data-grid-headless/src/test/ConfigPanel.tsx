@@ -7,6 +7,8 @@ import './styles.css';
 export interface PluginConfig {
   sorting?: SortingOptions & {
     enabled?: boolean;
+    /** If true, shift key is required for multi-sort. @default true */
+    multiSortWithShiftKey?: boolean;
   };
 }
 
@@ -178,6 +180,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
 
   const isManualMode = config.sorting?.sortingMode === 'manual';
   const isSortingEnabled = config.sorting?.enabled ?? true;
+  const isMultiSortEnabled = config.sorting?.enableMultiSort ?? true;
 
   const resizeHandleClassName = [
     'config-panel__resize-handle',
@@ -267,13 +270,27 @@ export function ConfigPanel(props: ConfigPanelProps) {
 
                   <OptionRow
                     label="Multi-column"
-                    description="Shift+click for multiple"
+                    description="Sort by multiple columns"
                     disabled={!isSortingEnabled}
                   >
                     <Toggle
                       checked={config.sorting?.enableMultiSort ?? true}
                       onChange={(checked) => updateSortingConfig({ enableMultiSort: checked })}
                       disabled={!isSortingEnabled}
+                    />
+                  </OptionRow>
+
+                  <OptionRow
+                    label="Shift-click Multi-sort"
+                    description="Require shift key"
+                    disabled={!isSortingEnabled || !isMultiSortEnabled}
+                  >
+                    <Toggle
+                      checked={config.sorting?.multiSortWithShiftKey ?? true}
+                      onChange={(checked) =>
+                        updateSortingConfig({ multiSortWithShiftKey: checked })
+                      }
+                      disabled={!isSortingEnabled || !isMultiSortEnabled}
                     />
                   </OptionRow>
 

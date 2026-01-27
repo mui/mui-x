@@ -23,6 +23,7 @@ export function TestDataGrid<TRow extends object>(props: {
     sorting: {
       enabled: true,
       enableMultiSort: true,
+      multiSortWithShiftKey: true,
       sortingMode: 'auto',
       stableSort: false,
       sortingOrder: ['asc', 'desc', null],
@@ -61,8 +62,10 @@ export function TestDataGrid<TRow extends object>(props: {
     if (!config.sorting?.enabled) {
       return;
     }
-    // Use shift key for multi-sort when enabled
-    const multiSort = config.sorting?.enableMultiSort && event.shiftKey;
+    // Use shift key for multi-sort when multiSortWithShiftKey is true (default)
+    const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
+    const multiSort =
+      config.sorting?.enableMultiSort && (!requireShiftKey || event.shiftKey);
     grid.api.sorting.sortColumn(field, undefined, multiSort);
   };
 
