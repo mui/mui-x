@@ -4,8 +4,7 @@ import { EventCalendarPremiumLazyLoadingPlugin } from './plugins/EventCalendarPr
 import { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.types';
 
 /**
- * Premium version of EventCalendarStore with lazy loading support.
- * Extends EventCalendarStore and adds the lazy loading plugin.
+ * Premium version of EventCalendarStore with premium plugins.
  */
 export class EventCalendarPremiumStore<
   TEvent extends object,
@@ -17,7 +16,6 @@ export class EventCalendarPremiumStore<
   ) {
     super(parameters, adapter);
 
-    // Initialize lazy loading plugin for premium features
     this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent, TResource>(this);
   }
 }
