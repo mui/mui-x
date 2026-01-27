@@ -89,6 +89,8 @@ function CandlestickWebGLPlotImpl({
   );
   const dataLength = series.data.length;
   const renderScheduledRef = React.useRef<boolean>(false);
+  const rectVaoRef = React.useRef(gl.createVertexArray());
+  const lineVaoRef = React.useRef(gl.createVertexArray());
 
   const render = React.useCallback(() => {
     renderScheduledRef.current = false;
@@ -100,11 +102,15 @@ function CandlestickWebGLPlotImpl({
     // This isn't a hook
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(lineProgram);
+    logWebGLErrors(gl);
+    gl.bindVertexArray(lineVaoRef.current);
     gl.drawArraysInstanced(gl.LINES, 0, 2, dataLength);
 
     // This isn't a hook
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
+    logWebGLErrors(gl);
+    gl.bindVertexArray(rectVaoRef.current);
     gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, dataLength);
   }, [dataLength, gl, lineProgram, rectProgram]);
 
@@ -125,27 +131,8 @@ function CandlestickWebGLPlotImpl({
   React.useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
-    bindQuadBuffer(gl, rectProgram, uploadQuadBuffer(gl));
-
     gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_width'), CANDLESTICK_WIDTH);
-    logWebGLErrors(gl);
   }, [gl, rectProgram]);
-
-  React.useEffect(() => {
-    // eslint-disable-next-line react-compiler/react-compiler
-    gl.useProgram(lineProgram);
-
-    const lineVertices = new Float32Array([0, -1, 0, 1]);
-
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, lineVertices, gl.STATIC_DRAW);
-
-    const aPosition = gl.getAttribLocation(lineProgram, 'a_position');
-    gl.enableVertexAttribArray(aPosition);
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-    logWebGLErrors(gl);
-  }, [gl, lineProgram]);
 
   React.useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
@@ -206,6 +193,9 @@ function CandlestickWebGLPlotImpl({
     // Setup rect attributes
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
+    gl.bindVertexArray(rectVaoRef.current);
+
+    bindQuadBuffer(gl, rectProgram, uploadQuadBuffer(gl));
 
     // Center attribute
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -234,9 +224,22 @@ function CandlestickWebGLPlotImpl({
     gl.vertexAttribPointer(colorLocation, 4, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(colorLocation, 1); // One per instance
 
+    gl.bindVertexArray(null);
+
     // Setup line attributes
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(lineProgram);
+    gl.bindVertexArray(lineVaoRef.current);
+
+    const lineVertices = new Float32Array([0, -1, 0, 1]);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, lineVertices, gl.STATIC_DRAW);
+
+    const aPosition = gl.getAttribLocation(lineProgram, 'a_position');
+    gl.enableVertexAttribArray(aPosition);
+    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     gl.bufferData(gl.ARRAY_BUFFER, lineCenters, gl.STATIC_DRAW);
@@ -254,6 +257,8 @@ function CandlestickWebGLPlotImpl({
     gl.enableVertexAttribArray(lineHeightLocation);
     gl.vertexAttribPointer(lineHeightLocation, 1, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(lineHeightLocation, 1); // One per instance
+
+    gl.bindVertexArray(null);
 
     scheduleRender();
   }, [gl, lineProgram, rectProgram, scheduleRender, series.data, xScale, yScale]);
