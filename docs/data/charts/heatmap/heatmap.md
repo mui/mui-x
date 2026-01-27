@@ -117,3 +117,7 @@ The WebGL renderer has some limitations compared to the SVG renderer:
 The following example showcases a heatmap with approximately 8800 cells rendered using WebGL.
 
 {{"demo": "WebGLHeatmap.js"}}
+
+### Composition
+
+{{"demo": "WebGLHeatmapComposition.js"}}

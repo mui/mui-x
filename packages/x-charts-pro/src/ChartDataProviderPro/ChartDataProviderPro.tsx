@@ -20,6 +20,7 @@ import {
 } from '../internals/material';
 import { type AllPluginSignatures, DEFAULT_PLUGINS } from '../internals/plugins/allPlugins';
 import { useChartDataProviderProProps } from './useChartDataProviderProProps';
+import { heatmapSeriesConfig } from '../Heatmap/seriesConfig';
 
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
@@ -43,8 +44,9 @@ export type ChartDataProviderProProps<
     slotProps?: Partial<ChartDataProviderProSlotProps>;
   };
 
-export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> =
-  defaultSeriesConfig;
+export const defaultSeriesConfigPro: ChartSeriesConfig<
+  'bar' | 'scatter' | 'line' | 'pie' | 'heatmap'
+> = { ...defaultSeriesConfig, heatmap: heatmapSeriesConfig };
 
 /**
  * Orchestrates the data providers for the chart components and hooks.
