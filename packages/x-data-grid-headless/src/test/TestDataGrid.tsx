@@ -3,7 +3,13 @@ import * as React from 'react';
 import { ColumnDef, useDataGrid } from '../';
 import { sortingPlugin, paginationPlugin } from '../plugins';
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
+import './styles.css';
 
+/**
+ * This is a test component for the Data Grid.
+ * It is used to test the Data Grid in a standalone environment.
+ * It is not meant to be used in production.
+ */
 export function TestDataGrid<TRow extends object>(props: {
   rows: TRow[];
   columns: ColumnDef<TRow>[];
@@ -72,85 +78,87 @@ export function TestDataGrid<TRow extends object>(props: {
     const arrow = sortInfo.sortDirection === 'asc' ? '↑' : '↓';
     const index = config.sorting?.enableMultiSort ? ` (${sortInfo.sortIndex + 1})` : '';
     return (
-      <span style={{ marginLeft: 4, fontSize: '12px' }}>
+      <span className="grid-sort-icon">
         {arrow}
         {index}
       </span>
     );
   };
 
+  const showConfigPanel = props.showConfig !== false;
+
   return (
-    <div>
-      {props.showConfig !== false && (
+    <div className="test-grid-container">
+      {/* Grid Wrapper */}
+      <div className="grid-wrapper">
+        <div className="grid-scroll-container">
+          <table className="grid-table">
+            <thead className="grid-thead">
+              <tr>
+                {visibleColumns.map((column: (typeof visibleColumns)[0]) => {
+                  const isSortable = config.sorting?.enabled;
+                  const thClassName = ['grid-th', isSortable && 'grid-th--sortable']
+                    .filter(Boolean)
+                    .join(' ');
+
+                  return (
+                    <th
+                      key={column.id}
+                      onClick={(event) => handleColumnHeaderClick(column.field as string, event)}
+                      className={thClassName}
+                      style={{
+                        width: column.size || 150,
+                        minWidth: column.size || 150,
+                      }}
+                    >
+                      {column.header || column.id}
+                      {config.sorting?.enabled && getSortIcon(column.field as string)}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
+                const row = rowsData[rowId] as TRow | undefined;
+                if (!row) {
+                  return null;
+                }
+                return (
+                  <tr key={rowId} className="grid-tr">
+                    {visibleColumns.map((column: (typeof visibleColumns)[0], index: number) => {
+                      const value = row[column.field as keyof TRow];
+                      return (
+                        <td
+                          role="gridcell"
+                          data-colindex={index}
+                          key={column.id}
+                          className="grid-td"
+                          style={{
+                            width: column.size || 150,
+                            minWidth: column.size || 150,
+                          }}
+                        >
+                          {value != null ? String(value) : ''}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Config Panel (Side Panel) */}
+      {showConfigPanel && (
         <ConfigPanel
           config={config}
           onConfigChange={setConfig}
           onApplySorting={handleApplySorting}
         />
       )}
-      <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>
-        <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f5f5f5', zIndex: 1 }}>
-          <tr>
-            {visibleColumns.map((column: (typeof visibleColumns)[0]) => (
-              <th
-                key={column.id}
-                onClick={(event) => handleColumnHeaderClick(column.field as string, event)}
-                style={{
-                  padding: '12px 16px',
-                  textAlign: 'left',
-                  borderBottom: '2px solid #e0e0e0',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  width: column.size || 150,
-                  minWidth: column.size || 150,
-                  cursor: config.sorting?.enabled ? 'pointer' : 'default',
-                  userSelect: 'none',
-                }}
-              >
-                {column.header || column.id}
-                {config.sorting?.enabled && getSortIcon(column.field as string)}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
-            const row = rowsData[rowId] as TRow | undefined;
-            if (!row) {
-              return null;
-            }
-            return (
-              <tr
-                key={rowId}
-                className="data-grid-row"
-                style={{
-                  borderBottom: '1px solid #e0e0e0',
-                }}
-              >
-                {visibleColumns.map((column: (typeof visibleColumns)[0], index: number) => {
-                  const value = row[column.field as keyof TRow];
-                  return (
-                    <td
-                      // TODO: It should use the elements API when added
-                      role="gridcell"
-                      data-colindex={index}
-                      key={column.id}
-                      style={{
-                        padding: '12px 16px',
-                        fontSize: '14px',
-                        width: column.size || 150,
-                        minWidth: column.size || 150,
-                      }}
-                    >
-                      {value != null ? String(value) : ''}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
     </div>
   );
 }
