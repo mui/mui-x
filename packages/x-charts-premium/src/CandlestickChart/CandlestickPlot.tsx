@@ -3,6 +3,7 @@ import * as React from 'react';
 import {
   type ContinuousScaleName,
   useDrawingArea,
+  useRegisterPointerInteractions,
   useWebGLContext,
   WebGLProvider,
 } from '@mui/x-charts/internals';
@@ -21,6 +22,7 @@ import {
   candlestickLineVertexShader,
   candlestickRectVertexShader,
 } from './shaders';
+import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
 
 export interface CandlestickPlotProps {}
 
@@ -89,6 +91,7 @@ function CandlestickWebGLPlotImpl({
   const renderScheduledRef = React.useRef<boolean>(false);
   const rectVaoRef = React.useRef(gl.createVertexArray());
   const lineVaoRef = React.useRef(gl.createVertexArray());
+  useRegisterPointerInteractions(selectorCandlestickItemAtPosition);
 
   const render = React.useCallback(() => {
     renderScheduledRef.current = false;
@@ -170,8 +173,11 @@ function CandlestickWebGLPlotImpl({
       const [open, high, low, close] = datum;
 
       const x = scaledX - drawingArea.left;
-      const [rectBottom, rectTop] = [yScale(open), yScale(close)].sort();
-      const [lineBottom, lineTop] = [yScale(low), yScale(high)];
+      const [rectBottom, rectTop] = [
+        yScale(open) - drawingArea.top,
+        yScale(close) - drawingArea.top,
+      ].sort();
+      const [lineBottom, lineTop] = [yScale(low) - drawingArea.top, yScale(high) - drawingArea.top];
 
       rectCenters[dataIndex * 2] = x;
       rectCenters[dataIndex * 2 + 1] = (rectTop + rectBottom) / 2;
