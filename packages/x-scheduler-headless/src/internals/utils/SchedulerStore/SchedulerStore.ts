@@ -304,7 +304,6 @@ export class SchedulerStore<
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
 
-    // Sync cache in premium lazy loading plugins
     queueMicrotask(() =>
       this.lazyLoading?.updateEventsFromDataSource(
         {
