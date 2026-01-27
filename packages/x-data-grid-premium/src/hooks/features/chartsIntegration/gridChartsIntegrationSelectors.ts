@@ -1,4 +1,4 @@
-import { GridColumnLookup } from '@mui/x-data-grid';
+import type { GridColumnLookup } from '@mui/x-data-grid';
 import {
   createRootSelector,
   createSelector,
@@ -6,7 +6,7 @@ import {
   gridColumnLookupSelector,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
-import { GridStatePremium } from '../../../models/gridStatePremium';
+import type { GridStatePremium } from '../../../models/gridStatePremium';
 import { gridSidebarStateSelector, GridSidebarValue } from '../sidebar';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 

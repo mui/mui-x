@@ -8,7 +8,7 @@ import {
   type RowsOptions,
   createRowsState,
   createRowsApi,
-  GridRowId,
+  type GridRowId,
 } from './rowUtils';
 
 export interface RowsPluginState {

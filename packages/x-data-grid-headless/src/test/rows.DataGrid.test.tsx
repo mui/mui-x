@@ -3,9 +3,9 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { TestDataGrid } from './TestDataGrid';
-import { useDataGrid, ColumnDef } from '../';
-import sortingPlugin from '../plugins/sorting';
-import paginationPlugin from '../plugins/pagination';
+import { type useDataGrid, type ColumnDef } from '../';
+import type sortingPlugin from '../plugins/sorting';
+import type paginationPlugin from '../plugins/pagination';
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();

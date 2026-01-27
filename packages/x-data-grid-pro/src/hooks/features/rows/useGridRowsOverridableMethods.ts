@@ -6,7 +6,7 @@ import {
   useGridSelector,
   gridRowMaximumTreeDepthSelector,
   gridExpandedSortedRowIndexLookupSelector,
-  GridRowProApi,
+  type GridRowProApi,
 } from '@mui/x-data-grid';
 import { useGridRowsOverridableMethodsCommunity } from '@mui/x-data-grid/internals';
 import type { RefObject } from '@mui/x-internals/types';

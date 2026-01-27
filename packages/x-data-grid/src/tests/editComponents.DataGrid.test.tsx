@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
-  DataGridProps,
+  type GridApi,
+  type DataGridProps,
   useGridApiRef,
   DataGrid,
   renderEditLongTextCell,

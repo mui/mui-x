@@ -1,5 +1,5 @@
 import type { HeightEntry } from '@mui/x-virtualizer/models';
-import { GridRowId } from '../../../models/gridRows';
+import type { GridRowId } from '../../../models/gridRows';
 
 export type { HeightEntry } from '@mui/x-virtualizer/models';
 
