@@ -1,7 +1,8 @@
 import { spy } from 'sinon';
 import { describe, expect, it } from 'vitest';
 import { adapter } from 'test/utils/scheduler';
-import { premiumStoreClasses } from './utils';
+import { EventCalendarPremiumStore } from '../../use-event-calendar-premium';
+import { EventTimelinePremiumStore } from '../../use-event-timeline-premium';
 
 const DEFAULT_PARAMS = { events: [] };
 
@@ -27,6 +28,11 @@ const mockFetchData = async (_start: Date, _end: Date): Promise<TestEvent[]> => 
     setTimeout(() => resolve(events), 0);
   });
 };
+
+const premiumStoreClasses = [
+  { name: 'EventCalendarPremiumStore', Value: EventCalendarPremiumStore },
+  { name: 'EventTimelinePremiumStore', Value: EventTimelinePremiumStore },
+];
 
 premiumStoreClasses.forEach((storeClass) => {
   describe(`${storeClass.name} - Data Source`, () => {
