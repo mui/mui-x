@@ -15,6 +15,6 @@ githubLabel: 'scope: scheduler'
 This package is not published yet.
 :::
 
-Lazy loading is a Premium feature that allows you to load events on demand as the user navigates through the calendar. Use the `EventCalendarPremium` component from `@mui/x-scheduler-premium` to enable this feature.
+## Basic example
 
 {{"demo": "BasicDataSource.js", "bg": "inline", "defaultCodeOpen": false}}
