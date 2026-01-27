@@ -37,8 +37,9 @@ type GestureManagerTyped = GestureManager<
 >;
 
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
-  svgRef,
+  instance,
 }) => {
+  const { svgRef } = instance;
   const gestureManagerRef = React.useRef<GestureManagerTyped | null>(null);
 
   React.useEffect(() => {
