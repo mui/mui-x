@@ -2,12 +2,12 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store, useStore, type ReadonlyStore } from '@base-ui/utils/store';
-import { type AnyPlugin, type BaseApi } from '../plugins/core/plugin';
-import {
-  type PluginsApi,
-  type PluginsColumnMeta,
-  type PluginsOptions,
-  type PluginsState,
+import type { AnyPlugin, BaseApi } from '../plugins/core/plugin';
+import type {
+  PluginsApi,
+  PluginsColumnMeta,
+  PluginsOptions,
+  PluginsState,
 } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
 import { internalPlugins, type InternalPluginsApi } from '../plugins/internal';

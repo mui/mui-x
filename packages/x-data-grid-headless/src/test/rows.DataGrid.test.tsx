@@ -3,7 +3,7 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { TestDataGrid } from './TestDataGrid';
-import { type useDataGrid, type ColumnDef } from '../';
+import type { useDataGrid, ColumnDef } from '../';
 import type sortingPlugin from '../plugins/sorting';
 import type paginationPlugin from '../plugins/pagination';
 
