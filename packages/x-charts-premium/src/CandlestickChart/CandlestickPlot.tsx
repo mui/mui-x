@@ -164,15 +164,10 @@ function CandlestickWebGLPlotImpl({
         continue;
       }
 
-      const [open, high, low, close] = datum;
-      const xValue = xDomain[dataIndex];
-      const scaledX = xScale(xValue);
+      // Can't return undefined because we're calling it with a value from the domain
+      const scaledX = xScale(xDomain[dataIndex])!;
 
-      if (scaledX === undefined) {
-        // Set alpha to 0 to hide the candle
-        colors[dataIndex * 4 + 3] = 0.0;
-        continue;
-      }
+      const [open, high, low, close] = datum;
 
       const x = scaledX - drawingArea.left;
       const [rectBottom, rectTop] = [yScale(open), yScale(close)].sort();
