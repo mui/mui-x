@@ -18,6 +18,7 @@ import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
+import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
 import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -66,6 +67,51 @@ export const useGridFocus = (
     (id, field) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === id && focusedCell?.field === field) {
+        /**
+         * Check if the state matches the actual DOM focus. They can get out of sync after `updateRows()` remounts the cell.
+         */
+        if (apiRef.current.getCellMode(id, field) !== 'view') {
+          return;
+        }
+
+        const cellElement = apiRef.current.getCellElement(id, field);
+        if (!cellElement) {
+          return;
+        }
+
+        const gridRoot = apiRef.current.rootElementRef!.current;
+        const doc = ownerDocument(gridRoot);
+        const activeElement = doc.activeElement;
+
+        // We can take focus if:
+        // - Focus is inside the grid, OR
+        // - Focus is "lost" (on body/documentElement/null, e.g., after cell remount during undo/redo)
+        // We should NOT take focus if it's intentionally outside the grid (e.g., in a Portal/Dialog).
+        // React synthetic events bubble through the React component tree, not the DOM tree,
+        // so events from Portal content can trigger this code even though focus is elsewhere.
+        // This avoids https://github.com/mui/mui-x/issues/21063
+        const allowTakingFocus =
+          !activeElement ||
+          activeElement === doc.body ||
+          activeElement === doc.documentElement ||
+          gridRoot?.contains(activeElement);
+
+        if (!allowTakingFocus) {
+          return;
+        }
+
+        if (cellElement.contains(doc.activeElement!)) {
+          return;
+        }
+
+        if (doesSupportPreventScroll()) {
+          cellElement.focus({ preventScroll: true });
+        } else {
+          const scrollPosition = apiRef.current.getScrollPosition();
+          cellElement.focus();
+          apiRef.current.scroll(scrollPosition);
+        }
+
         return;
       }
 
