@@ -32,9 +32,6 @@ export class SchedulerLazyLoadingPlugin<
         this.store.state.adapter,
         this.loadEventsFromDataSource,
       );
-
-      // Subscribe to eventsUpdated event for cache sync
-      this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
     }
   }
 
@@ -120,26 +117,6 @@ export class SchedulerLazyLoadingPlugin<
       this.store.set('isLoading', false);
       await this.dataManager.setRequestSettled(range);
     }
-  };
-
-  /**
-   * Handles the eventsUpdated event from the base store.
-   * Updates the cache and syncs with the data source.
-   */
-  private handleEventsUpdated = async (params: {
-    deleted: SchedulerEventId[];
-    updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>;
-    created: SchedulerEventId[];
-    newEvents: TEvent[];
-  }) => {
-    await this.updateEventsFromDataSource(
-      {
-        deleted: params.deleted,
-        updated: params.updated,
-        created: params.created,
-      },
-      params.newEvents,
-    );
   };
 
   public updateEventsFromDataSource = async (

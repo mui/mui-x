@@ -2,7 +2,6 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
-import { EventManager } from '@mui/x-internals/EventManager';
 import {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -36,12 +35,6 @@ import {
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
-import {
-  SchedulerEvents,
-  SchedulerEventParameters,
-  SchedulerEventEvent,
-  SchedulerEventListener,
-} from '../../models';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 
@@ -75,8 +68,6 @@ export class SchedulerStore<
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected timeoutManager = new TimeoutManager();
-
-  private eventManager = new EventManager();
 
   /**
    * Lazy loading plugin instance.
@@ -261,29 +252,6 @@ export class SchedulerStore<
     });
   };
 
-  /**
-   * Publishes an event to all its subscribers.
-   * Used for communication between base store and premium plugins.
-   */
-  public publishEvent = <E extends SchedulerEvents>(
-    name: E,
-    params: SchedulerEventParameters<E>,
-    event: SchedulerEventEvent<E>,
-  ) => {
-    this.eventManager.emit(name, params, event);
-  };
-
-  /**
-   * Subscribe to an event emitted by the store.
-   * Used by premium lazy loading plugins to react to state changes.
-   */
-  public subscribeEvent = <E extends SchedulerEvents>(
-    eventName: E,
-    handler: SchedulerEventListener<E>,
-  ) => {
-    this.eventManager.on(eventName, handler);
-  };
-
   protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
@@ -339,17 +307,15 @@ export class SchedulerStore<
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
 
-    // Emit event for premium lazy loading plugins to sync cache
+    // Sync cache in premium lazy loading plugins
     queueMicrotask(() =>
-      this.publishEvent(
-        'eventsUpdated',
+      this.lazyLoading?.updateEventsFromDataSource(
         {
           deleted: deletedParam ?? [],
           updated,
           created: createdIds,
-          newEvents,
         },
-        null,
+        newEvents,
       ),
     );
 
