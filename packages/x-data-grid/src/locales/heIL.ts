@@ -165,6 +165,10 @@ const heILGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'כן',
   booleanCellFalseLabel: 'לא',
 
+  // Long text cell
+  longTextCellExpandLabel: 'הרחב',
+  longTextCellCollapseLabel: 'כווץ',
+
   // Actions cell more text
   actionsCellMore: 'עוד',
 

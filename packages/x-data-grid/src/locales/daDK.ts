@@ -165,6 +165,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Udvid',
+  longTextCellCollapseLabel: 'Kollaps',
+
   // Actions cell more text
   actionsCellMore: 'mere',
 
