@@ -6,13 +6,13 @@ export function useEventCalendarPremiumStoreContext<
   TEvent extends object,
   TResource extends object,
 >() {
-  const store = useSchedulerStoreContext();
+  const context = useSchedulerStoreContext();
 
-  if (store.instanceName !== 'EventCalendarPremiumStore') {
+  if (context.instanceName !== 'EventCalendarPremiumStore') {
     throw new Error(
-      'MUI: useEventCalendarPremiumStoreContext must be used within <EventCalendarPremium />',
+      'MUI: useEventCalendarPremiumStoreContext must be used within an <EventCalendarPremium /> component',
     );
   }
 
-  return store as unknown as EventCalendarPremiumStore<TEvent, TResource>;
+  return context as unknown as EventCalendarPremiumStore<TEvent, TResource>;
 }

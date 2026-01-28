@@ -3,16 +3,16 @@ import { useSchedulerStoreContext } from '../use-scheduler-store-context';
 import { EventCalendarStore } from '../use-event-calendar';
 
 export function useEventCalendarStoreContext<TEvent extends object, TResource extends object>() {
-  const store = useSchedulerStoreContext();
+  const context = useSchedulerStoreContext();
 
   if (
-    store.instanceName !== 'EventCalendarStore' &&
-    store.instanceName !== 'EventCalendarPremiumStore'
+    context.instanceName !== 'EventCalendarStore' &&
+    context.instanceName !== 'EventCalendarPremiumStore'
   ) {
     throw new Error(
-      'MUI X: useEventCalendarStoreContext must be used within <EventCalendar /> or <EventCalendarPremium />',
+      'MUI: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
     );
   }
 
-  return store as unknown as EventCalendarStore<TEvent, TResource>;
+  return context as unknown as EventCalendarStore<TEvent, TResource>;
 }
