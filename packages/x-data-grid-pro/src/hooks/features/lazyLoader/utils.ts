@@ -1,5 +1,5 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
+import { type GridRenderContext, type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const findSkeletonRowsSection = ({
@@ -9,7 +9,7 @@ export const findSkeletonRowsSection = ({
 }: {
   apiRef: RefObject<GridPrivateApiPro>;
   visibleRows: GridRowEntry[];
-  range: { firstRowIndex: number; lastRowIndex: number };
+  range: GridRenderContext;
 }) => {
   let { firstRowIndex, lastRowIndex } = range;
   const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);

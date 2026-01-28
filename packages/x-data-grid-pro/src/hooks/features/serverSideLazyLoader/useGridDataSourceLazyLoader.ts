@@ -90,11 +90,15 @@ export const useGridDataSourceLazyLoader = (
       }
 
       const paginationModel = gridPaginationModelSelector(privateApiRef);
+      const rowCount = privateApiRef.current.state.pagination.rowCount;
 
       return {
         ...params,
         start: params.start - (params.start % paginationModel.pageSize),
-        end: params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+        end: Math.min(
+          rowCount !== undefined ? rowCount - 1 : Infinity,
+          params.end + paginationModel.pageSize - (params.end % paginationModel.pageSize) - 1,
+        ),
       };
     },
     [privateApiRef],
@@ -377,7 +381,7 @@ export const useGridDataSourceLazyLoader = (
   const handleRenderedRowsIntervalChange = React.useCallback<
     GridEventListener<'renderedRowsIntervalChange'>
   >(
-    (params) => {
+    (renderContext) => {
       if (rowsStale.current) {
         return;
       }
@@ -385,22 +389,22 @@ export const useGridDataSourceLazyLoader = (
       const sortModel = gridSortModelSelector(privateApiRef);
       const filterModel = gridFilterModelSelector(privateApiRef);
       const getRowsParams: GridGetRowsParams = {
-        start: params.firstRowIndex,
-        end: params.lastRowIndex - 1,
+        start: renderContext.firstRowIndex,
+        end: renderContext.lastRowIndex - 1,
         sortModel,
         filterModel,
       };
 
       if (
-        renderedRowsIntervalCache.current.firstRowToRender === params.firstRowIndex &&
-        renderedRowsIntervalCache.current.lastRowToRender === params.lastRowIndex
+        renderedRowsIntervalCache.current.firstRowToRender === renderContext.firstRowIndex &&
+        renderedRowsIntervalCache.current.lastRowToRender === renderContext.lastRowIndex
       ) {
         return;
       }
 
       renderedRowsIntervalCache.current = {
-        firstRowToRender: params.firstRowIndex,
-        lastRowToRender: params.lastRowIndex,
+        firstRowToRender: renderContext.firstRowIndex,
+        lastRowToRender: renderContext.lastRowIndex,
       };
 
       const currentVisibleRows = getVisibleRows(privateApiRef);
@@ -408,10 +412,7 @@ export const useGridDataSourceLazyLoader = (
       const skeletonRowsSection = findSkeletonRowsSection({
         apiRef: privateApiRef,
         visibleRows: currentVisibleRows.rows,
-        range: {
-          firstRowIndex: params.firstRowIndex,
-          lastRowIndex: params.lastRowIndex - 1,
-        },
+        range: renderContext,
       });
 
       if (!skeletonRowsSection) {
