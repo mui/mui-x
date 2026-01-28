@@ -1,7 +1,10 @@
-import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
+import {
+  createSchedulerRenderer,
+  SchedulerStoreRunner,
+  AnyEventCalendarStore,
+} from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
-import { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';
@@ -126,7 +129,7 @@ describe('<PreferencesMenu />', () => {
   it('should show "Show empty days" ONLY in Agenda view when enabled in config', async () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
-        <SchedulerStoreRunner<EventCalendarStore<any, any>>
+        <SchedulerStoreRunner<AnyEventCalendarStore>
           context={SchedulerStoreContext}
           onMount={(store) => store.setView('agenda', {} as any)}
         />
@@ -143,7 +146,7 @@ describe('<PreferencesMenu />', () => {
   it('should NOT show "Show empty days" in non-Agenda views even when enabled in config', async () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
-        <SchedulerStoreRunner<EventCalendarStore<any, any>>
+        <SchedulerStoreRunner<AnyEventCalendarStore>
           context={SchedulerStoreContext}
           onMount={(store) => store.setView('week', {} as any)}
         />
@@ -165,7 +168,7 @@ describe('<PreferencesMenu />', () => {
           toggleEmptyDaysInAgenda: false,
         }}
       >
-        <SchedulerStoreRunner<EventCalendarStore<any, any>>
+        <SchedulerStoreRunner<AnyEventCalendarStore>
           context={SchedulerStoreContext}
           onMount={(store) => store.setView('agenda', {} as any)}
         />
