@@ -24,15 +24,14 @@ function TestComponent(props: { packageName?: MuiCommercialPackageName }) {
 describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
   const { render } = createRenderer();
 
-  let env: any;
+  let isTestEnv: any;
 
   beforeEach(() => {
-    env = process.env.NODE_ENV;
-    process.env.NODE_ENV = 'test';
+    isTestEnv = process.env.IS_TEST_ENV;
   });
 
   afterEach(() => {
-    process.env.NODE_ENV = env;
+    process.env.IS_TEST_ENV = isTestEnv;
   });
 
   describe('error', () => {
@@ -70,7 +69,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     });
 
     it('should throw if the license is expired by more than a 30 days', () => {
-      process.env.NODE_ENV = 'development';
+      delete process.env.IS_TEST_ENV;
 
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
@@ -144,7 +143,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     it.each(planCombinations)(
       'should work for plan $planVersion with scope $planScope',
       ({ planVersion, planScope, ok, notOk, notInInitial }) => {
-        process.env.NODE_ENV = 'development';
+        delete process.env.IS_TEST_ENV;
 
         const licenseKey = generateLicense({
           expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
