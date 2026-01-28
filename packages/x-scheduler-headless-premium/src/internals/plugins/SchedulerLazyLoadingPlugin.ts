@@ -146,7 +146,7 @@ export class SchedulerLazyLoadingPlugin<
       const modifiedIds = new Set([...created, ...updated.keys()]);
 
       if (modifiedIds.size > 0) {
-        for (const event of newEvents as TEvent[]) {
+        for (const event of newEvents) {
           // @ts-ignore
           if (modifiedIds.has(event.id)) {
             this.cache.upsert(event);
@@ -155,7 +155,7 @@ export class SchedulerLazyLoadingPlugin<
       }
 
       const eventsState = buildEventsState(
-        { ...this.store.parameters, events: newEvents as TEvent[] },
+        { ...this.store.parameters, events: newEvents },
         adapter,
         displayTimezone,
       );
