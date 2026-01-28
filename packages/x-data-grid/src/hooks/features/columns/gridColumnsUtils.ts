@@ -30,7 +30,7 @@ export const COLUMNS_DIMENSION_PROPERTIES = [
   'minWidth',
   'width',
   'flex',
-  'autoSizingMinSize',
+  'autoSizingMinWidth',
   'autoSizingMaxSize',
 ] as const;
 

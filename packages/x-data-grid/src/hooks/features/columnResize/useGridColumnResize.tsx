@@ -274,8 +274,8 @@ function extractColumnWidths(
     }
 
     let min = 0;
-    if (column.autoSizingMinSize !== undefined) {
-      min = column.autoSizingMinSize;
+    if (column.autoSizingMinWidth !== undefined) {
+      min = column.autoSizingMinWidth;
     } else if (column.minWidth !== -Infinity && column.minWidth !== undefined) {
       min = column.minWidth;
     }
