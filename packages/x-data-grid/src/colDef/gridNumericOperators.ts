@@ -1,6 +1,6 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
-import { GridFilterOperator } from '../models/gridFilterOperator';
+import type { GridFilterOperator } from '../models/gridFilterOperator';
 import type { GridFilterInputValueProps } from '../models/gridFilterInputComponent';
 import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
 

@@ -5,13 +5,13 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  GridRenderCellParams,
-  GridGroupNode,
+  type GridRenderCellParams,
+  type GridGroupNode,
 } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { useGridAriaAttributes as useGridAriaAttributesCommunity } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from './useGridRootProps';
 

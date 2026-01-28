@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../api/gridApiCommunity';
-import { DataGridProcessedProps } from '../props/DataGridProps';
-import { GridEditingApi } from '../api/gridEditingApi';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../props/DataGridProps';
+import type { GridEditingApi } from '../api/gridEditingApi';
 
 /**
  * Get the cell editable condition function

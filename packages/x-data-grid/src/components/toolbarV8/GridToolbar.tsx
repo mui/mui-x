@@ -13,7 +13,7 @@ import { ExportCsv, ExportPrint } from '../export';
 import { GridToolbarQuickFilter } from '../toolbar/GridToolbarQuickFilter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
 import { vars } from '../../constants/cssVariables';

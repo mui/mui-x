@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { GridChartsIntegrationContext } from '../../components/chartsIntegration/GridChartsIntegrationContext';
-import { GridChartsIntegrationContextValue } from '../../models/gridChartsIntegration';
+import type { GridChartsIntegrationContextValue } from '../../models/gridChartsIntegration';
 
 export const useGridChartsIntegrationContext = (ignoreError = false) => {
   const context = React.useContext(GridChartsIntegrationContext);
