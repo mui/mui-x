@@ -134,6 +134,20 @@
     "import { HeatmapPremium } from '@mui/x-charts-premium';"
   ],
   "classes": [],
+  "slots": [
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbarPro",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "HeatmapTooltip",
+      "class": null
+    }
+  ],
   "muiName": "MuiHeatmapPremium",
   "filename": "/packages/x-charts-premium/src/HeatmapPremium/HeatmapPremium.tsx",
   "inheritance": null,
