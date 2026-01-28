@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "CandlestickPlot",
+  "imports": [
+    "import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';",
+    "import { CandlestickPlot } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiCandlestickPlot",
+  "filename": "/packages/x-charts-premium/src/CandlestickChart/CandlestickPlot.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/candlestick/\">Charts - Candlestick <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}
