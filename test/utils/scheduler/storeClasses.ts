@@ -1,6 +1,6 @@
+import { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventCalendarPremiumStore } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
 import { EventTimelinePremiumStore } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium';
-import { EventCalendarStore } from '../../../../use-event-calendar';
 
 /**
  * Store classes for general scheduler tests.

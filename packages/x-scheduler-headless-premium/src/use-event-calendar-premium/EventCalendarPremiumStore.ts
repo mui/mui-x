@@ -10,6 +10,8 @@ export class EventCalendarPremiumStore<
   TEvent extends object,
   TResource extends object,
 > extends EventCalendarStore<TEvent, TResource> {
+  public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent, TResource>;
+
   public constructor(
     parameters: EventCalendarPremiumParameters<TEvent, TResource>,
     adapter: Adapter,

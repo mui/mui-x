@@ -1,13 +1,10 @@
-import {
-  SchedulerEventId,
-  TemporalSupportedObject,
-  SchedulerEventUpdatedProperties,
-} from '@mui/x-scheduler-headless/models';
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import {
   SchedulerState,
   SchedulerParameters,
   SchedulerStore,
   buildEventsState,
+  SchedulerEventParameters,
 } from '@mui/x-scheduler-headless/internals';
 import { SchedulerDataSourceCacheDefault } from '../utils/cache';
 import { SchedulerDataManager } from '../utils/queue';
@@ -32,6 +29,9 @@ export class SchedulerLazyLoadingPlugin<
         this.store.state.adapter,
         this.loadEventsFromDataSource,
       );
+
+      // Subscribe to events updated event to sync cache
+      this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
     }
   }
 
@@ -119,18 +119,8 @@ export class SchedulerLazyLoadingPlugin<
     }
   };
 
-  public updateEventsFromDataSource = async (
-    {
-      deleted,
-      updated,
-      created,
-    }: {
-      deleted: SchedulerEventId[];
-      updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>;
-      created: SchedulerEventId[];
-    },
-    newEvents: TEvent[],
-  ) => {
+  private handleEventsUpdated = async (params: SchedulerEventParameters<'eventsUpdated'>) => {
+    const { deleted, updated, created, newEvents } = params;
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
 
@@ -157,7 +147,7 @@ export class SchedulerLazyLoadingPlugin<
       const modifiedIds = new Set([...created, ...updated.keys()]);
 
       if (modifiedIds.size > 0) {
-        for (const event of newEvents) {
+        for (const event of newEvents as TEvent[]) {
           // @ts-ignore
           if (modifiedIds.has(event.id)) {
             this.cache.upsert(event);
@@ -166,7 +156,7 @@ export class SchedulerLazyLoadingPlugin<
       }
 
       const eventsState = buildEventsState(
-        { ...this.store.parameters, events: newEvents },
+        { ...this.store.parameters, events: newEvents as TEvent[] },
         adapter,
         displayTimezone,
       );

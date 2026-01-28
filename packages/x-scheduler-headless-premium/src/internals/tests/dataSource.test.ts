@@ -1,7 +1,6 @@
 import { spy } from 'sinon';
 import { describe, expect, it } from 'vitest';
-import { adapter } from 'test/utils/scheduler';
-import { premiumStoreClasses } from '@mui/x-scheduler-headless/internals/utils/SchedulerStore/tests/utils';
+import { adapter, premiumStoreClasses } from 'test/utils/scheduler';
 
 const DEFAULT_PARAMS = { events: [] };
 
