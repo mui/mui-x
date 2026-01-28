@@ -231,7 +231,7 @@ export const useGridPrintExport = (
       }
 
       // Trigger print
-      if (process.env.NODE_ENV !== 'test' && !DEBUG_MODE) {
+      if (!process.env.IS_TEST_ENV && !DEBUG_MODE) {
         // wait for remote stylesheets to load
         Promise.all(stylesheetLoadPromises).then(() => {
           printWindow.contentWindow!.print();
@@ -314,7 +314,7 @@ export const useGridPrintExport = (
 
       await raf(); // wait for the state changes to take action
       const printWindow = buildPrintWindow(options?.fileName);
-      if (process.env.NODE_ENV === 'test') {
+      if (process.env.IS_TEST_ENV) {
         doc.current!.body.appendChild(printWindow);
         // In test env, run the all pipeline without waiting for loading
         handlePrintWindowLoad(printWindow, options);

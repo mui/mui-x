@@ -47,7 +47,7 @@ type CommonProps = {
 export interface GridExperimentalFeatures {
   /**
    * Emits a warning if the cell receives focus without also syncing the focus state.
-   * Only works if NODE_ENV=test.
+   * Only works if IS_TEST_ENV=true.
    */
   warnIfFocusStateIsNotSynced: boolean;
 }

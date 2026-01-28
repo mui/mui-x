@@ -134,6 +134,7 @@ function getIsDebugModeEnabled(): boolean {
 
 function getNodeEnv(): string {
   try {
+    // eslint-disable-next-line material-ui/consistent-production-guard
     return process.env.NODE_ENV ?? '<unknown>';
   } catch (_) {
     return '<unknown>';
