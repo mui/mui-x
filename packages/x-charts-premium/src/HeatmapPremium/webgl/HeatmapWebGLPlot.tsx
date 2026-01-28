@@ -1,16 +1,10 @@
 'use client';
 import * as React from 'react';
-import { useDrawingArea, useXScale, useYScale, useZColorScale } from '@mui/x-charts/hooks';
-import {
-  selectorChartsIsFadedCallback,
-  selectorChartsIsHighlightedCallback,
-  useStore,
-  useWebGLContext,
-} from '@mui/x-charts/internals';
+import { useDrawingArea, useXScale, useYScale } from '@mui/x-charts/hooks';
+import { useWebGLContext } from '@mui/x-charts/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { useHeatmapSeriesContext } from '../../hooks';
-import { parseColor } from '../../utils/webgl/parseColor';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,
@@ -24,6 +18,7 @@ import {
   logWebGLErrors,
   uploadQuadBuffer,
 } from './utils';
+import { useHeatmapPlotData } from './useHeatmapPlotData';
 
 export function HeatmapWebGLPlot({
   borderRadius,
@@ -52,10 +47,6 @@ function HeatmapWebGLPlotImpl(props: {
   const drawingArea = useDrawingArea();
   const xScale = useXScale<'band'>();
   const yScale = useYScale<'band'>();
-  const colorScale = useZColorScale()!;
-  const store = useStore();
-  const isHighlighted = store.use(selectorChartsIsHighlightedCallback);
-  const isFaded = store.use(selectorChartsIsFadedCallback);
 
   const [vertexShader] = React.useState<WebGLShader>(() =>
     compileShader(gl, heatmapVertexShaderSource, gl.VERTEX_SHADER),
@@ -124,41 +115,9 @@ function HeatmapWebGLPlotImpl(props: {
     setupRectDimensionsUniform();
   });
 
+  const plotData = useHeatmapPlotData(drawingArea, series, xScale, yScale);
   const setupAttributes = React.useCallback(() => {
-    const centers = new Float32Array(series.data.length * 2);
-    const colors = new Float32Array(series.data.length * 4);
-    const saturations = new Float32Array(series.data.length);
-
-    const xDomain = xScale.domain();
-    const yDomain = yScale.domain();
-
-    for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
-      const [xIndex, yIndex, value] = series.data[dataIndex];
-
-      const x = xScale(xDomain[xIndex]);
-      const y = yScale(yDomain[yIndex]);
-      const color = colorScale?.(value);
-
-      if (x === undefined || y === undefined || !color) {
-        continue;
-      }
-
-      centers[dataIndex * 2] = x + width / 2 - drawingArea.left;
-      centers[dataIndex * 2 + 1] = y + height / 2 - drawingArea.top;
-
-      const rgbColor = parseColor(color);
-
-      colors[dataIndex * 4] = rgbColor[0];
-      colors[dataIndex * 4 + 1] = rgbColor[1];
-      colors[dataIndex * 4 + 2] = rgbColor[2];
-      colors[dataIndex * 4 + 3] = 1.0;
-
-      if (isHighlighted({ seriesId: series.id, dataIndex })) {
-        saturations[dataIndex] = 0.2;
-      } else if (isFaded({ seriesId: series.id, dataIndex })) {
-        saturations[dataIndex] = -0.2;
-      }
-    }
+    const { centers, colors, saturations } = plotData;
 
     // Upload rectangle centers
     const centerBuffer = gl.createBuffer();
@@ -191,21 +150,7 @@ function HeatmapWebGLPlotImpl(props: {
     gl.enableVertexAttribArray(aSaturation);
     gl.vertexAttribPointer(aSaturation, 1, gl.FLOAT, false, 0, 0);
     gl.vertexAttribDivisor(aSaturation, 1);
-  }, [
-    colorScale,
-    drawingArea.left,
-    drawingArea.top,
-    gl,
-    height,
-    isFaded,
-    isHighlighted,
-    program,
-    series.data,
-    series.id,
-    width,
-    xScale,
-    yScale,
-  ]);
+  }, [gl, plotData, program]);
   const setupAttributesEvent = useEventCallback(() => setupAttributes());
 
   React.useEffect(() => {
