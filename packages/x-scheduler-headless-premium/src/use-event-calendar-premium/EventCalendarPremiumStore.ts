@@ -17,6 +17,7 @@ export class EventCalendarPremiumStore<
     adapter: Adapter,
   ) {
     super(parameters, adapter);
+    this.instanceName = 'EventCalendarPremiumStore';
 
     this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
   }

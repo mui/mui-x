@@ -1,6 +1,7 @@
 import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
 import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
 import { getPreferencesMenu, openPreferencesMenu } from '../../../internals/utils/test-utils';
@@ -127,7 +128,9 @@ describe('<PreferencesMenu />', () => {
       <EventCalendarProvider events={[]}>
         <SchedulerStoreRunner
           context={EventCalendarStoreContext}
-          onMount={(store) => store.setView('agenda', {} as any)}
+          onMount={(store) =>
+            (store as unknown as EventCalendarStore<any, any>).setView('agenda', {} as any)
+          }
         />
         <PreferencesMenu />
       </EventCalendarProvider>,
@@ -144,7 +147,9 @@ describe('<PreferencesMenu />', () => {
       <EventCalendarProvider events={[]}>
         <SchedulerStoreRunner
           context={EventCalendarStoreContext}
-          onMount={(store) => store.setView('week', {} as any)}
+          onMount={(store) =>
+            (store as unknown as EventCalendarStore<any, any>).setView('week', {} as any)
+          }
         />
         <PreferencesMenu />
       </EventCalendarProvider>,
@@ -166,7 +171,9 @@ describe('<PreferencesMenu />', () => {
       >
         <SchedulerStoreRunner
           context={EventCalendarStoreContext}
-          onMount={(store) => store.setView('agenda', {} as any)}
+          onMount={(store) =>
+            (store as unknown as EventCalendarStore<any, any>).setView('agenda', {} as any)
+          }
         />
         <PreferencesMenu />
       </EventCalendarProvider>,

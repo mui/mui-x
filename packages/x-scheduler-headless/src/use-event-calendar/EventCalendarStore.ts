@@ -79,7 +79,7 @@ export class EventCalendarStore<
   EventCalendarParameters<TEvent, TResource>
 > {
   public constructor(parameters: EventCalendarParameters<TEvent, TResource>, adapter: Adapter) {
-    super(parameters, adapter, 'Event Calendar', mapper);
+    super(parameters, adapter, 'EventCalendarStore', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)

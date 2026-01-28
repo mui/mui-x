@@ -1,22 +1,23 @@
 'use client';
-import * as React from 'react';
+import {
+  useSchedulerStoreContext,
+  SchedulerStoreContext,
+} from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '../use-event-timeline-premium';
 
-export const EventTimelinePremiumStoreContext = React.createContext<EventTimelinePremiumStore<
-  any,
-  any
-> | null>(null);
+export { SchedulerStoreContext as EventTimelinePremiumStoreContext };
 
 export function useEventTimelinePremiumStoreContext<
   TEvent extends object,
   TResource extends object,
 >() {
-  const context = React.useContext(EventTimelinePremiumStoreContext);
-  if (context == null) {
+  const store = useSchedulerStoreContext();
+
+  if (store.instanceName !== 'EventTimelinePremiumStore') {
     throw new Error(
-      'MUI: useEventTimelinePremiumStoreContext must be used within an <EventTimelinePremium /> component',
+      'MUI X: useEventTimelinePremiumStoreContext must be used within <EventTimelinePremium />',
     );
   }
 
-  return context as EventTimelinePremiumStore<TEvent, TResource>;
+  return store as unknown as EventTimelinePremiumStore<TEvent, TResource>;
 }
