@@ -1,0 +1,100 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
+    "brushConfig": { "description": "Configuration for the brush interaction." },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "dataset": {
+      "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
+    },
+    "disableAxisListener": {
+      "description": "If <code>true</code>, the charts will not listen to the mouse move event. It might break interactive features, but will improve performance."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
+    "highlightedItem": {
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialZoom": {
+      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
+    },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "localeText": { "description": "Localized text for chart components." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onAxisClick": {
+      "description": "The function called for onClick events. The second argument contains information about all line/bar elements at the current mouse position.",
+      "typeDescriptions": {
+        "event": {
+          "name": "event",
+          "description": "The mouse event recorded on the <code>&lt;svg/&gt;</code> element."
+        },
+        "data": {
+          "name": "data",
+          "description": "The data about the clicked axis and items associated with it."
+        }
+      }
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
+        }
+      }
+    },
+    "onItemClick": {
+      "description": "The callback fired when an item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The click event." },
+        "item": { "name": "item", "description": "The clicked item." }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
+    "onZoomChange": {
+      "description": "Callback fired when the zoom has changed.",
+      "typeDescriptions": {
+        "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
+      }
+    },
+    "renderer": {
+      "description": "<p>The type of renderer to use for the heatmap plot.</p>\n<ul>\n<li><code>svg-single</code>: Renders every scatter item in a <code>&lt;rect /&gt;</code> element.</li>\n<li><code>webgl</code>: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.\n         Read more: <a href=\"https://mui.com/x/react-charts/heatmap/#performance\">https://mui.com/x/react-charts/heatmap/#performance</a></li>\n</ul>\n"
+    },
+    "series": {
+      "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/heatmap-series/'>HeatmapSeries</a> objects."
+    },
+    "showToolbar": { "description": "If true, shows the default chart toolbar." },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tooltip": {
+      "description": "The configuration of the tooltip.",
+      "seeMoreText": "See {{link}} for more details."
+    },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    },
+    "xAxis": {
+      "description": "The configuration of the x-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "yAxis": {
+      "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
+    },
+    "zAxis": { "description": "The configuration of the z-axes." },
+    "zoomData": { "description": "The list of zoom data related to each axis." },
+    "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
+  },
+  "classDescriptions": {}
+}
