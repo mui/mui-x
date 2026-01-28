@@ -53,6 +53,8 @@ const FULL_INITIAL_STATE: GridInitialState = {
         width: 75,
         maxWidth: -1,
         minWidth: 50,
+        autoSizingMaxWidth: undefined,
+        autoSizingMinWidth: undefined,
         flex: undefined,
       },
     },

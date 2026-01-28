@@ -281,8 +281,8 @@ function extractColumnWidths(
     }
 
     let max = Infinity;
-    if (column.autoSizingMaxSize !== undefined) {
-      max = column.autoSizingMaxSize;
+    if (column.autoSizingMaxWidth !== undefined) {
+      max = column.autoSizingMaxWidth;
     } else if (column.maxWidth !== Infinity && column.maxWidth !== undefined) {
       max = column.maxWidth;
     }

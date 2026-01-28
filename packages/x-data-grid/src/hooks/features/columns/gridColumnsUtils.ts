@@ -31,7 +31,7 @@ export const COLUMNS_DIMENSION_PROPERTIES = [
   'width',
   'flex',
   'autoSizingMinWidth',
-  'autoSizingMaxSize',
+  'autoSizingMaxWidth',
 ] as const;
 
 export type GridColumnDimensionProperties = (typeof COLUMNS_DIMENSION_PROPERTIES)[number];

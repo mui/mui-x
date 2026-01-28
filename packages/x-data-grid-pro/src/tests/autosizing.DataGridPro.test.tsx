@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
-import { RefObject } from '@mui/x-internals/types';
-import {
-  DataGridProProps,
-  useGridApiRef,
-  DataGridPro,
-  gridClasses,
-  GridApi,
-  GridAutosizeOptions,
-} from '@mui/x-data-grid-pro';
+import type { RefObject } from '@mui/x-internals/types';
+import type { DataGridProProps, GridApi, GridAutosizeOptions } from '@mui/x-data-grid-pro';
+import { useGridApiRef, DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -194,8 +188,8 @@ describe('<DataGridPro /> - Autosizing', () => {
       expect(getWidths(columns)[0]).to.equal(200);
     });
 
-    it('should respect autoSizingMaxSize', async () => {
-      const columns = [{ field: 'id' }, { field: 'brand', autoSizingMaxSize: 100 }];
+    it('should respect autoSizingMaxWidth', async () => {
+      const columns = [{ field: 'id' }, { field: 'brand', autoSizingMaxWidth: 100 }];
       render(<Test columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
       // 'brand' column "Lululemon Athletica" would normally be > 100, but should be capped at 100
@@ -210,8 +204,8 @@ describe('<DataGridPro /> - Autosizing', () => {
       expect(getWidths(columns)[0]).to.equal(200);
     });
 
-    it('should ignore maxWidth in favor of autoSizingMaxSize during autosizing', async () => {
-      const columns = [{ field: 'id' }, { field: 'brand', maxWidth: 50, autoSizingMaxSize: 100 }];
+    it('should ignore maxWidth in favor of autoSizingMaxWidth during autosizing', async () => {
+      const columns = [{ field: 'id' }, { field: 'brand', maxWidth: 50, autoSizingMaxWidth: 100 }];
       render(<Test columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
       // should be 100, not 50
@@ -225,7 +219,7 @@ describe('<DataGridPro /> - Autosizing', () => {
       expect(getWidths(columns)[0]).to.equal(200);
     });
 
-    it('should respect maxWidth if autoSizingMaxSize is not set', async () => {
+    it('should respect maxWidth if autoSizingMaxWidth is not set', async () => {
       const columns = [{ field: 'id' }, { field: 'brand', maxWidth: 100 }];
       render(<Test columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
@@ -234,7 +228,7 @@ describe('<DataGridPro /> - Autosizing', () => {
 
     it('should NOT respect autoSizingMinWidth/MaxSize during manual resizing', async () => {
       const columns = [
-        { field: 'id', width: 100, autoSizingMinWidth: 150, autoSizingMaxSize: 200 },
+        { field: 'id', width: 100, autoSizingMinWidth: 150, autoSizingMaxWidth: 200 },
         { field: 'brand' },
       ];
       render(<Test columns={columns} />);
@@ -245,7 +239,7 @@ describe('<DataGridPro /> - Autosizing', () => {
       fireEvent.mouseMove(separator, { clientX: 250, buttons: 1 });
       fireEvent.mouseUp(separator);
 
-      // Should be 250, ignoring autoSizingMaxSize (200)
+      // Should be 250, ignoring autoSizingMaxWidth (200)
       expect(getColumnHeaderCell(0)).toHaveInlineStyle({ width: '250px' });
 
       // Manual resize to 50px
