@@ -16,7 +16,15 @@ import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
-export interface HeatmapPremiumProps extends HeatmapProps {}
+export interface HeatmapPremiumProps extends HeatmapProps {
+  /**
+   * The type of renderer to use for the heatmap plot.
+   * - `svg-single`: Renders every scatter item in a `<rect />` element.
+   * - `webgl`: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/heatmap/#performance
+   */
+  renderer?: 'svg-single' | 'webgl';
+}
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   inProps: HeatmapPremiumProps,
@@ -197,6 +205,13 @@ HeatmapPremium.propTypes = {
    * @param {ZoomData[]} zoomData Updated zoom data.
    */
   onZoomChange: PropTypes.func,
+  /**
+   * The type of renderer to use for the heatmap plot.
+   * - `svg-single`: Renders every scatter item in a `<rect />` element.
+   * - `webgl`: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/heatmap/#performance
+   */
+  renderer: PropTypes.oneOf(['svg-single', 'webgl']),
   /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
