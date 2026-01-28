@@ -18,24 +18,9 @@ import type {
   SortingInternalOptions,
   SortingApi,
   SortingColumnMeta,
-  ComputeSortedRowIdsOptions,
 } from './types';
 
-// ================================
-// Plugin Options Type (combined)
-// ================================
-
 type SortingPluginOptions = SortingOptions & SortingInternalOptions;
-
-// ================================
-// Default Values
-// ================================
-
-const DEFAULT_SORTING_ORDER: readonly GridSortDirection[] = ['asc', 'desc', null];
-
-// ================================
-// Plugin Definition
-// ================================
 
 type SortingPlugin = Plugin<
   'sorting',
@@ -44,6 +29,8 @@ type SortingPlugin = Plugin<
   SortingPluginOptions,
   SortingColumnMeta
 >;
+
+const DEFAULT_SORTING_ORDER: readonly GridSortDirection[] = ['asc', 'desc', null];
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
@@ -63,10 +50,6 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
   },
 
   use: (store, params, api) => {
-    // ================================
-    // Internal Helpers
-    // ================================
-
     const getDefaultSortingOrder = (): readonly GridSortDirection[] => {
       return params.sortingOrder ?? DEFAULT_SORTING_ORDER;
     };
@@ -80,39 +63,18 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     };
 
     const getColumn = (field: string) => {
-      // Cast to include SortingColumnMeta since we're the sorting plugin
+      // Cast to include SortingColumnMeta since we're in the sorting plugin
       return api.columns.get(field) as
         | (ReturnType<typeof api.columns.get> & SortingColumnMeta)
         | undefined;
     };
 
-    const getRow = (id: GridRowId) => {
-      return api.rows.getRow(id);
-    };
-
-    const getAllRowIds = (): GridRowId[] => {
-      return api.rows.getAllRowIds();
-    };
-
-    // ================================
-    // Core API Methods
-    // ================================
-
-    /**
-     * Compute sorted row IDs without updating state.
-     * This is the core sorting utility that can be used externally or internally.
-     *
-     * @param rowIds - Row IDs to sort. Defaults to all row IDs.
-     * @param sortModel - Sort model to apply. Defaults to current state.
-     * @param options - Additional options for sorting behavior.
-     * @returns Sorted row IDs array.
-     */
-    const computeSortedRowIds = (
-      rowIds?: GridRowId[],
-      sortModel?: GridSortModel,
-      options?: ComputeSortedRowIdsOptions,
-    ): GridRowId[] => {
-      const idsToSort = rowIds ?? getAllRowIds();
+    const computeSortedRowIds: SortingApi['sorting']['computeSortedRowIds'] = (
+      rowIds,
+      sortModel,
+      options,
+    ) => {
+      const idsToSort = rowIds ?? api.rows.getAllRowIds();
       const modelToUse = sortModel ?? store.state.sorting.sortModel;
       const useStableSort = options?.stableSort ?? false;
       const currentIds = options?.currentSortedRowIds ?? store.state.sorting.sortedRowIds;
@@ -120,7 +82,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       const sortingApplier = buildSortingApplier({
         sortModel: modelToUse,
         getColumn,
-        getRow,
+        getRow: api.rows.getRow,
       });
 
       return applySortingToRowIds(idsToSort, sortingApplier, useStableSort, currentIds);
@@ -153,9 +115,6 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       params.onSortedRowsSet?.(newSortedRowIds);
     };
 
-    /**
-     * Set the sort model.
-     */
     const setSortModel = (model: GridSortModel): void => {
       const prevModel = store.state.sorting.sortModel;
 
@@ -183,20 +142,12 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
      * Get the current sort model.
      */
     const getSortModel = (): GridSortModel => {
-      return store.state.sorting.sortModel;
+      return sortingSelectors.sortModel(store.state);
     };
 
-    /**
-     * Sort a column.
-     */
-    const sortColumn = (
-      field: string,
-      direction?: GridSortDirection,
-      multiSort?: boolean,
-    ): void => {
+    const sortColumn: SortingApi['sorting']['sortColumn'] = (field, direction, multiSort) => {
       const column = getColumn(field);
 
-      // Skip if column is not sortable
       if (column?.sortable === false) {
         return;
       }
@@ -214,28 +165,20 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         newDirection = getNextGridSortDirection(columnSortingOrder, existingItem?.sort);
       }
 
-      // Create the new sort item
       const newSortItem: GridSortItem | undefined =
         newDirection === null ? undefined : { field, sort: newDirection };
 
-      // Determine if we should do multi-sort
       const shouldMultiSort = multiSort ?? params.enableMultiSort !== false;
 
       let newSortModel: GridSortModel;
       if (shouldMultiSort) {
-        // Add/update/remove in the existing model
         newSortModel = upsertSortModel(sortModel, field, newSortItem);
       } else {
-        // Replace the entire model
         newSortModel = newSortItem ? [newSortItem] : [];
       }
 
       setSortModel(newSortModel);
     };
-
-    // ================================
-    // Effects for Auto Mode
-    // ================================
 
     // Track previous values for change detection
     const prevRowIdsRef = React.useRef<GridRowId[]>([]);
@@ -249,7 +192,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
 
         if (isExternalSorting()) {
           // For external sorting, just mirror the row order
-          const rowIds = getAllRowIds();
+          const rowIds = api.rows.getAllRowIds();
           store.setState({
             ...store.state,
             sorting: {
@@ -258,7 +201,6 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
             },
           });
         } else {
-          // Apply initial sorting
           applySorting();
         }
       }
@@ -270,7 +212,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         return;
       }
 
-      const currentRowIds = getAllRowIds();
+      const currentRowIds = api.rows.getAllRowIds();
 
       if (prevRowIdsRef.current !== currentRowIds) {
         prevRowIdsRef.current = currentRowIds;
@@ -312,10 +254,6 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to sortModel prop changes
     }, [params.sortModel]);
-
-    // ================================
-    // Return API
-    // ================================
 
     return {
       sorting: {

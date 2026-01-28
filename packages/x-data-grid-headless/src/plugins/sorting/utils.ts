@@ -8,10 +8,6 @@ import type {
   SortingColumnMeta,
 } from './types';
 
-// ================================
-// Default Comparators
-// ================================
-
 /**
  * Comparator for null/undefined values.
  * Returns a number if one or both values are null, or null if both are non-null.
@@ -79,10 +75,6 @@ export const gridDateComparator: GridComparatorFn = (value1, value2) => {
   return 0;
 };
 
-// ================================
-// Sort Model Utilities
-// ================================
-
 /**
  * Get the next sort direction in the cycle.
  * @param {readonly GridSortDirection[]} sortingOrder The order of sort directions to cycle through.
@@ -131,10 +123,6 @@ export const upsertSortModel = (
 
   return newSortModel;
 };
-
-// ================================
-// Sorting Applier
-// ================================
 
 interface ColumnInfo {
   field?: string | number | symbol;
@@ -223,7 +211,6 @@ const parseSortItem = (
     return null;
   }
 
-  // Create value getter
   const fieldKey = column.field ?? column.id;
   const getValue = column.sortValueGetter
     ? (row: any, _id: GridRowId) => column.sortValueGetter!(row)

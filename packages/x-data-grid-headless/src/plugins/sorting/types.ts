@@ -1,36 +1,13 @@
 import type { GridRowId } from '../internal/rows/rowUtils';
 
-// ================================
-// Sort Model Types
-// ================================
-
-/**
- * The direction of the sort.
- * - 'asc': ascending order
- * - 'desc': descending order
- * - null: no sorting (unsorted)
- */
 export type GridSortDirection = 'asc' | 'desc' | null;
 
-/**
- * Represents a single sort item in the sort model.
- */
 export interface GridSortItem {
-  /** The column field identifier. */
   field: string;
-  /** The direction of the sort. */
   sort: GridSortDirection;
 }
 
-/**
- * The model used for sorting the grid.
- * An array of sort items, where earlier items have higher priority.
- */
 export type GridSortModel = readonly GridSortItem[];
-
-// ================================
-// Comparator Types
-// ================================
 
 /**
  * Parameters passed to sort comparators for each cell.
@@ -43,7 +20,7 @@ export interface GridSortCellParams<V = any, R = any> {
 }
 
 /**
- * The type of the sort comparison function.
+ * The sort comparator function.
  * @param {V} v1 The first value to compare.
  * @param {V} v2 The second value to compare.
  * @param {GridSortCellParams<V>} cellParams1 The parameters of the first cell.
@@ -67,16 +44,15 @@ export type GridComparatorFnFactory<V = any> = (
   sortDirection: GridSortDirection,
 ) => GridComparatorFn<V> | undefined;
 
-// ================================
-// Column Metadata
-// ================================
-
 /**
  * Column metadata for sorting configuration.
  * This is merged into the column definition type.
  */
 export interface SortingColumnMeta<V = any> {
-  /** If `false`, the column is not sortable. Defaults to true. */
+  /**
+   * If `false`, the column is not sortable.
+   * @default true
+   */
   sortable?: boolean;
   /**
    * A comparator function or factory for sorting column values.
@@ -85,7 +61,10 @@ export interface SortingColumnMeta<V = any> {
    * - A factory that returns a comparator based on direction: `(direction) => comparatorFn`
    */
   sortComparator?: GridComparatorFn<V> | GridComparatorFnFactory<V>;
-  /** The order of the sorting sequence. Defaults to ['asc', 'desc', null]. */
+  /**
+   * The order of the sorting sequence.
+   * @default ['asc', 'desc', null]
+   */
   sortingOrder?: readonly GridSortDirection[];
   /**
    * A function to get the value to sort by from a row.
@@ -95,31 +74,14 @@ export interface SortingColumnMeta<V = any> {
   sortValueGetter?: (row: any) => V;
 }
 
-// ================================
-// Plugin State
-// ================================
-
-/**
- * The sorting plugin state.
- */
 export interface SortingState {
   sorting: {
-    /** The current sort model. */
     sortModel: GridSortModel;
-    /** The sorted row IDs in order. */
     sortedRowIds: GridRowId[];
   };
 }
 
-// ================================
-// Plugin Options
-// ================================
-
-/**
- * Options for the sorting plugin.
- */
 export interface SortingOptions {
-  /** Initial state for the sorting plugin. */
   initialState?: {
     sorting?: {
       sortModel?: GridSortModel;
@@ -137,12 +99,13 @@ export interface SortingOptions {
 
   /**
    * The sorting mode: 'auto' or 'manual'.
+   * In manual mode, the sorted row ids and not updated automatically after the sort model changes.
    * @default 'auto'
    */
   sortingMode?: 'auto' | 'manual';
 
   /**
-   * If true, multiple columns can be sorted at once.
+   * If true, multiple columns can be sorted at the same time.
    * @default true
    */
   enableMultiSort?: boolean;
@@ -174,21 +137,11 @@ export interface SortingInternalOptions {
   externalSorting?: boolean;
 }
 
-// ================================
-// Plugin API
-// ================================
-
-/**
- * Selectors for the sorting plugin.
- */
 export interface SortingSelectors {
   sortModel: (state: SortingState) => GridSortModel;
   sortedRowIds: (state: SortingState) => GridRowId[];
 }
 
-/**
- * Options for computeSortedRowIds.
- */
 export interface ComputeSortedRowIdsOptions {
   /** Use stable sort - build on current sorted order instead of starting fresh. */
   stableSort?: boolean;
@@ -196,9 +149,6 @@ export interface ComputeSortedRowIdsOptions {
   currentSortedRowIds?: GridRowId[];
 }
 
-/**
- * The sorting plugin API.
- */
 export interface SortingApi {
   sorting: {
     /**
@@ -214,10 +164,10 @@ export interface SortingApi {
     setSortModel: (model: GridSortModel) => void;
 
     /**
-     * Sort a column. Cycles through sortingOrder if direction is not provided.
+     * Sort a column. Cycles through `sortingOrder` if direction is not provided.
      * @param {string} field The field to sort by.
      * @param {GridSortDirection} direction The direction to sort by.
-     * @param {boolean} multiSort If true, multiple columns can be sorted at once.
+     * @param {boolean} multiSort If true, multiple columns can be sorted at the same time.
      */
     sortColumn: (field: string, direction?: GridSortDirection, multiSort?: boolean) => void;
 
