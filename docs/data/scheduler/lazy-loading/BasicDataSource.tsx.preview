@@ -1,4 +1,4 @@
-<EventCalendar
+<EventCalendarPremium
   events={[]}
   dataSource={{ getEvents: fetchData, updateEvents: resolveUpdate }}
   resources={flatResources}

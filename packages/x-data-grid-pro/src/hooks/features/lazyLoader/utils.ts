@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { RefObject } from '@mui/x-internals/types';
+import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
 export const findSkeletonRowsSection = ({
   apiRef,

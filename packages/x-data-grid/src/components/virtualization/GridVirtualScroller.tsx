@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -13,7 +13,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridOverlays } from '../../hooks/features/overlays/useGridOverlays';
 import { GridHeaders } from '../GridHeaders';
 import { GridMainContainer as Container } from './GridMainContainer';
@@ -28,7 +28,7 @@ import type {
   GridOverlayType,
   GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import type { GridApiCommunity } from '../../models/api/gridApiCommunity';
 import { useGridVirtualizer } from '../../hooks/core/useGridVirtualizer';
 
 type OwnerState = Pick<DataGridProcessedProps, 'classes'> & {

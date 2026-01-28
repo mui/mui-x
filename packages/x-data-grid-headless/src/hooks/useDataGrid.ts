@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
-import { Store, useStore, ReadonlyStore } from '@base-ui/utils/store';
-import { AnyPlugin, BaseApi } from '../plugins/core/plugin';
-import {
+import { Store, useStore, type ReadonlyStore } from '@base-ui/utils/store';
+import type { AnyPlugin, BaseApi } from '../plugins/core/plugin';
+import type {
   PluginsApi,
   PluginsColumnMeta,
   PluginsOptions,
   PluginsState,
 } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
-import { internalPlugins, InternalPluginsApi } from '../plugins/internal';
+import { internalPlugins, type InternalPluginsApi } from '../plugins/internal';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
