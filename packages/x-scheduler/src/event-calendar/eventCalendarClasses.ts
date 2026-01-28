@@ -4,6 +4,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   EventDialogClasses,
   eventDialogClassKeys,
+  eventDialogSlots,
 } from '../internals/components/event-draggable-dialog/eventDialogClasses';
 
 export interface EventCalendarClasses extends EventDialogClasses {
@@ -391,6 +392,7 @@ const slots = {
   resourceLegendColor: ['resourceLegendColor'],
   eventItemCardContent: ['eventItemCardContent'],
   eventItemLinesClamp: ['eventItemLinesClamp'],
+  ...eventDialogSlots,
 };
 
 /**
