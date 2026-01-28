@@ -42,11 +42,33 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     const initialSortModel =
       params.sortModel ?? params.initialState?.sorting?.sortModel ?? ([] as GridSortModel);
 
+    const dataRowIds = state.rows.dataRowIds;
+    let sortedRowIds: GridRowId[];
+
+    if (params.externalSorting || params.sortingMode === 'manual') {
+      // For external/manual sorting, just mirror the row order
+      sortedRowIds = dataRowIds;
+    } else {
+      // Auto mode: compute sorted row IDs synchronously to avoid a flash of unsorted content
+      const getColumn = (field: string) =>
+        state.columns.lookup[field] as
+          | ((typeof state.columns.lookup)[string] & SortingColumnMeta)
+          | undefined;
+      const getRow = (id: GridRowId) => state.rows.dataRowIdToModelLookup[id];
+
+      const sortingApplier = buildSortingApplier({
+        sortModel: initialSortModel,
+        getColumn,
+        getRow,
+      });
+      sortedRowIds = applySortingToRowIds(dataRowIds, sortingApplier);
+    }
+
     return {
       ...state,
       sorting: {
         sortModel: initialSortModel,
-        sortedRowIds: [], // Will be computed on first applySorting
+        sortedRowIds,
       },
     };
   },
@@ -183,44 +205,18 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     };
 
     // Track previous values for change detection
-    const prevRowIdsRef = React.useRef<GridRowId[]>([]);
+    // Initialize to current row IDs since initial sorting is done in getInitialState
+    const prevRowIdsRef = React.useRef<GridRowId[]>(api.rows.getAllRowIds());
     const prevSortModelRef = React.useRef<GridSortModel>(store.state.sorting.sortModel);
-    const initializedRef = React.useRef(false);
 
-    // Initial sorting on mount
+    // Apply sorting when rows change (includes initial mount)
     React.useEffect(() => {
-      if (!initializedRef.current) {
-        initializedRef.current = true;
-
-        if (isExternalSorting()) {
-          // For external sorting, just mirror the row order
-          const rowIds = api.rows.getAllRowIds();
-          store.setState({
-            ...store.state,
-            sorting: {
-              ...store.state.sorting,
-              sortedRowIds: rowIds,
-            },
-          });
-        } else {
-          applySorting();
-        }
-      }
-    });
-
-    // Re-apply sorting when rows change (auto mode only)
-    React.useEffect(() => {
-      if (!initializedRef.current) {
-        return;
-      }
-
       const currentRowIds = api.rows.getAllRowIds();
 
       if (prevRowIdsRef.current !== currentRowIds) {
         prevRowIdsRef.current = currentRowIds;
 
         if (isExternalSorting()) {
-          // For external sorting, mirror the row order
           store.setState({
             ...store.state,
             sorting: {
