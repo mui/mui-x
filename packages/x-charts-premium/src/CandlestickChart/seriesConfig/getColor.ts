@@ -1,10 +1,8 @@
 import { type ColorProcessor, getSeriesColorFn } from '@mui/x-charts/internals';
 
-const getColor: ColorProcessor<'ohlc'> = (series, xAxis, yAxis) => {
-  const verticalLayout = series.layout === 'vertical';
-
-  const bandColorScale = verticalLayout ? xAxis?.colorScale : yAxis?.colorScale;
-  const bandValues = verticalLayout ? xAxis?.data : yAxis?.data;
+const getColor: ColorProcessor<'ohlc'> = (series, xAxis) => {
+  const bandColorScale = xAxis?.colorScale;
+  const bandValues = xAxis?.data;
   const getSeriesColor = getSeriesColorFn(series);
 
   if (bandColorScale && bandValues) {
