@@ -1,7 +1,8 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import { EventDialogClasses, eventDialogClassKeys } from '@mui/x-scheduler/internals';
 
-export interface EventTimelinePremiumClasses {
+export interface EventTimelinePremiumClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the header toolbar element. */
@@ -136,5 +137,6 @@ export const eventTimelinePremiumClasses: EventTimelinePremiumClasses = generate
     'monthsHeaderMonthLabel',
     'yearsHeader',
     'yearsHeaderYearLabel',
+    ...eventDialogClassKeys,
   ],
 );

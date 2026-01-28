@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import CloseRounded from '@mui/icons-material/CloseRounded';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const EventDraggableDialogHeaderRoot = styled('header', {
   name: 'MuiEventDraggableDialog',
@@ -25,9 +26,13 @@ const EventDraggableDialogHeaderContent = styled('div', {
 }));
 
 export default function EventDraggableDialogHeader({ children }: React.PropsWithChildren) {
+  const classes = useEventDialogClasses();
+
   return (
-    <EventDraggableDialogHeaderRoot>
-      <EventDraggableDialogHeaderContent>{children}</EventDraggableDialogHeaderContent>
+    <EventDraggableDialogHeaderRoot className={classes.eventDialogHeader}>
+      <EventDraggableDialogHeaderContent className={classes.eventDialogHeaderContent}>
+        {children}
+      </EventDraggableDialogHeaderContent>
       <CloseRounded fontSize="small" />
     </EventDraggableDialogHeaderRoot>
   );

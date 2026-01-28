@@ -14,6 +14,7 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import { EventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
@@ -69,6 +70,7 @@ const useUtilityClasses = (classes: Partial<EventTimelinePremiumClasses> | undef
     monthsHeaderMonthLabel: ['monthsHeaderMonthLabel'],
     yearsHeader: ['yearsHeader'],
     yearsHeaderYearLabel: ['yearsHeaderYearLabel'],
+    ...eventDialogSlots,
   };
 
   return composeClasses(slots, getEventTimelinePremiumUtilityClass, classes);
@@ -128,22 +130,24 @@ export const EventTimelinePremium = React.forwardRef(function EventTimelinePremi
     <EventTimelinePremiumStoreContext.Provider value={store}>
       <SchedulerStoreContext.Provider value={store as any}>
         <EventTimelinePremiumClassesContext.Provider value={classes}>
-          <EventTimelinePremiumRoot
-            ref={forwardedRef}
-            className={clsx(classes.root, className)}
-            {...forwardedProps}
-          >
-            <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
-              <Select value={view} onChange={handleViewChange} size="small">
-                {views.map((viewItem) => (
-                  <MenuItem key={viewItem} value={viewItem}>
-                    {viewItem}
-                  </MenuItem>
-                ))}
-              </Select>
-            </EventTimelinePremiumHeaderToolbar>
-            <EventTimelinePremiumContent />
-          </EventTimelinePremiumRoot>
+          <EventDialogClassesContext.Provider value={classes}>
+            <EventTimelinePremiumRoot
+              ref={forwardedRef}
+              className={clsx(classes.root, className)}
+              {...forwardedProps}
+            >
+              <EventTimelinePremiumHeaderToolbar className={classes.headerToolbar}>
+                <Select value={view} onChange={handleViewChange} size="small">
+                  {views.map((viewItem) => (
+                    <MenuItem key={viewItem} value={viewItem}>
+                      {viewItem}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </EventTimelinePremiumHeaderToolbar>
+              <EventTimelinePremiumContent />
+            </EventTimelinePremiumRoot>
+          </EventDialogClassesContext.Provider>
         </EventTimelinePremiumClassesContext.Provider>
       </SchedulerStoreContext.Provider>
     </EventTimelinePremiumStoreContext.Provider>

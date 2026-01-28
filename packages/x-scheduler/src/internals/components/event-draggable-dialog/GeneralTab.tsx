@@ -17,6 +17,7 @@ import {
 } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { computeRange, ControlledValue, hasProp } from './utils';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const GeneralTabContent = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -67,6 +68,7 @@ export function GeneralTab(props: GeneralTabProps) {
   const adapter = useAdapter();
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
 
   // Selector hooks
   const displayTimezone = useStore(store, schedulerOtherSelectors.displayTimezone);
@@ -119,9 +121,9 @@ export function GeneralTab(props: GeneralTabProps) {
       aria-labelledby="general-tab"
       hidden={value !== 'general'}
     >
-      <GeneralTabContent>
-        <DateTimeFieldsContainer>
-          <DateTimeFieldsRow>
+      <GeneralTabContent className={classes.eventDialogGeneralTabContent}>
+        <DateTimeFieldsContainer className={classes.eventDialogDateTimeFieldsContainer}>
+          <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
             <TextField
               name="startDate"
               label={translations.startDateLabel}
@@ -153,7 +155,7 @@ export function GeneralTab(props: GeneralTabProps) {
               />
             )}
           </DateTimeFieldsRow>
-          <DateTimeFieldsRow>
+          <DateTimeFieldsRow className={classes.eventDialogDateTimeFieldsRow}>
             <TextField
               name="endDate"
               label={translations.endDateLabel}

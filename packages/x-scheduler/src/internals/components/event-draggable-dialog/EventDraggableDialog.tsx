@@ -23,6 +23,7 @@ import { FormContent } from './FormContent';
 import { RecurringScopeDialog } from '../scope-dialog/ScopeDialog';
 import { calculatePosition } from '../../utils/dialog-utils';
 import ReadonlyContent from './ReadonlyContent';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 interface PaperComponentProps extends PaperProps {
   anchorRef: React.RefObject<HTMLElement>;
@@ -106,6 +107,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
   const { style, anchorRef, occurrence, onClose, open, ...other } = props;
   // Context hooks
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
 
   // Selector hooks
   const isEventReadOnly = useStore(store, schedulerEventSelectors.isReadOnly, occurrence.id);
@@ -121,6 +123,7 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       PaperComponent={PaperComponent}
       aria-labelledby="draggable-dialog-title"
       aria-modal="false"
+      className={classes.eventDialog}
       slotProps={{
         backdrop: {
           sx: {
@@ -135,7 +138,12 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       {...other}
     >
       <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <IconButton size="small" aria-label="drag-handle" ref={handleRef}>
+        <IconButton
+          size="small"
+          aria-label="drag-handle"
+          ref={handleRef}
+          className={classes.eventDialogDragHandle}
+        >
           <MoreHorizIcon />
         </IconButton>
       </Box>
