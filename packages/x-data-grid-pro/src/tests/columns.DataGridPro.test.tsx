@@ -9,7 +9,6 @@ import {
   gridColumnLookupSelector,
   gridColumnFieldsSelector,
   type GridApi,
-  type GridAutosizeOptions,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '@mui/x-data-grid-pro/internals';
 import { getColumnHeaderCell, getCell, getRow } from 'test/utils/helperFn';
