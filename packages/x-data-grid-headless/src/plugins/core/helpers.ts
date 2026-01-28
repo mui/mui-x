@@ -58,7 +58,7 @@ export type PluginsState<TPlugins extends readonly AnyPlugin[]> = SafeUnionToInt
 export type PluginsApi<TPlugins extends readonly AnyPlugin[], TRow = any> = SafeUnionToIntersection<
   ExtractPluginApi<FlattenPluginsWithDeps<TPlugins>>
 > &
-  InternalPluginsApi<TRow>;
+  InternalPluginsApi<TRow, PluginsColumnMeta<TPlugins>>;
 
 // Union all plugin column metadata including dependencies
 // Merges plugin column metadata like: { sortable?: boolean } & { groupable?: boolean }

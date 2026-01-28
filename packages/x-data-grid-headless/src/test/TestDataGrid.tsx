@@ -98,7 +98,7 @@ export function TestDataGrid<TRow extends object>(props: {
             <thead className="grid-thead">
               <tr>
                 {visibleColumns.map((column: (typeof visibleColumns)[0]) => {
-                  const isSortable = config.sorting?.enabled;
+                  const isSortable = config.sorting?.enabled && column.sortable !== false;
                   const thClassName = ['grid-th', isSortable && 'grid-th--sortable']
                     .filter(Boolean)
                     .join(' ');
