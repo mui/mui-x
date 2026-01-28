@@ -8,7 +8,7 @@ import { createRandomNumberGenerator } from '../../utils/utils';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { GridColType } from '../../models';
+import { GridColType, GridSlotProps } from '../../models';
 
 const CIRCULAR_CONTENT_SIZE = '1.3em';
 
@@ -35,6 +35,7 @@ export interface GridSkeletonCellProps extends React.HTMLAttributes<HTMLDivEleme
    * @default false
    */
   empty?: boolean;
+  skeletonProps?: GridSlotProps['baseSkeleton'];
 }
 
 type OwnerState = Pick<GridSkeletonCellProps, 'align' | 'empty'> & {
@@ -59,7 +60,18 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 const randomNumberGenerator = createRandomNumberGenerator(12345);
 
 function GridSkeletonCell(props: GridSkeletonCellProps) {
-  const { field, type, align, width, height, empty = false, style, className, ...other } = props;
+  const {
+    field,
+    type,
+    align,
+    width,
+    height,
+    empty = false,
+    style,
+    className,
+    skeletonProps: skeletonPropsOverride,
+    ...other
+  } = props;
   const rootProps = useGridRootProps();
   const ownerState = { classes: rootProps.classes, align, empty };
   const classes = useUtilityClasses(ownerState);
@@ -86,8 +98,9 @@ function GridSkeletonCell(props: GridSkeletonCellProps) {
       variant: 'text',
       width: `${Math.round(randomNumberGenerator(min, max))}%`,
       height: CONTENT_HEIGHT,
+      ...skeletonPropsOverride,
     } as const;
-  }, [type]);
+  }, [skeletonPropsOverride, type]);
 
   return (
     <div

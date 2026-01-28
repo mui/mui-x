@@ -98,13 +98,6 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         return;
       }
 
-      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
-        options.fetchRowChildren?.([parentId]);
-        return;
-      }
-
-      options.clearDataSourceState?.();
-
       const { skipCache, keepChildrenExpanded, ...getRowsParams } = params || {};
 
       const fetchParams = {
@@ -113,11 +106,18 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         ...getRowsParams,
       };
 
+      if (parentId && parentId !== GRID_ROOT_GROUP_ID && props.signature !== 'DataGrid') {
+        options.fetchRowChildren?.(parentId, fetchParams);
+        return;
+      }
+
+      options.clearDataSourceState?.();
+
       const cacheKeys = cacheChunkManager.getCacheKeys(fetchParams);
       const responses = cacheKeys.map((cacheKey) => cache.get(cacheKey));
 
       if (!skipCache && responses.every((response) => response !== undefined)) {
-        apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+        apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
           response: CacheChunkManager.mergeResponses(responses as GridGetRowsResponse[]),
           fetchParams,
           options: { skipCache, keepChildrenExpanded },
@@ -140,7 +140,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         cacheResponses.forEach((response, key) => cache.set(key, response));
 
         if (lastRequestId.current === requestId) {
-          apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+          apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             response: getRowsResponse,
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
@@ -148,7 +148,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
         }
       } catch (originalError) {
         if (lastRequestId.current === requestId) {
-          apiRef.current.applyStrategyProcessor('dataSourceRowsUpdate', {
+          apiRef.current.applyStrategyProcessor('dataSourceRootRowsUpdate', {
             error: originalError as Error,
             fetchParams,
             options: { skipCache, keepChildrenExpanded },
@@ -200,7 +200,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     );
   }, [apiRef]);
 
-  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRowsUpdate'>>(
+  const handleDataUpdate = React.useCallback<GridStrategyProcessor<'dataSourceRootRowsUpdate'>>(
     (params) => {
       if ('error' in params) {
         apiRef.current.setRows([]);
@@ -296,7 +296,8 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     if (
       currentStrategy !== DataSourceRowsUpdateStrategy.Default &&
       currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoading &&
-      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData
+      currentStrategy !== DataSourceRowsUpdateStrategy.GroupedData &&
+      currentStrategy !== DataSourceRowsUpdateStrategy.LazyLoadedGroupedData
     ) {
       return undefined;
     }
@@ -316,7 +317,7 @@ export const useGridDataSourceBase = <Api extends GridPrivateApiCommunity>(
     debouncedFetchRows,
     strategyProcessor: {
       strategyName: DataSourceRowsUpdateStrategy.Default,
-      group: 'dataSourceRowsUpdate' as const,
+      group: 'dataSourceRootRowsUpdate' as const,
       processor: handleDataUpdate,
     },
     setStrategyAvailability,

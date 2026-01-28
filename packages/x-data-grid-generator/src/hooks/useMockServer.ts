@@ -235,7 +235,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
 
   const getChildrenCount = React.useMemo(() => {
     if (isTreeData) {
-      return (row: GridRowModel): number => row.descendantCount;
+      return (row: GridRowModel): number => row.childrenCount;
     }
     return undefined;
   }, [isTreeData]);
@@ -364,7 +364,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
-          nestedPagination ?? false,
+          nestedPagination ?? (params.start !== undefined && params.end !== undefined),
         );
 
         getRowsResponse = {
@@ -397,6 +397,7 @@ export const useMockServer = <T extends GridGetRowsResponse>(
           params,
           serverOptionsWithDefault,
           columnsWithDefaultColDef,
+          params.start !== undefined && params.end !== undefined,
         );
 
         getRowsResponse = {

@@ -43,6 +43,7 @@ export const useGridDataSourcePro = (
     api,
     flatTreeStrategyProcessor,
     groupedDataStrategyProcessor,
+    nestedDataStrategyProcessor,
     events,
     setStrategyAvailability,
   } = useGridDataSourceBasePro(apiRef, props, options);
@@ -61,6 +62,12 @@ export const useGridDataSourcePro = (
     groupedDataStrategyProcessor.strategyName,
     groupedDataStrategyProcessor.group,
     groupedDataStrategyProcessor.processor,
+  );
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    nestedDataStrategyProcessor.strategyName,
+    nestedDataStrategyProcessor.group,
+    nestedDataStrategyProcessor.processor,
   );
 
   Object.entries(events).forEach(([event, handler]) => {
