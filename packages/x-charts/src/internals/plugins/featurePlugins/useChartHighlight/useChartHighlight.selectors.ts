@@ -26,7 +26,10 @@ export const selectorChartsHighlightScopePerSeriesId = createSelector(
       const seriesData = processedSeries[seriesType as ChartSeriesType];
       seriesData?.seriesOrder?.forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map.set(seriesId, seriesItem?.highlightScope);
+
+        if (seriesItem == null || 'highlightScope' in seriesItem) {
+          map.set(seriesId, seriesItem?.highlightScope);
+        }
       });
     });
     return map;
