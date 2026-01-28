@@ -4,6 +4,7 @@ import { GRID_NUMERIC_COL_DEF } from './gridNumericColDef';
 import { GRID_DATE_COL_DEF, GRID_DATETIME_COL_DEF } from './gridDateColDef';
 import { GRID_BOOLEAN_COL_DEF } from './gridBooleanColDef';
 import { GRID_SINGLE_SELECT_COL_DEF } from './gridSingleSelectColDef';
+import { GRID_MULTI_SELECT_COL_DEF } from './gridMultiSelectColDef';
 import { GRID_ACTIONS_COL_DEF, GRID_ACTIONS_COLUMN_TYPE } from './gridActionsColDef';
 import { GRID_LONG_TEXT_COL_DEF } from './gridLongTextColDef';
 
@@ -16,6 +17,7 @@ export const getGridDefaultColumnTypes = () => {
     dateTime: GRID_DATETIME_COL_DEF,
     boolean: GRID_BOOLEAN_COL_DEF,
     singleSelect: GRID_SINGLE_SELECT_COL_DEF,
+    multiSelect: GRID_MULTI_SELECT_COL_DEF,
     [GRID_ACTIONS_COLUMN_TYPE]: GRID_ACTIONS_COL_DEF,
     custom: GRID_STRING_COL_DEF,
     longText: GRID_LONG_TEXT_COL_DEF,

@@ -793,6 +793,86 @@ describe('<DataGrid /> - Sorting', () => {
     });
   });
 
+  describe('column type: multiSelect', () => {
+    it('should sort by array length by default', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A', 'B', 'C'] },
+              { id: 2, tags: ['X'] },
+              { id: 3, tags: [] },
+              { id: 4, tags: ['P', 'Q'] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C', 'P', 'Q', 'X'],
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'asc' }]}
+          />
+        </div>,
+      );
+      // Sorted by length: [], [X], [P, Q], [A, B, C]
+      expect(getColumnValues(0)).to.deep.equal(['', 'X', 'P, Q', 'A, B, C']);
+    });
+
+    it('should sort by array length descending', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A', 'B', 'C'] },
+              { id: 2, tags: ['X'] },
+              { id: 3, tags: [] },
+              { id: 4, tags: ['P', 'Q'] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C', 'P', 'Q', 'X'],
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'desc' }]}
+          />
+        </div>,
+      );
+      // Sorted by length descending: [A, B, C], [P, Q], [X], []
+      expect(getColumnValues(0)).to.deep.equal(['A, B, C', 'P, Q', 'X', '']);
+    });
+
+    it('should handle null and undefined values when sorting', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            autoHeight={isJSDOM}
+            rows={[
+              { id: 1, tags: ['A'] },
+              { id: 2, tags: null },
+              { id: 3, tags: undefined },
+              { id: 4, tags: ['B', 'C'] },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['A', 'B', 'C'],
+              },
+            ]}
+            sortModel={[{ field: 'tags', sort: 'asc' }]}
+          />
+        </div>,
+      );
+      // null/undefined treated as length 0
+      expect(getColumnValues(0)).to.deep.equal(['', '', 'A', 'B, C']);
+    });
+  });
+
   describe('Header class names', () => {
     it('should have the sortable class when the column is sortable', () => {
       render(

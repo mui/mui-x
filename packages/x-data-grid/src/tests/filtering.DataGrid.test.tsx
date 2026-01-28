@@ -1409,6 +1409,89 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
+  describe('column type: multiSelect', () => {
+    it('should render multiSelect column without errors', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, tags: ['React', 'TypeScript'] },
+            { id: 2, tags: ['Node.js'] },
+            { id: 3, tags: [] },
+            { id: 4, tags: null },
+          ]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js', 'GraphQL'],
+            },
+          ]}
+        />,
+      );
+      // Default valueFormatter joins array values
+      expect(getColumnValues(0)).to.deep.equal(['React, TypeScript', 'Node.js', '', '']);
+    });
+
+    it('should format values with object valueOptions', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, categories: ['fe', 'be'] },
+            { id: 2, categories: ['db'] },
+          ]}
+          columns={[
+            {
+              field: 'categories',
+              type: 'multiSelect',
+              valueOptions: [
+                { value: 'fe', label: 'Frontend' },
+                { value: 'be', label: 'Backend' },
+                { value: 'db', label: 'Database' },
+              ],
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['Frontend, Backend', 'Database']);
+    });
+
+    it('should support custom separator', () => {
+      render(
+        <TestCase
+          rows={[{ id: 1, tags: ['React', 'TypeScript'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript'],
+              separator: ' | ',
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['React | TypeScript']);
+    });
+
+    it('should support function valueOptions', () => {
+      render(
+        <TestCase
+          rows={[
+            { id: 1, tags: ['A', 'B'], available: ['A', 'B', 'C'] },
+            { id: 2, tags: ['X'], available: ['X', 'Y'] },
+          ]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ({ row }) => row?.available || [],
+            },
+          ]}
+        />,
+      );
+      expect(getColumnValues(0)).to.deep.equal(['A, B', 'X']);
+    });
+  });
+
   describe('toolbar active filter count', () => {
     it('should not include operators with value when the value is empty', () => {
       const getFilterCount = (item: GridFilterItem) => {

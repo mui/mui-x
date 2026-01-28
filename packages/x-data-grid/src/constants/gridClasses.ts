@@ -484,6 +484,30 @@ export interface GridClasses {
    */
   editLongTextCellTextarea: string;
   /**
+   * Styles applied to the multi-select cell root element.
+   */
+  multiSelectCell: string;
+  /**
+   * Styles applied to each chip in the multi-select cell.
+   */
+  multiSelectCellChip: string;
+  /**
+   * Styles applied to the overflow "+N" chip in the multi-select cell.
+   */
+  multiSelectCellOverflow: string;
+  /**
+   * Styles applied to the multi-select cell expand popup.
+   */
+  multiSelectCellPopup: string;
+  /**
+   * Styles applied to the multi-select cell popper content.
+   */
+  multiSelectCellPopperContent: string;
+  /**
+   * Styles applied to the edit multi-select cell root element.
+   */
+  editMultiSelectCell: string;
+  /**
    * Styles applied to the filter icon element.
    */
   filterIcon: string;
@@ -1080,6 +1104,12 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editLongTextCellPopup',
   'editLongTextCellPopperContent',
   'editLongTextCellTextarea',
+  'multiSelectCell',
+  'multiSelectCellChip',
+  'multiSelectCellOverflow',
+  'multiSelectCellPopup',
+  'multiSelectCellPopperContent',
+  'editMultiSelectCell',
   'filler',
   'filler--borderBottom',
   'filler--pinnedLeft',
