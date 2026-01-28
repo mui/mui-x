@@ -8,7 +8,7 @@ import {
   applySortingToRowIds,
   upsertSortModel,
 } from './utils';
-import { selectSortModel, selectSortedRowIds, selectIsSorted } from './selectors';
+import { selectSortModel, selectSortedRowIds } from './selectors';
 import type { GridSortDirection, GridSortModel, SortingState } from './types';
 
 describe('Sorting Plugin', () => {
@@ -149,23 +149,6 @@ describe('Sorting Plugin', () => {
       it('should return sorted row IDs', () => {
         const state = createState({ sortedRowIds: [3, 1, 2] });
         expect(selectSortedRowIds(state)).toEqual([3, 1, 2]);
-      });
-    });
-
-    describe('selectIsSorted', () => {
-      it('should return false when no sorting', () => {
-        const state = createState();
-        expect(selectIsSorted(state)).toBe(false);
-      });
-
-      it('should return true when sorted', () => {
-        const state = createState({ sortModel: [{ field: 'name', sort: 'asc' }] });
-        expect(selectIsSorted(state)).toBe(true);
-      });
-
-      it('should return false when sortModel has null direction', () => {
-        const state = createState({ sortModel: [{ field: 'name', sort: null }] });
-        expect(selectIsSorted(state)).toBe(false);
       });
     });
   });
