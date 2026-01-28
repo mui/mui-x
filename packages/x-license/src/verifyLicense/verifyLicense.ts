@@ -207,7 +207,7 @@ export function verifyLicense({
       if (
         // 30 days grace
         new Date().getTime() < license.expiryTimestamp + 1000 * 3600 * 24 * 30 ||
-        process.env.NODE_ENV === 'production'
+        process.env.IS_TEST_ENV
       ) {
         return {
           status: LICENSE_STATUS.ExpiredAnnualGrace,
