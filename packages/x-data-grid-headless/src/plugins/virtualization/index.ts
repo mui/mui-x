@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { createSelector, Store, useStore } from '@base-ui/utils/store';
+import { createSelector, type Store, useStore } from '@base-ui/utils/store';
 import {
   useVirtualizer,
   LayoutDataGrid,
