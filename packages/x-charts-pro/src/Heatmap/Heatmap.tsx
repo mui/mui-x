@@ -414,6 +414,7 @@ Heatmap.propTypes = {
       data: PropTypes.array,
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
+      disableTickLabelOverlapPrevention: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       groups: PropTypes.arrayOf(
@@ -527,6 +528,7 @@ Heatmap.propTypes = {
       data: PropTypes.array,
       dataKey: PropTypes.string,
       disableLine: PropTypes.bool,
+      disableTickLabelOverlapPrevention: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
       groups: PropTypes.arrayOf(

@@ -40,6 +40,7 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
 
   const {
     disableTicks,
+    disableTickLabelOverlapPrevention,
     tickSize: tickSizeProp,
     valueFormatter,
     slotProps,
@@ -70,14 +71,16 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
     ordinalTimeTicks,
   });
 
-  const visibleLabels = getVisibleLabels(xTicks, {
-    tickLabelStyle: axisTickLabelProps.style,
-    tickLabelInterval,
-    tickLabelMinGap,
-    reverse,
-    isMounted,
-    isXInside: instance.isXInside,
-  });
+  const visibleLabels = disableTickLabelOverlapPrevention
+    ? new Set(xTicks)
+    : getVisibleLabels(xTicks, {
+        tickLabelStyle: axisTickLabelProps.style,
+        tickLabelInterval,
+        tickLabelMinGap,
+        reverse,
+        isMounted,
+        isXInside: instance.isXInside,
+      });
 
   /* If there's an axis title, the tick labels have less space to render  */
   const tickLabelsMaxHeight = Math.max(
@@ -88,15 +91,16 @@ function ChartsSingleXAxisTicks(inProps: ChartsSingleXAxisProps) {
       TICK_LABEL_GAP,
   );
 
-  const tickLabels = isHydrated
-    ? shortenLabels(
-        visibleLabels,
-        drawingArea,
-        tickLabelsMaxHeight,
-        isRtl,
-        axisTickLabelProps.style,
-      )
-    : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
+  const tickLabels =
+    !disableTickLabelOverlapPrevention && isHydrated
+      ? shortenLabels(
+          visibleLabels,
+          drawingArea,
+          tickLabelsMaxHeight,
+          isRtl,
+          axisTickLabelProps.style,
+        )
+      : new Map(Array.from(visibleLabels).map((item) => [item, item.formattedValue]));
 
   return (
     <React.Fragment>

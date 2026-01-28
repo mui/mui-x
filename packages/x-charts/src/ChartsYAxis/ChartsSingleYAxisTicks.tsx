@@ -35,6 +35,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
 
   const {
     disableTicks,
+    disableTickLabelOverlapPrevention,
     tickSize: tickSizeProp,
     valueFormatter,
     slotProps,
@@ -73,9 +74,10 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
       TICK_LABEL_GAP,
   );
 
-  const tickLabels = isHydrated
-    ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
-    : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
+  const tickLabels =
+    !disableTickLabelOverlapPrevention && isHydrated
+      ? shortenLabels(yTicks, drawingArea, tickLabelsMaxWidth, isRtl, axisTickLabelProps.style)
+      : new Map(Array.from(yTicks).map((item) => [item, item.formattedValue]));
 
   return (
     <React.Fragment>
