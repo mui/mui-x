@@ -5,6 +5,7 @@ import { type ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
 import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { type ChartsClipPathProps } from '@mui/x-charts/ChartsClipPath';
 import { type ChartsAxisProps, type XAxis } from '@mui/x-charts/internals';
+import type { ChartsAxisHighlightProps } from '@mui/x-charts';
 import { type ChartContainerPremiumProps } from '../ChartContainerPremium';
 import { type CandlestickChartProps } from './CandlestickChart';
 import { type CandlestickPlotProps } from './CandlestickPlot';
@@ -38,6 +39,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     skipAnimation,
     loading,
     className,
+    axisHighlight,
     ...other
   } = props;
 
@@ -64,6 +66,12 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     [series],
   );
 
+  const axisHighlightProps = {
+    ...axisHighlight,
+    x: axisHighlight?.x ?? ('line' as const),
+    y: axisHighlight?.y ?? ('line' as const),
+  } satisfies ChartsAxisHighlightProps;
+
   const chartContainerProps: ChartContainerPremiumProps<'ohlc', CandlestickChartPluginSignatures> =
     {
       ...other,
@@ -75,7 +83,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
       dataset,
       xAxis: xAxisWithDefault,
       yAxis,
-      disableAxisListener: true,
+      disableAxisListener: axisHighlightProps.x === 'none' && axisHighlightProps.y === 'none',
       className,
       skipAnimation,
       plugins: CANDLESTICK_CHART_PLUGINS,
@@ -123,6 +131,7 @@ export function useCandlestickChartProps(props: CandlestickChartProps) {
     clipPathGroupProps,
     overlayProps,
     chartsAxisProps,
+    axisHighlightProps,
     children,
   };
 }

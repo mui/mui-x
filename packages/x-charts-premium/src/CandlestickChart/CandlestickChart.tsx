@@ -23,6 +23,10 @@ import {
 import type { MakeOptional } from '@mui/x-internals/types';
 import { useThemeProps } from '@mui/material/styles';
 import { type ChartsSlotProps, type ChartsSlots } from '@mui/x-charts/internals';
+import {
+  ChartsAxisHighlight,
+  type ChartsAxisHighlightProps,
+} from '@mui/x-charts/ChartsAxisHighlight';
 import { type ChartContainerPremiumProps } from '../ChartContainerPremium';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type OHLCSeriesType } from '../models';
@@ -61,6 +65,12 @@ export interface CandlestickChartProps
    */
   grid?: Pick<ChartsGridProps, 'vertical' | 'horizontal'>;
   /**
+   * The configuration of axes highlight.
+   * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
+   * @default { x: 'line', y: 'line' }
+   */
+  axisHighlight?: ChartsAxisHighlightProps;
+  /**
    * Overridable component slots.
    * @default {}
    */
@@ -95,6 +105,7 @@ export const CandlestickChart = React.forwardRef(function CandlestickChart(
     clipPathGroupProps,
     overlayProps,
     chartsAxisProps,
+    axisHighlightProps,
     children,
   } = useCandlestickChartProps(props);
   const { chartDataProviderPremiumProps, chartsSurfaceProps } = useChartContainerPremiumProps(
@@ -114,6 +125,7 @@ export const CandlestickChart = React.forwardRef(function CandlestickChart(
           <g {...clipPathGroupProps}>
             <CandlestickPlot {...candlestickPlotProps} />
             <ChartsOverlay {...overlayProps} />
+            <ChartsAxisHighlight {...axisHighlightProps} />
           </g>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsClipPath {...clipPathProps} />
