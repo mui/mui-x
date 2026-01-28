@@ -126,11 +126,9 @@ describe('<PreferencesMenu />', () => {
   it('should show "Show empty days" ONLY in Agenda view when enabled in config', async () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
-        <SchedulerStoreRunner
+        <SchedulerStoreRunner<EventCalendarStore<any, any>>
           context={SchedulerStoreContext}
-          onMount={(store) =>
-            (store as unknown as EventCalendarStore<any, any>).setView('agenda', {} as any)
-          }
+          onMount={(store) => store.setView('agenda', {} as any)}
         />
         <PreferencesMenu />
       </EventCalendarProvider>,
@@ -145,11 +143,9 @@ describe('<PreferencesMenu />', () => {
   it('should NOT show "Show empty days" in non-Agenda views even when enabled in config', async () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
-        <SchedulerStoreRunner
+        <SchedulerStoreRunner<EventCalendarStore<any, any>>
           context={SchedulerStoreContext}
-          onMount={(store) =>
-            (store as unknown as EventCalendarStore<any, any>).setView('week', {} as any)
-          }
+          onMount={(store) => store.setView('week', {} as any)}
         />
         <PreferencesMenu />
       </EventCalendarProvider>,
@@ -169,11 +165,9 @@ describe('<PreferencesMenu />', () => {
           toggleEmptyDaysInAgenda: false,
         }}
       >
-        <SchedulerStoreRunner
+        <SchedulerStoreRunner<EventCalendarStore<any, any>>
           context={SchedulerStoreContext}
-          onMount={(store) =>
-            (store as unknown as EventCalendarStore<any, any>).setView('agenda', {} as any)
-          }
+          onMount={(store) => store.setView('agenda', {} as any)}
         />
         <PreferencesMenu />
       </EventCalendarProvider>,

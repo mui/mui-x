@@ -15,6 +15,7 @@ import {
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDraggableDialogContent } from './EventDraggableDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
@@ -324,7 +325,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
+          <SchedulerStoreRunner<EventCalendarStore<any, any>>
             context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
@@ -368,7 +369,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
+          <SchedulerStoreRunner<EventCalendarStore<any, any>>
             context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
@@ -411,7 +412,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
+          <SchedulerStoreRunner<EventCalendarStore<any, any>>
             context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
@@ -469,7 +470,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
-          <SchedulerStoreRunner
+          <SchedulerStoreRunner<EventCalendarStore<any, any>>
             context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
@@ -537,7 +538,7 @@ describe('<EventDraggableDialogContent open />', () => {
           onEventsChange={onEventsChange}
           displayTimezone={displayTimezone}
         >
-          <SchedulerStoreRunner
+          <SchedulerStoreRunner<EventCalendarStore<any, any>>
             context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
