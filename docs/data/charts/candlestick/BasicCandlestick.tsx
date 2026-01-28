@@ -16,7 +16,7 @@ export default function BasicCandlestick() {
     <CandlestickChart
       xAxis={[{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
       series={[{ data }]}
-      height={500}
+      height={400}
     />
   );
 }
