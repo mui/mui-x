@@ -184,7 +184,6 @@ export interface SortingInternalOptions {
 export interface SortingSelectors {
   sortModel: (state: SortingState) => GridSortModel;
   sortedRowIds: (state: SortingState) => GridRowId[];
-  isSorted: (state: SortingState) => boolean;
 }
 
 /**
