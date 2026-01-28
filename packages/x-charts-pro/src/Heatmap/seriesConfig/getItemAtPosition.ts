@@ -48,6 +48,8 @@ export default function getItemAtPosition(
     return {
       type: 'heatmap',
       seriesId,
+      xIndex,
+      yIndex,
     };
   }
 
@@ -55,5 +57,7 @@ export default function getItemAtPosition(
     type: 'heatmap',
     seriesId,
     dataIndex,
+    xIndex,
+    yIndex,
   };
 }
