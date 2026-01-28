@@ -70,6 +70,18 @@ export type AutocompleteProps<
    * @param {string} value The new value of the input.
    */
   onInputChange?: (event: React.SyntheticEvent, value: string) => void;
+  /** Control the popup open state. */
+  open?: boolean;
+  /** Callback fired when the popup requests to be opened. */
+  onOpen?: (event: React.SyntheticEvent) => void;
+  /** Callback fired when the popup requests to be closed. */
+  onClose?: (event: React.SyntheticEvent, reason: string) => void;
+  /** If true, the popup won't close when a value is selected. */
+  disableCloseOnSelect?: boolean;
+  /** If true, the popup opens when the input is focused. */
+  openOnFocus?: boolean;
+  /** If true, the first option is automatically highlighted. */
+  autoHighlight?: boolean;
 
   /* New props */
 

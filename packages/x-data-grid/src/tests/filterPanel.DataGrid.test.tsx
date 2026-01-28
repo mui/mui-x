@@ -519,4 +519,144 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(getSelectByName('Columns').value).to.equal('country');
     expect(getSelectByName('Operator').value).to.equal('is');
   });
+
+  describe('multiSelect columns', () => {
+    const multiSelectProps: DataGridProps = {
+      autoHeight: isJSDOM,
+      disableVirtualization: true,
+      rows: [
+        { id: 1, tags: ['React', 'TypeScript'] },
+        { id: 2, tags: ['Node.js'] },
+        { id: 3, tags: [] },
+      ],
+      columns: [
+        { field: 'id' },
+        {
+          field: 'tags',
+          type: 'multiSelect',
+          valueOptions: ['React', 'TypeScript', 'Node.js', 'GraphQL'],
+        },
+      ],
+    };
+
+    it('should show dropdown for "contains" operator', () => {
+      render(
+        <DataGrid
+          {...multiSelectProps}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'tags', operator: 'contains' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      expect(getSelectByName('Operator').value).to.equal('contains');
+      // The input for contains is a select dropdown
+      expect(getSelectByName('Value')).not.to.equal(null);
+    });
+
+    it('should show no input for "isEmpty" operator', () => {
+      render(
+        <DataGrid
+          {...multiSelectProps}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'tags', operator: 'isEmpty' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      expect(getSelectByName('Operator').value).to.equal('isEmpty');
+      // isEmpty doesn't have an input
+      expect(screen.queryByRole('textbox', { name: 'Value' })).to.equal(null);
+      expect(screen.queryByRole('combobox', { name: 'Value' })).to.equal(null);
+    });
+
+    it('should reset value when switching to operator without input', () => {
+      const onFilterModelChange = spy();
+
+      render(
+        <DataGrid
+          {...multiSelectProps}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'tags', operator: 'contains', value: 'React' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+          onFilterModelChange={onFilterModelChange}
+        />,
+      );
+
+      expect(getSelectByName('Operator').value).to.equal('contains');
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+
+      setOperatorValue('isEmpty');
+
+      expect(onFilterModelChange.callCount).to.equal(1);
+      expect(onFilterModelChange.lastCall.args[0].items[0].value).to.equal(undefined);
+      expect(getSelectByName('Operator').value).to.equal('isEmpty');
+    });
+
+    it('should filter correctly with "contains" operator', () => {
+      render(
+        <DataGrid
+          {...multiSelectProps}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'tags', operator: 'contains', value: 'React' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['1']);
+    });
+
+    it('should filter correctly with "isEmpty" operator', () => {
+      render(
+        <DataGrid
+          {...multiSelectProps}
+          initialState={{
+            filter: {
+              filterModel: {
+                items: [{ field: 'tags', operator: 'isEmpty' }],
+              },
+            },
+            preferencePanel: {
+              open: true,
+              openedPanelValue: GridPreferencePanelsValue.filters,
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['3']);
+    });
+  });
 });

@@ -1762,6 +1762,12 @@
       "isGlobal": false
     },
     {
+      "key": "editMultiSelectCell",
+      "className": "MuiDataGridPro-editMultiSelectCell",
+      "description": "Styles applied to the edit multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPro-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1927,6 +1933,36 @@
       "key": "menuOpen",
       "className": "MuiDataGridPro-menuOpen",
       "description": "Styles applied to the menu icon element if the menu is open.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCell",
+      "className": "MuiDataGridPro-multiSelectCell",
+      "description": "Styles applied to the multi-select cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellChip",
+      "className": "MuiDataGridPro-multiSelectCellChip",
+      "description": "Styles applied to each chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellOverflow",
+      "className": "MuiDataGridPro-multiSelectCellOverflow",
+      "description": "Styles applied to the overflow \"+N\" chip in the multi-select cell.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopperContent",
+      "className": "MuiDataGridPro-multiSelectCellPopperContent",
+      "description": "Styles applied to the multi-select cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "multiSelectCellPopup",
+      "className": "MuiDataGridPro-multiSelectCellPopup",
+      "description": "Styles applied to the multi-select cell expand popup.",
       "isGlobal": false
     },
     {

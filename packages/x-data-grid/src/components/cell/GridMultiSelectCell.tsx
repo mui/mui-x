@@ -9,6 +9,7 @@ import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import { gridFilterModelSelector } from '../../hooks/features/filter/gridFilterSelector';
 import { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
 import { GridSlotProps } from '../../models/gridSlotsComponent';
@@ -122,15 +123,51 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
+  const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 
   const [popupOpen, setPopupOpen] = React.useState(false);
   const [visibleCount, setVisibleCount] = React.useState<number | null>(null);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const chipsRef = React.useRef<Map<number, HTMLDivElement>>(new Map());
+  // Cache chip widths so we can calculate visible chips even when some aren't rendered
+  const chipWidthsRef = React.useRef<Map<number, number>>(new Map());
   const overflowChipRef = React.useRef<HTMLDivElement>(null);
 
-  const arrayValue = Array.isArray(value) ? value : [];
+  const rawArrayValue = Array.isArray(value) ? value : [];
   const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : [];
+
+  // Reorder array to show filtered value first (improves UX when filtering)
+  const arrayValue = React.useMemo(() => {
+    if (rawArrayValue.length === 0) {
+      return rawArrayValue;
+    }
+    const activeFilter = filterModel.items.find(
+      (item) => item.field === colDef.field && item.operator === 'contains' && item.value != null,
+    );
+    if (!activeFilter) {
+      return rawArrayValue;
+    }
+    const filterValue = activeFilter.value;
+    const index = rawArrayValue.indexOf(filterValue);
+    if (index <= 0) {
+      // Already first or not found
+      return rawArrayValue;
+    }
+    // Move filtered value to front
+    const reordered = [...rawArrayValue];
+    reordered.splice(index, 1);
+    reordered.unshift(filterValue);
+    return reordered;
+  }, [rawArrayValue, filterModel.items, colDef.field]);
+
+  // Create a stable key for the array values to detect when chips need remeasuring
+  const arrayKey = React.useMemo(() => arrayValue.join('\0'), [arrayValue]);
+
+  // Clear chip width cache when array values change
+  React.useEffect(() => {
+    chipWidthsRef.current.clear();
+    setVisibleCount(null);
+  }, [arrayKey]);
 
   // Measure chips and calculate visible count
   React.useEffect(() => {
@@ -151,6 +188,13 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
         return;
       }
 
+      // Update cached widths from any currently rendered chips
+      chipsRef.current.forEach((chipEl, index) => {
+        if (chipEl) {
+          chipWidthsRef.current.set(index, chipEl.offsetWidth);
+        }
+      });
+
       const containerWidth = container.clientWidth;
       const gap = 4;
       const overflowChipWidth = 40; // approximate width for "+N" chip
@@ -159,12 +203,16 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       let count = 0;
 
       for (let i = 0; i < arrayValue.length; i += 1) {
+        // Use cached width if chip isn't rendered, otherwise measure from DOM
         const chipEl = chipsRef.current.get(i);
-        if (!chipEl) {
-          continue;
+        const chipWidth = chipEl ? chipEl.offsetWidth : chipWidthsRef.current.get(i);
+        if (chipWidth === undefined) {
+          // Chip not measured yet, need to render more chips first
+          // Set visibleCount to show at least up to this index so it can be measured
+          setVisibleCount(i + 1);
+          return;
         }
 
-        const chipWidth = chipEl.offsetWidth;
         const spaceNeeded =
           usedWidth + chipWidth + (count > 0 ? gap : 0) + (i < arrayValue.length - 1 ? overflowChipWidth + gap : 0);
 

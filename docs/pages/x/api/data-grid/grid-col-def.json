@@ -93,7 +93,7 @@
     "sortable": { "type": { "description": "boolean" }, "default": "true" },
     "sortComparator": { "type": { "description": "GridComparatorFn&lt;V&gt;" } },
     "sortingOrder": { "type": { "description": "readonly GridSortDirection[]" } },
-    "type": { "type": { "description": "GridColType" }, "default": "'singleSelect'" },
+    "type": { "type": { "description": "GridColType" }, "default": "'multiSelect'" },
     "valueFormatter": { "type": { "description": "GridValueFormatter&lt;R, V, F&gt;" } },
     "valueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
     "valueParser": { "type": { "description": "GridValueParser&lt;R, V, F&gt;" } },

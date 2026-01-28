@@ -11,3 +11,4 @@ export * from './GridSkeletonCell';
 export * from './GridLongTextCell';
 export * from './GridEditLongTextCell';
 export * from './GridMultiSelectCell';
+export * from './GridEditMultiSelectCell';

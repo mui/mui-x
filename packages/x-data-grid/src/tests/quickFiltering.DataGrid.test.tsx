@@ -787,4 +787,89 @@ describe('<DataGrid /> - Quick filter', () => {
       rows: [],
     });
   });
+
+  describe('multiSelect columns', () => {
+    it('should match any array element', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[
+            { id: 0, tags: ['React', 'TypeScript'] },
+            { id: 1, tags: ['Node.js'] },
+            { id: 2, tags: [] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+            },
+          ]}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+
+      await user.type(screen.getByRole('searchbox'), 'React');
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0']);
+      });
+    });
+
+    it('should be case-insensitive', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[
+            { id: 0, tags: ['React', 'TypeScript'] },
+            { id: 1, tags: ['Node.js'] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: ['React', 'TypeScript', 'Node.js'],
+            },
+          ]}
+        />,
+      );
+
+      await user.type(screen.getByRole('searchbox'), 'react');
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0']);
+      });
+    });
+
+    it('should search labels with object valueOptions', async () => {
+      const { user } = render(
+        <TestCase
+          rows={[
+            { id: 0, categories: ['fe', 'be'] },
+            { id: 1, categories: ['db'] },
+          ]}
+          columns={[
+            { field: 'id' },
+            {
+              field: 'categories',
+              type: 'multiSelect',
+              valueOptions: [
+                { value: 'fe', label: 'Frontend' },
+                { value: 'be', label: 'Backend' },
+                { value: 'db', label: 'Database' },
+              ],
+            },
+          ]}
+        />,
+      );
+
+      // Search by label (not value)
+      await user.type(screen.getByRole('searchbox'), 'Frontend');
+
+      await waitFor(() => {
+        expect(getColumnValues(0)).to.deep.equal(['0']);
+      });
+    });
+  });
 });

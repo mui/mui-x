@@ -1493,6 +1493,114 @@ describe('<DataGrid /> - Filter', () => {
       // Chips render the labels without separators
       expect(getColumnValues(0)).to.deep.equal(['AB', 'X']);
     });
+
+    describe('filtering operators', () => {
+      const getRows = (item: Omit<GridFilterItem, 'field'>) => {
+        const { unmount } = render(
+          <TestCase
+            filterModel={{
+              items: [{ field: 'tags', ...item }],
+            }}
+            rows={[
+              { id: 0, tags: undefined },
+              { id: 1, tags: null },
+              { id: 2, tags: [] },
+              { id: 3, tags: ['React'] },
+              { id: 4, tags: ['React', 'TypeScript'] },
+              { id: 5, tags: ['Node.js'] },
+            ]}
+            columns={[
+              { field: 'id' },
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['React', 'TypeScript', 'Node.js', 'GraphQL'],
+              },
+            ]}
+          />,
+        );
+
+        const values = getColumnValues(0);
+        unmount();
+        return values;
+      };
+
+      const ALL_ROWS = ['0', '1', '2', '3', '4', '5'];
+
+      it('should filter with operator "contains"', () => {
+        expect(getRows({ operator: 'contains', value: 'React' })).to.deep.equal(['3', '4']);
+        expect(getRows({ operator: 'contains', value: 'Node.js' })).to.deep.equal(['5']);
+        expect(getRows({ operator: 'contains', value: 'GraphQL' })).to.deep.equal([]);
+        expect(getRows({ operator: 'contains', value: '' })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'contains', value: undefined })).to.deep.equal(ALL_ROWS);
+      });
+
+      it('should filter with operator "doesNotContain"', () => {
+        expect(getRows({ operator: 'doesNotContain', value: 'React' })).to.deep.equal([
+          '0',
+          '1',
+          '2',
+          '5',
+        ]);
+        expect(getRows({ operator: 'doesNotContain', value: 'Node.js' })).to.deep.equal([
+          '0',
+          '1',
+          '2',
+          '3',
+          '4',
+        ]);
+        expect(getRows({ operator: 'doesNotContain', value: '' })).to.deep.equal(ALL_ROWS);
+        expect(getRows({ operator: 'doesNotContain', value: undefined })).to.deep.equal(ALL_ROWS);
+      });
+
+      it('should filter with operator "isEmpty"', () => {
+        expect(getRows({ operator: 'isEmpty' })).to.deep.equal(['0', '1', '2']);
+      });
+
+      it('should filter with operator "isNotEmpty"', () => {
+        expect(getRows({ operator: 'isNotEmpty' })).to.deep.equal(['3', '4', '5']);
+      });
+
+      it('should work with object valueOptions', () => {
+        const getRowsWithObjects = (item: Omit<GridFilterItem, 'field'>) => {
+          const { unmount } = render(
+            <TestCase
+              filterModel={{
+                items: [{ field: 'categories', ...item }],
+              }}
+              rows={[
+                { id: 0, categories: [] },
+                { id: 1, categories: ['fe'] },
+                { id: 2, categories: ['fe', 'be'] },
+                { id: 3, categories: ['db'] },
+              ]}
+              columns={[
+                { field: 'id' },
+                {
+                  field: 'categories',
+                  type: 'multiSelect',
+                  valueOptions: [
+                    { value: 'fe', label: 'Frontend' },
+                    { value: 'be', label: 'Backend' },
+                    { value: 'db', label: 'Database' },
+                  ],
+                },
+              ]}
+            />,
+          );
+
+          const values = getColumnValues(0);
+          unmount();
+          return values;
+        };
+
+        expect(getRowsWithObjects({ operator: 'contains', value: 'fe' })).to.deep.equal(['1', '2']);
+        expect(getRowsWithObjects({ operator: 'doesNotContain', value: 'fe' })).to.deep.equal([
+          '0',
+          '3',
+        ]);
+      });
+    });
   });
 
   describe('toolbar active filter count', () => {
