@@ -16,7 +16,7 @@ import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
 import { useBarChartProps } from '@mui/x-charts/internals';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import {
@@ -112,7 +112,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <ChartsGrid {...gridProps} />
           <g {...clipPathGroupProps}>
             <BarPlot {...barPlotProps} />
@@ -124,7 +124,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
           <ChartsBrushOverlay />
           <ChartsClipPath {...clipPathProps} />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>

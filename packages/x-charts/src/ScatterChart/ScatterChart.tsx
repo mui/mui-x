@@ -32,7 +32,7 @@ import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartsSvgSurface } from '../ChartsSvgSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
 import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 import type { ScatterChartPluginSignatures } from './ScatterChart.plugins';
@@ -166,7 +166,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
           <ChartsGrid {...gridProps} />
           <g data-drawing-container>
@@ -177,7 +177,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
           <ChartsAxisHighlight {...axisHighlightProps} />
           <FocusedScatterMark />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProvider>

@@ -5,7 +5,7 @@ import { useThemeProps } from '@mui/material/styles';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsAxis, type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
 import { type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import {
   type ChartsAxisSlots,
   type ChartsAxisSlotProps,
@@ -176,7 +176,7 @@ const Heatmap = React.forwardRef(function Heatmap(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
+        <ChartsSvgSurface ref={ref} sx={sx}>
           <g {...clipPathGroupProps}>
             <HeatmapPlot {...heatmapPlotProps} />
             <FocusedHeatmapCell />
@@ -186,7 +186,7 @@ const Heatmap = React.forwardRef(function Heatmap(
           <ChartsClipPath {...clipPathProps} />
           <ChartsBrushOverlay />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>

@@ -16,7 +16,7 @@ import {
 import { useThemeProps } from '@mui/material/styles';
 import { useRadarChartProps } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
@@ -98,7 +98,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps} ref={ref}>
+        <ChartsSvgSurface {...chartsSurfaceProps} ref={ref}>
           <RadarGrid {...radarGrid} />
           <RadarMetricLabels />
           <RadarSeriesArea />
@@ -106,7 +106,7 @@ const RadarChartPro = React.forwardRef(function RadarChartPro(
           <RadarSeriesMarks />
           <ChartsOverlay {...overlayProps} />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </RadarDataProvider>

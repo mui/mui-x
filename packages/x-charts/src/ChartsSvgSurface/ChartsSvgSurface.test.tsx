@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartProvider } from '../context/ChartProvider';
 
 // JSDOM doesn't implement SVGElement
-describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
+describe.skipIf(isJSDOM)('<ChartsSvgSurface />', () => {
   const { render } = createRenderer();
 
   it('should pass ref when it is added directly to component', () => {
@@ -13,9 +13,9 @@ describe.skipIf(isJSDOM)('<ChartsSurface />', () => {
 
     render(
       <ChartProvider pluginParams={{ width: 100, height: 100, series: [] }}>
-        <ChartsSurface ref={ref}>
+        <ChartsSvgSurface ref={ref}>
           <rect width={100} height={100} />
-        </ChartsSurface>
+        </ChartsSvgSurface>
       </ChartProvider>,
     );
 

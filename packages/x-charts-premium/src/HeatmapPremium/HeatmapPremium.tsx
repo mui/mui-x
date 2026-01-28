@@ -4,8 +4,12 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { FocusedHeatmapCell, type HeatmapProps, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
+import {
+  FocusedHeatmapCell,
+  type HeatmapProps,
+  HeatmapTooltip,
+} from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -16,7 +20,7 @@ import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
-export interface HeatmapPremiumProps extends HeatmapProps {}
+export interface HeatmapPremiumProps extends HeatmapProps { }
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   inProps: HeatmapPremiumProps,
@@ -47,7 +51,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface ref={ref} sx={sx}>
+        <ChartsSvgSurface ref={ref} sx={sx}>
           <g {...clipPathGroupProps}>
             <HeatmapPlotPremium {...heatmapPlotPremiumProps} />
             <FocusedHeatmapCell />
@@ -57,7 +61,7 @@ const HeatmapPremium = React.forwardRef(function HeatmapPremium(
           <ChartsClipPath {...clipPathProps} />
           <ChartsBrushOverlay />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!loading && <Tooltip {...slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPremium>

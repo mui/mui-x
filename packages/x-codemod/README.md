@@ -80,9 +80,7 @@ The corresponding sub-sections are listed below
 
 - [`preset-safe-for-charts`](#preset-safe-for-charts-v900)
 
-### Charts codemods
-
-#### 🚀 `preset-safe` for Charts v9.0.0
+### 🚀 `preset-safe` for Charts v9.0.0
 
 The `preset-safe` codemods for Charts.
 
@@ -96,6 +94,7 @@ The list includes these transformers
 
 - [`replace-heatmap-hide-legend-false`](#replace-heatmap-hide-legend-false)
 - [`rename-chart-api-import`](#rename-chart-api-import)
+- [`rename-charts-surface`](#rename-charts-surface)
 - [`rename-id-to-series-id`](#rename-id-to-series-id)
 
 ### `replace-heatmap-hide-legend-false`
@@ -142,7 +141,18 @@ Moves the `ChartApi` type import from `@mui/x-charts/ChartContainer` to `@mui/x-
 +import type { ChartApi } from '@mui/x-charts/context';
 ```
 
-#### `rename-id-to-series-id`
+### `rename-charts-surface`
+
+Renames the `ChartsSurface` component to `ChartsSvgSurface` to make it clearer that it renders an SVG element.
+
+```diff
+-import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
+-import { chartsSurfaceClasses, ChartsSurfaceClasses } from '@mui/x-charts/ChartsSurface';
++import { ChartsSvgSurface, ChartsSvgSurfaceProps } from '@mui/x-charts/ChartsSvgSurface';
++import { chartsSvgSurfaceClasses, ChartsSvgSurfaceClasses } from '@mui/x-charts/ChartsSvgSurface';
+```
+
+### `rename-id-to-series-id`
 
 Rename the props `id` to `seriesId`.
 

@@ -8,7 +8,7 @@ import { BarPlot } from '../BarChart';
 import { LinePlot, AreaPlot, LineHighlightPlot } from '../LineChart';
 import { type ChartContainerProps } from '../ChartContainer';
 import { ChartDataProvider } from '../ChartDataProvider';
-import { ChartsSurface } from '../ChartsSurface';
+import { ChartsSvgSurface } from '../ChartsSvgSurface';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
 import { ChartsTooltip } from '../ChartsTooltip';
 import type {
@@ -296,7 +296,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
       highlightedAxis={highlightedAxis}
       highlightedItem={highlightedItem}
     >
-      <ChartsSurface className={className} ref={ref} sx={sx} {...other}>
+      <ChartsSvgSurface className={className} ref={ref} sx={sx} {...other}>
         <g clipPath={`url(#${clipPathId})`}>
           {plotType === 'bar' && <BarPlot skipAnimation slots={slots} slotProps={slotProps} />}
 
@@ -316,7 +316,7 @@ const SparkLineChart = React.forwardRef(function SparkLineChart(
         {disableClipping ? null : <ChartsClipPath id={clipPathId} offset={clipPathOffset} />}
         <ChartsAxisHighlight {...axisHighlight} />
         {children}
-      </ChartsSurface>
+      </ChartsSvgSurface>
       {showTooltip && <Tooltip {...props.slotProps?.tooltip} />}
     </ChartDataProvider>
   );

@@ -6,7 +6,7 @@ import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOver
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { type MakeOptional } from '@mui/x-internals/types';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import {
   ChartsAxisHighlight,
   type ChartsAxisHighlightProps,
@@ -107,14 +107,14 @@ const FunnelChart = React.forwardRef(function FunnelChart(
     >
       <ChartsWrapper {...chartsWrapperProps}>
         {!themedProps.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <FunnelPlot {...funnelPlotProps} />
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
           <ChartsAxis {...chartsAxisProps} />
           <FocusedFunnelSection />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>

@@ -1,6 +1,6 @@
 'use client';
 import type * as React from 'react';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
+import { type ChartsSvgSurfaceProps } from '../ChartsSvgSurface';
 import { type ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
 import { type ChartSeriesType } from '../models/seriesType/config';
@@ -12,7 +12,7 @@ export type UseChartContainerPropsReturnValue<
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
   chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
-  chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
+  chartsSurfaceProps: ChartsSvgSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
 
@@ -66,7 +66,7 @@ export const useChartContainerProps = <
     ...other
   } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
-  const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
+  const chartsSurfaceProps: ChartsSvgSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
     desc,
     sx,

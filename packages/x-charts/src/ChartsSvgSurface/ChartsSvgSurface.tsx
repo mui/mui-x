@@ -17,11 +17,11 @@ import {
   selectorChartsHasFocusedItem,
   selectorChartsIsKeyboardNavigationEnabled,
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
-import { useUtilityClasses } from './chartsSurfaceClasses';
+import { useUtilityClasses } from './chartsSvgSurfaceClasses';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
 import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 
-export interface ChartsSurfaceProps extends Omit<
+export interface ChartsSvgSurfaceProps extends Omit<
   React.SVGProps<SVGSVGElement>,
   'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
 > {
@@ -32,8 +32,8 @@ export interface ChartsSurfaceProps extends Omit<
   children?: React.ReactNode;
 }
 
-const ChartsSurfaceStyles = styled('svg', {
-  name: 'MuiChartsSurface',
+const ChartsSvgSurfaceStyles = styled('svg', {
+  name: 'MuiChartsSvgSurface',
   slot: 'Root',
 })<{ ownerState: { width?: number; height?: number } }>(({ ownerState }) => ({
   width: ownerState.width ?? '100%',
@@ -64,10 +64,10 @@ const ChartsSurfaceStyles = styled('svg', {
  *
  * API:
  *
- * - [ChartsSurface API](https://mui.com/x/api/charts/charts-surface/)
+ * - [ChartsSvgSurface API](https://mui.com/x/api/charts/charts-surface/)
  */
-const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(function ChartsSurface(
-  inProps: ChartsSurfaceProps,
+const ChartsSvgSurface = React.forwardRef<SVGSVGElement, ChartsSvgSurfaceProps>(function ChartsSvgSurface(
+  inProps: ChartsSvgSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
   const { store, instance } = useChartContext<
@@ -85,7 +85,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
 
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
-  const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
+  const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSvgSurface' });
 
   const { children, className, title, desc, ...other } = themeProps;
 
@@ -93,7 +93,7 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
-    <ChartsSurfaceStyles
+    <ChartsSvgSurfaceStyles
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
       className={clsx(classes.root, className)}
@@ -118,11 +118,11 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       {desc && <desc>{desc}</desc>}
       <ChartsAxesGradients />
       {hasIntrinsicSize && children}
-    </ChartsSurfaceStyles>
+    </ChartsSvgSurfaceStyles>
   );
 });
 
-ChartsSurface.propTypes = {
+ChartsSvgSurface.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -138,4 +138,4 @@ ChartsSurface.propTypes = {
   title: PropTypes.string,
 } as any;
 
-export { ChartsSurface };
+export { ChartsSvgSurface };

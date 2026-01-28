@@ -30,9 +30,9 @@ export interface ChartsComponents<Theme = unknown> {
     defaultProps?: ComponentsProps['MuiChartsTooltip'];
     styleOverrides?: ComponentsOverrides<Theme>['MuiChartsTooltip'];
   };
-  MuiChartsSurface?: {
-    defaultProps?: ComponentsProps['MuiChartsSurface'];
-    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSurface'];
+  MuiChartsSvgSurface?: {
+    defaultProps?: ComponentsProps['MuiChartsSvgSurface'];
+    styleOverrides?: ComponentsOverrides<Theme>['MuiChartsSvgSurface'];
   };
   MuiChartDataProvider?: {
     defaultProps?: ComponentsProps['MuiChartDataProvider'];

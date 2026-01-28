@@ -12,7 +12,7 @@ import {
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsGrid } from '@mui/x-charts/ChartsGrid';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsTooltip, type ChartsTooltipProps } from '@mui/x-charts/ChartsTooltip';
 import { useScatterChartProps } from '@mui/x-charts/internals';
@@ -124,7 +124,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
-        <ChartsSurface {...chartsSurfaceProps}>
+        <ChartsSvgSurface {...chartsSurfaceProps}>
           <ChartsAxis {...chartsAxisProps} />
           <ChartZoomSlider />
           <ChartsGrid {...gridProps} />
@@ -136,7 +136,7 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
           <ChartsAxisHighlight {...axisHighlightProps} />
           <ChartsBrushOverlay />
           {children}
-        </ChartsSurface>
+        </ChartsSvgSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
       </ChartsWrapper>
     </ChartDataProviderPro>

@@ -2,7 +2,7 @@ import { type BarLabelProps } from '../BarChart/BarLabel';
 import { type BarChartProps } from '../BarChart/BarChart';
 import { type ChartsGridProps } from '../ChartsGrid';
 import { type ChartsLegendProps } from '../ChartsLegend';
-import { type ChartsSurfaceProps } from '../ChartsSurface';
+import { type ChartsSvgSurfaceProps } from '../ChartsSvgSurface';
 import { type ChartsTooltipProps } from '../ChartsTooltip';
 import { type LineChartProps } from '../LineChart/LineChart';
 import { type ScatterChartProps } from '../ScatterChart/ScatterChart';
@@ -18,7 +18,7 @@ export interface ChartsComponentsPropsList {
   MuiChartsLegend: ChartsLegendProps;
   MuiChartsLocalizationProvider: ChartsLocalizationProviderProps;
   MuiChartsTooltip: ChartsTooltipProps;
-  MuiChartsSurface: ChartsSurfaceProps;
+  MuiChartsSvgSurface: ChartsSvgSurfaceProps;
 
   MuiChartDataProvider: ChartDataProviderProps;
 

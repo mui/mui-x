@@ -2,7 +2,7 @@ import { vi } from 'vitest';
 import { createRenderer, waitFor } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
+import { ChartsSvgSurface } from '@mui/x-charts/ChartsSvgSurface';
 import { ChartsAxisHighlight, chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
 import { useChartCartesianAxis } from './useChartCartesianAxis';
 import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
@@ -24,7 +24,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         margin={0}
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
-        <ChartsSurface />
+        <ChartsSvgSurface />
       </ChartDataProvider>,
     );
 
@@ -82,7 +82,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         margin={0}
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
-        <ChartsSurface />
+        <ChartsSvgSurface />
       </ChartDataProvider>,
     );
 
@@ -117,7 +117,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         margin={0}
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
-        <ChartsSurface />
+        <ChartsSvgSurface />
       </ChartDataProvider>,
     );
 
@@ -149,7 +149,7 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         margin={0}
         onHighlightedAxisChange={onHighlightedAxisChange}
       >
-        <ChartsSurface />
+        <ChartsSvgSurface />
       </ChartDataProvider>,
     );
 
@@ -182,9 +182,9 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         height={100}
         margin={0}
       >
-        <ChartsSurface>
+        <ChartsSvgSurface>
           <ChartsAxisHighlight y="line" />
-        </ChartsSurface>
+        </ChartsSvgSurface>
       </ChartDataProvider>,
     );
 
@@ -207,9 +207,9 @@ describe.skipIf(isJSDOM)('useChartCartesianAxis - axis highlight', () => {
         height={100}
         margin={0}
       >
-        <ChartsSurface>
+        <ChartsSvgSurface>
           <ChartsAxisHighlight x="line" />
-        </ChartsSurface>
+        </ChartsSvgSurface>
       </ChartDataProvider>,
     );
 
