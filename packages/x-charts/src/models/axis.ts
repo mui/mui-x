@@ -530,7 +530,10 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
-  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  domainLimit?:
+    | 'nice'
+    | 'strict'
+    | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */

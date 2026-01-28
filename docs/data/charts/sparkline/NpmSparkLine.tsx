@@ -16,7 +16,7 @@ const settings: SparkLineChartProps = {
   margin: { bottom: 0, top: 5, left: 4, right: 0 },
   xAxis: { id: 'week-axis', data: weeks },
   yAxis: {
-    domainLimit: (_, maxValue: number) => ({
+    domainLimit: (_, maxValue) => ({
       min: -maxValue / 6, //  Hack to add 5px bellow 0 like npm.
       max: maxValue,
     }),
