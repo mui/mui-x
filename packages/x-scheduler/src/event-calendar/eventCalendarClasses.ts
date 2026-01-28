@@ -1,7 +1,11 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
+import {
+  EventDialogClasses,
+  eventDialogClassKeys,
+} from '../internals/components/event-draggable-dialog/eventDialogClasses';
 
-export interface EventCalendarClasses {
+export interface EventCalendarClasses extends EventDialogClasses {
   /** Styles applied to the root element. */
   root: string;
   /** Styles applied to the side panel element. */
@@ -292,5 +296,6 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'resourceLegendColor',
     'eventItemCardContent',
     'eventItemLinesClamp',
+    ...eventDialogClassKeys,
   ],
 );

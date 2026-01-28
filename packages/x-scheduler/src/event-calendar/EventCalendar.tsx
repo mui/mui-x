@@ -30,6 +30,8 @@ import { schedulerTokens } from '../internals/utils/tokens';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 import { EventCalendarClasses, getEventCalendarUtilityClass } from './eventCalendarClasses';
 import { EventCalendarClassesContext } from './EventCalendarClassesContext';
+import { eventDialogSlots } from '../internals/components/event-draggable-dialog/eventDialogClasses';
+import { EventDialogClassesContext } from '../internals/components/event-draggable-dialog/EventDialogClassesContext';
 
 const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) => {
   const slots = {
@@ -126,6 +128,7 @@ const useUtilityClasses = (classes: Partial<EventCalendarClasses> | undefined) =
     resourceLegendColor: ['resourceLegendColor'],
     eventItemCardContent: ['eventItemCardContent'],
     eventItemLinesClamp: ['eventItemLinesClamp'],
+    ...eventDialogSlots,
   };
 
   return composeClasses(slots, getEventCalendarUtilityClass, classes);
@@ -261,52 +264,54 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
       <SchedulerStoreContext.Provider value={store as any}>
         <TranslationsProvider translations={translations}>
           <EventCalendarClassesContext.Provider value={classes}>
-            <EventDraggableDialogProvider>
-              <EventCalendarRoot
-                className={clsx(classes.root, className)}
-                {...other}
-                ref={handleRootRef}
-              >
-                <DateNavigator />
+            <EventDialogClassesContext.Provider value={classes}>
+              <EventDraggableDialogProvider>
+                <EventCalendarRoot
+                  className={clsx(classes.root, className)}
+                  {...other}
+                  ref={handleRootRef}
+                >
+                  <DateNavigator />
 
-                <HeaderToolbar />
+                  <HeaderToolbar />
 
-                <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
-                  {isSidePanelOpen && (
-                    <EventCalendarSidePanel className={classes.sidePanel}>
-                      <EventCalendarMonthCalendarPlaceholder
-                        className={classes.monthCalendarPlaceholder}
-                        // TODO: Add localization
-                        aria-label="Month calendar"
-                      >
-                        Month Calendar
-                      </EventCalendarMonthCalendarPlaceholder>
-                      <ResourcesLegend />
-                    </EventCalendarSidePanel>
-                  )}
+                  <EventCalendarMainPanel className={classes.mainPanel} data-view={view}>
+                    {isSidePanelOpen && (
+                      <EventCalendarSidePanel className={classes.sidePanel}>
+                        <EventCalendarMonthCalendarPlaceholder
+                          className={classes.monthCalendarPlaceholder}
+                          // TODO: Add localization
+                          aria-label="Month calendar"
+                        >
+                          Month Calendar
+                        </EventCalendarMonthCalendarPlaceholder>
+                        <ResourcesLegend />
+                      </EventCalendarSidePanel>
+                    )}
 
-                  <EventCalendarContent
-                    className={classes.content}
-                    data-view={view}
-                    data-side-panel-open={isSidePanelOpen}
-                    // TODO: Add localization
-                    aria-label="Calendar content"
-                  >
-                    {content}
-                  </EventCalendarContent>
-                  {errors?.length > 0 &&
-                    errors.map((error, index) => (
-                      <EventCalendarErrorContainer
-                        className={classes.errorContainer}
-                        severity="error"
-                        key={index}
-                      >
-                        {error.message}
-                      </EventCalendarErrorContainer>
-                    ))}
-                </EventCalendarMainPanel>
-              </EventCalendarRoot>
-            </EventDraggableDialogProvider>
+                    <EventCalendarContent
+                      className={classes.content}
+                      data-view={view}
+                      data-side-panel-open={isSidePanelOpen}
+                      // TODO: Add localization
+                      aria-label="Calendar content"
+                    >
+                      {content}
+                    </EventCalendarContent>
+                    {errors?.length > 0 &&
+                      errors.map((error, index) => (
+                        <EventCalendarErrorContainer
+                          className={classes.errorContainer}
+                          severity="error"
+                          key={index}
+                        >
+                          {error.message}
+                        </EventCalendarErrorContainer>
+                      ))}
+                  </EventCalendarMainPanel>
+                </EventCalendarRoot>
+              </EventDraggableDialogProvider>
+            </EventDialogClassesContext.Provider>
           </EventCalendarClassesContext.Provider>
         </TranslationsProvider>
       </SchedulerStoreContext.Provider>
