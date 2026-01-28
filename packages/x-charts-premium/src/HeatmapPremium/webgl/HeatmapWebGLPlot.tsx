@@ -10,13 +10,13 @@ import {
 import useEventCallback from '@mui/utils/useEventCallback';
 import { type DefaultizedHeatmapSeriesType } from '@mui/x-charts-pro/models';
 import { useHeatmapSeriesContext } from '../../hooks';
-import { parseColor } from './parseColor';
+import { parseColor } from '../../utils/webgl/parseColor';
 import {
   heatmapFragmentShaderSourceNoBorderRadius,
   heatmapFragmentShaderSourceWithBorderRadius,
   heatmapVertexShaderSource,
 } from './shaders';
-import { useWebGLResizeObserver } from './useWebGLResizeObserver';
+import { useWebGLResizeObserver } from '../../utils/webgl/useWebGLResizeObserver';
 import {
   attachShader,
   bindQuadBuffer,
