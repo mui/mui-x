@@ -60,6 +60,11 @@ function getComponents() {
       href: '/x/react-charts/sankey/',
       pro: true,
     },
+    {
+      title: 'Range Bar Chart',
+      href: '/x/react-charts/range-bar/',
+      premium: true,
+    },
   ];
 }
 
