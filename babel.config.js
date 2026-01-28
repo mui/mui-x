@@ -43,6 +43,10 @@ module.exports = function getBabelConfig(api) {
               search: '__RELEASE_INFO__',
               replace: generateReleaseInfo(),
             },
+            {
+              search: 'process.env.IS_TEST_ENV',
+              replace: 'false',
+            },
           ],
         },
       ]);
