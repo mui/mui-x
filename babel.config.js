@@ -49,7 +49,7 @@ module.exports = function getBabelConfig(api) {
     }
   }
 
-  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
+  if (process.env.BABEL_ENV || process.env.IS_TEST_ENV) {
     plugins.push([
       'transform-replace-expressions',
       {

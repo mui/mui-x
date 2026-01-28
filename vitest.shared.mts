@@ -45,7 +45,7 @@ export default defineConfig({
   plugins: [react()],
   // We seem to need both this and the `env` property below to make it work.
   define: {
-    'process.env.NODE_ENV': '"test"',
+    'process.env.IS_TEST_ENV': '"true"',
     LICENSE_DISABLE_CHECK: 'false',
   },
   esbuild: {
@@ -61,7 +61,7 @@ export default defineConfig({
     // Required for some tests that contain early returns or conditional tests.
     passWithNoTests: true,
     env: {
-      NODE_ENV: 'test',
+      IS_TEST_ENV: 'true',
       VITEST: 'true',
     },
     browser: {

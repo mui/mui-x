@@ -28,15 +28,11 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
 
   beforeEach(() => {
     env = process.env.NODE_ENV;
-    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-    // eslint-disable-next-line no-useless-concat
-    process.env['NODE_' + 'ENV'] = 'test';
+    process.env.NODE_ENV = 'test';
   });
 
   afterEach(() => {
-    // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-    // eslint-disable-next-line no-useless-concat
-    process.env['NODE_' + 'ENV'] = env;
+    process.env.NODE_ENV = env;
   });
 
   describe('error', () => {
@@ -74,9 +70,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     });
 
     it('should throw if the license is expired by more than a 30 days', () => {
-      // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-      // eslint-disable-next-line no-useless-concat
-      process.env['NODE_' + 'ENV'] = 'development';
+      process.env.NODE_ENV = 'development';
 
       const expiredLicenseKey = generateLicense({
         expiryDate: new Date(new Date().getTime() - oneDayInMS * 30),
@@ -150,9 +144,7 @@ describe.skipIf(!isJSDOM)('useLicenseVerifier', () => {
     it.each(planCombinations)(
       'should work for plan $planVersion with scope $planScope',
       ({ planVersion, planScope, ok, notOk, notInInitial }) => {
-        // Avoid Karma "Invalid left-hand side in assignment" SyntaxError
-        // eslint-disable-next-line no-useless-concat
-        process.env['NODE_' + 'ENV'] = 'development';
+        process.env.NODE_ENV = 'development';
 
         const licenseKey = generateLicense({
           expiryDate: new Date(3001, 0, 0, 0, 0, 0, 0),
