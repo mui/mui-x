@@ -1,7 +1,6 @@
-import { TemporalSupportedObject } from '../../../models';
-import { Adapter } from '../../../use-adapter/useAdapter.types';
-import { getDateKey } from '../date-utils';
-import { TimeoutManager } from '../TimeoutManager';
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
+import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
+import { getDateKey, TimeoutManager } from '@mui/x-scheduler-headless/internals';
 
 const MAX_CONCURRENT_REQUESTS = 3;
 const MAX_QUEUED_REQUESTS = 3;
