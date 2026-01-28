@@ -11,16 +11,15 @@ import { SchedulerDataManager } from '../utils/queue';
 
 export class SchedulerLazyLoadingPlugin<
   TEvent extends object,
-  TResource extends object,
   State extends SchedulerState,
-  Parameters extends SchedulerParameters<TEvent, TResource>,
+  Parameters extends SchedulerParameters<TEvent, any>,
 > {
-  private store: SchedulerStore<TEvent, TResource, State, Parameters>;
+  private store: SchedulerStore<TEvent, any, State, Parameters>;
 
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
-  constructor(store: SchedulerStore<TEvent, TResource, State, Parameters>) {
+  constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
     this.store = store;
 
     if (this.store.parameters.dataSource) {

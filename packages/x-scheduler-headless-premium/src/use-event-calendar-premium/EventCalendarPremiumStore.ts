@@ -10,7 +10,7 @@ export class EventCalendarPremiumStore<
   TEvent extends object,
   TResource extends object,
 > extends EventCalendarStore<TEvent, TResource> {
-  public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent, TResource>;
+  public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
 
   public constructor(
     parameters: EventCalendarPremiumParameters<TEvent, TResource>,
@@ -18,6 +18,6 @@ export class EventCalendarPremiumStore<
   ) {
     super(parameters, adapter);
 
-    this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent, TResource>(this);
+    this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
   }
 }

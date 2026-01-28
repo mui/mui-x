@@ -8,14 +8,12 @@ import type { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
 export class EventCalendarPremiumLazyLoadingPlugin<
   TEvent extends object,
-  TResource extends object,
 > extends SchedulerLazyLoadingPlugin<
   TEvent,
-  TResource,
   EventCalendarPremiumState,
-  EventCalendarPremiumParameters<TEvent, TResource>
+  EventCalendarPremiumParameters<TEvent, any>
 > {
-  constructor(store: EventCalendarPremiumStore<TEvent, TResource>) {
+  constructor(store: EventCalendarPremiumStore<TEvent, any>) {
     super(store);
 
     store.registerStoreEffect(
