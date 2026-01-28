@@ -22,6 +22,7 @@ import {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
+  SchedulerInstanceName,
 } from './SchedulerStore.types';
 import {
   SchedulerEvents,
@@ -69,7 +70,7 @@ export class SchedulerStore<
 
   private initialParameters: Parameters | null = null;
 
-  public instanceName: string;
+  public instanceName: SchedulerInstanceName;
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
@@ -80,7 +81,7 @@ export class SchedulerStore<
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
-    instanceName: string,
+    instanceName: SchedulerInstanceName,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);

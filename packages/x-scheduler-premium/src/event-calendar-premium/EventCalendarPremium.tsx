@@ -1,11 +1,9 @@
 'use client';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { useExtractEventCalendarParameters } from '@mui/x-scheduler-headless/use-event-calendar';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { useEventCalendarPremium } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium';
-import { EventCalendarPremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-calendar-premium-store-context';
 import {
   useEventCalendarUtilityClasses,
   EventCalendarClassesContext,
@@ -44,19 +42,15 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   const { translations, ...other } = forwardedProps;
 
   return (
-    <EventCalendarPremiumStoreContext.Provider value={store}>
-      <EventCalendarStoreContext.Provider value={store}>
-        <SchedulerStoreContext.Provider value={store as any}>
-          <TranslationsProvider translations={translations}>
-            <EventCalendarClassesContext.Provider value={classes}>
-              <EventDraggableDialogProvider>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-              </EventDraggableDialogProvider>
-            </EventCalendarClassesContext.Provider>
-          </TranslationsProvider>
-        </SchedulerStoreContext.Provider>
-      </EventCalendarStoreContext.Provider>
-    </EventCalendarPremiumStoreContext.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <TranslationsProvider translations={translations}>
+        <EventCalendarClassesContext.Provider value={classes}>
+          <EventDraggableDialogProvider>
+            <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+          </EventDraggableDialogProvider>
+        </EventCalendarClassesContext.Provider>
+      </TranslationsProvider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarPremiumComponent;
 
