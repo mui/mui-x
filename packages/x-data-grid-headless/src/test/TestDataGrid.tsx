@@ -54,7 +54,7 @@ export function TestDataGrid<TRow extends object>(props: {
 
   // Use sorted row IDs from sorting plugin
   const sortedRowIds = grid.use(grid.api.sorting.selectors.sortedRowIds);
-  const sortColumnLookup = grid.use(grid.api.sorting.selectors.sortColumnLookup);
+  const sortModel = grid.use(grid.api.sorting.selectors.sortModel);
   const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(grid.api.columns.selectors.visibleColumns);
 
@@ -73,12 +73,13 @@ export function TestDataGrid<TRow extends object>(props: {
   };
 
   const getSortIcon = (field: string) => {
-    const sortInfo = sortColumnLookup[field];
-    if (!sortInfo || sortInfo.sortDirection === null) {
+    const sortIndex = sortModel.findIndex((item) => item.field === field);
+    const sortInfo = sortModel[sortIndex];
+    if (!sortInfo || sortInfo.sort === null) {
       return null;
     }
-    const arrow = sortInfo.sortDirection === 'asc' ? '↑' : '↓';
-    const index = config.sorting?.enableMultiSort ? ` (${sortInfo.sortIndex + 1})` : '';
+    const arrow = sortInfo.sort === 'asc' ? '↑' : '↓';
+    const index = config.sorting?.enableMultiSort ? ` (${sortIndex + 1})` : '';
     return (
       <span className="grid-sort-icon">
         {arrow}

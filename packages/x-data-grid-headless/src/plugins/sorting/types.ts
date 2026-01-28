@@ -179,22 +179,11 @@ export interface SortingInternalOptions {
 // ================================
 
 /**
- * Lookup of column field to sort information.
- */
-export interface SortColumnLookup {
-  [field: string]: {
-    sortDirection: GridSortDirection;
-    sortIndex: number;
-  };
-}
-
-/**
  * Selectors for the sorting plugin.
  */
 export interface SortingSelectors {
   sortModel: (state: SortingState) => GridSortModel;
   sortedRowIds: (state: SortingState) => GridRowId[];
-  sortColumnLookup: (state: SortingState) => SortColumnLookup;
   isSorted: (state: SortingState) => boolean;
 }
 

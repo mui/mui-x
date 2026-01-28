@@ -24,7 +24,6 @@ export type {
   SortingOptions,
   SortingApi,
   SortingColumnMeta,
-  SortColumnLookup,
   SortingSelectors,
   ComputeSortedRowIdsOptions,
 } from './sorting/types';

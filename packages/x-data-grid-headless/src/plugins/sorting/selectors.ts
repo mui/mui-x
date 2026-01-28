@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import type { SortingState, SortColumnLookup } from './types';
+import type { SortingState } from './types';
 
 /**
  * Selector for the current sort model.
@@ -11,24 +11,6 @@ export const selectSortModel = createSelector((state: SortingState) => state.sor
  */
 export const selectSortedRowIds = createSelector(
   (state: SortingState) => state.sorting.sortedRowIds,
-);
-
-/**
- * Selector for the sort column lookup.
- * Returns a map of field to sort information (direction and index).
- */
-export const selectSortColumnLookup = createSelectorMemoized(
-  selectSortModel,
-  (sortModel): SortColumnLookup => {
-    const lookup: SortColumnLookup = {};
-    sortModel.forEach((item, index) => {
-      lookup[item.field] = {
-        sortDirection: item.sort,
-        sortIndex: index,
-      };
-    });
-    return lookup;
-  },
 );
 
 /**
@@ -44,6 +26,5 @@ export const selectIsSorted = createSelectorMemoized(selectSortModel, (sortModel
 export const sortingSelectors = {
   sortModel: selectSortModel,
   sortedRowIds: selectSortedRowIds,
-  sortColumnLookup: selectSortColumnLookup,
   isSorted: selectIsSorted,
 };

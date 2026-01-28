@@ -8,12 +8,7 @@ import {
   applySortingToRowIds,
   upsertSortModel,
 } from './utils';
-import {
-  selectSortModel,
-  selectSortedRowIds,
-  selectSortColumnLookup,
-  selectIsSorted,
-} from './selectors';
+import { selectSortModel, selectSortedRowIds, selectIsSorted } from './selectors';
 import type { GridSortDirection, GridSortModel, SortingState } from './types';
 
 describe('Sorting Plugin', () => {
@@ -154,33 +149,6 @@ describe('Sorting Plugin', () => {
       it('should return sorted row IDs', () => {
         const state = createState({ sortedRowIds: [3, 1, 2] });
         expect(selectSortedRowIds(state)).toEqual([3, 1, 2]);
-      });
-    });
-
-    describe('selectSortColumnLookup', () => {
-      it('should return empty object when no sorting', () => {
-        const state = createState();
-        expect(selectSortColumnLookup(state)).toEqual({});
-      });
-
-      it('should return lookup for single column', () => {
-        const state = createState({ sortModel: [{ field: 'name', sort: 'asc' }] });
-        expect(selectSortColumnLookup(state)).toEqual({
-          name: { sortDirection: 'asc', sortIndex: 0 },
-        });
-      });
-
-      it('should return lookup for multiple columns', () => {
-        const state = createState({
-          sortModel: [
-            { field: 'name', sort: 'asc' },
-            { field: 'age', sort: 'desc' },
-          ],
-        });
-        expect(selectSortColumnLookup(state)).toEqual({
-          name: { sortDirection: 'asc', sortIndex: 0 },
-          age: { sortDirection: 'desc', sortIndex: 1 },
-        });
       });
     });
 
