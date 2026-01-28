@@ -469,6 +469,12 @@ MobileDateTimePicker.propTypes = {
    */
   shouldDisableYear: PropTypes.func,
   /**
+   * @ignore
+   * Whether the time picker should render in a single column layout.
+   * This is computed based on thresholdToRenderTimeInASingleColumn and timeSteps.
+   */
+  shouldRenderTimeInASingleColumn: PropTypes.bool,
+  /**
    * If `true`, days outside the current month are rendered:
    *
    * - if `fixedWeekNumber` is defined, renders days to have the weeks requested.
