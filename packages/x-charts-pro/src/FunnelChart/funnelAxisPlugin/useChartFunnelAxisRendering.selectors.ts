@@ -5,6 +5,8 @@ import {
   selectorChartDrawingArea,
   selectorChartRawXAxis,
   selectorChartRawYAxis,
+  selectorChartXAxisAutoSizes,
+  selectorChartYAxisAutoSizes,
   type ChartState,
 } from '@mui/x-charts/internals';
 import { computeAxisValue } from './computeAxisValue';
@@ -21,8 +23,9 @@ export const selectorChartXAxis = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartSeriesConfig,
   selectorFunnelGap,
+  selectorChartXAxisAutoSizes,
 
-  (axis, drawingArea, formattedSeries, seriesConfig, gap) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, gap, autoSizes) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
@@ -30,6 +33,7 @@ export const selectorChartXAxis = createSelectorMemoized(
       seriesConfig,
       axisDirection: 'x',
       gap,
+      autoSizes,
     }),
 );
 
@@ -39,8 +43,9 @@ export const selectorChartYAxis = createSelectorMemoized(
   selectorChartSeriesProcessed,
   selectorChartSeriesConfig,
   selectorFunnelGap,
+  selectorChartYAxisAutoSizes,
 
-  (axis, drawingArea, formattedSeries, seriesConfig, gap) =>
+  (axis, drawingArea, formattedSeries, seriesConfig, gap, autoSizes) =>
     computeAxisValue({
       drawingArea,
       formattedSeries,
@@ -48,5 +53,6 @@ export const selectorChartYAxis = createSelectorMemoized(
       seriesConfig,
       axisDirection: 'y',
       gap,
+      autoSizes,
     }),
 );
