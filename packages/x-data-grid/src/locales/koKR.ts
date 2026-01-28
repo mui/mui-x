@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const koKRGrid: Partial<GridLocaleText> = {
   // Root
@@ -161,6 +161,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
+
+  // Long text cell
+  longTextCellExpandLabel: '열기',
+  longTextCellCollapseLabel: '접기',
 
   // Actions cell more text
   actionsCellMore: '더보기',

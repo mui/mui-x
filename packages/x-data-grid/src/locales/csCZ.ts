@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
@@ -192,6 +192,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbalit',
+  longTextCellCollapseLabel: 'Sbalit',
 
   // Actions cell more text
   actionsCellMore: 'více',

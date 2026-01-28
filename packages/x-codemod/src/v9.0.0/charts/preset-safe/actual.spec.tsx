@@ -13,4 +13,5 @@ import * as React from 'react';
   <HeatmapPremium series={[{}]} hideLegend={false} />
   <Heatmap series={[{}]} />
   <HeatmapPremium {...otherProps} />
+  <PieArc id="test" />
 </div>;

@@ -16,7 +16,7 @@ export function useCalendarGridRootContext() {
   const context = React.useContext(CalendarGridRootContext);
   if (context === undefined) {
     throw new Error(
-      'Scheduler: `CalendarGridRootContext` is missing. CalendarGrid parts must be placed within <CalendarGrid.Root />.',
+      'MUI: `CalendarGridRootContext` is missing. CalendarGrid parts must be placed within <CalendarGrid.Root />.',
     );
   }
   return context;

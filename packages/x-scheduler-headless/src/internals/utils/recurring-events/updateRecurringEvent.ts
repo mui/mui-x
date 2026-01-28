@@ -45,7 +45,7 @@ export function updateRecurringEvent(
     }
 
     default: {
-      throw new Error(`Scheduler: scope="${scope}" is not supported.`);
+      throw new Error(`MUI: scope="${scope}" is not supported.`);
     }
   }
 }

@@ -14,7 +14,6 @@ const legendGetter: LegendGetter<'scatter'> = (params) => {
     acc.push({
       type: 'scatter',
       markType: series[seriesId].labelMarkType,
-      id: seriesId,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,

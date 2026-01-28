@@ -80,6 +80,24 @@ In v9, only `string` is accepted.
 
 This type modification impacts the objects in the `series` props, as well as the `highlightedItem` and `tooltipItem` objects.
 
+## Renaming `id` to `seriesId` ✅
+
+Some components used for composition got their prop `id` renamed `seriesId` to improve clarity.
+
+Here is the list of slots and components that are impacted by the renaming:
+
+| slot          | Component                                |
+| :------------ | :--------------------------------------- |
+| pieArc        | PieArc                                   |
+|               | PieArcPlot                               |
+| pieArcLabel   | PieArcLabel                              |
+|               | PieArcLabelPlot                          |
+| bar           | BarElement, AnimatedRangeBarElementProps |
+| area          | AnimatedArea, AreaElement                |
+| line          | AnimatedLine, LineElement                |
+| mark          | MarkElement                              |
+| lineHighlight | LineHighlightElement                     |
+
 ## Removed deprecated types and APIs
 
 The following deprecated types, interfaces, and APIs that were marked as deprecated in v8 have been removed in v9.
@@ -187,12 +205,19 @@ This improves consistency across chart components and developer experience.
 
 ## Legend
 
-### Property `type` is now required
-
-The `type` property of `LegendItemParams` has been modified from optional to required.
+### `LegendItemParams` Modification
 
 This type is used in the return value of `useLegend()`.
 If you haven't created a custom legend, you should not be impacted by this change.
+
+#### Property `type` is now required
+
+The `type` property of `LegendItemParams` has been modified from optional to required.
+
+#### Property `id` is removed
+
+The `id` property of `LegendItemParams` was deprecated in v8 and is removed in v9.
+You should use the `seriesId` and `dataIndex` instead.
 
 ## Axis
 

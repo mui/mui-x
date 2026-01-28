@@ -45,8 +45,8 @@ function CustomAnimatedLine(props: CustomAnimatedLineProps) {
     return <AnimatedLine {...other} />;
   }
 
-  const clipIdleft = `${chartId}-${props.ownerState.id}-line-limit-${limit}-1`;
-  const clipIdRight = `${chartId}-${props.ownerState.id}-line-limit-${limit}-2`;
+  const clipIdleft = `${chartId}-${props.ownerState.seriesId}-line-limit-${limit}-1`;
+  const clipIdRight = `${chartId}-${props.ownerState.seriesId}-line-limit-${limit}-2`;
   return (
     <React.Fragment>
       {/* Clip to show the line before the limit */}

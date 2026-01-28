@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { IconProps } from './gridBaseSlots';
+import type * as React from 'react';
+import type { IconProps } from './gridBaseSlots';
 import type { GridColumnUnsortedIconProps } from '../components/GridColumnUnsortedIcon';
 
 /**
@@ -201,4 +201,14 @@ export interface GridIconSlotsComponent {
    * @default GridCheckIcon
    */
   menuItemCheckIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the long text cell to expand the content.
+   * @default GridLongTextCellExpandIcon
+   */
+  longTextCellExpandIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the long text cell popup to collapse the content.
+   * @default GridLongTextCellCollapseIcon
+   */
+  longTextCellCollapseIcon: React.JSXElementConstructor<IconProps>;
 }

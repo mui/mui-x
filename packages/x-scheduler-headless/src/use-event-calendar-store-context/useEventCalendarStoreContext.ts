@@ -10,7 +10,7 @@ export function useEventCalendarStoreContext<TEvent extends object, TResource ex
   const context = React.useContext(EventCalendarStoreContext);
   if (context == null) {
     throw new Error(
-      'useEventCalendarStoreContext must be used within an <EventCalendar /> component',
+      'MUI: useEventCalendarStoreContext must be used within an <EventCalendar /> component',
     );
   }
 
