@@ -1,4 +1,4 @@
-import {
+import type {
   GridInitialState as GridInitialStatePro,
   GridState as GridStatePro,
 } from '@mui/x-data-grid-pro';

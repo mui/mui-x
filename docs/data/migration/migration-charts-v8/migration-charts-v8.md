@@ -283,3 +283,26 @@ To get the numeric value, call `valueOf()` on the `NumberValue` parameters.
    }]}
  />
 ```
+
+## Styling
+
+### Chart class names updated
+
+The following CSS class prefixes have been renamed to include the "Chart" suffix for consistency:
+
+| Old class prefix | New class prefix   |
+| :--------------- | :----------------- |
+| `MuiScatter-`    | `MuiScatterChart-` |
+| `MuiBar-`        | `MuiBarChart-`     |
+
+The `barClasses` and `scatterClasses` objects have been updated, so you can continue to use them without any changes.
+
+If you're using these classes manually in your styles, update them accordingly:
+
+```diff
+-`.MuiScatter-root`
++`.MuiScatterChart-root`
+
+-`.MuiBar-root`
++`.MuiBarChart-root`
+```

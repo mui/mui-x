@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const isISGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const isISGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Stækka',
+  longTextCellCollapseLabel: 'Minnka',
 
   // Actions cell more text
   actionsCellMore: 'meira',

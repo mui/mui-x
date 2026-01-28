@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const frFRGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'vrai',
   booleanCellFalseLabel: 'faux',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Afficher',
+  longTextCellCollapseLabel: 'Masquer',
 
   // Actions cell more text
   actionsCellMore: 'Plus',
