@@ -205,10 +205,9 @@ This improves consistency across chart components and developer experience.
 
 ### New identifier structure
 
-The heatmap identifier type has been modified as follow.
+The heatmap identifier type has been modified as follows.
 
-This new type relies on the `xIndex`/`yIndex` to identify the cell instead of just the `dataIndex`.
-Which simplifies the identification of cells without data.
+This new type relies on the `xIndex`/`yIndex` to identify the cell instead of just the `dataIndex`, permitting the identification of cells without data.
 
 ```diff
  {
