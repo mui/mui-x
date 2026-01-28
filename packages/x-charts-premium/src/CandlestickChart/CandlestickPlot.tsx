@@ -8,6 +8,7 @@ import {
   WebGLProvider,
 } from '@mui/x-charts/internals';
 import { useXScale, useYScale } from '@mui/x-charts/hooks';
+import { useTheme } from '@mui/material/styles';
 import { type DefaultizedOHLCSeriesType } from '../models';
 import { useOHLCSeriesContext } from '../hooks/useOHLCSeries';
 import {
@@ -17,13 +18,11 @@ import {
   uploadQuadBuffer,
 } from '../HeatmapPremium/webgl/utils';
 import { useWebGLResizeObserver } from '../HeatmapPremium/webgl/useWebGLResizeObserver';
-import {
-  candlestickFragmentShader,
-  candlestickLineVertexShader,
-  candlestickRectVertexShader,
-} from './shaders';
+import { candlestickRectFragmentShader, candlestickRectVertexShader } from './rectShaders';
+import { candlestickLineFragmentShader, candlestickLineVertexShader } from './lineShaders';
 import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
+import { parseColor } from '../HeatmapPremium/webgl/parseColor';
 
 export interface CandlestickPlotProps {}
 
@@ -83,10 +82,10 @@ function CandlestickWebGLPlotImpl({
   const xScale = useXScale<'band'>();
   const yScale = useYScale<ContinuousScaleName>();
   const [rectProgram] = React.useState<WebGLProgram>(() =>
-    initializeProgram(gl, candlestickRectVertexShader, candlestickFragmentShader),
+    initializeProgram(gl, candlestickRectVertexShader, candlestickRectFragmentShader),
   );
   const [lineProgram] = React.useState<WebGLProgram>(() =>
-    initializeProgram(gl, candlestickLineVertexShader, candlestickFragmentShader),
+    initializeProgram(gl, candlestickLineVertexShader, candlestickLineFragmentShader),
   );
   const dataLength = series.data.length;
   const renderScheduledRef = React.useRef<boolean>(false);
@@ -160,6 +159,16 @@ function CandlestickWebGLPlotImpl({
     gl.useProgram(lineProgram);
     gl.uniform1f(gl.getUniformLocation(lineProgram, 'u_candle_width'), candleWidth);
   }, [candleWidth, gl, lineProgram, rectProgram]);
+
+  const theme = useTheme();
+  const lineColor = theme.palette.text.primary;
+  React.useEffect(() => {
+    const lineColorComponents = parseColor(lineColor);
+
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(lineProgram);
+    gl.uniform4f(gl.getUniformLocation(lineProgram, 'u_color'), ...lineColorComponents);
+  }, [gl, lineProgram, lineColor]);
 
   const plotData = useCandlestickPlotData(drawingArea, series, xScale, yScale);
   React.useEffect(() => {
