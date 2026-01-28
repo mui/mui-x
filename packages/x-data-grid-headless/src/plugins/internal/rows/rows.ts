@@ -53,13 +53,20 @@ const rowsSelectors = {
 };
 
 export interface RowsPluginApi<TRow = any> {
-  rows: RowsApi<TRow> & { selectors: typeof rowsSelectors };
+  rows: RowsApi<TRow>;
 }
 
-type RowsPlugin = Plugin<'rows', RowsPluginState, RowsPluginApi, RowsPluginOptions>;
+type RowsPlugin = Plugin<
+  'rows',
+  RowsPluginState,
+  typeof rowsSelectors,
+  RowsPluginApi,
+  RowsPluginOptions
+>;
 
 const rowsPlugin = createPlugin<RowsPlugin>()({
   name: 'rows',
+  selectors: rowsSelectors,
   getInitialState: (state, params) => ({
     ...state,
     rows: createRowsState(params.rows, params.getRowId, params.loading ?? false, params.rowCount),
@@ -109,7 +116,7 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       }
     }, [params.rowCount, store]);
 
-    return { rows: { ...rowsApi, selectors: rowsSelectors } };
+    return { rows: rowsApi };
   },
 });
 

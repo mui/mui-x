@@ -9,9 +9,11 @@ import columnsPlugin, {
   type ColumnsPluginOptions,
 } from './columns/columns';
 
+export { rowsPlugin, columnsPlugin };
 export const internalPlugins = [rowsPlugin, columnsPlugin] as const;
 
-export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> & ColumnsPluginApi;
+export type InternalPluginsApi<TRow = any, TColumnMeta = {}> = RowsPluginApi<TRow> &
+  ColumnsPluginApi<TColumnMeta>;
 
 export type InternalPluginsState = RowsPluginState & ColumnsPluginState;
 

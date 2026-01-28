@@ -3,6 +3,8 @@ import * as React from 'react';
 import { type Store, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
 import {
+  type ColumnLookup,
+  type ColumnState,
   type ColumnsState,
   type ColumnsApi,
   type ColumnsOptions,
@@ -66,14 +68,32 @@ const columnsSelectors = {
   column: selectColumn,
 };
 
-export interface ColumnsPluginApi {
-  columns: ColumnsApi & { selectors: typeof columnsSelectors };
+// Typed selectors interface that preserves TColumnMeta in return types
+export interface ColumnsSelectors<TColumnMeta = {}> {
+  orderedFields: typeof selectOrderedFields;
+  lookup: (state: ColumnsPluginState) => ColumnLookup<TColumnMeta>;
+  columnVisibilityModel: typeof selectColumnVisibilityModel;
+  initialColumnVisibilityModel: typeof selectInitialColumnVisibilityModel;
+  allColumns: (state: ColumnsPluginState) => ColumnState<TColumnMeta>[];
+  visibleColumns: (state: ColumnsPluginState) => ColumnState<TColumnMeta>[];
+  column: (state: ColumnsPluginState, field: string) => ColumnState<TColumnMeta> | undefined;
 }
 
-type ColumnsPlugin = Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
+export interface ColumnsPluginApi<TColumnMeta = {}> {
+  columns: ColumnsApi<TColumnMeta>;
+}
+
+type ColumnsPlugin = Plugin<
+  'columns',
+  ColumnsPluginState,
+  typeof columnsSelectors,
+  ColumnsPluginApi,
+  ColumnsPluginOptions
+>;
 
 const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
+  selectors: columnsSelectors,
   getInitialState: (state, params) => {
     const initialStateColumns = params.initialState?.columns;
     return {
@@ -113,7 +133,7 @@ const columnsPlugin = createPlugin<ColumnsPlugin>()({
       }
     }, [params.columnVisibilityModel, columnsApi]);
 
-    return { columns: { ...columnsApi, selectors: columnsSelectors } };
+    return { columns: columnsApi };
   },
 });
 

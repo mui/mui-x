@@ -2,10 +2,63 @@ import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { TestDataGrid } from './TestDataGrid';
-import type { useDataGrid, ColumnDef } from '../';
-import type sortingPlugin from '../plugins/sorting';
-import type paginationPlugin from '../plugins/pagination';
+import { useDataGrid, type ColumnDef } from '../../..';
+import { sortingPlugin, paginationPlugin, rowsPlugin, columnsPlugin } from '../..';
+
+type GridApi<TRow extends object> = ReturnType<
+  typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
+>;
+
+interface TestGridProps<TRow extends object> {
+  rows: TRow[];
+  columns: ColumnDef<TRow>[];
+  getRowId?: (row: TRow) => string;
+  apiRef?: React.RefObject<GridApi<TRow> | null>;
+}
+
+function TestGrid<TRow extends object>(props: TestGridProps<TRow>) {
+  const { rows, columns, getRowId, apiRef } = props;
+
+  const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>({
+    rows,
+    columns,
+    getRowId,
+    plugins: [sortingPlugin, paginationPlugin],
+  });
+
+  React.useEffect(() => {
+    if (apiRef) {
+      (apiRef as React.MutableRefObject<GridApi<TRow> | null>).current = grid;
+    }
+  }, [grid, apiRef]);
+
+  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
+
+  return (
+    <div data-testid="grid">
+      {sortedRowIds.map((rowId) => {
+        const row = rowsData[rowId] as TRow | undefined;
+        if (!row) {
+          return null;
+        }
+        return (
+          <div key={rowId} data-testid="row">
+            {visibleColumns.map((column, colIndex) => {
+              const value = row[column.field as keyof TRow];
+              return (
+                <div key={column.id} role="gridcell" data-colindex={colIndex}>
+                  {value != null ? String(value) : ''}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 describe('<DataGrid /> - Rows', () => {
   const { render } = createRenderer();
@@ -18,20 +71,18 @@ describe('<DataGrid /> - Rows', () => {
 
   type Row = (typeof rows)[number];
 
-  const columns = [
-    { id: 'clientId', field: 'clientId' as keyof Row },
-    { id: 'first', field: 'first' as keyof Row },
-    { id: 'age', field: 'age' as keyof Row },
+  const columns: ColumnDef<Row>[] = [
+    { id: 'clientId', field: 'clientId' },
+    { id: 'first', field: 'first' },
+    { id: 'age', field: 'age' },
   ];
 
   describe('prop: getRowId', () => {
     it('should allow to select a field as id', () => {
-      const getRowId: React.ComponentProps<
-        typeof TestDataGrid<(typeof rows)[number]>
-      >['getRowId'] = (row) => `${row.clientId}`;
+      const getRowId = (row: Row) => `${row.clientId}`;
       render(
         <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={rows} columns={columns} getRowId={getRowId} />
+          <TestGrid rows={rows} columns={columns} getRowId={getRowId} />
         </div>,
       );
       expect(getColumnValues(0)).to.deep.equal(['c1', 'c2', 'c3']);
@@ -42,19 +93,19 @@ describe('<DataGrid /> - Rows', () => {
     it('should support new dataset', () => {
       const { rows: testRows, columns: testColumns } = getBasicGridData(5, 2);
 
+      type GeneratedRow = (typeof testRows)[number];
+
       // Convert GridColDef to ColumnDef format for headless DataGrid
-      const headlessColumns: ColumnDef<(typeof testRows)[number]>[] = testColumns.map((col) => ({
+      const headlessColumns: ColumnDef<GeneratedRow>[] = testColumns.map((col) => ({
         id: col.field,
-        field: col.field as keyof (typeof testRows)[number],
+        field: col.field as keyof GeneratedRow,
         header: col.headerName,
       }));
 
-      function Test(
-        props: Pick<React.ComponentProps<typeof TestDataGrid<(typeof testRows)[number]>>, 'rows'>,
-      ) {
+      function Test(props: { rows: GeneratedRow[] }) {
         return (
           <div style={{ width: 300, height: 300 }}>
-            <TestDataGrid {...props} columns={headlessColumns} />
+            <TestGrid rows={props.rows} columns={headlessColumns} />
           </div>
         );
       }
@@ -73,15 +124,13 @@ describe('<DataGrid /> - Rows', () => {
       { id: 1, brand: 'Adidas' },
       { id: 2, brand: 'Puma' },
     ];
-    const testColumns = [{ id: 'brand', field: 'brand' as keyof TestRow }];
+    const testColumns: ColumnDef<TestRow>[] = [{ id: 'brand', field: 'brand' }];
 
     it('should allow to update one row at the time', async () => {
-      const apiRef = React.createRef<ReturnType<
-        typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>
-      > | null>();
+      const apiRef = React.createRef<GridApi<TestRow> | null>();
       render(
         <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
+          <TestGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
         </div>,
       );
       await act(async () => apiRef.current?.api.rows.updateRows([{ id: 1, brand: 'Fila' }]));
@@ -91,12 +140,10 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should allow adding rows', async () => {
-      const apiRef = React.createRef<ReturnType<
-        typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>
-      > | null>();
+      const apiRef = React.createRef<GridApi<TestRow> | null>();
       render(
         <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
+          <TestGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
         </div>,
       );
       await act(async () => apiRef.current?.api.rows.updateRows([{ id: 1, brand: 'Fila' }]));
@@ -107,12 +154,10 @@ describe('<DataGrid /> - Rows', () => {
     });
 
     it('should allow to delete rows', async () => {
-      const apiRef = React.createRef<ReturnType<
-        typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>
-      > | null>();
+      const apiRef = React.createRef<GridApi<TestRow> | null>();
       render(
         <div style={{ width: 300, height: 300 }}>
-          <TestDataGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
+          <TestGrid rows={testRows} columns={testColumns} apiRef={apiRef} />
         </div>,
       );
       await act(async () =>

@@ -2,15 +2,17 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store, useStore, type ReadonlyStore } from '@base-ui/utils/store';
-import type { AnyPlugin, BaseApi } from '../plugins/core/plugin';
-import type {
-  PluginsApi,
-  PluginsColumnMeta,
-  PluginsOptions,
-  PluginsState,
-} from '../plugins/core/helpers';
-import { PluginRegistry } from '../plugins/core/pluginRegistry';
+import {
+  type AnyPlugin,
+  type BaseApi,
+  type PluginsApi,
+  type PluginsColumnMeta,
+  type PluginsOptions,
+  type PluginsState,
+  PluginRegistry,
+} from '../plugins';
 import { internalPlugins, type InternalPluginsApi } from '../plugins/internal';
+import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/columnUtils';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
@@ -24,6 +26,23 @@ type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = Plu
 type DataGridState<TPlugins extends readonly AnyPlugin[]> = PluginsState<TPlugins>;
 
 type DataGridApi<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsApi<TPlugins, TRow>;
+
+// Transform selector return types to use the correct column metadata from plugins
+// This allows static selectors like `columnsPlugin.selectors.visibleColumns` to return
+// properly typed columns with plugin-specific metadata (e.g., sortable, filterable)
+type TransformColumnMeta<T, TColumnMeta> =
+  // ColumnState<any>[] -> ColumnState<TColumnMeta>[]
+  T extends (infer U)[]
+    ? U extends ColumnState<any>
+      ? ColumnState<TColumnMeta>[]
+      : T
+    : // ColumnLookup<any> -> ColumnLookup<TColumnMeta>
+      T extends ColumnLookup<any>
+      ? ColumnLookup<TColumnMeta>
+      : // ColumnState<any> | undefined -> ColumnState<TColumnMeta> | undefined
+        T extends ColumnState<any> | undefined
+        ? ColumnState<TColumnMeta> | undefined
+        : T;
 
 interface DataGridStore<TState> {
   use: <Value>(selector: (state: TState) => Value) => Value;
@@ -39,7 +58,9 @@ function createPublicStore<TState>(store: ReadonlyStore<TState>): DataGridStore<
 
 interface DataGridInstance<TPlugins extends readonly AnyPlugin[], TRow = any> {
   options: UseDataGridOptions<TPlugins, TRow>;
-  use: <Value>(selector: (state: DataGridState<TPlugins>) => Value) => Value;
+  use: <Value>(
+    selector: (state: DataGridState<TPlugins>) => Value,
+  ) => TransformColumnMeta<Value, PluginsColumnMeta<TPlugins>>;
   getState: () => DataGridState<TPlugins>;
   api: DataGridApi<TPlugins, TRow>;
 }
@@ -94,7 +115,7 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
 
   return {
     getState: publicStore.getState,
-    use: publicStore.use,
+    use: publicStore.use as DataGridInstance<TPlugins, TRow>['use'],
     api,
     options,
   };
