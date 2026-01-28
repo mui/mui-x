@@ -188,11 +188,5 @@ export interface SortingApi {
       sortModel?: GridSortModel,
       options?: ComputeSortedRowIdsOptions,
     ) => GridRowId[];
-
-    /**
-     * Selectors for accessing sorting state.
-     * @returns {SortingSelectors} The selectors.
-     */
-    selectors: SortingSelectors;
   };
 }

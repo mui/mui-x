@@ -9,6 +9,7 @@ import columnsPlugin, {
   type ColumnsPluginOptions,
 } from './columns/columns';
 
+export { rowsPlugin, columnsPlugin };
 export const internalPlugins = [rowsPlugin, columnsPlugin] as const;
 
 export type InternalPluginsApi<TRow = any, TColumnMeta = {}> = RowsPluginApi<TRow> &

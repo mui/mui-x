@@ -36,20 +36,20 @@ interface PaginationApi {
     setPage: (page: number) => void;
     setPageSize: (pageSize: number) => void;
     setModel: (model: PaginationModel) => void;
-    selectors: typeof paginationSelectors;
   };
 }
 
 type PaginationPlugin = Plugin<
   'pagination',
   PaginationState,
+  typeof paginationSelectors,
   PaginationApi,
-  PaginationOptions,
-  {} // TColumnMeta - no column metadata
+  PaginationOptions
 >;
 
 const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
+  selectors: paginationSelectors,
   getInitialState: (state, params) => ({
     ...state,
     pagination: {
@@ -68,7 +68,6 @@ const paginationPlugin = createPlugin<PaginationPlugin>()({
         setPage: (_page) => {},
         setPageSize: (_pageSize) => {},
         setModel,
-        selectors: paginationSelectors,
       },
     };
   },

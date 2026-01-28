@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
-import { sortingPlugin, paginationPlugin } from '../plugins';
+import { sortingPlugin, paginationPlugin, rowsPlugin, columnsPlugin } from '../plugins';
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 import './styles.css';
 
@@ -53,10 +53,10 @@ export function TestDataGrid<TRow extends object>(props: {
   }, [grid, props.apiRef]);
 
   // Use sorted row IDs from sorting plugin
-  const sortedRowIds = grid.use(grid.api.sorting.selectors.sortedRowIds);
-  const sortModel = grid.use(grid.api.sorting.selectors.sortModel);
-  const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
-  const visibleColumns = grid.use(grid.api.columns.selectors.visibleColumns);
+  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  const sortModel = grid.use(sortingPlugin.selectors.sortModel);
+  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   const handleColumnHeaderClick = (field: string, event: React.MouseEvent) => {
     if (!config.sorting?.enabled) {
@@ -98,7 +98,7 @@ export function TestDataGrid<TRow extends object>(props: {
           <table className="grid-table">
             <thead className="grid-thead">
               <tr>
-                {visibleColumns.map((column: (typeof visibleColumns)[0]) => {
+                {visibleColumns.map((column) => {
                   const isSortable = config.sorting?.enabled && column.sortable !== false;
                   const thClassName = ['grid-th', isSortable && 'grid-th--sortable']
                     .filter(Boolean)

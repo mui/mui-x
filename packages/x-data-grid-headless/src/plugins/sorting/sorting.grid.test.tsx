@@ -5,6 +5,7 @@ import { useDataGrid, type ColumnDef } from '../..';
 import {
   sortingPlugin,
   paginationPlugin,
+  rowsPlugin,
   type SortingColumnMeta,
   type GridSortDirection,
 } from '..';
@@ -56,8 +57,8 @@ function TestGrid(props: TestGridProps) {
     }
   }, [grid, apiRef]);
 
-  const sortedRowIds = grid.use(grid.api.sorting.selectors.sortedRowIds);
-  const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
+  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
 
   return (
     <div data-testid="grid">
@@ -847,8 +848,8 @@ describe('Sorting Plugin - Integration Tests', () => {
           (apiRef as { current: FullNameGridApi | null }).current = grid;
         }, [grid]);
 
-        const sortedRowIds = grid.use(grid.api.sorting.selectors.sortedRowIds);
-        const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
+        const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+        const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
 
         return (
           <div data-testid="grid">

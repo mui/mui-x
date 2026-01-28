@@ -4,16 +4,16 @@ import type { InternalPluginsApi, InternalPluginsOptions, InternalPluginsState }
 
 // Helper to extract params (options) from a plugin
 export type ExtractPluginParams<T> =
-  T extends Plugin<any, any, any, infer TParams, any, any> ? TParams : never;
+  T extends Plugin<any, any, any, any, infer TParams, any, any> ? TParams : never;
 
 // Helper to extract state from a plugin
 export type ExtractPluginState<T> =
-  T extends Plugin<any, infer TState, any, any, any, any> ? TState : never;
+  T extends Plugin<any, infer TState, any, any, any, any, any> ? TState : never;
 
 // Extract TDeps from Plugin type parameter
-// Order: TName, TState, TApi, TParams, TColumnMeta, TDeps
+// Order: TName, TState, TSelectors, TApi, TParams, TColumnMeta, TDeps
 type ExtractPluginDeps<T> =
-  T extends Plugin<any, any, any, any, any, infer TDeps> ? TDeps : readonly [];
+  T extends Plugin<any, any, any, any, any, any, infer TDeps> ? TDeps : readonly [];
 
 // Check if TDeps is a concrete tuple (not just readonly AnyPlugin[])
 type HasConcreteDeps<TDeps> = TDeps extends readonly []

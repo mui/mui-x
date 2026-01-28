@@ -25,6 +25,7 @@ type SortingPluginOptions = SortingOptions & SortingInternalOptions;
 type SortingPlugin = Plugin<
   'sorting',
   SortingState,
+  typeof sortingSelectors,
   SortingApi,
   SortingPluginOptions,
   SortingColumnMeta
@@ -34,6 +35,7 @@ const DEFAULT_SORTING_ORDER: readonly GridSortDirection[] = ['asc', 'desc', null
 
 const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
+  selectors: sortingSelectors,
 
   getInitialState: (state, params) => {
     // Prefer controlled sortModel over initialState
@@ -262,7 +264,6 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         sortColumn,
         applySorting,
         computeSortedRowIds,
-        selectors: sortingSelectors,
       },
     };
   },

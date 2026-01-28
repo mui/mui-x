@@ -80,13 +80,20 @@ export interface ColumnsSelectors<TColumnMeta = {}> {
 }
 
 export interface ColumnsPluginApi<TColumnMeta = {}> {
-  columns: ColumnsApi<TColumnMeta> & { selectors: ColumnsSelectors<TColumnMeta> };
+  columns: ColumnsApi<TColumnMeta>;
 }
 
-type ColumnsPlugin = Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
+type ColumnsPlugin = Plugin<
+  'columns',
+  ColumnsPluginState,
+  typeof columnsSelectors,
+  ColumnsPluginApi,
+  ColumnsPluginOptions
+>;
 
 const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
+  selectors: columnsSelectors,
   getInitialState: (state, params) => {
     const initialStateColumns = params.initialState?.columns;
     return {
@@ -126,7 +133,7 @@ const columnsPlugin = createPlugin<ColumnsPlugin>()({
       }
     }, [params.columnVisibilityModel, columnsApi]);
 
-    return { columns: { ...columnsApi, selectors: columnsSelectors } };
+    return { columns: columnsApi };
   },
 });
 

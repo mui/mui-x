@@ -3,7 +3,7 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { useDataGrid, type ColumnDef } from '../../..';
-import { sortingPlugin, paginationPlugin } from '../..';
+import { sortingPlugin, paginationPlugin, rowsPlugin, columnsPlugin } from '../..';
 
 type GridApi<TRow extends object> = ReturnType<
   typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
@@ -32,9 +32,9 @@ function TestGrid<TRow extends object>(props: TestGridProps<TRow>) {
     }
   }, [grid, apiRef]);
 
-  const sortedRowIds = grid.use(grid.api.sorting.selectors.sortedRowIds);
-  const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
-  const visibleColumns = grid.use(grid.api.columns.selectors.visibleColumns);
+  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
   return (
     <div data-testid="grid">
