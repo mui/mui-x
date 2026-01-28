@@ -1,11 +1,6 @@
 'use client';
-import {
-  useSchedulerStoreContext,
-  SchedulerStoreContext,
-} from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventTimelinePremiumStore } from '../use-event-timeline-premium';
-
-export { SchedulerStoreContext as EventTimelinePremiumStoreContext };
 
 export function useEventTimelinePremiumStoreContext<
   TEvent extends object,

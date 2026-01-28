@@ -1,6 +1,6 @@
 import { createSchedulerRenderer, SchedulerStoreRunner } from 'test/utils/scheduler';
 import { screen } from '@mui/internal-test-utils';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventCalendarProvider } from '../../../internals/components/EventCalendarProvider';
 import { PreferencesMenu } from './PreferencesMenu';
@@ -127,7 +127,7 @@ describe('<PreferencesMenu />', () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
         <SchedulerStoreRunner
-          context={EventCalendarStoreContext}
+          context={SchedulerStoreContext}
           onMount={(store) =>
             (store as unknown as EventCalendarStore<any, any>).setView('agenda', {} as any)
           }
@@ -146,7 +146,7 @@ describe('<PreferencesMenu />', () => {
     const { user } = render(
       <EventCalendarProvider events={[]}>
         <SchedulerStoreRunner
-          context={EventCalendarStoreContext}
+          context={SchedulerStoreContext}
           onMount={(store) =>
             (store as unknown as EventCalendarStore<any, any>).setView('week', {} as any)
           }
@@ -170,7 +170,7 @@ describe('<PreferencesMenu />', () => {
         }}
       >
         <SchedulerStoreRunner
-          context={EventCalendarStoreContext}
+          context={SchedulerStoreContext}
           onMount={(store) =>
             (store as unknown as EventCalendarStore<any, any>).setView('agenda', {} as any)
           }

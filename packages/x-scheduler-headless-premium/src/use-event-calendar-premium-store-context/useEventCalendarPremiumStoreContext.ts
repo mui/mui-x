@@ -1,11 +1,6 @@
 'use client';
-import {
-  useSchedulerStoreContext,
-  SchedulerStoreContext,
-} from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { EventCalendarPremiumStore } from '../use-event-calendar-premium';
-
-export { SchedulerStoreContext as EventCalendarPremiumStoreContext };
 
 export function useEventCalendarPremiumStoreContext<
   TEvent extends object,
@@ -15,7 +10,7 @@ export function useEventCalendarPremiumStoreContext<
 
   if (store.instanceName !== 'EventCalendarPremiumStore') {
     throw new Error(
-      'MUI X: useEventCalendarPremiumStoreContext must be used within <EventCalendarPremium />',
+      'MUI: useEventCalendarPremiumStoreContext must be used within <EventCalendarPremium />',
     );
   }
 
