@@ -4,7 +4,6 @@
   "private": true,
   "description": "The community edition of the Scheduler component (MUI X).",
   "author": "MUI Team",
-  "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -15,20 +14,15 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
-    "./joy": "./src/joy/index.ts",
-    "./joy/day-view": "./src/joy/day-view/index.ts",
-    "./joy/event-calendar": "./src/joy/event-calendar/index.ts",
-    "./joy/standalone-view": "./src/joy/standalone-view/index.ts",
-    "./joy/week-view": "./src/joy/week-view/index.ts",
-    "./joy/locales/enUS": "./src/joy/locales/enUS.ts",
-    "./joy/locales/frFR": "./src/joy/locales/frFR.ts",
-    "./primitives": "./src/primitives/index.ts",
-    "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
-    "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
-    "./primitives/timeline": "./src/primitives/timeline/index.ts",
-    "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
-    "./primitives/use-event-calendar": "./src/primitives/use-event-calendar/index.ts",
-    "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
+    "./agenda-view": "./src/agenda-view/index.ts",
+    "./day-view": "./src/day-view/index.ts",
+    "./event-calendar": "./src/event-calendar/index.ts",
+    "./models": "./src/models/index.ts",
+    "./month-view": "./src/month-view/index.ts",
+    "./standalone-event": "./src/standalone-event/index.ts",
+    "./translations": "./src/translations/index.ts",
+    "./internals": "./src/internals/index.ts",
+    "./week-view": "./src/week-view/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -38,6 +32,10 @@
   "keywords": [
     "react",
     "react-component",
+    "mui",
+    "mui-x",
+    "material-ui",
+    "material design",
     "scheduler",
     "event-calendar",
     "calendar",
@@ -48,11 +46,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -61,34 +55,39 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "^1.7.4",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.1",
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "^1.0.0-beta.2",
-    "@base-ui-components/utils": "^0.1.0",
-    "@floating-ui/react": "^0.27.15",
+    "@base-ui/react": "^1.0.0",
+    "@base-ui/utils": "^0.2.3",
     "@mui/x-internals": "workspace:*",
-    "clsx": "catalog:",
-    "lucide-react": "^0.539.0",
-    "reselect": "catalog:",
-    "prop-types": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "@mui/x-scheduler-headless": "workspace:*",
+    "clsx": "catalog:"
   },
   "peerDependencies": {
-    "luxon": "^3.0.2",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@types/luxon": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "luxon": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "catalog:",
-    "use-isomorphic-layout-effect": "^1.2.1"
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

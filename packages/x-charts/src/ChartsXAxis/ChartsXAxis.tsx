@@ -1,10 +1,18 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsXAxisProps } from '../models/axis';
+import { warnOnce } from '@mui/x-internals/warning';
+import {
+  type ChartsXAxisProps,
+  type ChartsAxisSlots,
+  type ChartsAxisSlotProps,
+} from '../models/axis';
 import { useXAxes } from '../hooks/useAxis';
-import { ChartsSingleXAxis } from './ChartsSingleXAxis';
-import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
+
+import { ChartsXAxisImpl } from './ChartsXAxisImpl';
+
+export interface ChartsXAxisSlots extends ChartsAxisSlots {}
+
+export interface ChartsXAxisSlotProps extends ChartsAxisSlotProps {}
 
 /**
  * Demos:
@@ -17,13 +25,14 @@ import { ChartsGroupedXAxis } from './ChartsGroupedXAxis';
  */
 function ChartsXAxis(inProps: ChartsXAxisProps) {
   const { xAxis, xAxisIds } = useXAxes();
-
   const axis = xAxis[inProps.axisId ?? xAxisIds[0]];
-  if ('groups' in axis && Array.isArray(axis.groups)) {
-    return <ChartsGroupedXAxis {...inProps} />;
+
+  if (!axis) {
+    warnOnce(`MUI X Charts: No axis found. The axisId "${inProps.axisId}" is probably invalid.`);
+    return null;
   }
 
-  return <ChartsSingleXAxis {...inProps} />;
+  return <ChartsXAxisImpl {...inProps} axis={axis} />;
 }
 
 ChartsXAxis.propTypes = {
@@ -52,11 +61,6 @@ ChartsXAxis.propTypes = {
    */
   disableTicks: PropTypes.bool,
   /**
-   * The fill color of the axis text.
-   * @default 'currentColor'
-   */
-  fill: PropTypes.string,
-  /**
    * The label of the axis.
    */
   label: PropTypes.string,
@@ -74,11 +78,6 @@ ChartsXAxis.propTypes = {
    * @default {}
    */
   slots: PropTypes.object,
-  /**
-   * The stroke color of the axis line.
-   * @default 'currentColor'
-   */
-  stroke: PropTypes.string,
   sx: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
     PropTypes.func,

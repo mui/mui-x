@@ -39,20 +39,28 @@ export const useGridDataSourcePro = (
   apiRef: RefObject<GridPrivateApiPro>,
   props: DataGridProProcessedProps,
 ) => {
-  const { api, strategyProcessor, events, setStrategyAvailability } = useGridDataSourceBasePro(
-    apiRef,
-    props,
-    options,
-  );
+  const {
+    api,
+    flatTreeStrategyProcessor,
+    groupedDataStrategyProcessor,
+    events,
+    setStrategyAvailability,
+  } = useGridDataSourceBasePro(apiRef, props, options);
 
   useGridApiMethod(apiRef, api.public, 'public');
   useGridApiMethod(apiRef, api.private, 'private');
 
   useGridRegisterStrategyProcessor(
     apiRef,
-    strategyProcessor.strategyName,
-    strategyProcessor.group,
-    strategyProcessor.processor,
+    flatTreeStrategyProcessor.strategyName,
+    flatTreeStrategyProcessor.group,
+    flatTreeStrategyProcessor.processor,
+  );
+  useGridRegisterStrategyProcessor(
+    apiRef,
+    groupedDataStrategyProcessor.strategyName,
+    groupedDataStrategyProcessor.group,
+    groupedDataStrategyProcessor.processor,
   );
 
   Object.entries(events).forEach(([event, handler]) => {

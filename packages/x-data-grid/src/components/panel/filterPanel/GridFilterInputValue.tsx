@@ -27,7 +27,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
     slotProps,
     clearButton,
     headerFilterMenu,
-    ...others
+    ...other
   } = props;
   const textFieldProps = slotProps?.root;
 
@@ -90,7 +90,7 @@ function GridFilterInputValue(props: GridTypeFilterInputValueProps) {
         }}
         inputRef={focusElementRef}
         {...rootProps.slotProps?.baseTextField}
-        {...others}
+        {...other}
         {...textFieldProps}
       />
       {headerFilterMenu}

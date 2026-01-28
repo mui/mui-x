@@ -1,13 +1,12 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
-import { getCell, getActiveCell } from 'test/utils/helperFn';
+import { getCell, getActiveCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
-describe('<DataGrid /> - Row spanning', () => {
+describe.skipIf(isJSDOM)('<DataGrid /> - Row spanning', () => {
   const { render } = createRenderer();
 
   let publicApiRef: RefObject<GridApi | null>;
@@ -106,19 +105,14 @@ describe('<DataGrid /> - Row spanning', () => {
     publicApiRef = useGridApiRef();
     return (
       <div style={{ width: 500, height: 300 }}>
-        <DataGrid
-          {...baselineProps}
-          apiRef={publicApiRef}
-          {...props}
-          disableVirtualization={isJSDOM}
-        />
+        <DataGrid {...baselineProps} apiRef={publicApiRef} {...props} />
       </div>
     );
   }
 
   const rowHeight = 52;
 
-  it.skipIf(isJSDOM)('should span the repeating row values', () => {
+  it('should span the repeating row values', async () => {
     render(<TestDataGrid />);
     const api = unwrapPrivateAPI(publicApiRef.current!);
 
@@ -135,10 +129,11 @@ describe('<DataGrid /> - Row spanning', () => {
     expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
     const spannedCell = getCell(rowIndex, 0);
     expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+    await microtasks();
   });
 
   describe('sorting', () => {
-    it.skipIf(isJSDOM)('should work with sorting when initializing sorting', () => {
+    it('should work with sorting when initializing sorting', async () => {
       render(
         <TestDataGrid
           initialState={{ sorting: { sortModel: [{ field: 'code', sort: 'desc' }] } }}
@@ -155,9 +150,10 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
 
-    it.skipIf(isJSDOM)('should work with sorting when controlling sorting', () => {
+    it('should work with sorting when controlling sorting', async () => {
       render(<TestDataGrid sortModel={[{ field: 'code', sort: 'desc' }]} />);
 
       const api = unwrapPrivateAPI(publicApiRef.current!);
@@ -170,11 +166,12 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 3, '4': 3 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
   });
 
   describe('filtering', () => {
-    it.skipIf(isJSDOM)('should work with filtering when initializing filter', () => {
+    it('should work with filtering when initializing filter', async () => {
       render(
         <TestDataGrid
           initialState={{
@@ -197,9 +194,10 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
 
-    it.skipIf(isJSDOM)('should work with filtering when controlling filter', () => {
+    it('should work with filtering when controlling filter', async () => {
       render(
         <TestDataGrid
           filterModel={{
@@ -218,11 +216,12 @@ describe('<DataGrid /> - Row spanning', () => {
       expect(spanValue).to.deep.equal({ '0': 2, '4': 2 });
       const spannedCell = getCell(rowIndex, 0);
       expect(spannedCell).to.have.style('height', `${rowHeight * spanValue[0]}px`);
+      await microtasks();
     });
   });
 
   describe('pagination', () => {
-    it.skipIf(isJSDOM)('should only compute the row spanning state for current page', async () => {
+    it('should only compute the row spanning state for current page', async () => {
       render(
         <TestDataGrid
           pagination
@@ -244,7 +243,7 @@ describe('<DataGrid /> - Row spanning', () => {
   });
 
   describe('keyboard navigation', () => {
-    it('should respect the spanned cells when navigating using keyboard', () => {
+    it('should respect the spanned cells when navigating using keyboard', async () => {
       render(<TestDataGrid />);
       // Set focus to the cell with value `- 16GB RAM Upgrade`
       act(() => publicApiRef.current?.setCellFocus(5, 'description'));
@@ -255,6 +254,7 @@ describe('<DataGrid /> - Row spanning', () => {
       const cell30 = getCell(3, 0);
       fireEvent.keyDown(cell30, { key: 'ArrowRight' });
       expect(getActiveCell()).to.equal('3-1');
+      await microtasks();
     });
   });
 
@@ -287,7 +287,6 @@ describe('<DataGrid /> - Row spanning', () => {
         ]);
       });
 
-      // Update on row update
       expect(rowSpanningStateUpdates).to.equal(1);
 
       dispose();

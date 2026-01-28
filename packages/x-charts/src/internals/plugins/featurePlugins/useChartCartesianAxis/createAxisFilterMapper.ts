@@ -1,84 +1,8 @@
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { isDefined } from '../../../isDefined';
-import {
-  AxisId,
-  ChartsXAxisProps,
-  ChartsYAxisProps,
-  ContinuousScaleName,
-  ScaleName,
-} from '../../../../models/axis';
-import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries';
-import { AxisConfig } from '../../../../models';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { getAxisExtremum } from './getAxisExtremum';
-import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
-import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { getScale } from '../../../getScale';
-
-type CreateAxisFilterMapperParams = {
-  zoomMap: Map<AxisId, ZoomData>;
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
-  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
-  formattedSeries: ProcessedSeries;
-  direction: 'x' | 'y';
-};
-
-export function createAxisFilterMapper(params: {
-  zoomMap: Map<AxisId, ZoomData>;
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
-  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
-  formattedSeries: ProcessedSeries;
-  direction: 'x';
-}): (
-  axis: AxisConfig<ScaleName, any, ChartsXAxisProps>,
-  axisIndex: number,
-) => ExtremumFilter | null;
-export function createAxisFilterMapper(params: {
-  zoomMap: Map<AxisId, ZoomData>;
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>;
-  seriesConfig: ChartSeriesConfig<CartesianChartSeriesType>;
-  formattedSeries: ProcessedSeries;
-  direction: 'y';
-}): (
-  axis: AxisConfig<ScaleName, any, ChartsYAxisProps>,
-  axisIndex: number,
-) => ExtremumFilter | null;
-export function createAxisFilterMapper({
-  zoomMap,
-  zoomOptions,
-  seriesConfig,
-  formattedSeries,
-  direction,
-}: CreateAxisFilterMapperParams) {
-  return (axis: AxisConfig, axisIndex: number): ExtremumFilter | null => {
-    const zoomOption = zoomOptions[axis.id];
-    if (!zoomOption || zoomOption.filterMode !== 'discard') {
-      return null;
-    }
-
-    const zoom = zoomMap?.get(axis.id);
-
-    if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
-      // No zoom, or zoom with all data visible
-      return null;
-    }
-
-    const scaleType = axis.scaleType;
-
-    if (scaleType === 'point' || scaleType === 'band') {
-      return createDiscreteScaleGetAxisFilter(axis.data, zoom.start, zoom.end, direction);
-    }
-
-    return createContinuousScaleGetAxisFilter(
-      scaleType,
-      getAxisExtremum(axis, direction, seriesConfig, axisIndex, formattedSeries),
-      zoom.start,
-      zoom.end,
-      direction,
-      axis.data,
-    );
-  };
-}
+import { type AxisConfig } from '../../../../models';
+import { type ExtremumFilter } from './useChartCartesianAxis.types';
+import { type GetZoomAxisFilters, type ZoomAxisFilters } from './zoom.types';
 
 export function createDiscreteScaleGetAxisFilter(
   axisData: AxisConfig['data'],
@@ -104,22 +28,14 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  scaleType: ContinuousScaleName | undefined,
-  extrema: readonly [number, number],
+  domain: readonly NumberValue[],
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',
   axisData: AxisConfig['data'],
 ): ExtremumFilter {
-  let min: number | Date;
-  let max: number | Date;
-
-  [min, max] = getScale(scaleType ?? 'linear', extrema, [0, 100])
-    .nice()
-    .domain();
-
-  min = min instanceof Date ? min.getTime() : min;
-  max = max instanceof Date ? max.getTime() : max;
+  const min = domain[0].valueOf();
+  const max = domain[1].valueOf();
 
   const minVal = min + (zoomStart * (max - min)) / 100;
   const maxVal = min + (zoomEnd * (max - min)) / 100;

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, screen } from '@mui/internal-test-utils';
 import { spy, stub } from 'sinon';
@@ -43,7 +42,7 @@ const baselineProps: BaselineProps = {
   ],
 };
 
-describe('<DataGridPremium /> - Prompt', () => {
+describe('<DataGridPremium /> - AI Assistant', () => {
   const { render } = createRenderer();
 
   let apiRef: RefObject<GridApi | null>;

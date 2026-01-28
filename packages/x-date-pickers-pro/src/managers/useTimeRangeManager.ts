@@ -84,8 +84,7 @@ function useApplyDefaultValuesToTimeRangeFieldInternalProps<
 }
 
 export interface UseTimeRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends RangeFieldSeparatorProps,
-    AmPmProps {
+  extends RangeFieldSeparatorProps, AmPmProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 
@@ -100,7 +99,9 @@ export type UseTimeRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
 
 export interface TimeRangeManagerFieldInternalProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
+>
+  extends
+    MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
         TEnableAccessibleFieldDOMStructure,

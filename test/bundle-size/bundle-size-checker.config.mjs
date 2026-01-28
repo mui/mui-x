@@ -4,14 +4,16 @@
  * This file determines which packages and components will have their bundle sizes measured.
  */
 import path from 'path';
-import glob from 'fast-glob';
+import { globby } from 'globby';
 import { defineConfig } from '@mui/internal-bundle-size-checker';
+// eslint-disable-next-line import/no-relative-packages
+import generateReleaseInfo from '../../packages/x-license/generateReleaseInfo.js';
 
 const rootDir = path.resolve(import.meta.dirname, '../..');
 
 async function findComponents(packageFolder, packageName) {
   const pkgBuildFolder = path.join(rootDir, `packages/${packageFolder}/build`);
-  const pkgFiles = await glob(path.join(pkgBuildFolder, '([A-Z])*/index.js'));
+  const pkgFiles = await globby(path.join(pkgBuildFolder, '([A-Z])*/index.js'));
   const pkgComponents = pkgFiles.map((componentPath) => {
     const componentName = path.basename(path.dirname(componentPath));
     return `${packageName}/${componentName}`;
@@ -26,8 +28,7 @@ export default defineConfig(async () => {
   const [
     chartsComponents,
     chartsProComponents,
-    // TODO: CHARTS-PREMIUM: uncomment when premium is available
-    // chartsPremiumComponents,
+    chartsPremiumComponents,
     datePickersComponents,
     datePickersProComponents,
     treeViewComponents,
@@ -35,8 +36,7 @@ export default defineConfig(async () => {
   ] = await Promise.all([
     findComponents('x-charts', '@mui/x-charts'),
     findComponents('x-charts-pro', '@mui/x-charts-pro'),
-    // TODO: CHARTS-PREMIUM: uncomment when premium is available
-    // findComponents('x-charts-premium', '@mui/x-charts-premium'),
+    findComponents('x-charts-premium', '@mui/x-charts-premium'),
     findComponents('x-date-pickers', '@mui/x-date-pickers'),
     findComponents('x-date-pickers-pro', '@mui/x-date-pickers-pro'),
     findComponents('x-tree-view', '@mui/x-tree-view'),
@@ -56,9 +56,8 @@ export default defineConfig(async () => {
       ...chartsComponents,
       '@mui/x-charts-pro',
       ...chartsProComponents,
-      // TODO: CHARTS-PREMIUM: uncomment when premium is available
-      // '@mui/x-charts-premium',
-      // ...chartsPremiumComponents,
+      '@mui/x-charts-premium',
+      ...chartsPremiumComponents,
       '@mui/x-date-pickers',
       ...datePickersComponents.filter(
         (component) =>
@@ -75,5 +74,10 @@ export default defineConfig(async () => {
       ...treeViewProComponents,
     ],
     upload: !!process.env.CI,
+    replace: {
+      // Stabilize release info string
+      [JSON.stringify(generateReleaseInfo())]: JSON.stringify('__RELEASE_INFO__'),
+    },
+    comment: false,
   };
 });

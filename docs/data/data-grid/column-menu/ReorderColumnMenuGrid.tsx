@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGrid, GridColumnMenu, GridColumnMenuProps } from '@mui/x-data-grid';
 import { useDemoData } from '@mui/x-data-grid-generator';
 

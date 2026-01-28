@@ -14,7 +14,7 @@ export interface GridParamsApi {
    * @param {string} field The column field.
    * @returns {v} The cell value.
    */
-  getCellValue: <V extends any = any>(id: GridRowId, field: string) => V;
+  getCellValue: <V = any>(id: GridRowId, field: string) => V;
   /**
    * Gets the cell value.
    * Use it instead of `getCellValue` for better performance if you have `row` and `colDef`.
@@ -24,7 +24,7 @@ export interface GridParamsApi {
    * @returns {v} The cell value.
    * @ignore - do not document
    */
-  getRowValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
+  getRowValue: <V = any>(row: GridRowModel, colDef: GridColDef) => V;
   /**
    * Gets the cell formatted value
    * Use it instead of `getCellParams` for better performance if you only need the formatted value.
@@ -34,7 +34,7 @@ export interface GridParamsApi {
    * @returns {v} The cell value.
    * @ignore - do not document
    */
-  getRowFormattedValue: <V extends any = any>(row: GridRowModel, colDef: GridColDef) => V;
+  getRowFormattedValue: <V = any>(row: GridRowModel, colDef: GridColDef) => V;
   /**
    * Gets the [[GridCellParams]] object that is passed as argument in events.
    * @param {GridRowId} id The id of the row.
@@ -117,12 +117,16 @@ export interface GridParamsPrivateApi {
       hasFocus,
       rowNode,
       tabIndex,
+      value,
+      formattedValue,
     }: {
       cellMode: GridCellMode;
       colDef: GridStateColDef;
       hasFocus: boolean;
       rowNode: N;
       tabIndex: 0 | -1;
+      value?: V;
+      formattedValue?: F;
     },
   ) => GridCellParams<R, V, F, N>;
 }

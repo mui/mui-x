@@ -1,7 +1,13 @@
 import { styled } from '@mui/material/styles';
-import { referenceLineClasses, ChartsReferenceLineClasses } from './chartsReferenceLineClasses';
-import { ChartsTextStyle } from '../ChartsText';
-import { AxisId } from '../models/axis';
+import {
+  referenceLineClasses,
+  type ChartsReferenceLineClasses,
+} from './chartsReferenceLineClasses';
+import { type ChartsTextStyle } from '../ChartsText';
+import { type AxisId } from '../models/axis';
+
+export const DEFAULT_SPACING = 5;
+export const DEFAULT_SPACING_MIDDLE_OTHER_AXIS = 0;
 
 export type CommonChartsReferenceLineProps = {
   /**
@@ -16,7 +22,7 @@ export type CommonChartsReferenceLineProps = {
   /**
    * Additional space around the label in px.
    * Can be a number or an object `{ x, y }` to distinguish space with the reference line and space with axes.
-   * @default 5
+   * @default { x: 0, y: 5 } on a horizontal line and { x: 5, y: 0 } on a vertical line.
    */
   spacing?: number | { x?: number; y?: number };
   /**
@@ -38,7 +44,10 @@ export type CommonChartsReferenceLineProps = {
   classes?: Partial<ChartsReferenceLineClasses>;
 };
 
-export const ReferenceLineRoot = styled('g')(({ theme }) => ({
+export const ReferenceLineRoot = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(({ theme }) => ({
   [`& .${referenceLineClasses.line}`]: {
     fill: 'none',
     stroke: (theme.vars || theme).palette.text.primary,

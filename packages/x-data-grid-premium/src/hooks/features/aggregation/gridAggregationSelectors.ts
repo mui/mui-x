@@ -1,7 +1,10 @@
-import { createSelector, createRootSelector } from '@mui/x-data-grid-pro/internals';
-import { GridRowId, gridRowTreeSelector } from '@mui/x-data-grid';
+import {
+  createSelector,
+  createRootSelector,
+  GridAggregationPosition,
+} from '@mui/x-data-grid-pro/internals';
+import { GridRowId, gridRowTreeSelector } from '@mui/x-data-grid-pro';
 import { GridStatePremium } from '../../../models/gridStatePremium';
-import { GridAggregationPosition } from './gridAggregationInterfaces';
 
 export const gridAggregationStateSelector = createRootSelector(
   (state: GridStatePremium) => state.aggregation,
@@ -30,6 +33,10 @@ export const gridCellAggregationResultSelector = createSelector(
   gridRowTreeSelector,
   gridAggregationLookupSelector,
   (rowTree, aggregationLookup, { id, field }: { id: GridRowId; field: string }) => {
+    if (!aggregationLookup) {
+      return null;
+    }
+
     let cellAggregationPosition: GridAggregationPosition | null = null;
     const rowNode = rowTree[id];
 

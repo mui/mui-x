@@ -1,12 +1,6 @@
 import * as React from 'react';
 import { TreeViewItemId, TreeViewCancellableEventHandler } from '../models';
-import { TreeViewPublicAPI } from '../internals/models';
-import { UseTreeViewSelectionSignature } from '../internals/plugins/useTreeViewSelection';
-import { UseTreeViewItemsSignature } from '../internals/plugins/useTreeViewItems';
-import { UseTreeViewFocusSignature } from '../internals/plugins/useTreeViewFocus';
-import { UseTreeViewKeyboardNavigationSignature } from '../internals/plugins/useTreeViewKeyboardNavigation';
-import { UseTreeViewLabelSignature } from '../internals/plugins/useTreeViewLabel';
-import { UseTreeViewExpansionSignature } from '../internals/plugins/useTreeViewExpansion';
+import { TreeViewPublicAPI, TreeViewAnyStore } from '../internals/models';
 
 export interface UseTreeItemParameters {
   /**
@@ -18,6 +12,11 @@ export interface UseTreeItemParameters {
    * @default false
    */
   disabled?: boolean;
+  /**
+   * If `true`, the item cannot be selected.
+   * @default false
+   */
+  disableSelection?: boolean;
   /**
    * The id of the item.
    * Must be unique.
@@ -44,7 +43,6 @@ export interface UseTreeItemRootSlotPropsFromUseTreeItem {
   tabIndex: 0 | -1;
   id: string;
   'aria-expanded': React.AriaAttributes['aria-expanded'];
-  'aria-selected': React.AriaAttributes['aria-selected'];
   'aria-disabled': React.AriaAttributes['aria-disabled'];
   onFocus: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
   onBlur: TreeViewCancellableEventHandler<React.FocusEvent<HTMLElement>>;
@@ -74,8 +72,7 @@ export interface UseTreeItemContentSlotPropsFromUseTreeItem {
   'data-editable'?: '';
 }
 
-export interface UseTreeItemContentSlotOwnProps
-  extends UseTreeItemContentSlotPropsFromUseTreeItem {}
+export interface UseTreeItemContentSlotOwnProps extends UseTreeItemContentSlotPropsFromUseTreeItem {}
 
 export type UseTreeItemContentSlotProps<ExternalProps = {}> = ExternalProps &
   UseTreeItemContentSlotOwnProps;
@@ -102,6 +99,7 @@ export type UseTreeItemLabelInputSlotProps<ExternalProps = {}> = ExternalProps &
 
 export interface UseTreeItemCheckboxSlotOwnProps {
   ref: React.RefObject<HTMLButtonElement | null>;
+  'aria-hidden': true;
 }
 
 export type UseTreeItemCheckboxSlotProps<ExternalProps = {}> = ExternalProps &
@@ -142,10 +140,7 @@ export interface UseTreeItemStatus {
   error: boolean;
 }
 
-export interface UseTreeItemReturnValue<
-  TSignatures extends UseTreeItemMinimalPlugins,
-  TOptionalSignatures extends UseTreeItemOptionalPlugins,
-> {
+export interface UseTreeItemReturnValue<TStore extends TreeViewAnyStore> {
   /**
    * Resolver for the context provider's props.
    * @returns {UseTreeItemContextProviderProps} Props that should be spread on the context provider slot.
@@ -245,22 +240,5 @@ export interface UseTreeItemReturnValue<
   /**
    * The object the allows Tree View manipulation.
    */
-  publicAPI: TreeViewPublicAPI<TSignatures, TOptionalSignatures>;
+  publicAPI: TreeViewPublicAPI<TStore>;
 }
-
-/**
- * Plugins that need to be present in the Tree View in order for `UseTreeItem` to work correctly.
- */
-export type UseTreeItemMinimalPlugins = readonly [
-  UseTreeViewSelectionSignature,
-  UseTreeViewExpansionSignature,
-  UseTreeViewItemsSignature,
-  UseTreeViewFocusSignature,
-  UseTreeViewKeyboardNavigationSignature,
-  UseTreeViewLabelSignature,
-];
-
-/**
- * Plugins that `UseTreeItem` can use if they are present, but are not required.
- */
-export type UseTreeItemOptionalPlugins = readonly [];

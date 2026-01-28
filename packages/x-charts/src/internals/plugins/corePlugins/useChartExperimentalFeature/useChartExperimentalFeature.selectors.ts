@@ -1,4 +1,5 @@
-import { ChartRootSelector, createSelector } from '../../utils/selectors';
+import { createSelector } from '@mui/x-internals/store';
+import { type ChartRootSelector } from '../../utils/selectors';
 import type { UseChartExperimentalFeaturesSignature } from './useChartExperimentalFeature.types';
 
 export const selectorChartExperimentalFeaturesState: ChartRootSelector<
@@ -6,6 +7,6 @@ export const selectorChartExperimentalFeaturesState: ChartRootSelector<
 > = (state) => state.experimentalFeatures;
 
 export const selectorPreferStrictDomainInLineCharts = createSelector(
-  [selectorChartExperimentalFeaturesState],
+  selectorChartExperimentalFeaturesState,
   (features) => Boolean(features?.preferStrictDomainInLineCharts),
 );

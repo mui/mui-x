@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled, keyframes } from '@mui/system';
@@ -66,9 +67,9 @@ const ShadowScrollArea = styled('div', {
  */
 const GridShadowScrollArea = forwardRef<HTMLDivElement, GridShadowScrollAreaProps>(
   function GridShadowScrollArea(props, ref) {
-    const { children, ...rest } = props;
+    const { children, ...other } = props;
     return (
-      <ShadowScrollArea {...rest} ref={ref}>
+      <ShadowScrollArea {...other} ref={ref}>
         {children}
       </ShadowScrollArea>
     );

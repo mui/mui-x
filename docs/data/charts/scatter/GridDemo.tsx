@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
-import { data } from './randomData';
+import data from '../dataset/random/scatterParallel.json';
 
 export default function GridDemo() {
   return (
@@ -13,7 +12,7 @@ export default function GridDemo() {
         },
         {
           label: 'Series B',
-          data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+          data: data.map((v) => ({ x: v.x2, y: v.y2, id: v.id })),
         },
       ]}
       grid={{ vertical: true, horizontal: true }}

@@ -28,9 +28,11 @@ const ignoreSsrWarning =
   '/* emotion-disable-server-rendering-unsafe-selector-warning-please-do-not-use-this-the-warning-exists-for-a-reason */';
 
 const shouldShowBorderTopRightRadiusSelector = (apiRef: RefObject<GridApiCommunity>) =>
-  apiRef.current.state.dimensions.hasScrollX &&
-  (!apiRef.current.state.dimensions.hasScrollY ||
-    apiRef.current.state.dimensions.scrollbarSize === 0);
+  !apiRef.current.state.dimensions.isReady
+    ? apiRef.current.state.dimensions.scrollbarSize === 0
+    : apiRef.current.state.dimensions.hasScrollX &&
+      (!apiRef.current.state.dimensions.hasScrollY ||
+        apiRef.current.state.dimensions.scrollbarSize === 0);
 
 export const GridRootStyles = styled('div', {
   name: 'MuiDataGrid',
@@ -82,7 +84,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['columnHeader--filledGroup']}`]: styles['columnHeader--filledGroup'] },
     { [`& .${c['columnHeader--filtered']}`]: styles['columnHeader--filtered'] },
     { [`& .${c['columnHeader--last']}`]: styles['columnHeader--last'] },
-    { [`& .${c['columnHeader--lastUnpinned']}`]: styles['columnHeader--lastUnpinned'] },
     { [`& .${c['columnHeader--moving']}`]: styles['columnHeader--moving'] },
     { [`& .${c['columnHeader--numeric']}`]: styles['columnHeader--numeric'] },
     { [`& .${c['columnHeader--pinnedLeft']}`]: styles['columnHeader--pinnedLeft'] },
@@ -143,9 +144,6 @@ export const GridRootStyles = styled('div', {
     { [`& .${c['scrollbar--horizontal']}`]: styles['scrollbar--horizontal'] },
     { [`& .${c['scrollbar--vertical']}`]: styles['scrollbar--vertical'] },
     { [`& .${c.scrollbarFiller}`]: styles.scrollbarFiller },
-    { [`& .${c['scrollbarFiller--borderBottom']}`]: styles['scrollbarFiller--borderBottom'] },
-    { [`& .${c['scrollbarFiller--borderTop']}`]: styles['scrollbarFiller--borderTop'] },
-    { [`& .${c['scrollbarFiller--header']}`]: styles['scrollbarFiller--header'] },
     { [`& .${c['scrollbarFiller--pinnedRight']}`]: styles['scrollbarFiller--pinnedRight'] },
     { [`& .${c.sortIcon}`]: styles.sortIcon },
     { [`& .${c.treeDataGroupingCell}`]: styles.treeDataGroupingCell },
@@ -154,8 +152,6 @@ export const GridRootStyles = styled('div', {
     },
     { [`& .${c.treeDataGroupingCellToggle}`]: styles.treeDataGroupingCellToggle },
     { [`& .${c.withBorderColor}`]: styles.withBorderColor },
-    { [`& .${c['row--dropAbove']}`]: styles['row--dropAbove'] },
-    { [`& .${c['row--dropBelow']}`]: styles['row--dropBelow'] },
     { [`& .${c['row--beingDragged']}`]: styles['row--beingDragged'] },
   ],
 })<{ ownerState: OwnerState }>(() => {
@@ -176,25 +172,62 @@ export const GridRootStyles = styled('div', {
   const selectedHoverColor = selectedColor;
   const selectedHoverOpacity = `calc(${selectedOpacity} + ${hoverOpacity})`;
 
-  const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity);
-  const selectedBackground = mix(baseBackground, selectedColor, selectedOpacity);
-  const selectedHoverBackground = mix(baseBackground, selectedHoverColor, selectedHoverOpacity);
+  const fallbackColors = {
+    hover: vars.colors.interactive.hover,
+    selected: selectedColor,
+    selectedHover: selectedColor,
+  };
 
-  const pinnedHoverBackground = mix(pinnedBackground, hoverColor, hoverOpacity);
-  const pinnedSelectedBackground = mix(pinnedBackground, selectedColor, selectedOpacity);
+  const hoverBackground = mix(baseBackground, hoverColor, hoverOpacity, fallbackColors.hover);
+  const selectedBackground = mix(
+    baseBackground,
+    selectedColor,
+    selectedOpacity,
+    fallbackColors.selected,
+  );
+  const selectedHoverBackground = mix(
+    baseBackground,
+    selectedHoverColor,
+    selectedHoverOpacity,
+    fallbackColors.selectedHover,
+  );
+
+  const pinnedHoverBackground = mix(
+    pinnedBackground,
+    hoverColor,
+    hoverOpacity,
+    fallbackColors.hover,
+  );
+  const pinnedSelectedBackground = mix(
+    pinnedBackground,
+    selectedColor,
+    selectedOpacity,
+    fallbackColors.selected,
+  );
   const pinnedSelectedHoverBackground = mix(
     pinnedBackground,
     selectedHoverColor,
     selectedHoverOpacity,
+    fallbackColors.selectedHover,
   );
 
   const getPinnedBackgroundStyles = (backgroundColor: string) => ({
     [`& .${c['cell--pinnedLeft']}, & .${c['cell--pinnedRight']}`]: {
       backgroundColor,
       '&.Mui-selected': {
-        backgroundColor: mix(backgroundColor, selectedBackground, selectedOpacity),
+        backgroundColor: mix(
+          backgroundColor,
+          selectedBackground,
+          selectedOpacity,
+          fallbackColors.selected,
+        ),
         '&:hover': {
-          backgroundColor: mix(backgroundColor, selectedHoverBackground, selectedHoverOpacity),
+          backgroundColor: mix(
+            backgroundColor,
+            selectedHoverBackground,
+            selectedHoverOpacity,
+            fallbackColors.selectedHover,
+          ),
         },
       },
     },
@@ -284,6 +317,10 @@ export const GridRootStyles = styled('div', {
       [`& .${c.treeDataGroupingCell}`]: {
         width: 'unset',
       },
+      [`& .${c['columnHeader--filter']}`]: {
+        flex: 'none !important',
+        width: 'unset !important',
+      },
     },
     [`&.${c.withSidePanel}`]: {
       flexDirection: 'row',
@@ -315,9 +352,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.columnHeader}:focus,
       & .${c['columnHeader--withLeftBorder']},
       & .${c['columnHeader--withRightBorder']},
-      & .${c['columnHeader--siblingFocused']},
-      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--lastUnpinned']},
-      & .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}
+      & .${c['columnHeader--siblingFocused']}
       `]: {
       [`& .${c.columnSeparator}`]: {
         opacity: 0,
@@ -351,12 +386,19 @@ export const GridRootStyles = styled('div', {
       alignItems: 'center',
       backgroundColor: headerBackground,
     },
+    [`& .${c.columnHeader} .${c.sortButton}`]: {
+      backgroundColor: vars.header.background.base,
+    },
     [`& .${c['columnHeader--filter']}`]: {
       paddingTop: 8,
       paddingBottom: 8,
       paddingRight: 5,
       minHeight: 'min-content',
       overflow: 'hidden',
+    },
+    [`&.${c['root--densityCompact']} .${c['columnHeader--filter']}`]: {
+      paddingTop: 4,
+      paddingBottom: 4,
     },
     [`& .${c['virtualScroller--hasScrollX']} .${c['columnHeader--last']}`]: {
       overflow: 'hidden',
@@ -451,8 +493,18 @@ export const GridRootStyles = styled('div', {
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton},
         & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible`]:
         {
-          opacity: 0.5,
+          opacity: 1,
         },
+      // Add opacity only to the button content to avoid affecting the background color
+      [`& .${c.columnHeader}:not(.${c['columnHeader--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}):hover .${c.sortButton} > *,
+        & .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}:focus-visible > *`]:
+        {
+          opacity: 0.78,
+        },
+      [`& .${c.pivotPanelFieldActionContainer} button:hover`]: {
+        backgroundColor: vars.colors.background.base,
+      },
     },
     '@media (hover: none)': {
       [`& .${c.columnHeader} .${c.menuIcon}`]: {
@@ -466,9 +518,15 @@ export const GridRootStyles = styled('div', {
         },
       },
       [`& .${c.pivotPanelField}:not(.${c['pivotPanelField--sorted']}) .${c.sortButton}`]: {
-        opacity: 0.5,
+        opacity: 0.78,
       },
     },
+    // Hide the column separator when the column has border and it is not resizable
+    // In this case, this column separator may block interaction with the separator from the adjacent column that is resizable
+    [`& .${c['columnHeader--withLeftBorder']} .${c['columnSeparator--sideLeft']}:not(.${c['columnSeparator--resizable']}), & .${c['columnHeader--withRightBorder']} .${c['columnSeparator--sideRight']}:not(.${c['columnSeparator--resizable']})`]:
+      {
+        display: 'none',
+      },
     [`& .${c['columnSeparator--sideLeft']}`]: {
       left: columnSeparatorOffset,
     },
@@ -521,7 +579,7 @@ export const GridRootStyles = styled('div', {
     },
 
     [`& .${c.headerFilterRow}`]: {
-      [`& .${c.columnHeader}`]: {
+      [`& .${c.columnHeader}, & .${c.scrollbarFiller}`]: {
         boxSizing: 'border-box',
         borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
       },
@@ -560,6 +618,7 @@ export const GridRootStyles = styled('div', {
         backgroundColor: 'transparent',
       },
       '&.Mui-selected': selectedStyles,
+      position: 'relative',
     },
 
     /* Cell styles */
@@ -614,6 +673,11 @@ export const GridRootStyles = styled('div', {
       '&:focus-within': {
         outline: `${focusOutlineWidth}px solid ${vars.colors.interactive.focus}`,
         outlineOffset: focusOutlineWidth * -1,
+      },
+    },
+    [`& .${c['cell--editing']}`]: {
+      '& .MuiInputBase-root': {
+        height: '100%',
       },
     },
     [`& .${c['row--editing']}`]: {
@@ -718,7 +782,7 @@ export const GridRootStyles = styled('div', {
     [`& .${c.rowReorderCellPlaceholder}`]: {
       display: 'none',
     },
-    [`& .${c['columnHeader--dragging']}, & .${c['row--dragging']}`]: {
+    [`& .${c['columnHeader--dragging']}`]: {
       background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
@@ -728,9 +792,12 @@ export const GridRootStyles = styled('div', {
       background: vars.colors.background.overlay,
       padding: '0 12px',
       borderRadius: 'var(--unstable_DataGrid-radius)',
-      opacity: vars.colors.interactive.disabledOpacity,
+      border: '1px solid var(--DataGrid-rowBorderColor)',
+      color: vars.colors.foreground.base,
+      transform: 'translateZ(0)',
 
       [`& .${c.rowReorderCellPlaceholder}`]: {
+        padding: '0 6px',
         display: 'flex',
       },
     },
@@ -760,7 +827,6 @@ export const GridRootStyles = styled('div', {
       alignSelf: 'stretch',
       marginRight: vars.spacing(2),
     },
-
     /* ScrollbarFiller styles */
     [`& .${c.columnHeaders} .${c.scrollbarFiller}`]: {
       backgroundColor: headerBackground,
@@ -768,20 +834,13 @@ export const GridRootStyles = styled('div', {
     [`.${c.scrollbarFiller}`]: {
       minWidth: 'calc(var(--DataGrid-hasScrollY) * var(--DataGrid-scrollbarSize))',
       alignSelf: 'stretch',
-      [`&.${c['scrollbarFiller--borderTop']}`]: {
-        borderTop: '1px solid var(--DataGrid-rowBorderColor)',
-      },
-      [`&.${c['scrollbarFiller--borderBottom']}`]: {
-        borderBottom: '1px solid var(--DataGrid-rowBorderColor)',
-      },
+      backgroundColor: headerBackground,
       [`&.${c['scrollbarFiller--pinnedRight']}`]: {
-        backgroundColor: vars.cell.background.pinned,
         position: 'sticky',
         zIndex: 40, // Should be above the column separator
         right: 0,
       },
     },
-
     [`& .${c.filler}`]: {
       flex: '1 0 auto',
     },
@@ -792,7 +851,7 @@ export const GridRootStyles = styled('div', {
       backgroundColor: headerBackground,
     },
 
-    /* Hide grid rows, row filler, and vertical scrollbar. Used when skeleton/no columns overlay is visible */
+    /* Used when skeleton/no columns overlay is visible */
     [`& .${c['main--hiddenContent']}`]: {
       [`& .${c.virtualScrollerContent}`]: {
         // We use visibility hidden so that the virtual scroller content retains its height.
@@ -801,44 +860,16 @@ export const GridRootStyles = styled('div', {
         position: 'fixed',
         visibility: 'hidden',
       },
-      [`& .${c['scrollbar--vertical']}, & .${c.pinnedRows}, & .${c.virtualScroller} > .${c.filler}`]:
-        {
-          display: 'none',
-        },
-    },
-    [`& .${c['row--dropAbove']}`]: {
-      position: 'relative',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '2px',
-        backgroundColor: vars.colors.interactive.selected,
-      },
-    },
-    [`& .${c['row--dropBelow']}`]: {
-      position: 'relative',
-      '&::before': {
-        content: '""',
-        position: 'absolute',
-        bottom: '-2px',
-        left: 0,
-        width: '100%',
-        height: '2px',
-        backgroundColor: vars.colors.interactive.selected,
-      },
-      [`&.${c['row--lastVisible']}`]: {
-        '&::before': {
-          bottom:
-            'calc(var(--DataGrid-hasScrollY) * 0px + (1 - var(--DataGrid-hasScrollY)) * -2px)',
-        },
+      // Hide grid content
+      [`& .${c.pinnedRows}`]: {
+        display: 'none',
       },
     },
     [`& .${c['row--beingDragged']}`]: {
-      backgroundColor: vars.colors.background.overlay,
       color: vars.colors.foreground.disabled,
+      '&:hover': {
+        backgroundColor: 'transparent',
+      },
     },
   };
 
@@ -853,6 +884,21 @@ function removeOpacity(color: string) {
   return setOpacity(color, 1);
 }
 
-function mix(background: string, overlay: string, opacity: number | string) {
-  return `color-mix(in srgb,${background}, ${overlay} calc(${opacity} * 100%))`;
+export const supportsColorMix =
+  typeof CSS !== 'undefined' &&
+  typeof CSS.supports === 'function' &&
+  CSS.supports('color', 'color-mix(in srgb, red 50%, blue 50%)');
+
+export const colorMixIfSupported = (colorMixValue: string, fallback: string) => {
+  if (!supportsColorMix) {
+    return fallback;
+  }
+  return colorMixValue;
+};
+
+function mix(background: string, overlay: string, opacity: number | string, fallback: string) {
+  return colorMixIfSupported(
+    `color-mix(in srgb,${background}, ${overlay} calc(${opacity} * 100%))`,
+    fallback,
+  );
 }

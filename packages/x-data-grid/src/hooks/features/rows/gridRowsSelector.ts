@@ -29,6 +29,9 @@ export const gridRowsLookupSelector = createSelector(
   (rows) => rows.dataRowIdToModelLookup,
 );
 
+/**
+ * @category Rows
+ */
 export const gridRowSelector = createSelector(
   gridRowsLookupSelector,
   (rows, id: GridRowId) => rows[id],
@@ -36,6 +39,9 @@ export const gridRowSelector = createSelector(
 
 export const gridRowTreeSelector = createSelector(gridRowsStateSelector, (rows) => rows.tree);
 
+/**
+ * @category Rows
+ */
 export const gridRowNodeSelector = createSelector(
   gridRowTreeSelector,
   (rowTree, rowId: GridRowId) => rowTree[rowId],
@@ -74,6 +80,9 @@ export const gridRowMaximumTreeDepthSelector = createSelectorMemoized(
   },
 );
 
+/**
+ * @category Rows
+ */
 export const gridDataRowIdsSelector = createSelector(
   gridRowsStateSelector,
   (rows) => rows.dataRowIds,

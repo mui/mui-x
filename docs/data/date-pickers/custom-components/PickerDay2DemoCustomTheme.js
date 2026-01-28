@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

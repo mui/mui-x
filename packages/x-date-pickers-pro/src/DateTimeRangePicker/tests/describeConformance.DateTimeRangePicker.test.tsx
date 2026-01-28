@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';
 import { DateTimeRangePicker } from '../DateTimeRangePicker';

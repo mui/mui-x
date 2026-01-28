@@ -625,9 +625,13 @@ describe('<DesktopDateRangePicker />', () => {
       expect(onClose.callCount).to.equal(1);
     });
 
-    // TODO: Write test
-    // it('should call onClose and onAccept with the live value when clicking outside of the picker', () => {
-    // })
+    it.todo(
+      'should call onClose and onAccept with the live value when clicking outside of the picker',
+      () => {
+        // TODO: Write test
+      },
+    );
+
     it('should not close picker when switching focus from start to end input (multi input field)', async () => {
       const onChange = spy();
       const onAccept = spy();

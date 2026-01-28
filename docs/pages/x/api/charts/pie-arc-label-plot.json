@@ -1,10 +1,7 @@
 {
   "props": {
-    "id": {
-      "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
-      "required": true
-    },
     "outerRadius": { "type": { "name": "number" }, "required": true },
+    "seriesId": { "type": { "name": "string" }, "required": true },
     "arcLabel": {
       "type": {
         "name": "union",
@@ -44,13 +41,14 @@
   "imports": [
     "import { PieArcLabelPlot } from '@mui/x-charts/PieChart';",
     "import { PieArcLabelPlot } from '@mui/x-charts';",
-    "import { PieArcLabelPlot } from '@mui/x-charts-pro';"
+    "import { PieArcLabelPlot } from '@mui/x-charts-pro';",
+    "import { PieArcLabelPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [{ "name": "pieArcLabel", "description": "", "class": null }],
   "classes": [],
   "muiName": "MuiPieArcLabelPlot",
   "filename": "/packages/x-charts/src/PieChart/PieArcLabelPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demos</a></li></ul>",
   "cssComponent": false
 }

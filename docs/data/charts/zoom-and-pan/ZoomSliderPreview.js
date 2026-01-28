@@ -7,7 +7,11 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
 import { BarChartPro } from '@mui/x-charts-pro/BarChartPro';
-import { usUnemploymentRate } from '../dataset/usUnemploymentRate';
+import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
+import {
+  dateAxisFormatter,
+  usUnemploymentRate,
+} from '../dataset/usUnemploymentRate';
 import { globalGdpPerCapita } from '../dataset/globalGdpPerCapita';
 import { globalBirthPerWoman } from '../dataset/globalBirthsPerWoman';
 import {
@@ -17,6 +21,7 @@ import {
 } from '../dataset/countryData';
 import { shareOfRenewables } from '../dataset/shareOfRenewables';
 import { populationPrediction2050 } from '../dataset/populationPrediction2050';
+import { temperatureBerlinPorto } from '../dataset/temperatureBerlinPorto';
 
 const lineData = usUnemploymentRate.map((d) => d.rate / 100);
 
@@ -36,17 +41,7 @@ const lineXAxis = {
   scaleType: 'time',
   id: 'x',
   data: usUnemploymentRate.map((d) => d.date),
-  valueFormatter: (v, context) =>
-    v.toLocaleDateString(undefined, {
-      month:
-        // eslint-disable-next-line no-nested-ternary
-        context.location === 'tick'
-          ? undefined
-          : context.location === 'tooltip'
-            ? 'long'
-            : 'short',
-      year: 'numeric',
-    }),
+  valueFormatter: dateAxisFormatter,
 };
 
 const lineSettings = {
@@ -134,6 +129,33 @@ const barSettings = {
   height: 400,
 };
 
+const rangeBarXAxis = {
+  data: temperatureBerlinPorto.months,
+  valueFormatter: (v, context) => (context.location === 'tick' ? v.slice(0, 3) : v),
+};
+const rangeBarSettings = {
+  yAxis: [{ valueFormatter: (value) => `${value}°C` }],
+  series: [
+    {
+      id: 'porto',
+      type: 'rangeBar',
+      label: 'Porto, Portugal',
+      valueFormatter: (value) =>
+        value === null ? null : `${value[0]}°C - ${value[1]}°C`,
+      data: temperatureBerlinPorto.porto,
+    },
+    {
+      id: 'berlin',
+      type: 'rangeBar',
+      label: 'Berlin, Germany',
+      valueFormatter: (value) =>
+        value === null ? null : `${value[0]}°C - ${value[1]}°C`,
+      data: temperatureBerlinPorto.berlin,
+    },
+  ],
+  height: 300,
+};
+
 export default function ZoomSliderPreview() {
   const [chartType, setChartType] = React.useState('bar');
 
@@ -152,13 +174,14 @@ export default function ZoomSliderPreview() {
         aria-label="chart type"
         fullWidth
       >
-        {['bar', 'line', 'area', 'scatter'].map((type) => (
-          <ToggleButton key={type} value={type} aria-label="left aligned">
+        {['bar', 'rangeBar', 'line', 'area', 'scatter'].map((type) => (
+          <ToggleButton key={type} value={type}>
             {type}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
       {chartType === 'bar' && <BarChartPreview />}
+      {chartType === 'rangeBar' && <RangeBarChartPreview />}
       {chartType === 'line' && <LineChartPreview />}
       {chartType === 'area' && <AreaChartPreview />}
       {chartType === 'scatter' && <ScatterChartPreview />}
@@ -216,6 +239,25 @@ function BarChartPreview() {
       />
       <Typography variant="caption">
         Source: Our World in Data. Updated: 2023.
+      </Typography>
+    </React.Fragment>
+  );
+}
+
+function RangeBarChartPreview() {
+  return (
+    <React.Fragment>
+      <Typography variant="h6" sx={{ alignSelf: 'center' }}>
+        Average monthly temperature ranges in °C for Porto and Berlin in 1991-2020
+      </Typography>
+      <BarChartPremium
+        {...rangeBarSettings}
+        xAxis={[
+          { ...rangeBarXAxis, zoom: { slider: { enabled: true, preview: true } } },
+        ]}
+      />
+      <Typography variant="caption">
+        Source: IPMA (Porto), climate-data.org (Berlin)
       </Typography>
     </React.Fragment>
   );

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function GroupedAxes() {
@@ -9,7 +8,7 @@ export default function GroupedAxes() {
           data,
           scaleType: 'band',
           tickSize: 8,
-          height: 32,
+          height: 36,
           groups: [
             { getValue: getMonth },
             { getValue: getQuarter },

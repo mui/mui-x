@@ -4,20 +4,17 @@ import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslation
 import jsonPageContent from './charts-toolbar-image-export-trigger.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/charts/charts-toolbar-image-export-trigger',
     false,
-    /\.\/charts-toolbar-image-export-trigger.*.json$/,
+    /\.\/charts-toolbar-image-export-trigger.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    descriptions,
-    pageContent: jsonPageContent,
-  };
-};
+  return { props: { descriptions } };
+}

@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { dataset } from './GDPperCapita';
+import { dataset } from '../dataset/gdpPerCapitaEvolution';
 
 export default function StackedAreas() {
   return (

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';

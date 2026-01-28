@@ -295,8 +295,11 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridActionsColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'actions'
@@ -306,6 +309,20 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
    * Function that returns the actions to be shown.
    * @param {GridRowParams} params The params for each row.
    * @returns {readonly React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   * @deprecated Use `renderCell` instead
+   * @example
+   * // Before
+   * getActions: (params) => [
+   *   <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+   *   <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
+   * ],
+   * // After
+   * renderCell: (params) => (
+   *   <GridActionsCell {...params}>
+   *     <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+   *     <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+   *   </GridActionsCell>
+   * ),
    */
   getActions: (params: GridRowParams<R>) => readonly React.ReactElement<GridActionsCellItemProps>[];
 }
@@ -315,8 +332,11 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridSingleSelectColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'singleSelect'
@@ -330,14 +350,16 @@ export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = a
    * Used to determine the label displayed for a given value option.
    * @param {ValueOptions} value The current value option.
    * @returns {string} The text to be displayed.
+   * @default {defaultGetOptionLabel}
    */
-  getOptionLabel?: (value: ValueOptions) => string;
+  getOptionLabel: (value: ValueOptions) => string;
   /**
    * Used to determine the value used for a value option.
    * @param {ValueOptions} value The current value option.
    * @returns {string} The value to be used.
+   * @default {defaultGetOptionValue}
    */
-  getOptionValue?: (value: ValueOptions) => any;
+  getOptionValue: (value: ValueOptions) => any;
 }
 
 /**

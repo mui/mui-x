@@ -96,15 +96,21 @@ describe('<DataGrid /> - Layout & warnings', () => {
         );
       }
 
-      const { container, setProps } = render(<TestCase width={300} />);
+      const { setProps } = render(<TestCase width={300} />);
       let rect;
-      rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
+      rect = screen
+        .getAllByRole('row')
+        .find((el) => el.dataset.rowindex === '0')!
+        .getBoundingClientRect();
       expect(rect.width).to.equal(300 - 2);
 
       setProps({ width: 400 });
 
       await waitFor(() => {
-        rect = container.querySelector('[role="row"][data-rowindex="0"]')!.getBoundingClientRect();
+        rect = screen
+          .getAllByRole('row')
+          .find((el) => el.dataset.rowindex === '0')!
+          .getBoundingClientRect();
         expect(rect.width).to.equal(400 - 2);
       });
     });
@@ -920,7 +926,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
 
   describe('warnings', () => {
     // TODO: reintroduce chainProptypes that has been removed in https://github.com/mui/mui-x/pull/11303
-    it.skip('should raise a warning if trying to use an enterprise feature', () => {
+    it.todo('should raise a warning if trying to use an enterprise feature', () => {
       expect(() => {
         render(
           <div style={{ width: 150, height: 300 }}>
@@ -948,8 +954,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </ErrorBoundary>,
         );
       }).toErrorDev([
-        'The Data Grid component requires all rows to have a unique `id` property',
-        reactMajor < 19 &&
+        reactMajor >= 19 &&
           'The Data Grid component requires all rows to have a unique `id` property',
         reactMajor < 19 && 'The above error occurred in the <ForwardRef(DataGrid2)> component',
       ]);
@@ -969,7 +974,7 @@ describe('<DataGrid /> - Layout & warnings', () => {
           </div>
         </ThemeProvider>,
       );
-      expect(document.querySelector('[title="Ordenar"]')).not.to.equal(null);
+      expect(document.querySelector('[aria-label="Ordenar"]')).not.to.equal(null);
     });
 
     it('should allow to change localeText on the fly', () => {

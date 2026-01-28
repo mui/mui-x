@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-data-grid-premium",
-  "version": "8.10.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Premium plan edition of the MUI X Data Grid Components.",
-  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -31,11 +30,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -48,11 +43,10 @@
     "@mui/utils": "catalog:",
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-data-grid-pro": "workspace:*",
+    "@mui/x-internal-exceljs-fork": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "catalog:",
     "clsx": "catalog:",
-    "exceljs": "catalog:",
     "prop-types": "catalog:"
   },
   "peerDependencies": {
@@ -85,5 +79,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
   }
 }

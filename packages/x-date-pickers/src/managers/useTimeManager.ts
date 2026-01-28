@@ -88,8 +88,9 @@ export function useApplyDefaultValuesToTimeValidationProps(
   );
 }
 
-export interface UseTimeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends AmPmProps {
+export interface UseTimeManagerParameters<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends AmPmProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 
@@ -103,7 +104,8 @@ export type UseTimeManagerReturnValue<TEnableAccessibleFieldDOMStructure extends
   >;
 
 export interface TimeManagerFieldInternalProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends MakeOptional<
+  extends
+    MakeOptional<
       UseFieldInternalProps<PickerValue, TEnableAccessibleFieldDOMStructure, TimeValidationError>,
       'format'
     >,

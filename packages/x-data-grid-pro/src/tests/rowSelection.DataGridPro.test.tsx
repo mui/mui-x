@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
-import { getCell, getColumnValues, getRows, includeRowSelection } from 'test/utils/helperFn';
+import {
+  getCell,
+  getColumnValues,
+  getRows,
+  includeRowSelection,
+  excludeRowSelection,
+} from 'test/utils/helperFn';
 import { createRenderer, screen, act, fireEvent } from '@mui/internal-test-utils';
 import {
   GridApi,
@@ -811,7 +817,7 @@ describe('<DataGridPro /> - Row selection', () => {
         />,
       );
 
-      expect(onRowSelectionModelChange.callCount).to.equal(4);
+      expect(onRowSelectionModelChange.callCount).to.equal(3);
       expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
         includeRowSelection([2, 3, 4, 5, 6, 7, 1]),
       );
@@ -1283,6 +1289,25 @@ describe('<DataGridPro /> - Row selection', () => {
     });
   });
 
+  describe('apiRef: getPropagatedRowSelectionModel', () => {
+    it('`getPropagatedRowSelectionModel` should return exclude models unchanged', () => {
+      render(<TreeDataGrid rowSelectionPropagation={{ descendants: true, parents: true }} />);
+
+      // Exclude models are not affected by propagation
+      const excludeModel = excludeRowSelection([1]);
+      const propagatedModel = apiRef.current?.getPropagatedRowSelectionModel(excludeModel);
+
+      expect(propagatedModel).to.equal(excludeModel); // same object
+
+      // Include models are affected by propagation
+      const includeModel = includeRowSelection([1]);
+      const propagatedIncludeModel = apiRef.current?.getPropagatedRowSelectionModel(includeModel);
+
+      expect(propagatedIncludeModel?.type).to.equal('include');
+      expect(propagatedIncludeModel?.ids).to.have.keys([1, 2, 3, 4, 5, 6, 7]);
+    });
+  });
+
   it('should select only filtered rows after filter is applied', async () => {
     const { user } = render(<TestDataGridSelection checkboxSelection />);
     const selectAll = screen.getByRole('checkbox', {
@@ -1311,7 +1336,7 @@ describe('<DataGridPro /> - Row selection', () => {
   });
 
   describe('controlled selection', () => {
-    it('should not publish "rowSelectionChange" if the selection state did not change ', () => {
+    it('should not publish "rowSelectionChange" if the selection state did not change', () => {
       const handleSelectionChange = spy();
       const rowSelectionModel: GridRowSelectionModel = includeRowSelection([]);
       render(<TestDataGridSelection rowSelectionModel={rowSelectionModel} />);

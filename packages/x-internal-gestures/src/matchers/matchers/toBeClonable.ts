@@ -96,14 +96,14 @@ export const toBeClonable: SyncMatcherFn = function toBeClonable(
   }
 
   // Check that non-overridden properties match the original
-  let nonOverriddenPropertiesMatch = true;
+  const nonOverriddenPropertiesMatch: string[] = [];
   for (const key in original) {
     // Skip checking overridden properties and functions
     if (overrides && key in overrides) {
       continue;
     }
     // @ts-expect-error, its ok if original[key] = undefined
-    if (typeof original[key] === 'function') {
+    if (typeof original[key] === 'function' || key.endsWith('Gesture')) {
       continue;
     }
 
@@ -111,14 +111,17 @@ export const toBeClonable: SyncMatcherFn = function toBeClonable(
       // @ts-expect-error, we checked that the key exists
       const valueMatches = this.equals(clone[key], original[key]);
       if (!valueMatches) {
-        nonOverriddenPropertiesMatch = false;
+        nonOverriddenPropertiesMatch.push(key);
         break;
       }
     }
   }
 
   const pass =
-    isNotSameInstance && isInstanceOfGesture && overridesApplied && nonOverriddenPropertiesMatch;
+    isNotSameInstance &&
+    isInstanceOfGesture &&
+    overridesApplied &&
+    nonOverriddenPropertiesMatch.length === 0;
 
   if (pass) {
     return {
@@ -136,8 +139,10 @@ export const toBeClonable: SyncMatcherFn = function toBeClonable(
       if (!overridesApplied) {
         return 'Expected clone to have overridden properties applied, but it does not.';
       }
-      if (!nonOverriddenPropertiesMatch) {
-        return 'Expected non-overridden properties to match the original, but they do not.';
+      if (nonOverriddenPropertiesMatch.length > 0) {
+        return `Expected non-overridden properties to match the original, but they do not. Mismatched properties: ${nonOverriddenPropertiesMatch.join(
+          ', ',
+        )}`;
       }
 
       return 'Expected clone to be a different instance than the original, but they are the same.';

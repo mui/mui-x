@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { useInteractionItemProps, SeriesId, consumeSlots } from '@mui/x-charts/internals';
+import { useInteractionItemProps, type SeriesId, consumeSlots } from '@mui/x-charts/internals';
 import { useItemHighlighted } from '@mui/x-charts/hooks';
 import clsx from 'clsx';
-import { FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
+import { type FunnelSectionClasses, useUtilityClasses } from './funnelSectionClasses';
 
-export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> {
+export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>, 'ref'> {
   seriesId: SeriesId;
   dataIndex: number;
   color: string;
@@ -14,7 +14,10 @@ export interface FunnelSectionProps extends Omit<React.SVGProps<SVGPathElement>,
   variant?: 'filled' | 'outlined';
 }
 
-export const FunnelSectionPath = styled('path')(() => ({
+export const FunnelSectionPath = styled('path', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})(() => ({
   transition:
     'opacity 0.2s ease-in, fill 0.2s ease-in, fill-opacity 0.2s ease-in, filter 0.2s ease-in',
 }));

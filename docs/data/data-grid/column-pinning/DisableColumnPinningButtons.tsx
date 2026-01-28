@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPro, GridColDef, GridRowsProp } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,

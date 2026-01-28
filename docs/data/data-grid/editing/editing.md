@@ -17,7 +17,7 @@ You will find the details of the editing API in the next sections.
 
 You can make a column editable by enabling the `editable` property in its [column definition](/x/api/data-grid/grid-col-def/).
 
-This lets the user edit any cell from the specified columns.
+This lets users edit any cell from the specified columns.
 For example, with the code snippet below, users can edit cells in the `name` column, but not in the `id` column.
 
 ```tsx
@@ -240,7 +240,7 @@ Additionally, the callback props `onCellModesModelChange()` and `onRowModesModel
 Use them to update the respective prop.
 
 In the demo below, `cellModesModel` is used to control the mode of selected cell using the external buttons.
-For an example using row editing check the [full-featured CRUD component](#full-featured-crud-component).
+For an example using row editing check the [full-featured CRUD component](#full-featured-crud).
 
 {{"demo": "StartEditButtonGrid.js", "bg": "inline", "defaultCodeOpen": false}}
 

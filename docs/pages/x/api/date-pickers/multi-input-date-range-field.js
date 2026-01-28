@@ -4,20 +4,17 @@ import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslation
 import jsonPageContent from './multi-input-date-range-field.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers/multi-input-date-range-field',
     false,
-    /\.\/multi-input-date-range-field.*.json$/,
+    /\.\/multi-input-date-range-field.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    descriptions,
-    pageContent: jsonPageContent,
-  };
-};
+  return { props: { descriptions } };
+}

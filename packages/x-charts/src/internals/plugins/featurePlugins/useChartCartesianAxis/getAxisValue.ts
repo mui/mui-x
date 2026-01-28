@@ -1,5 +1,5 @@
-import { isBandScale } from '../../../isBandScale';
-import { ComputedAxis } from '../../../../models/axis';
+import { isOrdinalScale } from '../../../scaleGuards';
+import { type ComputedAxis, type D3Scale } from '../../../../models/axis';
 
 function getAsANumber(value: number | Date) {
   return value instanceof Date ? value.getTime() : value;
@@ -12,7 +12,7 @@ function getAsANumber(value: number | Date) {
 export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
-  if (!isBandScale(scale)) {
+  if (!isOrdinalScale(scale)) {
     const value = scale.invert(pointerValue);
 
     if (axisData === undefined) {
@@ -60,16 +60,21 @@ export function getAxisIndex(axisConfig: ComputedAxis, pointerValue: number): nu
  * For a pointer coordinate, this function returns the value associated.
  * Returns `null` if the coordinate has no value associated.
  */
-export function getAxisValue(
-  axisConfig: ComputedAxis,
+export function getAxisValue<
+  Domain extends { toString(): string } = { toString(): string },
+  Range = number,
+  Output = number,
+>(
+  scale: D3Scale<Domain, Range, Output>,
+  axisData: readonly any[] | undefined,
   pointerValue: number,
   dataIndex: number | null,
 ): number | Date | null {
-  const { scale, data: axisData } = axisConfig;
-
-  if (!isBandScale(scale)) {
+  if (!isOrdinalScale(scale)) {
     if (dataIndex === null) {
-      return scale.invert(pointerValue);
+      const invertedValue = scale.invert(pointerValue);
+
+      return Number.isNaN(invertedValue) ? null : invertedValue;
     }
     return axisData![dataIndex];
   }

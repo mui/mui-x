@@ -5,7 +5,11 @@ import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DateFieldProps } from './DateField.types';
 import { useDateField } from './useDateField';
-import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
+import {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  useFieldTextFieldProps,
+} from '../internals/components/PickerFieldUI';
 import { CalendarIcon } from '../icons';
 
 type DateFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
@@ -45,12 +49,9 @@ const DateField = React.forwardRef(function DateField<
   );
 
   return (
-    <PickerFieldUI
-      slots={slots}
-      slotProps={slotProps}
-      fieldResponse={fieldResponse}
-      defaultOpenPickerIcon={CalendarIcon}
-    />
+    <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
+      <PickerFieldUI fieldResponse={fieldResponse} defaultOpenPickerIcon={CalendarIcon} />
+    </PickerFieldUIContextProvider>
   );
 }) as DateFieldComponent;
 

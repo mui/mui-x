@@ -15,6 +15,7 @@ import type { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import type { ZoomData, ZoomOptions, ZoomSliderShowTooltip } from './zoom.types';
 import type { UseChartInteractionSignature } from '../useChartInteraction';
 import type { ChartsAxisProps } from '../../../../ChartsAxis';
+import type { UseChartBrushSignature } from '../useChartBrush';
 
 /**
  * The axes' configuration after computing.
@@ -67,16 +68,24 @@ export interface UseChartCartesianAxisParameters<S extends ScaleName = ScaleName
    * @default false
    */
   disableAxisListener?: boolean;
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap?: number;
 }
 
 export type UseChartCartesianAxisDefaultizedParameters<S extends ScaleName = ScaleName> =
-  UseChartCartesianAxisParameters<S> & {
-    defaultizedXAxis: DefaultedXAxis<S>[];
-    defaultizedYAxis: DefaultedYAxis<S>[];
-  };
+  UseChartCartesianAxisParameters<S> &
+    Required<Pick<UseChartCartesianAxisParameters<S>, 'axesGap'>> & {
+      defaultizedXAxis: DefaultedXAxis<S>[];
+      defaultizedYAxis: DefaultedYAxis<S>[];
+    };
 
-export interface DefaultedZoomSliderOptions
-  extends Omit<NonNullable<Required<ZoomOptions['slider']>>, 'showTooltip'> {
+export interface DefaultedZoomSliderOptions extends Omit<
+  NonNullable<Required<ZoomOptions['slider']>>,
+  'showTooltip'
+> {
   showTooltip: ZoomSliderShowTooltip;
 }
 
@@ -84,17 +93,19 @@ export interface DefaultizedZoomOptions extends Required<Omit<ZoomOptions, 'slid
   axisId: AxisId;
   axisDirection: 'x' | 'y';
   slider: DefaultedZoomSliderOptions;
+  reverse: boolean;
 }
 
 export interface UseChartCartesianAxisState {
   /**
-   * @ignore - state populated by the useChartProZoomPlugin
+   * @ignore - state populated by the useChartProZoom plugin
    */
   zoom?: {
     isInteracting: boolean;
     zoomData: readonly ZoomData[];
   };
   cartesianAxis: {
+    axesGap: number;
     x: DefaultedXAxis[];
     y: DefaultedYAxis[];
   };
@@ -115,5 +126,5 @@ export type UseChartCartesianAxisSignature<SeriesType extends ChartSeriesType = 
     defaultizedParams: UseChartCartesianAxisDefaultizedParameters;
     state: UseChartCartesianAxisState;
     dependencies: [UseChartSeriesSignature<SeriesType>];
-    optionalDependencies: [UseChartInteractionSignature];
+    optionalDependencies: [UseChartInteractionSignature, UseChartBrushSignature];
   }>;

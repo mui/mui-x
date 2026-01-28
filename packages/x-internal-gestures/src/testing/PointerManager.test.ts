@@ -1,13 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { PointerManager } from './PointerManager';
 
 describe('PointerManager', () => {
   let mousePointerManager: PointerManager;
   let touchPointerManager: PointerManager;
   let target: HTMLElement;
-  let pointerDown: ReturnType<typeof vi.fn>;
-  let pointerMove: ReturnType<typeof vi.fn>;
-  let pointerUp: ReturnType<typeof vi.fn>;
+  let pointerDown: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerdown']) => any>;
+  let pointerMove: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointermove']) => any>;
+  let pointerUp: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerup']) => any>;
 
   beforeEach(() => {
     // Create a target element for testing
@@ -345,10 +345,10 @@ describe('PointerManager', () => {
   });
 
   describe('Pointer Enter and Leave Events', () => {
-    let pointerOver: ReturnType<typeof vi.fn>;
-    let pointerEnter: ReturnType<typeof vi.fn>;
-    let pointerOut: ReturnType<typeof vi.fn>;
-    let pointerLeave: ReturnType<typeof vi.fn>;
+    let pointerOver: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerover']) => any>;
+    let pointerEnter: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerenter']) => any>;
+    let pointerOut: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerout']) => any>;
+    let pointerLeave: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerleave']) => any>;
     let secondTarget: HTMLElement;
 
     beforeEach(() => {
@@ -436,10 +436,10 @@ describe('PointerManager', () => {
   });
 
   describe('Pointer movement between elements', () => {
-    let pointerOver: ReturnType<typeof vi.fn>;
-    let pointerEnter: ReturnType<typeof vi.fn>;
-    let pointerOut: ReturnType<typeof vi.fn>;
-    let pointerLeave: ReturnType<typeof vi.fn>;
+    let pointerOver: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerover']) => any>;
+    let pointerEnter: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerenter']) => any>;
+    let pointerOut: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerout']) => any>;
+    let pointerLeave: Mock<(this: HTMLElement, ev: HTMLElementEventMap['pointerleave']) => any>;
     let secondTarget: HTMLElement;
 
     beforeEach(() => {

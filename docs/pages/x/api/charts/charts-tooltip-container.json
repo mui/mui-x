@@ -1,5 +1,9 @@
 {
   "props": {
+    "anchor": {
+      "type": { "name": "enum", "description": "'node'<br>&#124;&nbsp;'pointer'" },
+      "default": "'pointer'"
+    },
     "anchorEl": {
       "type": {
         "name": "union",
@@ -56,6 +60,12 @@
         "description": "func<br>&#124;&nbsp;{ current?: { destroy: func, forceUpdate: func, setOptions: func, state: { attributes: object, elements: object, modifiersData: object, options: object, orderedModifiers: Array&lt;object&gt;, placement: 'auto-end'<br>&#124;&nbsp;'auto-start'<br>&#124;&nbsp;'auto'<br>&#124;&nbsp;'bottom-end'<br>&#124;&nbsp;'bottom-start'<br>&#124;&nbsp;'bottom'<br>&#124;&nbsp;'left-end'<br>&#124;&nbsp;'left-start'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right-end'<br>&#124;&nbsp;'right-start'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top-end'<br>&#124;&nbsp;'top-start'<br>&#124;&nbsp;'top', rects: object, reset: bool, scrollParents: object, strategy: 'absolute'<br>&#124;&nbsp;'fixed', styles: object }, update: func } }"
       }
     },
+    "position": {
+      "type": {
+        "name": "enum",
+        "description": "'bottom'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right'<br>&#124;&nbsp;'top'"
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -82,7 +92,16 @@
   "imports": [
     "import { ChartsTooltipContainer } from '@mui/x-charts/ChartsTooltip';",
     "import { ChartsTooltipContainer } from '@mui/x-charts';",
-    "import { ChartsTooltipContainer } from '@mui/x-charts-pro';"
+    "import { ChartsTooltipContainer } from '@mui/x-charts-pro';",
+    "import { ChartsTooltipContainer } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "root",
+      "description": "The component that renders the root.",
+      "default": "'div'",
+      "class": "MuiChartsTooltipContainer-root"
+    }
   ],
   "classes": [
     {
@@ -119,12 +138,6 @@
       "key": "paper",
       "className": "MuiChartsTooltipContainer-paper",
       "description": "Styles applied to the paper element.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsTooltipContainer-root",
-      "description": "Styles applied to the root element.",
       "isGlobal": false
     },
     {

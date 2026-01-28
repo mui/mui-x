@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils/createRenderer';
 import { describeConformance } from 'test/utils/describeConformance';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const cellSelector = '.MuiChartsTooltip-root td, .MuiChartsTooltip-root th';
 
@@ -75,7 +75,7 @@ describe('<ScatterChart />', () => {
         />
       </div>,
     );
-    const svg = document.querySelector<HTMLElement>('svg')!;
+    const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
     await user.pointer([
       // Set tooltip position voronoi value
       { target: svg, coords: { clientX: 10, clientY: 10 } },
@@ -132,7 +132,7 @@ describe('<ScatterChart />', () => {
     expect([...cells].map((cell) => cell.textContent)).to.deep.equal(['', '(5, 5)']);
   });
 
-  it.skipIf(isJSDOM)('should support dataset with missing values', async () => {
+  it('should support dataset with missing values', async () => {
     // x from 500 to 600
     // y from 100 to 200
     const dataset = [

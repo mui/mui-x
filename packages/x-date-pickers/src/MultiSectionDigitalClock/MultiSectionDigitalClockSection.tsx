@@ -34,8 +34,7 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
 }
 
 export interface MultiSectionDigitalClockSectionProps<TSectionValue extends number | string>
-  extends FormProps,
-    ExportedMultiSectionDigitalClockSectionProps {
+  extends FormProps, ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
   items: MultiSectionDigitalClockOption<TSectionValue>[];
   onChange: (value: TSectionValue) => void;
@@ -82,12 +81,6 @@ const MultiSectionDigitalClockSectionRoot = styled(MenuList, {
   },
   '&:not(:first-of-type)': {
     borderLeft: `1px solid ${(theme.vars || theme).palette.divider}`,
-  },
-  '&::after': {
-    display: 'block',
-    content: '""',
-    // subtracting the height of one item, extra margin and borders to make sure the max height is correct
-    height: 'calc(100% - 40px - 6px)',
   },
   variants: [
     {
@@ -193,9 +186,21 @@ export const MultiSectionDigitalClockSection = React.forwardRef(
       }
       previousActive.current = activeItem;
       const offsetTop = activeItem.offsetTop;
+      const itemHeight = activeItem.offsetHeight;
+      const containerHeight = containerRef.current.clientHeight;
+      const scrollableHeight = containerRef.current.scrollHeight;
 
-      // Subtracting the 4px of extra margin intended for the first visible section item
-      containerRef.current.scrollTop = offsetTop - 4;
+      // Calculate the ideal centered position
+      const centeredPosition = offsetTop - containerHeight / 2 + itemHeight / 2;
+
+      // Calculate the maximum scroll position that would show content at the bottom
+      const maxScrollTop = scrollableHeight - containerHeight;
+
+      // If centering would create empty space at the bottom, align the last items to the bottom instead
+      const scrollPosition = Math.min(centeredPosition, maxScrollTop);
+
+      // Ensure we don't scroll past the top
+      containerRef.current.scrollTop = Math.max(0, scrollPosition);
     });
 
     const focusedOptionIndex = items.findIndex((item) => item.isFocused(item.value));

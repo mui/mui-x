@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "ChartContainerPremium",
+  "imports": [
+    "import { ChartContainerPremium } from '@mui/x-charts-premium/ChartContainerPremium';",
+    "import { ChartContainerPremium } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartContainerPremium",
+  "filename": "/packages/x-charts-premium/src/ChartContainerPremium/ChartContainerPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/range-bar/\">Charts - Range Bar <a href=\"/x/introduction/licensing/#premium-plan\" title=\"Premium plan\"><span class=\"plan-premium\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

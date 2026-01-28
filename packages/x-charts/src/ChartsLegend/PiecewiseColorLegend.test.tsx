@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { createRenderer, describeConformance } from '@mui/internal-test-utils';
+import { createRenderer, describeConformance, screen } from '@mui/internal-test-utils';
 import { PiecewiseColorLegend, piecewiseColorLegendClasses } from '@mui/x-charts/ChartsLegend';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -49,4 +48,64 @@ describe('<PiecewiseColorLegend />', () => {
     // SKIP
     skip: ['themeVariants', 'componentProp', 'componentsProp'],
   }));
+
+  it('should apply inline-start class when labelPosition="inline-start"', () => {
+    render(
+      <ChartDataProvider
+        height={50}
+        width={50}
+        series={[
+          {
+            type: 'line',
+            label: 'Line 1',
+            data: [10, 20, 30, 40, 50],
+          },
+        ]}
+        zAxis={[
+          {
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+              colors: ['blue', 'gray', 'red'],
+            },
+          },
+        ]}
+      >
+        <PiecewiseColorLegend labelPosition="inline-start" />
+        <ChartsSurface />
+      </ChartDataProvider>,
+    );
+
+    expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineStart);
+  });
+
+  it('should apply inline-end class when labelPosition="inline-end"', () => {
+    render(
+      <ChartDataProvider
+        height={50}
+        width={50}
+        series={[
+          {
+            type: 'line',
+            label: 'Line 1',
+            data: [10, 20, 30, 40, 50],
+          },
+        ]}
+        zAxis={[
+          {
+            colorMap: {
+              type: 'piecewise',
+              thresholds: [new Date(1961, 0, 1), new Date(1990, 0, 1)],
+              colors: ['blue', 'gray', 'red'],
+            },
+          },
+        ]}
+      >
+        <PiecewiseColorLegend labelPosition="inline-end" />
+        <ChartsSurface />
+      </ChartDataProvider>,
+    );
+
+    expect(screen.getByRole('list').className).contains(piecewiseColorLegendClasses.inlineEnd);
+  });
 });

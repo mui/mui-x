@@ -1,4 +1,4 @@
-import * as React from 'react';
+import Box from '@mui/material/Box';
 import {
   LineChart,
   lineElementClasses,
@@ -20,32 +20,33 @@ const xLabels = [
 
 export default function DashedLineChart() {
   return (
-    <LineChart
-      height={300}
-      series={[
-        { data: pData, label: 'pv', id: 'pvId' },
-        { data: uData, label: 'uv', id: 'uvId' },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      yAxis={[{ width: 50 }]}
-      sx={{
-        [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
-          strokeWidth: 1,
-        },
-        [`.${lineElementClasses.root}[data-series="pvId"]`]: {
-          strokeDasharray: '5 5',
-        },
-        [`.${lineElementClasses.root}[data-series="uvId"]`]: {
-          strokeDasharray: '3 4 5 2',
-        },
-        [`.${markElementClasses.root}:not(.${markElementClasses.highlighted})`]: {
-          fill: '#fff',
-        },
-        [`& .${markElementClasses.highlighted}`]: {
-          stroke: 'none',
-        },
-      }}
-      margin={margin}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <LineChart
+        series={[
+          { data: pData, label: 'pv', id: 'pvId' },
+          { data: uData, label: 'uv', id: 'uvId' },
+        ]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
+        yAxis={[{ width: 50 }]}
+        sx={{
+          [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
+            strokeWidth: 1,
+          },
+          [`.${lineElementClasses.root}[data-series="pvId"]`]: {
+            strokeDasharray: '5 5',
+          },
+          [`.${lineElementClasses.root}[data-series="uvId"]`]: {
+            strokeDasharray: '3 4 5 2',
+          },
+          [`.${markElementClasses.root}:not(.${markElementClasses.highlighted})`]: {
+            fill: '#fff',
+          },
+          [`& .${markElementClasses.highlighted}`]: {
+            stroke: 'none',
+          },
+        }}
+        margin={margin}
+      />
+    </Box>
   );
 }

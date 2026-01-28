@@ -4,10 +4,10 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useSimpleTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 export default function ApiMethodSetItemSelectionKeepExistingSelection() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useSimpleTreeViewApiRef();
   const handleSelectGridPro = (event: React.SyntheticEvent) => {
     apiRef.current?.setItemSelection({
       event,

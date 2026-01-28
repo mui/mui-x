@@ -60,6 +60,22 @@ To disable clipboard paste, set the `disableClipboardPaste` prop to `true`:
 
 {{"demo": "ClipboardPasteDisabled.js", "bg": "inline"}}
 
+### Disable pasting to the specific cells within a row
+
+The clipboard paste operation respects the [cell editing rules](/x/react-data-grid/editing/#disable-editing-of-specific-cells-within-a-row).
+Use this to prevent pasting into certain cells based on row data or other conditions.
+
+The demo below shows a product inventory grid with the following paste restrictions:
+
+- **Price column:** Cannot be pasted in archived products
+- **Status column:** Cannot be pasted in any row
+- **Last Modified column:** Cannot be pasted in any row
+
+Try selecting multiple cells and pasting data.
+Cells marked as non-editable by `isCellEditable` will not be updated.
+
+{{"demo": "ClipboardPasteIsCellEditable.js", "bg": "inline"}}
+
 ### Persisting pasted data
 
 Clipboard paste uses the same API for persistence as [Editing](/x/react-data-grid/editing/persistence/)—use the `processRowUpdate` prop to persist the updated row in your data source:

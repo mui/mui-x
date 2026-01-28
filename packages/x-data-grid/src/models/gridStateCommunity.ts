@@ -34,7 +34,10 @@ import type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowRe
  * Some props are passed on the state to enable grid selectors to select
  * and react to them.
  */
-type GridStateProps = Pick<DataGridProcessedProps, 'getRowId' | 'listView'>;
+export type GridStateProps = Pick<
+  DataGridProcessedProps,
+  'getRowId' | 'listView' | 'isCellEditable' | 'isRowSelectable' | 'dataSource'
+>;
 
 /**
  * The state of Data Grid.

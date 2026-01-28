@@ -7,20 +7,22 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import { throttle } from '@mui/x-internals/throttle';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { roundToDecimalPlaces } from '@mui/x-internals/math';
-import { Store, useStore, useStoreEffect, createSelectorMemoized } from '@mui/x-internals/store';
+import { Store, useStore, createSelectorMemoized } from '@mui/x-internals/store';
 import { ColumnWithWidth, DimensionsState, RowId, RowEntry, RowsMetaState, Size } from '../models';
-import type { BaseState, VirtualizerParams } from '../useVirtualizer';
+import type { BaseState, ParamsWithDefaults } from '../useVirtualizer';
 
 /* eslint-disable import/export, @typescript-eslint/no-redeclare */
 /* eslint-disable no-underscore-dangle */
 
 export type DimensionsParams = {
   rowHeight: number;
-  columnsTotalWidth: number;
-  leftPinnedWidth: number;
-  rightPinnedWidth: number;
-  topPinnedHeight: number;
-  bottomPinnedHeight: number;
+  columnsTotalWidth?: number;
+  leftPinnedWidth?: number;
+  rightPinnedWidth?: number;
+  topPinnedHeight?: number;
+  bottomPinnedHeight?: number;
+  autoHeight?: boolean;
+  minimalContentHeight?: number | string;
   scrollbarSize?: number;
 };
 
@@ -41,14 +43,20 @@ const EMPTY_DIMENSIONS: DimensionsState = {
   rightPinnedWidth: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 const selectors = {
   rootSize: (state: BaseState) => state.rootSize,
   dimensions: (state: BaseState) => state.dimensions,
   rowHeight: (state: BaseState) => state.dimensions.rowHeight,
+  columnsTotalWidth: (state: BaseState) => state.dimensions.columnsTotalWidth,
   contentHeight: (state: BaseState) => state.dimensions.contentSize.height,
+  autoHeight: (state: BaseState) => state.dimensions.autoHeight,
+  minimalContentHeight: (state: BaseState) => state.dimensions.minimalContentHeight,
   rowsMeta: (state: BaseState) => state.rowsMeta,
+  rowPositions: (state: BaseState) => state.rowsMeta.positions,
   columnPositions: createSelectorMemoized((_, columns: ColumnWithWidth[]) => {
     const positions: number[] = [];
     let currentPosition = 0;
@@ -80,10 +88,12 @@ export namespace Dimensions {
   export type API = ReturnType<typeof useDimensions>;
 }
 
-function initializeState(params: VirtualizerParams): Dimensions.State {
+function initializeState(params: ParamsWithDefaults): Dimensions.State {
   const dimensions = {
     ...EMPTY_DIMENSIONS,
     ...params.dimensions,
+    autoHeight: params.dimensions.autoHeight,
+    minimalContentHeight: params.dimensions.minimalContentHeight,
   };
 
   const { rowCount } = params;
@@ -106,11 +116,11 @@ function initializeState(params: VirtualizerParams): Dimensions.State {
   };
 }
 
-function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api: {}) {
+function useDimensions(store: Store<BaseState>, params: ParamsWithDefaults, _api: {}) {
   const isFirstSizing = React.useRef(true);
 
   const {
-    refs,
+    layout,
     dimensions: {
       rowHeight,
       columnsTotalWidth,
@@ -119,160 +129,174 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
       topPinnedHeight,
       bottomPinnedHeight,
     },
+    onResize,
   } = params;
 
-  const containerNode = refs.container.current;
+  const updateDimensions = React.useCallback(
+    (firstUpdate?: boolean) => {
+      if (firstUpdate) {
+        isFirstSizing.current = false;
+      }
+      if (isFirstSizing.current) {
+        return;
+      }
 
-  const updateDimensions = React.useCallback(() => {
-    if (isFirstSizing.current) {
-      return;
-    }
+      const containerNode = layout.refs.container.current;
+      const rootSize = selectors.rootSize(store.state);
+      const rowsMeta = selectors.rowsMeta(store.state);
 
-    const rootSize = selectors.rootSize(store.state);
-    const rowsMeta = selectors.rowsMeta(store.state);
+      // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
+      // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
+      // https://github.com/mui/mui-x/issues/15721
+      const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
 
-    // All the floating point dimensions should be rounded to .1 decimal places to avoid subpixel rendering issues
-    // https://github.com/mui/mui-x/issues/9550#issuecomment-1619020477
-    // https://github.com/mui/mui-x/issues/15721
-    const scrollbarSize = measureScrollbarSize(containerNode, params.dimensions.scrollbarSize);
+      const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
+      const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
 
-    const topContainerHeight = topPinnedHeight + rowsMeta.pinnedTopRowsTotalHeight;
-    const bottomContainerHeight = bottomPinnedHeight + rowsMeta.pinnedBottomRowsTotalHeight;
-
-    const contentSize = {
-      width: columnsTotalWidth,
-      height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
-    };
-
-    let viewportOuterSize: Size;
-    let viewportInnerSize: Size;
-    let hasScrollX = false;
-    let hasScrollY = false;
-
-    if (params.autoHeight) {
-      hasScrollY = false;
-      hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
-
-      viewportOuterSize = {
-        width: rootSize.width,
-        height: topContainerHeight + bottomContainerHeight + contentSize.height,
-      };
-      viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
-        height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
-      };
-    } else {
-      viewportOuterSize = {
-        width: rootSize.width,
-        height: rootSize.height,
-      };
-      viewportInnerSize = {
-        width: Math.max(0, viewportOuterSize.width),
-        height: Math.max(0, viewportOuterSize.height - topContainerHeight - bottomContainerHeight),
+      const contentSize = {
+        width: columnsTotalWidth,
+        height: roundToDecimalPlaces(rowsMeta.currentPageTotalHeight, 1),
       };
 
-      const content = contentSize;
-      const container = viewportInnerSize;
+      let viewportOuterSize: Size;
+      let viewportInnerSize: Size;
+      let hasScrollX = false;
+      let hasScrollY = false;
 
-      const hasScrollXIfNoYScrollBar = content.width > container.width;
-      const hasScrollYIfNoXScrollBar = content.height > container.height;
+      if (params.dimensions.autoHeight) {
+        hasScrollY = false;
+        hasScrollX = Math.round(columnsTotalWidth) > Math.round(rootSize.width);
 
-      if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
-        hasScrollY = hasScrollYIfNoXScrollBar;
-        hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+        viewportOuterSize = {
+          width: rootSize.width,
+          height: topContainerHeight + bottomContainerHeight + contentSize.height,
+        };
+        viewportInnerSize = {
+          width: Math.max(0, viewportOuterSize.width - (hasScrollY ? scrollbarSize : 0)),
+          height: Math.max(0, viewportOuterSize.height - (hasScrollX ? scrollbarSize : 0)),
+        };
+      } else {
+        viewportOuterSize = {
+          width: rootSize.width,
+          height: rootSize.height,
+        };
+        viewportInnerSize = {
+          width: Math.max(0, viewportOuterSize.width),
+          height: Math.max(
+            0,
+            viewportOuterSize.height - topContainerHeight - bottomContainerHeight,
+          ),
+        };
 
-        // We recalculate the scroll y to consider the size of the x scrollbar.
+        const content = contentSize;
+        const container = viewportInnerSize;
+
+        const hasScrollXIfNoYScrollBar = content.width > container.width;
+        const hasScrollYIfNoXScrollBar = content.height > container.height;
+
+        if (hasScrollXIfNoYScrollBar || hasScrollYIfNoXScrollBar) {
+          hasScrollY = hasScrollYIfNoXScrollBar;
+          hasScrollX = content.width + (hasScrollY ? scrollbarSize : 0) > container.width;
+
+          // We recalculate the scroll y to consider the size of the x scrollbar.
+          if (hasScrollX) {
+            hasScrollY = content.height + scrollbarSize > container.height;
+          }
+        }
+
+        if (hasScrollY) {
+          viewportInnerSize.width -= scrollbarSize;
+        }
         if (hasScrollX) {
-          hasScrollY = content.height + scrollbarSize > container.height;
+          viewportInnerSize.height -= scrollbarSize;
         }
       }
 
-      if (hasScrollY) {
-        viewportInnerSize.width -= scrollbarSize;
+      if (params.disableHorizontalScroll) {
+        hasScrollX = false;
       }
-      if (hasScrollX) {
-        viewportInnerSize.height -= scrollbarSize;
+
+      if (params.disableVerticalScroll) {
+        hasScrollY = false;
       }
-    }
 
-    const rowWidth = Math.max(
-      viewportOuterSize.width,
-      columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
-    );
+      const rowWidth = Math.max(
+        viewportOuterSize.width,
+        columnsTotalWidth + (hasScrollY ? scrollbarSize : 0),
+      );
 
-    const minimumSize = {
-      width: columnsTotalWidth,
-      height: topContainerHeight + contentSize.height + bottomContainerHeight,
-    };
+      const minimumSize = {
+        width: columnsTotalWidth,
+        height: topContainerHeight + contentSize.height + bottomContainerHeight,
+      };
 
-    const newDimensions: DimensionsState = {
-      isReady: true,
-      root: rootSize,
-      viewportOuterSize,
-      viewportInnerSize,
-      contentSize,
-      minimumSize,
-      hasScrollX,
-      hasScrollY,
-      scrollbarSize,
-      rowWidth,
+      const newDimensions: DimensionsState = {
+        isReady: true,
+        root: rootSize,
+        viewportOuterSize,
+        viewportInnerSize,
+        contentSize,
+        minimumSize,
+        hasScrollX,
+        hasScrollY,
+        scrollbarSize,
+        rowWidth,
+        rowHeight,
+        columnsTotalWidth,
+        leftPinnedWidth,
+        rightPinnedWidth,
+        topContainerHeight,
+        bottomContainerHeight,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
+      };
+
+      const prevDimensions = store.state.dimensions;
+
+      if (isDeepEqual(prevDimensions as any, newDimensions)) {
+        return;
+      }
+
+      store.update({ dimensions: newDimensions });
+      onResize?.(newDimensions.root);
+    },
+    [
+      store,
+      layout.refs.container,
+      params.dimensions.scrollbarSize,
+      params.dimensions.autoHeight,
+      params.dimensions.minimalContentHeight,
+      params.disableHorizontalScroll,
+      params.disableVerticalScroll,
+      onResize,
       rowHeight,
       columnsTotalWidth,
       leftPinnedWidth,
       rightPinnedWidth,
-      topContainerHeight,
-      bottomContainerHeight,
-    };
+      topPinnedHeight,
+      bottomPinnedHeight,
+    ],
+  );
 
-    const prevDimensions = store.state.dimensions;
-
-    if (isDeepEqual(prevDimensions as any, newDimensions)) {
-      return;
-    }
-
-    store.update({ dimensions: newDimensions });
-  }, [
-    store,
-    containerNode,
-    params.dimensions.scrollbarSize,
-    params.autoHeight,
-    rowHeight,
-    columnsTotalWidth,
-    leftPinnedWidth,
-    rightPinnedWidth,
-    topPinnedHeight,
-    bottomPinnedHeight,
-  ]);
-
-  const { resizeThrottleMs, onResize } = params;
+  const { resizeThrottleMs } = params;
   const updateDimensionCallback = useEventCallback(updateDimensions);
   const debouncedUpdateDimensions = React.useMemo(
-    () =>
-      resizeThrottleMs > 0
-        ? throttle(() => {
-            updateDimensionCallback();
-            onResize?.(store.state.rootSize);
-          }, resizeThrottleMs)
-        : undefined,
-    [resizeThrottleMs, onResize, store, updateDimensionCallback],
+    () => (resizeThrottleMs > 0 ? throttle(updateDimensionCallback, resizeThrottleMs) : undefined),
+    [resizeThrottleMs, updateDimensionCallback],
   );
   React.useEffect(() => debouncedUpdateDimensions?.clear, [debouncedUpdateDimensions]);
 
-  useLayoutEffect(() => observeRootNode(containerNode, store), [containerNode, store]);
-
   useLayoutEffect(updateDimensions, [updateDimensions]);
 
-  useStoreEffect(store, selectors.rootSize, (_, size) => {
-    params.onResize?.(size);
-
-    if (isFirstSizing.current || !debouncedUpdateDimensions) {
-      // We want to initialize the grid dimensions as soon as possible to avoid flickering
-      isFirstSizing.current = false;
-      updateDimensions();
-    } else {
-      debouncedUpdateDimensions();
-    }
-  });
+  useLayoutEffect(() => {
+    store.update({
+      dimensions: {
+        ...store.state.dimensions,
+        autoHeight: params.dimensions.autoHeight,
+        minimalContentHeight: params.dimensions.minimalContentHeight,
+      },
+    });
+  }, [store, params.dimensions.autoHeight, params.dimensions.minimalContentHeight]);
 
   const rowsMeta = useRowsMeta(store, params, updateDimensions);
 
@@ -285,7 +309,7 @@ function useDimensions(store: Store<BaseState>, params: VirtualizerParams, _api:
 
 function useRowsMeta(
   store: Store<BaseState>,
-  params: VirtualizerParams,
+  params: ParamsWithDefaults,
   updateDimensions: Function,
 ) {
   const heightCache = store.state.rowHeights;
@@ -419,7 +443,6 @@ function useRowsMeta(
     };
 
     store.set('rowsMeta', rowsMeta);
-
     if (didHeightsChange) {
       updateDimensions();
     }
@@ -518,7 +541,11 @@ function useRowsMeta(
   };
 }
 
-function observeRootNode(node: Element | null, store: Store<BaseState>) {
+export function observeRootNode(
+  node: Element | null,
+  store: Store<BaseState>,
+  setRootSize: (size: Size) => void,
+) {
   if (!node) {
     return undefined;
   }
@@ -528,7 +555,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
     height: roundToDecimalPlaces(bounds.height, 1),
   };
   if (store.state.rootSize === Size.EMPTY || !Size.equals(initialSize, store.state.rootSize)) {
-    store.update({ rootSize: initialSize });
+    setRootSize(initialSize);
   }
 
   if (typeof ResizeObserver === 'undefined') {
@@ -543,7 +570,7 @@ function observeRootNode(node: Element | null, store: Store<BaseState>) {
       height: roundToDecimalPlaces(entry.contentRect.height, 1),
     };
     if (!Size.equals(rootSize, store.state.rootSize)) {
-      store.update({ rootSize });
+      setRootSize(rootSize);
     }
   });
 

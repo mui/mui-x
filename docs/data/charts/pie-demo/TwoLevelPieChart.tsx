@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
+import Box from '@mui/material/Box';
 
 const data1 = [
   { label: 'Group A', value: 400 },
@@ -23,21 +23,22 @@ const data2 = [
 
 export default function TwoLevelPieChart() {
   return (
-    <PieChart
-      series={[
-        {
-          innerRadius: 0,
-          outerRadius: 80,
-          data: data1,
-        },
-        {
-          innerRadius: 100,
-          outerRadius: 120,
-          data: data2,
-        },
-      ]}
-      height={300}
-      hideLegend
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <PieChart
+        series={[
+          {
+            innerRadius: 0,
+            outerRadius: 60,
+            data: data1,
+          },
+          {
+            innerRadius: 80,
+            outerRadius: 100,
+            data: data2,
+          },
+        ]}
+        hideLegend
+      />
+    </Box>
   );
 }

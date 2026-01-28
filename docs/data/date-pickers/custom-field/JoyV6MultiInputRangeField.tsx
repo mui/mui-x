@@ -37,7 +37,8 @@ import {
 const joyTheme = extendJoyTheme();
 
 interface JoyTextFieldProps
-  extends UseMultiInputRangeFieldTextFieldProps<false, {}>,
+  extends
+    UseMultiInputRangeFieldTextFieldProps<false, {}>,
     Omit<InputProps, keyof UseMultiInputRangeFieldTextFieldProps<false, {}>> {
   label?: React.ReactNode;
   triggerRef?: React.Ref<HTMLDivElement>;
@@ -74,10 +75,8 @@ function JoyField(props: JoyTextFieldProps) {
 }
 
 interface JoyMultiInputDateRangeFieldProps
-  extends Omit<
-      DateRangePickerFieldProps,
-      'unstableFieldRef' | 'clearable' | 'onClear'
-    >,
+  extends
+    Omit<DateRangePickerFieldProps, 'unstableFieldRef' | 'clearable' | 'onClear'>,
     MultiInputFieldRefs {
   slotProps: {
     textField: any;

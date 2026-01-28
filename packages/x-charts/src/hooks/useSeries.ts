@@ -1,8 +1,7 @@
 'use client';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import { selectorChartSeriesProcessed } from '../internals/plugins/corePlugins/useChartSeries/useChartSeries.selectors';
-import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
+import { type UseChartSeriesSignature } from '../internals/plugins/corePlugins/useChartSeries';
 
 /**
  * Get access to the internal state of series.
@@ -12,5 +11,5 @@ import { UseChartSeriesSignature } from '../internals/plugins/corePlugins/useCha
  */
 export function useSeries() {
   const store = useStore<[UseChartSeriesSignature]>();
-  return useSelector(store, selectorChartSeriesProcessed);
+  return store.use(selectorChartSeriesProcessed);
 }

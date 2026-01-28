@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
@@ -83,6 +82,7 @@ const chartSetting = {
       dataKey: 'year',
       valueFormatter: (v: number | null) => (v ? v.toString() : ''),
       domainLimit: 'strict' as const,
+      height: 28,
     },
   ],
 };

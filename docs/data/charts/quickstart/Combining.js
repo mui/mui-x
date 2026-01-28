@@ -1,5 +1,4 @@
-import * as React from 'react';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import { BarPlot } from '@mui/x-charts/BarChart';
 import { LineHighlightPlot, LinePlot } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
@@ -38,59 +37,55 @@ const series = [
 
 export default function Combining() {
   return (
-    <div style={{ width: '100%' }}>
-      <Typography>Alphabet stocks</Typography>
-      <div>
-        <ChartContainer
-          series={series}
-          height={400}
-          xAxis={[
-            {
-              id: 'date',
-              data: alphabetStock.map((day) => new Date(day.date)),
-              scaleType: 'band',
-              valueFormatter: (value) => value.toLocaleDateString(),
-              height: 40,
-            },
-          ]}
-          yAxis={[
-            { id: 'price', scaleType: 'linear', position: 'left', width: 50 },
-            {
-              id: 'volume',
-              scaleType: 'linear',
-              position: 'right',
-              valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
-              width: 55,
-            },
-          ]}
-        >
-          <ChartsAxisHighlight x="line" />
-          <BarPlot />
-          <LinePlot />
-          <LineHighlightPlot />
-          <ChartsXAxis
-            label="Date"
-            axisId="date"
-            tickInterval={(value, index) => {
-              return index % 30 === 0;
-            }}
-            tickLabelStyle={{
-              fontSize: 10,
-            }}
-          />
-          <ChartsYAxis
-            label="Price (USD)"
-            axisId="price"
-            tickLabelStyle={{ fontSize: 10 }}
-          />
-          <ChartsYAxis
-            label="Volume"
-            axisId="volume"
-            tickLabelStyle={{ fontSize: 10 }}
-          />
-          <ChartsTooltip />
-        </ChartContainer>
-      </div>
-    </div>
+    <Box sx={{ width: '100%', height: 400 }}>
+      <ChartContainer
+        series={series}
+        xAxis={[
+          {
+            id: 'date',
+            data: alphabetStock.map((day) => new Date(day.date)),
+            scaleType: 'band',
+            valueFormatter: (value) => value.toLocaleDateString(),
+            height: 48,
+          },
+        ]}
+        yAxis={[
+          { id: 'price', scaleType: 'linear', position: 'left', width: 50 },
+          {
+            id: 'volume',
+            scaleType: 'linear',
+            position: 'right',
+            valueFormatter: (value) => `${(value / 1000000).toLocaleString()}M`,
+            width: 55,
+          },
+        ]}
+      >
+        <ChartsAxisHighlight x="line" />
+        <BarPlot />
+        <LinePlot />
+        <LineHighlightPlot />
+        <ChartsXAxis
+          label="Date"
+          axisId="date"
+          tickInterval={(value, index) => {
+            return index % 30 === 0;
+          }}
+          tickLabelStyle={{
+            fontSize: 10,
+          }}
+        />
+        <ChartsYAxis
+          label="Alphabet Stock Price (USD)"
+          axisId="price"
+          tickLabelStyle={{ fontSize: 10 }}
+        />
+        <ChartsYAxis
+          label="Volume"
+          axisId="volume"
+          tickLabelStyle={{ fontSize: 10 }}
+        />
+        <ChartsTooltip />
+      </ChartContainer>
+    </Box>
   );
 }

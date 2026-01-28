@@ -1,7 +1,7 @@
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 
 export interface BarElementClasses {
   /** Styles applied to the root element. */
@@ -20,11 +20,12 @@ export interface BarElementClasses {
 export type BarElementClassKey = keyof BarElementClasses;
 
 export interface BarElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
   classes?: Partial<BarElementClasses>;
 }
 
@@ -40,9 +41,9 @@ export const barElementClasses: BarElementClasses = generateUtilityClasses('MuiB
 ]);
 
 export const useUtilityClasses = (ownerState: BarElementOwnerState) => {
-  const { classes, id, isHighlighted, isFaded } = ownerState;
+  const { classes, seriesId, isHighlighted, isFaded } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getBarElementUtilityClass, classes);

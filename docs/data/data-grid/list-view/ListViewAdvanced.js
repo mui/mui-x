@@ -4,6 +4,8 @@ import {
   useGridApiRef,
   DataGridPremium,
   gridClasses,
+  GridActionsCell,
+  useGridApiContext,
 } from '@mui/x-data-grid-premium';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,6 +26,114 @@ import { FILE_TYPES } from './constants';
 import { formatDate, formatSize, stringAvatar } from './utils';
 import { ActionDrawer } from './components/ActionDrawer';
 import { RenameDialog } from './components/RenameDialog';
+
+const ActionHandlersContext = React.createContext(null);
+
+function ActionsCell(props) {
+  const context = React.useContext(ActionHandlersContext);
+  const apiRef = useGridApiContext();
+  if (!context) {
+    return null;
+  }
+  const { setOverlayState, handleDelete } = context;
+
+  return (
+    <GridActionsCell {...props}>
+      <GridActionsCellItem
+        label="Preview"
+        icon={<OpenIcon fontSize="small" />}
+        onClick={() => {
+          setOverlayState({ overlay: 'actions', params: props });
+        }}
+        showInMenu
+      />
+      <GridActionsCellItem
+        label="Rename"
+        icon={<EditIcon fontSize="small" />}
+        onClick={() =>
+          apiRef.current?.startCellEditMode({
+            id: props.id,
+            field: 'name',
+          })
+        }
+        showInMenu
+      />
+      <GridActionsCellItem
+        label="Delete"
+        icon={<DeleteIcon fontSize="small" />}
+        onClick={() => handleDelete([props.id])}
+        showInMenu
+      />
+    </GridActionsCell>
+  );
+}
+
+const columns = [
+  {
+    field: 'name',
+    headerName: 'Name',
+    width: 350,
+    editable: true,
+    hideable: false,
+    renderCell: (params) => {
+      return (
+        <Stack direction="row" gap={1.5} alignItems="center" sx={{ height: '100%' }}>
+          <FileIcon type={params.row.type} />
+          {params.value}
+        </Stack>
+      );
+    },
+  },
+  {
+    field: 'createdBy',
+    headerName: 'Owner',
+    width: 200,
+    renderCell: (params) => {
+      const avatarProps = stringAvatar(params.value);
+      return (
+        <Stack direction="row" gap={1.5} alignItems="center">
+          <Avatar
+            {...avatarProps}
+            sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}
+          />
+          {params.value}
+        </Stack>
+      );
+    },
+  },
+  {
+    field: 'createdAt',
+    headerName: 'Added',
+    type: 'date',
+    width: 200,
+    valueFormatter: formatDate,
+  },
+  {
+    field: 'updatedAt',
+    headerName: 'Modified',
+    type: 'date',
+    width: 200,
+    valueFormatter: formatDate,
+  },
+  {
+    field: 'type',
+    headerName: 'Type',
+    width: 150,
+  },
+  {
+    field: 'size',
+    headerName: 'Size',
+    width: 120,
+    valueFormatter: formatSize,
+  },
+  {
+    type: 'actions',
+    field: 'actions',
+    resizable: false,
+    width: 50,
+    renderCell: (params) => <ActionsCell {...params} />,
+  },
+];
 
 export default function ListViewAdvanced({ window }) {
   // This is used only for the example - renders the drawer inside the container
@@ -110,107 +220,6 @@ export default function ListViewAdvanced({ window }) {
     [apiRef],
   );
 
-  const columns = React.useMemo(
-    () => [
-      {
-        field: 'name',
-        headerName: 'Name',
-        width: 350,
-        editable: true,
-        hideable: false,
-        renderCell: (params) => {
-          return (
-            <Stack
-              direction="row"
-              gap={1.5}
-              alignItems="center"
-              sx={{ height: '100%' }}
-            >
-              <FileIcon type={params.row.type} />
-              {params.value}
-            </Stack>
-          );
-        },
-      },
-      {
-        field: 'createdBy',
-        headerName: 'Owner',
-        width: 200,
-        renderCell: (params) => {
-          const avatarProps = stringAvatar(params.value);
-          return (
-            <Stack direction="row" gap={1.5} alignItems="center">
-              <Avatar
-                {...avatarProps}
-                sx={{ width: 24, height: 24, fontSize: 12, ...avatarProps.sx }}
-              />
-              {params.value}
-            </Stack>
-          );
-        },
-      },
-      {
-        field: 'createdAt',
-        headerName: 'Added',
-        type: 'date',
-        width: 200,
-        valueFormatter: formatDate,
-      },
-      {
-        field: 'updatedAt',
-        headerName: 'Modified',
-        type: 'date',
-        width: 200,
-        valueFormatter: formatDate,
-      },
-      {
-        field: 'type',
-        headerName: 'Type',
-        width: 150,
-      },
-      {
-        field: 'size',
-        headerName: 'Size',
-        width: 120,
-        valueFormatter: formatSize,
-      },
-      {
-        type: 'actions',
-        field: 'actions',
-        resizable: false,
-        width: 50,
-        getActions: (params) => [
-          <GridActionsCellItem
-            label="Preview"
-            icon={<OpenIcon fontSize="small" />}
-            onClick={() => {
-              setOverlayState({ overlay: 'actions', params });
-            }}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            label="Rename"
-            icon={<EditIcon fontSize="small" />}
-            onClick={() =>
-              apiRef.current?.startCellEditMode({
-                id: params.id,
-                field: 'name',
-              })
-            }
-            showInMenu
-          />,
-          <GridActionsCellItem
-            label="Delete"
-            icon={<DeleteIcon fontSize="small" />}
-            onClick={() => handleDelete([params.id])}
-            showInMenu
-          />,
-        ],
-      },
-    ],
-    [handleDelete, apiRef],
-  );
-
   const listViewColDef = React.useMemo(
     () => ({
       field: 'listCell',
@@ -259,6 +268,15 @@ export default function ListViewAdvanced({ window }) {
     [isListView],
   );
 
+  const actionHandlers = React.useMemo(
+    () => ({
+      setOverlayState,
+      apiRef,
+      handleDelete,
+    }),
+    [apiRef, handleDelete],
+  );
+
   return (
     <React.Fragment>
       <CSSBaseline />
@@ -268,65 +286,69 @@ export default function ListViewAdvanced({ window }) {
           height: 600,
         }}
       >
-        <DataGridPremium
-          apiRef={apiRef}
-          rows={INITIAL_ROWS}
-          columns={columns}
-          loading={loading}
-          slots={{ toolbar: Toolbar }}
-          showToolbar
-          slotProps={{
-            toolbar: {
-              listView: isListView,
-              container,
-              handleDelete,
-              handleUpload,
-            },
-            loadingOverlay: {
-              variant: 'linear-progress',
-            },
-          }}
-          listView={isListView}
-          listViewColumn={listViewColDef}
-          pagination
-          pageSizeOptions={[10]}
-          initialState={{
-            density: 'comfortable',
-            pagination: {
-              paginationModel: {
-                pageSize: 10,
+        <ActionHandlersContext.Provider value={actionHandlers}>
+          <DataGridPremium
+            apiRef={apiRef}
+            rows={INITIAL_ROWS}
+            columns={columns}
+            loading={loading}
+            slots={{ toolbar: Toolbar }}
+            showToolbar
+            slotProps={{
+              toolbar: {
+                listView: isListView,
+                container,
+                handleDelete,
+                handleUpload,
               },
-            },
-            sorting: {
-              sortModel: [{ field: 'createdAt', sort: 'desc' }],
-            },
-            columns: {
-              columnVisibilityModel: {
-                type: false,
+              loadingOverlay: {
+                variant: 'linear-progress',
               },
-            },
-          }}
-          sx={{
-            border: 0,
-            borderRadius: 0,
-            [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
-            [`&.${gridClasses['root--densityCompact']} .${gridClasses.cell}`]: {
-              py: 1,
-            },
-            [`&.${gridClasses['root--densityStandard']} .${gridClasses.cell}`]: {
-              py: 1.5,
-            },
-            [`&.${gridClasses['root--densityComfortable']} .${gridClasses.cell}`]: {
-              py: 2,
-            },
-          }}
-          getRowHeight={getRowHeight}
-          getEstimatedRowHeight={getEstimatedRowHeight}
-          onRowDoubleClick={(params) =>
-            setOverlayState({ overlay: 'actions', params })
-          }
-          hideFooterSelectedRowCount
-        />
+            }}
+            listView={isListView}
+            listViewColumn={listViewColDef}
+            pagination
+            pageSizeOptions={[10]}
+            initialState={{
+              density: 'comfortable',
+              pagination: {
+                paginationModel: {
+                  pageSize: 10,
+                },
+              },
+              sorting: {
+                sortModel: [{ field: 'createdAt', sort: 'desc' }],
+              },
+              columns: {
+                columnVisibilityModel: {
+                  type: false,
+                },
+              },
+            }}
+            sx={{
+              border: 0,
+              borderRadius: 0,
+              [`& .${gridClasses.cell}`]: { display: 'flex', alignItems: 'center' },
+              [`&.${gridClasses['root--densityCompact']} .${gridClasses.cell}`]: {
+                py: 1,
+              },
+              [`&.${gridClasses['root--densityStandard']} .${gridClasses.cell}`]: {
+                py: 1.5,
+              },
+              [`&.${gridClasses['root--densityComfortable']} .${gridClasses.cell}`]:
+                {
+                  py: 2,
+                },
+            }}
+            getRowHeight={getRowHeight}
+            getEstimatedRowHeight={getEstimatedRowHeight}
+            onRowDoubleClick={(params) =>
+              setOverlayState({ overlay: 'actions', params })
+            }
+            hideFooterSelectedRowCount
+          />
+        </ActionHandlersContext.Provider>
+
         <DetailsDrawer
           open={overlayState.overlay === 'details'}
           params={overlayState.params}

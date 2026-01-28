@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Box from '@mui/material/Box';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';

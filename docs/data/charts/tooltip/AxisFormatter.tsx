@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 
 const dataset = [

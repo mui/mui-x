@@ -2,30 +2,34 @@
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { ChartsOverlay, ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import {
+  ChartsAxisHighlight,
+  type ChartsAxisHighlightProps,
+} from '@mui/x-charts/ChartsAxisHighlight';
 import { ChartsAxis } from '@mui/x-charts/ChartsAxis';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
-import { FunnelPlot, FunnelPlotProps } from './FunnelPlot';
-import { FunnelSeriesType } from './funnel.types';
+import { FunnelPlot, type FunnelPlotProps } from './FunnelPlot';
+import { type FunnelSeriesType } from './funnel.types';
 import { useFunnelChartProps } from './useFunnelChartProps';
-import { ChartContainerProProps } from '../ChartContainerPro';
-import { seriesConfig as funnelSeriesConfig } from './seriesConfig';
+import { type ChartContainerProProps } from '../ChartContainerPro';
+import { funnelSeriesConfig } from './seriesConfig';
 import { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 import { ChartDataProviderPro } from '../ChartDataProviderPro';
-import { FunnelChartSlotExtension } from './funnelSlots.types';
-import { CategoryAxis } from './categoryAxis.types';
-import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
+import { type FunnelChartSlotExtension } from './funnelSlots.types';
+import { type CategoryAxis } from './categoryAxis.types';
+import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
+import { FocusedFunnelSection } from './FocusedFunnelSection';
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
-  extends Omit<
-      ChartContainerProProps<'funnel', FunnelChartPluginsSignatures>,
+  extends
+    Omit<
+      ChartContainerProProps<'funnel', FunnelChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'zAxis'
@@ -69,7 +73,7 @@ export interface FunnelChartProps
   axisHighlight?: ChartsAxisHighlightProps;
 }
 
-const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelSeriesConfig };
+const seriesConfig = { funnel: funnelSeriesConfig };
 
 const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,
@@ -95,7 +99,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
   const Tooltip = themedProps.slots?.tooltip ?? ChartsTooltip;
 
   return (
-    <ChartDataProviderPro<'funnel', FunnelChartPluginsSignatures>
+    <ChartDataProviderPro<'funnel', FunnelChartPluginSignatures>
       {...chartDataProviderProProps}
       gap={themedProps.gap}
       seriesConfig={seriesConfig}
@@ -108,6 +112,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
           <ChartsAxis {...chartsAxisProps} />
+          <FocusedFunnelSection />
           {children}
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
@@ -245,6 +250,7 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
@@ -254,6 +260,33 @@ FunnelChart.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['funnel']).isRequired,
+    }),
+  ),
   /**
    * If `true`, the legend is not rendered.
    * @default false
@@ -265,13 +298,41 @@ FunnelChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['funnel']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -304,6 +365,11 @@ FunnelChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -315,6 +381,12 @@ FunnelChart.propTypes = {
    * @param {FunnelItemIdentifier} funnelItemIdentifier The funnel item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The series to display in the funnel chart.
    * An array of [[FunnelSeries]] objects.
@@ -342,6 +414,15 @@ FunnelChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['funnel']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

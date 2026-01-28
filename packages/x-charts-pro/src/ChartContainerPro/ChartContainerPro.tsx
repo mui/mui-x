@@ -1,11 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartsSurface, ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
-import { ChartAnyPluginSignature, ChartSeriesType } from '@mui/x-charts/internals';
+import { ChartsSurface, type ChartsSurfaceProps } from '@mui/x-charts/ChartsSurface';
+import { type ChartAnyPluginSignature, type ChartSeriesType } from '@mui/x-charts/internals';
 import { useChartContainerProProps } from './useChartContainerProProps';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartDataProviderPro, ChartDataProviderProProps } from '../ChartDataProviderPro';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { ChartDataProviderPro, type ChartDataProviderProProps } from '../ChartDataProviderPro';
+
+export interface ChartContainerProSlots {}
+
+export interface ChartContainerProSlotProps {}
 
 export type ChartContainerProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -30,7 +34,7 @@ type ChartContainerProComponent = <
  *
  * API:
  *
- * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ * - [ChartContainerPro API](https://mui.com/x/api/charts/chart-container-pro/)
  *
  * @example
  * ```jsx
@@ -53,7 +57,7 @@ const ChartContainerPro = React.forwardRef(function ChartContainerProInner<
   >(props, ref);
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps}>
+    <ChartDataProviderPro<TSeries, TSignatures> {...chartDataProviderProProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProviderPro>
   );

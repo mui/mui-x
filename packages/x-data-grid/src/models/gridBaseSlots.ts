@@ -142,6 +142,11 @@ export type IconButtonProps = Omit<ButtonProps, 'startIcon'> & {
   edge?: 'start' | 'end' | false;
 };
 
+export type ToggleButtonProps = CommonProps & {
+  selected?: boolean;
+  value: string;
+};
+
 export type DividerProps = {
   className?: string;
   orientation?: 'horizontal' | 'vertical';
@@ -201,6 +206,7 @@ export type PaginationProps = CommonProps & {
 };
 
 export type PopperProps = CommonProps & {
+  role?: string;
   ref?: Ref<HTMLDivElement>;
   open: boolean;
   children?: React.ReactNode;
@@ -246,6 +252,19 @@ export type InputProps = CommonProps & {
   };
 };
 
+export type TextareaProps = CommonProps & {
+  ref?: React.Ref<HTMLTextAreaElement>;
+  inputRef?: React.Ref<HTMLTextAreaElement>;
+  fullWidth?: boolean;
+  value?: string;
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement>;
+  disabled?: boolean;
+  autoFocus?: boolean;
+  minRows?: number;
+  maxRows?: number;
+};
+
 export type SelectProps = CommonProps & {
   ref?: Ref;
   id?: string;
@@ -287,6 +306,18 @@ export type SwitchProps = CommonProps & {
   onChange?: React.ChangeEventHandler;
   size?: 'small' | 'medium';
   label?: React.ReactNode;
+  disabled?: boolean;
+  title?: string;
+};
+
+export type TabsProps = Omit<CommonProps, 'onChange'> & {
+  items: {
+    value: string;
+    label: string;
+    children: React.ReactNode;
+  }[];
+  value: string;
+  onChange: (event: React.SyntheticEvent, value: string) => void;
 };
 
 export type TextFieldProps = CommonProps & {

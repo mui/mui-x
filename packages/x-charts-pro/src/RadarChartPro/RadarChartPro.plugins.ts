@@ -1,23 +1,27 @@
-import {
+import type {
   ConvertSignaturesIntoPlugins,
-  useChartHighlight,
   UseChartHighlightSignature,
-  useChartInteraction,
+  UseChartTooltipSignature,
   UseChartInteractionSignature,
-  useChartPolarAxis,
   UseChartPolarAxisSignature,
+  UseChartVisibilityManagerSignature,
+  UseChartKeyboardNavigationSignature,
 } from '@mui/x-charts/internals';
+import { RADAR_PLUGINS } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
-export type RadarChartProPluginsSignatures = [
-  UseChartPolarAxisSignature,
+export type RadarChartProPluginSignatures = [
+  UseChartTooltipSignature<'radar'>,
   UseChartInteractionSignature,
+  UseChartPolarAxisSignature,
   UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartVisibilityManagerSignature<'radar'>,
   UseChartProExportSignature,
 ];
 
-export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginsSignatures> =
-  [useChartPolarAxis, useChartInteraction, useChartHighlight, useChartProExport];
+export const RADAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<RadarChartProPluginSignatures> =
+  [...RADAR_PLUGINS, useChartProExport];

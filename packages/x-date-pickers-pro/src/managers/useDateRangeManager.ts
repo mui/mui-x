@@ -70,8 +70,9 @@ function useApplyDefaultValuesToDateRangeFieldInternalProps<
   );
 }
 
-export interface UseDateRangeManagerParameters<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends RangeFieldSeparatorProps {
+export interface UseDateRangeManagerParameters<
+  TEnableAccessibleFieldDOMStructure extends boolean,
+> extends RangeFieldSeparatorProps {
   enableAccessibleFieldDOMStructure?: TEnableAccessibleFieldDOMStructure;
 }
 
@@ -86,7 +87,9 @@ export type UseDateRangeManagerReturnValue<TEnableAccessibleFieldDOMStructure ex
 
 export interface DateRangeManagerFieldInternalProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends MakeOptional<
+>
+  extends
+    MakeOptional<
       UseFieldInternalProps<
         PickerRangeValue,
         TEnableAccessibleFieldDOMStructure,

@@ -1,19 +1,30 @@
 'use client';
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import type { BarChartProps } from './BarChart';
+import { type BarChartProps, type BarSeries } from './BarChart';
 import { DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '../constants';
-import { ChartContainerProps } from '../ChartContainer';
-import { BarPlotProps } from './BarPlot';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsClipPathProps } from '../ChartsClipPath';
-import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
+import { type ChartContainerProps } from '../ChartContainer';
+import { type BarPlotProps } from './BarPlot';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsClipPathProps } from '../ChartsClipPath';
+import { type ChartsOverlayProps } from '../ChartsOverlay';
+import { type ChartsAxisProps } from '../ChartsAxis';
+import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsLegendSlotExtension } from '../ChartsLegend';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
 import type { AxisConfig, ChartsXAxisProps, ChartsYAxisProps } from '../models/axis';
-import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins';
+import { BAR_CHART_PLUGINS, type BarChartPluginSignatures } from './BarChart.plugins';
+
+export interface UseBarChartPropsExtensions {}
+
+export type UseBarChartProps = Omit<BarChartProps, 'series'> &
+  Omit<
+    {
+      series: ReadonlyArray<BarSeries>;
+    },
+    keyof UseBarChartPropsExtensions
+  > &
+  UseBarChartPropsExtensions;
 
 /**
  * A helper function that extracts BarChartProps from the input props
@@ -22,7 +33,7 @@ import { BAR_CHART_PLUGINS, BarChartPluginsSignatures } from './BarChart.plugins
  * @param props The input props for BarChart
  * @returns An object with props for the children components of BarChart
  */
-export const useBarChartProps = (props: BarChartProps) => {
+export const useBarChartProps = (props: UseBarChartProps) => {
   const {
     xAxis,
     yAxis,
@@ -49,7 +60,9 @@ export const useBarChartProps = (props: BarChartProps) => {
     className,
     hideLegend,
     showToolbar,
-    ...rest
+    brushConfig,
+    renderer,
+    ...other
   } = props;
 
   const id = useId();
@@ -119,8 +132,8 @@ export const useBarChartProps = (props: BarChartProps) => {
       : yAxis;
   }, [defaultYAxis, hasHorizontalSeries, yAxis]);
 
-  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginsSignatures> = {
-    ...rest,
+  const chartContainerProps: ChartContainerProps<'bar', BarChartPluginSignatures> = {
+    ...other,
     series: seriesWithDefault,
     width,
     height,
@@ -137,6 +150,7 @@ export const useBarChartProps = (props: BarChartProps) => {
       axisHighlight?.y === 'none',
     className,
     skipAnimation,
+    brushConfig,
     plugins: BAR_CHART_PLUGINS,
   };
 
@@ -145,6 +159,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     slots,
     slotProps,
     borderRadius,
+    renderer,
     barLabel,
   };
 
@@ -186,6 +201,7 @@ export const useBarChartProps = (props: BarChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {

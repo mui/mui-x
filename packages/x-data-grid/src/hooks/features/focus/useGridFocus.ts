@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -12,11 +13,12 @@ import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { isNavigationKey } from '../../../utils/keyboardUtils';
+import { isNavigationKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridFocusCellSelector,
   gridFocusColumnGroupHeaderSelector,
 } from './gridFocusStateSelector';
+import { doesSupportPreventScroll } from '../../../utils/doesSupportPreventScroll';
 import { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { gridVisibleColumnDefinitionsSelector } from '../columns/gridColumnsSelector';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
@@ -65,6 +67,51 @@ export const useGridFocus = (
     (id, field) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === id && focusedCell?.field === field) {
+        /**
+         * Check if the state matches the actual DOM focus. They can get out of sync after `updateRows()` remounts the cell.
+         */
+        if (apiRef.current.getCellMode(id, field) !== 'view') {
+          return;
+        }
+
+        const cellElement = apiRef.current.getCellElement(id, field);
+        if (!cellElement) {
+          return;
+        }
+
+        const gridRoot = apiRef.current.rootElementRef!.current;
+        const doc = ownerDocument(gridRoot);
+        const activeElement = doc.activeElement;
+
+        // We can take focus if:
+        // - Focus is inside the grid, OR
+        // - Focus is "lost" (on body/documentElement/null, e.g., after cell remount during undo/redo)
+        // We should NOT take focus if it's intentionally outside the grid (e.g., in a Portal/Dialog).
+        // React synthetic events bubble through the React component tree, not the DOM tree,
+        // so events from Portal content can trigger this code even though focus is elsewhere.
+        // This avoids https://github.com/mui/mui-x/issues/21063
+        const allowTakingFocus =
+          !activeElement ||
+          activeElement === doc.body ||
+          activeElement === doc.documentElement ||
+          gridRoot?.contains(activeElement);
+
+        if (!allowTakingFocus) {
+          return;
+        }
+
+        if (cellElement.contains(doc.activeElement!)) {
+          return;
+        }
+
+        if (doesSupportPreventScroll()) {
+          cellElement.focus({ preventScroll: true });
+        } else {
+          const scrollPosition = apiRef.current.getScrollPosition();
+          cellElement.focus();
+          apiRef.current.scroll(scrollPosition);
+        }
+
         return;
       }
 
@@ -278,8 +325,8 @@ export const useGridFocus = (
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
     (params, event) => {
-      // GRID_CELL_NAVIGATION_KEY_DOWN handles the focus on Enter, Tab and navigation keys
       if (
+        isPasteShortcut(event) ||
         event.key === 'Enter' ||
         event.key === 'Tab' ||
         event.key === 'Shift' ||
@@ -412,7 +459,7 @@ export const useGridFocus = (
     [apiRef],
   );
 
-  const handleRowSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
+  const handleRowsSet = React.useCallback<GridEventListener<'rowsSet'>>(() => {
     const cell = gridFocusCellSelector(apiRef);
 
     // If the focused cell is in a row which does not exist anymore,
@@ -445,6 +492,8 @@ export const useGridFocus = (
       }));
     }
   }, [apiRef, props.pagination, props.paginationMode]);
+
+  const debouncedHandleRowsSet = React.useMemo(() => debounce(handleRowsSet, 0), [handleRowsSet]);
 
   const handlePaginationModelChange = useEventCallback(() => {
     const currentFocusedCell = gridFocusCellSelector(apiRef);
@@ -508,6 +557,6 @@ export const useGridFocus = (
   useGridEvent(apiRef, 'cellModeChange', handleCellModeChange);
   useGridEvent(apiRef, 'columnHeaderFocus', handleColumnHeaderFocus);
   useGridEvent(apiRef, 'columnGroupHeaderFocus', handleColumnGroupHeaderFocus);
-  useGridEvent(apiRef, 'rowsSet', handleRowSet);
+  useGridEvent(apiRef, 'rowsSet', debouncedHandleRowsSet);
   useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
 };

@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "8.10.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Data Grid components.",
-  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -31,11 +30,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -49,7 +44,6 @@
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },
@@ -82,5 +76,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
   }
 }

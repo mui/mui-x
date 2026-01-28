@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy, SinonSpy } from 'sinon';
 import { DataGrid, DataGridProps, GridToolbarExport } from '@mui/x-data-grid';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';

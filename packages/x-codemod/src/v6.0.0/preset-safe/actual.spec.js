@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import DayjsUtils from '@date-io/dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

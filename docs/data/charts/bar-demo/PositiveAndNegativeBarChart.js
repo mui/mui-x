@@ -1,4 +1,4 @@
-import * as React from 'react';
+import Box from '@mui/material/Box';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -16,14 +16,15 @@ const xLabels = [
 
 export default function PositiveAndNegativeBarChart() {
   return (
-    <BarChart
-      height={300}
-      series={[
-        { data: pData, label: 'pv' },
-        { data: uData, label: 'uv' },
-      ]}
-      xAxis={[{ data: xLabels }]}
-      yAxis={[{ width: 60, max: 10000 }]}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <BarChart
+        series={[
+          { data: pData, label: 'pv' },
+          { data: uData, label: 'uv' },
+        ]}
+        xAxis={[{ data: xLabels, height: 28 }]}
+        yAxis={[{ width: 60, max: 10000 }]}
+      />
+    </Box>
   );
 }

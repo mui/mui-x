@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
 import type { Expect, Equal } from 'test/utils/typeUtils';
 import { GridCellParams } from '../models/params/gridCellParams';

@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.10.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
-  "main": "src/index.js",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -25,12 +24,10 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "build": "code-infra build --ignore 'src/**/*.bench.ts'",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts",
+    "bench:browser": "pnpm vitest bench -c ./vitest.config.browser.mts"
   },
   "repository": {
     "type": "git",
@@ -78,5 +75,10 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts",
+    "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
   }
 }

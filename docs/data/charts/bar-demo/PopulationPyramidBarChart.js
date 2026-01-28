@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -50,12 +49,16 @@ const valueFormatter = (population) =>
 
 export default function PopulationPyramidBarChart() {
   return (
-    <Stack width="100%" sx={{ mx: [0, 4] }}>
-      <Typography variant="h6" component="span" textAlign="center">
+    <Stack width="100%" height={550} sx={{ mx: [0, 4] }}>
+      <Typography
+        variant="h6"
+        component="span"
+        textAlign="center"
+        data-hide-overview
+      >
         South Korea Population Pyramid - 2022
       </Typography>
       <BarChart
-        height={500}
         layout="horizontal"
         margin={{ right: 0, left: 0 }}
         series={[
@@ -78,6 +81,7 @@ export default function PopulationPyramidBarChart() {
           {
             data: ageGroups,
             width: 60,
+            tickLabelInterval: (value, index) => index % 2 === 0,
             disableLine: true,
             disableTicks: true,
           },

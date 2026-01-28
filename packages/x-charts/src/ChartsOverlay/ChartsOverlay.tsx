@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { SxProps, Theme } from '@mui/material/styles';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SxProps, type Theme } from '@mui/material/styles';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { ChartsLoadingOverlay } from './ChartsLoadingOverlay';
 import { useSeries } from '../hooks/useSeries';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 import { ChartsNoDataOverlay } from './ChartsNoDataOverlay';
 
 export function useNoData() {
@@ -16,7 +16,18 @@ export function useNoData() {
     }
     const { series, seriesOrder } = seriesOfGivenType;
 
-    return seriesOrder.every((seriesId: SeriesId) => series[seriesId].data.length === 0);
+    return seriesOrder.every((seriesId: SeriesId) => {
+      const seriesItem = series[seriesId];
+
+      // These prevent a type error when building the package.
+      // @ts-ignore, sankey type is not declared in the base package
+      if (seriesItem.type === 'sankey') {
+        // @ts-ignore, sankey type is not declared in the base package
+        return seriesItem.data.links.length === 0;
+      }
+
+      return seriesItem.data.length === 0;
+    });
   });
 }
 

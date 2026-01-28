@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';

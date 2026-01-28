@@ -3,12 +3,25 @@
 <p class="description">The Data Grid offers multiple layout modes.</p>
 
 :::error
-By default, the Data Grid has **no intrinsic dimensions**.
-Instead, it takes up the space given by its parent.
-The Data Grid will raise an error in the console if its container has no intrinsic dimensions.
+The Data Grid has no intrinsic dimensions: you must set the dimensions using one of the approaches below or else it may not display correctly.
+By default, the Data Grid fills the space of its parent container, so that container must have intrinsic dimensions.
+In other words, if the container has no child elements, then it still must have non-zero dimensions.
 :::
 
 ## Flex parent container
+
+:::success
+When to use:
+
+- You want the Data Grid to take its content height, but with a minimum or maximum height constraints.
+- You want the Data Grid height to be dynamic, and use row virtualization when rows do not fit the Data Grid viewport.
+
+When not to use:
+
+- You want the Data Grid to always take the height of its content, with no vertical scrollbar, and no row virtualization.
+  In this case, use the [`autoHeight`](/x/react-data-grid/layout/#auto-height) prop.
+
+:::
 
 The Data Grid can be placed inside a flex container with `flex-direction: column`.
 Without setting the minimum and maximum height, the Data Grid takes as much space as it needs to display all rows.
@@ -18,10 +31,6 @@ Consider setting `maxHeight` on the flex parent container, otherwise row virtual
 :::
 
 {{"demo": "FlexGrid.js", "bg": "inline"}}
-
-:::success
-The flex parent in the demo above is effectively equivalent [`autoHeight`](/x/react-data-grid/layout/#auto-height) prop, but with the added benefit of being able to set the minimum and maximum height of the parent container.
-:::
 
 ### Minimum and maximum height
 
@@ -54,8 +63,17 @@ To customize the overlay height, use the `--DataGrid-overlayHeight` CSS variable
 
 ## Auto height
 
-:::error
-This prop is deprecated, use the [flex parent container](/x/react-data-grid/layout/#flex-parent-container) instead.
+:::success
+When to use:
+
+- You don't need to set a minimum or maximum height for the Data Grid
+- You want the Data Grid to always take the height of its content, with no vertical scrollbar, and no row virtualization.
+
+When not to use:
+
+- You need to set a minimum or maximum height for the Data Grid, or want the Data Grid height to be dynamic.
+  In this case, use the [flex parent container](/x/react-data-grid/layout/#flex-parent-container) instead.
+
 :::
 
 The `autoHeight` prop enables the Data Grid to adjust its size based on its content.

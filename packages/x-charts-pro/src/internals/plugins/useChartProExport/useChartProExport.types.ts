@@ -1,8 +1,4 @@
-import {
-  UseChartSeriesSignature,
-  ChartPluginSignature,
-  UseChartCartesianAxisSignature,
-} from '@mui/x-charts/internals';
+import { type ChartPluginSignature } from '@mui/x-charts/internals';
 
 export interface UseChartProExportParameters {}
 
@@ -32,6 +28,11 @@ export interface ChartExportOptions {
    * @default true
    */
   copyStyles?: boolean;
+  /**
+   * A nonce to be used for Content Security Policy (CSP) compliance.
+   * If provided, this nonce will be added to any style elements created during the export process.
+   */
+  nonce?: string;
 }
 
 /**
@@ -88,5 +89,4 @@ export type UseChartProExportSignature = ChartPluginSignature<{
   state: UseChartProExportState;
   publicAPI: UseChartProExportPublicApi;
   instance: UseChartProExportInstance;
-  dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
 }>;

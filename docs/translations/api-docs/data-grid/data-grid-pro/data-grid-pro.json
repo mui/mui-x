@@ -9,7 +9,7 @@
       "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and takes as much space as it needs to display all rows. Use it instead of a flex parent container approach, if: - you don&#39;t need to set a minimum or maximum height for the Data Grid - you want to avoid the scrollbar flickering when the content changes"
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
@@ -92,6 +92,9 @@
     },
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
+    },
+    "disableRowSelectionExcludeModel": {
+      "description": "If <code>true</code>, the Data Grid will not use the exclude model optimization when selecting all rows."
     },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
@@ -252,6 +255,24 @@
         }
       }
     },
+    "isRowReorderable": {
+      "description": "Indicates whether a row is reorderable.",
+      "typeDescriptions": {
+        "params": { "name": "params", "description": "With all properties from the row." },
+        "params.row": {
+          "name": "params.row",
+          "description": "The row model of the row that the current cell belongs to."
+        },
+        "params.rowNode": {
+          "name": "params.rowNode",
+          "description": "The node of the row that the current cell belongs to."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the row is reorderable."
+        }
+      }
+    },
     "isRowSelectable": {
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
@@ -262,6 +283,19 @@
         "boolean": {
           "name": "boolean",
           "description": "A boolean indicating if the row is selectable."
+        }
+      }
+    },
+    "isValidRowReorder": {
+      "description": "Indicates if a row reorder attempt is valid. Can be used to disable certain row reorder operations based on the context. The internal validation is still applied, preventing unsupported use-cases. Use <code>isValidRowReorder()</code> to add additional validation rules to the default ones.",
+      "typeDescriptions": {
+        "context": {
+          "name": "context",
+          "description": "The context object containing all information about the reorder operation."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the reorder operation should go through."
         }
       }
     },
@@ -591,7 +625,7 @@
       }
     },
     "onProcessRowUpdateError": {
-      "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
+      "description": "Callback called when <code>processRowUpdate()</code> throws an error or rejects.",
       "typeDescriptions": { "error": { "name": "error", "description": "The error thrown." } }
     },
     "onResize": {
@@ -663,7 +697,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridRowOrderChangeParams."
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-order-change-params/'>GridRowOrderChangeParams</a>."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -709,7 +743,13 @@
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
     },
     "pinnedColumns": { "description": "The column fields to display pinned to left or right." },
+    "pinnedColumnsSectionSeparator": {
+      "description": "Sets the type of separator between pinned columns and non-pinned columns."
+    },
     "pinnedRows": { "description": "Rows data to pin on top or bottom." },
+    "pinnedRowsSectionSeparator": {
+      "description": "Sets the type of separator between pinned rows and non-pinned rows."
+    },
     "processRowUpdate": {
       "description": "Callback called before updating a row with new values in the row and cell editing.",
       "typeDescriptions": {
@@ -751,6 +791,14 @@
     "scrollEndThreshold": {
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>lazyLoading</code>, it defines the area where the next data request is triggered."
     },
+    "setTreeDataPath": {
+      "description": "Updates the tree path in a row model. Used when reordering rows across different parents in tree data.",
+      "typeDescriptions": {
+        "path": { "name": "path", "description": "The new path for the row." },
+        "row": { "name": "row", "description": "The row model to update." },
+        "R": { "name": "R", "description": "The updated row model with the new path." }
+      }
+    },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
@@ -769,6 +817,9 @@
     "sortModel": { "description": "Set the sort model of the Data Grid." },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "tabNavigation": {
+      "description": "Sets the tab navigation behavior for the Data Grid. - &quot;none&quot;: No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence. - &quot;content&quot;: Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header. - &quot;header&quot;: Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content. - &quot;all&quot;: Combines the &quot;content&quot; and &quot;header&quot; behavior."
     },
     "throttleRowsMs": {
       "description": "If positive, the Data Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update."
@@ -1161,6 +1212,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
     },
+    "editLongTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell root element"
+    },
+    "editLongTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popper content"
+    },
+    "editLongTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popup"
+    },
+    "editLongTextCellTextarea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell textarea"
+    },
+    "editLongTextCellValue": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell value element"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1214,6 +1285,30 @@
     "iconSeparator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator icon element"
+    },
+    "longTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell root element"
+    },
+    "longTextCellCollapseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell collapse button"
+    },
+    "longTextCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell content element"
+    },
+    "longTextCellExpandButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell expand button"
+    },
+    "longTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popper content"
+    },
+    "longTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popup"
     },
     "main": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1449,16 +1544,6 @@
       "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
     },
-    "row--dropAbove": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target above"
-    },
-    "row--dropBelow": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target below"
-    },
     "row--dynamicHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",
@@ -1532,6 +1617,18 @@
     "scrollbar--vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
+    },
+    "scrollShadow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroll shadow element"
+    },
+    "scrollShadow--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scroll shadow element"
+    },
+    "scrollShadow--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the vertical scroll shadow element"
     },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1635,7 +1732,10 @@
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",
+    "baseTabs": "The custom Tabs component used in the grid.",
+    "baseTextarea": "The custom Textarea component used in the grid for multiline text editing.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToggleButton": "The custom ToggleButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
@@ -1663,6 +1763,7 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
@@ -1682,6 +1783,8 @@
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "longTextCellCollapseIcon": "Icon displayed on the long text cell popup to collapse the content.",
+    "longTextCellExpandIcon": "Icon displayed on the long text cell to expand the content.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
@@ -1692,11 +1795,13 @@
     "panel": "Panel component wrapping the filters and columns panels.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
+    "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
-    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
+    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "undoIcon": "Icon displayed on the undo button in the toolbar."
   }
 }

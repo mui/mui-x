@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-data-grid",
-  "version": "8.10.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Community plan edition of the MUI X Data Grid components.",
-  "main": "src/index.ts",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -35,11 +34,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts --removeCss",
+    "build": "code-infra build --copy \"src/**/*.css\" --copy \"src/**/*.css:esm\"",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -73,10 +68,11 @@
     }
   },
   "devDependencies": {
+    "@mui/icons-material": "catalog:",
     "@mui/internal-test-utils": "catalog:",
     "@mui/material": "catalog:",
     "@mui/system": "catalog:",
-    "@mui/types": "^7.4.5",
+    "@mui/types": "7.4.10",
     "@types/prop-types": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
@@ -85,5 +81,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
   }
 }

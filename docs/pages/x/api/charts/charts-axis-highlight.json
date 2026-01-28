@@ -4,7 +4,8 @@
   "imports": [
     "import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';",
     "import { ChartsAxisHighlight } from '@mui/x-charts';",
-    "import { ChartsAxisHighlight } from '@mui/x-charts-pro';"
+    "import { ChartsAxisHighlight } from '@mui/x-charts-pro';",
+    "import { ChartsAxisHighlight } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

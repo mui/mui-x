@@ -7,18 +7,13 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": {
-      "type": { "name": "bool" },
-      "default": "false",
-      "deprecated": true,
-      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
-    },
+    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -67,6 +62,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
@@ -186,11 +182,27 @@
         "returned": "boolean"
       }
     },
+    "isRowReorderable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object, params.row: R, params.rowNode: GridTreeNode) => boolean",
+        "describedArgs": ["params", "params.row", "params.rowNode"],
+        "returned": "boolean"
+      }
+    },
     "isRowSelectable": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(params: GridRowParams) => boolean",
         "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "isValidRowReorder": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(context: ReorderValidationContext) => boolean",
+        "describedArgs": ["context"],
         "returned": "boolean"
       }
     },
@@ -533,11 +545,22 @@
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumnsSectionSeparator": {
+      "type": {
+        "name": "enum",
+        "description": "'border-and-shadow'<br>&#124;&nbsp;'border'<br>&#124;&nbsp;'shadow'"
+      },
+      "default": "'border-and-shadow'"
+    },
     "pinnedRows": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
+    },
+    "pinnedRowsSectionSeparator": {
+      "type": { "name": "enum", "description": "'border-and-shadow'<br>&#124;&nbsp;'border'" },
+      "default": "'border-and-shadow'"
     },
     "processRowUpdate": {
       "type": { "name": "func" },
@@ -581,6 +604,14 @@
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
+    "setTreeDataPath": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(path: Array<string>, row: R) => R",
+        "describedArgs": ["path", "row"],
+        "returned": "R"
+      }
+    },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -606,6 +637,13 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
+    },
+    "tabNavigation": {
+      "type": {
+        "name": "enum",
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
+      },
+      "default": "\"none\""
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
@@ -840,6 +878,18 @@
       "class": null
     },
     {
+      "name": "baseTextarea",
+      "description": "The custom Textarea component used in the grid for multiline text editing.",
+      "default": "InputBase with multiline",
+      "class": null
+    },
+    {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -876,6 +926,12 @@
       "class": null
     },
     {
+      "name": "baseTabs",
+      "description": "The custom Tabs component used in the grid.",
+      "default": "Tabs",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -885,6 +941,18 @@
       "name": "booleanCellFalseIcon",
       "description": "Icon displayed on the boolean cell to represent the false value.",
       "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
       "class": null
     },
     {
@@ -909,6 +977,12 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
+      "class": null
+    },
+    {
+      "name": "columnUnsortedIcon",
+      "description": "Icon displayed on the side of the column header title when unsorted.",
+      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -1089,6 +1163,18 @@
       "name": "menuItemCheckIcon",
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellExpandIcon",
+      "description": "Icon displayed on the long text cell to expand the content.",
+      "default": "GridLongTextCellExpandIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellCollapseIcon",
+      "description": "Icon displayed on the long text cell popup to collapse the content.",
+      "default": "GridLongTextCellCollapseIcon",
       "class": null
     },
     {
@@ -1646,6 +1732,36 @@
       "isGlobal": false
     },
     {
+      "key": "editLongTextCell",
+      "className": "MuiDataGridPro-editLongTextCell",
+      "description": "Styles applied to the edit long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopperContent",
+      "className": "MuiDataGridPro-editLongTextCellPopperContent",
+      "description": "Styles applied to the edit long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopup",
+      "className": "MuiDataGridPro-editLongTextCellPopup",
+      "description": "Styles applied to the edit long text cell popup.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellTextarea",
+      "className": "MuiDataGridPro-editLongTextCellTextarea",
+      "description": "Styles applied to the edit long text cell textarea.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellValue",
+      "className": "MuiDataGridPro-editLongTextCellValue",
+      "description": "Styles applied to the edit long text cell value element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPro-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1727,6 +1843,42 @@
       "key": "iconSeparator",
       "className": "MuiDataGridPro-iconSeparator",
       "description": "Styles applied to the column header separator icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCell",
+      "className": "MuiDataGridPro-longTextCell",
+      "description": "Styles applied to the long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellCollapseButton",
+      "className": "MuiDataGridPro-longTextCellCollapseButton",
+      "description": "Styles applied to the long text cell collapse button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellContent",
+      "className": "MuiDataGridPro-longTextCellContent",
+      "description": "Styles applied to the long text cell content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellExpandButton",
+      "className": "MuiDataGridPro-longTextCellExpandButton",
+      "description": "Styles applied to the long text cell expand button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopperContent",
+      "className": "MuiDataGridPro-longTextCellPopperContent",
+      "description": "Styles applied to the long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopup",
+      "className": "MuiDataGridPro-longTextCellPopup",
+      "description": "Styles applied to the long text cell popup.",
       "isGlobal": false
     },
     {
@@ -2084,18 +2236,6 @@
       "isGlobal": false
     },
     {
-      "key": "row--dropAbove",
-      "className": "MuiDataGridPro-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGridPro-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
-      "isGlobal": false
-    },
-    {
       "key": "row--dynamicHeight",
       "className": "MuiDataGridPro-row--dynamicHeight",
       "description": "Styles applied to the row if it has dynamic row height.",
@@ -2207,6 +2347,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGridPro-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGridPro-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGridPro-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGridPro-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
@@ -2340,6 +2498,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-pro/src/DataGridPro/DataGridPro.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

@@ -199,3 +199,40 @@ export function getSelectByName(name: string) {
 export const includeRowSelection = (ids: GridRowId[]) => {
   return { type: 'include', ids: new Set(ids) } as const;
 };
+
+export const excludeRowSelection = (ids: GridRowId[]) => {
+  return { type: 'exclude', ids: new Set(ids) } as const;
+};
+
+type UserEvent = {
+  click: (element: Element) => Promise<void>;
+  dblClick: (element: Element) => Promise<void>;
+  keyboard: (keys: string) => Promise<void>;
+};
+
+export async function openLongTextViewPopup(
+  cell: HTMLElement,
+  user: UserEvent,
+  action: 'click' | 'spacebar' = 'click',
+) {
+  await user.click(cell);
+  const expandButton = cell.querySelector('button[aria-haspopup="dialog"]') as HTMLButtonElement;
+  if (action === 'spacebar') {
+    await user.keyboard(' ');
+  } else {
+    await user.click(expandButton);
+  }
+}
+
+export async function openLongTextEditPopup(
+  cell: HTMLElement,
+  user: UserEvent,
+  action: 'dblClick' | 'enter' = 'dblClick',
+) {
+  if (action === 'dblClick') {
+    await user.dblClick(cell);
+  } else {
+    await user.click(cell);
+    await user.keyboard('{Enter}');
+  }
+}

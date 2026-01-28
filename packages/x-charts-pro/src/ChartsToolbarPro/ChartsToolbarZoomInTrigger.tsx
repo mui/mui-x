@@ -4,15 +4,14 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
   useChartContext,
-  ChartsSlotProps,
-  useSelector,
+  type ChartsSlotProps,
   useChartsSlots,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '@mui/x-charts/internals';
-import { RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
+import { type RenderProp, useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import {
   selectorChartCanZoomIn,
-  UseChartProZoomSignature,
+  type UseChartProZoomSignature,
 } from '../internals/plugins/useChartProZoom';
 
 interface ChartsToolbarZoomInTriggerProps {
@@ -33,7 +32,7 @@ const ChartsToolbarZoomInTrigger = React.forwardRef<
   const { slots, slotProps } = useChartsSlots();
   const { instance, store } =
     useChartContext<[UseChartCartesianAxisSignature, UseChartProZoomSignature]>();
-  const disabled = useSelector(store, selectorChartCanZoomIn);
+  const disabled = store.use(selectorChartCanZoomIn);
 
   const element = useComponentRenderer(slots.baseButton, render, {
     ...slotProps.baseButton,

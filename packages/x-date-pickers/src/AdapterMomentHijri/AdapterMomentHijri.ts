@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 /* v8 ignore next */
 import defaultHMoment, { Moment } from 'moment-hijri';
 import { AdapterMoment } from '../AdapterMoment';

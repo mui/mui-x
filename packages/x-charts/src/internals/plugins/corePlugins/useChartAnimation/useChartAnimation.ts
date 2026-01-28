@@ -1,29 +1,21 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import type { UseChartAnimationSignature } from './useChartAnimation.types';
 
 export const useChartAnimation: ChartPlugin<UseChartAnimationSignature> = ({ params, store }) => {
   React.useEffect(() => {
-    store.update((prevState) => {
-      return {
-        ...prevState,
-        animation: { ...prevState.animation, skip: params.skipAnimation },
-      };
-    });
+    store.set('animation', { ...store.state.animation, skip: params.skipAnimation });
   }, [store, params.skipAnimation]);
 
   const disableAnimation = React.useCallback(() => {
     let disableCalled = false;
 
-    store.update((prevState) => ({
-      ...prevState,
-      animation: {
-        ...prevState.animation,
-        skipAnimationRequests: prevState.animation.skipAnimationRequests + 1,
-      },
-    }));
+    store.set('animation', {
+      ...store.state.animation,
+      skipAnimationRequests: store.state.animation.skipAnimationRequests + 1,
+    });
 
     return () => {
       if (disableCalled) {
@@ -32,13 +24,10 @@ export const useChartAnimation: ChartPlugin<UseChartAnimationSignature> = ({ par
 
       disableCalled = true;
 
-      store.update((prevState) => ({
-        ...prevState,
-        animation: {
-          ...prevState.animation,
-          skipAnimationRequests: prevState.animation.skipAnimationRequests - 1,
-        },
-      }));
+      store.set('animation', {
+        ...store.state.animation,
+        skipAnimationRequests: store.state.animation.skipAnimationRequests - 1,
+      });
     };
   }, [store]);
 

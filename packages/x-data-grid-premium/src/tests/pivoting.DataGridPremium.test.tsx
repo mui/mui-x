@@ -3,17 +3,22 @@ import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
   DataGridPremiumProps,
+  gridClasses,
   GridColDef,
   GridPivotModel,
   type GridApi,
 } from '@mui/x-data-grid-premium';
 import {
+  $$,
   getCell,
+  getColumnHeaderCell,
   getColumnHeadersTextContent,
   getColumnValues,
   getRowValues,
   sleep,
 } from 'test/utils/helperFn';
+import { spy } from 'sinon';
+import { isJSDOM } from 'test/utils/skipIf';
 
 const ROWS = [
   {
@@ -166,9 +171,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
-      await waitFor(() => {
-        expect(pivotSwitch).to.have.property('checked', true);
-      });
+      await waitFor(() => pivotSwitch.checked === true);
     }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200']);
@@ -207,9 +210,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
-      await waitFor(() => {
-        expect(pivotSwitch).to.have.property('checked', true);
-      });
+      await waitFor(() => pivotSwitch.checked === true);
     }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '12,200', '$192.77']);
@@ -248,9 +249,7 @@ describe('<DataGridPremium /> - Pivoting', () => {
     const pivotSwitch = screen.getByRole('switch', { name: 'Pivot' }) as HTMLInputElement;
     if (!pivotSwitch.checked) {
       await user.click(pivotSwitch);
-      await waitFor(() => {
-        expect(pivotSwitch).to.have.property('checked', true);
-      });
+      await waitFor(() => pivotSwitch.checked === true);
     }
 
     expect(getRowValues(0)).to.deep.equal(['AAPL (2)', '$192.45', '5,500', '$193.10', '6,700']);
@@ -885,6 +884,99 @@ describe('<DataGridPremium /> - Pivoting', () => {
         'IDsize',
         'IDsize',
         'IDsize',
+      ]);
+    });
+  });
+
+  it.skipIf(isJSDOM)(
+    'should not hide the pivot column on double click on the column separator',
+    async () => {
+      const onColumnWidthChange = spy();
+
+      const { user } = render(
+        <Test
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: {
+                rows: [{ field: 'ticker' }],
+                columns: [{ field: 'date-year' }],
+                values: [{ field: 'volume', aggFunc: 'sum' }],
+              },
+            },
+          }}
+          onColumnWidthChange={onColumnWidthChange}
+        />,
+      );
+
+      const columnHeaders = ['', '2024', '2023', 'Ticker', 'Volumesum', 'Volumesum'];
+
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal(columnHeaders);
+      });
+
+      const separators = $$(`.${gridClasses['columnSeparator--resizable']}`);
+
+      expect(onColumnWidthChange.callCount).to.equal(0);
+
+      await user.dblClick(separators[1]);
+
+      expect(onColumnWidthChange.callCount).to.equal(1);
+      expect(onColumnWidthChange.args[0][0].colDef.field).to.equal('2024>->volume');
+      expect(onColumnWidthChange.args[0][0].width).to.equal(68);
+      expect(getColumnHeaderCell(1).offsetWidth).to.equal(68);
+
+      await waitFor(() => {
+        expect(getColumnHeadersTextContent()).to.deep.equal(columnHeaders);
+      });
+    },
+  );
+
+  it('should handle columns with non-existing or empty string values', async () => {
+    const rows = [
+      { id: 1, category: 'A', status: '', sales: 100 },
+      { id: 2, category: 'A', status: 'Active', sales: 200 },
+      { id: 3, category: 'B', status: '', sales: 150 },
+      { id: 4, category: 'B', status: 'Inactive', sales: 300 },
+      { id: 5, category: 'C', status: null, sales: 250 },
+    ];
+
+    const columns: GridColDef[] = [
+      { field: 'category', headerName: 'Category' },
+      { field: 'status', headerName: 'Status' },
+      { field: 'sales', headerName: 'Sales', type: 'number' },
+    ];
+
+    render(
+      <div style={{ height: 600, width: 600 }}>
+        <DataGridPremium
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pivoting: {
+              enabled: true,
+              model: {
+                columns: [{ field: 'status' }],
+                rows: [{ field: 'category' }],
+                values: [{ field: 'sales', aggFunc: 'sum' }],
+              },
+            },
+          }}
+        />
+      </div>,
+    );
+
+    await waitFor(() => {
+      // Empty strings should be replaced with "(No value)" in column headers
+      expect(getColumnHeadersTextContent()).to.deep.equal([
+        '',
+        '(No value)',
+        'Active',
+        'Inactive',
+        'Category',
+        'Salessum',
+        'Salessum',
+        'Salessum',
       ]);
     });
   });

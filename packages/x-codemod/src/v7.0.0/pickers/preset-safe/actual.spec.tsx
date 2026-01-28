@@ -1,5 +1,4 @@
 // @ts-nocheck
-import * as React from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { dayPickerClasses } from '@mui/x-date-pickers/DateCalendar';
 // prettier-ignore

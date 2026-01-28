@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import { addSeconds } from 'date-fns-jalali/addSeconds';
 import { addMinutes } from 'date-fns-jalali/addMinutes';
 import { addHours } from 'date-fns-jalali/addHours';

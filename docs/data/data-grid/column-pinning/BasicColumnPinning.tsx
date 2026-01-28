@@ -1,4 +1,3 @@
-import * as React from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import {
@@ -6,6 +5,7 @@ import {
   GridColDef,
   GridRowsProp,
   GridActionsCellItem,
+  GridActionsCell,
 } from '@mui/x-data-grid-pro';
 import {
   randomCreatedDate,
@@ -48,10 +48,12 @@ const columns: GridColDef[] = [
     field: 'actions',
     type: 'actions',
     width: 100,
-    getActions: () => [
-      <GridActionsCellItem icon={<EditIcon />} label="Edit" />,
-      <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
-    ],
+    renderCell: (params) => (
+      <GridActionsCell {...params}>
+        <GridActionsCellItem icon={<EditIcon />} label="Edit" />
+        <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />
+      </GridActionsCell>
+    ),
   },
 ];
 

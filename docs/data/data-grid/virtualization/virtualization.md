@@ -2,7 +2,7 @@
 
 <p class="description">The grid is high performing thanks to its rows and columns virtualization engine.</p>
 
-DOM virtualization is the feature that allows the Data Grid to handle an unlimited\* number of rows and columns.
+DOM virtualization is what makes it possible for the Data Grid to handle an unlimited\* number of rows and columns.
 This is a built-in feature of the rendering engine and greatly improves rendering performance.
 
 _\*unlimited: Browsers set a limit on the number of pixels a scroll container can host: 17.5 million pixels on Firefox, 33.5 million pixels on Chrome, Edge, and Safari. A [reproduction](https://codesandbox.io/s/beautiful-silence-1yifo?file=/src/App.js)._
@@ -22,9 +22,9 @@ Row virtualization does not work with the `autoHeight` prop enabled.
 
 Column virtualization is the insertion and removal of columns as the Data Grid scrolls horizontally.
 
-- Overscanning by at least one column allows the arrow key to focus on the next (not yet visible) item.
+- Overscanning by at least one column lets the arrow key focus on the next (not yet visible) item.
 - Overscanning slightly can reduce or prevent a flash of empty space when a user first starts scrolling.
-- Overscanning more allows the built-in search feature of the browser to find more matching cells.
+- Overscanning more lets the built-in search feature of the browser find more matching cells.
 - Overscanning too much can negatively impact performance.
 
 By default, columns coming under 150 pixels region are rendered outside of the viewport. You can change this option with the `columnBufferPx` prop. As for `rowBufferPx`, the value may be ignored in some situations. The following demo renders 1,000 columns in total:

@@ -2,7 +2,7 @@
 
 <p class="description">Group your columns.</p>
 
-Grouping columns allows you to have a multi-level hierarchy of columns in your header.
+Grouping columns lets you have a multi-level hierarchy of columns in your header.
 
 ## Define column groups
 
@@ -16,8 +16,8 @@ A column group is defined by at least two properties:
 
 The `children` attribute can contain two types of objects:
 
-- leafs with type `{ field: string }`, which add the column with the corresponding `field` to this group.
-- other column groups which allows you to have nested groups.
+- leaves with type `{ field: string }`, which add the column with the corresponding `field` to this group
+- other column groups, making it possible to create nested groups
 
 :::warning
 A column can only be associated with one group.

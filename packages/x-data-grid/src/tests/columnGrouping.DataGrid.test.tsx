@@ -375,8 +375,8 @@ describe('<DataGrid /> - Column grouping', () => {
     });
   });
 
-  // TODO: remove the skip. I failed to test if an error is thrown
-  describe.skip('error messages', () => {
+  // TODO: Investigate: I failed to test if an error is thrown
+  describe.todo('error messages', () => {
     function TestWithError(props: TestDataGridProps) {
       return (
         <ErrorBoundary>

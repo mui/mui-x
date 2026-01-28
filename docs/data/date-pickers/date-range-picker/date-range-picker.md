@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Range Picker component
 components: DateRangePicker, DesktopDateRangePicker, MobileDateRangePicker, StaticDateRangePicker, DateRangeCalendar, DateRangePickerDay
-githubLabel: 'scope: DateRangePicker'
+githubLabel: 'component: DateRangePicker'
 packageName: '@mui/x-date-pickers-pro'
 materialDesign: https://m2.material.io/components/date-pickers
 ---
@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/date-pickers
 
 The component is built using the `SingleInputDateRangeField` for the keyboard editing and the `DateRangeCalendar` for the view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Date Range Field](/x/react-date-pickers/date-range-field/)
 - [Date Range Calendar](/x/react-date-pickers/date-range-calendar/)
@@ -49,7 +49,7 @@ The component is available in four variants:
   It renders the views inside a popover and a field for keyboard editing.
 
 - The `MobileDateRangePicker` component which works best for touch devices and small screens.
-  It renders the view inside a modal and does not allow editing values with the keyboard in the field.
+  It renders the view inside a modal and does not let users edit values with the keyboard in the field.
 
 - The `DateRangePicker` component which renders `DesktopDateRangePicker` or `MobileDateRangePicker` depending on the device it runs on.
 
@@ -57,7 +57,7 @@ The component is available in four variants:
 
 {{"demo": "ResponsiveDateRangePickers.js"}}
 
-By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `DateRangePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning

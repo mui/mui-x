@@ -27,12 +27,14 @@ function GridColumnMenuSortItem(props: GridColumnMenuItemProps) {
     (event: React.MouseEvent<HTMLElement>) => {
       onClick(event);
       const direction = event.currentTarget.getAttribute('data-value') || null;
+      const allowMultipleSorting = rootProps.multipleColumnsSortingMode === 'always';
       apiRef.current.sortColumn(
         colDef!.field,
         (direction === sortDirection ? null : direction) as GridSortDirection,
+        allowMultipleSorting,
       );
     },
-    [apiRef, colDef, onClick, sortDirection],
+    [apiRef, colDef, onClick, sortDirection, rootProps.multipleColumnsSortingMode],
   );
 
   if (

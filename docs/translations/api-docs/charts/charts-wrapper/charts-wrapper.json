@@ -4,6 +4,7 @@
     "extendVertically": {
       "description": "If <code>true</code>, the chart wrapper set <code>height: 100%</code>."
     },
+    "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "legendDirection": { "description": "The direction of the legend." },
     "legendPosition": { "description": "The position of the legend." }
   },

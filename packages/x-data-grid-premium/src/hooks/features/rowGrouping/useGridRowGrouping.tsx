@@ -6,6 +6,11 @@ import {
   useGridEvent,
   useGridApiMethod,
   gridColumnLookupSelector,
+  gridRowMaximumTreeDepthSelector,
+  gridRowTreeSelector,
+  gridExpandedSortedRowIdsSelector,
+  gridExpandedSortedRowIndexLookupSelector,
+  type ReorderValidationContext,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
@@ -31,6 +36,7 @@ import {
 } from './gridRowGroupingUtils';
 import { GridRowGroupingApi } from './gridRowGroupingInterfaces';
 import { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import { rowGroupingReorderValidator } from '../rowReorder/rowGroupingReorderValidator';
 
 export const rowGroupingStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'rowGroupingModel' | 'initialState'>
@@ -59,13 +65,14 @@ export const useGridRowGrouping = (
     | 'initialState'
     | 'rowGroupingModel'
     | 'onRowGroupingModelChange'
-    | 'defaultGroupingExpansionDepth'
     | 'isGroupExpandedByDefault'
     | 'rowGroupingColumnMode'
     | 'disableRowGrouping'
     | 'slotProps'
     | 'slots'
     | 'dataSource'
+    | 'treeData'
+    | 'isValidRowReorder'
   >,
 ) => {
   apiRef.current.registerControlState({
@@ -284,6 +291,61 @@ export const useGridRowGrouping = (
     }
   }, [apiRef, props.disableRowGrouping]);
 
+  const isValidRowReorderProp = props.isValidRowReorder;
+  const isRowReorderValid = React.useCallback<GridPipeProcessor<'isRowReorderValid'>>(
+    (initialValue, { sourceRowId, targetRowId, dropPosition, dragDirection }) => {
+      if (gridRowMaximumTreeDepthSelector(apiRef) === 1 || props.treeData) {
+        return initialValue;
+      }
+
+      const expandedSortedRowIndexLookup = gridExpandedSortedRowIndexLookupSelector(apiRef);
+      const expandedSortedRowIds = gridExpandedSortedRowIdsSelector(apiRef);
+      const rowTree = gridRowTreeSelector(apiRef);
+
+      const targetRowIndex = expandedSortedRowIndexLookup[targetRowId];
+      const sourceNode = rowTree[sourceRowId];
+      const targetNode = rowTree[targetRowId];
+      const prevNode =
+        targetRowIndex > 0 ? rowTree[expandedSortedRowIds[targetRowIndex - 1]] : null;
+      const nextNode =
+        targetRowIndex < expandedSortedRowIds.length - 1
+          ? rowTree[expandedSortedRowIds[targetRowIndex + 1]]
+          : null;
+
+      // Basic validity checks
+      if (!sourceNode || !targetNode) {
+        return false;
+      }
+
+      // Create context object
+      const context: ReorderValidationContext = {
+        apiRef,
+        sourceNode,
+        targetNode,
+        prevNode,
+        nextNode,
+        dropPosition,
+        dragDirection,
+      };
+
+      // First apply internal validation
+      let isValid = rowGroupingReorderValidator.validate(context);
+
+      // If internal validation passes AND user provided additional validation
+      if (isValid && isValidRowReorderProp) {
+        // Apply additional user restrictions
+        isValid = isValidRowReorderProp(context);
+      }
+
+      if (isValid) {
+        return true;
+      }
+      return false;
+    },
+    [apiRef, props.treeData, isValidRowReorderProp],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'isRowReorderValid', isRowReorderValid);
   useGridEvent(apiRef, 'cellKeyDown', handleCellKeyDown);
   useGridEvent(apiRef, 'columnsChange', checkGroupingColumnsModelDiff);
   useGridEvent(apiRef, 'rowGroupingModelChange', checkGroupingColumnsModelDiff);

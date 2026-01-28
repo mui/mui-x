@@ -12,7 +12,6 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "strict": true,
-    "baseUrl": "./",
     "paths": {
       "docs/config": ["../../node_modules/@mui/monorepo/docs/config.d.ts"],
       "@mui-internal/api-docs-builder": [

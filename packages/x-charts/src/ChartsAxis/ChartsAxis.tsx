@@ -3,8 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ChartsXAxis } from '../ChartsXAxis';
 import { ChartsYAxis } from '../ChartsYAxis';
-import { ChartsAxisSlotProps, ChartsAxisSlots } from '../models/axis';
+import { type ChartsAxisSlotProps, type ChartsAxisSlots } from '../models/axis';
 import { useXAxes, useYAxes } from '../hooks';
+
+export type { ChartsAxisSlots, ChartsAxisSlotProps };
 
 export interface ChartsAxisProps {
   /**
@@ -33,6 +35,9 @@ function ChartsAxis(props: ChartsAxisProps) {
   const { xAxisIds, xAxis } = useXAxes();
   const { yAxisIds, yAxis } = useYAxes();
 
+  const XAxis = slots?.xAxis ?? ChartsXAxis;
+  const YAxis = slots?.yAxis ?? ChartsYAxis;
+
   return (
     <React.Fragment>
       {xAxisIds.map((axisId) => {
@@ -40,14 +45,14 @@ function ChartsAxis(props: ChartsAxisProps) {
           return null;
         }
 
-        return <ChartsXAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
+        return <XAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
       })}
       {yAxisIds.map((axisId) => {
         if (!yAxis[axisId].position || yAxis[axisId].position === 'none') {
           return null;
         }
 
-        return <ChartsYAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
+        return <YAxis key={axisId} slots={slots} slotProps={slotProps} axisId={axisId} />;
       })}
     </React.Fragment>
   );

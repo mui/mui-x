@@ -18,14 +18,14 @@ import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
 ```
 
-The Simple Tree View component receives its items directly as JSX children.
+`SimpleTreeView` receives its items directly as JSX children.
 
 {{"demo": "BasicSimpleTreeView.js"}}
 
 ### Item identifier
 
-Each Tree Item must have a unique `itemId`.
-This is used internally to identify the item in the various models, and to track it across updates.
+Each `TreeItem` must have a unique `itemId`.
+This is used internally to identify the item in various models and to track it across updates.
 
 ```tsx
 <SimpleTreeView>
@@ -35,7 +35,7 @@ This is used internally to identify the item in the various models, and to track
 
 ### Item label
 
-You must pass a `label` prop to each Tree Item component, as shown below:
+You must pass a `label` prop to each `TreeItem`, as shown below:
 
 ```tsx
 <SimpleTreeView>
@@ -45,30 +45,29 @@ You must pass a `label` prop to each Tree Item component, as shown below:
 
 ### Disabled items
 
-Use the `disabled` prop on the Tree Item component to disable interaction and focus:
+Use the `disabled` prop on `TreeItem` to disable interaction and focus:
 
 {{"demo": "DisabledJSXItem.js", "defaultCodeOpen": false}}
 
-#### The disabledItemsFocusable prop
+#### Focusable disabled items
 
-Note that the demo below also includes a switch.
-This toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled Tree Item can be focused.
+The demo below includes a switch that toggles the `disabledItemsFocusable` prop, which controls whether or not a disabled `TreeItem` can be focused.
 
 When this prop is set to false:
 
-- Navigating with keyboard arrow keys will not focus the disabled items, and the next non-disabled item will be focused instead.
+- Disabled items will not receive focus when navigating with keyboard arrow keys—they next non-disabled item is focused instead.
 - Typing the first character of a disabled item's label will not move the focus to it.
-- Mouse or keyboard interaction will not expand/collapse disabled items.
-- Mouse or keyboard interaction will not select disabled items.
+- Mouse or keyboard interactions will not expand or collapse disabled items.
+- Mouse or keyboard interactions will not select disabled items.
 - <kbd class="key">Shift</kbd> + arrow keys will skip disabled items, and the next non-disabled item will be selected instead.
 - Programmatic focus will not focus disabled items.
 
 When it's set to true:
 
-- Navigating with keyboard arrow keys will focus disabled items.
+- Disabled items will receive focus when navigating with keyboard arrow keys.
 - Typing the first character of a disabled item's label will move focus to it.
-- Mouse or keyboard interaction will not expand/collapse disabled items.
-- Mouse or keyboard interaction will not select disabled items.
+- Mouse or keyboard interactions will not expand or collapse disabled items.
+- Mouse or keyboard interactions will not select disabled items.
 - <kbd class="key">Shift</kbd> + arrow keys will not skip disabled items, but the disabled item will not be selected.
 - Programmatic focus will focus disabled items.
 
@@ -80,20 +79,25 @@ Use the `onItemClick` prop to track the clicked item:
 
 {{"demo": "OnItemClick.js"}}
 
+## Item height
+
+Use the `itemHeight` prop to set the height of each item in the tree.
+If not provided, no height restriction is applied to the tree item content element.
+
+{{"demo": "ItemHeight.js"}}
+
 ## Imperative API
 
-:::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef()` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+const apiRef = useSimpleTreeViewApiRef();
 
-return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+return <SimpleTreeView apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` is `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 
 ### Get an item's DOM element by ID
 

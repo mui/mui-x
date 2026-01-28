@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IconProps } from './gridBaseSlots';
+import type { GridColumnUnsortedIconProps } from '../components/GridColumnUnsortedIcon';
 
 /**
  * Set of icons used in the grid component UI.
@@ -15,6 +16,16 @@ export interface GridIconSlotsComponent {
    * @default GridCloseIcon
    */
   booleanCellFalseIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the undo button in the toolbar.
+   * @default GridUndoIcon
+   */
+  undoIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the redo button in the toolbar.
+   * @default GridRedoIcon
+   */
+  redoIcon: React.JSXElementConstructor<IconProps>;
   /**
    * Icon displayed on the side of the column header title to display the filter input component.
    * @default GridTripleDotsVerticalIcon
@@ -35,6 +46,11 @@ export interface GridIconSlotsComponent {
    * @default GridColumnIcon
    */
   columnSelectorIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the side of the column header title when unsorted.
+   * @default GridColumnUnsortedIcon
+   */
+  columnUnsortedIcon: React.JSXElementConstructor<GridColumnUnsortedIconProps> | null;
   /**
    * Icon displayed on the side of the column header title when sorted in ascending order.
    * @default GridArrowUpwardIcon
@@ -185,4 +201,14 @@ export interface GridIconSlotsComponent {
    * @default GridCheckIcon
    */
   menuItemCheckIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the long text cell to expand the content.
+   * @default GridLongTextCellExpandIcon
+   */
+  longTextCellExpandIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon displayed on the long text cell popup to collapse the content.
+   * @default GridLongTextCellCollapseIcon
+   */
+  longTextCellCollapseIcon: React.JSXElementConstructor<IconProps>;
 }

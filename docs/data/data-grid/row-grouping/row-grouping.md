@@ -215,16 +215,22 @@ In the following example, the **Company** column is not groupable through the in
 
 {{"demo": "RowGroupingReadOnly.js", "bg": "inline", "defaultCodeOpen": false}}
 
-## Using groupingValueGetter for complex grouping value
+## Using groupingValueGetter() for complex grouping value
 
-The grouping value must be either a string, a number, `null`, or `undefined`.
-If your cell value is more complex, pass a `groupingValueGetter` property to the column definition to convert it into a valid value.
+The grouping value must be either a string, a number, `Date`, `null`, or `undefined`.
+If your cell value is more complex, or if you want to use a different value for grouping than the one displayed in the cell, use the `groupingValueGetter()` property in the column definition:
 
 ```ts
 const columns: GridColDef[] = [
   {
-    field: 'composer',
-    groupingValueGetter: (value) => value.name,
+    field: 'year',
+    type: 'number',
+    valueFormatter: (value) => (value ? `${value}` : ''),
+    // Group by decade
+    groupingValueGetter: (value) => {
+      const yearDecade = Math.floor(value / 10) * 10;
+      return `${yearDecade.toString().slice(-2)}'s`;
+    },
   },
   // ...
 ];
@@ -376,6 +382,62 @@ Row selection propagation has some limitations:
   Consider opening a [GitHub issue](https://github.com/mui/mui-x/issues/new?template=2.feature.yml) if you need this behavior.
 
 :::
+
+## Drag-and-drop group reordering
+
+With row reordering, users can reorder row groups or move rows from one group to another.
+To enable this feature with row grouping, pass the `rowReordering` prop to the Data Grid Premium component:
+
+```tsx
+<DataGridPremium rowGroupingModel={['category']} rowReordering />
+```
+
+{{"demo": "RowGroupingReordering.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Reacting to group updates
+
+When a row is moved from one group to another, it warrants a row update, and the row data value that was used to group this row must be updated to maintain the row grouping data integrity.
+
+For example, in a Data Grid displaying movies grouped by companies, if the **Avatar** row is moved from **20th Century Fox** to the **Disney Studios** group, along with the row being updated in the row tree, the row data must be updated to reflect this change.
+
+```diff
+ // "Avatar" row
+ {
+  title: 'Avatar',
+- company: '20th Century Fox',
++ company: 'Disney Studios',
+  ...
+ }
+```
+
+The Data Grid updates the internal row data, but for the change to persist on the server, you must use the [`processRowUpdate()`](/x/react-data-grid/editing/persistence/#the-processrowupdate-callback) callback.
+
+When moving a nested group to a different parent on the same depth, there will be multiple `processRowUpdate()` calls for all the leaf descendants of the dragged group. In case some of them fail, you might see the parent node appearing in both places. Consider using the `onProcessRowUpdateError()` to show the proper feedback to the user.
+
+### Usage with groupingValueSetter()
+
+If you use [`colDef.groupingValueGetter()`](#using-groupingvaluegetter-for-complex-grouping-value) to handle complex grouping values and you want to group across rows, you must use the `colDef.groupingValueSetter()` to properly convert back the simple value to the complex one.
+
+This method should return the updated row based on the groupKey (`value`) that corresponds to the target group.
+
+```ts
+const columns: GridColDef[] = [
+  {
+    field: 'composer',
+    valueGetter: (value) => value?.name,
+    groupingValueSetter: (value, row) => ({
+      ...row,
+      composer: {
+        ...row.composer,
+        name: value,
+      },
+    }),
+  },
+  // ...
+];
+```
+
+{{"demo": "RowGroupingGroupingValueSetter.js", "bg": "inline", "defaultCodeOpen": false}}
 
 ## Get all rows in a group
 

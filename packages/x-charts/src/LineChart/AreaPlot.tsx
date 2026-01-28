@@ -5,22 +5,24 @@ import { styled } from '@mui/material/styles';
 import {
   AreaElement,
   areaElementClasses,
-  AreaElementProps,
-  AreaElementSlotProps,
-  AreaElementSlots,
+  type AreaElementProps,
+  type AreaElementSlotProps,
+  type AreaElementSlots,
 } from './AreaElement';
-import { LineItemIdentifier } from '../models/seriesType/line';
+import { type LineItemIdentifier } from '../models/seriesType/line';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
 import { useXAxes, useYAxes } from '../hooks/useAxis';
 import { useInternalIsZoomInteracting } from '../internals/plugins/featurePlugins/useChartCartesianAxis/useInternalIsZoomInteracting';
 import { useAreaPlotData } from './useAreaPlotData';
+import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 
 export interface AreaPlotSlots extends AreaElementSlots {}
 
 export interface AreaPlotSlotProps extends AreaElementSlotProps {}
 
 export interface AreaPlotProps
-  extends React.SVGAttributes<SVGSVGElement>,
+  extends
+    React.SVGAttributes<SVGSVGElement>,
     Pick<AreaElementProps, 'slots' | 'slotProps' | 'skipAnimation'> {
   /**
    * Callback fired when a line area item is clicked.
@@ -38,7 +40,9 @@ const AreaPlotRoot = styled('g', {
   slot: 'Root',
 })({
   [`& .${areaElementClasses.root}`]: {
-    transition: 'opacity 0.2s ease-in, fill 0.2s ease-in',
+    transitionProperty: 'opacity, fill',
+    transitionDuration: `${ANIMATION_DURATION_MS}ms`,
+    transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 });
 
@@ -74,7 +78,7 @@ function AreaPlot(props: AreaPlotProps) {
           !!area && (
             <AreaElement
               key={seriesId}
-              id={seriesId}
+              seriesId={seriesId}
               d={d}
               color={color}
               gradientId={gradientId}

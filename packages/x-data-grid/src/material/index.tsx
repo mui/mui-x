@@ -2,7 +2,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import MUIAutocomplete from '@mui/material/Autocomplete';
 import MUIBadge from '@mui/material/Badge';
 import MUICheckbox from '@mui/material/Checkbox';
@@ -18,6 +18,7 @@ import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
+import MUITextareaAutosize from '@mui/material/TextareaAutosize';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
@@ -33,13 +34,19 @@ import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
 import MUIInputLabel from '@mui/material/InputLabel';
 import MUISkeleton from '@mui/material/Skeleton';
+import MUITabs from '@mui/material/Tabs';
+import MUITab from '@mui/material/Tab';
+import MUIToggleButton from '@mui/material/ToggleButton';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import useId from '@mui/utils/useId';
 import {
   GridAddIcon,
   GridArrowDownwardIcon,
   GridArrowUpwardIcon,
   GridCheckIcon,
   GridCloseIcon,
+  GridUndoIcon,
+  GridRedoIcon,
   GridColumnIcon,
   GridDragIcon,
   GridExpandMoreIcon,
@@ -60,11 +67,14 @@ import {
   GridLoadIcon,
   GridDeleteForeverIcon,
   GridDownloadIcon,
+  GridLongTextCellExpandIcon,
+  GridLongTextCellCollapseIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
 import type { GridSlotProps as P } from '../models/gridSlotsComponentsProps';
 import type { PopperProps } from '../models/gridBaseSlots';
+import { GridColumnUnsortedIcon } from '../components/GridColumnUnsortedIcon';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
@@ -74,13 +84,16 @@ export { useMaterialCSSVariables } from './variables';
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
-const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
+const InputAdornment = styled(MUIInputAdornment, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: theme.spacing(-0.75),
   },
 }));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -103,6 +116,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 }));
 
 const Checkbox = styled(MUICheckbox, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
@@ -115,7 +129,9 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const ListItemText = styled(MUIListItemText)({
+const ListItemText = styled(MUIListItemText, {
+  slot: 'internal',
+})({
   [`& .${listItemTextClasses.primary}`]: {
     overflowX: 'clip',
     textOverflow: 'ellipsis',
@@ -138,8 +154,15 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     size,
     style,
     fullWidth,
-    ...rest
+    ...other
   } = props;
+  const theme = useTheme();
+  const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
+  const computedSize = (size ?? textFieldDefaults.size) as 'small' | 'medium' | undefined;
+  const computedVariant = (textFieldDefaults.variant ?? 'outlined') as
+    | 'standard'
+    | 'filled'
+    | 'outlined';
   const menuProps = {
     PaperProps: {
       onKeyDown,
@@ -149,8 +172,14 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
     menuProps.onClose = onClose;
   }
   return (
-    <MUIFormControl size={size} fullWidth={fullWidth} style={style} disabled={disabled} ref={ref}>
-      <MUIInputLabel id={labelId} htmlFor={id} shrink variant="outlined">
+    <MUIFormControl
+      size={computedSize}
+      fullWidth={fullWidth}
+      style={style}
+      disabled={disabled}
+      ref={ref}
+    >
+      <MUIInputLabel id={labelId} htmlFor={id} shrink variant={computedVariant}>
         {label}
       </MUIInputLabel>
       <MUISelect
@@ -159,20 +188,21 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
         label={label}
         displayEmpty
         onChange={onChange as any}
-        variant="outlined"
-        {...rest}
-        notched
+        variant={computedVariant as any}
+        {...other}
         inputProps={slotProps?.htmlInput}
         onOpen={onOpen}
         MenuProps={menuProps}
-        size={size}
+        size={computedSize}
         {...material}
       />
     </MUIFormControl>
   );
 });
 
-const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+const StyledPagination = styled(MUIPagination, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -188,7 +218,7 @@ const StyledPagination = styled(MUIPagination)(({ theme }) => ({
 })) as typeof MUIPagination;
 
 const BasePagination = forwardRef<any, P['basePagination']>(function BasePagination(props, ref) {
-  const { onRowsPerPageChange, material, disabled, ...rest } = props;
+  const { onRowsPerPageChange, material, disabled, ...other } = props;
   const computedProps = React.useMemo(() => {
     if (!disabled) {
       return undefined;
@@ -220,7 +250,7 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
       }
       getItemAriaLabel={apiRef.current.getLocaleText('paginationItemAriaLabel')}
       {...computedProps}
-      {...rest}
+      {...other}
       {...material}
       ref={ref}
     />
@@ -228,8 +258,8 @@ const BasePagination = forwardRef<any, P['basePagination']>(function BasePaginat
 });
 
 const BaseBadge = forwardRef<any, P['baseBadge']>(function BaseBadge(props, ref) {
-  const { material, ...rest } = props;
-  return <MUIBadge {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUIBadge {...other} {...material} ref={ref} />;
 });
 
 const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(props, ref) {
@@ -283,67 +313,81 @@ const BaseCheckbox = forwardRef<any, P['baseCheckbox']>(function BaseCheckbox(pr
 
 const BaseCircularProgress = forwardRef<any, P['baseCircularProgress']>(
   function BaseCircularProgress(props, ref) {
-    const { material, ...rest } = props;
-    return <MUICircularProgress {...rest} {...material} ref={ref} />;
+    const { material, ...other } = props;
+    return <MUICircularProgress {...other} {...material} ref={ref} />;
   },
 );
 
 const BaseDivider = forwardRef<any, P['baseDivider']>(function BaseDivider(props, ref) {
-  const { material, ...rest } = props;
-  return <MUIDivider {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUIDivider {...other} {...material} ref={ref} />;
 });
 
 const BaseLinearProgress = forwardRef<any, P['baseLinearProgress']>(
   function BaseLinearProgress(props, ref) {
-    const { material, ...rest } = props;
-    return <MUILinearProgress {...rest} {...material} ref={ref} />;
+    const { material, ...other } = props;
+    return <MUILinearProgress {...other} {...material} ref={ref} />;
   },
 );
 
 const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, ref) {
-  const { material, ...rest } = props;
-  return <MUIButton {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUIButton {...other} {...material} ref={ref} />;
 });
 
+const StyledToggleButton = styled(MUIToggleButton, {
+  slot: 'internal',
+})(({ theme }) => ({
+  gap: theme.spacing(1),
+  border: 0,
+}));
+
+const BaseToggleButton = forwardRef<any, P['baseToggleButton']>(
+  function BaseToggleButton(props, ref) {
+    const { material, ...rest } = props;
+    return <StyledToggleButton size="small" color="primary" {...rest} {...material} ref={ref} />;
+  },
+);
+
 const BaseChip = forwardRef<any, P['baseChip']>(function BaseChip(props, ref) {
-  const { material, ...rest } = props;
-  return <MUIChip {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUIChip {...other} {...material} ref={ref} />;
 });
 
 const BaseIconButton = forwardRef<any, P['baseIconButton']>(function BaseIconButton(props, ref) {
-  const { material, ...rest } = props;
-  return <MUIIconButton {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUIIconButton {...other} {...material} ref={ref} />;
 });
 
 const BaseTooltip = forwardRef<any, P['baseTooltip']>(function BaseTooltip(props, ref) {
-  const { material, ...rest } = props;
-  return <MUITooltip {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUITooltip {...other} {...material} ref={ref} />;
 });
 
 const BaseSkeleton = forwardRef<any, P['baseSkeleton']>(function BaseSkeleton(props, ref) {
-  const { material, ...rest } = props;
-  return <MUISkeleton {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUISkeleton {...other} {...material} ref={ref} />;
 });
 
 const BaseSwitch = forwardRef<any, P['baseSwitch']>(function BaseSwitch(props, ref) {
-  const { material, label, className, ...rest } = props;
+  const { material, label, className, ...other } = props;
 
   if (!label) {
-    return <MUISwitch {...rest} {...material} className={className} ref={ref} />;
+    return <MUISwitch {...other} {...material} className={className} ref={ref} />;
   }
 
   return (
     <FormControlLabel
       className={className}
-      control={<MUISwitch {...rest} {...material} ref={ref} />}
+      control={<MUISwitch {...other} {...material} ref={ref} />}
       label={label}
     />
   );
 });
 
 const BaseMenuList = forwardRef<any, P['baseMenuList']>(function BaseMenuList(props, ref) {
-  const { material, ...rest } = props;
-  return <MUIMenuList {...rest} {...material} ref={ref} />;
+  const { material, ...other } = props;
+  return <MUIMenuList {...other} {...material} ref={ref} />;
 });
 
 function BaseMenuItem(props: P['baseMenuItem']) {
@@ -361,11 +405,16 @@ function BaseMenuItem(props: P['baseMenuItem']) {
 function BaseTextField(props: P['baseTextField']) {
   // MaterialUI v5 doesn't support slotProps, until we drop v5 support we need to
   // translate the pattern.
-  const { slotProps, material, ...rest } = props;
+  const { slotProps, material, ...other } = props;
+  const theme = useTheme();
+  const textFieldDefaults = (theme.components?.MuiTextField?.defaultProps ?? {}) as any;
+  const computedVariant = (other as any).variant ?? textFieldDefaults.variant ?? 'outlined';
+  const computedSize = (other as any).size ?? textFieldDefaults.size;
   return (
     <MUITextField
-      variant="outlined"
-      {...rest}
+      variant={computedVariant as any}
+      size={computedSize as any}
+      {...other}
       {...material}
       inputProps={slotProps?.htmlInput}
       InputProps={transformInputProps(slotProps?.input as any)}
@@ -392,7 +441,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
     placeholder,
     slotProps,
     material,
-    ...rest
+    ...other
   } = props;
 
   return (
@@ -437,7 +486,7 @@ function BaseAutocomplete(props: P['baseAutocomplete']) {
           />
         );
       }}
-      {...rest}
+      {...other}
       {...material}
     />
   );
@@ -452,8 +501,8 @@ function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments =
     return undefined;
   }
 
-  const { slotProps, material, ...rest } = props;
-  const result = rest as Partial<MUIInputBaseProps>;
+  const { slotProps, material, ...other } = props;
+  const result = other as Partial<MUIInputBaseProps>;
 
   if (wrapAdornments) {
     if (result.startAdornment) {
@@ -483,6 +532,11 @@ function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments =
   return result;
 }
 
+const BaseTextarea = forwardRef<any, P['baseTextarea']>(function BaseTextarea(props, ref) {
+  const { material, ...other } = props;
+  return <MUITextareaAutosize {...other} {...material} ref={ref} />;
+});
+
 const transformOrigin = {
   'bottom-start': 'top left',
   'bottom-end': 'top right',
@@ -507,7 +561,7 @@ function BasePopper(props: P['basePopper']) {
     transition,
     placement,
     material,
-    ...rest
+    ...other
   } = props;
 
   const modifiers = React.useMemo(() => {
@@ -523,9 +577,6 @@ function BasePopper(props: P['basePopper']) {
       result.push({
         name: 'flip',
         enabled: true,
-        options: {
-          rootBoundary: 'document',
-        },
       });
     }
     if (onDidShow || onDidHide) {
@@ -580,7 +631,7 @@ function BasePopper(props: P['basePopper']) {
       transition={transition}
       placement={placement}
       modifiers={modifiers}
-      {...rest}
+      {...other}
       {...material}
     >
       {content}
@@ -625,14 +676,90 @@ function BaseSelectOption({ native, ...props }: NonNullable<P['baseSelectOption'
   return <MUIMenuItem {...props} />;
 }
 
+const StyledTabs = styled(MUITabs, {
+  name: 'MuiDataGrid',
+  slot: 'Tabs',
+})(({ theme }) => ({
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledTab = styled(MUITab, {
+  name: 'MuiDataGrid',
+  slot: 'Tab',
+})({
+  flex: 1,
+  minWidth: 'fit-content',
+});
+
+const StyledTabPanel = styled('div', {
+  name: 'MuiDataGrid',
+  slot: 'TabPanel',
+})({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+});
+
+function TabPanel(
+  props: {
+    children?: React.ReactNode;
+    value: string;
+    active: boolean;
+  } & React.HTMLAttributes<HTMLDivElement>,
+) {
+  const { children, value, active, ...other } = props;
+
+  return (
+    <StyledTabPanel role="tabpanel" style={{ display: active ? 'flex' : 'none' }} {...other}>
+      {children}
+    </StyledTabPanel>
+  );
+}
+
+function BaseTabs({ items, value, material, ...props }: P['baseTabs']) {
+  const id = useId();
+  const labelId = `${id}-tab-${value}`;
+  const panelId = `${id}-tabpanel-${value}`;
+  return (
+    <React.Fragment>
+      <StyledTabs {...props} value={value} variant="scrollable" scrollButtons="auto" {...material}>
+        {items.map((item) => (
+          <StyledTab
+            key={item.value}
+            value={item.value}
+            label={item.label}
+            id={labelId}
+            aria-controls={panelId}
+          />
+        ))}
+      </StyledTabs>
+      {items.map((item) => (
+        <TabPanel
+          key={item.value}
+          value={item.value}
+          active={value === item.value}
+          id={panelId}
+          aria-labelledby={labelId}
+        >
+          {item.children}
+        </TabPanel>
+      ))}
+    </React.Fragment>
+  );
+}
+
 const iconSlots: GridIconSlotsComponent = {
   booleanCellTrueIcon: GridCheckIcon,
   booleanCellFalseIcon: GridCloseIcon,
   columnMenuIcon: GridTripleDotsVerticalIcon,
   openFilterButtonIcon: GridFilterListIcon,
   filterPanelDeleteIcon: GridCloseIcon,
+  undoIcon: GridUndoIcon,
+  redoIcon: GridRedoIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
+  columnUnsortedIcon: GridColumnUnsortedIcon,
   columnSortedAscendingIcon: GridArrowUpwardIcon,
   columnSortedDescendingIcon: GridArrowDownwardIcon,
   columnResizeIcon: GridSeparatorIcon,
@@ -662,6 +789,8 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  longTextCellExpandIcon: GridLongTextCellExpandIcon,
+  longTextCellCollapseIcon: GridLongTextCellCollapseIcon,
 };
 
 const baseSlots: GridBaseSlots = {
@@ -672,13 +801,16 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: BaseCircularProgress,
   baseDivider: BaseDivider,
   baseInput: BaseInput,
+  baseTextarea: BaseTextarea,
   baseLinearProgress: BaseLinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,
   baseTextField: BaseTextField,
   baseButton: BaseButton,
   baseIconButton: BaseIconButton,
+  baseToggleButton: BaseToggleButton,
   baseTooltip: BaseTooltip,
+  baseTabs: BaseTabs,
   basePagination: BasePagination,
   basePopper: BasePopper,
   baseSelect: BaseSelect,

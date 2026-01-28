@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
 import { describeConformance } from 'test/utils/describeConformance';

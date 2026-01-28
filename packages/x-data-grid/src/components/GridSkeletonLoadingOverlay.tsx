@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import clsx from 'clsx';
 import { styled } from '@mui/system';
@@ -23,7 +24,6 @@ import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { escapeOperandAttributeSelector } from '../utils/domUtils';
-import { GridScrollbarFillerCell } from './GridScrollbarFillerCell';
 import { rtlFlipSide } from '../utils/rtlFlipSide';
 import { attachPinnedStyle } from '../internals/utils';
 
@@ -75,7 +75,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     () => positions.filter((value) => value <= totalWidth).length,
     [totalWidth, positions],
   );
-  const { skeletonRowsCount, visibleColumns, showFirstRowBorder, ...rest } = props;
+  const { skeletonRowsCount, visibleColumns, showFirstRowBorder, ...other } = props;
   const allVisibleColumns = useGridSelector(apiRef, gridVisibleColumnDefinitionsSelector);
   const columns = React.useMemo(
     () => allVisibleColumns.slice(0, inViewportCount),
@@ -135,8 +135,14 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
           sectionLength,
           rootProps.showCellVerticalBorder,
           gridHasFiller,
+          rootProps.pinnedColumnsSectionSeparator,
         );
-        const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, sectionIndex);
+        const showLeftBorder = shouldCellShowLeftBorder(
+          pinnedPosition,
+          sectionIndex,
+          rootProps.showCellVerticalBorder,
+          rootProps.pinnedColumnsSectionSeparator,
+        );
         const isLastColumn = colIndex === columns.length - 1;
         const isFirstPinnedRight = isPinnedRight && sectionIndex === 0;
         const hasFillerBefore = isFirstPinnedRight && gridHasFiller;
@@ -146,7 +152,6 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
         const emptyCell = (
           <slots.skeletonCell key={`skeleton-filler-column-${i}`} width={emptyCellWidth} empty />
         );
-        const hasScrollbarFiller = isLastColumn && scrollbarWidth !== 0;
 
         if (hasFillerBefore) {
           rowCells.push(emptyCell);
@@ -177,15 +182,6 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
         if (hasFillerAfter) {
           rowCells.push(emptyCell);
         }
-
-        if (hasScrollbarFiller) {
-          rowCells.push(
-            <GridScrollbarFillerCell
-              key={`skeleton-scrollbar-filler-${i}`}
-              pinnedRight={pinnedColumns.right.length > 0}
-            />,
-          );
-        }
       }
 
       array.push(
@@ -215,6 +211,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
     dimensions.rowHeight,
     positions,
     rootProps.showCellVerticalBorder,
+    rootProps.pinnedColumnsSectionSeparator,
     slots,
     visibleColumns,
     showFirstRowBorder,
@@ -272,7 +269,7 @@ export const GridSkeletonLoadingOverlayInner = forwardRef<
   useGridEvent(apiRef, 'columnResize', handleColumnResize);
 
   return (
-    <SkeletonOverlay className={classes.root} {...rest} ref={handleRef}>
+    <SkeletonOverlay className={classes.root} {...other} ref={handleRef}>
       {children}
     </SkeletonOverlay>
   );

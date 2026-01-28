@@ -8,10 +8,11 @@ import {
   useGridApiRef,
   GridColDef,
 } from '@mui/x-data-grid-pro';
-import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, act, screen } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { getColumnValues, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
+import { vi } from 'vitest';
 
 describe('<DataGridPro /> - Sorting', () => {
   const baselineProps: DataGridProProps = {
@@ -167,6 +168,40 @@ describe('<DataGridPro /> - Sorting', () => {
       fireEvent.click(getColumnHeaderCell(0), { shiftKey: true });
       expect(getColumnValues(0)).to.deep.equal(['Adidas', 'Nike', 'Puma']);
     });
+
+    it('should do multi-sorting when using column menu with multipleColumnsSortingMode="always"', async () => {
+      vi.useFakeTimers();
+      render(<TestCase multipleColumnsSortingMode="always" />);
+      // Set initial sort on year column
+      act(() => apiRef.current?.setSortModel([{ field: 'year', sort: 'desc' }]));
+      expect(getColumnValues(0)).to.deep.equal(['Puma', 'Nike', 'Adidas']);
+
+      // Click brand column menu and sort by ASC (should preserve existing year sort)
+      const brandColumnCell = getColumnHeaderCell(0);
+      const menuIconButton = brandColumnCell.querySelector(
+        'button[aria-label="brand column menu"]',
+      )!;
+      fireEvent.click(menuIconButton);
+
+      // Wait for menu to appear
+      await act(() => vi.runAllTimersAsync());
+      expect(screen.queryByRole('menu')).not.to.equal(null);
+
+      // Click Sort by ASC
+      fireEvent.click(screen.getByRole('menuitem', { name: 'Sort by ASC' }));
+
+      // Should have both year (desc) and brand (asc) in sort model
+      // Expected order: first by year desc (1950 before 1940), then by brand asc within same year
+      expect(getColumnValues(0)).to.deep.equal(['Puma', 'Adidas', 'Nike']);
+
+      // Verify the sort model has both columns
+      const sortModel = apiRef.current?.getSortModel();
+      expect(sortModel).to.deep.equal([
+        { field: 'year', sort: 'desc' },
+        { field: 'brand', sort: 'asc' },
+      ]);
+      vi.useRealTimers();
+    });
   });
 
   // The number of renders depends on the user-agent
@@ -238,7 +273,7 @@ describe('<DataGridPro /> - Sorting', () => {
     it('should control sort state when the model and the onChange are set', () => {
       let expectedModel: GridSortModel = [];
       function ControlCase(props: Partial<DataGridProProps>) {
-        const { rows, columns, ...others } = props;
+        const { rows, columns, ...other } = props;
         const [caseSortModel, setSortModel] = React.useState<GridSortModel>([]);
         const handleSortChange: DataGridProProps['onSortModelChange'] = (newModel) => {
           setSortModel(newModel);
@@ -253,7 +288,7 @@ describe('<DataGridPro /> - Sorting', () => {
               rows={rows || baselineProps.rows}
               sortModel={caseSortModel}
               onSortModelChange={handleSortChange}
-              {...others}
+              {...other}
             />
           </div>
         );

@@ -1,20 +1,42 @@
 import {
   useChartPolarAxis,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartPolarAxis';
 import {
+  useChartTooltip,
+  type UseChartTooltipSignature,
+} from '../internals/plugins/featurePlugins/useChartTooltip';
+import {
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
+import {
+  useChartKeyboardNavigation,
+  type UseChartKeyboardNavigationSignature,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import {
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
-export const RADAR_PLUGINS = [useChartPolarAxis, useChartInteraction, useChartHighlight] as const;
+export const RADAR_PLUGINS = [
+  useChartTooltip,
+  useChartInteraction,
+  useChartPolarAxis,
+  useChartHighlight,
+  useChartKeyboardNavigation,
+  useChartVisibilityManager,
+] as const;
 
-export type RadarChartPluginsSignatures = [
-  UseChartPolarAxisSignature,
+export type RadarChartPluginSignatures = [
+  UseChartTooltipSignature<'radar'>,
   UseChartInteractionSignature,
+  UseChartPolarAxisSignature,
   UseChartHighlightSignature,
+  UseChartKeyboardNavigationSignature,
+  UseChartVisibilityManagerSignature<'radar'>,
 ];

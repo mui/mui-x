@@ -1,6 +1,6 @@
-import { scaleTime } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig } from '../models';
-import { ChartsAxisProps } from '../models/axis';
+import { type NumberValue, scaleTime } from '@mui/x-charts-vendor/d3-scale';
+import { type AxisConfig } from '../models';
+import { type ChartsAxisProps } from '../models/axis';
 
 /**
  * Checks if the provided data array contains Date objects.
@@ -11,16 +11,18 @@ export const isDateData = (data?: readonly any[]): data is Date[] => data?.[0] i
 
 /**
  * Creates a formatter function for date values.
- * @param axis The axis configuration.
+ * @param data The data array containing Date or NumberValue objects.
  * @param range The range for the time scale.
+ * @param tickNumber (Optional) The number of ticks for formatting.
  * @returns A formatter function for date values.
  */
 export function createDateFormatter(
-  axis: AxisConfig<'band' | 'point', any, ChartsAxisProps>,
+  data: Iterable<Date | NumberValue>,
   range: number[],
+  tickNumber?: number,
 ): AxisConfig<'band' | 'point', any, ChartsAxisProps>['valueFormatter'] {
-  const timeScale = scaleTime(axis.data!, range);
+  const timeScale = scaleTime(data, range);
 
   return (v, { location }) =>
-    location === 'tick' ? timeScale.tickFormat(axis.tickNumber)(v) : `${v.toLocaleString()}`;
+    location === 'tick' ? timeScale.tickFormat(tickNumber)(v) : `${v.toLocaleString()}`;
 }

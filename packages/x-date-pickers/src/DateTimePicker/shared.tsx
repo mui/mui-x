@@ -35,9 +35,7 @@ import {
 import { useApplyDefaultValuesToDateTimeValidationProps } from '../managers/useDateTimeManager';
 
 export interface BaseDateTimePickerSlots
-  extends DateCalendarSlots,
-    DigitalClockSlots,
-    MultiSectionDigitalClockSlots {
+  extends DateCalendarSlots, DigitalClockSlots, MultiSectionDigitalClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimePickerTabs
@@ -51,9 +49,7 @@ export interface BaseDateTimePickerSlots
 }
 
 export interface BaseDateTimePickerSlotProps
-  extends DateCalendarSlotProps,
-    DigitalClockSlotProps,
-    MultiSectionDigitalClockSlotProps {
+  extends DateCalendarSlotProps, DigitalClockSlotProps, MultiSectionDigitalClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -76,7 +72,8 @@ export type DateTimePickerViewRenderers<TView extends DateOrTimeViewWithMeridiem
   >;
 
 export interface BaseDateTimePickerProps
-  extends Omit<
+  extends
+    Omit<
       BasePickerInputProps<PickerValue, DateOrTimeViewWithMeridiem, DateTimeValidationError>,
       'views'
     >,
@@ -118,6 +115,7 @@ type UseDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps> = 
 > & {
   shouldRenderTimeInASingleColumn: boolean;
   views: readonly DateOrTimeViewWithMeridiem[];
+  viewsForFormatting: readonly DateOrTimeViewWithMeridiem[];
 };
 
 export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePickerProps>(
@@ -163,6 +161,11 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting: readonly DateOrTimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -171,6 +174,7 @@ export function useDateTimePickerDefaultizedProps<Props extends BaseDateTimePick
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     localeText,
     orientation: themeProps.orientation ?? 'portrait',

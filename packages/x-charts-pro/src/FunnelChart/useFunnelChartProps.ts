@@ -1,17 +1,17 @@
 'use client';
 import { DEFAULT_MARGINS, DEFAULT_X_AXIS_KEY, DEFAULT_Y_AXIS_KEY } from '@mui/x-charts/constants';
-import { ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
-import { ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
-import { ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
-import { defaultizeMargin, XAxis, YAxis } from '@mui/x-charts/internals';
-import { ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
+import { type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
+import { type ChartsAxisProps } from '@mui/x-charts/ChartsAxis';
+import { type ChartsLegendSlotExtension } from '@mui/x-charts/ChartsLegend';
+import { defaultizeMargin, type XAxis, type YAxis } from '@mui/x-charts/internals';
+import { type ChartsAxisHighlightProps } from '@mui/x-charts/ChartsAxisHighlight';
 import { warnOnce } from '@mui/x-internals/warning';
 import { strawberrySkyPalette } from '@mui/x-charts/colorPalettes';
 import type { ChartsWrapperProps } from '@mui/x-charts/ChartsWrapper';
-import { FUNNEL_CHART_PLUGINS, FunnelChartPluginsSignatures } from './FunnelChart.plugins';
-import { FunnelPlotProps } from './FunnelPlot';
+import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
+import { type FunnelPlotProps } from './FunnelPlot';
 import type { FunnelChartProps } from './FunnelChart';
-import { ChartContainerProProps } from '../ChartContainerPro';
+import { type ChartContainerProProps } from '../ChartContainerPro';
 
 function getCategoryAxisConfig(
   categoryAxis: FunnelChartProps['categoryAxis'],
@@ -56,7 +56,7 @@ function getCategoryAxisConfig<D extends 'x' | 'y' = 'x' | 'y'>(
     id: direction === 'x' ? DEFAULT_X_AXIS_KEY : DEFAULT_Y_AXIS_KEY,
     ...categoryAxis,
     ...(categoryAxis?.size ? { [isHorizontal ? 'height' : 'width']: categoryAxis.size } : {}),
-    position: (categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none')) as any,
+    position: categoryAxis?.position ?? (categoryAxis?.categories ? side : 'none'),
   };
 
   // If the scaleType is not defined or is 'band', our job is simple.
@@ -127,7 +127,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     axisHighlight,
     apiRef,
     gap,
-    ...rest
+    ...other
   } = props;
   const margin = defaultizeMargin(marginProps, DEFAULT_MARGINS);
 
@@ -147,8 +147,8 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     ? valueAxisConfig
     : getCategoryAxisConfig(categoryAxis, series, isHorizontal, 'y');
 
-  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginsSignatures> = {
-    ...rest,
+  const chartContainerProps: ChartContainerProProps<'funnel', FunnelChartPluginSignatures> = {
+    ...other,
     series: series.map((s) => ({
       type: 'funnel' as const,
       layout: isHorizontal ? 'horizontal' : 'vertical',
@@ -194,6 +194,7 @@ export const useFunnelChartProps = (props: FunnelChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   const axisHighlightProps: ChartsAxisHighlightProps = {

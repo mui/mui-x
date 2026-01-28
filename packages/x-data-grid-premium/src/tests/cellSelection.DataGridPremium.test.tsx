@@ -184,6 +184,59 @@ describe('<DataGridPremium /> - Cell selection', () => {
     });
   });
 
+  describe('Editing', () => {
+    // https://github.com/mui/mui-x/issues/20542
+    it('should not clear cell selection (from shift key) when pressing space in edit mode', async () => {
+      const columns = [{ field: 'id' }, { field: 'name', editable: true }, { field: 'age' }];
+      const rows = [
+        { id: 0, name: 'Alice', age: 30 },
+        { id: 1, name: 'Bob', age: 25 },
+        { id: 2, name: 'Charlie', age: 35 },
+      ];
+      const { user } = render(<TestDataGridSelection columns={columns} rows={rows} />);
+
+      // Click the editable cell first, then Shift+click to extend selection
+      const editableCell = getCell(0, 1); // name column (editable)
+      await user.click(editableCell);
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(1, 1));
+      await user.keyboard('{/Shift}');
+
+      expect(document.querySelectorAll('.Mui-selected')).to.have.length(2);
+
+      // Start typing to enter edit mode and type **space** character
+      // Focus is on the editable cell, so typing will start editing
+      await user.keyboard('Hello World');
+
+      expect(document.querySelectorAll('.Mui-selected')).to.have.length(2);
+    });
+
+    it('should not clear cell selection (from dragging) when pressing space in edit mode', async () => {
+      const columns = [{ field: 'id' }, { field: 'name', editable: true }, { field: 'age' }];
+      const rows = [
+        { id: 0, name: 'Alice', age: 30 },
+        { id: 1, name: 'Bob', age: 25 },
+        { id: 2, name: 'Charlie', age: 35 },
+      ];
+      const { user } = render(<TestDataGridSelection columns={columns} rows={rows} />);
+
+      // Drag to select cells
+      await user.pointer([
+        { keys: '[MouseLeft>]', target: getCell(0, 1) },
+        { target: getCell(1, 1) },
+        { keys: '[/MouseLeft]' },
+      ]);
+
+      expect(document.querySelectorAll('.Mui-selected')).to.have.length(2);
+
+      // Start typing to enter edit mode and type **space** character
+      // Focus is on the editable cell, so typing will start editing
+      await user.keyboard('Hello World');
+
+      expect(document.querySelectorAll('.Mui-selected')).to.have.length(2);
+    });
+  });
+
   describe('Shift + arrow keys', () => {
     it('should call selectCellRange when ArrowDown is pressed', async () => {
       const { user } = render(<TestDataGridSelection />);

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import dayjs from 'dayjs';
 import Grid from '@mui/material/Grid';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

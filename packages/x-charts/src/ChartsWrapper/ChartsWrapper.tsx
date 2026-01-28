@@ -1,13 +1,17 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
-import { Direction } from '../ChartsLegend';
-import { Position } from '../models';
+import { type Direction } from '../ChartsLegend';
+import { type Position } from '../models';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
-import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
+import {
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+} from '../internals/plugins/corePlugins/useChartDimensions';
+import { chartsToolbarClasses } from '../Toolbar';
 
 export interface ChartsWrapperProps {
   /**
@@ -23,6 +27,12 @@ export interface ChartsWrapperProps {
   // eslint-disable-next-line react/no-unused-prop-types
   legendDirection?: Direction;
   /**
+   * If `true`, the legend is not rendered.
+   * @default false
+   */
+  // eslint-disable-next-line react/no-unused-prop-types
+  hideLegend?: boolean;
+  /**
    * If `true`, the chart wrapper set `height: 100%`.
    * @default `false` if the `height` prop is set. And `true` otherwise.
    */
@@ -31,65 +41,140 @@ export interface ChartsWrapperProps {
   sx?: SxProps<Theme>;
 }
 
-const getDirection = (direction?: Direction, position?: Position) => {
+const getJustifyItems = (position: Position | undefined) => {
+  if (position?.horizontal === 'start') {
+    return 'start';
+  }
+  if (position?.horizontal === 'end') {
+    return 'end';
+  }
+  return 'center';
+};
+
+const getAlignItems = (position: Position | undefined) => {
+  if (position?.vertical === 'top') {
+    return 'flex-start';
+  }
+  if (position?.vertical === 'bottom') {
+    return 'flex-end';
+  }
+  return 'center';
+};
+
+const getGridTemplateAreas = (
+  hideLegend: boolean | undefined,
+  direction: Direction | undefined,
+  position: Position | undefined,
+) => {
+  if (hideLegend) {
+    return `"chart"`;
+  }
   if (direction === 'vertical') {
     if (position?.horizontal === 'start') {
-      return 'row';
+      return `"legend chart"`;
     }
-
-    return 'row-reverse';
+    return `"chart legend"`;
   }
 
   if (position?.vertical === 'bottom') {
-    return 'column-reverse';
+    return `"chart"
+            "legend"`;
   }
-
-  return 'column';
+  return `"legend"
+          "chart"`;
 };
 
-const getAlign = (direction?: Direction, position?: Position) => {
-  if (direction === 'vertical') {
-    if (position?.vertical === 'top') {
-      return 'flex-start';
-    }
-
-    if (position?.vertical === 'bottom') {
-      return 'flex-end';
-    }
-  }
-
+const getTemplateColumns = (
+  hideLegend: boolean = false,
+  direction: Direction = 'horizontal',
+  horizontalPosition: Position['horizontal'] = 'end',
+  width: number | undefined = undefined,
+) => {
+  const drawingAreaColumn = width ? 'auto' : '1fr';
   if (direction === 'horizontal') {
-    if (position?.horizontal === 'start') {
-      return 'flex-start';
-    }
-
-    if (position?.horizontal === 'end') {
-      return 'flex-end';
-    }
+    return drawingAreaColumn;
   }
 
-  return 'center';
+  if (hideLegend) {
+    return drawingAreaColumn;
+  }
+  return horizontalPosition === 'start' ? `auto ${drawingAreaColumn}` : `${drawingAreaColumn} auto`;
+};
+
+const getTemplateRows = (
+  hideLegend: boolean = false,
+  direction: Direction = 'horizontal',
+  verticalPosition: Position['vertical'] = 'top',
+) => {
+  const drawingAreaRow = '1fr';
+  if (direction === 'vertical') {
+    return drawingAreaRow;
+  }
+
+  if (hideLegend) {
+    return drawingAreaRow;
+  }
+  return verticalPosition === 'bottom' ? `${drawingAreaRow} auto` : `auto ${drawingAreaRow}`;
 };
 
 const Root = styled('div', {
   name: 'MuiChartsWrapper',
   slot: 'Root',
-  shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'extendVertically',
-})<{ ownerState: ChartsWrapperProps; extendVertically: boolean }>(({ ownerState }) => ({
-  display: 'flex',
-  flexDirection: getDirection(ownerState.legendDirection, ownerState.legendPosition),
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: getAlign(ownerState.legendDirection, ownerState.legendPosition),
-  variants: [
-    {
-      props: { extendVertically: true },
-      style: {
-        height: '100%',
+  shouldForwardProp: (prop) =>
+    shouldForwardProp(prop) && prop !== 'extendVertically' && prop !== 'width',
+})<{ ownerState: ChartsWrapperProps; extendVertically: boolean; width?: number }>(({
+  ownerState,
+  width,
+}) => {
+  const gridTemplateColumns = getTemplateColumns(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition?.horizontal,
+    width,
+  );
+  const gridTemplateRows = getTemplateRows(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition?.vertical,
+  );
+  const gridTemplateAreas = getGridTemplateAreas(
+    ownerState.hideLegend,
+    ownerState.legendDirection,
+    ownerState.legendPosition,
+  );
+  return {
+    variants: [
+      {
+        props: { extendVertically: true },
+        style: {
+          height: '100%',
+          minHeight: 0,
+        },
       },
+    ],
+    flex: 1,
+    display: 'grid',
+    gridTemplateColumns,
+    gridTemplateRows,
+    gridTemplateAreas,
+    [`&:has(.${chartsToolbarClasses.root})`]: {
+      // Add a row for toolbar if there is one.
+      gridTemplateRows: `auto ${gridTemplateRows}`,
+      gridTemplateAreas: `"${gridTemplateColumns
+        .split(' ')
+        .map(() => 'toolbar')
+        .join(' ')}"
+        ${gridTemplateAreas}`,
     },
-  ],
-}));
+    [`& .${chartsToolbarClasses.root}`]: {
+      gridArea: 'toolbar',
+      justifySelf: 'center',
+    },
+    justifyContent: 'safe center',
+    justifyItems: getJustifyItems(ownerState.legendPosition),
+    alignItems: getAlignItems(ownerState.legendPosition),
+  };
+});
 
 /**
  * Wrapper for the charts components.
@@ -100,7 +185,9 @@ function ChartsWrapper(props: ChartsWrapperProps) {
   const chartRootRef = useChartRootRef();
 
   const store = useStore();
-  const { height: propsHeight } = useSelector(store, selectorChartPropsSize);
+
+  const propsWidth = store.use(selectorChartPropsWidth);
+  const propsHeight = store.use(selectorChartPropsHeight);
 
   return (
     <Root
@@ -108,6 +195,7 @@ function ChartsWrapper(props: ChartsWrapperProps) {
       ownerState={props}
       sx={sx}
       extendVertically={extendVertically ?? propsHeight === undefined}
+      width={propsWidth}
     >
       {children}
     </Root>
@@ -125,6 +213,11 @@ ChartsWrapper.propTypes = {
    * @default `false` if the `height` prop is set. And `true` otherwise.
    */
   extendVertically: PropTypes.bool,
+  /**
+   * If `true`, the legend is not rendered.
+   * @default false
+   */
+  hideLegend: PropTypes.bool,
   /**
    * The direction of the legend.
    * @default 'horizontal'

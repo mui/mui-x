@@ -1,0 +1,32 @@
+import {
+  blueberryTwilightPalette,
+  mangoFusionPalette,
+  cheerfulFiestaPalette,
+  strawberrySkyPalette,
+  rainbowSurgePalette,
+  bluePalette,
+  greenPalette,
+  purplePalette,
+  redPalette,
+  orangePalette,
+  yellowPalette,
+  cyanPalette,
+  pinkPalette,
+  type ChartsColorPaletteCallback,
+} from '@mui/x-charts/colorPalettes';
+
+export const colorPaletteLookup: Map<string, ChartsColorPaletteCallback> = new Map([
+  ['blueberryTwilightPalette', blueberryTwilightPalette],
+  ['mangoFusionPalette', mangoFusionPalette],
+  ['cheerfulFiestaPalette', cheerfulFiestaPalette],
+  ['strawberrySkyPalette', strawberrySkyPalette],
+  ['rainbowSurgePalette', rainbowSurgePalette],
+  ['bluePalette', bluePalette],
+  ['greenPalette', greenPalette],
+  ['purplePalette', purplePalette],
+  ['redPalette', redPalette],
+  ['orangePalette', orangePalette],
+  ['yellowPalette', yellowPalette],
+  ['cyanPalette', cyanPalette],
+  ['pinkPalette', pinkPalette],
+]);

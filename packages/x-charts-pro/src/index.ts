@@ -30,6 +30,7 @@ export * from './constants';
 export * from './hooks';
 export * from './context';
 export * from './models';
+export * from './plugins';
 // Locales should be imported from `@mui/x-charts-pro/locales`
 // export * from './locales';
 export * from './colorPalettes';
@@ -37,9 +38,14 @@ export * from './colorPalettes';
 // Pro components
 export * from './Heatmap';
 export { ChartContainerPro } from './ChartContainerPro';
-export type { ChartContainerProProps } from './ChartContainerPro';
+export type {
+  ChartContainerProProps,
+  ChartContainerProSlots,
+  ChartContainerProSlotProps,
+} from './ChartContainerPro';
 export * from './ChartDataProviderPro';
 export * from './ScatterChartPro';
+export * from './SankeyChart';
 export * from './BarChartPro';
 export * from './LineChartPro';
 export * from './PieChartPro';

@@ -1,0 +1,39 @@
+{
+  "componentDescription": "Renders a Sankey diagram plot.",
+  "propDescriptions": {
+    "classes": { "description": "Classes applied to the various elements." },
+    "onLinkClick": {
+      "description": "Callback fired when a sankey item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "link": { "name": "link", "description": "The sankey link identifier." }
+      }
+    },
+    "onNodeClick": {
+      "description": "Callback fired when a sankey item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "node": { "name": "node", "description": "The sankey node identifier." }
+      }
+    }
+  },
+  "classDescriptions": {
+    "linkLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the link label container"
+    },
+    "links": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the links container"
+    },
+    "nodeLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the node label container"
+    },
+    "nodes": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the nodes container"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  }
+}

@@ -48,7 +48,7 @@ On the calendar and clock views, the invalid values are displayed as disabled to
 
 All pickers support the past and future validation.
 
-The `disablePast` prop prevents the selection all values before today for date pickers and the selection of all values before the current time for time pickers.
+The `disablePast` prop prevents the selection of all values before today for date pickers, and the selection of all values before the current time for time pickers.
 For date time pickers, it will combine both.
 
 - On the `day` view, all the days before today won't be selectable.
@@ -164,7 +164,7 @@ The `maxTime` prop prevents the selection of all values between `props.maxTime` 
 The validation only uses the time part of this prop value. It ignores the day / month / year.
 The simplest way to use it is to pass today's date and only care about the hour / minute / seconds.
 
-For example to disable the afternoon in `dayjs` you can pass `dayjs().set('hour', 12).startOf('hour')`.
+For example, to disable the afternoon in `dayjs` you can pass `dayjs().set('hour', 12).startOf('hour')`.
 :::
 
 ### Disable specific time
@@ -208,7 +208,7 @@ The `maxDateTime` prop prevents the selection of all values after `props.maxDate
 {{"demo": "DateTimeValidationMaxDateTime.js", "defaultCodeOpen": false}}
 
 :::warning
-If you want to put time boundaries independent of the date, use the [`time boundaries`](#set-time-boundaries) instead.
+If you want to set time boundaries independent of the date, use the [`time boundaries`](#minimum-and-maximum-time) instead.
 
 For now, you cannot use `maxDateTime` and `maxTime` together.
 `maxDateTime` will override the `maxTime` behavior, and the same goes for `minDateTime` and `minTime`.

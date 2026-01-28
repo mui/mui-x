@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { DateRangeIcon } from '@mui/x-date-pickers/icons';
-import { PickerFieldUI, useFieldTextFieldProps } from '@mui/x-date-pickers/internals';
+import {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  useFieldTextFieldProps,
+} from '@mui/x-date-pickers/internals';
 import { SingleInputDateRangeFieldProps } from './SingleInputDateRangeField.types';
 import { useSingleInputDateRangeField } from './useSingleInputDateRangeField';
 import { FieldType } from '../models';
@@ -51,12 +55,9 @@ const SingleInputDateRangeField = React.forwardRef(function SingleInputDateRange
   >(textFieldProps);
 
   return (
-    <PickerFieldUI
-      slots={slots}
-      slotProps={slotProps}
-      fieldResponse={fieldResponse}
-      defaultOpenPickerIcon={DateRangeIcon}
-    />
+    <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
+      <PickerFieldUI fieldResponse={fieldResponse} defaultOpenPickerIcon={DateRangeIcon} />
+    </PickerFieldUIContextProvider>
   );
 }) as DateRangeFieldComponent;
 

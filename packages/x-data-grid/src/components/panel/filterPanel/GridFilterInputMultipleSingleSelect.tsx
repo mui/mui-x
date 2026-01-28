@@ -19,16 +19,10 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
   const id = useId();
   const rootProps = useGridRootProps();
 
-  let resolvedColumn: GridSingleSelectColDef | null = null;
-  if (item.field) {
-    const column = apiRef.current.getColumn(item.field);
-    if (isSingleSelectColDef(column)) {
-      resolvedColumn = column;
-    }
-  }
+  const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
 
-  const getOptionValue = resolvedColumn?.getOptionValue!;
-  const getOptionLabel = resolvedColumn?.getOptionLabel!;
+  const getOptionValue = resolvedColumn!.getOptionValue;
+  const getOptionLabel = resolvedColumn!.getOptionLabel;
 
   const isOptionEqualToValue = React.useCallback(
     (option: ValueOptions, value: ValueOptions) => getOptionValue(option) === getOptionValue(value),
@@ -63,6 +57,10 @@ function GridFilterInputMultipleSingleSelect(props: GridFilterInputMultipleSingl
     },
     [applyValue, item, getOptionValue],
   );
+
+  if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn)) {
+    return null;
+  }
 
   const BaseAutocomplete = rootProps.slots.baseAutocomplete as React.JSXElementConstructor<
     AutocompleteProps<ValueOptions, true, false, true>

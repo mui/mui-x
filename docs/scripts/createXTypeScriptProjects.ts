@@ -44,7 +44,8 @@ export type XProjectNames =
 export type XTypeScriptProjects = Map<XProjectNames, XTypeScriptProject>;
 
 interface CreateXTypeScriptProjectOptions
-  extends Omit<CreateTypeScriptProjectOptions, 'name'>,
+  extends
+    Omit<CreateTypeScriptProjectOptions, 'name'>,
     Pick<
       XTypeScriptProject,
       'name' | 'documentationFolderName' | 'getComponentsWithPropTypes' | 'getComponentsWithApiDoc'
@@ -135,6 +136,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'GridRowClassNameParams',
       'GridRowSpacingParams',
       'GridExportStateParams',
+      'GridRowOrderChangeParams',
 
       // Others
       'GridColDef',
@@ -157,12 +159,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
   },
   {
     folder: 'charts',
-    packages: [
-      'x-charts',
-      'x-charts-pro',
-      // TODO: CHARTS-PREMIUM: uncomment when premium is ready
-      // 'x-charts-premium'
-    ],
+    packages: ['x-charts', 'x-charts-pro', 'x-charts-premium'],
     documentedInterfaces: [
       'BarSeries',
       'LineSeries',
@@ -174,6 +171,7 @@ export const interfacesToDocument: InterfacesToDocumentType[] = [
       'AxisConfig',
       'ChartImageExportOptions',
       'ChartPrintExportOptions',
+      'LegendItemParams',
     ],
   },
 ];
@@ -258,7 +256,10 @@ export const createXTypeScriptProjects = () => {
       documentationFolderName: 'data-grid',
       getComponentsWithPropTypes: getComponentPaths({
         folders: ['src/components'],
-        files: ['src/DataGridPremium/DataGridPremium.tsx'],
+        files: [
+          'src/DataGridPremium/DataGridPremium.tsx',
+          'src/context/GridChartsRendererProxy.tsx',
+        ],
       }),
       getComponentsWithApiDoc: getComponentPaths({
         files: ['src/DataGridPremium/DataGridPremium.tsx'],
@@ -348,24 +349,23 @@ export const createXTypeScriptProjects = () => {
     }),
   );
 
-  // TODO: CHARTS-PREMIUM: uncomment when premium is ready
-  // projects.set(
-  //   'x-charts-premium',
-  //   createXTypeScriptProject({
-  //     name: 'x-charts-premium',
-  //     rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
-  //     entryPointPath: 'src/index.ts',
-  //     documentationFolderName: 'charts',
-  //     getComponentsWithPropTypes: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //     getComponentsWithApiDoc: getComponentPaths({
-  //       folders: ['src'],
-  //       includeUnstableComponents: true,
-  //     }),
-  //   }),
-  // );
+  projects.set(
+    'x-charts-premium',
+    createXTypeScriptProject({
+      name: 'x-charts-premium',
+      rootPath: path.join(workspaceRoot, 'packages/x-charts-premium'),
+      entryPointPath: 'src/index.ts',
+      documentationFolderName: 'charts',
+      getComponentsWithPropTypes: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+      getComponentsWithApiDoc: getComponentPaths({
+        folders: ['src'],
+        includeUnstableComponents: true,
+      }),
+    }),
+  );
 
   projects.set(
     'x-tree-view',

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';

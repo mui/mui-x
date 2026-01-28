@@ -2,7 +2,7 @@
 
 <p class="description">Follow these recommendations to improve your Data Grid's performance.</p>
 
-The Data Grid is a complex component that renders many elements, and you can inadvertantly introduce performance issues by triggering unnecessary re-renders.
+The Data Grid is a complex component that renders many elements, and you can inadvertently introduce performance issues by triggering unnecessary re-renders.
 This guide describes best practices for implementing your Data Grid to avoid common problems.
 
 ## Maintain a stable reference when passing props

@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-data-grid-generator",
-  "version": "8.10.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "Generate fake data for demo purposes only.",
-  "main": "src/index.ts",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -19,11 +18,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:stable": "node ../../scripts/build.mjs stable --babel-flag=\"--copy-files\" --babel-flag=\"--no-copy-ignored\"",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -39,7 +34,7 @@
     "@mui/x-internals": "workspace:*",
     "chance": "catalog:",
     "clsx": "catalog:",
-    "lru-cache": "^11.1.0"
+    "lru-cache": "^11.2.2"
   },
   "devDependencies": {
     "@mui/icons-material": "catalog:",
@@ -64,12 +59,12 @@
       "optional": true
     }
   },
-  "exports": {
-    "./services/static-data": {
-      "mui-src": "./src/services/static-data.ts"
-    }
-  },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./services/static-data": "./src/services/static-data.ts",
+    "./*": "./src/*/index.ts"
   }
 }

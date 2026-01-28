@@ -5,10 +5,10 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { AnimatedLine, AnimatedLineProps } from './AnimatedLine';
-import { SeriesId } from '../models/seriesType/common';
+import { AnimatedLine, type AnimatedLineProps } from './AnimatedLine';
+import { type SeriesId } from '../models/seriesType/common';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
 
 export interface LineElementClasses {
@@ -28,12 +28,14 @@ export interface LineElementClasses {
 export type LineElementClassKey = keyof LineElementClasses;
 
 export interface LineElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   gradientId?: string;
   isFaded: boolean;
   isHighlighted: boolean;
   classes?: Partial<LineElementClasses>;
+  /** If `true`, the line is hidden. */
+  hidden?: boolean;
 }
 
 export function getLineElementUtilityClass(slot: string) {
@@ -48,9 +50,9 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getLineElementUtilityClass, classes);
@@ -69,10 +71,13 @@ export interface LineElementSlotProps {
 }
 
 export interface LineElementProps
-  extends Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
-    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
   d: string;
+  /** If `true`, the line is hidden. */
+  hidden?: boolean;
   /**
    * The props used for each component slot.
    * @default {}
@@ -97,27 +102,29 @@ export interface LineElementProps
  */
 function LineElement(props: LineElementProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
     slots,
     slotProps,
     onClick,
+    hidden,
     ...other
   } = props;
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
   const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
+    seriesId,
   });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
     isFaded,
     isHighlighted,
+    hidden,
   };
   const classes = useUtilityClasses(ownerState);
 
@@ -146,7 +153,9 @@ LineElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /** If `true`, the line is hidden. */
+  hidden: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

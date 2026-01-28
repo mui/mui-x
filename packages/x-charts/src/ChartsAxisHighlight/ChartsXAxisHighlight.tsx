@@ -1,18 +1,18 @@
 'use client';
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/useScale';
-import { isBandScale } from '../internals/isBandScale';
-import { useSelector } from '../internals/store/useSelector';
+import { isOrdinalScale } from '../internals/scaleGuards';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightXAxisValue,
   selectorChartXAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
-import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
-import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
+import { type ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
+import { type ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
  * @ignore - internal component.
@@ -25,9 +25,9 @@ export default function ChartsXHighlight(props: {
 
   const { top, height } = useDrawingArea();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const axisXValues = useSelector(store, selectorChartsHighlightXAxisValue);
-  const xAxes = useSelector(store, selectorChartXAxis);
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const axisXValues = store.use(selectorChartsHighlightXAxisValue);
+  const xAxes = store.use(selectorChartXAxis);
 
   if (axisXValues.length === 0) {
     return null;
@@ -39,10 +39,10 @@ export default function ChartsXHighlight(props: {
     const xScale = xAxis.scale;
     const getXPosition = getValueToPositionMapper(xScale);
 
-    const isBandScaleX = type === 'band' && value !== null && isBandScale(xScale);
+    const isXScaleOrdinal = type === 'band' && value !== null && isOrdinalScale(xScale);
 
     if (process.env.NODE_ENV !== 'production') {
-      const isError = isBandScaleX && xScale(value) === undefined;
+      const isError = isXScaleOrdinal && xScale(value) === undefined;
 
       if (isError) {
         console.error(
@@ -57,7 +57,7 @@ export default function ChartsXHighlight(props: {
 
     return (
       <React.Fragment key={`${axisId}-${value}`}>
-        {isBandScaleX && xScale(value) !== undefined && (
+        {isXScaleOrdinal && xScale(value) !== undefined && (
           <ChartsAxisHighlightPath
             d={`M ${xScale(value)! - (xScale.step() - xScale.bandwidth()) / 2} ${
               top

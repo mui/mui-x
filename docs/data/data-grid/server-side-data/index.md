@@ -9,6 +9,10 @@ Challenges include manual data fetching, pagination, sorting, filtering, and per
 A dedicated module can help abstract these complexities to improve the developer experience.
 The Data Grid provides the Data Source layer for this purpose.
 
+:::success
+If you prefer to learn by example, the [server-side data tutorial](/x/react-data-grid/tutorials/server-side-data/) shows you how to implement the Data Source layer in a full-stack app.
+:::
+
 ### The problem: compounding complexity
 
 Consider a Data Grid displaying a list of users that supports pagination, sorting by column headers, and filtering.
@@ -62,7 +66,7 @@ But this example only scratches the surface of the complexity when working with 
 - Handling updates to the data (row editing and deletion)
 - On-demand data refetching
 
-Trying to tackle each of these features invidually can make the code overly complex and difficult to maintain.
+Trying to tackle each of these features individually can make the code overly complex and difficult to maintain.
 
 ### The solution: the Data Source layer
 
@@ -251,11 +255,21 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
 
+:::success
+To bypass the cache and force refetch rows from the server with a single `dataSource.fetchRows()` API method call, pass `skipCache` flag to the fetch options:
+
+```tsx
+apiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, { skipCache: true });
+```
+
+The response will be used to refresh the cache.
+:::
+
 ## Updating server-side data
 
 The Data Source supports an optional `updateRow()` method for updating data on the server.
 
-This method returns a promise that resolves when the row is updated.
+This method returns a promise that either resolves with the updated row, or else rejects if there's an update error.
 If the promise resolves, the Grid updates the row and mutates the cache.
 If there's an error, `onDataSourceError()` is triggered with the error object containing the params described in the [Error handling section](#error-handling) that follows.
 
@@ -292,7 +306,7 @@ You can manually trigger a refetch by calling the `dataSource.fetchRows()` API m
 
 You can handle errors with the Data Source by providing an error handler function with `onDataSourceError()`.
 This gets called whenever there's an error in fetching or updating the data.
-This function recieves an error object of type `GridGetRowsError | GridUpdateRowError`.
+This function receives an error object of type `GridGetRowsError | GridUpdateRowError`.
 Each error type has a corresponding `error.params` type which is passed as an argument to the callback:
 
 | **Error type**       | `error.params` **type** |

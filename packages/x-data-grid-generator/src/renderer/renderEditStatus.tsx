@@ -1,13 +1,8 @@
+'use client';
 import * as React from 'react';
-import {
-  GridRenderEditCellParams,
-  useGridApiContext,
-  useGridRootProps,
-  GridEditModes,
-} from '@mui/x-data-grid-premium';
-import Select, { SelectProps } from '@mui/material/Select';
+import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import { MenuProps } from '@mui/material/Menu';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
@@ -15,32 +10,36 @@ import InfoIcon from '@mui/icons-material/Info';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import DoneIcon from '@mui/icons-material/Done';
 import { STATUS_OPTIONS } from '../services/static-data';
+import { useEditDropdownState } from '../hooks/useEditDropdownState';
 
 function EditStatus(props: GridRenderEditCellParams<any, string>) {
-  const { id, value, field } = props;
-  const rootProps = useGridRootProps();
-  const apiRef = useGridApiContext();
+  const { id, value, field, hasFocus } = props;
 
-  const handleChange: SelectProps['onChange'] = async (event) => {
-    const isValid = await apiRef.current.setEditCellValue({ id, field, value: event.target.value });
+  const {
+    open,
+    setOpen,
+    inputRef,
+    shouldAutoOpen,
+    handleSelectKeyDown,
+    handleSelectMenuClose,
+    handleSelectMenuListKeyDown,
+    createSelectChangeHandler,
+  } = useEditDropdownState({ id, field, hasFocus });
 
-    if (isValid && rootProps.editMode === GridEditModes.Cell) {
-      apiRef.current.stopCellEditMode({ id, field, cellToFocusAfter: 'below' });
-    }
-  };
-
-  const handleClose: MenuProps['onClose'] = (event, reason) => {
-    if (reason === 'backdropClick') {
-      apiRef.current.stopCellEditMode({ id, field, ignoreModifications: true });
-    }
-  };
+  const handleChange = createSelectChangeHandler((event) => event.target.value);
 
   return (
     <Select
       value={value}
       onChange={handleChange}
+      onKeyDown={handleSelectKeyDown}
+      onOpen={() => setOpen(true)}
+      inputRef={inputRef}
       MenuProps={{
-        onClose: handleClose,
+        onClose: handleSelectMenuClose,
+        MenuListProps: {
+          onKeyDown: handleSelectMenuListKeyDown,
+        },
       }}
       sx={{
         height: '100%',
@@ -50,9 +49,9 @@ function EditStatus(props: GridRenderEditCellParams<any, string>) {
           pl: 1,
         },
       }}
-      autoFocus
+      autoFocus={shouldAutoOpen}
       fullWidth
-      open
+      open={open}
     >
       {STATUS_OPTIONS.map((option) => {
         let IconComponent: any = null;
@@ -60,15 +59,10 @@ function EditStatus(props: GridRenderEditCellParams<any, string>) {
           IconComponent = ReportProblemIcon;
         } else if (option === 'Open') {
           IconComponent = InfoIcon;
-        } else if (option === 'PartiallyFilled') {
+        } else if (option === 'Partially Filled') {
           IconComponent = AutorenewIcon;
         } else if (option === 'Filled') {
           IconComponent = DoneIcon;
-        }
-
-        let label = option;
-        if (option === 'PartiallyFilled') {
-          label = 'Partially Filled';
         }
 
         return (
@@ -76,7 +70,7 @@ function EditStatus(props: GridRenderEditCellParams<any, string>) {
             <ListItemIcon sx={{ minWidth: 36 }}>
               <IconComponent fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary={label} sx={{ overflow: 'hidden' }} />
+            <ListItemText primary={option} sx={{ overflow: 'hidden' }} />
           </MenuItem>
         );
       })}

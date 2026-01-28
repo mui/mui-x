@@ -1,7 +1,7 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { ChartPluginSignature } from '../../models';
-import { SeriesId } from '../../../../models/seriesType/common';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type ChartPluginSignature } from '../../models';
+import { type SeriesId } from '../../../../models/seriesType/common';
+import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 
 /**
  * The data of the highlighted item.
@@ -29,6 +29,8 @@ export type HighlightItemData = {
    */
   dataIndex?: number;
 };
+
+export type HighlightUpdateSource = 'pointer' | 'keyboard';
 
 export interface UseChartHighlightInstance {
   /**
@@ -64,9 +66,18 @@ export type UseChartHighlightDefaultizedParameters = DefaultizedProps<
 export interface UseChartHighlightState {
   highlight: {
     /**
+     * Indicates if the highlighted item is controlled.
+     */
+    isControlled: boolean;
+    /**
      * The item currently highlighted.
      */
     item: HighlightItemData | null;
+    /**
+     * The last interaction highlight update.
+     * Used to decide if highlight should be based on pointer position or keyboard navigation.
+     */
+    lastUpdate: HighlightUpdateSource;
   };
 }
 

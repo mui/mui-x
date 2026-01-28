@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';

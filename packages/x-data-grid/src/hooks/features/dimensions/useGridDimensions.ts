@@ -2,7 +2,6 @@
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { Size } from '@mui/x-virtualizer/models';
 import { GridEventListener } from '../../../models/events';
 import { ElementSize } from '../../../models';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -65,6 +64,8 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   headersTotalHeight: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
@@ -75,18 +76,21 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   const dimensions = EMPTY_DIMENSIONS;
 
   const density = gridDensityFactorSelector(apiRef);
+  const dimensionsWithStatic = {
+    ...dimensions,
+    ...getStaticDimensions(
+      props,
+      apiRef,
+      density,
+      gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+    ),
+  };
+
+  apiRef.current.store.state.dimensions = dimensionsWithStatic;
 
   return {
     ...state,
-    dimensions: {
-      ...dimensions,
-      ...getStaticDimensions(
-        props,
-        apiRef,
-        density,
-        gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-      ),
-    },
+    dimensions: dimensionsWithStatic,
   };
 };
 
@@ -106,10 +110,6 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
-  const virtualizer = apiRef.current.virtualizer;
-  const updateDimensions = virtualizer.api.updateDimensions;
-  const getViewportPageSize = virtualizer.api.getViewportPageSize;
-
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
   const apiPublic: GridDimensionsApi = {
@@ -117,8 +117,12 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   };
 
   const apiPrivate: GridDimensionsPrivateApi = {
-    updateDimensions,
-    getViewportPageSize,
+    updateDimensions: () => {
+      return apiRef.current.virtualizer.api.updateDimensions();
+    },
+    getViewportPageSize: () => {
+      return apiRef.current.virtualizer.api.getViewportPageSize();
+    },
   };
 
   useGridApiMethod(apiRef, apiPublic, 'public');
@@ -137,7 +141,7 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     const errorShown = React.useRef(false);
 
     useGridEventPriority(apiRef, 'resize', (size) => {
-      if (!getRootDimensions().isReady || size === Size.EMPTY) {
+      if (!getRootDimensions().isReady) {
         return;
       }
       if (size.height === 0 && !errorShown.current && !props.autoHeight && !isJSDOM) {
@@ -172,6 +176,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     apiRef.current.store,
     (s) => s.dimensions,
     (previous, next) => {
+      if (!next.isReady) {
+        return;
+      }
+
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, next);
       }

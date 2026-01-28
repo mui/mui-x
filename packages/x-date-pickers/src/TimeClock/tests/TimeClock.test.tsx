@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { fireEvent, fireTouchChangedEvent, screen, within } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
@@ -278,7 +277,7 @@ describe('<TimeClock />', () => {
     },
   );
 
-  describe.skipIf(!hasTouchSupport)('Time validation on touch ', () => {
+  describe.skipIf(!hasTouchSupport)('Time validation on touch', () => {
     const clockTouchEvent = {
       '13:--': {
         changedTouches: [

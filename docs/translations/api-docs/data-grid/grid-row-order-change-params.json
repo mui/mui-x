@@ -1,0 +1,20 @@
+{
+  "interfaceDescription": "Object passed as parameter of the row order change event.",
+  "propertiesDescriptions": {
+    "newParent": {
+      "description": "The parent row ID after the move.<br />- For flat data: <code>null</code>.<br />- For nested row at root level: <code>null</code>.<br />- For nested row at levels below root: Parent row&#39;s ID."
+    },
+    "oldIndex": {
+      "description": "The old index of the row.<br />- For flat data: Position in the flat array.<br />- For nested data: Position within oldParent&#39;s children array (0-based)."
+    },
+    "oldParent": {
+      "description": "The parent row ID before the move.<br />- For flat data: <code>null</code><br />- For nested row at root level: <code>null</code>.<br />- For nested row at levels below root: Parent row&#39;s ID."
+    },
+    "row": {
+      "description": "The row data of the primary row being moved.<br />For group moves, this represents the group row itself.<br />Descendants move should be handled as data updates. e.g. using <code>processRowUpdate()</code>"
+    },
+    "targetIndex": {
+      "description": "The target index of the row.<br />- For flat data: New position in the flat array.<br />- For nested data: Position within newParent&#39;s children array (0-based)."
+    }
+  }
+}

@@ -10,20 +10,36 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" } },
-    "highlightedItem": {
+    "hiddenItems": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
       }
     },
+    "hideLegend": { "type": { "name": "bool" } },
+    "highlightedItem": {
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+    },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
@@ -34,6 +50,13 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -41,6 +64,12 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }"
+      }
     },
     "width": { "type": { "name": "number" } }
   },

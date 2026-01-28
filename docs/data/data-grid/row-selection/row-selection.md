@@ -1,12 +1,12 @@
 # Data Grid - Row selection
 
-<p class="description">Row selection allows the user to select and highlight a single or multiple rows that they can then take action on.</p>
+<p class="description">Row selection lets users select and highlight a single row or multiple rows that they can then take action on.</p>
 
 ## Single row selection
 
 Single row selection comes enabled by default for the MIT Data Grid component.
 You can select a row by clicking it, or using the [keyboard shortcuts](/x/react-data-grid/accessibility/#selection).
-To unselect a row, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and click on it.
+To unselect a row, click on it again.
 
 {{"demo": "SingleRowSelectionGrid.js", "bg": "inline"}}
 
@@ -17,6 +17,8 @@ On the Data Grid Pro and Data Grid Premium components, you can select multiple r
 - To select multiple independent rows, hold the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key while selecting rows.
 - To select a range of rows, hold the <kbd class="key">Shift</kbd> key while selecting rows.
 - To disable multiple row selection, use `disableMultipleRowSelection={true}`.
+
+Unselect one of the selected rows by holding the <kbd class="key">Ctrl</kbd> (<kbd class="key">Cmd</kbd> on MacOS) key and clicking on the selected row.
 
 {{"demo": "MultipleRowSelectionGrid.js", "disableAd": true, "bg": "inline"}}
 
@@ -48,7 +50,36 @@ To keep those rows selected even when they're not visible, set the `keepNonExist
 Use the `rowSelectionModel` prop to control the selection.
 Each time this prop changes, the `onRowSelectionModelChange` callback is called with the new selection value.
 
+The row selection model has the following structure:
+
+```tsx
+const [rowSelectionModel, setRowSelectionModel] =
+  React.useState<GridRowSelectionModel>({
+    type: 'include', // or 'exclude'
+    ids: new Set<GridRowId>(['row1', 'row2']),
+  });
+```
+
+The model can be either:
+
+- **`type: 'include'`**: Only the rows with IDs in the `ids` set are selected
+- **`type: 'exclude'`**: All rows are selected except those with IDs in the `ids` set
+
 {{"demo": "ControlledSelectionGrid.js", "bg": "inline"}}
+
+### Opting out of exclude model optimization
+
+To opt out of the `exclude` model and always use `include` model and a predictable behavior with explicit row IDs, pass `disableRowSelectionExcludeModel` prop to the Data Grid.
+
+By default, the Data Grid uses an exclude model optimization when selecting all rows (for example, via "Select all" checkbox) for better performance with large datasets.
+
+```tsx
+<DataGrid
+  disableRowSelectionExcludeModel
+  // This ensures the selection model always uses type: 'include'
+  // with explicit row IDs, even when selecting all rows
+/>
+```
 
 ## Checkbox selection
 

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { useAxesTooltip } from '@mui/x-charts/ChartsTooltip';

@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { green, red } from '@mui/material/colors';
 import Stack from '@mui/material/Stack';
 import { useYScale, useDrawingArea } from '@mui/x-charts/hooks';

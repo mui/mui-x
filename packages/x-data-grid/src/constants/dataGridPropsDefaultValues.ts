@@ -27,6 +27,7 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   disableMultipleColumnsSorting: false,
   disableMultipleRowSelection: false,
   disableRowSelectionOnClick: false,
+  disableRowSelectionExcludeModel: false,
   disableVirtualization: false,
   editMode: GridEditModes.Cell,
   filterDebounceMs: 150,
@@ -59,4 +60,5 @@ export const DATA_GRID_PROPS_DEFAULT_VALUES: DataGridPropsWithDefaultValues = {
   sortingOrder: ['asc' as const, 'desc' as const, null],
   throttleRowsMs: 0,
   virtualizeColumnsWithAutoRowHeight: false,
+  tabNavigation: 'none',
 };

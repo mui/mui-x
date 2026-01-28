@@ -30,6 +30,8 @@ export function syncSelectionToDOM<TValue extends PickerValidValue>(
     // If the selection contains an element inside the field, we reset it.
     if (
       selection.rangeCount > 0 &&
+      // Firefox can return a Restricted object here
+      selection.getRangeAt(0).startContainer instanceof Node &&
       domGetters.getRoot().contains(selection.getRangeAt(0).startContainer)
     ) {
       selection.removeAllRanges();

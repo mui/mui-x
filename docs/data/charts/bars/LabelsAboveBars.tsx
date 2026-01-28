@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useAnimate } from '@mui/x-charts/hooks';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarLabelProps, BarPlot } from '@mui/x-charts/BarChart';

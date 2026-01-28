@@ -1,12 +1,13 @@
 'use client';
 import * as React from 'react';
 import {
-  ComputedPieRadius,
-  DefaultizedPieSeriesType,
-  DefaultizedPieValueType,
+  type ComputedPieRadius,
+  type DefaultizedPieSeriesType,
+  type DefaultizedPieValueType,
 } from '../../models/seriesType/pie';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { deg2rad } from '../../internals/angleConversion';
+import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
+import { getModifiedArcProperties } from './getModifiedArcProperties';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -22,6 +23,7 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
   dataIndex: number;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
 }
 
 export function useTransformData(
@@ -31,19 +33,10 @@ export function useTransformData(
   > &
     ComputedPieRadius,
 ) {
-  const {
-    id: seriesId,
-    data,
-    faded,
-    highlighted,
-    paddingAngle: basePaddingAngle = 0,
-    innerRadius: baseInnerRadius = 0,
-    arcLabelRadius: baseArcLabelRadius,
-    outerRadius: baseOuterRadius,
-    cornerRadius: baseCornerRadius = 0,
-  } = series;
+  const { id: seriesId, data, faded, highlighted } = series;
 
   const { isFaded: isItemFaded, isHighlighted: isItemHighlighted } = useItemHighlightedGetter();
+  const isItemFocused = useIsItemFocusedGetter();
 
   const dataWithHighlight: ValueWithHighlight[] = React.useMemo(
     () =>
@@ -54,27 +47,26 @@ export function useTransformData(
         };
         const isHighlighted = isItemHighlighted(currentItem);
         const isFaded = !isHighlighted && isItemFaded(currentItem);
+        const isFocused = isItemFocused({ type: 'pie', seriesId, dataIndex: itemIndex });
 
+        // TODO v9: Replace the second argument with the result of useSeriesLayout
+        const arcSizes = getModifiedArcProperties(
+          series,
+          {
+            radius: {
+              inner: series.innerRadius ?? 0,
+              outer: series.outerRadius,
+              label: series.arcLabelRadius ?? 0,
+              available: 0,
+            },
+          },
+          isHighlighted,
+          isFaded,
+        );
         const attributesOverride = {
           additionalRadius: 0,
           ...((isFaded && faded) || (isHighlighted && highlighted) || {}),
         };
-        const paddingAngle = Math.max(
-          0,
-          deg2rad(attributesOverride.paddingAngle ?? basePaddingAngle),
-        );
-        const innerRadius = Math.max(0, attributesOverride.innerRadius ?? baseInnerRadius);
-
-        const outerRadius = Math.max(
-          0,
-          attributesOverride.outerRadius ?? baseOuterRadius + attributesOverride.additionalRadius,
-        );
-        const cornerRadius = attributesOverride.cornerRadius ?? baseCornerRadius;
-
-        const arcLabelRadius =
-          attributesOverride.arcLabelRadius ??
-          baseArcLabelRadius ??
-          (innerRadius + outerRadius) / 2;
 
         return {
           ...item,
@@ -82,26 +74,11 @@ export function useTransformData(
           dataIndex: itemIndex,
           isFaded,
           isHighlighted,
-          paddingAngle,
-          innerRadius,
-          outerRadius,
-          cornerRadius,
-          arcLabelRadius,
+          isFocused,
+          ...arcSizes,
         };
       }),
-    [
-      baseCornerRadius,
-      baseInnerRadius,
-      baseOuterRadius,
-      basePaddingAngle,
-      baseArcLabelRadius,
-      data,
-      faded,
-      highlighted,
-      isItemFaded,
-      isItemHighlighted,
-      seriesId,
-    ],
+    [data, seriesId, isItemHighlighted, isItemFaded, isItemFocused, series, faded, highlighted],
   );
 
   return dataWithHighlight;

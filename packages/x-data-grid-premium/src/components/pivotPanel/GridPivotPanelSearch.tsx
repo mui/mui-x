@@ -67,6 +67,9 @@ function GridPivotPanelSearch(props: GridPivotPanelSearchProps) {
               </rootProps.slots.baseIconButton>
             ) : null,
           },
+          htmlInput: {
+            role: 'searchbox',
+          },
         }}
         {...rootProps.slotProps?.baseTextField}
         value={value}

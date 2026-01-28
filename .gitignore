@@ -2,11 +2,12 @@
 # However, in order to prevent issues, editor files are ignored here.
 .idea
 .vscode
+.cursor
+.claude/settings.local.json
 
 __diff_output__
 .DS_STORE
 *.log
-*.tsbuildinfo
 /.eslintcache
 /.nyc_output
 /coverage
@@ -26,3 +27,8 @@ performance-snapshot.json
 # vale downloaded config
 .github/styles/
 test-results
+AGENTS.local.md
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

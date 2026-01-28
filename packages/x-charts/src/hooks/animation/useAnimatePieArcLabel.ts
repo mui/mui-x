@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import { arc as d3Arc } from '@mui/x-charts-vendor/d3-shape';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 import { useAnimate } from './useAnimate';
@@ -71,8 +71,8 @@ export function useAnimatePieArcLabel(
     {
       startAngle: props.startAngle,
       endAngle: props.endAngle,
-      innerRadius: props?.arcLabelRadius ?? props.innerRadius,
-      outerRadius: props?.arcLabelRadius ?? props.outerRadius,
+      innerRadius: props.arcLabelRadius ?? props.innerRadius,
+      outerRadius: props.arcLabelRadius ?? props.outerRadius,
       paddingAngle: props.paddingAngle,
       cornerRadius: props.cornerRadius,
     },

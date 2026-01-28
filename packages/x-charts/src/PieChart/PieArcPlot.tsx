@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PieArc, PieArcProps } from './PieArc';
+import { PieArc, type PieArcProps } from './PieArc';
 import {
-  ComputedPieRadius,
-  DefaultizedPieSeriesType,
-  DefaultizedPieValueType,
-  PieItemIdentifier,
+  type ComputedPieRadius,
+  type DefaultizedPieSeriesType,
+  type DefaultizedPieValueType,
+  type PieItemIdentifier,
 } from '../models/seriesType/pie';
 import { useTransformData } from './dataTransform/useTransformData';
 
@@ -19,11 +19,16 @@ export interface PieArcPlotSlotProps {
 }
 
 export interface PieArcPlotProps
-  extends Pick<
+  extends
+    Pick<
       DefaultizedPieSeriesType,
-      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle' | 'id'
+      'data' | 'faded' | 'highlighted' | 'cornerRadius' | 'paddingAngle'
     >,
     ComputedPieRadius {
+  /**
+   * The id of this series.
+   */
+  seriesId: string;
   /**
    * Override the arc attributes when it is faded.
    * @default { additionalRadius: -5 }
@@ -65,7 +70,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     outerRadius,
     cornerRadius = 0,
     paddingAngle = 0,
-    id,
+    seriesId,
     highlighted,
     faded = { additionalRadius: -5 },
     data,
@@ -79,7 +84,7 @@ function PieArcPlot(props: PieArcPlotProps) {
     outerRadius,
     cornerRadius,
     paddingAngle,
-    id,
+    id: seriesId,
     highlighted,
     faded,
     data,
@@ -103,15 +108,16 @@ function PieArcPlot(props: PieArcPlotProps) {
           outerRadius={item.outerRadius}
           cornerRadius={item.cornerRadius}
           skipAnimation={skipAnimation ?? false}
-          id={id}
+          seriesId={seriesId}
           color={item.color}
           dataIndex={index}
           isFaded={item.isFaded}
           isHighlighted={item.isHighlighted}
+          isFocused={item.isFocused}
           onClick={
             onItemClick &&
             ((event) => {
-              onItemClick(event, { type: 'pie', seriesId: id, dataIndex: index }, item);
+              onItemClick(event, { type: 'pie', seriesId, dataIndex: index }, item);
             })
           }
           {...slotProps?.pieArc}
@@ -181,7 +187,7 @@ PieArcPlot.propTypes = {
   /**
    * The id of this series.
    */
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * The radius between circle center and the beginning of the arc.
    * @default 0

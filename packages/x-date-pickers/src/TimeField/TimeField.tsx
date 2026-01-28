@@ -5,7 +5,11 @@ import { useThemeProps } from '@mui/material/styles';
 import refType from '@mui/utils/refType';
 import { TimeFieldProps } from './TimeField.types';
 import { useTimeField } from './useTimeField';
-import { PickerFieldUI, useFieldTextFieldProps } from '../internals/components/PickerFieldUI';
+import {
+  PickerFieldUI,
+  PickerFieldUIContextProvider,
+  useFieldTextFieldProps,
+} from '../internals/components/PickerFieldUI';
 import { ClockIcon } from '../icons';
 
 type TimeFieldComponent = (<TEnableAccessibleFieldDOMStructure extends boolean = true>(
@@ -45,12 +49,9 @@ const TimeField = React.forwardRef(function TimeField<
   );
 
   return (
-    <PickerFieldUI
-      slots={slots}
-      slotProps={slotProps}
-      fieldResponse={fieldResponse}
-      defaultOpenPickerIcon={ClockIcon}
-    />
+    <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={other.inputRef}>
+      <PickerFieldUI fieldResponse={fieldResponse} defaultOpenPickerIcon={ClockIcon} />
+    </PickerFieldUIContextProvider>
   );
 }) as TimeFieldComponent;
 

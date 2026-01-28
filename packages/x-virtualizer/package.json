@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-virtualizer",
-  "version": "0.1.1",
+  "version": "0.3.2",
   "author": "MUI Team",
   "description": "MUI virtualization library",
   "license": "MIT",
@@ -24,11 +24,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -46,13 +42,18 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@mui/internal-test-utils": "^2.0.9",
-    "@mui/types": "^7.4.5",
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/types": "7.4.10",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "^6.0.1"
+    "rimraf": "6.1.2"
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./useVirtualizer": "./src/useVirtualizer.ts",
+    "./*": "./src/*/index.ts"
   }
 }

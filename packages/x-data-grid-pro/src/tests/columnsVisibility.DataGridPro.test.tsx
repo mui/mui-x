@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, screen } from '@mui/internal-test-utils';

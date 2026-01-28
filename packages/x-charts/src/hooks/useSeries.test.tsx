@@ -3,6 +3,7 @@ import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';
 import { ChartProvider } from '../context/ChartProvider';
+import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 function UseSeries() {
   const { bar } = useSeries();
@@ -22,9 +23,7 @@ describe('useSeries', () => {
       'It looks like you rendered your component outside of a ChartDataProvider.';
     const errorMessage3 = 'The above error occurred in the <UseSeries> component:';
     const expectedError =
-      reactMajor < 19
-        ? [errorMessage1, errorMessage2, errorMessage3]
-        : [errorMessage1, errorMessage2].join('\n');
+      reactMajor < 19 ? [errorMessage3] : [errorMessage1, errorMessage2].join('\n');
 
     expect(() =>
       render(
@@ -40,11 +39,12 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <ChartProvider
+      <ChartProvider<'bar'>
         pluginParams={{
           series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
           width: 200,
           height: 200,
+          seriesConfig: defaultSeriesConfig,
         }}
       >
         <UseSeries />

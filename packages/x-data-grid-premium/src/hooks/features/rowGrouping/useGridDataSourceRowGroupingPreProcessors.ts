@@ -12,6 +12,7 @@ import {
   GridRowsPartialUpdates,
   getParentPath,
   RowGroupingStrategy,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { getGroupingRules } from './gridRowGroupingUtils';
@@ -41,7 +42,10 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         throw new Error('MUI X: No `getChildrenCount` method provided with the dataSource.');
       }
 
+      const pivotingActive = gridPivotActiveSelector(apiRef);
       const sanitizedRowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
+      const maxDepth = pivotingActive ? sanitizedRowGroupingModel.length - 1 : undefined;
+
       const columnsLookup = gridColumnLookupSelector(apiRef);
       const groupingRules = getGroupingRules({
         sanitizedRowGroupingModel,
@@ -70,6 +74,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
           defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
           isGroupExpandedByDefault: props.isGroupExpandedByDefault,
           groupingName: RowGroupingStrategy.DataSource,
+          maxDepth,
         });
       }
 
@@ -89,6 +94,7 @@ export const useGridDataSourceRowGroupingPreProcessors = (
         defaultGroupingExpansionDepth: props.defaultGroupingExpansionDepth,
         isGroupExpandedByDefault: props.isGroupExpandedByDefault,
         groupingName: RowGroupingStrategy.DataSource,
+        maxDepth,
       });
     },
     [apiRef, props.dataSource, props.defaultGroupingExpansionDepth, props.isGroupExpandedByDefault],

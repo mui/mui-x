@@ -4,20 +4,17 @@ import mapApiPageTranslations from 'docs/src/modules/utils/mapApiPageTranslation
 import jsonPageContent from './desktop-date-picker.json';
 
 export default function Page(props) {
-  const { descriptions, pageContent } = props;
-  return <ApiPage descriptions={descriptions} pageContent={pageContent} />;
+  const { descriptions } = props;
+  return <ApiPage descriptions={descriptions} pageContent={jsonPageContent} />;
 }
 
-Page.getInitialProps = () => {
+export async function getStaticProps() {
   const req = require.context(
     'docsx/translations/api-docs/date-pickers/desktop-date-picker',
     false,
-    /\.\/desktop-date-picker.*.json$/,
+    /\.\/desktop-date-picker.*\.json$/,
   );
   const descriptions = mapApiPageTranslations(req);
 
-  return {
-    descriptions,
-    pageContent: jsonPageContent,
-  };
-};
+  return { props: { descriptions } };
+}

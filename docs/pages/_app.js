@@ -22,7 +22,42 @@ import { pathnameToLanguage } from 'docs/src/modules/utils/helpers';
 import getProductInfoFromUrl from 'docs/src/modules/utils/getProductInfoFromUrl';
 import { DocsProvider } from '@mui/docs/DocsProvider';
 import { mapTranslations } from '@mui/docs/i18n';
+import { Inter, Roboto } from 'next/font/google';
+import localFont from 'next/font/local';
 import * as config from '../config';
+
+const inter = Inter({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+});
+
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+});
+
+const generalSans = localFont({
+  declarations: [{ prop: 'font-family', value: 'General Sans' }],
+  src: [
+    { path: '../public/static/fonts/GeneralSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Semibold.woff2', weight: '600', style: 'normal' },
+    { path: '../public/static/fonts/GeneralSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+const ibmPlexSans = localFont({
+  declarations: [{ prop: 'font-family', value: 'IBM Plex Sans' }],
+  src: [
+    { path: '../public/static/fonts/IBMPlexSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-SemiBold.woff2', weight: '600', style: 'normal' },
+    { path: '../public/static/fonts/IBMPlexSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+export const fontClasses = `${inter.className} ${roboto.className} ${generalSans.className} ${ibmPlexSans.className}`;
 
 // Enable telemetry for internal purposes
 muiXTelemetrySettings.enableTelemetry();
@@ -34,7 +69,7 @@ function getMuiPackageVersion(packageName, commitRef) {
     // #npm-tag-reference
     // Use the "next" tag for the master git branch after we start working on the next major version
     // Once the major release is finished we can go back to "latest"
-    return 'latest';
+    return 'next';
   }
   return `https://pkg.pr.new/mui/mui-x/@mui/${packageName}@${commitRef}`;
 }
@@ -65,13 +100,13 @@ globalThis.muiDocConfig = {
       '@mui/x-date-pickers-pro': getMuiPackageVersion('x-date-pickers-pro', muiCommitRef),
       '@mui/x-charts': getMuiPackageVersion('x-charts', muiCommitRef),
       '@mui/x-charts-pro': getMuiPackageVersion('x-charts-pro', muiCommitRef),
-      // TODO: CHARTS-PREMIUM: uncomment when premium is available
-      // '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
+      '@mui/x-charts-premium': getMuiPackageVersion('x-charts-premium', muiCommitRef),
       '@mui/x-tree-view': getMuiPackageVersion('x-tree-view', muiCommitRef),
       '@mui/x-tree-view-pro': getMuiPackageVersion('x-tree-view-pro', muiCommitRef),
       '@mui/x-internals': getMuiPackageVersion('x-internals', muiCommitRef),
       '@mui/x-internal-gestures': getMuiPackageVersion('x-internal-gestures', muiCommitRef),
       exceljs: 'latest',
+      '@base-ui-components/utils': 'latest',
     };
   },
   postProcessImport,
@@ -227,12 +262,6 @@ function AppWrapper(props) {
             href: `${languagePrefix}${productIdSubpathMap[id]}/`,
           };
         }
-        if (version === 'v8') {
-          return {
-            text: version,
-            href: `https://mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
-          };
-        }
         return {
           text: version,
           href: `https://${version}.mui.com${languagePrefix}${productIdSubpathMap[id]}/`,
@@ -243,7 +272,7 @@ function AppWrapper(props) {
       metadata: '',
       name: 'MUI X',
       versions: [
-        ...getVersionOptions('introduction', [process.env.LIB_VERSION, 'v7', 'v6', 'v5']),
+        ...getVersionOptions('introduction', [process.env.LIB_VERSION, 'v8', 'v7', 'v6', 'v5']),
         { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
       ],
     };
@@ -253,7 +282,13 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Data Grid',
         versions: [
-          ...getVersionOptions('x-data-grid', [process.env.DATA_GRID_VERSION, 'v7', 'v6', 'v5']),
+          ...getVersionOptions('x-data-grid', [
+            process.env.DATA_GRID_VERSION,
+            'v8',
+            'v7',
+            'v6',
+            'v5',
+          ]),
           { text: 'v4', href: `https://v4.mui.com${languagePrefix}/components/data-grid/` },
         ],
       };
@@ -262,7 +297,12 @@ function AppWrapper(props) {
         metadata: 'MUI X',
         name: 'Date Pickers',
         versions: [
-          ...getVersionOptions('x-date-pickers', [process.env.DATE_PICKERS_VERSION, 'v7', 'v6']),
+          ...getVersionOptions('x-date-pickers', [
+            process.env.DATE_PICKERS_VERSION,
+            'v8',
+            'v7',
+            'v6',
+          ]),
           {
             text: 'v5',
             href: `https://v5.mui.com${languagePrefix}/x/react-date-pickers/getting-started/`,
@@ -273,14 +313,14 @@ function AppWrapper(props) {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Charts',
-        versions: getVersionOptions('x-charts', [process.env.CHARTS_VERSION, 'v7', 'v6']),
+        versions: getVersionOptions('x-charts', [process.env.CHARTS_VERSION, 'v8', 'v7', 'v6']),
       };
     } else if (productId === 'x-tree-view') {
       productIdentifier = {
         metadata: 'MUI X',
         name: 'Tree View',
         versions: [
-          ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION, 'v7']),
+          ...getVersionOptions('x-tree-view', [process.env.TREE_VIEW_VERSION, 'v8', 'v7']),
           {
             text: 'v6',
             href: `https://v6.mui.com${languagePrefix}/x/react-tree-view/getting-started`,
@@ -299,13 +339,6 @@ function AppWrapper(props) {
     };
   }, [productId, productCategoryId, pageProps.userLanguage, router.pathname]);
 
-  let fonts = [];
-  if (pathnameToLanguage(router.asPath).canonicalAs.match(/onepirate/)) {
-    fonts = [
-      'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&family=Work+Sans:wght@300;400&display=swap',
-    ];
-  }
-
   // Replicate change reverted in https://github.com/mui/material-ui/pull/35969/files#r1089572951
   // Fixes playground styles in dark mode.
   const ThemeWrapper = router.pathname.startsWith('/playground') ? React.Fragment : ThemeProvider;
@@ -314,9 +347,6 @@ function AppWrapper(props) {
     <React.Fragment>
       <NextHead>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        {fonts.map((font) => (
-          <link rel="stylesheet" href={font} key={font} />
-        ))}
         <meta name="mui:productId" content={productId} />
         <meta name="mui:productCategoryId" content={productCategoryId} />
       </NextHead>

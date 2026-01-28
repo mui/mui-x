@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import { PickersModalDialog } from '../../components/PickersModalDialog';
 import { UseMobilePickerParams, UseMobilePickerProps } from './useMobilePicker.types';
@@ -6,7 +5,6 @@ import { usePicker } from '../usePicker';
 import { PickersLayout } from '../../../PickersLayout';
 import { DateOrTimeViewWithMeridiem, PickerValue } from '../../models';
 import { PickerProvider } from '../../components/PickerProvider';
-import { PickerFieldUIContextProvider } from '../../components/PickerFieldUI';
 import { createNonRangePickerStepNavigation } from '../../utils/createNonRangePickerStepNavigation';
 
 /**
@@ -85,14 +83,17 @@ export const useMobilePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <Field {...fieldProps} />
-        <PickersModalDialog slots={slots} slotProps={slotProps}>
-          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-            {renderCurrentView()}
-          </Layout>
-        </PickersModalDialog>
-      </PickerFieldUIContextProvider>
+      <Field
+        {...fieldProps}
+        slots={{ ...slots, ...(fieldProps as any).slots }}
+        slotProps={{ ...slotProps, ...(fieldProps as any).slotProps }}
+        inputRef={inputRef}
+      />
+      <PickersModalDialog slots={slots} slotProps={slotProps}>
+        <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+          {renderCurrentView()}
+        </Layout>
+      </PickersModalDialog>
     </PickerProvider>
   );
 

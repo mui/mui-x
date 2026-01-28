@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { describe } from 'vitest';
 // eslint-disable-next-line no-restricted-imports
 import { render, cleanup } from '@testing-library/react';
-import { describe } from 'vitest';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { options } from '../utils/options';
 import { bench } from '../utils/bench';

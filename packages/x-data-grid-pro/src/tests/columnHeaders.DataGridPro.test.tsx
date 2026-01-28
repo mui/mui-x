@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { config } from 'react-transition-group';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';

@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "0.2.3",
     "@emotion/cache": "catalog:",
     "@emotion/react": "catalog:",
     "@mui/material": "catalog:",
@@ -18,8 +19,11 @@
     "@mui/x-data-grid-pro": "workspace:*",
     "@mui/x-date-pickers": "workspace:*",
     "@mui/x-date-pickers-pro": "workspace:*",
+    "@mui/x-scheduler": "workspace:*",
+    "@mui/x-scheduler-headless": "workspace:*",
+    "@mui/x-scheduler-premium": "workspace:*",
+    "@mui/x-scheduler-headless-premium": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@playwright/test": "catalog:",
     "@react-spring/web": "catalog:",
     "@types/moment-jalaali": "catalog:",
     "@types/prop-types": "catalog:",
@@ -36,7 +40,7 @@
     "react-dom": "catalog:",
     "react-router": "catalog:",
     "react-transition-group": "catalog:",
-    "semver": "^7.7.2",
+    "semver": "7.7.3",
     "stylis": "catalog:"
   }
 }

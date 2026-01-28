@@ -1,14 +1,14 @@
 'use client';
 import {
-  ChartAnyPluginSignature,
-  ChartSeriesType,
+  type ChartAnyPluginSignature,
+  type ChartSeriesType,
   useChartContainerProps,
-  UseChartContainerPropsReturnValue,
+  type UseChartContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
-import * as React from 'react';
-import { ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import type * as React from 'react';
+import type { ChartDataProviderProProps } from '../ChartDataProviderPro';
 import type { ChartContainerProProps } from './ChartContainerPro';
-import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
 export type UseChartContainerProPropsReturnValue<
   TSeries extends ChartSeriesType,
@@ -17,7 +17,7 @@ export type UseChartContainerProPropsReturnValue<
   UseChartContainerPropsReturnValue<TSeries, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProps<TSeries, TSignatures>;
+  chartDataProviderProProps: ChartDataProviderProProps<TSeries, TSignatures>;
 };
 
 export const useChartContainerProProps = <
@@ -27,8 +27,15 @@ export const useChartContainerProProps = <
   props: ChartContainerProProps<TSeries, TSignatures>,
   ref: React.Ref<SVGSVGElement>,
 ): UseChartContainerProPropsReturnValue<TSeries, TSignatures> => {
-  const { initialZoom, zoomData, onZoomChange, plugins, apiRef, ...baseProps } =
-    props as ChartContainerProProps<TSeries, AllPluginSignatures>;
+  const {
+    initialZoom,
+    zoomData,
+    onZoomChange,
+    zoomInteractionConfig,
+    plugins,
+    apiRef,
+    ...baseProps
+  } = props as ChartContainerProProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const { chartDataProviderProps, chartsSurfaceProps, children } = useChartContainerProps<TSeries>(
     baseProps,
@@ -40,9 +47,10 @@ export const useChartContainerProProps = <
     initialZoom,
     zoomData,
     onZoomChange,
+    zoomInteractionConfig,
     apiRef,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
+  } as unknown as ChartDataProviderProProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderProProps,

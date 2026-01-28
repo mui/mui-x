@@ -1,13 +1,13 @@
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/material/styles';
-import { AxisConfig, ChartsXAxisProps } from '../models/axis';
+import { type AxisConfig, type ChartsXAxisProps } from '../models/axis';
 import { getAxisUtilityClass } from '../ChartsAxis/axisClasses';
-import { AxisRoot } from '../internals/components/AxisSharedComponents';
 
-export const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisProps>) => {
-  const { classes, position, id } = ownerState;
+export const useUtilityClasses = (
+  ownerState: Pick<AxisConfig<any, any, ChartsXAxisProps>, 'position' | 'classes'>,
+) => {
+  const { classes, position } = ownerState;
   const slots = {
-    root: ['root', 'directionX', position, `id-${id}`],
+    root: ['root', 'directionX', position],
     line: ['line'],
     tickContainer: ['tickContainer'],
     tick: ['tick'],
@@ -22,11 +22,6 @@ export const useUtilityClasses = (ownerState: AxisConfig<any, any, ChartsXAxisPr
 export const TICK_LABEL_GAP = 3;
 /* Gap between the axis label and tick labels. */
 export const AXIS_LABEL_TICK_LABEL_GAP = 4;
-
-export const XAxisRoot = styled(AxisRoot, {
-  name: 'MuiChartsXAxis',
-  slot: 'Root',
-})({});
 
 export const defaultProps = {
   disableLine: false,

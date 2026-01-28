@@ -13,20 +13,8 @@ import { GesturePhase, GestureState } from '../Gesture';
 import { PointerGesture, PointerGestureEventData, PointerGestureOptions } from '../PointerGesture';
 import { PointerData } from '../PointerManager';
 import { TargetElement } from '../types/TargetElement';
+import { Direction } from '../types/Direction';
 import { calculateCentroid, createEventName, getDirection, isDirectionAllowed } from '../utils';
-
-/**
- * The direction of movement for the pan gesture
- * This type defines the detected directions based on the vertical and horizontal components
- * The values can be 'up', 'down', 'left', 'right' or null if not applicable.
- *
- * The null values indicate that the gesture is not moving in that direction.
- */
-export type Direction = {
-  vertical: 'up' | 'down' | null;
-  horizontal: 'left' | 'right' | null;
-  mainAxis: 'horizontal' | 'vertical' | 'diagonal' | null;
-};
 
 /**
  * Configuration options for PanGesture
@@ -185,6 +173,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       requiredKeys: [...this.requiredKeys],
       pointerMode: [...this.pointerMode],
       preventIf: [...this.preventIf],
+      pointerOptions: structuredClone(this.pointerOptions),
       // Apply any overrides passed to the method
       ...overrides,
     });
@@ -199,6 +188,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     super.updateOptions(options);
 
     this.direction = options.direction || this.direction;
+    this.threshold = options.threshold ?? this.threshold;
   }
 
   protected resetState(): void {
@@ -223,7 +213,10 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
   /**
    * Handle pointer events for the pan gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
@@ -241,7 +234,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     }
 
     // Check if this gesture should be prevented by active gestures
-    if (this.shouldPreventGesture(targetElement)) {
+    if (this.shouldPreventGesture(targetElement, event.pointerType)) {
       // If the gesture was active but now should be prevented, cancel it gracefully
       this.cancel(targetElement, pointersArray, event);
       return;
@@ -250,8 +243,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    // Check if we have enough pointers and not too many
-    if (relevantPointers.length < this.minPointers || relevantPointers.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
       // Cancel or end the gesture if it was active
       this.cancel(targetElement, relevantPointers, event);
       return;
@@ -271,11 +263,37 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
           // Calculate and store the starting centroid
           this.state.startCentroid = calculateCentroid(relevantPointers);
           this.state.lastCentroid = { ...this.state.startCentroid };
+        } else if (this.state.startCentroid && this.state.lastCentroid) {
+          // A new pointer was added during an active gesture
+          // Adjust the start centroid to prevent jumping
+          const oldCentroid = this.state.lastCentroid;
+          const newCentroid = calculateCentroid(relevantPointers);
+
+          // Calculate the offset that the new pointer would cause
+          const offsetX = newCentroid.x - oldCentroid.x;
+          const offsetY = newCentroid.y - oldCentroid.y;
+
+          // Adjust start centroid to compensate for the new pointer
+          this.state.startCentroid = {
+            x: this.state.startCentroid.x + offsetX,
+            y: this.state.startCentroid.y + offsetY,
+          };
+          this.state.lastCentroid = newCentroid;
+
+          // Add the new pointer to tracked pointers
+          relevantPointers.forEach((pointer) => {
+            if (!this.state.startPointers.has(pointer.pointerId)) {
+              this.state.startPointers.set(pointer.pointerId, pointer);
+            }
+          });
         }
         break;
 
       case 'pointermove':
-        if (this.state.startCentroid && relevantPointers.length >= this.minPointers) {
+        if (
+          this.state.startCentroid &&
+          this.isWithinPointerCount(pointersArray, event.pointerType)
+        ) {
           // Calculate current centroid
           const currentCentroid = calculateCentroid(relevantPointers);
 
@@ -346,11 +364,12 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       case 'forceCancel':
         // If the gesture was active (threshold was reached), emit end event
         if (this.isActive && this.state.movementThresholdReached) {
-          // If we have less than the minimum required pointers, end the gesture
-          if (
-            relevantPointers.filter((p) => p.type !== 'pointerup' && p.type !== 'pointercancel')
-              .length < this.minPointers
-          ) {
+          const remainingPointers = relevantPointers.filter(
+            (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
+          );
+
+          // If we no longer meet the pointer count requirements, end the gesture
+          if (!this.isWithinPointerCount(remainingPointers, event.pointerType)) {
             // End the gesture
             const currentCentroid = this.state.lastCentroid || this.state.startCentroid!;
             if (event.type === 'pointercancel') {
@@ -358,6 +377,29 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
             }
             this.emitPanEvent(targetElement, 'end', relevantPointers, event, currentCentroid);
             this.resetState();
+          } else if (remainingPointers.length >= 1 && this.state.lastCentroid) {
+            // If we still have enough pointers, adjust the centroid
+            // to prevent jumping when a finger is lifted
+            const newCentroid = calculateCentroid(remainingPointers);
+
+            // Calculate the offset that removing the pointer would cause
+            const offsetX = newCentroid.x - this.state.lastCentroid.x;
+            const offsetY = newCentroid.y - this.state.lastCentroid.y;
+
+            // Adjust start centroid to compensate
+            this.state.startCentroid = {
+              x: this.state.startCentroid!.x + offsetX,
+              y: this.state.startCentroid!.y + offsetY,
+            };
+            this.state.lastCentroid = newCentroid;
+
+            // Remove the pointer from tracked pointers
+            const removedPointerId = relevantPointers.find(
+              (p) => p.type === 'pointerup' || p.type === 'pointercancel',
+            )?.pointerId;
+            if (removedPointerId !== undefined) {
+              this.state.startPointers.delete(removedPointerId);
+            }
           }
         } else {
           this.resetState();
@@ -367,7 +409,7 @@ export class PanGesture<GestureName extends string> extends PointerGesture<Gestu
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pan-specific events with additional data

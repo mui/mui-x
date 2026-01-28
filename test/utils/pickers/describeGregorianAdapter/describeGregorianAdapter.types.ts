@@ -9,8 +9,10 @@ export interface DescribeGregorianAdapterParams<TLocale> {
   frenchLocale: TLocale;
 }
 
-export interface DescribeGregorianAdapterTestSuiteParams<TLocale>
-  extends Omit<DescribeGregorianAdapterParams<TLocale>, 'frenchLocale'> {
+export interface DescribeGregorianAdapterTestSuiteParams<TLocale> extends Omit<
+  DescribeGregorianAdapterParams<TLocale>,
+  'frenchLocale'
+> {
   adapter: MuiPickersAdapter<TLocale>;
   adapterTZ: MuiPickersAdapter<TLocale>;
   adapterFr: MuiPickersAdapter<TLocale>;

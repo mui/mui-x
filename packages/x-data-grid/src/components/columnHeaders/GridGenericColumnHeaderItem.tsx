@@ -5,7 +5,6 @@ import useForkRef from '@mui/utils/useForkRef';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { GridStateColDef } from '../../models/colDef/gridColDef';
 import { GridSortDirection } from '../../models/gridSortModel';
-import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
 import { GridColumnHeaderTitle } from './GridColumnHeaderTitle';
 import {
   GridColumnHeaderSeparator,
@@ -14,8 +13,10 @@ import {
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { GridColumnGroup } from '../../models/gridColumnGrouping';
 
-interface GridGenericColumnHeaderItemProps
-  extends Pick<GridStateColDef, 'headerClassName' | 'description' | 'resizable'> {
+interface GridGenericColumnHeaderItemProps extends Pick<
+  GridStateColDef,
+  'headerClassName' | 'description' | 'resizable'
+> {
   classes: Record<
     'root' | 'draggableContainer' | 'titleContainer' | 'titleContainerContent',
     string
@@ -73,7 +74,6 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
       ...other
     } = props;
 
-    const apiRef = useGridPrivateApiContext();
     const rootProps = useGridRootProps();
     const headerCellRef = React.useRef<HTMLDivElement>(null);
 
@@ -83,19 +83,6 @@ const GridGenericColumnHeaderItem = forwardRef<HTMLDivElement, GridGenericColumn
     if (sortDirection != null) {
       ariaSort = sortDirection === 'asc' ? 'ascending' : 'descending';
     }
-
-    React.useLayoutEffect(() => {
-      const columnMenuState = apiRef.current.state.columnMenu;
-      if (hasFocus && !columnMenuState.open) {
-        const focusableElement =
-          headerCellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-        const elementToFocus = focusableElement || headerCellRef.current;
-        elementToFocus?.focus();
-        if (apiRef.current.columnHeadersContainerRef?.current) {
-          apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-        }
-      }
-    }, [apiRef, hasFocus]);
 
     return (
       <div

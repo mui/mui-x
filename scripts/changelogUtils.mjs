@@ -11,8 +11,12 @@
  */
 import fs from 'fs';
 import path from 'path';
+import {
+  findLatestTaggedVersion,
+  fetchCommitsBetweenRefs,
+} from '@mui/internal-code-infra/changelog';
+import { $ } from 'execa';
 
-const ORG = 'mui';
 const REPO = 'mui-x';
 
 /**
@@ -25,7 +29,7 @@ const excludeLabels = ['dependencies', 'scope: scheduler'];
  * @type {string[]}
  * Tags found in title to exclude the commit from the changelog
  */
-const excludeTitleTags = ['[charts-premium]'];
+const excludeTitleTags = [];
 
 /**
  * @type {string}
@@ -107,22 +111,9 @@ function parseTags(commitMessage) {
     .join(',');
 }
 
-/**
- * Find the latest tagged version from GitHub
- * @returns {Promise<string>} The latest tagged version
- */
-async function findLatestTaggedVersion() {
-  // fetch tags from the GitHub API and return the last one
-  const { data: tags } = await octokit.rest.repos.listTags({
-    owner: ORG,
-    repo: REPO,
-  });
-  return tags[0].name.trim();
-}
-
-function resolvePackagesByLabels(labels) {
+function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
-  labels.forEach((label) => {
+  for (const label of labels) {
     switch (label.name) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
@@ -142,131 +133,78 @@ function resolvePackagesByLabels(labels) {
       default:
         break;
     }
-  });
+  }
   return resolvedPackages;
+}
+
+function getContributors(commits = []) {
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+    team: new Set(),
+  };
+  for (const { author } of commits) {
+    if (!author || author.login.endsWith('[bot]')) {
+      break;
+    }
+    const username = `@${author.login}`;
+    if (author.association === 'team') {
+      community.team.add(username);
+    } else if (author.association === 'first_timer') {
+      community.firstTimers.add(username);
+    } else {
+      community.contributors.add(username);
+    }
+  }
+  return community;
 }
 
 /**
  * Generates a changelog for MUI X packages
  * @param {object} options - The options for generating the changelog
- * @param {import('@octokit/rest').Octokit} options.octokit - The Octokit instance to use for GitHub API calls
  * @param {string} [options.lastRelease] - The release to compare against
  * @param {string} options.release - The release to generate the changelog for
  * @param {string} [options.nextVersion] - The version expected to be released
  * @param {boolean} [options.returnEntry] - Whether to return the changelog as a string
  * @returns {Promise<string|null>} The changelog string or null
  */
-export async function generateChangelog({
-  octokit: octokitInput,
+async function generateChangelog({
   lastRelease: lastReleaseInput,
   release = 'master',
   nextVersion,
   returnEntry = false,
 }) {
-  octokit = octokitInput;
-
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersion();
-  const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
+  const latestTaggedVersion = await findLatestTaggedVersion({
+    cwd: process.cwd(),
+    fetchAll: true,
+  });
+  const lastRelease = lastReleaseInput ?? latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
       `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
-  // Now We will fetch all the commits between the chosen tag and release branch
-  /**
-   * @type {AsyncIterableIterator<import('@octokit/rest').Octokit.Response<import('@octokit/rest').Octokit.ReposCompareCommitsResponse>>}
-   */
-  const timeline = octokit.paginate.iterator(
-    octokit.repos.compareCommits.endpoint.merge({
-      owner: ORG,
+  const commitsItems = (
+    await fetchCommitsBetweenRefs({
+      octokit,
       repo: REPO,
-      base: lastRelease,
-      head: release,
-    }),
-  );
+      lastRelease,
+      release,
+    })
+  )
+    .filter((commit) => !commit.author?.login.endsWith('[bot]'))
+    .map((commit) => ({
+      ...commit,
+      commit: {
+        message: commit.message,
+      },
+    }));
 
-  /**
-   * @type {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]}
-   */
-  const commitsItems = [];
-  for await (const response of timeline) {
-    const { data: compareCommits } = response;
-    commitsItems.push(...compareCommits.commits);
-  }
-
-  // Fetch all the pull Request and check if there is a section named changelog
   const changeLogMessages = {};
   const prsLabelsMap = {};
-  const community = {
-    firstTimers: new Set(),
-    contributors: new Set(),
-    team: new Set(),
-  };
-  await Promise.all(
-    commitsItems.map(async (commitsItem) => {
-      const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
-      if (!searchPullRequestId || !searchPullRequestId[1]) {
-        return;
-      }
-
-      const {
-        data: {
-          body: bodyMessage,
-          labels,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          author_association,
-          user: { login },
-        },
-      } = await octokit.rest.pulls.get({
-        owner: ORG,
-        repo: REPO,
-        pull_number: Number(searchPullRequestId[1]),
-      });
-
-      // Skip bot accounts
-      if (!login.includes('[bot]')) {
-        switch (author_association) {
-          case 'CONTRIBUTOR':
-            community.contributors.add(`@${login}`);
-            break;
-          case 'FIRST_TIMER':
-            community.firstTimers.add(`@${login}`);
-            break;
-          case 'MEMBER':
-            community.team.add(`@${login}`);
-            break;
-          default:
-        }
-      }
-
-      prsLabelsMap[commitsItem.sha] = labels;
-
-      if (!bodyMessage) {
-        return;
-      }
-
-      const changelogMotif = '## changelog';
-      const lowercaseBody = bodyMessage.toLowerCase();
-      // Check if the body contains a line starting with '## changelog'
-      const matchedChangelog = lowercaseBody.matchAll(new RegExp(`^${changelogMotif}`, 'gim'));
-      const changelogMatches = Array.from(matchedChangelog);
-      if (changelogMatches.length > 0) {
-        const prLabels = prsLabelsMap[commitsItem.sha];
-        const resolvedPackage = resolvePackagesByLabels(prLabels)[0];
-        const changelogIndex = changelogMatches[0].index;
-        const message = `From https://github.com/${ORG}/${REPO}/pull/${
-          searchPullRequestId[1]
-        }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`;
-        if (changeLogMessages[resolvedPackage || 'general']) {
-          changeLogMessages[resolvedPackage || 'general'].push(message);
-        } else {
-          changeLogMessages[resolvedPackage || 'general'] = [message];
-        }
-      }
-    }),
-  );
+  const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
   const dataGridCommits = [];
@@ -276,11 +214,12 @@ export async function generateChangelog({
   const pickersProCommits = [];
   const chartsCommits = [];
   const chartsProCommits = [];
+  const chartsPremiumCommits = [];
   const treeViewCommits = [];
   const treeViewProCommits = [];
   const schedulerCommits = [];
   const schedulerProCommits = [];
-  const coreCommits = [];
+  const internalCommits = [];
   const docsCommits = [];
   const otherCommits = [];
   const codemodCommits = [];
@@ -315,6 +254,9 @@ export async function generateChangelog({
         case 'TimeRangePicker':
           pickersProCommits.push(commitItem);
           break;
+        case 'charts-premium':
+          chartsPremiumCommits.push(commitItem);
+          break;
         case 'charts-pro':
           chartsProCommits.push(commitItem);
           break;
@@ -340,8 +282,11 @@ export async function generateChangelog({
         case 'docs':
           docsCommits.push(commitItem);
           break;
-        case 'core':
-          coreCommits.push(commitItem);
+        case 'internal':
+        case 'support-infra':
+        case 'code-infra':
+        case 'docs-infra':
+          internalCommits.push(commitItem);
           break;
         case 'codemod':
           codemodCommits.push(commitItem);
@@ -366,7 +311,7 @@ export async function generateChangelog({
                   schedulerCommits.push(commitItem);
                   break;
                 default:
-                  coreCommits.push(commitItem);
+                  internalCommits.push(commitItem);
                   break;
               }
             });
@@ -401,10 +346,8 @@ export async function generateChangelog({
       .join('\n');
   };
 
-  const proIcon =
-    '[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link "Pro plan")';
-  const premiumIcon =
-    '[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link "Premium plan")';
+  const proIcon = `[![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')`;
+  const premiumIcon = `[![premium](https://mui.com/r/x-premium-svg)](https://mui.com/r/x-premium-svg-link 'Premium plan')`;
 
   /**
    * Generates a changelog section for a product
@@ -516,15 +459,19 @@ export async function generateChangelog({
       a.toLowerCase().localeCompare(b.toLowerCase()),
     );
 
-    if (contributors.length > 0) {
+    if (contributors.length > 1) {
       lines.push(
-        `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}`,
+        `Special thanks go out to these community members for their valuable contributions:\n${contributors.join(', ')}`,
+      );
+    } else if (contributors.length === 1) {
+      lines.push(
+        `Special thanks go out to community member ${contributors[0]} for their valuable contribution.`,
       );
     }
 
     if (community.team.size > 0) {
       lines.push(
-        `The following are all team members who have contributed to this release:\n${teamMembers.join(', ')}`,
+        `The following team members contributed to this release:\n${teamMembers.join(', ')}`,
       );
     }
 
@@ -560,6 +507,7 @@ ${logProductSection({
   packageName: 'x-charts',
   baseCommits: chartsCommits,
   proCommits: chartsProCommits,
+  premiumCommits: chartsPremiumCommits,
   changelogKey: 'charts',
 })}
 
@@ -585,7 +533,7 @@ ${logOtherSection({
 
 ${logOtherSection({
   sectionName: 'Core',
-  commits: coreCommits,
+  commits: internalCommits,
 })}
 
 ${logOtherSection({
@@ -610,4 +558,28 @@ ${logOtherSection({
     }
     return null;
   }
+}
+
+/**
+ * Fetches and returns the latest tagged version for a given major version.
+ * @param {string | undefined} majorVersion
+ */
+async function findLatestTaggedVersionForMajor(majorVersion) {
+  // Fetch all tags from all remotes to ensure we have the latest tags.
+  await $`git fetch --tags --all`;
+  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
+  return stdout.trim();
+}
+
+/**
+ * Used to pass in the octokit instance from outside the module and return ready to use functions
+ * @param {import('@octokit/rest').Octokit} octokitInstance - The Octokit instance to use for GitHub API calls
+ * @returns {{generateChangelog: ((function({octokit: import('@octokit/rest').Octokit, lastRelease?: string, release: string, nextVersion?: string, returnEntry?: boolean}): Promise<string|null>)|*), findLatestTaggedVersionForMajor: (function(): Promise<string>)}}
+ */
+export function getChangelogUtils(octokitInstance) {
+  octokit = octokitInstance;
+  return {
+    generateChangelog,
+    findLatestTaggedVersionForMajor,
+  };
 }

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, describeConformance } from '@mui/internal-test-utils';
 import { ChartDataProviderPro } from '@mui/x-charts-pro/ChartDataProviderPro';
 

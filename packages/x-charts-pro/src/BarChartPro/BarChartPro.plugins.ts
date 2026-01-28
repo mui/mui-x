@@ -1,34 +1,53 @@
 import {
+  type ConvertSignaturesIntoPlugins,
   useChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
   useChartHighlight,
-  UseChartHighlightSignature,
-  ConvertSignaturesIntoPlugins,
+  type UseChartHighlightSignature,
+  useChartKeyboardNavigation,
+  type UseChartKeyboardNavigationSignature,
+  useChartBrush,
+  type UseChartBrushSignature,
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import {
+  useChartProZoom,
+  type UseChartProZoomSignature,
+} from '../internals/plugins/useChartProZoom';
 
-export type BarChartProPluginsSignatures = [
+export type BarChartProPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'bar'>,
+  UseChartBrushSignature,
+  UseChartTooltipSignature<'bar'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'bar'>,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<'bar'>,
+  UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
   UseChartProExportSignature,
 ];
 
-export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginsSignatures> = [
+export const BAR_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<BarChartProPluginSignatures> = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartBrush,
+  useChartTooltip,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
+  useChartVisibilityManager,
+  useChartKeyboardNavigation,
   useChartProZoom,
   useChartProExport,
 ];

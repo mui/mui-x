@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { PromptField, PromptFieldProps } from './PromptField';
 import { PromptFieldControl } from './PromptFieldControl';
 import { PromptFieldRecord } from './PromptFieldRecord';

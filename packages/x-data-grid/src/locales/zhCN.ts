@@ -16,6 +16,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '标准',
   toolbarDensityComfortable: '稀疏',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '撤销',
+  toolbarRedo: '重做',
+
   // Columns selector toolbar button text
   toolbarColumns: '列',
   toolbarColumnsLabel: '选择列',
@@ -41,6 +45,9 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
@@ -127,6 +134,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '升序',
   columnMenuSortDesc: '降序',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -154,6 +162,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
+
+  // Long text cell
+  longTextCellExpandLabel: '显示',
+  longTextCellCollapseLabel: '折叠',
 
   // Actions cell more text
   actionsCellMore: '更多',
@@ -205,6 +217,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '集合',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: '总数',
   aggregationFunctionLabelAvg: '平均',
   aggregationFunctionLabelMin: '最小',
@@ -239,6 +252,32 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
@@ -287,6 +326,7 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const zhCN: Localization = getGridLocalization(zhCNGrid);

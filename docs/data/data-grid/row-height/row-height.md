@@ -92,7 +92,7 @@ However, the row height might change during horizontal scrolling.
 
 Give your users the option to change the default row density to match their preferences—compact, standard, or comfortable.
 Density is calculated based on the `rowHeight` and/or `columnHeaderHeight` props, when present.
-See [Density](https://mui.com/x/react-data-grid/accessibility/#density) for details.
+See [Density](/x/react-data-grid/accessibility/#density) for details.
 
 ## Row spacing
 

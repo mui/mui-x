@@ -71,7 +71,11 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
   content?: SlotComponentProps<'div', {}, {}>;
   groupTransition?: SlotComponentPropsFromProps<TransitionProps, {}, {}>;
   iconContainer?: SlotComponentProps<'div', {}, {}>;
-  checkbox?: SlotComponentProps<'button', {}, {}>;
+  checkbox?: SlotComponentProps<
+    React.ElementType<React.HTMLAttributes<HTMLButtonElement> & { visible?: boolean }>,
+    {},
+    {}
+  >;
   label?: SlotComponentProps<'div', {}, {}>;
   labelInput?: SlotComponentProps<'input', {}, {}>;
   dragAndDropOverlay?: SlotComponentProps<'div', {}, {}>;
@@ -80,7 +84,8 @@ export interface TreeItemSlotProps extends TreeItemIconSlotProps {
 }
 
 export interface TreeItemProps
-  extends Omit<UseTreeItemParameters, 'rootRef'>,
+  extends
+    Omit<UseTreeItemParameters, 'rootRef'>,
     Omit<React.HTMLAttributes<HTMLLIElement>, 'onFocus'> {
   className?: string;
   /**

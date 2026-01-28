@@ -1,19 +1,60 @@
-import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, screen, createEvent } from '@mui/internal-test-utils';
+import { createRenderer, fireEvent, screen, createEvent, waitFor } from '@mui/internal-test-utils';
 import { getCell, getColumnValues, getRowsFieldContent } from 'test/utils/helperFn';
 import { DataGridPro, gridClasses } from '@mui/x-data-grid-pro';
 import { isJSDOM } from 'test/utils/skipIf';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 
-function createDragOverEvent(target: ChildNode) {
+function createDragOverEvent(target: ChildNode, dropPosition: 'above' | 'below' = 'above') {
   const dragOverEvent = createEvent.dragOver(target);
   // Safari 13 doesn't have DragEvent.
   // RTL fallbacks to Event which doesn't allow to set these fields during initialization.
   Object.defineProperty(dragOverEvent, 'clientX', { value: 1 });
-  Object.defineProperty(dragOverEvent, 'clientY', { value: 1 });
+
+  // Mock getBoundingClientRect for the target
+  const targetElement = target as Element;
+  if (!targetElement.getBoundingClientRect) {
+    targetElement.getBoundingClientRect = () => ({
+      top: 0,
+      left: 0,
+      width: 100,
+      height: 52,
+      right: 100,
+      bottom: 52,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
+    });
+  }
+
+  // Set clientY based on drop position - relative to getBoundingClientRect
+  const rect = targetElement.getBoundingClientRect();
+  const clientY =
+    dropPosition === 'above'
+      ? rect.top + rect.height * 0.25 // Upper quarter
+      : rect.top + rect.height * 0.75; // Lower quarter
+
+  Object.defineProperty(dragOverEvent, 'clientY', { value: clientY });
+  Object.defineProperty(dragOverEvent, 'target', { value: target });
+  Object.defineProperty(dragOverEvent, 'dataTransfer', {
+    value: {
+      dropEffect: 'copy',
+    },
+  });
 
   return dragOverEvent;
+}
+
+function fireDragStart(target: ChildNode) {
+  const dragStartEvent = createEvent.dragStart(target);
+  Object.defineProperty(dragStartEvent, 'dataTransfer', {
+    value: {
+      effectAllowed: 'copy',
+      setData: () => {},
+      getData: () => '',
+    },
+  });
+  fireEvent(target, dragStartEvent);
 }
 
 function createDragEndEvent(target: ChildNode, isOutsideTheGrid: boolean = false) {
@@ -51,14 +92,17 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const targetCell = getCell(2, 0);
 
     // Start the drag
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
+    fireDragStart(rowReorderCell);
 
-    // Hover over the target row to render a drop indicator
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
+
     const targetRow = targetCell.closest('[data-id]');
-    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+    const rowDragPlaceholder = targetRow?.lastElementChild;
+    expect(rowDragPlaceholder).not.to.be.oneOf([null, undefined]);
+    expect(rowDragPlaceholder).to.have.style('position', 'absolute');
+    const pseudoElement = window.getComputedStyle(rowDragPlaceholder!, '::before');
+    expect(pseudoElement.height).to.equal('2px');
 
     // End the drag to update the row order
     const dragEndEvent = createDragEndEvent(rowReorderCell, true);
@@ -85,7 +129,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     render(<Test />);
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
     const rowReorderCell = getCell(0, 0)!;
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
     expect(rowReorderCell).not.to.have.class(gridClasses['row--dragging']);
   });
 
@@ -113,7 +157,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     expect(getRowsFieldContent('brand')).to.deep.equal(['Nike', 'Adidas', 'Puma']);
   });
 
-  it('should call onRowOrderChange after the row stops being dragged', () => {
+  it('should call onRowOrderChange after the row stops being dragged', async () => {
     const handleOnRowOrderChange = spy();
     function Test() {
       const rows = [
@@ -141,15 +185,17 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     const rowReorderCell = getCell(0, 0).firstChild!;
     const targetCell = getCell(2, 0)!;
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
+    fireDragStart(rowReorderCell);
+
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     expect(handleOnRowOrderChange.callCount).to.equal(0);
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
 
-    expect(handleOnRowOrderChange.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(handleOnRowOrderChange.callCount).to.equal(1);
+    });
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);
   });
 
@@ -180,8 +226,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const rowReorderCell = getCell(0, 0).firstChild!;
     const targetrowReorderCell = getCell(1, 0)!;
 
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetrowReorderCell);
+    fireDragStart(rowReorderCell);
     const dragOverRowEvent = createDragOverEvent(targetrowReorderCell);
     fireEvent(targetrowReorderCell, dragOverRowEvent);
     const dragEndRowEvent = createDragEndEvent(rowReorderCell);
@@ -192,7 +237,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     expect(handleDragEnd.callCount).to.equal(0);
   });
 
-  it('should reorder rows correctly on any page when pagination is enabled', () => {
+  it('should reorder rows correctly on any page when pagination is enabled', async () => {
     const rows = [
       { id: 0, brand: 'Nike' },
       { id: 1, brand: 'Adidas' },
@@ -202,7 +247,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
       { id: 5, brand: 'Converse' },
     ];
     const columns = [{ field: 'brand' }];
-
+    const onRowOrderChange = spy();
     function Test() {
       return (
         <div style={{ width: 300, height: 300 }}>
@@ -217,6 +262,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
               },
             }}
             pageSizeOptions={[3]}
+            onRowOrderChange={onRowOrderChange}
           />
         </div>
       );
@@ -230,8 +276,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const targetCell = getCell(5, 0);
 
     // Start the drag
-    fireEvent.dragStart(rowReorderCell);
-    fireEvent.dragEnter(targetCell);
+    fireDragStart(rowReorderCell);
     const sourceRow = rowReorderCell.closest('[data-id]');
     expect(sourceRow).to.have.class(gridClasses['row--beingDragged']);
 
@@ -239,11 +284,19 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const dragOverEvent = createDragOverEvent(targetCell);
     fireEvent(targetCell, dragOverEvent);
     const targetRow = targetCell.closest('[data-id]');
-    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+    const rowDragPlaceholder = targetRow?.lastElementChild;
+    expect(rowDragPlaceholder).not.to.be.oneOf([null, undefined]);
+    expect(rowDragPlaceholder).to.have.style('position', 'absolute');
+    const beforePseudoElement = window.getComputedStyle(rowDragPlaceholder!, '::before');
+    expect(beforePseudoElement.height).to.equal('2px');
 
     // End the drag to update the row order
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
+    await waitFor(() => {
+      expect(onRowOrderChange.callCount).to.equal(1);
+    });
+
     expect(getRowsFieldContent('brand')).to.deep.equal(['Vans', 'Skechers', 'Converse']);
   });
 
@@ -267,11 +320,12 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     const { container } = render(<Test />);
 
     // Initially, no scroll areas should be visible
+    /* eslint-disable testing-library/no-container */
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
 
     // Start dragging a row at the top (scroll = 0)
     const rowReorderCell = getCell(0, 0).firstChild!;
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
 
     // Check what scroll areas are rendered when at the top
     let allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
@@ -295,7 +349,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
     fireEvent.scroll(virtualScroller, { target: { scrollTop: 100 } });
 
     // Start dragging again after scrolling down
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
 
     // Check scroll areas after scrolling down
     allScrollAreas = container.querySelectorAll(`.${gridClasses.scrollArea}`);
@@ -313,9 +367,10 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     // Scroll areas should be hidden again
     expect(container.querySelectorAll(`.${gridClasses.scrollArea}`)).to.have.length(0);
+    /* eslint-enable testing-library/no-container */
   });
 
-  it('should allow row reordering when dragging from any cell during active reorder', () => {
+  it('should allow row reordering when dragging from any cell during active reorder', async () => {
     const rows = [
       { id: 0, brand: 'Nike', category: 'Sportswear' },
       { id: 1, brand: 'Adidas', category: 'Sportswear' },
@@ -326,10 +381,17 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
       { field: 'category', width: 150 },
     ];
 
+    const onRowOrderChange = spy();
     function Test() {
       return (
         <div style={{ width: 400, height: 300 }}>
-          <DataGridPro rows={rows} columns={columns} rowReordering disableColumnReorder />
+          <DataGridPro
+            rows={rows}
+            columns={columns}
+            rowReordering
+            disableColumnReorder
+            onRowOrderChange={onRowOrderChange}
+          />
         </div>
       );
     }
@@ -341,7 +403,7 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     // Start drag from the reorder cell (column 0, row 0)
     const rowReorderCell = getCell(0, 0).firstChild! as Element;
-    fireEvent.dragStart(rowReorderCell);
+    fireDragStart(rowReorderCell);
 
     // Verify that the reorder cell has the dragging class (this happens immediately)
     expect(rowReorderCell).to.have.class(gridClasses['row--dragging']);
@@ -356,11 +418,19 @@ describe.skipIf(isJSDOM)('<DataGridPro /> - Row reorder', () => {
 
     // Verify that the target row shows the drop indicator
     const targetRow = targetNonReorderCell.closest('[data-id]');
-    expect(targetRow).to.have.class(gridClasses['row--dropAbove']);
+    const rowDragPlaceholder = targetRow?.lastElementChild;
+    expect(rowDragPlaceholder).not.to.be.oneOf([null, undefined]);
+    expect(rowDragPlaceholder).to.have.style('position', 'absolute');
+    const pseudoElement = window.getComputedStyle(rowDragPlaceholder!, '::before');
+    expect(pseudoElement.height).to.equal('2px');
 
     // End the drag to complete the row reorder
     const dragEndEvent = createDragEndEvent(rowReorderCell);
     fireEvent(rowReorderCell, dragEndEvent);
+
+    await waitFor(() => {
+      expect(onRowOrderChange.callCount).to.equal(1);
+    });
 
     // Verify that the row order has changed (Nike should now be between Adidas and Puma)
     expect(getRowsFieldContent('brand')).to.deep.equal(['Adidas', 'Nike', 'Puma']);

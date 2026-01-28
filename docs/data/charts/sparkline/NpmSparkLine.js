@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { areaElementClasses, lineElementClasses } from '@mui/x-charts/LineChart';
 import { chartsAxisHighlightClasses } from '@mui/x-charts/ChartsAxisHighlight';
+import Box from '@mui/material/Box';
 import data from './weekly-downloads.json';
 
 const downloads = data.map((item) => item.downloads);
@@ -40,7 +41,7 @@ export default function NpmSparkLine() {
   const [weekIndex, setWeekIndex] = React.useState(null);
 
   return (
-    <div
+    <Box
       onKeyDown={(event) => {
         switch (event.key) {
           case 'ArrowLeft':
@@ -60,6 +61,11 @@ export default function NpmSparkLine() {
       role="button"
       aria-label="Showing weekly downloads"
       tabIndex={0}
+      width="100%"
+      height="100%"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
     >
       <Stack direction="column" width={300}>
         <Typography
@@ -106,7 +112,7 @@ export default function NpmSparkLine() {
           />
         </Stack>
       </Stack>
-    </div>
+    </Box>
   );
 }
 

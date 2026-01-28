@@ -3,11 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { GaugeContainer, GaugeContainerProps } from './GaugeContainer';
+import { GaugeContainer, type GaugeContainerProps } from './GaugeContainer';
 import { GaugeValueArc } from './GaugeValueArc';
 import { GaugeReferenceArc } from './GaugeReferenceArc';
-import { GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
-import { GaugeValueText, GaugeValueTextProps } from './GaugeValueText';
+import { type GaugeClasses, getGaugeUtilityClass } from './gaugeClasses';
+import { GaugeValueText, type GaugeValueTextProps } from './GaugeValueText';
 
 export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProps, 'text'> {
   classes?: Partial<GaugeClasses>;
@@ -17,12 +17,7 @@ export interface GaugeProps extends GaugeContainerProps, Pick<GaugeValueTextProp
 const useUtilityClasses = (props: GaugeProps) => {
   const { classes } = props;
 
-  const slots = {
-    root: ['root'],
-    valueArc: ['valueArc'],
-    referenceArc: ['referenceArc'],
-    valueText: ['valueText'],
-  };
+  const slots = { root: ['root'] };
 
   return composeClasses(slots, getGaugeUtilityClass, classes);
 };
@@ -33,9 +28,9 @@ const Gauge = React.forwardRef(function Gauge(props: GaugeProps, ref: React.Ref<
 
   return (
     <GaugeContainer {...other} className={clsx(classes.root, className)} ref={ref}>
-      <GaugeReferenceArc className={classes.referenceArc} />
-      <GaugeValueArc className={classes.valueArc} skipAnimation={skipAnimation} />
-      <GaugeValueText className={classes.valueText} text={text} />
+      <GaugeReferenceArc />
+      <GaugeValueArc skipAnimation={skipAnimation} />
+      <GaugeValueText text={text} />
       {children}
     </GaugeContainer>
   );

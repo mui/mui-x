@@ -379,6 +379,20 @@ function GridPrompt(props: GridPromptProps) {
     [apiRef, getColumnName, rootProps.slots],
   );
 
+  const getChartChanges = React.useCallback(
+    (chart: NonNullable<PromptResponse['chart']>) => {
+      return {
+        label: apiRef.current.getLocaleText('toolbarCharts'),
+        description: apiRef.current.getLocaleText('promptChangeChartsLabel')(
+          chart.dimensions.length,
+          chart.values.length,
+        ),
+        icon: rootProps.slots.promptChartsIcon,
+      };
+    },
+    [apiRef, rootProps.slots.promptChartsIcon],
+  );
+
   const changeList = React.useMemo(() => {
     if (!response) {
       return [];
@@ -405,6 +419,9 @@ function GridPrompt(props: GridPromptProps) {
     if (response.pivoting && 'columns' in response.pivoting) {
       changes.push(...getPivotingChanges(response.pivoting));
     }
+    if (response.chart) {
+      changes.push(getChartChanges(response.chart));
+    }
 
     return changes;
   }, [
@@ -414,6 +431,7 @@ function GridPrompt(props: GridPromptProps) {
     getFilterChanges,
     getSortingChanges,
     getPivotingChanges,
+    getChartChanges,
   ]);
 
   return (

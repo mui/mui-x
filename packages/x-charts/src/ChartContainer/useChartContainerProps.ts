@@ -1,17 +1,17 @@
 'use client';
-import * as React from 'react';
-import { ChartsSurfaceProps } from '../ChartsSurface';
-import { ChartDataProviderProps } from '../ChartDataProvider';
+import type * as React from 'react';
+import { type ChartsSurfaceProps } from '../ChartsSurface';
+import { type ChartDataProviderProps } from '../ChartDataProvider';
 import type { ChartContainerProps } from './ChartContainer';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { DEFAULT_PLUGINS, AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 
 export type UseChartContainerPropsReturnValue<
   TSeries extends ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[],
 > = {
-  chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  chartDataProviderProps: ChartDataProviderProps<TSeries, TSignatures>;
   chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> };
   children: React.ReactNode;
 };
@@ -35,6 +35,8 @@ export const useChartContainerProps = <
     onAxisClick,
     highlightedAxis,
     onHighlightedAxisChange,
+    tooltipItem,
+    onTooltipItemChange,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
@@ -43,6 +45,7 @@ export const useChartContainerProps = <
     onHighlightChange,
     sx,
     title,
+    axesGap,
     xAxis,
     yAxis,
     zAxis,
@@ -55,8 +58,13 @@ export const useChartContainerProps = <
     slots,
     slotProps,
     experimentalFeatures,
+    enableKeyboardNavigation,
+    brushConfig,
+    onHiddenItemsChange,
+    hiddenItems,
+    initialHiddenItems,
     ...other
-  } = props as ChartContainerProps<TSeries, AllPluginSignatures>;
+  } = props as ChartContainerProps<TSeries, AllPluginSignatures<TSeries>>;
 
   const chartsSurfaceProps: ChartsSurfaceProps & { ref: React.Ref<SVGSVGElement> } = {
     title,
@@ -66,7 +74,7 @@ export const useChartContainerProps = <
     ...other,
   };
 
-  const chartDataProviderProps: Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'> = {
+  const chartDataProviderProps = {
     margin,
     series,
     colors,
@@ -77,9 +85,12 @@ export const useChartContainerProps = <
     onAxisClick,
     highlightedAxis,
     onHighlightedAxisChange,
+    tooltipItem,
+    onTooltipItemChange,
     disableVoronoi,
     voronoiMaxRadius,
     onItemClick,
+    axesGap,
     xAxis,
     yAxis,
     zAxis,
@@ -91,10 +102,15 @@ export const useChartContainerProps = <
     localeText,
     seriesConfig,
     experimentalFeatures,
+    enableKeyboardNavigation,
+    brushConfig,
+    onHiddenItemsChange,
+    hiddenItems,
+    initialHiddenItems,
     plugins: plugins ?? DEFAULT_PLUGINS,
     slots,
     slotProps,
-  } as unknown as Omit<ChartDataProviderProps<TSeries, TSignatures>, 'children'>;
+  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderProps,

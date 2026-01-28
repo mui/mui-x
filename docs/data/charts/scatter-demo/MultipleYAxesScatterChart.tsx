@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import Box from '@mui/material/Box';
 
 const data1 = [
   { x: 100, y: 200, id: 1 },
@@ -27,35 +27,36 @@ const data2 = [
 
 export default function MultipleYAxesScatterChart() {
   return (
-    <ScatterChart
-      height={300}
-      series={[
-        {
-          data: data1,
-          yAxisId: 'leftAxis',
-          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
-        },
-        {
-          data: data2,
-          yAxisId: 'rightAxis',
-          valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
-        },
-      ]}
-      xAxis={[{ min: 0 }]}
-      yAxis={[
-        { id: 'leftAxis', min: 0 },
-        { id: 'rightAxis', min: 0, position: 'right' },
-      ]}
-      sx={{
-        [`& .${axisClasses.left}`]: {
-          line: { stroke: '#8884d8' },
-          text: { fill: '#8884d8' },
-        },
-        [`& .${axisClasses.right}`]: {
-          line: { stroke: '#82ca9d' },
-          text: { fill: '#82ca9d' },
-        },
-      }}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <ScatterChart
+        series={[
+          {
+            data: data1,
+            yAxisId: 'leftAxis',
+            valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
+          },
+          {
+            data: data2,
+            yAxisId: 'rightAxis',
+            valueFormatter: (value) => value && `${value.x}cm, ${value.y}kg`,
+          },
+        ]}
+        xAxis={[{ min: 0, height: 28 }]}
+        yAxis={[
+          { id: 'leftAxis', min: 0 },
+          { id: 'rightAxis', min: 0, position: 'right' },
+        ]}
+        sx={{
+          [`& .${axisClasses.left}`]: {
+            line: { stroke: '#8884d8' },
+            text: { fill: '#8884d8' },
+          },
+          [`& .${axisClasses.right}`]: {
+            line: { stroke: '#82ca9d' },
+            text: { fill: '#82ca9d' },
+          },
+        }}
+      />
+    </Box>
   );
 }

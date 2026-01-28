@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
 import { isJSDOM } from 'test/utils/skipIf';
 import { BarChart } from '@mui/x-charts/BarChart';

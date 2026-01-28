@@ -16,13 +16,15 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
-    }
+    },
+    "toggleVisibilityOnClick": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "ChartsLegend",
   "imports": [
     "import { ChartsLegend } from '@mui/x-charts/ChartsLegend';",
     "import { ChartsLegend } from '@mui/x-charts';",
-    "import { ChartsLegend } from '@mui/x-charts-pro';"
+    "import { ChartsLegend } from '@mui/x-charts-pro';",
+    "import { ChartsLegend } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -33,6 +35,12 @@
     }
   ],
   "classes": [
+    {
+      "key": "hidden",
+      "className": "MuiChartsLegend-hidden",
+      "description": "Styles applied to hidden items.",
+      "isGlobal": false
+    },
     {
       "key": "horizontal",
       "className": "MuiChartsLegend-horizontal",

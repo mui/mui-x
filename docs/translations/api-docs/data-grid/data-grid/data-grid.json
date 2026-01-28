@@ -68,6 +68,9 @@
     "disableMultipleRowSelection": {
       "description": "If <code>true</code>, multiple selection using the Ctrl/CMD or Shift key is disabled. The MIT DataGrid will ignore this prop, unless <code>checkboxSelection</code> is enabled."
     },
+    "disableRowSelectionExcludeModel": {
+      "description": "If <code>true</code>, the Data Grid will not use the exclude model optimization when selecting all rows."
+    },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
     },
@@ -482,7 +485,7 @@
       }
     },
     "onProcessRowUpdateError": {
-      "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
+      "description": "Callback called when <code>processRowUpdate()</code> throws an error or rejects.",
       "typeDescriptions": { "error": { "name": "error", "description": "The error thrown." } }
     },
     "onResize": {
@@ -1011,6 +1014,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
     },
+    "editLongTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell root element"
+    },
+    "editLongTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popper content"
+    },
+    "editLongTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popup"
+    },
+    "editLongTextCellTextarea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell textarea"
+    },
+    "editLongTextCellValue": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell value element"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1064,6 +1087,30 @@
     "iconSeparator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator icon element"
+    },
+    "longTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell root element"
+    },
+    "longTextCellCollapseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell collapse button"
+    },
+    "longTextCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell content element"
+    },
+    "longTextCellExpandButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell expand button"
+    },
+    "longTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popper content"
+    },
+    "longTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popup"
     },
     "main": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1299,16 +1346,6 @@
       "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
     },
-    "row--dropAbove": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target above"
-    },
-    "row--dropBelow": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target below"
-    },
     "row--dynamicHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",
@@ -1382,6 +1419,18 @@
     "scrollbar--vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
+    },
+    "scrollShadow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroll shadow element"
+    },
+    "scrollShadow--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scroll shadow element"
+    },
+    "scrollShadow--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the vertical scroll shadow element"
     },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1485,7 +1534,10 @@
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",
+    "baseTabs": "The custom Tabs component used in the grid.",
+    "baseTextarea": "The custom Textarea component used in the grid for multiline text editing.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToggleButton": "The custom ToggleButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
@@ -1511,6 +1563,7 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
@@ -1528,6 +1581,8 @@
     "groupingCriteriaExpandIcon": "Icon displayed on the grouping column when the children are collapsed",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "longTextCellCollapseIcon": "Icon displayed on the long text cell popup to collapse the content.",
+    "longTextCellExpandIcon": "Icon displayed on the long text cell to expand the content.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
@@ -1538,11 +1593,13 @@
     "panel": "Panel component wrapping the filters and columns panels.",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
+    "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
-    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
+    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "undoIcon": "Icon displayed on the undo button in the toolbar."
   }
 }

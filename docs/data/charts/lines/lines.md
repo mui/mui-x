@@ -8,6 +8,15 @@ components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHigh
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
 
+## Overview
+
+Line charts are ideal for showing how values change over continuous dimensions such as time or measurement scales.
+
+They emphasize trends, patterns, and fluctuations, making them useful for exploring relationships, detecting cycles, or tracking performance over time.
+Each line typically represents a series, allowing easy comparison between multiple variables or groups.
+
+{{"demo": "LineOverview.js"}}
+
 ## Basics
 
 ### Data format
@@ -61,7 +70,7 @@ For more information, see [stacking docs](/x/react-charts/stacking/).
 
 ### Axis domain
 
-By default axes round their limits to match human readable values.
+By default, axes round their limits to match human-readable values.
 For example, if your data ranges from 2 to 195, the axis displays values from 0 to 200.
 This behavior can be modified by the [axis property `domainLimit`](/x/react-charts/axis/#relative-axis-subdomain).
 
@@ -144,7 +153,7 @@ const clickHandler = (
 {{"demo": "LineClick.js"}}
 
 :::info
-Their is a slight difference between the `event` of `onAxisClick` and the others:
+There is a slight difference between the `event` of `onAxisClick` and the others:
 
 - For `onAxisClick` it's a native mouse event emitted by the svg component.
 - For others, it's a React synthetic mouse event emitted by the area, line, or mark component.
@@ -153,7 +162,7 @@ Their is a slight difference between the `event` of `onAxisClick` and the others
 
 ### Composition
 
-If you're using composition, you can get those click event as follow.
+If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
@@ -185,7 +194,7 @@ The line charts use by priority:
 2. The x-axis color
 3. The series color
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -270,7 +279,7 @@ The definition of `myGradient` is passed as a children of the chart component.
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
@@ -304,6 +313,7 @@ In addition to the common chart components available for [composition](/x/react-
 - `<LinePlot />` renders the series lines.
 - `<MarkPlot />` renders the series marks.
 - `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+- `<FocusedLineMark />` renders a focus indicator when the user focuses a data point.
 
 Here's how the Line Chart is composed:
 
@@ -320,6 +330,7 @@ Here's how the Line Chart is composed:
         <ChartsOverlay />
         <ChartsAxisHighlight />
       </g>
+      <FocusedLineMark />
       <ChartsAxis />
       <g data-drawing-container>
         {/* Elements able to overflow the drawing area. */}

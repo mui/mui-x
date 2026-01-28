@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -11,13 +11,20 @@ export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <EventCalendar
-      events={events}
-      resources={resources}
-      defaultVisibleDate={defaultVisibleDate}
-      onEventsChange={setEvents}
-      areEventsDraggable
-      areEventsResizable
-    />
+    <div
+      style={{
+        display: 'flex',
+        height: '100vh',
+      }}
+    >
+      <EventCalendar
+        events={events}
+        resources={resources}
+        defaultVisibleDate={defaultVisibleDate}
+        onEventsChange={setEvents}
+        areEventsDraggable
+        areEventsResizable
+      />
+    </div>
   );
 }

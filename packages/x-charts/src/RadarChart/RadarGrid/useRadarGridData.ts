@@ -1,17 +1,17 @@
 import { useRotationScale } from '../../hooks/useScale';
-import { useDrawingArea } from '../../hooks/useDrawingArea';
 import { useRadiusAxes } from '../../hooks';
-import { UseChartPolarAxisSignature } from '../../internals/plugins/featurePlugins/useChartPolarAxis';
+import {
+  selectorChartPolarCenter,
+  type UseChartPolarAxisSignature,
+} from '../../internals/plugins/featurePlugins/useChartPolarAxis';
 import { useChartContext } from '../../context/ChartProvider/useChartContext';
 
 export function useRadarGridData() {
-  const { instance } = useChartContext<[UseChartPolarAxisSignature]>();
+  const { instance, store } = useChartContext<[UseChartPolarAxisSignature]>();
   const rotationScale = useRotationScale<'point'>();
   const { radiusAxis } = useRadiusAxes();
-  const drawingArea = useDrawingArea();
 
-  const cx = drawingArea.left + drawingArea.width / 2;
-  const cy = drawingArea.top + drawingArea.height / 2;
+  const { cx, cy } = store.use(selectorChartPolarCenter);
 
   if (!rotationScale || rotationScale.domain().length === 0) {
     return null;

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 

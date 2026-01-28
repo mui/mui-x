@@ -1,9 +1,13 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import { ChartsLabelMarkClasses, labelMarkClasses, useUtilityClasses } from './labelMarkClasses';
+import {
+  type ChartsLabelMarkClasses,
+  labelMarkClasses,
+  useUtilityClasses,
+} from './labelMarkClasses';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 
 export interface ChartsLabelCustomMarkProps {

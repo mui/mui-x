@@ -3,14 +3,19 @@
     "apiRef": {
       "type": {
         "name": "shape",
-        "description": "{ current?: { focusItem: func, getItem: func, getItemDOMElement: func, getItemOrderedChildrenIds: func, getItemTree: func, getParentId: func, setEditedItem: func, setIsItemDisabled: func, setItemExpansion: func, setItemSelection: func, updateItemLabel: func } }"
+        "description": "{ current?: { focusItem?: func, getItem?: func, getItemDOMElement?: func, getItemOrderedChildrenIds?: func, getItemTree?: func, getParentId?: func, isItemExpanded?: func, setEditedItem?: func, setIsItemDisabled?: func, setItemExpansion?: func, setItemSelection?: func, updateItemChildren?: func, updateItemLabel?: func } }"
       }
     },
     "canMoveItemToNewPosition": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: string, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => boolean",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"],
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => boolean",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ],
         "returned": "boolean"
       }
     },
@@ -29,6 +34,10 @@
     "defaultSelectedItems": { "type": { "name": "any" }, "default": "[]" },
     "disabledItemsFocusable": { "type": { "name": "bool" }, "default": "false" },
     "disableSelection": { "type": { "name": "bool" }, "default": "false" },
+    "domStructure": {
+      "type": { "name": "enum", "description": "'flat'<br>&#124;&nbsp;'nested'" },
+      "default": "'flat' when using virtualization, 'nested' otherwise"
+    },
     "expandedItems": { "type": { "name": "arrayOf", "description": "Array&lt;string&gt;" } },
     "expansionTrigger": {
       "type": { "name": "enum", "description": "'content'<br>&#124;&nbsp;'iconContainer'" },
@@ -47,9 +56,9 @@
       "type": { "name": "func" },
       "default": "(item) => item.id",
       "signature": {
-        "type": "function(item: R) => string",
+        "type": "function(item: R) => TreeViewItemId",
         "describedArgs": ["item"],
-        "returned": "string"
+        "returned": "TreeViewItemId"
       }
     },
     "getItemLabel": {
@@ -78,8 +87,16 @@
       "type": { "name": "func" },
       "default": "() => true",
       "signature": {
-        "type": "function(itemId: string) => boolean",
+        "type": "function(itemId: TreeViewItemId) => boolean",
         "describedArgs": ["itemId"],
+        "returned": "boolean"
+      }
+    },
+    "isItemSelectionDisabled": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(item: R) => boolean",
+        "describedArgs": ["item"],
         "returned": "boolean"
       }
     },
@@ -87,33 +104,34 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
+    "itemHeight": { "type": { "name": "number" } },
     "itemsReordering": { "type": { "name": "bool" }, "default": "false" },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId>) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "type": "function(event: React.MouseEvent, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId, isExpanded: boolean) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
@@ -127,21 +145,26 @@
     "onItemPositionChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(params: object, params.itemId: string, params.oldPosition: TreeViewItemReorderPosition, params.newPosition: TreeViewItemReorderPosition) => void",
-        "describedArgs": ["params", "params.itemId", "params.oldPosition", "params.newPosition"]
+        "type": "function(parameters: object, parameters.itemId: TreeViewItemId, parameters.oldPosition: TreeViewItemReorderPosition, parameters.newPosition: TreeViewItemReorderPosition) => void",
+        "describedArgs": [
+          "parameters",
+          "parameters.itemId",
+          "parameters.oldPosition",
+          "parameters.newPosition"
+        ]
       }
     },
     "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemId: TreeViewItemId, isSelected: boolean) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
     "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId> | TreeViewItemId) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
@@ -162,7 +185,8 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
-    }
+    },
+    "virtualization": { "type": { "name": "bool" }, "default": "false" }
   },
   "name": "RichTreeViewPro",
   "imports": [

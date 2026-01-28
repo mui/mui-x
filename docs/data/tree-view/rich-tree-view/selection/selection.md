@@ -12,51 +12,58 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Single selection
 
-By default, the Tree View allows selecting a single item.
+By default, `RichTreeView` lets users select one item at a time.
 
 {{"demo": "SingleSelectTreeView.js"}}
 
 :::success
-When the Tree View uses single selection, you can select an item by clicking it,
-or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
+When `RichTreeView` is set to allow one seletion at a time, users can select an item by clicking it or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
 :::
 
-## Multi selection
+## Multi-selection
 
 Use the `multiSelect` prop to enable multi-selection.
 
 {{"demo": "MultiSelectTreeView.js"}}
 
 :::success
-When the Tree View uses multi selection, you can select multiple items using the mouse in two ways:
+When multi-selection is enabled, users can select multiple items using the mouse in two ways:
 
-- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
-- To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
+1. To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
+2. To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
 
-You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
+You can also use [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
 :::
 
 ## Disable selection
 
-Use the `disableSelection` prop if you don't want your items to be selectable:
+Use the `disableSelection` prop if you don't want the items to be selectable:
 
 {{"demo": "DisableSelection.js"}}
 
 ## Checkbox selection
 
-To activate checkbox selection set `checkboxSelection={true}`:
+To enable checkbox selection, set `checkboxSelection={true}`:
 
 {{"demo": "CheckboxSelection.js"}}
 
-This is also compatible with multi selection:
+This is also compatible with multi-selection:
 
 {{"demo": "CheckboxMultiSelection.js"}}
 
+## Selectable items
+
+Use the `isItemSelectionDisabled` prop to disable selection on specific items.
+When an item is not selectable, the checkbox is hidden regardless of [`checkboxSelection`](#checkbox-selection) prop.
+
+In the example below, only leaf items (items without children) are selectable.
+
+{{"demo": "SelectableItems.js"}}
+
 ## Controlled selection
 
-Use the `selectedItems` prop to control the selected items.
-
-You can use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
+Use the `selectedItems` prop to control selected `TreeItem` components.
+You can also use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
 
@@ -70,13 +77,14 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track item selection change
 
-Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
+Use the `onItemSelectionToggle` prop to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}
 
 ## Automatic parents and children selection
 
-By default, selecting a parent item does not select its children. You can override this behavior using the `selectionPropagation` prop.
+By default, selecting a parent item does not select its children.
+You can override this behavior using the `selectionPropagation` prop.
 
 Here's how it's structured:
 
@@ -102,23 +110,83 @@ The example below demonstrates the usage of the `selectionPropagation` prop.
 {{"demo": "SelectionPropagation.js", "defaultCodeOpen": false}}
 
 :::warning
-This feature only works when multi selection is enabled using `props.multiSelect`.
+This feature only works when multi-selection is enabled using `props.multiSelect`.
+:::
+
+### Apply propagation on mount
+
+You can use the `useApplyPropagationToSelectedItemsOnMount()` to apply the selection propagation to your `defaultSelectedItems` or `selectedItems` prop.
+
+```tsx
+// Uncontrolled example
+const defaultSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    defaultSelectedItems={defaultSelectedItems}
+  />
+);
+```
+
+```tsx
+// Controlled example
+const initialSelectedItems = useApplyPropagationToSelectedItemsOnMount({
+  items: props.items,
+  selectionPropagation: props.selectedPropagation,
+  selectedItems: ['10', '11', '13', '14'],
+});
+
+const [selectedItems, setSelectedItems] = React.useState(initialSelectedItems);
+
+return (
+  <RichTreeView
+    items={props.items}
+    selectionPropagation={props.selectionPropagation}
+    selectedItems={selectedItems}
+    onSelectedItemsChange={setSelectedItems}
+  />
+);
+```
+
+In the example below, only Anna, Michael, Elizabeth, and William are selected in the raw data.
+Their ancestors are added to the `defaultSelectedItems` prop by the hook:
+
+{{"demo": "SelectionPropagationMount.js", "defaultCodeOpen": false}}
+
+:::success
+The `useApplyPropagationToSelectedItemsOnMount()` must receive the following props as provided to `RichTreeView`:
+
+- `items`
+- `selectionPropagation`
+- `getItemId` (can be skipped if not provided to `RichTreeView`)
+- `getItemChildren` (can be skipped if not provided to `RichTreeView`)
+
 :::
 
 ## Imperative API
 
-:::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useRichTreeViewApiRef()` or `useRichTreeViewProApiRef()` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+// Community package
+const apiRef = useRichTreeViewApiRef();
 
-return <RichTreeView apiRef={apiRef} items={ITEMS}>;
+return <RichTreeView apiRef={apiRef} items={ITEMS} />;
+
+// Pro package
+const apiRef = useRichTreeViewProApiRef();
+
+return <RichTreeViewPro apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` is `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 
 ### Select or deselect an item
 
@@ -136,13 +204,13 @@ apiRef.current.setItemSelection({
   keepExistingSelection,
   // If `true` the item will be selected
   // If `false` the item will be deselected
-  // If not defined, the item's selection status will toggled
+  // If not defined, the item's selection status will be toggled
   shouldBeSelected,
 });
 ```
 
 {{"demo": "ApiMethodSetItemSelection.js", "defaultCodeOpen": false}}
 
-You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
+You can use the `keepExistingSelection` property to avoid losing the items that have already been selected when using `multiSelect`:
 
 {{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js", "defaultCodeOpen": false}}

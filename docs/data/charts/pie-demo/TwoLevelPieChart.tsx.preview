@@ -2,15 +2,14 @@
   series={[
     {
       innerRadius: 0,
-      outerRadius: 80,
+      outerRadius: 60,
       data: data1,
     },
     {
-      innerRadius: 100,
-      outerRadius: 120,
+      innerRadius: 80,
+      outerRadius: 100,
       data: data2,
     },
   ]}
-  height={300}
   hideLegend
 />

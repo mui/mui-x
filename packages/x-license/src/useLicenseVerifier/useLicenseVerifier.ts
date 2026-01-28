@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { sendMuiXTelemetryEvent, muiXTelemetryEvents } from '@mui/x-telemetry';
 import { verifyLicense } from '../verifyLicense/verifyLicense';
@@ -81,7 +82,7 @@ export function useLicenseVerifier(
     } else if (licenseStatus.status === LICENSE_STATUS.NotAvailableInInitialProPlan) {
       showNotAvailableInInitialProPlanError();
     } else if (licenseStatus.status === LICENSE_STATUS.OutOfScope) {
-      showLicenseKeyPlanMismatchError();
+      showLicenseKeyPlanMismatchError({ packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.NotFound) {
       showMissingLicenseKeyError({ plan, packageName: fullPackageName });
     } else if (licenseStatus.status === LICENSE_STATUS.ExpiredAnnualGrace) {

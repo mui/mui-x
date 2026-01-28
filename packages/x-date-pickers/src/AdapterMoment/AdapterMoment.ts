@@ -1,4 +1,3 @@
-/* eslint-disable class-methods-use-this */
 import defaultMoment, { Moment, LongDateFormatKey } from 'moment';
 import {
   AdapterFormats,

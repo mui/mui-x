@@ -1,5 +1,5 @@
 import { defaultizeZoom } from './defaultizeZoom';
-import { ZoomOptions } from './zoom.types';
+import { type ZoomOptions } from './zoom.types';
 import {
   DEFAULT_X_AXIS_KEY,
   DEFAULT_Y_AXIS_KEY,
@@ -7,15 +7,16 @@ import {
   DEFAULT_AXIS_SIZE_WIDTH,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
-import { XAxis, YAxis } from '../../../../models';
-import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
-import { DatasetType } from '../../../../models/seriesType/config';
+import { type XAxis, type YAxis } from '../../../../models';
+import { type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
+import { type DatasetType } from '../../../../models/seriesType/config';
 
 type InXAxis = XAxis & { zoom?: boolean | ZoomOptions };
 
 export function defaultizeXAxis(
   inAxes: readonly InXAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
+  axesGap: number,
 ): DefaultedXAxis[] {
   const offsets = {
     top: 0,
@@ -44,12 +45,12 @@ export function defaultizeXAxis(
       id,
       position,
       height: axisConfig.height ?? defaultHeight,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'x'),
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'x', axisConfig.reverse),
     };
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += sharedConfig.height;
+      offsets[position] += sharedConfig.height + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
         offsets[position] += sharedConfig.zoom.slider.size;
@@ -80,6 +81,7 @@ type InYAxis = YAxis & { zoom?: boolean | ZoomOptions };
 export function defaultizeYAxis(
   inAxes: readonly InYAxis[] | undefined,
   dataset: Readonly<DatasetType> | undefined,
+  axesGap: number,
 ): DefaultedYAxis[] {
   const offsets = { right: 0, left: 0, none: 0 };
 
@@ -104,12 +106,12 @@ export function defaultizeYAxis(
       id,
       position,
       width: axisConfig.width ?? defaultWidth,
-      zoom: defaultizeZoom(axisConfig.zoom, id, 'y'),
+      zoom: defaultizeZoom(axisConfig.zoom, id, 'y', axisConfig.reverse),
     } satisfies DefaultedYAxis;
 
     // Increment the offset for the next axis
     if (position !== 'none') {
-      offsets[position] += sharedConfig.width;
+      offsets[position] += sharedConfig.width + axesGap;
 
       if (sharedConfig.zoom?.slider.enabled) {
         offsets[position] += sharedConfig.zoom.slider.size;

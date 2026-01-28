@@ -1,37 +1,61 @@
 import {
   useChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartZAxis';
 import {
   useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import {
+  useChartTooltip,
+  type UseChartTooltipSignature,
+} from '../internals/plugins/featurePlugins/useChartTooltip';
+import {
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
 } from '../internals/plugins/featurePlugins/useChartInteraction';
 import {
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
+import { type ConvertSignaturesIntoPlugins } from '../internals/plugins/models/helpers';
 import {
-  useChartVoronoi,
-  UseChartVoronoiSignature,
-} from '../internals/plugins/featurePlugins/useChartVoronoi';
+  useChartClosestPoint,
+  type UseChartClosestPointSignature,
+} from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import {
+  useChartKeyboardNavigation,
+  type UseChartKeyboardNavigationSignature,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import {
+  useChartBrush,
+  type UseChartBrushSignature,
+} from '../internals/plugins/featurePlugins/useChartBrush';
+import {
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
+} from '../internals/plugins/featurePlugins/useChartVisibilityManager';
 
-export type ScatterChartPluginsSignatures = [
+export type ScatterChartPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'scatter'>,
+  UseChartBrushSignature,
+  UseChartTooltipSignature<'scatter'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
-  UseChartVoronoiSignature,
+  UseChartVisibilityManagerSignature<'scatter'>,
+  UseChartClosestPointSignature,
+  UseChartKeyboardNavigationSignature,
 ];
 
-export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginsSignatures> = [
+export const SCATTER_CHART_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartPluginSignatures> = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartBrush,
+  useChartTooltip,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
-  useChartVoronoi,
+  useChartVisibilityManager,
+  useChartClosestPoint,
+  useChartKeyboardNavigation,
 ];

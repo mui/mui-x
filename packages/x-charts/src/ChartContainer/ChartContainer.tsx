@@ -1,12 +1,21 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, ChartDataProviderProps } from '../ChartDataProvider';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import {
+  ChartDataProvider,
+  type ChartDataProviderProps,
+  type ChartDataProviderSlotProps,
+  type ChartDataProviderSlots,
+} from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
-import { ChartsSurface, ChartsSurfaceProps } from '../ChartsSurface';
-import { AllPluginSignatures } from '../internals/plugins/allPlugins';
-import { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+
+export interface ChartContainerSlots extends ChartDataProviderSlots {}
+
+export interface ChartContainerSlotProps extends ChartDataProviderSlotProps {}
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -37,17 +46,17 @@ export type ChartContainerProps<
  * </ChartContainer>
  * ```
  */
-const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends ChartSeriesType>(
-  props: ChartContainerProps<TSeries>,
-  ref: React.Ref<SVGSVGElement>,
-) {
-  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
-    props,
-    ref,
-  );
+const ChartContainer = React.forwardRef(function ChartContainer<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartContainerProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps<
+    TSeries,
+    TSignatures
+  >(props, ref);
 
   return (
-    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProps}>
+    <ChartDataProvider {...chartDataProviderProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );
@@ -64,6 +73,19 @@ ChartContainer.propTypes = {
   // ----------------------------------------------------------------------
   apiRef: PropTypes.shape({
     current: PropTypes.object,
+  }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -87,6 +109,7 @@ ChartContainer.propTypes = {
    * If true, the voronoi interaction are ignored.
    */
   disableVoronoi: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Options to enable features planned for the next major.
    */
@@ -97,6 +120,33 @@ ChartContainer.propTypes = {
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.object,
+      type: PropTypes.object.isRequired,
+    }),
+  ),
   /**
    * The controlled axis highlight.
    * Identified by the axis id, and data index.
@@ -113,13 +163,41 @@ ChartContainer.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.any,
+      seriesId: PropTypes.object,
+      type: PropTypes.object.isRequired,
+    }),
+  ),
   /**
    * Localized text for chart components.
    */
@@ -147,6 +225,11 @@ ChartContainer.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -167,6 +250,12 @@ ChartContainer.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier Identify which item got clicked
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The configuration of the radial-axes.
    * If not provided, a default axis config is used.
@@ -198,16 +287,15 @@ ChartContainer.propTypes = {
       disableLine: PropTypes.bool,
       disableTicks: PropTypes.bool,
       domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-      fill: PropTypes.string,
       height: PropTypes.number,
       hideTooltip: PropTypes.bool,
       id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       ignoreTooltip: PropTypes.bool,
       label: PropTypes.string,
       labelStyle: PropTypes.object,
-      max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      max: PropTypes.number,
       maxRadius: PropTypes.number,
-      min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+      min: PropTypes.number,
       minRadius: PropTypes.number,
       offset: PropTypes.number,
       position: PropTypes.oneOf(['bottom', 'none', 'top']),
@@ -215,7 +303,6 @@ ChartContainer.propTypes = {
       scaleType: PropTypes.oneOf(['linear']),
       slotProps: PropTypes.object,
       slots: PropTypes.object,
-      stroke: PropTypes.string,
       sx: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool])),
         PropTypes.func,
@@ -234,6 +321,7 @@ ChartContainer.propTypes = {
       tickNumber: PropTypes.number,
       tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
       tickSize: PropTypes.number,
+      tickSpacing: PropTypes.number,
       valueFormatter: PropTypes.func,
     }),
   ),
@@ -281,7 +369,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -296,16 +383,23 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -326,6 +420,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -363,7 +458,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -378,16 +472,23 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -408,6 +509,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -436,7 +538,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -444,8 +545,8 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -453,7 +554,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -474,6 +574,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -503,7 +604,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -511,8 +611,8 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -520,7 +620,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -541,6 +640,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -569,7 +669,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -577,8 +676,8 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -586,7 +685,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -607,6 +705,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -635,7 +734,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -643,8 +741,8 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -652,7 +750,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -673,6 +770,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -701,7 +799,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -709,8 +806,18 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -718,7 +825,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -739,6 +845,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -767,7 +874,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -775,8 +881,18 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -784,7 +900,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -805,6 +920,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -833,7 +949,6 @@ ChartContainer.propTypes = {
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
         endAngle: PropTypes.number,
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
@@ -841,8 +956,8 @@ ChartContainer.propTypes = {
         label: PropTypes.string,
         labelGap: PropTypes.number,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
@@ -850,7 +965,6 @@ ChartContainer.propTypes = {
         slotProps: PropTypes.object,
         slots: PropTypes.object,
         startAngle: PropTypes.number,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -871,6 +985,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
     ]).isRequired,
@@ -902,10 +1017,20 @@ ChartContainer.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
+  }),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius: PropTypes.number,
+  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -954,7 +1079,6 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -968,15 +1092,22 @@ ChartContainer.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -998,6 +1129,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1035,7 +1167,6 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1049,15 +1180,22 @@ ChartContainer.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1079,6 +1217,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1107,22 +1246,20 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['log']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1144,6 +1281,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1173,22 +1311,20 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['symlog']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1210,6 +1346,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1238,22 +1375,20 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['pow']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1275,6 +1410,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1303,22 +1439,20 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['sqrt']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1340,6 +1474,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1368,22 +1503,30 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['time']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1405,6 +1548,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1433,22 +1577,30 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['utc']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1470,6 +1622,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -1498,22 +1651,20 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['linear']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1535,6 +1686,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
     ]).isRequired,
@@ -1583,7 +1735,6 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1596,15 +1747,22 @@ ChartContainer.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1625,6 +1783,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1663,7 +1822,6 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1676,15 +1834,22 @@ ChartContainer.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1705,6 +1870,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1734,21 +1900,19 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['log']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1769,6 +1933,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1799,21 +1964,19 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['symlog']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1834,6 +1997,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1863,21 +2027,19 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['pow']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1898,6 +2060,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1927,21 +2090,19 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['sqrt']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1962,6 +2123,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1991,21 +2153,29 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['time']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -2026,6 +2196,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -2055,21 +2226,29 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['utc']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -2090,6 +2269,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -2119,21 +2299,19 @@ ChartContainer.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['linear']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -2154,6 +2332,7 @@ ChartContainer.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),

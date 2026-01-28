@@ -10,20 +10,36 @@
     },
     "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
     "height": { "type": { "name": "number" } },
-    "hideLegend": { "type": { "name": "bool" } },
-    "highlightedItem": {
+    "hiddenItems": {
       "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
       }
     },
+    "hideLegend": { "type": { "name": "bool" } },
+    "highlightedItem": {
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+    },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'pie' }&gt;"
+      }
+    },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
     "margin": {
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
       }
     },
     "onHighlightChange": {
@@ -34,6 +50,13 @@
       }
     },
     "onItemClick": { "type": { "name": "func" } },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
     "skipAnimation": { "type": { "name": "bool" } },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -42,13 +65,20 @@
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
     },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: string, type: 'pie' }"
+      }
+    },
     "width": { "type": { "name": "number" } }
   },
   "name": "PieChart",
   "imports": [
     "import { PieChart } from '@mui/x-charts/PieChart';",
     "import { PieChart } from '@mui/x-charts';",
-    "import { PieChart } from '@mui/x-charts-pro';"
+    "import { PieChart } from '@mui/x-charts-pro';",
+    "import { PieChart } from '@mui/x-charts-premium';"
   ],
   "slots": [
     { "name": "baseButton", "description": "", "class": null },
@@ -93,6 +123,6 @@
   "forwardsRefTo": "SVGSVGElement",
   "filename": "/packages/x-charts/src/PieChart/PieChart.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demonstration</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/label/\">Charts - Label</a></li>\n<li><a href=\"/x/react-charts/pie/\">Charts - Pie</a></li>\n<li><a href=\"/x/react-charts/pie-demo/\">Charts - Pie demos</a></li></ul>",
   "cssComponent": false
 }

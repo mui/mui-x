@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PiecewiseColorConfig } from '../../../models/colorMapping';
+import { type PiecewiseColorConfig } from '../../../models/colorMapping';
 
 type ChartsPiecewiseGradientProps = {
   isReversed?: boolean;

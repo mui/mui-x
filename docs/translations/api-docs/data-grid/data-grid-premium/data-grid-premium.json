@@ -1,6 +1,7 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "activeChartId": { "description": "The id of the active chart." },
     "aggregationFunctions": { "description": "Aggregation functions available on the grid." },
     "aggregationModel": { "description": "Set the aggregation model of the grid." },
     "aggregationRowsScope": {
@@ -23,7 +24,7 @@
       "description": "The <code>id</code> of the element containing a label for the Data Grid."
     },
     "autoHeight": {
-      "description": "If <code>true</code>, the Data Grid height is dynamic and follows the number of rows in the Data Grid."
+      "description": "If <code>true</code>, the Data Grid height is dynamic and takes as much space as it needs to display all rows. Use it instead of a flex parent container approach, if: - you don&#39;t need to set a minimum or maximum height for the Data Grid - you want to avoid the scrollbar flickering when the content changes"
     },
     "autoPageSize": {
       "description": "If <code>true</code>, the pageSize is calculated according to the container size and the max number of rows to avoid rendering a vertical scroll bar."
@@ -35,6 +36,9 @@
     "cellModesModel": { "description": "Controls the modes of the cells." },
     "cellSelection": { "description": "If <code>true</code>, the cell selection mode is enabled." },
     "cellSelectionModel": { "description": "Set the cell selection model of the grid." },
+    "chartsIntegration": {
+      "description": "If <code>true</code>, the charts integration feature is enabled."
+    },
     "checkboxSelection": {
       "description": "If <code>true</code>, the Data Grid will display an extra column with checkboxes for selecting rows."
     },
@@ -115,6 +119,9 @@
     },
     "disablePivoting": { "description": "If <code>true</code>, the pivoting feature is disabled." },
     "disableRowGrouping": { "description": "If <code>true</code>, the row grouping is disabled." },
+    "disableRowSelectionExcludeModel": {
+      "description": "If <code>true</code>, the Data Grid will not use the exclude model optimization when selecting all rows."
+    },
     "disableRowSelectionOnClick": {
       "description": "If <code>true</code>, the selection on click on a row or cell is disabled."
     },
@@ -258,6 +265,13 @@
     "hideFooterSelectedRowCount": {
       "description": "If <code>true</code>, the selected row count in the footer is hidden."
     },
+    "historyEventHandlers": { "description": "Map of grid events to their undo/redo handlers." },
+    "historyStackSize": {
+      "description": "The maximum size of the history stack. Set to 0 to disable the undo/redo feature."
+    },
+    "historyValidationEvents": {
+      "description": "List of grid events after which the history stack items should be re-validated."
+    },
     "ignoreDiacritics": {
       "description": "If <code>true</code>, the diacritics (accents) are ignored when filtering or quick filtering. E.g. when filter value is <code>cafe</code>, the rows with <code>café</code> will be visible."
     },
@@ -290,6 +304,24 @@
         }
       }
     },
+    "isRowReorderable": {
+      "description": "Indicates whether a row is reorderable.",
+      "typeDescriptions": {
+        "params": { "name": "params", "description": "With all properties from the row." },
+        "params.row": {
+          "name": "params.row",
+          "description": "The row model of the row that the current cell belongs to."
+        },
+        "params.rowNode": {
+          "name": "params.rowNode",
+          "description": "The node of the row that the current cell belongs to."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the row is reorderable."
+        }
+      }
+    },
     "isRowSelectable": {
       "description": "Determines if a row can be selected.",
       "typeDescriptions": {
@@ -300,6 +332,19 @@
         "boolean": {
           "name": "boolean",
           "description": "A boolean indicating if the row is selectable."
+        }
+      }
+    },
+    "isValidRowReorder": {
+      "description": "Indicates if a row reorder attempt is valid. Can be used to disable certain row reorder operations based on the context. The internal validation is still applied, preventing unsupported use-cases. Use <code>isValidRowReorder()</code> to add additional validation rules to the default ones.",
+      "typeDescriptions": {
+        "context": {
+          "name": "context",
+          "description": "The context object containing all information about the reorder operation."
+        },
+        "boolean": {
+          "name": "boolean",
+          "description": "A boolean indicating if the reorder operation should go through."
         }
       }
     },
@@ -337,6 +382,12 @@
     },
     "nonce": {
       "description": "Nonce of the inline styles for <a href=\"https://www.w3.org/TR/2016/REC-CSP2-20161215/#script-src-the-nonce-attribute\">Content Security Policy</a>."
+    },
+    "onActiveChartIdChange": {
+      "description": "Callback fired when the active chart changes.",
+      "typeDescriptions": {
+        "activeChartId": { "name": "activeChartId", "description": "The new active chart id." }
+      }
     },
     "onAggregationModelChange": {
       "description": "Callback fired when the row grouping model changes.",
@@ -709,7 +760,7 @@
       }
     },
     "onProcessRowUpdateError": {
-      "description": "Callback called when <code>processRowUpdate</code> throws an error or rejects.",
+      "description": "Callback called when <code>processRowUpdate()</code> throws an error or rejects.",
       "typeDescriptions": { "error": { "name": "error", "description": "The error thrown." } }
     },
     "onPrompt": {
@@ -727,6 +778,7 @@
         }
       }
     },
+    "onRedo": { "description": "Callback fired when a redo operation is executed." },
     "onResize": {
       "description": "Callback fired when the Data Grid is resized.",
       "typeDescriptions": {
@@ -803,7 +855,7 @@
       "typeDescriptions": {
         "params": {
           "name": "params",
-          "description": "With all properties from GridRowOrderChangeParams."
+          "description": "With all properties from <a href='/x/api/data-grid/grid-row-order-change-params/'>GridRowOrderChangeParams</a>."
         },
         "event": { "name": "event", "description": "The event object." },
         "details": { "name": "details", "description": "Additional details for this callback." }
@@ -859,6 +911,7 @@
         "details": { "name": "details", "description": "Additional details for this callback." }
       }
     },
+    "onUndo": { "description": "Callback fired when an undo operation is executed." },
     "pageSizeOptions": { "description": "Select the pageSize dynamically using the component UI." },
     "pagination": { "description": "If <code>true</code>, pagination is enabled." },
     "paginationMeta": {
@@ -871,12 +924,18 @@
       "description": "The pagination model of type GridPaginationModel which refers to current <code>page</code> and <code>pageSize</code>."
     },
     "pinnedColumns": { "description": "The column fields to display pinned to left or right." },
+    "pinnedColumnsSectionSeparator": {
+      "description": "Sets the type of separator between pinned columns and non-pinned columns."
+    },
     "pinnedRows": { "description": "Rows data to pin on top or bottom." },
+    "pinnedRowsSectionSeparator": {
+      "description": "Sets the type of separator between pinned rows and non-pinned rows."
+    },
     "pivotActive": {
       "description": "If <code>true</code>, the data grid will show data in pivot mode using the <code>pivotModel</code>."
     },
     "pivotingColDef": {
-      "description": "The column definition overrides for the columns generated by the pivoting feature."
+      "description": "The column definition overrides for the columns generated by the pivoting feature. Pass either a partial column definition to apply the same overrides to all pivot columns, or a callback to apply different overrides to each pivot column. For server-side pivoting, only the <code>PivotingColDefCallback</code> signature is supported, and the prop is required."
     },
     "pivotModel": {
       "description": "The pivot model of the grid. Will be used to generate the pivot data. In case of <code>pivotActive</code> being <code>false</code>, the pivot model is still used to populate the pivot panel."
@@ -927,6 +986,14 @@
     "scrollEndThreshold": {
       "description": "Set the area in <code>px</code> at the bottom of the grid viewport where onRowsScrollEnd is called. If combined with <code>lazyLoading</code>, it defines the area where the next data request is triggered."
     },
+    "setTreeDataPath": {
+      "description": "Updates the tree path in a row model. Used when reordering rows across different parents in tree data.",
+      "typeDescriptions": {
+        "path": { "name": "path", "description": "The new path for the row." },
+        "row": { "name": "row", "description": "The row model to update." },
+        "R": { "name": "R", "description": "The updated row model with the new path." }
+      }
+    },
     "showCellVerticalBorder": {
       "description": "If <code>true</code>, vertical borders will be displayed between cells."
     },
@@ -955,6 +1022,9 @@
     },
     "sx": {
       "description": "The system prop that allows defining system overrides as well as additional CSS styles."
+    },
+    "tabNavigation": {
+      "description": "Sets the tab navigation behavior for the Data Grid. - &quot;none&quot;: No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence. - &quot;content&quot;: Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header. - &quot;header&quot;: Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content. - &quot;all&quot;: Combines the &quot;content&quot; and &quot;header&quot; behavior."
     },
     "throttleRowsMs": {
       "description": "If positive, the Data Grid will throttle updates coming from <code>apiRef.current.updateRows</code> and <code>apiRef.current.setRows</code>. It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update."
@@ -1339,6 +1409,26 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the input component"
     },
+    "editLongTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell root element"
+    },
+    "editLongTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popper content"
+    },
+    "editLongTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell popup"
+    },
+    "editLongTextCellTextarea": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell textarea"
+    },
+    "editLongTextCellValue": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the edit long text cell value element"
+    },
     "filterForm": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the root of the filter form component"
@@ -1392,6 +1482,30 @@
     "iconSeparator": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the column header separator icon element"
+    },
+    "longTextCell": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell root element"
+    },
+    "longTextCellCollapseButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell collapse button"
+    },
+    "longTextCellContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell content element"
+    },
+    "longTextCellExpandButton": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell expand button"
+    },
+    "longTextCellPopperContent": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popper content"
+    },
+    "longTextCellPopup": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the long text cell popup"
     },
     "main": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1619,16 +1733,6 @@
       "nodeName": "the floating special row reorder cell element",
       "conditions": "it is dragged"
     },
-    "row--dropAbove": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target above"
-    },
-    "row--dropBelow": {
-      "description": "Styles applied to {{nodeName}} when {{conditions}}.",
-      "nodeName": "the row element",
-      "conditions": "it is a drop target below"
-    },
     "row--dynamicHeight": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the row",
@@ -1702,6 +1806,18 @@
     "scrollbar--vertical": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the horizontal scrollbar"
+    },
+    "scrollShadow": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the scroll shadow element"
+    },
+    "scrollShadow--horizontal": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the horizontal scroll shadow element"
+    },
+    "scrollShadow--vertical": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the vertical scroll shadow element"
     },
     "selectedRowCount": {
       "description": "Styles applied to {{nodeName}}.",
@@ -1810,12 +1926,27 @@
     "baseSelectOption": "The custom SelectOption component used in the grid.",
     "baseSkeleton": "The custom Skeleton component used in the grid.",
     "baseSwitch": "The custom Switch component used in the grid.",
+    "baseTabs": "The custom Tabs component used in the grid.",
+    "baseTextarea": "The custom Textarea component used in the grid for multiline text editing.",
     "baseTextField": "The custom TextField component used in the grid.",
+    "baseToggleButton": "The custom ToggleButton component used in the grid.",
     "baseTooltip": "The custom Tooltip component used in the grid.",
     "booleanCellFalseIcon": "Icon displayed on the boolean cell to represent the false value.",
     "booleanCellTrueIcon": "Icon displayed on the boolean cell to represent the true value.",
     "bottomContainer": "Component rendered for the bottom container.",
     "cell": "Component rendered for each cell.",
+    "chartsIcon": "Icon used for the charts configuration button",
+    "chartsMenuAddIcon": "Icon used for the add button in the charts configuration panel menu",
+    "chartsMenuMoveDownIcon": "Icon used for the move down button in the charts configuration panel menu",
+    "chartsMenuMoveToBottomIcon": "Icon used for the move to bottom button in the charts configuration panel menu",
+    "chartsMenuMoveToTopIcon": "Icon used for the move to top button in the charts configuration panel menu",
+    "chartsMenuMoveUpIcon": "Icon used for the move up button in the charts configuration panel menu",
+    "chartsMenuRemoveIcon": "Icon used for the remove button in the charts configuration panel menu",
+    "chartsPanel": "Component rendered when charts panel is open. Only needed when <code>chartsIntegration</code> prop is passed to the grid. Pass <code>GridChartsPanel</code> to render the default charts panel.",
+    "chartsSearchClearIcon": "Icon used for the clear button in the sidebar search field in the charts configuration panel",
+    "chartsSearchIcon": "Icon used for the search icon in the sidebar search field in the charts configuration panel",
+    "chartsSyncDisabledIcon": "Icon used for the sync button in the charts configuration panel when sync is disabled",
+    "chartsSyncIcon": "Icon used for the sync button in the charts configuration panel when sync is enabled",
     "collapsibleIcon": "Icon displayed in the collapsible to indicate if it is open or closed.",
     "columnFilteredIcon": "Icon displayed on the column header menu to show that a filter has been applied to the column.",
     "columnHeaderFilterIconButton": "Filter icon component rendered in each column header.",
@@ -1842,6 +1973,7 @@
     "columnSortedAscendingIcon": "Icon displayed on the side of the column header title when sorted in ascending order.",
     "columnSortedDescendingIcon": "Icon displayed on the side of the column header title when sorted in descending order.",
     "columnsPanel": "GridColumns panel component rendered when clicking the columns button.",
+    "columnUnsortedIcon": "Icon displayed on the side of the column header title when unsorted.",
     "densityComfortableIcon": "Icon displayed on the &quot;comfortable&quot; density option in the toolbar.",
     "densityCompactIcon": "Icon displayed on the compact density option in the toolbar.",
     "densityStandardIcon": "Icon displayed on the standard density option in the toolbar.",
@@ -1862,6 +1994,8 @@
     "headerFilterMenu": "Component responsible for showing menu in Header filter row",
     "loadIcon": "Icon displayed on the input while processing.",
     "loadingOverlay": "Loading overlay component rendered when the grid is in a loading state.",
+    "longTextCellCollapseIcon": "Icon displayed on the long text cell popup to collapse the content.",
+    "longTextCellExpandIcon": "Icon displayed on the long text cell to expand the content.",
     "menuItemCheckIcon": "Icon displayed to indicate that a menu item is selected.",
     "moreActionsIcon": "Icon displayed on the <code>actions</code> column type to open the menu.",
     "noColumnsOverlay": "No columns overlay component rendered when the grid has no columns.",
@@ -1882,6 +2016,7 @@
     "pivotSearchIcon": "Icon used for the search icon in the sidebar search field",
     "promptAggregationIcon": "Icon used to display aggregation changes",
     "promptChangesToggleIcon": "Icon used on the toggle button of the changes list",
+    "promptChartsIcon": "Icon used to mark the request to visalize the data",
     "promptFilterIcon": "Icon used to display filter changes",
     "promptGroupIcon": "Icon used to display group changes",
     "promptIcon": "Icon used for the prompt",
@@ -1894,12 +2029,14 @@
     "promptSpeechRecognitionOffIcon": "Icon used for when speech recognition is not supported",
     "quickFilterClearIcon": "Icon displayed on the quick filter reset input.",
     "quickFilterIcon": "Icon displayed on the quick filter input.",
+    "redoIcon": "Icon displayed on the redo button in the toolbar.",
     "row": "Component rendered for each row.",
     "rowReorderIcon": "Icon displayed on the <code>reorder</code> column type to reorder a row.",
     "sidebarCloseIcon": "Icon displayed in the sidebar close button.",
     "skeletonCell": "Component rendered for each skeleton cell.",
     "toolbar": "Toolbar component rendered in the grid header.",
     "treeDataCollapseIcon": "Icon displayed on the tree data toggling column when the children are expanded",
-    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed"
+    "treeDataExpandIcon": "Icon displayed on the tree data toggling column when the children are collapsed",
+    "undoIcon": "Icon displayed on the undo button in the toolbar."
   }
 }

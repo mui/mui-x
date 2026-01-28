@@ -1,28 +1,27 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import clsx from 'clsx';
-import { PrependKeys } from '@mui/x-internals/types';
+import { type PrependKeys } from '@mui/x-internals/types';
 import { ChartsLabel } from '../ChartsLabel/ChartsLabel';
-import { ChartsLabelMark, ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
-import { Direction } from './direction';
+import { ChartsLabelMark, type ChartsLabelMarkProps } from '../ChartsLabel/ChartsLabelMark';
+import { type Direction } from './direction';
 import { consumeThemeProps } from '../internals/consumeThemeProps';
 import {
   piecewiseColorLegendClasses,
-  PiecewiseColorLegendClasses,
+  type PiecewiseColorLegendClasses,
   useUtilityClasses,
 } from './piecewiseColorLegendClasses';
-import { ColorLegendSelector } from './colorLegend.types';
-import { PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
-import { ComputedAxis } from '../models/axis';
+import { type ColorLegendSelector } from './colorLegend.types';
+import { type PiecewiseLabelFormatterParams } from './piecewiseColorLegend.types';
+import { type ComputedAxis } from '../models/axis';
 import { useAxis } from './useAxis';
-import { PiecewiseColorLegendItemContext } from './legendContext.types';
+import { type PiecewiseColorLegendItemContext } from './legendContext.types';
 import { piecewiseColorDefaultLabelFormatter } from './piecewiseColorDefaultLabelFormatter';
 
 export interface PiecewiseColorLegendProps
-  extends ColorLegendSelector,
-    PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
+  extends ColorLegendSelector, PrependKeys<Pick<ChartsLabelMarkProps, 'type'>, 'mark'> {
   /**
    * The direction of the legend layout.
    * @default 'horizontal'
@@ -35,10 +34,10 @@ export interface PiecewiseColorLegendProps
    */
   labelFormatter?: (params: PiecewiseLabelFormatterParams) => string | null;
   /**
-   * Where to position the labels relative to the gradient.
+   * Where to position the labels relative to the color marks.
    * @default 'extremes'
    */
-  labelPosition?: 'start' | 'end' | 'extremes';
+  labelPosition?: 'start' | 'end' | 'extremes' | 'inline-start' | 'inline-end';
   /**
    * Callback fired when a legend item is clicked.
    * @param {React.MouseEvent<HTMLButtonElement, MouseEvent>} event The click event.
@@ -63,6 +62,7 @@ const RootElement = styled('ul', {
   name: 'MuiPiecewiseColorLegend',
   slot: 'Root',
 })<{ ownerState: PiecewiseColorLegendProps }>(({ theme, ownerState }) => {
+  const classes = piecewiseColorLegendClasses;
   return {
     ...theme.typography.caption,
     color: (theme.vars || theme).palette.text.primary,
@@ -75,8 +75,9 @@ const RootElement = styled('ul', {
     paddingInlineStart: 0,
     marginBlock: theme.spacing(1),
     marginInline: theme.spacing(1),
-    width: 'max-content',
-    [`button.${piecewiseColorLegendClasses.item}`]: {
+    width: 'fit-content',
+    gridArea: 'legend',
+    [`button.${classes.item}`]: {
       // Reset button styles
       background: 'none',
       border: 'none',
@@ -88,56 +89,62 @@ const RootElement = styled('ul', {
       letterSpacing: 'inherit',
       color: 'inherit',
     },
-    [`.${piecewiseColorLegendClasses.item}`]: {
+    [`.${classes.item}`]: {
       display: 'flex',
       gap: theme.spacing(0.5),
     },
-    [`li :not(.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}) .${piecewiseColorLegendClasses?.mark}`]:
-      {
-        alignSelf: 'center',
-      },
-    [`&.${piecewiseColorLegendClasses.start}`]: {
+    [`li :not(.${classes.minLabel}, .${classes.maxLabel}) .${classes?.mark}`]: {
+      alignSelf: 'center',
+    },
+    [`&.${classes.start}`]: {
       alignItems: 'end',
     },
-    [`&.${piecewiseColorLegendClasses.end}`]: {
+    [`&.${classes.end}`]: {
       alignItems: 'start',
     },
-    [`&.${piecewiseColorLegendClasses.horizontal}`]: {
+    [`&.${classes.horizontal}`]: {
       alignItems: 'center',
-      [`.${piecewiseColorLegendClasses.item}`]: {
+      [`.${classes.item}`]: {
         flexDirection: 'column',
       },
-      [`&.${piecewiseColorLegendClasses.start}`]: {
+      [`&.${classes.inlineStart}, &.${classes.inlineEnd}`]: {
+        gap: theme.spacing(1.5),
+        flexWrap: 'wrap',
+        [`.${classes.item}`]: {
+          flexDirection: 'row',
+        },
+      },
+      [`&.${classes.start}`]: {
         alignItems: 'end',
       },
-      [`&.${piecewiseColorLegendClasses.end}`]: {
+      [`&.${classes.end}`]: {
         alignItems: 'start',
       },
-      [`.${piecewiseColorLegendClasses.minLabel}`]: {
+      [`.${classes.minLabel}`]: {
         alignItems: 'end',
       },
-      [`&.${piecewiseColorLegendClasses.extremes}`]: {
-        [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {
+      [`&.${classes.extremes}`]: {
+        [`.${classes.minLabel}, .${classes.maxLabel}`]: {
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'row',
         },
       },
     },
-    [`&.${piecewiseColorLegendClasses.vertical}`]: {
-      [`.${piecewiseColorLegendClasses.item}`]: {
+    [`&.${classes.vertical}`]: {
+      [`.${classes.item}`]: {
         flexDirection: 'row',
         alignItems: 'center',
       },
-      [`&.${piecewiseColorLegendClasses.start}`]: {
+      [`&.${classes.start}, &.${classes.inlineStart}`]: {
         alignItems: 'end',
       },
-      [`&.${piecewiseColorLegendClasses.end}`]: {
+      [`&.${classes.end}, &.${classes.inlineEnd}`]: {
         alignItems: 'start',
       },
-      [`&.${piecewiseColorLegendClasses.extremes}`]: {
+      [`&.${classes.extremes}`]: {
         alignItems: 'center',
-        [`.${piecewiseColorLegendClasses.minLabel}, .${piecewiseColorLegendClasses.maxLabel}`]: {
+        [`.${classes.minLabel}, .${classes.maxLabel}`]: {
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
@@ -201,6 +208,8 @@ const PiecewiseColorLegend = consumeThemeProps(
     const isStart = labelPosition === 'start';
     const isEnd = labelPosition === 'end';
     const isExtremes = labelPosition === 'extremes';
+    const isInlineStart = labelPosition === 'inline-start';
+    const isInlineEnd = labelPosition === 'inline-end';
 
     return (
       <RootElement
@@ -238,8 +247,8 @@ const PiecewiseColorLegend = consumeThemeProps(
             return null;
           }
 
-          const isTextBefore = isStart || (isExtremes && isFirst);
-          const isTextAfter = isEnd || (isExtremes && isLast);
+          const isTextBefore = isStart || (isExtremes && isFirst) || isInlineStart;
+          const isTextAfter = isEnd || (isExtremes && isLast) || isInlineEnd;
 
           const clickObject = {
             type: 'piecewiseColor',
@@ -312,7 +321,7 @@ PiecewiseColorLegend.propTypes = {
    * Where to position the labels relative to the gradient.
    * @default 'extremes'
    */
-  labelPosition: PropTypes.oneOf(['start', 'end', 'extremes']),
+  labelPosition: PropTypes.oneOf(['start', 'end', 'extremes', 'inline-start', 'inline-end']),
   /**
    * The type of the mark.
    * @default 'square'

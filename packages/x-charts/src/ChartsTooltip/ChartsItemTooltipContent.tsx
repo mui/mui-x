@@ -1,10 +1,9 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import Typography from '@mui/material/Typography';
-import { SxProps, Theme } from '@mui/material/styles';
-import { ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
+import { type SxProps, type Theme } from '@mui/material/styles';
+import { type ChartsTooltipClasses, useUtilityClasses } from './chartsTooltipClasses';
 import { useInternalItemTooltip } from './useItemTooltip';
 import {
   ChartsTooltipCell,
@@ -13,6 +12,8 @@ import {
   ChartsTooltipTable,
 } from './ChartsTooltipTable';
 import { ChartsLabelMark } from '../ChartsLabel/ChartsLabelMark';
+
+export interface ChartsItemTooltipContentClasses extends ChartsTooltipClasses {}
 
 export interface ChartsItemTooltipContentProps {
   /**

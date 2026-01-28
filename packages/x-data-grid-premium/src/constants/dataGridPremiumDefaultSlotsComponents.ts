@@ -10,6 +10,7 @@ export const DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS: GridPremiumSlotsCompone
   ...DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS,
   ...materialSlots,
   aiAssistantPanel: null,
+  chartsPanel: null,
   columnMenu: GridPremiumColumnMenu,
   bottomContainer: GridBottomContainer,
   emptyPivotOverlay: GridEmptyPivotOverlay,

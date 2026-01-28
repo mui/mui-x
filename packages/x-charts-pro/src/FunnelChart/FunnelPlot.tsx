@@ -2,25 +2,21 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 
 import { line as d3Line } from '@mui/x-charts-vendor/d3-shape';
-import {
-  ComputedAxis,
-  cartesianSeriesTypes,
-  useSelector,
-  useStore,
-  isBandScale,
-} from '@mui/x-charts/internals';
-import { FunnelItemIdentifier } from './funnel.types';
+import { cartesianSeriesTypes, useStore } from '@mui/x-charts/internals';
+import { type FunnelItemIdentifier } from './funnel.types';
 import { FunnelSection } from './FunnelSection';
 import { alignLabel, positionLabel } from './labelUtils';
-import { FunnelPlotSlotExtension } from './funnelPlotSlots.types';
+import { type FunnelPlotSlotExtension } from './funnelPlotSlots.types';
 import { useFunnelSeriesContext } from '../hooks/useFunnelSeries';
-import { getFunnelCurve, Point, PositionGetter } from './curves';
+import { getFunnelCurve, type Point } from './curves';
 import { FunnelSectionLabel } from './FunnelSectionLabel';
 import {
   selectorChartXAxis,
   selectorChartYAxis,
   selectorFunnelGap,
 } from './funnelAxisPlugin/useChartFunnelAxisRendering.selectors';
+import { createPositionGetter } from './coordinateMapper';
+import { get2DExtrema } from './get2DExtrema';
 
 cartesianSeriesTypes.addType('funnel');
 
@@ -39,9 +35,9 @@ export interface FunnelPlotProps extends FunnelPlotSlotExtension {
 const useAggregatedData = () => {
   const seriesData = useFunnelSeriesContext();
   const store = useStore();
-  const { axis: xAxis, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxis, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
-  const gap = useSelector(store, selectorFunnelGap);
+  const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxis, axisIds: yAxisIds } = store.use(selectorChartYAxis);
+  const gap = store.use(selectorFunnelGap);
 
   const allData = React.useMemo(() => {
     if (seriesData === undefined) {
@@ -63,81 +59,13 @@ const useAggregatedData = () => {
 
       const baseScaleConfig = isHorizontal ? xAxis[xAxisId] : yAxis[yAxisId];
 
-      const isXAxisBand = xAxis[xAxisId].scaleType === 'band';
-      const isYAxisBand = yAxis[yAxisId].scaleType === 'band';
-
-      const bandWidth =
-        ((isXAxisBand || isYAxisBand) &&
-          (baseScaleConfig as ComputedAxis<'band'>).scale?.bandwidth()) ||
-        0;
-
       const xScale = xAxis[xAxisId].scale;
       const yScale = yAxis[yAxisId].scale;
 
-      const xPosition: PositionGetter = (
-        value,
-        bandIndex,
-        bandIdentifier,
-        stackOffset,
-        useBand,
-      ) => {
-        if (isBandScale(xScale)) {
-          const position = xScale(bandIdentifier)!;
-          return useBand ? position + bandWidth : position;
-        }
-        if (isHorizontal) {
-          return xScale(value + (stackOffset || 0))! + bandIndex * gap;
-        }
-        return xScale(value)!;
-      };
+      const xPosition = createPositionGetter(xScale, isHorizontal, gap, baseScaleConfig.data);
+      const yPosition = createPositionGetter(yScale, !isHorizontal, gap, baseScaleConfig.data);
 
-      const yPosition: PositionGetter = (
-        value: number,
-        bandIndex: number,
-        bandIdentifier: string | number,
-        stackOffset?: number,
-        useBand?: boolean,
-      ) => {
-        if (isBandScale(yScale)) {
-          const position = yScale(bandIdentifier);
-          return useBand ? position! + bandWidth : position!;
-        }
-        if (isHorizontal) {
-          return yScale(value)!;
-        }
-        return yScale(value + (stackOffset || 0))! + bandIndex * gap;
-      };
-
-      const allY = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          yPosition(
-            v.y,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const allX = currentSeries.dataPoints.flatMap((d, dataIndex) =>
-        d.flatMap((v) =>
-          xPosition(
-            v.x,
-            dataIndex,
-            baseScaleConfig.data?.[dataIndex],
-            v.stackOffset,
-            v.useBandWidth,
-          ),
-        ),
-      );
-      const minPoint = {
-        x: Math.min(...allX),
-        y: Math.min(...allY),
-      };
-      const maxPoint = {
-        x: Math.max(...allX),
-        y: Math.max(...allY),
-      };
+      const [minPoint, maxPoint] = get2DExtrema(currentSeries.dataPoints, xPosition, yPosition);
 
       return currentSeries.dataPoints.flatMap((values, dataIndex) => {
         const color = currentSeries.data[dataIndex].color!;
@@ -165,20 +93,8 @@ const useAggregatedData = () => {
         });
         const bandPoints = curve({} as any).processPoints(
           values.map((v) => ({
-            x: xPosition(
-              v.x,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
-            y: yPosition(
-              v.y,
-              dataIndex,
-              baseScaleConfig.data?.[dataIndex],
-              v.stackOffset,
-              v.useBandWidth,
-            ),
+            x: xPosition(v.x, dataIndex, v.stackOffset, v.useBandWidth),
+            y: yPosition(v.y, dataIndex, v.stackOffset, v.useBandWidth),
           })),
         );
 

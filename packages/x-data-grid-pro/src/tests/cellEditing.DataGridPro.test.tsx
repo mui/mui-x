@@ -31,7 +31,7 @@ describe('<DataGridPro /> - Cell editing', () => {
 
   function TestCase(props: Partial<DataGridProProps> & { columnProps?: Record<string, any> }) {
     apiRef = useGridApiRef();
-    const { columnProps = {}, ...rest } = props;
+    const { columnProps = {}, ...other } = props;
     return (
       <div style={{ width: 300, height: 300 }}>
         <DataGridPro
@@ -47,7 +47,7 @@ describe('<DataGridPro /> - Cell editing', () => {
                 }
               : column,
           )}
-          {...rest}
+          {...other}
         />
       </div>
     );
@@ -552,7 +552,7 @@ describe('<DataGridPro /> - Cell editing', () => {
         await act(async () => apiRef.current?.stopCellEditMode({ id: 0, field: 'currencyPair' }));
 
         expect(consoleMock.mock.lastCall?.[0]).to.include(
-          'MUI X: A call to `processRowUpdate` threw an error which was not handled because `onProcessRowUpdateError` is missing.',
+          'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',
         );
         expect(getCell(0, 1)).to.have.class('MuiDataGrid-cell--editing');
       });
@@ -863,6 +863,19 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
+      });
+
+      it('should prevent the default behavior to avoid the key affecting the edit component', () => {
+        const handleKeyDown = spy((event: React.KeyboardEvent) => event.defaultPrevented);
+        render(
+          <div onKeyDown={handleKeyDown}>
+            <TestCase />
+          </div>,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Enter' });
+        expect(handleKeyDown.returnValues).to.deep.equal([true]);
       });
     });
 

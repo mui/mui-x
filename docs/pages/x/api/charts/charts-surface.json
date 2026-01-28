@@ -4,14 +4,22 @@
   "imports": [
     "import { ChartsSurface } from '@mui/x-charts/ChartsSurface';",
     "import { ChartsSurface } from '@mui/x-charts';",
-    "import { ChartsSurface } from '@mui/x-charts-pro';"
+    "import { ChartsSurface } from '@mui/x-charts-pro';",
+    "import { ChartsSurface } from '@mui/x-charts-premium';"
   ],
-  "classes": [],
+  "classes": [
+    {
+      "key": "root",
+      "className": "MuiChartsSurface-root",
+      "description": "Styles applied to the root element.",
+      "isGlobal": false
+    }
+  ],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChartsSurface",
   "filename": "/packages/x-charts/src/ChartsSurface/ChartsSurface.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li>\n<li><a href=\"/x/react-charts/composition/\">Chart composition</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/components/\">Charts - Custom components</a></li>\n<li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
   "cssComponent": false
 }

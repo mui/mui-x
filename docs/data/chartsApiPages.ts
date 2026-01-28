@@ -22,6 +22,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarChart',
   },
   {
+    pathname: '/x/api/charts/bar-chart-premium',
+    title: 'BarChartPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/bar-chart-pro',
     title: 'BarChartPro',
     plan: 'pro',
@@ -43,6 +48,11 @@ const chartsApiPages: MuiPage[] = [
     title: 'ChartContainer',
   },
   {
+    pathname: '/x/api/charts/chart-container-premium',
+    title: 'ChartContainerPremium',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/charts/chart-container-pro',
     title: 'ChartContainerPro',
     plan: 'pro',
@@ -50,6 +60,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/chart-data-provider',
     title: 'ChartDataProvider',
+  },
+  {
+    pathname: '/x/api/charts/chart-data-provider-premium',
+    title: 'ChartDataProviderPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/chart-data-provider-pro',
@@ -67,6 +82,10 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-axis-tooltip-content',
     title: 'ChartsAxisTooltipContent',
+  },
+  {
+    pathname: '/x/api/charts/charts-brush-overlay',
+    title: 'ChartsBrushOverlay',
   },
   {
     pathname: '/x/api/charts/charts-clip-path',
@@ -153,6 +172,30 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/continuous-color-legend',
     title: 'ContinuousColorLegend',
+  },
+  {
+    pathname: '/x/api/charts/focused-funnel-section',
+    title: 'FocusedFunnelSection',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-heatmap-cell',
+    title: 'FocusedHeatmapCell',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-radar-mark',
+    title: 'FocusedRadarMark',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-link',
+    title: 'FocusedSankeyLink',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-node',
+    title: 'FocusedSankeyNode',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/funnel-chart',
@@ -259,6 +302,10 @@ const chartsApiPages: MuiPage[] = [
     title: 'PiePlot',
   },
   {
+    pathname: '/x/api/charts/radar-axis',
+    title: 'RadarAxis',
+  },
+  {
     pathname: '/x/api/charts/radar-axis-highlight',
     title: 'RadarAxisHighlight',
   },
@@ -290,6 +337,36 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/radar-series-plot',
     title: 'RadarSeriesPlot',
+  },
+  {
+    pathname: '/x/api/charts/range-bar-plot',
+    title: 'RangeBarPlot',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/sankey-chart',
+    title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-data-provider',
+    title: 'SankeyDataProvider',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-plot',
+    title: 'SankeyPlot',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip',
+    title: 'SankeyTooltip',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-tooltip-content',
+    title: 'SankeyTooltipContent',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/scatter',

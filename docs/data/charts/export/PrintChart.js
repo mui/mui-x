@@ -14,6 +14,7 @@ import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import { useChartProApiRef } from '@mui/x-charts-pro/hooks';
 import { RadarChartPro } from '@mui/x-charts-pro/RadarChartPro';
 import { PieChartPro } from '@mui/x-charts-pro/PieChartPro';
+import { Unstable_SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import { data } from './randomData';
 import { heatmapData } from './heatmapData';
 
@@ -28,6 +29,16 @@ const scatterSeries = [
   },
 ];
 
+const sankeySeries = {
+  data: {
+    links: [
+      { source: 'A', target: 'B', value: 10 },
+      { source: 'A', target: 'C', value: 5 },
+      { source: 'B', target: 'D', value: 8 },
+      { source: 'C', target: 'D', value: 3 },
+    ],
+  },
+};
 const series = [
   { label: 'Series A', data: data.map((p) => p.y1) },
   { label: 'Series B', data: data.map((p) => p.y2) },
@@ -64,6 +75,7 @@ export default function PrintChart() {
             <MenuItem value="heatmap">Heatmap</MenuItem>
             <MenuItem value="funnel">Funnel</MenuItem>
             <MenuItem value="radar">Radar</MenuItem>
+            <MenuItem value="sankey">Sankey</MenuItem>
           </Select>
         </FormControl>
         <Button onClick={() => apiRef.current.exportAsPrint()} variant="contained">
@@ -170,6 +182,11 @@ function Chart({ apiRef, type }) {
             ],
           }}
         />
+      );
+
+    case 'sankey':
+      return (
+        <Unstable_SankeyChart apiRef={apiRef} height={300} series={sankeySeries} />
       );
 
     default:

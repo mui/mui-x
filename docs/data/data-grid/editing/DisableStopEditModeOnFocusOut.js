@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGrid, GridCellEditStopReasons } from '@mui/x-data-grid';
 import {
   randomCreatedDate,

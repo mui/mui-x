@@ -8,6 +8,7 @@ import {
   GridUpdateRowError,
   type GridColDef,
   GridLocaleTextApi,
+  type GridEvents,
 } from '@mui/x-data-grid-pro';
 import {
   GridExperimentalProFeatures,
@@ -25,11 +26,13 @@ import type {
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
 import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import { GridPremiumSlotProps } from './gridPremiumSlotProps';
 import { GridInitialStatePremium } from './gridStatePremium';
 import { GridApiPremium } from './gridApiPremium';
 import { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import type {
   GridPivotingColDefOverrides,
+  PivotingColDefCallback,
   GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import {
@@ -41,11 +44,16 @@ import {
   PromptResponse,
   PromptSuggestion,
 } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { GridHistoryEventHandler } from '../hooks/features/history/gridHistoryInterfaces';
 
-export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {}
+export interface GridExperimentalPremiumFeatures extends GridExperimentalProFeatures {
+  charts?: boolean;
+}
 
-export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
-  extends Pick<DataGridPropsWithComplexDefaultValueBeforeProcessing, 'localeText'> {
+export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing extends Pick<
+  DataGridPropsWithComplexDefaultValueBeforeProcessing,
+  'localeText'
+> {
   /**
    * Overridable components.
    */
@@ -55,16 +63,17 @@ export interface DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing
 /**
  * The props users can give to the `DataGridPremiumProps` component.
  */
-export interface DataGridPremiumProps<R extends GridValidRowModel = any>
-  extends Omit<
-    Partial<DataGridPremiumPropsWithDefaultValue<R>> &
-      DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
-      DataGridPremiumPropsWithoutDefaultValue<R>,
-    DataGridPremiumForcedPropsKey
-  > {}
+export interface DataGridPremiumProps<R extends GridValidRowModel = any> extends Omit<
+  Partial<DataGridPremiumPropsWithDefaultValue<R>> &
+    DataGridPremiumPropsWithComplexDefaultValueBeforeProcessing &
+    DataGridPremiumPropsWithoutDefaultValue<R>,
+  DataGridPremiumForcedPropsKey
+> {}
 
-export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
-  extends Pick<DataGridPropsWithComplexDefaultValueAfterProcessing, 'localeText'> {
+export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing extends Pick<
+  DataGridPropsWithComplexDefaultValueAfterProcessing,
+  'localeText'
+> {
   slots: GridPremiumSlotsComponent;
 }
 
@@ -72,7 +81,8 @@ export interface DataGridPremiumPropsWithComplexDefaultValueAfterProcessing
  * The props of the Data Grid Premium component after the pre-processing phase.
  */
 export interface DataGridPremiumProcessedProps
-  extends DataGridPremiumPropsWithDefaultValue,
+  extends
+    DataGridPremiumPropsWithDefaultValue,
     DataGridPremiumPropsWithComplexDefaultValueAfterProcessing,
     DataGridPremiumPropsWithoutDefaultValue {}
 
@@ -84,8 +94,7 @@ export type DataGridPremiumForcedPropsKey = 'signature';
  * The controlled model do not have a default value at the prop processing level, so they must be defined in `DataGridOtherProps`.
  */
 export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowModel = any>
-  extends DataGridProPropsWithDefaultValue<R>,
-    DataGridPremiumSharedPropsWithDefaultValue {
+  extends DataGridProPropsWithDefaultValue<R>, DataGridPremiumSharedPropsWithDefaultValue {
   /**
    * If `true`, aggregation is disabled.
    * @default false
@@ -142,31 +151,39 @@ export interface DataGridPremiumPropsWithDefaultValue<R extends GridValidRowMode
    */
   disablePivoting: boolean;
   /**
-   * Allows to generate derived columns from actual columns that will be used for pivoting.
-   * Useful e.g. for date columns to generate year, quarter, month, etc.
-   * @param {GridColDef} column The column to generate derived columns for.
-   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
-   * @returns {GridColDef[] | undefined} The derived columns.
-   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
-   */
-  getPivotDerivedColumns:
-    | ((
-        column: GridColDef,
-        getLocaleText: GridLocaleTextApi['getLocaleText'],
-      ) => GridColDef[] | undefined)
-    | null;
-  /**
    * If `true`, the AI Assistant is enabled.
    * @default false
    */
   aiAssistant: boolean;
+  /**
+   * If `true`, the charts integration feature is enabled.
+   * @default false
+   */
+  chartsIntegration: boolean;
+  /**
+   * The maximum size of the history stack.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyStackSize: number;
+  /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
+   */
+  historyEventHandlers: Record<GridEvents, GridHistoryEventHandler<any>>;
+  /**
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']
+   */
+  historyValidationEvents: GridEvents[];
 }
 
-export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowModel = any>
-  extends Omit<
-    DataGridProPropsWithoutDefaultValue<R>,
-    'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
-  > {
+export interface DataGridPremiumPropsWithoutDefaultValue<
+  R extends GridValidRowModel = any,
+> extends Omit<
+  DataGridProPropsWithoutDefaultValue<R>,
+  'initialState' | 'apiRef' | 'dataSource' | 'onDataSourceError'
+> {
   /**
    * The ref object that allows grid manipulation. Can be instantiated with `useGridApiRef()`.
    */
@@ -177,6 +194,10 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * If one of the data in `initialState` is also being controlled, then the control state wins.
    */
   initialState?: GridInitialStatePremium;
+  /**
+   * Overridable components props dynamically passed to the component at rendering.
+   */
+  slotProps?: GridPremiumSlotProps;
   /**
    * Set the row grouping model of the grid.
    */
@@ -278,20 +299,29 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @deprecated Use the `sidebarOpen` and `sidebarClose` events or corresponding event handlers `onSidebarOpen()` and `onSidebarClose()` instead.
    */
   onPivotPanelOpenChange?: (pivotPanelOpen: boolean) => void;
-
+  /**
+   * Allows to generate derived columns from actual columns that will be used for pivoting.
+   * Useful e.g. for date columns to generate year, quarter, month, etc.
+   * @param {GridColDef} column The column to generate derived columns for.
+   * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
+   * @returns {GridColDef[] | undefined} The derived columns.
+   * @default {defaultGetPivotDerivedColumns | undefined} Creates year and quarter columns for date columns if not in server side mode.
+   */
+  getPivotDerivedColumns?:
+    | ((
+        column: GridColDef,
+        getLocaleText: GridLocaleTextApi['getLocaleText'],
+      ) => GridColDef[] | undefined)
+    | null;
   /**
    * The column definition overrides for the columns generated by the pivoting feature.
-   * @param {string} originalColumnField The field of the original column.
-   * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
-   * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * Pass either a partial column definition to apply the same overrides to all pivot columns, or a callback to apply different overrides to each pivot column.
+   * For server-side pivoting, only the `PivotingColDefCallback` signature is supported, and the prop is required.
+   * @type {Partial<GridPivotingColDefOverrides> | PivotingColDefCallback}
    * @default undefined
+   * @throws {Error} If `undefined` and `dataSource` is provided.
    */
-  pivotingColDef?:
-    | Partial<GridPivotingColDefOverrides>
-    | ((
-        originalColumnField: GridColDef['field'],
-        columnGroupPath: string[],
-      ) => Partial<GridPivotingColDefOverrides> | undefined);
+  pivotingColDef?: Partial<GridPivotingColDefOverrides> | PivotingColDefCallback;
   /**
    * The conversations with the AI Assistant.
    */
@@ -344,4 +374,21 @@ export interface DataGridPremiumPropsWithoutDefaultValue<R extends GridValidRowM
    * @param {GridCallbackDetails} details Additional details for this callback.
    */
   onSidebarOpen?: GridEventListener<'sidebarOpen'>;
+  /**
+   * The id of the active chart.
+   */
+  activeChartId?: string;
+  /**
+   * Callback fired when the active chart changes.
+   * @param {string} activeChartId The new active chart id.
+   */
+  onActiveChartIdChange?: (activeChartId: string) => void;
+  /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo?: GridEventListener<'undo'>;
+  /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo?: GridEventListener<'redo'>;
 }

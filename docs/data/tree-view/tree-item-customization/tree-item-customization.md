@@ -7,13 +7,13 @@ githubLabel: 'scope: tree view'
 waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 ---
 
-# Tree Item Customization
+# Tree Item customization
 
 <p class="description">Learn how to customize the Tree Item component.</p>
 
 ## Anatomy
 
-Each Tree Item component is shaped by a series of composable slots.
+Each `TreeItem` is shaped by a series of composable slots.
 Hover over them in the demo below to see each slot.
 
 <span class="only-light-mode" style="border: 1px solid rgb(232, 234, 238); border-radius:12px">
@@ -25,12 +25,12 @@ Hover over them in the demo below to see each slot.
 
 ### Content
 
-Use the content slot to customize the content of the Tree Item or replace it with a custom component.
+Use the content slot to customize the content of a `TreeItem` or replace it with a custom component.
 
 #### Slot props
 
 The `slotProps` prop lets you pass props to the content component.
-The demo below shows how to pass an `sx` handler to the content of the Tree Item:
+The demo below shows how to pass an `sx` handler to the content of a `TreeItem`:
 
 {{"demo": "ContentSlotProps.js"}}
 
@@ -42,12 +42,12 @@ The demo below shows how to replace the content slot with a custom component.
 
 ### Label
 
-Use the label slot to customize the Tree Item label or replace it with a custom component.
+Use the label slot to customize the `TreeItem` label or replace it with a custom component.
 
 #### Slot props
 
 The `slotProps` prop lets you pass props to the label component.
-The demo below shows how to pass an `id` attribute to the Tree Item label:
+The demo below shows how to pass an `id` attribute to the `TreeItem` label:
 
 {{"demo": "LabelSlotProps.js"}}
 
@@ -63,7 +63,7 @@ The checkbox is present on the items when `checkboxSelection` is enabled on the 
 
 #### Slot props
 
-You can pass props to the checkbox slot using the `slotProps` on the Tree Item 2 component.
+You can pass props to the checkbox slot using the `slotProps` on the `TreeItem2` component.
 
 {{"demo": "CheckboxSlotProps.js"}}
 
@@ -77,14 +77,13 @@ The demo below shows how to replace the checkbox slot with a custom component.
 
 ### Change nested item's indentation
 
-Use the `itemChildrenIndentation` prop to change the indentation of the nested items.
-By default, a nested item is indented by `12px` from its parent item.
+Use the `itemChildrenIndentation` prop to change the indentation of nested items.
+By default, a nested item is indented 12 px from its parent item.
 
 {{"demo": "ItemChildrenIndentationProp.js"}}
 
 :::success
-If you are using a custom Tree Item component, and you want to override the padding,
-then apply the following padding to your `content` element:
+If you're using a custom `TreeItem` and you want to override the padding, apply the following padding to your `content` element:
 
 ```ts
 const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
@@ -100,13 +99,13 @@ const CustomTreeItemContent = styled(TreeItemContent)(({ theme }) => ({
 
 ### useTreeItem
 
-The `useTreeItem` hook lets you manage and customize individual Tree Items.
-You can use it to get the properties needed for all slots, the status of any given Item, or to tap into the interactive API of the Tree View.
+The `useTreeItem()` hook lets you manage and customize individual `TreeItem` components.
+You can use it to get the properties needed for all slots, the status of any given item, or to tap into the interactive API of the Tree View.
 
 #### Slot properties
 
-The `useTreeItem` hook gives you granular control over an Item's layout by providing resolvers to get the appropriate props for each slot.
-This makes it possible to build a fully custom layout for your Tree Items.
+The `useTreeItem()` hook gives you granular control over the layout of `TreeItem` by providing resolvers to get the appropriate props for each slot.
+This makes it possible to build a fully custom layout for `TreeItem` components.
 
 The demo below shows how to get the props needed for each slot, and how to pass them correctly.
 
@@ -125,7 +124,7 @@ You can pass additional props to a slot—or override existing slots—by passin
 
 #### Item status
 
-The `useTreeItem` hook also returns a `status` object that holds boolean values for each possible state of a Tree Item.
+The `useTreeItem()` hook also returns a `status` object that holds boolean values for each possible state of a `TreeItem`.
 
 ```jsx
 const {
@@ -140,23 +139,23 @@ You can use these statuses to apply custom styling to the item or conditionally 
 #### Imperative API
 
 The `publicAPI` object provides a number of methods to programmatically interact with the Tree View.
-You can use the `useTreeItem` hook to access the `publicAPI` object from within a Tree Item.
+You can use the `useTreeItem()` hook to access the `publicAPI` object from within a `TreeItem`.
 
 {{"demo": "useTreeItemHookPublicAPI.js"}}
 
-See the **Imperative API** section on each feature page to learn more about the public API methods available on the Tree View.
+See the Imperative API section on each feature page to learn more about the public API methods available to the Tree View.
 
 :::warning
 The `publicAPI` object should not be used in the render because the item won't necessarily re-render when the returned value is updated.
 
-If you want to access the item model, you can use the `useTreeItemModel` hook.
-See [Tree Item Customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.
+If you want to access the item model, you can use the `useTreeItemModel()` hook.
+See [Tree Item customization—useTreeItemModel](/x/react-tree-view/tree-item-customization/#usetreeitemmodel) for more details.
 :::
 
 ### `useTreeItemUtils`
 
-The `useTreeItemUtils` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
-It also returns the status of the Item.
+The `useTreeItemUtils()` hook provides a set of interaction methods for implementing custom behaviors for the Tree View.
+It also returns the status of the `TreeItem`.
 
 ```jsx
 const { interactions, status, publicAPI } = useTreeItemUtils({
@@ -165,40 +164,40 @@ const { interactions, status, publicAPI } = useTreeItemUtils({
 });
 ```
 
-To override the Tree Item's default interactions, set `event.defaultMuiPrevented` to `true` in the event handlers and then implement your own behavior.
+To override the default interactions of `TreeItem`, set `event.defaultMuiPrevented` to `true` in the event handlers and then implement your own behavior.
 
 #### Selection
 
-You can select an Item in a Tree View by clicking its content slot.
+You can select a `TreeItem` in a Tree View by clicking its content slot.
 The demo below shows how to handle selection when the user clicks on an icon.
 
 {{"demo": "HandleSelectionDemo.js"}}
 
 #### Checkbox selection
 
-By default, checkbox selection is skipped if an Item is disabled or if `disableSelection` is `true` on the Tree View.
+By default, checkbox selection is skipped if a `TreeItem` is disabled or if `disableSelection` is `true` on the Tree View.
 You can create a custom handler for the `onChange` event on the checkbox slot to bypass these conditions.
 The demo below shows how to implement custom checkbox selection behavior.
 
 {{"demo": "HandleCheckboxSelectionDemo.js"}}
 
-Visit the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/) or [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/) docs, respectively, for more details on the selection API.
+Visit the corresponding [`RichTreeView`](/x/react-tree-view/rich-tree-view/selection/) or [`SimpleTreeView`](/x/react-tree-view/simple-tree-view/selection/) docs, respectively, for more details on the selection API.
 
 #### Expansion
 
-By default, a Tree Item is expanded when the user clicks on its contents.
+By default, a `TreeItem` is expanded when the user clicks on its contents.
 You can change the expansion trigger using the `expansionTrigger` prop on the `iconContainer`.
 For more details, see [Expansion—Limit expansion to icon container](/x/react-tree-view/rich-tree-view/expansion/#limit-expansion-to-icon-container).
 
-Use the `handleExpansion` interaction method for deeper customization of the Item's expansion behavior.
+Use the `handleExpansion` interaction method for deeper customization of the `TreeItem` component's expansion behavior.
 
-The demo below shows how to introduce a new element that expands and collapses the Item.
+The demo below shows how to introduce a new element that expands and collapses the `TreeItem`.
 
 {{"demo": "HandleExpansionDemo.js"}}
 
 #### Label editing
 
-The `useTreeItemUtils` hook provides the following interaction methods relevant to label editing behavior:
+The `useTreeItemUtils()` hook provides the following interaction methods relevant to label editing behavior:
 
 ```jsx
 const {
@@ -217,7 +216,7 @@ See [Editing—enable editing using only icons](/x/react-tree-view/rich-tree-vie
 
 ### `useTreeItemModel`
 
-The `useTreeItemModel` hook lets you access the item model (the object passed to `props.items`):
+The `useTreeItemModel()` hook lets you access the item model (the object passed to `props.items`):
 
 ```jsx
 const item = useTreeItemModel(itemId);

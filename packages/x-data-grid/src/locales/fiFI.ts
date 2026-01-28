@@ -5,8 +5,8 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ei rivejä',
   noResultsOverlayLabel: 'Ei tuloksia.',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Ei sarakkeita',
+  noColumnsOverlayManageColumns: 'Hallitse sarakkeita',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -15,6 +15,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakti',
   toolbarDensityStandard: 'Vakio',
   toolbarDensityComfortable: 'Mukava',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Kumoa',
+  toolbarRedo: 'Tee uudelleen',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Sarakkeet',
@@ -43,6 +47,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
 
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
+
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
 
@@ -67,9 +74,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Filter operators text
   filterOperatorContains: 'sisältää',
-  // filterOperatorDoesNotContain: 'does not contain',
+  filterOperatorDoesNotContain: 'ei sisällä',
   filterOperatorEquals: 'on yhtä suuri kuin',
-  // filterOperatorDoesNotEqual: 'does not equal',
+  filterOperatorDoesNotEqual: 'on eri suuri kuin',
   filterOperatorStartsWith: 'alkaa',
   filterOperatorEndsWith: 'päättyy',
   filterOperatorIs: 'on',
@@ -90,9 +97,9 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Header filter operators text
   headerFilterOperatorContains: 'Sisältää',
-  // headerFilterOperatorDoesNotContain: 'Does not contain',
+  headerFilterOperatorDoesNotContain: 'Ei sisällä',
   headerFilterOperatorEquals: 'On yhtä suuri kuin',
-  // headerFilterOperatorDoesNotEqual: 'Does not equal',
+  headerFilterOperatorDoesNotEqual: 'On eri suuri kuin',
   headerFilterOperatorStartsWith: 'Alkaa',
   headerFilterOperatorEndsWith: 'Päättyy',
   headerFilterOperatorIs: 'On',
@@ -128,6 +135,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Järjestä nousevasti',
   columnMenuSortDesc: 'Järjestä laskevasti',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -158,6 +166,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'tosi',
   booleanCellFalseLabel: 'epätosi',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Laajenna',
+  longTextCellCollapseLabel: 'Tiivistä',
 
   // Actions cell more text
   actionsCellMore: 'lisää',
@@ -215,6 +227,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Koostaminen',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'summa',
   aggregationFunctionLabelAvg: 'ka.',
   aggregationFunctionLabelMin: 'min.',
@@ -249,6 +262,32 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
@@ -297,6 +336,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid);

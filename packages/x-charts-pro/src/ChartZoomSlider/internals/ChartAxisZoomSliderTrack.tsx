@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import {
-  AxisId,
+  type AxisId,
   useChartContext,
   getSVGPoint,
   selectorChartAxisZoomOptionsLookup,
@@ -12,17 +12,18 @@ import { rafThrottle } from '@mui/x-internals/rafThrottle';
 import { shouldForwardProp } from '@mui/system';
 import clsx from 'clsx';
 import { calculateZoomEnd, calculateZoomFromPoint, calculateZoomStart } from './zoom-utils';
-import { UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
+import { type UseChartProZoomSignature } from '../../internals/plugins/useChartProZoom';
 import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderTrack = styled('rect', {
+  slot: 'internal',
   shouldForwardProp: (prop) =>
     shouldForwardProp(prop) && prop !== 'axisDirection' && prop !== 'isSelecting',
 })<{ axisDirection: 'x' | 'y'; isSelecting: boolean }>(({ theme }) => ({
-  fill:
-    theme.palette.mode === 'dark'
-      ? (theme.vars || theme).palette.grey[800]
-      : (theme.vars || theme).palette.grey[300],
+  fill: (theme.vars || theme).palette.grey[300],
+  ...theme.applyStyles('dark', {
+    fill: (theme.vars || theme).palette.grey[800],
+  }),
   cursor: 'pointer',
   variants: [
     {
@@ -57,7 +58,8 @@ export function ChartAxisZoomSliderTrack({
   ...other
 }: ChartAxisZoomSliderTrackProps) {
   const ref = React.useRef<SVGRectElement>(null);
-  const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { svgRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const [isSelecting, setIsSelecting] = React.useState(false);
   const classes = useUtilityClasses({ axisDirection });
@@ -71,11 +73,7 @@ export function ChartAxisZoomSliderTrack({
     }
 
     const pointerDownPoint = getSVGPoint(element, event);
-    const zoomFromPointerDown = calculateZoomFromPoint(
-      store.getSnapshot(),
-      axisId,
-      pointerDownPoint,
-    );
+    const zoomFromPointerDown = calculateZoomFromPoint(store.state, axisId, pointerDownPoint);
 
     if (zoomFromPointerDown === null) {
       return;
@@ -83,17 +81,13 @@ export function ChartAxisZoomSliderTrack({
 
     const onPointerMove = rafThrottle(function onPointerMove(pointerMoveEvent: PointerEvent) {
       const pointerMovePoint = getSVGPoint(element, pointerMoveEvent);
-      const zoomFromPointerMove = calculateZoomFromPoint(
-        store.getSnapshot(),
-        axisId,
-        pointerMovePoint,
-      );
+      const zoomFromPointerMove = calculateZoomFromPoint(store.state, axisId, pointerMovePoint);
 
       if (zoomFromPointerMove === null) {
         return;
       }
 
-      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.getSnapshot(), axisId);
+      const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, axisId);
 
       instance.setAxisZoomData(axisId, (prevZoomData) => {
         if (zoomFromPointerMove > zoomFromPointerDown) {

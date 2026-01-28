@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useDemoData } from '@mui/x-data-grid-generator';
 import Button from '@mui/material/Button';
 import {

@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Date Calendar component
 components: DateCalendar, MonthCalendar, YearCalendar, PickersDay, DayCalendarSkeleton
-githubLabel: 'scope: DatePicker'
+githubLabel: 'component: DatePicker'
 packageName: '@mui/x-date-pickers'
 ---
 
@@ -83,7 +83,7 @@ This value is usually set to `6` for Gregorian calendars, because month display 
 
 ### Display week number
 
-To display week number, use the `displayWeekNumber`.
+To display week numbers, use the `displayWeekNumber` prop.
 You can customize the calendar week header by using the localization key `localeText.calendarWeekNumberHeaderText`.
 You can also customize what's rendered as a calendar week number, using a callback for the localization key `localeText.calendarWeekNumberText`.
 

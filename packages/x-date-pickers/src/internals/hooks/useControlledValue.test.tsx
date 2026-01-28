@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { PickersTimezone, PickerValidDate } from '@mui/x-date-pickers/models';
 import { createPickerRenderer } from 'test/utils/pickers';

@@ -37,6 +37,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
         );
       }
       const { container, setProps } = render(<TestCase rows={baseRows} />);
+      // eslint-disable-next-line testing-library/no-container
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
 
       // arbitrary number to make sure that the bottom of the grid window is reached.
@@ -183,6 +184,7 @@ describe('<DataGridPro /> - Infinite loader', () => {
         );
       }
       const { container } = render(<TestCase rows={baseRows} pinnedRows={basePinnedRows} />);
+      // eslint-disable-next-line testing-library/no-container
       const virtualScroller = container.querySelector('.MuiDataGrid-virtualScroller')!;
       // on the initial render, last row is not visible and the `observe` method is not called
       expect(observe.callCount).to.equal(0);

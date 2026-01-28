@@ -2,40 +2,45 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
-import { ChartsSlots, ChartsSlotProps } from '../internals/material';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { type ChartsSlots, type ChartsSlotProps } from '../internals/material';
 import {
   ScatterPlot,
-  ScatterPlotProps,
-  ScatterPlotSlotProps,
-  ScatterPlotSlots,
+  type ScatterPlotProps,
+  type ScatterPlotSlotProps,
+  type ScatterPlotSlots,
 } from './ScatterPlot';
-import { ChartContainerProps } from '../ChartContainer';
-import { ChartsAxis, ChartsAxisProps } from '../ChartsAxis';
-import { ScatterSeriesType } from '../models/seriesType/scatter';
-import { ChartsTooltip, ChartsTooltipProps } from '../ChartsTooltip';
-import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
+import { type ChartContainerProps } from '../ChartContainer';
+import { ChartsAxis, type ChartsAxisProps } from '../ChartsAxis';
+import { type ScatterSeriesType } from '../models/seriesType/scatter';
+import { ChartsTooltip, type ChartsTooltipProps } from '../ChartsTooltip';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
+import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '../ChartsOverlay';
-import { ChartsAxisHighlight, ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsAxisSlots, ChartsAxisSlotProps } from '../models/axis';
-import { ChartsGrid, ChartsGridProps } from '../ChartsGrid';
+import { ChartsAxisHighlight, type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsAxisSlots, type ChartsAxisSlotProps } from '../models/axis';
+import { ChartsGrid, type ChartsGridProps } from '../ChartsGrid';
 import { useScatterChartProps } from './useScatterChartProps';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
-import { ScatterChartPluginsSignatures } from './ScatterChart.plugins';
+import type { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import type { ScatterChartPluginSignatures } from './ScatterChart.plugins';
+import { FocusedScatterMark } from './FocusedScatterMark';
 
 export interface ScatterChartSlots
-  extends ChartsAxisSlots,
+  extends
+    ChartsAxisSlots,
     ScatterPlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
@@ -43,7 +48,8 @@ export interface ScatterChartSlots
     ChartsToolbarSlots,
     Partial<ChartsSlots> {}
 export interface ScatterChartSlotProps
-  extends ChartsAxisSlotProps,
+  extends
+    ChartsAxisSlotProps,
     ScatterPlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
@@ -59,8 +65,9 @@ export interface ScatterChartSlotProps
 
 export type ScatterSeries = MakeOptional<ScatterSeriesType, 'type'>;
 export interface ScatterChartProps
-  extends Omit<
-      ChartContainerProps<'scatter', ScatterChartPluginsSignatures>,
+  extends
+    Omit<
+      ChartContainerProps<'scatter', ScatterChartPluginSignatures>,
       | 'series'
       | 'plugins'
       | 'onItemClick'
@@ -69,7 +76,8 @@ export interface ScatterChartProps
       | 'onHighlightedAxisChange'
     >,
     Omit<ChartsAxisProps, 'slots' | 'slotProps'>,
-    Omit<ChartsOverlayProps, 'slots' | 'slotProps'> {
+    Omit<ChartsOverlayProps, 'slots' | 'slotProps'>,
+    Pick<ScatterPlotProps, 'renderer'> {
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
@@ -114,7 +122,9 @@ export interface ScatterChartProps
    * @param {MouseEvent} event The mouse event recorded on the `<svg/>` element if using Voronoi cells. Or the Mouse event from the scatter element, when `disableVoronoi=true`.
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
-  onItemClick?: ScatterPlotProps['onItemClick'] | UseChartVoronoiSignature['params']['onItemClick'];
+  onItemClick?:
+    | ScatterPlotProps['onItemClick']
+    | UseChartClosestPointSignature['params']['onItemClick'];
 }
 
 /**
@@ -152,7 +162,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
   const Toolbar = props.slots?.toolbar;
 
   return (
-    <ChartDataProvider<'scatter', ScatterChartPluginsSignatures> {...chartDataProviderProps}>
+    <ChartDataProvider<'scatter', ScatterChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {props.showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -165,6 +175,7 @@ const ScatterChart = React.forwardRef(function ScatterChart(
           </g>
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
+          <FocusedScatterMark />
           {children}
         </ChartsSurface>
         {!props.loading && <Tooltip trigger="item" {...props.slotProps?.tooltip} />}
@@ -182,6 +193,11 @@ ScatterChart.propTypes = {
     current: PropTypes.object,
   }),
   /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
+  /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
    * @default { x: 'none', y: 'none' }
@@ -189,6 +205,14 @@ ScatterChart.propTypes = {
   axisHighlight: PropTypes.shape({
     x: PropTypes.oneOf(['band', 'line', 'none']),
     y: PropTypes.oneOf(['band', 'line', 'none']),
+  }),
+  /**
+   * Configuration for the brush interaction.
+   */
+  brushConfig: PropTypes.shape({
+    enabled: PropTypes.bool,
+    preventHighlight: PropTypes.bool,
+    preventTooltip: PropTypes.bool,
   }),
   children: PropTypes.node,
   className: PropTypes.string,
@@ -213,6 +237,7 @@ ScatterChart.propTypes = {
    * @default false
    */
   disableVoronoi: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * Option to display a cartesian grid in the background.
    */
@@ -225,6 +250,33 @@ ScatterChart.propTypes = {
    */
   height: PropTypes.number,
   /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+  ),
+  /**
    * If `true`, the legend is not rendered.
    */
   hideLegend: PropTypes.bool,
@@ -234,13 +286,41 @@ ScatterChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['scatter']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -273,6 +353,11 @@ ScatterChart.propTypes = {
    */
   onAxisClick: PropTypes.func,
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -284,6 +369,21 @@ ScatterChart.propTypes = {
    * @param {ScatterItemIdentifier} scatterItemIdentifier The scatter item identifier.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
+   * The type of renderer to use for the scatter plot.
+   * - `svg-single`: Renders every scatter item in a `<circle />` element.
+   * - `svg-batch`: Batch renders scatter items in `<path />` elements for better performance with large datasets, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/scatter/#performance
+   *
+   * @default 'svg-single'
+   */
+  renderer: PropTypes.oneOf(['svg-batch', 'svg-single']),
   /**
    * The series to display in the scatter chart.
    * An array of [[ScatterSeries]] objects.
@@ -317,10 +417,20 @@ ScatterChart.propTypes = {
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
   /**
-   * Defines the maximal distance between a scatter point and the pointer that triggers the interaction.
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['scatter']).isRequired,
+  }),
+  /**
+   * Defines the maximum distance between a scatter point and the pointer that triggers the interaction.
+   * If set to `'item'`, the radius is the `markerSize`.
    * If `undefined`, the radius is assumed to be infinite.
    */
-  voronoiMaxRadius: PropTypes.number,
+  voronoiMaxRadius: PropTypes.oneOfType([PropTypes.oneOf(['item']), PropTypes.number]),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */
@@ -369,7 +479,6 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -383,15 +492,22 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -413,6 +529,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -450,7 +567,6 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -464,15 +580,22 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -494,6 +617,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -522,22 +646,20 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['log']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -559,6 +681,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -588,22 +711,20 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['symlog']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -625,6 +746,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -653,22 +775,20 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['pow']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -690,6 +810,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -718,22 +839,20 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['sqrt']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -755,6 +874,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -783,22 +903,30 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['time']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -820,6 +948,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -848,22 +977,30 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['utc']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -885,6 +1022,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
       PropTypes.shape({
@@ -913,22 +1051,20 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         height: PropTypes.number,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['bottom', 'none', 'top']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['linear']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -950,6 +1086,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
       }),
     ]).isRequired,
@@ -998,7 +1135,6 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1011,15 +1147,22 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['band']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1040,6 +1183,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1078,7 +1222,6 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         groups: PropTypes.arrayOf(
           PropTypes.shape({
             getValue: PropTypes.func.isRequired,
@@ -1091,15 +1234,22 @@ ScatterChart.propTypes = {
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
         offset: PropTypes.number,
+        ordinalTimeTicks: PropTypes.arrayOf(
+          PropTypes.oneOfType([
+            PropTypes.oneOf(['biweekly', 'days', 'hours', 'months', 'quarterly', 'weeks', 'years']),
+            PropTypes.shape({
+              format: PropTypes.func.isRequired,
+              getTickNumber: PropTypes.func.isRequired,
+              isTick: PropTypes.func.isRequired,
+            }),
+          ]).isRequired,
+        ),
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['point']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1120,6 +1270,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1149,21 +1300,19 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['log']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1184,6 +1333,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1214,21 +1364,19 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['symlog']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1249,6 +1397,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1278,21 +1427,19 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['pow']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1313,6 +1460,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1342,21 +1490,19 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['sqrt']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1377,6 +1523,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1406,21 +1553,29 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['time']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1441,6 +1596,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1470,21 +1626,29 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
+        min: PropTypes.oneOfType([
+          PropTypes.number,
+          PropTypes.shape({
+            valueOf: PropTypes.func.isRequired,
+          }),
+        ]),
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['utc']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1505,6 +1669,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),
@@ -1534,21 +1699,19 @@ ScatterChart.propTypes = {
         disableLine: PropTypes.bool,
         disableTicks: PropTypes.bool,
         domainLimit: PropTypes.oneOfType([PropTypes.oneOf(['nice', 'strict']), PropTypes.func]),
-        fill: PropTypes.string,
         hideTooltip: PropTypes.bool,
         id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
         ignoreTooltip: PropTypes.bool,
         label: PropTypes.string,
         labelStyle: PropTypes.object,
-        max: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
-        min: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.number]),
+        max: PropTypes.number,
+        min: PropTypes.number,
         offset: PropTypes.number,
         position: PropTypes.oneOf(['left', 'none', 'right']),
         reverse: PropTypes.bool,
         scaleType: PropTypes.oneOf(['linear']),
         slotProps: PropTypes.object,
         slots: PropTypes.object,
-        stroke: PropTypes.string,
         sx: PropTypes.oneOfType([
           PropTypes.arrayOf(
             PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.bool]),
@@ -1569,6 +1732,7 @@ ScatterChart.propTypes = {
         tickNumber: PropTypes.number,
         tickPlacement: PropTypes.oneOf(['end', 'extremities', 'middle', 'start']),
         tickSize: PropTypes.number,
+        tickSpacing: PropTypes.number,
         valueFormatter: PropTypes.func,
         width: PropTypes.number,
       }),

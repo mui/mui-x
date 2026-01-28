@@ -18,7 +18,7 @@ import { singleItemValueManager } from '../internals/utils/valueManagers';
 import { SECTION_TYPE_GRANULARITY } from '../internals/utils/getDefaultReferenceDate';
 import { useControlledValue } from '../internals/hooks/useControlledValue';
 import { DIALOG_WIDTH } from '../internals/constants/dimensions';
-import { PickerOwnerState, PickerValidDate } from '../models';
+import { MuiPickersAdapter, PickerOwnerState, PickerValidDate } from '../models';
 import { usePickerPrivateContext } from '../internals/hooks/usePickerPrivateContext';
 import { useApplyDefaultValuesToDateValidationProps } from '../managers/useDateManager';
 import { usePickerAdapter } from '../hooks/usePickerAdapter';
@@ -47,6 +47,14 @@ export function useMonthCalendarDefaultizedProps(
     monthsPerRow: themeProps.monthsPerRow ?? 3,
   };
 }
+
+const isSameMonth = (
+  monthA: number,
+  monthB: number | null,
+  yearA: PickerValidDate,
+  yearB: PickerValidDate | null,
+  adapter: MuiPickersAdapter,
+) => Boolean(monthA === monthB && yearB && adapter.isSameYear(yearA, yearB));
 
 const MonthCalendarRoot = styled('div', {
   name: 'MuiMonthCalendar',
@@ -94,6 +102,7 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
   const {
     autoFocus,
     className,
+    currentMonth,
     classes: classesProp,
     value: valueProp,
     defaultValue,
@@ -210,12 +219,20 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       return;
     }
 
-    const newDate = adapter.setMonth(value ?? referenceDate, month);
+    const currentValue =
+      value && currentMonth && !adapter.isSameYear(value, currentMonth)
+        ? adapter.setYear(value, adapter.getYear(currentMonth))
+        : value;
+    // When no value is selected yet but a year was chosen (via YearCalendar),
+    // prefer using currentMonth (which carries the selected year) over the initial referenceDate.
+    // Fix for: https://github.com/mui/mui-x/issues/20624
+    const baseDateForMonth = currentValue ?? currentMonth ?? referenceDate;
+    const newDate = adapter.setMonth(baseDateForMonth, month);
     handleValueChange(newDate);
   });
 
   const focusMonth = useEventCallback((month: number) => {
-    if (!isMonthDisabled(adapter.setMonth(value ?? referenceDate, month))) {
+    if (!isMonthDisabled(adapter.setMonth(value ?? currentMonth ?? referenceDate, month))) {
       setFocusedMonth(month);
       changeHasFocus(true);
       if (onMonthFocus) {
@@ -280,11 +297,11 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
       monthsPerRow={monthsPerRow}
       {...other}
     >
-      {getMonthsInYear(adapter, value ?? referenceDate).map((month) => {
+      {getMonthsInYear(adapter, currentMonth ?? value ?? referenceDate).map((month) => {
         const monthNumber = adapter.getMonth(month);
         const monthText = adapter.format(month, 'monthShort');
         const monthLabel = adapter.format(month, 'month');
-        const isSelected = monthNumber === selectedMonth;
+        const isSelected = isSameMonth(monthNumber, selectedMonth, month, value, adapter);
         const isDisabled = disabled || isMonthDisabled(month);
 
         return (
@@ -299,7 +316,9 @@ export const MonthCalendar = React.forwardRef(function MonthCalendar(
             tabIndex={monthNumber === focusedMonth && !isDisabled ? 0 : -1}
             onFocus={handleMonthFocus}
             onBlur={handleMonthBlur}
-            aria-current={todayMonth === monthNumber ? 'date' : undefined}
+            aria-current={
+              isSameMonth(monthNumber, todayMonth, month, now, adapter) ? 'date' : undefined
+            }
             aria-label={monthLabel}
             slots={slots}
             slotProps={slotProps}
@@ -324,6 +343,7 @@ MonthCalendar.propTypes = {
    */
   classes: PropTypes.object,
   className: PropTypes.string,
+  currentMonth: PropTypes.object,
   /**
    * The default selected value.
    * Used when the component is not controlled.

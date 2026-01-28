@@ -1,6 +1,5 @@
 {
   "props": {
-    "barLabel": { "type": { "name": "union", "description": "'value'<br>&#124;&nbsp;func" } },
     "borderRadius": { "type": { "name": "number" } },
     "onItemClick": {
       "type": { "name": "func" },
@@ -8,6 +7,10 @@
         "type": "function(event: React.MouseEvent<SVGElement, MouseEvent>, barItemIdentifier: BarItemIdentifier) => void",
         "describedArgs": ["event", "barItemIdentifier"]
       }
+    },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "default": "'svg-single'"
     },
     "skipAnimation": { "type": { "name": "bool" }, "default": "undefined" },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
@@ -21,7 +24,8 @@
   "imports": [
     "import { BarPlot } from '@mui/x-charts/BarChart';",
     "import { BarPlot } from '@mui/x-charts';",
-    "import { BarPlot } from '@mui/x-charts-pro';"
+    "import { BarPlot } from '@mui/x-charts-pro';",
+    "import { BarPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -38,9 +42,11 @@
     }
   ],
   "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
   "muiName": "MuiBarPlot",
   "filename": "/packages/x-charts/src/BarChart/BarPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demonstration</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/bar-demo/\">Charts - Bar demos</a></li>\n<li><a href=\"/x/react-charts/bars/\">Charts - Bars</a></li></ul>",
   "cssComponent": false
 }

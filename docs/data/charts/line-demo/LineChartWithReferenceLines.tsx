@@ -1,4 +1,4 @@
-import * as React from 'react';
+import Box from '@mui/material/Box';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
@@ -20,27 +20,27 @@ const xLabels = [
 
 export default function LineChartWithReferenceLines() {
   return (
-    <ChartContainer
-      width={500}
-      height={300}
-      series={[
-        { data: pData, label: 'pv', type: 'line' },
-        { data: uData, label: 'uv', type: 'line' },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      yAxis={[{ width: 50 }]}
-      margin={margin}
-    >
-      <LinePlot />
-      <MarkPlot />
-      <ChartsReferenceLine
-        x="Page C"
-        label="Max PV PAGE"
-        lineStyle={{ stroke: 'red' }}
-      />
-      <ChartsReferenceLine y={9800} label="Max" lineStyle={{ stroke: 'red' }} />
-      <ChartsXAxis />
-      <ChartsYAxis />
-    </ChartContainer>
+    <Box sx={{ width: '100%', height: 300 }}>
+      <ChartContainer
+        series={[
+          { data: pData, label: 'pv', type: 'line' },
+          { data: uData, label: 'uv', type: 'line' },
+        ]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
+        yAxis={[{ width: 50 }]}
+        margin={margin}
+      >
+        <LinePlot />
+        <MarkPlot />
+        <ChartsReferenceLine
+          x="Page C"
+          label="Max PV PAGE"
+          lineStyle={{ stroke: 'red' }}
+        />
+        <ChartsReferenceLine y={9800} label="Max" lineStyle={{ stroke: 'red' }} />
+        <ChartsXAxis />
+        <ChartsYAxis />
+      </ChartContainer>
+    </Box>
   );
 }

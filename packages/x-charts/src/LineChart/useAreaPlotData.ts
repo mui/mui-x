@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { area as d3Area } from '@mui/x-charts-vendor/d3-shape';
 import { useChartGradientIdBuilder } from '../hooks/useChartGradientId';
-import { isBandScale } from '../internals/isBandScale';
-import { ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
+import { isOrdinalScale } from '../internals/scaleGuards';
+import { type ComputedAxisConfig } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { getCurveFactory } from '../internals/getCurve';
-import { ChartsXAxisProps, ChartsYAxisProps } from '../models';
+import { type ChartsXAxisProps, type ChartsYAxisProps } from '../models';
 import { getValueToPositionMapper, useLineSeriesContext, useXAxes, useYAxes } from '../hooks';
 import { DEFAULT_X_AXIS_KEY } from '../constants';
-import { SeriesId } from '../models/seriesType/common';
+import { type SeriesId } from '../models/seriesType/common';
 
 interface AreaPlotDataPoint {
   d: string;
@@ -43,6 +43,7 @@ export function useAreaPlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
+          visibleStackedData,
           stackedData,
           data,
           connectNulls,
@@ -83,7 +84,7 @@ export function useAreaPlotData(
           }
         }
 
-        const shouldExpand = curve?.includes('step') && !strictStepCurve && isBandScale(xScale);
+        const shouldExpand = curve?.includes('step') && !strictStepCurve && isOrdinalScale(xScale);
 
         const formattedData: {
           x: any;
@@ -94,11 +95,11 @@ export function useAreaPlotData(
           xData?.flatMap((x, index) => {
             const nullData = data[index] == null;
             if (shouldExpand) {
-              const rep = [{ x, y: stackedData[index], nullData, isExtension: false }];
+              const rep = [{ x, y: visibleStackedData[index], nullData, isExtension: false }];
               if (!nullData && (index === 0 || data[index - 1] == null)) {
                 rep.unshift({
                   x: (xScale(x) ?? 0) - (xScale.step() - xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
@@ -106,14 +107,14 @@ export function useAreaPlotData(
               if (!nullData && (index === data.length - 1 || data[index + 1] == null)) {
                 rep.push({
                   x: (xScale(x) ?? 0) + (xScale.step() + xScale.bandwidth()) / 2,
-                  y: stackedData[index],
+                  y: visibleStackedData[index],
                   nullData,
                   isExtension: true,
                 });
               }
               return rep;
             }
-            return { x, y: stackedData[index], nullData };
+            return { x, y: visibleStackedData[index], nullData };
           }) ?? [];
 
         const d3Data = connectNulls ? formattedData.filter((d) => !d.nullData) : formattedData;

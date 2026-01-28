@@ -17,7 +17,7 @@ A typical release goes like this:
 > [!INFO]
 > You can now use the new automated release preparation script by running `pnpm release:prepare`. This script automates steps 1-5 below by:
 >
-> - Asking for the major version to update (v7.x, v6.x, etc.)
+> - Asking for the major version to update (v8.x, v7.x, v6.x, etc.)
 > - Determining the new version based on the selected major version:
 >   - For non-latest major versions: patch/minor/custom
 >   - For latest major version: patch/minor/major/custom and prerelease options:
@@ -69,10 +69,40 @@ In case of a problem, another method to generate the changelog is available at t
 
 ### Release the packages
 
-1. Checkout the last version of the working branch
-2. `pnpm i && pnpm release:build` (make sure you have the latest dependencies installed, and build the packages)
-3. `pnpm release:publish` (release the versions on npm, you need your 2FA device)
-4. `pnpm release:tag` (push the newly created tag)
+> [!WARNING]
+> If one of the packages hasn't been published before, a team member with admin role must do the initial publish. To find team member, use the command:
+>
+> ```bash
+> npm team ls mui:MUI-X
+> npm org ls mui
+> ```
+>
+> Cross-reference both lists to find a team member with admin rights.
+>
+> After publishing you'll have to setup the access parameters for [trusted publishing](http://docs.npmjs.com/trusted-publishers#configuring-trusted-publishing). You can find > them under `https://www.npmjs.com/package/<pkg>/access`. Use the following values:
+>
+> - **Publisher:** GitHub actions
+> - **Organization or user:** mui
+> - **Repository:** mui-x
+> - **Workflow filename:** publish.yml
+> - **Environment name:** npm-publish
+>
+> and click _Set up connection_
+
+1. Go to the [publish action](https://github.com/mui/mui-x/actions/workflows/publish.yml).
+2. Choose "Run workflow" dropdown
+
+   > - **Branch:** master
+   > - **Commit SHA to release from:** the commit that contains the merged release on master. This commit is linked to the GitHub release.
+   > - **Run in dry-run mode:** Used for debugging.
+   > - **Create GitHub release:** Keep selected if you want a GitHub release to be automatically created from the changelog.
+   > - **npm dist tag to publish to** Use to publish legacy or canary versions.
+
+3. Click "Run workflow"
+4. Refresh the page to see the newly created workflow, and click it.
+5. The next screen shows "@username requested your review to deploy to npm-publish", click "Review deployments" and authorize your workflow run. **Never approve workflow runs you didn't initiaite.**
+
+The action publishes packages, and prepares the GitHub release. The release tag is created during GitHub release. The GitHub release is created in draft mode.
 
 > [!WARNING]
 > If the `pnpm release:tag` fails you can create and push the tag using the following command: `git tag -a v4.0.0-alpha.30 -m "Version 4.0.0-alpha.30" && git push upstream --tag`.
@@ -89,15 +119,15 @@ pnpm docs:deploy
 ```
 
 <!-- #target-branch-reference -->
+<!-- Replace `docs-vX` with the future new version number -->
+<!-- For example, when creating v9 from v8, `docs-v8 -> docs-v9` -->
 
-You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v8)
-Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v8` deployment.
+You can follow the deployment process [on the Netlify Dashboard](https://app.netlify.com/sites/material-ui-x/deploys?filter=docs-v9)
+Once deployed, it will be accessible at https://material-ui-x.netlify.app/ for the `docs-v9` deployment.
 
 ### Publish GitHub release
 
-After documentation is deployed, publish a new release on [GitHub releases page](https://github.com/mui/mui-x/releases)
-
-Create a new release on the newly published tag, then copy/paste the new changes in the changelog while removing the "version" and "date" sections. If in doubt, check the previous release notes.
+After the documentation deployment is done, review and then publish the release that was created in draft mode during the release step [GitHub releases page](https://github.com/mui/mui-x/releases)
 
 ### Announce
 

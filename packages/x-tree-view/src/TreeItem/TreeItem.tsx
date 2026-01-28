@@ -18,7 +18,7 @@ import { TreeItemIcon } from '../TreeItemIcon';
 import { TreeItemDragAndDropOverlay } from '../TreeItemDragAndDropOverlay';
 import { TreeItemProvider } from '../TreeItemProvider';
 import { TreeItemLabelInput } from '../TreeItemLabelInput';
-import { useTreeViewStyleContext } from '../internals/TreeViewProvider/TreeViewStyleContext';
+import { useTreeViewStyleContext } from '../internals/TreeViewProvider';
 
 const useThemeProps = createUseThemeProps('MuiTreeItem');
 
@@ -41,6 +41,7 @@ export const TreeItemContent = styled('div', {
   paddingLeft: `calc(${theme.spacing(1)} + var(--TreeView-itemChildrenIndentation) * var(--TreeView-itemDepth))`,
   borderRadius: theme.shape.borderRadius,
   width: '100%',
+  height: 'var(--TreeView-itemHeight, unset)',
   boxSizing: 'border-box', // prevent width + padding to overflow
   position: 'relative',
   display: 'flex',
@@ -58,6 +59,7 @@ export const TreeItemContent = styled('div', {
   '&[data-disabled]': {
     opacity: (theme.vars || theme).palette.action.disabledOpacity,
     backgroundColor: 'transparent',
+    cursor: 'auto',
   },
   '&[data-focused]': {
     backgroundColor: (theme.vars || theme).palette.action.focus,
@@ -122,6 +124,7 @@ export const TreeItemIconContainer = styled('div', {
   flexShrink: 0,
   justifyContent: 'center',
   position: 'relative',
+  cursor: 'inherit',
   '& svg': {
     fontSize: 18,
   },
@@ -241,6 +244,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     itemId,
     label,
     disabled,
+    disableSelection,
     children,
     slots = {},
     slotProps = {},
@@ -267,6 +271,7 @@ export const TreeItem = React.forwardRef(function TreeItem(
     children,
     label,
     disabled,
+    disableSelection,
   });
 
   const classes = useUtilityClasses(classesProp);
@@ -379,7 +384,6 @@ export const TreeItem = React.forwardRef(function TreeItem(
         <Content {...contentProps}>
           <IconContainer {...iconContainerProps}>
             {status.error && <ErrorIcon {...errorContainerProps} />}
-
             {status.loading ? (
               <LoadingIcon {...loadingContainerProps} />
             ) : (
@@ -415,6 +419,11 @@ TreeItem.propTypes = {
    * @default false
    */
   disabled: PropTypes.bool,
+  /**
+   * If `true`, the item cannot be selected.
+   * @default false
+   */
+  disableSelection: PropTypes.bool,
   /**
    * The id attribute of the item. If not provided, it will be generated.
    */

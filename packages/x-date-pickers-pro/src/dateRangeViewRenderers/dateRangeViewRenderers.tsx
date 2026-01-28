@@ -1,12 +1,10 @@
-import * as React from 'react';
 import { DateOrTimeViewWithMeridiem, isDatePickerView } from '@mui/x-date-pickers/internals';
 import { DateRangeCalendar, DateRangeCalendarProps } from '../DateRangeCalendar';
 
-export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem>
-  extends Omit<
-    DateRangeCalendarProps,
-    'views' | 'onRangePositionChange' | 'rangePosition' | 'defaultRangePosition'
-  > {
+export interface DateRangeViewRendererProps<TView extends DateOrTimeViewWithMeridiem> extends Omit<
+  DateRangeCalendarProps,
+  'views' | 'onRangePositionChange' | 'rangePosition' | 'defaultRangePosition'
+> {
   views: readonly TView[];
 }
 

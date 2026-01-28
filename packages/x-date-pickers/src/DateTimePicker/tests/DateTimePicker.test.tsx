@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
@@ -12,6 +11,6 @@ describe('<DateTimePicker />', () => {
     const { user } = render(<DateTimePicker />);
 
     await user.click(screen.getByLabelText(/Choose date/));
-    expect(screen.queryByRole('dialog')).to.not.equal(null);
+    expect(screen.queryByRole('dialog')).not.to.equal(null);
   });
 });

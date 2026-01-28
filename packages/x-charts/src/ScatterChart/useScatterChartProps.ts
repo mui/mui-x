@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartContainerProps } from '../ChartContainer';
+import { type ChartsAxisProps } from '../ChartsAxis';
+import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import { type ChartsOverlayProps } from '../ChartsOverlay';
+import { type ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { SCATTER_CHART_PLUGINS, ScatterChartPluginsSignatures } from './ScatterChart.plugins';
-import { UseChartVoronoiSignature } from '../internals/plugins/featurePlugins/useChartVoronoi';
+import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
+import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -44,6 +44,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     className,
     showToolbar,
+    renderer,
+    brushConfig,
     ...other
   } = props;
 
@@ -51,7 +53,8 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     () => series.map((s) => ({ type: 'scatter' as const, ...s })),
     [series],
   );
-  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginsSignatures> = {
+  const useVoronoiOnItemClick = disableVoronoi !== true || renderer === 'svg-batch';
+  const chartContainerProps: ChartContainerProps<'scatter', ScatterChartPluginSignatures> = {
     ...other,
     series: seriesWithDefault,
     width,
@@ -65,13 +68,14 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     onHighlightChange,
     disableVoronoi,
     voronoiMaxRadius,
-    onItemClick: disableVoronoi
-      ? undefined
-      : (onItemClick as UseChartVoronoiSignature['params']['onItemClick']),
+    onItemClick: useVoronoiOnItemClick
+      ? (onItemClick as UseChartClosestPointSignature['params']['onItemClick'])
+      : undefined,
     className,
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,
+    brushConfig,
   };
 
   const chartsAxisProps: ChartsAxisProps = {
@@ -85,9 +89,12 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
   };
 
   const scatterPlotProps: ScatterPlotProps = {
-    onItemClick: disableVoronoi ? (onItemClick as ScatterPlotProps['onItemClick']) : undefined,
+    onItemClick: useVoronoiOnItemClick
+      ? undefined
+      : (onItemClick as ScatterPlotProps['onItemClick']),
     slots,
     slotProps,
+    renderer,
   };
 
   const overlayProps: ChartsOverlayProps = {
@@ -111,6 +118,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     sx,
     legendPosition: props.slotProps?.legend?.position,
     legendDirection: props.slotProps?.legend?.direction,
+    hideLegend: props.hideLegend ?? false,
   };
 
   return {

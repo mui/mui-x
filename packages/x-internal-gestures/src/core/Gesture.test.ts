@@ -14,11 +14,9 @@ export class MockGesture extends Gesture<string> {
 
   protected readonly mutableStateType!: never;
 
-  // eslint-disable-next-line class-methods-use-this
   protected resetState(): void {}
 
   // Extra property for coverage
-  // eslint-disable-next-line class-methods-use-this
   public extra = () => {};
 
   // Add custom properties for testing complex options

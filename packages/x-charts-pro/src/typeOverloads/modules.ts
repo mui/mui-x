@@ -1,25 +1,34 @@
-import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { AxisId, ZoomOptions } from '@mui/x-charts/internals';
+import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
+import { type AxisId, type ZoomOptions } from '@mui/x-charts/internals';
 import {
-  DefaultizedFunnelSeriesType,
-  FunnelItemIdentifier,
-  FunnelSeriesType,
-  FunnelValueType,
+  type DefaultizedFunnelSeriesType,
+  type FunnelItemIdentifier,
+  type FunnelSeriesType,
+  type FunnelValueType,
 } from '../FunnelChart/funnel.types';
 import {
-  HeatmapItemIdentifier,
-  HeatmapSeriesType,
-  DefaultizedHeatmapSeriesType,
-  HeatmapValueType,
+  type HeatmapItemIdentifier,
+  type HeatmapSeriesType,
+  type DefaultizedHeatmapSeriesType,
+  type HeatmapValueType,
 } from '../models/seriesType/heatmap';
+import {
+  type SankeyLayout,
+  type SankeySeriesType,
+  type DefaultizedSankeySeriesType,
+  type SankeyItemIdentifier,
+  type SankeyItemIdentifierWithData,
+} from '../SankeyChart/sankey.types';
 
 declare module '@mui/x-charts/internals' {
   interface ChartsSeriesConfig {
     heatmap: {
       seriesInput: DefaultizedProps<HeatmapSeriesType, 'id'>;
       series: DefaultizedHeatmapSeriesType;
+      seriesLayout: {};
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
+      itemIdentifierWithData: HeatmapItemIdentifier;
       valueType: HeatmapValueType;
       axisType: 'cartesian';
     };
@@ -28,10 +37,23 @@ declare module '@mui/x-charts/internals' {
         data: MakeRequired<FunnelValueType, 'color'>[];
       };
       series: DefaultizedFunnelSeriesType;
+      seriesLayout: {};
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
+      itemIdentifierWithData: FunnelItemIdentifier;
       valueType: MakeRequired<FunnelValueType, 'id' | 'color'>;
       axisType: 'cartesian';
+    };
+    sankey: {
+      seriesInput: DefaultizedSankeySeriesType;
+      series: DefaultizedSankeySeriesType;
+      seriesLayout: {
+        sankeyLayout: SankeyLayout<true>;
+      };
+      seriesProp: SankeySeriesType;
+      itemIdentifier: SankeyItemIdentifier;
+      itemIdentifierWithData: SankeyItemIdentifierWithData<true>;
+      valueType: number;
     };
   }
 

@@ -18,7 +18,6 @@
     "domainLimit": {
       "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extra space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
     },
-    "fill": { "description": "The fill color of the axis text." },
     "height": { "description": "The height of the axis." },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
     "ignoreTooltip": {
@@ -26,12 +25,6 @@
     },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
-    "max": {
-      "description": "The maximal value of the domain.<br />If not provided, it gets computed to display the entire chart data."
-    },
-    "min": {
-      "description": "The minimal value of the domain.<br />If not provided, it gets computed to display the entire chart data."
-    },
     "offset": {
       "description": "The offset of the axis in pixels. It can be used to move the axis from its default position.<br />X-axis: A top axis will move up, and a bottom axis will move down.<br />Y-axis: A left axis will move left, and a right axis will move right."
     },
@@ -41,7 +34,6 @@
     "reverse": { "description": "If <code>true</code>, Reverse the axis scaleBand." },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
-    "stroke": { "description": "The stroke color of the axis line." },
     "sx": { "description": "" },
     "tickInterval": {
       "description": "Defines which ticks are displayed.<br />Its value can be:<br />- &#39;auto&#39; In such case the ticks are computed based on axis scale and other parameters.<br />- a filtering function of the form <code>(value, index) =&amp;gt; boolean</code> which is available only if the axis has &quot;point&quot; scale.<br />- an array containing the values where ticks should be displayed."
@@ -66,6 +58,9 @@
       "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."
     },
     "tickSize": { "description": "The size of the ticks." },
+    "tickSpacing": {
+      "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+    },
     "valueFormatter": { "description": "Formats the axis value." },
     "zoom": { "description": "" }
   }

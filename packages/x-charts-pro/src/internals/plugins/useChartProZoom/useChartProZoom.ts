@@ -1,145 +1,110 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  AxisId,
-  DefaultizedZoomOptions,
-  ZoomData,
-  useSelector,
+  type ChartPlugin,
+  type AxisId,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
   createZoomLookup,
   selectorChartAxisZoomOptionsLookup,
 } from '@mui/x-charts/internals';
 import debounce from '@mui/utils/debounce';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import { useEventCallback } from '@mui/material/utils';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { calculateZoom } from './calculateZoom';
-import { UseChartProZoomSignature } from './useChartProZoom.types';
+import { type UseChartProZoomSignature } from './useChartProZoom.types';
 import { useZoomOnWheel } from './gestureHooks/useZoomOnWheel';
 import { useZoomOnPinch } from './gestureHooks/useZoomOnPinch';
 import { usePanOnDrag } from './gestureHooks/usePanOnDrag';
+import { usePanOnWheel } from './gestureHooks/usePanOnWheel';
+import { useZoomOnTapAndDrag } from './gestureHooks/useZoomOnTapAndDrag';
+import { usePanOnPressAndDrag } from './gestureHooks/usePanOnPressAndDrag';
+import { useZoomOnBrush } from './gestureHooks/useZoomOnBrush';
+import { useZoomOnDoubleTapReset } from './gestureHooks/useZoomOnDoubleTapReset';
+import { initializeZoomInteractionConfig } from './initializeZoomInteractionConfig';
+import { initializeZoomData } from './initializeZoomData';
 
-// It is helpful to avoid the need to provide the possibly auto-generated id for each axis.
-export function initializeZoomData(
-  options: Record<AxisId, Pick<DefaultizedZoomOptions, 'axisId' | 'minStart' | 'maxEnd'>>,
-  zoomData?: readonly ZoomData[],
-) {
-  const zoomDataMap = new Map<AxisId, ZoomData>();
-
-  zoomData?.forEach((zoom) => {
-    const option = options[zoom.axisId];
-    if (option) {
-      zoomDataMap.set(zoom.axisId, zoom);
-    }
-  });
-
-  return Object.values(options).map(({ axisId, minStart: start, maxEnd: end }) => {
-    if (zoomDataMap.has(axisId)) {
-      return zoomDataMap.get(axisId)!;
-    }
-
-    return {
-      axisId,
-      start,
-      end,
-    };
-  });
-}
-
-export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
-  store,
-  instance,
-  svgRef,
-  params,
-}) => {
-  const { zoomData: paramsZoomData, onZoomChange: onZoomChangeProp } = params;
+export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = (pluginData) => {
+  const { store, params } = pluginData;
+  const {
+    zoomData: paramsZoomData,
+    onZoomChange: onZoomChangeProp,
+    zoomInteractionConfig,
+  } = params;
 
   const onZoomChange = useEventCallback(onZoomChangeProp ?? (() => {}));
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
 
-  // Manage controlled state
-  React.useEffect(() => {
-    if (paramsZoomData === undefined) {
-      return undefined;
-    }
-    store.update((prevState) => {
-      if (process.env.NODE_ENV !== 'production' && !prevState.zoom.isControlled) {
-        console.error(
-          [
-            `MUI X Charts: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
-            'Elements should not switch from uncontrolled to controlled (or vice versa).',
-            'Decide between using a controlled or uncontrolled for the lifetime of the component.',
-            "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
-            'More info: https://fb.me/react-controlled-components',
-          ].join('\n'),
-        );
-      }
-
-      return {
-        ...prevState,
-        zoom: {
-          ...prevState.zoom,
-          isInteracting: true,
-          zoomData: paramsZoomData,
-        },
-      };
+  useEffectAfterFirstRender(() => {
+    store.set('zoom', {
+      ...store.state.zoom,
+      zoomInteractionConfig: initializeZoomInteractionConfig(zoomInteractionConfig, optionsLookup),
     });
-
-    const timeout = setTimeout(() => {
-      store.update((prevState) => {
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            isInteracting: false,
-          },
-        };
-      });
-    }, 166);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [store, paramsZoomData]);
+  }, [store, zoomInteractionConfig, optionsLookup]);
 
   // This is debounced. We want to run it only once after the interaction ends.
   const removeIsInteracting = React.useMemo(
     () =>
       debounce(
         () =>
-          store.update((prevState) => {
-            return {
-              ...prevState,
-              zoom: {
-                ...prevState.zoom,
-                isInteracting: false,
-              },
-            };
+          store.set('zoom', {
+            ...store.state.zoom,
+            isInteracting: false,
           }),
         166,
       ),
     [store],
   );
 
+  // Manage controlled state
+  React.useEffect(() => {
+    if (paramsZoomData === undefined) {
+      return;
+    }
+
+    if (process.env.NODE_ENV !== 'production' && !store.state.zoom.isControlled) {
+      console.error(
+        [
+          `MUI X Charts: A chart component is changing the \`zoomData\` from uncontrolled to controlled.`,
+          'Elements should not switch from uncontrolled to controlled (or vice versa).',
+          'Decide between using a controlled or uncontrolled for the lifetime of the component.',
+          "The nature of the state is determined during the first render. It's considered controlled if the value is not `undefined`.",
+          'More info: https://fb.me/react-controlled-components',
+        ].join('\n'),
+      );
+    }
+    store.set('zoom', {
+      ...store.state.zoom,
+      isInteracting: true,
+      zoomData: paramsZoomData,
+    });
+    removeIsInteracting();
+  }, [store, paramsZoomData, removeIsInteracting]);
+
   const setZoomDataCallback = React.useCallback(
     (zoomData: ZoomData[] | ((prev: ZoomData[]) => ZoomData[])) => {
-      store.update((prevState) => {
-        const newZoomData =
-          typeof zoomData === 'function' ? zoomData([...prevState.zoom.zoomData]) : zoomData;
-        onZoomChange?.(newZoomData);
-        if (prevState.zoom.isControlled) {
-          return prevState;
-        }
+      const newZoomData =
+        typeof zoomData === 'function' ? zoomData([...store.state.zoom.zoomData]) : zoomData;
 
+      if (isDeepEqual(store.state.zoom.zoomData, newZoomData)) {
+        return;
+      }
+
+      onZoomChange(newZoomData);
+      if (store.state.zoom.isControlled) {
+        store.set('zoom', {
+          ...store.state.zoom,
+          isInteracting: true,
+        });
+      } else {
+        store.set('zoom', {
+          ...store.state.zoom,
+          isInteracting: true,
+          zoomData: newZoomData,
+        });
         removeIsInteracting();
-        return {
-          ...prevState,
-          zoom: {
-            ...prevState.zoom,
-            isInteracting: true,
-            zoomData: newZoomData,
-          },
-        };
-      });
+      }
     },
     [onZoomChange, store, removeIsInteracting],
   );
@@ -200,22 +165,27 @@ export const useChartProZoom: ChartPlugin<UseChartProZoomSignature> = ({
   }, [removeIsInteracting]);
 
   // Add events
-  const pluginData = { store, instance, svgRef };
-
   usePanOnDrag(pluginData, setZoomDataCallback);
+
+  usePanOnPressAndDrag(pluginData, setZoomDataCallback);
+
+  usePanOnWheel(pluginData, setZoomDataCallback);
 
   useZoomOnWheel(pluginData, setZoomDataCallback);
 
   useZoomOnPinch(pluginData, setZoomDataCallback);
 
+  useZoomOnTapAndDrag(pluginData, setZoomDataCallback);
+
+  useZoomOnBrush(pluginData, setZoomDataCallback);
+
+  useZoomOnDoubleTapReset(pluginData, setZoomDataCallback);
+
   const zoom = React.useCallback(
     (step: number) => {
       setZoomDataCallback((prev) =>
         prev.map((zoomData) => {
-          const zoomOptions = selectorChartAxisZoomOptionsLookup(
-            store.getSnapshot(),
-            zoomData.axisId,
-          );
+          const zoomOptions = selectorChartAxisZoomOptionsLookup(store.state, zoomData.axisId);
 
           return calculateZoom(zoomData, step, zoomOptions);
         }),
@@ -248,12 +218,7 @@ useChartProZoom.params = {
   initialZoom: true,
   onZoomChange: true,
   zoomData: true,
-};
-
-useChartProZoom.getDefaultizedParams = ({ params }) => {
-  return {
-    ...params,
-  };
+  zoomInteractionConfig: true,
 };
 
 useChartProZoom.getInitialState = (params) => {
@@ -272,6 +237,10 @@ useChartProZoom.getInitialState = (params) => {
       zoomData: initializeZoomData(optionsLookup, userZoomData),
       isInteracting: false,
       isControlled: zoomData !== undefined,
+      zoomInteractionConfig: initializeZoomInteractionConfig(
+        params.zoomInteractionConfig,
+        optionsLookup,
+      ),
     },
   };
 };

@@ -13,7 +13,7 @@ It replaces the previous values. This approach has some drawbacks:
 {{"demo": "UpdateRowsProp.js", "bg": "inline"}}
 
 :::warning
-Updating the `rows` prop causes the Data Grid to recompute the row tree, resulting in losing the current tree information like the expanded rows state.
+Updating the `rows` prop causes the Data Grid to recompute the row tree, which may result in losing some tree information, however the expansion state of the groups is preserved for the rows with same IDs across rerenders.
 Unless the recomputation is explicitly required, the API method `updateRows()` should be used.
 :::
 
@@ -89,7 +89,10 @@ You can find out more information about how to do that on the [server-side filte
 
 ## High frequency [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-Whenever the rows are updated, the Data Grid has to apply the sorting and filters. This can be a problem if you have high frequency updates. To maintain good performances, the Data Grid allows to batch the updates and only apply them after a period of time. The `throttleRowsMs` prop can be used to define the frequency (in milliseconds) at which rows updates are applied.
+Whenever the rows are updated, the Data Grid has to apply sorting and filters.
+This can be a problem if you have high-frequency updates.
+To maintain good performance, the Data Grid lets you batch the updates and only apply them after a period of time.
+You can use the `throttleRowsMs` prop to define the frequency (in milliseconds) at which rows updates are applied.
 
 When receiving updates more frequently than this threshold, the Data Grid will wait before updating the rows.
 

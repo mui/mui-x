@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
@@ -11,7 +10,6 @@ import {
   DateOrTimeViewWithMeridiem,
   PickerProvider,
   PickerRangeValue,
-  PickerFieldUIContextProvider,
 } from '@mui/x-date-pickers/internals';
 import { usePickerTranslations } from '@mui/x-date-pickers/hooks';
 import { FieldOwnerState } from '@mui/x-date-pickers/models';
@@ -43,6 +41,7 @@ export const useMobileRangePicker = <
   const { slots, slotProps: innerSlotProps, label, inputRef, localeText } = props;
 
   const fieldType = getRangeFieldType(slots.field);
+  const isSingleInput = fieldType === 'single-input';
   const rangePositionResponse = useRangePosition(props);
   const contextTranslations = usePickerTranslations();
 
@@ -76,7 +75,7 @@ export const useMobileRangePicker = <
     elementType: Field,
     externalSlotProps: innerSlotProps?.field,
     additionalProps: {
-      ...(fieldType === 'single-input' &&
+      ...(isSingleInput &&
         isToolbarHidden && {
           id: labelId,
         }),
@@ -131,16 +130,21 @@ export const useMobileRangePicker = <
 
   const renderPicker = () => (
     <PickerProvider {...providerProps}>
-      <PickerFieldUIContextProvider slots={slots} slotProps={slotProps} inputRef={inputRef}>
-        <PickerRangePositionContext.Provider value={rangePositionResponse}>
-          <Field {...fieldProps} />
-          <PickersModalDialog slots={slots} slotProps={slotProps}>
-            <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
-              {renderCurrentView()}
-            </Layout>
-          </PickersModalDialog>
-        </PickerRangePositionContext.Provider>
-      </PickerFieldUIContextProvider>
+      <PickerRangePositionContext.Provider value={rangePositionResponse}>
+        <Field
+          {...fieldProps}
+          slots={{ ...slots, ...(fieldProps as any).slots }}
+          slotProps={{ ...slotProps, ...(fieldProps as any).slotProps }}
+          {...(isSingleInput && {
+            inputRef,
+          })}
+        />
+        <PickersModalDialog slots={slots} slotProps={slotProps}>
+          <Layout {...slotProps?.layout} slots={slots} slotProps={slotProps}>
+            {renderCurrentView()}
+          </Layout>
+        </PickersModalDialog>
+      </PickerRangePositionContext.Provider>
     </PickerProvider>
   );
 

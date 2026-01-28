@@ -16,6 +16,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'درمیانہ',
   toolbarDensityComfortable: 'مناسب',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واپس',
+  toolbarRedo: 'دوبارہ',
+
   // Columns selector toolbar button text
   toolbarColumns: 'کالمز',
   toolbarColumnsLabel: 'کالمز کو منتخب کریں',
@@ -42,6 +46,9 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
@@ -128,6 +135,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'ترتیب صعودی',
   columnMenuSortDesc: 'ترتیب نزولی',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -156,6 +164,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ہاں',
   booleanCellFalseLabel: 'نہیں',
+
+  // Long text cell
+  longTextCellExpandLabel: 'پھیلائیں',
+  longTextCellCollapseLabel: 'تنگ کریں',
 
   // Actions cell more text
   actionsCellMore: 'ذیادہ',
@@ -213,6 +225,7 @@ const urPKGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'ایگریگیشن',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'کل',
   aggregationFunctionLabelAvg: 'اوسط',
   aggregationFunctionLabelMin: 'کم از کم',
@@ -247,6 +260,32 @@ const urPKGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
@@ -295,6 +334,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid);

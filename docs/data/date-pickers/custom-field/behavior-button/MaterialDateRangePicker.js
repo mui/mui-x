@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

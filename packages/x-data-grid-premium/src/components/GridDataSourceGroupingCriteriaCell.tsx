@@ -7,6 +7,7 @@ import {
   gridDataSourceLoadingIdSelector,
   gridRowSelector,
   vars,
+  gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
 import {
   useGridSelector,
@@ -18,6 +19,7 @@ import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { GridPrivateApiPremium } from '../models/gridApiPremium';
+import { gridRowGroupingModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 type OwnerState = DataGridPremiumProcessedProps;
 
@@ -37,8 +39,10 @@ interface GridGroupingCriteriaCellProps extends GridRenderCellParams<any, any, a
   hideDescendantCount?: boolean;
 }
 
-interface GridGroupingCriteriaCellIconProps
-  extends Pick<GridGroupingCriteriaCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
+interface GridGroupingCriteriaCellIconProps extends Pick<
+  GridGroupingCriteriaCellProps,
+  'id' | 'field' | 'rowNode' | 'row'
+> {
   descendantCount: number;
 }
 
@@ -103,7 +107,12 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const row = useGridSelector(apiRef, gridRowSelector, id);
+  const pivotActive = useGridSelector(apiRef, gridPivotActiveSelector);
+  const rowGroupingModelLength = useGridSelector(apiRef, gridRowGroupingModelSelector).length;
   const classes = useUtilityClasses(rootProps);
+  const shouldShowToggleContainer = !pivotActive || rowGroupingModelLength > 1;
+  // Do not allow expand/collapse the last grouping criteria cell when in pivot mode
+  const shouldShowToggleButton = !pivotActive || rowNode.depth < rowGroupingModelLength - 1;
 
   let descendantCount = 0;
   if (row) {
@@ -131,15 +140,19 @@ export function GridDataSourceGroupingCriteriaCell(props: GridGroupingCriteriaCe
             : `calc(var(--DataGrid-cellOffsetMultiplier) * ${vars.spacing(rowNode.depth)})`,
       }}
     >
-      <div className={classes.toggle}>
-        <GridGroupingCriteriaCellIcon
-          id={id}
-          field={field}
-          rowNode={rowNode}
-          row={row}
-          descendantCount={descendantCount}
-        />
-      </div>
+      {shouldShowToggleContainer && (
+        <div className={classes.toggle}>
+          {shouldShowToggleButton && (
+            <GridGroupingCriteriaCellIcon
+              id={id}
+              field={field}
+              rowNode={rowNode}
+              row={row}
+              descendantCount={descendantCount}
+            />
+          )}
+        </div>
+      )}
       {cellContent}
       {!hideDescendantCount && descendantCount > 0 ? (
         <span style={{ whiteSpace: 'pre' }}> ({descendantCount})</span>

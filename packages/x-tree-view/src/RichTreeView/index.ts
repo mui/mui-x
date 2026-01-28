@@ -5,7 +5,5 @@ export type {
   RichTreeViewPropsBase,
   RichTreeViewSlots,
   RichTreeViewSlotProps,
+  RichTreeViewApiRef,
 } from './RichTreeView.types';
-
-export { RICH_TREE_VIEW_PLUGINS } from './RichTreeView.plugins';
-export type { RichTreeViewPluginParameters } from './RichTreeView.plugins';

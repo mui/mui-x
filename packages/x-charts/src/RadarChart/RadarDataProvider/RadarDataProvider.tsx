@@ -1,22 +1,25 @@
 'use client';
 import * as React from 'react';
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartProviderProps } from '../../context/ChartProvider/ChartProvider.types';
-import { RADAR_PLUGINS, RadarChartPluginsSignatures } from '../RadarChart.plugins';
-import { RadarSeriesType } from '../../models/seriesType/radar';
-import { ChartsRadiusAxisProps, ChartsRotationAxisProps, PolarAxisConfig } from '../../models/axis';
-import { ChartDataProvider, ChartDataProviderProps } from '../../ChartDataProvider';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { RADAR_PLUGINS, type RadarChartPluginSignatures } from '../RadarChart.plugins';
+import { type RadarSeriesType } from '../../models/seriesType/radar';
+import {
+  type ChartsRadiusAxisProps,
+  type ChartsRotationAxisProps,
+  type PolarAxisConfig,
+} from '../../models/axis';
+import { ChartDataProvider, type ChartDataProviderProps } from '../../ChartDataProvider';
 import { defaultizeMargin } from '../../internals/defaultizeMargin';
 import { radarSeriesConfig } from '../seriesConfig';
-import { RadarConfig } from './radar.types';
-import { ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
+import { type RadarConfig } from './radar.types';
+import { type ChartAnyPluginSignature } from '../../internals/plugins/models/plugin';
 
 const RADAR_SERIES_CONFIG = { radar: radarSeriesConfig };
 const DEFAULT_RADAR_MARGIN = { top: 30, bottom: 30, left: 50, right: 50 };
 
 export type RadarSeries = MakeOptional<RadarSeriesType, 'type'>;
 export type RadarDataProviderProps<
-  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginsSignatures,
+  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginSignatures,
 > = Omit<
   ChartDataProviderProps<'radar', TSignatures>,
   'series' | 'rotationAxis' | 'radiusAxis' | 'dataset' | 'experimentalFeatures'
@@ -38,7 +41,7 @@ export type RadarDataProviderProps<
 };
 
 function RadarDataProvider<
-  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginsSignatures,
+  TSignatures extends readonly ChartAnyPluginSignature[] = RadarChartPluginSignatures,
 >(props: RadarDataProviderProps<TSignatures>) {
   const {
     series,
@@ -112,7 +115,7 @@ function RadarDataProvider<
       margin={defaultizedMargin}
       colors={colors}
       skipAnimation={skipAnimation}
-      plugins={(plugins ?? RADAR_PLUGINS) as ChartProviderProps<'radar', TSignatures>['plugins']}
+      plugins={plugins ?? RADAR_PLUGINS}
       rotationAxis={rotationAxes}
       radiusAxis={radiusAxis}
       seriesConfig={RADAR_SERIES_CONFIG}

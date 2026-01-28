@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { screen } from '@mui/internal-test-utils/createRenderer';
 import { createPickerRenderer, stubMatchMedia } from 'test/utils/pickers';
@@ -12,6 +11,6 @@ describe('<TimePicker />', () => {
     const { user } = render(<TimePicker />);
 
     await user.click(screen.getByLabelText(/Choose time/));
-    expect(screen.queryByRole('dialog')).to.not.equal(null);
+    expect(screen.queryByRole('dialog')).not.to.equal(null);
   });
 });

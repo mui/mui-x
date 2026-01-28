@@ -38,9 +38,7 @@ import {
 } from './TimeRangePickerTabs';
 
 export interface BaseTimeRangePickerSlots
-  extends TimeClockSlots,
-    DigitalClockSlots,
-    MultiSectionDigitalClockSlots {
+  extends TimeClockSlots, DigitalClockSlots, MultiSectionDigitalClockSlots {
   /**
    * Tabs enabling toggling between start and end time.
    * @default TimeRangePickerTabs
@@ -54,9 +52,7 @@ export interface BaseTimeRangePickerSlots
 }
 
 export interface BaseTimeRangePickerSlotProps
-  extends TimeClockSlotProps,
-    DigitalClockSlotProps,
-    MultiSectionDigitalClockSlotProps {
+  extends TimeClockSlotProps, DigitalClockSlotProps, MultiSectionDigitalClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -76,7 +72,8 @@ export type TimeRangePickerRenderers = PickerViewRendererLookup<
 >;
 
 export interface BaseTimeRangePickerProps
-  extends Omit<
+  extends
+    Omit<
       BasePickerInputProps<PickerRangeValue, TimeViewWithMeridiem, TimeRangeValidationError>,
       'orientation' | 'views' | 'openTo'
     >,
@@ -121,6 +118,7 @@ type UseTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps> 
   > & {
     shouldRenderTimeInASingleColumn: boolean;
     views: readonly TimeViewWithMeridiem[];
+    viewsForFormatting: readonly TimeViewWithMeridiem[];
   };
 
 export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePickerProps>(
@@ -166,6 +164,11 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting: readonly TimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -175,6 +178,7 @@ export function useTimeRangePickerDefaultizedProps<Props extends BaseTimeRangePi
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     slots: {
       tabs: TimeRangePickerTabs,

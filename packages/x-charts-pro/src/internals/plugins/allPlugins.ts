@@ -1,30 +1,40 @@
 // This file should be removed after creating all plugins in favor of a file per chart type.
 
 import {
-  ChartSeriesType,
-  ConvertSignaturesIntoPlugins,
+  type ChartSeriesType,
+  type ConvertSignaturesIntoPlugins,
   useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
   useChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
   useChartPolarAxis,
-  UseChartPolarAxisSignature,
+  type UseChartPolarAxisSignature,
+  useChartBrush,
+  type UseChartBrushSignature,
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
-import { useChartProExport, UseChartProExportSignature } from './useChartProExport';
-import { useChartProZoom, UseChartProZoomSignature } from './useChartProZoom';
+import { useChartProExport, type UseChartProExportSignature } from './useChartProExport';
+import { useChartProZoom, type UseChartProZoomSignature } from './useChartProZoom';
 
 export type AllPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
+  UseChartBrushSignature,
+  UseChartTooltipSignature<TSeries>,
+  UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
-  UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
 ];
 
 export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
@@ -32,22 +42,30 @@ export type AllPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
 
 export const ALL_PLUGINS = [
   useChartZAxis,
+  useChartBrush,
+  useChartTooltip,
+  useChartInteraction,
   useChartCartesianAxis,
   useChartPolarAxis,
-  useChartInteraction,
   useChartHighlight,
+  useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
+  useChartVisibilityManager,
 ];
 
 export type DefaultPluginSignatures<TSeries extends ChartSeriesType = ChartSeriesType> = [
   UseChartZAxisSignature,
+  UseChartBrushSignature,
+  UseChartTooltipSignature<TSeries>,
+  UseChartInteractionSignature,
   UseChartCartesianAxisSignature<TSeries>,
   UseChartPolarAxisSignature<TSeries>,
-  UseChartInteractionSignature,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
   UseChartProZoomSignature,
   UseChartProExportSignature,
+  UseChartVisibilityManagerSignature<TSeries>,
 ];
 
 export type DefaultPluginsType<TSeries extends ChartSeriesType = ChartSeriesType> =
@@ -55,9 +73,13 @@ export type DefaultPluginsType<TSeries extends ChartSeriesType = ChartSeriesType
 
 export const DEFAULT_PLUGINS = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartBrush,
+  useChartTooltip,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
+  useChartVisibilityManager,
   useChartProZoom,
   useChartProExport,
+  useChartVisibilityManager,
 ];

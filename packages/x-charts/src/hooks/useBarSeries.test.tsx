@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useBarSeries, useBarSeriesContext } from './useBarSeries';
-import { BarSeriesType, DefaultizedBarSeriesType } from '../models';
+import { type BarSeriesType, type DefaultizedBarSeriesType } from '../models';
 import { BarChart } from '../BarChart';
 
 const mockSeries: BarSeriesType[] = [
@@ -66,5 +66,10 @@ describe('useBarSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useBarSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

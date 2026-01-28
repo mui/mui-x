@@ -7,6 +7,7 @@ import {
   ErrorBoundary,
   reactMajor,
   waitFor,
+  fireEvent,
 } from '@mui/internal-test-utils';
 import clsx from 'clsx';
 import { spy, stub } from 'sinon';
@@ -22,6 +23,7 @@ import {
   useGridApiRef,
   GridApi,
   gridClasses,
+  GridActionsCell,
 } from '@mui/x-data-grid';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import {
@@ -134,6 +136,47 @@ describe('<DataGrid /> - Rows', () => {
     expect(handleRowClick.callCount).to.equal(1);
   });
 
+  // https://github.com/mui/mui-x/issues/21063
+  it('should not steal focus from input elements in Dialog', async () => {
+    function DialogCell() {
+      const [open, setOpen] = React.useState(false);
+      return (
+        <div>
+          <button onClick={() => setOpen(true)} data-testid="open-dialog">
+            Open
+          </button>
+          <Dialog open={open} onClose={() => setOpen(false)}>
+            <input type="text" data-testid="dialog-input" />
+          </Dialog>
+        </div>
+      );
+    }
+
+    const { user } = render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          rows={[{ id: 1 }]}
+          columns={[{ field: 'id', renderCell: () => <DialogCell /> }]}
+        />
+      </div>,
+    );
+
+    // Open the dialog
+    await user.click(screen.getByTestId('open-dialog'));
+
+    // Focus the input in the dialog
+    const dialogInput = screen.getByTestId('dialog-input');
+    dialogInput.focus();
+    expect(dialogInput).toHaveFocus();
+
+    // Simulate typing - this should NOT cause focus loss
+    fireEvent.keyDown(dialogInput, { key: 'a' });
+    expect(dialogInput).toHaveFocus();
+
+    fireEvent.keyDown(dialogInput, { key: 'b' });
+    expect(dialogInput).toHaveFocus();
+  });
+
   // https://github.com/mui/mui-x/issues/8042
   it('should not throw when clicking the cell in the nested grid in a portal', () => {
     const rows = [
@@ -215,268 +258,669 @@ describe('<DataGrid /> - Rows', () => {
   });
 
   describe('columnType: actions', () => {
-    function TestCase({
-      getActions,
-      ...other
-    }: { getActions?: () => React.JSX.Element[] } & Partial<DataGridProps>) {
-      return (
-        <div style={{ width: 300, height: 300 }}>
-          <DataGrid
-            {...baselineProps}
-            rows={[{ id: 1 }]}
-            columns={[
-              {
-                field: 'id',
-              },
-              {
-                field: 'actions',
-                type: 'actions',
-                getActions,
-              },
-            ]}
-            {...other}
-          />
-        </div>
-      );
-    }
-
-    it.skipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
-      expect(() => {
-        render(
-          <ErrorBoundary>
-            <TestCase />
-          </ErrorBoundary>,
-        );
-      }).toErrorDev([
-        'MUI X: Missing the `getActions` property in the `GridColDef`.',
-        reactMajor < 19 && 'MUI X: Missing the `getActions` property in the `GridColDef`.',
-        reactMajor < 19 && 'The above error occurred in the <GridActionsCell> component',
-      ]);
-    });
-
-    it('should call getActions with the row params', () => {
-      const getActions = stub().returns([]);
-      render(<TestCase getActions={getActions} />);
-      expect(getActions.args[0][0].id).to.equal(1);
-      expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
-    });
-
-    it('should always show the actions not marked as showInMenu', () => {
-      render(
-        <TestCase
-          getActions={() => [
-            <GridActionsCellItem icon={<span />} label="delete" />,
-            <GridActionsCellItem label="print" showInMenu />,
-          ]}
-        />,
-      );
-      expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
-      expect(screen.queryByText('print')).to.equal(null);
-    });
-
-    it('should show in a menu the actions marked as showInMenu', async () => {
-      const { user } = render(
-        <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
-      );
-      expect(screen.queryByText('print')).to.equal(null);
-      await user.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(screen.queryByText('print')).not.to.equal(null);
-    });
-
-    it('should not select the row when clicking in an action', async () => {
-      const { user } = render(
-        <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
-      );
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-      await user.click(screen.getByRole('menuitem', { name: 'print' }));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-    });
-
-    it('should not select the row when clicking in a menu action', async () => {
-      const { user } = render(
-        <TestCase
-          getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
-        />,
-      );
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-      await user.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(screen.queryByText('print')).not.to.equal(null);
-
-      await user.click(screen.getByText('print'));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-    });
-
-    it('should not select the row when opening the menu', async () => {
-      const { user } = render(
-        <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
-      );
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-      await user.click(screen.getByRole('menuitem', { name: 'more' }));
-      expect(getRow(0)).not.to.have.class('Mui-selected');
-    });
-
-    it('should close other menus before opening a new one', async () => {
-      const { user } = render(
-        <TestCase
-          rows={[{ id: 1 }, { id: 2 }]}
-          getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
-        />,
-      );
-      expect(screen.queryAllByRole('menu')).to.have.length(2);
-
-      const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
-      await user.click(more1);
-      await waitFor(() => {
-        expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
-      });
-
-      const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
-      await user.click(more2);
-      await waitFor(() => {
-        expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
-      });
-    });
-
-    it('should allow to move focus to another cell with the arrow keys', async () => {
-      const { user } = render(
-        <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
-      );
-      await user.click(getCell(0, 0));
-      expect(getActiveCell()).to.equal('0-0');
-
-      await user.keyboard('{ArrowRight}');
-      const printButton = screen.getByRole('menuitem', { name: 'print' });
-      expect(printButton).toHaveFocus();
-
-      await user.keyboard('{ArrowLeft}');
-      expect(getActiveCell()).to.equal('0-0');
-    });
-
-    it('should focus the first item when opening the menu', async () => {
-      const { user } = render(
-        <TestCase
-          getActions={() => [
-            <GridActionsCellItem icon={<span />} label="print" showInMenu />,
-            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
-          ]}
-        />,
-      );
-      const moreButton = screen.getByRole('menuitem', { name: 'more' });
-      await user.click(moreButton);
-
-      const printButton = screen.queryByRole('menuitem', { name: 'print' });
-      expect(printButton).toHaveFocus();
-    });
-
-    it('should allow to navigate between actions using the arrow keys', async () => {
-      const { user } = render(
-        <TestCase
-          getActions={() => [
-            <GridActionsCellItem icon={<span />} label="print" />,
-            <GridActionsCellItem icon={<span />} label="delete" />,
-          ]}
-        />,
-      );
-      const firstCell = getCell(0, 0);
-      await user.click(firstCell);
-      expect(getActiveCell()).to.equal('0-0');
-
-      await user.keyboard('{ArrowRight}');
-      const printButton = screen.getByRole('menuitem', { name: 'print' });
-      expect(printButton).toHaveFocus();
-
-      await user.keyboard('{ArrowRight}');
-      const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
-      expect(deleteButton).toHaveFocus();
-
-      await user.keyboard('{ArrowLeft}');
-      expect(printButton).toHaveFocus();
-
-      await user.keyboard('{ArrowLeft}');
-      expect(firstCell).toHaveFocus();
-    });
-
-    it('should not move focus to first item when clicking in another item', async () => {
-      const { user } = render(
-        <TestCase
-          getActions={() => [
-            <GridActionsCellItem icon={<span />} label="print" />,
-            <GridActionsCellItem icon={<span />} label="delete" />,
-          ]}
-        />,
-      );
-      const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
-      await user.click(deleteButton);
-      expect(deleteButton).toHaveFocus();
-    });
-
-    it('should set the correct tabIndex to the focused button', async () => {
-      const { user } = render(
-        <TestCase
-          getActions={() => [
-            <GridActionsCellItem icon={<span />} label="print" />,
-            <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
-          ]}
-        />,
-      );
-      const firstCell = getCell(0, 0);
-      const secondCell = getCell(0, 1);
-      await user.click(firstCell);
-
-      await user.keyboard('{ArrowRight}');
-      expect(secondCell).to.have.property('tabIndex', -1);
-
-      const printButton = screen.getByRole('menuitem', { name: 'print' });
-      const menuButton = screen.getByRole('menuitem', { name: 'more' });
-      expect(printButton).to.have.property('tabIndex', 0);
-      expect(menuButton).to.have.property('tabIndex', -1);
-
-      await user.click(printButton);
-      await user.keyboard('{ArrowRight}');
-      expect(printButton).to.have.property('tabIndex', -1);
-      expect(menuButton).to.have.property('tabIndex', 0);
-    });
-
-    it('should focus the last button if the clicked button removes itself', async () => {
-      let canDelete = true;
-      function Test() {
+    describe('getActions', () => {
+      function TestCase({
+        getActions,
+        ...other
+      }: { getActions?: () => React.JSX.Element[] } & Partial<DataGridProps>) {
         return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              rows={[{ id: 1 }]}
+              columns={[
+                {
+                  field: 'id',
+                },
+                {
+                  field: 'actions',
+                  type: 'actions',
+                  getActions,
+                },
+              ]}
+              {...other}
+            />
+          </div>
+        );
+      }
+
+      it.skipIf(!isJSDOM)('should throw an error if getActions is missing', () => {
+        expect(() => {
+          render(
+            <ErrorBoundary>
+              <TestCase />
+            </ErrorBoundary>,
+          );
+        }).toErrorDev([
+          reactMajor >= 19 && 'MUI X: Missing the `getActions` property in the `GridColDef`.',
+          reactMajor < 19 && 'The above error occurred in the <GridActionsCellWrapper> component',
+        ]);
+      });
+
+      it('should call getActions with the row params', () => {
+        const getActions = stub().returns([]);
+        render(<TestCase getActions={getActions} />);
+        expect(getActions.args[0][0].id).to.equal(1);
+        expect(getActions.args[0][0].row).to.deep.equal({ id: 1 });
+      });
+
+      it('should always show the actions not marked as showInMenu', () => {
+        render(
           <TestCase
-            getActions={() =>
-              canDelete
-                ? [
-                    <GridActionsCellItem icon={<span />} label="print" />,
+            getActions={() => [
+              <GridActionsCellItem key={1} icon={<span />} label="delete" />,
+              <GridActionsCellItem key={2} label="print" showInMenu />,
+            ]}
+          />,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByText('print')).to.equal(null);
+      });
+
+      it('should show in a menu the actions marked as showInMenu', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [<GridActionsCellItem key={1} label="print" showInMenu />]}
+          />,
+        );
+        expect(screen.queryByText('print')).to.equal(null);
+        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        expect(screen.queryByText('print')).not.to.equal(null);
+      });
+
+      it('should not select the row when clicking in an action', async () => {
+        const { user } = render(
+          <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+        );
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+        await user.click(screen.getByRole('menuitem', { name: 'print' }));
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
+
+      it('should not select the row when clicking in a menu action', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [<GridActionsCellItem icon={<span />} label="print" showInMenu />]}
+          />,
+        );
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        expect(screen.queryByText('print')).not.to.equal(null);
+
+        await user.click(screen.getByText('print'));
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
+
+      it('should not select the row when opening the menu', async () => {
+        const { user } = render(
+          <TestCase getActions={() => [<GridActionsCellItem label="print" showInMenu />]} />,
+        );
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
+
+      it('should close other menus before opening a new one', async () => {
+        const { user } = render(
+          <TestCase
+            rows={[{ id: 1 }, { id: 2 }]}
+            getActions={() => [<GridActionsCellItem label="print" showInMenu />]}
+          />,
+        );
+        expect(screen.queryAllByRole('menu')).to.have.length(2);
+
+        const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
+        await user.click(more1);
+        await waitFor(() => {
+          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+        });
+
+        const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
+        await user.click(more2);
+        await waitFor(() => {
+          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+        });
+      });
+
+      it('should allow to move focus to another cell with the arrow keys', async () => {
+        const { user } = render(
+          <TestCase getActions={() => [<GridActionsCellItem icon={<span />} label="print" />]} />,
+        );
+        await user.click(getCell(0, 0));
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(getActiveCell()).to.equal('0-0');
+      });
+
+      it('should focus the first item when opening the menu', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem icon={<span />} label="print" showInMenu />,
+              <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+            ]}
+          />,
+        );
+        const moreButton = screen.getByRole('menuitem', { name: 'more' });
+        await user.click(moreButton);
+
+        const printButton = screen.queryByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+      });
+
+      it('should allow to navigate between actions using the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem icon={<span />} label="print" />,
+              <GridActionsCellItem icon={<span />} label="delete" />,
+            ]}
+          />,
+        );
+        const firstCell = getCell(0, 0);
+        await user.click(firstCell);
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+
+        await user.keyboard('{ArrowRight}');
+        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        expect(deleteButton).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(printButton).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(firstCell).toHaveFocus();
+      });
+
+      it('should not move focus to first item when clicking in another item', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem icon={<span />} label="print" />,
+              <GridActionsCellItem icon={<span />} label="delete" />,
+            ]}
+          />,
+        );
+        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        await user.click(deleteButton);
+        expect(deleteButton).toHaveFocus();
+      });
+
+      it('should set the correct tabIndex to the focused button', async () => {
+        const { user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem icon={<span />} label="print" />,
+              <GridActionsCellItem icon={<span />} label="delete" showInMenu />,
+            ]}
+          />,
+        );
+        const firstCell = getCell(0, 0);
+        const secondCell = getCell(0, 1);
+        await user.click(firstCell);
+
+        await user.keyboard('{ArrowRight}');
+        expect(secondCell).to.have.property('tabIndex', -1);
+
+        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        const menuButton = screen.getByRole('menuitem', { name: 'more' });
+        expect(printButton).to.have.property('tabIndex', 0);
+        expect(menuButton).to.have.property('tabIndex', -1);
+
+        await user.click(printButton);
+        await user.keyboard('{ArrowRight}');
+        expect(printButton).to.have.property('tabIndex', -1);
+        expect(menuButton).to.have.property('tabIndex', 0);
+      });
+
+      it('should focus the last button if the clicked button removes itself', async () => {
+        function Test() {
+          const [canDelete, setCanDelete] = React.useState(true);
+
+          return (
+            <TestCase
+              getActions={() =>
+                canDelete
+                  ? [
+                      <GridActionsCellItem icon={<span />} label="print" />,
+                      <GridActionsCellItem
+                        icon={<span />}
+                        label="delete"
+                        onClick={() => {
+                          setCanDelete(false);
+                        }}
+                      />,
+                    ]
+                  : [<GridActionsCellItem icon={<span />} label="print" />]
+              }
+            />
+          );
+        }
+        const { user } = render(<Test />);
+        await user.click(screen.getByRole('menuitem', { name: 'delete' }));
+        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      });
+
+      it('should focus the last button if the currently focused button is removed', async () => {
+        const { setProps, user } = render(
+          <TestCase
+            getActions={() => [
+              <GridActionsCellItem icon={<span />} label="print" />,
+              <GridActionsCellItem icon={<span />} label="delete" />,
+            ]}
+          />,
+        );
+        await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
+        expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
+        await act(async () => {
+          setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
+        });
+        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      });
+    });
+
+    describe('renderCell', () => {
+      function TestCase({
+        renderCell,
+        ...other
+      }: {
+        renderCell?: (params: GridRenderCellParams) => React.JSX.Element;
+      } & Partial<DataGridProps>) {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              {...baselineProps}
+              rows={[{ id: 1 }]}
+              columns={[{ field: 'id' }, { field: 'actions', type: 'actions', renderCell }]}
+              {...other}
+            />
+          </div>
+        );
+      }
+
+      it('should always show the actions not marked as showInMenu', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByText('print')).to.equal(null);
+      });
+
+      it('should show in a menu the actions marked as showInMenu', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByText('print')).to.equal(null);
+        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        expect(screen.queryByText('print')).not.to.equal(null);
+      });
+
+      it('should not select the row when clicking in an action', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+        await user.click(screen.getByRole('menuitem', { name: 'print' }));
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
+
+      it('should not select the row when clicking in a menu action', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        expect(screen.queryByText('print')).not.to.equal(null);
+
+        await user.click(screen.getByText('print'));
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
+
+      it('should not select the row when opening the menu', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+        await user.click(screen.getByRole('menuitem', { name: 'more' }));
+        expect(getRow(0)).not.to.have.class('Mui-selected');
+      });
+
+      it('should close other menus before opening a new one', async () => {
+        const { user } = render(
+          <TestCase
+            rows={[{ id: 1 }, { id: 2 }]}
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryAllByRole('menu')).to.have.length(2);
+
+        const more1 = screen.getAllByRole('menuitem', { name: 'more' })[0];
+        await user.click(more1);
+        await waitFor(() => {
+          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+        });
+
+        const more2 = screen.getAllByRole('menuitem', { name: 'more' })[1];
+        await user.click(more2);
+        await waitFor(() => {
+          expect(screen.queryAllByRole('menu')).to.have.length(2 + 1);
+        });
+      });
+
+      it('should allow to move focus to another cell with the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        await user.click(getCell(0, 0));
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(getActiveCell()).to.equal('0-0');
+      });
+
+      it('should focus the first item when opening the menu', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" showInMenu />
+                <GridActionsCellItem icon={<span />} label="delete" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        const moreButton = screen.getByRole('menuitem', { name: 'more' });
+        await user.click(moreButton);
+
+        const printButton = screen.queryByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+      });
+
+      it('should allow to navigate between actions using the arrow keys', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+                <GridActionsCellItem icon={<span />} label="delete" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        const firstCell = getCell(0, 0);
+        await user.click(firstCell);
+        expect(getActiveCell()).to.equal('0-0');
+
+        await user.keyboard('{ArrowRight}');
+        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        expect(printButton).toHaveFocus();
+
+        await user.keyboard('{ArrowRight}');
+        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        expect(deleteButton).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(printButton).toHaveFocus();
+
+        await user.keyboard('{ArrowLeft}');
+        expect(firstCell).toHaveFocus();
+      });
+
+      it('should not move focus to first item when clicking in another item', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+                <GridActionsCellItem icon={<span />} label="delete" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        const deleteButton = screen.getByRole('menuitem', { name: 'delete' });
+        await user.click(deleteButton);
+        expect(deleteButton).toHaveFocus();
+      });
+
+      it('should set the correct tabIndex to the focused button', async () => {
+        const { user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+                <GridActionsCellItem icon={<span />} label="delete" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        const firstCell = getCell(0, 0);
+        const secondCell = getCell(0, 1);
+        await user.click(firstCell);
+
+        await user.keyboard('{ArrowRight}');
+        expect(secondCell).to.have.property('tabIndex', -1);
+
+        const printButton = screen.getByRole('menuitem', { name: 'print' });
+        const menuButton = screen.getByRole('menuitem', { name: 'more' });
+        expect(printButton).to.have.property('tabIndex', 0);
+        expect(menuButton).to.have.property('tabIndex', -1);
+
+        await user.click(printButton);
+        await user.keyboard('{ArrowRight}');
+        expect(printButton).to.have.property('tabIndex', -1);
+        expect(menuButton).to.have.property('tabIndex', 0);
+      });
+
+      it('should focus the last button if the clicked button removes itself', async () => {
+        function Test() {
+          const [canDelete, setCanDelete] = React.useState(true);
+
+          return (
+            <TestCase
+              renderCell={(params) => (
+                <GridActionsCell {...params}>
+                  <GridActionsCellItem icon={<span />} label="print" />
+                  {canDelete && (
                     <GridActionsCellItem
                       icon={<span />}
                       label="delete"
                       onClick={() => {
-                        canDelete = false;
+                        setCanDelete(false);
                       }}
-                    />,
-                  ]
-                : [<GridActionsCellItem icon={<span />} label="print" />]
-            }
-          />
-        );
-      }
-      const { user } = render(<Test />);
-      await user.click(screen.getByRole('menuitem', { name: 'delete' }));
-      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
-    });
+                    />
+                  )}
+                </GridActionsCell>
+              )}
+            />
+          );
+        }
+        const { user } = render(<Test />);
+        await user.click(screen.getByRole('menuitem', { name: 'delete' }));
+        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      });
 
-    it('should focus the last button if the currently focused button is removed', async () => {
-      const { setProps, user } = render(
-        <TestCase
-          getActions={() => [
-            <GridActionsCellItem icon={<span />} label="print" />,
-            <GridActionsCellItem icon={<span />} label="delete" />,
-          ]}
-        />,
-      );
-      await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
-      expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
-      setProps({ getActions: () => [<GridActionsCellItem icon={<span />} label="print" />] }); // Sets focusedButtonIndex=0
-      expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      it('should focus the last button if the currently focused button is removed', async () => {
+        const { setProps, user } = render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+                <GridActionsCellItem icon={<span />} label="delete" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        await user.click(screen.getByRole('menuitem', { name: 'delete' })); // Sets focusedButtonIndex=1
+        expect(screen.getByRole('menuitem', { name: 'delete' })).toHaveFocus();
+        await act(async () => {
+          setProps({
+            renderCell: (params: GridRenderCellParams) => (
+              <GridActionsCell {...params}>
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            ),
+          }); // Sets focusedButtonIndex=0
+        });
+        expect(screen.getByRole('menuitem', { name: 'print' })).toHaveFocus();
+      });
+
+      it('should show a warning when using invalid child types without `suppressChildrenValidation`', () => {
+        function CustomComponent() {
+          return <div>Custom</div>;
+        }
+
+        expect(() => {
+          render(
+            <TestCase
+              renderCell={(params) => (
+                <GridActionsCell {...params}>
+                  <CustomComponent />
+                </GridActionsCell>
+              )}
+            />,
+          );
+        }).toErrorDev(
+          'MUI X: Invalid child type in `GridActionsCell`. Expected `GridActionsCellItem` or `React.Fragment`, got `CustomComponent`.',
+        );
+      });
+
+      it('should allow custom components when `suppressChildrenValidation` is true', () => {
+        function CustomComponent() {
+          return <button type="button">Custom Action</button>;
+        }
+
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params} suppressChildrenValidation>
+                <CustomComponent />
+                <GridActionsCellItem icon={<span />} label="print" />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByText('Custom Action')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+      });
+
+      it('should allow mixing custom elements with GridActionsCellItem when `suppressChildrenValidation` is true', () => {
+        function CustomIcon() {
+          return <span>O</span>;
+        }
+
+        function CustomElement() {
+          return <div>Custom</div>;
+        }
+
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params} suppressChildrenValidation>
+                <CustomIcon />
+                <CustomElement />
+                <GridActionsCellItem icon={<span />} label="delete" />
+                <GridActionsCellItem label="print" showInMenu />
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByText('O')).not.to.equal(null);
+        expect(screen.queryByText('Custom')).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'more' })).not.to.equal(null);
+      });
+
+      it('should allow React.Fragment as children', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <React.Fragment>
+                  <GridActionsCellItem icon={<span />} label="print" />
+                  <GridActionsCellItem icon={<span />} label="delete" />
+                </React.Fragment>
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+      });
+
+      it('should allow nested React.Fragment as children', () => {
+        render(
+          <TestCase
+            renderCell={(params) => (
+              <GridActionsCell {...params}>
+                <React.Fragment>
+                  <GridActionsCellItem icon={<span />} label="print" />
+                  <React.Fragment>
+                    <GridActionsCellItem icon={<span />} label="delete" />
+                    <GridActionsCellItem icon={<span />} label="copy" />
+                  </React.Fragment>
+                </React.Fragment>
+              </GridActionsCell>
+            )}
+          />,
+        );
+        expect(screen.queryByRole('menuitem', { name: 'print' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'delete' })).not.to.equal(null);
+        expect(screen.queryByRole('menuitem', { name: 'copy' })).not.to.equal(null);
+      });
     });
   });
 

@@ -1,8 +1,0 @@
-<StandaloneView
-  events={events}
-  resources={resources}
-  defaultVisibleDate={defaultVisibleDate}
-  onEventsChange={setEvents}
->
-  <AgendaView className={classes.Container} />
-</StandaloneView>

@@ -41,6 +41,7 @@ import CellSelectionGrid from '../cell-selection/CellSelectionRangeStyling';
 import HeaderFilteringDataGridPro from '../filtering/HeaderFilteringDataGridPro';
 import ClipboardPaste from '../clipboard/ClipboardPaste';
 import GridPivotingInitialState from '../pivoting/GridPivotingInitialState';
+import GridChartsIntegrationPivoting from '../charts-integration/GridChartsIntegrationPivoting';
 import AssistantWithExamples from '../ai-assistant/AssistantWithExamples';
 
 export const featuresSet = [
@@ -231,6 +232,15 @@ export const featuresSet = [
   },
   {
     id: 21,
+    name: 'Charts integration',
+    description: 'Visualize data with charts.',
+    plan: 'Premium',
+    detailPage: '/charts-integration/',
+    demo: <GridChartsIntegrationPivoting />,
+    linkToCode: '/charts-integration/#system-GridChartsIntegrationPivoting.tsx',
+  },
+  {
+    id: 22,
     name: 'AI Assistant',
     description: 'Translate natural language into a set of grid state updates.',
     plan: 'Premium',
@@ -570,6 +580,7 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
+        scrollbarSize={0}
         getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',

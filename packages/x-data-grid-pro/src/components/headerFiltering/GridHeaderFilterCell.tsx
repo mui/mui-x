@@ -89,9 +89,9 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     fontSize: '14px',
   },
   [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: vars.spacing(0.5),
-    paddingBottom: vars.spacing(0.5),
-    height: 23,
+    paddingTop: vars.spacing(0.25),
+    paddingBottom: vars.spacing(0.25),
+    height: 20,
   },
 });
 
@@ -141,6 +141,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   singleSelect: GridFilterInputSingleSelect,
   actions: null,
   custom: null,
+  longText: GridFilterInputValue,
 };
 
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {
@@ -223,10 +224,10 @@ const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProp
         focusableElement = inputRef.current;
       }
       const elementToFocus = focusableElement || cellRef.current;
+
+      const scrollPosition = apiRef.current.getScrollPosition();
       elementToFocus?.focus();
-      if (apiRef.current.columnHeadersContainerRef.current) {
-        apiRef.current.columnHeadersContainerRef.current.scrollLeft = 0;
-      }
+      apiRef.current.scroll(scrollPosition);
     }
   }, [InputComponent, apiRef, hasFocus, isEditing, isMenuOpen]);
 

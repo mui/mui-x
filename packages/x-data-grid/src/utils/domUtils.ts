@@ -266,6 +266,13 @@ export function findGridHeader(api: GridPrivateApiCommunity, field: string) {
   );
 }
 
+export function findGridHeaderFilter(api: GridPrivateApiCommunity, field: string) {
+  const headers = api.columnHeadersContainerRef!.current!;
+  return headers.querySelector(
+    `:scope > .${gridClasses.headerFilterRow} > [data-field="${escapeOperandAttributeSelector(field)}"]`,
+  );
+}
+
 export function findGridCells(api: GridPrivateApiCommunity, field: string) {
   const container = api.virtualScrollerRef!.current!;
   return Array.from(

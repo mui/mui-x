@@ -14,7 +14,7 @@ import { gridFocusCellSelector, gridTabIndexCellSelector } from '../focus/gridFo
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridListColumnSelector } from '../listView/gridListViewSelectors';
 import { gridRowNodeSelector } from './gridRowsSelector';
-import { getRowValue as getRowValueFn } from './gridRowsUtils';
+import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
 export class MissingRowIdError extends Error {}
 
@@ -29,6 +29,7 @@ export class MissingRowIdError extends Error {}
 export function useGridParamsApi(
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: DataGridProcessedProps,
+  configuration: GridConfiguration,
 ) {
   const getColumnHeaderParams = React.useCallback<GridParamsApi['getColumnHeaderParams']>(
     (field) => ({
@@ -57,11 +58,26 @@ export function useGridParamsApi(
   );
 
   const getCellParamsForRow = React.useCallback<GridParamsPrivateApi['getCellParamsForRow']>(
-    (id, field, row, { cellMode, colDef, hasFocus, rowNode, tabIndex }) => {
-      const rawValue = row[field];
-      const value = colDef?.valueGetter
-        ? colDef.valueGetter(rawValue as never, row, colDef, apiRef)
-        : rawValue;
+    (
+      id,
+      field,
+      row,
+      {
+        cellMode,
+        colDef,
+        hasFocus,
+        rowNode,
+        tabIndex,
+        value: forcedValue,
+        formattedValue: forcedFormattedValue,
+      },
+    ) => {
+      const value =
+        forcedValue !== undefined ? forcedValue : apiRef.current.getRowValue(row, colDef);
+      const formattedValue =
+        forcedFormattedValue !== undefined
+          ? forcedFormattedValue
+          : apiRef.current.getRowFormattedValue(row, colDef);
 
       const params: GridCellParams<any, any, any, any> = {
         id,
@@ -73,13 +89,10 @@ export function useGridParamsApi(
         hasFocus,
         tabIndex,
         value,
-        formattedValue: value,
+        formattedValue,
         isEditable: false,
         api: apiRef.current,
       };
-      if (colDef && colDef.valueFormatter) {
-        params.formattedValue = colDef.valueFormatter(value as never, row, colDef, apiRef);
-      }
       params.isEditable = colDef && apiRef.current.isCellEditable(params);
 
       return params;
@@ -114,42 +127,6 @@ export function useGridParamsApi(
     [apiRef, props.listView, props.listViewColumn?.field],
   );
 
-  const getCellValue = React.useCallback<GridParamsApi['getCellValue']>(
-    (id, field) => {
-      const colDef = apiRef.current.getColumn(field);
-
-      const row = apiRef.current.getRow(id);
-      if (!row) {
-        throw new MissingRowIdError(`No row with id #${id} found`);
-      }
-
-      if (!colDef || !colDef.valueGetter) {
-        return row[field];
-      }
-
-      return colDef.valueGetter(row[colDef.field] as never, row, colDef, apiRef);
-    },
-    [apiRef],
-  );
-
-  const getRowValue = React.useCallback<GridParamsApi['getRowValue']>(
-    (row, colDef) => getRowValueFn(row, colDef, apiRef),
-    [apiRef],
-  );
-
-  const getRowFormattedValue = React.useCallback<GridParamsApi['getRowFormattedValue']>(
-    (row, colDef) => {
-      const value = getRowValue(row, colDef);
-
-      if (!colDef || !colDef.valueFormatter) {
-        return value;
-      }
-
-      return colDef.valueFormatter(value as never, row, colDef, apiRef);
-    },
-    [apiRef, getRowValue],
-  );
-
   const getColumnHeaderElement = React.useCallback<GridParamsApi['getColumnHeaderElement']>(
     (field) => {
       if (!apiRef.current.rootElementRef!.current) {
@@ -179,12 +156,13 @@ export function useGridParamsApi(
     [apiRef],
   );
 
+  const overridableParamsMethods = configuration.hooks.useGridParamsOverridableMethods(apiRef);
   const paramsApi: GridParamsApi = {
-    getCellValue,
+    getCellValue: overridableParamsMethods.getCellValue,
     getCellParams,
     getCellElement,
-    getRowValue,
-    getRowFormattedValue,
+    getRowValue: overridableParamsMethods.getRowValue,
+    getRowFormattedValue: overridableParamsMethods.getRowFormattedValue,
     getRowParams,
     getRowElement,
     getColumnHeaderParams,

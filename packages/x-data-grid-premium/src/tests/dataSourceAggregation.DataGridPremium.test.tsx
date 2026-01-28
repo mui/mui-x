@@ -13,7 +13,7 @@ import {
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid-premium';
 import { spy } from 'sinon';
-import { getColumnHeaderCell } from 'test/utils/helperFn';
+import { getColumnHeaderCell, getCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => {
@@ -21,6 +21,7 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
 
   let apiRef: RefObject<GridApi | null>;
   const fetchRowsSpy = spy();
+  const editRowSpy = spy();
 
   // TODO: Resets strictmode calls, need to find a better fix for this, maybe an AbortController?
   function Reset() {
@@ -33,14 +34,27 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
   function TestDataSourceAggregation(
     props: Partial<DataGridPremiumProps> & {
       getAggregatedValue?: GridDataSource['getAggregatedValue'];
+      dataSetOptions?: Record<string, any>;
     },
   ) {
     apiRef = useGridApiRef();
-    const { getAggregatedValue: getAggregatedValueProp, ...rest } = props;
-    const { fetchRows, columns, isReady } = useMockServer<GridGetRowsResponse>(
-      { rowLength: 10, maxColumns: 1 },
+    const { getAggregatedValue: getAggregatedValueProp, dataSetOptions, ...other } = props;
+    const {
+      fetchRows,
+      columns: mockColumns,
+      isReady,
+      editRow,
+    } = useMockServer<GridGetRowsResponse>(
+      { rowLength: 10, maxColumns: 1, ...dataSetOptions },
       { useCursorPagination: false, minDelay: 0, maxDelay: 0, verbose: false },
     );
+
+    const columns = React.useMemo(() => {
+      return mockColumns.map((column) => ({
+        ...column,
+        editable: true,
+      }));
+    }, [mockColumns]);
 
     const dataSource: GridDataSource = React.useMemo(() => {
       return {
@@ -49,6 +63,8 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             filterModel: JSON.stringify(params.filterModel),
             sortModel: JSON.stringify(params.sortModel),
             paginationModel: JSON.stringify(params.paginationModel),
+            groupKeys: JSON.stringify(params.groupKeys),
+            groupFields: JSON.stringify(params.groupFields),
             aggregationModel: JSON.stringify(params.aggregationModel),
           });
 
@@ -64,13 +80,16 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             aggregateRow: getRowsResponse.aggregateRow,
           };
         },
-        getAggregatedValue:
-          getAggregatedValueProp ??
-          ((row, field) => {
-            return row[`${field}Aggregate`];
-          }),
+        getGroupKey: (row) => row.group,
+        getChildrenCount: (row) => row.descendantCount,
+        getAggregatedValue: getAggregatedValueProp ?? ((row, field) => row[field]),
+        updateRow: async (params) => {
+          editRowSpy(params);
+          const syncedRow = await editRow(params.rowId, params.updatedRow);
+          return syncedRow;
+        },
       };
-    }, [fetchRows, getAggregatedValueProp]);
+    }, [fetchRows, editRow, getAggregatedValueProp]);
 
     if (!isReady) {
       return null;
@@ -91,14 +110,14 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
             max: { columnTypes: ['number', 'date', 'dateTime'] },
             size: {},
           }}
-          {...rest}
+          {...other}
         />
       </div>
     );
   }
 
   // TODO @MBilalShafi: Flaky test, fix it
-  it.skip('should show aggregation option in the column menu', async () => {
+  it.todo('should show aggregation option in the column menu', async () => {
     const dataSource = {
       getRows: async () => {
         fetchRowsSpy();
@@ -180,5 +199,47 @@ describe.skipIf(isJSDOM)('<DataGridPremium /> - Data source aggregation', () => 
     expect(apiRef.current?.state.aggregation.lookup[GRID_ROOT_GROUP_ID].id.value).to.equal(
       'Agg value',
     );
+  });
+
+  it('should re-fetch all parents when the leaf row is updated', async () => {
+    const { user } = render(
+      <TestDataSourceAggregation
+        dataSourceCache={null}
+        initialState={{
+          rowGrouping: { model: ['company'] },
+          aggregation: { model: { gross: 'sum' } },
+        }}
+        dataSetOptions={{
+          dataSet: 'Movies',
+          rowLength: 100,
+          editable: true,
+          maxColumns: undefined,
+        }}
+      />,
+    );
+
+    expect(fetchRowsSpy.callCount).to.equal(1);
+    await waitFor(() => {
+      expect(Object.keys(apiRef.current!.state.rows.tree).length).to.be.greaterThan(1);
+    });
+
+    const cell11 = getCell(0, 0);
+    await user.click(within(cell11).getByRole('button'));
+
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(2);
+    });
+
+    const cell = getCell(1, apiRef.current!.state.columns.orderedFields.indexOf('gross'));
+    await user.click(cell);
+    expect(cell).toHaveFocus();
+
+    await user.keyboard('{Enter}{Delete}1{Enter}');
+
+    expect(editRowSpy.callCount).to.equal(1);
+    // Two additional calls should be made
+    await waitFor(() => {
+      expect(fetchRowsSpy.callCount).to.equal(4);
+    });
   });
 });

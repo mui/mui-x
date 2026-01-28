@@ -1,5 +1,6 @@
+'use client';
 import useForkRef from '@mui/utils/useForkRef';
-import * as React from 'react';
+import type * as React from 'react';
 import { useAnimateInternal } from '../../internals/animation/useAnimateInternal';
 
 export interface UseAnimateParams<Props extends {}, Elem extends Element, T extends {} = Props> {
@@ -91,17 +92,17 @@ export function useAnimate<Props extends {}, Elem extends Element, T extends {} 
 ): UseAnimateReturn<Elem, T> {
   const transform = transformProps ?? ((p) => p);
 
-  const animateRef = useAnimateInternal<Props, Elem>(props, {
+  const [animateRef, lastInterpolatedProps] = useAnimateInternal<Props, Elem>(props, {
     initialProps,
     createInterpolator,
     applyProps: (element, animatedProps) => applyProps(element, transform(animatedProps)),
     skip,
   });
 
-  const usedProps = skip ? props : initialProps;
+  const usedProps = skip ? transformProps(props) : transformProps(lastInterpolatedProps);
 
   return {
-    ...transformProps(usedProps),
+    ...usedProps,
     ref: useForkRef(animateRef, ref),
   };
 }

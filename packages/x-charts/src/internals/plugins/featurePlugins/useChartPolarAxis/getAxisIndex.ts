@@ -1,5 +1,5 @@
-import { isBandScale } from '../../../isBandScale';
-import { PolarAxisDefaultized } from '../../../../models/axis';
+import { isOrdinalScale } from '../../../scaleGuards';
+import { type PolarAxisDefaultized } from '../../../../models/axis';
 import { clampAngleRad } from '../../../clampAngle';
 
 /**
@@ -9,7 +9,7 @@ import { clampAngleRad } from '../../../clampAngle';
 export function getAxisIndex(axisConfig: PolarAxisDefaultized, pointerValue: number): number {
   const { scale, data: axisData, reverse } = axisConfig;
 
-  if (!isBandScale(scale)) {
+  if (!isOrdinalScale(scale)) {
     throw new Error('MUI X Charts: getAxisValue is not implemented for polare continuous axes.');
   }
 

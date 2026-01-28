@@ -1,0 +1,89 @@
+{
+  "componentDescription": "Sankey Chart component\n\nDisplays a Sankey diagram, visualizing flows between nodes where the width\nof the links is proportional to the flow quantity.",
+  "propDescriptions": {
+    "classes": { "description": "Classes applied to the various elements." },
+    "colors": { "description": "Color palette used to colorize multiple series." },
+    "experimentalFeatures": {
+      "description": "Options to enable features planned for the next major."
+    },
+    "height": {
+      "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
+    },
+    "highlightedItem": {
+      "description": "The highlighted item. Used when the highlight is controlled."
+    },
+    "id": {
+      "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
+    "localeText": { "description": "Localized text for chart components." },
+    "margin": {
+      "description": "The margin between the SVG and the drawing area. It&#39;s used for leaving some space for extra information such as the x- and y-axis or legend.<br>Accepts a <code>number</code> to be used on all sides or an object with the optional properties: <code>top</code>, <code>bottom</code>, <code>left</code>, and <code>right</code>."
+    },
+    "onHighlightChange": {
+      "description": "The callback fired when the highlighted item changes.",
+      "typeDescriptions": {
+        "highlightedItem": {
+          "name": "highlightedItem",
+          "description": "The newly highlighted item."
+        }
+      }
+    },
+    "onLinkClick": {
+      "description": "Callback fired when a sankey item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "link": { "name": "link", "description": "The sankey link identifier." }
+      }
+    },
+    "onNodeClick": {
+      "description": "Callback fired when a sankey item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The event source of the callback." },
+        "node": { "name": "node", "description": "The sankey node identifier." }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
+    "series": {
+      "description": "The series to display in the Sankey chart. A single object is expected."
+    },
+    "slotProps": { "description": "The props used for each component slot." },
+    "slots": { "description": "Overridable component slots." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
+    "width": {
+      "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
+    }
+  },
+  "classDescriptions": {
+    "linkLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the link label container"
+    },
+    "links": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the links container"
+    },
+    "nodeLabels": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the node label container"
+    },
+    "nodes": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "the nodes container"
+    },
+    "root": { "description": "Styles applied to the root element." }
+  },
+  "slotDescriptions": {
+    "baseButton": "",
+    "baseIconButton": "",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip popper."
+  }
+}

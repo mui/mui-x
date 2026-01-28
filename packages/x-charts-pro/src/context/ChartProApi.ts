@@ -1,21 +1,26 @@
-import { ChartAnyPluginSignature, ChartPublicAPI } from '@mui/x-charts/internals';
-import { HeatmapPluginsSignatures } from '../Heatmap/Heatmap.plugins';
-import { LineChartProPluginsSignatures } from '../LineChartPro/LineChartPro.plugins';
-import { ScatterChartProPluginsSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
-import { BarChartProPluginsSignatures } from '../BarChartPro/BarChartPro.plugins';
-import { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
-import { FunnelChartPluginsSignatures } from '../FunnelChart/FunnelChart.plugins';
-import { RadarChartProPluginsSignatures } from '../RadarChartPro/RadarChartPro.plugins';
-import { PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
+import { type ChartAnyPluginSignature, type ChartPublicAPI } from '@mui/x-charts/internals';
+import { type HeatmapPluginSignatures } from '../Heatmap/Heatmap.plugins';
+import { type LineChartProPluginSignatures } from '../LineChartPro/LineChartPro.plugins';
+import { type ScatterChartProPluginSignatures } from '../ScatterChartPro/ScatterChartPro.plugins';
+import { type BarChartProPluginSignatures } from '../BarChartPro/BarChartPro.plugins';
+import {
+  type AllPluginSignatures,
+  type DefaultPluginSignatures,
+} from '../internals/plugins/allPlugins';
+import { type FunnelChartPluginSignatures } from '../FunnelChart/FunnelChart.plugins';
+import { type RadarChartProPluginSignatures } from '../RadarChartPro/RadarChartPro.plugins';
+import { type PieChartProPluginSignatures } from '../PieChartPro/PieChartPro.plugins';
+import { type SankeyChartPluginSignatures } from '../SankeyChart/SankeyChart.plugins';
 
 export type ProPluginsPerSeriesType = {
-  heatmap: HeatmapPluginsSignatures;
-  line: LineChartProPluginsSignatures;
-  scatter: ScatterChartProPluginsSignatures;
-  bar: BarChartProPluginsSignatures;
-  funnel: FunnelChartPluginsSignatures;
-  radar: RadarChartProPluginsSignatures;
+  heatmap: HeatmapPluginSignatures;
+  line: LineChartProPluginSignatures;
+  scatter: ScatterChartProPluginSignatures;
+  bar: BarChartProPluginSignatures;
+  funnel: FunnelChartPluginSignatures;
+  radar: RadarChartProPluginSignatures;
   pie: PieChartProPluginSignatures;
+  sankey: SankeyChartPluginSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
 };
@@ -29,8 +34,8 @@ export type ProPluginsPerSeriesType = {
  */
 export type ChartProApi<
   ChartType extends keyof ProPluginsPerSeriesType | undefined = undefined,
-  Signatures extends
-    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
-    ? ProPluginsPerSeriesType[ChartType]
-    : AllPluginSignatures,
+  Signatures extends readonly ChartAnyPluginSignature[] =
+    ChartType extends keyof ProPluginsPerSeriesType
+      ? ProPluginsPerSeriesType[ChartType]
+      : AllPluginSignatures,
 > = ChartPublicAPI<Signatures>;

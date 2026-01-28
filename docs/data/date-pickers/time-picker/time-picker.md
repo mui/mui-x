@@ -2,7 +2,7 @@
 productId: x-date-pickers
 title: React Time Picker component
 components: TimePicker, DesktopTimePicker, MobileTimePicker, StaticTimePicker, DigitalClock, MultiSectionDigitalClock, TimeClock
-githubLabel: 'scope: TimePicker'
+githubLabel: 'component: TimePicker'
 packageName: '@mui/x-date-pickers'
 materialDesign: https://m2.material.io/components/time-pickers
 ---
@@ -19,7 +19,7 @@ materialDesign: https://m2.material.io/components/time-pickers
 
 The component is built using the `TimeField` for the keyboard editing, the `DigitalClock` for the desktop view editing, and the `TimeClock` for the mobile view editing.
 
-Check-out their documentation page for more information:
+Check out their documentation page for more information:
 
 - [Time Field](/x/react-date-pickers/time-field/)
 - [Digital Clock](/x/react-date-pickers/digital-clock/)
@@ -58,7 +58,7 @@ The component is available in four variants:
 
 {{"demo": "ResponsiveTimePickers.js"}}
 
-By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer) matches.
+By default, the `TimePicker` component renders the desktop version if the media query [`@media (pointer: fine)`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/pointer) matches.
 This can be customized with the `desktopModeMediaQuery` prop.
 
 :::warning

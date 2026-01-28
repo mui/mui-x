@@ -1,13 +1,18 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
-import { PieArcPlot, PieArcPlotProps, PieArcPlotSlotProps, PieArcPlotSlots } from './PieArcPlot';
-import { PieArcLabelPlotSlots, PieArcLabelPlotSlotProps, PieArcLabelPlot } from './PieArcLabelPlot';
-import { getPercentageValue } from '../internals/getPercentageValue';
-import { getPieCoordinates } from './getPieCoordinates';
-import { usePieSeriesContext } from '../hooks/usePieSeries';
+import {
+  PieArcPlot,
+  type PieArcPlotProps,
+  type PieArcPlotSlotProps,
+  type PieArcPlotSlots,
+} from './PieArcPlot';
+import {
+  type PieArcLabelPlotSlots,
+  type PieArcLabelPlotSlotProps,
+  PieArcLabelPlot,
+} from './PieArcLabelPlot';
+import { usePieSeriesContext, usePieSeriesLayout } from '../hooks/usePieSeries';
 import { useSkipAnimation } from '../hooks/useSkipAnimation';
-import { useDrawingArea } from '../hooks';
 import { useUtilityClasses } from './pieClasses';
 
 export interface PiePlotSlots extends PieArcPlotSlots, PieArcLabelPlotSlots {}
@@ -40,7 +45,7 @@ export interface PiePlotProps extends Pick<PieArcPlotProps, 'skipAnimation' | 'o
 function PiePlot(props: PiePlotProps) {
   const { skipAnimation: inSkipAnimation, slots, slotProps, onItemClick } = props;
   const seriesData = usePieSeriesContext();
-  const { left, top, width, height } = useDrawingArea();
+  const seriesLayout = usePieSeriesLayout();
   const skipAnimation = useSkipAnimation(inSkipAnimation);
   const classes = useUtilityClasses();
 
@@ -53,41 +58,21 @@ function PiePlot(props: PiePlotProps) {
   return (
     <g>
       {seriesOrder.map((seriesId) => {
-        const {
-          innerRadius: innerRadiusParam,
-          outerRadius: outerRadiusParam,
-          cornerRadius,
-          paddingAngle,
-          data,
-          cx: cxParam,
-          cy: cyParam,
-          highlighted,
-          faded,
-        } = series[seriesId];
+        const { cornerRadius, paddingAngle, data, highlighted, faded } = series[seriesId];
 
-        const { cx, cy, availableRadius } = getPieCoordinates(
-          { cx: cxParam, cy: cyParam },
-          { width, height },
-        );
-
-        const outerRadius = getPercentageValue(
-          outerRadiusParam ?? availableRadius,
-          availableRadius,
-        );
-        const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
         return (
           <g
             key={seriesId}
             className={classes.series}
-            transform={`translate(${left + cx}, ${top + cy})`}
+            transform={`translate(${seriesLayout[seriesId].center.x}, ${seriesLayout[seriesId].center.y})`}
             data-series={seriesId}
           >
             <PieArcPlot
-              innerRadius={innerRadius}
-              outerRadius={outerRadius}
+              innerRadius={seriesLayout[seriesId].radius.inner}
+              outerRadius={seriesLayout[seriesId].radius.outer}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
-              id={seriesId}
+              seriesId={seriesId}
               data={data}
               skipAnimation={skipAnimation}
               highlighted={highlighted}
@@ -100,49 +85,22 @@ function PiePlot(props: PiePlotProps) {
         );
       })}
       {seriesOrder.map((seriesId) => {
-        const {
-          innerRadius: innerRadiusParam,
-          outerRadius: outerRadiusParam,
-          arcLabelRadius: arcLabelRadiusParam,
-          cornerRadius,
-          paddingAngle,
-          arcLabel,
-          arcLabelMinAngle,
-          data,
-          cx: cxParam,
-          cy: cyParam,
-        } = series[seriesId];
-
-        const { cx, cy, availableRadius } = getPieCoordinates(
-          { cx: cxParam, cy: cyParam },
-          { width, height },
-        );
-
-        const outerRadius = getPercentageValue(
-          outerRadiusParam ?? availableRadius,
-          availableRadius,
-        );
-        const innerRadius = getPercentageValue(innerRadiusParam ?? 0, availableRadius);
-
-        const arcLabelRadius =
-          arcLabelRadiusParam === undefined
-            ? (outerRadius + innerRadius) / 2
-            : getPercentageValue(arcLabelRadiusParam, availableRadius);
+        const { cornerRadius, paddingAngle, arcLabel, arcLabelMinAngle, data } = series[seriesId];
 
         return (
           <g
             key={seriesId}
             className={classes.seriesLabels}
-            transform={`translate(${left + cx}, ${top + cy})`}
+            transform={`translate(${seriesLayout[seriesId].center.x}, ${seriesLayout[seriesId].center.y})`}
             data-series={seriesId}
           >
             <PieArcLabelPlot
-              innerRadius={innerRadius}
-              outerRadius={outerRadius ?? availableRadius}
-              arcLabelRadius={arcLabelRadius}
+              innerRadius={seriesLayout[seriesId].radius.inner}
+              outerRadius={seriesLayout[seriesId].radius.outer}
+              arcLabelRadius={seriesLayout[seriesId].radius.label}
               cornerRadius={cornerRadius}
               paddingAngle={paddingAngle}
-              id={seriesId}
+              seriesId={seriesId}
               data={data}
               skipAnimation={skipAnimation}
               arcLabel={arcLabel}

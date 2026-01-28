@@ -1,7 +1,6 @@
 <LineChart
-  height={300}
   series={[{ data: uData, label: 'uv', area: true, showMark: false }]}
-  xAxis={[{ scaleType: 'point', data: xLabels }]}
+  xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
   sx={{
     [`& .${lineElementClasses.root}`]: {
       display: 'none',

@@ -2,32 +2,37 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useThemeProps } from '@mui/material/styles';
-import { MakeOptional } from '@mui/x-internals/types';
+import { type MakeOptional } from '@mui/x-internals/types';
 import { DEFAULT_PIE_CHART_MARGIN } from '../internals/constants';
-import { ChartsToolbarSlotProps, ChartsToolbarSlots } from '../Toolbar';
-import { ChartsSlotProps, ChartsSlots } from '../internals/material';
-import { ChartContainerProps } from '../ChartContainer';
-import { PieSeriesType } from '../models/seriesType';
+import { type ChartsToolbarSlotProps, type ChartsToolbarSlots } from '../Toolbar';
+import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
+import { type ChartContainerProps } from '../ChartContainer';
+import { type PieSeriesType } from '../models/seriesType';
 import { ChartsTooltip } from '../ChartsTooltip';
-import { ChartsTooltipSlots, ChartsTooltipSlotProps } from '../ChartsTooltip/ChartTooltip.types';
-import { ChartsLegend, ChartsLegendSlotProps, ChartsLegendSlots } from '../ChartsLegend';
-import { PiePlot, PiePlotProps, PiePlotSlotProps, PiePlotSlots } from './PiePlot';
-import { PieValueType } from '../models/seriesType/pie';
+import {
+  type ChartsTooltipSlots,
+  type ChartsTooltipSlotProps,
+} from '../ChartsTooltip/ChartTooltip.types';
+import { ChartsLegend, type ChartsLegendSlotProps, type ChartsLegendSlots } from '../ChartsLegend';
+import { PiePlot, type PiePlotProps, type PiePlotSlotProps, type PiePlotSlots } from './PiePlot';
+import { type PieValueType } from '../models/seriesType/pie';
 import {
   ChartsOverlay,
-  ChartsOverlayProps,
-  ChartsOverlaySlotProps,
-  ChartsOverlaySlots,
+  type ChartsOverlayProps,
+  type ChartsOverlaySlotProps,
+  type ChartsOverlaySlots,
 } from '../ChartsOverlay';
 import { ChartsSurface } from '../ChartsSurface';
 import { ChartDataProvider } from '../ChartDataProvider';
 import { useChartContainerProps } from '../ChartContainer/useChartContainerProps';
 import { ChartsWrapper } from '../ChartsWrapper';
-import { PIE_CHART_PLUGINS, PieChartPluginSignatures } from './PieChart.plugins';
+import { PIE_CHART_PLUGINS, type PieChartPluginSignatures } from './PieChart.plugins';
 import { defaultizeMargin } from '../internals/defaultizeMargin';
+import { FocusedPieArc } from './FocusedPieArc';
 
 export interface PieChartSlots
-  extends PiePlotSlots,
+  extends
+    PiePlotSlots,
     ChartsLegendSlots,
     ChartsOverlaySlots,
     ChartsTooltipSlots,
@@ -35,7 +40,8 @@ export interface PieChartSlots
     Partial<ChartsSlots> {}
 
 export interface PieChartSlotProps
-  extends PiePlotSlotProps,
+  extends
+    PiePlotSlotProps,
     ChartsLegendSlotProps,
     ChartsOverlaySlotProps,
     ChartsTooltipSlotProps,
@@ -44,7 +50,8 @@ export interface PieChartSlotProps
 
 export type PieSeries = MakeOptional<PieSeriesType<MakeOptional<PieValueType, 'id'>>, 'type'>;
 export interface PieChartProps
-  extends Omit<
+  extends
+    Omit<
       ChartContainerProps<'pie', PieChartPluginSignatures>,
       'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     >,
@@ -138,25 +145,27 @@ const PieChart = React.forwardRef(function PieChart(
   );
 
   const Tooltip = slots?.tooltip ?? ChartsTooltip;
-  const Toolbar = props.slots?.toolbar;
+  const Toolbar = slots?.toolbar;
 
   return (
     <ChartDataProvider<'pie', PieChartPluginSignatures> {...chartDataProviderProps}>
       <ChartsWrapper
-        legendPosition={props.slotProps?.legend?.position}
-        legendDirection={props?.slotProps?.legend?.direction ?? 'vertical'}
+        legendPosition={slotProps?.legend?.position}
+        legendDirection={slotProps?.legend?.direction ?? 'vertical'}
         sx={sx}
+        hideLegend={hideLegend ?? false}
       >
-        {showToolbar && Toolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
+        {showToolbar && Toolbar ? <Toolbar {...slotProps?.toolbar} /> : null}
         {!hideLegend && (
           <ChartsLegend
-            direction={props?.slotProps?.legend?.direction ?? 'vertical'}
+            direction={slotProps?.legend?.direction ?? 'vertical'}
             slots={slots}
             slotProps={slotProps}
           />
         )}
         <ChartsSurface {...chartsSurfaceProps}>
           <PiePlot slots={slots} slotProps={slotProps} onItemClick={onItemClick} />
+          <FocusedPieArc />
           <ChartsOverlay loading={loading} slots={slots} slotProps={slotProps} />
           {children}
         </ChartsSurface>
@@ -186,10 +195,38 @@ PieChart.propTypes = {
    */
   dataset: PropTypes.arrayOf(PropTypes.object),
   desc: PropTypes.string,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The height of the chart in px. If not defined, it takes the height of the parent element.
    */
   height: PropTypes.number,
+  /**
+   * List of hidden series and/or items.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  hiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+  ),
   /**
    * If `true`, the legend is not rendered.
    */
@@ -200,13 +237,41 @@ PieChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['pie']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -232,6 +297,11 @@ PieChart.propTypes = {
     }),
   ]),
   /**
+   * Callback fired when any hidden identifiers change.
+   * @param {VisibilityIdentifier[]} hiddenItems The new list of hidden identifiers.
+   */
+  onHiddenItemsChange: PropTypes.func,
+  /**
    * The callback fired when the highlighted item changes.
    *
    * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
@@ -241,6 +311,12 @@ PieChart.propTypes = {
    * Callback fired when a pie arc is clicked.
    */
   onItemClick: PropTypes.func,
+  /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
   /**
    * The series to display in the pie chart.
    * An array of [[PieSeries]] objects.
@@ -273,6 +349,15 @@ PieChart.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['pie']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

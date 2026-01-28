@@ -1,8 +1,8 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useHeatmapSeries, useHeatmapSeriesContext } from './useHeatmapSeries';
 import { Heatmap } from '../Heatmap';
-import { DefaultizedHeatmapSeriesType, HeatmapSeriesType } from '../models';
+import { type DefaultizedHeatmapSeriesType, type HeatmapSeriesType } from '../models';
 
 const mockSeries: HeatmapSeriesType[] = [
   {
@@ -76,5 +76,10 @@ describe('useHeatmapSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useHeatmapSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

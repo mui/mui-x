@@ -3,5 +3,5 @@
   resources={resources}
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
-  className={classes.Container}
+  defaultPreferences={{ showWeekends: false, isSidePanelOpen: false }}
 />

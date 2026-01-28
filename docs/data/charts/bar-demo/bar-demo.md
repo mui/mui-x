@@ -1,12 +1,12 @@
 ---
-title: Charts - Bar demonstration
+title: Charts - Bar demos
 productId: x-charts
 components: BarChart, BarElement, BarPlot
 ---
 
-# Charts - Bar demonstration
+# Charts - Bar demos
 
-<p class="description">This page groups demonstration using bar charts.</p>
+<p class="description">This page groups demos using bar charts.</p>
 
 ## TinyBarChart
 
@@ -39,3 +39,15 @@ components: BarChart, BarElement, BarPlot
 ## Population pyramid
 
 {{"demo": "PopulationPyramidBarChart.js"}}
+
+## Waterfall Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+The following demo shows a waterfall chart built using a [range bar chart](/x/react-charts/range-bar/).
+
+{{"demo": "WaterfallChart.js"}}
+
+## Candlestick Chart [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+The following demo shows a simplified candlestick chart built using a [range bar chart](/x/react-charts/range-bar/).
+
+{{"demo": "RangeBarCandlestick.js"}}

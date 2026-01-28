@@ -128,7 +128,7 @@ const theme = createTheme({
 ### Date value types
 
 The Date and Time Pickers are compatible with several date libraries that each use different formats to represent their dates.
-To correctly type all date-related props, the adapters override a global type named `PickerValidDate` to allow for the formatting of their corresponding libraries.
+To correctly type all date-related props, the adapters override a global type named `PickerValidDate` to let users format their corresponding libraries.
 As a result, TypeScript will throw an error if you try to pass the wrong kind of value to the date library.
 
 To determine whether your adapter is set up correctly, you can import the `PickerValidDate` type from `@mui/x-date-pickers/models` and check its current value.
@@ -149,6 +149,17 @@ The solution described above should resolve this.
 :::
 
 ## Using this documentation
+
+### Feature availability
+
+:::info
+MUI X is **open core**—Community components are MIT-licensed, while more advanced features require a Pro or Premium commercial license.
+See [Licensing](/x/introduction/licensing/) for details.
+:::
+
+Throughout the documentation, Pro- and Premium-only features are denoted with the [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan') and [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan') icons, respectively.
+
+All documentation for Community components and features also applies to their Pro and Premium counterparts.
 
 ### Localization Provider
 

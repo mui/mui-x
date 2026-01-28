@@ -1,4 +1,4 @@
-import type { GetSeriesWithDefaultValues } from '../../internals/plugins/models/seriesConfig';
+import type { GetSeriesWithDefaultValues } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'line'> = (
   seriesData,
@@ -6,9 +6,9 @@ const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'line'> = (
   colors,
 ) => {
   return {
-    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
-    color: colors[seriesIndex % colors.length],
     ...seriesData,
+    id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
+    color: seriesData.color ?? colors[seriesIndex % colors.length],
   };
 };
 

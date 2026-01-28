@@ -1,15 +1,15 @@
 import type { PieChartPluginSignatures } from '../PieChart/PieChart.plugins';
-import type { BarChartPluginsSignatures } from '../BarChart/BarChart.plugins';
-import type { ScatterChartPluginsSignatures } from '../ScatterChart/ScatterChart.plugins';
-import type { LineChartPluginsSignatures } from '../LineChart/LineChart.plugins';
+import type { BarChartPluginSignatures } from '../BarChart/BarChart.plugins';
+import type { ScatterChartPluginSignatures } from '../ScatterChart/ScatterChart.plugins';
+import type { LineChartPluginSignatures } from '../LineChart/LineChart.plugins';
 import type { AllPluginSignatures, DefaultPluginSignatures } from '../internals/plugins/allPlugins';
 import type { ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
 import type { ChartPublicAPI } from '../internals/plugins/models';
 
 export type PluginsPerSeriesType = {
-  line: LineChartPluginsSignatures;
-  scatter: ScatterChartPluginsSignatures;
-  bar: BarChartPluginsSignatures;
+  line: LineChartPluginSignatures;
+  scatter: ScatterChartPluginSignatures;
+  bar: BarChartPluginSignatures;
   pie: PieChartPluginSignatures;
   /* Special value when creating a chart using composition. */
   composition: DefaultPluginSignatures;
@@ -24,8 +24,8 @@ export type PluginsPerSeriesType = {
  */
 export type ChartApi<
   TSeries extends keyof PluginsPerSeriesType | undefined = undefined,
-  TSignatures extends
-    readonly ChartAnyPluginSignature[] = TSeries extends keyof PluginsPerSeriesType
-    ? PluginsPerSeriesType[TSeries]
-    : AllPluginSignatures,
+  TSignatures extends readonly ChartAnyPluginSignature[] =
+    TSeries extends keyof PluginsPerSeriesType
+      ? PluginsPerSeriesType[TSeries]
+      : AllPluginSignatures,
 > = ChartPublicAPI<TSignatures>;

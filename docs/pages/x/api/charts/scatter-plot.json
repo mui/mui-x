@@ -7,6 +7,10 @@
         "describedArgs": ["event", "scatterItemIdentifier"]
       }
     },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-batch'<br>&#124;&nbsp;'svg-single'" },
+      "default": "'svg-single'"
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
@@ -18,7 +22,8 @@
   "imports": [
     "import { ScatterPlot } from '@mui/x-charts/ScatterChart';",
     "import { ScatterPlot } from '@mui/x-charts';",
-    "import { ScatterPlot } from '@mui/x-charts-pro';"
+    "import { ScatterPlot } from '@mui/x-charts-pro';",
+    "import { ScatterPlot } from '@mui/x-charts-premium';"
   ],
   "slots": [
     {
@@ -33,6 +38,6 @@
   "muiName": "MuiScatterPlot",
   "filename": "/packages/x-charts/src/ScatterChart/ScatterPlot.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demonstration</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-charts/scatter/\">Charts - Scatter</a></li>\n<li><a href=\"/x/react-charts/scatter-demo/\">Charts - Scatter demos</a></li></ul>",
   "cssComponent": false
 }

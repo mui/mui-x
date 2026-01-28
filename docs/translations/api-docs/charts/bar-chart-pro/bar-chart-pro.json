@@ -1,14 +1,15 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "axisHighlight": {
       "description": "The configuration of axes highlight. Default is set to &#39;band&#39; in the bar direction. Depends on <code>layout</code> prop.",
       "seeMoreText": "See {{link}} for more details."
     },
-    "barLabel": {
-      "description": "If provided, the function will be used to format the label of the bar. It can be set to &#39;value&#39; to display the current value."
-    },
     "borderRadius": { "description": "Defines the border radius of the bar element." },
+    "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -20,6 +21,9 @@
     "height": {
       "description": "The height of the chart in px. If not defined, it takes the height of the parent element."
     },
+    "hiddenItems": {
+      "description": "List of hidden series and/or items.<br>Different chart types use different keys."
+    },
     "hideLegend": { "description": "If <code>true</code>, the legend is not rendered." },
     "highlightedAxis": {
       "description": "The controlled axis highlight. Identified by the axis id, and data index."
@@ -29,6 +33,9 @@
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "initialZoom": {
       "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
@@ -49,6 +56,15 @@
         "data": {
           "name": "data",
           "description": "The data about the clicked axis and items associated with it."
+        }
+      }
+    },
+    "onHiddenItemsChange": {
+      "description": "Callback fired when any hidden identifiers change.",
+      "typeDescriptions": {
+        "hiddenItems": {
+          "name": "hiddenItems",
+          "description": "The new list of hidden identifiers."
         }
       }
     },
@@ -77,11 +93,20 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "onZoomChange": {
       "description": "Callback fired when the zoom has changed.",
       "typeDescriptions": {
         "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
       }
+    },
+    "renderer": {
+      "description": "The type of renderer to use for the bar plot. - <code>svg-single</code>: Renders every bar in a <code>&lt;rect /&gt;</code> element. - <code>svg-batch</code>: Batch renders bars in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/bars/#performance\">https://mui.com/x/react-charts/bars/#performance</a>"
     },
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/bar-series/'>BarSeries</a> objects."
@@ -92,6 +117,7 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -102,7 +128,8 @@
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
     "zAxis": { "description": "The configuration of the z-axes." },
-    "zoomData": { "description": "The list of zoom data related to each axis." }
+    "zoomData": { "description": "The list of zoom data related to each axis." },
+    "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
   },
   "classDescriptions": {},
   "slotDescriptions": {
@@ -125,6 +152,8 @@
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",
     "tooltip": "Custom component for the tooltip popper.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis.",
     "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
     "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
   }

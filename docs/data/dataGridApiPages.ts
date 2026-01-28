@@ -7,6 +7,11 @@ const dataGridApiPages: MuiPage[] = [
     plan: 'premium',
   },
   {
+    pathname: '/x/api/data-grid/charts-panel-trigger',
+    title: 'ChartsPanelTrigger',
+    plan: 'premium',
+  },
+  {
     pathname: '/x/api/data-grid/columns-panel-trigger',
     title: 'ColumnsPanelTrigger',
   },
@@ -40,6 +45,16 @@ const dataGridApiPages: MuiPage[] = [
   {
     pathname: '/x/api/data-grid/filter-panel-trigger',
     title: 'FilterPanelTrigger',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-charts-panel',
+    title: 'GridChartsPanel',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/data-grid/grid-charts-renderer-proxy',
+    title: 'GridChartsRendererProxy',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/data-grid/grid-filter-form',

@@ -1,4 +1,4 @@
-import * as React from 'react';
+'use client';
 import PropTypes from 'prop-types';
 
 import { forwardRef } from '@mui/x-internals/forwardRef';

@@ -16,6 +16,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standart',
   toolbarDensityComfortable: 'Rahat',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Geri al',
+  toolbarRedo: 'Yinele',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Sütunlar',
   toolbarColumnsLabel: 'Sütun seç',
@@ -41,6 +45,9 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
@@ -127,6 +134,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sırala - Artan',
   columnMenuSortDesc: 'Sırala - Azalan',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count} filtre aktif`,
@@ -153,6 +161,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Evet',
   booleanCellFalseLabel: 'Hayır',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Genişlet',
+  longTextCellCollapseLabel: 'Gizle',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
@@ -210,6 +222,7 @@ const trTRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Toplama',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'top',
   aggregationFunctionLabelAvg: 'ort',
   aggregationFunctionLabelMin: 'min',
@@ -244,6 +257,32 @@ const trTRGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
@@ -292,6 +331,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid);

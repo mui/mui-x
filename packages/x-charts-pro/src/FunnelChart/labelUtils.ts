@@ -1,6 +1,11 @@
-import { Position } from '@mui/x-charts/models';
-import { FunnelLabelOptions } from './funnel.types';
-import { Point } from './curves';
+import { type Position } from '@mui/x-charts/models';
+import { type FunnelLabelOptions } from './funnel.types';
+import { type Point } from './curves';
+
+type AlignReturnType = {
+  textAnchor: FunnelLabelOptions['textAnchor'];
+  dominantBaseline: Exclude<FunnelLabelOptions['dominantBaseline'], 'baseline'>;
+};
 
 /**
  * It tries to keep the label inside the bounds of the section based on the position.
@@ -11,16 +16,16 @@ export const alignLabel = ({
   position,
   textAnchor,
   dominantBaseline,
-}: Omit<FunnelLabelOptions, 'margin'>) => {
+}: Omit<FunnelLabelOptions, 'margin'>): AlignReturnType => {
   const vertical: Position['vertical'] = position?.vertical ?? 'middle';
   const horizontal: Position['horizontal'] = position?.horizontal ?? 'center';
-  let anchor = 'middle';
-  let baseline = 'central';
+  let anchor: FunnelLabelOptions['textAnchor'] = 'middle';
+  let baseline: Exclude<FunnelLabelOptions['dominantBaseline'], 'baseline'> = 'central';
 
   if (vertical === 'top') {
     baseline = 'hanging';
   } else if (vertical === 'bottom') {
-    baseline = 'baseline';
+    baseline = 'auto';
   }
 
   if (horizontal === 'start') {
@@ -31,7 +36,7 @@ export const alignLabel = ({
 
   return {
     textAnchor: textAnchor ?? anchor,
-    dominantBaseline: dominantBaseline ?? baseline,
+    dominantBaseline: dominantBaseline === 'baseline' ? 'auto' : (dominantBaseline ?? baseline),
   };
 };
 

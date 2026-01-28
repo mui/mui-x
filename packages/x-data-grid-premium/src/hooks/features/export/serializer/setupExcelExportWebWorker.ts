@@ -1,4 +1,4 @@
-import type * as Excel from 'exceljs';
+import type * as Excel from '@mui/x-internal-exceljs-fork';
 import type { GridExcelExportOptions } from '../gridExcelExportInterface';
 import {
   addColumnGroupingHeaders,
@@ -11,8 +11,7 @@ import {
 export function setupExcelExportWebWorker(
   workerOptions: Pick<GridExcelExportOptions, 'exceljsPostProcess' | 'exceljsPreProcess'> = {},
 ) {
-  // eslint-disable-next-line no-restricted-globals
-  addEventListener('message', async (event: MessageEvent<ExcelExportInitEvent>) => {
+  globalThis.addEventListener('message', async (event: MessageEvent<ExcelExportInitEvent>) => {
     const {
       namespace,
       serializedColumns,

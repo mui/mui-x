@@ -27,7 +27,7 @@ module.exports = function getBabelConfig(api) {
   const useESModules = api.env(['stable', 'rollup']);
 
   return {
-    only: [/node_modules\/(d3-.*|internmap|delaunator|robust-predicates)\/.*\.js/],
+    only: [/node_modules\/(d3-.*|internmap|flatqueue)\/.*\.js/],
     plugins: [
       [
         '@babel/transform-modules-commonjs',
@@ -42,8 +42,7 @@ module.exports = function getBabelConfig(api) {
           // Convert all imports for _other_ d3 dependencies to the relative
           // path in our vendor package.
           resolvePath(sourcePath, currentFile) {
-            const d3pattern =
-              /^(?<pkg>(d3-[^\/]+|internmap|delaunator|robust-predicates))(?<path>.*)/;
+            const d3pattern = /^(?<pkg>(d3-[^\/]+|internmap|flatqueue))(?<path>.*)/;
             const match = d3pattern.exec(sourcePath);
             if (match) {
               // We're assuming a common shape of d3 packages:
@@ -54,9 +53,10 @@ module.exports = function getBabelConfig(api) {
               }
 
               // Get Vendor package path.
-              const vendorPkg = ['delaunator', 'robust-predicates'].includes(match.groups.pkg)
-                ? path.resolve(__dirname, `./lib-vendor/${match.groups.pkg}/index.js`)
-                : path.resolve(__dirname, `./lib-vendor/${match.groups.pkg}/src/index.js`);
+              const vendorPkg = path.resolve(
+                __dirname,
+                `./lib-vendor/${match.groups.pkg}/src/index.js`,
+              );
 
               // Derive relative path to vendor lib to have a file like move from:
               // - 'node_modules/d3-interpolate/src/rgb.js'

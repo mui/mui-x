@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -32,7 +33,7 @@ function GridHeaderFilterMenuContainer(props: {
     disabled = false,
     showClearItem,
     clearFilterItem,
-    ...others
+    ...other
   } = props;
 
   const buttonId = useId();
@@ -89,7 +90,7 @@ function GridHeaderFilterMenuContainer(props: {
         id={menuId!}
         clearFilterItem={clearFilterItem}
         showClearItem={showClearItem}
-        {...others}
+        {...other}
       />
     </React.Fragment>
   );

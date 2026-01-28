@@ -1,4 +1,4 @@
-import { CartesianExtremumGetter } from '../../internals/plugins/models/seriesConfig';
+import { type CartesianExtremumGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 export const getExtremumX: CartesianExtremumGetter<'scatter'> = (params) => {
   const { series, axis, isDefaultAxis, getFilters } = params;

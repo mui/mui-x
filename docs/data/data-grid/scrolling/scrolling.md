@@ -14,7 +14,7 @@ The following demo explores the usage of this API:
 
 ## Scroll restoration
 
-You can restore scroll to a previous position by definining `initialState.scroll` values `{ top: number, left: number }`. The Data Grid will mount at the specified scroll offset in pixels.
+You can restore scroll to a previous position by defining `initialState.scroll` values `{ top: number, left: number }`. The Data Grid will mount at the specified scroll offset in pixels.
 
 The following demo explores the usage of scroll restoration:
 

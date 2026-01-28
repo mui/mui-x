@@ -25,13 +25,19 @@ import type {
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
 import { GridAiAssistantApi } from '../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { GridSidebarApi } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import {
+  GridChartsIntegrationApi,
+  GridChartsIntegrationPrivateApi,
+} from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import type { GridHistoryApi } from '../hooks/features/history/gridHistoryInterfaces';
 
 /**
  * The api of Data Grid Premium.
  * TODO: Do not redefine manually the pro features
  */
 export interface GridApiPremium
-  extends GridApiCommon<GridStatePremium, GridInitialStatePremium>,
+  extends
+    GridApiCommon<GridStatePremium, GridInitialStatePremium>,
     GridRowProApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
@@ -44,15 +50,19 @@ export interface GridApiPremium
     GridPivotingApi,
     GridAiAssistantApi,
     GridSidebarApi,
+    GridChartsIntegrationApi,
+    GridHistoryApi,
     // APIs that are private in Community plan, but public in Pro and Premium plans
     GridRowMultiSelectionApi,
     GridColumnReorderApi {}
 
 export interface GridPrivateApiPremium
-  extends GridApiPremium,
+  extends
+    GridApiPremium,
     GridPrivateOnlyApiCommon<GridApiPremium, GridPrivateApiPremium, DataGridPremiumProcessedProps>,
     GridDataSourcePremiumPrivateApi,
     GridAggregationPrivateApi,
     GridDetailPanelPrivateApi,
     GridRowReorderPrivateApi,
-    GridPivotingPrivateApi {}
+    GridPivotingPrivateApi,
+    GridChartsIntegrationPrivateApi {}

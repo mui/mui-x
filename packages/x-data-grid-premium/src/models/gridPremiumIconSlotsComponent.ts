@@ -135,6 +135,11 @@ export interface GridPremiumIconSlotsComponent {
    */
   promptSortDescIcon: React.JSXElementConstructor<IconProps>;
   /**
+   * Icon used to mark the request to visalize the data
+   * @default GridChartsIcon
+   */
+  promptChartsIcon: React.JSXElementConstructor<IconProps>;
+  /**
    * Icon used to display group changes
    * @default GridGroupWorkIcon
    */
@@ -159,4 +164,59 @@ export interface GridPremiumIconSlotsComponent {
    * @default GridExpandMoreIcon
    */
   promptChangesToggleIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the charts configuration button
+   * @default GridChartsIcon
+   */
+  chartsIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the search icon in the sidebar search field in the charts configuration panel
+   * @default GridSearchIcon
+   */
+  chartsSearchIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the clear button in the sidebar search field in the charts configuration panel
+   * @default GridClearIcon
+   */
+  chartsSearchClearIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the move up button in the charts configuration panel menu
+   * @default GridExpandLessIcon
+   */
+  chartsMenuMoveUpIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the move down button in the charts configuration panel menu
+   * @default GridExpandMoreIcon
+   */
+  chartsMenuMoveDownIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the move to top button in the charts configuration panel menu
+   * @default GridMoveToTopIcon
+   */
+  chartsMenuMoveToTopIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the move to bottom button in the charts configuration panel menu
+   * @default GridMoveToBottomIcon
+   */
+  chartsMenuMoveToBottomIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the add button in the charts configuration panel menu
+   * @default GridAddIcon
+   */
+  chartsMenuAddIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the remove button in the charts configuration panel menu
+   * @default GridDeleteIcon
+   */
+  chartsMenuRemoveIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the sync button in the charts configuration panel when sync is enabled
+   * @default GridSyncIcon
+   */
+  chartsSyncIcon: React.JSXElementConstructor<IconProps>;
+  /**
+   * Icon used for the sync button in the charts configuration panel when sync is disabled
+   * @default GridSyncDisabledIcon
+   */
+  chartsSyncDisabledIcon: React.JSXElementConstructor<IconProps>;
 }

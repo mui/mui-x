@@ -55,6 +55,7 @@
       "type": { "name": "bool" },
       "default": "false (`!props.checkboxSelection` for MIT Data Grid)"
     },
+    "disableRowSelectionExcludeModel": { "type": { "name": "bool" }, "default": "false" },
     "disableRowSelectionOnClick": { "type": { "name": "bool" }, "default": "false" },
     "disableVirtualization": { "type": { "name": "bool" }, "default": "false" },
     "editMode": {
@@ -713,6 +714,18 @@
       "class": null
     },
     {
+      "name": "baseTextarea",
+      "description": "The custom Textarea component used in the grid for multiline text editing.",
+      "default": "InputBase with multiline",
+      "class": null
+    },
+    {
+      "name": "baseToggleButton",
+      "description": "The custom ToggleButton component used in the grid.",
+      "default": "ToggleButton",
+      "class": null
+    },
+    {
       "name": "baseTooltip",
       "description": "The custom Tooltip component used in the grid.",
       "default": "Tooltip",
@@ -749,6 +762,12 @@
       "class": null
     },
     {
+      "name": "baseTabs",
+      "description": "The custom Tabs component used in the grid.",
+      "default": "Tabs",
+      "class": null
+    },
+    {
       "name": "booleanCellTrueIcon",
       "description": "Icon displayed on the boolean cell to represent the true value.",
       "default": "GridCheckIcon",
@@ -758,6 +777,18 @@
       "name": "booleanCellFalseIcon",
       "description": "Icon displayed on the boolean cell to represent the false value.",
       "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
       "class": null
     },
     {
@@ -782,6 +813,12 @@
       "name": "columnSelectorIcon",
       "description": "Icon displayed on the column menu selector tab.",
       "default": "GridColumnIcon",
+      "class": null
+    },
+    {
+      "name": "columnUnsortedIcon",
+      "description": "Icon displayed on the side of the column header title when unsorted.",
+      "default": "GridColumnUnsortedIcon",
       "class": null
     },
     {
@@ -962,6 +999,18 @@
       "name": "menuItemCheckIcon",
       "description": "Icon displayed to indicate that a menu item is selected.",
       "default": "GridCheckIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellExpandIcon",
+      "description": "Icon displayed on the long text cell to expand the content.",
+      "default": "GridLongTextCellExpandIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellCollapseIcon",
+      "description": "Icon displayed on the long text cell popup to collapse the content.",
+      "default": "GridLongTextCellCollapseIcon",
       "class": null
     }
   ],
@@ -1507,6 +1556,36 @@
       "isGlobal": false
     },
     {
+      "key": "editLongTextCell",
+      "className": "MuiDataGrid-editLongTextCell",
+      "description": "Styles applied to the edit long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopperContent",
+      "className": "MuiDataGrid-editLongTextCellPopperContent",
+      "description": "Styles applied to the edit long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopup",
+      "className": "MuiDataGrid-editLongTextCellPopup",
+      "description": "Styles applied to the edit long text cell popup.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellTextarea",
+      "className": "MuiDataGrid-editLongTextCellTextarea",
+      "description": "Styles applied to the edit long text cell textarea.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellValue",
+      "className": "MuiDataGrid-editLongTextCellValue",
+      "description": "Styles applied to the edit long text cell value element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGrid-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -1588,6 +1667,42 @@
       "key": "iconSeparator",
       "className": "MuiDataGrid-iconSeparator",
       "description": "Styles applied to the column header separator icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCell",
+      "className": "MuiDataGrid-longTextCell",
+      "description": "Styles applied to the long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellCollapseButton",
+      "className": "MuiDataGrid-longTextCellCollapseButton",
+      "description": "Styles applied to the long text cell collapse button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellContent",
+      "className": "MuiDataGrid-longTextCellContent",
+      "description": "Styles applied to the long text cell content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellExpandButton",
+      "className": "MuiDataGrid-longTextCellExpandButton",
+      "description": "Styles applied to the long text cell expand button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopperContent",
+      "className": "MuiDataGrid-longTextCellPopperContent",
+      "description": "Styles applied to the long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopup",
+      "className": "MuiDataGrid-longTextCellPopup",
+      "description": "Styles applied to the long text cell popup.",
       "isGlobal": false
     },
     {
@@ -1945,18 +2060,6 @@
       "isGlobal": false
     },
     {
-      "key": "row--dropAbove",
-      "className": "MuiDataGrid-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGrid-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
-      "isGlobal": false
-    },
-    {
       "key": "row--dynamicHeight",
       "className": "MuiDataGrid-row--dynamicHeight",
       "description": "Styles applied to the row if it has dynamic row height.",
@@ -2068,6 +2171,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGrid-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGrid-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGrid-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGrid-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
@@ -2201,6 +2322,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid/src/DataGrid/DataGrid.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { config } from 'react-transition-group';
 import { RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, waitFor } from '@mui/internal-test-utils';
@@ -1528,5 +1527,40 @@ describe('<DataGridPremium /> - Row grouping', () => {
     );
 
     expect(getColumnValues(0)).to.deep.equal(['2025 (1)', 'MUI (1)', '']);
+  });
+
+  it('should use the valueFormatter of the respective original column for each of the grouping criteria in single column grouping mode', () => {
+    render(
+      <Test
+        columns={[
+          { field: 'id' },
+          {
+            field: 'date',
+            type: 'date',
+            valueGetter: (value) => (value ? new Date(value) : null),
+          },
+          {
+            field: 'price',
+            type: 'number',
+            valueFormatter: (value: number | undefined) => (value ? `$${value.toFixed(2)}` : null),
+          },
+        ]}
+        rows={[
+          { id: 1, date: '2025-01-01', price: 100 },
+          { id: 2, date: '2025-01-02', price: 200 },
+        ]}
+        rowGroupingModel={['price', 'date']}
+        defaultGroupingExpansionDepth={-1}
+      />,
+    );
+
+    expect(getColumnValues(0)).to.deep.equal([
+      '$100.00 (1)',
+      '1/1/2025 (1)',
+      '',
+      '$200.00 (1)',
+      '1/2/2025 (1)',
+      '',
+    ]);
   });
 });

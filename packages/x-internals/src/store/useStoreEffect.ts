@@ -1,6 +1,6 @@
 import useLazyRef from '@mui/utils/useLazyRef';
 import useOnMount from '@mui/utils/useOnMount';
-import type { Store } from './Store';
+import type { ReadonlyStore } from './Store';
 
 const noop = () => {};
 
@@ -9,7 +9,7 @@ const noop = () => {};
  * compute and store derived state, use `createSelectorMemoized` instead.
  */
 export function useStoreEffect<State, Value>(
-  store: Store<State>,
+  store: ReadonlyStore<State>,
   selector: (state: State) => Value,
   effect: (previous: Value, next: Value) => void,
 ): void {
@@ -20,7 +20,7 @@ export function useStoreEffect<State, Value>(
 
 // `useLazyRef` typings are incorrect, `params` should not be optional
 function initialize<State, Value>(params?: {
-  store: Store<State>;
+  store: ReadonlyStore<State>;
   selector: (state: State) => Value;
 }) {
   const { store, selector } = params!;
@@ -36,8 +36,11 @@ function initialize<State, Value>(params?: {
     subscribe: () => {
       instance.dispose ??= store.subscribe((state) => {
         const nextState = selector(state);
-        instance.effect(previousState, nextState);
-        previousState = nextState;
+        if (!Object.is(previousState, nextState)) {
+          const prev = previousState;
+          previousState = nextState;
+          instance.effect(prev, nextState);
+        }
       });
     },
     onMount: () => {

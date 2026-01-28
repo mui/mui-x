@@ -1,5 +1,9 @@
-/* eslint-disable class-methods-use-this */
-import { FunnelCurveGenerator, CurveOptions, FunnelPointShape, Point } from './curve.types';
+import {
+  type FunnelCurveGenerator,
+  type CurveOptions,
+  type FunnelPointShape,
+  type Point,
+} from './curve.types';
 import { borderRadiusPolygon } from './borderRadiusPolygon';
 import { lerpX, lerpY } from './utils';
 

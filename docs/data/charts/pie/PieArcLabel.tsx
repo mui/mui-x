@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import { desktopOS, valueFormatter } from './webUsageStats';
 

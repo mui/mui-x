@@ -1,9 +1,10 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import { NotRendered, useChartsSlots } from '@mui/x-charts/internals';
-import { ChartsBaseSlotsPro } from '../../internals/slots/chartsBaseSlots';
-import { ChartBaseDividerProps } from '../../internals/slots/chartBaseSlotProps';
+import { type ChartsBaseSlotsPro } from '../../internals/slots/chartsBaseSlots';
+import { type ChartBaseDividerProps } from '../../internals/slots/chartBaseSlotProps';
 
 export interface ChartsToolbarDividerProps extends ChartBaseDividerProps {}
 

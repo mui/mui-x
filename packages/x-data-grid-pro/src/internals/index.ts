@@ -31,6 +31,7 @@ export {
   useGridRowReorder,
   rowReorderStateInitializer,
 } from '../hooks/features/rowReorder/useGridRowReorder';
+export { useGridRowsOverridableMethods as useGridRowsOverridableMethodsPro } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridRowReorderPreProcessors } from '../hooks/features/rowReorder/useGridRowReorderPreProcessors';
 export type { GridRowReorderPrivateApi } from '../models/gridRowReorderApi';
 export { useGridTreeData } from '../hooks/features/treeData/useGridTreeData';
@@ -61,6 +62,8 @@ export type {
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
 
+export type { GridProSlotProps } from '../models/gridProSlotProps';
+
 export { createRowTree } from '../utils/tree/createRowTree';
 export { updateRowTree } from '../utils/tree/updateRowTree';
 export { sortRowTree } from '../utils/tree/sortRowTree';
@@ -77,5 +80,20 @@ export enum RowGroupingStrategy {
   Default = 'grouping-columns',
   DataSource = 'grouping-columns-data-source',
 }
+
+export { RowReorderValidator } from '../hooks/features/rowReorder/reorderValidator';
+export type { ValidationRule } from '../hooks/features/rowReorder/reorderValidator';
+export {
+  RowReorderExecutor,
+  BaseReorderOperation,
+} from '../hooks/features/rowReorder/reorderExecutor';
+export { SameParentSwapOperation } from '../hooks/features/treeData/treeDataReorderExecutor';
+export type {
+  ReorderExecutionContext,
+  ReorderOperation,
+  ReorderOperationType,
+} from '../hooks/features/rowReorder/types';
+export { commonReorderConditions } from '../hooks/features/rowReorder/commonReorderConditions';
+export * as rowReorderUtils from '../hooks/features/rowReorder/utils';
 
 export * from './propValidation';

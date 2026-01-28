@@ -1,5 +1,5 @@
 {
   "componentDescription": "It provides the drawing area for the chart elements.\nIt is the root `<svg>` of all the chart elements.\n\nIt also provides the `title` and `desc` elements for the chart.",
   "propDescriptions": {},
-  "classDescriptions": {}
+  "classDescriptions": { "root": { "description": "Styles applied to the root element." } }
 }

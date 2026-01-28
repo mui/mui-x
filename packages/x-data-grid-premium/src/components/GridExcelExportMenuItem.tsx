@@ -1,4 +1,3 @@
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import { GridExportMenuItemProps } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';

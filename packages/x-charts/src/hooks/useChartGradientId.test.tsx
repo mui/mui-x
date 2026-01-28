@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { useChartGradientId, useChartGradientIdObjectBound } from './useChartGradientId';
 import { ChartDataProvider } from '../ChartDataProvider';
@@ -23,7 +22,7 @@ describe('useChartGradientId', () => {
       </ChartDataProvider>,
     );
 
-    expect(screen.getByText(/[«|:]\w+[»|:]-gradient-test-id/)).toBeVisible();
+    expect(screen.getByText(/[«|:|_]\w+[»|:|_]-gradient-test-id/)).toBeVisible();
   });
 
   describe('useChartGradientIdObjectBound', () => {
@@ -34,7 +33,7 @@ describe('useChartGradientId', () => {
         </ChartDataProvider>,
       );
 
-      expect(screen.getByText(/[«|:]\w+[»|:]-gradient-test-id-object-bound/)).toBeVisible();
+      expect(screen.getByText(/[«|:|_]\w+[»|:|_]-gradient-test-id-object-bound/)).toBeVisible();
     });
   });
 });

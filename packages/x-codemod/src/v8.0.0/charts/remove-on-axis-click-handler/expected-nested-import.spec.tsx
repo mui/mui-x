@@ -1,5 +1,4 @@
 // @ts-nocheck
-import * as React from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { BarPlot } from '@mui/x-charts/BarChart';
 

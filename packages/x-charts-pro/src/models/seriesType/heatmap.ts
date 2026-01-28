@@ -1,15 +1,14 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import {
-  CommonDefaultizedProps,
-  CommonSeriesType,
-  CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type CartesianSeriesType,
 } from '@mui/x-charts/internals';
 
 export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
-  extends Omit<CommonSeriesType<HeatmapValueType>, 'color'>,
-    CartesianSeriesType {
+  extends Omit<CommonSeriesType<HeatmapValueType>, 'color' | 'colorGetter'>, CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each bar.
@@ -31,9 +30,26 @@ export interface HeatmapSeriesType
  */
 export type HeatmapItemIdentifier = {
   type: 'heatmap';
+  /**
+   * The id of the series the cell belongs to.
+   */
   seriesId: DefaultizedHeatmapSeriesType['id'];
-  dataIndex: number;
+  /**
+   * The data index of the cell.
+   * Is defined only if some data is associated to the cell.
+   */
+  dataIndex?: number;
+  /**
+   * The x index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
+   */
+  xIndex?: number;
+  /**
+   * The y index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
+   */
+  yIndex?: number;
 };
 
-export interface DefaultizedHeatmapSeriesType
-  extends DefaultizedProps<HeatmapSeriesType, CommonDefaultizedProps> {}
+export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
+  HeatmapSeriesType,
+  CommonDefaultizedProps
+> {}

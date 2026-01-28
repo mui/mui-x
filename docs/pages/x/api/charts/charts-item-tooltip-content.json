@@ -4,7 +4,8 @@
   "imports": [
     "import { ChartsItemTooltipContent } from '@mui/x-charts/ChartsTooltip';",
     "import { ChartsItemTooltipContent } from '@mui/x-charts';",
-    "import { ChartsItemTooltipContent } from '@mui/x-charts-pro';"
+    "import { ChartsItemTooltipContent } from '@mui/x-charts-pro';",
+    "import { ChartsItemTooltipContent } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {

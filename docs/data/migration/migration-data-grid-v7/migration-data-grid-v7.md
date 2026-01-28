@@ -34,6 +34,10 @@ Since `v8` is a major release, it contains changes that affect the public API.
 These changes were done for consistency, improved stability and to make room for new features.
 Described below are the steps needed to migrate from `v7` to `v8`.
 
+## Minimum TypeScript version
+
+The minimum supported version of TypeScript is `v5` to take advantage of the [`const` type parameters](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html#const-type-parameters) feature.
+
 ## Package layout changes
 
 MUI X v8 packages have been updated to use the [Node.js `exports` field](https://nodejs.org/api/packages.html#exports), following [Material v7 package layout changes](https://mui.com/system/migration/upgrade-to-v7/#package-layout).
@@ -167,6 +171,18 @@ You have to import it from `@mui/x-license` instead:
   rowSelectionManager.select(rowId);
   rowSelectionManager.unselect(rowId);
   rowSelectionManager.has(rowId);
+  ```
+
+  **Opting out of exclude model optimization**
+
+  If you prefer the previous behavior where the selection model always contains explicit row IDs (even when selecting all rows), you can use the new `disableRowSelectionExcludeModel` prop:
+
+  ```tsx
+  <DataGrid
+    disableRowSelectionExcludeModel
+    // This disables the exclude model optimization and ensures
+    // the selection model always uses type: 'include' with explicit row IDs
+  />
   ```
 
 - The `selectedIdsLookupSelector` selector has been removed. Use the `gridRowSelectionManagerSelector` or `gridRowSelectionStateSelector` selectors instead.
@@ -401,7 +417,6 @@ You have to import it from `@mui/x-license` instead:
 - The `baseInputAdornment` slot was removed.
 - The `pagination` slot has been mostly refactored to `basePagination`.
 - The `paper` slot has been renamed to `panelContent`.
-- The `columnUnsortedIcon` slot was removed.
 - The icon slots now require material icons to be passed like `Icon as any`.
   Note: This is due to typing issues that might be resolved later.
 

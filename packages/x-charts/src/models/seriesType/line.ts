@@ -1,13 +1,13 @@
-import { DefaultizedProps } from '@mui/x-internals/types';
+import { type DefaultizedProps } from '@mui/x-internals/types';
 import type { StackOffsetType } from '../stacking';
 import {
-  CartesianSeriesType,
-  CommonDefaultizedProps,
-  CommonSeriesType,
-  SeriesId,
-  StackableSeriesType,
+  type CartesianSeriesType,
+  type CommonDefaultizedProps,
+  type CommonSeriesType,
+  type SeriesId,
+  type StackableSeriesType,
 } from './common';
-import { CurveType } from '../curve';
+import { type CurveType } from '../curve';
 
 export interface ShowMarkParams<AxisValue = number | Date> {
   /**
@@ -33,9 +33,7 @@ export interface ShowMarkParams<AxisValue = number | Date> {
 }
 
 export interface LineSeriesType
-  extends CommonSeriesType<number | null>,
-    CartesianSeriesType,
-    StackableSeriesType {
+  extends CommonSeriesType<number | null>, CartesianSeriesType, StackableSeriesType {
   type: 'line';
   /**
    * Data associated to the line.
@@ -116,5 +114,9 @@ export type LineItemIdentifier = {
   dataIndex?: number;
 };
 
-export interface DefaultizedLineSeriesType
-  extends DefaultizedProps<LineSeriesType, CommonDefaultizedProps | 'color'> {}
+export interface DefaultizedLineSeriesType extends DefaultizedProps<
+  LineSeriesType,
+  CommonDefaultizedProps | 'color'
+> {
+  hidden: boolean;
+}

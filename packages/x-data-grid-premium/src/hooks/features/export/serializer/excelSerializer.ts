@@ -1,4 +1,4 @@
-import type * as Excel from 'exceljs';
+import type * as Excel from '@mui/x-internal-exceljs-fork';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GridRowId,
@@ -300,7 +300,8 @@ export async function getDataForValueOptionsSheet(
   return record;
 }
 interface BuildExcelOptions
-  extends Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
+  extends
+    Pick<GridExcelExportOptions, 'exceljsPreProcess' | 'exceljsPostProcess'>,
     Pick<
       Required<GridExcelExportOptions>,
       'valueOptionsSheetName' | 'includeHeaders' | 'includeColumnGroupsHeaders' | 'escapeFormulas'

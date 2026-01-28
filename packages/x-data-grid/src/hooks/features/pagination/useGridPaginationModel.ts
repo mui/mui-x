@@ -1,5 +1,6 @@
 'use client';
 import * as React from 'react';
+import debounce from '@mui/utils/debounce';
 import { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
@@ -98,6 +99,8 @@ export const useGridPaginationModel = (
     },
     [apiRef, logger],
   );
+
+  const debouncedSetPage = React.useMemo(() => debounce(setPage, 0), [setPage]);
 
   const setPageSize = React.useCallback<GridPaginationModelApi['setPageSize']>(
     (pageSize) => {
@@ -254,10 +257,12 @@ export const useGridPaginationModel = (
 
       const pageCount = gridPageCountSelector(apiRef);
       if (paginationModel.page > pageCount - 1) {
-        apiRef.current.setPage(Math.max(0, pageCount - 1));
+        queueMicrotask(() => {
+          debouncedSetPage(Math.max(0, pageCount - 1));
+        });
       }
     },
-    [apiRef],
+    [apiRef, debouncedSetPage],
   );
 
   /**
@@ -266,7 +271,7 @@ export const useGridPaginationModel = (
   const navigateToStart = React.useCallback(() => {
     const paginationModel = gridPaginationModelSelector(apiRef);
     if (paginationModel.page !== 0) {
-      apiRef.current.setPage(0);
+      debouncedSetPage(0);
     }
 
     // If the page was not changed it might be needed to scroll to the top
@@ -274,7 +279,12 @@ export const useGridPaginationModel = (
     if (scrollPosition.top !== 0) {
       apiRef.current.scroll({ top: 0 });
     }
-  }, [apiRef]);
+  }, [apiRef, debouncedSetPage]);
+
+  const debouncedNavigateToStart = React.useMemo(
+    () => debounce(navigateToStart, 0),
+    [navigateToStart],
+  );
 
   /**
    * Resets the page only if the active items or quick filter has changed from the last time.
@@ -295,15 +305,15 @@ export const useGridPaginationModel = (
       }
 
       previousFilterModel.current = currentActiveFilters;
-      navigateToStart();
+      debouncedNavigateToStart();
     },
-    [apiRef, navigateToStart],
+    [apiRef, debouncedNavigateToStart],
   );
 
   useGridEvent(apiRef, 'viewportInnerSizeChange', handleUpdateAutoPageSize);
   useGridEvent(apiRef, 'paginationModelChange', handlePaginationModelChange);
   useGridEvent(apiRef, 'rowCountChange', handleRowCountChange);
-  useGridEvent(apiRef, 'sortModelChange', navigateToStart);
+  useGridEvent(apiRef, 'sortModelChange', debouncedNavigateToStart);
   useGridEvent(apiRef, 'filterModelChange', handleFilterModelChange);
 
   /**
@@ -335,7 +345,7 @@ export const useGridPaginationModel = (
     apiRef.current.setState((state) => {
       const isEnabled = props.pagination === true;
       if (
-        state.pagination.paginationMode === props.paginationMode ||
+        state.pagination.paginationMode === props.paginationMode &&
         state.pagination.enabled === isEnabled
       ) {
         return state;
@@ -346,7 +356,7 @@ export const useGridPaginationModel = (
         pagination: {
           ...state.pagination,
           paginationMode: props.paginationMode,
-          enabled: props.pagination === true,
+          enabled: isEnabled,
         },
       };
     });

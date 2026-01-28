@@ -17,6 +17,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfortabelt',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Angre',
+  toolbarRedo: 'Gjer om',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
   toolbarColumnsLabel: 'Vel kolonner',
@@ -43,6 +47,9 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Assistent',
@@ -129,6 +136,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sorter AUKANDE',
   columnMenuSortDesc: 'Sorter SYNKANDE',
   columnMenuManagePivot: 'Behandle pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -157,6 +165,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sant',
   booleanCellFalseLabel: 'usant',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Vis',
+  longTextCellCollapseLabel: 'Gøym',
 
   // Actions cell more text
   actionsCellMore: 'meir',
@@ -209,6 +221,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'sum',
   aggregationFunctionLabelAvg: 'snitt',
   aggregationFunctionLabelMin: 'min',
@@ -243,6 +256,32 @@ const nnNOGrid: Partial<GridLocaleText> = {
   pivotDragToValues: 'Dra hit for å opprette verdiar',
   pivotYearColumnHeaderName: '(År)',
   pivotQuarterColumnHeaderName: '(Kvartal)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'AI Assistent',
@@ -296,6 +335,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Verdiar (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const nnNO: Localization = getGridLocalization(nnNOGrid);

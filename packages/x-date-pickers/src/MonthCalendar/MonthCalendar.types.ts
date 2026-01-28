@@ -36,13 +36,15 @@ export interface ExportedMonthCalendarProps {
   monthsPerRow?: 3 | 4;
 }
 export interface MonthCalendarProps
-  extends ExportedMonthCalendarProps,
+  extends
+    ExportedMonthCalendarProps,
     MonthValidationProps,
     BaseDateValidationProps,
     TimezoneProps,
     FormProps {
   autoFocus?: boolean;
   className?: string;
+  currentMonth?: PickerValidDate;
   /**
    * Override or extend the styles applied to the component.
    */

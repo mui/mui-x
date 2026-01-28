@@ -82,7 +82,12 @@
     "category": "Visible Columns",
     "description": "Get the summed width of all the visible columns."
   },
-  { "name": "gridDataRowIdsSelector", "returnType": "GridRowId[]", "description": "" },
+  {
+    "name": "gridDataRowIdsSelector",
+    "returnType": "GridRowId[]",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridDensityFactorSelector", "returnType": "number", "description": "" },
   { "name": "gridDensitySelector", "returnType": "GridDensity", "description": "" },
   {
@@ -211,6 +216,9 @@
     "returnType": "GridHeaderFilteringState",
     "description": ""
   },
+  { "name": "gridHistoryCanRedoSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridHistoryCanUndoSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridHistoryEnabledSelector", "returnType": "boolean", "description": "" },
   {
     "name": "gridPageCountSelector",
     "returnType": "number",
@@ -271,6 +279,7 @@
     "category": "Visible Columns",
     "description": "Get the visible pinned columns model."
   },
+  { "name": "gridPivotModelSelector", "returnType": "GridPivotModel", "description": "" },
   {
     "name": "gridPreferencePanelStateSelector",
     "returnType": "GridPreferencePanelState",
@@ -298,7 +307,12 @@
   },
   { "name": "gridRowIsEditingSelector", "returnType": "boolean", "description": "" },
   { "name": "gridRowMaximumTreeDepthSelector", "returnType": "number", "description": "" },
-  { "name": "gridRowNodeSelector", "returnType": "GridTreeNode", "description": "" },
+  {
+    "name": "gridRowNodeSelector",
+    "returnType": "GridTreeNode",
+    "category": "Rows",
+    "description": ""
+  },
   { "name": "gridRowSelectionCountSelector", "returnType": "number", "description": "" },
   {
     "name": "gridRowSelectionIdsSelector",
@@ -313,6 +327,12 @@
   {
     "name": "gridRowSelectionStateSelector",
     "returnType": "GridRowSelectionModel",
+    "description": ""
+  },
+  {
+    "name": "gridRowSelector",
+    "returnType": "GridValidRowModel",
+    "category": "Rows",
     "description": ""
   },
   { "name": "gridRowTreeDepthsSelector", "returnType": "GridTreeDepths", "description": "" },

@@ -32,7 +32,7 @@ export function useAnimateInternal<Props extends {}, Elem extends Element>(
   const lastInterpolatedPropsRef = React.useRef(initialProps);
   const transitionRef = React.useRef<Transition>(null);
   const elementRef = React.useRef<Elem>(null);
-  const lastPropsRef = React.useRef(props);
+  const lastPropsRef = React.useRef<Props>(props);
 
   useEnhancedEffect(() => {
     lastPropsRef.current = props;
@@ -100,5 +100,5 @@ export function useAnimateInternal<Props extends {}, Elem extends Element>(
     [animate, props, skip],
   );
 
-  return setRef;
+  return [setRef, lastInterpolatedPropsRef.current] as const;
 }

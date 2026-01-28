@@ -248,4 +248,8 @@ export interface PickerTextFieldOwnerState extends FieldOwnerState {
    * `true` if the input has a label, `false` otherwise.
    */
   inputHasLabel: boolean;
+  /**
+   * `true` if the input label is shrunk, `false` otherwise.
+   */
+  isLabelShrunk: boolean;
 }

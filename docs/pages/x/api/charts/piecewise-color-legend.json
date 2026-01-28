@@ -24,7 +24,7 @@
     "labelPosition": {
       "type": {
         "name": "enum",
-        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'"
+        "description": "'start'<br>&#124;&nbsp;'end'<br>&#124;&nbsp;'extremes'<br>&#124;&nbsp;'inline-start'<br>&#124;&nbsp;'inline-end'"
       },
       "default": "'extremes'"
     },
@@ -47,7 +47,8 @@
   "imports": [
     "import { PiecewiseColorLegend } from '@mui/x-charts/ChartsLegend';",
     "import { PiecewiseColorLegend } from '@mui/x-charts';",
-    "import { PiecewiseColorLegend } from '@mui/x-charts-pro';"
+    "import { PiecewiseColorLegend } from '@mui/x-charts-pro';",
+    "import { PiecewiseColorLegend } from '@mui/x-charts-premium';"
   ],
   "classes": [
     {
@@ -66,6 +67,18 @@
       "key": "horizontal",
       "className": "MuiPiecewiseColorLegend-horizontal",
       "description": "Styles applied to the legend in row layout.",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineEnd",
+      "className": "MuiPiecewiseColorLegend-inlineEnd",
+      "description": "Styles applied to the legend with the labels inlined after the color marks.",
+      "isGlobal": false
+    },
+    {
+      "key": "inlineStart",
+      "className": "MuiPiecewiseColorLegend-inlineStart",
+      "description": "Styles applied to the legend with the labels inlined before the color marks.",
       "isGlobal": false
     },
     {

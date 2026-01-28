@@ -1,6 +1,6 @@
 // date-fns@<3 has no exports field defined
 // See https://github.com/date-fns/date-fns/issues/1781
-/* eslint-disable import/extensions, class-methods-use-this */
+/* eslint-disable import/extensions */
 /* v8 ignore start */
 // @ts-nocheck
 import addDays from 'date-fns/addDays/index.js';

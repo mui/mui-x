@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { isWeekend } from 'date-fns';
 import { StaticDateRangePicker } from '@mui/x-date-pickers-pro/StaticDateRangePicker';
 import { screen } from '@mui/internal-test-utils';

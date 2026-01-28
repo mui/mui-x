@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
 import { grid } from 'test/utils/helperFn';

@@ -1,10 +1,9 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import {
   worldElectricityProduction,
   keyToLabel,
   colors,
-} from './worldElectricityProduction';
+} from '../dataset/worldElectricityProduction';
 
 const stackStrategy = {
   stack: 'total',
@@ -15,18 +14,14 @@ const stackStrategy = {
 const customize = {
   height: 350,
   hideLegend: true,
+  experimentalFeatures: { preferStrictDomainInLineCharts: true },
 };
 
 export default function LineDataset() {
   return (
     <LineChart
       xAxis={[
-        {
-          dataKey: 'year',
-          valueFormatter: (value: number) => value.toString(),
-          min: 1985,
-          max: 2022,
-        },
+        { dataKey: 'year', valueFormatter: (value: number) => value.toString() },
       ]}
       yAxis={[{ width: 50 }]}
       series={Object.keys(keyToLabel).map((key) => ({

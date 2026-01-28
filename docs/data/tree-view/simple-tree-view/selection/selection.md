@@ -13,49 +13,57 @@ waiAria: https://www.w3.org/WAI/ARIA/apg/patterns/treeview/
 
 ## Single selection
 
-By default, the Tree View allows selecting a single item.
+By default, `SimpleTreeView` lets users select a single item.
 
 {{"demo": "SingleSelectTreeView.js"}}
 
 :::success
-When the Tree View uses single selection, you can select an item by clicking it,
-or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
+When `SimpleTreeView` is set to allow one seletion at a time, users can select an item by clicking it or using the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-single-select-trees).
 :::
 
-## Multi selection
+## Multi-selection
 
 Use the `multiSelect` prop to enable multi-selection.
 
 {{"demo": "MultiSelectTreeView.js"}}
 
 :::success
-When the Tree View uses multi selection, you can select multiple items using the mouse in two ways:
+When multi-selection is enabled, users can select multiple items using the mouse in two ways:
 
-- To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
-- To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
+1. To select multiple independent items, hold <kbd class="key">Ctrl</kbd> (or <kbd class="key">⌘ Command</kbd> on macOS) and click the items.
+2. To select a range of items, click on the first item of the range, then hold the <kbd class="key">Shift</kbd> key while clicking on the last item of the range.
 
-You can also use the [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
+You can also use [keyboard shortcuts](/x/react-tree-view/accessibility/#on-multi-select-trees) to select items.
 :::
 
 ## Disable selection
 
-Use the `disableSelection` prop if you don't want your items to be selectable:
+Use the `disableSelection` prop if you don't want the items to be selectable:
 
 {{"demo": "DisableSelection.js"}}
 
 ## Checkbox selection
 
-To activate checkbox selection set `checkboxSelection={true}`:
+To enable checkbox selection, set `checkboxSelection={true}`:
 
 {{"demo": "CheckboxSelection.js"}}
 
-This is also compatible with multi selection:
+This is also compatible with multi-selection:
 
 {{"demo": "CheckboxMultiSelection.js"}}
 
+## Selectable items
+
+Use the `disableSelection` prop on the Tree Item component to disable selection on specific items.
+When an item is not selectable, the checkbox is hidden regardless of [`checkboxSelection`](#checkbox-selection) prop.
+
+In the example below, only leaf items (items without children) are selectable.
+
+{{"demo": "SelectableItems.js"}}
+
 ## Controlled selection
 
-Use the `selectedItems` prop to control selected Tree View items.
+Use the `selectedItems` prop to control selected `TreeItem` components.
 You can also use the `onSelectedItemsChange` prop to listen to changes in the selected items and update the prop accordingly.
 
 {{"demo": "ControlledSelection.js"}}
@@ -70,24 +78,22 @@ Learn more about the _Controlled and uncontrolled_ pattern in the [React documen
 
 ## Track item selection change
 
-Use the `onItemSelectionToggle` prop if you want to react to an item selection change:
+Use the `onItemSelectionToggle` prop to react to an item selection change:
 
 {{"demo": "TrackItemSelectionToggle.js"}}
 
 ## Imperative API
 
-:::success
-To use the `apiRef` object, you need to initialize it using the `useTreeViewApiRef` hook as follows:
+To use the `apiRef` object, you need to initialize it using the `useSimpleTreeViewApiRef()` hook as follows:
 
 ```tsx
-const apiRef = useTreeViewApiRef();
+const apiRef = useSimpleTreeViewApiRef();
 
-return <SimpleTreeView apiRef={apiRef}>{children}</SimpleTreeView>;
+return <SimpleTreeView apiRef={apiRef} items={ITEMS} />;
 ```
 
-When your component first renders, `apiRef` will be `undefined`.
-After this initial render, `apiRef` holds methods to interact imperatively with the Tree View.
-:::
+When your component first renders, `apiRef.current` is `undefined`.
+After the initial render, `apiRef` holds methods to interact imperatively with the Tree View.
 
 ### Select or deselect an item
 
@@ -112,6 +118,6 @@ apiRef.current.setItemSelection({
 
 {{"demo": "ApiMethodSetItemSelection.js"}}
 
-You can use the `keepExistingSelection` property to avoid losing the already selected items when using `multiSelect`:
+You can use the `keepExistingSelection` property to avoid losing the items that have already been selected when using `multiSelect`:
 
 {{"demo": "ApiMethodSetItemSelectionKeepExistingSelection.js"}}

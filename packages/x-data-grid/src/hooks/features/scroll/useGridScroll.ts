@@ -8,7 +8,6 @@ import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
-import { useGridSelector } from '../../utils/useGridSelector';
 import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
@@ -59,8 +58,7 @@ export const useGridScroll = (
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
-  const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
-  const visibleSortedRows = useGridSelector(apiRef, gridExpandedSortedRowEntriesSelector);
+  const virtualScrollerRef = apiRef.current.virtualScrollerRef;
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -76,12 +74,13 @@ export const useGridScroll = (
 
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
-      if (params.colIndex !== undefined) {
+      if (params.colIndex !== undefined && visibleColumns[params.colIndex]) {
         const columnPositions = gridColumnPositionsSelector(apiRef);
 
         let cellWidth: number | undefined;
 
         if (typeof params.rowIndex !== 'undefined') {
+          const visibleSortedRows = gridExpandedSortedRowEntriesSelector(apiRef);
           const rowId = visibleSortedRows[params.rowIndex]?.id;
           const cellColSpanInfo = apiRef.current.unstable_getCellColSpanInfo(
             rowId,
@@ -98,11 +97,12 @@ export const useGridScroll = (
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
           containerSize: dimensions.viewportOuterSize.width,
-          scrollPosition: Math.abs(virtualScrollerRef.current!.scrollLeft),
+          scrollPosition: Math.abs(virtualScrollerRef.current?.scrollLeft ?? 0),
           elementSize: cellWidth,
           elementOffset: columnPositions[params.colIndex],
         });
       }
+
       if (params.rowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef);
         const page = gridPageSelector(apiRef);
@@ -118,7 +118,7 @@ export const useGridScroll = (
 
         scrollCoordinates.top = scrollIntoView({
           containerSize: dimensions.viewportInnerSize.height,
-          scrollPosition: virtualScrollerRef.current!.scrollTop,
+          scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
           elementSize: targetOffsetHeight,
           elementOffset: rowsMeta.positions[elementIndex],
         });
@@ -131,8 +131,8 @@ export const useGridScroll = (
       );
 
       if (
-        typeof scrollCoordinates.left !== undefined ||
-        typeof scrollCoordinates.top !== undefined
+        typeof scrollCoordinates.left !== 'undefined' ||
+        typeof scrollCoordinates.top !== 'undefined'
       ) {
         apiRef.current.scroll(scrollCoordinates);
         return true;
@@ -140,7 +140,7 @@ export const useGridScroll = (
 
       return false;
     },
-    [logger, apiRef, virtualScrollerRef, props.pagination, visibleSortedRows],
+    [logger, apiRef, virtualScrollerRef, props.pagination],
   );
 
   const scroll = React.useCallback<GridScrollApi['scroll']>(

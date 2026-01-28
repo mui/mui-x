@@ -1,9 +1,8 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "8.10.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
-  "main": "src/index.ts",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
     "url": "https://github.com/mui/mui-x/issues"
@@ -29,11 +28,7 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
-    "build:node": "node ../../scripts/build.mjs node",
-    "build:stable": "node ../../scripts/build.mjs stable",
-    "build:copy-files": "node ../../scripts/copyFiles.mjs",
-    "build:types": "tsx ../../scripts/buildTypes.mts",
+    "build": "code-infra build",
     "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
   },
   "repository": {
@@ -43,10 +38,12 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
+    "@base-ui/utils": "^0.2.3",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
+    "@mui/x-virtualizer": "workspace:*",
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",
@@ -82,5 +79,9 @@
   },
   "engines": {
     "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
   }
 }

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 
 import { RichTreeViewPro } from '@mui/x-tree-view-pro/RichTreeViewPro';

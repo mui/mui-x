@@ -10,7 +10,6 @@ import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { vars } from '../constants/cssVariables';
-import { GridColumnUnsortedIcon } from './GridColumnUnsortedIcon';
 import { NotRendered } from '../utils/assert';
 
 export type GridColumnSortButtonProps = GridSlotProps['baseIconButton'] & {
@@ -61,7 +60,7 @@ function getIcon(
   } else if (direction === 'desc') {
     Icon = icons.columnSortedDescendingIcon;
   } else {
-    Icon = GridColumnUnsortedIcon;
+    Icon = icons.columnUnsortedIcon;
     iconProps.sortingOrder = sortingOrder;
   }
   return Icon ? <Icon fontSize="small" className={className} {...iconProps} /> : null;
@@ -85,7 +84,6 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
       as={rootProps.slots.baseIconButton}
       ownerState={ownerState}
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
-      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
       disabled={disabled}
       className={clsx(classes.root, className)}
@@ -97,15 +95,21 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
   );
 
   return (
-    <React.Fragment>
-      {index != null && (
-        <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
-          {iconButton}
-        </rootProps.slots.baseBadge>
-      )}
+    <rootProps.slots.baseTooltip
+      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
+      enterDelay={1000}
+      {...rootProps.slotProps?.baseTooltip}
+    >
+      <span>
+        {index != null && (
+          <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
+            {iconButton}
+          </rootProps.slots.baseBadge>
+        )}
 
-      {index == null && iconButton}
-    </React.Fragment>
+        {index == null && iconButton}
+      </span>
+    </rootProps.slots.baseTooltip>
   );
 }
 

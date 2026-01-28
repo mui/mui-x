@@ -5,7 +5,10 @@ import type {
   GridDataSource,
   GridGetRowsParams,
 } from '@mui/x-data-grid';
-import type { GridDataSourceApiBase } from '@mui/x-data-grid/internals';
+import type {
+  GridDataSourceApiBase,
+  GridDataSourceFetchRowsParams,
+} from '@mui/x-data-grid/internals';
 
 export interface GridDataSourceState {
   loading: Record<GridRowId, boolean>;
@@ -16,9 +19,9 @@ export interface GridGetRowsResponsePro extends GridGetRowsResponse {}
 
 export interface GridGetRowsParamsPro extends GridGetRowsParams {
   /**
-   * Array of keys returned by `getGroupKey` of all the parent rows until the row for which the data is requested
-   * `getGroupKey` prop must be implemented to use this.
-   * Useful for `treeData` and `rowGrouping` only.
+   * Array of keys returned by `getGroupKey()` of all the parent rows until the row for which the data is requested
+   * `getGroupKey()` prop must be implemented to use this.
+   * Used with "tree data" and "row grouping" features only.
    */
   groupKeys?: string[];
 }
@@ -31,7 +34,9 @@ export interface GridDataSourcePro extends Omit<GridDataSource, 'getRows'> {
    */
   getRows(params: GridGetRowsParamsPro): Promise<GridGetRowsResponsePro>;
   /**
-   * Used to group rows by their parent group. Replaces `getTreeDataPath` used in client side tree-data.
+   * Used to group rows by their parent group.
+   * Replaces `getTreeDataPath()` used in client side tree-data
+   * Replaces `colDef.groupingValueGetter` used in client side row grouping
    * @param {GridRowModel} row The row to get the group key of.
    * @returns {string} The group key for the row.
    */
@@ -51,9 +56,13 @@ export interface GridDataSourceApiBasePro extends Omit<GridDataSourceApiBase, 'f
    * If no `parentId` option is provided, it fetches the root rows.
    * Any missing parameter from `params` will be filled from the state (sorting, filtering, etc.).
    * @param {GridRowId} parentId The id of the parent node (default: `GRID_ROOT_GROUP_ID`).
-   * @param {Partial<GridGetRowsParamsPro>} params Request parameters override.
+   * @param {GridDataSourceFetchRowsParams<GridGetRowsParamsPro>} params Request parameters override.
+   * @returns {Promise<void>} A promise that resolves when the rows are fetched.
    */
-  fetchRows: (parentId?: GridRowId, params?: Partial<GridGetRowsParamsPro>) => void;
+  fetchRows: (
+    parentId?: GridRowId,
+    params?: GridDataSourceFetchRowsParams<GridGetRowsParamsPro>,
+  ) => Promise<void>;
   /**
    * Set the loading state of a parent row.
    * @param {string} parentId The id of the parent node.

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -359,12 +360,25 @@ const GridFilterForm = forwardRef<HTMLDivElement, GridFilterFormProps>(
             filterValue = filterValue.filter((val) => {
               return (
                 // Only keep values that are in the new value options
-                getValueFromValueOptions(val, valueOptions, colDef?.getOptionValue!) !== undefined
+                getValueFromValueOptions(
+                  val,
+                  valueOptions,
+                  colDef?.getOptionValue as Exclude<
+                    GridSingleSelectColDef['getOptionValue'],
+                    undefined
+                  >,
+                ) !== undefined
               );
             });
           } else if (
-            getValueFromValueOptions(item.value, valueOptions, colDef?.getOptionValue!) ===
-            undefined
+            getValueFromValueOptions(
+              item.value,
+              valueOptions,
+              colDef?.getOptionValue as Exclude<
+                GridSingleSelectColDef['getOptionValue'],
+                undefined
+              >,
+            ) === undefined
           ) {
             // Reset the filter value if it is not in the new value options
             filterValue = undefined;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import Box from '@mui/material/Box';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 const pData = [2400, 1398, -9800, 3908, 4800, -3800, 4300];
@@ -16,14 +16,15 @@ const xLabels = [
 
 export default function BarChartStackedBySign() {
   return (
-    <BarChart
-      height={300}
-      series={[
-        { data: pData, label: 'pv', id: 'pvId', stack: 'stack1' },
-        { data: uData, label: 'uv', id: 'uvId', stack: 'stack1' },
-      ]}
-      xAxis={[{ data: xLabels }]}
-      yAxis={[{ width: 60 }]}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <BarChart
+        series={[
+          { data: pData, label: 'pv', id: 'pvId', stack: 'stack1' },
+          { data: uData, label: 'uv', id: 'uvId', stack: 'stack1' },
+        ]}
+        xAxis={[{ data: xLabels, height: 28 }]}
+        yAxis={[{ width: 60 }]}
+      />
+    </Box>
   );
 }

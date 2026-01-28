@@ -1,4 +1,5 @@
 import { RefObject } from '@mui/x-internals/types';
+import { getRowValue } from './gridRowsUtils';
 import type { GridRenderContext } from '../../../models';
 import type { GridValidRowModel } from '../../../models/gridRows';
 import type { GridColDef } from '../../../models/colDef';
@@ -55,10 +56,13 @@ export const getCellValue = (
   if (!row) {
     return null;
   }
-  let cellValue = row[colDef.field];
-  const valueGetter = colDef.rowSpanValueGetter ?? colDef.valueGetter;
-  if (valueGetter) {
-    cellValue = valueGetter(cellValue as never, row, colDef, apiRef);
+
+  const cellValue = row[colDef.field];
+  if (colDef.rowSpanValueGetter) {
+    return colDef.rowSpanValueGetter(cellValue as never, row, colDef, apiRef);
   }
-  return cellValue;
+
+  // This util is also called during the state initialization
+  // Use util method directly instead of calling apiRef.current.getRowValue
+  return getRowValue(row, colDef, apiRef);
 };

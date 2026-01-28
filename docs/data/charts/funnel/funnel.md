@@ -1,12 +1,12 @@
 ---
 title: React Funnel chart
 productId: x-charts
-components: FunnelChart, FunnelPlot
+components: FunnelChart, FunnelPlot, FocusedFunnelSection
 ---
 
 # Charts - Funnel [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
-<p class="description">Funnel charts allow to express quantity evolution along a process, such as audience engagement, population education levels or yields of multiple processes.</p>
+<p class="description">Funnel charts let you express quantity evolution along a process, such as audience engagement, population education levels, or yields of multiple processes.</p>
 
 ## Basics
 
@@ -21,7 +21,7 @@ It must contain a property `value` and can have other optional properties, like 
 The funnel chart displays a legend by default.
 The only requirement is to provide a `label` value in the data objects.
 
-To disable the legend, set the `hideLegend` prop to `true`.
+To hide the legend, set the `hideLegend` prop to `true`.
 
 {{"demo": "FunnelLegend.js"}}
 
@@ -114,7 +114,7 @@ The `outlined` variant creates a more lightweight visual style.
 
 The funnel colors can be customized in two ways.
 
-1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each section of the funnel will be colored according to this palette.
+1. You can provide a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each section of the funnel will be colored according to this palette.
 2. You can provide a `color` property in `data` objects, which overrides the palette.
 
 {{"demo": "FunnelColor.js"}}
@@ -161,7 +161,7 @@ To display a category axis, pass a `position` and a list of `categories` to the 
 ### Scaled sections
 
 By default, the sections have the same size because they use the `band` scale type.
-A linear scale, is also available, and will scale the the sections based on their value.
+A linear scale is also available, and scales the sections based on their values.
 To do so, set the `scaleType` property to `linear` in the `categoryAxis`.
 
 {{"demo": "FunnelLinearScale.js"}}

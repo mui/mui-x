@@ -18,7 +18,7 @@ To customize Chart animations, you may need to override CSS classes or implement
 ## Customizing CSS animations
 
 You can override the default CSS classes to customize CSS-based animations.
-The demo below shows how to do this by adding an animated color gradient to the label text:
+The demo below shows how you can increase the label's animation duration to two seconds:
 
 {{"demo": "CSSAnimationCustomization.js"}}
 

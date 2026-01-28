@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function GroupedYAxes() {
@@ -47,7 +46,6 @@ const salesData = [150, 120, 200, 180, 90, 160, 140, 110, 85];
 const profitData = [45, 35, 80, 65, 25, 55, 50, 40, 30];
 
 const chartConfig = {
-  width: 600,
   height: 400,
   xAxis: [{ valueFormatter: (value) => `${value}K` }],
   series: [

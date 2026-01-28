@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 
 export default function SimpleCharts() {
@@ -8,6 +7,7 @@ export default function SimpleCharts() {
         {
           id: 'barCategories',
           data: ['bar A', 'bar B', 'bar C'],
+          height: 28,
         },
       ]}
       series={[

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { ChartsLabelCustomMarkProps } from '@mui/x-charts/ChartsLabel';
 

@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   GridRowSelectionModel,
   gridColumnLookupSelector,
@@ -10,6 +11,8 @@ import {
   useGridApiMethod,
   GRID_CHECKBOX_SELECTION_FIELD,
   GridPreferencePanelsValue,
+  gridColumnGroupsUnwrappedModelSelector,
+  gridVisibleRowsSelector,
 } from '@mui/x-data-grid-pro';
 import {
   getValueOptions,
@@ -31,8 +34,10 @@ import {
   gridAiAssistantActiveConversationSelector,
   gridAiAssistantActiveConversationIndexSelector,
 } from './gridAiAssistantSelectors';
+import { gridChartsIntegrationActiveChartIdSelector } from '../chartsIntegration/gridChartsIntegrationSelectors';
 
 const DEFAULT_SAMPLE_COUNT = 5;
+const MAX_CHART_DATA_POINTS = 1000;
 
 export const aiAssistantStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'initialState' | 'aiAssistantConversations' | 'aiAssistant'>
@@ -69,23 +74,33 @@ export const useGridAiAssistant = (
     | 'onAiAssistantActiveConversationIndexChange'
     | 'onPrompt'
     | 'slots'
+    | 'rowSelection'
     | 'disableColumnFilter'
     | 'disableRowGrouping'
     | 'disableAggregation'
     | 'disableColumnSorting'
     | 'disablePivoting'
+    | 'chartsIntegration'
+    | 'experimentalFeatures'
+    | 'getPivotDerivedColumns'
   >,
 ) => {
   const {
     onPrompt,
     allowAiAssistantDataSampling,
     slots,
+    rowSelection,
     disableColumnFilter,
     disableRowGrouping,
     disableAggregation,
     disableColumnSorting,
     disablePivoting,
+    chartsIntegration,
+    experimentalFeatures,
+    getPivotDerivedColumns,
   } = props;
+  const previousUnwrappedGroupingModel = React.useRef<string[]>([]);
+  const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
   const columnsLookup = gridColumnLookupSelector(apiRef);
   const columns = Object.values(columnsLookup);
   const rows = Object.values(gridRowsLookupSelector(apiRef));
@@ -130,10 +145,7 @@ export const useGridAiAssistant = (
         length: Math.min(DEFAULT_SAMPLE_COUNT, rows.length),
       }).map(() => {
         const row = rows[Math.floor(Math.random() * rows.length)];
-        if (column.valueGetter) {
-          return column.valueGetter(row[column.field] as never, row, column, apiRef);
-        }
-        return row[column.field];
+        return apiRef.current.getRowValue(row, column);
       });
     });
 
@@ -148,17 +160,66 @@ export const useGridAiAssistant = (
 
       const examples = allowDataSampling ? collectSampleData() : {};
 
-      const columnsContext = columns.map((column) => ({
-        field: column.field,
-        description: column.description ?? null,
-        examples: examples[column.field] ?? column.examples ?? [],
-        type: column.type ?? 'string',
-        allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
-      }));
+      const columnsContext = columns.reduce(
+        (acc, column) => {
+          const columnContextWithoutExamples = {
+            field: column.field,
+            description: column.description ?? null,
+            examples: [],
+            type: column.type ?? 'string',
+            allowedOperators: column.filterOperators?.map((operator) => operator.value) ?? [],
+          };
+
+          acc.push({
+            ...columnContextWithoutExamples,
+            examples: examples[column.field] ?? column.examples ?? [],
+          });
+
+          if (disablePivoting) {
+            return acc;
+          }
+
+          (getPivotDerivedColumns?.(column, apiRef.current.getLocaleText) || []).forEach((col) =>
+            acc.push({
+              ...columnContextWithoutExamples,
+              ...col,
+              derivedFrom: column.field,
+            }),
+          );
+
+          return acc;
+        },
+        [] as Record<string, any>[],
+      );
 
       return JSON.stringify(columnsContext);
     },
-    [columns, collectSampleData, isAiAssistantAvailable],
+    [
+      apiRef,
+      columns,
+      collectSampleData,
+      getPivotDerivedColumns,
+      isAiAssistantAvailable,
+      disablePivoting,
+    ],
+  );
+
+  const updateChart = React.useCallback(
+    (result: PromptResponse) => {
+      if (!result.chart) {
+        return;
+      }
+
+      apiRef.current.updateChartDimensionsData(
+        activeChartId,
+        result.chart.dimensions.map((item) => ({ field: item })),
+      );
+      apiRef.current.updateChartValuesData(
+        activeChartId,
+        result.chart.values.map((item) => ({ field: item })),
+      );
+    },
+    [apiRef, activeChartId],
   );
 
   const applyPromptResult = React.useCallback(
@@ -196,6 +257,8 @@ export const useGridAiAssistant = (
           quickFilterValues: [],
         });
         interestColumns.push(...result.filters.map((f) => f.column));
+      } else {
+        result.filters = [];
       }
 
       let appliedPivoting = false;
@@ -212,6 +275,7 @@ export const useGridAiAssistant = (
         appliedPivoting = true;
       } else if ('columns' in result.pivoting) {
         // if pivoting is disabled and there are pivoting results, try to move them into grouping and aggregation
+        apiRef.current.setPivotActive(false);
         result.pivoting.columns.forEach((c) => {
           result.grouping.push({ column: c.column });
         });
@@ -224,26 +288,68 @@ export const useGridAiAssistant = (
         });
         // remove the pivoting results data
         result.pivoting = {};
+      } else {
+        apiRef.current.setPivotActive(false);
       }
 
       if (!disableRowGrouping && !appliedPivoting) {
         apiRef.current.setRowGroupingModel(result.grouping.map((g) => g.column));
+      } else {
+        result.grouping = [];
       }
 
       if (!disableAggregation && !appliedPivoting) {
         apiRef.current.setAggregationModel(result.aggregation);
         interestColumns.push(...Object.keys(result.aggregation));
+      } else {
+        result.aggregation = {};
       }
 
       if (!disableColumnSorting) {
         apiRef.current.setSortModel(
           result.sorting.map((s) => ({ field: s.column, sort: s.direction })),
         );
+      } else {
+        result.sorting = [];
+      }
+
+      if (experimentalFeatures?.charts && chartsIntegration && activeChartId && result.chart) {
+        if (appliedPivoting) {
+          const unsubscribe = apiRef.current.subscribeEvent('rowsSet', () => {
+            const unwrappedGroupingModel = Object.keys(
+              gridColumnGroupsUnwrappedModelSelector(apiRef),
+            );
+            // wait until unwrapped grouping model changes
+            if (
+              !result.chart ||
+              unwrappedGroupingModel.length === 0 ||
+              isDeepEqual(previousUnwrappedGroupingModel.current, unwrappedGroupingModel)
+            ) {
+              return;
+            }
+
+            previousUnwrappedGroupingModel.current = unwrappedGroupingModel;
+
+            const visibleRowsCount = gridVisibleRowsSelector(apiRef).rows.length;
+            const maxColumns = Math.floor(MAX_CHART_DATA_POINTS / visibleRowsCount);
+
+            // we assume that the pivoting was adjusted to what needs to be shown in the chart
+            // so we can just pick up all the columns that were created by pivoting
+            // to avoid rendering issues, set the limit to MAX_CHART_DATA_POINTS data points (rows * columns)
+            result.chart.values = unwrappedGroupingModel.slice(0, maxColumns);
+            updateChart(result);
+
+            unsubscribe();
+          });
+        } else {
+          updateChart(result);
+        }
       }
 
       const visibleRowsData = getVisibleRows(apiRef);
       const rowSelectionModel: GridRowSelectionModel = { type: 'include', ids: new Set() };
-      if (result.select !== -1) {
+      const selection = rowSelection ? result.select : -1;
+      if (selection !== -1) {
         for (let i = 0; i < result.select; i += 1) {
           const row = visibleRowsData.rows[i];
           const id = apiRef.current.getRowId(row);
@@ -261,6 +367,8 @@ export const useGridAiAssistant = (
     },
     [
       apiRef,
+      updateChart,
+      rowSelection,
       disableColumnFilter,
       disableRowGrouping,
       disableAggregation,
@@ -268,6 +376,9 @@ export const useGridAiAssistant = (
       disablePivoting,
       columnsLookup,
       isAiAssistantAvailable,
+      activeChartId,
+      chartsIntegration,
+      experimentalFeatures?.charts,
     ],
   );
 

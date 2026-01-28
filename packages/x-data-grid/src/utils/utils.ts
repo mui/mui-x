@@ -80,8 +80,10 @@ export function deepClone(obj: Record<string, any>) {
  */
 export function eslintUseValue(_: any) {}
 
-export const runIf = (condition: boolean, fn: Function) => (params: unknown) => {
-  if (condition) {
-    fn(params);
-  }
-};
+export const runIf =
+  (condition: boolean, fn: Function) =>
+  (...params: unknown[]) => {
+    if (condition) {
+      fn(...params);
+    }
+  };

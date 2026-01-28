@@ -6,7 +6,8 @@
   "imports": [
     "import { ToolbarButton } from '@mui/x-charts/Toolbar';",
     "import { ToolbarButton } from '@mui/x-charts';",
-    "import { ToolbarButton } from '@mui/x-charts-pro';"
+    "import { ToolbarButton } from '@mui/x-charts-pro';",
+    "import { ToolbarButton } from '@mui/x-charts-premium';"
   ],
   "classes": [],
   "muiName": "MuiToolbarButton",

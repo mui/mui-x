@@ -16,6 +16,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: '기본',
   toolbarDensityComfortable: '넓게',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: '실행 취소',
+  toolbarRedo: '다시 실행',
+
   // Columns selector toolbar button text
   toolbarColumns: '열 목록',
   toolbarColumnsLabel: '열 선택',
@@ -41,6 +45,9 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   toolbarPivot: '피벗',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI 어시스턴트',
@@ -127,6 +134,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: '오름차순 정렬',
   columnMenuSortDesc: '내림차순 정렬',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) => `${count}건의 필터를 적용중`,
@@ -153,6 +161,10 @@ const koKRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '참',
   booleanCellFalseLabel: '거짓',
+
+  // Long text cell
+  longTextCellExpandLabel: '열기',
+  longTextCellCollapseLabel: '접기',
 
   // Actions cell more text
   actionsCellMore: '더보기',
@@ -205,6 +217,7 @@ const koKRGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: '집계',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: '합',
   aggregationFunctionLabelAvg: '평균',
   aggregationFunctionLabelMin: '최소값',
@@ -239,6 +252,32 @@ const koKRGrid: Partial<GridLocaleText> = {
   pivotDragToValues: '값 생성',
   pivotYearColumnHeaderName: '(년)',
   pivotQuarterColumnHeaderName: '(분기)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'AI 어시스턴트',
@@ -292,6 +331,7 @@ const koKRGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `(${count}) 개의 값`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const koKR: Localization = getGridLocalization(koKRGrid);

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
@@ -5,7 +6,6 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   GridRenderCellParams,
   GridRowEventLookup,
-  gridRowMaximumTreeDepthSelector,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -44,22 +44,37 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
   const sortModel = useGridSelector(apiRef, gridSortModelSelector);
-  const treeDepth = useGridSelector(apiRef, gridRowMaximumTreeDepthSelector);
   const editRowsState = useGridSelector(apiRef, gridEditRowsStateSelector);
-  // eslint-disable-next-line no-underscore-dangle
-  const cellValue = params.row.__reorder__ || params.id;
+  const cellValue =
+    // eslint-disable-next-line no-underscore-dangle
+    params.row.__reorder__ ||
+    (params.rowNode.type === 'group' ? (params.rowNode.groupingKey ?? params.id) : params.id);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
-  // TODO: remove sortModel and treeDepth checks once row reorder is compatible
-  const isDraggable = React.useMemo(
-    () =>
-      !!rootProps.rowReordering &&
-      !sortModel.length &&
-      treeDepth === 1 &&
-      Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, treeDepth, editRowsState],
-  );
+  const isRowReorderable = rootProps.isRowReorderable;
+  // TODO: remove sortModel check once row reorder is compatible
+  const isDraggable = React.useMemo(() => {
+    const baseCondition =
+      !!rootProps.rowReordering && !sortModel.length && Object.keys(editRowsState).length === 0;
+
+    if (!baseCondition) {
+      return false;
+    }
+
+    if (isRowReorderable) {
+      return isRowReorderable({ row: params.row, rowNode: params.rowNode });
+    }
+
+    return true;
+  }, [
+    rootProps.rowReordering,
+    isRowReorderable,
+    sortModel,
+    editRowsState,
+    params.row,
+    params.rowNode,
+  ]);
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -175,19 +190,6 @@ GridRowReorderCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

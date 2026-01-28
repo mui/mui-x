@@ -1,4 +1,4 @@
-import * as React from 'react';
+import Box from '@mui/material/Box';
 import { LineChart } from '@mui/x-charts/LineChart';
 
 const margin = { right: 24 };
@@ -16,15 +16,16 @@ const xLabels = [
 
 export default function SimpleLineChart() {
   return (
-    <LineChart
-      height={300}
-      series={[
-        { data: pData, label: 'pv' },
-        { data: uData, label: 'uv' },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-      yAxis={[{ width: 50 }]}
-      margin={margin}
-    />
+    <Box sx={{ width: '100%', height: 300 }}>
+      <LineChart
+        series={[
+          { data: pData, label: 'pv' },
+          { data: uData, label: 'uv' },
+        ]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
+        yAxis={[{ width: 50 }]}
+        margin={margin}
+      />
+    </Box>
   );
 }

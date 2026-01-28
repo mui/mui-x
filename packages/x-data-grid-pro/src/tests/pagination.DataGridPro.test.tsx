@@ -1,6 +1,5 @@
-import { createRenderer, act } from '@mui/internal-test-utils';
+import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
@@ -110,5 +109,46 @@ describe('<DataGridPro /> - Pagination', () => {
     }).toErrorDev([
       'MUI X: Usage of the `rowCount` prop with client side pagination (`paginationMode="client"`) has no effect. `rowCount` is only meant to be used with `paginationMode="server"`.',
     ]);
+  });
+
+  // Test for https://github.com/mui/mui-x/issues/19281
+  it('should sync pagination prop with state properly', async () => {
+    const columns = [{ field: 'name' }];
+    const rows = [
+      { id: 1, name: 'Row 1' },
+      { id: 2, name: 'Row 2' },
+      { id: 3, name: 'Row 3' },
+      { id: 4, name: 'Row 4' },
+      { id: 5, name: 'Row 5' },
+      { id: 6, name: 'Row 6' },
+      { id: 7, name: 'Row 7' },
+      { id: 8, name: 'Row 8' },
+      { id: 9, name: 'Row 9' },
+      { id: 10, name: 'Row 10' },
+      { id: 11, name: 'Row 11' },
+    ];
+    function TestComponent({ pagination = false }: { pagination?: boolean }) {
+      return (
+        <div style={{ width: 300, height: 500 }}>
+          <DataGridPro
+            columns={columns}
+            rows={rows}
+            initialState={{ pagination: { paginationModel: { pageSize: 5 } } }}
+            pageSizeOptions={[5, 10]}
+            pagination={pagination}
+            disableVirtualization
+          />
+        </div>
+      );
+    }
+
+    const { setProps } = render(<TestComponent />);
+    expect(getColumnValues(0)).to.have.length(11);
+    setProps({ pagination: true });
+
+    await waitFor(() => {
+      const visibleValues = getColumnValues(0);
+      expect(visibleValues).to.have.length(5);
+    });
   });
 });

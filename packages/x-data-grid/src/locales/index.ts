@@ -4,6 +4,7 @@ export * from './beBY';
 export * from './bgBG';
 export * from './bnBD';
 export * from './csCZ';
+export * from './caES';
 export * from './daDK';
 export * from './deDE';
 export * from './elGR';

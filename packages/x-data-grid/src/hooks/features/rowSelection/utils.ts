@@ -4,7 +4,7 @@ import { GRID_ROOT_GROUP_ID } from '../rows/gridRowsUtils';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridRowSelectionManagerSelector } from './gridRowSelectionSelector';
-import { gridRowTreeSelector } from '../rows/gridRowsSelector';
+import { gridRowsLookupSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { createSelector } from '../../../utils/createSelector';
 import type { GridGroupNode, GridRowId, GridRowTreeConfig } from '../../../models/gridRows';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
@@ -14,6 +14,9 @@ import type {
 } from '../../../models/api/gridApiCommunity';
 import { type GridRowSelectionPropagation } from '../../../models/gridRowSelectionModel';
 import { type RowSelectionManager } from '../../../models/gridRowSelectionManager';
+import { GridRowParams } from '../../../models/params/gridRowParams';
+import { gridColumnDefinitionsSelector } from '../columns';
+import { gridRowSelectableSelector } from '../../core/gridPropsSelectors';
 
 export const ROW_SELECTION_PROPAGATION_DEFAULT: GridRowSelectionPropagation = {
   parents: true,
@@ -49,20 +52,45 @@ function getGridRowGroupSelectableDescendants(
 }
 
 export const checkboxPropsSelector = createSelector(
+  gridColumnDefinitionsSelector,
   gridRowTreeSelector,
   gridFilteredRowsLookupSelector,
   gridRowSelectionManagerSelector,
+  gridRowsLookupSelector,
+  gridRowSelectableSelector,
   (
+    columns,
     rowTree,
     filteredRowsLookup,
     rowSelectionManager,
-    { groupId, autoSelectParents }: { groupId: GridRowId; autoSelectParents: boolean },
+    rowsLookup,
+    isRowSelectable,
+    {
+      groupId,
+      autoSelectParents,
+    }: {
+      groupId: GridRowId;
+      autoSelectParents: boolean;
+    },
   ) => {
     const groupNode = rowTree[groupId];
+
+    const rowParams: GridRowParams = {
+      id: groupId,
+      row: rowsLookup[groupId],
+      columns,
+    };
+
+    let isSelectable = true;
+    if (typeof isRowSelectable === 'function' && rowsLookup[groupId]) {
+      isSelectable = isRowSelectable(rowParams);
+    }
+
     if (!groupNode || groupNode.type !== 'group' || rowSelectionManager.has(groupId)) {
       return {
         isIndeterminate: false,
         isChecked: rowSelectionManager.has(groupId),
+        isSelectable,
       };
     }
 
@@ -82,10 +110,24 @@ export const checkboxPropsSelector = createSelector(
       if (node?.type === 'group') {
         node.children.forEach(traverseDescendants);
       }
-      if (rowSelectionManager.has(itemToTraverseId)) {
-        hasSelectedDescendant = true;
-      } else {
-        hasUnSelectedDescendant = true;
+      // Check if row is selectable before considering it for parent selection state
+      const descendantRowParams: GridRowParams = {
+        id: itemToTraverseId,
+        row: rowsLookup[itemToTraverseId],
+        columns,
+      };
+      const rowIsSelectable =
+        typeof isRowSelectable === 'function' && rowsLookup[itemToTraverseId]
+          ? isRowSelectable(descendantRowParams)
+          : true;
+
+      // Only consider selectable rows when determining parent selection state
+      if (rowIsSelectable) {
+        if (rowSelectionManager.has(itemToTraverseId)) {
+          hasSelectedDescendant = true;
+        } else {
+          hasUnSelectedDescendant = true;
+        }
       }
     };
 
@@ -94,6 +136,7 @@ export const checkboxPropsSelector = createSelector(
     return {
       isIndeterminate: hasSelectedDescendant && hasUnSelectedDescendant,
       isChecked: autoSelectParents ? hasSelectedDescendant && !hasUnSelectedDescendant : false,
+      isSelectable,
     };
   },
 );
@@ -177,22 +220,39 @@ export const findRowsToSelect = (
 
   if (autoSelectParents) {
     const checkAllDescendantsSelected = (rowId: GridRowId): boolean => {
-      if (!rowSelectionManager.has(rowId) && !selectedDescendants.has(rowId)) {
-        return false;
-      }
       const node = tree[rowId];
       if (!node) {
         return false;
       }
+      // For non-group nodes, check if it's selected or if it's non-selectable
       if (node.type !== 'group') {
+        // If the row is selectable, it must be selected
+        if (apiRef.current.isRowSelectable(rowId)) {
+          return rowSelectionManager.has(rowId) || selectedDescendants.has(rowId);
+        }
+        // Non-selectable rows don't affect parent selection
         return true;
       }
+      // For group nodes, check if it's selected or all its children are selected
+      if (rowSelectionManager.has(rowId) || selectedDescendants.has(rowId)) {
+        return true;
+      }
+      // Recursively check all children
       return node.children.every(checkAllDescendantsSelected);
     };
 
     const traverseParents = (rowId: GridRowId) => {
       const siblings: GridRowId[] = getFilteredRowNodeSiblings(tree, filteredRows, rowId);
-      if (siblings.length === 0 || siblings.every(checkAllDescendantsSelected)) {
+      // Check if all selectable siblings are selected
+      const allSelectableSiblingsSelected = siblings.every((siblingId) => {
+        // Non-selectable siblings don't affect parent selection
+        if (!apiRef.current.isRowSelectable(siblingId)) {
+          return true;
+        }
+        return checkAllDescendantsSelected(siblingId);
+      });
+
+      if (siblings.length === 0 || allSelectableSiblingsSelected) {
         const rowNode = tree[rowId] as GridGroupNode;
         const parent = rowNode?.parent;
         if (

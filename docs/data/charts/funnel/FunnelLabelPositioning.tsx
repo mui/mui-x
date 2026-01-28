@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { FunnelChart } from '@mui/x-charts-pro/FunnelChart';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import Stack from '@mui/material/Stack';
@@ -29,7 +28,6 @@ export default function FunnelLabelPositioning() {
             defaultValue: 'middle',
             options: [
               'auto',
-              'baseline',
               'hanging',
               'middle',
               'central',

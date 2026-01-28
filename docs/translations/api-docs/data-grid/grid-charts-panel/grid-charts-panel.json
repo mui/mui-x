@@ -1,0 +1,17 @@
+{
+  "componentDescription": "",
+  "propDescriptions": {
+    "getColumnName": {
+      "description": "Override the default column name generation logic. Use field in combination with the grid state to determine the name of the column that will be shown to the user.",
+      "typeDescriptions": {
+        "field": { "name": "field", "description": "The field name" },
+        "string | undefined": {
+          "name": "string | undefined",
+          "description": "The name of the column or undefined if the column name should be determined by the grid"
+        }
+      }
+    },
+    "schema": { "description": "The schema of the charts configuration." }
+  },
+  "classDescriptions": {}
+}

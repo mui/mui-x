@@ -1,0 +1,18 @@
+{
+  "props": {},
+  "name": "ChartsBrushOverlay",
+  "imports": [
+    "import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';",
+    "import { ChartsBrushOverlay } from '@mui/x-charts';",
+    "import { ChartsBrushOverlay } from '@mui/x-charts-pro';",
+    "import { ChartsBrushOverlay } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "spread": true,
+  "themeDefaultProps": null,
+  "muiName": "MuiChartsBrushOverlay",
+  "filename": "/packages/x-charts/src/ChartsBrushOverlay/ChartsBrushOverlay.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/brush/\">Charts - Brush</a></li>\n<li><a href=\"/x/react-charts/zoom-and-pan/\">Charts - Zoom and pan <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

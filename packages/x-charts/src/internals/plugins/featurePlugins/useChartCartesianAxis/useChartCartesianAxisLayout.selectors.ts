@@ -1,6 +1,6 @@
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
-import { ChartState } from '../../models/chart';
+import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type DefaultedXAxis, type DefaultedYAxis } from '../../../../models/axis';
+import { type ChartState } from '../../models/chart';
 
 export const selectorChartCartesianAxisState = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
@@ -21,3 +21,7 @@ export type SelectorChartRawYAxisType = <
 ) => DefaultedYAxis[] | undefined;
 
 export const selectorChartRawYAxis: SelectorChartRawYAxisType = (state) => state.cartesianAxis?.y;
+
+export const selectorChartCartesianAxesGap = (
+  state: ChartState<[], [UseChartCartesianAxisSignature]>,
+) => state.cartesianAxis?.axesGap ?? 0;

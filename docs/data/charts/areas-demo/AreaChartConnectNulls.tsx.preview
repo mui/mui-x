@@ -1,12 +1,10 @@
 <LineChart
-  xAxis={[{ data: xData, scaleType: 'point' }]}
+  xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
   series={[{ data, showMark: false, area: true }]}
-  height={200}
   margin={margin}
 />
 <LineChart
-  xAxis={[{ data: xData, scaleType: 'point' }]}
+  xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
   series={[{ data, showMark: false, area: true, connectNulls: true }]}
-  height={200}
   margin={margin}
 />

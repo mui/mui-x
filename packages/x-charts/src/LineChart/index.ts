@@ -10,7 +10,11 @@ export * from './AnimatedArea';
 export * from './LineElement';
 export * from './AnimatedLine';
 export * from './MarkElement';
+
+export * from './FocusedLineMark';
+
 export * from './LineHighlightElement';
+export * from './LineChart.plugins';
 
 export type { MarkElementClasses, MarkElementClassKey } from './markElementClasses';
 export { getMarkElementUtilityClass, markElementClasses } from './markElementClasses';

@@ -357,6 +357,7 @@ export const DateCalendar = React.forwardRef(function DateCalendar(
             <MonthCalendar
               {...baseDateValidationProps}
               {...commonViewProps}
+              currentMonth={calendarState.currentMonth}
               hasFocus={hasFocus}
               className={className}
               value={value}

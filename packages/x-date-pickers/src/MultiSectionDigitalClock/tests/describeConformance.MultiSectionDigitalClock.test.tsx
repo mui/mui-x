@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createPickerRenderer } from 'test/utils/pickers';
 import {
   MultiSectionDigitalClock,

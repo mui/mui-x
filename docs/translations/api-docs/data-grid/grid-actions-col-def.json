@@ -14,6 +14,9 @@
       "description": "Limit the aggregation function usable on this column.<br />By default, the column will have all the aggregation functions that are compatible with its type."
     },
     "cellClassName": { "description": "Class name added to cells in this column." },
+    "chartable": {
+      "description": "If <code>false</code>, the column will not be available for charts integration."
+    },
     "colSpan": { "description": "Number of columns a cell should span." },
     "description": {
       "description": "The tooltip text shown when the column header name is truncated."
@@ -46,6 +49,9 @@
     },
     "groupingValueGetter": {
       "description": "Function that transforms a complex cell value into a key that be used for grouping the rows.<br />Not supported with the server-side row grouping. Use <code>dataSource.getGroupKey()</code> instead."
+    },
+    "groupingValueSetter": {
+      "description": "Function that takes a grouping value and updates the row data accordingly.<br />This is the inverse operation of <code>groupingValueGetter</code>."
     },
     "headerAlign": { "description": "Align column header content." },
     "headerClassName": { "description": "Class name added to the column header cell." },

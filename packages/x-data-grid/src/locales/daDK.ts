@@ -5,8 +5,8 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Ingen rækker',
   noResultsOverlayLabel: 'Ingen resultater',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
+  noColumnsOverlayLabel: 'Ingen kolonner',
+  noColumnsOverlayManageColumns: 'Administrer kolonner',
   // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
 
   // Density selector toolbar button text
@@ -15,6 +15,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Fortryd',
+  toolbarRedo: 'Gentag',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
@@ -42,6 +46,9 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Toolbar pivot button
   // toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  // toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   // toolbarAssistant: 'AI Assistant',
@@ -110,7 +117,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Større end eller lig med',
   'headerFilterOperator<': 'Mindre end',
   'headerFilterOperator<=': 'Mindre end eller lig med',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Ryd filter',
 
   // Filter values text
   filterValueAny: 'hvilken som helst',
@@ -128,6 +135,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   columnMenuSortAsc: 'Sortér stigende',
   columnMenuSortDesc: 'Sortér faldende',
   // columnMenuManagePivot: 'Manage pivot',
+  // columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -156,6 +164,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Udvid',
+  longTextCellCollapseLabel: 'Kollaps',
 
   // Actions cell more text
   actionsCellMore: 'mere',
@@ -213,6 +225,7 @@ const daDKGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregering',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'sum',
   aggregationFunctionLabelAvg: 'gns',
   aggregationFunctionLabelMin: 'min',
@@ -247,6 +260,32 @@ const daDKGrid: Partial<GridLocaleText> = {
   // pivotDragToValues: 'Drag here to create values',
   // pivotYearColumnHeaderName: '(Year)',
   // pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  // chartsNoCharts: 'There are no charts available',
+  // chartsChartNotSelected: 'Select a chart type to configure its options',
+  // chartsTabChart: 'Chart',
+  // chartsTabFields: 'Fields',
+  // chartsTabCustomize: 'Customize',
+  // chartsCloseButton: 'Close charts configuration',
+  // chartsSyncButtonLabel: 'Sync chart',
+  // chartsSearchPlaceholder: 'Search fields',
+  // chartsSearchLabel: 'Search fields',
+  // chartsSearchClear: 'Clear search',
+  // chartsNoFields: 'No fields',
+  // chartsFieldBlocked: 'This field cannot be added to any section',
+  // chartsCategories: 'Categories',
+  // chartsSeries: 'Series',
+  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  // chartsMenuMoveUp: 'Move up',
+  // chartsMenuMoveDown: 'Move down',
+  // chartsMenuMoveToTop: 'Move to top',
+  // chartsMenuMoveToBottom: 'Move to bottom',
+  // chartsMenuOptions: 'Field options',
+  // chartsMenuRemove: 'Remove',
+  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
+  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   // aiAssistantPanelTitle: 'AI Assistant',
@@ -295,6 +334,7 @@ const daDKGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const daDK: Localization = getGridLocalization(daDKGrid);

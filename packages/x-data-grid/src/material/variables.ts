@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
-import { hash, stringify } from '@mui/x-internals/hash';
+import { hash } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
+import { colorMixIfSupported, supportsColorMix } from '../components/containers/GridRootStyles';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
   return React.useMemo(() => {
-    const id = hash(stringify(theme));
+    const id = hash(stringifyTheme(theme));
     const variables = transformTheme(theme);
     return { id, variables };
   }, [theme]);
@@ -17,7 +18,13 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
 
-  const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
+  const paperColor = (t.vars || t).palette.background.paper;
+
+  const backgroundBase =
+    dataGridPalette?.bg ??
+    (t.palette.mode === 'dark'
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
+      : paperColor);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.vars
@@ -25,8 +32,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
   const backgroundOverlay =
     t.palette.mode === 'dark'
-      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
-      : (t.vars || t).palette.background.paper;
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 90%, #fff)`, paperColor)
+      : paperColor;
 
   const selectedColor = t.vars
     ? `rgb(${t.vars.palette.primary.mainChannel})`
@@ -52,13 +59,17 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
     [k.colors.foreground.error]: (t.vars || t).palette.error.dark,
 
-    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
+    [k.colors.interactive.hover]: supportsColorMix
+      ? (t.vars || t).palette.action.hover
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 800 : 100],
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
     [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
     [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
-    [k.colors.interactive.selected]: selectedColor,
+    [k.colors.interactive.selected]: supportsColorMix
+      ? selectedColor
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 700 : 200],
     [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
     [k.header.background.base]: backgroundHeader,
@@ -123,5 +134,36 @@ function formatFont(font: React.CSSProperties | undefined) {
   if (!font) {
     return undefined;
   }
-  return `${font.fontWeight} ${font.fontSize} / ${font.lineHeight} ${font.fontFamily}`;
+  const fontSize = typeof font.fontSize === 'number' ? `${font.fontSize}px` : font.fontSize;
+  return `${font.fontWeight} ${fontSize} / ${font.lineHeight} ${font.fontFamily}`;
+}
+
+/**
+ * A version of JSON.stringify for theme objects.
+ * Fixes: https://github.com/mui/mui-x/issues/17521
+ * Source: https://www.30secondsofcode.org/js/s/stringify-circular-json/
+ */
+function stringifyTheme(input: object | string | number | null) {
+  const seen = new WeakSet();
+  return JSON.stringify(input, (_, v) => {
+    // https://github.com/mui/mui-x/issues/17855
+    if (
+      (typeof window !== 'undefined' && v === window) ||
+      (typeof document !== 'undefined' && v === document)
+    ) {
+      return v.toString();
+    }
+    if (v !== null && typeof v === 'object') {
+      // Do not attempt to serialize React elements due to performance concerns.
+      // Fixes https://github.com/mui/mui-x/issues/19414
+      if (React.isValidElement(v)) {
+        return null;
+      }
+      if (seen.has(v)) {
+        return null;
+      }
+      seen.add(v);
+    }
+    return v;
+  });
 }

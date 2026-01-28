@@ -114,7 +114,7 @@ Note that the signature of `valueFormatter` has changed in v7 – see the [migra
 If you're using v6, please use the [v6 documentation](https://v6.mui.com/x/react-data-grid/column-definition/#value-formatter).
 :::
 
-The value formatter allows you to convert the value before displaying it.
+The value formatter lets you convert the value before displaying it.
 Common use cases include converting a JavaScript `Date` object to a date string or a `Number` into a formatted number (for example "1,000.50").
 
 Note, that the value returned by `valueFormatter` is only used for rendering purposes.
@@ -141,7 +141,7 @@ It resolves the rendered output in the following order:
 4. `row[field]`
 
 The `renderCell` method of the column definitions is similar to `valueFormatter`.
-However, it trades to be able to only render in a cell in exchange for allowing to return a React node (instead of a string).
+However, it trades the ability to only render in a cell in exchange for letting you return a React node (instead of a string).
 
 ```tsx
 const columns: GridColDef[] = [
@@ -233,7 +233,7 @@ If you want the cell information to persist, you should save it either in the Da
 ### Expand cell renderer
 
 By default, the Data Grid cuts the content of a cell and renders an ellipsis if the content of the cell does not fit in the cell.
-As a workaround, you can create a cell renderer that will allow seeing the full content of the cell in the Data Grid.
+As a workaround, you can create a cell renderer that lets users see the full content of the cell in the Data Grid.
 
 {{"demo": "RenderExpandCellGrid.js", "bg": "inline"}}
 
@@ -255,6 +255,7 @@ The following are the native column types with their required value types:
 | Column type          | Value type                 |
 | :------------------- | :------------------------- |
 | `'string'` (default) | `string`                   |
+| `'longText'`         | `string`                   |
 | `'number'`           | `number`                   |
 | `'date'`             | `Date() object`            |
 | `'dateTime'`         | `Date() object`            |
@@ -263,6 +264,21 @@ The following are the native column types with their required value types:
 | `'actions'`          | Not applicable             |
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+
+### Long text keyboard interactions
+
+The `'longText'` column type supports keyboard interactions to expand, collapse, and edit content when the cell is focused via click or keyboard navigation.
+
+View mode (expand button focused):
+
+- <kbd class="key">Space</kbd> – Toggle popup
+- <kbd class="key">Escape</kbd> – Close popup
+
+Edit mode (textarea focused):
+
+- <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd> – Insert newline
+- <kbd class="key">Enter</kbd> – Commit changes
+- <kbd class="key">Escape</kbd> – Cancel editing
 
 ### Converting types
 
@@ -323,19 +339,28 @@ However, you can customize which attribute is used as value and label by using `
 
 #### Actions
 
-If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
-You can add the `showInMenu` prop on the returned React elements to signal the Data Grid to group these actions inside a row menu.
+If the column type is `'actions'`, you need to provide a `renderCell` function that renders a `GridActionsCell` component with `GridActionsCellItem` elements as children.
+You can add the `showInMenu` prop on the `GridActionsCellItem` elements to signal the Data Grid to group these actions inside a row menu.
 
 ```tsx
 {
   field: 'actions',
   type: 'actions',
-  getActions: (params: GridRowParams) => [
-    <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
-    <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
-  ]
+  renderCell: (params) => (
+    <GridActionsCell {...params}>
+      <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+    </GridActionsCell>
+  )
 }
 ```
+
+<!-- TODO(v9): remove the warning below -->
+
+:::warning
+This is the recommended way to define actions in the column definition starting from v8.19.0.
+The `getActions` method that returned an array of actions is deprecated, and will be removed in a future version.
+:::
 
 By default, actions shown in the menu will close the menu on click.
 But in some cases, you might want to keep the menu open after clicking an action.
@@ -344,6 +369,11 @@ You can achieve this by setting the `closeMenuOnClick` prop to `false`.
 In the following example, the "Delete" action opens a confirmation dialog and therefore needs to keep the menu mounted:
 
 {{"demo": "ActionsWithModalGrid.js", "bg": "inline"}}
+
+:::success
+In the example above, the React Context API is used to pass the action handlers to the `ActionsCell` component.
+This is a recommended pattern to keep the column definitions stable.
+:::
 
 ### Custom column types
 

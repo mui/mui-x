@@ -71,7 +71,7 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
     {
       props: { fieldDirection: 'rtl' },
       style: {
-        textAlign: 'right /*! @noflip */' as any,
+        justifyContent: 'end',
       },
     },
     {
@@ -93,6 +93,22 @@ export const PickersInputBaseSectionsContainer = styled(PickersSectionListRoot, 
         isFieldFocused: false,
         isFieldValueEmpty: true,
         inputHasLabel: false,
+      },
+      style: theme.vars
+        ? {
+            opacity: theme.vars.opacity.inputPlaceholder,
+          }
+        : {
+            opacity: theme.palette.mode === 'light' ? 0.42 : 0.5,
+          },
+    },
+    {
+      props: {
+        hasStartAdornment: false,
+        isFieldFocused: false,
+        isFieldValueEmpty: true,
+        inputHasLabel: true,
+        isLabelShrunk: true,
       },
       style: theme.vars
         ? {

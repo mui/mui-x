@@ -1,4 +1,3 @@
-import { server } from '@vitest/browser/context';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 import { PointerManager } from '../PointerManager';
 import { move } from './MoveUserGesture';
@@ -85,15 +84,9 @@ describe('MoveUserGesture', () => {
     await move(pointerManager, options);
 
     const lastMoveEvent = pointerMove.mock.lastCall?.[0];
-    // Webkit does not support fractional pixels
-    const isWebkit = server.browser === 'webkit';
     const expectedDelta = 100 / Math.sqrt(2); // 45 degree movement
-    expect(lastMoveEvent?.clientX).toBeCloseTo(
-      50 + (isWebkit ? Math.floor(expectedDelta) : expectedDelta),
-    );
-    expect(lastMoveEvent?.clientY).toBeCloseTo(
-      50 + (isWebkit ? Math.floor(expectedDelta) : expectedDelta),
-    );
+    expect(lastMoveEvent?.clientX).toBeCloseTo(50 + expectedDelta);
+    expect(lastMoveEvent?.clientY).toBeCloseTo(50 + expectedDelta);
   });
 
   it('should use custom pointer configuration', async () => {
@@ -174,10 +167,7 @@ describe('MoveUserGesture', () => {
       const lastMoveEvent = pointerMove.mock.lastCall?.[0];
       // Webkit does not support fractional pixels
       // So it seems we lose some precision here
-      const isWebkitIssueAngle = server.browser === 'webkit' && testCase.angle === 270;
-      expect(lastMoveEvent?.clientX, `for angle ${testCase.angle}`).toBeCloseTo(
-        testCase.expectedX - (isWebkitIssueAngle ? 1 : 0),
-      );
+      expect(lastMoveEvent?.clientX, `for angle ${testCase.angle}`).toBeCloseTo(testCase.expectedX);
       expect(lastMoveEvent?.clientY, `for angle ${testCase.angle}`).toBeCloseTo(testCase.expectedY);
     }
   });

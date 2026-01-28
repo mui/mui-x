@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useLineSeries, useLineSeriesContext } from './useLineSeries';
-import { DefaultizedLineSeriesType, LineSeriesType } from '../models';
+import { type DefaultizedLineSeriesType, type LineSeriesType } from '../models';
 import { LineChart } from '../LineChart';
 
 const mockSeries: LineSeriesType[] = [
@@ -66,5 +66,10 @@ describe('useLineSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useLineSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
 import {
   GRID_STRING_COL_DEF,
@@ -27,11 +26,15 @@ import {
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
 } from './gridRowGroupingUtils';
 import { gridRowGroupingSanitizedModelSelector } from './gridRowGroupingSelector';
+import type { GridRowGroupingModel } from './gridRowGroupingInterfaces';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 const GROUPING_COL_DEF_DEFAULT_PROPERTIES: Omit<GridColDef, 'field'> = {
   ...GRID_STRING_COL_DEF,
   type: 'custom',
   disableReorder: true,
+  chartable: false,
+  aggregable: false,
 };
 
 const GROUPING_COL_DEF_FORCED_PROPERTIES_DEFAULT: Pick<
@@ -110,13 +113,53 @@ const groupedByColValueFormatter: (
     return value;
   };
 
-const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderName: boolean) => {
+function getGroupingCriteriaProperties(
+  groupedByColDef: GridColDef,
+  rowGroupingColumnMode: 'single',
+  rowGroupingModel: GridRowGroupingModel,
+  columnsLookup: GridColumnRawLookup,
+): Partial<GridColDef>;
+function getGroupingCriteriaProperties(
+  groupedByColDef: GridColDef,
+  rowGroupingColumnMode: 'multiple',
+): Partial<GridColDef>;
+function getGroupingCriteriaProperties(
+  groupedByColDef: GridColDef,
+  rowGroupingColumnMode: DataGridPremiumProcessedProps['rowGroupingColumnMode'],
+  rowGroupingModel: GridRowGroupingModel = [],
+  columnsLookup: GridColumnRawLookup = {},
+): Partial<GridColDef> {
+  let valueFormatter: GridColDef['valueFormatter'] | undefined;
+
+  if (rowGroupingColumnMode === 'single' && rowGroupingModel.length > 1) {
+    // In single column grouping mode, the `valueFormatter` of the grouping column uses
+    // value formatters from original columns for each of the grouping criteria
+    valueFormatter = (value, row, column, apiRef) => {
+      const rowId = gridRowIdSelector(apiRef, row);
+      const rowNode = gridRowNodeSelector(apiRef, rowId);
+      if (rowNode?.type === 'group') {
+        const originalColDef = rowNode.groupingField ? columnsLookup[rowNode.groupingField] : null;
+        if (originalColDef?.type === 'singleSelect') {
+          // the default valueFormatter of a singleSelect colDef won't work with the grouping column values
+          return value;
+        }
+        const columnValueFormatter = originalColDef?.valueFormatter;
+        if (typeof columnValueFormatter === 'function') {
+          return columnValueFormatter(value as never, row, column, apiRef);
+        }
+      }
+      return value;
+    };
+  } else {
+    valueFormatter = groupedByColDef.valueFormatter
+      ? groupedByColValueFormatter(groupedByColDef)
+      : undefined;
+  }
+
   const properties: Partial<GridColDef> = {
     sortable: groupedByColDef.sortable,
     filterable: groupedByColDef.filterable,
-    valueFormatter: groupedByColDef.valueFormatter
-      ? groupedByColValueFormatter(groupedByColDef)
-      : undefined,
+    valueFormatter,
     valueOptions: isSingleSelectColDef(groupedByColDef) ? groupedByColDef.valueOptions : undefined,
     sortComparator: (v1, v2, cellParams1, cellParams2) => {
       // We only want to sort the groups of the current grouping criteria
@@ -134,12 +177,13 @@ const getGroupingCriteriaProperties = (groupedByColDef: GridColDef, applyHeaderN
     filterOperators: groupedByColDef.filterOperators,
   };
 
+  const applyHeaderName = !(rowGroupingColumnMode === 'single' && rowGroupingModel.length > 1);
   if (applyHeaderName) {
     properties.headerName = groupedByColDef.headerName ?? groupedByColDef.field;
   }
 
   return properties;
-};
+}
 
 interface CreateGroupingColDefMonoCriteriaParams {
   columnsLookup: GridColumnRawLookup;
@@ -253,11 +297,11 @@ export const createGroupingColDefForOneGroupingCriteria = ({
   // By default, we apply the sorting / filtering on the groups of this column's grouping criteria based on the properties of `groupedColDef`.
   let sourceProperties: Partial<GridColDef>;
   if (mainGroupingCriteria && mainGroupingCriteria === groupingCriteria) {
-    sourceProperties = getGroupingCriteriaProperties(groupedByColDef, true);
+    sourceProperties = getGroupingCriteriaProperties(groupedByColDef, 'multiple');
   } else if (leafColDef) {
     sourceProperties = getLeafProperties(leafColDef);
   } else {
-    sourceProperties = getGroupingCriteriaProperties(groupedByColDef, true);
+    sourceProperties = getGroupingCriteriaProperties(groupedByColDef, 'multiple');
   }
 
   // The properties that can't be overridden with `colDefOverride`
@@ -281,7 +325,7 @@ interface CreateGroupingColDefSeveralCriteriaParams {
   /**
    * The fields from which we are grouping the rows.
    */
-  rowGroupingModel: string[];
+  rowGroupingModel: GridRowGroupingModel;
   /**
    * The col def properties the user wants to override.
    * This value comes `prop.groupingColDef`.
@@ -379,13 +423,20 @@ export const createGroupingColDefForAllGroupingCriteria = ({
   // By default, we apply the sorting / filtering on the groups of the top level grouping criteria based on the properties of `columnsLookup[orderedGroupedByFields[0]]`.
   let sourceProperties: Partial<GridColDef>;
   if (mainGroupingCriteria && rowGroupingModel.includes(mainGroupingCriteria)) {
-    sourceProperties = getGroupingCriteriaProperties(columnsLookup[mainGroupingCriteria], true);
+    sourceProperties = getGroupingCriteriaProperties(
+      columnsLookup[mainGroupingCriteria],
+      'single',
+      rowGroupingModel,
+      columnsLookup,
+    );
   } else if (leafColDef) {
     sourceProperties = getLeafProperties(leafColDef);
   } else {
     sourceProperties = getGroupingCriteriaProperties(
       columnsLookup[rowGroupingModel[0]],
-      rowGroupingModel.length === 1,
+      'single',
+      rowGroupingModel,
+      columnsLookup,
     );
   }
 

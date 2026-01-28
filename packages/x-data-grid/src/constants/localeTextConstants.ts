@@ -18,6 +18,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Comfortable',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Undo',
+  toolbarRedo: 'Redo',
+
   // Columns selector toolbar button text
   toolbarColumns: 'Columns',
   toolbarColumnsLabel: 'Select columns',
@@ -44,6 +48,9 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Toolbar pivot button
   toolbarPivot: 'Pivot',
+
+  // Toolbar charts button
+  toolbarCharts: 'Charts',
 
   // Toolbar AI Assistant button
   toolbarAssistant: 'AI Assistant',
@@ -130,6 +137,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   columnMenuSortAsc: 'Sort by ASC',
   columnMenuSortDesc: 'Sort by DESC',
   columnMenuManagePivot: 'Manage pivot',
+  columnMenuManageCharts: 'Manage charts',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -160,6 +168,10 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Boolean cell text
   booleanCellTrueLabel: 'yes',
   booleanCellFalseLabel: 'no',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expand',
+  longTextCellCollapseLabel: 'Collapse',
 
   // Actions cell more text
   actionsCellMore: 'more',
@@ -215,6 +227,7 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Aggregation',
+  aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'sum',
   aggregationFunctionLabelAvg: 'avg',
   aggregationFunctionLabelMin: 'min',
@@ -249,6 +262,33 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   pivotDragToValues: 'Drag here to create values',
   pivotYearColumnHeaderName: '(Year)',
   pivotQuarterColumnHeaderName: '(Quarter)',
+
+  // Charts configuration panel
+  chartsNoCharts: 'There are no charts available',
+  chartsChartNotSelected: 'Select a chart type to configure its options',
+  chartsTabChart: 'Chart',
+  chartsTabFields: 'Fields',
+  chartsTabCustomize: 'Customize',
+  chartsCloseButton: 'Close charts configuration',
+  chartsSyncButtonLabel: 'Sync chart',
+  chartsSearchPlaceholder: 'Search fields',
+  chartsSearchLabel: 'Search fields',
+  chartsSearchClear: 'Clear search',
+  chartsNoFields: 'No fields',
+  chartsFieldBlocked: 'This field cannot be added to any section',
+  chartsCategories: 'Categories',
+  chartsSeries: 'Series',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
+  chartsMenuMoveUp: 'Move up',
+  chartsMenuMoveDown: 'Move down',
+  chartsMenuMoveToTop: 'Move to top',
+  chartsMenuMoveToBottom: 'Move to bottom',
+  chartsMenuOptions: 'Field options',
+  chartsMenuRemove: 'Remove',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Drag here to use column as ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
 
   // AI Assistant panel
   aiAssistantPanelTitle: 'AI Assistant',
@@ -302,4 +342,6 @@ export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };

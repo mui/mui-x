@@ -31,8 +31,7 @@ The example below shows the last value received by `onChange`.
 ## Lifecycle on range fields [<span class="plan-pro"></span>](/x/introduction/licensing/#pro-plan 'Pro plan')
 
 On range fields (`SingleInputDateRangeField` / `MultiInputDateRangeField` / ... ),
-`onChange` is called if the date you are modifying is matching one of the conditions above,
-regardless of the other date state.
+`onChange` is called if the date you are modifying matches one of the conditions above, regardless of the other date state.
 
 The example below shows the last value received by `onChange`.
 Note how changing the value of the start date section will call `onChange` even if the end date is empty or partially filled.
@@ -80,7 +79,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   **Behavior:** The picker will not close when selecting a day. The user will have to click on the _OK_ action to close it.
 
   :::success
-  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
+  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to let the user validate the value:
 
   ```tsx
   <DesktopDatePicker
@@ -201,14 +200,22 @@ You can find more information [in the dedicated doc section](/x/react-date-picke
 
 ### Usage
 
-The `onAccept` callback allows you to get the final value selected by the user without caring about the intermediary steps.
+The `onAccept` callback lets you get the final value selected by the user without caring about the intermediary steps.
 
 ```tsx
 <DatePicker onAccept={(value) => sendValueToServer(value)} />
 ```
 
-:::success
-You can use the second argument passed to the `onAccept` callback to get the validation error associated with the current value:
+The `onAccept` callback receives a second argument `context` with extra information about why and how the value was accepted.
+
+- `validationError`: the validation result of the accepted value.
+- `source`: string that indicates where a change or acceptance originated from. The value is one of:
+  - `'field'`: committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
+  - `'view'`: any interaction inside the picker's view
+  - `'unknown'`: unspecified or third‑party triggers.
+- `shortcut` (optional): the shortcut metadata when the value was accepted via a shortcut selection.
+
+For custom error handling, you can use the `validationError` property of the `context` object.
 
 ```tsx
 <DatePicker
@@ -220,7 +227,32 @@ You can use the second argument passed to the `onAccept` callback to get the val
 />
 ```
 
-:::
+The `source` property allows you to implement different behaviors depending on the source of the acceptance.
+
+```tsx
+<DatePicker
+  onAccept={(newValue, context) => {
+    if (context.validationError != null) {
+      return; // ignore invalid values
+    }
+
+    switch (context.source) {
+      case 'view':
+        analytics.track('date_accepted_from_view', {
+          value: newValue,
+          shortcut: context.shortcut?.id,
+        });
+        break;
+      case 'field':
+        analytics.track('date_accepted_from_field', { value: newValue });
+        break;
+      case 'unknown':
+      default:
+        analytics.track('date_accepted_from_unknown', { value: newValue });
+    }
+  }}
+/>
+```
 
 ### When is "onAccept" called?
 
@@ -257,7 +289,7 @@ The examples below are using the desktop and mobile variants of the pickers, but
   **Behavior:** The picker will not call `onAccept` when selecting a value.
 
   :::success
-  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to allow the user to validate the value:
+  If you want to set `closeOnSelect` to `false` on a desktop picker, you should consider enabling the action bar to let the user validate the value:
 
   ```tsx
   <DesktopDatePicker
@@ -282,9 +314,9 @@ The examples below are using the desktop and mobile variants of the pickers, but
   ```
 
   - Default `views` prop: `['hours', 'minutes']` (plus a `meridiem` view if the locale is in 12-hours format)
-  - Default `closeOnSelect` prop: `true`
+  - Default `closeOnSelect` prop: `false`
 
-  **Behavior:** The picker will call `onAccept` when selecting the minutes or meridiem (if a 12-hour clock is used).
+  **Behavior:** The picker will not call `onAccept` when selecting the minutes or meridiem (if a 12-hour clock is used).
 
 #### When the picker is manually closed
 
@@ -400,3 +432,37 @@ The following demo shows how to extend the Date Field component by adding an `on
 You can find more information about the `onAccept` prop [in the dedicated doc section](/x/react-date-pickers/lifecycle/#lifecycle-on-pickers-quot-onaccept-quot).
 
 {{"demo": "ServerInteraction.js"}}
+
+### Source values in `context.source`
+
+Pickers expose a simplified `context.source` string that indicates where a change or acceptance originated from.
+The value is one of:
+
+- `'field'`: committed from the input field (typing, paste, arrow keys, clear, Enter, etc.).
+- `'view'`: any interaction inside the picker's view
+- `'unknown'`: unspecified or third‑party triggers.
+
+Example usage:
+
+```tsx
+<DatePicker
+  onAccept={(value, context) => {
+    if (context.validationError) return;
+
+    switch (context.source) {
+      case 'view':
+        analytics.track('date_accept_from_view', {
+          value,
+          shortcut: context.shortcut?.id,
+        });
+        break;
+      case 'field':
+        analytics.track('date_accept_from_field', { value });
+        break;
+      case 'unknown':
+      default:
+        analytics.track('date_accept_from_unknown', { value });
+    }
+  }}
+/>
+```

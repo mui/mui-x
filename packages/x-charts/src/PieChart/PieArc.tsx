@@ -1,14 +1,15 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
 import { useAnimatePieArc } from '../hooks';
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { PieItemId } from '../models';
+import { type SeriesId } from '../models';
 
 export interface PieArcClasses {
   /** Styles applied to the root element. */
@@ -22,16 +23,20 @@ export interface PieArcClasses {
    * Needs to be suffixed with the series ID: `.${pieArcClasses.series}-${seriesId}`.
    */
   series: string;
+  /** Styles applied to the focus indicator element. */
+  focusIndicator: string;
 }
 
 export type PieArcClassKey = keyof PieArcClasses;
 
 interface PieArcOwnerState {
-  id: PieItemId;
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   isFaded: boolean;
   isHighlighted: boolean;
+  isFocused: boolean;
+  stroke?: string;
   classes?: Partial<PieArcClasses>;
 }
 
@@ -44,14 +49,15 @@ export const pieArcClasses: PieArcClasses = generateUtilityClasses('MuiPieArc', 
   'highlighted',
   'faded',
   'series',
+  'focusIndicator',
 ]);
 
 const useUtilityClasses = (ownerState: PieArcOwnerState) => {
-  const { classes, id, isFaded, isHighlighted, dataIndex } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted, dataIndex } = ownerState;
   const slots = {
     root: [
       'root',
-      `series-${id}`,
+      `series-${seriesId}`,
       `data-index-${dataIndex}`,
       isHighlighted && 'highlighted',
       isFaded && 'faded',
@@ -65,15 +71,13 @@ const PieArcRoot = styled('path', {
   name: 'MuiPieArc',
   slot: 'Root',
   overridesResolver: (_, styles) => styles.arc, // FIXME: Inconsistent naming with slot
-})<{ ownerState: PieArcOwnerState }>(({ theme }) => ({
-  // Got to move stroke to an element prop instead of style.
-  stroke: (theme.vars || theme).palette.background.paper,
+})<{ ownerState: PieArcOwnerState }>({
   transitionProperty: 'opacity, fill, filter',
   transitionDuration: `${ANIMATION_DURATION_MS}ms`,
   transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
-}));
+});
 
-export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
+export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref'> &
   PieArcOwnerState & {
     cornerRadius: number;
     endAngle: number;
@@ -82,18 +86,27 @@ export type PieArcProps = Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> &
     outerRadius: number;
     paddingAngle: number;
     startAngle: number;
-    /** @default false */
-    skipAnimation: boolean;
+    /**
+     * If `true`, the animation is disabled.
+     */
+    skipAnimation?: boolean;
+    /**
+     * If `true`, the default event handlers are disabled.
+     * Those are used, for example, to display a tooltip or highlight the arc on hover.
+     */
+    skipInteraction?: boolean;
   };
 
 const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(props, ref) {
   const {
+    className,
     classes: innerClasses,
     color,
     dataIndex,
-    id,
+    seriesId,
     isFaded,
     isHighlighted,
+    isFocused,
     onClick,
     cornerRadius,
     startAngle,
@@ -102,20 +115,29 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
     outerRadius,
     paddingAngle,
     skipAnimation,
+    stroke: strokeProp,
+    skipInteraction,
     ...other
   } = props;
 
+  const theme = useTheme();
+  const stroke = strokeProp ?? (theme.vars || theme).palette.background.paper;
+
   const ownerState = {
-    id,
+    seriesId,
     dataIndex,
     classes: innerClasses,
     color,
     isFaded,
     isHighlighted,
+    isFocused,
   };
   const classes = useUtilityClasses(ownerState);
 
-  const interactionProps = useInteractionItemProps({ type: 'pie', seriesId: id, dataIndex });
+  const interactionProps = useInteractionItemProps(
+    { type: 'pie', seriesId, dataIndex },
+    skipInteraction,
+  );
   const animatedProps = useAnimatePieArc({
     cornerRadius,
     startAngle,
@@ -132,10 +154,11 @@ const PieArc = React.forwardRef<SVGPathElement, PieArcProps>(function PieArc(pro
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
       ownerState={ownerState}
-      className={classes.root}
+      className={clsx(classes.root, className)}
       fill={ownerState.color}
       opacity={ownerState.isFaded ? 0.3 : 1}
       filter={ownerState.isHighlighted ? 'brightness(120%)' : 'none'}
+      stroke={stroke}
       strokeWidth={1}
       strokeLinejoin="round"
       data-highlighted={ownerState.isHighlighted || undefined}
@@ -156,16 +179,22 @@ PieArc.propTypes = {
   cornerRadius: PropTypes.number.isRequired,
   dataIndex: PropTypes.number.isRequired,
   endAngle: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   innerRadius: PropTypes.number.isRequired,
   isFaded: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired,
   isHighlighted: PropTypes.bool.isRequired,
   outerRadius: PropTypes.number.isRequired,
   paddingAngle: PropTypes.number.isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
-   * @default false
+   * If `true`, the animation is disabled.
    */
-  skipAnimation: PropTypes.bool.isRequired,
+  skipAnimation: PropTypes.bool,
+  /**
+   * If `true`, the default event handlers are disabled.
+   * Those are used, for example, to display a tooltip or highlight the arc on hover.
+   */
+  skipInteraction: PropTypes.bool,
   startAngle: PropTypes.number.isRequired,
 } as any;
 

@@ -1,14 +1,12 @@
+import { type Store } from '@mui/x-internals/store';
 import { useChartContext } from '../../context/ChartProvider';
-import { ChartStore } from '../plugins/utils/ChartStore';
-import { UseChartInteractionSignature } from '../plugins/featurePlugins/useChartInteraction';
-import { UseChartHighlightSignature } from '../plugins/featurePlugins/useChartHighlight';
-import { ChartAnyPluginSignature } from '../plugins/models';
+import { type ChartAnyPluginSignature, type ChartState } from '../plugins/models';
 
 // This hook should be removed because user and us should not interact with the store directly, but with public/private APIs
-export function useStore<TSignatures extends ChartAnyPluginSignature[] = []>(): ChartStore<
-  [...TSignatures, UseChartInteractionSignature, UseChartHighlightSignature]
+export function useStore<TSignatures extends ChartAnyPluginSignature[] = []>(): Store<
+  ChartState<TSignatures>
 > {
-  const context = useChartContext();
+  const context = useChartContext<TSignatures>();
 
   if (!context) {
     throw new Error(

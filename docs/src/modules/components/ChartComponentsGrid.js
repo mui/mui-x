@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Link } from '@mui/docs/Link';
@@ -54,6 +53,11 @@ function getComponents() {
     {
       title: 'Pyramid Chart',
       href: '/x/react-charts/pyramid/',
+      pro: true,
+    },
+    {
+      title: 'Sankey Chart',
+      href: '/x/react-charts/sankey/',
       pro: true,
     },
   ];

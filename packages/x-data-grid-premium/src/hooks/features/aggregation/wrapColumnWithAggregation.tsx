@@ -1,30 +1,18 @@
-import * as React from 'react';
 import { RefObject } from '@mui/x-internals/types';
+import { GridColDef, GridRowId, gridRowNodeSelector } from '@mui/x-data-grid-pro';
 import {
-  GridColDef,
-  GridRowId,
-  gridRowIdSelector,
-  gridRowNodeSelector,
-} from '@mui/x-data-grid-pro';
-import { type GridBaseColDef } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
-import type {
+  GridBaseColDef,
   GridAggregationCellMeta,
-  GridAggregationLookup,
   GridAggregationPosition,
-  GridAggregationRule,
-} from './gridAggregationInterfaces';
+  GridFooterCell,
+} from '@mui/x-data-grid-pro/internals';
+import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridAggregationLookup, GridAggregationRule } from './gridAggregationInterfaces';
 import { gridAggregationLookupSelector } from './gridAggregationSelectors';
-import { GridFooterCell } from '../../../components/GridFooterCell';
 import { GridAggregationHeader } from '../../../components/GridAggregationHeader';
 import { gridPivotActiveSelector } from '../pivoting/gridPivotingSelectors';
 
-type WrappableColumnProperty =
-  | 'valueGetter'
-  | 'valueFormatter'
-  | 'renderCell'
-  | 'renderHeader'
-  | 'filterOperators';
+type WrappableColumnProperty = 'renderCell' | 'renderHeader';
 
 interface GridColDefWithAggregationWrappers extends GridBaseColDef {
   aggregationWrappedProperties: {
@@ -44,57 +32,6 @@ type ColumnPropertyWrapper<P extends WrappableColumnProperty> = (params: {
     field: string,
   ) => GridAggregationLookup[GridRowId][string] | null;
 }) => GridBaseColDef[P];
-
-const getAggregationValueWrappedValueGetter: ColumnPropertyWrapper<'valueGetter'> = ({
-  value: valueGetter,
-  getCellAggregationResult,
-}) => {
-  const wrappedValueGetter: GridBaseColDef['valueGetter'] = (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef, row);
-    const cellAggregationResult = rowId ? getCellAggregationResult(rowId, column.field) : null;
-    if (cellAggregationResult != null) {
-      return cellAggregationResult?.value ?? null;
-    }
-
-    if (valueGetter) {
-      return valueGetter(value, row, column, apiRef);
-    }
-
-    return row[column.field];
-  };
-
-  return wrappedValueGetter;
-};
-
-const getAggregationValueWrappedValueFormatter: ColumnPropertyWrapper<'valueFormatter'> = ({
-  value: valueFormatter,
-  aggregationRule,
-  getCellAggregationResult,
-}) => {
-  // If neither the inline aggregation function nor the footer aggregation function have a custom value formatter,
-  // Then we don't wrap the column value formatter
-  if (!aggregationRule.aggregationFunction.valueFormatter) {
-    return valueFormatter;
-  }
-
-  const wrappedValueFormatter: GridBaseColDef['valueFormatter'] = (value, row, column, apiRef) => {
-    const rowId = gridRowIdSelector(apiRef, row);
-    if (rowId != null) {
-      const cellAggregationResult = getCellAggregationResult(rowId, column.field);
-      if (cellAggregationResult != null) {
-        return aggregationRule.aggregationFunction.valueFormatter?.(value, row, column, apiRef);
-      }
-    }
-
-    if (valueFormatter) {
-      return valueFormatter(value, row, column, apiRef);
-    }
-
-    return value;
-  };
-
-  return wrappedValueFormatter;
-};
 
 const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> = ({
   value: renderCell,
@@ -125,6 +62,7 @@ const getAggregationValueWrappedRenderCell: ColumnPropertyWrapper<'renderCell'> 
       const aggregationMeta: GridAggregationCellMeta = {
         hasCellUnit: aggregationRule!.aggregationFunction.hasCellUnit ?? true,
         aggregationFunctionName: aggregationRule!.aggregationFunctionName,
+        position: cellAggregationResult.position,
       };
 
       return renderCell({ ...params, aggregation: aggregationMeta });
@@ -234,8 +172,6 @@ export const wrapColumnWithAggregationValue = (
     }
   };
 
-  wrapColumnProperty('valueGetter', getAggregationValueWrappedValueGetter);
-  wrapColumnProperty('valueFormatter', getAggregationValueWrappedValueFormatter);
   wrapColumnProperty('renderCell', getAggregationValueWrappedRenderCell);
   wrapColumnProperty('renderHeader', getWrappedRenderHeader);
 

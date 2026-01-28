@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createPickerRenderer } from 'test/utils/pickers';
 import { DigitalClock, digitalClockClasses as classes } from '@mui/x-date-pickers/DigitalClock';
 import { describeConformance } from 'test/utils/describeConformance';

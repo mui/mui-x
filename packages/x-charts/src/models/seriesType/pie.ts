@@ -1,6 +1,6 @@
-import { PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
-import { DefaultizedProps } from '@mui/x-internals/types';
-import { CommonDefaultizedProps, CommonSeriesType, SeriesId } from './common';
+import { type PieArcDatum as D3PieArcDatum } from '@mui/x-charts-vendor/d3-shape';
+import { type DefaultizedProps } from '@mui/x-internals/types';
+import { type CommonDefaultizedProps, type CommonSeriesType, type SeriesId } from './common';
 import type { ChartsLabelMarkProps } from '../../ChartsLabel';
 
 export type PieItemId = string | number;
@@ -24,7 +24,11 @@ export type PieValueType = {
 };
 
 export type DefaultizedPieValueType = PieValueType &
-  Omit<D3PieArcDatum<any>, 'data'> & { color: string; formattedValue: string };
+  Omit<D3PieArcDatum<any>, 'data' | 'hidden'> & {
+    color: string;
+    formattedValue: string;
+    hidden: boolean;
+  };
 
 export type ChartsPieSorting = 'none' | 'asc' | 'desc' | ((a: number, b: number) => number);
 
@@ -149,8 +153,10 @@ export type PieItemIdentifier = {
   dataIndex: number;
 };
 
-export interface DefaultizedPieSeriesType
-  extends DefaultizedProps<PieSeriesType, CommonDefaultizedProps> {
+export interface DefaultizedPieSeriesType extends DefaultizedProps<
+  PieSeriesType,
+  CommonDefaultizedProps
+> {
   data: DefaultizedPieValueType[];
 }
 
@@ -173,3 +179,36 @@ export interface ComputedPieRadius {
    */
   arcLabelRadius?: number;
 }
+
+/**
+ * Layout information computed from the pie series and the drawing area.
+ */
+export type PieSeriesLayout = {
+  /**
+   * The pie center coordinate in px.
+   */
+  center: { x: number; y: number };
+  /**
+   * The pie radius in px.
+   * Computed based on the drawing area and the center placement.
+   */
+  radius: {
+    /**
+     * The maximum available radius in px.
+     * Correspond to radius='100%'.
+     */
+    available: number;
+    /**
+     * The pie inner radius in px, except if overridden by item state (highlight/faded).
+     */
+    inner: number;
+    /**
+     * The pie outer radius in px, except if overridden by item state (highlight/faded).
+     */
+    outer: number;
+    /**
+     * The pie label radius in px, except if overridden by item state (highlight/faded).
+     */
+    label: number;
+  };
+};

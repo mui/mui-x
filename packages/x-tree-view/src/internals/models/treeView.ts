@@ -1,6 +1,4 @@
-import type { TreeViewAnyPluginSignature } from './plugin';
-import type { MergeSignaturesProperty } from './helpers';
-import type { TreeViewCorePluginSignatures } from '../corePlugins';
+import { MinimalTreeViewStore } from '../MinimalTreeViewStore';
 
 export interface TreeViewItemMeta {
   id: string;
@@ -8,6 +6,7 @@ export interface TreeViewItemMeta {
   parentId: string | null;
   expandable: boolean;
   disabled: boolean;
+  selectable: boolean;
   /**
    * Only defined for `<RichTreeView />` and `<RichTreeViewPro />`.
    */
@@ -18,24 +17,10 @@ export interface TreeViewItemMeta {
   label?: string;
 }
 
-export type TreeViewInstance<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'instance'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
+export interface TreeViewAnyStore extends MinimalTreeViewStore<any, any, any, any> {
+  itemPluginManager: any;
+}
 
-export type TreeViewPublicAPI<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'publicAPI'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'instance'>>;
-
-export type TreeViewStateCacheKey = { id: number };
-
-export type TreeViewState<
-  TSignatures extends readonly TreeViewAnyPluginSignature[],
-  TOptionalSignatures extends readonly TreeViewAnyPluginSignature[] = [],
-> = MergeSignaturesProperty<[...TreeViewCorePluginSignatures, ...TSignatures], 'state'> &
-  Partial<MergeSignaturesProperty<TOptionalSignatures, 'state'>> & {
-    cacheKey: TreeViewStateCacheKey;
-  };
+export type TreeViewPublicAPI<TStore extends TreeViewAnyStore> = ReturnType<
+  TStore['buildPublicAPI']
+>;

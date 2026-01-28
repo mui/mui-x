@@ -46,9 +46,7 @@ import {
 } from '../validation/validateDateTimeRange';
 
 export interface BaseDateTimeRangePickerSlots
-  extends DateRangeCalendarSlots,
-    DigitalClockSlots,
-    MultiSectionDigitalClockSlots {
+  extends DateRangeCalendarSlots, DigitalClockSlots, MultiSectionDigitalClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimeRangePickerTabs
@@ -62,9 +60,7 @@ export interface BaseDateTimeRangePickerSlots
 }
 
 export interface BaseDateTimeRangePickerSlotProps
-  extends DateRangeCalendarSlotProps,
-    DigitalClockSlotProps,
-    MultiSectionDigitalClockSlotProps {
+  extends DateRangeCalendarSlotProps, DigitalClockSlotProps, MultiSectionDigitalClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -87,7 +83,8 @@ type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
   >;
 
 export interface BaseDateTimeRangePickerProps
-  extends Omit<
+  extends
+    Omit<
       BasePickerInputProps<PickerRangeValue, DateTimeRangePickerView, DateTimeRangeValidationError>,
       'orientation' | 'views' | 'openTo'
     >,
@@ -121,6 +118,7 @@ type UseDateTimeRangePickerDefaultizedProps<Props extends BaseDateTimeRangePicke
   > & {
     shouldRenderTimeInASingleColumn: boolean;
     views: readonly DateTimeRangePickerView[];
+    viewsForFormatting: readonly DateOrTimeViewWithMeridiem[];
   };
 
 export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTimeRangePickerProps>(
@@ -154,6 +152,11 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
     views: defaultViews,
   });
 
+  // Keep the original views for format calculation (before filtering)
+  const viewsForFormatting: readonly DateOrTimeViewWithMeridiem[] = ampm
+    ? [...defaultViews, 'meridiem']
+    : defaultViews;
+
   return {
     ...themeProps,
     ...validationProps,
@@ -162,6 +165,7 @@ export function useDateTimeRangePickerDefaultizedProps<Props extends BaseDateTim
     shouldRenderTimeInASingleColumn,
     thresholdToRenderTimeInASingleColumn,
     views,
+    viewsForFormatting,
     ampm,
     slots: {
       tabs: DateTimeRangePickerTabs,

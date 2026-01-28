@@ -1,22 +1,30 @@
 'use client';
-import { styled, SxProps, Theme, useThemeProps } from '@mui/material/styles';
+import { styled, type SxProps, type Theme, useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
+import clsx from 'clsx';
 import { ChartsAxesGradients } from '../internals/components/ChartsAxesGradients';
 import { useSvgRef } from '../hooks/useSvgRef';
-import { useSelector } from '../internals/store/useSelector';
-import { useStore } from '../internals/store/useStore';
+import { useChartContext } from '../context/ChartProvider';
 import {
-  selectorChartContainerSize,
-  selectorChartPropsSize,
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+  selectorChartSvgWidth,
+  selectorChartSvgHeight,
 } from '../internals/plugins/corePlugins/useChartDimensions/useChartDimensions.selectors';
+import {
+  selectorChartsHasFocusedItem,
+  selectorChartsIsKeyboardNavigationEnabled,
+} from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
+import { useUtilityClasses } from './chartsSurfaceClasses';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 
-export interface ChartsSurfaceProps
-  extends Omit<
-    React.SVGProps<SVGSVGElement>,
-    'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
-  > {
+export interface ChartsSurfaceProps extends Omit<
+  React.SVGProps<SVGSVGElement>,
+  'id' | 'children' | 'className' | 'height' | 'width' | 'cx' | 'cy' | 'viewBox' | 'color' | 'ref'
+> {
   className?: string;
   title?: string;
   desc?: string;
@@ -36,10 +44,12 @@ const ChartsSurfaceStyles = styled('svg', {
   alignItems: 'center',
   justifyContent: 'center',
   overflow: 'hidden',
-  // This prevents default touch actions when using the svg on mobile devices.
-  // For example, prevent page scroll & zoom.
   touchAction: 'pan-y',
   userSelect: 'none',
+  gridArea: 'chart',
+  '&:focus': {
+    outline: 'none', // By default don't show focus on the SVG container
+  },
 }));
 
 /**
@@ -60,23 +70,48 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const store = useStore();
-  const { width: svgWidth, height: svgHeight } = useSelector(store, selectorChartContainerSize);
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+  const { store, instance } = useChartContext<
+    [],
+    [UseChartInteractionSignature, UseChartItemClickSignature]
+  >();
+
+  const svgWidth = store.use(selectorChartSvgWidth);
+  const svgHeight = store.use(selectorChartSvgHeight);
+
+  const propsWidth = store.use(selectorChartPropsWidth);
+  const propsHeight = store.use(selectorChartPropsHeight);
+  const isKeyboardNavigationEnabled = store.use(selectorChartsIsKeyboardNavigationEnabled);
+  const hasFocusedItem = store.use(selectorChartsHasFocusedItem);
+
   const svgRef = useSvgRef();
   const handleRef = useForkRef(svgRef, ref);
   const themeProps = useThemeProps({ props: inProps, name: 'MuiChartsSurface' });
 
   const { children, className, title, desc, ...other } = themeProps;
 
+  const classes = useUtilityClasses();
   const hasIntrinsicSize = svgHeight > 0 && svgWidth > 0;
 
   return (
     <ChartsSurfaceStyles
       ownerState={{ width: propsWidth, height: propsHeight }}
       viewBox={`${0} ${0} ${svgWidth} ${svgHeight}`}
-      className={className}
+      className={clsx(classes.root, className)}
+      tabIndex={isKeyboardNavigationEnabled ? 0 : undefined}
+      data-has-focused-item={hasFocusedItem || undefined}
       {...other}
+      onPointerEnter={(event) => {
+        other.onPointerEnter?.(event);
+        instance.handlePointerEnter?.(event);
+      }}
+      onPointerLeave={(event) => {
+        other.onPointerLeave?.(event);
+        instance.handlePointerLeave?.(event);
+      }}
+      onClick={(event) => {
+        other.onClick?.(event);
+        instance.handleClick?.(event);
+      }}
       ref={handleRef}
     >
       {title && <title>{title}</title>}

@@ -69,8 +69,8 @@ In the example below, the actions are the same as in the section above, but they
 
 ## Tabs
 
-The tabs are available on all date time picker components.
-It allows switching between date and time interfaces.
+Tabs are available on all date time picker components.
+They let users switch between date and time interfaces.
 
 ### Component props
 
@@ -112,7 +112,7 @@ In the example below, the tabs are using different icons and have an additional 
 ## Toolbar
 
 The toolbar is available on all date time picker components.
-It displays the current values and allows to switch between different views.
+It displays the current values and lets users switch between different views.
 
 ### Component props
 
@@ -147,7 +147,7 @@ Each component comes with its own toolbar (`DatePickerToolbar`, `TimePickerToolb
 ## Calendar header
 
 The calendar header is available on any component that renders a calendar to select a date or a range of dates.
-It allows the user to navigate through months and to switch to the month and year views when available.
+It lets users navigate through months and switch to the month and year views when available.
 
 ### Component props
 
@@ -174,7 +174,7 @@ The demo below shows how to navigate the months two by two:
 
 ## Year button
 
-This button allows users to change the selected year in the `year` view.
+This button lets users change the selected year in the `year` view.
 
 ### Component props
 
@@ -196,7 +196,7 @@ The examples below use the new components, which might need further changes on y
 Be sure to check that any custom styling configuration is compatible with the new structure.
 :::
 
-The `day` slot allows users to change the selected day in the calendar.
+The `day` slot lets users change the selected day in the calendar.
 
 You can use the `<PickerDay2 />` and `<DateRangePickerDay2 />` components to replace the day slot with a simplified DOM structure reduced to a single element.
 
@@ -218,10 +218,10 @@ Customize the look and feel by creating a custom theme with `styleOverrides`.
 
 ## Month button
 
-This button allows users to change the selected month in the `month` view.
+This button lets users change the selected month in the `month` view.
 
 :::success
-You can learn more on how to enable the `month` view on the [`DateCalendar` doc page](/x/react-date-pickers/date-calendar/#views).
+You can learn more about how to enable the `month` view on the [`DateCalendar` doc page](/x/react-date-pickers/date-calendar/#views).
 :::
 
 ### Component props

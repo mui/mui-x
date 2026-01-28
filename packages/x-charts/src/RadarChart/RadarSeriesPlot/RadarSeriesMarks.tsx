@@ -2,11 +2,11 @@ import * as React from 'react';
 import { clsx } from 'clsx';
 import PropTypes from 'prop-types';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { RadarSeriesMarksProps } from './RadarSeriesPlot.types';
+import { type RadarSeriesMarksProps } from './RadarSeriesPlot.types';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
-import { SeriesId } from '../../models/seriesType/common';
-import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import { type SeriesId } from '../../models/seriesType/common';
+import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
 
 interface GetCirclePropsParams {
   seriesId: SeriesId;
@@ -46,8 +46,8 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
 
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, color, hideMark, fillArea }) => {
-        if (hideMark) {
+      {seriesCoordinates?.map(({ seriesId: id, points, hideMark, fillArea, hidden }) => {
+        if (hideMark || hidden) {
           return null;
         }
 
@@ -59,7 +59,7 @@ function RadarSeriesMarks(props: RadarSeriesMarksProps) {
                 {...getCircleProps({
                   seriesId: id,
                   point,
-                  color,
+                  color: point.color,
                   fillArea,
                   isFaded,
                   isHighlighted,

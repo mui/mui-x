@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { createPickerRenderer, adapterToUse, openPickerAsync } from 'test/utils/pickers';
 import { vi } from 'vitest';

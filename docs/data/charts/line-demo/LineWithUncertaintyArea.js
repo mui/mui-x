@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { AnimatedLine, LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
@@ -33,8 +34,8 @@ function CustomAnimatedLine(props) {
     return <AnimatedLine {...other} />;
   }
 
-  const clipIdleft = `${chartId}-${props.ownerState.id}-line-limit-${limit}-1`;
-  const clipIdRight = `${chartId}-${props.ownerState.id}-line-limit-${limit}-2`;
+  const clipIdleft = `${chartId}-${props.ownerState.seriesId}-line-limit-${limit}-1`;
+  const clipIdRight = `${chartId}-${props.ownerState.seriesId}-line-limit-${limit}-2`;
   return (
     <React.Fragment>
       {/* Clip to show the line before the limit */}
@@ -125,41 +126,42 @@ export default function LineWithUncertaintyArea() {
   const clipPathId = `${id}-clip-path`;
 
   return (
-    <ChartContainer
-      series={[
-        {
-          type: 'line',
-          data: [1, 2, 3, 4, 1, 2, 3, 4, 5],
-          valueFormatter: (v, i) => `${v}${i.dataIndex > 5 ? ' (estimated)' : ''}`,
-        },
-      ]}
-      xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6, 7, 8] }]}
-      height={200}
-      sx={{ '& .line-after path': { strokeDasharray: '10 5' } }}
-    >
-      <ChartsXAxis />
-      <ChartsYAxis />
-      <g clipPath={`url(#${clipPathId})`}>
-        <ShadedBackground limit={5} />
-        <LinePlot
-          slots={{ line: CustomAnimatedLine }}
-          slotProps={{ line: { limit: 5 } }}
-        />
-        <ForecastArea
-          limit={5}
-          forecast={[
-            { y0: 2, y1: 2 },
-            { y0: 2.3, y1: 4 },
-            { y0: 3, y1: 5 },
-            { y0: 4.4, y1: 5.8 },
-          ]}
-        />
-      </g>
-      <g data-drawing-container>
-        <MarkPlot />
-      </g>
-      <ChartsTooltip />
-      <ChartsClipPath id={clipPathId} />
-    </ChartContainer>
+    <Box sx={{ width: '100%', height: 200 }}>
+      <ChartContainer
+        series={[
+          {
+            type: 'line',
+            data: [1, 2, 3, 4, 1, 2, 3, 4, 5],
+            valueFormatter: (v, i) => `${v}${i.dataIndex > 5 ? ' (estimated)' : ''}`,
+          },
+        ]}
+        xAxis={[{ data: [0, 1, 2, 3, 4, 5, 6, 7, 8] }]}
+        sx={{ '& .line-after path': { strokeDasharray: '10 5' } }}
+      >
+        <ChartsXAxis />
+        <ChartsYAxis />
+        <g clipPath={`url(#${clipPathId})`}>
+          <ShadedBackground limit={5} />
+          <LinePlot
+            slots={{ line: CustomAnimatedLine }}
+            slotProps={{ line: { limit: 5 } }}
+          />
+          <ForecastArea
+            limit={5}
+            forecast={[
+              { y0: 2, y1: 2 },
+              { y0: 2.3, y1: 4 },
+              { y0: 3, y1: 5 },
+              { y0: 4.4, y1: 5.8 },
+            ]}
+          />
+        </g>
+        <g data-drawing-container>
+          <MarkPlot />
+        </g>
+        <ChartsTooltip />
+        <ChartsClipPath id={clipPathId} />
+      </ChartContainer>
+    </Box>
   );
 }

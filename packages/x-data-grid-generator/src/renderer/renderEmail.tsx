@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { DemoLink } from './renderLink';
 

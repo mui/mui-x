@@ -1,6 +1,7 @@
 {
   "name": "RadarSeries",
   "imports": [
+    "import { RadarSeries } from '@mui/x-charts-premium'",
     "import { RadarSeries } from '@mui/x-charts-pro'",
     "import { RadarSeries } from '@mui/x-charts'"
   ],
@@ -8,6 +9,9 @@
     "data": { "type": { "description": "number[]" }, "required": true },
     "type": { "type": { "description": "'radar'" }, "required": true },
     "color": { "type": { "description": "string" } },
+    "colorGetter": {
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+    },
     "fillArea": { "type": { "description": "boolean" } },
     "hideMark": { "type": { "description": "boolean" } },
     "highlightScope": { "type": { "description": "HighlightScope" } },

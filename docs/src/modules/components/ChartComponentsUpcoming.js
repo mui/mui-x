@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Link } from '@mui/docs/Link';
@@ -18,9 +17,14 @@ function getComponents() {
       href: 'https://github.com/mui/mui-x/issues/17275',
     },
     {
-      title: 'Sankey Chart',
-      href: '/x/react-charts/sankey/',
-      pro: true,
+      title: 'Range Bar',
+      href: 'https://github.com/mui/mui-x/issues/20350',
+      premium: true,
+    },
+    {
+      title: 'Range Area',
+      href: 'https://github.com/mui/mui-x/issues/13988',
+      premium: true,
     },
     {
       title: 'Treemap',
@@ -43,13 +47,13 @@ function getComponents() {
       pro: true,
     },
     {
-      title: 'Gantt Chart',
-      href: '/x/react-charts/gantt/',
+      title: 'Waterfall Chart',
+      href: 'https://github.com/mui/mui-x/issues/11318',
       premium: true,
     },
     {
-      title: 'Waterfall Chart',
-      href: 'https://github.com/mui/mui-x/issues/11318',
+      title: 'Gantt Chart',
+      href: '/x/react-charts/gantt/',
       premium: true,
     },
     {

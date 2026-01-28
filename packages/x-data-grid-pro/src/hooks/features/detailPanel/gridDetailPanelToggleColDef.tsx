@@ -1,5 +1,4 @@
 import { RefObject } from '@mui/x-internals/types';
-import * as React from 'react';
 import { GRID_STRING_COL_DEF, GridColDef, gridRowIdSelector } from '@mui/x-data-grid';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD } from '@mui/x-data-grid/internals';
 import { GridApiPro } from '../../../models/gridApiPro';
@@ -18,6 +17,7 @@ export const GRID_DETAIL_PANEL_TOGGLE_COL_DEF: GridColDef = {
   resizable: false,
   // @ts-ignore
   aggregable: false,
+  chartable: false,
   disableColumnMenu: true,
   disableReorder: true,
   disableExport: true,
