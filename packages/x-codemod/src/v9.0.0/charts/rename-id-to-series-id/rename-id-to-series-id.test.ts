@@ -1,7 +1,7 @@
 import jscodeshift from 'jscodeshift';
 import transform, { testConfig } from './index';
 
-const allFiles = [testConfig].map((config) => config.specFiles).flat();
+const allFiles = [testConfig].map((config) => config().specFiles).flat();
 
 describe('v9.0.0/charts', () => {
   describe(`${testConfig.name}`, () => {
