@@ -104,7 +104,11 @@ You can modify it with `slots.legend` and `slotProps.legend`.
 
 {{"demo": "CustomItem.js"}}
 
-## WebGL Renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+## WebGL Renderer [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')🧪
+
+:::info
+This feature is in preview. It is ready for production use, but its API, visuals and behavior may change in future minor or patch releases.
+:::
 
 Heatmaps can contain a large number of cells.
 To improve performance when rendering many cells, you can use the WebGL renderer by setting the `renderer` prop to `'webgl'`.
