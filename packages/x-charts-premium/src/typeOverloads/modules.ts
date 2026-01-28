@@ -32,7 +32,8 @@ declare module '@mui/x-charts/internals' {
       axisType: 'cartesian';
     };
     ohlc: {
-      seriesInput: DefaultizedProps<OHLCSeriesType, 'id'>;
+      seriesInput: DefaultizedProps<OHLCSeriesType, 'id'> &
+        MakeRequired<SeriesColor<OHLCValueType | null>, 'color'>;
       series: DefaultizedOHLCSeriesType;
       seriesLayout: {};
       seriesProp: OHLCSeriesType;
