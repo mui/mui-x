@@ -45,4 +45,3 @@ components: BarChart, BarElement, BarPlot
 The following demo shows a waterfall chart built using a [range bar chart](/x/react-charts/range-bar/).
 
 {{"demo": "WaterfallChart.js"}}
-

@@ -12,7 +12,7 @@ components: CandlestickChart, CandlestickPlot
 
 A candlestick chart provides a visual overview of how a price changes over time, commonly used in financial contexts like stock market analysis.
 
-Each candlestick represents a time period and shows where the price started, where it ended, and how high or low it moved during that period. 
+Each candlestick represents a time period and shows where the price started, where it ended, and how high or low it moved during that period.
 
 This makes it easier to understand overall trends, compare price movements, and see how buying and selling activity evolves.
 
