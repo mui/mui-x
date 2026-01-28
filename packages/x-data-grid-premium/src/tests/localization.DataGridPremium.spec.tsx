@@ -1,4 +1,4 @@
-import { ukUA } from '@mui/x-data-grid-premium/locales';
+import { type ukUA } from '@mui/x-data-grid-premium/locales';
 // @ts-expect-error
 import { enUS } from '@mui/x-data-grid-premium';
 import type { Expect, Equal } from 'test/utils/typeUtils';

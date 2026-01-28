@@ -5,7 +5,7 @@ import { getDataGridUtilityClass, useGridSelector } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { ResizablePanel, ResizablePanelHandle } from '../resizablePanel';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { gridSidebarContentSelector } from '../../hooks/features/sidebar';
 

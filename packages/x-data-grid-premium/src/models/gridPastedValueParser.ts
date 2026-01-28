@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
-import { GridApiPremium } from './gridApiPremium';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridColDef, GridValidRowModel } from '@mui/x-data-grid';
+import type { GridApiPremium } from './gridApiPremium';
 
 export type GridPastedValueParser<
   R extends GridValidRowModel = GridValidRowModel,
