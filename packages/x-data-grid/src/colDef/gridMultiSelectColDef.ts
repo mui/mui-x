@@ -4,6 +4,7 @@ import { getGridMultiSelectOperators } from './gridMultiSelectOperators';
 import { getValueOptions, isMultiSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
 import { isObject } from '../utils/utils';
 import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
+import { renderMultiSelectCell } from '../components/cell/GridMultiSelectCell';
 
 const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';
@@ -24,6 +25,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   getOptionLabel: defaultGetOptionLabel,
   getOptionValue: defaultGetOptionValue,
   sortComparator: (v1, v2) => (v1?.length ?? 0) - (v2?.length ?? 0),
+  renderCell: renderMultiSelectCell,
   valueFormatter: (value: any, row, colDef, apiRef) => {
     const rowId = gridRowIdSelector(apiRef, row);
 

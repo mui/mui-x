@@ -10,3 +10,4 @@ export * from './GridActionsCellItem';
 export * from './GridSkeletonCell';
 export * from './GridLongTextCell';
 export * from './GridEditLongTextCell';
+export * from './GridMultiSelectCell';

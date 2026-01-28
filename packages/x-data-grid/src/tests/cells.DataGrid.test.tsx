@@ -358,4 +358,99 @@ describe('<DataGrid /> - Cells', () => {
       });
     });
   });
+
+  describe('column type: multiSelect', () => {
+    it('should render array values as chips', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[{ id: 1, tags: ['React', 'TypeScript'] }]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 200,
+                valueOptions: ['React', 'TypeScript', 'Node.js'],
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      const chips = cell.querySelectorAll('.MuiChip-root');
+      expect(chips.length).to.equal(2);
+      expect(chips[0].textContent).to.equal('React');
+      expect(chips[1].textContent).to.equal('TypeScript');
+    });
+
+    it('should render empty cell for empty array', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[{ id: 1, tags: [] }]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['React', 'TypeScript'],
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      const chips = cell.querySelectorAll('.MuiChip-root');
+      expect(chips.length).to.equal(0);
+    });
+
+    it('should render empty cell for null value', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[{ id: 1, tags: null }]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                valueOptions: ['React', 'TypeScript'],
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      const chips = cell.querySelectorAll('.MuiChip-root');
+      expect(chips.length).to.equal(0);
+    });
+
+    it('should render chips with labels from object valueOptions', () => {
+      render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            rows={[{ id: 1, categories: ['fe', 'be'] }]}
+            columns={[
+              {
+                field: 'categories',
+                type: 'multiSelect',
+                width: 200,
+                valueOptions: [
+                  { value: 'fe', label: 'Frontend' },
+                  { value: 'be', label: 'Backend' },
+                ],
+              },
+            ]}
+          />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      const chips = cell.querySelectorAll('.MuiChip-root');
+      expect(chips.length).to.equal(2);
+      expect(chips[0].textContent).to.equal('Frontend');
+      expect(chips[1].textContent).to.equal('Backend');
+    });
+  });
 });

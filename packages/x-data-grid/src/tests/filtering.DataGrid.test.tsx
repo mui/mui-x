@@ -1428,8 +1428,8 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      // Default valueFormatter joins array values
-      expect(getColumnValues(0)).to.deep.equal(['React, TypeScript', 'Node.js', '', '']);
+      // Chips render the labels without separators in text content
+      expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript', 'Node.js', '', '']);
     });
 
     it('should format values with object valueOptions', () => {
@@ -1452,7 +1452,8 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['Frontend, Backend', 'Database']);
+      // Chips render the labels without separators
+      expect(getColumnValues(0)).to.deep.equal(['FrontendBackend', 'Database']);
     });
 
     it('should support custom separator', () => {
@@ -1469,7 +1470,8 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['React | TypeScript']);
+      // Chips render labels (separator only affects valueFormatter for export)
+      expect(getColumnValues(0)).to.deep.equal(['ReactTypeScript']);
     });
 
     it('should support function valueOptions', () => {
@@ -1488,7 +1490,8 @@ describe('<DataGrid /> - Filter', () => {
           ]}
         />,
       );
-      expect(getColumnValues(0)).to.deep.equal(['A, B', 'X']);
+      // Chips render the labels without separators
+      expect(getColumnValues(0)).to.deep.equal(['AB', 'X']);
     });
   });
 

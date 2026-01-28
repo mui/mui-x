@@ -816,8 +816,8 @@ describe('<DataGrid /> - Sorting', () => {
           />
         </div>,
       );
-      // Sorted by length: [], [X], [P, Q], [A, B, C]
-      expect(getColumnValues(0)).to.deep.equal(['', 'X', 'P, Q', 'A, B, C']);
+      // Sorted by length: [], [X], [P, Q], [A, B, C] - chips render without separators
+      expect(getColumnValues(0)).to.deep.equal(['', 'X', 'PQ', 'ABC']);
     });
 
     it('should sort by array length descending', () => {
@@ -842,8 +842,8 @@ describe('<DataGrid /> - Sorting', () => {
           />
         </div>,
       );
-      // Sorted by length descending: [A, B, C], [P, Q], [X], []
-      expect(getColumnValues(0)).to.deep.equal(['A, B, C', 'P, Q', 'X', '']);
+      // Sorted by length descending: [A, B, C], [P, Q], [X], [] - chips render without separators
+      expect(getColumnValues(0)).to.deep.equal(['ABC', 'PQ', 'X', '']);
     });
 
     it('should handle null and undefined values when sorting', () => {
@@ -868,8 +868,8 @@ describe('<DataGrid /> - Sorting', () => {
           />
         </div>,
       );
-      // null/undefined treated as length 0
-      expect(getColumnValues(0)).to.deep.equal(['', '', 'A', 'B, C']);
+      // null/undefined treated as length 0 - chips render without separators
+      expect(getColumnValues(0)).to.deep.equal(['', '', 'A', 'BC']);
     });
   });
 
