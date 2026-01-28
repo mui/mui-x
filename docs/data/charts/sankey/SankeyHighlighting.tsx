@@ -52,7 +52,11 @@ export default function SankeyHighlighting() {
           margin={{ left: 80, right: 80 }}
         />
       </Box>
-      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: '100%' }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={2}
+        sx={{ width: '100%' }}
+      >
         <Stack spacing={2} sx={{ flex: 1 }}>
           <TextField
             select
@@ -60,7 +64,12 @@ export default function SankeyHighlighting() {
             value={nodeHighlight}
             onChange={(event) =>
               setNodeHighlight(
-                event.target.value as 'nodes' | 'links' | 'incoming' | 'outgoing' | 'none',
+                event.target.value as
+                  | 'nodes'
+                  | 'links'
+                  | 'incoming'
+                  | 'outgoing'
+                  | 'none',
               )
             }
             fullWidth
@@ -75,7 +84,9 @@ export default function SankeyHighlighting() {
             select
             label="Node Fade"
             value={nodeFade}
-            onChange={(event) => setNodeFade(event.target.value as 'global' | 'none')}
+            onChange={(event) =>
+              setNodeFade(event.target.value as 'global' | 'none')
+            }
             fullWidth
           >
             <MenuItem value="global">global</MenuItem>
@@ -89,7 +100,12 @@ export default function SankeyHighlighting() {
             value={linkHighlight}
             onChange={(event) =>
               setLinkHighlight(
-                event.target.value as 'links' | 'nodes' | 'source' | 'target' | 'none',
+                event.target.value as
+                  | 'links'
+                  | 'nodes'
+                  | 'source'
+                  | 'target'
+                  | 'none',
               )
             }
             fullWidth
@@ -104,7 +120,9 @@ export default function SankeyHighlighting() {
             select
             label="Link Fade"
             value={linkFade}
-            onChange={(event) => setLinkFade(event.target.value as 'global' | 'none')}
+            onChange={(event) =>
+              setLinkFade(event.target.value as 'global' | 'none')
+            }
             fullWidth
           >
             <MenuItem value="global">global</MenuItem>

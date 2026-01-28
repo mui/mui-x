@@ -28,7 +28,8 @@ export default function SankeyLinkKeywordColors() {
         },
       }}
       renderDemo={(props) => {
-        const linkColor = props.linkColorMode === 'default' ? undefined : props.linkColorMode;
+        const linkColor =
+          props.linkColorMode === 'default' ? undefined : props.linkColorMode;
 
         return (
           <SankeyChart
@@ -47,7 +48,8 @@ export default function SankeyLinkKeywordColors() {
         );
       }}
       getCode={({ props }) => {
-        const linkColor = props.linkColorMode === 'default' ? undefined : props.linkColorMode;
+        const linkColor =
+          props.linkColorMode === 'default' ? undefined : props.linkColorMode;
 
         return `import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 

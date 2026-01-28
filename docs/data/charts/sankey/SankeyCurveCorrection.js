@@ -20,7 +20,10 @@ export default function SankeyCurveCorrection() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <SliderHandle curveCorrection={curveCorrection} setCurveCorrection={setCurveCorrection} />
+      <SliderHandle
+        curveCorrection={curveCorrection}
+        setCurveCorrection={setCurveCorrection}
+      />
       <SankeyChart
         height={400}
         series={{
