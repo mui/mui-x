@@ -72,5 +72,6 @@
 /x/api/charts/line-series-type/ /x/api/charts/line-series/ 301
 /x/api/charts/pie-series-type/ /x/api/charts/pie-series/ 301
 /x/api/charts/scatter-series-type/ /x/api/charts/scatter-series/ 301
+/x/introduction/priority-support/ /x/introduction/support/ 301
 
 # Proxies

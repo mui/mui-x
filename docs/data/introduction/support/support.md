@@ -71,21 +71,62 @@ If you cannot find your answer, [ask a new question](https://stackoverflow.com/q
 
 ## Technical support
 
-:::info
-The technical support covers only MUI X components. If you need to cover the entire component library, check out [Priority Support](/x/introduction/priority-support/).
-:::
+MUI offers two support plans, Standard(free) and Priority(paid).
+
+### Standard Support
 
 When purchasing a MUI X Pro or Premium license you get access to free technical support until the end of your active license.
+
+### Priority Support [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
+
+Priority Support is an add-on service for Premium plan users.
+With priority support you get expedited assistance and troubleshooting for your critical applications.
+
+#### Why teams choose Priority Support
+
+Priority Support is tailored for enterprise teams who rely on the MUI ecosystem at scale and want faster turnaround on bug reports, closer collaboration on issue triaging, and coverage across the entire component library.
+
+In addition to the MUI X components, Priority Support covers the entire MUI ecosystem, including:
+
+- The entire MUI X suite: Data Grid, Date and Time Pickers, Tree View, and Charts
+- Material UI
+- Base UI
+- MUI System
+- Pigment CSS
+- Joy UI
+
+#### Service-level agreement (SLA)
+
+Priority Support is governed by a service-level agreement (SLA) that ensures:
+
+- **24-hour response times**: Priority Support requests receive an initial response within one business day.
+- **Four-hour pre-screenings**: Priority requests undergo a review of up to four hours to validate and reproduce the issues.
+- **Issue escalation**: Critical issues are escalated to senior engineers for focused attention and prompt resolutions.
+
+For complete details, see our [SLA for technical support](https://mui.com/legal/technical-support-sla/).
+
+#### How to purchase Priority Support
+
+Priority Support is available as an add-on for Premium users and can be purchased from the [pricing page](https://mui.com/pricing/).
+Community and Pro users must upgrade to a Premium license to purchase Priority Support.
+
+### How to request technical support
+
 Support is available on multiple channels, but the recommended channels are:
 
-- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly.
+- GitHub: You can [open a new issue](https://github.com/mui/mui-x/issues/new/choose) and leave your Order ID (or Support key), so we can prioritize accordingly. In case of Priority Support:
+  - Create a new issue using the **Priority Support: SLA ⏰** template—this ensures it will include the necessary labels to trigger our automated process.
+  - After you've created the issue, a GitHub action will prompt you to follow an external link to validate your support key (which was issued to you upon purchase).
+  - Once your support key is validated, the action comment will update to confirm that your SLA is now in effect, and the issue labels will update accordingly to alert our team to review your request as soon as possible.
+
 - Email: If you need to share **private information** you can [submit a request](https://support.mui.com/hc/en-us/requests/new?tf_360023797420=mui_x) or send an email to [x@mui.com](mailto:x@mui.com).
 
 Including your Order ID (or Support key) in the issue helps us prioritize the issues based on the following support levels:
 
-1. MUI X Pro: maintainers give these issues more attention than the ones from the community.
-2. MUI X Premium: The same as MUI X Pro, but with higher priority.
-3. MUI X Priority Support (paid add-on): Provides a 24h SLA for the first answer.
+1. MUI X Priority Support: Provides a 24h SLA for the first answer.
+2. MUI X Premium: The same as MUI X Pro, but with higher priority. There is no SLA.
+3. MUI X Pro: maintainers give these issues more attention than the ones from the community.
+4. Community license
 
 ## Long-term support (LTS)
 
