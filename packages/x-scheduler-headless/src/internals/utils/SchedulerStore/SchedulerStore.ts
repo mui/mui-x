@@ -2,6 +2,7 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
+import { EventManager } from '@mui/x-internals/EventManager';
 import {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -22,6 +23,11 @@ import {
   SchedulerModelUpdater,
   UpdateEventsParameters,
 } from './SchedulerStore.types';
+import {
+  SchedulerEvents,
+  SchedulerEventListener,
+  SchedulerEventParameters,
+} from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
@@ -34,7 +40,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
-import { SchedulerLazyLoadingPlugin } from './plugins/SchedulerLazyLoadingPlugin';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -70,7 +75,7 @@ export class SchedulerStore<
 
   protected timeoutManager = new TimeoutManager();
 
-  public lazyLoading: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters> | undefined;
+  private eventManager = new EventManager();
 
   public constructor(
     parameters: Parameters,
@@ -249,6 +254,26 @@ export class SchedulerStore<
     });
   };
 
+  /**
+   * Publishes an event to all its subscribers.
+   */
+  public publishEvent = <E extends SchedulerEvents>(
+    name: E,
+    params: SchedulerEventParameters<E>,
+  ) => {
+    this.eventManager.emit(name, params);
+  };
+
+  /**
+   * Subscribe to an event emitted by the store.
+   */
+  public subscribeEvent = <E extends SchedulerEvents>(
+    eventName: E,
+    handler: SchedulerEventListener<E>,
+  ) => {
+    this.eventManager.on(eventName, handler);
+  };
+
   protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
@@ -303,15 +328,15 @@ export class SchedulerStore<
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
+
+    // Publish event for premium plugins (e.g., lazy loading) to sync caches
     queueMicrotask(() =>
-      this.lazyLoading?.updateEventsFromDataSource(
-        {
-          deleted: deletedParam ?? [],
-          updated,
-          created: createdIds,
-        },
+      this.publishEvent('eventsUpdated', {
+        deleted: deletedParam ?? [],
+        updated,
+        created: createdIds,
         newEvents,
-      ),
+      }),
     );
 
     return {

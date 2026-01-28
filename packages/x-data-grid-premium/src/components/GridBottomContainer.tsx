@@ -9,7 +9,7 @@ import {
   gridRowsLoadingSelector,
   gridRowTreeSelector,
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
+  type GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
 import { GridAggregationRowOverlay } from './GridAggregationRowOverlay';

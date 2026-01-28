@@ -1,17 +1,19 @@
-import { SchedulerLazyLoadingPlugin } from '../../internals/utils/SchedulerStore/plugins/SchedulerLazyLoadingPlugin';
-import { EventCalendarStore } from '../EventCalendarStore';
-import { EventCalendarState, EventCalendarParameters } from '../EventCalendarStore.types';
+import { EventCalendarState } from '@mui/x-scheduler-headless/use-event-calendar';
+import { SchedulerLazyLoadingPlugin } from '../../internals/plugins/SchedulerLazyLoadingPlugin';
+import {
+  EventCalendarPremiumState,
+  EventCalendarPremiumParameters,
+} from '../EventCalendarPremiumStore.types';
+import type { EventCalendarPremiumStore } from '../EventCalendarPremiumStore';
 
-export class EventCalendarLazyLoadingPlugin<
+export class EventCalendarPremiumLazyLoadingPlugin<
   TEvent extends object,
-  TResource extends object,
 > extends SchedulerLazyLoadingPlugin<
   TEvent,
-  TResource,
-  EventCalendarState,
-  EventCalendarParameters<TEvent, TResource>
+  EventCalendarPremiumState,
+  EventCalendarPremiumParameters<TEvent, any>
 > {
-  constructor(store: EventCalendarStore<TEvent, TResource>) {
+  constructor(store: EventCalendarPremiumStore<TEvent, any>) {
     super(store);
 
     store.registerStoreEffect(

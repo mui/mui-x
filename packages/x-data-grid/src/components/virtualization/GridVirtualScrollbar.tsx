@@ -10,7 +10,7 @@ import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiCon
 import { gridDimensionsSelector, useGridSelector } from '../../hooks';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type Position = 'vertical' | 'horizontal';
 type OwnerState = DataGridProcessedProps;

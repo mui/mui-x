@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { MuiBaseEvent } from '@mui/x-internals/types';
 import type {
   GridColumnHeaderParams,
@@ -13,8 +13,8 @@ import type {
   GridColumnGroupHeaderParams,
   GridRenderContext,
 } from '../params';
-import { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
-import { GridCellParams } from '../params/gridCellParams';
+import type { GridCellEditStartParams, GridCellEditStopParams } from '../params/gridEditCellParams';
+import type { GridCellParams } from '../params/gridCellParams';
 import type { GridFilterModel } from '../gridFilterModel';
 import type { GridSortModel } from '../gridSortModel';
 import type { GridRowSelectionModel } from '../gridRowSelectionModel';
@@ -22,10 +22,10 @@ import type { ElementSize } from '../elementSize';
 import type { GridGroupNode } from '../gridRows';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns';
 import type { GridStrategyProcessorName } from '../../hooks/core/strategyProcessing';
-import { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
-import { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
-import { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
-import { GridDensity } from '../gridDensity';
+import type { GridRowEditStartParams, GridRowEditStopParams } from '../params/gridRowParams';
+import type { GridCellModesModel, GridRowModesModel } from '../api/gridEditingApi';
+import type { GridPaginationMeta, GridPaginationModel } from '../gridPaginationProps';
+import type { GridDensity } from '../gridDensity';
 
 export interface GridRowEventLookup {
   /**

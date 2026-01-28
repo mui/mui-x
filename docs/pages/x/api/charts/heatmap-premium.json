@@ -1,0 +1,142 @@
+{
+  "props": {
+    "series": {
+      "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
+      "required": true
+    },
+    "xAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axis?: 'x', barGapRatio?: number, categoryGapRatio?: number, classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, height?: number, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'bottom'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'top', reverse?: bool, scaleType?: 'band', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelMinGap?: number, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, slider?: { enabled?: bool, preview?: bool, showTooltip?: 'always'<br>&#124;&nbsp;'hover'<br>&#124;&nbsp;'never', size?: number }, step?: number }<br>&#124;&nbsp;bool }&gt;"
+      },
+      "required": true
+    },
+    "yAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axis?: 'y', barGapRatio?: number, categoryGapRatio?: number, classes?: object, colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, disableLine?: bool, disableTicks?: bool, domainLimit?: 'nice'<br>&#124;&nbsp;'strict'<br>&#124;&nbsp;func, groups?: Array&lt;{ getValue: func, tickLabelStyle?: object, tickSize?: number }&gt;, hideTooltip?: bool, id?: number<br>&#124;&nbsp;string, ignoreTooltip?: bool, label?: string, labelStyle?: object, offset?: number, ordinalTimeTicks?: Array&lt;'biweekly'<br>&#124;&nbsp;'days'<br>&#124;&nbsp;'hours'<br>&#124;&nbsp;'months'<br>&#124;&nbsp;'quarterly'<br>&#124;&nbsp;'weeks'<br>&#124;&nbsp;'years'<br>&#124;&nbsp;{ format: func, getTickNumber: func, isTick: func }&gt;, position?: 'left'<br>&#124;&nbsp;'none'<br>&#124;&nbsp;'right', reverse?: bool, scaleType?: 'band', slotProps?: object, slots?: object, sx?: Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object, tickInterval?: 'auto'<br>&#124;&nbsp;array<br>&#124;&nbsp;func, tickLabelInterval?: 'auto'<br>&#124;&nbsp;func, tickLabelPlacement?: 'middle'<br>&#124;&nbsp;'tick', tickLabelStyle?: object, tickMaxStep?: number, tickMinStep?: number, tickNumber?: number, tickPlacement?: 'end'<br>&#124;&nbsp;'extremities'<br>&#124;&nbsp;'middle'<br>&#124;&nbsp;'start', tickSize?: number, tickSpacing?: number, valueFormatter?: func, width?: number, zoom?: { filterMode?: 'discard'<br>&#124;&nbsp;'keep', maxEnd?: number, maxSpan?: number, minSpan?: number, minStart?: number, panning?: bool, slider?: { enabled?: bool, preview?: bool, showTooltip?: 'always'<br>&#124;&nbsp;'hover'<br>&#124;&nbsp;'never', size?: number }, step?: number }<br>&#124;&nbsp;bool }&gt;"
+      },
+      "required": true
+    },
+    "borderRadius": { "type": { "name": "number" } },
+    "brushConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ enabled?: bool, preventHighlight?: bool, preventTooltip?: bool }"
+      }
+    },
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
+    "hideLegend": { "type": { "name": "bool" } },
+    "highlightedItem": {
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
+    },
+    "id": { "type": { "name": "string" } },
+    "initialZoom": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+      }
+    },
+    "loading": { "type": { "name": "bool" }, "default": "false" },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onAxisClick": {
+      "type": { "name": "func" },
+      "deprecated": true,
+      "deprecationInfo": "Use <code>onItemClick</code> instead to get access to both x- and y-axis values.",
+      "signature": {
+        "type": "function(event: MouseEvent, data: null | ChartsAxisData) => void",
+        "describedArgs": ["event", "data"]
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onItemClick": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(event: React.MouseEvent<SVGSVGElement, MouseEvent>, item: SeriesItemIdentifier<SeriesType>) => void",
+        "describedArgs": ["event", "item"]
+      }
+    },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
+    "onZoomChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(zoomData: Array<ZoomData>) => void",
+        "describedArgs": ["zoomData"]
+      }
+    },
+    "renderer": {
+      "type": { "name": "enum", "description": "'svg-single'<br>&#124;&nbsp;'webgl'" }
+    },
+    "showToolbar": { "type": { "name": "bool" }, "default": "false" },
+    "slotProps": { "type": { "name": "object" }, "default": "{}" },
+    "slots": {
+      "type": { "name": "object" },
+      "default": "{}",
+      "additionalInfo": { "slotsApi": true }
+    },
+    "tooltip": {
+      "type": { "name": "object" },
+      "seeMoreLink": { "url": "https://mui.com/x/react-charts/tooltip/", "text": "tooltip docs" }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: string, type: 'heatmap', xIndex?: number, yIndex?: number }"
+      }
+    },
+    "width": { "type": { "name": "number" } },
+    "zAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+      }
+    },
+    "zoomData": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+      }
+    },
+    "zoomInteractionConfig": {
+      "type": {
+        "name": "shape",
+        "description": "{ pan?: Array&lt;'drag'<br>&#124;&nbsp;'pressAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'drag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'pressAndDrag' }<br>&#124;&nbsp;{ allowedDirection?: 'x'<br>&#124;&nbsp;'xy'<br>&#124;&nbsp;'y', pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }&gt;, zoom?: Array&lt;'brush'<br>&#124;&nbsp;'doubleTapReset'<br>&#124;&nbsp;'pinch'<br>&#124;&nbsp;'tapAndDrag'<br>&#124;&nbsp;'wheel'<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: Array&lt;string&gt;, type: 'wheel' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'pinch' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'tapAndDrag' }<br>&#124;&nbsp;{ pointerMode?: 'mouse'<br>&#124;&nbsp;'touch', requiredKeys?: Array&lt;string&gt;, type: 'doubleTapReset' }<br>&#124;&nbsp;{ pointerMode?: any, requiredKeys?: array, type: 'brush' }&gt; }"
+      }
+    }
+  },
+  "name": "HeatmapPremium",
+  "imports": [
+    "import { HeatmapPremium } from '@mui/x-charts-premium/HeatmapPremium';",
+    "import { HeatmapPremium } from '@mui/x-charts-premium';"
+  ],
+  "classes": [],
+  "muiName": "MuiHeatmapPremium",
+  "filename": "/packages/x-charts-premium/src/HeatmapPremium/HeatmapPremium.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/heatmap/\">Charts - Heatmap <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a></a></li></ul>",
+  "cssComponent": false
+}

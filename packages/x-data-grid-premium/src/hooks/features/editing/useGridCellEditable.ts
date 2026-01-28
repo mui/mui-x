@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   useIsCellEditable as useIsCellEditableCommunity,
-  CellEditableConditionFn,
+  type CellEditableConditionFn,
 } from '@mui/x-data-grid-pro/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 
 /**

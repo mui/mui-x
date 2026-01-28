@@ -1,4 +1,4 @@
-import { GridColDef, GridStateColDef } from '../colDef/gridColDef';
+import type { GridColDef, GridStateColDef } from '../colDef/gridColDef';
 import type { GridColumnVisibilityModel } from '../../hooks/features/columns/gridColumnsInterfaces';
 
 /**
