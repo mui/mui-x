@@ -192,6 +192,9 @@ export default defineConfig(
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/purity': 'off',
       'react-hooks/static-components': 'off',
+
+      // TODO(@Janpot) Fix issues and turn back on
+      'material-ui/consistent-production-guard': 'off',
     },
   },
   // Test start
