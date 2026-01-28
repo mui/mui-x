@@ -23,6 +23,7 @@ import {
   candlestickRectVertexShader,
 } from './shaders';
 import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
+import { useCandlestickPlotData } from './useCandlestickPlotData';
 
 export interface CandlestickPlotProps {}
 
@@ -149,65 +150,25 @@ function CandlestickWebGLPlotImpl({
     scheduleRender();
   }, [drawingArea.height, drawingArea.width, gl, lineProgram, rectProgram, scheduleRender]);
 
+  const candleWidth = xScale.bandwidth();
   React.useEffect(() => {
-    const rectCenters = new Float32Array(series.data.length * 2);
-    const rectHeights = new Float32Array(series.data.length);
-    const lineCenters = new Float32Array(series.data.length * 2);
-    const lineHeights = new Float32Array(series.data.length);
-    const colors = new Float32Array(series.data.length * 4);
-    const xDomain = xScale.domain();
-    const candleWidth = xScale.bandwidth();
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(rectProgram);
+    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_candle_width'), candleWidth);
 
-    for (let dataIndex = 0; dataIndex < series.data.length; dataIndex += 1) {
-      const datum = series.data[dataIndex];
+    // eslint-disable-next-line react-compiler/react-compiler
+    gl.useProgram(lineProgram);
+    gl.uniform1f(gl.getUniformLocation(lineProgram, 'u_candle_width'), candleWidth);
+  }, [candleWidth, gl, lineProgram, rectProgram]);
 
-      if (datum === null) {
-        // Set alpha to 0 to hide the candle
-        colors[dataIndex * 4 + 3] = 0.0;
-        continue;
-      }
-
-      // Can't return undefined because we're calling it with a value from the domain
-      const scaledX = xScale(xDomain[dataIndex])!;
-
-      const [open, high, low, close] = datum;
-
-      const x = scaledX - drawingArea.left;
-      const [rectBottom, rectTop] = [
-        yScale(open) - drawingArea.top,
-        yScale(close) - drawingArea.top,
-      ].sort();
-      const [lineBottom, lineTop] = [yScale(low) - drawingArea.top, yScale(high) - drawingArea.top];
-
-      rectCenters[dataIndex * 2] = x;
-      rectCenters[dataIndex * 2 + 1] = (rectTop + rectBottom) / 2;
-      rectHeights[dataIndex] = rectTop - rectBottom;
-
-      lineCenters[dataIndex * 2] = rectCenters[dataIndex * 2];
-      lineCenters[dataIndex * 2 + 1] = (lineTop + lineBottom) / 2;
-      lineHeights[dataIndex] = lineTop - lineBottom;
-
-      if (close >= open) {
-        // Bullish - green
-        colors[dataIndex * 4] = 0.0;
-        colors[dataIndex * 4 + 1] = 1.0;
-        colors[dataIndex * 4 + 2] = 0.0;
-        colors[dataIndex * 4 + 3] = 1.0;
-      } else {
-        // Bearish - red
-        colors[dataIndex * 4] = 1.0;
-        colors[dataIndex * 4 + 1] = 0.0;
-        colors[dataIndex * 4 + 2] = 0.0;
-        colors[dataIndex * 4 + 3] = 1.0;
-      }
-    }
+  const plotData = useCandlestickPlotData(drawingArea, series, xScale, yScale);
+  React.useEffect(() => {
+    const { rectCenters, rectHeights, lineCenters, lineHeights, colors } = plotData;
 
     // Setup rect attributes
     // eslint-disable-next-line react-compiler/react-compiler
     gl.useProgram(rectProgram);
     gl.bindVertexArray(rectVaoRef.current);
-
-    gl.uniform1f(gl.getUniformLocation(rectProgram, 'u_candle_width'), candleWidth);
 
     bindQuadBuffer(gl, rectProgram, uploadQuadBuffer(gl));
 
@@ -245,8 +206,6 @@ function CandlestickWebGLPlotImpl({
     gl.useProgram(lineProgram);
     gl.bindVertexArray(lineVaoRef.current);
 
-    gl.uniform1f(gl.getUniformLocation(lineProgram, 'u_candle_width'), candleWidth);
-
     const lineVertices = new Float32Array([0, -1, 0, 1]);
 
     const buffer = gl.createBuffer();
@@ -277,18 +236,7 @@ function CandlestickWebGLPlotImpl({
     gl.bindVertexArray(null);
 
     scheduleRender();
-  }, [
-    dataLength,
-    drawingArea.left,
-    drawingArea.width,
-    gl,
-    lineProgram,
-    rectProgram,
-    scheduleRender,
-    series.data,
-    xScale,
-    yScale,
-  ]);
+  }, [gl, lineProgram, plotData, rectProgram, scheduleRender]);
 
   React.useEffect(() => {
     if (renderScheduledRef.current) {
