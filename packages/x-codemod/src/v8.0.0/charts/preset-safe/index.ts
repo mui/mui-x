@@ -8,6 +8,8 @@ import transformRenameLegendPositionType from '../rename-legend-position-type';
 import transformReplaceAxisClickHandler from '../remove-on-axis-click-handler';
 import transformRenameUnstableUseSeries from '../rename-unstable-use-series';
 import transformReplaceLegendHiddenSlotProp from '../replace-legend-hidden-slot-prop';
+import transformRemoveDeprecatedSeriesTypes from '../remove-deprecated-series-types/index';
+import transformRemoveIsBarSeriesHelpers from '../remove-is-bar-series-helpers/index';
 
 import { JsCodeShiftAPI, JsCodeShiftFileInfo } from '../../../types';
 
@@ -22,6 +24,8 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   file.source = transformReplaceAxisClickHandler(file, api, options);
   file.source = transformRenameUnstableUseSeries(file, api, options);
   file.source = transformReplaceLegendHiddenSlotProp(file, api, options);
+  file.source = transformRemoveDeprecatedSeriesTypes(file, api, options);
+  file.source = transformRemoveIsBarSeriesHelpers(file, api, options);
 
   return file.source;
 }

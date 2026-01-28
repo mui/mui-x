@@ -16,6 +16,14 @@ import {
   unstable_useScatterSeries,
 } from '@mui/x-charts/hooks';
 import { unstable_useHeatmapSeries } from '@mui/x-charts-pro/hooks';
+import {
+  CartesianSeriesType,
+  DefaultizedCartesianSeriesType,
+  StackableSeriesType,
+  AllSeriesType,
+  isBarSeries,
+  isDefaultizedBarSeries,
+} from '@mui/x-charts/models';
 
 function App() {
   const series = unstable_useSeries();
@@ -55,4 +63,25 @@ function App() {
     <BarChart slotProps={{ legend: { position: { vertical: 'bottom', horizontal: 'right' } } }} />
     <BarChart slotProps={{ legend: { position: { vertical: 'wrong', horizontal: 'wrong' } } }} />
   </div>;
+}
+
+function processCartesian(series: CartesianSeriesType) {
+  console.log(series);
+}
+
+function processDefaultizedCartesian(series: DefaultizedCartesianSeriesType) {
+  console.log(series);
+}
+
+function processStackable(series: StackableSeriesType) {
+  console.log(series);
+}
+
+function processAll(series: AllSeriesType) {
+  if (isBarSeries(series)) {
+    console.log('bar series');
+  }
+  if (isDefaultizedBarSeries(series)) {
+    console.log('defaultized bar series');
+  }
 }
