@@ -381,10 +381,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   let handleFocus = other.onFocus;
 
-  if (
-    process.env.NODE_ENV === 'test' &&
-    rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced
-  ) {
+  if (process.env.IS_TEST_ENV && rootProps.experimentalFeatures?.warnIfFocusStateIsNotSynced) {
     handleFocus = (event: React.FocusEvent) => {
       const focusedCell = gridFocusCellSelector(apiRef);
       if (focusedCell?.id === rowId && focusedCell.field === field) {
