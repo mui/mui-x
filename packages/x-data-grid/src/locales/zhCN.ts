@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('zh-CN');
 
 const zhCNGrid: Partial<GridLocaleText> = {
   // Root
@@ -194,10 +196,11 @@ const zhCNGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: '每页行数:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} 共 ${count !== -1 ? count : `超过 ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} 共 ${count !== -1 ? formatNumber(count) : `超过 ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `约 ${estimated}` : `超过 ${to}`;
-    return `${from}–${to} 共 ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `约 ${formatNumber(estimated)}` : `超过 ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} 共 ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('nn-NO');
 
 const nnNOGrid: Partial<GridLocaleText> = {
   // Root
@@ -197,10 +199,13 @@ const nnNOGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'Rader per side:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} av ${count !== -1 ? count : `flere enn ${to}`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} av ${count !== -1 ? formatNumber(count) : `flere enn ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `omtrent ${estimated}` : `flere enn ${to}`;
-    return `${from}–${to} av ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `omtrent ${formatNumber(estimated)}`
+        : `flere enn ${formatNumber(to)}`;
+    return `${formatNumber(from)}–${formatNumber(to)} av ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('he-IL');
 
 const heILGrid: Partial<GridLocaleText> = {
   // Root
@@ -196,10 +198,11 @@ const heILGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'שורות בעמוד:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}-${to} מתוך ${count !== -1 ? count : `יותר מ־${to}`}`;
+      return `${formatNumber(from)}-${formatNumber(to)} מתוך ${count !== -1 ? formatNumber(count) : `יותר מ־${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `כ־${estimated}` : `יותר מ־${to}`;
-    return `${from}-${to} מתוך ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `כ־${formatNumber(estimated)}` : `יותר מ־${formatNumber(to)}`;
+    return `${formatNumber(from)}-${formatNumber(to)} מתוך ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('ja-JP');
 
 const jaJPGrid: Partial<GridLocaleText> = {
   // Root
@@ -193,10 +195,11 @@ const jaJPGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'ページあたりの行数:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} of ${count !== -1 ? count : `${to}以上`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : `${formatNumber(to)}以上`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `${estimated}前後` : `${to}以上`;
-    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `${formatNumber(estimated)}前後` : `${formatNumber(to)}以上`;
+    return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
