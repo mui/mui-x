@@ -23,10 +23,7 @@ export default function SankeyControlledHighlight() {
     setHighlightedItem(item);
   };
 
-  const handleToggleChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    newValue: string | null,
-  ) => {
+  const handleToggleChange = (_event: React.MouseEvent<HTMLElement>, newValue: string | null) => {
     if (newValue === null) {
       setHighlightedItem(null);
       return;

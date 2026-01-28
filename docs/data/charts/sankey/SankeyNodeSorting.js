@@ -2,14 +2,7 @@ import { SankeyChart } from '@mui/x-charts-pro/SankeyChart';
 import Typography from '@mui/material/Typography';
 
 const data = {
-  nodes: [
-    { id: 'C' },
-    { id: 'B' },
-    { id: 'A' },
-    { id: 'X' },
-    { id: 'Y' },
-    { id: 'Z' },
-  ],
+  nodes: [{ id: 'C' }, { id: 'B' }, { id: 'A' }, { id: 'X' }, { id: 'Y' }, { id: 'Z' }],
   links: [
     { source: 'C', target: 'Y', value: 10 },
     { source: 'A', target: 'X', value: 25 },

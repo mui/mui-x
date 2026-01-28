@@ -1,7 +1,4 @@
-import {
-  SankeyChart,
-  type SankeyValueFormatterContext,
-} from '@mui/x-charts-pro/SankeyChart';
+import { SankeyChart, type SankeyValueFormatterContext } from '@mui/x-charts-pro/SankeyChart';
 
 const data = {
   nodes: [
@@ -37,8 +34,7 @@ export default function SankeyValueFormatter() {
         data,
         valueFormatter: (value: number, context: SankeyValueFormatterContext) => {
           // Format the value as energy units
-          const formatted =
-            value >= 1000 ? `${(value / 1000).toFixed(1)} GWh` : `${value} MWh`;
+          const formatted = value >= 1000 ? `${(value / 1000).toFixed(1)} GWh` : `${value} MWh`;
 
           // You can customize formatting based on context type
           if (context.type === 'link') {
