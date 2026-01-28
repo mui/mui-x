@@ -12,6 +12,8 @@ export type { ItemTooltip } from '../internals/plugins/corePlugins/useChartSerie
 export type { UseItemTooltipReturnValue, UseRadarItemTooltipReturnValue } from './useItemTooltip';
 export { useItemTooltip, useRadarItemTooltip } from './useItemTooltip';
 export * from './useAxesTooltip';
+export * from './useTooltipPosition';
+export * from './useTooltipAnchor';
 
 export { useMouseTracker } from './utils';
 export * from './ChartTooltip.types';

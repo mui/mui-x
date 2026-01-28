@@ -1,0 +1,48 @@
+{
+  "name": "@mui/x-charts-material",
+  "version": "0.0.1",
+  "description": "Material UI integration for @mui/x-charts-headless",
+  "author": "MUI Team",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-charts/",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/mui-org"
+  },
+  "scripts": {
+    "build": "pnpm build:modern && pnpm build:node && pnpm build:stable && pnpm build:types && pnpm build:copy-files",
+    "build:modern": "node ../../scripts/build.mjs modern",
+    "build:node": "node ../../scripts/build.mjs node",
+    "build:stable": "node ../../scripts/build.mjs stable",
+    "build:copy-files": "node ../../scripts/copyFiles.mjs",
+    "build:types": "node ../../scripts/buildTypes.mjs",
+    "typescript": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/utils": "catalog:",
+    "@mui/x-charts-headless": "workspace:^",
+    "@mui/x-internals": "workspace:^",
+    "clsx": "catalog:"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
