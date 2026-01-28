@@ -19,11 +19,11 @@ import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/u
 import { findClosestPoints } from './findClosestPoints';
 
 export const useChartClosestPoint: ChartPlugin<UseChartClosestPointSignature> = ({
-  svgRef,
   params,
   store,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { disableVoronoi, voronoiMaxRadius, onItemClick } = params;
 
   const { axis: xAxis, axisIds: xAxisIds } = store.use(selectorChartXAxis);

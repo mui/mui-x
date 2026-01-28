@@ -1,5 +1,5 @@
-import * as React from 'react';
-import {
+import type * as React from 'react';
+import type {
   GridCellIndexCoordinates,
   GridScrollParams,
   GridColDef,
@@ -7,21 +7,21 @@ import {
   GridCellParams,
   GridEditMode,
 } from '../../../models';
-import { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
-import {
+import type { GridInitialStateCommunity } from '../../../models/gridStateCommunity';
+import type {
   GridExportStateParams,
   GridRestoreStatePreProcessingContext,
   GridRestoreStatePreProcessingValue,
 } from '../../features/statePersistence/gridStatePersistenceInterface';
-import {
+import type {
   GridHydrateColumnsValue,
   GridPinnedColumnPosition,
 } from '../../features/columns/gridColumnsInterfaces';
-import { GridRowEntry, GridRowId } from '../../../models/gridRows';
-import { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
-import { GridPreferencePanelsValue } from '../../features/preferencesPanel';
-import { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
-import { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
+import type { GridRowEntry, GridRowId } from '../../../models/gridRows';
+import type { GridHydrateRowsValue } from '../../features/rows/gridRowsInterfaces';
+import type { GridPreferencePanelsValue } from '../../features/preferencesPanel';
+import type { GridGetRowsParams, GridGetRowsResponse } from '../../../models/gridDataSource';
+import type { HeightEntry } from '../../features/rows/gridRowsMetaInterfaces';
 import type { RowReorderDropPosition } from '../../../models/api/gridRowApi';
 
 export type GridPipeProcessorGroup = keyof GridPipeProcessingLookup;

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -196,6 +196,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'так',
   booleanCellFalseLabel: 'ні',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Показати',
+  longTextCellCollapseLabel: 'Приховати',
 
   // Actions cell more text
   actionsCellMore: 'більше',

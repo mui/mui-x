@@ -440,6 +440,50 @@ export interface GridClasses {
    */
   editInputCell: string;
   /**
+   * Styles applied to the long text cell root element.
+   */
+  longTextCell: string;
+  /**
+   * Styles applied to the long text cell content element.
+   */
+  longTextCellContent: string;
+  /**
+   * Styles applied to the long text cell expand button.
+   */
+  longTextCellExpandButton: string;
+  /**
+   * Styles applied to the long text cell collapse button.
+   */
+  longTextCellCollapseButton: string;
+  /**
+   * Styles applied to the long text cell popup.
+   */
+  longTextCellPopup: string;
+  /**
+   * Styles applied to the long text cell popper content.
+   */
+  longTextCellPopperContent: string;
+  /**
+   * Styles applied to the edit long text cell root element.
+   */
+  editLongTextCell: string;
+  /**
+   * Styles applied to the edit long text cell value element.
+   */
+  editLongTextCellValue: string;
+  /**
+   * Styles applied to the edit long text cell popup.
+   */
+  editLongTextCellPopup: string;
+  /**
+   * Styles applied to the edit long text cell popper content.
+   */
+  editLongTextCellPopperContent: string;
+  /**
+   * Styles applied to the edit long text cell textarea.
+   */
+  editLongTextCellTextarea: string;
+  /**
    * Styles applied to the filter icon element.
    */
   filterIcon: string;
@@ -1025,6 +1069,17 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'paper',
   'editBooleanCell',
   'editInputCell',
+  'longTextCell',
+  'longTextCellContent',
+  'longTextCellExpandButton',
+  'longTextCellCollapseButton',
+  'longTextCellPopup',
+  'longTextCellPopperContent',
+  'editLongTextCell',
+  'editLongTextCellValue',
+  'editLongTextCellPopup',
+  'editLongTextCellPopperContent',
+  'editLongTextCellTextarea',
   'filler',
   'filler--borderBottom',
   'filler--pinnedLeft',

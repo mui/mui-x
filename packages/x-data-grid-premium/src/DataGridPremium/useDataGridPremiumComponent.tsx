@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridInitialization,
   useGridInitializeState,
@@ -80,8 +80,8 @@ import {
   useFirstRender,
 } from '@mui/x-data-grid-pro/internals';
 import { useGridSelector } from '@mui/x-data-grid-pro';
-import { GridPrivateApiPremium } from '../models/gridApiPremium';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { useGridDataSourcePremium as useGridDataSource } from '../hooks/features/dataSource/useGridDataSourcePremium';
 // Premium-only features
 import {

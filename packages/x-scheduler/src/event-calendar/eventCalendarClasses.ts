@@ -14,18 +14,16 @@ export interface EventCalendarClasses {
   monthCalendarPlaceholder: string;
   /** Styles applied to the error container element. */
   errorContainer: string;
-  /** Styles applied to the date navigator root element. */
-  dateNavigator: string;
-  /** Styles applied to the date navigator label element. */
-  dateNavigatorLabel: string;
-  /** Styles applied to the date navigator buttons container element. */
-  dateNavigatorButtonsContainer: string;
   /** Styles applied to the header toolbar element. */
   headerToolbar: string;
   /** Styles applied to the header toolbar actions element. */
   headerToolbarActions: string;
-  /** Styles applied to the header toolbar primary action wrapper element. */
-  headerToolbarPrimaryActionWrapper: string;
+  /** Styles applied to the header toolbar left side element. */
+  headerToolbarLeftElement: string;
+  /** Styles applied to the header toolbar label element. */
+  headerToolbarLabel: string;
+  /** Styles applied to the header toolbar date navigator buttons container element. */
+  headerToolbarDateNavigator: string;
   /** Styles applied to the view switcher element. */
   viewSwitcher: string;
   /** Styles applied to the preferences menu element. */
@@ -130,6 +128,8 @@ export interface EventCalendarClasses {
   dayTimeGridColumnInteractiveLayer: string;
   /** Styles applied to the day time grid current time indicator element. */
   dayTimeGridCurrentTimeIndicator: string;
+  /** Styles applied to the day time grid current time indicator circle element. */
+  dayTimeGridCurrentTimeIndicatorCircle: string;
   /** Styles applied to the day time grid current time label element. */
   dayTimeGridCurrentTimeLabel: string;
   /** Styles applied to day time grid all day events cell events container elements. */
@@ -203,12 +203,11 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'content',
     'monthCalendarPlaceholder',
     'errorContainer',
-    'dateNavigator',
-    'dateNavigatorLabel',
-    'dateNavigatorButtonsContainer',
     'headerToolbar',
     'headerToolbarActions',
-    'headerToolbarPrimaryActionWrapper',
+    'headerToolbarLeftElement',
+    'headerToolbarLabel',
+    'headerToolbarDateNavigator',
     'viewSwitcher',
     'preferencesMenu',
     'resourcesLegend',
@@ -261,6 +260,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'dayTimeGridColumn',
     'dayTimeGridColumnInteractiveLayer',
     'dayTimeGridCurrentTimeIndicator',
+    'dayTimeGridCurrentTimeIndicatorCircle',
     'dayTimeGridCurrentTimeLabel',
     'dayTimeGridAllDayEventsCellEvents',
     'dayTimeGridAllDayEventContainer',

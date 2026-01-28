@@ -13,11 +13,11 @@ import {
 import { extrapolateSeed, deepFreeze } from './useDemoData';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
-import { GridColDefGenerator } from '../services/gridColDefGenerator';
-import { getRealGridData, GridDemoData } from '../services/real-data-service';
+import type { GridColDefGenerator } from '../services/gridColDefGenerator';
+import { getRealGridData, type GridDemoData } from '../services/real-data-service';
 import {
   addTreeDataOptionsToDemoData,
-  AddPathToDemoDataOptions,
+  type AddPathToDemoDataOptions,
 } from '../services/tree-data-generator';
 import {
   loadServerRows,

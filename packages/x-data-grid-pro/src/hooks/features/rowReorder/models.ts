@@ -1,4 +1,4 @@
-import { GridTreeNode, GridValidRowModel } from '@mui/x-data-grid';
+import type { GridTreeNode, GridValidRowModel } from '@mui/x-data-grid';
 import type { RefObject } from '@mui/x-internals/types';
 import type { RowReorderDropPosition, RowReorderDragDirection } from '@mui/x-data-grid/internals';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';

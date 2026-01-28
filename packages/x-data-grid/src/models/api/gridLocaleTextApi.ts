@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { GridColDef } from '../colDef';
 
 /**
@@ -163,6 +163,10 @@ export interface GridLocaleText {
   // Boolean cell text
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
+
+  // Long text cell
+  longTextCellExpandLabel: string;
+  longTextCellCollapseLabel: string;
 
   // Actions cell more text
   actionsCellMore: string;

@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { ToolbarContext } from './ToolbarContext';

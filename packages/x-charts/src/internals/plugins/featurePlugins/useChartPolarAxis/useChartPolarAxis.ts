@@ -25,9 +25,9 @@ import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasIntera
 export const useChartPolarAxis: ChartPlugin<UseChartPolarAxisSignature<any>> = ({
   params,
   store,
-  svgRef,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { rotationAxis, radiusAxis, dataset } = params;
 
   if (process.env.NODE_ENV !== 'production') {

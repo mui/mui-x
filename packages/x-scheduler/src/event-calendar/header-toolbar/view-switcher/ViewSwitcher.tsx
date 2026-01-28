@@ -1,22 +1,22 @@
 'use client';
 import * as React from 'react';
+import clsx from 'clsx';
 import { styled } from '@mui/material/styles';
 import ExpandMoreOutlined from '@mui/icons-material/ExpandMoreOutlined';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
 import { CalendarView } from '@mui/x-scheduler-headless/models';
-import clsx from 'clsx';
 import { useTranslations } from '../../../internals/utils/TranslationsContext';
 import { useEventCalendarClasses } from '../../EventCalendarClassesContext';
 
 const ViewSwitcherRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'ViewSwitcher',
-})({});
+})({
+  display: 'flex',
+});
 
 export interface ViewSwitcherProps extends React.HTMLAttributes<HTMLDivElement> {
   views: CalendarView[];
@@ -42,16 +42,7 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
   const classes = useEventCalendarClasses();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const menuOpen = Boolean(anchorEl);
-
-  const handleToggleChange = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>, newView: CalendarView | null) => {
-      if (newView) {
-        onViewChange(newView, event.nativeEvent);
-      }
-    },
-    [onViewChange],
-  );
+  const open = Boolean(anchorEl);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -66,72 +57,44 @@ export const ViewSwitcher = React.forwardRef(function ViewSwitcher(
     handleMenuClose();
   };
 
-  const showAll = views.length <= 3;
-  const visible = showAll ? views : views.slice(0, 2);
-  const dropdown = React.useMemo(() => (showAll ? [] : views.slice(2)), [showAll, views]);
-
-  const [state, setState] = React.useState<{
-    dropdownView: CalendarView | null;
-    prevView: CalendarView | null;
-    prevViews: CalendarView[];
-  }>({ dropdownView: dropdown[0], prevView: view, prevViews: views });
-
-  // making sure we persist the last selected item from the menu, so when switching to a different view, the last item in the menu bar does not automatically change back to the initial value of dropdown[0]
-  if (state.prevView !== view || state.prevViews !== views) {
-    let newDropdownView: CalendarView | null;
-    if (dropdown.includes(view)) {
-      newDropdownView = view;
-    } else if (state.dropdownView != null && views.includes(state.dropdownView)) {
-      newDropdownView = state.dropdownView;
-    } else {
-      newDropdownView = dropdown[0] ?? null;
-    }
-
-    setState({
-      prevView: view,
-      prevViews: views,
-      dropdownView: newDropdownView,
-    });
-  }
-
   return (
     <ViewSwitcherRoot ref={handleRef} {...other} className={clsx(className, classes.viewSwitcher)}>
-      <ToggleButtonGroup value={view} exclusive onChange={handleToggleChange} size="small">
-        {visible.map((visibleView) => (
-          <ToggleButton key={visibleView} value={visibleView}>
-            {translations[visibleView]}
-          </ToggleButton>
-        ))}
-
-        {!!state.dropdownView && (
-          <ToggleButton value={state.dropdownView}>{translations[state.dropdownView]}</ToggleButton>
-        )}
-      </ToggleButtonGroup>
-
-      {dropdown.length > 0 && (
-        <React.Fragment>
-          <IconButton
-            size="small"
-            onClick={handleMenuOpen}
-            aria-label="Show more views"
-            aria-haspopup="true"
-            aria-expanded={menuOpen ? 'true' : undefined}
+      <Button
+        size="medium"
+        variant="outlined"
+        id="view-switcher-button"
+        aria-controls={open ? 'view-switcher-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        aria-label="Switch View"
+        onClick={handleMenuOpen}
+        endIcon={<ExpandMoreOutlined />}
+      >
+        {translations[view]}
+      </Button>
+      <Menu
+        id="view-switcher-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleMenuClose}
+        slotProps={{
+          list: {
+            'aria-labelledby': 'view-switcher-button',
+            role: 'listbox',
+          },
+        }}
+      >
+        {views.map((viewItem) => (
+          <MenuItem
+            key={viewItem}
+            selected={view === viewItem}
+            aria-selected={view === viewItem}
+            onClick={(event) => handleMenuItemClick(event, viewItem)}
           >
-            <ExpandMoreOutlined fontSize="small" />
-          </IconButton>
-          <Menu anchorEl={anchorEl} open={menuOpen} onClose={handleMenuClose}>
-            {dropdown.map((dropdownView) => (
-              <MenuItem
-                key={dropdownView}
-                selected={view === dropdownView}
-                onClick={(event) => handleMenuItemClick(event, dropdownView)}
-              >
-                {translations[dropdownView]}
-              </MenuItem>
-            ))}
-          </Menu>
-        </React.Fragment>
-      )}
+            {translations[viewItem]}
+          </MenuItem>
+        ))}
+      </Menu>
     </ViewSwitcherRoot>
   );
 }) as ViewSwitcherComponent;

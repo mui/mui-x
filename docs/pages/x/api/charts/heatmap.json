@@ -205,6 +205,18 @@
       "class": null
     },
     {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
+      "class": null
+    },
+    {
       "name": "zoomInIcon",
       "description": "Icon displayed on the toolbar's zoom in button.",
       "default": "ChartsZoomInIcon",

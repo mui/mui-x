@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { Logger } from '../../models/logger';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { RefObject } from '@mui/x-internals/types';
+import type { Logger } from '../../models/logger';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 
 export function useGridLogger<PrivateApi extends GridPrivateApiCommon>(
   privateApiRef: RefObject<PrivateApi>,
