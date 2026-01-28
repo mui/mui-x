@@ -8,12 +8,18 @@ import columnsPlugin, {
   type ColumnsPluginState,
   type ColumnsPluginOptions,
 } from './columns/columns';
+import elementsPlugin, {
+  type ElementsPluginApi,
+  type ElementsPluginState,
+  type ElementsPluginOptions,
+} from './elements/elements';
 
-export const internalPlugins = [rowsPlugin, columnsPlugin] as const;
+export const internalPlugins = [rowsPlugin, columnsPlugin, elementsPlugin] as const;
 
-export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> & ColumnsPluginApi;
+export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> & ColumnsPluginApi & ElementsPluginApi;
 
-export type InternalPluginsState = RowsPluginState & ColumnsPluginState;
+export type InternalPluginsState = RowsPluginState & ColumnsPluginState & ElementsPluginState;
 
 export type InternalPluginsOptions<TRow = any, TColumnMeta = {}> = RowsPluginOptions<TRow> &
-  ColumnsPluginOptions<TRow, TColumnMeta>;
+  ColumnsPluginOptions<TRow, TColumnMeta> &
+  ElementsPluginOptions;

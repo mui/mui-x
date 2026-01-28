@@ -331,9 +331,10 @@ function DataGridVirtualScrollbar({
   const lastPosition = React.useRef(0);
 
   const isVertical = position === 'vertical';
-  const { scrollPosition, ...scrollbarProps } = isVertical
-    ? grid.api.virtualization.hooks.useScrollbarVerticalProps()
-    : grid.api.virtualization.hooks.useScrollbarHorizontalProps();
+  const elements = grid.api.elements;
+  const scrollbarProps = isVertical
+    ? elements.hooks.useScrollbarVerticalProps()
+    : elements.hooks.useScrollbarHorizontalProps();
 
   const handleScrollbarRef = useForkRef(scrollbarRef, scrollbarProps.ref);
 
@@ -430,8 +431,6 @@ function DataGridVirtualScrollbar({
       className={`DataGrid-scrollbar${isVertical ? 'Vertical' : 'Horizontal'}`}
       {...scrollbarProps}
       ref={handleScrollbarRef}
-      tabIndex={-1}
-      aria-hidden="true"
       style={style}
     >
       <div style={innerStyle} />
@@ -452,11 +451,13 @@ function DataGrid() {
   });
 
   const virtualization = grid.api.virtualization;
+  const elements = grid.api.elements;
 
-  const containerProps = virtualization.hooks.useContainerProps();
-  const scrollerProps = virtualization.hooks.useScrollerProps();
-  const contentProps = virtualization.hooks.useContentProps();
-  const { scrollPosition, ...scrollAreaProps } = virtualization.hooks.useScrollAreaProps();
+  const gridProps = elements.hooks.useGridProps();
+  const containerProps = elements.hooks.useContainerProps();
+  const scrollerProps = elements.hooks.useScrollerProps();
+  const contentProps = elements.hooks.useContentProps();
+  const scrollAreaProps = elements.hooks.useScrollAreaProps();
   const dimensions = virtualization.hooks.useDimensions();
 
   const scrollerRef = React.useRef<HTMLDivElement>(null);
@@ -503,6 +504,7 @@ function DataGrid() {
 
         <div
           className="DataGrid-root"
+          {...gridProps}
           style={{
             display: 'flex',
             flexDirection: 'column',

@@ -80,7 +80,7 @@ export interface VirtualizationApi {
   };
 }
 
-type VirtualizationPlugin = Plugin<
+export type VirtualizationPlugin = Plugin<
   'virtualization',
   VirtualizationState,
   VirtualizationApi,
@@ -358,7 +358,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
         return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollbarHorizontalProps);
       };
 
-    const useScrollAreaPropsHook: VirtualizationHooks['useScrollAreaProps'] = () => {
+    const useScrollAreaProps: VirtualizationHooks['useScrollAreaProps'] = () => {
       return useStore(virtualizerStore, LayoutDataGrid.selectors.scrollAreaProps);
     };
 
@@ -384,7 +384,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
           usePositionerProps: usePositionerPropsHook,
           useScrollbarVerticalProps: useScrollbarVerticalPropsHook,
           useScrollbarHorizontalProps: useScrollbarHorizontalPropsHook,
-          useScrollAreaProps: useScrollAreaPropsHook,
+          useScrollAreaProps,
         },
       },
     };
