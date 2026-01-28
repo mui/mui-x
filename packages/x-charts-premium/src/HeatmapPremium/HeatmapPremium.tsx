@@ -5,7 +5,13 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { FocusedHeatmapCell, type HeatmapProps, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
+import {
+  FocusedHeatmapCell,
+  HeatmapTooltip,
+  type HeatmapProps,
+  type HeatmapSlots,
+  type HeatmapSlotProps,
+} from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -15,6 +21,9 @@ import { useHeatmapPremiumProps } from './useHeatmapPremiumProps';
 import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
+
+export interface HeatmapPremiumSlots extends HeatmapSlots {}
+export interface HeatmapPremiumSlotProps extends HeatmapSlotProps {}
 
 export interface HeatmapPremiumProps extends HeatmapProps {
   /**
