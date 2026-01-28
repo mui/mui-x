@@ -5,7 +5,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import {
-  Unstable_SankeyChart as SankeyChart,
+  SankeyChart,
   type SankeyNodeIdentifier,
   type SankeyLinkIdentifier,
 } from '@mui/x-charts-pro/SankeyChart';

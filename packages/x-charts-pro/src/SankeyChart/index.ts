@@ -1,3 +1,4 @@
+export { SankeyChart } from './SankeyChart';
 export { SankeyChart as Unstable_SankeyChart } from './SankeyChart';
 export type { SankeyChartProps, SankeySeries } from './SankeyChart';
 export * from './SankeyPlot';

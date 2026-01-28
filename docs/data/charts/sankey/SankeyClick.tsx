@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import UndoOutlinedIcon from '@mui/icons-material/UndoOutlined';
 import {
-  Unstable_SankeyChart as SankeyChart,
+  SankeyChart,
   SankeyItemIdentifier,
 } from '@mui/x-charts-pro/SankeyChart';
 import { HighlightedCode } from '@mui/docs/HighlightedCode';
