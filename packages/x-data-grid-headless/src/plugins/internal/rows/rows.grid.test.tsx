@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
-import { useDataGrid, ColumnDef } from '../../..';
+import { useDataGrid, type ColumnDef } from '../../..';
 import { sortingPlugin, paginationPlugin } from '../..';
 
 type GridApi<TRow extends object> = ReturnType<

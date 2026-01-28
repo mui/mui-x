@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import resolveProps from '@mui/utils/resolveProps';
-import {
+import type {
   GridColumnLookup,
   GridColumnsState,
   GridColumnsRawState,
@@ -13,13 +13,13 @@ import {
   GRID_STRING_COL_DEF,
   getGridDefaultColumnTypes,
 } from '../../../colDef';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
-import { GridApiCommon } from '../../../models/api/gridApiCommon';
-import { GridRowEntry } from '../../../models/gridRows';
+import type { GridApiCommon } from '../../../models/api/gridApiCommon';
+import type { GridRowEntry } from '../../../models/gridRows';
 import { gridDensityFactorSelector } from '../density/densitySelector';
 import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeaderFilteringSelectors';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';

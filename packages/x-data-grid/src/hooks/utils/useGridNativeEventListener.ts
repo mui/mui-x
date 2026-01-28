@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useGridLogger } from './useGridLogger';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
 import { useGridEventPriority } from './useGridEvent';
 
 export const useGridNativeEventListener = <
