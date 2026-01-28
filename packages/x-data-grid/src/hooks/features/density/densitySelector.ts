@@ -1,6 +1,6 @@
 import { createSelector, createRootSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
-import { GridDensity } from '../../../models/gridDensity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridDensity } from '../../../models/gridDensity';
 
 export const COMPACT_DENSITY_FACTOR = 0.7;
 export const COMFORTABLE_DENSITY_FACTOR = 1.3;

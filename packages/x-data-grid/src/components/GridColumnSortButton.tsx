@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import clsx from 'clsx';
-import { GridSlotProps, GridSlotsComponent } from '../models';
-import { GridSortDirection } from '../models/gridSortModel';
+import type { GridSlotProps, GridSlotsComponent } from '../models';
+import type { GridSortDirection } from '../models/gridSortModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { vars } from '../constants/cssVariables';
 import { NotRendered } from '../utils/assert';
 

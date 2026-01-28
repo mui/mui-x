@@ -1,16 +1,20 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { GridEventListener } from '../../../models/events';
-import { ElementSize } from '../../../models';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridEventListener } from '../../../models/events';
+import type { ElementSize } from '../../../models';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridEventPriority } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { createSelector } from '../../../utils/createSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type {
+  GridDimensions,
+  GridDimensionsApi,
+  GridDimensionsPrivateApi,
+} from './gridDimensionsApi';
 import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -20,7 +24,7 @@ import { gridDimensionsSelector } from './gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../density';
 import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';

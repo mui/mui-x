@@ -9,7 +9,7 @@ import {
   gridAiAssistantConversationsSelector,
 } from '../../hooks/features/aiAssistant/gridAiAssistantSelectors';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { GridAiAssistantPanelConversation } from './GridAiAssistantPanelConversation';
 import { GridPromptField } from '../promptField/GridPromptField';
 import { GridAiAssistantPanelSuggestions } from './GridAiAssistantPanelSuggestions';

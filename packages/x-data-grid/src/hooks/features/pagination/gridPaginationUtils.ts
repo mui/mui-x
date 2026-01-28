@@ -1,4 +1,4 @@
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { GridSignature } from '../../../constants/signature';
 
 const MAX_PAGE_SIZE = 100;

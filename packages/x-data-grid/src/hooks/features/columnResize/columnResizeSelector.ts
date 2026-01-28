@@ -1,4 +1,4 @@
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { createRootSelector, createSelector } from '../../../utils/createSelector';
 
 export const gridColumnResizeSelector = createRootSelector(

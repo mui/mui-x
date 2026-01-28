@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommon } from '../../../models/api/gridApiCommon';
 import {
-  GridStrategyProcessor,
-  GridStrategyProcessorName,
-  GridStrategyProcessingApi,
-  GridStrategyGroupValue,
+  type GridStrategyProcessor,
+  type GridStrategyProcessorName,
+  type GridStrategyProcessingApi,
+  type GridStrategyGroupValue,
   GridStrategyGroup,
 } from './gridStrategyProcessingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';

@@ -1,4 +1,4 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
 
 export const GRID_DEFAULT_LOCALE_TEXT: GridLocaleText = {
   // Root

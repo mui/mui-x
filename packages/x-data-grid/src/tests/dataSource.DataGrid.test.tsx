@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useMockServer } from '@mui/x-data-grid-generator';
 import { act, createRenderer, waitFor } from '@mui/internal-test-utils';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGrid,
-  DataGridProps,
-  GridApi,
-  GridDataSource,
-  GridGetRowsParams,
-  GridGetRowsResponse,
+  type DataGridProps,
+  type GridApi,
+  type GridDataSource,
+  type GridGetRowsParams,
+  type GridGetRowsResponse,
   useGridApiRef,
 } from '@mui/x-data-grid';
 import { spy } from 'sinon';

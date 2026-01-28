@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { DataGrid, useGridApiRef, DataGridProps, GridApi } from '@mui/x-data-grid';
+import { DataGrid, useGridApiRef, type DataGridProps, type GridApi } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import { getCell, getActiveCell, microtasks } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';

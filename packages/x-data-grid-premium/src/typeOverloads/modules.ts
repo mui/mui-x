@@ -23,14 +23,14 @@ import type {
   GridCellSelectionModel,
   Conversation,
 } from '../hooks';
-import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
-import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
+import type { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
 import type {
   GridPivotingInternalCache,
   GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import type { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**

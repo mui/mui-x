@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
-  GridRowSelectionModel,
+  type GridRowSelectionModel,
   gridColumnLookupSelector,
   GridLogicOperator,
   gridRowsLookupSelector,
-  GridSingleSelectColDef,
+  type GridSingleSelectColDef,
   useGridApiMethod,
   GRID_CHECKBOX_SELECTION_FIELD,
   GridPreferencePanelsValue,
@@ -17,18 +17,18 @@ import {
 import {
   getValueOptions,
   getVisibleRows,
-  GridPipeProcessor,
-  GridStateInitializer,
+  type GridPipeProcessor,
+  type GridStateInitializer,
   useGridRegisterPipeProcessor,
 } from '@mui/x-data-grid-pro/internals';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import {
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type {
   GridAiAssistantApi,
   GridAiAssistantState,
   Prompt,
   PromptResponse,
 } from './gridAiAssistantInterfaces';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridAiAssistantConversationsSelector,
   gridAiAssistantActiveConversationSelector,

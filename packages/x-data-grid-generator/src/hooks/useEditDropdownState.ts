@@ -4,7 +4,7 @@ import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
   GridCellEditStopReasons,
   GridEditModes,
-  GridRowId,
+  type GridRowId,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-premium';

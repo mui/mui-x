@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
+import type { GridSlotProps, GridBaseIconProps } from '../../models/gridSlotsComponentsProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 interface GridActionsCellItemCommonProps {

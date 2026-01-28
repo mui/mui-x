@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/system';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  GridRenderCellParams,
-  GridRowEventLookup,
+  type GridRenderCellParams,
+  type GridRowEventLookup,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,

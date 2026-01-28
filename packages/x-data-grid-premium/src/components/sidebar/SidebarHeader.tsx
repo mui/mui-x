@@ -4,7 +4,7 @@ import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 export type SidebarHeaderProps = React.HTMLAttributes<HTMLDivElement>;

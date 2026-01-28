@@ -1,16 +1,16 @@
-import { RefObject } from '@mui/x-internals/types';
-import {
+import type { RefObject } from '@mui/x-internals/types';
+import type {
   GridCallbackDetails,
   GridValidRowModel,
   GridGroupNode,
   GridEventListener,
   GridGetRowsError,
   GridUpdateRowError,
-  type GridColDef,
+  GridColDef,
   GridLocaleTextApi,
-  type GridEvents,
+  GridEvents,
 } from '@mui/x-data-grid-pro';
-import {
+import type {
   GridExperimentalProFeatures,
   DataGridProPropsWithDefaultValue,
   DataGridProPropsWithoutDefaultValue,
@@ -25,21 +25,21 @@ import type {
   GridAggregationFunctionDataSource,
   GridAggregationPosition,
 } from '../hooks/features/aggregation';
-import { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
-import { GridPremiumSlotProps } from './gridPremiumSlotProps';
-import { GridInitialStatePremium } from './gridStatePremium';
-import { GridApiPremium } from './gridApiPremium';
-import { GridCellSelectionModel } from '../hooks/features/cellSelection';
+import type { GridPremiumSlotsComponent } from './gridPremiumSlotsComponent';
+import type { GridPremiumSlotProps } from './gridPremiumSlotProps';
+import type { GridInitialStatePremium } from './gridStatePremium';
+import type { GridApiPremium } from './gridApiPremium';
+import type { GridCellSelectionModel } from '../hooks/features/cellSelection';
 import type {
   GridPivotingColDefOverrides,
   PivotingColDefCallback,
   GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import {
+import type {
   GridDataSourcePremium as GridDataSource,
   GridGetRowsParamsPremium as GridGetRowsParams,
 } from '../hooks/features/dataSource/models';
-import {
+import type {
   Conversation,
   PromptResponse,
   PromptSuggestion,

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  GridApi,
+  type GridApi,
   useGridApiRef,
-  DataGridProProps,
-  GridRowParams,
+  type DataGridProProps,
+  type GridRowParams,
   gridClasses,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '@mui/x-data-grid-pro';

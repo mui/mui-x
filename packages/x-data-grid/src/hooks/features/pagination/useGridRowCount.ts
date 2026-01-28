@@ -1,14 +1,14 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPaginationRowCountApi, GridPaginationState } from './gridPaginationInterfaces';
 import { gridFilteredTopLevelRowCountSelector } from '../filter';
 import { useGridLogger, useGridApiMethod, useGridEvent } from '../../utils';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   gridPaginationRowCountSelector,
   gridPaginationMetaSelector,

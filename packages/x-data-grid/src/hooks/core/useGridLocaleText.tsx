@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { GridLocaleTextApi } from '../../models/api/gridLocaleTextApi';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 export const useGridLocaleText = (
   apiRef: RefObject<GridPrivateApiCommon>,

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createRenderer, act, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import { vi } from 'vitest';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   $,
   $$,
@@ -15,14 +15,14 @@ import {
   getColumnHeaderCell,
 } from 'test/utils/helperFn';
 import {
-  GridRowModel,
+  type GridRowModel,
   useGridApiRef,
   DataGridPro,
-  DataGridProProps,
-  GridApi,
+  type DataGridProProps,
+  type GridApi,
   gridFocusCellSelector,
   gridClasses,
-  GridValidRowModel,
+  type GridValidRowModel,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';

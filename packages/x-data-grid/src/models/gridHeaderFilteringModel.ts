@@ -1,4 +1,4 @@
-import { GridColDef } from './colDef';
+import type { GridColDef } from './colDef';
 
 export type GridHeaderFilteringState = {
   enabled: boolean;

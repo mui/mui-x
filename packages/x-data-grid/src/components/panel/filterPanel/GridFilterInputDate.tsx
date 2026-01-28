@@ -3,10 +3,10 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
-import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterItem } from '../../../models/gridFilterItem';
-import { TextFieldProps } from '../../../models/gridBaseSlots';
+import type { GridFilterItem } from '../../../models/gridFilterItem';
+import type { TextFieldProps } from '../../../models/gridBaseSlots';
 
 export type GridFilterInputDateProps = GridFilterInputValueProps<TextFieldProps> & {
   type?: 'date' | 'datetime-local';

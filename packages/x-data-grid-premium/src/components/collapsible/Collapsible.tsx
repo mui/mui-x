@@ -7,7 +7,7 @@ import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import clsx from 'clsx';
 import { CollapsibleContext } from './CollapsibleContext';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 
 type CollapsibleProps = React.HTMLAttributes<HTMLDivElement> & {

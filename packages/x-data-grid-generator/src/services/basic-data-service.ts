@@ -1,4 +1,4 @@
-import { GridColDef, GridRowId } from '@mui/x-data-grid';
+import type { GridColDef, GridRowId } from '@mui/x-data-grid';
 
 export const currencyPairs = [
   'USDGBP',

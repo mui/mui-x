@@ -3,9 +3,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { PromptSuggestion } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { PromptSuggestion } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 
 type GridAiAssistantPanelSuggestionsProps = {
   suggestions: PromptSuggestion[];

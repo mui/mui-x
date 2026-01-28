@@ -4,7 +4,7 @@ import {
   createRootSelector,
   createSelectorMemoized,
 } from '@mui/x-data-grid-pro/internals';
-import { GridStatePremium } from '../../../models/gridStatePremium';
+import type { GridStatePremium } from '../../../models/gridStatePremium';
 
 const gridRowGroupingStateSelector = createRootSelector(
   (state: GridStatePremium) => state.rowGrouping,

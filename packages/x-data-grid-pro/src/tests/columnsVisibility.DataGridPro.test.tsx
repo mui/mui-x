@@ -1,15 +1,15 @@
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, act, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
-  DataGridProProps,
-  GridApi,
+  type DataGridProProps,
+  type GridApi,
   gridClasses,
-  GridColDef,
+  type GridColDef,
   gridColumnVisibilityModelSelector,
   GridPreferencePanelsValue,
-  GridRowsProp,
+  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { getColumnHeadersTextContent } from 'test/utils/helperFn';

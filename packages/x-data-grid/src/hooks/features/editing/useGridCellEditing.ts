@@ -1,21 +1,21 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
-import { GridEventListener } from '../../../models/events/gridEventListener';
+import type { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
   GridCellModes,
-  GridEditingState,
-  GridEditCellProps,
+  type GridEditingState,
+  type GridEditCellProps,
 } from '../../../models/gridEditRowModel';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import {
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type {
   GridCellEditingApi,
   GridStopCellEditModeParams,
   GridStartCellEditModeParams,
@@ -27,18 +27,18 @@ import {
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector } from './gridEditingSelectors';
-import { GridRowId } from '../../../models/gridRows';
+import type { GridRowId } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
-  GridCellEditStartParams,
-  GridCellEditStopParams,
+  type GridCellEditStartParams,
+  type GridCellEditStopParams,
   GridCellEditStartReasons,
   GridCellEditStopReasons,
 } from '../../../models/params/gridEditCellParams';
 import { getDefaultCellValue } from './utils';
-import { GridUpdateRowParams } from '../../../models/gridDataSource';
+import type { GridUpdateRowParams } from '../../../models/gridDataSource';
 
 export const useGridCellEditing = (
   apiRef: RefObject<GridPrivateApiCommunity>,

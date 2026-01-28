@@ -1,8 +1,8 @@
 import { GridFilterInputValue } from '../components/panel/filterPanel/GridFilterInputValue';
 import { escapeRegExp } from '../utils/utils';
 import type { GetApplyQuickFilterFn } from '../models/colDef/gridColDef';
-import { GridFilterItem } from '../models/gridFilterItem';
-import { GridFilterOperator } from '../models/gridFilterOperator';
+import type { GridFilterItem } from '../models/gridFilterItem';
+import type { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultipleValue } from '../components/panel/filterPanel/GridFilterInputMultipleValue';
 import { removeDiacritics } from '../hooks/features/filter/gridFilterUtils';
 

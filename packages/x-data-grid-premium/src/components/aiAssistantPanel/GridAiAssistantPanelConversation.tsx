@@ -4,8 +4,8 @@ import { getDataGridUtilityClass, GridShadowScrollArea } from '@mui/x-data-grid-
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { Conversation } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { Conversation } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { GridPrompt } from '../prompt';
 

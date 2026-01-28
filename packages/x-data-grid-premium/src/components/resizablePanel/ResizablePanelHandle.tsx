@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useResize } from '../../hooks/utils/useResize';
 import { useResizablePanelContext } from './ResizablePanelContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export type ResizablePanelHandleProps = React.HTMLAttributes<HTMLDivElement>;
 

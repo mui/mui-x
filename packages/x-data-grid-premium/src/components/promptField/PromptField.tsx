@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { RenderProp } from '@mui/x-data-grid';
+import type { RenderProp } from '@mui/x-data-grid';
 import { useComponentRenderer } from '@mui/x-internals/useComponentRenderer';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { PromptFieldContext, PromptFieldState } from './PromptFieldContext';
+import { PromptFieldContext, type PromptFieldState } from './PromptFieldContext';
 
 export type PromptFieldProps = Omit<
   React.HTMLAttributes<HTMLDivElement>,

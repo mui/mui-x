@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridPrintExportOptions } from '../../models/gridExport';
+import type { GridPrintExportOptions } from '../../models/gridExport';
 import type { GridSlotProps } from '../../models';
 
 export type ExportPrintProps = GridSlotProps['baseButton'] & {

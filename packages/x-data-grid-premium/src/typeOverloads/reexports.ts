@@ -1,5 +1,5 @@
 import type { GridApiPremium } from '../models/gridApiPremium';
-import { GridInitialStatePremium, GridStatePremium } from '../models/gridStatePremium';
+import type { GridInitialStatePremium, GridStatePremium } from '../models/gridStatePremium';
 
 export { useGridApiContext } from '../hooks/utils/useGridApiContext';
 export { useGridApiRef } from '../hooks/utils/useGridApiRef';

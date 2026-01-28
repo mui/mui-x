@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { useComponentRenderer, RenderProp } from '@mui/x-internals/useComponentRenderer';
+import { useComponentRenderer, type RenderProp } from '@mui/x-internals/useComponentRenderer';
 import useForkRef from '@mui/utils/useForkRef';
 import { useGridPanelContext } from '../panel/GridPanelContext';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';

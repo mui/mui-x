@@ -2,10 +2,10 @@ import * as React from 'react';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
+  type DataGridPremiumProps,
   gridClasses,
-  GridColDef,
-  GridPivotModel,
+  type GridColDef,
+  type GridPivotModel,
   type GridApi,
 } from '@mui/x-data-grid-premium';
 import {

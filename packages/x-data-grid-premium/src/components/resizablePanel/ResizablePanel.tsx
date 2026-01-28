@@ -6,7 +6,7 @@ import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import { ResizablePanelContext } from './ResizablePanelContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export type ResizablePanelProps = React.HTMLAttributes<HTMLDivElement> & {
   /**

@@ -2,14 +2,14 @@ import * as React from 'react';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
-  GridRenderCellParams,
-  GridDataSourceGroupNode,
+  type GridRenderCellParams,
+  type GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
 import { vars, gridRowSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import {
-  GridRenderEditCellParams,
+  type GridRenderEditCellParams,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-premium';

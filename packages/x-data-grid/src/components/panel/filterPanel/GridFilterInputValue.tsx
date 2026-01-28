@@ -3,9 +3,9 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
 import { useTimeout } from '../../../hooks/utils/useTimeout';
-import { TextFieldProps } from '../../../models/gridBaseSlots';
-import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import type { TextFieldProps } from '../../../models/gridBaseSlots';
+import type { GridFilterItem } from '../../../models/gridFilterItem';
+import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 
 export type GridTypeFilterInputValueProps = GridFilterInputValueProps<TextFieldProps> & {

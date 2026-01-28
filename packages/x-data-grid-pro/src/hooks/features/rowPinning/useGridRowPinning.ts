@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useGridApiMethod } from '@mui/x-data-grid';
-import { getRowIdFromRowModel, GridStateInitializer } from '@mui/x-data-grid/internals';
+import { getRowIdFromRowModel, type GridStateInitializer } from '@mui/x-data-grid/internals';
 
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps, DataGridProProps } from '../../../models/dataGridProProps';
-import {
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps, DataGridProProps } from '../../../models/dataGridProProps';
+import type {
   GridPinnedRowsProp,
   GridRowPinningApi,
   GridRowPinningInternalCache,

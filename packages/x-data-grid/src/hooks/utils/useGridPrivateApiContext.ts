@@ -1,8 +1,8 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
+import type { GridPrivateApiCommunity } from '../../models/api/gridApiCommunity';
 
 export const GridPrivateApiContext = React.createContext<unknown>(undefined);
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridTreeNode } from '../../../models/gridRows';
-import { GetRowAriaAttributesFn } from '../../../models/configuration/gridRowConfiguration';
+import type { GridTreeNode } from '../../../models/gridRows';
+import type { GetRowAriaAttributesFn } from '../../../models/configuration/gridRowConfiguration';
 import { useGridSelector } from '../../utils/useGridSelector';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';

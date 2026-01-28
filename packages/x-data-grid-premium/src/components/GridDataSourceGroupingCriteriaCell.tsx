@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   useGridPrivateApiContext,
@@ -12,13 +12,13 @@ import {
 import {
   useGridSelector,
   getDataGridUtilityClass,
-  GridRenderCellParams,
-  GridGroupNode,
+  type GridRenderCellParams,
+  type GridGroupNode,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../models/gridApiPremium';
 import { gridRowGroupingModelSelector } from '../hooks/features/rowGrouping/gridRowGroupingSelector';
 
 type OwnerState = DataGridPremiumProcessedProps;

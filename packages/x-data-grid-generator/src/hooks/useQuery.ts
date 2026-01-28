@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { getGridDefaultColumnTypes, GridRowModel } from '@mui/x-data-grid-pro';
+import { getGridDefaultColumnTypes, type GridRowModel } from '@mui/x-data-grid-pro';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import {
   useDemoData,
-  UseDemoDataOptions,
+  type UseDemoDataOptions,
   getColumnsFromOptions,
   getInitialState,
 } from './useDemoData';

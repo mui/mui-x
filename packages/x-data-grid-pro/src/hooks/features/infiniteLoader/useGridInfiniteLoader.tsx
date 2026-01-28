@@ -1,15 +1,15 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridEventPriority,
   gridVisibleColumnDefinitionsSelector,
   useGridEvent,
-  GridEventListener,
+  type GridEventListener,
 } from '@mui/x-data-grid';
 import { runIf, getVisibleRows } from '@mui/x-data-grid/internals';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { GridRowScrollEndParams } from '../../../models';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { GridRowScrollEndParams } from '../../../models';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 /**
  * @requires useGridColumns (state)

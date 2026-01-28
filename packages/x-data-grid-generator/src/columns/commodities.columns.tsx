@@ -1,4 +1,4 @@
-import { GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
+import { type GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
 import {
   randomCommodity,
   randomDesk,
@@ -46,14 +46,14 @@ import {
 import {
   CONTRACT_TYPE_OPTIONS,
   COUNTRY_ISO_OPTIONS_SORTED,
-  CountryIsoOption,
+  type CountryIsoOption,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
   RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from '../services/static-data';
-import { GridColDefGenerator } from '../services/gridColDefGenerator';
+import type { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
   {

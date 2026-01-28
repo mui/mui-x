@@ -11,9 +11,9 @@ import {
   type GridUpdateRowParams,
 } from '@mui/x-data-grid';
 import { warnOnce } from '@mui/x-internals/warning';
-import { type ReorderOperationType } from './types';
+import type { ReorderOperationType } from './types';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 
 // Re-export to be made part of `rowReorderUtils`
 export { getNodePathInTree } from '../../../utils/tree/utils';

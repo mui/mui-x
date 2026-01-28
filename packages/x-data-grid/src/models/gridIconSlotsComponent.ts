@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { IconProps } from './gridBaseSlots';
+import type * as React from 'react';
+import type { IconProps } from './gridBaseSlots';
 import type { GridColumnUnsortedIconProps } from '../components/GridColumnUnsortedIcon';
 
 /**

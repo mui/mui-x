@@ -22,7 +22,7 @@ import type {
 import type { DataGridProcessedProps } from './props/DataGridProps';
 import type { GridRowsMetaState } from '../hooks/features/rows/gridRowsMetaState';
 import type { GridEditingState } from './gridEditRowModel';
-import { GridHeaderFilteringState } from './gridHeaderFilteringModel';
+import type { GridHeaderFilteringState } from './gridHeaderFilteringModel';
 import type { GridRowSelectionModel } from './gridRowSelectionModel';
 import type { GridVisibleRowsLookupState } from '../hooks/features/filter/gridFilterState';
 import type { GridColumnResizeState } from '../hooks/features/columnResize';

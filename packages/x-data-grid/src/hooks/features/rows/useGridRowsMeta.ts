@@ -1,10 +1,10 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridRowsMetaApi, GridRowsMetaPrivateApi } from '../../../models/api/gridRowsMetaApi';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridPaginationSelector } from '../pagination/gridPaginationSelector';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridRegisterPipeApplier } from '../../core/pipeProcessing';
 import { gridRowCountSelector } from './gridRowsSelector';
 import { gridRowHeightSelector } from '../dimensions/gridDimensionsSelectors';

@@ -1,5 +1,5 @@
-import { RefObject } from '@mui/x-internals/types';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { RefObject } from '@mui/x-internals/types';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { gridVisibleRowsSelector } from '../features/pagination/gridPaginationSelector';
 import type { GridApiCommon } from '../../models';
 import { useGridSelector } from '.';

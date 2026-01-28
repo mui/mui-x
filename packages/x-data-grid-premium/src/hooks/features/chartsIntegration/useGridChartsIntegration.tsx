@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridColDef,
+  type GridColDef,
   gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
@@ -11,29 +11,29 @@ import {
   gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
 import {
-  GridStateInitializer,
+  type GridStateInitializer,
   useGridApiMethod,
   useGridEvent,
   gridColumnLookupSelector,
   runIf,
   gridPivotActiveSelector,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridColumnFieldsSelector,
   gridFilteredSortedDepthRowEntriesSelector,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
-  GridRestoreStatePreProcessingContext,
+  type GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
 import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import {
+import type {
   ChartState,
   GridChartsIntegrationContextValue,
 } from '../../../models/gridChartsIntegration';
 import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import {
+import type {
   GridChartsIntegrationApi,
   GridChartsIntegrationItem,
   GridChartsIntegrationPrivateApi,

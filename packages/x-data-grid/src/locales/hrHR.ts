@@ -1,4 +1,4 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
 const hrHRGrid: Partial<GridLocaleText> = {

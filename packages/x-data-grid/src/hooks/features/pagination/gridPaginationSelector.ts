@@ -3,7 +3,7 @@ import {
   createRootSelector,
   createSelectorMemoized,
 } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridExpandedSortedRowEntriesSelector,
   gridExpandedSortedRowIdsSelector,
@@ -11,7 +11,7 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
-import { GridRowId } from '../../../models/gridRows';
+import type { GridRowId } from '../../../models/gridRows';
 
 const ALL_RESULTS_PAGE_VALUE = -1;
 

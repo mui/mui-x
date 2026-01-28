@@ -1,27 +1,27 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   gridColumnLookupSelector,
-  GridRowId,
+  type GridRowId,
   gridRowTreeSelector,
   useFirstRender,
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
-  GridColumnRawLookup,
-  GridPipeProcessor,
-  GridHydrateColumnsValue,
-  GridStrategyProcessor,
+  type GridColumnRawLookup,
+  type GridPipeProcessor,
+  type GridHydrateColumnsValue,
+  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   sortRowTree,
   createRowTree,
   updateRowTree,
-  RowTreeBuilderGroupingCriterion,
+  type RowTreeBuilderGroupingCriterion,
   getVisibleRowsLookup,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 import {
   gridRowGroupingModelSelector,
   gridRowGroupingSanitizedModelSelector,
@@ -38,7 +38,7 @@ import {
   getCellGroupingCriteria,
   getGroupingRules,
 } from './gridRowGroupingUtils';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const useGridRowGroupingPreProcessors = (
   apiRef: RefObject<GridPrivateApiPremium>,

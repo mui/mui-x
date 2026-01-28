@@ -1,12 +1,12 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
-  GridKeyValue,
-  GridRowId,
-  GridRowTreeConfig,
+  type GridGroupNode,
+  type GridKeyValue,
+  type GridRowId,
+  type GridRowTreeConfig,
 } from '@mui/x-data-grid';
-import { GridPrivateApiPro } from '../../../models';
+import type { GridPrivateApiPro } from '../../../models';
 
 const MAX_CONCURRENT_REQUESTS = Infinity;
 

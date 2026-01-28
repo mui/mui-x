@@ -1,13 +1,17 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { Virtualization, LayoutDataGridLegacy, EMPTY_RENDER_CONTEXT } from '@mui/x-virtualizer';
+import type { RefObject } from '@mui/x-internals/types';
+import {
+  type Virtualization,
+  type LayoutDataGridLegacy,
+  EMPTY_RENDER_CONTEXT,
+} from '@mui/x-virtualizer';
 import { isJSDOM } from '../../../utils/isJSDOM';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { useGridEventPriority } from '../../utils';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 
 const HAS_LAYOUT = !isJSDOM;
 

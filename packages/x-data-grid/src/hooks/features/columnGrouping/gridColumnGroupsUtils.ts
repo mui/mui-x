@@ -1,11 +1,11 @@
 import {
-  GridColumnGroupingModel,
-  GridColumnNode,
-  GridColumnGroup,
+  type GridColumnGroupingModel,
+  type GridColumnNode,
+  type GridColumnGroup,
   isLeaf,
 } from '../../../models/gridColumnGrouping';
-import { GridColDef } from '../../../models/colDef';
-import { GridColumnGroupLookup, GridGroupingStructure } from './gridColumnGroupsInterfaces';
+import type { GridColDef } from '../../../models/colDef';
+import type { GridColumnGroupLookup, GridGroupingStructure } from './gridColumnGroupsInterfaces';
 
 type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };
 

@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridColumnMenuRootProps } from '../../../hooks/features/columnMenu';
+import type * as React from 'react';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridColumnMenuRootProps } from '../../../hooks/features/columnMenu';
 
 export interface GridColumnMenuContainerProps extends React.HTMLAttributes<HTMLUListElement> {
   hideMenu: (event: React.SyntheticEvent) => void;

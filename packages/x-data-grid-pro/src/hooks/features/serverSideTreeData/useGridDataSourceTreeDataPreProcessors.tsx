@@ -1,19 +1,19 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   gridRowTreeSelector,
   useFirstRender,
-  GridColDef,
-  GridRenderCellParams,
-  GridDataSourceGroupNode,
-  GridRowId,
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridDataSourceGroupNode,
+  type GridRowId,
 } from '@mui/x-data-grid';
 import {
-  GridPipeProcessor,
-  GridRowsPartialUpdates,
+  type GridPipeProcessor,
+  type GridRowsPartialUpdates,
   GridStrategyGroup,
-  GridStrategyProcessor,
+  type GridStrategyProcessor,
   useGridRegisterPipeProcessor,
   useGridRegisterStrategyProcessor,
 } from '@mui/x-data-grid/internals';
@@ -21,16 +21,16 @@ import {
   GRID_TREE_DATA_GROUPING_COL_DEF,
   GRID_TREE_DATA_GROUPING_COL_DEF_FORCED_PROPERTIES,
 } from '../treeData/gridTreeDataGroupColDef';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { getParentPath, skipFiltering, skipSorting } from './utils';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import {
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type {
   GridGroupingColDefOverride,
   GridGroupingColDefOverrideParams,
 } from '../../../models/gridGroupingColDefOverride';
 import { GridDataSourceTreeDataGroupingCell } from '../../../components/GridDataSourceTreeDataGroupingCell';
 import { createRowTree } from '../../../utils/tree/createRowTree';
-import {
+import type {
   GridTreePathDuplicateHandler,
   RowTreeBuilderGroupingCriterion,
 } from '../../../utils/tree/models';

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { styled } from '@mui/system';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 import type {

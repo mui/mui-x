@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {
   GridEditModes,
-  GridRowId,
+  type GridRowId,
   useGridApiContext,
   useGridRootProps,
 } from '@mui/x-data-grid-premium';

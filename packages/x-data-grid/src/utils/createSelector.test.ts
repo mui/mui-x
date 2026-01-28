@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
-import { createSelectorMemoized, OutputSelector } from './createSelector';
-import { GridStateCommunity } from '../models/gridStateCommunity';
-import { GridApiCommunity } from '../models/api/gridApiCommunity';
+import { type RefObject } from '@mui/x-internals/types';
+import { createSelectorMemoized, type OutputSelector } from './createSelector';
+import { type GridStateCommunity } from '../models/gridStateCommunity';
+import { type GridApiCommunity } from '../models/api/gridApiCommunity';
 
 describe('createSelectorMemoized', () => {
   it('should return the same selectors for the same cache keys', () => {

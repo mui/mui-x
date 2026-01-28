@@ -1,6 +1,6 @@
-import { MuiBaseEvent } from '@mui/x-internals/types';
-import { GridRowId } from '../gridRows';
-import { GridColumnGroupIdentifier } from '../../hooks/features/focus';
+import type { MuiBaseEvent } from '@mui/x-internals/types';
+import type { GridRowId } from '../gridRows';
+import type { GridColumnGroupIdentifier } from '../../hooks/features/focus';
 
 export interface GridFocusApi {
   /**

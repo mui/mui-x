@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
   GridToolbar,
   GridToolbarDivider,
-  GridToolbarProps,
+  type GridToolbarProps,
   useGridSelector,
 } from '@mui/x-data-grid-pro/internals';
 import { ColumnsPanelTrigger, FilterPanelTrigger, ToolbarButton } from '@mui/x-data-grid-pro';

@@ -5,13 +5,13 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  GridRenderCellParams,
-  GridGroupNode,
+  type GridRenderCellParams,
+  type GridGroupNode,
   gridRowMaximumTreeDepthSelector,
 } from '@mui/x-data-grid-pro';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../models/dataGridPremiumProps';
 import { gridPivotActiveSelector } from '../hooks/features/pivoting/gridPivotingSelectors';
 
 type OwnerState = { classes: DataGridPremiumProcessedProps['classes'] };

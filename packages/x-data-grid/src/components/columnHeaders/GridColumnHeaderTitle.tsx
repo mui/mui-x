@@ -8,7 +8,7 @@ import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isOverflown } from '../../utils/domUtils';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 
 type OwnerState = DataGridProcessedProps;
 

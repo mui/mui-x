@@ -13,7 +13,7 @@ import {
 } from '@mui/x-data-grid-pro/internals';
 import { gridRowGroupingSanitizedModelSelector } from '../rowGrouping';
 import { getGroupingRules, getCellGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 type ReorderExecutionContextType = ReorderExecutionContext<GridPrivateApiPremium>;
 

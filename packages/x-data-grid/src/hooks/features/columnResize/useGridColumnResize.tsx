@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -23,12 +23,12 @@ import {
   escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
 import {
-  GridAutosizeOptions,
-  GridColumnResizeApi,
+  type GridAutosizeOptions,
+  type GridColumnResizeApi,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
 } from './gridColumnResizeApi';
-import { CursorCoordinates } from '../../../models/cursorCoordinates';
-import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
+import type { CursorCoordinates } from '../../../models/cursorCoordinates';
+import type { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
 import {
   useGridEvent,
@@ -41,10 +41,10 @@ import {
 } from '../../utils';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import {
-  ControllablePromise,
+  type ControllablePromise,
   createControllablePromise,
 } from '../../../utils/createControllablePromise';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';

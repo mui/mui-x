@@ -2,9 +2,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { AutocompleteProps } from '../../../models/gridBaseSlots';
+import type { AutocompleteProps } from '../../../models/gridBaseSlots';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
 
 export type GridFilterInputMultipleValueProps = GridFilterInputValueProps<
   Omit<AutocompleteProps<string, true, false, true>, 'options'>

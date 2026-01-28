@@ -1,11 +1,14 @@
-import {
+import type {
   GridApiCommon,
   GridColumnReorderApi,
   GridRowMultiSelectionApi,
   GridRowProApi,
 } from '@mui/x-data-grid';
-import { GridPrivateOnlyApiCommon, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
-import { GridInitialStatePro, GridStatePro } from './gridStatePro';
+import type {
+  GridPrivateOnlyApiCommon,
+  GridInfiniteLoaderPrivateApi,
+} from '@mui/x-data-grid/internals';
+import type { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type {
   GridColumnPinningApi,
   GridDetailPanelApi,

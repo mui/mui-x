@@ -1,4 +1,4 @@
-import { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
+import type { GridValidRowModel, GridRowEntry, GridRowId } from '../gridRows';
 import type { GridColDef } from '../colDef/gridColDef';
 
 /**

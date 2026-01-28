@@ -5,11 +5,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { styled } from '@mui/material/styles';
 import { NotRendered } from '../../utils/assert';
-import { GridSlotProps } from '../../models/gridSlotsComponent';
-import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import type { GridSlotProps } from '../../models/gridSlotsComponent';
+import type { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
