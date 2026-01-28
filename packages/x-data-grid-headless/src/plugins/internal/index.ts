@@ -16,7 +16,9 @@ import elementsPlugin, {
 
 export const internalPlugins = [rowsPlugin, columnsPlugin, elementsPlugin] as const;
 
-export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> & ColumnsPluginApi & ElementsPluginApi;
+export type InternalPluginsApi<TRow = any> = RowsPluginApi<TRow> &
+  ColumnsPluginApi &
+  ElementsPluginApi;
 
 export type InternalPluginsState = RowsPluginState & ColumnsPluginState & ElementsPluginState;
 
