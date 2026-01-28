@@ -48,11 +48,7 @@ export default function SankeyHighlighting() {
           margin={{ left: 80, right: 80 }}
         />
       </Box>
-      <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={2}
-        sx={{ width: '100%' }}
-      >
+      <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: '100%' }}>
         <Stack spacing={2} sx={{ flex: 1 }}>
           <TextField
             select
