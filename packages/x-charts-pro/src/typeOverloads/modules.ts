@@ -1,23 +1,23 @@
-import { type DefaultizedProps, type MakeRequired } from '@mui/x-internals/types';
-import { type AxisId, type ZoomOptions } from '@mui/x-charts/internals';
-import {
-  type DefaultizedFunnelSeriesType,
-  type FunnelItemIdentifier,
-  type FunnelSeriesType,
-  type FunnelValueType,
+import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import type { AxisId, ZoomOptions } from '@mui/x-charts/internals';
+import type {
+  DefaultizedFunnelSeriesType,
+  FunnelItemIdentifier,
+  FunnelSeriesType,
+  FunnelValueType,
 } from '../FunnelChart/funnel.types';
-import {
-  type HeatmapItemIdentifier,
-  type HeatmapSeriesType,
-  type DefaultizedHeatmapSeriesType,
-  type HeatmapValueType,
+import type {
+  HeatmapItemIdentifier,
+  HeatmapSeriesType,
+  DefaultizedHeatmapSeriesType,
+  HeatmapValueType,
 } from '../models/seriesType/heatmap';
-import {
-  type SankeyLayout,
-  type SankeySeriesType,
-  type DefaultizedSankeySeriesType,
-  type SankeyItemIdentifier,
-  type SankeyItemIdentifierWithData,
+import type {
+  SankeyLayout,
+  SankeySeriesType,
+  DefaultizedSankeySeriesType,
+  SankeyItemIdentifier,
+  SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
 
 declare module '@mui/x-charts/internals' {

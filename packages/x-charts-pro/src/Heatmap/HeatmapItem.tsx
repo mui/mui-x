@@ -27,6 +27,8 @@ export interface HeatmapItemProps {
   height: number;
   x: number;
   y: number;
+  xIndex: number;
+  yIndex: number;
   color: string;
   isHighlighted?: boolean;
   isFaded?: boolean;
@@ -74,6 +76,8 @@ function HeatmapItem(props: HeatmapItemProps) {
     isHighlighted = false,
     isFaded = false,
     borderRadius,
+    xIndex,
+    yIndex,
     slotProps = {},
     slots = {},
     ...other
@@ -86,7 +90,7 @@ function HeatmapItem(props: HeatmapItemProps) {
     props.slotProps,
   );
   const interactionProps = useInteractionItemProps(
-    { type: 'heatmap', seriesId, dataIndex },
+    { type: 'heatmap', seriesId, dataIndex, xIndex, yIndex },
     skipInteractionItemProps,
   );
 

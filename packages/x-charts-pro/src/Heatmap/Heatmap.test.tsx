@@ -117,6 +117,8 @@ describe('Heatmap - onItemClick', () => {
       type: 'heatmap',
       seriesId: '0',
       dataIndex: 5,
+      xIndex: 1,
+      yIndex: 2,
     });
   });
 });

@@ -48,6 +48,8 @@ export const selectorHeatmapItemAtPosition = createSelector(
           type: 'heatmap',
           seriesId,
           dataIndex,
+          xIndex,
+          yIndex,
         };
       }
     }

@@ -41,13 +41,15 @@ export default function getItemAtPosition(
   }
 
   const dataIndex = series
-    ? series.series[series.seriesOrder[0]].data.findIndex((d) => d[0] === xIndex && d[1] === yIndex)
+    ? series.series[series.seriesOrder[0]].dataIndexLookup.get(xIndex)?.get(yIndex)
     : -1;
 
   if (dataIndex === -1) {
     return {
       type: 'heatmap',
       seriesId,
+      xIndex,
+      yIndex,
     };
   }
 
@@ -55,5 +57,7 @@ export default function getItemAtPosition(
     type: 'heatmap',
     seriesId,
     dataIndex,
+    xIndex,
+    yIndex,
   };
 }
