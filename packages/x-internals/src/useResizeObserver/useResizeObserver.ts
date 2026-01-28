@@ -2,6 +2,8 @@
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 
+const isDevEnvironment = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
+
 const noop = () => {};
 
 export function useResizeObserver(
@@ -24,7 +26,7 @@ export function useResizeObserver(
       // See https://github.com/mui/mui-x/issues/8733
       // In dev, we avoid the React warning by moving the task to the next frame.
       // In prod, we want the task to run in the same frame as to avoid tear.
-      if (process.env.NODE_ENV !== 'production') {
+      if (isDevEnvironment) {
         frameID = requestAnimationFrame(() => {
           fnRef.current(entries);
         });

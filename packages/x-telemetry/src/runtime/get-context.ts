@@ -22,7 +22,7 @@ function pick(obj: any, keys: string[]) {
 }
 
 const getBrowserFingerprint =
-  typeof window === 'undefined' || process.env.IS_TEST_ENV
+  typeof window === 'undefined' || process.env.NODE_ENV === 'test'
     ? () => undefined
     : async () => {
         const fingerprintLCKey = 'fingerprint';

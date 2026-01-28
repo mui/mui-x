@@ -129,7 +129,7 @@ export const getStringSize = (text: string | number, style: SVGCSSProperties = {
       stringCache.clear();
     }
 
-    if (process.env.IS_TEST_ENV) {
+    if (process.env.NODE_ENV === 'test') {
       // In test environment, we clean the measurement span immediately
       measurementSpanContainer.replaceChildren();
     }
@@ -200,7 +200,7 @@ export function batchMeasureStrings(
     stringCache.clear();
   }
 
-  if (process.env.IS_TEST_ENV) {
+  if (process.env.NODE_ENV === 'test') {
     // In test environment, we clean the measurement span immediately
     measurementContainer.replaceChildren();
   }

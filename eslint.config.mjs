@@ -248,8 +248,6 @@ export default defineConfig(
         },
       ],
       'compat/compat': 'off',
-      // TODO(@Janpot) bring to mui-public baseConfig
-      'material-ui/consistent-production-guard': 'off',
     },
   },
 

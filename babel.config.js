@@ -43,17 +43,13 @@ module.exports = function getBabelConfig(api) {
               search: '__RELEASE_INFO__',
               replace: generateReleaseInfo(),
             },
-            {
-              search: 'process.env.IS_TEST_ENV',
-              replace: 'false',
-            },
           ],
         },
       ]);
     }
   }
 
-  if (process.env.BABEL_ENV || process.env.IS_TEST_ENV) {
+  if (process.env.BABEL_ENV || process.env.NODE_ENV === 'test') {
     plugins.push([
       'transform-replace-expressions',
       {
