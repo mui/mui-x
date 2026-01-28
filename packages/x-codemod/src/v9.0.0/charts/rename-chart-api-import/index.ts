@@ -23,6 +23,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
         importsMapping: {
           ChartApi: 'ChartApi',
         },
+        splitUnmatchedSpecifiers: true,
       },
     ],
   });
@@ -30,7 +31,7 @@ export default function transformer(file: JsCodeShiftFileInfo, api: JsCodeShiftA
   return root.toSource(printOptions);
 }
 
-export const testConfig = {
+export const testConfig = () => ({
   name: 'rename-chart-api-import',
   specFiles: [
     {
@@ -39,4 +40,4 @@ export const testConfig = {
       expected: readFile(path.join(import.meta.dirname, 'expected-imports.spec.tsx')),
     },
   ],
-};
+});

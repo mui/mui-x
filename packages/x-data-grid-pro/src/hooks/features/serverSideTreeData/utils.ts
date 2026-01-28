@@ -1,13 +1,13 @@
 import {
-  GridRowId,
-  GridRowTreeConfig,
+  type GridRowId,
+  type GridRowTreeConfig,
   GRID_ROOT_GROUP_ID,
-  GridDataSourceGroupNode,
+  type GridDataSourceGroupNode,
 } from '@mui/x-data-grid';
 import {
   defaultGridFilterLookup,
   getTreeNodeDescendants,
-  GridRowTreeCreationParams,
+  type GridRowTreeCreationParams,
 } from '@mui/x-data-grid/internals';
 
 export function skipFiltering(rowTree: GridRowTreeConfig) {

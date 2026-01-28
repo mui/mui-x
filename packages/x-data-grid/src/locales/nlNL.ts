@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const nlNLGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const nlNLGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'waar',
   booleanCellFalseLabel: 'onwaar',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Uitklappen',
+  longTextCellCollapseLabel: 'Inklappen',
 
   // Actions cell more text
   actionsCellMore: 'meer',

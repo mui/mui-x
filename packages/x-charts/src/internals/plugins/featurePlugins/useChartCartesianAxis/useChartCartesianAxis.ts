@@ -25,9 +25,9 @@ type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ?
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
   store,
-  svgRef,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { xAxis, yAxis, dataset, onHighlightedAxisChange, axesGap } = params;
 
   if (process.env.NODE_ENV !== 'production') {

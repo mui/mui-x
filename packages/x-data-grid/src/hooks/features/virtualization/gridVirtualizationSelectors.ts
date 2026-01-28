@@ -4,7 +4,7 @@ import {
   createSelectorMemoized,
 } from '../../../utils/createSelector';
 import type { GridColumnsRenderContext } from '../../../models/params/gridScrollParams';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 
 /**
  * Get the columns state
