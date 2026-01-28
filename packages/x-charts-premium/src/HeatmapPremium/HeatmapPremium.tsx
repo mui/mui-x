@@ -5,7 +5,13 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { FocusedHeatmapCell, type HeatmapProps, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
+import {
+  FocusedHeatmapCell,
+  type HeatmapProps,
+  type HeatmapSlotProps,
+  type HeatmapSlots,
+  HeatmapTooltip,
+} from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -16,7 +22,10 @@ import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
-export interface HeatmapPremiumProps extends HeatmapProps {
+export interface HeatmapPremiumSlots extends HeatmapSlots {}
+
+export interface HeatmapPremiumSlotProps extends HeatmapSlotProps {}
+export interface HeatmapPremiumProps extends Omit<HeatmapProps, 'slots' | 'slotProps'> {
   /**
    * The type of renderer to use for the heatmap plot.
    * - `svg-single`: Renders every scatter item in a `<rect />` element.
@@ -24,6 +33,18 @@ export interface HeatmapPremiumProps extends HeatmapProps {
    *                Read more: https://mui.com/x/react-charts/heatmap/#performance
    */
   renderer?: 'svg-single' | 'webgl';
+
+  // Declare slots and slotProps explicitly to generate api docs correctly
+  /**
+   * Overridable component slots.
+   * @default {}
+   */
+  slots?: HeatmapPremiumSlots;
+  /**
+   * The props used for each component slot.
+   * @default {}
+   */
+  slotProps?: HeatmapPremiumSlotProps;
 }
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
