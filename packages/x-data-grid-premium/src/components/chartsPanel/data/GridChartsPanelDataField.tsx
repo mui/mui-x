@@ -5,7 +5,7 @@ import { styled } from '@mui/system';
 import {
   getDataGridUtilityClass,
   GridMenu,
-  GridSlotProps,
+  type GridSlotProps,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';

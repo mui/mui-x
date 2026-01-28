@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridRowId, GridGroupNode } from '../../../models/gridRows';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridRowId, GridGroupNode } from '../../../models/gridRows';
 import { gridRowTreeSelector, gridRowNodeSelector } from './gridRowsSelector';
 import { gridExpandedSortedRowIndexLookupSelector } from '../filter/gridFilterSelector';
 import { GRID_ROOT_GROUP_ID } from './gridRowsUtils';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridRowProApi } from '../../../models/api/gridRowApi';
 
 export const useGridRowsOverridableMethods = (apiRef: RefObject<GridPrivateApiCommunity>) => {

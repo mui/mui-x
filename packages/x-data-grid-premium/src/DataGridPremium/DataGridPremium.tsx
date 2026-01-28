@@ -11,7 +11,7 @@ import {
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  PropValidator,
+  type PropValidator,
   validateProps,
   type GridConfiguration,
   useGridApiInitialization,
@@ -20,7 +20,7 @@ import {
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import {
+import type {
   DataGridPremiumProcessedProps,
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
