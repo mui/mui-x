@@ -16,13 +16,13 @@ import {
   compileShader,
   logWebGLErrors,
   uploadQuadBuffer,
-} from '../HeatmapPremium/webgl/utils';
-import { useWebGLResizeObserver } from '../HeatmapPremium/webgl/useWebGLResizeObserver';
+} from '../utils/webgl/utils';
 import { candlestickRectFragmentShader, candlestickRectVertexShader } from './rectShaders';
 import { candlestickLineFragmentShader, candlestickLineVertexShader } from './lineShaders';
 import { selectorCandlestickItemAtPosition } from '../plugins/selectors/useChartCandlestickPosition.selectors';
 import { useCandlestickPlotData } from './useCandlestickPlotData';
-import { parseColor } from '../HeatmapPremium/webgl/parseColor';
+import { parseColor } from '../utils/webgl/parseColor';
+import { useWebGLResizeObserver } from '../utils/webgl/useWebGLResizeObserver';
 
 export interface CandlestickPlotProps {}
 
