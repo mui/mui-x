@@ -34,7 +34,8 @@ export default function SankeyValueFormatter() {
         data,
         valueFormatter: (value, context) => {
           // Format the value as energy units
-          const formatted = value >= 1000 ? `${(value / 1000).toFixed(1)} GWh` : `${value} MWh`;
+          const formatted =
+            value >= 1000 ? `${(value / 1000).toFixed(1)} GWh` : `${value} MWh`;
 
           // You can customize formatting based on context type
           if (context.type === 'link') {
