@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store, useStore, type ReadonlyStore } from '@base-ui/utils/store';
-import type { AnyPlugin, BaseApi } from '../plugins/core/plugin';
+import type { AnyPlugin } from '../plugins/core/plugin';
 import type {
   PluginsApi,
   PluginsColumnMeta,
@@ -10,7 +10,7 @@ import type {
   PluginsState,
 } from '../plugins/core/helpers';
 import { PluginRegistry } from '../plugins/core/pluginRegistry';
-import { internalPlugins, type InternalPluginsApi } from '../plugins/internal';
+import { internalPlugins } from '../plugins/internal';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
@@ -67,22 +67,16 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
     };
   }).current;
 
-  const baseApi = useRefWithInit(() => {
+  const api = useRefWithInit(() => {
     return {
       pluginRegistry,
-    } as unknown as BaseApi & InternalPluginsApi<TRow>;
+    } as DataGridApi<TPlugins, TRow>;
   }).current;
 
   internalPlugins.forEach((plugin: AnyPlugin) => {
-    const pluginApi = plugin.use(stateStore, options as any, baseApi);
-    Object.assign(baseApi, pluginApi);
+    const pluginApi = plugin.use(stateStore, options as any, api);
+    Object.assign(api, pluginApi);
   });
-
-  const api = useRefWithInit(() => {
-    return {
-      ...baseApi,
-    } as DataGridApi<TPlugins, TRow>;
-  }).current;
 
   // Pass the accumulating api object so dependencies' APIs are available
   pluginRegistry.forEachUserPlugin((plugin) => {
