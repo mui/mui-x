@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('ar-SD');
 
 const arSDGrid: Partial<GridLocaleText> = {
   // Root
@@ -196,10 +198,13 @@ const arSDGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: 'عدد الصفوف في الصفحة:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : `أكثر من ${to}`}`;
+      return `\u200E${formatNumber(to)}-${formatNumber(from)}\u200E من ${count !== -1 ? formatNumber(count) : `أكثر من ${formatNumber(to)}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `حوالي ${estimated}` : `أكثر من ${to}`;
-    return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to
+        ? `حوالي ${formatNumber(estimated)}`
+        : `أكثر من ${formatNumber(to)}`;
+    return `\u200E${formatNumber(to)}-${formatNumber(from)}\u200E من ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {

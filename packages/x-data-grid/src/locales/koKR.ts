@@ -1,5 +1,7 @@
 import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import { getGridLocalization, Localization, buildLocaleFormat } from '../utils/getGridLocalization';
+
+const formatNumber = buildLocaleFormat('ko-KR');
 
 const koKRGrid: Partial<GridLocaleText> = {
   // Root
@@ -193,10 +195,11 @@ const koKRGrid: Partial<GridLocaleText> = {
   paginationRowsPerPage: '페이지 당 행:',
   paginationDisplayedRows: ({ from, to, count, estimated }) => {
     if (!estimated) {
-      return `${from}–${to} of ${count !== -1 ? count : `${to} 이상`}`;
+      return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : `${formatNumber(to)} 이상`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `약 ${estimated}` : `${to} 이상`;
-    return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
+    const estimatedLabel =
+      estimated && estimated > to ? `약 ${formatNumber(estimated)}` : `${formatNumber(to)} 이상`;
+    return `${formatNumber(from)}–${formatNumber(to)} of ${count !== -1 ? formatNumber(count) : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
