@@ -4,7 +4,7 @@ import type { SortingState } from './types';
 export const selectSortModel = createSelector((state: SortingState) => state.sorting.sortModel);
 
 /**
- * Retreive ordered row ids.
+ * Retrieve ordered row ids.
  */
 export const selectSortedRowIds = createSelector(
   (state: SortingState) => state.sorting.sortedRowIds,
