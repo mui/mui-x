@@ -14,6 +14,7 @@ import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-pre
 import { EventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/models';
 import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
+import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
 import { EventTimelinePremiumProps } from './EventTimelinePremium.types';
 import { EventTimelinePremiumContent } from './content';
 import {
@@ -21,7 +22,6 @@ import {
   getEventTimelinePremiumUtilityClass,
 } from './eventTimelinePremiumClasses';
 import { EventTimelinePremiumClassesContext } from './EventTimelinePremiumClassesContext';
-import { eventDialogSlots, EventDialogClassesContext } from '@mui/x-scheduler/internals';
 // TODO: Remove these CSS imports during the MUI X migration
 import '../styles/index.css';
 import '../styles/colors.css';
