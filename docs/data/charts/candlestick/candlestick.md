@@ -21,3 +21,5 @@ This makes it easier to understand overall trends, compare price movements, and 
 {{"demo": "BasicCandlestick.js"}}
 
 ## Composition
+
+{{"demo": "CandlestickComposition.js"}}
