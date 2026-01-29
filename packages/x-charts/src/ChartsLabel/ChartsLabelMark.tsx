@@ -48,15 +48,13 @@ const Root = styled('div', {
     display: 'flex',
     width: 14,
     height: 14,
-
     ['& > *']: {
       width: '100%',
       height: '100%',
     },
-
     [`&.${labelMarkClasses.line}`]: {
       width: 16,
-      height: 16,
+      height: 8,
       alignItems: 'center',
     },
     [`&.${labelMarkClasses.square}`]: {
@@ -99,31 +97,30 @@ const ChartsLabelMark = consumeThemeProps(
       >
         {typeof Component === 'function' ? (
           <Component className={classes?.fill} color={color} />
-        ) : (<React.Fragment>
-          {type === 'circle' && (
-            <svg viewBox="0 0 15 15">
-              <circle className={classes?.fill} r="7.5" cx="7.5" cy="7.5" fill={color} />
-            </svg>
-          )}
-          {type === 'line' && (
-            <svg viewBox="0 0 16 16">
-              <path
-                className={classes?.fill}
-                d="M 2 8 L 14 8"
-                stroke={color}
-                strokeWidth="4"
-                strokeLinecap="round"
-              />
-            </svg>
-
-          )}
-          {type !== 'line' && type !== 'circle' && (
-            <svg viewBox="0 0 13 13">
-              <rect className={classes?.fill} width="13" height="13" fill={color} />
-            </svg>
-
-          )}
-        </React.Fragment>
+        ) : (
+          <React.Fragment>
+            {type === 'circle' && (
+              <svg viewBox="0 0 15 15">
+                <circle className={classes?.fill} r="7.5" cx="7.5" cy="7.5" fill={color} />
+              </svg>
+            )}
+            {type === 'line' && (
+              <svg viewBox="0 0 16 8" >
+                <path
+                  className={classes?.fill}
+                  d="M 2 4 L 14 4"
+                  stroke={color}
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
+              </svg>
+            )}
+            {type !== 'line' && type !== 'circle' && (
+              <svg viewBox="0 0 13 13">
+                <rect className={classes?.fill} width="13" height="13" fill={color} />
+              </svg>
+            )}
+          </React.Fragment>
         )}
       </Root>
     );
