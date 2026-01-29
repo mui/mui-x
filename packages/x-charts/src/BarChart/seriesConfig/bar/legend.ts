@@ -14,7 +14,6 @@ const legendGetter: LegendGetter<'bar'> = (params) => {
     acc.push({
       type: 'bar',
       markType: series[seriesId].labelMarkType,
-      id: seriesId,
       seriesId,
       color: series[seriesId].color,
       label: formattedLabel,

@@ -48,7 +48,7 @@ export const enUS: SchedulerTranslations = {
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
 
-  // EventPopover
+  // EventDraggableDialog
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',
   closeButtonLabel: 'Close',

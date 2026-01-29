@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const elGRGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ναί',
   booleanCellFalseLabel: 'όχι',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Ανάπτυξη',
+  longTextCellCollapseLabel: 'Σύμπτυξη',
 
   // Actions cell more text
   actionsCellMore: 'περισσότερα',

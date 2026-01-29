@@ -28,7 +28,7 @@ export interface LineElementClasses {
 export type LineElementClassKey = keyof LineElementClasses;
 
 export interface LineElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   gradientId?: string;
   isFaded: boolean;
@@ -50,9 +50,9 @@ export const lineElementClasses: LineElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: LineElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getLineElementUtilityClass, classes);
@@ -74,7 +74,7 @@ export interface LineElementProps
   extends
     Omit<LineElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedLineProps, 'skipAnimation'>,
-    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
   d: string;
   /** If `true`, the line is hidden. */
   hidden?: boolean;
@@ -102,7 +102,7 @@ export interface LineElementProps
  */
 function LineElement(props: LineElementProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -112,13 +112,13 @@ function LineElement(props: LineElementProps) {
     hidden,
     ...other
   } = props;
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
   const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
+    seriesId,
   });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -155,7 +155,7 @@ LineElement.propTypes = {
   gradientId: PropTypes.string,
   /** If `true`, the line is hidden. */
   hidden: PropTypes.bool,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

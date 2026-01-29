@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const roROGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const roROGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Da',
   booleanCellFalseLabel: 'Nu',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Extindere',
+  longTextCellCollapseLabel: 'Restrângere',
 
   // Actions cell more text
   actionsCellMore: 'Mai multe',

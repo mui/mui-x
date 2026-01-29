@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
+import type { GridRenderEditCellParams } from '@mui/x-data-grid-premium';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';

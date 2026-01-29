@@ -2,6 +2,7 @@ import { Store } from '@base-ui/utils/store';
 import { EMPTY_OBJECT } from '@base-ui/utils/empty';
 // TODO: Use the Base UI warning utility once it supports cleanup in tests.
 import { warnOnce } from '@mui/x-internals/warning';
+import { EventManager } from '@mui/x-internals/EventManager';
 import {
   SchedulerEventId,
   SchedulerOccurrencePlaceholder,
@@ -21,7 +22,13 @@ import {
   SchedulerParametersToStateMapper,
   SchedulerModelUpdater,
   UpdateEventsParameters,
+  SchedulerInstanceName,
 } from './SchedulerStore.types';
+import {
+  SchedulerEvents,
+  SchedulerEventListener,
+  SchedulerEventParameters,
+} from '../../models/events';
 import { Adapter } from '../../../use-adapter/useAdapter.types';
 import { createEventFromRecurringEvent, updateRecurringEvent } from '../recurring-events';
 import { schedulerEventSelectors } from '../../../scheduler-selectors';
@@ -34,7 +41,6 @@ import {
 } from './SchedulerStore.utils';
 import { TimeoutManager } from '../TimeoutManager';
 import { createChangeEventDetails } from '../../../base-ui-copy/utils/createBaseUIEventDetails';
-import { SchedulerLazyLoadingPlugin } from './plugins/SchedulerLazyLoadingPlugin';
 import { applyDataTimezoneToEventUpdate } from '../recurring-events/applyDataTimezoneToEventUpdate';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
@@ -64,18 +70,18 @@ export class SchedulerStore<
 
   private initialParameters: Parameters | null = null;
 
-  public instanceName: string;
+  public instanceName: SchedulerInstanceName;
 
   private mapper: SchedulerParametersToStateMapper<State, Parameters>;
 
   protected timeoutManager = new TimeoutManager();
 
-  public lazyLoading: SchedulerLazyLoadingPlugin<TEvent, TResource, State, Parameters> | undefined;
+  private eventManager = new EventManager();
 
   public constructor(
     parameters: Parameters,
     adapter: Adapter,
-    instanceName: string,
+    instanceName: SchedulerInstanceName,
     mapper: SchedulerParametersToStateMapper<State, Parameters>,
   ) {
     const stateFromParameters = SchedulerStore.deriveStateFromParameters(parameters, adapter);
@@ -169,7 +175,7 @@ export class SchedulerStore<
 
         if (initialIsControlled !== isControlled) {
           warnOnce([
-            `Scheduler: A component is changing the ${
+            `MUI: A component is changing the ${
               initialIsControlled ? '' : 'un'
             }controlled ${controlledProp} state of ${this.instanceName} to be ${initialIsControlled ? 'un' : ''}controlled.`,
             'Elements should not switch from uncontrolled to controlled (or vice versa).',
@@ -179,7 +185,7 @@ export class SchedulerStore<
           ]);
         } else if (JSON.stringify(initialDefaultValue) !== JSON.stringify(defaultValue)) {
           warnOnce([
-            `Scheduler: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
+            `MUI: A component is changing the default ${controlledProp} state of an uncontrolled ${this.instanceName} after being initialized. `,
             `To suppress this warning opt to use a controlled ${this.instanceName}.`,
           ]);
         }
@@ -249,6 +255,26 @@ export class SchedulerStore<
     });
   };
 
+  /**
+   * Publishes an event to all its subscribers.
+   */
+  public publishEvent = <E extends SchedulerEvents>(
+    name: E,
+    params: SchedulerEventParameters<E>,
+  ) => {
+    this.eventManager.emit(name, params);
+  };
+
+  /**
+   * Subscribe to an event emitted by the store.
+   */
+  public subscribeEvent = <E extends SchedulerEvents>(
+    eventName: E,
+    handler: SchedulerEventListener<E>,
+  ) => {
+    this.eventManager.on(eventName, handler);
+  };
+
   protected setVisibleDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
     const { visibleDate: visibleDateProp, onVisibleDateChange } = this.parameters;
     const { adapter } = this.state;
@@ -303,15 +329,15 @@ export class SchedulerStore<
     }
 
     this.parameters.onEventsChange?.(newEvents, eventDetails);
+
+    // Publish event for premium plugins (e.g., lazy loading) to sync caches
     queueMicrotask(() =>
-      this.lazyLoading?.updateEventsFromDataSource(
-        {
-          deleted: deletedParam ?? [],
-          updated,
-          created: createdIds,
-        },
+      this.publishEvent('eventsUpdated', {
+        deleted: deletedParam ?? [],
+        updated,
+        created: createdIds,
         newEvents,
-      ),
+      }),
     );
 
     return {
@@ -342,9 +368,7 @@ export class SchedulerStore<
   public updateEvent = (calendarEvent: SchedulerEventUpdatedProperties) => {
     const original = schedulerEventSelectors.processedEventRequired(this.state, calendarEvent.id);
     if (original.dataTimezone.rrule) {
-      throw new Error(
-        `${this.instanceName}: this event is recurring. Use updateRecurringEvent(...) instead.`,
-      );
+      throw new Error('MUI: this event is recurring. Use updateRecurringEvent(...) instead.');
     }
 
     this.updateEvents({
@@ -377,9 +401,7 @@ export class SchedulerStore<
     const { changes, occurrenceStart, onSubmit } = pendingUpdateRecurringEventParameters;
     const original = schedulerEventSelectors.processedEventRequired(this.state, changes.id);
     if (!original.dataTimezone.rrule) {
-      throw new Error(
-        `${this.instanceName}: the original event is not recurring. Use updateEvent(...) instead.`,
-      );
+      throw new Error('MUI: the original event is not recurring. Use updateEvent(...) instead.');
     }
 
     // IMPORTANT:

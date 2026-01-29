@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const urPKGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ہاں',
   booleanCellFalseLabel: 'نہیں',
+
+  // Long text cell
+  longTextCellExpandLabel: 'پھیلائیں',
+  longTextCellCollapseLabel: 'تنگ کریں',
 
   // Actions cell more text
   actionsCellMore: 'ذیادہ',

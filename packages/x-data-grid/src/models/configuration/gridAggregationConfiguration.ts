@@ -1,6 +1,6 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridRowId, GridRowModel } from '../gridRows';
-import { GridColDef } from '../colDef';
+import type { GridColDef } from '../colDef';
 
 /**
  * Get the cell aggregation result

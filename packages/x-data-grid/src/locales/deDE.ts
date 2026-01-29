@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const deDEGrid: Partial<GridLocaleText> = {
   // Root
@@ -167,6 +167,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Ja',
   booleanCellFalseLabel: 'Nein',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Aufklappen',
+  longTextCellCollapseLabel: 'Zuklappen',
 
   // Actions cell more text
   actionsCellMore: 'Mehr',
