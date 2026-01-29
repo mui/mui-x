@@ -105,13 +105,14 @@ const ChartsLabelMark = consumeThemeProps(
               </svg>
             )}
             {type === 'line' && (
-              <svg viewBox="0 0 16 8" >
+              <svg viewBox="0 0 16 8" preserveAspectRatio="none">
                 <path
                   className={classes?.fill}
                   d="M 2 4 L 14 4"
                   stroke={color}
                   strokeWidth="4"
                   strokeLinecap="round"
+                  vectorEffect="non-scaling-stroke"
                 />
               </svg>
             )}
