@@ -303,6 +303,7 @@
   { "name": "MarkPlotSlotProps", "kind": "Interface" },
   { "name": "MarkPlotSlots", "kind": "Interface" },
   { "name": "niceDomain", "kind": "Function" },
+  { "name": "NumberValue", "kind": "TypeAlias" },
   { "name": "orangePalette", "kind": "Variable" },
   { "name": "orangePaletteDark", "kind": "Variable" },
   { "name": "orangePaletteLight", "kind": "Variable" },
