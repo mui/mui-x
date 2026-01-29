@@ -1,8 +1,8 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import { type ChartSeriesType } from '../../../../models/seriesType/config';
+import type { ChartSeriesType, SeriesItemIdentifier } from '../../../../models/seriesType';
 import { type ChartRootSelector } from '../../utils/selectors';
-import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
+import { type UseChartHighlightSignature } from './useChartHighlight.types';
 import { type HighlightScope } from './highlightConfig.types';
 import { createIsHighlighted } from './createIsHighlighted';
 import { createIsFaded } from './createIsFaded';
@@ -15,7 +15,9 @@ import {
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 
-const selectHighlight: ChartRootSelector<UseChartHighlightSignature> = (state) => state.highlight;
+
+const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
+  state.highlight;
 
 export const selectorChartsHighlightScopePerSeriesId = createSelector(
   selectorChartSeriesProcessed,
@@ -78,7 +80,7 @@ export const selectorChartsIsHighlighted = createSelector(
   function selectorChartsIsHighlighted(
     highlightScope,
     highlightedItem,
-    item: HighlightItemData | null,
+    item: SeriesItemIdentifier | null,
   ) {
     return createIsHighlighted(highlightScope, highlightedItem)(item);
   },
@@ -111,7 +113,7 @@ export const selectorChartSeriesHighlightedItem = createSelector(
 export const selectorChartsIsFaded = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  function selectorChartsIsFaded(highlightScope, highlightedItem, item: HighlightItemData | null) {
+  function selectorChartsIsFaded(highlightScope, highlightedItem, item: SeriesItemIdentifier | null) {
     return createIsFaded(highlightScope, highlightedItem)(item);
   },
 );
