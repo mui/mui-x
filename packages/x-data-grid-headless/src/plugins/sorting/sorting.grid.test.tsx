@@ -9,7 +9,7 @@ import {
   type SortingColumnMeta,
   type GridSortDirection,
 } from '..';
-import { TestDataGrid } from '../../test';
+import { TestDataGrid } from '../../test/TestDataGrid';
 
 type TestRow = { id: number; name: string; age: number };
 

@@ -4,7 +4,7 @@ import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import type { useDataGrid, ColumnDef } from '../../..';
 import type { sortingPlugin, paginationPlugin } from '../..';
-import { TestDataGrid } from '../../../test';
+import { TestDataGrid } from '../../../test/TestDataGrid';
 
 type GridApi<TRow extends object> = ReturnType<
   typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>
