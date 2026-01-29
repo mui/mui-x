@@ -790,7 +790,7 @@ describe('<DataGrid /> - Quick filter', () => {
 
   describe('multiSelect columns', () => {
     it('should match any array element', async () => {
-      const { user } = render(
+      const { setProps, container } = render(
         <TestCase
           rows={[
             { id: 0, tags: ['React', 'TypeScript'] },
@@ -808,17 +808,21 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2']);
+      // Wait for grid to be fully rendered with all rows
+      await waitFor(() => {
+        expect(getColumnValues(0, container)).to.deep.equal(['0', '1', '2']);
+      });
 
-      await user.type(screen.getByRole('searchbox'), 'React');
+      // Use setProps instead of typing to avoid debounce race conditions
+      setProps({ filterModel: { items: [], quickFilterValues: ['React'] } });
 
       await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0']);
+        expect(getColumnValues(0, container)).to.deep.equal(['0']);
       });
     });
 
     it('should be case-insensitive', async () => {
-      const { user } = render(
+      const { setProps, container } = render(
         <TestCase
           rows={[
             { id: 0, tags: ['React', 'TypeScript'] },
@@ -835,15 +839,16 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      await user.type(screen.getByRole('searchbox'), 'react');
+      // Use setProps instead of typing to avoid debounce race conditions
+      setProps({ filterModel: { items: [], quickFilterValues: ['react'] } });
 
       await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0']);
+        expect(getColumnValues(0, container)).to.deep.equal(['0']);
       });
     });
 
     it('should search labels with object valueOptions', async () => {
-      const { user } = render(
+      const { setProps, container } = render(
         <TestCase
           rows={[
             { id: 0, categories: ['fe', 'be'] },
@@ -864,11 +869,11 @@ describe('<DataGrid /> - Quick filter', () => {
         />,
       );
 
-      // Search by label (not value)
-      await user.type(screen.getByRole('searchbox'), 'Frontend');
+      // Search by label (not value) - use setProps to avoid debounce race conditions
+      setProps({ filterModel: { items: [], quickFilterValues: ['Frontend'] } });
 
       await waitFor(() => {
-        expect(getColumnValues(0)).to.deep.equal(['0']);
+        expect(getColumnValues(0, container)).to.deep.equal(['0']);
       });
     });
   });

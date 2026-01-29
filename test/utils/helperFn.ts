@@ -119,9 +119,9 @@ export function getActiveColumnHeader() {
   return `${Number(activeElement.getAttribute('aria-colindex')) - 1}`;
 }
 
-export function getColumnValues(colIndex: number) {
+export function getColumnValues(colIndex: number, container: ParentNode = document) {
   return Array.from(
-    document.querySelectorAll(`[role="gridcell"][data-colindex="${colIndex}"]`),
+    container.querySelectorAll(`[role="gridcell"][data-colindex="${colIndex}"]`),
   ).map((node) => node!.textContent);
 }
 
