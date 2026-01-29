@@ -7,6 +7,7 @@ import {
   useSankeyNodeHighlightState,
   useSankeySeries,
 } from '@mui/x-charts-pro/SankeyChart';
+import { SeriesId } from '@mui/x-charts/models';
 
 export function CustomNodeLabelPlot() {
   const sankeySeries = useSankeySeries()[0];
@@ -31,17 +32,30 @@ export function CustomNodeLabelPlot() {
   return (
     <g>
       {layout.nodes.map((node) => (
-        <CustomNodeLabel key={`label-node-${node.id}`} node={node} />
+        <CustomNodeLabel
+          key={`label-node-${node.id}`}
+          seriesId={sankeySeries.id}
+          node={node}
+        />
       ))}
     </g>
   );
 }
 
-function CustomNodeLabel(props: { node: SankeyLayoutNode }) {
-  const { node } = props;
+function CustomNodeLabel(props: { seriesId: SeriesId; node: SankeyLayoutNode }) {
+  const { seriesId, node } = props;
   const theme = useTheme();
 
-  const highlightState = useSankeyNodeHighlightState(node.id);
+  const nodeIdentifier = React.useMemo(
+    () => ({
+      type: 'sankey' as const,
+      subType: 'node' as const,
+      seriesId,
+      nodeId: node.id,
+    }),
+    [seriesId, node.id],
+  );
+  const highlightState = useSankeyNodeHighlightState(nodeIdentifier);
 
   const x0 = node.x0 ?? 0;
   const y0 = node.y0 ?? 0;
