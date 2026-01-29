@@ -1,3 +1,4 @@
+import type { MakeOptional } from '@mui/x-internals/types';
 import type {
   ChartSeriesType,
   HighlightScope,
@@ -19,10 +20,9 @@ export function isBatchRenderingSeriesType(
   return batchRenderingSeries.has(type as SeriesTypeWithBatchRendering);
 }
 
-
 export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: SeriesItemIdentifier<SeriesType> | null,
+  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'series' && item?.seriesId === seriesId;
@@ -30,7 +30,7 @@ export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRender
 
 export function isSeriesFaded<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: SeriesItemIdentifier<SeriesType> | null,
+  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
@@ -49,7 +49,7 @@ export function isSeriesFaded<SeriesType extends SeriesTypeWithBatchRendering>(
  */
 export function getSeriesHighlightedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: SeriesItemIdentifier<SeriesType> | null,
+  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'item' && item?.seriesId === seriesId ? item.dataIndex : null;
@@ -62,7 +62,7 @@ export function getSeriesHighlightedDataIndex<SeriesType extends SeriesTypeWithB
  */
 export function getSeriesUnfadedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
   scope: Partial<HighlightScope<SeriesType>> | null,
-  item: SeriesItemIdentifier<SeriesType> | null,
+  item: MakeOptional<SeriesItemIdentifier<SeriesType>, 'dataIndex'> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
