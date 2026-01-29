@@ -359,3 +359,12 @@ export interface UpdateEventsParameters {
 }
 
 export type SchedulerChangeEventDetails = BaseUIChangeEventDetails<'none'>;
+
+/**
+ * The unique identifier for each scheduler store type.
+ * Used by context hooks to assert the store type at runtime.
+ */
+export type SchedulerInstanceName =
+  | 'EventCalendarStore'
+  | 'EventCalendarPremiumStore'
+  | 'EventTimelinePremiumStore';
