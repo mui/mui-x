@@ -54,3 +54,4 @@ export * from './ChartDataProviderPremium';
 export * from './ChartContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
+export * from './CandlestickChart';
