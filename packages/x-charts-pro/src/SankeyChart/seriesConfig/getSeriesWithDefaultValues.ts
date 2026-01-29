@@ -109,10 +109,21 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = 
     throw error;
   }
 
+  const highlightScope = {
+    nodes: {
+      highlight: seriesData.nodeOptions?.highlight ?? 'links',
+      fade: seriesData.nodeOptions?.fade ?? 'none'
+    }, links: {
+      highlight: seriesData.linkOptions?.highlight ?? 'links',
+      fade: seriesData.linkOptions?.fade ?? 'none'
+    }
+  };
+
   return {
     id: seriesData.id ?? `auto-generated-id-${seriesIndex}`,
     ...seriesData,
     valueFormatter: seriesData.valueFormatter ?? defaultSankeyValueFormatter,
+    highlightScope,
     data,
   };
 };

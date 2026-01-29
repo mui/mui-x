@@ -1,9 +1,9 @@
 'use client';
 
-import type { HighlightScope, SeriesId } from '@mui/x-charts/internals';
+import type { SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
-import type { SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
+import type { SankeyHighlightScope, SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;
 
@@ -276,8 +276,10 @@ export interface DefaultizedSankeySeriesType extends DefaultizedProps<
   //   links: readonly SankeyLink[];
   // };
   data: SankeyLayout<false>;
-  // TODO: Implement, currently here so types don't break.
-  highlightScope?: HighlightScope;
+  /**
+   * Highlight scope for the series derived from nodeOptions and linksOptions
+   */
+  highlightScope?: SankeyHighlightScope;
 }
 
 type SankeyNodeIdentifierBase = {
@@ -338,34 +340,34 @@ export type SankeyItemIdentifierWithData<WithPosition extends boolean = true> =
 
 export type SankeyValueFormatterContext =
   | {
-      /**
-       * Where the value will be displayed
-       */
-      location: 'tooltip' | 'label';
-      /**
-       * Can be 'node' or 'link'
-       */
-      type: 'node';
-      /**
-       * The id of the node
-       */
-      nodeId: SankeyNodeId;
-    }
+    /**
+     * Where the value will be displayed
+     */
+    location: 'tooltip' | 'label';
+    /**
+     * Can be 'node' or 'link'
+     */
+    type: 'node';
+    /**
+     * The id of the node
+     */
+    nodeId: SankeyNodeId;
+  }
   | {
-      /**
-       * Where the value will be displayed
-       */
-      location: 'tooltip' | 'label';
-      /**
-       * Can be 'node' or 'link'
-       */
-      type: 'link';
-      /**
-       * The id of the source node
-       */
-      sourceId: SankeyNodeId;
-      /**
-       * The id of the target node
-       */
-      targetId: SankeyNodeId;
-    };
+    /**
+     * Where the value will be displayed
+     */
+    location: 'tooltip' | 'label';
+    /**
+     * Can be 'node' or 'link'
+     */
+    type: 'link';
+    /**
+     * The id of the source node
+     */
+    sourceId: SankeyNodeId;
+    /**
+     * The id of the target node
+     */
+    targetId: SankeyNodeId;
+  };
