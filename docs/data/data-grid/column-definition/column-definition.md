@@ -281,6 +281,24 @@ Edit mode (textarea focused):
 - <kbd class="key">Enter</kbd> – Commit changes
 - <kbd class="key">Escape</kbd> – Cancel editing
 
+### Multi-select keyboard interactions
+
+The `'multiSelect'` column type supports keyboard interactions to expand overflow chips and edit values when the cell is focused via click or keyboard navigation.
+
+View mode (cell focused):
+
+- <kbd class="key">Space</kbd> – Toggle overflow popup to see all values
+- <kbd class="key">Escape</kbd> – Close popup
+- <kbd class="key">Enter</kbd> or <kbd class="key">F2</kbd> – Enter edit mode
+
+Edit mode (autocomplete focused):
+
+- <kbd class="key">Arrow Up</kbd>/<kbd class="key">Arrow Down</kbd> – Navigate through options
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS) – Select/deselect highlighted option (dropdown stays open)
+- <kbd class="key">Enter</kbd> – Commit changes and exit edit mode
+- <kbd class="key">Escape</kbd> – Cancel editing and close dropdown
+- <kbd class="key">Backspace</kbd> (empty input) – Remove last selected chip
+
 ### Converting types
 
 Default methods, such as filtering and sorting, assume that the type of the values will match the type of the column specified in `type`.
