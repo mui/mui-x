@@ -124,6 +124,10 @@ Created playground for manual testing.
 3. **PR Review** - Submit for code review
 4. **RFC/Discussion** - Consider opening GitHub discussion for community feedback on API
 
+## TODO
+
+- [ ] Support column auto-resize (double-click separator) to display all chips - requires calculating total width from cached chip measurements
+
 ---
 
 ## Executive Summary
