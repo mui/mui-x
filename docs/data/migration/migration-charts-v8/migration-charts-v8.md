@@ -308,7 +308,7 @@ To get the numeric value, call `valueOf()` on the `NumberValue` parameters.
 
 The charts label mark has been redesigned to improve consistency in how different mark types can be styled.
 
-We removed the `markElementClasses.mask` class and the corresponding `mask` component which was used to create a mask effect on the label mark.
+The `markElementClasses.mask` class got removed, together with the corresponding `mask` component which was used to create a mask effect on the label mark.
 
 Now the `line` type of mark can be styled in the same way you would a line chart's line element, since they both use SVG `<path>` elements.
 
