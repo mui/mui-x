@@ -1,20 +1,26 @@
-import { type HighlightScope } from './highlightConfig.types';
-import { type HighlightItemData } from './useChartHighlight.types';
+import type { SeriesItemIdentifier, ChartSeriesType, HighlightScope } from "../../../../models/seriesType";
+
 
 function alwaysFalse(): boolean {
   return false;
 }
 
-export function createIsHighlighted(
-  highlightScope: HighlightScope | null | undefined,
-  highlightedItem: HighlightItemData | null,
+/**
+ * The isHighlighted logic for main charts (those that are identified by an id and a dataIndex)
+ */
+export function createIsHighlighted<SeriesType extends 'bar' | 'line' | 'scatter' | 'pie' | 'radar'>(highlightScope: HighlightScope<SeriesType> | null | undefined,
+  highlightedItem: SeriesItemIdentifier<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {
     return alwaysFalse;
   }
 
-  return function isHighlighted(item: HighlightItemData | null): boolean {
+  return function isHighlighted(item: SeriesItemIdentifier<ChartSeriesType> | null): boolean {
     if (!item) {
+      return false;
+    }
+
+    if (item.type === 'sankey') {
       return false;
     }
 
