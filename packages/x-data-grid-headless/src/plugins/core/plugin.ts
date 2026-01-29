@@ -86,10 +86,7 @@ export interface Plugin<
   name: TName;
   dependencies?: TDeps;
   selectors: TSelectors;
-  initialize: (
-    state: AvailableState<TDeps>,
-    params: TParams,
-  ) => AvailableState<TDeps> & TState;
+  initialize: (state: AvailableState<TDeps>, params: TParams) => AvailableState<TDeps> & TState;
   use: (
     store: Store<TState & InternalPluginsState>,
     params: TParams & InternalPluginsOptions,
