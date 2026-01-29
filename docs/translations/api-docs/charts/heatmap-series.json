@@ -2,7 +2,9 @@
   "interfaceDescription": "",
   "propertiesDescriptions": {
     "type": { "description": "" },
-    "data": { "description": "Data associated to each bar." },
+    "data": {
+      "description": "Data associated to each cell in the heatmap.<br />Each entry is a tuple [xIndex, yIndex, value]."
+    },
     "dataKey": { "description": "The key used to retrieve data from the dataset." },
     "highlightScope": { "description": "The scope to apply when the series is highlighted." },
     "id": { "description": "The id of this series." },
