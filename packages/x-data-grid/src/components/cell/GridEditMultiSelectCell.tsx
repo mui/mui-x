@@ -170,7 +170,6 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
     error,
     onValueChange,
     slotProps,
-    ...other
   } = props;
 
   const apiRef = useGridApiContext();
@@ -283,7 +282,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
     selectedOptions,
     getOptionValue,
     getOptionLabel,
-    ...other
   } = props;
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -307,6 +305,11 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
       });
     },
     [apiRef, field, id],
+  );
+
+  const isOptionEqualToValue = React.useCallback(
+    (option: ValueOptions, val: ValueOptions) => getOptionValue(option) === getOptionValue(val),
+    [getOptionValue],
   );
 
   const handleChange = React.useCallback(
@@ -345,6 +348,7 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
       onClose={handleClose}
       onChange={handleChange}
       getOptionLabel={getOptionLabel}
+      isOptionEqualToValue={isOptionEqualToValue}
       disableCloseOnSelect
       openOnFocus
       autoHighlight
@@ -362,7 +366,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
         // @ts-expect-error the types require import from Material UI package
         slots: { popper: GridEditMultiSelectCellAutocompletePopper },
       }}
-      {...other}
       {...slotProps?.autocomplete}
     />
   );
