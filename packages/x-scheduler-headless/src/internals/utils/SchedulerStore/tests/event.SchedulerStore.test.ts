@@ -1,11 +1,10 @@
 import { spy } from 'sinon';
-import { adapter, EventBuilder } from 'test/utils/scheduler';
+import { adapter, EventBuilder, storeClasses } from 'test/utils/scheduler';
 import {
   SchedulerEventModelStructure,
   TemporalSupportedObject,
 } from '@mui/x-scheduler-headless/models';
 import { processDate } from '@mui/x-scheduler-headless/process-date';
-import { storeClasses } from './utils';
 import { schedulerEventSelectors } from '../../../../scheduler-selectors';
 
 storeClasses.forEach((storeClass) => {

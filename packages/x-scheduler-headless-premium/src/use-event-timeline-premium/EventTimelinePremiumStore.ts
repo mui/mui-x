@@ -62,6 +62,8 @@ export class EventTimelinePremiumStore<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, TResource>
 > {
+  public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
+
   public constructor(
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,

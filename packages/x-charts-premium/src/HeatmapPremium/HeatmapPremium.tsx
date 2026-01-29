@@ -5,7 +5,13 @@ import { useThemeProps } from '@mui/material/styles';
 import { ChartsBrushOverlay } from '@mui/x-charts/ChartsBrushOverlay';
 import { ChartsWrapper } from '@mui/x-charts/ChartsWrapper';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
-import { FocusedHeatmapCell, type HeatmapProps, HeatmapTooltip } from '@mui/x-charts-pro/Heatmap';
+import {
+  FocusedHeatmapCell,
+  HeatmapTooltip,
+  type HeatmapProps,
+  type HeatmapSlots,
+  type HeatmapSlotProps,
+} from '@mui/x-charts-pro/Heatmap';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { ChartsToolbarPro } from '@mui/x-charts-pro/ChartsToolbarPro';
 import { ChartsOverlay } from '@mui/x-charts/ChartsOverlay';
@@ -16,7 +22,18 @@ import { ChartDataProviderPremium } from '../ChartDataProviderPremium';
 import { type HeatmapPremiumPluginSignatures } from './HeatmapPremium.plugins';
 import { HeatmapPlotPremium } from './HeatmapPlotPremium';
 
-export interface HeatmapPremiumProps extends HeatmapProps {}
+export interface HeatmapPremiumSlots extends HeatmapSlots {}
+export interface HeatmapPremiumSlotProps extends HeatmapSlotProps {}
+
+export interface HeatmapPremiumProps extends HeatmapProps {
+  /**
+   * The type of renderer to use for the heatmap plot.
+   * - `svg-single`: Renders every scatter item in a `<rect />` element.
+   * - `webgl`: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/heatmap/#performance
+   */
+  renderer?: 'svg-single' | 'webgl';
+}
 
 const HeatmapPremium = React.forwardRef(function HeatmapPremium(
   inProps: HeatmapPremiumProps,
@@ -198,6 +215,13 @@ HeatmapPremium.propTypes = {
    */
   onZoomChange: PropTypes.func,
   /**
+   * The type of renderer to use for the heatmap plot.
+   * - `svg-single`: Renders every scatter item in a `<rect />` element.
+   * - `webgl`: Renders heatmap cells using WebGL for better performance, at the cost of some limitations.
+   *                Read more: https://mui.com/x/react-charts/heatmap/#performance
+   */
+  renderer: PropTypes.oneOf(['svg-single', 'webgl']),
+  /**
    * The series to display in the bar chart.
    * An array of [[HeatmapSeries]] objects.
    */
@@ -237,8 +261,8 @@ HeatmapPremium.propTypes = {
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['heatmap']).isRequired,
-    xIndex: PropTypes.number,
-    yIndex: PropTypes.number,
+    xIndex: PropTypes.number.isRequired,
+    yIndex: PropTypes.number.isRequired,
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
