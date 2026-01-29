@@ -281,7 +281,8 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
 
     // Container or chips not measured yet - show all chips so they can be measured
     // CSS overflow:hidden will handle the visual overflow during measurement
-    if (containerWidth === null || measuredCount < arrayValue.length) {
+    // Also handles JSDOM where clientWidth returns 0
+    if (containerWidth === null || containerWidth === 0 || measuredCount < arrayValue.length) {
       return arrayValue.length;
     }
 
