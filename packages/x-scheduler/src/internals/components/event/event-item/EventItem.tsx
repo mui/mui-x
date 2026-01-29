@@ -24,7 +24,6 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular' }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
   '&[data-variant="compact"]': {
     containerType: 'inline-size',
     cursor: 'pointer',
