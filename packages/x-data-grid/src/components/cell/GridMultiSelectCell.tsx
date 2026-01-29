@@ -116,6 +116,45 @@ function getOptionLabel(
   return valueOption ? colDef.getOptionLabel!(valueOption) : String(value);
 }
 
+const GAP = 4;
+const OVERFLOW_CHIP_WIDTH = 40;
+
+/**
+ * Calculate how many chips fit in the available width
+ */
+function calculateVisibleCount(
+  arrayLength: number,
+  containerWidth: number,
+  chipWidths: Map<number, number>,
+): number {
+  let usedWidth = 0;
+  let count = 0;
+
+  for (let i = 0; i < arrayLength; i += 1) {
+    const chipWidth = chipWidths.get(i);
+    if (chipWidth === undefined) {
+      // Not all chips measured yet, show up to this point
+      return i;
+    }
+
+    const isLast = i === arrayLength - 1;
+    const spaceNeeded =
+      usedWidth +
+      chipWidth +
+      (count > 0 ? GAP : 0) +
+      (isLast ? 0 : OVERFLOW_CHIP_WIDTH + GAP);
+
+    if (spaceNeeded <= containerWidth || i === 0) {
+      usedWidth += chipWidth + (count > 0 ? GAP : 0);
+      count += 1;
+    } else {
+      break;
+    }
+  }
+
+  return count;
+}
+
 function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const { id, value, colDef, hasFocus, row, slotProps } = props;
   const popupId = `${id}-${colDef.field}-multiselect-popup`;
@@ -126,7 +165,10 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 
   const [popupOpen, setPopupOpen] = React.useState(false);
-  const [visibleCount, setVisibleCount] = React.useState<number | null>(null);
+  // Track how many chips have been measured
+  const [measuredCount, setMeasuredCount] = React.useState(0);
+  // Track container width for visible count calculation
+  const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
   const cellRef = React.useRef<HTMLDivElement>(null);
   const chipsRef = React.useRef<Map<number, HTMLDivElement>>(new Map());
   // Cache chip widths so we can calculate visible chips even when some aren't rendered
@@ -163,89 +205,84 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   // Create a stable key for the array values to detect when chips need remeasuring
   const arrayKey = React.useMemo(() => arrayValue.join('\0'), [arrayValue]);
 
+  // Store previous computedWidth to detect column resize
+  const prevComputedWidthRef = React.useRef(colDef.computedWidth);
+
   // Clear chip width cache when array values change
   React.useEffect(() => {
     chipWidthsRef.current.clear();
-    setVisibleCount(null);
+    setMeasuredCount(0);
+    setContainerWidth(null);
   }, [arrayKey]);
 
-  // Measure chips and calculate visible count
+  // Update container width when column is resized
   React.useEffect(() => {
-    if (!cellRef.current || arrayValue.length === 0) {
-      setVisibleCount(null);
-      return undefined;
+    if (containerWidth !== null && prevComputedWidthRef.current !== colDef.computedWidth) {
+      const delta = colDef.computedWidth - prevComputedWidthRef.current;
+      setContainerWidth((prev) => (prev !== null ? prev + delta : null));
+    }
+    prevComputedWidthRef.current = colDef.computedWidth;
+  }, [colDef.computedWidth, containerWidth]);
+
+  // Measure chips and container width after render (synchronous to avoid flicker)
+  React.useLayoutEffect(() => {
+    // Measure container width once
+    if (containerWidth === null && cellRef.current) {
+      setContainerWidth(cellRef.current.clientWidth);
     }
 
-    // Skip ResizeObserver if not available (e.g., in JSDOM test environment)
-    if (typeof ResizeObserver === 'undefined') {
-      setVisibleCount(arrayValue.length);
-      return undefined;
+    let newMeasurements = 0;
+    chipsRef.current.forEach((chipEl, index) => {
+      if (chipEl && !chipWidthsRef.current.has(index)) {
+        chipWidthsRef.current.set(index, chipEl.offsetWidth);
+        newMeasurements += 1;
+      }
+    });
+    if (newMeasurements > 0) {
+      setMeasuredCount(chipWidthsRef.current.size);
+    }
+  });
+
+  // Calculate visible count based on container width and cached chip widths
+  // This recalculates when:
+  // - Container width changes (measured or column resize)
+  // - Array values change (arrayValue.length)
+  // - More chips are measured (measuredCount)
+  const visibleCount = React.useMemo(() => {
+    if (arrayValue.length === 0) {
+      return 0;
     }
 
-    const calculateVisibleChips = () => {
-      const container = cellRef.current;
-      if (!container) {
-        return;
-      }
+    // Container or chips not measured yet - show all chips so they can be measured
+    // CSS overflow:hidden will handle the visual overflow during measurement
+    if (containerWidth === null || measuredCount < arrayValue.length) {
+      return arrayValue.length;
+    }
 
-      // Update cached widths from any currently rendered chips
-      chipsRef.current.forEach((chipEl, index) => {
-        if (chipEl) {
-          chipWidthsRef.current.set(index, chipEl.offsetWidth);
-        }
-      });
+    // All measurements complete, calculate based on container width
+    return calculateVisibleCount(arrayValue.length, containerWidth, chipWidthsRef.current);
+  }, [arrayValue.length, measuredCount, containerWidth]);
 
-      const containerWidth = container.clientWidth;
-      const gap = 4;
-      const overflowChipWidth = 40; // approximate width for "+N" chip
+  const hiddenCount = arrayValue.length - visibleCount;
 
-      let usedWidth = 0;
-      let count = 0;
-
-      for (let i = 0; i < arrayValue.length; i += 1) {
-        // Use cached width if chip isn't rendered, otherwise measure from DOM
-        const chipEl = chipsRef.current.get(i);
-        const chipWidth = chipEl ? chipEl.offsetWidth : chipWidthsRef.current.get(i);
-        if (chipWidth === undefined) {
-          // Chip not measured yet, need to render more chips first
-          // Set visibleCount to show at least up to this index so it can be measured
-          setVisibleCount(i + 1);
-          return;
-        }
-
-        const spaceNeeded =
-          usedWidth + chipWidth + (count > 0 ? gap : 0) + (i < arrayValue.length - 1 ? overflowChipWidth + gap : 0);
-
-        if (spaceNeeded <= containerWidth || i === 0) {
-          usedWidth += chipWidth + (count > 0 ? gap : 0);
-          count += 1;
-        } else {
-          break;
-        }
-      }
-
-      setVisibleCount(count);
-    };
-
-    // Initial calculation after render
-    const timeoutId = setTimeout(calculateVisibleChips, 0);
-
-    const observer = new ResizeObserver(calculateVisibleChips);
-    observer.observe(cellRef.current);
-
-    return () => {
-      clearTimeout(timeoutId);
-      observer.disconnect();
-    };
-  }, [arrayValue]);
-
+  // Focus overflow chip when cell receives focus
   React.useEffect(() => {
+    if (hasFocus && !popupOpen && hiddenCount > 0) {
+      if (overflowChipRef.current && overflowChipRef.current !== document.activeElement) {
+        overflowChipRef.current.focus();
+      }
+    }
     if (!hasFocus) {
       setPopupOpen(false);
     }
-  }, [hasFocus]);
+  }, [hasFocus, popupOpen, hiddenCount]);
 
   const handleOverflowClick = (event: React.MouseEvent) => {
+    // event.detail === 0 means keyboard-triggered click (Enter keyup on focused button)
+    // Ignore these to prevent popup from opening when focus moves to this cell via Enter
+    if (event.detail === 0) {
+      return;
+    }
     event.stopPropagation();
     setPopupOpen(true);
   };
@@ -270,16 +307,13 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
     return null;
   }
 
-  const displayCount = visibleCount ?? arrayValue.length;
-  const hiddenCount = arrayValue.length - displayCount;
-
   return (
     <GridMultiSelectCellRoot
       ref={cellRef}
       {...slotProps?.root}
       className={clsx(classes.root, hasFocus && 'Mui-focused', slotProps?.root?.className)}
     >
-      {arrayValue.slice(0, displayCount).map((v, index) => (
+      {arrayValue.slice(0, visibleCount).map((v, index) => (
         <rootProps.slots.baseChip
           key={index}
           ref={(el: HTMLDivElement) => {
@@ -304,9 +338,10 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
           onClick={handleOverflowClick}
           onKeyDown={handleOverflowKeyDown}
           aria-haspopup="dialog"
+          aria-keyshortcuts="Space"
           aria-controls={popupOpen ? popupId : undefined}
           aria-expanded={popupOpen}
-          material={{ tabIndex: hasFocus ? 0 : -1 }}
+          material={{ tabIndex: 0, component: 'button' }}
           {...slotProps?.overflowChip}
           className={clsx(classes.overflow, slotProps?.overflowChip?.className)}
         />
