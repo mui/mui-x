@@ -1000,6 +1000,24 @@ describe('<DataGridPremium /> - Aggregation', () => {
         '5' /* Agg "Cat B" */,
       ]);
     });
+
+    it('should show aggregation with both sorting and pinnedColumns in initialState', async () => {
+      await render(
+        <Test
+          initialState={{
+            aggregation: { model: { id: 'max' } },
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'asc' }],
+            },
+            pinnedColumns: {
+              left: ['id'],
+            },
+          }}
+        />,
+      );
+
+      expect(getColumnValues(0)).to.deep.equal(['0', '1', '2', '3', '4', '5', '5']);
+    });
   });
 
   describe('built-in aggregation functions', () => {
