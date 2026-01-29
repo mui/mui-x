@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Stack from '@mui/material/Stack';
 import useId from '@mui/utils/useId';
 import { ChartsClipPath } from '@mui/x-charts-premium/ChartsClipPath';
 import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
@@ -6,7 +7,7 @@ import { LinePlot } from '@mui/x-charts-premium/LineChart';
 import { BarPlot } from '@mui/x-charts-premium/BarChart';
 import { ChartsXAxis } from '@mui/x-charts-premium/ChartsXAxis';
 import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';
-import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
+import { useAxesTooltip } from '@mui/x-charts-premium/ChartsTooltip';
 import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 
 import { ChartsSurface } from '@mui/x-charts-premium/ChartsSurface';
@@ -14,6 +15,7 @@ import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProvide
 import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
 import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';
 import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';
+import { useDrawingArea } from '@mui/x-charts-premium/hooks';
 import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
 
 const xData = sp500ohlcv.map((entry) => new Date(Date.parse(entry.date)));
@@ -42,6 +44,19 @@ for (let i = 0; i < sp500ohlcv.length; i += 1) {
   }
 }
 
+const formatVolume = (value) =>
+  value.toLocaleString('en-US', {
+    maximumSignificantDigits: 3,
+    notation: 'compact',
+    compactDisplay: 'short',
+  });
+
+const formatTooltipDollarValue = (value) =>
+  value.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  });
+
 const formatAsDollar = (value) =>
   value.toLocaleString('en-US', {
     currency: 'USD',
@@ -69,17 +84,20 @@ export default function CandlestickComposition() {
     <ChartDataProviderPremium
       series={[
         {
+          id: 'ohlc',
           type: 'ohlc',
           data: ohlcData,
           label: 'S&P 500',
         },
         {
+          id: 'moving-average',
           type: 'line',
           data: movingAverage,
           label: '20-day Moving Average',
           color: '#42a5f5',
         },
         {
+          id: 'volume',
           type: 'bar',
           data: volumeData,
           label: 'Volume',
@@ -105,7 +123,12 @@ export default function CandlestickComposition() {
         },
       ]}
       yAxis={[
-        { id: 'price', valueFormatter: formatAsDollar, width: 48 },
+        {
+          id: 'price',
+          valueFormatter: formatAsDollar,
+          width: 48,
+          position: 'right',
+        },
         {
           id: 'volume',
           // Ensures that volume bars only take up to 20% of the chart height
@@ -127,10 +150,78 @@ export default function CandlestickComposition() {
           <ChartsXAxis />
           <ChartsYAxis axisId="price" />
           <ChartsYAxis axisId="volume" />
-          <ChartsTooltip />
+          <CandlestickTooltip />
           <ChartsLegend />
         </ChartsSurface>
       </ChartsWrapper>
     </ChartDataProviderPremium>
+  );
+}
+
+function CandlestickTooltip() {
+  const drawingArea = useDrawingArea();
+  const axesTooltipData = useAxesTooltip({ directions: ['x'] });
+
+  const tooltipData = axesTooltipData?.[0];
+
+  if (!tooltipData) {
+    return null;
+  }
+
+  const ohlcItem = tooltipData.seriesItems.find((item) => item.seriesId === 'ohlc');
+  const movingAverageItem = tooltipData.seriesItems.find(
+    (item) => item.seriesId === 'moving-average',
+  );
+  const volumeItem = tooltipData.seriesItems.find(
+    (item) => item.seriesId === 'volume',
+  );
+
+  return (
+    <foreignObject
+      x={drawingArea.left}
+      y={drawingArea.top}
+      width={drawingArea.width}
+      height={drawingArea.height}
+    >
+      <Stack
+        direction="column"
+        gap={0.5}
+        sx={(theme) => ({
+          ...theme.typography.caption,
+          pointerEvents: 'none',
+          marginLeft: theme.spacing(1),
+          marginTop: theme.spacing(1),
+        })}
+      >
+        <Stack
+          direction="row"
+          gap={1}
+          sx={(theme) => ({
+            width: 'min-content',
+            paddingX: theme.spacing(1),
+            paddingY: theme.spacing(0.5),
+            background: theme.palette.background.paper,
+          })}
+        >
+          <span>O:{formatTooltipDollarValue(ohlcItem.value[0])}</span>
+          <span>H:{formatTooltipDollarValue(ohlcItem.value[1])}</span>
+          <span>L:{formatTooltipDollarValue(ohlcItem.value[2])}</span>
+          <span>C:{formatTooltipDollarValue(ohlcItem.value[3])}</span>
+          <span>V:{formatVolume(volumeItem.value)}</span>
+        </Stack>
+        {movingAverageItem.value != null && (
+          <Stack
+            sx={(theme) => ({
+              width: 'min-content',
+              paddingX: theme.spacing(1),
+              paddingY: theme.spacing(0.5),
+              background: theme.palette.background.paper,
+            })}
+          >
+            <span>MA:{formatTooltipDollarValue(movingAverageItem.value)}</span>
+          </Stack>
+        )}
+      </Stack>
+    </foreignObject>
   );
 }
