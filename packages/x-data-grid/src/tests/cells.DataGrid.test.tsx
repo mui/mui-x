@@ -458,7 +458,7 @@ describe('<DataGrid /> - Cells', () => {
       expect(chips[1].textContent).to.equal('Backend');
     });
 
-    // Tests below require ResizeObserver and real focus management
+    // Tests below require real DOM layout (offsetWidth, clientWidth) for chip measurement
     describe.skipIf(isJSDOM)('overflow chip', () => {
       const overflowBaselineProps = {
         rows: [{ id: 1, tags: ['React', 'TypeScript', 'Node.js', 'Python', 'Go'] }],
