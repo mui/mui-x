@@ -13,7 +13,8 @@ import {
 } from '../plugins/core';
 import { type InternalPluginsApi } from '../plugins/internal';
 import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/columnUtils';
-import { rowsPlugin, columnsPlugin } from '..';
+import rowsPlugin from '../plugins/internal/rows/rows';
+import columnsPlugin from '../plugins/internal/columns/columns';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
