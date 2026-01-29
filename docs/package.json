@@ -29,7 +29,7 @@
     "@emotion/styled": "catalog:",
     "@mui/docs": "7.3.7",
     "@mui/icons-material": "catalog:",
-    "@mui/internal-docs-infra": "^0.4.1-canary.1",
+    "@mui/internal-docs-infra": "^0.4.1-canary.2",
     "@mui/joy": "^5.0.0-beta.52",
     "@mui/lab": "^7.0.0-beta.17",
     "@mui/material": "catalog:",
