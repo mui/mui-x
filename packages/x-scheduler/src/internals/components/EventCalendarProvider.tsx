@@ -14,10 +14,11 @@ import { schedulerTokens } from '../utils/tokens';
 const StandaloneViewRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'StandaloneViewRoot',
-})({
+})(({ theme }) => ({
   ...schedulerTokens,
   display: 'contents',
-});
+  fontFamily: theme.typography.fontFamily,
+}));
 
 export function EventCalendarProvider<TEvent extends object, TResource extends object>(
   props: HeadlessEventCalendarProvider.Props<TEvent, TResource>,
