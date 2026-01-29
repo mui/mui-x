@@ -28,6 +28,13 @@ describe('adjustRowParams', () => {
     expect(result.end).to.equal(39);
   });
 
+  it('should not cap end when rowCount is -1 (infinite loading)', () => {
+    const params = { start: 7, end: 33 };
+    const result = adjustRowParams(params, { pageSize: 10, rowCount: -1 });
+    expect(result.start).to.equal(0);
+    expect(result.end).to.equal(39);
+  });
+
   it('should handle rowCount of 0', () => {
     const params = { start: 0, end: 10 };
     const result = adjustRowParams(params, { pageSize: 10, rowCount: 0 });
