@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridTreeNode } from '../gridRows';
-import { GridRowProApi } from '../api';
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridTreeNode } from '../gridRows';
+import type { GridRowProApi } from '../api';
 
 /**
  * Get the ARIA attributes for a row

@@ -6,7 +6,10 @@ import { useStore } from '@base-ui/utils/store';
 import { EventTimelinePremium as TimelinePrimitive } from '@mui/x-scheduler-headless-premium/event-timeline-premium';
 import { useEventTimelinePremiumStoreContext } from '@mui/x-scheduler-headless-premium/use-event-timeline-premium-store-context';
 import { eventTimelinePremiumViewSelectors } from '@mui/x-scheduler-headless-premium/event-timeline-premium-selectors';
-import { EventPopoverProvider, EventPopoverTrigger } from '@mui/x-scheduler/internals';
+import {
+  EventDraggableDialogProvider,
+  EventDraggableDialogTrigger,
+} from '@mui/x-scheduler/internals';
 import { DaysHeader, MonthsHeader, TimeHeader, WeeksHeader, YearsHeader } from './view-header';
 import { EventTimelinePremiumContentProps } from './EventTimelinePremiumContent.types';
 import EventTimelinePremiumTitleCell from './timeline-title-cell/EventTimelinePremiumTitleCell';
@@ -162,7 +165,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
 
   return (
     <EventTimelinePremiumContentRoot ref={handleRef} className={classes.content} {...props}>
-      <EventPopoverProvider containerRef={containerRef}>
+      <EventDraggableDialogProvider>
         <EventTimelinePremiumGrid
           className={classes.grid}
           style={{ '--unit-width': `var(--${view}-cell-width)` } as React.CSSProperties}
@@ -195,17 +198,13 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
                   {({ occurrences, placeholder }) => (
                     <React.Fragment>
                       {occurrences.map((occurrence) => (
-                        <EventPopoverTrigger
-                          key={occurrence.key}
-                          occurrence={occurrence}
-                          render={
-                            <EventTimelinePremiumEvent
-                              occurrence={occurrence}
-                              ariaLabelledBy={`EventTimelinePremiumTitleCell-${occurrence.resource}`}
-                              variant="regular"
-                            />
-                          }
-                        />
+                        <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+                          <EventTimelinePremiumEvent
+                            occurrence={occurrence}
+                            ariaLabelledBy={`TimelineTitleCell-${occurrence.resource}`}
+                            variant="regular"
+                          />
+                        </EventDraggableDialogTrigger>
                       ))}
                       {placeholder != null && (
                         <EventTimelinePremiumEvent
@@ -221,7 +220,7 @@ export const EventTimelinePremiumContent = React.forwardRef(function EventTimeli
             </EventTimelinePremiumEventsSubGrid>
           </EventTimelinePremiumEventsSubGridWrapper>
         </EventTimelinePremiumGrid>
-      </EventPopoverProvider>
+      </EventDraggableDialogProvider>
     </EventTimelinePremiumContentRoot>
   );
 });

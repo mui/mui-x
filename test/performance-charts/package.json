@@ -14,7 +14,7 @@
     "@mui/x-charts": "workspace:*",
     "@mui/x-charts-pro": "workspace:*",
     "@mui/x-charts-premium": "workspace:*",
-    "@testing-library/react": "16.3.1",
+    "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
     "@vitejs/plugin-react": "catalog:",
     "@vitejs/plugin-react-swc": "catalog:",

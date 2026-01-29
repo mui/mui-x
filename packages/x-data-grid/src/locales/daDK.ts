@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const daDKGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Udvid',
+  longTextCellCollapseLabel: 'Kollaps',
 
   // Actions cell more text
   actionsCellMore: 'mere',

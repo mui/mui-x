@@ -1,6 +1,6 @@
 import type { UnionToIntersection } from 'type-fest';
 import type { AnyPlugin, ExtractPluginApi, ExtractPluginColumnMeta, Plugin } from './plugin';
-import { InternalPluginsApi, InternalPluginsOptions, InternalPluginsState } from '../internal';
+import type { InternalPluginsApi, InternalPluginsOptions, InternalPluginsState } from '../internal';
 
 // Helper to extract params (options) from a plugin
 export type ExtractPluginParams<T> =

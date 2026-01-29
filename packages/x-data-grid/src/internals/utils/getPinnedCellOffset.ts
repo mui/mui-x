@@ -1,5 +1,5 @@
 import { PinnedColumnPosition } from '../constants';
-import { gridColumnPositionsSelector } from '../../hooks/features/columns';
+import type { gridColumnPositionsSelector } from '../../hooks/features/columns';
 
 export const getPinnedCellOffset = (
   pinnedPosition: PinnedColumnPosition | undefined,

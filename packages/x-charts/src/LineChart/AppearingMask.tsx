@@ -8,7 +8,7 @@ import { useChartId, useDrawingArea } from '../hooks';
 import { type SeriesId } from '../models/seriesType/common';
 
 interface AppearingMaskProps {
-  id: SeriesId;
+  seriesId: SeriesId;
   skipAnimation?: boolean;
   children: React.ReactNode;
 }
@@ -46,7 +46,7 @@ const AnimatedRect = styled('rect', {
 export function AppearingMask(props: AppearingMaskProps) {
   const drawingArea = useDrawingArea();
   const chartId = useChartId();
-  const clipId = cleanId(`${chartId}-${props.id}`);
+  const clipId = cleanId(`${chartId}-${props.seriesId}`);
 
   return (
     <React.Fragment>

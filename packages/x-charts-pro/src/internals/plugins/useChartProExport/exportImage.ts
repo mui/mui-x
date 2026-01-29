@@ -18,7 +18,7 @@ export const getDrawDocument = async () => {
 };
 
 export async function exportImage(
-  element: HTMLElement | SVGElement,
+  element: Element,
   svg: SVGElement,
   params?: ChartImageExportOptions,
 ) {
@@ -46,7 +46,7 @@ export async function exportImage(
 
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
-    const elementClone = element.cloneNode(true) as HTMLElement;
+    const elementClone = element.cloneNode(true) as Element;
     applyStyles(svg, previousStyles);
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';

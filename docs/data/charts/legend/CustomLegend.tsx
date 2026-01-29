@@ -44,10 +44,10 @@ function MyCustomLegend() {
   return (
     <Stack direction="column" justifySelf={'start'} marginLeft={9}>
       {items.map((item) => {
-        const { label, id, color, seriesId, markType } = item;
+        const { label, color, seriesId, markType } = item;
         return (
           <Box
-            key={id}
+            key={seriesId}
             sx={{
               display: 'flex',
               alignItems: 'center',

@@ -43,7 +43,7 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
             return (
               <BarElement
                 key={dataIndex}
-                id={seriesId}
+                seriesId={seriesId}
                 dataIndex={dataIndex}
                 color={color}
                 skipAnimation

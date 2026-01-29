@@ -1,4 +1,3 @@
-import type * as React from 'react';
 import { type Store } from '@mui/x-internals/store';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
@@ -17,14 +16,6 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
    * The store that can be used to access the state of other plugins.
    */
   store: ChartUsedStore<TSignature>;
-  /**
-   * Reference to the main svg element.
-   */
-  svgRef: React.RefObject<SVGSVGElement | null>;
-  /**
-   * Reference to the chart root element.
-   */
-  chartRootRef: React.RefObject<HTMLDivElement | null>;
   /**
    * All the plugins that are used in the chart.
    */

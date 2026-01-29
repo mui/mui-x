@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const esESGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const esESGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'si',
   booleanCellFalseLabel: 'no',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Contraer',
 
   // Actions cell more text
   actionsCellMore: 'más',

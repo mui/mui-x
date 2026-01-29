@@ -18,7 +18,6 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
         type: 'pie',
         markType: item.labelMarkType ?? series[seriesId].labelMarkType,
         seriesId,
-        id,
         itemId: id,
         dataIndex,
         color: item.color,

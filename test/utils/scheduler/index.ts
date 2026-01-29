@@ -6,3 +6,4 @@ export * from './SchedulerStoreRunner';
 export * from './StoreSpy';
 export * from './state';
 export * from './event-builder';
+export * from './storeClasses';
