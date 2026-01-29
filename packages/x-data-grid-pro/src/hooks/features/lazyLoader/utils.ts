@@ -1,6 +1,11 @@
 import type { RefObject } from '@mui/x-internals/types';
-import { type GridRenderContext, type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
+import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+
+export interface GridRowRenderContext {
+  firstRowIndex: number;
+  lastRowIndex: number;
+}
 
 export interface AdjustRowParamsOptions {
   pageSize: number;
@@ -40,7 +45,7 @@ export const findSkeletonRowsSection = ({
 }: {
   apiRef: RefObject<GridPrivateApiPro>;
   visibleRows: GridRowEntry[];
-  range: GridRenderContext;
+  range: GridRowRenderContext;
 }) => {
   let { firstRowIndex, lastRowIndex } = range;
   const visibleRowsSection = visibleRows.slice(range.firstRowIndex, range.lastRowIndex);
