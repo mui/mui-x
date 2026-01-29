@@ -1057,8 +1057,11 @@ describe('<DataGridPro /> - Row selection', () => {
         function TreeDataServerPaginationSelection() {
           apiRef = useGridApiRef();
           const [page, setPage] = React.useState(0);
-          const pageRoots = React.useMemo(() => page === 0 ? ['Thomas'] : ['Mary'], [page]);
-          const pageRows = React.useMemo(() => rows.filter((row) => pageRoots.includes(row.hierarchy[0])), [pageRoots]);
+          const pageRoots = React.useMemo(() => (page === 0 ? ['Thomas'] : ['Mary']), [page]);
+          const pageRows = React.useMemo(
+            () => rows.filter((row) => pageRoots.includes(row.hierarchy[0])),
+            [pageRoots],
+          );
 
           return (
             <div style={{ height: 800, width: '100%' }}>

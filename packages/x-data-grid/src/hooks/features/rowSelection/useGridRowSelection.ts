@@ -563,6 +563,11 @@ export const useGridRowSelection = (
         return false;
       }
 
+      // Only consider nodes that are present (not filtered out) when using client-side filtering.
+      if (props.filterMode !== 'server' && filteredRowsLookup[nodeId] === false) {
+        return false;
+      }
+
       if (node.type !== 'group') {
         return Boolean(rowsLookup[nodeId]) && apiRef.current.isRowSelectable(nodeId);
       }
@@ -599,7 +604,12 @@ export const useGridRowSelection = (
         }
         // Keep previously selected tree data parents selected if all their children are filtered out
         // or not selectable.
-        if (node.children.some((childId) => filteredRowsLookup[childId] && hasVisibleSelectableDescendant(childId))) {
+        if (
+          node.children.some(
+            (childId) =>
+              filteredRowsLookup[childId] !== false && hasVisibleSelectableDescendant(childId),
+          )
+        ) {
           selectionManager.unselect(id);
           hasChanged = true;
         }
