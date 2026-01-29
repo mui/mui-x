@@ -2,7 +2,7 @@
 title: React Chart composition
 productId: x-charts
 githubLabel: 'scope: charts'
-components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, ChartDataProviderPro, ChartsSurface
+components: ChartContainer, ChartContainerPro, ChartsGrid, ChartsDataProvider, ChartsDataProviderPro, ChartsSurface
 packageName: '@mui/x-charts'
 ---
 
@@ -20,7 +20,7 @@ There are two main types of components used to create Charts: [structural](#stru
 Structural components are used to define a chart's dimensions, surfaces, and data.
 
 - Basics
-  - `ChartDataProvider` provides data to descendants.
+  - `ChartsDataProvider` provides data to descendants.
   - `ChartsSurface` renders the SVG element.
 - Helpers
   - `ChartContainer` combines the Data Provider and Surface components.
@@ -28,17 +28,17 @@ Structural components are used to define a chart's dimensions, surfaces, and dat
 
 :::info
 Demos in this doc use the `ChartContainer` component.
-For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/x/react-charts/components/#html-components).
+For demos using `ChartsDataProvider` and `ChartsSurface`, see [HTML components](/x/react-charts/components/#html-components).
 :::
 
 ### Chart Data Provider and Surface usage
 
-Notice that the `width` and `height` props are passed to `ChartDataProvider` and not `ChartsSurface`.
+Notice that the `width` and `height` props are passed to `ChartsDataProvider` and not `ChartsSurface`.
 
-`ChartsLegend` is placed inside `ChartDataProvider` to get access to the context, but outside `ChartsSurface` since it's not an SVG component.
+`ChartsLegend` is placed inside `ChartsDataProvider` to get access to the context, but outside `ChartsSurface` since it's not an SVG component.
 
 ```jsx
-<ChartDataProvider
+<ChartsDataProvider
   // The configuration of the chart
   series={[{ type: 'bar', data: [100, 200] }]}
   xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
@@ -52,12 +52,12 @@ Notice that the `width` and `height` props are passed to `ChartDataProvider` and
   >
     {children}
   </ChartsSurface>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 ### Chart Container usage
 
-`ChartContainer` is the direct concatenation of `ChartDataProvider` and `ChartsSurface`.
+`ChartContainer` is the direct concatenation of `ChartsDataProvider` and `ChartsSurface`.
 It takes care of dispatching props between the two components.
 
 Using `ChartContainer` has one major drawback: all the children will be inside `ChartsSurface`.
@@ -88,20 +88,20 @@ This is done by default on built-in components.
 The layout can be modified with the [wrapper props](/x/api/charts/charts-wrapper/).
 
 ```jsx
-<ChartDataProvider height={300} series={ /* ... */ }>
+<ChartsDataProvider height={300} series={ /* ... */ }>
   <ChartsWrapper legendDirection='horizontal' legendPosition={{ vertical: 'bottom' }}>
     <ChartsLegend direction='horizontal' />
     <ChartsSurface>
       {children}
     </ChartsSurface>
   </ChartsWrapper>
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 ## Graphical components
 
 Graphical components are used to render the visual elements of a chart.
-They are descendants of [`ChartDataProvider`](#structural-components) described above.
+They are descendants of [`ChartsDataProvider`](#structural-components) described above.
 These are too numerous to list, but common examples include:
 
 - `LinePlot`
@@ -266,17 +266,17 @@ Use `ChartsLegend` to display a legend with information about the chart.
 
 :::warning
 `ChartsLegend` is an HTML element since v8.
-It must be rendered inside `ChartDataProvider` to gain access to the data, but outside of `ChartsSurface` since it's not an SVG element.
+It must be rendered inside `ChartsDataProvider` to gain access to the data, but outside of `ChartsSurface` since it's not an SVG element.
 
 This means you can't use it inside `ChartContainer`.
-You must use `ChartDataProvider` and `ChartsSurface` instead.
+You must use `ChartsDataProvider` and `ChartsSurface` instead.
 
 ```jsx
 // ✅ Correct
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsLegend />
   <ChartsSurface>{/* SVG components */}</ChartsSurface>
-</ChartDataProvider>
+</ChartsDataProvider>
 
 // ❌ Incorrect
 <ChartContainer>

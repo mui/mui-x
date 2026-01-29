@@ -61,7 +61,7 @@ You can also enable it globally using [theme default props](/material-ui/customi
 
 ```js
 components: {
-  MuiChartDataProvider: {
+  MuiChartsDataProvider: {
     defaultProps: {
       enableKeyboardNavigation: true
     },
