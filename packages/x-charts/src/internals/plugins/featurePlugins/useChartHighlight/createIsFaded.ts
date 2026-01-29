@@ -11,7 +11,7 @@ function alwaysFalse(): boolean {
 /**
  * The isFade logic for main charts (those that are identified by an id and a dataIndex)
  */
-export function createIsFaded<SeriesType extends 'bar' | 'line' | 'scatter' | 'pie' | 'radar' | 'heatmap' | 'funnel'>(
+export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sankey'>>(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
   highlightedItem: SeriesItemIdentifier<SeriesType> | null,
 ) {

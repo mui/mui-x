@@ -6,13 +6,9 @@ import type {
   SeriesItemIdentifier,
 } from '../../../../models/seriesType';
 
-type SeriesTypeWithBatchRendering = 'bar' | 'rangeBar' | 'scatter';
+const batchRenderingSeries = new Set(['bar', 'rangeBar', 'line'] as const);
+type SeriesTypeWithBatchRendering = typeof batchRenderingSeries extends Set<infer U> ? U : never;
 
-const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>([
-  'bar',
-  'rangeBar',
-  'scatter',
-]);
 
 export function isBatchRenderingSeriesType(
   type: ChartSeriesType | undefined,

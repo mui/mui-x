@@ -12,7 +12,7 @@ function alwaysFalse(): boolean {
  * The isHighlighted logic for main charts (those that are identified by an id and a dataIndex)
  */
 export function createIsHighlighted<
-  SeriesType extends 'bar' | 'line' | 'scatter' | 'pie' | 'radar' | 'heatmap' | 'funnel',
+  SeriesType extends Exclude<ChartSeriesType, 'sankey'>,
 >(
   highlightScope: HighlightScope<SeriesType> | null | undefined,
   highlightedItem: SeriesItemIdentifier<SeriesType> | null,
