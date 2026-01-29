@@ -2,12 +2,12 @@ import type { RefObject } from '@mui/x-internals/types';
 import { type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
-export interface GridRowRenderContext {
+interface GridRowRenderContext {
   firstRowIndex: number;
   lastRowIndex: number;
 }
 
-export interface AdjustRowParamsOptions {
+interface AdjustRowParamsOptions {
   pageSize: number;
   rowCount: number | undefined;
 }
