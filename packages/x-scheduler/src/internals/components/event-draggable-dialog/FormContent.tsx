@@ -230,7 +230,7 @@ export function FormContent(props: FormContentProps) {
   return (
     <DialogContent className={classes.eventDialogContent}>
       <form onSubmit={handleSubmit}>
-        <EventDraggableDialogHeader>
+        <EventDraggableDialogHeader onClose={onClose}>
           <TextField
             name="title"
             defaultValue={occurrence.title}
