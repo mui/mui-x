@@ -60,6 +60,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         sortModel: initialSortModel,
         getColumn,
         getRow,
+        locale: params.intl?.locale,
       });
       sortedRowIds = applySortingToRowIds(dataRowIds, sortingApplier);
     }
@@ -107,6 +108,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         sortModel: modelToUse,
         getColumn,
         getRow: api.rows.getRow,
+        locale: params.intl?.locale,
       });
 
       return applySortingToRowIds(idsToSort, sortingApplier, useStableSort, currentIds);

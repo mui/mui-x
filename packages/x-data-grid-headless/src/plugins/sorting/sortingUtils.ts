@@ -26,23 +26,21 @@ const gridNullComparator = (value1: any, value2: any): number | null => {
   return null;
 };
 
-const collator = new Intl.Collator();
-
 /**
- * Comparator for string or number values.
- * Strings are compared using locale-aware collation.
- * Numbers are compared numerically.
+ * Create a string/number comparator with the given collator.
  */
-export const gridStringOrNumberComparator: GridComparatorFn = (value1, value2) => {
-  const nullResult = gridNullComparator(value1, value2);
-  if (nullResult !== null) {
-    return nullResult;
-  }
+export const createStringOrNumberComparator = (collator: Intl.Collator): GridComparatorFn => {
+  return (value1, value2) => {
+    const nullResult = gridNullComparator(value1, value2);
+    if (nullResult !== null) {
+      return nullResult;
+    }
 
-  if (typeof value1 === 'string') {
-    return collator.compare(value1!.toString(), value2!.toString());
-  }
-  return (value1 as number) - (value2 as number);
+    if (typeof value1 === 'string') {
+      return collator.compare(value1!.toString(), value2!.toString());
+    }
+    return (value1 as number) - (value2 as number);
+  };
 };
 
 /**
@@ -187,6 +185,7 @@ const normalizeToComparatorFactory = (
 const parseSortItem = (
   sortItem: GridSortItem,
   getColumn: (field: string) => (ColumnInfo & SortingColumnMeta) | undefined,
+  defaultComparator: GridComparatorFn,
 ): ParsedSortItem | null => {
   const column = getColumn(sortItem.field);
   if (!column || sortItem.sort === null || column.sortable === false) {
@@ -202,9 +201,7 @@ const parseSortItem = (
   } else {
     // Use default comparator with direction modifier
     const isDesc = sortItem.sort === 'desc';
-    comparator = isDesc
-      ? (...args) => -1 * gridStringOrNumberComparator(...args)
-      : gridStringOrNumberComparator;
+    comparator = isDesc ? (...args) => -1 * defaultComparator(...args) : defaultComparator;
   }
 
   if (!comparator) {
@@ -227,6 +224,7 @@ interface SortingApplierParams {
   sortModel: GridSortModel;
   getColumn: (field: string) => (ColumnInfo & SortingColumnMeta) | undefined;
   getRow: (id: GridRowId) => any;
+  locale?: string | string[];
 }
 
 /**
@@ -237,9 +235,12 @@ export const buildSortingApplier = ({
   sortModel,
   getColumn,
   getRow,
+  locale,
 }: SortingApplierParams): ((rowIds: GridRowId[]) => GridRowId[]) | null => {
   const parsedSortItems = sortModel
-    .map((item) => parseSortItem(item, getColumn))
+    .map((item) =>
+      parseSortItem(item, getColumn, createStringOrNumberComparator(new Intl.Collator(locale))),
+    )
     .filter((item): item is ParsedSortItem => item !== null);
 
   if (parsedSortItems.length === 0) {

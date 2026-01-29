@@ -18,5 +18,17 @@ export type {
   PluginsState,
 } from './plugins/core';
 
-// Internal plugins (rows, columns) - exported to allow import from the root path
-export { rowsPlugin, columnsPlugin } from './plugins/internal';
+// Internal plugins (rows, columns) and their types - exported to allow import from the root path
+export { default as rowsPlugin } from './plugins/internal/rows/rows';
+export { default as columnsPlugin } from './plugins/internal/columns/columns';
+export type {
+  RowsPluginApi,
+  RowsPluginState,
+  RowsPluginOptions,
+} from './plugins/internal/rows/rows';
+export type {
+  ColumnsPluginApi,
+  ColumnsPluginState,
+  ColumnsPluginOptions,
+} from './plugins/internal/columns/columns';
+export type { IntlOptions } from './plugins/internal';

@@ -1,21 +1,17 @@
-import rowsPlugin, {
-  type RowsPluginApi,
-  type RowsPluginState,
-  type RowsPluginOptions,
-} from './rows/rows';
-import columnsPlugin, {
-  type ColumnsPluginApi,
-  type ColumnsPluginState,
-  type ColumnsPluginOptions,
-} from './columns/columns';
-
-export { rowsPlugin, columnsPlugin };
-export const internalPlugins = [rowsPlugin, columnsPlugin] as const;
+import type { RowsPluginApi, RowsPluginState, RowsPluginOptions } from './rows/rows';
+import type { ColumnsPluginApi, ColumnsPluginState, ColumnsPluginOptions } from './columns/columns';
 
 export type InternalPluginsApi<TRow = any, TColumnMeta = {}> = RowsPluginApi<TRow> &
   ColumnsPluginApi<TColumnMeta>;
 
 export type InternalPluginsState = RowsPluginState & ColumnsPluginState;
 
+export interface IntlOptions {
+  intl?: {
+    locale?: string | string[];
+  };
+}
+
 export type InternalPluginsOptions<TRow = any, TColumnMeta = {}> = RowsPluginOptions<TRow> &
-  ColumnsPluginOptions<TRow, TColumnMeta>;
+  ColumnsPluginOptions<TRow, TColumnMeta> &
+  IntlOptions;

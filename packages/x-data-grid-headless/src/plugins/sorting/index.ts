@@ -1,10 +1,4 @@
 export { default as sortingPlugin } from './sorting';
-export {
-  gridStringOrNumberComparator,
-  gridNumberComparator,
-  gridDateComparator,
-  getNextGridSortDirection,
-} from './sortingUtils';
 export type {
   GridSortDirection,
   GridSortModel,
@@ -17,5 +11,4 @@ export type {
   SortingApi,
   SortingColumnMeta,
   SortingSelectors,
-  ComputeSortedRowIdsOptions,
 } from './types';
