@@ -5,16 +5,31 @@ import type {
   SeriesItemIdentifier,
 } from '../../../../models/seriesType';
 
-export function isSeriesHighlighted<SeriesType extends ChartSeriesType>(
-  scope: Partial<HighlightScope> | null,
+type SeriesTypeWithBatchRendering = 'bar' | 'rangeBar' | 'scatter';
+
+const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>([
+  'bar',
+  'rangeBar',
+  'scatter',
+]);
+
+export function isBatchRenderingSeriesType(
+  type: ChartSeriesType | undefined,
+): type is SeriesTypeWithBatchRendering {
+  return batchRenderingSeries.has(type as SeriesTypeWithBatchRendering);
+}
+
+
+export function isSeriesHighlighted<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
   item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'series' && item?.seriesId === seriesId;
 }
 
-export function isSeriesFaded<SeriesType extends ChartSeriesType>(
-  scope: Partial<HighlightScope> | null,
+export function isSeriesFaded<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
   item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
@@ -32,8 +47,8 @@ export function isSeriesFaded<SeriesType extends ChartSeriesType>(
  * Returns the data index of the highlighted item for a specific series.
  * If the item is not highlighted, it returns `null`.
  */
-export function getSeriesHighlightedItem<SeriesType extends ChartSeriesType>(
-  scope: Partial<HighlightScope> | null,
+export function getSeriesHighlightedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
   item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
@@ -45,8 +60,8 @@ export function getSeriesHighlightedItem<SeriesType extends ChartSeriesType>(
  * An "unfaded item" is the only item of a faded series that shouldn't be faded.
  * If the series is not faded or if there is no highlighted item, it returns `null`.
  */
-export function getSeriesUnfadedItem<SeriesType extends ChartSeriesType>(
-  scope: Partial<HighlightScope> | null,
+export function getSeriesUnfadedDataIndex<SeriesType extends SeriesTypeWithBatchRendering>(
+  scope: Partial<HighlightScope<SeriesType>> | null,
   item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
@@ -54,7 +69,7 @@ export function getSeriesUnfadedItem<SeriesType extends ChartSeriesType>(
     return null;
   }
 
-  if (getSeriesHighlightedItem(scope, item, seriesId) === item?.dataIndex) {
+  if (getSeriesHighlightedDataIndex(scope, item, seriesId) === item?.dataIndex) {
     return null;
   }
 

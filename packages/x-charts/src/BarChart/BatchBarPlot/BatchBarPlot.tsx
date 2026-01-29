@@ -92,7 +92,7 @@ function SeriesBatchPlot({
   skipAnimation: boolean;
 }) {
   const classes = useUtilityClasses();
-  const { store } = useChartContext<[UseChartHighlightSignature]>();
+  const { store } = useChartContext<[UseChartHighlightSignature<'bar'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.seriesId);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.seriesId);
 
@@ -143,7 +143,7 @@ function FadedHighlightedBars({
   processedSeries: ProcessedBarSeriesData;
   borderRadius: number;
 }) {
-  const { store } = useChartContext<[UseChartHighlightSignature]>();
+  const { store } = useChartContext<[UseChartHighlightSignature<'bar'>]>();
   const seriesHighlightedDataIndex = store.use(
     selectorChartSeriesHighlightedItem,
     processedSeries.seriesId,
