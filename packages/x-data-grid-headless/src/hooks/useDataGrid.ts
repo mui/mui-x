@@ -11,8 +11,9 @@ import {
   type PluginsState,
   PluginRegistry,
 } from '../plugins/core';
-import { internalPlugins, type InternalPluginsApi } from '../plugins/internal';
+import { type InternalPluginsApi } from '../plugins/internal';
 import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/columnUtils';
+import { rowsPlugin, columnsPlugin } from '..';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
@@ -68,6 +69,7 @@ interface DataGridInstance<TPlugins extends readonly AnyPlugin[], TRow = any> {
 export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow extends object = any>(
   options: UseDataGridOptions<TPlugins, TRow>,
 ): DataGridInstance<TPlugins, TRow> => {
+  const internalPlugins = [rowsPlugin, columnsPlugin];
   const { pluginRegistry, stateStore } = useRefWithInit(() => {
     const registry = new PluginRegistry(internalPlugins, options.plugins);
 

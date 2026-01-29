@@ -3,7 +3,7 @@ import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
 import { sortingPlugin, type SortingColumnMeta } from '../plugins/sorting';
 import { paginationPlugin } from '../plugins/pagination';
-import { rowsPlugin, columnsPlugin } from '../plugins/internal';
+import { rowsPlugin, columnsPlugin } from '..';
 
 type GridApi = ReturnType<typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], any>>;
 
