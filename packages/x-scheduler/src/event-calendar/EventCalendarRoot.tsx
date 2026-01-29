@@ -38,6 +38,7 @@ const EventCalendarRootStyled = styled('div', {
   flexDirection: 'column',
   gap: theme.spacing(2),
   height: '100%',
+  fontFamily: theme.typography.fontFamily,
 }));
 
 const EventCalendarSidePanel = styled('aside', {
