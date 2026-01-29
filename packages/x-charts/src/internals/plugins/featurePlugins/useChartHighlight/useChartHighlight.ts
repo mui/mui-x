@@ -6,7 +6,7 @@ import { fastObjectShallowCompare } from '@mui/x-internals/fastObjectShallowComp
 import { type ChartPlugin } from '../../models';
 import { type HighlightItemData, type UseChartHighlightSignature } from './useChartHighlight.types';
 
-export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params }) => {
+export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ store, params , instance}) => {
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
     componentName: 'Chart',
@@ -48,7 +48,8 @@ export const useChartHighlight: ChartPlugin<UseChartHighlightSignature> = ({ sto
   const setHighlight = useEventCallback((newItem: HighlightItemData) => {
     const prevHighlight = store.state.highlight;
 
-    if (fastObjectShallowCompare(prevHighlight.item, newItem)) {
+    const cleanNewItem = instance.cleanIdentifier(newItem);
+    if (fastObjectShallowCompare(prevHighlight.item, cleanNewItem)) {
       return;
     }
 

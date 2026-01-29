@@ -20,7 +20,7 @@ function onPointerDown(event: React.PointerEvent) {
 }
 
 export const useInteractionItemProps = (
-  data: SeriesItemIdentifierWithData,
+  data: SeriesItemIdentifier,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;

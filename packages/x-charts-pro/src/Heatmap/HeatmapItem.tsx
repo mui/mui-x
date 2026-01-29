@@ -90,7 +90,7 @@ function HeatmapItem(props: HeatmapItemProps) {
     props.slotProps,
   );
   const interactionProps = useInteractionItemProps(
-    { type: 'heatmap', seriesId, dataIndex, xIndex, yIndex },
+    { type: 'heatmap', seriesId, xIndex, yIndex },
     skipInteractionItemProps,
   );
 

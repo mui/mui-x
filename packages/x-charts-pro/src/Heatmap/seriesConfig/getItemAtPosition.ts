@@ -40,23 +40,9 @@ export default function getItemAtPosition(
     return undefined;
   }
 
-  const dataIndex = series
-    ? series.series[series.seriesOrder[0]].dataIndexLookup.get(xIndex)?.get(yIndex)
-    : -1;
-
-  if (dataIndex === -1) {
-    return {
-      type: 'heatmap',
-      seriesId,
-      xIndex,
-      yIndex,
-    };
-  }
-
   return {
     type: 'heatmap',
     seriesId,
-    dataIndex,
     xIndex,
     yIndex,
   };

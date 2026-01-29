@@ -38,7 +38,13 @@ export interface ChartsSeriesConfig {
      * Series typing such that the one user need to provide
      */
     seriesProp: BarSeriesType;
+    /**
+     * The minimal information to identify a specific item in the series.
+     */
     itemIdentifier: BarItemIdentifier;
+    /**
+     * The minimal information to identify a specific item in the series. Plus the data associated to it.
+     */
     itemIdentifierWithData: BarItemIdentifier;
     valueType: number | null;
     canBeStacked: true;

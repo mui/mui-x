@@ -9,17 +9,16 @@ const seriesProcessor: SeriesProcessor<'heatmap'> = (params) => {
 
     const data = series[seriesId].data ?? []
     const dataIndexLookup = new Map<number, Map<number, number>>();
-    (data).forEach((value, dataIndex) => {
-      const xIndex = value[0];
-      const yIndex = value[1];
+    for (const [xIndex, yIndex, value] of data) {
 
       if (!dataIndexLookup.has(xIndex)) {
         dataIndexLookup.set(xIndex, new Map<number, number>());
       }
+
       if (!dataIndexLookup.get(xIndex)!.has(yIndex)) {
-        dataIndexLookup.get(xIndex)!.set(yIndex, dataIndex);
+        dataIndexLookup.get(xIndex)!.set(yIndex, value);
       }
-    });
+    }
 
     defaultizedSeries[seriesId] = {
       // Defaultize the data and the value formatter.

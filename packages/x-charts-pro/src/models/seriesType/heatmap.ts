@@ -36,11 +36,6 @@ export type HeatmapItemIdentifier = {
    */
   seriesId: DefaultizedHeatmapSeriesType['id'];
   /**
-   * The data index of the cell.
-   * Is defined only if some data is associated to the cell.
-   */
-  dataIndex?: number;
-  /**
    * The x index of the cell. Useful to identify the cell position in the heatmap even if there is no data.
    */
   xIndex: number;
@@ -50,12 +45,22 @@ export type HeatmapItemIdentifier = {
   yIndex: number;
 };
 
+/**
+ * The cell identifier with the associated data value.
+ */
+export type HeatmapItemIdentifierWithData = HeatmapItemIdentifier & {
+  /**
+   * The value of the cell. Null if there is no data associated.
+   */
+  value: number | null;
+}
+
 export interface DefaultizedHeatmapSeriesType extends DefaultizedProps<
   HeatmapSeriesType,
   CommonDefaultizedProps
 > {
   /**
-   * Map the `xIndex` and `yIndex` to the corresponding dataIndex in the `data`.
+   * Map the `xIndex` and `yIndex` to the corresponding value of the cell.
    */
   dataIndexLookup: Map<number, Map<number, number>>;
 }
