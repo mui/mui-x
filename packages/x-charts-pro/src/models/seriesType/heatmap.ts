@@ -8,7 +8,9 @@ import {
 export type HeatmapValueType = readonly [number, number, number];
 
 export interface HeatmapSeriesType
-  extends Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter'>, CartesianSeriesType {
+  extends
+    Omit<CommonSeriesType<HeatmapValueType, 'heatmap'>, 'color' | 'colorGetter'>,
+    CartesianSeriesType {
   type: 'heatmap';
   /**
    * Data associated to each bar.

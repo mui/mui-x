@@ -1,8 +1,9 @@
 import type { DefaultizedProps } from '@mui/x-internals/types';
 import { type ChartSeriesType, type ChartsSeriesConfig } from './config';
 
+export type { ChartSeriesType, HighlightScope } from './config';
+
 // Series definition
-export { type ChartSeriesType } from './config';
 
 type AllSeriesType<T extends ChartSeriesType = ChartSeriesType> =
   ChartsSeriesConfig[T]['seriesProp'];

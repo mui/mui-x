@@ -15,7 +15,6 @@ import {
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 
-
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
   state.highlight;
 
@@ -113,7 +112,11 @@ export const selectorChartSeriesHighlightedItem = createSelector(
 export const selectorChartsIsFaded = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
-  function selectorChartsIsFaded(highlightScope, highlightedItem, item: SeriesItemIdentifier | null) {
+  function selectorChartsIsFaded(
+    highlightScope,
+    highlightedItem,
+    item: SeriesItemIdentifier | null,
+  ) {
     return createIsFaded(highlightScope, highlightedItem)(item);
   },
 );

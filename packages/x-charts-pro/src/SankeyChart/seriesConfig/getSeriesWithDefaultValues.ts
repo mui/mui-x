@@ -112,11 +112,12 @@ export const getSeriesWithDefaultValues: GetSeriesWithDefaultValues<'sankey'> = 
   const highlightScope = {
     nodes: {
       highlight: seriesData.nodeOptions?.highlight ?? 'links',
-      fade: seriesData.nodeOptions?.fade ?? 'none'
-    }, links: {
+      fade: seriesData.nodeOptions?.fade ?? 'none',
+    },
+    links: {
       highlight: seriesData.linkOptions?.highlight ?? 'links',
-      fade: seriesData.linkOptions?.fade ?? 'none'
-    }
+      fade: seriesData.linkOptions?.fade ?? 'none',
+    },
   };
 
   return {

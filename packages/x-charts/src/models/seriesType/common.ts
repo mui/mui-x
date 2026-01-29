@@ -39,7 +39,10 @@ export interface SeriesColor<TValue> {
   colorGetter?: (data: ColorCallbackValue<TValue>) => string;
 }
 
-export interface CommonSeriesType<TValue, SeriesType extends ChartSeriesType> extends SeriesColor<TValue> {
+export interface CommonSeriesType<
+  TValue,
+  SeriesType extends ChartSeriesType,
+> extends SeriesColor<TValue> {
   /**
    * The id of this series.
    */

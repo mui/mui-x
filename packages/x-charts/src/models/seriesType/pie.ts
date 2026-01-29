@@ -86,10 +86,10 @@ export interface PieSeriesType<TData = PieValueType> extends CommonSeriesType<TD
    * The label displayed into the arc.
    */
   arcLabel?:
-  | 'formattedValue'
-  | 'label'
-  | 'value'
-  | ((item: Omit<DefaultizedPieValueType, 'label'> & { label?: string }) => string);
+    | 'formattedValue'
+    | 'label'
+    | 'value'
+    | ((item: Omit<DefaultizedPieValueType, 'label'> & { label?: string }) => string);
   /**
    * The minimal angle required to display the arc label.
    * @default 0

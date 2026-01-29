@@ -3,7 +3,11 @@
 import type { SeriesId } from '@mui/x-charts/internals';
 import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
 import type { SankeyLink as D3SankeyLink, SankeyNode as D3SankeyNode } from './d3Sankey';
-import type { SankeyHighlightScope, SankeyLinkHighlightScope, SankeyNodeHighlightScope } from './sankey.highlight.types';
+import type {
+  SankeyHighlightScope,
+  SankeyLinkHighlightScope,
+  SankeyNodeHighlightScope,
+} from './sankey.highlight.types';
 
 export type SankeyNodeId = string | number;
 
@@ -340,34 +344,34 @@ export type SankeyItemIdentifierWithData<WithPosition extends boolean = true> =
 
 export type SankeyValueFormatterContext =
   | {
-    /**
-     * Where the value will be displayed
-     */
-    location: 'tooltip' | 'label';
-    /**
-     * Can be 'node' or 'link'
-     */
-    type: 'node';
-    /**
-     * The id of the node
-     */
-    nodeId: SankeyNodeId;
-  }
+      /**
+       * Where the value will be displayed
+       */
+      location: 'tooltip' | 'label';
+      /**
+       * Can be 'node' or 'link'
+       */
+      type: 'node';
+      /**
+       * The id of the node
+       */
+      nodeId: SankeyNodeId;
+    }
   | {
-    /**
-     * Where the value will be displayed
-     */
-    location: 'tooltip' | 'label';
-    /**
-     * Can be 'node' or 'link'
-     */
-    type: 'link';
-    /**
-     * The id of the source node
-     */
-    sourceId: SankeyNodeId;
-    /**
-     * The id of the target node
-     */
-    targetId: SankeyNodeId;
-  };
+      /**
+       * Where the value will be displayed
+       */
+      location: 'tooltip' | 'label';
+      /**
+       * Can be 'node' or 'link'
+       */
+      type: 'link';
+      /**
+       * The id of the source node
+       */
+      sourceId: SankeyNodeId;
+      /**
+       * The id of the target node
+       */
+      targetId: SankeyNodeId;
+    };

@@ -1,5 +1,8 @@
-import type { SeriesItemIdentifier, ChartSeriesType, HighlightScope } from "../../../../models/seriesType";
-
+import type {
+  SeriesItemIdentifier,
+  ChartSeriesType,
+  HighlightScope,
+} from '../../../../models/seriesType';
 
 function alwaysFalse(): boolean {
   return false;
@@ -8,7 +11,10 @@ function alwaysFalse(): boolean {
 /**
  * The isHighlighted logic for main charts (those that are identified by an id and a dataIndex)
  */
-export function createIsHighlighted<SeriesType extends 'bar' | 'line' | 'scatter' | 'pie' | 'radar'>(highlightScope: HighlightScope<SeriesType> | null | undefined,
+export function createIsHighlighted<
+  SeriesType extends 'bar' | 'line' | 'scatter' | 'pie' | 'radar',
+>(
+  highlightScope: HighlightScope<SeriesType> | null | undefined,
   highlightedItem: SeriesItemIdentifier<SeriesType> | null,
 ) {
   if (!highlightScope || !highlightedItem) {

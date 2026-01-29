@@ -1,18 +1,21 @@
-import { type HighlightItemData } from './useChartHighlight.types';
-import { type HighlightScope } from './highlightConfig.types';
-import { type SeriesId } from '../../../../models/seriesType/common';
+import type {
+  ChartSeriesType,
+  HighlightScope,
+  SeriesId,
+  SeriesItemIdentifier,
+} from '../../../../models/seriesType';
 
-export function isSeriesHighlighted(
+export function isSeriesHighlighted<SeriesType extends ChartSeriesType>(
   scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+  item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'series' && item?.seriesId === seriesId;
 }
 
-export function isSeriesFaded(
+export function isSeriesFaded<SeriesType extends ChartSeriesType>(
   scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+  item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
@@ -29,9 +32,9 @@ export function isSeriesFaded(
  * Returns the data index of the highlighted item for a specific series.
  * If the item is not highlighted, it returns `null`.
  */
-export function getSeriesHighlightedItem(
+export function getSeriesHighlightedItem<SeriesType extends ChartSeriesType>(
   scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+  item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   return scope?.highlight === 'item' && item?.seriesId === seriesId ? item.dataIndex : null;
@@ -42,9 +45,9 @@ export function getSeriesHighlightedItem(
  * An "unfaded item" is the only item of a faded series that shouldn't be faded.
  * If the series is not faded or if there is no highlighted item, it returns `null`.
  */
-export function getSeriesUnfadedItem(
+export function getSeriesUnfadedItem<SeriesType extends ChartSeriesType>(
   scope: Partial<HighlightScope> | null,
-  item: HighlightItemData | null,
+  item: SeriesItemIdentifier<SeriesType> | null,
   seriesId: SeriesId,
 ) {
   if (isSeriesHighlighted(scope, item, seriesId)) {
