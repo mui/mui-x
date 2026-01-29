@@ -1,4 +1,4 @@
-import { type ScatterItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType, ScatterItemIdentifier } from '../../../../models/seriesType';
 import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
 import { type ChartPluginSignature } from '../../models';
 import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
@@ -57,7 +57,7 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
   disableVoronoi: boolean;
 };
 
-export type UseChartClosestPointSignature = ChartPluginSignature<{
+export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> = ChartPluginSignature<{
   instance: UseChartVoronoiInstance;
   state: UseChartVoronoiState;
   params: UseChartVoronoiParameters;
@@ -65,7 +65,7 @@ export type UseChartClosestPointSignature = ChartPluginSignature<{
   dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
   optionalDependencies: [
     UseChartInteractionSignature,
-    UseChartHighlightSignature,
+    UseChartHighlightSignature<SeriesType>,
     UseChartTooltipSignature,
   ];
 }>;

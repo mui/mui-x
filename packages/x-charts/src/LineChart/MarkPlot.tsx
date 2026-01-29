@@ -89,8 +89,10 @@ function MarkPlot(props: MarkPlotProps) {
       {completedData.map(({ seriesId, clipId, shape, xAxisId, marks, hidden }) => {
         const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
-        const isSeriesHighlighted = isHighlighted({ seriesId });
-        const isSeriesFaded = !isSeriesHighlighted && isFaded({ seriesId });
+        const identifier = { type: 'line' as const, seriesId };
+
+        const isSeriesHighlighted = isHighlighted(identifier);
+        const isSeriesFaded = !isSeriesHighlighted && isFaded(identifier);
 
         return (
           <g key={seriesId} clipPath={`url(#${clipId})`} data-series={seriesId}>

@@ -19,7 +19,7 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-export const useInteractionItemProps = (
+export const useInteractionItemProps = <ChartSeries extends ChartSeriesType>(
   data: SeriesItemIdentifierWithData,
   skip?: boolean,
 ): {
@@ -29,7 +29,7 @@ export const useInteractionItemProps = (
 } => {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [UseChartInteractionSignature, UseChartHighlightSignature<ChartSeries>, UseChartTooltipSignature]
     >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
@@ -63,17 +63,17 @@ export const useInteractionItemProps = (
       skip
         ? {}
         : {
-            onPointerEnter,
-            onPointerLeave,
-            onPointerDown,
-          },
+          onPointerEnter,
+          onPointerLeave,
+          onPointerDown,
+        },
     [skip, onPointerEnter, onPointerLeave],
   );
 };
 
-export function getInteractionItemProps(
+export function getInteractionItemProps<SeriesType extends ChartSeriesType>(
   instance: ChartInstance<
-    [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+    [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
   >,
   item: SeriesItemIdentifier<ChartSeriesType>,
 ): {
