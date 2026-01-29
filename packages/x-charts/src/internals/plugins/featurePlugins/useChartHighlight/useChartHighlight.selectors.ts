@@ -33,7 +33,9 @@ export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
       const seriesData = processedSeries[seriesType as ChartSeriesType];
       seriesData?.seriesOrder?.forEach((seriesId) => {
         const seriesItem = seriesData?.series[seriesId];
-        map[seriesType]?.set(seriesId, seriesItem?.highlightScope);
+        if (seriesItem?.highlightScope !== undefined) {
+          map[seriesType]?.set(seriesId, seriesItem.highlightScope);
+        }
       });
     });
     return map;
@@ -102,7 +104,7 @@ export const selectorChartsIsHighlighted = createSelector(
     item: SeriesItemIdentifier | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
-      return alwaysFalse;
+      return false;
     }
     return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(highlightScope, highlightedItem)(item);
   },
@@ -117,7 +119,7 @@ export const selectorChartsIsFaded = createSelector(
     item: SeriesItemIdentifier | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
-      return alwaysFalse;
+      return false;
     }
     return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(highlightScope, highlightedItem)(item);
   },

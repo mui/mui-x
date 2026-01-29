@@ -112,10 +112,11 @@ function LineElement(props: LineElementProps) {
     hidden,
     ...other
   } = props;
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
-  const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId,
-  });
+
+  const identifier = React.useMemo(() => ({ type: 'line' as const, seriesId }), [seriesId]);
+
+  const interactionProps = useInteractionItemProps(identifier);
+  const { isFaded, isHighlighted } = useItemHighlighted(identifier);
 
   const ownerState = {
     seriesId,

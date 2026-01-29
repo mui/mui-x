@@ -77,7 +77,7 @@ function Scatter(props: ScatterProps) {
 
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [UseChartInteractionSignature, UseChartHighlightSignature<'scatter'>, UseChartTooltipSignature]
     >();
   const store = useStore<[UseChartClosestPointSignature]>();
   const isVoronoiEnabled = store.use(selectorChartsIsVoronoiEnabled);

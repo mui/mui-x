@@ -12,7 +12,7 @@ export const useInteractionAllItemProps = (
 ) => {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [UseChartInteractionSignature, UseChartHighlightSignature<'radar'>, UseChartTooltipSignature]
     >();
 
   const results = React.useMemo(() => {
@@ -20,10 +20,10 @@ export const useInteractionAllItemProps = (
       return skip
         ? {}
         : getInteractionItemProps(instance, {
-            type: 'radar',
-            seriesId: item.seriesId,
-            dataIndex: item.dataIndex,
-          });
+          type: 'radar',
+          seriesId: item.seriesId,
+          dataIndex: item.dataIndex,
+        });
     });
   }, [data, instance, skip]);
 
