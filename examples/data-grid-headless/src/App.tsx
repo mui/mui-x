@@ -96,17 +96,19 @@ function generateColumns() {
   return shuffleArray(allColumns);
 }
 
-function DataGrid(props: { rows: RowData[]; columns: ColumnDef<RowData>[] }) {
-  const [config, setConfig] = React.useState<PluginConfig>({
-    sorting: {
-      enabled: true,
-      enableMultiSort: true,
-      multiSortWithShiftKey: true,
-      sortingMode: 'auto',
-      stableSort: false,
-      sortingOrder: ['asc', 'desc', null],
-    },
-  });
+interface DataGridHandle {
+  applySorting: () => void;
+}
+
+interface DataGridProps {
+  rows: RowData[];
+  columns: ColumnDef<RowData>[];
+  config: PluginConfig;
+  ref?: React.Ref<DataGridHandle>;
+}
+
+function DataGrid(props: DataGridProps) {
+  const { config, ref } = props;
 
   const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], RowData>({
     rows: props.rows,
@@ -123,6 +125,10 @@ function DataGrid(props: { rows: RowData[]; columns: ColumnDef<RowData>[] }) {
     },
   });
 
+  React.useImperativeHandle(ref, () => ({
+    applySorting: () => grid.api.sorting.applySorting(),
+  }));
+
   // Use sorted row IDs from sorting plugin
   const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
   const sortModel = grid.use(sortingPlugin.selectors.sortModel);
@@ -137,10 +143,6 @@ function DataGrid(props: { rows: RowData[]; columns: ColumnDef<RowData>[] }) {
     const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
     const multiSort = config.sorting?.enableMultiSort && (!requireShiftKey || event.shiftKey);
     grid.api.sorting.sortColumn(field, undefined, multiSort);
-  };
-
-  const handleApplySorting = () => {
-    grid.api.sorting.applySorting();
   };
 
   const getSortIcon = (field: string) => {
@@ -160,71 +162,65 @@ function DataGrid(props: { rows: RowData[]; columns: ColumnDef<RowData>[] }) {
   };
 
   return (
-    <div className="test-grid-container">
-      {/* Grid Wrapper */}
-      <div className="grid-wrapper">
-        <div className="grid-scroll-container">
-          <table className="grid-table">
-            <thead className="grid-thead">
-              <tr>
-                {visibleColumns.map((column) => {
-                  const isSortable = config.sorting?.enabled && column.sortable !== false;
-                  const thClassName = ['grid-th', isSortable && 'grid-th--sortable']
-                    .filter(Boolean)
-                    .join(' ');
+    <div className="grid-wrapper">
+      <div className="grid-scroll-container">
+        <table className="grid-table">
+          <thead className="grid-thead">
+            <tr>
+              {visibleColumns.map((column) => {
+                const isSortable = config.sorting?.enabled && column.sortable !== false;
+                const thClassName = ['grid-th', isSortable && 'grid-th--sortable']
+                  .filter(Boolean)
+                  .join(' ');
 
-                  return (
-                    <th
-                      key={column.id}
-                      onClick={(event) => handleColumnHeaderClick(column.field as string, event)}
-                      className={thClassName}
-                      style={{
-                        width: column.size || 150,
-                        minWidth: column.size || 150,
-                      }}
-                    >
-                      {column.header || column.id}
-                      {config.sorting?.enabled && getSortIcon(column.field as string)}
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
-                const row = rowsData[rowId] as RowData | undefined;
-                if (!row) {
-                  return null;
-                }
                 return (
-                  <tr key={rowId} className="grid-tr">
-                    {visibleColumns.map((column: (typeof visibleColumns)[0], index: number) => {
-                      const value = row[column.field as keyof RowData];
-                      return (
-                        <td
-                          role="gridcell"
-                          data-colindex={index}
-                          key={column.id}
-                          className="grid-td"
-                          style={{
-                            width: column.size || 150,
-                            minWidth: column.size || 150,
-                          }}
-                        >
-                          {value != null ? String(value) : ''}
-                        </td>
-                      );
-                    })}
-                  </tr>
+                  <th
+                    key={column.id}
+                    onClick={(event) => handleColumnHeaderClick(column.field as string, event)}
+                    className={thClassName}
+                    style={{
+                      width: column.size || 150,
+                      minWidth: column.size || 150,
+                    }}
+                  >
+                    {column.header || column.id}
+                    {config.sorting?.enabled && getSortIcon(column.field as string)}
+                  </th>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
+              const row = rowsData[rowId] as RowData | undefined;
+              if (!row) {
+                return null;
+              }
+              return (
+                <tr key={rowId} className="grid-tr">
+                  {visibleColumns.map((column: (typeof visibleColumns)[0], index: number) => {
+                    const value = row[column.field as keyof RowData];
+                    return (
+                      <td
+                        role="gridcell"
+                        data-colindex={index}
+                        key={column.id}
+                        className="grid-td"
+                        style={{
+                          width: column.size || 150,
+                          minWidth: column.size || 150,
+                        }}
+                      >
+                        {value != null ? String(value) : ''}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-
-      {/* Config Panel (Side Panel) */}
-      <ConfigPanel config={config} onConfigChange={setConfig} onApplySorting={handleApplySorting} />
     </div>
   );
 }
@@ -232,8 +228,29 @@ function DataGrid(props: { rows: RowData[]; columns: ColumnDef<RowData>[] }) {
 function App() {
   const [rows] = React.useState<RowData[]>(() => generateSampleData(30));
   const [columns] = React.useState(() => generateColumns());
+  const [config, setConfig] = React.useState<PluginConfig>({
+    sorting: {
+      enabled: true,
+      enableMultiSort: true,
+      multiSortWithShiftKey: true,
+      sortingMode: 'auto',
+      stableSort: false,
+      sortingOrder: ['asc', 'desc', null],
+    },
+  });
 
-  return <DataGrid rows={rows} columns={columns} />;
+  const gridRef = React.useRef<DataGridHandle>(null);
+
+  const handleApplySorting = () => {
+    gridRef.current?.applySorting();
+  };
+
+  return (
+    <div className="test-grid-container">
+      <DataGrid ref={gridRef} rows={rows} columns={columns} config={config} />
+      <ConfigPanel config={config} onConfigChange={setConfig} onApplySorting={handleApplySorting} />
+    </div>
+  );
 }
 
 export default App;
