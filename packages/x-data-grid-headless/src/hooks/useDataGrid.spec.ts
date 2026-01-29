@@ -30,11 +30,13 @@ export function Example() {
     plugins: [sortingPlugin],
 
     // ✓ These properties are available (from sortingPlugin)
-    sortModel: [{ field: 'name', sort: 'asc' }],
-    onSortModelChange: (_model: GridSortModel) => {
-      // Handle sort model change
+    sorting: {
+      model: [{ field: 'name', sort: 'asc' }],
+      onModelChange: (_model: GridSortModel) => {
+        // Handle sort model change
+      },
+      enableMultiSort: false,
     },
-    enableMultiSort: false,
 
     // @ts-expect-error Property 'paginationModel' does not exist
     paginationModel: { page: 0, pageSize: 10 },
@@ -71,9 +73,11 @@ export function Example() {
     plugins: [sortingPlugin, paginationPlugin],
 
     // ✓ All properties available
-    sortModel: [{ field: 'name', sort: 'asc' }],
-    onSortModelChange: (_model: GridSortModel) => {
-      // Handle sort model change
+    sorting: {
+      model: [{ field: 'name', sort: 'asc' }],
+      onModelChange: (_model: GridSortModel) => {
+        // Handle sort model change
+      },
     },
     paginationModel: { page: 0, pageSize: 10 },
     onPaginationModelChange: (_model: PaginationModel) => {

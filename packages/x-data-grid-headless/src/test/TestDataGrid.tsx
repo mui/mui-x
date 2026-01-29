@@ -12,25 +12,20 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
   columns: ColumnDef<TRow, SortingColumnMeta>[];
   getRowId?: (row: TRow) => string;
   apiRef?: React.RefObject<GridApi | null>;
-  sortModel?: Parameters<typeof useDataGrid>[0]['sortModel'];
+  sorting?: Parameters<typeof useDataGrid>[0]['sorting'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
-  onSortModelChange?: Parameters<typeof useDataGrid>[0]['onSortModelChange'];
-  onSortedRowsSet?: Parameters<typeof useDataGrid>[0]['onSortedRowsSet'];
-  sortingMode?: Parameters<typeof useDataGrid>[0]['sortingMode'];
-  enableMultiSort?: Parameters<typeof useDataGrid>[0]['enableMultiSort'];
-  stableSort?: Parameters<typeof useDataGrid>[0]['stableSort'];
-  sortingOrder?: Parameters<typeof useDataGrid>[0]['sortingOrder'];
 }
 
 export function TestDataGrid<TRow extends Record<string, any>>(props: TestDataGridProps<TRow>) {
-  const { rows, columns, getRowId, apiRef, ...gridProps } = props;
+  const { rows, columns, getRowId, apiRef, sorting, initialState } = props;
 
   const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TRow>({
     rows,
     columns,
     getRowId,
     plugins: [sortingPlugin, paginationPlugin],
-    ...gridProps,
+    sorting,
+    initialState,
   });
 
   React.useEffect(() => {

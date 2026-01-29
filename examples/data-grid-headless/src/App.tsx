@@ -115,13 +115,15 @@ function DataGrid(props: DataGridProps) {
     columns: props.columns,
     plugins: [sortingPlugin, paginationPlugin],
     // Sorting options from config
-    enableMultiSort: config.sorting?.enableMultiSort,
-    sortingMode: config.sorting?.sortingMode,
-    stableSort: config.sorting?.stableSort,
-    sortingOrder: config.sorting?.sortingOrder,
-    onSortModelChange: (model) => {
-      // eslint-disable-next-line no-console
-      console.log('Sort model changed:', model);
+    sorting: {
+      enableMultiSort: config.sorting?.enableMultiSort,
+      mode: config.sorting?.mode,
+      stableSort: config.sorting?.stableSort,
+      order: config.sorting?.order,
+      onModelChange: (model) => {
+        // eslint-disable-next-line no-console
+        console.log('Sort model changed:', model);
+      },
     },
   });
 
@@ -233,9 +235,9 @@ function App() {
       enabled: true,
       enableMultiSort: true,
       multiSortWithShiftKey: true,
-      sortingMode: 'auto',
+      mode: 'auto',
       stableSort: false,
-      sortingOrder: ['asc', 'desc', null],
+      order: ['asc', 'desc', null],
     },
   });
 

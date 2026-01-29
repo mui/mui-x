@@ -4,7 +4,7 @@ import type { SortingOptions, GridSortDirection } from '@mui/x-data-grid-headles
 import { SettingsIcon, SortIcon, ChevronIcon, CollapseIcon, ArrowIcon } from './icons';
 
 export interface PluginConfig {
-  sorting?: SortingOptions & {
+  sorting?: NonNullable<SortingOptions['sorting']> & {
     enabled?: boolean;
     /** If true, shift key is required for multi-sort. @default true */
     multiSortWithShiftKey?: boolean;
@@ -170,14 +170,14 @@ export function ConfigPanel(props: ConfigPanelProps) {
   };
 
   const getCurrentSortingOrderValue = () => {
-    const current = config.sorting?.sortingOrder;
+    const current = config.sorting?.order;
     const entry = Object.entries(sortingOrderMap).find(
       ([, val]) => JSON.stringify(val) === JSON.stringify(current),
     );
     return entry?.[0] || 'asc-desc-null';
   };
 
-  const isManualMode = config.sorting?.sortingMode === 'manual';
+  const isManualMode = config.sorting?.mode === 'manual';
   const isSortingEnabled = config.sorting?.enabled ?? true;
   const isMultiSortEnabled = config.sorting?.enableMultiSort ?? true;
 
@@ -307,9 +307,9 @@ export function ConfigPanel(props: ConfigPanelProps) {
 
                   <OptionRow label="Mode" disabled={!isSortingEnabled}>
                     <Select
-                      value={config.sorting?.sortingMode ?? 'auto'}
+                      value={config.sorting?.mode ?? 'auto'}
                       onChange={(val) =>
-                        updateSortingConfig({ sortingMode: val as 'auto' | 'manual' })
+                        updateSortingConfig({ mode: val as 'auto' | 'manual' })
                       }
                       options={[
                         { value: 'auto', label: 'Auto' },
@@ -338,7 +338,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                       onChange={(val) => {
                         const order = sortingOrderMap[val];
                         if (order) {
-                          updateSortingConfig({ sortingOrder: order });
+                          updateSortingConfig({ order });
                         }
                       }}
                       options={sortingOrderOptions}

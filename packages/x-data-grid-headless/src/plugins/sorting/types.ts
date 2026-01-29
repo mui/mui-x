@@ -88,53 +88,57 @@ export interface SortingOptions {
     };
   };
 
-  /** The sort model for controlled mode. */
-  sortModel?: GridSortModel;
+  sorting?: {
+    /** The sort model for controlled mode. */
+    model?: GridSortModel;
 
-  /**
-   * Callback fired when the sort model changes.
-   * @param {GridSortModel} model The new sort model.
-   */
-  onSortModelChange?: (model: GridSortModel) => void;
+    /**
+     * Callback fired when the sort model changes.
+     * @param {GridSortModel} model The new sort model.
+     */
+    onModelChange?: (model: GridSortModel) => void;
 
-  /**
-   * The sorting mode: 'auto' or 'manual'.
-   * In manual mode, the sorted row ids and not updated automatically after the sort model changes.
-   * @default 'auto'
-   */
-  sortingMode?: 'auto' | 'manual';
+    /**
+     * The sorting mode: 'auto' or 'manual'.
+     * In manual mode, the sorted row ids and not updated automatically after the sort model changes.
+     * @default 'auto'
+     */
+    mode?: 'auto' | 'manual';
 
-  /**
-   * If true, multiple columns can be sorted at the same time.
-   * @default true
-   */
-  enableMultiSort?: boolean;
+    /**
+     * If true, multiple columns can be sorted at the same time.
+     * @default true
+     */
+    enableMultiSort?: boolean;
 
-  /**
-   * If true, sorting builds on the current sorted order.
-   * @default false
-   */
-  stableSort?: boolean;
+    /**
+     * If true, sorting builds on the current sorted order.
+     * @default false
+     */
+    stableSort?: boolean;
 
-  /**
-   * The default sorting order cycle.
-   * @default ['asc', 'desc', null]
-   */
-  sortingOrder?: readonly GridSortDirection[];
+    /**
+     * The default sorting order cycle.
+     * @default ['asc', 'desc', null]
+     */
+    order?: readonly GridSortDirection[];
 
-  /**
-   * Callback fired when sorted row IDs are recomputed.
-   * @param {GridRowId[]} sortedRowIds The sorted row IDs.
-   */
-  onSortedRowsSet?: (sortedRowIds: GridRowId[]) => void;
+    /**
+     * Callback fired when sorted row IDs are recomputed.
+     * @param {GridRowId[]} sortedRowIds The sorted row IDs.
+     */
+    onSortedRowsSet?: (sortedRowIds: GridRowId[]) => void;
+  };
 }
 
 /**
  * Internal options for the sorting plugin.
  */
 export interface SortingInternalOptions {
-  /** If true, sorting is handled externally (e.g., server-side). */
-  externalSorting?: boolean;
+  sorting?: {
+    /** If true, sorting is handled externally (e.g., server-side). */
+    external?: boolean;
+  };
 }
 
 export interface SortingSelectors {

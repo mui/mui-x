@@ -40,12 +40,12 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
   initialize: (state, params) => {
     // Prefer controlled sortModel over initialState
     const initialSortModel =
-      params.sortModel ?? params.initialState?.sorting?.sortModel ?? ([] as GridSortModel);
+      params.sorting?.model ?? params.initialState?.sorting?.sortModel ?? ([] as GridSortModel);
 
     const dataRowIds = state.rows.dataRowIds;
     let sortedRowIds: GridRowId[];
 
-    if (params.externalSorting || params.sortingMode === 'manual') {
+    if (params.sorting?.external || params.sorting?.mode === 'manual') {
       // For external/manual sorting, just mirror the row order
       sortedRowIds = dataRowIds;
     } else {
@@ -75,15 +75,15 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
 
   use: (store, params, api) => {
     const getDefaultSortingOrder = (): readonly GridSortDirection[] => {
-      return params.sortingOrder ?? DEFAULT_SORTING_ORDER;
+      return params.sorting?.order ?? DEFAULT_SORTING_ORDER;
     };
 
     const isExternalSorting = (): boolean => {
-      return params.externalSorting === true;
+      return params.sorting?.external === true;
     };
 
     const isAutoMode = (): boolean => {
-      return params.sortingMode !== 'manual';
+      return params.sorting?.mode !== 'manual';
     };
 
     const getColumn = (field: string) => {
@@ -123,7 +123,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       }
 
       const newSortedRowIds = computeSortedRowIds(undefined, undefined, {
-        stableSort: params.stableSort ?? false,
+        stableSort: params.sorting?.stableSort ?? false,
       });
 
       // Update state
@@ -136,7 +136,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       });
 
       // Call callback
-      params.onSortedRowsSet?.(newSortedRowIds);
+      params.sorting?.onSortedRowsSet?.(newSortedRowIds);
     };
 
     const setSortModel = (model: GridSortModel): void => {
@@ -153,7 +153,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
 
       // Call callback if model changed
       if (prevModel !== model) {
-        params.onSortModelChange?.(model);
+        params.sorting?.onModelChange?.(model);
       }
 
       // Apply sorting in auto mode
@@ -192,7 +192,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       const newSortItem: GridSortItem | undefined =
         newDirection === null ? undefined : { field, sort: newDirection };
 
-      const shouldMultiSort = multiSort ?? params.enableMultiSort !== false;
+      const shouldMultiSort = multiSort ?? params.sorting?.enableMultiSort !== false;
 
       let newSortModel: GridSortModel;
       if (shouldMultiSort) {
@@ -232,16 +232,16 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
 
     // Handle controlled sortModel prop changes
     React.useEffect(() => {
-      if (params.sortModel !== undefined) {
+      if (params.sorting?.model !== undefined) {
         const currentModel = store.state.sorting.sortModel;
-        if (params.sortModel !== currentModel && params.sortModel !== prevSortModelRef.current) {
-          prevSortModelRef.current = params.sortModel;
+        if (params.sorting.model !== currentModel && params.sorting.model !== prevSortModelRef.current) {
+          prevSortModelRef.current = params.sorting.model;
           // Update state without triggering callback (it's controlled)
           store.setState({
             ...store.state,
             sorting: {
               ...store.state.sorting,
-              sortModel: params.sortModel,
+              sortModel: params.sorting.model,
             },
           });
 
@@ -251,7 +251,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to sortModel prop changes
-    }, [params.sortModel]);
+    }, [params.sorting?.model]);
 
     return {
       sorting: {

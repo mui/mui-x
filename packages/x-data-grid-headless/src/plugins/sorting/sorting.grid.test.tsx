@@ -53,23 +53,23 @@ describe('Sorting Plugin - Integration Tests', () => {
       expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
     });
 
-    it('should apply sorting from sortModel prop', () => {
+    it('should apply sorting from sorting.model prop', () => {
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sortModel={[{ field: 'name', sort: 'desc' }]}
+          sorting={{ model: [{ field: 'name', sort: 'desc' }] }}
         />,
       );
       expect(getRowNames(container)).toEqual(['Charlie', 'Bob', 'Alice']);
     });
 
-    it('should prefer sortModel prop over initialState', () => {
+    it('should prefer sorting.model prop over initialState', () => {
       const { container } = render(
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sortModel={[{ field: 'name', sort: 'desc' }]}
+          sorting={{ model: [{ field: 'name', sort: 'desc' }] }}
           initialState={{
             sorting: {
               sortModel: [{ field: 'name', sort: 'asc' }],
@@ -141,7 +141,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            enableMultiSort
+            sorting={{ enableMultiSort: true }}
           />,
         );
 
@@ -257,7 +257,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            sortingMode="manual"
+            sorting={{ mode: 'manual' }}
           />,
         );
 
@@ -330,7 +330,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            onSortModelChange={onSortModelChange}
+            sorting={{ onModelChange: onSortModelChange }}
           />,
         );
 
@@ -349,7 +349,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            onSortModelChange={onSortModelChange}
+            sorting={{ onModelChange: onSortModelChange }}
           />,
         );
 
@@ -370,7 +370,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            onSortedRowsSet={onSortedRowsSet}
+            sorting={{ onSortedRowsSet }}
           />,
         );
 
@@ -395,7 +395,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            sortingMode="auto"
+            sorting={{ mode: 'auto' }}
           />,
         );
 
@@ -441,7 +441,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            sortingMode="manual"
+            sorting={{ mode: 'manual' }}
           />,
         );
 
@@ -473,7 +473,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         { id: 2, name: 'Alice', age: 25 },
         { id: 3, name: 'Bob', age: 35 },
       ];
-      render(<TestDataGrid rows={rows} columns={defaultColumns} apiRef={apiRef} enableMultiSort />);
+      render(<TestDataGrid rows={rows} columns={defaultColumns} apiRef={apiRef} sorting={{ enableMultiSort: true }} />);
 
       await act(async () => {
         apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -494,7 +494,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          enableMultiSort={false}
+          sorting={{ enableMultiSort: false }}
         />,
       );
 
@@ -523,8 +523,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={rows}
           columns={defaultColumns}
           apiRef={apiRef}
-          stableSort
-          enableMultiSort
+          sorting={{ stableSort: true, enableMultiSort: true }}
         />,
       );
 
@@ -547,37 +546,37 @@ describe('Sorting Plugin - Integration Tests', () => {
   });
 
   describe('controlled sortModel', () => {
-    it('should update when controlled sortModel prop changes', async () => {
+    it('should update when controlled sorting.model prop changes', async () => {
       const { container, setProps } = render(
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sortModel={[{ field: 'name', sort: 'asc' }]}
+          sorting={{ model: [{ field: 'name', sort: 'asc' }] }}
         />,
       );
 
       expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
 
       await act(async () => {
-        setProps({ sortModel: [{ field: 'name', sort: 'desc' }] });
+        setProps({ sorting: { model: [{ field: 'name', sort: 'desc' }] } });
       });
 
       expect(getRowNames(container)).toEqual(['Charlie', 'Bob', 'Alice']);
     });
 
-    it('should clear sorting when controlled sortModel becomes empty', async () => {
+    it('should clear sorting when controlled sorting.model becomes empty', async () => {
       const { container, setProps } = render(
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sortModel={[{ field: 'name', sort: 'asc' }]}
+          sorting={{ model: [{ field: 'name', sort: 'asc' }] }}
         />,
       );
 
       expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
 
       await act(async () => {
-        setProps({ sortModel: [] });
+        setProps({ sorting: { model: [] } });
       });
 
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
@@ -613,7 +612,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          onSortModelChange={onSortModelChange}
+          sorting={{ onModelChange: onSortModelChange }}
         />,
       );
 
@@ -650,7 +649,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          sortingOrder={['asc']}
+          sorting={{ order: ['asc'] }}
         />,
       );
 
@@ -674,7 +673,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          sortingOrder={['asc', null]}
+          sorting={{ order: ['asc', null] }}
         />,
       );
 
@@ -704,7 +703,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          sortingOrder={['desc', 'asc']}
+          sorting={{ order: ['desc', 'asc'] }}
         />,
       );
 
@@ -738,8 +737,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={columns}
           apiRef={apiRef}
-          sortingOrder={['asc', 'desc', null]}
-          enableMultiSort={false}
+          sorting={{ order: ['asc', 'desc', null], enableMultiSort: false }}
         />,
       );
 
