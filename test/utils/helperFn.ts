@@ -1,5 +1,5 @@
 import { spy } from 'sinon';
-import { act, screen } from '@mui/internal-test-utils';
+import { act, screen, waitFor } from '@mui/internal-test-utils';
 import { gridClasses, GridRowId } from '@mui/x-data-grid';
 import { unwrapPrivateAPI } from '@mui/x-data-grid/internals';
 import type { GridApiCommon } from '@mui/x-data-grid/models/api/gridApiCommon';
@@ -235,4 +235,25 @@ export async function openLongTextEditPopup(
     await user.click(cell);
     await user.keyboard('{Enter}');
   }
+}
+
+export async function openMultiSelectPopup(
+  cell: HTMLElement,
+  user: UserEvent,
+  action: 'click' | 'spacebar' = 'spacebar',
+) {
+  await user.click(cell);
+  await waitFor(() => {
+    const chip = cell.querySelector('button[aria-haspopup="dialog"]');
+    if (!chip || document.activeElement !== chip) {
+      throw new Error('Overflow chip not focused');
+    }
+  });
+  const overflowChip = cell.querySelector('button[aria-haspopup="dialog"]') as HTMLButtonElement;
+  if (action === 'spacebar') {
+    await user.keyboard(' ');
+  } else {
+    await user.click(overflowChip);
+  }
+  return { overflowChip };
 }

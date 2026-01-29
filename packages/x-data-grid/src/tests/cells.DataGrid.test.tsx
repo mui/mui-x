@@ -2,7 +2,12 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import { DataGrid, GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
-import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
+import {
+  getCell,
+  openLongTextEditPopup,
+  openLongTextViewPopup,
+  openMultiSelectPopup,
+} from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -451,6 +456,69 @@ describe('<DataGrid /> - Cells', () => {
       expect(chips.length).to.equal(2);
       expect(chips[0].textContent).to.equal('Frontend');
       expect(chips[1].textContent).to.equal('Backend');
+    });
+
+    // Tests below require ResizeObserver and real focus management
+    describe.skipIf(isJSDOM)('overflow chip', () => {
+      const overflowBaselineProps = {
+        rows: [{ id: 1, tags: ['React', 'TypeScript', 'Node.js', 'Python', 'Go'] }],
+        columns: [
+          {
+            field: 'tags',
+            type: 'multiSelect' as const,
+            width: 150, // narrow width to force overflow
+            valueOptions: ['React', 'TypeScript', 'Node.js', 'Python', 'Go'],
+          },
+        ],
+      };
+
+      it('should focus overflow chip when cell receives focus', async () => {
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...overflowBaselineProps} />
+          </div>,
+        );
+
+        const cell = getCell(0, 0);
+        await user.click(cell);
+
+        await waitFor(() => {
+          const overflowChip = cell.querySelector('button[aria-haspopup="dialog"]');
+          expect(overflowChip).not.to.equal(null);
+          expect(document.activeElement).to.equal(overflowChip);
+        });
+      });
+
+      it('should open popup when pressing Space on overflow chip', async () => {
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...overflowBaselineProps} />
+          </div>,
+        );
+
+        const cell = getCell(0, 0);
+        const { overflowChip } = await openMultiSelectPopup(cell, user);
+
+        expect(overflowChip).to.have.attribute('aria-expanded', 'true');
+        const popup = document.querySelector('.MuiDataGrid-multiSelectCellPopup');
+        expect(popup).not.to.equal(null);
+      });
+
+      it('should close popup when pressing Escape', async () => {
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid {...overflowBaselineProps} />
+          </div>,
+        );
+
+        const cell = getCell(0, 0);
+        const { overflowChip } = await openMultiSelectPopup(cell, user);
+        expect(overflowChip).to.have.attribute('aria-expanded', 'true');
+
+        // Close popup
+        await user.keyboard('{Escape}');
+        expect(overflowChip).to.have.attribute('aria-expanded', 'false');
+      });
     });
   });
 });
