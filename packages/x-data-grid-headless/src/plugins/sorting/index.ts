@@ -4,7 +4,7 @@ export {
   gridNumberComparator,
   gridDateComparator,
   getNextGridSortDirection,
-} from './utils';
+} from './sortingUtils';
 export type {
   GridSortDirection,
   GridSortModel,

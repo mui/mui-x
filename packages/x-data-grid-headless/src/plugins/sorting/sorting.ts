@@ -8,7 +8,7 @@ import {
   upsertSortModel,
   buildSortingApplier,
   applySortingToRowIds,
-} from './utils';
+} from './sortingUtils';
 import type {
   GridSortDirection,
   GridSortModel,

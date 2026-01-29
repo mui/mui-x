@@ -7,7 +7,7 @@ import {
   buildSortingApplier,
   applySortingToRowIds,
   upsertSortModel,
-} from './utils';
+} from './sortingUtils';
 import { selectSortModel, selectSortedRowIds } from './selectors';
 import type { GridSortDirection, GridSortModel, SortingState } from './types';
 
