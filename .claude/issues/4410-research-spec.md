@@ -49,6 +49,19 @@ Implemented edit cell using MUI Autocomplete with `multiple`.
 | [`packages/x-data-grid/src/components/cell/GridEditMultiSelectCell.tsx`](../../../packages/x-data-grid/src/components/cell/GridEditMultiSelectCell.tsx) | Edit cell with Autocomplete, keyboard nav, `disableCloseOnSelect`                                                |
 | [`packages/x-data-grid/src/models/gridBaseSlots.ts`](../../../packages/x-data-grid/src/models/gridBaseSlots.ts)                                         | Added `open`, `onOpen`, `onClose`, `disableCloseOnSelect`, `openOnFocus`, `autoHighlight` to `AutocompleteProps` |
 
+**Implementation details:**
+
+- **Component structure:** Extracted `GridEditMultiSelectAutocomplete` as internal component to handle focus timing (ensures `inputRef.current` exists when `useEnhancedEffect` runs)
+- **Focus handling:** Uses `useEnhancedEffect` with `preventScroll: true` to prevent browser scrolling when focusing inside portaled popper (same pattern as `GridEditLongTextCell`)
+- **Autocomplete always open:** Removed `open` state and `initialOpen` prop since Autocomplete should always be open in edit mode
+- **Keyboard handling in `handleChange`:**
+  - Bare Enter → exits edit mode via `stopCellEditMode` (saves changes)
+  - Ctrl/Cmd + Enter → stops propagation, continues with selection
+- **`handleClose` callback:**
+  - `escape` reason → `ignoreModifications: true` (discards changes)
+  - Other reasons (blur, etc.) → saves changes
+- **Click handling:** `onClick` with `stopPropagation` on textField to prevent cell focus loss
+
 ### Phase 4: Filter Operators + Quick Filter ✅
 
 Implemented 4 filter operators and quick filter support.
@@ -291,6 +304,30 @@ function MultiSelectCell({ value, colDef }) {
 - Support keyboard navigation (arrow keys, Enter, Escape)
 - Prevent Enter from closing edit mode prematurely
 - Match singleSelect patterns (initialOpen, onValueChange)
+
+**Implementation: Popup-based approach**
+
+The edit cell uses a popup (Popper) pattern similar to `GridEditLongTextCell`:
+
+1. Cell root shows a chips preview (with `overflow: hidden`)
+2. When cell receives focus, a Popper opens containing the full Autocomplete
+3. The Autocomplete uses a custom `slots.popper` component to control dropdown rendering
+
+**Custom Popper Component:**
+
+The Autocomplete dropdown positioning is controlled via `material.slots.popper`:
+
+```tsx
+material={{
+  slots: { popper: GridEditMultiSelectCellAutocompletePopper },
+}}
+```
+
+Where `GridEditMultiSelectCellAutocompletePopper` is a simple styled div that renders the dropdown inline within the outer `GridEditMultiSelectCellPopper` container. This ensures:
+
+- Dropdown stays in the same coordinate system as the input
+- No position recalculation conflicts when chips are added/removed (input height changes)
+- Proper positioning relative to the cell without portal conflicts
 
 ---
 
@@ -887,15 +924,15 @@ All decisions have been finalized. The following mockups are needed from design:
 
 ### Keyboard Navigation (Spec)
 
-| Action           | Key                     | Behavior                        |
-| ---------------- | ----------------------- | ------------------------------- |
-| Open edit mode   | Enter / F2              | Focus input, open dropdown      |
-| Close edit mode  | Escape                  | Discard changes, close dropdown |
-| Confirm edit     | Tab / Click outside     | Save changes                    |
-| Navigate options | Arrow Up/Down           | Move through dropdown           |
-| Select option    | Enter / Click           | Add to selection (don't close)  |
-| Remove last chip | Backspace (empty input) | Remove last selected value      |
-| Expand popup     | Spacebar (view mode)    | Open full list popup            |
+| Action           | Key                     | Behavior                                    |
+| ---------------- | ----------------------- | ------------------------------------------- |
+| Open edit mode   | Enter / F2              | Focus input, open dropdown                  |
+| Close edit mode  | Escape                  | Discard changes, close dropdown             |
+| Confirm edit     | Enter / Tab / Click outside | Save changes, exit edit mode            |
+| Navigate options | Arrow Up/Down           | Move through dropdown                       |
+| Select option    | Ctrl/Cmd + Enter / Click | Add to selection (don't close)             |
+| Remove last chip | Backspace (empty input) | Remove last selected value                  |
+| Expand popup     | Spacebar (view mode)    | Open full list popup                        |
 
 ### Accessibility (Spec)
 
