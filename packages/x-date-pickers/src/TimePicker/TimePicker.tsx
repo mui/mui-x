@@ -111,6 +111,26 @@ TimePicker.propTypes = {
    */
   enableAccessibleFieldDOMStructure: PropTypes.any,
   /**
+   * The index or type of the section to focus when the field is focused.
+   * If `null`, no section will be focused.
+   * If `undefined`, the first section will be focused.
+   */
+  focusedSectionOnFocus: PropTypes.oneOfType([
+    PropTypes.oneOf([
+      'all',
+      'day',
+      'empty',
+      'hours',
+      'meridiem',
+      'minutes',
+      'month',
+      'seconds',
+      'weekDay',
+      'year',
+    ]),
+    PropTypes.number,
+  ]),
+  /**
    * Format of the date when rendered in the input(s).
    * Defaults to localized format based on the used `views`.
    */
