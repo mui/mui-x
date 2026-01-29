@@ -274,6 +274,34 @@ If you're using the `sx` prop or `styled()`:
  />
 ```
 
+### The `domainLimit` function signature updated
+
+The `domainLimit` function now receives `NumberValue` instead of `number` for its parameters and return type.
+This change allows the function to work correctly with time-based axes where values are `Date` objects.
+
+`NumberValue` is a number-like type that can be either a `number` or an object with a `valueOf(): number` method.
+Some objects, such as `Date` already implement this method.
+It is now exported from `@mui/x-charts` for convenience.
+
+If you're using TypeScript and have a custom `domainLimit` function, update the types to use the new values.
+To get the numeric value, call `valueOf()` on the `NumberValue` parameters.
+
+```diff
++import { NumberValue } from '@mui/x-charts';
++
+ calculateDomainLimit(min: number, max: number) {
+   // Your implementation
+ }
+
+ <LineChart
+   xAxis={[{
+     scaleType: 'time',
+-    domainLimit: (min: number, max: number) => ({ min, max }),
++    domainLimit: (min: NumberValue, max: NumberValue) => calculateDomainLimit(min.valueOf(), max.valueOf()),
+   }]}
+ />
+```
+
 ## Styling
 
 ### Chart class names updated
