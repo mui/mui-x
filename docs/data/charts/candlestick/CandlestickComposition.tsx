@@ -1,18 +1,19 @@
 import * as React from 'react';
 import useId from '@mui/utils/useId';
-import { ChartsClipPath } from '@mui/x-charts/ChartsClipPath';
+import { ChartsClipPath } from '@mui/x-charts-premium/ChartsClipPath';
 import { CandlestickPlot } from '@mui/x-charts-premium/CandlestickChart';
-import { LinePlot } from '@mui/x-charts/LineChart';
-import { BarPlot } from '@mui/x-charts/BarChart';
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
-import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
+import { LinePlot } from '@mui/x-charts-premium/LineChart';
+import { BarPlot } from '@mui/x-charts-premium/BarChart';
+import { ChartsXAxis } from '@mui/x-charts-premium/ChartsXAxis';
+import { ChartsYAxis } from '@mui/x-charts-premium/ChartsYAxis';
+import { ChartsTooltip } from '@mui/x-charts-premium/ChartsTooltip';
+import { ChartsLegend } from '@mui/x-charts-premium/ChartsLegend';
 import { OHLCValueType } from '@mui/x-charts-premium/models';
 import { ChartsSurface } from '@mui/x-charts-premium/ChartsSurface';
 import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';
 import { ChartsWrapper } from '@mui/x-charts-premium/ChartsWrapper';
-import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import { ChartsAxisHighlight } from '@mui/x-charts-premium/ChartsAxisHighlight';
+import { ChartsGrid } from '@mui/x-charts-premium/ChartsGrid';
 import sp500ohlcv from '../dataset/sp500-2025-ohlcv.json'; // Source: Yahoo Finance
 
 const xData = sp500ohlcv.map((entry) => new Date(Date.parse(entry.date)));
@@ -116,6 +117,7 @@ export default function CandlestickComposition() {
       <ChartsWrapper>
         <ChartsSurface>
           <CandlestickPlot />
+          <ChartsGrid horizontal vertical />
           <g clipPath={`url(#${clipPathId})`}>
             <LinePlot />
             <BarPlot renderer="svg-batch" />

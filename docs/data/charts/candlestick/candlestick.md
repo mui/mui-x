@@ -22,4 +22,8 @@ This makes it easier to understand overall trends, compare price movements, and 
 
 ## Composition
 
+Similar to other chart types, candlestick charts can be composed using multiple components to create more complex visualizations.
+
+In this example, we demonstrate how to create a candlestick chart that displays the volume of trades as a bar chart, as well as the 20-day moving average, shown as a line chart.
+
 {{"demo": "CandlestickComposition.js"}}

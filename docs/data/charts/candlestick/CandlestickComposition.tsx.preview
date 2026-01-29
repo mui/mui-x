@@ -1,5 +1,0 @@
-<CandlestickChart
-  xAxis={[{ data: xData, zoom: { minSpan: 1, filterMode: 'discard' } }]}
-  series={[{ data: ohlcData }]}
-  height={400}
-/>
