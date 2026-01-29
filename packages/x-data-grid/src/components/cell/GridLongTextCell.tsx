@@ -3,15 +3,15 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
-import { GridRenderCellParams } from '../../models/params/gridCellParams';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
-import { GridSlotProps } from '../../models/gridSlotsComponent';
+import type { GridSlotProps } from '../../models/gridSlotsComponent';
 import { vars } from '../../constants/cssVariables';
 
 type OwnerState = DataGridProcessedProps;

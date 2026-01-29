@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
-import { GridColumnGroupingModel } from '../../../models/gridColumnGrouping';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridColumnGroupingModel } from '../../../models/gridColumnGrouping';
 import {
   gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
 } from './gridColumnGroupsSelector';
-import { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
+import type { GridColumnGroupingApi } from '../../../models/api/gridColumnGroupingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import {
   createGroupLookup,
@@ -17,7 +17,7 @@ import {
   unwrapGroupingColumnModel,
 } from './gridColumnGroupsUtils';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { GridEventListener } from '../../../models/events';
+import type { GridEventListener } from '../../../models/events';
 import { gridColumnFieldsSelector, gridVisibleColumnFieldsSelector } from '../columns';
 
 export const columnGroupsStateInitializer: GridStateInitializer<
