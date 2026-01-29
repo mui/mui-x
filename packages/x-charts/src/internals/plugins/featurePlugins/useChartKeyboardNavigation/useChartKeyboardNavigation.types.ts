@@ -25,7 +25,7 @@ export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
   state: UseChartKeyboardNavigationState;
   optionalDependencies: [
     UseChartInteractionSignature,
-    UseChartHighlightSignature,
+    UseChartHighlightSignature<ChartSeriesType>,
     UseChartCartesianAxisSignature,
   ];
 }>;
