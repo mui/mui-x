@@ -57,7 +57,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-12)',
+  color: theme.palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -68,7 +68,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-11)',
+  color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -85,7 +85,7 @@ const EventItemRecurringIcon = styled(RepeatRounded, {
   slot: 'EventItemRecurringIcon',
 })(({ theme }) => ({
   padding: theme.spacing(0.25),
-  color: 'var(--event-color-11)',
+  color: theme.palette.text.secondary,
 }));
 
 const ResourceLegendColor = styled('span', {
