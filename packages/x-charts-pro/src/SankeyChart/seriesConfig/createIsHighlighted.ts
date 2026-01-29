@@ -1,6 +1,10 @@
 import type { ChartSeriesType } from '@mui/x-charts/internals';
 import type { SeriesItemIdentifier } from '@mui/x-charts/models';
-import type { SankeyHighlightScope, SankeyLinkHighlight, SankeyNodeHighlight } from '../sankey.highlight.types';
+import type {
+  SankeyHighlightScope,
+  SankeyLinkHighlight,
+  SankeyNodeHighlight,
+} from '../sankey.highlight.types';
 import type { SankeyItemIdentifier } from '../sankey.types';
 
 const DEFAULT_NODE_HIGHLIGHT = 'links';

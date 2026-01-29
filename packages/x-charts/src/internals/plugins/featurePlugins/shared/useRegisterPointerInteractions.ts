@@ -25,10 +25,15 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
 ) {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature<SeriesType>, UseChartTooltipSignature]
+      [
+        UseChartInteractionSignature,
+        UseChartHighlightSignature<SeriesType>,
+        UseChartTooltipSignature,
+      ]
     >();
   const svgRef = useSvgRef();
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>();
+  const store =
+    useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>();
   const interactionActive = React.useRef(false);
   const lastItemRef = React.useRef<SeriesItemIdentifier | undefined>(undefined);
 

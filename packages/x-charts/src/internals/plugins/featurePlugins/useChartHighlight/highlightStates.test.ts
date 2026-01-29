@@ -113,10 +113,13 @@ describe('highlightStates', () => {
       });
 
       it('should handle undefined dataIndex', () => {
-        const itemWithoutDataIndex: MakeOptional<SeriesItemIdentifier<'bar'>, 'dataIndex'> = { type: 'bar', seriesId: s1 };
-        expect(getSeriesHighlightedDataIndex(highlightItemScope, itemWithoutDataIndex, s1)).to.equal(
-          undefined,
-        );
+        const itemWithoutDataIndex: MakeOptional<SeriesItemIdentifier<'bar'>, 'dataIndex'> = {
+          type: 'bar',
+          seriesId: s1,
+        };
+        expect(
+          getSeriesHighlightedDataIndex(highlightItemScope, itemWithoutDataIndex, s1),
+        ).to.equal(undefined);
       });
     });
 
@@ -178,7 +181,10 @@ describe('highlightStates', () => {
 
       it('should handle undefined dataIndex', () => {
         const scope: Partial<HighlightScope<'bar'>> = { fade: 'global' };
-        const itemWithoutDataIndex: MakeOptional<SeriesItemIdentifier<'bar'>, 'dataIndex'> = { type: 'bar', seriesId: s1 };
+        const itemWithoutDataIndex: MakeOptional<SeriesItemIdentifier<'bar'>, 'dataIndex'> = {
+          type: 'bar',
+          seriesId: s1,
+        };
         expect(getSeriesUnfadedDataIndex(scope, itemWithoutDataIndex, s1)).to.equal(undefined);
       });
     });
@@ -189,10 +195,16 @@ describe('highlightStates', () => {
     });
 
     it('should return null when scope.fade is "series", but an item is highlighted', () => {
-      const highlightSeriesScope: Partial<HighlightScope<'bar'>> = { highlight: 'series', fade: 'series' };
+      const highlightSeriesScope: Partial<HighlightScope<'bar'>> = {
+        highlight: 'series',
+        fade: 'series',
+      };
       expect(getSeriesUnfadedDataIndex(highlightSeriesScope, itemData1, s1)).to.equal(null);
 
-      const highlightItemScope: Partial<HighlightScope<'bar'>> = { highlight: 'item', fade: 'series' };
+      const highlightItemScope: Partial<HighlightScope<'bar'>> = {
+        highlight: 'item',
+        fade: 'series',
+      };
       expect(getSeriesUnfadedDataIndex(highlightItemScope, itemData1, s1)).to.equal(null);
     });
 

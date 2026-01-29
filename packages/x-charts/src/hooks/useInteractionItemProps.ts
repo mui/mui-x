@@ -29,7 +29,11 @@ export const useInteractionItemProps = <ChartSeries extends ChartSeriesType>(
 } => {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature<ChartSeries>, UseChartTooltipSignature]
+      [
+        UseChartInteractionSignature,
+        UseChartHighlightSignature<ChartSeries>,
+        UseChartTooltipSignature,
+      ]
     >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
@@ -63,10 +67,10 @@ export const useInteractionItemProps = <ChartSeries extends ChartSeriesType>(
       skip
         ? {}
         : {
-          onPointerEnter,
-          onPointerLeave,
-          onPointerDown,
-        },
+            onPointerEnter,
+            onPointerLeave,
+            onPointerDown,
+          },
     [skip, onPointerEnter, onPointerLeave],
   );
 };

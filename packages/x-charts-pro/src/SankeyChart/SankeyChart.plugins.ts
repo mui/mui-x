@@ -14,7 +14,6 @@ import {
   type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
 
-
 export type SankeyChartPluginSignatures = [
   UseChartTooltipSignature<'sankey'>,
   UseChartInteractionSignature,

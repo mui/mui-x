@@ -329,6 +329,7 @@ LineChart.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['line']).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -406,7 +407,7 @@ LineChart.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

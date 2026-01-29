@@ -1,4 +1,8 @@
-import { selectorChartsIsFaded, selectorChartsIsHighlighted, useStore } from '@mui/x-charts/internals';
+import {
+  selectorChartsIsFaded,
+  selectorChartsIsHighlighted,
+  useStore,
+} from '@mui/x-charts/internals';
 import type { SankeyLinkIdentifier, SankeyNodeIdentifier } from './sankey.types';
 
 export function useSankeyNodeHighlightState(nodeIdentifier: SankeyNodeIdentifier) {

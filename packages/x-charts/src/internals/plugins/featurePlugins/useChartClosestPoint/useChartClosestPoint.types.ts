@@ -57,15 +57,16 @@ export type UseChartVoronoiDefaultizedParameters = Pick<
   disableVoronoi: boolean;
 };
 
-export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> = ChartPluginSignature<{
-  instance: UseChartVoronoiInstance;
-  state: UseChartVoronoiState;
-  params: UseChartVoronoiParameters;
-  defaultizedParams: UseChartVoronoiDefaultizedParameters;
-  dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
-  optionalDependencies: [
-    UseChartInteractionSignature,
-    UseChartHighlightSignature<SeriesType>,
-    UseChartTooltipSignature,
-  ];
-}>;
+export type UseChartClosestPointSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
+  ChartPluginSignature<{
+    instance: UseChartVoronoiInstance;
+    state: UseChartVoronoiState;
+    params: UseChartVoronoiParameters;
+    defaultizedParams: UseChartVoronoiDefaultizedParameters;
+    dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
+    optionalDependencies: [
+      UseChartInteractionSignature,
+      UseChartHighlightSignature<SeriesType>,
+      UseChartTooltipSignature,
+    ];
+  }>;

@@ -2,7 +2,12 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import { selectorChartsIsFaded, selectorChartsIsHighlighted, useInteractionItemProps, useStore } from '@mui/x-charts/internals';
+import {
+  selectorChartsIsFaded,
+  selectorChartsIsHighlighted,
+  useInteractionItemProps,
+  useStore,
+} from '@mui/x-charts/internals';
 import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
 
 export interface SankeyLinkElementProps {

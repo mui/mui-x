@@ -27,7 +27,7 @@ export const rangeBarSeriesConfig: ChartSeriesTypeConfig<'rangeBar'> = {
   identifierSerializer: identifierSerializerSeriesIdDataIndex,
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
   isHighlightedCreator: createIsHighlighted,
-  isFadedCreator: createIsFaded
+  isFadedCreator: createIsFaded,
 };
 
 cartesianSeriesTypes.addType('rangeBar');

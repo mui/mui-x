@@ -8,12 +8,11 @@ import type {
 import type { ChartsSeriesConfig } from '../../../../models/seriesType/config';
 
 const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>(['bar', 'rangeBar', 'line']);
-type SeriesTypeWithBatchRendering = 'bar' | 'line' |
+type SeriesTypeWithBatchRendering =
+  | 'bar'
+  | 'line'
   // Conditional type to add 'rangeBar' if it exists in ChartsSeriesConfig
-  (ChartsSeriesConfig extends { rangeBar: any }
-    ? 'rangeBar'
-    : never);
-
+  | (ChartsSeriesConfig extends { rangeBar: any } ? 'rangeBar' : never);
 
 export function isBatchRenderingSeriesType(
   type: ChartSeriesType | undefined,

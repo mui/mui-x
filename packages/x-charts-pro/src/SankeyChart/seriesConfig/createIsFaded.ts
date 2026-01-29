@@ -1,5 +1,6 @@
 import type { ChartSeriesType } from '@mui/x-charts/internals';
-import type { SeriesItemIdentifier } from '@mui/x-charts/models';import type { SankeyHighlightScope } from '../sankey.highlight.types';
+import type { SeriesItemIdentifier } from '@mui/x-charts/models';
+import type { SankeyHighlightScope } from '../sankey.highlight.types';
 import type { SankeyItemIdentifier } from '../sankey.types';
 import { createSankeyIsHighlighted } from './createIsHighlighted';
 

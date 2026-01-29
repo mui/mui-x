@@ -1,6 +1,10 @@
 import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
 import { type SeriesId } from '../../../../models/seriesType/common';
-import type { ChartSeriesType, HighlightScope, SeriesItemIdentifier } from '../../../../models/seriesType';
+import type {
+  ChartSeriesType,
+  HighlightScope,
+  SeriesItemIdentifier,
+} from '../../../../models/seriesType';
 import { type ChartRootSelector } from '../../utils/selectors';
 import { type UseChartHighlightSignature } from './useChartHighlight.types';
 import {
@@ -12,14 +16,15 @@ import {
 } from './highlightStates';
 import { selectorChartsKeyboardItem } from '../useChartKeyboardNavigation';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
-import { type ChartSeriesConfig, selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
-
+import {
+  type ChartSeriesConfig,
+  selectorChartSeriesConfig,
+} from '../../corePlugins/useChartSeriesConfig';
 
 const selectHighlight: ChartRootSelector<UseChartHighlightSignature<ChartSeriesType>> = (state) =>
   state.highlight;
 
-type HighlightLookUp<T extends ChartSeriesType> = { [K in T]?: Map<SeriesId, HighlightScope<K>>
-};
+type HighlightLookUp<T extends ChartSeriesType> = { [K in T]?: Map<SeriesId, HighlightScope<K>> };
 
 export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
   selectorChartSeriesProcessed,
@@ -27,17 +32,18 @@ export const selectorChartsHighlightScopePerSeriesId = createSelectorMemoized(
     const map: HighlightLookUp<ChartSeriesType> = {};
 
     map.bar = new Map<SeriesId, HighlightScope<'bar'>>();
-    (Object.keys(processedSeries) as ChartSeriesType[]).forEach(<T extends ChartSeriesType>(seriesType: T) => {
-
-      map[seriesType] = new Map();
-      const seriesData = processedSeries[seriesType as ChartSeriesType];
-      seriesData?.seriesOrder?.forEach((seriesId) => {
-        const seriesItem = seriesData?.series[seriesId];
-        if (seriesItem?.highlightScope !== undefined) {
-          map[seriesType]?.set(seriesId, seriesItem.highlightScope);
-        }
-      });
-    });
+    (Object.keys(processedSeries) as ChartSeriesType[]).forEach(
+      <T extends ChartSeriesType>(seriesType: T) => {
+        map[seriesType] = new Map();
+        const seriesData = processedSeries[seriesType as ChartSeriesType];
+        seriesData?.seriesOrder?.forEach((seriesId) => {
+          const seriesItem = seriesData?.series[seriesId];
+          if (seriesItem?.highlightScope !== undefined) {
+            map[seriesType]?.set(seriesId, seriesItem.highlightScope);
+          }
+        });
+      },
+    );
     return map;
   },
 );
@@ -55,11 +61,16 @@ export const selectorChartsHighlightedItem = createSelectorMemoized(
 export const selectorChartsHighlightScope = createSelector(
   selectorChartsHighlightScopePerSeriesId,
   selectorChartsHighlightedItem,
-  function selectorChartsHighlightScope<SeriesType extends ChartSeriesType>(seriesIdToHighlightScope: HighlightLookUp<ChartSeriesType>, highlightedItem: SeriesItemIdentifier<SeriesType> | null): HighlightScope<SeriesType> | null {
+  function selectorChartsHighlightScope<SeriesType extends ChartSeriesType>(
+    seriesIdToHighlightScope: HighlightLookUp<ChartSeriesType>,
+    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+  ): HighlightScope<SeriesType> | null {
     if (!highlightedItem) {
       return null;
     }
-    const highlightScope = seriesIdToHighlightScope[highlightedItem.type]?.get(highlightedItem.seriesId);
+    const highlightScope = seriesIdToHighlightScope[highlightedItem.type]?.get(
+      highlightedItem.seriesId,
+    );
 
     if (highlightScope === undefined) {
       return null;
@@ -74,25 +85,37 @@ export const selectorChartsIsHighlightedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(highlightScope: HighlightScope<SeriesType> | null, highlightedItem: SeriesItemIdentifier<SeriesType> | null, seriesConfig: ChartSeriesConfig<SeriesType>
+  function selectorChartsIsHighlightedCallback<SeriesType extends ChartSeriesType>(
+    highlightScope: HighlightScope<SeriesType> | null,
+    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    seriesConfig: ChartSeriesConfig<SeriesType>,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return alwaysFalse;
     }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(highlightScope, highlightedItem);
-  }
+    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(
+      highlightScope,
+      highlightedItem,
+    );
+  },
 );
 
 export const selectorChartsIsFadedCallback = createSelectorMemoized(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(highlightScope: HighlightScope<SeriesType> | null, highlightedItem: SeriesItemIdentifier<SeriesType> | null, seriesConfig: ChartSeriesConfig<SeriesType>
+  function selectorChartsIsFadedCallback<SeriesType extends ChartSeriesType>(
+    highlightScope: HighlightScope<SeriesType> | null,
+    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    seriesConfig: ChartSeriesConfig<SeriesType>,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return alwaysFalse;
     }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(highlightScope, highlightedItem);
+    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(
+      highlightScope,
+      highlightedItem,
+    );
   },
 );
 
@@ -100,13 +123,19 @@ export const selectorChartsIsHighlighted = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(highlightScope: HighlightScope<SeriesType> | null, highlightedItem: SeriesItemIdentifier<SeriesType> | null, seriesConfig: ChartSeriesConfig<SeriesType>,
+  function selectorChartsIsHighlighted<SeriesType extends ChartSeriesType>(
+    highlightScope: HighlightScope<SeriesType> | null,
+    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    seriesConfig: ChartSeriesConfig<SeriesType>,
     item: SeriesItemIdentifier | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
     }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(highlightScope, highlightedItem)(item);
+    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isHighlightedCreator(
+      highlightScope,
+      highlightedItem,
+    )(item);
   },
 );
 
@@ -114,22 +143,27 @@ export const selectorChartsIsFaded = createSelector(
   selectorChartsHighlightScope,
   selectorChartsHighlightedItem,
   selectorChartSeriesConfig,
-  function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(highlightScope: HighlightScope<SeriesType> | null, highlightedItem: SeriesItemIdentifier<SeriesType> | null, seriesConfig: ChartSeriesConfig<SeriesType>,
+  function selectorChartsIsFaded<SeriesType extends ChartSeriesType>(
+    highlightScope: HighlightScope<SeriesType> | null,
+    highlightedItem: SeriesItemIdentifier<SeriesType> | null,
+    seriesConfig: ChartSeriesConfig<SeriesType>,
 
     item: SeriesItemIdentifier | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
     }
-    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(highlightScope, highlightedItem)(item);
+    return seriesConfig[highlightedItem.type as keyof typeof seriesConfig].isFadedCreator(
+      highlightScope,
+      highlightedItem,
+    )(item);
   },
 );
-
 
 // ==========================================================================================
 //
 // Selectors for a specific series
-// 
+//
 // Those selectors are for series with batch rendering (e.g., Scatter, Bar, Line)
 //
 // ==========================================================================================
@@ -145,7 +179,7 @@ export const selectorChartIsSeriesHighlighted = createSelector(
     if (!isBatchRenderingSeriesType(item?.type)) {
       return false;
     }
-    return isSeriesHighlighted(scope, item, seriesId)
+    return isSeriesHighlighted(scope, item, seriesId);
   },
 );
 
@@ -160,7 +194,7 @@ export const selectorChartIsSeriesFaded = createSelector(
     if (!isBatchRenderingSeriesType(item?.type)) {
       return false;
     }
-    return isSeriesFaded(scope, item, seriesId)
+    return isSeriesFaded(scope, item, seriesId);
   },
 );
 
@@ -175,7 +209,7 @@ export const selectorChartSeriesUnfadedItem = createSelector(
     if (!isBatchRenderingSeriesType(item?.type)) {
       return null;
     }
-    return getSeriesUnfadedDataIndex(scope, item, seriesId)
+    return getSeriesUnfadedDataIndex(scope, item, seriesId);
   },
 );
 
@@ -190,6 +224,6 @@ export const selectorChartSeriesHighlightedItem = createSelector(
     if (!isBatchRenderingSeriesType(item?.type)) {
       return null;
     }
-    return getSeriesHighlightedDataIndex(scope, item, seriesId)
+    return getSeriesHighlightedDataIndex(scope, item, seriesId);
   },
 );

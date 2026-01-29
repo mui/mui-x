@@ -22,7 +22,10 @@
       "default": "'auto'",
       "isProPlan": true
     },
-    "highlightScope": { "type": { "description": "HighlightScope" }, "isProPlan": true },
+    "highlightScope": {
+      "type": { "description": "HighlightScope&lt;SeriesType&gt;" },
+      "isProPlan": true
+    },
     "id": { "type": { "description": "SeriesId" }, "isProPlan": true },
     "label": {
       "type": { "description": "string | ((location: 'tooltip' | 'legend') =&gt; string)" },
