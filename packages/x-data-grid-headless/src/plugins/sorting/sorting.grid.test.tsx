@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRenderer, act, screen } from '@mui/internal-test-utils';
-import { useDataGrid, type ColumnDef } from '../..';
+import { useDataGrid, type ColumnDef, rowsPlugin } from '../..';
 import { sortingPlugin, type SortingColumnMeta, type GridSortDirection } from '.';
 import { paginationPlugin } from '../pagination';
-import { rowsPlugin } from '../internal';
 import { TestDataGrid } from '../../test/TestDataGrid';
 
 type TestRow = { id: number; name: string; age: number };

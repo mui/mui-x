@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  gridStringOrNumberComparator,
+  createStringOrNumberComparator,
   gridNumberComparator,
   gridDateComparator,
   getNextGridSortDirection,
@@ -52,33 +52,41 @@ describe('Sorting Plugin', () => {
       });
     });
 
-    describe('gridStringOrNumberComparator', () => {
+    describe('createStringOrNumberComparator', () => {
       it('should sort strings correctly', () => {
         const params = { id: 1, field: 'test', value: '', row: {} };
-        expect(gridStringOrNumberComparator('apple', 'banana', params, params)).toBeLessThan(0);
-        expect(gridStringOrNumberComparator('banana', 'apple', params, params)).toBeGreaterThan(0);
-        expect(gridStringOrNumberComparator('apple', 'apple', params, params)).toBe(0);
+        expect(createStringOrNumberComparator()('apple', 'banana', params, params)).toBeLessThan(0);
+        expect(createStringOrNumberComparator()('banana', 'apple', params, params)).toBeGreaterThan(
+          0,
+        );
+        expect(createStringOrNumberComparator()('apple', 'apple', params, params)).toBe(0);
       });
 
       it('should sort numbers correctly', () => {
         const params = { id: 1, field: 'test', value: 0, row: {} };
-        expect(gridStringOrNumberComparator(1, 2, params, params)).toBeLessThan(0);
-        expect(gridStringOrNumberComparator(2, 1, params, params)).toBeGreaterThan(0);
-        expect(gridStringOrNumberComparator(1, 1, params, params)).toBe(0);
+        expect(createStringOrNumberComparator()(1, 2, params, params)).toBeLessThan(0);
+        expect(createStringOrNumberComparator()(2, 1, params, params)).toBeGreaterThan(0);
+        expect(createStringOrNumberComparator()(1, 1, params, params)).toBe(0);
       });
 
       it('should handle null values (nulls first)', () => {
         const params = { id: 1, field: 'test', value: null, row: {} };
-        expect(gridStringOrNumberComparator(null, 'apple', params, params)).toBe(-1);
-        expect(gridStringOrNumberComparator('apple', null, params, params)).toBe(1);
-        expect(gridStringOrNumberComparator(null, null, params, params)).toBe(0);
+        expect(createStringOrNumberComparator()(null, 'apple', params, params)).toBe(-1);
+        expect(createStringOrNumberComparator()('apple', null, params, params)).toBe(1);
+        expect(createStringOrNumberComparator()(null, null, params, params)).toBe(0);
       });
 
       it('should handle undefined values', () => {
         const params = { id: 1, field: 'test', value: undefined, row: {} };
-        expect(gridStringOrNumberComparator(undefined, 'apple', params, params)).toBe(-1);
-        expect(gridStringOrNumberComparator('apple', undefined, params, params)).toBe(1);
-        expect(gridStringOrNumberComparator(undefined, undefined, params, params)).toBe(0);
+        expect(createStringOrNumberComparator()(undefined, 'apple', params, params)).toBe(-1);
+        expect(createStringOrNumberComparator()('apple', undefined, params, params)).toBe(1);
+        expect(createStringOrNumberComparator()(undefined, undefined, params, params)).toBe(0);
+      });
+
+      it('should accept a locale parameter', () => {
+        const params = { id: 1, field: 'test', value: '', row: {} };
+        // ä sorts after a in German locale
+        expect(createStringOrNumberComparator('de')('ä', 'z', params, params)).toBeLessThan(0);
       });
     });
 

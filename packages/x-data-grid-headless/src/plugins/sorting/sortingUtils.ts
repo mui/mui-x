@@ -27,9 +27,10 @@ const gridNullComparator = (value1: any, value2: any): number | null => {
 };
 
 /**
- * Create a string/number comparator with the given collator.
+ * Create a string/number comparator with the given locale(s).
  */
-export const createStringOrNumberComparator = (collator: Intl.Collator): GridComparatorFn => {
+export const createStringOrNumberComparator = (locale?: string | string[]): GridComparatorFn => {
+  const collator = new Intl.Collator(locale);
   return (value1, value2) => {
     const nullResult = gridNullComparator(value1, value2);
     if (nullResult !== null) {
@@ -238,9 +239,7 @@ export const buildSortingApplier = ({
   locale,
 }: SortingApplierParams): ((rowIds: GridRowId[]) => GridRowId[]) | null => {
   const parsedSortItems = sortModel
-    .map((item) =>
-      parseSortItem(item, getColumn, createStringOrNumberComparator(new Intl.Collator(locale))),
-    )
+    .map((item) => parseSortItem(item, getColumn, createStringOrNumberComparator(locale)))
     .filter((item): item is ParsedSortItem => item !== null);
 
   if (parsedSortItems.length === 0) {

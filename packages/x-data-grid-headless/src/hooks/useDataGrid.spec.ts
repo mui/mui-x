@@ -1,7 +1,7 @@
 import { createPlugin, type Plugin } from '../plugins/core';
+import { rowsPlugin, columnsPlugin } from '..';
 import { sortingPlugin, type GridSortModel } from '../plugins/sorting';
 import { paginationPlugin, type PaginationModel } from '../plugins/pagination';
-import { rowsPlugin, columnsPlugin } from '../plugins/internal';
 import { useDataGrid } from './useDataGrid';
 
 interface User {
