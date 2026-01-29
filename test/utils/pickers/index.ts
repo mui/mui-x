@@ -8,6 +8,7 @@ export * from './misc';
 export * from './openPicker';
 export * from './viewHandlers';
 export * from './describeAdapters';
+export * from './describeBuddhistAdapter';
 export * from './describeGregorianAdapter';
 export * from './describeHijriAdapter';
 export * from './describeJalaliAdapter';

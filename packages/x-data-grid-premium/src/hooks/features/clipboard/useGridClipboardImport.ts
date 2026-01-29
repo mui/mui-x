@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridColDef,
-  GridRowId,
-  GridValidRowModel,
+  type GridColDef,
+  type GridRowId,
+  type GridValidRowModel,
   GRID_CHECKBOX_SELECTION_FIELD,
   gridFocusCellSelector,
   gridVisibleColumnFieldsSelector,
-  GridRowModel,
+  type GridRowModel,
   useGridEventPriority,
   useGridEvent,
-  GridEventListener,
+  type GridEventListener,
   gridPaginatedVisibleSortedGridRowIdsSelector,
   gridExpandedSortedRowIdsSelector,
   gridRowSelectionIdsSelector,
@@ -19,7 +19,7 @@ import {
 import {
   getRowIdFromRowModel,
   getActiveElement,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   getPublicApiRef,
   isPasteShortcut,
@@ -28,7 +28,7 @@ import {
 import { warnOnce } from '@mui/x-internals/warning';
 import { GRID_DETAIL_PANEL_TOGGLE_FIELD, GRID_REORDER_COL_DEF } from '@mui/x-data-grid-pro';
 import debounce from '@mui/utils/debounce';
-import { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridApiPremium, GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
 
 const columnFieldsToExcludeFromPaste = [
@@ -85,9 +85,7 @@ async function getTextFromClipboard(rootEl: HTMLElement) {
 
 // Keeps track of updated rows during clipboard paste
 class CellValueUpdater {
-  rowsToUpdate: {
-    [rowId: GridRowId]: GridValidRowModel;
-  } = {};
+  rowsToUpdate: Map<GridRowId, GridValidRowModel> = new Map();
 
   updateRow: (row: GridRowModel) => void;
 
@@ -121,7 +119,7 @@ class CellValueUpdater {
     if (!colDef || !colDef.editable) {
       return;
     }
-    const row = this.rowsToUpdate[rowId] || { ...apiRef.current.getRow(rowId) };
+    const row = this.rowsToUpdate.get(rowId) || { ...apiRef.current.getRow(rowId) };
     if (!row) {
       return;
     }
@@ -155,21 +153,29 @@ class CellValueUpdater {
       // We cannot update row id, so this cell value update should be ignored
       return;
     }
-    this.rowsToUpdate[rowId] = rowCopy;
+    this.rowsToUpdate.set(rowId, rowCopy);
   }
 
   applyUpdates() {
     const { apiRef, processRowUpdate, onProcessRowUpdateError } = this.options;
     const rowsToUpdate = this.rowsToUpdate;
-    const rowIdsToUpdate = Object.keys(rowsToUpdate);
+    const rowIdsToUpdate = Array.from(rowsToUpdate.keys());
 
     if (rowIdsToUpdate.length === 0) {
-      apiRef.current.publishEvent('clipboardPasteEnd');
+      apiRef.current.publishEvent('clipboardPasteEnd', {
+        oldRows: new Map<GridRowId, GridValidRowModel>(),
+        newRows: new Map<GridRowId, GridValidRowModel>(),
+      });
       return;
     }
 
+    const oldRows = new Map<GridRowId, GridValidRowModel>();
+    const newRows = new Map<GridRowId, GridValidRowModel>();
+
     const handleRowUpdate = async (rowId: GridRowId) => {
-      const newRow = rowsToUpdate[rowId];
+      const oldRow = apiRef.current.getRow(rowId);
+      const newRow = rowsToUpdate.get(rowId)!;
+      oldRows.set(rowId, oldRow);
 
       if (typeof processRowUpdate === 'function') {
         const handleError = (errorThrown: any) => {
@@ -188,13 +194,14 @@ class CellValueUpdater {
         };
 
         try {
-          const oldRow = apiRef.current.getRow(rowId);
           const finalRowUpdate = await processRowUpdate(newRow, oldRow, { rowId });
+          newRows.set(rowId, finalRowUpdate);
           this.updateRow(finalRowUpdate);
         } catch (error) {
           handleError(error);
         }
       } else {
+        newRows.set(rowId, newRow);
         this.updateRow(newRow);
       }
     };
@@ -207,8 +214,11 @@ class CellValueUpdater {
       });
     });
     Promise.all(promises).then(() => {
-      this.rowsToUpdate = {};
-      apiRef.current.publishEvent('clipboardPasteEnd');
+      apiRef.current.publishEvent('clipboardPasteEnd', {
+        oldRows,
+        newRows,
+      });
+      this.rowsToUpdate.clear();
     });
   }
 }

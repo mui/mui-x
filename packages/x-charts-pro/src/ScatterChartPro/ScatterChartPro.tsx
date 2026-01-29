@@ -49,12 +49,10 @@ export interface ScatterChartProSlotProps
 
 export interface ScatterChartProProps
   extends
-    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<ScatterChartProps, 'apiRef' | 'slots' | 'slotProps' | 'plugins' | 'seriesConfig'>,
     Omit<
       ChartContainerProProps<'scatter', ScatterChartProPluginSignatures>,
       | 'series'
-      | 'plugins'
-      | 'seriesConfig'
       | 'onItemClick'
       | 'slots'
       | 'slotProps'
@@ -120,7 +118,9 @@ const ScatterChartPro = React.forwardRef(function ScatterChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps}>
+    <ChartDataProviderPro<'scatter', ScatterChartProPluginSignatures>
+      {...chartDataProviderProProps}
+    >
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -156,6 +156,11 @@ ScatterChartPro.propTypes = {
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * The configuration of axes highlight.
    * @see See {@link https://mui.com/x/react-charts/highlighting/ highlighting docs} for more details.
@@ -231,7 +236,7 @@ ScatterChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['scatter']).isRequired,
     }),
   ),
@@ -245,7 +250,7 @@ ScatterChartPro.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -276,7 +281,7 @@ ScatterChartPro.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['scatter']).isRequired,
     }),
   ),
@@ -398,7 +403,7 @@ ScatterChartPro.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['scatter']).isRequired,
   }),
   /**

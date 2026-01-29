@@ -39,7 +39,9 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@mui/x-internals": "workspace:*",
-    "prop-types": "catalog:"
+    "@base-ui/utils": "0.2.4",
+    "prop-types": "catalog:",
+    "type-fest": "catalog:"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
@@ -47,6 +49,7 @@
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "@mui/x-data-grid-generator": "workspace:*",
     "@types/prop-types": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

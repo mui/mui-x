@@ -313,6 +313,11 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
       });
 
       scrollTimeout.start(1000, triggerUpdateRenderContext);
+    } else {
+      store.set('virtualization', {
+        ...store.state.virtualization,
+        scrollPosition: { current: { ...scrollPosition.current } },
+      });
     }
 
     return nextRenderContext;
@@ -419,11 +424,18 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
     let virtualRowIndex = -1;
     const focusedVirtualCell = params.focusedVirtualCell?.();
     if (!isPinnedSection && focusedVirtualCell) {
-      if (focusedVirtualCell.rowIndex < firstRowToRender) {
+      if (
+        focusedVirtualCell.rowIndex < firstRowToRender &&
+        focusedVirtualCell.rowIndex >= 0 &&
+        focusedVirtualCell.rowIndex < rowModels.length
+      ) {
         rowIndexes.unshift(focusedVirtualCell.rowIndex);
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }
-      if (focusedVirtualCell.rowIndex > lastRowToRender) {
+      if (
+        focusedVirtualCell.rowIndex > lastRowToRender &&
+        focusedVirtualCell.rowIndex < rowModels.length
+      ) {
         rowIndexes.push(focusedVirtualCell.rowIndex);
         virtualRowIndex = focusedVirtualCell.rowIndex;
       }

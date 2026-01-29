@@ -8,11 +8,11 @@ import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaA
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
-import { DataGridProps } from '../models/props/DataGridProps';
+import type { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
-import { GridValidRowModel } from '../models/gridRows';
+import type { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 import { useMaterialCSSVariables } from '../material/variables';
 import type { GridConfiguration } from '../models/configuration/gridConfiguration';

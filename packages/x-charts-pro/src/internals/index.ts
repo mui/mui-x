@@ -4,3 +4,8 @@ export { seriesPreviewPlotMap } from '../ChartZoomSlider/internals/seriesPreview
 export type { PreviewPlotProps } from '../ChartZoomSlider/internals/previews/PreviewPlot.types';
 export { defaultSeriesConfigPro } from '../ChartDataProviderPro/ChartDataProviderPro';
 export type { ProPluginsPerSeriesType } from '../context/ChartProApi';
+export { useHeatmapProps } from '../Heatmap/useHeatmapProps';
+export { defaultSlotsMaterial } from './material';
+export * from '../Heatmap/HeatmapSVGPlot';
+export type * from '../Heatmap/Heatmap.types';
+export { selectorHeatmapItemAtPosition } from '../plugins/selectors/useChartHeatmapPosition.selectors';

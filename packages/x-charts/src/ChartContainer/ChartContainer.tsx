@@ -2,11 +2,20 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { type ChartSeriesType } from '../models/seriesType/config';
-import { ChartDataProvider, type ChartDataProviderProps } from '../ChartDataProvider';
+import {
+  ChartDataProvider,
+  type ChartDataProviderProps,
+  type ChartDataProviderSlotProps,
+  type ChartDataProviderSlots,
+} from '../ChartDataProvider';
 import { useChartContainerProps } from './useChartContainerProps';
 import { ChartsSurface, type ChartsSurfaceProps } from '../ChartsSurface';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+
+export interface ChartContainerSlots extends ChartDataProviderSlots {}
+
+export interface ChartContainerSlotProps extends ChartDataProviderSlotProps {}
 
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -37,17 +46,17 @@ export type ChartContainerProps<
  * </ChartContainer>
  * ```
  */
-const ChartContainer = React.forwardRef(function ChartContainer<TSeries extends ChartSeriesType>(
-  props: ChartContainerProps<TSeries>,
-  ref: React.Ref<SVGSVGElement>,
-) {
-  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps(
-    props,
-    ref,
-  );
+const ChartContainer = React.forwardRef(function ChartContainer<
+  TSeries extends ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartContainerProps<TSeries, TSignatures>, ref: React.Ref<SVGSVGElement>) {
+  const { chartDataProviderProps, children, chartsSurfaceProps } = useChartContainerProps<
+    TSeries,
+    TSignatures
+  >(props, ref);
 
   return (
-    <ChartDataProvider<TSeries, AllPluginSignatures<TSeries>> {...chartDataProviderProps}>
+    <ChartDataProvider {...chartDataProviderProps}>
       <ChartsSurface {...chartsSurfaceProps}>{children}</ChartsSurface>
     </ChartDataProvider>
   );
@@ -65,6 +74,11 @@ ChartContainer.propTypes = {
   apiRef: PropTypes.shape({
     current: PropTypes.object,
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * Configuration for the brush interaction.
    */
@@ -129,11 +143,7 @@ ChartContainer.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
-      seriesId: PropTypes.shape({
-        toLocaleString: PropTypes.func.isRequired,
-        toString: PropTypes.func.isRequired,
-        valueOf: PropTypes.func.isRequired,
-      }),
+      seriesId: PropTypes.object,
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -153,7 +163,7 @@ ChartContainer.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -184,11 +194,7 @@ ChartContainer.propTypes = {
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.any,
-      seriesId: PropTypes.shape({
-        toLocaleString: PropTypes.func.isRequired,
-        toString: PropTypes.func.isRequired,
-        valueOf: PropTypes.func.isRequired,
-      }),
+      seriesId: PropTypes.object,
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -1016,7 +1022,7 @@ ChartContainer.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
   }),
   /**

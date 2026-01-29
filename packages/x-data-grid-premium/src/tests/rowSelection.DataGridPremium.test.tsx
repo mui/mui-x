@@ -1,13 +1,13 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
-  GridApi,
+  type DataGridPremiumProps,
+  type GridApi,
   gridRowSelectionIdsSelector,
-  GridRowsProp,
+  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 

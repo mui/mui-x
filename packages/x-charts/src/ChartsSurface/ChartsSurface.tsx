@@ -19,6 +19,7 @@ import {
 } from '../internals/plugins/featurePlugins/useChartKeyboardNavigation';
 import { useUtilityClasses } from './chartsSurfaceClasses';
 import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction/useChartInteraction.types';
+import type { UseChartItemClickSignature } from '../internals/plugins/featurePlugins/useChartItemClick';
 
 export interface ChartsSurfaceProps extends Omit<
   React.SVGProps<SVGSVGElement>,
@@ -69,7 +70,10 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
   inProps: ChartsSurfaceProps,
   ref: React.Ref<SVGSVGElement>,
 ) {
-  const { store, instance } = useChartContext<[], [UseChartInteractionSignature]>();
+  const { store, instance } = useChartContext<
+    [],
+    [UseChartInteractionSignature, UseChartItemClickSignature]
+  >();
 
   const svgWidth = store.use(selectorChartSvgWidth);
   const svgHeight = store.use(selectorChartSvgHeight);
@@ -103,6 +107,10 @@ const ChartsSurface = React.forwardRef<SVGSVGElement, ChartsSurfaceProps>(functi
       onPointerLeave={(event) => {
         other.onPointerLeave?.(event);
         instance.handlePointerLeave?.(event);
+      }}
+      onClick={(event) => {
+        other.onClick?.(event);
+        instance.handleClick?.(event);
       }}
       ref={handleRef}
     >

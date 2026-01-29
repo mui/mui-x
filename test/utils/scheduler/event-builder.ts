@@ -12,7 +12,7 @@ import {
   SchedulerEventSide,
 } from '@mui/x-scheduler-headless/models/event';
 import { processEvent } from '@mui/x-scheduler-headless/process-event';
-import { getWeekDayCode } from '@mui/x-scheduler-headless/utils/recurring-events';
+import { getWeekDayCode } from '@mui/x-scheduler-headless/internals/utils/recurring-events';
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
 import { TemporalTimezone } from '@mui/x-scheduler-headless/base-ui-copy/types';
 import { adapter as defaultAdapter } from './adapters';

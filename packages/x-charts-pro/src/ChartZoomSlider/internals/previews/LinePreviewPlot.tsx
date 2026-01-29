@@ -19,7 +19,7 @@ export function LinePreviewPlot({ axisId }: LinePreviewPlotProps) {
         return (
           <PreviewLineElement
             key={seriesId}
-            id={seriesId}
+            seriesId={seriesId}
             d={d}
             color={color}
             gradientId={gradientId}
@@ -34,7 +34,7 @@ export interface PreviewLineElementProps extends Omit<
   React.SVGProps<SVGPathElement>,
   'ref' | 'color' | 'id'
 > {
-  id: SeriesId;
+  seriesId: SeriesId;
   gradientId?: string;
   color: string;
   d: string;
@@ -44,14 +44,20 @@ export interface PreviewLineElementProps extends Omit<
  * Preview of the line element for the zoom preview.
  * Based on LineElement and AnimatedLine.
  */
-function PreviewLineElement({ id, color, gradientId, onClick, ...other }: PreviewLineElementProps) {
+function PreviewLineElement({
+  seriesId,
+  color,
+  gradientId,
+  onClick,
+  ...other
+}: PreviewLineElementProps) {
   return (
     <path
       stroke={gradientId ? `url(#${gradientId})` : color}
       strokeWidth={2}
       strokeLinejoin="round"
       fill="none"
-      data-series={id}
+      data-series={seriesId}
       {...other}
     />
   );

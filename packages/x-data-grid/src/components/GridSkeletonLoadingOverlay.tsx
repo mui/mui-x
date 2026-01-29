@@ -18,8 +18,8 @@ import {
 } from '../hooks';
 import { PinnedColumnPosition } from '../internals/constants';
 import { gridColumnsTotalWidthSelector } from '../hooks/features/dimensions/gridDimensionsSelectors';
-import { GridColDef, GridEventListener } from '../models';
-import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import type { GridColDef, GridEventListener } from '../models';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants/gridClasses';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';

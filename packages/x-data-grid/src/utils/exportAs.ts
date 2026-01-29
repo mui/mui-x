@@ -1,4 +1,4 @@
-import { GridExportExtension } from '../models/gridExport';
+import type { GridExportExtension } from '../models/gridExport';
 
 /**
  * I have hesitated to use https://github.com/eligrey/FileSaver.js.

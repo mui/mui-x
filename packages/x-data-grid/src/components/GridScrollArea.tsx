@@ -5,9 +5,9 @@ import useEventCallback from '@mui/utils/useEventCallback';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/system';
 import { fastMemo } from '@mui/x-internals/fastMemo';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { getDataGridUtilityClass, gridClasses } from '../constants';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
@@ -18,8 +18,8 @@ import {
   gridColumnsTotalWidthSelector,
 } from '../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../hooks/features/density/densitySelector';
-import { GridScrollParams } from '../models/params/gridScrollParams';
-import { GridEventListener } from '../models/events';
+import type { GridScrollParams } from '../models/params/gridScrollParams';
+import type { GridEventListener } from '../models/events';
 import { useTimeout } from '../hooks/utils/useTimeout';
 import { getTotalHeaderHeight } from '../hooks/features/columns/gridColumnsUtils';
 import { createSelector } from '../utils/createSelector';

@@ -1,5 +1,5 @@
 import { type ScatterValueType } from '../../models';
-import { type SeriesProcessor } from '../../internals/plugins/models';
+import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const seriesProcessor: SeriesProcessor<'scatter'> = (
   { series, seriesOrder },

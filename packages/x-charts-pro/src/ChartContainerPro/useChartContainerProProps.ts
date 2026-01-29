@@ -6,7 +6,7 @@ import {
   type UseChartContainerPropsReturnValue,
 } from '@mui/x-charts/internals';
 import type * as React from 'react';
-import { type ChartDataProviderProps } from '@mui/x-charts/ChartDataProvider';
+import type { ChartDataProviderProProps } from '../ChartDataProviderPro';
 import type { ChartContainerProProps } from './ChartContainerPro';
 import { DEFAULT_PLUGINS, type AllPluginSignatures } from '../internals/plugins/allPlugins';
 
@@ -17,7 +17,7 @@ export type UseChartContainerProPropsReturnValue<
   UseChartContainerPropsReturnValue<TSeries, TSignatures>,
   'chartsSurfaceProps' | 'children'
 > & {
-  chartDataProviderProProps: ChartDataProviderProps<TSeries, TSignatures>;
+  chartDataProviderProProps: ChartDataProviderProProps<TSeries, TSignatures>;
 };
 
 export const useChartContainerProProps = <
@@ -50,7 +50,7 @@ export const useChartContainerProProps = <
     zoomInteractionConfig,
     apiRef,
     plugins: plugins ?? DEFAULT_PLUGINS,
-  } as unknown as ChartDataProviderProps<TSeries, TSignatures>;
+  } as unknown as ChartDataProviderProProps<TSeries, TSignatures>;
 
   return {
     chartDataProviderProProps,

@@ -3,17 +3,22 @@ import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   GridToolbarContainer,
-  GridToolbarContainerProps,
+  type GridToolbarContainerProps,
 } from '../containers/GridToolbarContainer';
 import { GridToolbarColumnsButton } from './GridToolbarColumnsButton';
 import { GridToolbarDensitySelector } from './GridToolbarDensitySelector';
 import { GridToolbarFilterButton } from './GridToolbarFilterButton';
-import { GridToolbarExport, GridToolbarExportProps } from './GridToolbarExport';
+import { GridToolbarExport, type GridToolbarExportProps } from './GridToolbarExport';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { GridToolbarQuickFilter, GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
+import { GridToolbarQuickFilter, type GridToolbarQuickFilterProps } from './GridToolbarQuickFilter';
 import { GridToolbarLabel } from '../toolbarV8/GridToolbar';
 
 export interface GridToolbarProps extends GridToolbarContainerProps, GridToolbarExportProps {
+  /**
+   * Show the history controls (undo/redo buttons).
+   * @default true
+   */
+  showHistoryControls?: boolean;
   /**
    * Show the quick filter component.
    * @default true
@@ -86,6 +91,11 @@ GridToolbar.propTypes = {
     quickFilterParser: PropTypes.func,
     slotProps: PropTypes.object,
   }),
+  /**
+   * Show the history controls (undo/redo buttons).
+   * @default true
+   */
+  showHistoryControls: PropTypes.bool,
   /**
    * Show the quick filter component.
    * @default true

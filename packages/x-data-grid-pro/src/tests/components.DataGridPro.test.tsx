@@ -1,12 +1,12 @@
-import { createRenderer, EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
+import { createRenderer, type EventType, fireEvent, waitFor } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
   gridClasses,
   useGridApiRef,
-  DataGridProProps,
-  GridApi,
+  type DataGridProProps,
+  type GridApi,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import { getCell, getRow } from 'test/utils/helperFn';

@@ -7,7 +7,7 @@ import {
   type DatasetType,
 } from '../../models/seriesType/config';
 import { type SeriesId } from '../../models/seriesType/common';
-import { type SeriesProcessor } from '../../internals/plugins/models';
+import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 import type { DefaultizedLineSeriesType } from '../../models';
 
 const lineValueFormatter = ((v) =>
