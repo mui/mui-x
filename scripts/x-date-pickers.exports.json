@@ -325,7 +325,7 @@
   { "name": "usePickerActionsContext", "kind": "Variable" },
   { "name": "usePickerAdapter", "kind": "Variable" },
   { "name": "usePickerContext", "kind": "Variable" },
-  { "name": "usePickerLayout", "kind": "ExportAssignment" },
+  { "name": "usePickerLayout", "kind": "Variable" },
   { "name": "usePickerTranslations", "kind": "Variable" },
   { "name": "useSplitFieldProps", "kind": "Variable" },
   { "name": "UseTimeFieldProps", "kind": "Interface" },
