@@ -20,6 +20,7 @@ import { SchedulerEventColor, SchedulerResourceId } from '@mui/x-scheduler-headl
 import { useStore } from '@base-ui/utils/store';
 import { useTranslations } from '../../utils/TranslationsContext';
 import { schedulerPaletteStyles } from '../../utils/tokens';
+import { useEventDialogClasses } from './EventDialogClassesContext';
 
 const ResourceMenuLegendContainer = styled('div', {
   name: 'MuiEventDraggableDialog',
@@ -86,6 +87,7 @@ function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
   const { resource, color } = props;
 
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
   const resourceColor = useStore(
     store,
     schedulerResourceSelectors.defaultEventColor,
@@ -93,11 +95,17 @@ function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
   );
 
   return (
-    <ResourceMenuLegendContainer>
-      <ResourceMenuColorDot className="ResourceLegendColor" data-palette={resourceColor} />
+    <ResourceMenuLegendContainer className={classes.eventDialogResourceMenuLegendContainer}>
+      <ResourceMenuColorDot
+        className={classes.eventDialogResourceMenuColorDot}
+        data-palette={resourceColor}
+      />
 
       {color && resourceColor !== color && (
-        <ResourceMenuColorDot className="ResourceLegendColor" data-palette={color} />
+        <ResourceMenuColorDot
+          className={classes.eventDialogResourceMenuColorDot}
+          data-palette={color}
+        />
       )}
     </ResourceMenuLegendContainer>
   );
@@ -109,6 +117,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
   // Context hooks
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
+  const classes = useEventDialogClasses();
 
   // Selector hooks
   const resources = useStore(store, schedulerResourceSelectors.processedResourceFlatList);
@@ -179,7 +188,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
           >
             <ListItemIcon>
               <ResourceMenuColorDot
-                className="ResourceLegendColor"
+                className={classes.eventDialogResourceMenuColorDot}
                 data-palette={resourceOption.eventColor}
               />
             </ListItemIcon>
@@ -204,6 +213,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
               }}
               aria-label={colorOption}
               data-palette={colorOption}
+              className={classes.eventDialogResourceMenuColorRadioButton}
             >
               {color === colorOption && <CheckIcon fontSize="small" />}
             </ResourceMenuColorRadioButton>

@@ -332,6 +332,8 @@
   { "name": "HeatmapPluginSignatures", "kind": "TypeAlias" },
   { "name": "HeatmapPremium", "kind": "Variable" },
   { "name": "HeatmapPremiumProps", "kind": "Interface" },
+  { "name": "HeatmapPremiumSlotProps", "kind": "Interface" },
+  { "name": "HeatmapPremiumSlots", "kind": "Interface" },
   { "name": "HeatmapProps", "kind": "Interface" },
   { "name": "HeatmapSeries", "kind": "TypeAlias" },
   { "name": "HeatmapSeriesType", "kind": "Interface" },
