@@ -7,6 +7,7 @@ import {
   SchedulerStoreRunner,
   StateWatcher,
   StoreSpy,
+  AnyEventCalendarStore,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import {
@@ -14,7 +15,7 @@ import {
   SchedulerResourceId,
   SchedulerOccurrencePlaceholderCreation,
 } from '@mui/x-scheduler-headless/models';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
+import { SchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventDraggableDialogContent } from './EventDraggableDialog';
 import { EventCalendarProvider } from '../EventCalendarProvider';
@@ -324,8 +325,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
                 type: 'creation',
@@ -341,7 +342,7 @@ describe('<EventDraggableDialogContent open />', () => {
           <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -368,8 +369,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
                 type: 'creation',
@@ -385,7 +386,7 @@ describe('<EventDraggableDialogContent open />', () => {
           <EventDraggableDialogContent open {...defaultProps} occurrence={creationOccurrence} />
 
           <StateWatcher
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -411,8 +412,8 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) =>
               store.setOccurrencePlaceholder({
                 type: 'creation',
@@ -432,7 +433,7 @@ describe('<EventDraggableDialogContent open />', () => {
           />
 
           <StateWatcher
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             selector={(s) => s.occurrencePlaceholder?.surfaceType}
             onValueChange={handleSurfaceChange}
           />
@@ -469,12 +470,12 @@ describe('<EventDraggableDialogContent open />', () => {
 
       const { user } = render(
         <EventCalendarProvider events={[]} resources={resources} onEventsChange={onEventsChange}>
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
           <StoreSpy
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             method="createEvent"
             onSpyReady={(sp) => {
               createEventSpy = sp;
@@ -537,12 +538,12 @@ describe('<EventDraggableDialogContent open />', () => {
           onEventsChange={onEventsChange}
           displayTimezone={displayTimezone}
         >
-          <SchedulerStoreRunner
-            context={EventCalendarStoreContext}
+          <SchedulerStoreRunner<AnyEventCalendarStore>
+            context={SchedulerStoreContext}
             onMount={(store) => store.setOccurrencePlaceholder(placeholder)}
           />
           <StoreSpy
-            Context={EventCalendarStoreContext}
+            Context={SchedulerStoreContext}
             method="createEvent"
             onSpyReady={(sp) => {
               createEventSpy = sp;
@@ -604,14 +605,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -654,14 +655,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -717,14 +718,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -778,14 +779,14 @@ describe('<EventDraggableDialogContent open />', () => {
             <div ref={containerRef} />
             <EventCalendarProvider events={[originalRecurringEvent]} resources={resources}>
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="updateRecurringEvent"
                 onSpyReady={(sp) => {
                   updateRecurringEventSpy = sp;
                 }}
               />
               <StoreSpy
-                Context={EventCalendarStoreContext}
+                Context={SchedulerStoreContext}
                 method="selectRecurringEventUpdateScope"
                 onSpyReady={(sp) => {
                   selectRecurringEventUpdateScopeSpy = sp;
@@ -1169,7 +1170,7 @@ describe('<EventDraggableDialogContent open />', () => {
         const { user } = render(
           <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
-              Context={EventCalendarStoreContext}
+              Context={SchedulerStoreContext}
               method="updateEvent"
               onSpyReady={(sp) => {
                 updateEventSpy = sp;
@@ -1209,7 +1210,7 @@ describe('<EventDraggableDialogContent open />', () => {
         const { user } = render(
           <EventCalendarProvider events={[nonRecurringEvent]} resources={resources}>
             <StoreSpy
-              Context={EventCalendarStoreContext}
+              Context={SchedulerStoreContext}
               method="updateEvent"
               onSpyReady={(sp) => {
                 updateEventSpy = sp;
