@@ -73,11 +73,11 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
 
     let accumulatedState: Record<string, any> = { ...options.initialState };
     internalPlugins.forEach((plugin) => {
-      accumulatedState = plugin.getInitialState(accumulatedState as any, options as any);
+      accumulatedState = plugin.initialize(accumulatedState as any, options as any);
     });
 
     registry.forEachUserPlugin((plugin) => {
-      accumulatedState = plugin.getInitialState(accumulatedState, options as any);
+      accumulatedState = plugin.initialize(accumulatedState, options as any);
     });
 
     const store = new Store<DataGridState<TPlugins>>(accumulatedState as DataGridState<TPlugins>);

@@ -94,7 +94,7 @@ type ColumnsPlugin = Plugin<
 const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
   selectors: columnsSelectors,
-  getInitialState: (state, params) => {
+  initialize: (state, params) => {
     const initialStateColumns = params.initialState?.columns;
     return {
       ...state,

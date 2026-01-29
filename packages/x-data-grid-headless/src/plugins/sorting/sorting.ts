@@ -37,7 +37,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
   name: 'sorting',
   selectors: sortingSelectors,
 
-  getInitialState: (state, params) => {
+  initialize: (state, params) => {
     // Prefer controlled sortModel over initialState
     const initialSortModel =
       params.sortModel ?? params.initialState?.sorting?.sortModel ?? ([] as GridSortModel);
@@ -205,7 +205,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     };
 
     // Track previous values for change detection
-    // Initialize to current row IDs since initial sorting is done in getInitialState
+    // Initialize to current row IDs since initial sorting is done in initialize
     const prevRowIdsRef = React.useRef<GridRowId[]>(api.rows.getAllRowIds());
     const prevSortModelRef = React.useRef<GridSortModel>(store.state.sorting.sortModel);
 

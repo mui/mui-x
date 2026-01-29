@@ -50,7 +50,7 @@ type PaginationPlugin = Plugin<
 const paginationPlugin = createPlugin<PaginationPlugin>()({
   name: 'pagination',
   selectors: paginationSelectors,
-  getInitialState: (state, params) => ({
+  initialize: (state, params) => ({
     ...state,
     pagination: {
       paginationModel: params.initialState?.pagination?.paginationModel ??

@@ -182,7 +182,7 @@ type PluginWithColumnMeta = Plugin<
 
 const pluginWithColumnMeta = createPlugin<PluginWithColumnMeta>()({
   name: 'pluginWithColumnMeta',
-  getInitialState: (state) => ({ ...state, pluginWithColumnMeta: { value: 'test' } }),
+  initialize: (state) => ({ ...state, pluginWithColumnMeta: { value: 'test' } }),
   use: () => ({ pluginWithColumnMeta: { getValue: () => 'test' } }),
 });
 
@@ -199,7 +199,7 @@ type PluginDependsOnPluginWithColumnMeta = Plugin<
 const pluginDependsOnPluginWithColumnMeta = createPlugin<PluginDependsOnPluginWithColumnMeta>()({
   name: 'pluginDependsOnPluginWithColumnMeta',
   dependencies: [pluginWithColumnMeta],
-  getInitialState: (state) => ({
+  initialize: (state) => ({
     ...state,
     pluginDependsOnPluginWithColumnMeta: { derived: 'derived' },
   }),
@@ -274,7 +274,7 @@ type PluginA = Plugin<
 
 const pluginA = createPlugin<PluginA>()({
   name: 'pluginA',
-  getInitialState: (state, params) => {
+  initialize: (state, params) => {
     // @ts-expect-error Not initialized yet
     state.pluginA;
 
@@ -298,7 +298,7 @@ type PluginB = Plugin<
 
 const pluginB = createPlugin<PluginB>()({
   name: 'pluginB',
-  getInitialState: (state) => {
+  initialize: (state) => {
     // Can access internal plugins state here
     state.rows.tree;
     state.columns.orderedFields;
@@ -324,7 +324,7 @@ type PluginC = Plugin<
 const pluginC = createPlugin<PluginC>()({
   name: 'pluginC',
   dependencies: [pluginA, pluginB],
-  getInitialState: (state, params) => {
+  initialize: (state, params) => {
     // Can access internal plugins state here
     state.rows.tree;
     state.columns.orderedFields;
@@ -365,7 +365,7 @@ type PluginD = Plugin<
 // Use `import type` for optional plugins - type-only imports don't affect bundle
 const pluginD = createPlugin<PluginD>()({
   name: 'pluginD',
-  getInitialState: (state) => {
+  initialize: (state) => {
     // Can access internal plugins state here
     state.rows.tree;
     state.columns.orderedFields;

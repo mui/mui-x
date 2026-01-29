@@ -61,7 +61,7 @@ export type ExtractAllDependenciesState<TDeps extends readonly AnyPlugin[]> =
         ExtractAllDependenciesState<Rest>
     : {};
 
-// The state available to a plugin's getInitialState method
+// The state available to a plugin's initialize method
 export type AvailableState<TDeps extends readonly AnyPlugin[]> = InternalPluginsState &
   ExtractAllDependenciesState<TDeps>;
 
@@ -86,7 +86,7 @@ export interface Plugin<
   name: TName;
   dependencies?: TDeps;
   selectors: TSelectors;
-  getInitialState: (
+  initialize: (
     state: AvailableState<TDeps>,
     params: TParams,
   ) => AvailableState<TDeps> & TState;
@@ -110,10 +110,10 @@ type PluginColumnMeta<T> = T extends Plugin<any, any, any, any, any, infer C, an
 // Usage: createPlugin<PluginType>()(pluginImpl) - the double call allows TDeps inference
 export function createPlugin<TPlugin extends AnyPlugin>() {
   return <const TDeps extends readonly AnyPlugin[] = readonly []>(
-    plugin: Omit<TPlugin, 'dependencies' | 'use' | 'getInitialState' | 'selectors'> & {
+    plugin: Omit<TPlugin, 'dependencies' | 'use' | 'initialize' | 'selectors'> & {
       dependencies?: TDeps;
       selectors?: PluginSelectors<TPlugin>;
-      getInitialState: (
+      initialize: (
         state: AvailableState<TDeps>,
         params: ExtractPluginParams<TPlugin>,
       ) => AvailableState<TDeps> & ExtractPluginState<TPlugin>;
