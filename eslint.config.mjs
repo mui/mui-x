@@ -232,6 +232,12 @@ export default defineConfig(
     },
   },
   {
+    files: [`packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
+    },
+  },
+  {
     files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
       'no-restricted-imports': [

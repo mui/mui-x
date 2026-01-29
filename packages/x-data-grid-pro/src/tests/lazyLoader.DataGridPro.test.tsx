@@ -1,15 +1,15 @@
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
 import { getColumnHeaderCell, getColumnValues, getRow } from 'test/utils/helperFn';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  DataGridProProps,
+  type DataGridProProps,
   GRID_ROOT_GROUP_ID,
-  GridApi,
-  GridColDef,
-  GridGroupNode,
-  GridRowModel,
-  GridRowsProp,
+  type GridApi,
+  type GridColDef,
+  type GridGroupNode,
+  type GridRowModel,
+  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { spy } from 'sinon';

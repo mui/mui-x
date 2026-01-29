@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
+  type GridApi,
   useGridApiRef,
   DataGridPremium,
-  DataGridPremiumProps,
-  GridHistoryEventHandler,
-  GridEvents,
+  type DataGridPremiumProps,
+  type GridHistoryEventHandler,
+  type GridEvents,
 } from '@mui/x-data-grid-premium';
 import {
   createRenderer,
   waitFor,
   act,
   fireEvent,
-  MuiRenderResult,
+  type MuiRenderResult,
   screen,
 } from '@mui/internal-test-utils';
 import { getCell, getColumnValues } from 'test/utils/helperFn';

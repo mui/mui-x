@@ -1,19 +1,19 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import useLazyRef from '@mui/utils/useLazyRef';
 import {
-  GridDataSourceGroupNode,
+  type GridDataSourceGroupNode,
   useGridSelector,
   GridGetRowsError,
   gridRowIdSelector,
   gridRowNodeSelector,
-  GridRowModelUpdate,
-  GridRowModel,
+  type GridRowModelUpdate,
+  type GridRowModel,
   gridRowTreeSelector,
-  GridUpdateRowParams,
-  GridRowId,
+  type GridUpdateRowParams,
+  type GridRowId,
   GRID_ROOT_GROUP_ID,
 } from '@mui/x-data-grid';
 import {
@@ -23,15 +23,15 @@ import {
   gridGetRowsParamsSelector,
   DataSourceRowsUpdateStrategy,
   GridStrategyGroup,
-  GridDataSourceBaseOptions,
-  GridStrategyProcessor,
+  type GridDataSourceBaseOptions,
+  type GridStrategyProcessor,
   getTreeNodeDescendants,
 } from '@mui/x-data-grid/internals';
 import { warnOnce } from '@mui/x-internals/warning';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { NestedDataManager, RequestStatus, getGroupKeys } from './utils';
-import {
+import type {
   GridDataSourceApiBasePro,
   GridDataSourceApiPro,
   GridDataSourcePrivateApiPro,
