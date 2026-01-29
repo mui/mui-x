@@ -62,7 +62,6 @@ export default defineConfig({
     passWithNoTests: true,
     env: {
       NODE_ENV: 'test',
-      VITEST: 'true',
     },
     browser: {
       provider: playwright({
