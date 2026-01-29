@@ -203,6 +203,24 @@ This improves consistency across chart components and developer experience.
  />
 ```
 
+### New identifier structure
+
+The heatmap identifier type has been modified as follows.
+
+This new type relies on the `xIndex`/`yIndex` to identify the cell instead of just the `dataIndex`, permitting the identification of cells without data.
+
+```diff
+ {
+  type: 'heatmap';
+  seriesId: SeriesId;
+  dataIndex?: number;
+-  xIndex?: number;
++  xIndex: number;
+-  yIndex?: number;
++  yIndex: number;
+ }
+```
+
 ## Legend
 
 ### `LegendItemParams` Modification
