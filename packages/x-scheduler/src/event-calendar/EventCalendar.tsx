@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
   useExtractEventCalendarParameters,
@@ -34,19 +33,17 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const { translations, ...other } = forwardedProps;
 
   return (
-    <EventCalendarStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store as any}>
-        <TranslationsProvider translations={translations}>
-          <EventCalendarClassesContext.Provider value={classes}>
-            <EventDialogClassesContext.Provider value={classes}>
-              <EventDraggableDialogProvider>
-                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-              </EventDraggableDialogProvider>
-            </EventDialogClassesContext.Provider>
-          </EventCalendarClassesContext.Provider>
-        </TranslationsProvider>
-      </SchedulerStoreContext.Provider>
-    </EventCalendarStoreContext.Provider>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <TranslationsProvider translations={translations}>
+        <EventCalendarClassesContext.Provider value={classes}>
+          <EventDialogClassesContext.Provider value={classes}>
+            <EventDraggableDialogProvider>
+              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+            </EventDraggableDialogProvider>
+          </EventDialogClassesContext.Provider>
+        </EventCalendarClassesContext.Provider>
+      </TranslationsProvider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;
 

@@ -1,5 +1,5 @@
 import { Adapter } from '@mui/x-scheduler-headless/use-adapter';
-import { EventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
+import { ExtendableEventCalendarStore } from '@mui/x-scheduler-headless/use-event-calendar';
 import { EventCalendarPremiumLazyLoadingPlugin } from './plugins/EventCalendarPremiumLazyLoadingPlugin';
 import { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.types';
 
@@ -9,14 +9,14 @@ import { EventCalendarPremiumParameters } from './EventCalendarPremiumStore.type
 export class EventCalendarPremiumStore<
   TEvent extends object,
   TResource extends object,
-> extends EventCalendarStore<TEvent, TResource> {
+> extends ExtendableEventCalendarStore<TEvent, TResource> {
   public lazyLoading: EventCalendarPremiumLazyLoadingPlugin<TEvent>;
 
   public constructor(
     parameters: EventCalendarPremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter);
+    super(parameters, adapter, 'EventCalendarPremiumStore');
 
     this.lazyLoading = new EventCalendarPremiumLazyLoadingPlugin<TEvent>(this);
   }

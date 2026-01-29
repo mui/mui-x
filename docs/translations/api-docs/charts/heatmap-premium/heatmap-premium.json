@@ -96,5 +96,29 @@
     "zoomData": { "description": "The list of zoom data related to each axis." },
     "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
   },
-  "classDescriptions": {}
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
+    "baseDivider": "",
+    "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
+    "baseTooltip": "",
+    "cell": "The component that renders the heatmap cell.",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
+    "legend": "Custom component for the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
+  }
 }

@@ -68,7 +68,7 @@ export class EventTimelinePremiumStore<
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremium', mapper);
+    super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
