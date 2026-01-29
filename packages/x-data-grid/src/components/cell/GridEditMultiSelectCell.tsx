@@ -151,26 +151,7 @@ export interface GridEditMultiSelectCellProps extends GridRenderEditCellParams {
 
 function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
   const rootProps = useGridRootProps();
-  const {
-    id,
-    value: valueProp,
-    formattedValue,
-    api,
-    field,
-    row,
-    rowNode,
-    colDef,
-    cellMode,
-    isEditable,
-    tabIndex,
-    className,
-    hasFocus,
-    isValidating,
-    isProcessingProps,
-    error,
-    onValueChange,
-    slotProps,
-  } = props;
+  const { id, value: valueProp, field, row, colDef, cellMode, hasFocus, slotProps } = props;
 
   const apiRef = useGridApiContext();
   const classes = useUtilityClasses(rootProps);
@@ -356,10 +337,6 @@ function GridEditMultiSelectAutocomplete(props: GridEditMultiSelectAutocompleteP
         textField: {
           size: 'small',
           inputRef,
-          onClick: (event: React.MouseEvent) => {
-            // Prevent the cell from losing focus
-            event.stopPropagation();
-          },
         },
       }}
       material={{

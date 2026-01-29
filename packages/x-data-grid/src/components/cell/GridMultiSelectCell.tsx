@@ -26,7 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['multiSelectCell'],
     chip: ['multiSelectCellChip'],
-    chipHidden: ['multiSelectCellChipHidden'],
+    chipHidden: ['multiSelectCellChip--hidden'],
     overflow: ['multiSelectCellOverflow'],
     popup: ['multiSelectCellPopup'],
     popperContent: ['multiSelectCellPopperContent'],
@@ -76,6 +76,20 @@ const GridMultiSelectCellPopper = styled(NotRendered<GridSlotProps['basePopper']
     pointerEvents: 'none',
   },
 }));
+
+const GridMultiSelectCellChip = styled(NotRendered<GridSlotProps['baseChip']>, {
+  name: 'MuiDataGrid',
+  slot: 'MultiSelectCellChip',
+})<{ ownerState: OwnerState }>({
+  [`&.${gridClasses['multiSelectCellChip--hidden']}`]: {
+    display: 'none',
+  },
+});
+
+const GridMultiSelectCellOverflow = styled(NotRendered<GridSlotProps['baseChip']>, {
+  name: 'MuiDataGrid',
+  slot: 'MultiSelectCellChip',
+})<{ ownerState: OwnerState }>();
 
 export interface GridMultiSelectCellProps extends GridRenderCellParams {
   /**
@@ -286,8 +300,10 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       className={clsx(classes.root, hasFocus && 'Mui-focused', slotProps?.root?.className)}
     >
       {arrayValue.map((v, index) => (
-        <rootProps.slots.baseChip
+        <GridMultiSelectCellChip
           key={index}
+          as={rootProps.slots.baseChip}
+          ownerState={rootProps}
           ref={(el: HTMLDivElement) => {
             if (el) {
               chipsRef.current.set(index, el);
@@ -306,7 +322,9 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
         />
       ))}
       {hiddenCount > 0 && (
-        <rootProps.slots.baseChip
+        <GridMultiSelectCellOverflow
+          as={rootProps.slots.baseChip}
+          ownerState={rootProps}
           ref={overflowChipRef}
           label={`+${hiddenCount}`}
           size="small"

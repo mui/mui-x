@@ -494,7 +494,7 @@ export interface GridClasses {
   /**
    * Styles applied to hidden chips in the multi-select cell that overflow the container.
    */
-  multiSelectCellChipHidden: string;
+  'multiSelectCellChip--hidden': string;
   /**
    * Styles applied to the overflow "+N" chip in the multi-select cell.
    */
@@ -1110,7 +1110,7 @@ export const gridClasses = generateUtilityClasses<GridClassKey>('MuiDataGrid', [
   'editLongTextCellTextarea',
   'multiSelectCell',
   'multiSelectCellChip',
-  'multiSelectCellChipHidden',
+  'multiSelectCellChip--hidden',
   'multiSelectCellOverflow',
   'multiSelectCellPopup',
   'multiSelectCellPopperContent',
