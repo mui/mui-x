@@ -5,9 +5,14 @@ import type {
   SeriesId,
   SeriesItemIdentifier,
 } from '../../../../models/seriesType';
+import type { ChartsSeriesConfig } from '../../../../models/seriesType/config';
 
-const batchRenderingSeries = new Set(['bar', 'rangeBar', 'line'] as const);
-type SeriesTypeWithBatchRendering = typeof batchRenderingSeries extends Set<infer U> ? U : never;
+const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>(['bar', 'rangeBar', 'line']);
+type SeriesTypeWithBatchRendering = 'bar' | 'line' |
+  // Conditional type to add 'rangeBar' if it exists in ChartsSeriesConfig
+  (ChartsSeriesConfig extends { rangeBar: any }
+    ? 'rangeBar'
+    : never);
 
 
 export function isBatchRenderingSeriesType(
