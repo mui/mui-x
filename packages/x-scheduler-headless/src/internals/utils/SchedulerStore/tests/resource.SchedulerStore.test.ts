@@ -3,8 +3,7 @@ import {
   SchedulerResourceId,
   SchedulerResourceModelStructure,
 } from '@mui/x-scheduler-headless/models';
-import { adapter } from 'test/utils/scheduler';
-import { storeClasses } from './utils';
+import { adapter, storeClasses } from 'test/utils/scheduler';
 import { schedulerResourceSelectors } from '../../../../scheduler-selectors';
 
 const DEFAULT_PARAMS = { events: [] };
