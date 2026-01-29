@@ -124,7 +124,7 @@ export const useGridAggregation = (
     const hasAggregatedSortedField =
       gridRowMaximumTreeDepthSelector(apiRef) > 1 && sortedAggregatedFields.length > 0;
 
-    if (visibleAggregatedFields.length > 0) {
+    if (visibleAggregatedFieldsWithSort.length > 0) {
       chunks.push(visibleAggregatedFieldsWithSort);
     }
     const otherAggregatedFields = aggregatedFields.filter(
