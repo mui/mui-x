@@ -226,12 +226,19 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
 
   // Store previous computedWidth to detect column resize
   const prevComputedWidthRef = React.useRef(colDef.computedWidth);
+  // Track previous arrayKey to detect actual changes (not initial mount)
+  const prevArrayKeyRef = React.useRef<string | null>(null);
 
   // Clear chip width cache when array values change
   React.useEffect(() => {
-    chipWidthsRef.current.clear();
-    setMeasuredCount(0);
-    setContainerWidth(null);
+    // Skip on initial mount - state is already fresh
+    // Only reset when arrayKey actually changes
+    if (prevArrayKeyRef.current !== null && prevArrayKeyRef.current !== arrayKey) {
+      chipWidthsRef.current.clear();
+      setMeasuredCount(0);
+      setContainerWidth(null);
+    }
+    prevArrayKeyRef.current = arrayKey;
   }, [arrayKey]);
 
   // Update container width when column is resized
