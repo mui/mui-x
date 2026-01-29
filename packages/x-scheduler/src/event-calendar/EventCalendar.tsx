@@ -1,7 +1,6 @@
 'use client';
 import * as React from 'react';
 import { useThemeProps } from '@mui/material/styles';
-import { EventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   useEventCalendar,
   useExtractEventCalendarParameters,
@@ -12,6 +11,7 @@ import { TranslationsProvider } from '../internals/utils/TranslationsContext';
 import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
 import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarClassesContext } from './EventCalendarClassesContext';
+import { EventDialogClassesContext } from '../internals/components/event-draggable-dialog/EventDialogClassesContext';
 import { EventCalendarRoot } from './EventCalendarRoot';
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
@@ -33,17 +33,17 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const { translations, ...other } = forwardedProps;
 
   return (
-    <EventCalendarStoreContext.Provider value={store}>
-      <SchedulerStoreContext.Provider value={store as any}>
-        <TranslationsProvider translations={translations}>
-          <EventCalendarClassesContext.Provider value={classes}>
+    <SchedulerStoreContext.Provider value={store as any}>
+      <TranslationsProvider translations={translations}>
+        <EventCalendarClassesContext.Provider value={classes}>
+          <EventDialogClassesContext.Provider value={classes}>
             <EventDraggableDialogProvider>
               <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
             </EventDraggableDialogProvider>
-          </EventCalendarClassesContext.Provider>
-        </TranslationsProvider>
-      </SchedulerStoreContext.Provider>
-    </EventCalendarStoreContext.Provider>
+          </EventDialogClassesContext.Provider>
+        </EventCalendarClassesContext.Provider>
+      </TranslationsProvider>
+    </SchedulerStoreContext.Provider>
   );
 }) as EventCalendarComponent;
 
