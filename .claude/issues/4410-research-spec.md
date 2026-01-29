@@ -29,10 +29,16 @@ Added TypeScript types and column definition defaults.
 
 Implemented chip rendering with auto-overflow and expand popup.
 
-| File                                                                                                                                            | Description                                                        |
-| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [`packages/x-data-grid/src/components/cell/GridMultiSelectCell.tsx`](../../../packages/x-data-grid/src/components/cell/GridMultiSelectCell.tsx) | Display cell with chips, ResizeObserver for overflow, expand popup |
-| [`packages/x-data-grid/src/constants/gridClasses.ts`](../../../packages/x-data-grid/src/constants/gridClasses.ts)                               | Added `multiSelectCell*` CSS classes                               |
+| File                                                                                                                                            | Description                                                                      |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [`packages/x-data-grid/src/components/cell/GridMultiSelectCell.tsx`](../../../packages/x-data-grid/src/components/cell/GridMultiSelectCell.tsx) | Display cell with chips, measure-once overflow calculation, expand popup         |
+| [`packages/x-data-grid/src/constants/gridClasses.ts`](../../../packages/x-data-grid/src/constants/gridClasses.ts)                               | Added `multiSelectCell*` CSS classes                                             |
+
+**Performance optimization:** Replaced per-cell ResizeObserver with measure-once approach:
+- Measure chips and container width once on mount via `useLayoutEffect`
+- React to `colDef.computedWidth` changes via delta calculation
+- Use `useMemo` for visible count calculation from cached measurements
+- Result: 0 ResizeObservers vs N observers per column, no DOM reads on resize
 
 ### Phase 3: Cell Editing (Autocomplete) ✅
 
