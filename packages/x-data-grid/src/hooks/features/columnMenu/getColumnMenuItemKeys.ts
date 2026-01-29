@@ -1,7 +1,7 @@
-import { RefObject } from '@mui/x-internals/types';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridColumnMenuSlotProps } from './columnMenuInterfaces';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridColumnMenuSlotProps } from './columnMenuInterfaces';
 
 export interface GetColumnMenuItemKeysParams {
   apiRef: RefObject<GridPrivateApiCommunity>;
