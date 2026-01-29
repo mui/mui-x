@@ -308,9 +308,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
                   <OptionRow label="Mode" disabled={!isSortingEnabled}>
                     <Select
                       value={config.sorting?.mode ?? 'auto'}
-                      onChange={(val) =>
-                        updateSortingConfig({ mode: val as 'auto' | 'manual' })
-                      }
+                      onChange={(val) => updateSortingConfig({ mode: val as 'auto' | 'manual' })}
                       options={[
                         { value: 'auto', label: 'Auto' },
                         { value: 'manual', label: 'Manual' },

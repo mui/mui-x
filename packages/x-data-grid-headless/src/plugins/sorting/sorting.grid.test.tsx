@@ -473,7 +473,14 @@ describe('Sorting Plugin - Integration Tests', () => {
         { id: 2, name: 'Alice', age: 25 },
         { id: 3, name: 'Bob', age: 35 },
       ];
-      render(<TestDataGrid rows={rows} columns={defaultColumns} apiRef={apiRef} sorting={{ enableMultiSort: true }} />);
+      render(
+        <TestDataGrid
+          rows={rows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          sorting={{ enableMultiSort: true }}
+        />,
+      );
 
       await act(async () => {
         apiRef.current?.api.sorting.sortColumn('name', 'asc');

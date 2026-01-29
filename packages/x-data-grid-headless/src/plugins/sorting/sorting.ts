@@ -236,7 +236,10 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     React.useEffect(() => {
       if (params.sorting?.model !== undefined) {
         const currentModel = store.state.sorting.sortModel;
-        if (params.sorting.model !== currentModel && params.sorting.model !== prevSortModelRef.current) {
+        if (
+          params.sorting.model !== currentModel &&
+          params.sorting.model !== prevSortModelRef.current
+        ) {
           prevSortModelRef.current = params.sorting.model;
           // Update state without triggering callback (it's controlled)
           store.setState({
