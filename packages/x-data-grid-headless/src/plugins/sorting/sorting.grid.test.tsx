@@ -9,6 +9,7 @@ import {
   type SortingColumnMeta,
   type GridSortDirection,
 } from '..';
+import { TestDataGrid } from '../../test';
 
 type TestRow = { id: number; name: string; age: number };
 
@@ -27,53 +28,6 @@ type GridApi = ReturnType<
   typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>
 >;
 
-interface TestGridProps {
-  rows?: TestRow[];
-  columns?: ColumnDef<TestRow, SortingColumnMeta>[];
-  apiRef?: React.RefObject<GridApi | null>;
-  sortModel?: Parameters<typeof useDataGrid>[0]['sortModel'];
-  initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
-  onSortModelChange?: Parameters<typeof useDataGrid>[0]['onSortModelChange'];
-  onSortedRowsSet?: Parameters<typeof useDataGrid>[0]['onSortedRowsSet'];
-  sortingMode?: Parameters<typeof useDataGrid>[0]['sortingMode'];
-  enableMultiSort?: Parameters<typeof useDataGrid>[0]['enableMultiSort'];
-  stableSort?: Parameters<typeof useDataGrid>[0]['stableSort'];
-  sortingOrder?: Parameters<typeof useDataGrid>[0]['sortingOrder'];
-}
-
-function TestGrid(props: TestGridProps) {
-  const { rows = defaultRows, columns = defaultColumns, apiRef, ...gridProps } = props;
-
-  const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], TestRow>({
-    rows,
-    columns,
-    plugins: [sortingPlugin, paginationPlugin],
-    ...gridProps,
-  });
-
-  React.useEffect(() => {
-    if (apiRef) {
-      (apiRef as React.RefObject<GridApi | null>).current = grid;
-    }
-  }, [grid, apiRef]);
-
-  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
-  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
-
-  return (
-    <div data-testid="grid">
-      {sortedRowIds.map((rowId) => {
-        const row = rowsData[rowId] as TestRow | undefined;
-        return row ? (
-          <div key={rowId} data-testid="row" data-name={row.name} data-age={row.age}>
-            {row.name}
-          </div>
-        ) : null;
-      })}
-    </div>
-  );
-}
-
 describe('Sorting Plugin - Integration Tests', () => {
   const { render } = createRenderer();
 
@@ -84,13 +38,15 @@ describe('Sorting Plugin - Integration Tests', () => {
 
   describe('initial state', () => {
     it('should keep original order when no sorting is applied', () => {
-      const { container } = render(<TestGrid />);
+      const { container } = render(<TestDataGrid rows={defaultRows} columns={defaultColumns} />);
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
     });
 
     it('should apply sorting from initialState', async () => {
       const { container } = render(
-        <TestGrid
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
           initialState={{
             sorting: {
               sortModel: [{ field: 'name', sort: 'asc' }],
@@ -102,13 +58,21 @@ describe('Sorting Plugin - Integration Tests', () => {
     });
 
     it('should apply sorting from sortModel prop', () => {
-      const { container } = render(<TestGrid sortModel={[{ field: 'name', sort: 'desc' }]} />);
+      const { container } = render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          sortModel={[{ field: 'name', sort: 'desc' }]}
+        />,
+      );
       expect(getRowNames(container)).toEqual(['Charlie', 'Bob', 'Alice']);
     });
 
     it('should prefer sortModel prop over initialState', () => {
       const { container } = render(
-        <TestGrid
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
           sortModel={[{ field: 'name', sort: 'desc' }]}
           initialState={{
             sorting: {
@@ -125,7 +89,9 @@ describe('Sorting Plugin - Integration Tests', () => {
     describe('sortColumn', () => {
       it('should sort column ascending', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} />);
+        const { container } = render(
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -136,7 +102,9 @@ describe('Sorting Plugin - Integration Tests', () => {
 
       it('should sort column descending', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} />);
+        const { container } = render(
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.sortColumn('name', 'desc');
@@ -147,7 +115,9 @@ describe('Sorting Plugin - Integration Tests', () => {
 
       it('should cycle through sortingOrder when direction not provided', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} />);
+        const { container } = render(
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
 
         // First click - asc
         await act(async () => {
@@ -170,7 +140,14 @@ describe('Sorting Plugin - Integration Tests', () => {
 
       it('should add to sortModel when multiSort is true', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        render(<TestGrid apiRef={apiRef} enableMultiSort />);
+        render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            enableMultiSort
+          />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -188,7 +165,7 @@ describe('Sorting Plugin - Integration Tests', () => {
 
       it('should replace sortModel when multiSort is false', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        render(<TestGrid apiRef={apiRef} />);
+        render(<TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />);
 
         await act(async () => {
           apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -207,7 +184,9 @@ describe('Sorting Plugin - Integration Tests', () => {
           { id: 'name', field: 'name', sortable: false },
           { id: 'age', field: 'age' },
         ];
-        const { container } = render(<TestGrid apiRef={apiRef} columns={columns} />);
+        const { container } = render(
+          <TestDataGrid rows={defaultRows} columns={columns} apiRef={apiRef} />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -223,7 +202,9 @@ describe('Sorting Plugin - Integration Tests', () => {
     describe('setSortModel', () => {
       it('should update sortModel and apply sorting', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} />);
+        const { container } = render(
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.setSortModel([{ field: 'age', sort: 'asc' }]);
@@ -236,7 +217,9 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should clear sorting when setting empty model', async () => {
         const apiRef = React.createRef<GridApi | null>();
         const { container } = render(
-          <TestGrid
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
             apiRef={apiRef}
             initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
           />,
@@ -256,7 +239,9 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should return current sortModel', async () => {
         const apiRef = React.createRef<GridApi | null>();
         render(
-          <TestGrid
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
             apiRef={apiRef}
             initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
           />,
@@ -271,7 +256,14 @@ describe('Sorting Plugin - Integration Tests', () => {
     describe('applySorting', () => {
       it('should recompute sorted rows', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} sortingMode="manual" />);
+        const { container } = render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            sortingMode="manual"
+          />,
+        );
 
         // Set sort model without auto-apply
         await act(async () => {
@@ -295,7 +287,9 @@ describe('Sorting Plugin - Integration Tests', () => {
     describe('computeSortedRowIds', () => {
       it('should compute sorted rows without updating state', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} />);
+        const { container } = render(
+          <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+        );
 
         const computed = apiRef.current?.api.sorting.computeSortedRowIds(undefined, [
           { field: 'name', sort: 'asc' },
@@ -309,7 +303,9 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should support stableSort option', async () => {
         const apiRef = React.createRef<GridApi | null>();
         render(
-          <TestGrid
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
             apiRef={apiRef}
             initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
           />,
@@ -333,7 +329,14 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should be called when sortModel changes via setSortModel', async () => {
         const onSortModelChange = vi.fn();
         const apiRef = React.createRef<GridApi | null>();
-        render(<TestGrid apiRef={apiRef} onSortModelChange={onSortModelChange} />);
+        render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            onSortModelChange={onSortModelChange}
+          />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
@@ -345,7 +348,14 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should be called when sortModel changes via sortColumn', async () => {
         const onSortModelChange = vi.fn();
         const apiRef = React.createRef<GridApi | null>();
-        render(<TestGrid apiRef={apiRef} onSortModelChange={onSortModelChange} />);
+        render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            onSortModelChange={onSortModelChange}
+          />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.sortColumn('name', 'desc');
@@ -359,7 +369,14 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should be called when sorted rows are computed', async () => {
         const onSortedRowsSet = vi.fn();
         const apiRef = React.createRef<GridApi | null>();
-        render(<TestGrid apiRef={apiRef} onSortedRowsSet={onSortedRowsSet} />);
+        render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            onSortedRowsSet={onSortedRowsSet}
+          />,
+        );
 
         // Clear initial call
         onSortedRowsSet.mockClear();
@@ -377,7 +394,14 @@ describe('Sorting Plugin - Integration Tests', () => {
     describe('auto mode (default)', () => {
       it('should re-sort when sortModel changes', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} sortingMode="auto" />);
+        const { container } = render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            sortingMode="auto"
+          />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
@@ -389,7 +413,9 @@ describe('Sorting Plugin - Integration Tests', () => {
       it('should re-sort when rows change', async () => {
         const apiRef = React.createRef<GridApi | null>();
         const { container, setProps } = render(
-          <TestGrid
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
             apiRef={apiRef}
             initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
           />,
@@ -414,7 +440,14 @@ describe('Sorting Plugin - Integration Tests', () => {
     describe('manual mode', () => {
       it('should NOT re-sort automatically when sortModel changes', async () => {
         const apiRef = React.createRef<GridApi | null>();
-        const { container } = render(<TestGrid apiRef={apiRef} sortingMode="manual" />);
+        const { container } = render(
+          <TestDataGrid
+            rows={defaultRows}
+            columns={defaultColumns}
+            apiRef={apiRef}
+            sortingMode="manual"
+          />,
+        );
 
         await act(async () => {
           apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
@@ -444,7 +477,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         { id: 2, name: 'Alice', age: 25 },
         { id: 3, name: 'Bob', age: 35 },
       ];
-      render(<TestGrid apiRef={apiRef} rows={rows} enableMultiSort />);
+      render(<TestDataGrid rows={rows} columns={defaultColumns} apiRef={apiRef} enableMultiSort />);
 
       await act(async () => {
         apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -460,7 +493,14 @@ describe('Sorting Plugin - Integration Tests', () => {
 
     it('should replace sort when enableMultiSort is false', async () => {
       const apiRef = React.createRef<GridApi | null>();
-      render(<TestGrid apiRef={apiRef} enableMultiSort={false} />);
+      render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          enableMultiSort={false}
+        />,
+      );
 
       await act(async () => {
         apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -483,7 +523,13 @@ describe('Sorting Plugin - Integration Tests', () => {
         { id: 3, name: 'Bob', age: 25 },
       ];
       const { container } = render(
-        <TestGrid apiRef={apiRef} rows={rows} stableSort enableMultiSort />,
+        <TestDataGrid
+          rows={rows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          stableSort
+          enableMultiSort
+        />,
       );
 
       // First sort by name
@@ -507,7 +553,11 @@ describe('Sorting Plugin - Integration Tests', () => {
   describe('controlled sortModel', () => {
     it('should update when controlled sortModel prop changes', async () => {
       const { container, setProps } = render(
-        <TestGrid sortModel={[{ field: 'name', sort: 'asc' }]} />,
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          sortModel={[{ field: 'name', sort: 'asc' }]}
+        />,
       );
 
       expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
@@ -521,7 +571,11 @@ describe('Sorting Plugin - Integration Tests', () => {
 
     it('should clear sorting when controlled sortModel becomes empty', async () => {
       const { container, setProps } = render(
-        <TestGrid sortModel={[{ field: 'name', sort: 'asc' }]} />,
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          sortModel={[{ field: 'name', sort: 'asc' }]}
+        />,
       );
 
       expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
@@ -537,7 +591,9 @@ describe('Sorting Plugin - Integration Tests', () => {
   describe('sortColumn with null', () => {
     it('should clear sorting when passing null direction', async () => {
       const apiRef = React.createRef<GridApi | null>();
-      const { container } = render(<TestGrid apiRef={apiRef} />);
+      const { container } = render(
+        <TestDataGrid rows={defaultRows} columns={defaultColumns} apiRef={apiRef} />,
+      );
 
       // First sort ascending
       await act(async () => {
@@ -557,7 +613,12 @@ describe('Sorting Plugin - Integration Tests', () => {
       const onSortModelChange = vi.fn();
       const apiRef = React.createRef<GridApi | null>();
       const { container } = render(
-        <TestGrid apiRef={apiRef} onSortModelChange={onSortModelChange} />,
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          onSortModelChange={onSortModelChange}
+        />,
       );
 
       // First sort
@@ -588,7 +649,14 @@ describe('Sorting Plugin - Integration Tests', () => {
   describe('sortingOrder variations', () => {
     it('should only allow ascending when sortingOrder is [asc]', async () => {
       const apiRef = React.createRef<GridApi | null>();
-      const { container } = render(<TestGrid apiRef={apiRef} sortingOrder={['asc']} />);
+      const { container } = render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          sortingOrder={['asc']}
+        />,
+      );
 
       // First call - asc
       await act(async () => {
@@ -605,7 +673,14 @@ describe('Sorting Plugin - Integration Tests', () => {
 
     it('should cycle through asc and null when sortingOrder is [asc, null]', async () => {
       const apiRef = React.createRef<GridApi | null>();
-      const { container } = render(<TestGrid apiRef={apiRef} sortingOrder={['asc', null]} />);
+      const { container } = render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          sortingOrder={['asc', null]}
+        />,
+      );
 
       // First call - asc
       await act(async () => {
@@ -628,7 +703,14 @@ describe('Sorting Plugin - Integration Tests', () => {
 
     it('should cycle through desc and asc when sortingOrder is [desc, asc]', async () => {
       const apiRef = React.createRef<GridApi | null>();
-      const { container } = render(<TestGrid apiRef={apiRef} sortingOrder={['desc', 'asc']} />);
+      const { container } = render(
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
+          apiRef={apiRef}
+          sortingOrder={['desc', 'asc']}
+        />,
+      );
 
       // First call - desc
       await act(async () => {
@@ -656,9 +738,10 @@ describe('Sorting Plugin - Integration Tests', () => {
         { id: 'age', field: 'age' },
       ];
       const { container } = render(
-        <TestGrid
-          apiRef={apiRef}
+        <TestDataGrid
+          rows={defaultRows}
           columns={columns}
+          apiRef={apiRef}
           sortingOrder={['asc', 'desc', null]}
           enableMultiSort={false}
         />,
@@ -684,7 +767,9 @@ describe('Sorting Plugin - Integration Tests', () => {
     it('should maintain sorting when rows are updated via API', async () => {
       const apiRef = React.createRef<GridApi | null>();
       const { container } = render(
-        <TestGrid
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
           apiRef={apiRef}
           initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
         />,
@@ -704,7 +789,9 @@ describe('Sorting Plugin - Integration Tests', () => {
     it('should maintain sorting when adding rows via API', async () => {
       const apiRef = React.createRef<GridApi | null>();
       const { container } = render(
-        <TestGrid
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
           apiRef={apiRef}
           initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
         />,
@@ -725,7 +812,9 @@ describe('Sorting Plugin - Integration Tests', () => {
   describe('initialState behavior', () => {
     it('should not update sorting when initialState prop changes after mount', async () => {
       const { container, setProps } = render(
-        <TestGrid
+        <TestDataGrid
+          rows={defaultRows}
+          columns={defaultColumns}
           initialState={{
             sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
           }}
@@ -760,7 +849,9 @@ describe('Sorting Plugin - Integration Tests', () => {
         },
         { id: 'age', field: 'age' },
       ];
-      const { container } = render(<TestGrid apiRef={apiRef} columns={columns} />);
+      const { container } = render(
+        <TestDataGrid rows={defaultRows} columns={columns} apiRef={apiRef} />,
+      );
 
       await act(async () => {
         apiRef.current?.api.sorting.sortColumn('name', 'asc');
@@ -798,7 +889,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         { id: 2, name: 'Alice', age: 25 },
         { id: 3, name: 'Bob', age: 35 },
       ];
-      const { container } = render(<TestGrid apiRef={apiRef} columns={columns} rows={rows} />);
+      const { container } = render(<TestDataGrid rows={rows} columns={columns} apiRef={apiRef} />);
 
       // Sort ascending
       await act(async () => {
@@ -876,6 +967,4 @@ describe('Sorting Plugin - Integration Tests', () => {
       expect(rowNames).toEqual(['Charlie', 'Bob', 'Alice']);
     });
   });
-
-  // selectors tests removed - covered by unit tests in sorting.test.ts
 });

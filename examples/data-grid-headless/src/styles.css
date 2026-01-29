@@ -65,11 +65,6 @@
    Layout
    =========================================== */
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
 .test-grid-container {
   display: flex;
   align-items: flex-start;
@@ -106,7 +101,7 @@ body {
 }
 
 .grid-scroll-container {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
 }
@@ -297,7 +292,7 @@ body {
    =========================================== */
 
 .config-panel__body {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   padding: var(--space-3);

@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
-import sortingPlugin from '@mui/x-data-grid-headless/plugins/sorting';
-import paginationPlugin from '@mui/x-data-grid-headless/plugins/pagination';
-// import { useDataGridPro } from '@mui/x-data-grid-headless-pro';
-// import { useDataGridPremium } from '@mui/x-data-grid-headless-premium';
-import './App.css';
+import {
+  sortingPlugin,
+  paginationPlugin,
+  rowsPlugin,
+  columnsPlugin,
+} from '@mui/x-data-grid-headless/plugins';
+import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 
 interface RowData {
   id: number;
@@ -96,131 +98,144 @@ function generateColumns() {
   return shuffleArray(allColumns);
 }
 
-function DataGrid() {
-  const [rows, setRows] = React.useState<RowData[]>(() => generateSampleData(30));
-  const [columns, setColumns] = React.useState(() => generateColumns());
-
-  const [, setCounter] = React.useState(0);
-
-  const grid = useDataGrid({
-    rows,
-    columns,
-    plugins: [sortingPlugin, paginationPlugin],
+function DataGrid(props: { rows: RowData[]; columns: ColumnDef<RowData>[] }) {
+  const [config, setConfig] = React.useState<PluginConfig>({
+    sorting: {
+      enabled: true,
+      enableMultiSort: true,
+      multiSortWithShiftKey: true,
+      sortingMode: 'auto',
+      stableSort: false,
+      sortingOrder: ['asc', 'desc', null],
+    },
   });
 
-  const rowIds = grid.use(grid.api.rows.selectors.rowIds);
-  const rowsData = grid.use(grid.api.rows.selectors.rowIdToModelLookup);
-  const visibleColumns = grid.use(grid.api.columns.selectors.visibleColumns);
+  const grid = useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], RowData>({
+    rows: props.rows,
+    columns: props.columns,
+    plugins: [sortingPlugin, paginationPlugin],
+    // Sorting options from config
+    enableMultiSort: config.sorting?.enableMultiSort,
+    sortingMode: config.sorting?.sortingMode,
+    stableSort: config.sorting?.stableSort,
+    sortingOrder: config.sorting?.sortingOrder,
+    onSortModelChange: (model) => {
+      // eslint-disable-next-line no-console
+      console.log('Sort model changed:', model);
+    },
+  });
 
-  const handleRefreshRows = () => {
-    setRows(generateSampleData(30));
-  };
+  // Use sorted row IDs from sorting plugin
+  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  const sortModel = grid.use(sortingPlugin.selectors.sortModel);
+  const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
+  const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
-  const handleRefreshColumns = () => {
-    setColumns(generateColumns());
-  };
-
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      (window as any).grid = grid;
+  const handleColumnHeaderClick = (field: string, event: React.MouseEvent) => {
+    if (!config.sorting?.enabled) {
+      return;
     }
-  }, [grid]);
+    // Use shift key for multi-sort when multiSortWithShiftKey is true (default)
+    const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
+    const multiSort = config.sorting?.enableMultiSort && (!requireShiftKey || event.shiftKey);
+    grid.api.sorting.sortColumn(field, undefined, multiSort);
+  };
+
+  const handleApplySorting = () => {
+    grid.api.sorting.applySorting();
+  };
+
+  const getSortIcon = (field: string) => {
+    const sortIndex = sortModel.findIndex((item) => item.field === field);
+    const sortInfo = sortModel[sortIndex];
+    if (!sortInfo || sortInfo.sort === null) {
+      return null;
+    }
+    const arrow = sortInfo.sort === 'asc' ? '↑' : '↓';
+    const index = config.sorting?.enableMultiSort ? ` (${sortIndex + 1})` : '';
+    return (
+      <span className="grid-sort-icon">
+        {arrow}
+        {index}
+      </span>
+    );
+  };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', gap: '8px' }}>
-        <button
-          type="button"
-          onClick={() => {
-            setCounter((prev) => prev + 1);
-          }}
-          className="button"
-        >
-          Rerender
-        </button>
-        <button type="button" onClick={handleRefreshRows} className="button">
-          Refresh Rows
-        </button>
-        <button type="button" onClick={handleRefreshColumns} className="button">
-          Refresh Columns
-        </button>
+    <div className="test-grid-container">
+      {/* Grid Wrapper */}
+      <div className="grid-wrapper">
+        <div className="grid-scroll-container">
+          <table className="grid-table">
+            <thead className="grid-thead">
+              <tr>
+                {visibleColumns.map((column) => {
+                  const isSortable = config.sorting?.enabled && column.sortable !== false;
+                  const thClassName = ['grid-th', isSortable && 'grid-th--sortable']
+                    .filter(Boolean)
+                    .join(' ');
+
+                  return (
+                    <th
+                      key={column.id}
+                      onClick={(event) => handleColumnHeaderClick(column.field as string, event)}
+                      className={thClassName}
+                      style={{
+                        width: column.size || 150,
+                        minWidth: column.size || 150,
+                      }}
+                    >
+                      {column.header || column.id}
+                      {config.sorting?.enabled && getSortIcon(column.field as string)}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
+                const row = rowsData[rowId] as RowData | undefined;
+                if (!row) {
+                  return null;
+                }
+                return (
+                  <tr key={rowId} className="grid-tr">
+                    {visibleColumns.map((column: (typeof visibleColumns)[0], index: number) => {
+                      const value = row[column.field as keyof RowData];
+                      return (
+                        <td
+                          role="gridcell"
+                          data-colindex={index}
+                          key={column.id}
+                          className="grid-td"
+                          style={{
+                            width: column.size || 150,
+                            minWidth: column.size || 150,
+                          }}
+                        >
+                          {value != null ? String(value) : ''}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div
-        style={{
-          border: '1px solid #e0e0e0',
-          borderRadius: '4px',
-          overflow: 'auto',
-          maxHeight: '600px',
-          backgroundColor: 'white',
-        }}
-      >
-        <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '100%' }}>
-          <thead style={{ position: 'sticky', top: 0, backgroundColor: '#f5f5f5', zIndex: 1 }}>
-            <tr>
-              {visibleColumns.map((column: (typeof visibleColumns)[0]) => (
-                <th
-                  key={column.id}
-                  style={{
-                    padding: '12px 16px',
-                    textAlign: 'left',
-                    borderBottom: '2px solid #e0e0e0',
-                    fontWeight: 600,
-                    fontSize: '14px',
-                    width: column.size || 150,
-                    minWidth: column.size || 150,
-                  }}
-                >
-                  {column.header || column.id}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rowIds.map((rowId: (typeof rowIds)[0]) => {
-              const row = rowsData[rowId] as RowData | undefined;
-              if (!row) {
-                return null;
-              }
-              return (
-                <tr
-                  key={rowId}
-                  className="data-grid-row"
-                  style={{
-                    borderBottom: '1px solid #e0e0e0',
-                  }}
-                >
-                  {visibleColumns.map((column: (typeof visibleColumns)[0]) => {
-                    const value = row[column.field as keyof RowData];
-                    return (
-                      <td
-                        key={column.id}
-                        style={{
-                          padding: '12px 16px',
-                          fontSize: '14px',
-                          width: column.size || 150,
-                          minWidth: column.size || 150,
-                        }}
-                      >
-                        {value != null ? String(value) : ''}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+
+      {/* Config Panel (Side Panel) */}
+      <ConfigPanel config={config} onConfigChange={setConfig} onApplySorting={handleApplySorting} />
     </div>
   );
 }
 
 function App() {
-  return (
-    <div className="app">
-      <DataGrid />
-    </div>
-  );
+  const [rows] = React.useState<RowData[]>(() => generateSampleData(30));
+  const [columns] = React.useState(() => generateColumns());
+
+  return <DataGrid rows={rows} columns={columns} />;
 }
 
 export default App;
