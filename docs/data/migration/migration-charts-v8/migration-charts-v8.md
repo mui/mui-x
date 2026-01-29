@@ -304,6 +304,25 @@ To get the numeric value, call `valueOf()` on the `NumberValue` parameters.
 
 ## Styling
 
+### Label mark
+
+The charts label mark has been redesigned to improve consistency in how different mark types can be styled.
+
+We removed the `markElementClasses.mask` class and the corresponding `mask` component which was used to create a mask effect on the label mark.
+
+Now the `line` type of mark can be styled in the same way you would a line chart's line element, since they both use SVG `<path>` elements.
+
+```diff
+  <LineChart
+    sx={{
+      [`.${lineElementClasses.root}[data-series="my-series"], .${legendClasses.item}[data-series="my-series"] .${labelMarkClasses.fill}`]:
+        {
+          strokeDasharray: '3 2',
+        },
+    }}
+  />
+```
+
 ### Chart class names updated
 
 The following CSS class prefixes have been renamed to include the "Chart" suffix for consistency:
