@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
-import {
-  sortingPlugin,
-  paginationPlugin,
-  rowsPlugin,
-  columnsPlugin,
-} from '@mui/x-data-grid-headless/plugins';
+import { rowsPlugin, columnsPlugin } from '@mui/x-data-grid-headless';
+import { sortingPlugin } from '@mui/x-data-grid-headless/plugins/sorting';
+import { paginationPlugin } from '@mui/x-data-grid-headless/plugins/pagination';
+
 import { ConfigPanel, type PluginConfig } from './ConfigPanel';
 
 interface RowData {

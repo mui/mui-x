@@ -10,7 +10,7 @@ import {
   type PluginsOptions,
   type PluginsState,
   PluginRegistry,
-} from '../plugins';
+} from '../plugins/core';
 import { internalPlugins, type InternalPluginsApi } from '../plugins/internal';
 import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/columnUtils';
 

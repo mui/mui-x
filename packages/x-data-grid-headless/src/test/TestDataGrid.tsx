@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
-import { sortingPlugin, paginationPlugin, rowsPlugin, columnsPlugin } from '../plugins';
-import type { SortingColumnMeta } from '../plugins';
+import { sortingPlugin, type SortingColumnMeta } from '../plugins/sorting';
+import { paginationPlugin } from '../plugins/pagination';
+import { rowsPlugin, columnsPlugin } from '../plugins/internal';
 
 type GridApi = ReturnType<typeof useDataGrid<[typeof sortingPlugin, typeof paginationPlugin], any>>;
 

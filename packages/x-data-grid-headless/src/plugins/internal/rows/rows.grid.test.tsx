@@ -3,7 +3,8 @@ import { createRenderer, act } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import type { useDataGrid, ColumnDef } from '../../..';
-import type { sortingPlugin, paginationPlugin } from '../..';
+import type { sortingPlugin } from '../../sorting';
+import type { paginationPlugin } from '../../pagination';
 import { TestDataGrid } from '../../../test/TestDataGrid';
 
 type GridApi<TRow extends object> = ReturnType<
