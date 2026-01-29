@@ -2,7 +2,7 @@ import { SankeyChart } from './SankeyChart';
 
 export { SankeyChart } from './SankeyChart';
 /**
- * @deprecated Sankey chart is now stable, import `SankeyChart` instead
+ * @deprecated sankey chart is now stable, import `SankeyChart` instead
  */
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Unstable_SankeyChart = SankeyChart;
