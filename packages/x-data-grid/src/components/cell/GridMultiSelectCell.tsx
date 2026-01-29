@@ -16,6 +16,7 @@ import { GridSlotProps } from '../../models/gridSlotsComponent';
 import { vars } from '../../constants/cssVariables';
 import { isMultiSelectColDef, getValueOptions } from '../panel/filterPanel/filterPanelUtils';
 import { GridMultiSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import { calculateVisibleCount } from '../../utils/multiSelectCellUtils';
 
 type OwnerState = DataGridProcessedProps;
 
@@ -25,6 +26,7 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   const slots = {
     root: ['multiSelectCell'],
     chip: ['multiSelectCellChip'],
+    chipHidden: ['multiSelectCellChipHidden'],
     overflow: ['multiSelectCellOverflow'],
     popup: ['multiSelectCellPopup'],
     popperContent: ['multiSelectCellPopperContent'],
@@ -116,64 +118,6 @@ function getOptionLabel(
   return valueOption ? colDef.getOptionLabel!(valueOption) : String(value);
 }
 
-const GAP = 4;
-
-/**
- * Get overflow chip width based on hidden count
- * - "+9" (1 digit) = 32px
- * - "+99" (2 digits) = 38px
- * - "+999" (3+ digits) = 44px
- */
-function getOverflowChipWidth(hiddenCount: number): number {
-  if (hiddenCount <= 0) {
-    return 0;
-  }
-  if (hiddenCount < 10) {
-    return 32;
-  }
-  if (hiddenCount < 100) {
-    return 38;
-  }
-  return 44;
-}
-
-/**
- * Calculate how many chips fit in the available width
- */
-function calculateVisibleCount(
-  arrayLength: number,
-  containerWidth: number,
-  chipWidths: Map<number, number>,
-): number {
-  let usedWidth = 0;
-  let count = 0;
-
-  for (let i = 0; i < arrayLength; i += 1) {
-    const chipWidth = chipWidths.get(i);
-    if (chipWidth === undefined) {
-      // Not all chips measured yet, show up to this point
-      return i;
-    }
-
-    const hiddenIfStopHere = arrayLength - (i + 1);
-    const overflowChipWidth = getOverflowChipWidth(hiddenIfStopHere);
-    const spaceNeeded =
-      usedWidth +
-      chipWidth +
-      (count > 0 ? GAP : 0) +
-      (hiddenIfStopHere > 0 ? overflowChipWidth + GAP : 0);
-
-    if (spaceNeeded <= containerWidth || i === 0) {
-      usedWidth += chipWidth + (count > 0 ? GAP : 0);
-      count += 1;
-    } else {
-      break;
-    }
-  }
-
-  return count;
-}
-
 function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const { id, value, colDef, hasFocus, row, slotProps } = props;
   const popupId = `${id}-${colDef.field}-multiselect-popup`;
@@ -188,6 +132,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const [measuredCount, setMeasuredCount] = React.useState(0);
   // Track container width for visible count calculation
   const [containerWidth, setContainerWidth] = React.useState<number | null>(null);
+
   const cellRef = React.useRef<HTMLDivElement>(null);
   const chipsRef = React.useRef<Map<number, HTMLDivElement>>(new Map());
   // Cache chip widths so we can calculate visible chips even when some aren't rendered
@@ -340,7 +285,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       {...slotProps?.root}
       className={clsx(classes.root, hasFocus && 'Mui-focused', slotProps?.root?.className)}
     >
-      {arrayValue.slice(0, visibleCount).map((v, index) => (
+      {arrayValue.map((v, index) => (
         <rootProps.slots.baseChip
           key={index}
           ref={(el: HTMLDivElement) => {
@@ -353,7 +298,11 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
           label={getOptionLabel(colDef as GridMultiSelectColDef, v, valueOptions)}
           size="small"
           {...slotProps?.chip}
-          className={clsx(classes.chip, slotProps?.chip?.className)}
+          className={clsx(
+            classes.chip,
+            index >= visibleCount && classes.chipHidden,
+            slotProps?.chip?.className,
+          )}
         />
       ))}
       {hiddenCount > 0 && (

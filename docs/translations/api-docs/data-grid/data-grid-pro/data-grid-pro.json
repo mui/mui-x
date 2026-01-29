@@ -1350,6 +1350,10 @@
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "each chip in the multi-select cell"
     },
+    "multiSelectCellChipHidden": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "hidden chips in the multi-select cell that overflow the container"
+    },
     "multiSelectCellOverflow": {
       "description": "Styles applied to {{nodeName}}.",
       "nodeName": "the overflow &quot;+N&quot; chip in the multi-select cell"

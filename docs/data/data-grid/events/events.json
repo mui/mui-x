@@ -253,7 +253,7 @@
     "event": "MuiEvent<{}>"
   },
   {
-    "projects": ["x-data-grid-pro", "x-data-grid-premium"],
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "fetchRows",
     "description": "Fired when a new batch of rows is requested to be loaded. Called with a GridFetchRowsParams object. Used to trigger <code>onFetchRows</code>.",
     "params": "GridFetchRowsParams",
@@ -445,7 +445,7 @@
     "event": "MuiEvent<React.MouseEvent<HTMLElement>>"
   },
   {
-    "projects": ["x-data-grid-pro", "x-data-grid-premium"],
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowOrderChange",
     "description": "Fired when the user ends reordering a row.",
     "params": "GridRowOrderChangeParams",
@@ -467,7 +467,7 @@
     "event": "MuiEvent<React.ChangeEvent<HTMLElement>>"
   },
   {
-    "projects": ["x-data-grid-pro", "x-data-grid-premium"],
+    "projects": ["x-data-grid", "x-data-grid-pro", "x-data-grid-premium"],
     "name": "rowsScrollEnd",
     "description": "Fired when scrolling to the bottom of the grid viewport.",
     "params": "GridRowScrollEndParams",
