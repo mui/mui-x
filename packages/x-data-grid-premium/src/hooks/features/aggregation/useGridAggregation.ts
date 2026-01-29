@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
 import {
   gridColumnLookupSelector,
@@ -14,17 +14,17 @@ import {
 } from '@mui/x-data-grid-pro';
 import {
   useGridRegisterPipeProcessor,
-  GridStateInitializer,
-  GridPipeProcessor,
+  type GridStateInitializer,
+  type GridPipeProcessor,
   gridPivotActiveSelector,
 } from '@mui/x-data-grid-pro/internals';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 import {
   gridAggregationLookupSelector,
   gridAggregationModelSelector,
 } from './gridAggregationSelectors';
-import {
+import type {
   GridAggregationApi,
   GridAggregationLookup,
   GridAggregationPrivateApi,

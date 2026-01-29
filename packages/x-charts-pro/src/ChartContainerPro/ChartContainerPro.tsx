@@ -34,7 +34,7 @@ type ChartContainerProComponent = <
  *
  * API:
  *
- * - [ChartContainer API](https://mui.com/x/api/charts/chart-container/)
+ * - [ChartContainerPro API](https://mui.com/x/api/charts/chart-container-pro/)
  *
  * @example
  * ```jsx

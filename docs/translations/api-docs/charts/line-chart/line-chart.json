@@ -127,6 +127,8 @@
     "mark": "",
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "toolbar": "Custom component for the toolbar.",
-    "tooltip": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
   }
 }

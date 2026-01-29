@@ -12,8 +12,9 @@ import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
   store,
-  svgRef,
+  instance,
 }) => {
+  const { svgRef } = instance;
   const removeFocus = useEventCallback(function removeFocus() {
     if (store.state.keyboardNavigation.item !== null) {
       store.set('keyboardNavigation', {

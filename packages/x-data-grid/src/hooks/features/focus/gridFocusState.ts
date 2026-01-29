@@ -1,4 +1,4 @@
-import { GridCellCoordinates } from '../../../models/gridCell';
+import type { GridCellCoordinates } from '../../../models/gridCell';
 
 export type GridColumnIdentifier = { field: string };
 export type GridColumnGroupIdentifier = { field: string; depth: number };

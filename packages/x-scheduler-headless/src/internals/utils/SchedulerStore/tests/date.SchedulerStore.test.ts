@@ -1,6 +1,5 @@
 import { spy } from 'sinon';
-import { adapter } from 'test/utils/scheduler';
-import { storeClasses } from './utils';
+import { adapter, storeClasses } from 'test/utils/scheduler';
 
 const DEFAULT_PARAMS = { events: [] };
 
