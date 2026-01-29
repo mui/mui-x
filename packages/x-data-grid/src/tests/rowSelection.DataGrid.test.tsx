@@ -26,6 +26,7 @@ import {
   getColumnHeaderCell,
   getColumnHeadersTextContent,
   getActiveCell,
+  getActiveColumnHeader,
   grid,
   includeRowSelection,
 } from 'test/utils/helperFn';
@@ -550,6 +551,42 @@ describe('<DataGrid /> - Row selection', () => {
       await user.click(input2);
       expect(input1.checked).to.equal(false);
       expect(input2.checked).to.equal(true);
+    });
+
+    it('keyboard navigation when disableMultipleRowSelection is true', async () => {
+      const { user } = render(
+        <div>
+          <button>Before</button>
+          <TestDataGridSelection checkboxSelection disableMultipleRowSelection hideFooter />
+          <button>After</button>
+        </div>,
+      );
+
+      // Tab into the grid and focus first column header (checkbox column)
+      await user.keyboard('{Tab}{Tab}');
+      expect(getActiveColumnHeader()).to.equal('0');
+
+      // Arrow down to the first cell
+      await user.keyboard('{ArrowDown}');
+      expect(getActiveCell()).to.equal('0-0');
+
+      // Tab out of the grid
+      await user.keyboard('{Tab}');
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: 'After' }));
+
+      // Tab back into the grid - focus should return to the last focused cell
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      expect(getActiveCell()).to.equal('0-0');
+
+      await user.keyboard('{ArrowUp}');
+      expect(getActiveColumnHeader()).to.equal('0');
+
+      // Tab out to button before
+      await user.keyboard('{Shift>}{Tab}{/Shift}');
+      expect(document.activeElement).to.equal(screen.getByRole('button', { name: 'Before' }));
+
+      await user.keyboard('{Tab}');
+      expect(getActiveColumnHeader()).to.equal('0');
     });
 
     it('should remove the selection from rows that are filtered out', async () => {
