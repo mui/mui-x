@@ -2,6 +2,37 @@ import type { RefObject } from '@mui/x-internals/types';
 import { type GridRenderContext, type GridRowEntry, gridRowNodeSelector } from '@mui/x-data-grid';
 import type { GridPrivateApiPro } from '../../../models/gridApiPro';
 
+export interface AdjustRowParamsOptions {
+  pageSize: number;
+  rowCount: number | undefined;
+}
+
+/**
+ * Adjusts the row fetch parameters to align with page boundaries.
+ * - Start index is decreased to the start of the page
+ * - End index is increased to the end of the page (capped by rowCount - 1 if defined)
+ */
+export const adjustRowParams = <T extends { start: number | string; end: number }>(
+  params: T,
+  options: AdjustRowParamsOptions,
+): T => {
+  if (typeof params.start !== 'number') {
+    return params;
+  }
+
+  const { pageSize, rowCount } = options;
+
+  const adjustedStart = params.start - (params.start % pageSize);
+  const pageAlignedEnd = params.end + pageSize - (params.end % pageSize) - 1;
+  const maxEnd = rowCount !== undefined ? Math.max(0, rowCount - 1) : Infinity;
+
+  return {
+    ...params,
+    start: adjustedStart,
+    end: Math.min(maxEnd, pageAlignedEnd),
+  };
+};
+
 export const findSkeletonRowsSection = ({
   apiRef,
   visibleRows,
