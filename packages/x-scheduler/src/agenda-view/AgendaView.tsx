@@ -127,7 +127,10 @@ const EventsList = styled('ul', {
 })(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  gap: theme.spacing(0.5),
   padding: theme.spacing(1),
+  margin: 0,
+  listStyle: 'none',
   flexGrow: 1,
 }));
 

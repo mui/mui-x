@@ -25,22 +25,17 @@ const EventItemCard = styled('div', {
   padding: 0,
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-color-3)',
-  '&[data-variant="compact"], &[data-variant="regular"]': {
-    '&:active': {
-      backgroundColor: 'var(--interactive-active-bg)',
-    },
-    '&:hover': {
-      backgroundColor: 'var(--interactive-hover-bg)',
-    },
+  '&[data-variant="compact"]': {
+    containerType: 'inline-size',
+    cursor: 'pointer',
+    height: 'fit-content',
   },
   '&[data-variant="filled"]': {
     backgroundColor: 'var(--event-color-3)',
     color: 'var(--event-color-12)',
   },
-  '&[data-variant="compact"]': {
-    containerType: 'inline-size',
+  '&[data-variant="regular"]': {
     cursor: 'pointer',
-    height: 'fit-content',
   },
   ...schedulerPaletteStyles,
 }));
@@ -89,9 +84,10 @@ const EventItemTime = styled('time', {
 const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
-})({
+})(({ theme }) => ({
+  padding: theme.spacing(0.25),
   color: 'var(--event-color-11)',
-});
+}));
 
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventCalendar',
