@@ -18,6 +18,7 @@ export interface PickerFieldPrivateContextValue extends Pick<
   | 'enableAccessibleFieldDOMStructure'
   | 'selectedSections'
   | 'onSelectedSectionsChange'
+  | 'focusedSectionOnFocus'
 > {
   fieldRef: React.RefObject<FieldRef<PickerValue> | FieldRef<PickerRangeValue> | null>;
 }

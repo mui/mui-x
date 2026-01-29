@@ -228,7 +228,14 @@ export const useFieldV7TextField = <
     }
 
     if (autoFocus && !disabled && sectionListRef.current) {
-      sectionListRef.current.getSectionContent(sectionOrder.startIndex).focus();
+      sectionListRef.current
+        .getSectionContent(
+          parseSelectedSections(
+            internalPropsWithDefaults.focusedSectionOnFocus ?? sectionOrder.startIndex,
+            state.sections,
+          ) as number,
+        )
+        .focus();
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
