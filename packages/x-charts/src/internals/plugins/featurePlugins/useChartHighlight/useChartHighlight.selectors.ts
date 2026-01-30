@@ -127,7 +127,10 @@ export const selectorChartsIsHighlighted = createSelector(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: SeriesItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-    item: SeriesItemIdentifier | null,
+    /**
+     * The item to test if it's highlighted or not.
+     */
+    item: SeriesItemIdentifier<ChartSeriesType> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;
@@ -147,8 +150,10 @@ export const selectorChartsIsFaded = createSelector(
     highlightScope: HighlightScope<SeriesType> | null,
     highlightedItem: SeriesItemIdentifier<SeriesType> | null,
     seriesConfig: ChartSeriesConfig<SeriesType>,
-
-    item: SeriesItemIdentifier | null,
+    /**
+     * The item to test if it's faded or not.
+     */
+    item: SeriesItemIdentifier<ChartSeriesType> | null,
   ) {
     if (highlightedItem === null || highlightScope === null) {
       return false;

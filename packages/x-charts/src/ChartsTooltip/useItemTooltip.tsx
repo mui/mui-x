@@ -15,6 +15,7 @@ import {
 } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { isCartesianSeries } from '../internals/isCartesian';
 import { type AxisId } from '../models/axis';
+import { type SeriesItemIdentifier } from '../models/seriesType';
 
 export type UseItemTooltipReturnValue<T extends ChartSeriesType> = ItemTooltip<T>;
 export type UseRadarItemTooltipReturnValue = ItemTooltipWithMultipleValues<'radar'>;
@@ -23,7 +24,7 @@ export function useInternalItemTooltip<T extends ChartSeriesType>():
   | (T extends 'radar' ? ItemTooltipWithMultipleValues<T> : ItemTooltip<T>)
   | null {
   const store = useStore();
-  const identifier = store.use(selectorChartsTooltipItem);
+  const identifier = store.use(selectorChartsTooltipItem) as SeriesItemIdentifier<T> | null;
   const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const series = useSeries();

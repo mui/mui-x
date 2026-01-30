@@ -19,7 +19,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
   getItemAtPosition: (
     state: ChartState<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>,
     point: { x: number; y: number },
-  ) => SeriesItemIdentifier | undefined,
+  ) => SeriesItemIdentifier<SeriesType> | undefined,
   onItemEnter?: () => void,
   onItemLeave?: () => void,
 ) {
@@ -35,7 +35,7 @@ export function useRegisterPointerInteractions<SeriesType extends ChartSeriesTyp
   const store =
     useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<SeriesType>]>();
   const interactionActive = React.useRef(false);
-  const lastItemRef = React.useRef<SeriesItemIdentifier | undefined>(undefined);
+  const lastItemRef = React.useRef<SeriesItemIdentifier<SeriesType> | undefined>(undefined);
 
   const onItemEnterRef = useEventCallback(() => onItemEnter?.());
   const onItemLeaveRef = useEventCallback(() => onItemLeave?.());

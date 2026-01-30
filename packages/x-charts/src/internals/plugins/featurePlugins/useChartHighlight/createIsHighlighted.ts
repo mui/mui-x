@@ -24,6 +24,7 @@ export function createIsHighlighted<SeriesType extends Exclude<ChartSeriesType, 
       return false;
     }
 
+    // @ts-ignore Sankey is only in pro package
     if (item.type === 'sankey') {
       return false;
     }

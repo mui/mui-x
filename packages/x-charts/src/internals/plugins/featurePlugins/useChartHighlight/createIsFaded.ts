@@ -24,6 +24,7 @@ export function createIsFaded<SeriesType extends Exclude<ChartSeriesType, 'sanke
       return false;
     }
 
+    // @ts-ignore Sankey is only in pro package
     if (item.type === 'sankey') {
       return false;
     }

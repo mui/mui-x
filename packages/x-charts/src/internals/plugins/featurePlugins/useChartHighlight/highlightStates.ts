@@ -7,7 +7,7 @@ import type {
 } from '../../../../models/seriesType';
 import type { ChartsSeriesConfig } from '../../../../models/seriesType/config';
 
-const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>(['bar', 'rangeBar', 'line']);
+const batchRenderingSeries = new Set<SeriesTypeWithBatchRendering>(['bar', 'rangeBar', 'line'] as unknown as SeriesTypeWithBatchRendering[]);
 type SeriesTypeWithBatchRendering =
   | 'bar'
   | 'line'
