@@ -184,6 +184,7 @@ export class LayoutDataGrid extends Layout<DataGridElements> {
       Dimensions.selectors.needsHorizontalScrollbar,
       (contentHeight, minimalContentHeight, columnsTotalWidth, needsHorizontalScrollbar) => ({
         style: {
+          position: 'relative',
           width: needsHorizontalScrollbar ? columnsTotalWidth : 'auto',
           flexBasis: contentHeight === 0 ? minimalContentHeight : contentHeight,
           flexShrink: 0,

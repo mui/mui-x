@@ -99,6 +99,13 @@
   position: relative;
 }
 
+.grid-mainContent {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
 .grid-virtualScroller {
   overflow: auto;
   flex: 1;
@@ -120,10 +127,43 @@
   border-bottom: 2px solid var(--color-border);
 }
 
+.grid-column-headers-content {
+  display: flex;
+  position: absolute;
+  top: 0;
+}
+
+.grid-column-header-cell {
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
 .grid-scroll-container {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
+}
+
+.grid-row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  box-sizing: border-box;
+}
+
+.grid-cell {
+  padding: 12px 16px;
+  font-size: 14px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 
 .grid-scrollbar-corner {

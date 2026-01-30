@@ -191,19 +191,10 @@ function renderCell(column: ColumnToRender, row: RowToRender<RowData>) {
   return (
     <div
       key={column.id}
-      className="DataGrid-cell"
+      className="grid-cell"
+      // TODO: useCellProps()
       role="gridcell"
-      style={{
-        padding: '12px 16px',
-        fontSize: '14px',
-        width: column.size || 150,
-        minWidth: column.size || 150,
-        flexShrink: 0,
-        boxSizing: 'border-box',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-      }}
+      style={{ width: column.size || 150, minWidth: column.size || 150 }}
     >
       {value != null ? String(value) : ''}
     </div>
@@ -212,17 +203,8 @@ function renderCell(column: ColumnToRender, row: RowToRender<RowData>) {
 
 function renderRow(row: RowToRender<RowData>, columnsToRender: ColumnToRender[]) {
   return (
-    <div
-      key={row.id}
-      className="DataGrid-row"
-      role="row"
-      style={{
-        display: 'flex',
-        borderBottom: '1px solid #e0e0e0',
-        height: ROW_HEIGHT,
-        boxSizing: 'border-box',
-      }}
-    >
+    // TODO: useRowProps()
+    <div key={row.id} className="grid-row" role="row" style={{ height: ROW_HEIGHT }}>
       {columnsToRender.map((column) => renderCell(column, row))}
     </div>
   );
@@ -238,7 +220,7 @@ function DataGridRenderZone() {
 
   return (
     <div
-      className="DataGrid-virtualScrollerRenderZone"
+      className="grid-virtualScrollerRenderZone"
       role="rowgroup"
       style={{
         position: 'absolute',
@@ -297,16 +279,8 @@ function DataGridColumnHeaders() {
         role="rowgroup"
         style={{ minWidth: columnsTotalWidth, height: HEADER_HEIGHT }}
       >
-        <div
-          style={{
-            display: 'flex',
-            position: 'absolute',
-            top: 0,
-            left: offsetLeft,
-          }}
-        >
+        <div className="grid-column-headers-content" style={{ left: offsetLeft }}>
           {columnsToRender.map((column) => {
-            const isSortable = config.sorting?.enabled && column.sortable !== false;
             return (
               // eslint-disable-next-line jsx-a11y/interactive-supports-focus
               <div
@@ -314,19 +288,11 @@ function DataGridColumnHeaders() {
                 role="columnheader"
                 onClick={(event) => sortColumn(column.field as string, event.shiftKey)}
                 onKeyDown={(event) => sortColumn(column.field as string, event.shiftKey)}
+                className="grid-column-header-cell"
                 style={{
-                  padding: '12px 16px',
-                  fontWeight: 600,
-                  fontSize: '14px',
                   width: column.size || 150,
                   minWidth: column.size || 150,
-                  flexShrink: 0,
-                  boxSizing: 'border-box',
                   height: HEADER_HEIGHT,
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: isSortable ? 'pointer' : 'default',
-                  userSelect: 'none',
                 }}
               >
                 {column.header || column.id}
@@ -390,11 +356,7 @@ function DataGridVirtualScrollbar({
   }, [isVertical, scrollbarSize, contentSize]);
 
   return (
-    <div
-      className={`DataGrid-scrollbar${isVertical ? 'Vertical' : 'Horizontal'}`}
-      {...scrollbarProps}
-      style={style}
-    >
+    <div {...scrollbarProps} style={style}>
       <div style={innerStyle} />
     </div>
   );
@@ -455,26 +417,10 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
     <DataGridContext.Provider value={contextValue}>
       <div className="grid-wrapper">
         <div className="grid-root" {...gridProps}>
-          <div
-            className="DataGrid-mainContent"
-            {...containerProps}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 1,
-              overflow: 'hidden',
-            }}
-          >
+          <div className="grid-mainContent" {...containerProps}>
             <div className="grid-virtualScroller" {...scrollerProps}>
               <DataGridColumnHeaders />
-              <div
-                className="DataGrid-virtualScrollerContent"
-                {...contentProps}
-                style={{
-                  ...contentProps.style,
-                  position: 'relative',
-                }}
-              >
+              <div className="grid-virtualScrollerContent" {...contentProps}>
                 <DataGridRenderZone />
               </div>
             </div>
