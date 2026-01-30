@@ -67,11 +67,7 @@ const ResourcesLegendItemName = styled(Typography, {
 interface ResourcesLegendItemProps {
   resource: SchedulerResource;
   isVisible: boolean;
-  onToggle: (
-    resourceId: string,
-    checked: boolean,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => void;
+  onToggle: (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function ResourcesLegendItem(props: ResourcesLegendItemProps) {
@@ -89,7 +85,7 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
         <Checkbox
           className={classes.resourcesLegendItemCheckbox}
           checked={isVisible}
-          onChange={(event) => onToggle(resource.id, event.target.checked, event)}
+          onChange={(event) => onToggle(resource.id, event)}
           icon={<VisibilityOffOutlined fontSize="small" />}
           checkedIcon={<VisibilityOutlined fontSize="small" />}
           size="small"
@@ -134,9 +130,12 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
   const visibleSet = React.useMemo(() => new Set(visibleResourcesList), [visibleResourcesList]);
 
   const handleToggle = useStableCallback(
-    (resourceId: string, checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
+    (resourceId: string, event: React.ChangeEvent<HTMLInputElement>) => {
       const newVisibleResources = Object.fromEntries(
-        resources.map((res) => [res.id, res.id === resourceId ? checked : visibleSet.has(res.id)]),
+        resources.map((res) => [
+          res.id,
+          res.id === resourceId ? event.target.checked : visibleSet.has(res.id),
+        ]),
       );
       store.setVisibleResources(newVisibleResources, event.nativeEvent);
     },
