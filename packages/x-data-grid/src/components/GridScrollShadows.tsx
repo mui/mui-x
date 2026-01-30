@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
 import composeClasses from '@mui/utils/composeClasses';
 import {

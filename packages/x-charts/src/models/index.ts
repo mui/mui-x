@@ -16,6 +16,7 @@ export type {
   AxisItemIdentifier,
   AxisValueFormatterContext,
 } from './axis';
+export type { NumberValue } from '@mui/x-charts-vendor/d3-scale';
 
 // Utils shared across the X packages
 export type { PropsFromSlot } from '@mui/x-internals/slots';
