@@ -154,14 +154,14 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 
 ## Composition
 
-Use the `<ChartsDataProvider />` to provide the `series` prop for composition.
+Use the `<ChartDataProvider />` to provide the `series` prop for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<PiePlot />` component that renders the pie slices and their labels.
 
 Here's how the Pie Chart is composed:
 
 ```jsx
-<ChartsDataProvider plugins={PIE_CHART_PLUGINS}>
+<ChartDataProvider plugins={PIE_CHART_PLUGINS}>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -171,11 +171,11 @@ Here's how the Pie Chart is composed:
     </ChartsSurface>
     <ChartsTooltip trigger="item" />
   </ChartsWrapper>
-</ChartsDataProvider>
+</ChartDataProvider>
 ```
 
 :::info
-The `<ChartsDataProvider />` accepts a [`plugins`](/x/react-charts/plugins/) prop.
+The `<ChartDataProvider />` accepts a [`plugins`](/x/react-charts/plugins/) prop.
 This is done to remove cartesian-axis features which are useless for a pie chart, and interfere with the pie position.
 
 For pro users, use the `PIE_CHART_PRO_PLUGINS` instead to activate the export feature.

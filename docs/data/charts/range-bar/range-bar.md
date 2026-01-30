@@ -1,7 +1,7 @@
 ---
 title: React Range Bar chart
 productId: x-charts
-components: BarChartPremium, RangeBarPlot, ChartsDataProviderPremium, ChartContainerPremium
+components: BarChartPremium, RangeBarPlot, ChartDataProviderPremium, ChartContainerPremium
 ---
 
 # Charts - Range Bar [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
@@ -92,14 +92,14 @@ You read more about it in bar chart's [Animation](/x/react-charts/bars/#animatio
 
 ## Composition
 
-You can use the `ChartsDataProviderPremium` to provide `series`, `xAxis`, and `yAxis` props for composition.
+You can use the `ChartDataProviderPremium` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 Besides the common chart components available for [composition](/x/react-charts/composition/), to compose a range bar chart you need to render the `RangeBarPlot` component to display the range bars and their labels.
 
 Here's roughly a `BarChartPremium` is composed, which you can use as a reference:
 
 ```jsx
-<ChartsDataProviderPremium>
+<ChartDataProviderPremium>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -115,7 +115,7 @@ Here's roughly a `BarChartPremium` is composed, which you can use as a reference
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartsDataProviderPremium>
+</ChartDataProviderPremium>
 ```
 
 In the example below, we follow a similar pattern and create a project schedule chart using range bars to represent task durations.

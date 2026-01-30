@@ -83,7 +83,7 @@ You can also enable it globally using [theme default props](/material-ui/customi
 
 ```js
 components: {
-  MuiChartsDataProvider: {
+  MuiChartDataProvider: {
     defaultProps: {
        experimentalFeatures: { preferStrictDomainInLineCharts: true }
     },
@@ -305,7 +305,7 @@ This will lead to strange behaviors.
 
 ## Composition
 
-Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the following components:
 
@@ -318,7 +318,7 @@ In addition to the common chart components available for [composition](/x/react-
 Here's how the Line Chart is composed:
 
 ```jsx
-<ChartsDataProvider>
+<ChartDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -341,7 +341,7 @@ Here's how the Line Chart is composed:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartsDataProvider>
+</ChartDataProvider>
 ```
 
 :::info

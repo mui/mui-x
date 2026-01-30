@@ -292,14 +292,14 @@ The example below uses the `renderer` prop to improve performance when rendering
 
 ## Composition
 
-Use the `<ChartsDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
+Use the `<ChartDataProvider />` to provide `series`, `xAxis`, and `yAxis` props for composition.
 
 In addition to the common chart components available for [composition](/x/react-charts/composition/), you can use the `<BarPlot />` component that renders the bars and their labels.
 
 Here's how the Bar Chart is composed:
 
 ```jsx
-<ChartsDataProvider>
+<ChartDataProvider>
   <ChartsWrapper>
     <ChartsLegend />
     <ChartsSurface>
@@ -315,7 +315,7 @@ Here's how the Bar Chart is composed:
     </ChartsSurface>
     <ChartsTooltip />
   </ChartsWrapper>
-</ChartsDataProvider>
+</ChartDataProvider>
 ```
 
 {{"demo": "BarScatterCompostion.js"}}

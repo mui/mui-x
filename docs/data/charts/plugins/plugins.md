@@ -1,7 +1,7 @@
 ---
 title: Charts - Plugins
 productId: x-charts
-components: ChartContainer, ChartsDataProvider
+components: ChartContainer, ChartDataProvider
 ---
 
 # Charts - Plugins
@@ -18,7 +18,7 @@ Most charts should not require changes to either the plugins or the series confi
 Plugins are functions that add features to the chart.
 They can process data, add internal state, or listen to events.
 
-Plugins can be passed to the `<ChartContainer />` or the `<ChartsDataProvider />` with the `plugins` props.
+Plugins can be passed to the `<ChartContainer />` or the `<ChartDataProvider />` with the `plugins` props.
 
 :::info
 Notice that `myChartPlugins` is defined outside of the component.
