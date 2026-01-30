@@ -77,7 +77,6 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
   },
   filterOperators: getGridMultiSelectOperators(),
   getApplyQuickFilterFn: getGridMultiSelectQuickFilterFn,
-  // @ts-ignore
   pastedValueParser: (value, row, column) => {
     const colDef = column as GridMultiSelectColDef;
     const valueOptions = getValueOptions(colDef) || [];
@@ -93,7 +92,7 @@ export const GRID_MULTI_SELECT_COL_DEF: Omit<GridMultiSelectColDef, 'field'> = {
         );
         return matchingOption ? getOptionValue(matchingOption) : null;
       })
-      .filter((v): v is NonNullable<typeof v> => v !== null);
+      .filter((v) => v !== null);
 
     return validValues.length > 0 ? validValues : undefined;
   },
