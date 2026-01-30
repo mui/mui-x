@@ -140,7 +140,7 @@ const kkKZGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Мәзір',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} баған мәзірі`,
+  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
   columnMenuShowColumns: 'Бағандарды көрсету',
   columnMenuManageColumns: 'Бағандарды басқару',
   columnMenuFilter: 'Сүзгі',
@@ -247,7 +247,7 @@ const kkKZGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Деректерді біріктіру',
-  // aggregationFunctionLabelNone: 'жоқ',
+  // aggregationFunctionLabelNone: 'none',
   aggregationFunctionLabelSum: 'сома',
   aggregationFunctionLabelAvg: 'орташа',
   aggregationFunctionLabelMin: 'мин',
@@ -322,7 +322,7 @@ const kkKZGrid: Partial<GridLocaleText> = {
   promptFieldPlaceholder: 'Сұрауды енгізіңіз…',
   promptFieldPlaceholderWithRecording: 'Сұрауды енгізіңіз немесе жазыңыз…',
   promptFieldPlaceholderListening: 'Сұрауды тыңдау…',
-  // promptFieldSpeechRecognitionNotSupported: 'Бұл браузерде сөйлеуді тану қолдау көрсетілмейді',
+  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
   promptFieldSend: 'Жіберу',
   promptFieldRecord: 'Жазу',
   promptFieldStopRecording: 'Жазуды тоқтату',
