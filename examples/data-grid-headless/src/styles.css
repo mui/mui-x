@@ -103,8 +103,6 @@
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  border: 1px solid #e0e0e0;
-  background-color: white;
   overflow: hidden;
   position: relative;
 }
