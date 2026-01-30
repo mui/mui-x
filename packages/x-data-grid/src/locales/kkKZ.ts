@@ -7,9 +7,7 @@ type PluralForm = {
   many: string;
 };
 
-// Казахский тілінде сандардан кейін көпше түрі жоқ, бірақ үйлесімділік үшін сақтаймыз
 function getPluralForm(count: number, options: PluralForm) {
-  // В казахском языке после числительных существительные обычно стоят в единственном числе
   return `${count} ${options.one}`;
 }
 
