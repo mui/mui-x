@@ -63,7 +63,7 @@ const pieChartsParams = {
 };
 
 function CustomLine(props: AnimatedLineProps) {
-  const { d, ownerState, className, ...other } = props;
+  const { d, ownerState, skipAnimation, className, ...other } = props;
 
   return (
     <React.Fragment>
