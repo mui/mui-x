@@ -1,0 +1,64 @@
+{
+  "props": {
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "rainbowSurgePalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "experimentalFeatures": {
+      "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
+    },
+    "height": { "type": { "name": "number" } },
+    "id": { "type": { "name": "string" } },
+    "localeText": { "type": { "name": "object" } },
+    "margin": {
+      "type": {
+        "name": "union",
+        "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "slotProps": { "type": { "name": "object" } },
+    "slots": { "type": { "name": "object" }, "additionalInfo": { "slotsApi": true } },
+    "width": { "type": { "name": "number" } }
+  },
+  "name": "ChartsDataProviderPro",
+  "imports": [
+    "import { ChartsDataProviderPro } from '@mui/x-charts-pro/ChartsDataProviderPro';",
+    "import { ChartsDataProviderPro } from '@mui/x-charts-pro';"
+  ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
+  ],
+  "classes": [],
+  "muiName": "MuiChartsDataProviderPro",
+  "filename": "/packages/x-charts-pro/src/ChartsDataProviderPro/ChartsDataProviderPro.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
+  "cssComponent": false
+}

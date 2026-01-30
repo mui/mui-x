@@ -1,0 +1,170 @@
+'use client';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import {
+  defaultSlotsMaterial,
+  type ChartsSlotProps,
+  type ChartsSlots,
+} from '../internals/material';
+import { ChartsSlotsProvider } from '../context/ChartsSlotsContext';
+
+import { useChartsDataProviderProps } from './useChartsDataProviderProps';
+import { ChartsProvider, type ChartsProviderProps } from '../context/ChartsProvider';
+import { type ChartSeriesType } from '../models/seriesType/config';
+import { type ChartAnyPluginSignature } from '../internals/plugins/models/plugin';
+
+import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
+import {
+  ChartsLocalizationProvider,
+  type ChartsLocalizationProviderProps,
+} from '../ChartsLocalizationProvider';
+
+export interface ChartsDataProviderSlots extends ChartsSlots {}
+
+export interface ChartsDataProviderSlotProps extends ChartsSlotProps {}
+
+export type ChartsDataProviderProps<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+> = React.PropsWithChildren<
+  ChartsProviderProps<TSeries, TSignatures>['pluginParams'] &
+    Pick<ChartsProviderProps<TSeries, TSignatures>, 'plugins'>
+> &
+  ChartsLocalizationProviderProps & {
+    /**
+     * Slots to customize charts' components.
+     */
+    slots?: Partial<ChartsDataProviderSlots>;
+    /**
+     * The props for the slots.
+     */
+    slotProps?: Partial<ChartsDataProviderSlotProps>;
+  };
+
+/**
+ * Orchestrates the data providers for the chart components and hooks.
+ *
+ * Use this component if you have custom HTML components that need to access the chart data.
+ *
+ * Demos:
+ *
+ * - [Composition](https://mui.com/x/react-charts/composition/)
+ *
+ * API:
+ *
+ * - [ChartsDataProvider API](https://mui.com/x/api/charts/charts-data-provider/)
+ *
+ * @example
+ * ```jsx
+ * <ChartsDataProvider
+ *   series={[{ label: "Label", type: "bar", data: [10, 20] }]}
+ *   xAxis={[{ data: ["A", "B"], scaleType: "band", id: "x-axis" }]}
+ * >
+ *   <ChartsSurface>
+ *      <BarPlot />
+ *      <ChartsXAxis axisId="x-axis" />
+ *   </ChartsSurface>
+ *   {'Custom Legend Component'}
+ * </ChartsDataProvider>
+ * ```
+ */
+function ChartsDataProvider<
+  TSeries extends ChartSeriesType = ChartSeriesType,
+  TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
+>(props: ChartsDataProviderProps<TSeries, TSignatures>) {
+  const { children, localeText, chartProviderProps, slots, slotProps } =
+    useChartsDataProviderProps(props);
+
+  return (
+    <ChartsProvider<TSeries, TSignatures> {...chartProviderProps}>
+      <ChartsLocalizationProvider localeText={localeText}>
+        <ChartsSlotsProvider
+          slots={slots}
+          slotProps={slotProps}
+          defaultSlots={defaultSlotsMaterial}
+        >
+          {children}
+        </ChartsSlotsProvider>
+      </ChartsLocalizationProvider>
+    </ChartsProvider>
+  );
+}
+
+ChartsDataProvider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  apiRef: PropTypes.shape({
+    current: PropTypes.any,
+  }),
+  /**
+   * Color palette used to colorize multiple series.
+   * @default rainbowSurgePalette
+   */
+  colors: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]),
+  /**
+   * An array of objects that can be used to populate series and axes data using their `dataKey` property.
+   */
+  dataset: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Options to enable features planned for the next major.
+   */
+  experimentalFeatures: PropTypes.shape({
+    preferStrictDomainInLineCharts: PropTypes.bool,
+  }),
+  /**
+   * The height of the chart in px. If not defined, it takes the height of the parent element.
+   */
+  height: PropTypes.number,
+  /**
+   * This prop is used to help implement the accessibility logic.
+   * If you don't provide this prop. It falls back to a randomly generated id.
+   */
+  id: PropTypes.string,
+  /**
+   * Localized text for chart components.
+   */
+  localeText: PropTypes.object,
+  /**
+   * The margin between the SVG and the drawing area.
+   * It's used for leaving some space for extra information such as the x- and y-axis or legend.
+   *
+   * Accepts a `number` to be used on all sides or an object with the optional properties: `top`, `bottom`, `left`, and `right`.
+   */
+  margin: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.shape({
+      bottom: PropTypes.number,
+      left: PropTypes.number,
+      right: PropTypes.number,
+      top: PropTypes.number,
+    }),
+  ]),
+  /**
+   * The array of series to display.
+   * Each type of series has its own specificity.
+   * Please refer to the appropriate docs page to learn more about it.
+   */
+  series: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * If `true`, animations are skipped.
+   * If unset or `false`, the animations respects the user's `prefers-reduced-motion` setting.
+   */
+  skipAnimation: PropTypes.bool,
+  /**
+   * The props for the slots.
+   */
+  slotProps: PropTypes.object,
+  /**
+   * Slots to customize charts' components.
+   */
+  slots: PropTypes.object,
+  theme: PropTypes.oneOf(['dark', 'light']),
+  /**
+   * The width of the chart in px. If not defined, it takes the width of the parent element.
+   */
+  width: PropTypes.number,
+} as any;
+
+export { ChartsDataProvider };

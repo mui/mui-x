@@ -1,8 +1,8 @@
 'use client';
-import * as React from 'react';
-import type { ChartContextValue } from './ChartProvider.types';
+import { ChartsContext } from '../ChartsProvider/ChartsContext';
 
 /**
+ * @deprecated Use `ChartsContext` instead. We added S to the charts prefix to align with other components.
  * @ignore - internal component.
  */
-export const ChartContext = React.createContext<ChartContextValue<any> | null>(null);
+export const ChartContext = ChartsContext;

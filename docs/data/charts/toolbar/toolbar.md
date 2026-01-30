@@ -25,7 +25,7 @@ For example, if the chart doesn't have zooming enabled, then the zoom buttons do
 You can customize basic components, such as buttons and tooltips, by passing custom elements to the `slots` prop of the chart.
 You can use this to replace the default buttons with components from your design system.
 
-If you're composing a custom component, you can provide these basic components as slots to `ChartDataProvider`.
+If you're composing a custom component, you can provide these basic components as slots to `ChartsDataProvider`.
 
 {{"demo": "ChartsToolbarCustomElements.js"}}
 
