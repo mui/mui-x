@@ -18,7 +18,9 @@
     "domainLimit": {
       "description": "Defines the axis scale domain based on the min/max values of series linked to it.<br />- &#39;nice&#39;: Rounds the domain at human friendly values.<br />- &#39;strict&#39;: Set the domain to the min/max value provided. No extra space is added.<br />- function: Receives the calculated extremums as parameters, and should return the axis domain."
     },
-    "height": { "description": "The height of the axis." },
+    "height": {
+      "description": "The height of the axis.<br />Set to <code>&#39;auto&#39;</code> to automatically calculate the height based on tick label measurements."
+    },
     "hideTooltip": { "description": "If <code>true</code>, hide this value in the tooltip" },
     "ignoreTooltip": {
       "description": "If <code>true</code>, the axis will be ignored by the tooltip with <code>trigger=&#39;axis&#39;</code>."

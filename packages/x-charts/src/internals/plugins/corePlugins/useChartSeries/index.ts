@@ -7,3 +7,4 @@ export type {
   SeriesLayout,
 } from './useChartSeries.types';
 export * from './useChartSeries.selectors';
+export * from './useChartSeriesLayout.selectors';
