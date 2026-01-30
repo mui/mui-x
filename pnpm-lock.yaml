@@ -261,8 +261,8 @@ importers:
         specifier: 1.0.9-canary.60
         version: 1.0.9-canary.60(@types/node@22.19.3)(rollup@4.52.5)(terser@5.43.1)(tsx@4.21.0)(yaml@2.8.1)
       '@mui/internal-code-infra':
-        specifier: 0.0.3-canary.82
-        version: 0.0.3-canary.82(@next/eslint-plugin-next@15.5.9)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@16.26.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
+        specifier: 0.0.3-canary.85
+        version: 0.0.3-canary.85(@next/eslint-plugin-next@15.5.9)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@16.26.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)
       '@mui/internal-markdown':
         specifier: 2.0.14
         version: 2.0.14
@@ -513,8 +513,8 @@ importers:
         specifier: 'catalog:'
         version: 7.3.7(@mui/material@7.3.7(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@types/react@19.2.9)(react@19.2.3)
       '@mui/internal-docs-infra':
-        specifier: ^0.4.1-canary.2
-        version: 0.4.1-canary.2(@types/react@19.2.9)(next@15.5.11(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(prettier@3.7.4)(react@19.2.3)
+        specifier: ^0.4.1-canary.3
+        version: 0.4.1-canary.3(@types/react@19.2.9)(next@15.5.11(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(prettier@3.7.4)(react@19.2.3)
       '@mui/joy':
         specifier: ^5.0.0-beta.52
         version: 5.0.0-beta.52(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react@19.2.3))(@types/react@19.2.9)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -4455,8 +4455,8 @@ packages:
       '@babel/core': '7'
       '@babel/preset-react': '7'
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.18':
-    resolution: {integrity: sha512-lTGTa9x33iWD0bk0qmiR+UGAAUkI7u+nBwaW5vfcQL/Mfkso6y7zU2pgoCK1voyHPI0PPAGRX0hIcChnBq4QnA==}
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.20':
+    resolution: {integrity: sha512-c1p/39GF0fAJs/w5CCPESkw2drzQ8fy/Ldlvu0z5MpyGrLeIG9pNNSjS8DxFvAEsFmUO6IF/XBfV7gYZ7sYcVA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@babel/core': '7'
@@ -4470,8 +4470,8 @@ packages:
     resolution: {integrity: sha512-R77CJIXuKiKIfrKFVBEbKi2x+fA+fhf+HV907eLLBY9jN6zRB+9Cgyhsfi5mlYS62YEqZldqqY9jvIi+QLQweg==}
     hasBin: true
 
-  '@mui/internal-code-infra@0.0.3-canary.82':
-    resolution: {integrity: sha512-jhssBwCrwyYJaW22IgMlUMyenL26OhoYOu0/Jq4h95t3y08tbSUucsidvskeoDmgJcA/4Wkn4sPFuC/eA1q8YQ==}
+  '@mui/internal-code-infra@0.0.3-canary.85':
+    resolution: {integrity: sha512-q6B8ku4sXZ/Jz8t29kvWNngbcogsFNEMNBRfEvIAOkXTpcIC4//JjihuQ8aZ4NvNgb8sRzaRWMPa7nfnL7zwQg==}
     hasBin: true
     peerDependencies:
       '@next/eslint-plugin-next': '*'
@@ -4479,8 +4479,8 @@ packages:
       prettier: ^3.0.0
       typescript: ^5.0.0
 
-  '@mui/internal-docs-infra@0.4.1-canary.2':
-    resolution: {integrity: sha512-u/E/KFUGsoEIINAVtBoe0QEbwsW4wAZz/O94FFGksjNNoRwsJwgi8m0E5/MJ3eeTp+1jWl7a9PEFtdHAn6pJpQ==}
+  '@mui/internal-docs-infra@0.4.1-canary.3':
+    resolution: {integrity: sha512-rNvRNsydB8nDbH7CS7s8dccfw1/gtBbdyC7PQ2wGrGaoyzloY/VbHKfj6ubW05V5Z7Vc0T8UGR0A/R0ZbvJKGA==}
     engines: {node: '>=22.12.0'}
     hasBin: true
     peerDependencies:
@@ -14804,7 +14804,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.18(@babel/core@7.28.6)':
+  '@mui/internal-babel-plugin-minify-errors@2.0.8-canary.20(@babel/core@7.28.6)':
     dependencies:
       '@babel/core': 7.28.6
       '@babel/helper-module-imports': 7.28.6
@@ -14847,7 +14847,7 @@ snapshots:
       - tsx
       - yaml
 
-  '@mui/internal-code-infra@0.0.3-canary.82(@next/eslint-plugin-next@15.5.9)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@16.26.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)':
+  '@mui/internal-code-infra@0.0.3-canary.85(@next/eslint-plugin-next@15.5.9)(@types/node@22.19.3)(@typescript-eslint/parser@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-webpack@0.13.10)(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.54.0(eslint@9.39.2)(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2))(eslint@9.39.2)(postcss@8.5.6)(prettier@3.7.4)(stylelint@16.26.1(typescript@5.9.3))(typescript@5.9.3)(vitest@4.0.18)':
     dependencies:
       '@argos-ci/core': 4.5.0
       '@babel/cli': 7.28.6(@babel/core@7.28.6)
@@ -14864,7 +14864,7 @@ snapshots:
       '@inquirer/confirm': 6.0.4(@types/node@22.19.3)
       '@inquirer/select': 5.0.4(@types/node@22.19.3)
       '@mui/internal-babel-plugin-display-name': 1.0.4-canary.11(@babel/core@7.28.6)(@babel/preset-react@7.28.5(@babel/core@7.28.6))
-      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.18(@babel/core@7.28.6)
+      '@mui/internal-babel-plugin-minify-errors': 2.0.8-canary.20(@babel/core@7.28.6)
       '@mui/internal-babel-plugin-resolve-imports': 2.0.7-canary.31(@babel/core@7.28.6)
       '@napi-rs/keyring': 1.2.0
       '@next/eslint-plugin-next': 15.5.9
@@ -14931,7 +14931,7 @@ snapshots:
       - supports-color
       - vitest
 
-  '@mui/internal-docs-infra@0.4.1-canary.2(@types/react@19.2.9)(next@15.5.11(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(prettier@3.7.4)(react@19.2.3)':
+  '@mui/internal-docs-infra@0.4.1-canary.3(@types/react@19.2.9)(next@15.5.11(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.57.0)(babel-plugin-macros@3.1.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(prettier@3.7.4)(react@19.2.3)':
     dependencies:
       '@babel/runtime': 7.28.6
       '@babel/standalone': 7.28.6
