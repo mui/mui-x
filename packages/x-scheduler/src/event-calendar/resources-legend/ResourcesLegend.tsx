@@ -140,11 +140,9 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
 
   const handleToggle = useStableCallback(
     (resourceId: string, checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
-      const newVisibleResources: Record<string, boolean> = {};
-      resources.forEach((resource) => {
-        newVisibleResources[resource.id] =
-          resource.id === resourceId ? checked : visibleSet.has(resource.id);
-      });
+      const newVisibleResources = Object.fromEntries(
+        resources.map((res) => [res.id, res.id === resourceId ? checked : visibleSet.has(res.id)]),
+      );
       store.setVisibleResources(newVisibleResources, event.nativeEvent);
     },
   );
