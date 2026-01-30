@@ -186,14 +186,19 @@ function useDataGridContext() {
   return context;
 }
 
-function renderCell(column: ColumnToRender, row: RowToRender<RowData>) {
+function GridCell({ column, row }: { column: ColumnToRender; row: RowToRender<RowData> }) {
   const value = row.model[column.field as keyof RowData];
+  const { grid } = useDataGridContext();
+  const cellProps = grid.api.elements.hooks.useCellProps({
+    field: column.id,
+    colIndex: column.index,
+  });
+
   return (
     <div
       key={column.id}
       className="grid-cell"
-      // TODO: useCellProps()
-      role="gridcell"
+      {...cellProps}
       style={{ width: column.size || 150, minWidth: column.size || 150 }}
     >
       {value != null ? String(value) : ''}
@@ -201,11 +206,21 @@ function renderCell(column: ColumnToRender, row: RowToRender<RowData>) {
   );
 }
 
-function renderRow(row: RowToRender<RowData>, columnsToRender: ColumnToRender[]) {
+function GridRow({
+  row,
+  columnsToRender,
+}: {
+  row: RowToRender<RowData>;
+  columnsToRender: ColumnToRender[];
+}) {
+  const { grid } = useDataGridContext();
+  const rowProps = grid.api.elements.hooks.useRowProps({ id: row.id, index: row.index });
+
   return (
-    // TODO: useRowProps()
-    <div key={row.id} className="grid-row" role="row" style={{ height: ROW_HEIGHT }}>
-      {columnsToRender.map((column) => renderCell(column, row))}
+    <div key={row.id} className="grid-row" {...rowProps} style={{ height: ROW_HEIGHT }}>
+      {columnsToRender.map((column) => (
+        <GridCell column={column} row={row}></GridCell>
+      ))}
     </div>
   );
 }
@@ -233,7 +248,7 @@ function DataGridRenderZone() {
         if (!row) {
           return null;
         }
-        return renderRow(row, columnsToRender);
+        return <GridRow row={row} columnsToRender={columnsToRender} />;
       })}
     </div>
   );
