@@ -43,13 +43,7 @@ export type {
   ChartsContainerProSlots,
   ChartsContainerProSlotProps,
 } from './ChartsContainerPro';
-/**
- * @deprecated Use `ChartsContainerPro` instead.
- */
 export { ChartContainerPro } from './ChartContainerPro';
-/**
- * @deprecated Use `ChartsContainerProProps`, `ChartsContainerProSlots`, `ChartsContainerProSlotProps` instead.
- */
 export type {
   ChartContainerProProps,
   ChartContainerProSlots,

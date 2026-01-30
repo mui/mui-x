@@ -9,17 +9,17 @@ import {
 } from '../ChartsContainerPro';
 
 /**
- * @deprecated Use `ChartsContainerProSlots` instead.
+ * @deprecated Use `ChartsContainerProSlots` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerProSlots = ChartsContainerProSlots;
 
 /**
- * @deprecated Use `ChartsContainerProSlotProps` instead.
+ * @deprecated Use `ChartsContainerProSlotProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerProSlotProps = ChartsContainerProSlotProps;
 
 /**
- * @deprecated Use `ChartsContainerProProps` instead.
+ * @deprecated Use `ChartsContainerProProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
@@ -27,6 +27,6 @@ export type ChartContainerProProps<
 > = ChartsContainerProProps<TSeries, TSignatures>;
 
 /**
- * @deprecated Use `ChartsContainerPro` instead.
+ * @deprecated Use `ChartsContainerPro` instead. We added S to the charts prefix to align with other components.
  */
 export const ChartContainerPro = ChartsContainerPro;

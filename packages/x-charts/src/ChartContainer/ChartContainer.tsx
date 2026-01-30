@@ -10,17 +10,17 @@ import {
 } from '../ChartsContainer';
 
 /**
- * @deprecated Use `ChartsContainerSlots` instead.
+ * @deprecated Use `ChartsContainerSlots` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerSlots = ChartsContainerSlots;
 
 /**
- * @deprecated Use `ChartsContainerSlotProps` instead.
+ * @deprecated Use `ChartsContainerSlotProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerSlotProps = ChartsContainerSlotProps;
 
 /**
- * @deprecated Use `ChartsContainerProps` instead.
+ * @deprecated Use `ChartsContainerProps` instead. We added S to the charts prefix to align with other components.
  */
 export type ChartContainerProps<
   SeriesType extends ChartSeriesType = ChartSeriesType,
@@ -28,6 +28,6 @@ export type ChartContainerProps<
 > = ChartsContainerProps<SeriesType, TSignatures>;
 
 /**
- * @deprecated Use `ChartsContainer` instead.
+ * @deprecated Use `ChartsContainer` instead. We added S to the charts prefix to align with other components.
  */
 export const ChartContainer = ChartsContainer;
