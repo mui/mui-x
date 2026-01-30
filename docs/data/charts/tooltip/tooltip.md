@@ -149,13 +149,13 @@ Use `slots` to replace the default tooltip in single-component charts:
 <LineChart slots={{ tooltip: CustomItemTooltip }} />
 ```
 
-When composing a custom component, use your component inside `ChartDataProvider`:
+When composing a custom component, use your component inside `ChartsDataProvider`:
 
 ```jsx
-<ChartDataProvider>
+<ChartsDataProvider>
   <ChartsSurface>{/* ... */}</ChartsSurface>
   <CustomItemTooltip />
-</ChartDataProvider>
+</ChartsDataProvider>
 ```
 
 ## Controlling the item tooltip
