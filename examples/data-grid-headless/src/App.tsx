@@ -1,5 +1,4 @@
 import * as React from 'react';
-import useForkRef from '@mui/utils/useForkRef';
 import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
 import { sortingPlugin } from '@mui/x-data-grid-headless/plugins/sorting';
 import { paginationPlugin } from '@mui/x-data-grid-headless/plugins/pagination';
@@ -349,23 +348,15 @@ function DataGridColumnHeaders() {
 
 type ScrollbarPosition = 'vertical' | 'horizontal';
 
-interface DataGridVirtualScrollbarProps {
-  position: ScrollbarPosition;
-  scrollerRef: React.RefObject<HTMLDivElement | null>;
-  hasOppositeScrollbar: boolean;
-}
-
 function DataGridVirtualScrollbar({
   position,
-  scrollerRef,
   hasOppositeScrollbar,
-}: DataGridVirtualScrollbarProps) {
+}: {
+  position: ScrollbarPosition;
+  hasOppositeScrollbar: boolean;
+}) {
   const { grid } = useDataGridContext();
   const dimensions = grid.api.virtualization.hooks.useDimensions();
-
-  const scrollbarRef = React.useRef<HTMLDivElement>(null);
-  const isLocked = React.useRef(false);
-  const lastPosition = React.useRef(0);
 
   const isVertical = position === 'vertical';
   const elements = grid.api.elements;
@@ -373,66 +364,7 @@ function DataGridVirtualScrollbar({
     ? elements.hooks.useScrollbarVerticalProps()
     : elements.hooks.useScrollbarHorizontalProps();
 
-  const handleScrollbarRef = useForkRef(scrollbarRef, scrollbarProps.ref);
-
-  const propertyScroll = isVertical ? 'scrollTop' : 'scrollLeft';
   const contentSize = dimensions.contentSize[isVertical ? 'height' : 'width'];
-
-  const handleScrollerScroll = React.useCallback(() => {
-    const scroller = scrollerRef.current;
-    const scrollbar = scrollbarRef.current;
-    if (!scroller || !scrollbar) {
-      return;
-    }
-
-    const scrollerPosition = scroller[propertyScroll];
-    if (scrollerPosition === lastPosition.current) {
-      return;
-    }
-    lastPosition.current = scrollerPosition;
-
-    if (isLocked.current) {
-      isLocked.current = false;
-      return;
-    }
-    isLocked.current = true;
-
-    scrollbar[propertyScroll] = scrollerPosition;
-  }, [scrollerRef, propertyScroll]);
-
-  const handleScrollbarScroll = React.useCallback(() => {
-    const scroller = scrollerRef.current;
-    const scrollbar = scrollbarRef.current;
-    if (!scroller || !scrollbar) {
-      return;
-    }
-
-    if (isLocked.current) {
-      isLocked.current = false;
-      return;
-    }
-    isLocked.current = true;
-
-    scroller[propertyScroll] = scrollbar[propertyScroll];
-  }, [scrollerRef, propertyScroll]);
-
-  React.useEffect(() => {
-    const scroller = scrollerRef.current;
-    const scrollbar = scrollbarRef.current;
-    if (!scroller || !scrollbar) {
-      return undefined;
-    }
-
-    const options: AddEventListenerOptions = { passive: true };
-    scroller.addEventListener('scroll', handleScrollerScroll, options);
-    scrollbar.addEventListener('scroll', handleScrollbarScroll, options);
-
-    return () => {
-      scroller.removeEventListener('scroll', handleScrollerScroll);
-      scrollbar.removeEventListener('scroll', handleScrollbarScroll);
-    };
-  }, [handleScrollerScroll, handleScrollbarScroll, scrollerRef]);
-
   const scrollbarSize = dimensions.scrollbarSize;
 
   const style: React.CSSProperties = isVertical
@@ -467,7 +399,6 @@ function DataGridVirtualScrollbar({
     <div
       className={`DataGrid-scrollbar${isVertical ? 'Vertical' : 'Horizontal'}`}
       {...scrollbarProps}
-      ref={handleScrollbarRef}
       style={style}
     >
       <div style={innerStyle} />
@@ -487,7 +418,6 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   { rows, columns, config },
   ref,
 ) {
-
   const grid = useDataGrid({
     rows,
     columns,
@@ -513,11 +443,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   const containerProps = elements.hooks.useContainerProps();
   const scrollerProps = elements.hooks.useScrollerProps();
   const contentProps = elements.hooks.useContentProps();
-  const scrollAreaProps = elements.hooks.useScrollAreaProps();
   const dimensions = virtualization.hooks.useDimensions();
-
-  const scrollerRef = React.useRef<HTMLDivElement>(null);
-  const handleScrollerRef = useForkRef(scrollerRef, scrollerProps.ref);
 
   const hasScrollY = dimensions.hasScrollY;
   const hasScrollX = dimensions.hasScrollX;
@@ -549,7 +475,6 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
             <div
               className="DataGrid-virtualScroller"
               {...scrollerProps}
-              ref={handleScrollerRef}
               style={{
                 ...(scrollerProps.style as React.CSSProperties),
                 overflow: 'auto',
@@ -585,18 +510,10 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
             />
           )}
           {hasScrollY && (
-            <DataGridVirtualScrollbar
-              position="vertical"
-              scrollerRef={scrollerRef}
-              hasOppositeScrollbar={hasScrollX}
-            />
+            <DataGridVirtualScrollbar position="vertical" hasOppositeScrollbar={hasScrollX} />
           )}
           {hasScrollX && (
-            <DataGridVirtualScrollbar
-              position="horizontal"
-              scrollerRef={scrollerRef}
-              hasOppositeScrollbar={hasScrollY}
-            />
+            <DataGridVirtualScrollbar position="horizontal" hasOppositeScrollbar={hasScrollY} />
           )}
         </div>
       </div>

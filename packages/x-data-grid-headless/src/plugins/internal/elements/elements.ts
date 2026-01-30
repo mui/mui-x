@@ -23,7 +23,7 @@ const containerStaticProps = {
 } as const;
 
 type ContainerProps = typeof containerStaticProps & {
-  ref?: React.RefCallback<any> | React.RefObject<any | null>;
+  ref?: React.Ref<any>;
 };
 
 const scrollerStaticProps = {
@@ -31,7 +31,7 @@ const scrollerStaticProps = {
 };
 
 type ScrollerProps = typeof scrollerStaticProps & {
-  ref?: React.RefCallback<HTMLElement> | React.RefObject<HTMLElement | null>;
+  ref?: React.Ref<any>;
   style?: React.CSSProperties;
   tabIndex?: number;
 };
@@ -57,7 +57,7 @@ const scrollbarStaticProps = {
 } as const;
 
 type ScrollbarProps = typeof scrollbarStaticProps & {
-  ref?: React.RefCallback<HTMLElement> | React.RefObject<HTMLElement | null>;
+  ref?: React.Ref<any>;
   zIndex?: number;
 };
 
