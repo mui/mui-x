@@ -3,7 +3,8 @@ import * as React from 'react';
 import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
@@ -24,23 +25,26 @@ const ResourcesLegendRoot = styled('section', {
   flexDirection: 'column',
 });
 
-const ResourcesLegendItemRoot = styled(ButtonBase, {
+const ResourcesLegendItemRoot = styled(FormControlLabel, {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegendItem',
 })(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(1),
+  marginLeft: 0,
+  marginRight: 0,
   padding: theme.spacing(1),
   borderRadius: theme.shape.borderRadius,
-  width: '100%',
-  justifyContent: 'flex-start',
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-  '&.Mui-focusVisible': {
+  '&:has(:focus-visible)': {
     outline: `2px solid ${theme.palette.primary.main}`,
     outlineOffset: -2,
+  },
+  '& .MuiFormControlLabel-label': {
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    flex: 1,
   },
 }));
 
@@ -67,7 +71,11 @@ const ResourcesLegendItemName = styled(Typography, {
 interface ResourcesLegendItemProps {
   resource: SchedulerResource;
   isVisible: boolean;
-  onToggle: (resourceId: string, event: React.MouseEvent) => void;
+  onToggle: (
+    resourceId: string,
+    checked: boolean,
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => void;
 }
 
 function ResourcesLegendItem(props: ResourcesLegendItemProps) {
@@ -80,26 +88,40 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   return (
     <ResourcesLegendItemRoot
       className={classes.resourcesLegendItem}
-      onClick={(event) => onToggle(resource.id, event)}
-      aria-label={
-        isVisible
-          ? translations.hideEventsLabel(resource.title)
-          : translations.showEventsLabel(resource.title)
+      labelPlacement="start"
+      control={
+        <Checkbox
+          checked={isVisible}
+          onChange={(event) => onToggle(resource.id, event.target.checked, event)}
+          icon={<VisibilityOffOutlined fontSize="small" />}
+          checkedIcon={<VisibilityOutlined fontSize="small" />}
+          size="small"
+          disableRipple
+          slotProps={{
+            input: {
+              'aria-label': isVisible
+                ? translations.hideEventsLabel(resource.title)
+                : translations.showEventsLabel(resource.title),
+            },
+          }}
+          sx={{
+            p: 0,
+            '&.Mui-checked': { color: 'action.active' },
+          }}
+        />
       }
-    >
-      <ResourcesLegendItemColorDot
-        className={classes.resourcesLegendItemColorDot}
-        data-palette={eventColor}
-      />
-      <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
-        {resource.title}
-      </ResourcesLegendItemName>
-      {isVisible ? (
-        <VisibilityOutlined fontSize="small" sx={{ ml: 'auto', color: 'action.active' }} />
-      ) : (
-        <VisibilityOffOutlined fontSize="small" sx={{ ml: 'auto', color: 'action.active' }} />
-      )}
-    </ResourcesLegendItemRoot>
+      label={
+        <React.Fragment>
+          <ResourcesLegendItemColorDot
+            className={classes.resourcesLegendItemColorDot}
+            data-palette={eventColor}
+          />
+          <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
+            {resource.title}
+          </ResourcesLegendItemName>
+        </React.Fragment>
+      }
+    />
   );
 }
 
@@ -115,10 +137,16 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
 
   const visibleSet = React.useMemo(() => new Set(visibleResourcesList), [visibleResourcesList]);
 
-  const handleToggle = useStableCallback((resourceId: string, event: React.MouseEvent) => {
-    const isCurrentlyVisible = visibleSet.has(resourceId);
-    store.setVisibleResources({ [resourceId]: !isCurrentlyVisible }, event.nativeEvent);
-  });
+  const handleToggle = useStableCallback(
+    (resourceId: string, checked: boolean, event: React.ChangeEvent<HTMLInputElement>) => {
+      const newVisibleResources: Record<string, boolean> = {};
+      resources.forEach((resource) => {
+        newVisibleResources[resource.id] =
+          resource.id === resourceId ? checked : visibleSet.has(resource.id);
+      });
+      store.setVisibleResources(newVisibleResources, event.nativeEvent);
+    },
+  );
 
   if (resources.length === 0) {
     return null;
