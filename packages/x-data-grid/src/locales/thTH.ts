@@ -29,8 +29,7 @@ const thTHGrid: Partial<GridLocaleText> = {
   toolbarFiltersLabel: 'แสดงตัวกรอง',
   toolbarFiltersTooltipHide: 'ซ่อนตัวกรอง',
   toolbarFiltersTooltipShow: 'แสดงตัวกรอง',
-  toolbarFiltersTooltipActive: (count) =>
-    count !== 1 ? `ตัวกรองที่ใช้งาน ${count} รายการ` : `ตัวกรองที่ใช้งาน ${count} รายการ`,
+  toolbarFiltersTooltipActive: (count) => `ตัวกรองที่ใช้งาน ${count} รายการ`,
 
   // Quick filter toolbar field
   toolbarQuickFilterPlaceholder: 'ค้นหา…',
@@ -138,17 +137,12 @@ const thTHGrid: Partial<GridLocaleText> = {
   columnMenuManageCharts: 'จัดการแผนภูมิ',
 
   // Column header text
-  columnHeaderFiltersTooltipActive: (count) =>
-    count !== 1 ? `ตัวกรองที่ใช้งาน ${count} รายการ` : `ตัวกรองที่ใช้งาน ${count} รายการ`,
+  columnHeaderFiltersTooltipActive: (count) => `ตัวกรองที่ใช้งาน ${count} รายการ`,
   columnHeaderFiltersLabel: 'แสดงตัวกรอง',
   columnHeaderSortIconLabel: 'เรียงลำดับ',
 
   // Rows selected footer text
-  footerRowSelected: (count) =>
-    count !== 1
-      ? `เลือกแล้ว ${count.toLocaleString()} แถว`
-      : `เลือกแล้ว ${count.toLocaleString()} แถว`,
-
+  footerRowSelected: (count) => `เลือกแล้ว ${count.toLocaleString()} แถว`,
   // Total row amount footer text
   footerTotalRows: 'จำนวนแถวทั้งหมด:',
 
@@ -200,7 +194,7 @@ const thTHGrid: Partial<GridLocaleText> = {
     if (!estimated) {
       return `${from}–${to} จาก ${count !== -1 ? count : `มากกว่า ${to}`}`;
     }
-    const estimatedLabel = estimated && estimated > to ? `ประมาณ ${estimated}` : `มากกว่า ${to}`;
+    const estimatedLabel = estimated > to ? `ประมาณ ${estimated}` : `มากกว่า ${to}`;
     return `${from}–${to} จาก ${count !== -1 ? count : estimatedLabel}`;
   },
   paginationItemAriaLabel: (type) => {
