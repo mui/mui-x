@@ -293,14 +293,11 @@ function DataGridColumnHeaders() {
 
   return (
     <div
-      className="DataGrid-columnHeaders"
+      className="grid-column-headers"
       role="rowgroup"
       style={{
-        position: 'relative',
         minWidth: columnsTotalWidth,
         flex: `1 0 ${HEADER_HEIGHT}px`,
-        backgroundColor: '#f5f5f5',
-        borderBottom: '2px solid #e0e0e0',
         transform: `translate3d(-${scrollPosition.left}px, 0, 0)`,
       }}
     >
@@ -497,16 +494,8 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
           </div>
           {hasScrollX && hasScrollY && (
             <div
-              className="DataGrid-scrollArea"
-              {...scrollAreaProps}
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                right: 0,
-                width: scrollbarSize,
-                height: scrollbarSize,
-                backgroundColor: '#f5f5f5',
-              }}
+              className="grid-scrollbar-corner"
+              style={{ width: scrollbarSize, height: scrollbarSize }}
             />
           )}
           {hasScrollY && (

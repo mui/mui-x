@@ -61,10 +61,6 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ===========================================
-   Layout
-   =========================================== */
-
 .test-grid-container {
   display: flex;
   align-items: flex-start;
@@ -82,10 +78,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-/* ===========================================
-   Grid Wrapper
-   =========================================== */
 
 .grid-wrapper {
   flex: 1 1 auto;
@@ -107,48 +99,23 @@
   position: relative;
 }
 
+.grid-column-headers {
+  position: relative;
+  background-color: var(--color-background);
+  border-bottom: 2px solid var(--color-border);
+}
+
 .grid-scroll-container {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
 }
 
-/* ===========================================
-   Table Styles
-   =========================================== */
-
-.grid-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 100%;
-}
-
-.grid-thead {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.grid-th {
-  padding: var(--space-3) var(--space-4);
-  text-align: left;
-  font-weight: 500;
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  color: var(--color-text-secondary);
-  background-color: var(--gray-50);
-  border-bottom: 1px solid var(--color-border);
-  user-select: none;
-  white-space: nowrap;
-}
-
-.grid-th--sortable {
-  cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-
-.grid-th--sortable:hover {
-  background-color: var(--gray-100);
+.grid-scrollbar-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  overflow: scroll;
 }
 
 .grid-sort-icon {
@@ -156,25 +123,6 @@
   font-size: 11px;
   color: var(--color-text);
   font-weight: 600;
-}
-
-.grid-tr {
-  transition: background-color var(--duration-fast) var(--ease-out);
-}
-
-.grid-tr:hover {
-  background-color: var(--gray-50);
-}
-
-.grid-td {
-  padding: var(--space-3) var(--space-4);
-  font-size: 14px;
-  color: var(--color-text);
-  border-bottom: 1px solid var(--gray-100);
-}
-
-.grid-tr:last-child .grid-td {
-  border-bottom: none;
 }
 
 /* ===========================================
@@ -581,18 +529,6 @@
 
 .btn--block {
   width: 100%;
-}
-
-/* ===========================================
-   Grid Toolbar
-   =========================================== */
-
-.grid-toolbar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-border);
 }
 
 /* ===========================================

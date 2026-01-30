@@ -269,13 +269,25 @@ export function ConfigPanel(props: ConfigPanelProps) {
               {sections.rows && (
                 <div className="config-section__content">
                   <div className="config-section__buttons">
-                    <button type="button" onClick={onRerender} className="btn btn--secondary btn--block">
+                    <button
+                      type="button"
+                      onClick={onRerender}
+                      className="btn btn--secondary btn--block"
+                    >
                       Rerender
                     </button>
-                    <button type="button" onClick={onRefreshRows} className="btn btn--secondary btn--block">
+                    <button
+                      type="button"
+                      onClick={onRefreshRows}
+                      className="btn btn--secondary btn--block"
+                    >
                       Refresh Rows
                     </button>
-                    <button type="button" onClick={onShuffleColumns} className="btn btn--secondary btn--block">
+                    <button
+                      type="button"
+                      onClick={onShuffleColumns}
+                      className="btn btn--secondary btn--block"
+                    >
                       Shuffle Columns
                     </button>
                   </div>
