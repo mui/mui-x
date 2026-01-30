@@ -85,7 +85,8 @@
       }
     },
     "renderHeaderFilter": {
-      "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" }
+      "type": { "description": "(params: GridRenderHeaderFilterProps) =&gt; React.ReactNode" },
+      "isProPlan": true
     },
     "resizable": { "type": { "description": "boolean" }, "default": "true" },
     "rowSpanValueGetter": { "type": { "description": "GridValueGetter&lt;R, V, F&gt;" } },
