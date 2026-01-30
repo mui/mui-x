@@ -19,6 +19,20 @@
     "import { FunnelPlot } from '@mui/x-charts-pro/FunnelChart';",
     "import { FunnelPlot } from '@mui/x-charts-pro';"
   ],
+  "slots": [
+    {
+      "name": "funnelSection",
+      "description": "Custom component for funnel section.",
+      "default": "FunnelSection",
+      "class": null
+    },
+    {
+      "name": "funnelSectionLabel",
+      "description": "Custom component for funnel section label.",
+      "default": "FunnelSectionLabel",
+      "class": null
+    }
+  ],
   "classes": [],
   "muiName": "MuiFunnelPlot",
   "filename": "/packages/x-charts-pro/src/FunnelChart/FunnelPlot.tsx",

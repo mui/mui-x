@@ -42,6 +42,7 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onAxisClick,
     onAreaClick,
     onMarkClick,
+    enableKeyboardNavigation,
     ...other
   } = props;
 
@@ -58,7 +59,8 @@ export const useRadarChartProps = (props: RadarChartProps) => {
     onHighlightChange,
     skipAnimation,
     onAxisClick,
-    plugins: props.plugins ?? RADAR_PLUGINS,
+    enableKeyboardNavigation,
+    plugins: RADAR_PLUGINS,
   };
 
   const overlayProps: ChartsOverlayProps = {

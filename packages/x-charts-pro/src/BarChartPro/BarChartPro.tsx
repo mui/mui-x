@@ -41,10 +41,10 @@ export interface BarChartProSlotProps
 
 export interface BarChartProProps
   extends
-    Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps'>,
+    Omit<BarChartProps, 'apiRef' | 'slots' | 'slotProps' | 'seriesConfig' | 'plugins'>,
     Omit<
       ChartContainerProProps<'bar', BarChartProPluginSignatures>,
-      'series' | 'plugins' | 'seriesConfig' | 'slots' | 'slotProps' | 'experimentalFeatures'
+      'series' | 'slots' | 'slotProps' | 'experimentalFeatures'
     > {
   /**
    * Overridable component slots.
@@ -108,7 +108,7 @@ const BarChartPro = React.forwardRef(function BarChartPro(
   const Toolbar = props.slots?.toolbar ?? ChartsToolbarPro;
 
   return (
-    <ChartDataProviderPro {...chartDataProviderProProps}>
+    <ChartDataProviderPro<'bar', BarChartProPluginSignatures> {...chartDataProviderProProps}>
       <ChartsWrapper {...chartsWrapperProps}>
         {showToolbar ? <Toolbar {...props.slotProps?.toolbar} /> : null}
         {!props.hideLegend && <ChartsLegend {...legendProps} />}
@@ -144,6 +144,11 @@ BarChartPro.propTypes = {
       setZoomData: PropTypes.func.isRequired,
     }),
   }),
+  /**
+   * A gap added between axes when multiple axes are rendered on the same side of the chart.
+   * @default 0
+   */
+  axesGap: PropTypes.number,
   /**
    * The configuration of axes highlight.
    * Default is set to 'band' in the bar direction.
@@ -228,7 +233,7 @@ BarChartPro.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['bar']).isRequired,
     }),
   ),
@@ -252,13 +257,41 @@ BarChartPro.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['bar']).isRequired,
+    }),
+  ),
   /**
    * The list of zoom data related to each axis.
    * Used to initialize the zoom in a specific configuration without controlling it.
@@ -332,6 +365,12 @@ BarChartPro.propTypes = {
    */
   onItemClick: PropTypes.func,
   /**
+   * The callback fired when the tooltip item changes.
+   *
+   * @param {SeriesItemIdentifier<TSeries> | null} tooltipItem  The newly highlighted item.
+   */
+  onTooltipItemChange: PropTypes.func,
+  /**
    * Callback fired when the zoom has changed.
    *
    * @param {ZoomData[]} zoomData Updated zoom data.
@@ -378,6 +417,15 @@ BarChartPro.propTypes = {
   ]),
   theme: PropTypes.oneOf(['dark', 'light']),
   title: PropTypes.string,
+  /**
+   * The tooltip item.
+   * Used when the tooltip is controlled.
+   */
+  tooltipItem: PropTypes.shape({
+    dataIndex: PropTypes.number.isRequired,
+    seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar']).isRequired,
+  }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
    */

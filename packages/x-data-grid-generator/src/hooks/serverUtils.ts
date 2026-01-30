@@ -1,21 +1,21 @@
 import {
-  GridRowModel,
-  GridFilterModel,
-  GridSortModel,
+  type GridRowModel,
+  type GridFilterModel,
+  type GridSortModel,
   GridLogicOperator,
-  GridFilterOperator,
-  GridColDef,
-  GridRowId,
-  GridPaginationModel,
-  GridValidRowModel,
+  type GridFilterOperator,
+  type GridColDef,
+  type GridRowId,
+  type GridPaginationModel,
+  type GridValidRowModel,
   GRID_AGGREGATION_FUNCTIONS,
-  GridAggregationModel,
-  GridAggregationFunction,
-  GridPivotModel,
+  type GridAggregationModel,
+  type GridAggregationFunction,
+  type GridPivotModel,
   gridStringOrNumberComparator,
-  GridGetRowsResponse,
+  type GridGetRowsResponse,
 } from '@mui/x-data-grid-premium';
-import { GridStateColDef } from '@mui/x-data-grid-pro/internals';
+import type { GridStateColDef } from '@mui/x-data-grid-pro/internals';
 import { randomInt } from '../services/random-generator';
 
 const getAvailableAggregationFunctions = (columnType: GridColDef['type']) => {

@@ -1,6 +1,5 @@
-import { adapter } from 'test/utils/scheduler';
+import { adapter, storeClasses } from 'test/utils/scheduler';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { storeClasses } from '../utils/SchedulerStore/tests/utils';
 
 storeClasses.forEach((storeClass) => {
   describe(`schedulerResourceSelectors - ${storeClass.name}`, () => {

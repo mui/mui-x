@@ -1,29 +1,20 @@
+'use client';
 import * as React from 'react';
-import { X } from 'lucide-react';
-import { Popover } from '@base-ui/react';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
+import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import { SchedulerEventOccurrence } from '@mui/x-scheduler-headless/models';
 import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { MoreEventsPopoverProps, MoreEventsPopoverProviderProps } from './MoreEventsPopover.types';
-import { useTranslations } from '../../utils/TranslationsContext';
 import { EventItem } from '../event/event-item/EventItem';
-import { createPopover } from '../create-popover';
-import { ArrowSvg } from './arrow/ArrowSvg';
+import { createModal } from '../create-modal';
 import { isOccurrenceAllDayOrMultipleDay } from '../../utils/event-utils';
 import { formatWeekDayMonthAndDayOfMonth } from '../../utils/date-utils';
-
-const MoreEventsPopoverPositioner = styled(Popover.Positioner)(({ theme }) => ({
-  maxWidth: 300,
-  width: '100%',
-  backgroundColor: theme.palette.background.paper,
-  border: `1px solid ${theme.palette.divider}`,
-  borderRadius: theme.shape.borderRadius,
-  zIndex: theme.zIndex.modal,
-  boxShadow: theme.shadows[4],
-}));
+import {
+  EventDraggableDialogTrigger,
+  useEventDraggableDialogContext,
+} from '../event-draggable-dialog';
 
 const MoreEventsPopoverHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -46,6 +37,8 @@ const MoreEventsPopoverBody = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(1),
+  width: 'fit-content',
+  minWidth: 200,
 }));
 
 interface MoreEventsData {
@@ -54,7 +47,7 @@ interface MoreEventsData {
   day: useEventOccurrencesWithDayGridPosition.DayData;
 }
 
-const MoreEventsPopover = createPopover<MoreEventsData>({
+const MoreEventsPopover = createModal<MoreEventsData>({
   contextName: 'MoreEventsPopoverContext',
 });
 
@@ -62,67 +55,53 @@ export const MoreEventsPopoverContext = MoreEventsPopover.Context;
 export const useMoreEventsPopoverContext = MoreEventsPopover.useContext;
 
 export default function MoreEventsPopoverContent(props: MoreEventsPopoverProps) {
-  const { anchor, container, occurrences, day } = props;
+  const { open, anchor, occurrences, day, onClose } = props;
 
   // Context hooks
-  const translations = useTranslations();
   const adapter = useAdapter();
+  const { subscribeCloseHandler } = useEventDraggableDialogContext();
+
+  React.useEffect(() => {
+    subscribeCloseHandler(() => {
+      onClose();
+    });
+  }, [subscribeCloseHandler, onClose]);
 
   return (
-    <Popover.Portal container={container}>
-      <MoreEventsPopoverPositioner anchor={anchor} sideOffset={8}>
-        <Popover.Popup>
-          <Popover.Arrow>
-            <ArrowSvg />
-          </Popover.Arrow>
-          <MoreEventsPopoverHeader
-            id={`PopoverHeader-${day.key}`}
-            aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
-          >
-            <Popover.Title
-              render={
-                <MoreEventsPopoverTitle>
-                  {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
-                </MoreEventsPopoverTitle>
-              }
+    <Popover open={open} anchorEl={anchor} onClose={onClose}>
+      <MoreEventsPopoverHeader
+        id={`PopoverHeader-${day.key}`}
+        aria-label={`${formatWeekDayMonthAndDayOfMonth(day.value, adapter)}`}
+      >
+        <MoreEventsPopoverTitle>
+          {formatWeekDayMonthAndDayOfMonth(day.value, adapter)}
+        </MoreEventsPopoverTitle>
+      </MoreEventsPopoverHeader>
+      <MoreEventsPopoverBody>
+        {occurrences.map((occurrence) => (
+          <EventDraggableDialogTrigger occurrence={occurrence} key={occurrence.key}>
+            <EventItem
+              variant={isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'}
+              occurrence={occurrence}
+              date={day}
+              ariaLabelledBy={`PopoverHeader-${day.key}`}
             />
-            <Popover.Close
-              render={
-                <IconButton aria-label={translations.closeButtonAriaLabel} size="small">
-                  <X size={16} strokeWidth={1.5} />
-                </IconButton>
-              }
-            />
-          </MoreEventsPopoverHeader>
-          <MoreEventsPopoverBody>
-            {occurrences.map((occurrence) => (
-              <EventItem
-                variant={
-                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                }
-                key={occurrence.key}
-                occurrence={occurrence}
-                date={day}
-                ariaLabelledBy={`PopoverHeader-${day.key}`}
-              />
-            ))}
-          </MoreEventsPopoverBody>
-        </Popover.Popup>
-      </MoreEventsPopoverPositioner>
-    </Popover.Portal>
+          </EventDraggableDialogTrigger>
+        ))}
+      </MoreEventsPopoverBody>
+    </Popover>
   );
 }
 
 export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps) {
-  const { containerRef, children } = props;
+  const { children } = props;
 
   return (
     <MoreEventsPopover.Provider
-      containerRef={containerRef}
-      renderPopover={({ anchor, data, container, onClose }) => (
+      render={({ isOpen, anchorRef, data, onClose }) => (
         <MoreEventsPopoverContent
-          anchor={anchor}
-          container={container}
+          open={isOpen}
+          anchor={anchorRef.current!}
           occurrences={data.occurrences}
           count={data.count}
           day={data.day}
@@ -135,20 +114,19 @@ export function MoreEventsPopoverProvider(props: MoreEventsPopoverProviderProps)
   );
 }
 
-interface MoreEventsPopoverTriggerProps extends Omit<
-  React.ComponentProps<typeof Popover.Trigger>,
-  'onClick'
-> {
+interface MoreEventsPopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
   occurrences: SchedulerEventOccurrence[];
   day: useEventOccurrencesWithDayGridPosition.DayData;
+  children: React.ReactNode;
 }
 
 export function MoreEventsPopoverTrigger(props: MoreEventsPopoverTriggerProps) {
   const { occurrences, day, ...other } = props;
+  const ref = React.useRef<HTMLElement | null>(null);
 
   return (
     <MoreEventsPopover.Trigger
-      nativeButton={true}
+      ref={ref}
       data={{ occurrences, count: occurrences.length, day }}
       {...other}
     />

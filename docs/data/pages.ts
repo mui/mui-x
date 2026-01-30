@@ -171,6 +171,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
+          {
+            pathname: '/x/react-data-grid/undo-redo',
+            title: 'Undo and redo',
+            plan: 'premium',
+            newFeature: true,
+          },
           { pathname: '/x/react-data-grid/scrolling' },
           {
             pathname: '/x/react-data-grid/list-view',
@@ -728,6 +734,11 @@ const pages: MuiPage[] = [
             newFeature: true,
           },
           {
+            pathname: '/x/react-tree-view/rich-tree-view/virtualization',
+            plan: 'pro',
+            newFeature: true,
+          },
+          {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
             newFeature: true,
@@ -760,6 +771,25 @@ const pages: MuiPage[] = [
     pathname: '/x/migration-group',
     title: 'Migration',
     children: [
+      {
+        pathname: '/x/migration-v9',
+        subheader: 'Upgrade to v9',
+        children: [
+          // { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+          // {
+          //   pathname: '/x/migration/migration-pickers-v8',
+          //   title: 'Breaking changes: Date and Time Pickers',
+          // },
+          {
+            pathname: '/x/migration/migration-charts-v8',
+            title: 'Breaking changes: Charts',
+          },
+          // {
+          //   pathname: '/x/migration/migration-tree-view-v8',
+          //   title: 'Breaking changes: Tree View',
+          // },
+        ],
+      },
       {
         pathname: '/x/migration-v8',
         subheader: 'Upgrade to v8',

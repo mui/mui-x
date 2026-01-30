@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { GridSlotProps } from '../../models/gridSlotsComponent';
+import type { GridSlotProps } from '../../models/gridSlotsComponent';
 import { getDataGridUtilityClass } from '../../constants';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { TextFieldProps } from '../../models/gridBaseSlots';
-import { GridFilterModel } from '../../models/gridFilterModel';
+import type { TextFieldProps } from '../../models/gridBaseSlots';
+import type { GridFilterModel } from '../../models/gridFilterModel';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import {
   QuickFilter,

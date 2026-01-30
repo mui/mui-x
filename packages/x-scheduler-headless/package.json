@@ -14,7 +14,9 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
+    "./base-ui-copy": "./src/base-ui-copy/index.ts",
     "./build-is-valid-drop-target": "./src/build-is-valid-drop-target/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./calendar-grid": "./src/calendar-grid/index.ts",
     "./constants": "./src/constants/index.ts",
     "./event-calendar-provider": "./src/event-calendar-provider/index.ts",
@@ -26,9 +28,6 @@
     "./scheduler-selectors": "./src/scheduler-selectors/index.ts",
     "./sort-event-occurrences": "./src/sort-event-occurrences/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
-    "./timeline": "./src/timeline/index.ts",
-    "./timeline-provider": "./src/timeline-provider/index.ts",
-    "./timeline-selectors": "./src/timeline-selectors/index.ts",
     "./use-adapter": "./src/use-adapter/index.ts",
     "./use-event-calendar": "./src/use-event-calendar/index.ts",
     "./use-event-calendar-store-context": "./src/use-event-calendar-store-context/index.ts",
@@ -37,8 +36,7 @@
     "./use-event-occurrences-with-day-grid-position": "./src/use-event-occurrences-with-day-grid-position/index.ts",
     "./use-event-occurrences-with-timeline-position": "./src/use-event-occurrences-with-timeline-position/index.ts",
     "./use-scheduler-store-context": "./src/use-scheduler-store-context/index.ts",
-    "./use-timeline": "./src/use-timeline/index.ts",
-    "./use-timeline-store-context": "./src/use-timeline-store-context/index.ts"
+    "./use-draggable-dialog": "./src/use-draggable-dialog/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {

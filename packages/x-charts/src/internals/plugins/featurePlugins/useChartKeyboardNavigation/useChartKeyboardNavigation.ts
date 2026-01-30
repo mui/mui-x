@@ -3,6 +3,7 @@ import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { selectorChartDefaultizedSeries } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
+import { selectorChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
 import type { ChartPlugin } from '../../models';
 import type { UseChartKeyboardNavigationSignature } from './useChartKeyboardNavigation.types';
 import type { ChartSeriesType } from '../../../../models/seriesType/config';
@@ -11,8 +12,9 @@ import type { FocusedItemUpdater } from './keyboardFocusHandler.types';
 export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationSignature> = ({
   params,
   store,
-  svgRef,
+  instance,
 }) => {
+  const { svgRef } = instance;
   const removeFocus = useEventCallback(function removeFocus() {
     if (store.state.keyboardNavigation.item !== null) {
       store.set('keyboardNavigation', {
@@ -32,20 +34,22 @@ export const useChartKeyboardNavigation: ChartPlugin<UseChartKeyboardNavigationS
     function keyboardHandler(event: KeyboardEvent) {
       let newFocusedItem = store.state.keyboardNavigation.item;
 
+      const seriesConfig = selectorChartSeriesConfig(store.state);
+
       let seriesType = newFocusedItem?.type;
       if (!seriesType) {
         seriesType = (
           Object.keys(selectorChartDefaultizedSeries(store.state)) as ChartSeriesType[]
-        ).find((key) => store.state.series.seriesConfig[key] !== undefined);
+        ).find((key) => seriesConfig[key] !== undefined);
 
         if (seriesType === undefined) {
           return;
         }
       }
 
-      const calculateFocusedItem = store.state.series.seriesConfig[
-        seriesType
-      ]?.keyboardFocusHandler?.(event) as FocusedItemUpdater<typeof seriesType> | undefined;
+      const calculateFocusedItem = seriesConfig[seriesType]?.keyboardFocusHandler?.(event) as
+        | FocusedItemUpdater<typeof seriesType>
+        | undefined;
 
       if (!calculateFocusedItem) {
         return;

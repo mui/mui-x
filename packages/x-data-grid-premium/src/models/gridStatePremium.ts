@@ -1,4 +1,4 @@
-import {
+import type {
   GridInitialState as GridInitialStatePro,
   GridState as GridStatePro,
 } from '@mui/x-data-grid-pro';
@@ -25,6 +25,7 @@ import type {
   GridChartsIntegrationState,
   GridChartsIntegrationInitialState,
 } from '../hooks/features/chartsIntegration/gridChartsIntegrationInterfaces';
+import type { GridHistoryState } from '../hooks/features/history/gridHistoryInterfaces';
 
 /**
  * The state of Data Grid Premium.
@@ -37,6 +38,7 @@ export interface GridStatePremium extends GridStatePro {
   aiAssistant: GridAiAssistantState;
   sidebar: GridSidebarState;
   chartsIntegration: GridChartsIntegrationState;
+  history: GridHistoryState;
 }
 
 /**
