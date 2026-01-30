@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import ToggleButton from '@mui/material/ToggleButton';
-import { BarItemIdentifier } from '@mui/x-charts/models';
+import { BarItemIdentifier, HighlightScope } from '@mui/x-charts/models';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -20,8 +20,9 @@ export default function ControlledHighlight() {
       seriesId: 'A',
       dataIndex: 0,
     });
-  const [highlight, setHighlight] = React.useState('item');
-  const [fade, setFade] = React.useState('global');
+  const [highlight, setHighlight] =
+    React.useState<HighlightScope<'bar'>['highlight']>('item');
+  const [fade, setFade] = React.useState<HighlightScope<'bar'>['fade']>('global');
 
   const handleHighLightedSeries = (event: any, newHighLightedSeries: string) => {
     if (newHighLightedSeries !== null) {
@@ -86,8 +87,8 @@ export default function ControlledHighlight() {
           series={barChartsProps.series.map((series) => ({
             ...series,
             highlightScope: {
-              highlight: highlight as 'none' | 'item' | 'series',
-              fade: fade as 'none' | 'series' | 'global',
+              highlight,
+              fade,
             },
           }))}
           highlightedItem={highlightedItem}
@@ -105,7 +106,9 @@ export default function ControlledHighlight() {
           select
           label="highlighted"
           value={highlight}
-          onChange={(event) => setHighlight(event.target.value)}
+          onChange={(event) =>
+            setHighlight(event.target.value as HighlightScope<'bar'>['highlight'])
+          }
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
@@ -116,7 +119,9 @@ export default function ControlledHighlight() {
           select
           label="faded"
           value={fade}
-          onChange={(event) => setFade(event.target.value)}
+          onChange={(event) =>
+            setFade(event.target.value as HighlightScope<'bar'>['fade'])
+          }
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>

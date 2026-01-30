@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BarChart, BarSeries } from '@mui/x-charts/BarChart';
-import { HighlightItemData, HighlightScope } from '@mui/x-charts/context';
+import { HighlightScope, SeriesItemIdentifier } from '@mui/x-charts/models';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { SelectOptions } from './types';
 
@@ -16,7 +16,7 @@ const dataset: Record<'x' | 'a' | 'b' | 'c', number>[] = [
   { x: 8, a: 5, b: 15 },
 ].map((p) => ({ ...p, c: 40 - p.a - p.b }));
 
-const highlightScope: HighlightScope = {
+const highlightScope: HighlightScope<'bar'> = {
   highlight: 'item',
   fade: 'global',
 };
@@ -28,11 +28,13 @@ const series = [
 ] satisfies BarSeries[];
 
 export default function BarChartDemo(props: { selected: SelectOptions }) {
-  const [highlightedItem, setHighlightedItem] = React.useState<HighlightItemData | null>(null);
+  const [highlightedItem, setHighlightedItem] = React.useState<SeriesItemIdentifier<'bar'> | null>(
+    null,
+  );
 
   useEnhancedEffect(() => {
     if (props.selected === 'highlighting') {
-      setHighlightedItem({ seriesId: 'B', dataIndex: 2 });
+      setHighlightedItem({ type: 'bar', seriesId: 'B', dataIndex: 2 });
     } else {
       setHighlightedItem(null);
     }

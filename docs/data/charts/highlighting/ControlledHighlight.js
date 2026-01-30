@@ -85,8 +85,8 @@ export default function ControlledHighlight() {
           series={barChartsProps.series.map((series) => ({
             ...series,
             highlightScope: {
-              highlight: highlight,
-              fade: fade,
+              highlight,
+              fade,
             },
           }))}
           highlightedItem={highlightedItem}
