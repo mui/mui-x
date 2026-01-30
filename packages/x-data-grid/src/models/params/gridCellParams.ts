@@ -1,5 +1,5 @@
-import { GridCellMode } from '../gridCell';
-import {
+import type { GridCellMode } from '../gridCell';
+import type {
   GridRowId,
   GridRowModel,
   GridTreeNode,
@@ -7,8 +7,8 @@ import {
   GridValidRowModel,
 } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
-import { GridEditCellProps } from '../gridEditRowModel';
-import { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridEditCellProps } from '../gridEditRowModel';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.

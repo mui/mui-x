@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ColumnDef, useDataGrid } from '../';
+import { type ColumnDef, useDataGrid } from '../';
 import sortingPlugin from '../plugins/sorting';
 import paginationPlugin from '../plugins/pagination';
 

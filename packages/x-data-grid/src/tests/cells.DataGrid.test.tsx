@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { spy } from 'sinon';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
+import { DataGrid, type GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
 import {
   getCell,
   openLongTextEditPopup,

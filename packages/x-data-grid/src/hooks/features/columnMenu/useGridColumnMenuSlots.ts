@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridColumnMenuRootProps } from './columnMenuInterfaces';
-import { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridColumnMenuRootProps } from './columnMenuInterfaces';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../../utils/useGridPrivateApiContext';
 

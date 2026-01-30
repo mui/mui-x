@@ -5,7 +5,7 @@ import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass } from '@mui/x-data-grid-pro';
 import clsx from 'clsx';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 import { useCollapsibleContext } from './CollapsibleContext';
 
 export type CollapsibleTriggerProps = React.HTMLAttributes<HTMLButtonElement>;

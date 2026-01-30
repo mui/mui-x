@@ -1,13 +1,13 @@
-import { RefObject } from '@mui/x-internals/types';
-import { CSSInterpolation } from '@mui/system';
+import type { RefObject } from '@mui/x-internals/types';
+import type { CSSInterpolation } from '@mui/system';
 import { styled } from '@mui/material/styles';
 import type {} from '../../themeAugmentation/overrides';
 import { gridClasses as c } from '../../constants/gridClasses';
 import { vars } from '../../constants/cssVariables';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridPrivateApiContext } from '../../hooks/utils/useGridPrivateApiContext';
-import { GridApiCommunity } from '../../models/api/gridApiCommunity';
+import type { GridApiCommunity } from '../../models/api/gridApiCommunity';
 
 export type OwnerState = DataGridProcessedProps;
 

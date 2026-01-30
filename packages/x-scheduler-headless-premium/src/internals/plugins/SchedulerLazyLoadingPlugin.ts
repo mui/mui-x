@@ -1,26 +1,25 @@
+import { TemporalSupportedObject } from '@mui/x-scheduler-headless/models';
 import {
-  SchedulerEventId,
-  TemporalSupportedObject,
-  SchedulerEventUpdatedProperties,
-} from '../../../../models';
-import { SchedulerState, SchedulerParameters } from '../SchedulerStore.types';
-import { SchedulerStore } from '../SchedulerStore';
-import { SchedulerDataSourceCacheDefault } from '../cache';
-import { SchedulerDataManager } from '../queue';
-import { buildEventsState } from '../SchedulerStore.utils';
+  SchedulerState,
+  SchedulerParameters,
+  SchedulerStore,
+  buildEventsState,
+  SchedulerEventParameters,
+} from '@mui/x-scheduler-headless/internals';
+import { SchedulerDataSourceCacheDefault } from '../utils/cache';
+import { SchedulerDataManager } from '../utils/queue';
 
 export class SchedulerLazyLoadingPlugin<
   TEvent extends object,
-  TResource extends object,
   State extends SchedulerState,
-  Parameters extends SchedulerParameters<TEvent, TResource>,
+  Parameters extends SchedulerParameters<TEvent, any>,
 > {
-  private store: SchedulerStore<TEvent, TResource, State, Parameters>;
+  private store: SchedulerStore<TEvent, any, State, Parameters>;
 
   private dataManager: SchedulerDataManager | null = null;
   private cache: SchedulerDataSourceCacheDefault<TEvent> | null = null;
 
-  constructor(store: SchedulerStore<TEvent, TResource, State, Parameters>) {
+  constructor(store: SchedulerStore<TEvent, any, State, Parameters>) {
     this.store = store;
 
     if (this.store.parameters.dataSource) {
@@ -29,6 +28,9 @@ export class SchedulerLazyLoadingPlugin<
         this.store.state.adapter,
         this.loadEventsFromDataSource,
       );
+
+      // Subscribe to events updated event to sync cache
+      this.store.subscribeEvent('eventsUpdated', this.handleEventsUpdated);
     }
   }
 
@@ -116,18 +118,8 @@ export class SchedulerLazyLoadingPlugin<
     }
   };
 
-  public updateEventsFromDataSource = async (
-    {
-      deleted,
-      updated,
-      created,
-    }: {
-      deleted: SchedulerEventId[];
-      updated: Map<SchedulerEventId, SchedulerEventUpdatedProperties>;
-      created: SchedulerEventId[];
-    },
-    newEvents: TEvent[],
-  ) => {
+  private handleEventsUpdated = async (params: SchedulerEventParameters<'eventsUpdated'>) => {
+    const { deleted, updated, created, newEvents } = params;
     const { dataSource } = this.store.parameters;
     const { adapter, displayTimezone } = this.store.state;
 
