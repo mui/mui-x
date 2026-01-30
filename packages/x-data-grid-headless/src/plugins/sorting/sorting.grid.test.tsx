@@ -942,7 +942,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           (apiRef as { current: FullNameGridApi | null }).current = grid;
         }, [grid]);
 
-        const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+        const sortedRowIds = grid.use(rowsPlugin.selectors.processedRowIds);
         const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
 
         return (

@@ -126,7 +126,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
     const columnBufferPx = params.columnBufferPx ?? 150;
     const autoHeight = params.autoHeight ?? false;
 
-    const rowIds = rowsPlugin.selectors.rowIds(store.state);
+    const rowIds = rowsPlugin.selectors.processedRowIds(store.state);
     const rowLookup = rowsPlugin.selectors.rowIdToModelLookup(store.state);
 
     const visibleColumns = columnsPlugin.selectors.visibleColumns(store.state);
@@ -293,7 +293,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
 
     const useRowsToRenderHook = <TRow = GridRowModel>(): RowToRender<TRow>[] => {
       const virtualizationState = useStore(store, selectVirtualization);
-      const rowIdsValue = useStore(store, rowsPlugin.selectors.rowIds);
+      const rowIdsValue = useStore(store, rowsPlugin.selectors.processedRowIds);
       const rowLookupValue = useStore(store, rowsPlugin.selectors.rowIdToModelLookup);
       const renderContext = useStore(virtualizerStore, Virtualization.selectors.renderContext);
 

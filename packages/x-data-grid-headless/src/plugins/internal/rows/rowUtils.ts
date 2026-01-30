@@ -54,6 +54,7 @@ export interface RowsState {
   totalTopLevelRowCount: number;
   loading: boolean;
   groupingName: string;
+  processedRowIds: GridRowId[];
 }
 
 export interface RowsOptions<TRow> {
@@ -67,6 +68,14 @@ export interface RowsOptions<TRow> {
 // API
 // ================================
 
+export interface RowProcessor {
+  /**
+   * Transform the row IDs. Receives the output of the previous processor
+   * (or raw dataRowIds for the first processor).
+   */
+  (inputIds: GridRowId[]): GridRowId[];
+}
+
 export interface RowsApi<TRow = any> {
   getRow: (id: GridRowId) => TRow | null;
   getRowId: (row: TRow) => GridRowId;
@@ -77,6 +86,9 @@ export interface RowsApi<TRow = any> {
   updateRows: (updates: Partial<TRow>[]) => void;
   getRowNode: (id: GridRowId) => GridTreeNode | null;
   setLoading: (loading: boolean) => void;
+  registerProcessor: (name: string, priority: number, processor: RowProcessor) => () => void;
+  recompute: () => void;
+  getProcessedRowIds: () => GridRowId[];
 }
 
 // ================================
@@ -189,6 +201,7 @@ export function createRowsState<TRow extends GridRowModel>(
     totalTopLevelRowCount: totalRowCount,
     loading,
     groupingName: 'flat',
+    processedRowIds: dataRowIds,
   };
 }
 

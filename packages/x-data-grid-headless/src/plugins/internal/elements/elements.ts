@@ -136,7 +136,7 @@ const elementsPlugin = createPlugin<ElementsPlugin>()({
   name: 'elements',
   initialize: (state, _params) => state,
   use: (store, _params, api) => {
-    const rowIds = useStore(store, rowsPlugin.selectors.rowIds);
+    const rowIds = useStore(store, rowsPlugin.selectors.processedRowIds);
     const visibleColumns = useStore(store, columnsPlugin.selectors.visibleColumns);
 
     const useGridProps: ElementsHooks['useGridProps'] = () => {

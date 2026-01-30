@@ -6,10 +6,17 @@ import {
   type RowsState,
   type RowsApi,
   type RowsOptions,
+  type RowProcessor,
   createRowsState,
   createRowsApi,
   type GridRowId,
 } from './rowUtils';
+
+interface RegisteredProcessor {
+  name: string;
+  priority: number;
+  processor: RowProcessor;
+}
 
 export interface RowsPluginState {
   rows: RowsState;
@@ -21,7 +28,6 @@ export interface RowsPluginOptions<TRow = any> extends RowsOptions<TRow> {
   };
 }
 
-const selectRowIds = createSelector((state: RowsPluginState) => state.rows.dataRowIds);
 const selectRowIdToModelLookup = createSelector(
   (state: RowsPluginState) => state.rows.dataRowIdToModelLookup,
 );
@@ -38,9 +44,11 @@ const selectRow = createSelector(
   (lookup, id: GridRowId) => lookup[id] ?? null,
 );
 const selectRowNode = createSelector(selectTree, (tree, id: GridRowId) => tree[id] ?? null);
+const selectProcessedRowIds = createSelector(
+  (state: RowsPluginState) => state.rows.processedRowIds,
+);
 
 const rowsSelectors = {
-  rowIds: selectRowIds,
   rowIdToModelLookup: selectRowIdToModelLookup,
   tree: selectTree,
   treeDepths: selectTreeDepths,
@@ -50,6 +58,7 @@ const rowsSelectors = {
   groupingName: selectGroupingName,
   row: selectRow,
   rowNode: selectRowNode,
+  processedRowIds: selectProcessedRowIds,
 };
 
 export interface RowsPluginApi<TRow = any> {
@@ -78,6 +87,51 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       loading: params.loading,
       rowCount: params.rowCount,
     });
+
+    // Store registered processors in a ref (not in state, since they're functions)
+    const processorsRef = React.useRef<Map<string, RegisteredProcessor>>(new Map());
+
+    const runPipeline = React.useCallback((): GridRowId[] => {
+      const dataRowIds = store.state.rows.dataRowIds;
+
+      // Sort processors by priority
+      const sortedProcessors = Array.from(processorsRef.current.values()).sort(
+        (a, b) => a.priority - b.priority,
+      );
+
+      // Run pipeline: each processor receives output of the previous one
+      let currentIds = dataRowIds;
+      for (const { processor } of sortedProcessors) {
+        currentIds = processor(currentIds);
+      }
+
+      return currentIds;
+    }, [store]);
+
+    const recompute = React.useCallback(() => {
+      const processedRowIds = runPipeline();
+      store.setState({
+        ...store.state,
+        rows: {
+          ...store.state.rows,
+          processedRowIds,
+        },
+      });
+    }, [runPipeline, store]);
+
+    const registerProcessor = React.useCallback(
+      (name: string, priority: number, processor: RowProcessor) => {
+        processorsRef.current.set(name, { name, priority, processor });
+        return () => {
+          processorsRef.current.delete(name);
+        };
+      },
+      [],
+    );
+
+    const getProcessedRowIds = React.useCallback(() => {
+      return store.state.rows.processedRowIds;
+    }, [store]);
 
     const prevDataRef = React.useRef(params.rows);
     const prevLoadingRef = React.useRef(params.loading);
@@ -116,7 +170,27 @@ const rowsPlugin = createPlugin<RowsPlugin>()({
       }
     }, [params.rowCount, store]);
 
-    return { rows: rowsApi };
+    // Recompute when raw row IDs change
+    const recomputeRef = React.useRef(recompute);
+    recomputeRef.current = recompute;
+
+    const prevRowIdsRef = React.useRef<GridRowId[]>(store.state.rows.dataRowIds);
+    React.useEffect(() => {
+      const currentRowIds = store.state.rows.dataRowIds;
+      if (prevRowIdsRef.current !== currentRowIds) {
+        prevRowIdsRef.current = currentRowIds;
+        recomputeRef.current();
+      }
+    });
+
+    return {
+      rows: {
+        ...rowsApi,
+        registerProcessor,
+        recompute,
+        getProcessedRowIds,
+      },
+    };
   },
 });
 

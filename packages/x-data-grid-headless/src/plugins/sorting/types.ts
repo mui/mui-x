@@ -77,7 +77,6 @@ export interface SortingColumnMeta<V = any> {
 export interface SortingState {
   sorting: {
     model: GridSortModel;
-    sortedRowIds: GridRowId[];
   };
 }
 
@@ -143,7 +142,6 @@ export interface SortingInternalOptions {
 
 export type SortingSelectors = {
   model: (state: SortingState) => GridSortModel;
-  sortedRowIds: (state: SortingState) => GridRowId[];
 };
 
 export interface ComputeSortedRowIdsOptions {
