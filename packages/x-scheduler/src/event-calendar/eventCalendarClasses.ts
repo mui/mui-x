@@ -42,6 +42,8 @@ export interface EventCalendarClasses extends EventDialogClasses {
   resourcesLegendItemColorDot: string;
   /** Styles applied to resources legend item name elements. */
   resourcesLegendItemName: string;
+  /** Styles applied to resources legend item checkbox elements. */
+  resourcesLegendItemCheckbox: string;
   /** Styles applied to the agenda view element. */
   agendaView: string;
   /** Styles applied to agenda view row elements. */
@@ -220,6 +222,7 @@ export const eventCalendarClasses: EventCalendarClasses = generateUtilityClasses
     'resourcesLegendItem',
     'resourcesLegendItemColorDot',
     'resourcesLegendItemName',
+    'resourcesLegendItemCheckbox',
     'agendaView',
     'agendaViewRow',
     'agendaViewDayHeaderCell',
@@ -317,6 +320,7 @@ const slots = {
   resourcesLegendItem: ['resourcesLegendItem'],
   resourcesLegendItemColorDot: ['resourcesLegendItemColorDot'],
   resourcesLegendItemName: ['resourcesLegendItemName'],
+  resourcesLegendItemCheckbox: ['resourcesLegendItemCheckbox'],
   agendaView: ['agendaView'],
   agendaViewRow: ['agendaViewRow'],
   agendaViewDayHeaderCell: ['agendaViewDayHeaderCell'],
