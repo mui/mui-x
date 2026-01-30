@@ -1,6 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import { createExportIframe } from './common';
+import { copyCanvasesContent, createExportIframe } from './common';
 import { type ChartPrintExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
@@ -29,6 +29,8 @@ export function printChart(
     if (copyStyles) {
       await Promise.all(loadStyleSheets(printDoc, root, nonce));
     }
+
+    await copyCanvasesContent(element, elementClone);
 
     const mediaQueryList = printWindow.contentWindow!.matchMedia('print');
     mediaQueryList.addEventListener('change', (mql) => {

@@ -4,6 +4,7 @@ export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
 export * from '../BarChart/BarClipPath';
+export * from './components/WebGLContext';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -49,7 +50,6 @@ export * from './store/useCharts';
 export * from './store/useStore';
 
 // plugins configs
-
 export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';

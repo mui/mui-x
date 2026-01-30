@@ -1,7 +1,7 @@
 import { gridRowNodeSelector, gridRowTreeSelector } from '@mui/x-data-grid';
 import type { GridTreeNode, GridGroupNode, GridValidRowModel } from '@mui/x-data-grid';
 import { BaseReorderOperation, RowReorderExecutor } from '../rowReorder/reorderExecutor';
-import { type ReorderOperation, type ReorderExecutionContext } from '../rowReorder/types';
+import type { ReorderOperation, ReorderExecutionContext } from '../rowReorder/types';
 import { calculateTargetIndex, isDescendantOf } from '../rowReorder/utils';
 import {
   displaySetTreeDataPathWarning,

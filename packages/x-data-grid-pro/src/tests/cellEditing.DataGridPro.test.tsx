@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
-  DataGridProProps,
+  type GridApi,
+  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  GridRenderEditCellParams,
-  GridValueSetter,
-  GridPreProcessEditCellProps,
+  type GridRenderEditCellParams,
+  type GridValueSetter,
+  type GridPreProcessEditCellProps,
   GridCellModes,
-  GridColDef,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';

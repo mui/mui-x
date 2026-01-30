@@ -11,11 +11,11 @@ import {
 } from 'test/utils/helperFn';
 import {
   DataGrid,
-  DataGridProps,
+  type DataGridProps,
   GridActionsCellItem,
-  GridColDef,
-  GridColType,
-  GridValueSetter,
+  type GridColDef,
+  type GridColType,
+  type GridValueSetter,
 } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';

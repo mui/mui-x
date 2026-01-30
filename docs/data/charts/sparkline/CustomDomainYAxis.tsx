@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Theme } from '@mui/material/styles';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
+import type { NumberValue } from '@mui/x-charts/models';
 
 const settings = {
   valueFormatter: (value: number | null) => `${value}%`,
@@ -43,9 +44,9 @@ export default function CustomDomainYAxis() {
 
   const domainLimit =
     domainLimitKey === 'function'
-      ? (min: number, max: number) => ({
-          min: extend(min, 10),
-          max: extend(max, 10),
+      ? (min: NumberValue, max: NumberValue) => ({
+          min: extend(min.valueOf(), 10),
+          max: extend(max.valueOf(), 10),
         })
       : domainLimitKey;
   return (

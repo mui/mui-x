@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
+import IconButton from '@mui/material/IconButton';
 import CloseRounded from '@mui/icons-material/CloseRounded';
+import { useEventDialogClasses } from './EventDialogClassesContext';
+import { useTranslations } from '../../utils/TranslationsContext';
 
 const EventDraggableDialogHeaderRoot = styled('header', {
   name: 'MuiEventDraggableDialog',
@@ -24,11 +27,29 @@ const EventDraggableDialogHeaderContent = styled('div', {
   flex: 1,
 }));
 
-export default function EventDraggableDialogHeader({ children }: React.PropsWithChildren) {
+interface EventDraggableDialogHeaderProps {
+  children: React.ReactNode;
+  onClose: () => void;
+}
+
+export default function EventDraggableDialogHeader(props: EventDraggableDialogHeaderProps) {
+  const { children, onClose } = props;
+  const classes = useEventDialogClasses();
+  const translations = useTranslations();
+
   return (
-    <EventDraggableDialogHeaderRoot>
-      <EventDraggableDialogHeaderContent>{children}</EventDraggableDialogHeaderContent>
-      <CloseRounded fontSize="small" />
+    <EventDraggableDialogHeaderRoot className={classes.eventDialogHeader}>
+      <EventDraggableDialogHeaderContent className={classes.eventDialogHeaderContent}>
+        {children}
+      </EventDraggableDialogHeaderContent>
+      <IconButton
+        className={classes.eventDialogCloseButton}
+        size="small"
+        aria-label={translations.closeButtonAriaLabel}
+        onClick={onClose}
+      >
+        <CloseRounded fontSize="small" />
+      </IconButton>
     </EventDraggableDialogHeaderRoot>
   );
 }

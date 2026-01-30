@@ -62,11 +62,13 @@ export class EventTimelinePremiumStore<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, TResource>
 > {
+  public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
+
   public constructor(
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremium', mapper);
+    super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
