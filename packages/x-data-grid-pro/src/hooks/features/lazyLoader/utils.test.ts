@@ -41,4 +41,13 @@ describe('adjustRowParams', () => {
     expect(result.start).to.equal(0);
     expect(result.end).to.equal(0);
   });
+
+  // Regression test for https://github.com/mui/mui-x/issues/21104
+  it('should correctly handle last page with single row when rowCount % pageSize === 1', () => {
+    // rowCount = 31 = pageSize(10) * 3 + 1, meaning the last page has only 1 row (index 30)
+    const params = { start: 30, end: 30 };
+    const result = adjustRowParams(params, { pageSize: 10, rowCount: 31 });
+    expect(result.start).to.equal(30);
+    expect(result.end).to.equal(30);
+  });
 });
