@@ -475,9 +475,7 @@ function DataGridVirtualScrollbar({
   );
 }
 
-interface DataGridHandle {
-  applySorting: () => void;
-}
+type DataGridHandle = GridInstance;
 
 interface DataGridProps {
   rows: RowData[];
@@ -505,9 +503,7 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
     },
   });
 
-  React.useImperativeHandle(ref, () => ({
-    applySorting: () => grid.api.sorting.apply(),
-  }));
+  React.useImperativeHandle(ref, () => grid);
 
   const virtualization = grid.api.virtualization;
   const elements = grid.api.elements;
@@ -626,7 +622,7 @@ function App() {
   const gridRef = React.useRef<DataGridHandle>(null);
 
   const handleApplySorting = () => {
-    gridRef.current?.applySorting();
+    gridRef.current?.api.sorting.apply();
   };
 
   const handleRefreshRows = () => {
