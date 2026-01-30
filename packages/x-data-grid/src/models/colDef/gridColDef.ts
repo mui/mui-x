@@ -410,6 +410,10 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
   hasBeenResized?: boolean;
 };
 
+export const isGridStateColDef = <R extends GridValidRowModel = any, V = any, F = V>(
+  colDef: GridColDef<R, V, F> | GridStateColDef<R, V, F>,
+): colDef is GridStateColDef<R, V, F> => 'computedWidth' in colDef;
+
 /**
  * Meta Info about columns.
  */

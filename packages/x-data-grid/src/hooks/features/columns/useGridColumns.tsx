@@ -40,6 +40,7 @@ import {
 import { GridPreferencePanelsValue } from '../preferencesPanel';
 import type { GridColumnOrderChangeParams } from '../../../models/params/gridColumnOrderChangeParams';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { isGridStateColDef } from '../../../models/colDef/gridColDef';
 import {
   gridPivotActiveSelector,
   gridPivotInitialColumnsSelector,
@@ -334,10 +335,10 @@ export function useGridColumns(
 
       columnsStateToExport.orderedFields = gridColumnFieldsSelector(apiRef);
 
-      const columns = gridColumnDefinitionsSelector(apiRef) as GridStateColDef[];
+      const columns = gridColumnDefinitionsSelector(apiRef);
       const dimensions: Record<string, GridColumnDimensions> = {};
       columns.forEach((colDef) => {
-        if (colDef?.hasBeenResized) {
+        if (isGridStateColDef(colDef) && colDef.hasBeenResized) {
           const colDefDimensions: GridColumnDimensions = {};
           COLUMNS_DIMENSION_PROPERTIES.forEach((propertyName) => {
             let propertyValue: number | undefined = colDef[propertyName];

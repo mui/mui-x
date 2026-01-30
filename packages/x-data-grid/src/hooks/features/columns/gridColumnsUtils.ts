@@ -16,6 +16,7 @@ import {
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridApiCommunity } from '../../../models/api/gridApiCommunity';
 import type { GridColDef, GridStateColDef } from '../../../models/colDef/gridColDef';
+import { isGridStateColDef } from '../../../models/colDef/gridColDef';
 import { gridColumnsStateSelector, gridColumnVisibilityModelSelector } from './gridColumnsSelector';
 import { clamp } from '../../../utils/utils';
 import type { GridApiCommon } from '../../../models/api/gridApiCommon';
@@ -282,7 +283,11 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
-    let hasBeenResized = (columnsState.lookup[field] as GridStateColDef)?.hasBeenResized ?? false;
+    const column = columnsState.lookup[field];
+    let hasBeenResized = false;
+    if (isGridStateColDef(column)) {
+      hasBeenResized = column.hasBeenResized ?? false;
+    }
     dimensionsWithResizedStatus.forEach((key) => {
       if (dimensions[field][key] !== undefined) {
         hasBeenResized = true;
@@ -390,7 +395,10 @@ export const createColumnsState = ({
       };
     }
 
-    let hasBeenResized = existingState?.hasBeenResized ?? false;
+    let hasBeenResized = false;
+    if (isGridStateColDef(existingState)) {
+      hasBeenResized = existingState.hasBeenResized ?? false;
+    }
     dimensionsWithResizedStatus.forEach((key) => {
       if (newColumn[key] !== undefined) {
         hasBeenResized = true;
