@@ -25,11 +25,10 @@ import { gridHeaderFilteringEnabledSelector } from '../headerFiltering/gridHeade
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import type { GridDimensions } from '../dimensions/gridDimensionsApi';
 
+const dimensionsWithResizedStatus = ['maxWidth', 'minWidth', 'width', 'flex'] as const;
+
 export const COLUMNS_DIMENSION_PROPERTIES = [
-  'maxWidth',
-  'minWidth',
-  'width',
-  'flex',
+  ...dimensionsWithResizedStatus,
   'autoSizingMinWidth',
   'autoSizingMaxWidth',
 ] as const;
@@ -283,9 +282,16 @@ export const applyInitialState = (
   for (let i = 0; i < columnsWithUpdatedDimensions.length; i += 1) {
     const field = columnsWithUpdatedDimensions[i];
 
+    let hasBeenResized = (columnsState.lookup[field] as GridStateColDef)?.hasBeenResized ?? false;
+    dimensionsWithResizedStatus.forEach((key) => {
+      if (dimensions[field][key] !== undefined) {
+        hasBeenResized = true;
+      }
+    });
+
     const newColDef: Omit<GridStateColDef, 'computedWidth'> = {
       ...newColumnLookup[field],
-      hasBeenResized: true,
+      hasBeenResized,
     };
 
     Object.entries(dimensions[field]).forEach(([key, value]) => {
@@ -384,18 +390,22 @@ export const createColumnsState = ({
       };
     }
 
-    let hasBeenResized = existingState.hasBeenResized;
-    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+    let hasBeenResized = existingState?.hasBeenResized ?? false;
+    dimensionsWithResizedStatus.forEach((key) => {
       if (newColumn[key] !== undefined) {
         hasBeenResized = true;
+      }
+    });
 
+    COLUMNS_DIMENSION_PROPERTIES.forEach((key) => {
+      if (newColumn[key] !== undefined) {
         if (newColumn[key] === -1) {
           newColumn[key] = Infinity;
         }
       }
     });
 
-    const mergedProps = {
+    const mergedProps: any = {
       ...getDefaultColTypeDef(newColumn.type),
       hasBeenResized,
       field,
@@ -408,7 +418,7 @@ export const createColumnsState = ({
       }
     }
 
-    columnsState.lookup[field] = resolveProps(existingState, mergedProps);
+    columnsState.lookup[field] = resolveProps(existingState, mergedProps) as GridStateColDef;
   });
 
   if (keepOnlyColumnsToUpsert && !isInsideStateInitializer) {

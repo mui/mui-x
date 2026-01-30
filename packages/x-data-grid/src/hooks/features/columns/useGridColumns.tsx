@@ -334,10 +334,10 @@ export function useGridColumns(
 
       columnsStateToExport.orderedFields = gridColumnFieldsSelector(apiRef);
 
-      const columns = gridColumnDefinitionsSelector(apiRef);
+      const columns = gridColumnDefinitionsSelector(apiRef) as GridStateColDef[];
       const dimensions: Record<string, GridColumnDimensions> = {};
       columns.forEach((colDef) => {
-        if (colDef.hasBeenResized) {
+        if (colDef?.hasBeenResized) {
           const colDefDimensions: GridColumnDimensions = {};
           COLUMNS_DIMENSION_PROPERTIES.forEach((propertyName) => {
             let propertyValue: number | undefined = colDef[propertyName];
