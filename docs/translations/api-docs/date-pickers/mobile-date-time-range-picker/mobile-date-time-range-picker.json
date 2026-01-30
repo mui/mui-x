@@ -62,6 +62,9 @@
       "description": "Density of the format when rendered in the input. Setting <code>formatDensity</code> to <code>&quot;spacious&quot;</code> will add a space before and after each <code>/</code>, <code>-</code> and <code>.</code> character."
     },
     "inputRef": { "description": "Pass a ref to the <code>input</code> element." },
+    "keepOpenDuringFieldFocus": {
+      "description": "If <code>true</code>, keep the picker open when the value is edited from the field. Useful to prevent the popper/dialog from closing while typing in the input. This only affects changes with <code>source = &quot;field&quot;</code> and does not alter view interactions."
+    },
     "label": { "description": "The label content." },
     "loading": {
       "description": "If <code>true</code>, calls <code>renderLoading</code> instead of rendering the day calendar. Can be used to preload information and show it in calendar."
