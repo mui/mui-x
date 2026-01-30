@@ -116,7 +116,7 @@ function DataGrid(props: DataGridProps) {
     plugins: [sortingPlugin, paginationPlugin],
     // Sorting options from config
     sorting: {
-      enableMultiSort: config.sorting?.enableMultiSort,
+      multiSort: config.sorting?.multiSort,
       mode: config.sorting?.mode,
       stableSort: config.sorting?.stableSort,
       order: config.sorting?.order,
@@ -128,12 +128,12 @@ function DataGrid(props: DataGridProps) {
   });
 
   React.useImperativeHandle(ref, () => ({
-    applySorting: () => grid.api.sorting.applySorting(),
+    applySorting: () => grid.api.sorting.apply(),
   }));
 
   // Use sorted row IDs from sorting plugin
   const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
-  const sortModel = grid.use(sortingPlugin.selectors.sortModel);
+  const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
 
@@ -143,18 +143,18 @@ function DataGrid(props: DataGridProps) {
     }
     // Use shift key for multi-sort when multiSortWithShiftKey is true (default)
     const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
-    const multiSort = config.sorting?.enableMultiSort && (!requireShiftKey || event.shiftKey);
+    const multiSort = config.sorting?.multiSort && (!requireShiftKey || event.shiftKey);
     grid.api.sorting.sortColumn(field, undefined, multiSort);
   };
 
   const getSortIcon = (field: string) => {
     const sortIndex = sortModel.findIndex((item) => item.field === field);
     const sortInfo = sortModel[sortIndex];
-    if (!sortInfo || sortInfo.sort === null) {
+    if (!sortInfo || sortInfo.direction === null) {
       return null;
     }
-    const arrow = sortInfo.sort === 'asc' ? '↑' : '↓';
-    const index = config.sorting?.enableMultiSort ? ` (${sortIndex + 1})` : '';
+    const arrow = sortInfo.direction === 'asc' ? '↑' : '↓';
+    const index = config.sorting?.multiSort ? ` (${sortIndex + 1})` : '';
     return (
       <span className="grid-sort-icon">
         {arrow}
@@ -233,7 +233,7 @@ function App() {
   const [config, setConfig] = React.useState<PluginConfig>({
     sorting: {
       enabled: true,
-      enableMultiSort: true,
+      multiSort: true,
       multiSortWithShiftKey: true,
       mode: 'auto',
       stableSort: false,

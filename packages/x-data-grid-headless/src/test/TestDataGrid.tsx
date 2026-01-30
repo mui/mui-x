@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { type ColumnDef, useDataGrid } from '../';
-import { sortingPlugin, type SortingColumnMeta } from '../plugins/sorting';
+import { sortingPlugin, type SortingColumnMeta, type SortingOptions } from '../plugins/sorting';
 import { paginationPlugin } from '../plugins/pagination';
 import rowsPlugin from '../plugins/internal/rows/rows';
 import columnsPlugin from '../plugins/internal/columns/columns';
@@ -13,7 +13,7 @@ interface TestDataGridProps<TRow extends Record<string, any>> {
   columns: ColumnDef<TRow, SortingColumnMeta>[];
   getRowId?: (row: TRow) => string;
   apiRef?: React.RefObject<GridApi | null>;
-  sorting?: Parameters<typeof useDataGrid>[0]['sorting'];
+  sorting?: SortingOptions['sorting'];
   initialState?: Parameters<typeof useDataGrid>[0]['initialState'];
 }
 

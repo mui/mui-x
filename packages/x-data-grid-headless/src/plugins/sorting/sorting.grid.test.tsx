@@ -45,7 +45,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           columns={defaultColumns}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'name', sort: 'asc' }],
+              model: [{ field: 'name', direction: 'asc' }],
             },
           }}
         />,
@@ -58,7 +58,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sorting={{ model: [{ field: 'name', sort: 'desc' }] }}
+          sorting={{ model: [{ field: 'name', direction: 'desc' }] }}
         />,
       );
       expect(getRowNames(container)).toEqual(['Charlie', 'Bob', 'Alice']);
@@ -69,10 +69,10 @@ describe('Sorting Plugin - Integration Tests', () => {
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sorting={{ model: [{ field: 'name', sort: 'desc' }] }}
+          sorting={{ model: [{ field: 'name', direction: 'desc' }] }}
           initialState={{
             sorting: {
-              sortModel: [{ field: 'name', sort: 'asc' }],
+              model: [{ field: 'name', direction: 'asc' }],
             },
           }}
         />,
@@ -141,7 +141,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            sorting={{ enableMultiSort: true }}
+            sorting={{ multiSort: true }}
           />,
         );
 
@@ -152,10 +152,10 @@ describe('Sorting Plugin - Integration Tests', () => {
           apiRef.current?.api.sorting.sortColumn('age', 'desc', true);
         });
 
-        const sortModel = apiRef.current?.api.sorting.getSortModel();
+        const sortModel = apiRef.current?.api.sorting.getModel();
         expect(sortModel).toEqual([
-          { field: 'name', sort: 'asc' },
-          { field: 'age', sort: 'desc' },
+          { field: 'name', direction: 'asc' },
+          { field: 'age', direction: 'desc' },
         ]);
       });
 
@@ -170,8 +170,8 @@ describe('Sorting Plugin - Integration Tests', () => {
           apiRef.current?.api.sorting.sortColumn('age', 'desc', false);
         });
 
-        const sortModel = apiRef.current?.api.sorting.getSortModel();
-        expect(sortModel).toEqual([{ field: 'age', sort: 'desc' }]);
+        const sortModel = apiRef.current?.api.sorting.getModel();
+        expect(sortModel).toEqual([{ field: 'age', direction: 'desc' }]);
       });
 
       it('should not sort column when sortable is false', async () => {
@@ -189,7 +189,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         });
 
         // sortModel should remain empty
-        expect(apiRef.current?.api.sorting.getSortModel()).toEqual([]);
+        expect(apiRef.current?.api.sorting.getModel()).toEqual([]);
         // rows should remain in original order
         expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
       });
@@ -203,11 +203,13 @@ describe('Sorting Plugin - Integration Tests', () => {
         );
 
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([{ field: 'age', sort: 'asc' }]);
+          apiRef.current?.api.sorting.setModel([{ field: 'age', direction: 'asc' }]);
         });
 
         expect(getRowNames(container)).toEqual(['Alice', 'Charlie', 'Bob']);
-        expect(apiRef.current?.api.sorting.getSortModel()).toEqual([{ field: 'age', sort: 'asc' }]);
+        expect(apiRef.current?.api.sorting.getModel()).toEqual([
+          { field: 'age', direction: 'asc' },
+        ]);
       });
 
       it('should clear sorting when setting empty model', async () => {
@@ -217,14 +219,14 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+            initialState={{ sorting: { model: [{ field: 'name', direction: 'asc' }] } }}
           />,
         );
 
         expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
 
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([]);
+          apiRef.current?.api.sorting.setModel([]);
         });
 
         expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
@@ -239,12 +241,12 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+            initialState={{ sorting: { model: [{ field: 'name', direction: 'asc' }] } }}
           />,
         );
 
-        expect(apiRef.current?.api.sorting.getSortModel()).toEqual([
-          { field: 'name', sort: 'asc' },
+        expect(apiRef.current?.api.sorting.getModel()).toEqual([
+          { field: 'name', direction: 'asc' },
         ]);
       });
     });
@@ -263,17 +265,17 @@ describe('Sorting Plugin - Integration Tests', () => {
 
         // Set sort model without auto-apply
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
+          apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'asc' }]);
         });
 
         // In manual mode, rows should not be sorted yet
         // Note: The sortModel is set but sorting isn't applied
-        const sortModel = apiRef.current?.api.sorting.getSortModel();
-        expect(sortModel).toEqual([{ field: 'name', sort: 'asc' }]);
+        const sortModel = apiRef.current?.api.sorting.getModel();
+        expect(sortModel).toEqual([{ field: 'name', direction: 'asc' }]);
 
         // Explicitly apply sorting
         await act(async () => {
-          apiRef.current?.api.sorting.applySorting();
+          apiRef.current?.api.sorting.apply();
         });
 
         expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
@@ -288,7 +290,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         );
 
         const computed = apiRef.current?.api.sorting.computeSortedRowIds(undefined, [
-          { field: 'name', sort: 'asc' },
+          { field: 'name', direction: 'asc' },
         ]);
 
         expect(computed).toEqual([2, 3, 1]); // Alice, Bob, Charlie
@@ -303,14 +305,14 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+            initialState={{ sorting: { model: [{ field: 'name', direction: 'asc' }] } }}
           />,
         );
 
         // Compute with stableSort using current sorted order as base
         const computed = apiRef.current?.api.sorting.computeSortedRowIds(
           undefined,
-          [{ field: 'age', sort: 'asc' }],
+          [{ field: 'age', direction: 'asc' }],
           { stableSort: true },
         );
 
@@ -335,10 +337,10 @@ describe('Sorting Plugin - Integration Tests', () => {
         );
 
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
+          apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'asc' }]);
         });
 
-        expect(onSortModelChange).toHaveBeenCalledWith([{ field: 'name', sort: 'asc' }]);
+        expect(onSortModelChange).toHaveBeenCalledWith([{ field: 'name', direction: 'asc' }]);
       });
 
       it('should be called when sortModel changes via sortColumn', async () => {
@@ -357,7 +359,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           apiRef.current?.api.sorting.sortColumn('name', 'desc');
         });
 
-        expect(onSortModelChange).toHaveBeenCalledWith([{ field: 'name', sort: 'desc' }]);
+        expect(onSortModelChange).toHaveBeenCalledWith([{ field: 'name', direction: 'desc' }]);
       });
     });
 
@@ -378,7 +380,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         onSortedRowsSet.mockClear();
 
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
+          apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'asc' }]);
         });
 
         expect(onSortedRowsSet).toHaveBeenCalledWith([2, 3, 1]); // Alice, Bob, Charlie
@@ -400,7 +402,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         );
 
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
+          apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'asc' }]);
         });
 
         expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
@@ -413,7 +415,7 @@ describe('Sorting Plugin - Integration Tests', () => {
             rows={defaultRows}
             columns={defaultColumns}
             apiRef={apiRef}
-            initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+            initialState={{ sorting: { model: [{ field: 'name', direction: 'asc' }] } }}
           />,
         );
 
@@ -446,18 +448,18 @@ describe('Sorting Plugin - Integration Tests', () => {
         );
 
         await act(async () => {
-          apiRef.current?.api.sorting.setSortModel([{ field: 'name', sort: 'asc' }]);
+          apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'asc' }]);
         });
 
         // Model is set but not applied
-        expect(apiRef.current?.api.sorting.getSortModel()).toEqual([
-          { field: 'name', sort: 'asc' },
+        expect(apiRef.current?.api.sorting.getModel()).toEqual([
+          { field: 'name', direction: 'asc' },
         ]);
 
         // Rows not sorted yet - still in original order
         // After explicit apply:
         await act(async () => {
-          apiRef.current?.api.sorting.applySorting();
+          apiRef.current?.api.sorting.apply();
         });
 
         expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
@@ -478,7 +480,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={rows}
           columns={defaultColumns}
           apiRef={apiRef}
-          sorting={{ enableMultiSort: true }}
+          sorting={{ multiSort: true }}
         />,
       );
 
@@ -501,7 +503,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          sorting={{ enableMultiSort: false }}
+          sorting={{ multiSort: false }}
         />,
       );
 
@@ -513,7 +515,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         apiRef.current?.api.sorting.sortColumn('age', 'desc');
       });
 
-      expect(apiRef.current?.api.sorting.getSortModel()).toEqual([{ field: 'age', sort: 'desc' }]);
+      expect(apiRef.current?.api.sorting.getModel()).toEqual([{ field: 'age', direction: 'desc' }]);
     });
   });
 
@@ -530,7 +532,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={rows}
           columns={defaultColumns}
           apiRef={apiRef}
-          sorting={{ stableSort: true, enableMultiSort: true }}
+          sorting={{ stableSort: true, multiSort: true }}
         />,
       );
 
@@ -547,7 +549,7 @@ describe('Sorting Plugin - Integration Tests', () => {
       // With multi-sort: primary=name, secondary=age
       // Alice(30), Bob(25), Charlie(30) sorted by name then age
       // This keeps the multi-column sort behavior
-      const sortModel = apiRef.current?.api.sorting.getSortModel();
+      const sortModel = apiRef.current?.api.sorting.getModel();
       expect(sortModel?.length).toBe(2);
     });
   });
@@ -558,14 +560,14 @@ describe('Sorting Plugin - Integration Tests', () => {
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sorting={{ model: [{ field: 'name', sort: 'asc' }] }}
+          sorting={{ model: [{ field: 'name', direction: 'asc' }] }}
         />,
       );
 
       expect(getRowNames(container)).toEqual(['Alice', 'Bob', 'Charlie']);
 
       await act(async () => {
-        setProps({ sorting: { model: [{ field: 'name', sort: 'desc' }] } });
+        setProps({ sorting: { model: [{ field: 'name', direction: 'desc' }] } });
       });
 
       expect(getRowNames(container)).toEqual(['Charlie', 'Bob', 'Alice']);
@@ -576,7 +578,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         <TestDataGrid
           rows={defaultRows}
           columns={defaultColumns}
-          sorting={{ model: [{ field: 'name', sort: 'asc' }] }}
+          sorting={{ model: [{ field: 'name', direction: 'asc' }] }}
         />,
       );
 
@@ -608,7 +610,7 @@ describe('Sorting Plugin - Integration Tests', () => {
         apiRef.current?.api.sorting.sortColumn('name', null);
       });
       expect(getRowNames(container)).toEqual(['Charlie', 'Alice', 'Bob']);
-      expect(apiRef.current?.api.sorting.getSortModel()).toEqual([]);
+      expect(apiRef.current?.api.sorting.getModel()).toEqual([]);
     });
 
     it('should be idempotent when called multiple times with null', async () => {
@@ -744,7 +746,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={columns}
           apiRef={apiRef}
-          sorting={{ order: ['asc', 'desc', null], enableMultiSort: false }}
+          sorting={{ order: ['asc', 'desc', null], multiSort: false }}
         />,
       );
 
@@ -772,7 +774,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+          initialState={{ sorting: { model: [{ field: 'name', direction: 'asc' }] } }}
         />,
       );
 
@@ -794,7 +796,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           apiRef={apiRef}
-          initialState={{ sorting: { sortModel: [{ field: 'name', sort: 'asc' }] } }}
+          initialState={{ sorting: { model: [{ field: 'name', direction: 'asc' }] } }}
         />,
       );
 
@@ -817,7 +819,7 @@ describe('Sorting Plugin - Integration Tests', () => {
           rows={defaultRows}
           columns={defaultColumns}
           initialState={{
-            sorting: { sortModel: [{ field: 'name', sort: 'asc' }] },
+            sorting: { model: [{ field: 'name', direction: 'asc' }] },
           }}
         />,
       );

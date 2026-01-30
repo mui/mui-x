@@ -100,22 +100,22 @@ export const getNextGridSortDirection = (
  * @returns {GridSortModel} The updated sort model.
  */
 export const upsertSortModel = (
-  sortModel: GridSortModel,
+  model: GridSortModel,
   field: string,
   sortItem: GridSortItem | undefined,
 ): GridSortModel => {
-  const fieldIndex = sortModel.findIndex((item) => item.field === field);
-  const newSortModel = [...sortModel];
+  const fieldIndex = model.findIndex((item) => item.field === field);
+  const newSortModel = [...model];
 
   if (fieldIndex > -1) {
-    if (sortItem == null || sortItem.sort == null) {
+    if (sortItem == null || sortItem.direction == null) {
       // Remove the item
       newSortModel.splice(fieldIndex, 1);
     } else {
       // Update the item
       newSortModel.splice(fieldIndex, 1, sortItem);
     }
-  } else if (sortItem != null && sortItem.sort != null) {
+  } else if (sortItem != null && sortItem.direction != null) {
     // Add new item
     newSortModel.push(sortItem);
   }
@@ -189,7 +189,7 @@ const parseSortItem = (
   defaultComparator: GridComparatorFn,
 ): ParsedSortItem | null => {
   const column = getColumn(sortItem.field);
-  if (!column || sortItem.sort === null || column.sortable === false) {
+  if (!column || sortItem.direction === null || column.sortable === false) {
     return null;
   }
 
@@ -198,10 +198,10 @@ const parseSortItem = (
   if (column.sortComparator) {
     // Normalize to factory and get comparator for this direction
     const factory = normalizeToComparatorFactory(column.sortComparator);
-    comparator = factory(sortItem.sort);
+    comparator = factory(sortItem.direction);
   } else {
     // Use default comparator with direction modifier
-    const isDesc = sortItem.sort === 'desc';
+    const isDesc = sortItem.direction === 'desc';
     comparator = isDesc ? (...args) => -1 * defaultComparator(...args) : defaultComparator;
   }
 
@@ -222,7 +222,7 @@ const parseSortItem = (
 };
 
 interface SortingApplierParams {
-  sortModel: GridSortModel;
+  model: GridSortModel;
   getColumn: (field: string) => (ColumnInfo & SortingColumnMeta) | undefined;
   getRow: (id: GridRowId) => any;
   locale?: string | string[];
@@ -233,20 +233,25 @@ interface SortingApplierParams {
  * @returns A function that takes row IDs and returns sorted row IDs, or null if no sorting.
  */
 export const buildSortingApplier = ({
-  sortModel,
+  model,
   getColumn,
   getRow,
   locale,
 }: SortingApplierParams): ((rowIds: GridRowId[]) => GridRowId[]) | null => {
-  const parsedSortItems = sortModel
-    .map((item) => parseSortItem(item, getColumn, createStringOrNumberComparator(locale)))
-    .filter((item): item is ParsedSortItem => item !== null);
+  const parsedSortItems: ParsedSortItem[] = [];
+
+  for (const item of model) {
+    const parsedItem = parseSortItem(item, getColumn, createStringOrNumberComparator(locale));
+    if (parsedItem) {
+      parsedSortItems.push(parsedItem);
+    }
+  }
 
   if (parsedSortItems.length === 0) {
     return null;
   }
 
-  return (rowIds: GridRowId[]): GridRowId[] => {
+  return (rowIds) => {
     // Build row data with pre-computed cell params for each sort item
     const rowsWithParams = rowIds.map((id) => {
       const row = getRow(id);
@@ -275,40 +280,4 @@ export const buildSortingApplier = ({
 
     return rowsWithParams.map((row) => row.id);
   };
-};
-
-/**
- * Apply sorting to row IDs.
- * If stableSort is true, uses the current order as the base.
- * Otherwise, uses the original row IDs order.
- */
-export const applySortingToRowIds = (
-  rowIds: GridRowId[],
-  sortingApplier: ((rowIds: GridRowId[]) => GridRowId[]) | null,
-  stableSort: boolean = false,
-  currentSortedRowIds?: GridRowId[],
-): GridRowId[] => {
-  if (!sortingApplier) {
-    // No sorting, return original order
-    return rowIds;
-  }
-
-  // Determine the input order for sorting
-  const inputIds = stableSort && currentSortedRowIds ? currentSortedRowIds : rowIds;
-
-  // Filter to only include IDs that exist in rowIds (in case of row changes)
-  const rowIdSet = new Set(rowIds);
-  const idsToSort = inputIds.filter((id) => rowIdSet.has(id));
-
-  // Add any new IDs that aren't in currentSortedRowIds (for stableSort)
-  if (stableSort && currentSortedRowIds) {
-    const currentIdSet = new Set(currentSortedRowIds);
-    rowIds.forEach((id) => {
-      if (!currentIdSet.has(id)) {
-        idsToSort.push(id);
-      }
-    });
-  }
-
-  return sortingApplier(idsToSort);
 };

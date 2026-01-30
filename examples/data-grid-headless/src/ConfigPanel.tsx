@@ -179,7 +179,7 @@ export function ConfigPanel(props: ConfigPanelProps) {
 
   const isManualMode = config.sorting?.mode === 'manual';
   const isSortingEnabled = config.sorting?.enabled ?? true;
-  const isMultiSortEnabled = config.sorting?.enableMultiSort ?? true;
+  const isMultiSortEnabled = config.sorting?.multiSort ?? true;
 
   const resizeHandleClassName = [
     'config-panel__resize-handle',
@@ -273,8 +273,8 @@ export function ConfigPanel(props: ConfigPanelProps) {
                     disabled={!isSortingEnabled}
                   >
                     <Toggle
-                      checked={config.sorting?.enableMultiSort ?? true}
-                      onChange={(checked) => updateSortingConfig({ enableMultiSort: checked })}
+                      checked={config.sorting?.multiSort ?? true}
+                      onChange={(checked) => updateSortingConfig({ multiSort: checked })}
                       disabled={!isSortingEnabled}
                     />
                   </OptionRow>

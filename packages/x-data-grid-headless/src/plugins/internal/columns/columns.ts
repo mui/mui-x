@@ -3,8 +3,6 @@ import * as React from 'react';
 import { type Store, createSelector, createSelectorMemoized } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
 import {
-  type ColumnLookup,
-  type ColumnState,
   type ColumnsState,
   type ColumnsApi,
   type ColumnsOptions,
@@ -67,17 +65,6 @@ const columnsSelectors = {
   visibleColumns: selectVisibleColumns,
   column: selectColumn,
 };
-
-// Typed selectors interface that preserves TColumnMeta in return types
-export interface ColumnsSelectors<TColumnMeta = {}> {
-  orderedFields: typeof selectOrderedFields;
-  lookup: (state: ColumnsPluginState) => ColumnLookup<TColumnMeta>;
-  columnVisibilityModel: typeof selectColumnVisibilityModel;
-  initialColumnVisibilityModel: typeof selectInitialColumnVisibilityModel;
-  allColumns: (state: ColumnsPluginState) => ColumnState<TColumnMeta>[];
-  visibleColumns: (state: ColumnsPluginState) => ColumnState<TColumnMeta>[];
-  column: (state: ColumnsPluginState, field: string) => ColumnState<TColumnMeta> | undefined;
-}
 
 export interface ColumnsPluginApi<TColumnMeta = {}> {
   columns: ColumnsApi<TColumnMeta>;

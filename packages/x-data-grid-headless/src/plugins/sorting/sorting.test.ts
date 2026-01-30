@@ -5,7 +5,6 @@ import {
   gridDateComparator,
   getNextGridSortDirection,
   buildSortingApplier,
-  applySortingToRowIds,
   upsertSortModel,
 } from './sortingUtils';
 import { selectSortModel, selectSortedRowIds } from './selectors';
@@ -135,7 +134,7 @@ describe('Sorting Plugin', () => {
   describe('selectors', () => {
     const createState = (overrides: Partial<SortingState['sorting']> = {}): SortingState => ({
       sorting: {
-        sortModel: [],
+        model: [],
         sortedRowIds: [],
         ...overrides,
       },
@@ -143,8 +142,8 @@ describe('Sorting Plugin', () => {
 
     describe('selectSortModel', () => {
       it('should return the current sort model', () => {
-        const state = createState({ sortModel: [{ field: 'name', sort: 'asc' }] });
-        expect(selectSortModel(state)).toEqual([{ field: 'name', sort: 'asc' }]);
+        const state = createState({ model: [{ field: 'name', direction: 'asc' }] });
+        expect(selectSortModel(state)).toEqual([{ field: 'name', direction: 'asc' }]);
       });
 
       it('should return empty array when no sorting', () => {
@@ -161,33 +160,33 @@ describe('Sorting Plugin', () => {
     });
   });
 
-  describe('upsertSortModel', () => {
+  describe('upsertmodel', () => {
     it('should add a new sort item to empty model', () => {
-      const result = upsertSortModel([], 'name', { field: 'name', sort: 'asc' });
-      expect(result).toEqual([{ field: 'name', sort: 'asc' }]);
+      const result = upsertSortModel([], 'name', { field: 'name', direction: 'asc' });
+      expect(result).toEqual([{ field: 'name', direction: 'asc' }]);
     });
 
     it('should update existing sort item', () => {
-      const model: GridSortModel = [{ field: 'name', sort: 'asc' }];
-      const result = upsertSortModel(model, 'name', { field: 'name', sort: 'desc' });
-      expect(result).toEqual([{ field: 'name', sort: 'desc' }]);
+      const model: GridSortModel = [{ field: 'name', direction: 'asc' }];
+      const result = upsertSortModel(model, 'name', { field: 'name', direction: 'desc' });
+      expect(result).toEqual([{ field: 'name', direction: 'desc' }]);
     });
 
     it('should remove sort item when newItem is undefined', () => {
       const model: GridSortModel = [
-        { field: 'name', sort: 'asc' },
-        { field: 'age', sort: 'desc' },
+        { field: 'name', direction: 'asc' },
+        { field: 'age', direction: 'desc' },
       ];
       const result = upsertSortModel(model, 'name', undefined);
-      expect(result).toEqual([{ field: 'age', sort: 'desc' }]);
+      expect(result).toEqual([{ field: 'age', direction: 'desc' }]);
     });
 
     it('should add new item while preserving existing items (multi-sort)', () => {
-      const model: GridSortModel = [{ field: 'name', sort: 'asc' }];
-      const result = upsertSortModel(model, 'age', { field: 'age', sort: 'desc' });
+      const model: GridSortModel = [{ field: 'name', direction: 'asc' }];
+      const result = upsertSortModel(model, 'age', { field: 'age', direction: 'desc' });
       expect(result).toEqual([
-        { field: 'name', sort: 'asc' },
-        { field: 'age', sort: 'desc' },
+        { field: 'name', direction: 'asc' },
+        { field: 'age', direction: 'desc' },
       ]);
     });
   });
@@ -202,18 +201,18 @@ describe('Sorting Plugin', () => {
     const getRow = (id: number | string) => rows.find((r) => r.id === id);
     const getColumn = (field: string) => ({ field, id: field });
 
-    it('should return null when sortModel is empty', () => {
+    it('should return null when model is empty', () => {
       const applier = buildSortingApplier({
-        sortModel: [],
+        model: [],
         getColumn,
         getRow,
       });
       expect(applier).toBeNull();
     });
 
-    it('should return null when sortModel has only null directions', () => {
+    it('should return null when model has only null directions', () => {
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: null }],
+        model: [{ field: 'name', direction: null }],
         getColumn,
         getRow,
       });
@@ -222,7 +221,7 @@ describe('Sorting Plugin', () => {
 
     it('should sort by single column ascending', () => {
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn,
         getRow,
       });
@@ -233,7 +232,7 @@ describe('Sorting Plugin', () => {
 
     it('should sort by single column descending', () => {
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'desc' }],
+        model: [{ field: 'name', direction: 'desc' }],
         getColumn,
         getRow,
       });
@@ -250,9 +249,9 @@ describe('Sorting Plugin', () => {
       const getRowMulti = (id: number | string) => rowsWithDuplicates.find((r) => r.id === id);
 
       const applier = buildSortingApplier({
-        sortModel: [
-          { field: 'name', sort: 'asc' },
-          { field: 'age', sort: 'asc' },
+        model: [
+          { field: 'name', direction: 'asc' },
+          { field: 'age', direction: 'asc' },
         ],
         getColumn,
         getRow: getRowMulti,
@@ -271,7 +270,7 @@ describe('Sorting Plugin', () => {
       });
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: getColumnWithComparator,
         getRow,
       });
@@ -297,14 +296,14 @@ describe('Sorting Plugin', () => {
       });
 
       const applierAsc = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: getColumnWithFactory,
         getRow,
       });
       expect(applierAsc!([1, 2, 3])).toEqual([2, 3, 1]); // Alice, Bob, Charlie
 
       const applierDesc = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'desc' }],
+        model: [{ field: 'name', direction: 'desc' }],
         getColumn: getColumnWithFactory,
         getRow,
       });
@@ -320,68 +319,13 @@ describe('Sorting Plugin', () => {
       });
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: getColumnWithValueGetter,
         getRow,
       });
       const sorted = applier!([1, 2, 3]);
       // Bob (3), Alice (5), Charlie (7)
       expect(sorted).toEqual([3, 2, 1]);
-    });
-  });
-
-  describe('applySortingToRowIds', () => {
-    const rows = [
-      { id: 1, name: 'Charlie', age: 30 },
-      { id: 2, name: 'Alice', age: 25 },
-      { id: 3, name: 'Bob', age: 35 },
-    ];
-
-    const getRow = (id: number | string) => rows.find((r) => r.id === id);
-    const getColumn = (field: string) => ({ field, id: field });
-
-    it('should return original order when applier is null', () => {
-      const result = applySortingToRowIds([1, 2, 3], null, false, []);
-      expect(result).toEqual([1, 2, 3]);
-    });
-
-    it('should apply sorting without stableSort', () => {
-      const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
-        getColumn,
-        getRow,
-      });
-      const result = applySortingToRowIds([1, 2, 3], applier, false, []);
-      expect(result).toEqual([2, 3, 1]); // Alice, Bob, Charlie
-    });
-
-    it('should apply stableSort - preserving previous order within equal groups', () => {
-      // Rows where some have same age
-      const rowsWithSameAge = [
-        { id: 1, name: 'Charlie', age: 30 },
-        { id: 2, name: 'Alice', age: 30 },
-        { id: 3, name: 'Bob', age: 25 },
-      ];
-      const getRowStable = (id: number | string) => rowsWithSameAge.find((r) => r.id === id);
-
-      // First sort by name
-      const nameApplier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
-        getColumn,
-        getRow: getRowStable,
-      });
-      const sortedByName = applySortingToRowIds([1, 2, 3], nameApplier, false, []);
-      expect(sortedByName).toEqual([2, 3, 1]); // Alice, Bob, Charlie
-
-      // Then sort by age with stableSort - within same age, previous order preserved
-      const ageApplier = buildSortingApplier({
-        sortModel: [{ field: 'age', sort: 'asc' }],
-        getColumn,
-        getRow: getRowStable,
-      });
-      const sortedByAge = applySortingToRowIds([1, 2, 3], ageApplier, true, sortedByName);
-      // Age 25: Bob, Age 30: Alice, Charlie (preserved from name sort)
-      expect(sortedByAge).toEqual([3, 2, 1]);
     });
   });
 
@@ -421,9 +365,9 @@ describe('Sorting Plugin', () => {
 
     it('should sort by primary then secondary column', () => {
       const applier = buildSortingApplier({
-        sortModel: [
-          { field: 'lastName', sort: 'asc' },
-          { field: 'firstName', sort: 'asc' },
+        model: [
+          { field: 'lastName', direction: 'asc' },
+          { field: 'firstName', direction: 'asc' },
         ],
         getColumn,
         getRow,
@@ -435,10 +379,10 @@ describe('Sorting Plugin', () => {
 
     it('should sort by three columns', () => {
       const applier = buildSortingApplier({
-        sortModel: [
-          { field: 'lastName', sort: 'asc' },
-          { field: 'age', sort: 'desc' },
-          { field: 'firstName', sort: 'asc' },
+        model: [
+          { field: 'lastName', direction: 'asc' },
+          { field: 'age', direction: 'desc' },
+          { field: 'firstName', direction: 'asc' },
         ],
         getColumn,
         getRow,
@@ -452,7 +396,7 @@ describe('Sorting Plugin', () => {
   describe('edge cases', () => {
     it('should handle empty row array', () => {
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: () => ({ field: 'name', id: 'name' }),
         getRow: () => undefined,
       });
@@ -463,7 +407,7 @@ describe('Sorting Plugin', () => {
     it('should handle single row', () => {
       const row = { id: 1, name: 'Alice' };
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: () => ({ field: 'name', id: 'name' }),
         getRow: () => row,
       });
@@ -480,7 +424,7 @@ describe('Sorting Plugin', () => {
       const getRow = (id: number | string) => rows.find((r) => r.id === id);
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: () => ({ field: 'name', id: 'name' }),
         getRow,
       });
@@ -498,7 +442,7 @@ describe('Sorting Plugin', () => {
       const getRow = (id: number | string) => rows.find((r) => r.id === id);
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: () => ({ field: 'name', id: 'name' }),
         getRow,
       });
@@ -515,7 +459,7 @@ describe('Sorting Plugin', () => {
       const getRow = (id: number | string) => rows.find((r) => r.id === id);
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'nonexistent', sort: 'asc' }],
+        model: [{ field: 'nonexistent', direction: 'asc' }],
         getColumn: () => undefined, // column not found
         getRow,
       });
@@ -531,7 +475,7 @@ describe('Sorting Plugin', () => {
       const getRow = (id: number | string) => rows.find((r) => r.id === id);
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: () => ({ field: 'name', id: 'name', sortable: false }),
         getRow,
       });
@@ -547,7 +491,7 @@ describe('Sorting Plugin', () => {
       const getRow = (id: number | string) => rows.find((r) => r.id === id);
 
       const applier = buildSortingApplier({
-        sortModel: [{ field: 'name', sort: 'asc' }],
+        model: [{ field: 'name', direction: 'asc' }],
         getColumn: () => ({ field: 'name', id: 'name', sortable: true }),
         getRow,
       });

@@ -4,7 +4,7 @@ export type GridSortDirection = 'asc' | 'desc' | null;
 
 export interface GridSortItem {
   field: string;
-  sort: GridSortDirection;
+  direction: GridSortDirection;
 }
 
 export type GridSortModel = readonly GridSortItem[];
@@ -76,7 +76,7 @@ export interface SortingColumnMeta<V = any> {
 
 export interface SortingState {
   sorting: {
-    sortModel: GridSortModel;
+    model: GridSortModel;
     sortedRowIds: GridRowId[];
   };
 }
@@ -84,7 +84,7 @@ export interface SortingState {
 export interface SortingOptions {
   initialState?: {
     sorting?: {
-      sortModel?: GridSortModel;
+      model?: GridSortModel;
     };
   };
 
@@ -109,7 +109,7 @@ export interface SortingOptions {
      * If true, multiple columns can be sorted at the same time.
      * @default true
      */
-    enableMultiSort?: boolean;
+    multiSort?: boolean;
 
     /**
      * If true, sorting builds on the current sorted order.
@@ -141,10 +141,10 @@ export interface SortingInternalOptions {
   };
 }
 
-export interface SortingSelectors {
-  sortModel: (state: SortingState) => GridSortModel;
+export type SortingSelectors = {
+  model: (state: SortingState) => GridSortModel;
   sortedRowIds: (state: SortingState) => GridRowId[];
-}
+};
 
 export interface ComputeSortedRowIdsOptions {
   /** Use stable sort - build on current sorted order instead of starting fresh. */
@@ -159,13 +159,13 @@ export interface SortingApi {
      * Get the current sort model.
      * @returns {GridSortModel} The current sort model.
      */
-    getSortModel: () => GridSortModel;
+    getModel: () => GridSortModel;
 
     /**
      * Set the sort model.
      * @param {GridSortModel} model The new sort model.
      */
-    setSortModel: (model: GridSortModel) => void;
+    setModel: (model: GridSortModel) => void;
 
     /**
      * Sort a column. Cycles through `sortingOrder` if direction is not provided.
@@ -178,7 +178,7 @@ export interface SortingApi {
     /**
      * Apply sorting using the current sort model. Uses `computeSortedRowIds` internally.
      */
-    applySorting: () => void;
+    apply: () => void;
 
     /**
      * Compute sorted row IDs without updating state.

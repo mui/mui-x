@@ -32,11 +32,11 @@ export function Example() {
 
     // ✓ These properties are available (from sortingPlugin)
     sorting: {
-      model: [{ field: 'name', sort: 'asc' }],
+      model: [{ field: 'name', direction: 'asc' }],
       onModelChange: (_model: GridSortModel) => {
         // Handle sort model change
       },
-      enableMultiSort: false,
+      multiSort: false,
     },
 
     // @ts-expect-error Property 'paginationModel' does not exist
@@ -56,7 +56,7 @@ export function Example() {
 
   // Sorting API is available
   grid1.api.sorting.sortColumn('name', 'asc');
-  grid1.api.sorting.setSortModel([]);
+  grid1.api.sorting.setModel([]);
 
   // @ts-expect-error pagination API does not exist
   grid1.api.pagination.setPage(1);
@@ -75,7 +75,7 @@ export function Example() {
 
     // ✓ All properties available
     sorting: {
-      model: [{ field: 'name', sort: 'asc' }],
+      model: [{ field: 'name', direction: 'asc' }],
       onModelChange: (_model: GridSortModel) => {
         // Handle sort model change
       },
@@ -568,14 +568,14 @@ export function SelectorsExample() {
   columnsPlugin.selectors.visibleColumns;
   columnsPlugin.selectors.allColumns;
 
-  sortingPlugin.selectors.sortModel;
+  sortingPlugin.selectors.model;
   paginationPlugin.selectors.paginationModel;
 
   // Should be able to call selectors imperatively
   rowsPlugin.selectors.rowIds(grid1.getState());
 
   // Should be able to use with grid.use()
-  grid1.use(sortingPlugin.selectors.sortModel);
+  grid1.use(sortingPlugin.selectors.model);
   grid1.use(rowsPlugin.selectors.rowIds);
 
   // @ts-expect-error paginationPlugin is not added

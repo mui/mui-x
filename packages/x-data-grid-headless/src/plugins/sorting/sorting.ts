@@ -3,12 +3,7 @@ import * as React from 'react';
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId } from '../internal/rows/rowUtils';
 import { sortingSelectors } from './selectors';
-import {
-  getNextGridSortDirection,
-  upsertSortModel,
-  buildSortingApplier,
-  applySortingToRowIds,
-} from './sortingUtils';
+import { getNextGridSortDirection, upsertSortModel, buildSortingApplier } from './sortingUtils';
 import type {
   GridSortDirection,
   GridSortModel,
@@ -18,6 +13,7 @@ import type {
   SortingInternalOptions,
   SortingApi,
   SortingColumnMeta,
+  SortingSelectors,
 } from './types';
 
 type SortingPluginOptions = SortingOptions & SortingInternalOptions;
@@ -25,7 +21,7 @@ type SortingPluginOptions = SortingOptions & SortingInternalOptions;
 type SortingPlugin = Plugin<
   'sorting',
   SortingState,
-  typeof sortingSelectors,
+  SortingSelectors,
   SortingApi,
   SortingPluginOptions,
   SortingColumnMeta
@@ -40,7 +36,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
   initialize: (state, params) => {
     // Prefer controlled sortModel over initialState
     const initialSortModel =
-      params.sorting?.model ?? params.initialState?.sorting?.sortModel ?? ([] as GridSortModel);
+      params.sorting?.model ?? params.initialState?.sorting?.model ?? ([] as GridSortModel);
 
     const dataRowIds = state.rows.dataRowIds;
     let sortedRowIds: GridRowId[];
@@ -57,18 +53,18 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       const getRow = (id: GridRowId) => state.rows.dataRowIdToModelLookup[id];
 
       const sortingApplier = buildSortingApplier({
-        sortModel: initialSortModel,
+        model: initialSortModel,
         getColumn,
         getRow,
         locale: params.intl?.locale,
       });
-      sortedRowIds = applySortingToRowIds(dataRowIds, sortingApplier);
+      sortedRowIds = sortingApplier ? sortingApplier(dataRowIds) : dataRowIds;
     }
 
     return {
       ...state,
       sorting: {
-        sortModel: initialSortModel,
+        model: initialSortModel,
         sortedRowIds,
       },
     };
@@ -99,19 +95,35 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       sortModel,
       options,
     ) => {
-      const idsToSort = rowIds ?? api.rows.getAllRowIds();
-      const modelToUse = sortModel ?? store.state.sorting.sortModel;
+      const originalRowIds = rowIds ?? api.rows.getAllRowIds();
+      const modelToUse = sortModel ?? store.state.sorting.model;
       const useStableSort = options?.stableSort ?? false;
-      const currentIds = options?.currentSortedRowIds ?? store.state.sorting.sortedRowIds;
+      const currentSortedRowIds = options?.currentSortedRowIds ?? store.state.sorting.sortedRowIds;
 
       const sortingApplier = buildSortingApplier({
-        sortModel: modelToUse,
+        model: modelToUse,
         getColumn,
         getRow: api.rows.getRow,
         locale: params.intl?.locale,
       });
 
-      return applySortingToRowIds(idsToSort, sortingApplier, useStableSort, currentIds);
+      if (!useStableSort || !currentSortedRowIds) {
+        return sortingApplier ? sortingApplier(originalRowIds) : originalRowIds;
+      }
+
+      // Stable sort: use the current sorted order as the base,
+      // filtering to only include IDs that still exist, and appending any new IDs.
+      const rowIdSet = new Set(originalRowIds);
+      const idsToSort = currentSortedRowIds.filter((id) => rowIdSet.has(id));
+
+      const currentIdSet = new Set(currentSortedRowIds);
+      originalRowIds.forEach((id) => {
+        if (!currentIdSet.has(id)) {
+          idsToSort.push(id);
+        }
+      });
+
+      return sortingApplier ? sortingApplier(idsToSort) : idsToSort;
     };
 
     /**
@@ -142,14 +154,14 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     };
 
     const setSortModel = (model: GridSortModel): void => {
-      const prevModel = store.state.sorting.sortModel;
+      const prevModel = store.state.sorting.model;
 
       // Update state
       store.setState({
         ...store.state,
         sorting: {
           ...store.state.sorting,
-          sortModel: model,
+          model,
         },
       });
 
@@ -168,7 +180,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
      * Get the current sort model.
      */
     const getSortModel = (): GridSortModel => {
-      return sortingSelectors.sortModel(store.state);
+      return sortingSelectors.model(store.state);
     };
 
     const sortColumn: SortingApi['sorting']['sortColumn'] = (field, direction, multiSort) => {
@@ -178,7 +190,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
         return;
       }
 
-      const sortModel = store.state.sorting.sortModel;
+      const sortModel = store.state.sorting.model;
       const existingItem = sortModel.find((item) => item.field === field);
 
       // Determine the sort direction
@@ -188,13 +200,13 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       } else {
         // Cycle through sortingOrder
         const columnSortingOrder = column?.sortingOrder ?? getDefaultSortingOrder();
-        newDirection = getNextGridSortDirection(columnSortingOrder, existingItem?.sort);
+        newDirection = getNextGridSortDirection(columnSortingOrder, existingItem?.direction);
       }
 
       const newSortItem: GridSortItem | undefined =
-        newDirection === null ? undefined : { field, sort: newDirection };
+        newDirection === null ? undefined : { field, direction: newDirection };
 
-      const shouldMultiSort = multiSort ?? params.sorting?.enableMultiSort !== false;
+      const shouldMultiSort = multiSort ?? params.sorting?.multiSort !== false;
 
       let newSortModel: GridSortModel;
       if (shouldMultiSort) {
@@ -209,7 +221,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
     // Track previous values for change detection
     // Initialize to current row IDs since initial sorting is done in initialize
     const prevRowIdsRef = React.useRef<GridRowId[]>(api.rows.getAllRowIds());
-    const prevSortModelRef = React.useRef<GridSortModel>(store.state.sorting.sortModel);
+    const prevSortModelRef = React.useRef<GridSortModel>(store.state.sorting.model);
 
     // Apply sorting when rows change (includes initial mount)
     React.useEffect(() => {
@@ -232,10 +244,10 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
       }
     });
 
-    // Handle controlled sortModel prop changes
+    // Handle controlled sorting.model prop changes
     React.useEffect(() => {
       if (params.sorting?.model !== undefined) {
-        const currentModel = store.state.sorting.sortModel;
+        const currentModel = store.state.sorting.model;
         if (
           params.sorting.model !== currentModel &&
           params.sorting.model !== prevSortModelRef.current
@@ -246,7 +258,7 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
             ...store.state,
             sorting: {
               ...store.state.sorting,
-              sortModel: params.sorting.model,
+              model: params.sorting.model,
             },
           });
 
@@ -255,15 +267,15 @@ const sortingPlugin = createPlugin<SortingPlugin>()({
           }
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to sortModel prop changes
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only reacting to sorting.model prop changes
     }, [params.sorting?.model]);
 
     return {
       sorting: {
-        getSortModel,
-        setSortModel,
+        getModel: getSortModel,
+        setModel: setSortModel,
         sortColumn,
-        applySorting,
+        apply: applySorting,
         computeSortedRowIds,
       },
     };
