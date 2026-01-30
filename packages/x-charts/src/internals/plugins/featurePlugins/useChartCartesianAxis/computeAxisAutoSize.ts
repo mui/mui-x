@@ -40,11 +40,6 @@ interface ComputeAxisAutoSizeOptions {
   axis: DefaultedXAxis | DefaultedYAxis;
   direction: 'x' | 'y';
   isHydrated: boolean;
-  /**
-   * For continuous scales, the computed extrema from series data.
-   * This is used to estimate tick labels more accurately.
-   */
-  extrema?: [number, number];
 }
 
 /**
@@ -80,12 +75,9 @@ export function isGroupedAxisAutoSizeResult(
 /**
  * Gets tick labels that would be displayed for the axis.
  * For ordinal scales (band/point), use axis.data.
- * For continuous scales, generate estimated tick values from min/max or provided extrema.
+ * For continuous scales, generate estimated tick values from axis min/max configuration.
  */
-function getTickLabels(
-  axis: DefaultedXAxis | DefaultedYAxis,
-  extrema?: [number, number],
-): string[] {
+function getTickLabels(axis: DefaultedXAxis | DefaultedYAxis): string[] {
   const { valueFormatter, scaleType, data, min, max } = axis as DefaultedXAxis &
     DefaultedYAxis & { min?: number; max?: number };
 
@@ -105,21 +97,10 @@ function getTickLabels(
   }
 
   // For continuous scales, we measure the min and max values to estimate axis size.
-  // We don't try to replicate D3's tick generation because D3 also "nices" the domain,
-  // which can produce different tick values than our estimates. Measuring min/max
-  // provides a reasonable approximation for auto-sizing purposes.
-  let minVal: number;
-  let maxVal: number;
-
-  if (extrema && extrema[0] !== Infinity && extrema[1] !== -Infinity) {
-    // Use computed extrema from series data, but respect user-provided min/max overrides
-    minVal = min ?? extrema[0];
-    maxVal = max ?? extrema[1];
-  } else {
-    // Fall back to user-provided min/max or defaults
-    minVal = min ?? 0;
-    maxVal = max ?? 100;
-  }
+  // We use axis min/max configuration or defaults. This avoids depending on series data
+  // which would cause performance issues. The estimation is sufficient for auto-sizing.
+  const minVal = min ?? 0;
+  const maxVal = max ?? 100;
 
   // Measure both min and max values to find the widest label
   const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
@@ -314,7 +295,7 @@ function computeGroupedAxisAutoSize(
 export function computeAxisAutoSize(
   options: ComputeAxisAutoSizeOptions,
 ): AxisAutoSizeResult | undefined {
-  const { axis, direction, isHydrated, extrema } = options;
+  const { axis, direction, isHydrated } = options;
 
   // During SSR or before hydration, return undefined to use fallback
   if (!isHydrated) {
@@ -332,7 +313,7 @@ export function computeAxisAutoSize(
   const angle = tickLabelStyle?.angle;
 
   // Get tick labels
-  const labels = getTickLabels(axis, extrema);
+  const labels = getTickLabels(axis);
 
   if (labels.length === 0) {
     return AXIS_AUTO_SIZE_MIN;
