@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-
 import { BarChart } from '@mui/x-charts/BarChart';
 import { PieChart } from '@mui/x-charts/PieChart';
+
+// Common type for syncing highlights between different chart types
 
 export default function SyncHighlight() {
   const [highlightedItem, setHighLightedItem] = React.useState(null);

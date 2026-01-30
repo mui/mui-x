@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
 import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';
 
 export default function RangeBarAnimation() {
