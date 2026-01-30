@@ -24,6 +24,12 @@ export * from './SparkLineChart';
 export * from './Gauge';
 export * from './RadarChart';
 export * from './ChartsSurface';
+export { ChartsContainer } from './ChartsContainer';
+export type {
+  ChartsContainerProps,
+  ChartsContainerSlots,
+  ChartsContainerSlotProps,
+} from './ChartsContainer';
 export { ChartContainer } from './ChartContainer';
 export type { ChartContainerProps } from './ChartContainer';
 export * from './ChartDataProvider';
