@@ -125,14 +125,42 @@ function DataGrid(props: DataGridProps) {
         console.log('Sort model changed:', model);
       },
     },
+    // Pagination options from config
+    pagination: {
+      onModelChange: (model) => {
+        // eslint-disable-next-line no-console
+        console.log('Pagination model changed:', model);
+      },
+    },
+    initialState: {
+      pagination: {
+        model: {
+          page: 0,
+          pageSize: config.pagination?.pageSize ?? 10,
+        },
+      },
+    },
   });
 
   React.useImperativeHandle(ref, () => ({
     applySorting: () => grid.api.sorting.apply(),
   }));
 
-  // Use sorted row IDs from sorting plugin
-  const sortedRowIds = grid.use(sortingPlugin.selectors.sortedRowIds);
+  // Sync page size with config changes (including disabling pagination)
+  const effectivePageSize = config.pagination?.enabled
+    ? (config.pagination?.pageSize ?? 10)
+    : Infinity;
+
+  React.useEffect(() => {
+    grid.api.pagination.setPageSize(effectivePageSize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- grid.api is stable by identity but not by reference
+  }, [effectivePageSize]);
+
+  // Use paginated row IDs from pagination plugin
+  const paginatedRowIds = grid.use(paginationPlugin.selectors.paginatedRowIds);
+  const paginationModel = grid.use(paginationPlugin.selectors.model);
+  const pageCount = grid.use(paginationPlugin.selectors.pageCount);
+  const rowCount = grid.use(paginationPlugin.selectors.rowCount);
   const sortModel = grid.use(sortingPlugin.selectors.model);
   const rowsData = grid.use(rowsPlugin.selectors.rowIdToModelLookup);
   const visibleColumns = grid.use(columnsPlugin.selectors.visibleColumns);
@@ -163,9 +191,19 @@ function DataGrid(props: DataGridProps) {
     );
   };
 
+  // Scroll to top when page changes
+  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    scrollContainerRef.current?.scrollTo({ top: 0 });
+  }, [paginationModel.page]);
+
+  // Pagination display
+  const startRow = paginationModel.page * paginationModel.pageSize + 1;
+  const endRow = Math.min(startRow + paginatedRowIds.length - 1, rowCount);
+
   return (
     <div className="grid-wrapper">
-      <div className="grid-scroll-container">
+      <div className="grid-scroll-container" ref={scrollContainerRef}>
         <table className="grid-table">
           <thead className="grid-thead">
             <tr>
@@ -193,7 +231,7 @@ function DataGrid(props: DataGridProps) {
             </tr>
           </thead>
           <tbody>
-            {sortedRowIds.map((rowId: (typeof sortedRowIds)[0]) => {
+            {paginatedRowIds.map((rowId: (typeof paginatedRowIds)[0]) => {
               const row = rowsData[rowId] as RowData | undefined;
               if (!row) {
                 return null;
@@ -223,12 +261,61 @@ function DataGrid(props: DataGridProps) {
           </tbody>
         </table>
       </div>
+      {/* Pagination Footer */}
+      {config.pagination?.enabled && (
+        <div className="grid-footer">
+          <div className="grid-footer__info">
+            {rowCount > 0 ? `${startRow}–${endRow} of ${rowCount}` : 'No rows'}
+          </div>
+          <div className="grid-footer__controls">
+            <button
+              type="button"
+              className="grid-footer__btn"
+              disabled={paginationModel.page === 0}
+              onClick={() => grid.api.pagination.setPage(0)}
+              aria-label="First page"
+            >
+              ⟨⟨
+            </button>
+            <button
+              type="button"
+              className="grid-footer__btn"
+              disabled={paginationModel.page === 0}
+              onClick={() => grid.api.pagination.setPage(paginationModel.page - 1)}
+              aria-label="Previous page"
+            >
+              ⟨
+            </button>
+            <span className="grid-footer__page-info">
+              Page {paginationModel.page + 1} of {pageCount}
+            </span>
+            <button
+              type="button"
+              className="grid-footer__btn"
+              disabled={paginationModel.page >= pageCount - 1}
+              onClick={() => grid.api.pagination.setPage(paginationModel.page + 1)}
+              aria-label="Next page"
+            >
+              ⟩
+            </button>
+            <button
+              type="button"
+              className="grid-footer__btn"
+              disabled={paginationModel.page >= pageCount - 1}
+              onClick={() => grid.api.pagination.setPage(pageCount - 1)}
+              aria-label="Last page"
+            >
+              ⟩⟩
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
 function App() {
-  const [rows] = React.useState<RowData[]>(() => generateSampleData(30));
+  const [rows] = React.useState<RowData[]>(() => generateSampleData(100));
   const [columns] = React.useState(() => generateColumns());
   const [config, setConfig] = React.useState<PluginConfig>({
     sorting: {
@@ -238,6 +325,10 @@ function App() {
       mode: 'auto',
       stableSort: false,
       order: ['asc', 'desc', null],
+    },
+    pagination: {
+      enabled: true,
+      pageSize: 10,
     },
   });
 

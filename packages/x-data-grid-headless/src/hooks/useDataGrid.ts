@@ -22,7 +22,6 @@ type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = Plu
   PluginsColumnMeta<TPlugins>
 > & {
   plugins: TPlugins;
-  initialState?: Partial<PluginsState<TPlugins>>;
 };
 
 type DataGridState<TPlugins extends readonly AnyPlugin[]> = PluginsState<TPlugins>;
