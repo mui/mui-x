@@ -8,6 +8,7 @@ import {
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
 import { useIsItemFocusedGetter } from '../../hooks/useIsItemFocusedGetter';
 import { getModifiedArcProperties } from './getModifiedArcProperties';
+import type { SeriesId } from '../../models';
 
 export interface AnimatedObject {
   innerRadius: number;
@@ -24,6 +25,7 @@ export interface ValueWithHighlight extends DefaultizedPieValueType, AnimatedObj
   isFaded: boolean;
   isHighlighted: boolean;
   isFocused: boolean;
+  seriesId: SeriesId;
 }
 
 export function useTransformData(
@@ -75,6 +77,7 @@ export function useTransformData(
           isFaded,
           isHighlighted,
           isFocused,
+          seriesId,
           ...arcSizes,
         };
       }),

@@ -1,0 +1,66 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.surface {
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.arc {
+  stroke: #f5f5f5;
+  stroke-width: 5px;
+}
+
+.arc-label {
+  font-size: 12px;
+  fill: #333;
+}
+
+.tooltip-container {
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+body {
+  --data-color-0: rgba(255, 0, 0, 0.7);
+  --data-color-1: rgba(0, 255, 0, 0.7);
+  --data-color-2: rgba(0, 255, 255, 0.7);
+}
+
+[data-index='0'] .tooltip-color-box,
+.surface path[data-index='0'] {
+  fill: var(--data-color-0);
+  background: var(--data-color-0);
+}
+
+[data-index='1'] .tooltip-color-box,
+.surface path[data-index='1'] {
+  fill: var(--data-color-1);
+  background: var(--data-color-1);
+}
+
+[data-index='2'] .tooltip-color-box,
+.surface path[data-index='2'] {
+  fill: var(--data-color-2);
+  background: var(--data-color-2);
+}
+
+.tooltip-color-box {
+  height: 10px;
+  width: 10px;
+  border-radius: 2px;
+}
+
+.tooltip-data {
+  gap: 5px;
+}
