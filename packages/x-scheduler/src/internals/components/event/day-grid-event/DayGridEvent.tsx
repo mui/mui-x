@@ -27,7 +27,8 @@ import { useEventCalendarClasses } from '../../../../event-calendar/EventCalenda
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
-  backgroundColor: 'var(--event-color-3)',
+  backgroundColor: 'var(--event-color-5)',
+  color: theme.palette.getContrastText('var(--event-color-5)' || theme.palette.primary.main),
   minWidth: 18,
   height: 'auto',
   cursor: 'pointer',
@@ -36,7 +37,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   gridRow: 'var(--grid-row)',
   gridColumn: 1,
   padding: `0 ${theme.spacing(0.5)}`,
-  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)} + (var(--grid-column-span) - 1) * 1px)`,
+  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)} )`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },

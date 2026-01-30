@@ -23,7 +23,12 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
   flexShrink: 0,
   flexBasis: 0,
   minWidth: 0,
-  position: 'relative',
+  padding: theme.spacing(0.5),
+  display: 'grid',
+  gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
+  gap: theme.spacing(0.5),
+  lineHeight: '18px',
+
   minHeight: `calc(var(--row-count, 0) * ${EVENT_HEIGHT}px + ${theme.spacing(0.5)})`,
   '&:first-of-type': {
     borderLeft: `1px solid ${theme.palette.divider}`,
@@ -36,23 +41,12 @@ const DayTimeGridAllDayEventsCell = styled(CalendarGrid.DayCell, {
 const DayTimeGridAllDayEventsCellEvents = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventsCellEvents',
-})({
-  position: 'absolute',
-  top: 0,
-  bottom: 0,
-  left: 0,
-  right: 0,
-});
+})(({ theme }) => ({ position: 'relative', display: 'grid', gap: theme.spacing(0.5) }));
 
 const DayTimeGridAllDayEventContainer = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventContainer',
-})({
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  right: 0,
-});
+})({});
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;
