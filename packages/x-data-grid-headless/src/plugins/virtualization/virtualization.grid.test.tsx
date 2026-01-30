@@ -3,8 +3,8 @@ import * as React from 'react';
 import { createRenderer, act } from '@mui/internal-test-utils';
 import { type ColumnDef, useDataGrid } from '../../';
 import virtualizationPlugin, { type VirtualizationOptions } from './virtualization';
-import sortingPlugin from '../sorting';
-import paginationPlugin from '../pagination';
+import { sortingPlugin } from '../sorting';
+import { paginationPlugin } from '../pagination';
 
 type TestRow = { id: number; brand: string };
 
