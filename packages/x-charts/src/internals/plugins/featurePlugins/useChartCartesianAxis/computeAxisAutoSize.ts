@@ -21,18 +21,6 @@ function hasGroups(
 }
 
 /**
- * Calculates the tick size for a specific group level.
- * This mirrors the logic in ChartsGroupedXAxisTicks/ChartsGroupedYAxisTicks.
- * If the group has a custom tickSize, use it. Otherwise, calculate based on the formula.
- */
-function getGroupTickSize(group: AxisGroup, groupIndex: number, baseTickSize: number): number {
-  if (group.tickSize !== undefined) {
-    return group.tickSize;
-  }
-  return baseTickSize * groupIndex * 2 + baseTickSize;
-}
-
-/**
  * Gets the unique labels for a specific group level.
  */
 function getGroupLabels(data: readonly any[], group: AxisGroup): string[] {
@@ -56,6 +44,36 @@ interface ComputeAxisAutoSizeOptions {
    * This is used to estimate tick labels more accurately.
    */
   extrema?: [number, number];
+}
+
+/**
+ * Result of auto-size computation for grouped axes.
+ * Includes both the total size and the computed tick sizes for each group level.
+ */
+export interface GroupedAxisAutoSizeResult {
+  size: number;
+  /**
+   * Computed tick sizes for each group level.
+   * These are cumulative - each group's tick extends further than the previous.
+   * The renderer should use these instead of the formula-based tick sizes.
+   */
+  groupTickSizes: number[];
+}
+
+/**
+ * Result of auto-size computation.
+ * For regular axes, returns just a number.
+ * For grouped axes, returns an object with size and group tick sizes.
+ */
+export type AxisAutoSizeResult = number | GroupedAxisAutoSizeResult;
+
+/**
+ * Type guard to check if the result is a grouped axis result.
+ */
+export function isGroupedAxisAutoSizeResult(
+  result: AxisAutoSizeResult | undefined,
+): result is GroupedAxisAutoSizeResult {
+  return result !== undefined && typeof result === 'object' && 'groupTickSizes' in result;
 }
 
 /**
@@ -219,39 +237,33 @@ function getRotatedDimension(
 
 /**
  * Computes the auto-size dimension for a grouped axis.
- * For grouped axes, we need to account for multiple group levels, each with its own
- * tick size and label dimensions.
+ * For grouped axes, we compute cumulative tick sizes so that each group's labels
+ * are positioned after the previous group's labels (no overlap).
+ *
+ * Returns both the total size and the computed tick sizes for each group level.
  */
 function computeGroupedAxisAutoSize(
   axis: DefaultedXAxis & { groups: AxisGroup[] },
   direction: 'x' | 'y',
-): number | undefined {
+): GroupedAxisAutoSizeResult | undefined {
   const { groups, data, tickSize: baseTickSize, tickLabelStyle: axisTickLabelStyle } = axis;
   const hasAxisLabel = Boolean(axis.label);
 
   if (!data || data.length === 0) {
-    return AXIS_AUTO_SIZE_MIN;
+    return { size: AXIS_AUTO_SIZE_MIN, groupTickSizes: [] };
   }
 
-  // Calculate the maximum extent across all group levels
-  // Each group level has: tickSize + gap + labelHeight
-  // The tick sizes increase with group level, and labels are positioned at tickSize + gap
-  let maxExtent = 0;
+  // Compute cumulative tick sizes for each group level
+  // Each group's labels should start after the previous group's labels end
+  const groupTickSizes: number[] = [];
+  const labelDimensions: number[] = [];
+  const defaultTickSize = baseTickSize ?? AXIS_AUTO_SIZE_TICK_SIZE;
 
   for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
     const group = groups[groupIndex];
-    const groupTickSize = getGroupTickSize(
-      group,
-      groupIndex,
-      baseTickSize ?? AXIS_AUTO_SIZE_TICK_SIZE,
-    );
 
     // Get labels for this group level
     const groupLabels = getGroupLabels(data, group);
-
-    if (groupLabels.length === 0) {
-      continue;
-    }
 
     // Merge axis tick label style with group-specific style
     const groupTickLabelStyle = {
@@ -271,34 +283,63 @@ function computeGroupedAxisAutoSize(
 
     // Get the dimension based on direction and rotation
     const labelDimension = getRotatedDimension(maxWidth, maxHeight, angle, direction);
+    labelDimensions.push(labelDimension);
 
-    // Calculate the extent for this group level
-    // Labels are positioned at tickSize + gap, and extend by labelDimension
-    const groupExtent = groupTickSize + AXIS_AUTO_SIZE_TICK_LABEL_GAP + labelDimension;
+    // For the first group, use the base tick size
+    // For subsequent groups, position after the previous group's labels
+    if (groupIndex === 0) {
+      // Check if group has custom tickSize, otherwise use base
+      groupTickSizes.push(group.tickSize ?? defaultTickSize);
+    } else {
+      // Previous group's extent: tickSize + gap + labelDimension
+      const previousExtent =
+        groupTickSizes[groupIndex - 1] +
+        AXIS_AUTO_SIZE_TICK_LABEL_GAP +
+        labelDimensions[groupIndex - 1];
 
-    maxExtent = Math.max(maxExtent, groupExtent);
+      // This group's tick should extend to just before its labels
+      // If group has custom tickSize, use it as an offset from previousExtent
+      const customTickSize = group.tickSize;
+      if (customTickSize !== undefined) {
+        // Custom tick size is relative to the axis line, not cumulative
+        // But we need cumulative positioning, so take max of custom and cumulative
+        groupTickSizes.push(Math.max(customTickSize, previousExtent));
+      } else {
+        // Add a small base tick for visual separation
+        groupTickSizes.push(previousExtent + defaultTickSize);
+      }
+    }
   }
 
-  // Calculate total axis size
-  let totalSize = maxExtent;
+  // Calculate total extent: last group's tickSize + gap + last group's labelDimension
+  const lastGroupIndex = groups.length - 1;
+  let totalExtent =
+    groupTickSizes[lastGroupIndex] +
+    AXIS_AUTO_SIZE_TICK_LABEL_GAP +
+    labelDimensions[lastGroupIndex];
 
   // Add axis label if present
   if (hasAxisLabel) {
-    totalSize += AXIS_LABEL_DEFAULT_HEIGHT;
+    totalExtent += AXIS_LABEL_DEFAULT_HEIGHT;
   }
 
   // Add padding
-  totalSize += AXIS_AUTO_SIZE_PADDING;
+  totalExtent += AXIS_AUTO_SIZE_PADDING;
 
   // Ensure minimum size
-  return Math.max(Math.ceil(totalSize), AXIS_AUTO_SIZE_MIN);
+  const size = Math.max(Math.ceil(totalExtent), AXIS_AUTO_SIZE_MIN);
+
+  return { size, groupTickSizes };
 }
 
 /**
  * Computes the auto-size dimension for an axis based on tick label measurements.
  * Returns undefined if measurement is not available (SSR or not hydrated).
+ *
+ * For regular axes, returns just a number (the size).
+ * For grouped axes, returns an object with size and computed group tick sizes.
  */
-export function computeAxisAutoSize(options: ComputeAxisAutoSizeOptions): number | undefined {
+export function computeAxisAutoSize(options: ComputeAxisAutoSizeOptions): AxisAutoSizeResult | undefined {
   const { axis, direction, isHydrated, extrema } = options;
 
   // During SSR or before hydration, return undefined to use fallback
