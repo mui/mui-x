@@ -219,7 +219,7 @@ interface CoreState {
 export function createRowsApi<TRow extends GridRowModel>(
   store: Store<CoreState>,
   options: RowsOptions<TRow>,
-): RowsApi {
+): Omit<RowsApi, 'registerProcessor' | 'recompute' | 'getProcessedRowIds'> {
   const getRow = (id: GridRowId): GridRowModel | null => {
     const lookup = store.state.rows.dataRowIdToModelLookup;
     return lookup[id] ?? null;
