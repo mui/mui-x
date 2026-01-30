@@ -3,7 +3,7 @@ import * as React from 'react';
 import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
-import IconButton from '@mui/material/IconButton';
+import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { useStore } from '@base-ui/utils/store';
 import { useStableCallback } from '@base-ui/utils/useStableCallback';
@@ -24,18 +24,23 @@ const ResourcesLegendRoot = styled('section', {
   flexDirection: 'column',
 });
 
-const ResourcesLegendItemRoot = styled('div', {
+const ResourcesLegendItemRoot = styled(ButtonBase, {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegendItem',
 })(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  padding: theme.spacing(0.5, 1),
+  padding: theme.spacing(1),
   borderRadius: theme.shape.borderRadius,
-  cursor: 'pointer',
+  width: '100%',
+  justifyContent: 'flex-start',
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
+  },
+  '&.Mui-focusVisible': {
+    outline: `2px solid ${theme.palette.primary.main}`,
+    outlineOffset: -2,
   },
 }));
 
@@ -73,7 +78,15 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
-    <ResourcesLegendItemRoot className={classes.resourcesLegendItem}>
+    <ResourcesLegendItemRoot
+      className={classes.resourcesLegendItem}
+      onClick={(event) => onToggle(resource.id, event)}
+      aria-label={
+        isVisible
+          ? translations.hideEventsLabel(resource.title)
+          : translations.showEventsLabel(resource.title)
+      }
+    >
       <ResourcesLegendItemColorDot
         className={classes.resourcesLegendItemColorDot}
         data-palette={eventColor}
@@ -81,22 +94,11 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
       <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
         {resource.title}
       </ResourcesLegendItemName>
-      <IconButton
-        size="small"
-        onClick={(event) => onToggle(resource.id, event)}
-        aria-label={
-          isVisible
-            ? translations.hideEventsLabel(resource.title)
-            : translations.showEventsLabel(resource.title)
-        }
-        sx={{ ml: 'auto' }}
-      >
-        {isVisible ? (
-          <VisibilityOutlined fontSize="small" />
-        ) : (
-          <VisibilityOffOutlined fontSize="small" />
-        )}
-      </IconButton>
+      {isVisible ? (
+        <VisibilityOutlined fontSize="small" sx={{ ml: 'auto', color: 'action.active' }} />
+      ) : (
+        <VisibilityOffOutlined fontSize="small" sx={{ ml: 'auto', color: 'action.active' }} />
+      )}
     </ResourcesLegendItemRoot>
   );
 }
