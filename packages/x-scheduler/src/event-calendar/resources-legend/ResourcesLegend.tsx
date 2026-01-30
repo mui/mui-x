@@ -36,10 +36,6 @@ const ResourcesLegendItemRoot = styled(FormControlLabel, {
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:has(:focus-visible)': {
-    outline: `2px solid ${theme.palette.primary.main}`,
-    outlineOffset: -2,
-  },
   '& .MuiFormControlLabel-label': {
     display: 'flex',
     alignItems: 'center',
@@ -97,7 +93,6 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
           icon={<VisibilityOffOutlined fontSize="small" />}
           checkedIcon={<VisibilityOutlined fontSize="small" />}
           size="small"
-          disableRipple
           slotProps={{
             input: {
               'aria-label': isVisible
