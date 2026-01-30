@@ -1053,6 +1053,47 @@ describe('<DataGridPro /> - Row selection', () => {
         expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([0, 1, 2, 3, 4, 5, 6, 7]);
       });
 
+      it('should preserve selected tree data parents when rows are paged out and back', async () => {
+        function TreeDataServerPaginationSelection() {
+          apiRef = useGridApiRef();
+          const [page, setPage] = React.useState(0);
+          const pageRoots = React.useMemo(() => (page === 0 ? ['Thomas'] : ['Mary']), [page]);
+          const pageRows = React.useMemo(
+            () => rows.filter((row) => pageRoots.includes(row.hierarchy[0])),
+            [pageRoots],
+          );
+
+          return (
+            <div style={{ height: 800, width: '100%' }}>
+              <button type="button" onClick={() => setPage((prev) => 1 - prev)}>
+                Toggle page
+              </button>
+              <DataGridPro
+                apiRef={apiRef}
+                treeData
+                rows={pageRows}
+                columns={columns}
+                getTreeDataPath={getTreeDataPath}
+                checkboxSelection
+                keepNonExistentRowsSelected
+                isRowSelectable={(params) => params.row.hierarchy.length === 1}
+                disableVirtualization
+              />
+            </div>
+          );
+        }
+
+        const { user } = render(<TreeDataServerPaginationSelection />);
+        await user.click(getCell(0, 0).querySelector('input')!);
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1]);
+
+        await user.click(screen.getByRole('button', { name: /toggle page/i }));
+        await user.click(screen.getByRole('button', { name: /toggle page/i }));
+
+        expect(gridRowSelectionIdsSelector(apiRef)).to.have.keys([1]);
+        expect((getCell(0, 0).querySelector('input') as HTMLInputElement).checked).to.equal(true);
+      });
+
       it('should not apply row selection propagation on filtered rows', async () => {
         const { user } = render(
           <SelectionPropagationGrid
