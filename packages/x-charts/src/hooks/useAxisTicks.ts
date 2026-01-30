@@ -14,7 +14,7 @@ export function useXAxisTicks(axisId: AxisId): TickItem[] {
   const axis = xAxes[axisId];
 
   // FIXME: `useAxisTicksProps` does this, but should we do it here?
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: axis, name: 'MuiChartsXAxis' });
 
   const defaultizedProps = {
@@ -46,7 +46,7 @@ export function useYAxisTicks(axisId: AxisId): TickItem[] {
   const axis = yAxes[axisId];
 
   // FIXME: `useAxisTicksProps` does this, but should we do it here?
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: axis, name: 'MuiChartsYAxis' });
 
   const defaultizedProps = {
