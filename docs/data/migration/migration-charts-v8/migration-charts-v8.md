@@ -352,5 +352,6 @@ In v9 the argument of `SeriesItemIdentifier` is now required.
 
 It accept an union of series types.
 For example:
+
 - `SeriesItemIdentifier<'bar'>` for a BarChart.
 - `SeriesItemIdentifier<'bar' | 'line'>` if you compose bar and line series.
