@@ -1240,7 +1240,7 @@ importers:
         specifier: 'catalog:'
         version: 2.1.1
       lru-cache:
-        specifier: ^11.2.2
+        specifier: ^11.2.5
         version: 11.2.5
     devDependencies:
       '@mui/icons-material':
