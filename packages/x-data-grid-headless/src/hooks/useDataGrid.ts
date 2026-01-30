@@ -4,17 +4,16 @@ import { useRefWithInit } from '@base-ui/utils/useRefWithInit';
 import { Store, useStore, type ReadonlyStore } from '@base-ui/utils/store';
 import {
   type AnyPlugin,
-  type BaseApi,
   type PluginsApi,
   type PluginsColumnMeta,
   type PluginsOptions,
   type PluginsState,
   PluginRegistry,
 } from '../plugins/core';
-import { type InternalPluginsApi } from '../plugins/internal';
 import type { ColumnState, ColumnLookup } from '../plugins/internal/columns/columnUtils';
 import rowsPlugin from '../plugins/internal/rows/rows';
 import columnsPlugin from '../plugins/internal/columns/columns';
+import elementsPlugin from '../plugins/internal/elements';
 
 type UseDataGridOptions<TPlugins extends readonly AnyPlugin[], TRow = any> = PluginsOptions<
   TPlugins,
@@ -67,10 +66,11 @@ interface DataGridInstance<TPlugins extends readonly AnyPlugin[], TRow = any> {
   api: DataGridApi<TPlugins, TRow>;
 }
 
+const internalPlugins = [rowsPlugin, columnsPlugin, elementsPlugin];
+
 export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow extends object = any>(
   options: UseDataGridOptions<TPlugins, TRow>,
 ): DataGridInstance<TPlugins, TRow> => {
-  const internalPlugins = [rowsPlugin, columnsPlugin];
   const { pluginRegistry, stateStore } = useRefWithInit(() => {
     const registry = new PluginRegistry(internalPlugins, options.plugins);
 
@@ -91,22 +91,16 @@ export const useDataGrid = <const TPlugins extends readonly AnyPlugin[], TRow ex
     };
   }).current;
 
-  const baseApi = useRefWithInit(() => {
+  const api = useRefWithInit(() => {
     return {
       pluginRegistry,
-    } as unknown as BaseApi & InternalPluginsApi<TRow>;
+    } as DataGridApi<TPlugins, TRow>;
   }).current;
 
   internalPlugins.forEach((plugin: AnyPlugin) => {
-    const pluginApi = plugin.use(stateStore, options as any, baseApi);
-    Object.assign(baseApi, pluginApi);
+    const pluginApi = plugin.use(stateStore, options as any, api);
+    Object.assign(api, pluginApi);
   });
-
-  const api = useRefWithInit(() => {
-    return {
-      ...baseApi,
-    } as DataGridApi<TPlugins, TRow>;
-  }).current;
 
   // Pass the accumulating api object so dependencies' APIs are available
   pluginRegistry.forEachUserPlugin((plugin) => {

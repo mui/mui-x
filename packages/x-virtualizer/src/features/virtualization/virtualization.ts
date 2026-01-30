@@ -703,7 +703,7 @@ function useVirtualization(store: Store<BaseState>, params: ParamsWithDefaults, 
   };
 }
 
-function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
+export function useRefCallback(fn: (node: HTMLDivElement) => (() => void) | undefined) {
   const refCleanup = React.useRef<() => void | undefined>(undefined);
   const refCallback = useEventCallback((node: HTMLDivElement | null) => {
     if (!node) {
