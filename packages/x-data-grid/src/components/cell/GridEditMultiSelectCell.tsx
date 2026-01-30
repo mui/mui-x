@@ -3,7 +3,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import { BaseAutocompletePropsOverrides } from '@mui/x-data-grid-pro';
+import { BaseAutocompletePropsOverrides } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import type { AutocompleteProps } from '../../models/gridBaseSlots';
