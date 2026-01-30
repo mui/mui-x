@@ -208,8 +208,8 @@ catalogs:
       specifier: ^4.21.0
       version: 4.21.0
     type-fest:
-      specifier: ^5.3.1
-      version: 5.3.1
+      specifier: ^5.4.2
+      version: 5.4.2
     use-sync-external-store:
       specifier: ^1.6.0
       version: 1.6.0
@@ -1279,7 +1279,7 @@ importers:
         version: 15.8.1
       type-fest:
         specifier: 'catalog:'
-        version: 5.3.1
+        version: 5.4.2
     devDependencies:
       '@mui/internal-test-utils':
         specifier: 'catalog:'
@@ -11670,8 +11670,8 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  type-fest@5.3.1:
-    resolution: {integrity: sha512-VCn+LMHbd4t6sF3wfU/+HKT63C9OoyrSIf4b+vtWHpt2U7/4InZG467YDNMFMR70DdHjAdpPWmw2lzRdg0Xqqg==}
+  type-fest@5.4.2:
+    resolution: {integrity: sha512-FLEenlVYf7Zcd34ISMLo3ZzRE1gRjY1nMDTp+bQRBiPsaKyIW8K3Zr99ioHDUgA9OGuGGJPyYpNcffGmBhJfGg==}
     engines: {node: '>=20'}
 
   type-is@2.0.1:
@@ -23534,7 +23534,7 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@5.3.1:
+  type-fest@5.4.2:
     dependencies:
       tagged-tag: 1.0.0
 
