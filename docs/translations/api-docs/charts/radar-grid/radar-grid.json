@@ -12,5 +12,18 @@
       }
     }
   },
-  "classDescriptions": {}
+  "classDescriptions": {
+    "divider": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every divider element"
+    },
+    "radial": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every radial line element"
+    },
+    "stripe": {
+      "description": "Styles applied to {{nodeName}}.",
+      "nodeName": "every stripe element"
+    }
+  }
 }

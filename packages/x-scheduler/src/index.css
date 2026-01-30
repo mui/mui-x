@@ -1,7 +1,6 @@
 @import './styles/index.css';
 @import './styles/colors.css';
 @import './styles/tokens.css';
-@import './styles/utils.css';
 
 html,
 body {

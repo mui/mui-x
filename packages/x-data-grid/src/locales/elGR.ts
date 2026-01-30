@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const elGRGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const elGRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Συμπαγής',
   toolbarDensityStandard: 'Προκαθορισμένο',
   toolbarDensityComfortable: 'Πλατύ',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Αναίρεση',
+  toolbarRedo: 'Επανάληψη',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Στήλες',
@@ -162,6 +166,10 @@ const elGRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ναί',
   booleanCellFalseLabel: 'όχι',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Ανάπτυξη',
+  longTextCellCollapseLabel: 'Σύμπτυξη',
 
   // Actions cell more text
   actionsCellMore: 'περισσότερα',

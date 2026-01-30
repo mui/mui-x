@@ -44,15 +44,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/chart-container',
-    title: 'ChartContainer',
-  },
-  {
-    pathname: '/x/api/charts/chart-container-pro',
-    title: 'ChartContainerPro',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/chart-data-provider',
     title: 'ChartDataProvider',
   },
@@ -85,6 +76,20 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
+  },
+  {
+    pathname: '/x/api/charts/charts-container',
+    title: 'ChartsContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-premium',
+    title: 'ChartsContainerPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-pro',
+    title: 'ChartsContainerPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-grid',
@@ -169,6 +174,30 @@ const chartsApiPages: MuiPage[] = [
     title: 'ContinuousColorLegend',
   },
   {
+    pathname: '/x/api/charts/focused-funnel-section',
+    title: 'FocusedFunnelSection',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-heatmap-cell',
+    title: 'FocusedHeatmapCell',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-radar-mark',
+    title: 'FocusedRadarMark',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-link',
+    title: 'FocusedSankeyLink',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/focused-sankey-node',
+    title: 'FocusedSankeyNode',
+    plan: 'pro',
+  },
+  {
     pathname: '/x/api/charts/funnel-chart',
     title: 'FunnelChart',
     plan: 'pro',
@@ -195,6 +224,11 @@ const chartsApiPages: MuiPage[] = [
     pathname: '/x/api/charts/heatmap-plot',
     title: 'HeatmapPlot',
     plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/heatmap-premium',
+    title: 'HeatmapPremium',
+    plan: 'premium',
   },
   {
     pathname: '/x/api/charts/heatmap-tooltip',
@@ -317,6 +351,11 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/sankey-chart',
     title: 'SankeyChart',
+    plan: 'pro',
+  },
+  {
+    pathname: '/x/api/charts/sankey-data-provider',
+    title: 'SankeyDataProvider',
     plan: 'pro',
   },
   {

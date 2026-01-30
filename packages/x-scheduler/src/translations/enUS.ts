@@ -1,9 +1,9 @@
 import { SchedulerTranslations } from '../models/translations';
 
 export const enUS: SchedulerTranslations = {
-  // ResourceLegend
+  // ResourcesLegend
   hideEventsLabel: (resourceName) => `Hide events for ${resourceName}`,
-  resourceLegendSectionLabel: 'Resource legend',
+  resourcesLegendSectionLabel: 'Resource legend',
   showEventsLabel: (resourceName) => `Show events for ${resourceName}`,
 
   // ViewSwitcher
@@ -48,7 +48,7 @@ export const enUS: SchedulerTranslations = {
   // EventItem
   eventItemMultiDayLabel: (endDate) => `Ends ${endDate}`,
 
-  // EventPopover
+  // EventDraggableDialog
   allDayLabel: 'All Day',
   closeButtonAriaLabel: 'Close modal',
   closeButtonLabel: 'Close',
@@ -101,4 +101,7 @@ export const enUS: SchedulerTranslations = {
   radioGroupAriaLabel: 'Editing recurring events scope',
   thisAndFollowing: 'This and following events',
   title: 'Apply this change to:',
+
+  // General
+  loading: 'Loading...',
 };

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const hyAMGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Կոմպակտ',
   toolbarDensityStandard: 'Ստանդարտ',
   toolbarDensityComfortable: 'Հարմարավետ',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Հետսարկել',
+  toolbarRedo: 'Կրկնվել',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Սյունակներ',
@@ -180,6 +184,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'այո',
   booleanCellFalseLabel: 'ոչ',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Բացել',
+  longTextCellCollapseLabel: 'Փակել',
 
   // Actions cell more text
   actionsCellMore: 'ավելին',

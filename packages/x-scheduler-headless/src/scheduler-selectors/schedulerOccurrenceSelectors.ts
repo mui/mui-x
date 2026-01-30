@@ -6,10 +6,10 @@ import {
   SchedulerResource,
   TemporalSupportedObject,
 } from '../models';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 import { schedulerEventSelectors } from './schedulerEventSelectors';
 import { schedulerResourceSelectors } from './schedulerResourceSelectors';
-import { getOccurrencesFromEvents } from '../utils/event-utils';
+import { getOccurrencesFromEvents } from '../internals/utils/event-utils';
 import { schedulerOtherSelectors } from './schedulerOtherSelectors';
 
 const occurrencesGroupedByResourceListSelector = createSelectorMemoized(

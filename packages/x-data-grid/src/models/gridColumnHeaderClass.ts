@@ -1,4 +1,4 @@
-import { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
+import type { GridColumnHeaderParams } from './params/gridColumnHeaderParams';
 
 /**
  * A function used to process headerClassName params.

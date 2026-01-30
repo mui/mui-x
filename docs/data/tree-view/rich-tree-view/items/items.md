@@ -156,6 +156,58 @@ When it's set to true:
 
 {{"demo": "DisabledItemsFocusable.js", "defaultCodeOpen": false}}
 
+## Item height
+
+Use the `itemHeight` prop to set the height of each item in the tree.
+If not provided, no height restriction is applied to the tree item content element.
+
+{{"demo": "ItemHeight.js"}}
+
+:::info
+When [virtualization](/x/react-tree-view/rich-tree-view/virtualization/) is enabled, the `itemHeight` defaults to `32px` if this prop is not defined.
+:::
+
+## DOM structure
+
+Use the `domStructure` prop to control how items are rendered in the DOM.
+
+By default, items are rendered with a **nested** structure where children are placed inside their parent:
+
+```html
+<ul>
+  <!-- root -->
+  <li>
+    <!-- Item 1 -->
+    <ul>
+      <!-- Item 1 children -->
+      <li>Item 1.1</li>
+      <li>Item 1.2</li>
+    </ul>
+  </li>
+  <li>Item 2</li>
+</ul>
+```
+
+When `domStructure="flat"` is set, all items are rendered as siblings regardless of their hierarchy:
+
+```html
+<ul>
+  <!-- root -->
+  <li>Item 1</li>
+  <li>Item 1.1</li>
+  <li>Item 1.2</li>
+  <li>Item 2</li>
+</ul>
+```
+
+```tsx
+<RichTreeView items={ITEMS} domStructure="flat" />
+```
+
+:::info
+When [virtualization](/x/react-tree-view/rich-tree-view/virtualization/) is enabled, the `domStructure` defaults to `"flat"` if this prop is not defined.
+:::
+
 ## Track item clicks
 
 Use the `onItemClick` prop to track the clicked item:

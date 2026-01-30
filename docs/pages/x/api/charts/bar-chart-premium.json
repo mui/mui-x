@@ -4,6 +4,7 @@
       "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" },
       "required": true
     },
+    "axesGap": { "type": { "name": "number" }, "default": "0" },
     "axisHighlight": {
       "type": {
         "name": "shape",
@@ -31,6 +32,12 @@
       "type": { "name": "shape", "description": "{ horizontal?: bool, vertical?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "hiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'bar' }&gt;"
+      }
+    },
     "hideLegend": { "type": { "name": "bool" } },
     "highlightedAxis": {
       "type": {
@@ -39,12 +46,15 @@
       }
     },
     "highlightedItem": {
-      "type": {
-        "name": "shape",
-        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
-      }
+      "type": { "name": "shape", "description": "{ dataIndex?: number, seriesId: string }" }
     },
     "id": { "type": { "name": "string" } },
+    "initialHiddenItems": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: 'bar' }&gt;"
+      }
+    },
     "initialZoom": {
       "type": {
         "name": "arrayOf",
@@ -70,6 +80,13 @@
         "describedArgs": ["event", "data"]
       }
     },
+    "onHiddenItemsChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(hiddenItems: Array<VisibilityIdentifier>) => void",
+        "describedArgs": ["hiddenItems"]
+      }
+    },
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
@@ -91,6 +108,13 @@
         "describedArgs": ["event", "itemIdentifier"]
       }
     },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "onZoomChange": {
       "type": { "name": "func" },
       "signature": {
@@ -109,6 +133,12 @@
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex: number, seriesId: string, type: 'bar' }"
+      }
     },
     "width": { "type": { "name": "number" } },
     "xAxis": {
@@ -146,6 +176,111 @@
   "imports": [
     "import { BarChartPremium } from '@mui/x-charts-premium/BarChartPremium';",
     "import { BarChartPremium } from '@mui/x-charts-premium';"
+  ],
+  "slots": [
+    {
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
+    },
+    {
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
+    },
+    {
+      "name": "bar",
+      "description": "The component that renders the bar.",
+      "default": "BarElementPath",
+      "class": null
+    },
+    {
+      "name": "barLabel",
+      "description": "The component that renders the bar label.",
+      "default": "BarLabel",
+      "class": null
+    },
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "legend",
+      "description": "Custom rendering of the legend.",
+      "default": "ChartsLegend",
+      "class": null
+    },
+    {
+      "name": "loadingOverlay",
+      "description": "Overlay component rendered when the chart is in a loading state.",
+      "default": "ChartsLoadingOverlay",
+      "class": null
+    },
+    {
+      "name": "noDataOverlay",
+      "description": "Overlay component rendered when the chart has no data to display.",
+      "default": "ChartsNoDataOverlay",
+      "class": null
+    },
+    {
+      "name": "toolbar",
+      "description": "Custom component for the toolbar.",
+      "default": "ChartsToolbar",
+      "class": null
+    },
+    {
+      "name": "tooltip",
+      "description": "Custom component for the tooltip popper.",
+      "default": "ChartsTooltipRoot",
+      "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
   ],
   "classes": [],
   "spread": true,

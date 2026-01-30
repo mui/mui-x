@@ -1,5 +1,5 @@
 import { createSelector, createSelectorMemoized } from '@base-ui/utils/store';
-import { SchedulerState as State } from '../utils/SchedulerStore/SchedulerStore.types';
+import { SchedulerState as State } from '../internals/utils/SchedulerStore/SchedulerStore.types';
 
 // Warning: Only add selectors here that do not belong to any specific feature.
 export const schedulerOtherSelectors = {
@@ -17,4 +17,6 @@ export const schedulerOtherSelectors = {
    */
   defaultEventColor: createSelector((state: State) => state.eventColor),
   displayTimezone: createSelector((state: State) => state.displayTimezone),
+  isLoading: createSelector((state: State) => state.isLoading),
+  errors: createSelector((state: State) => state.errors),
 };

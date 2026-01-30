@@ -1,0 +1,66 @@
+{
+  "props": {
+    "colors": {
+      "type": { "name": "union", "description": "Array&lt;string&gt;<br>&#124;&nbsp;func" },
+      "default": "blueberryTwilightPalette"
+    },
+    "dataset": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "disableAxisListener": { "type": { "name": "bool" }, "default": "false" },
+    "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "shape",
+        "description": "{ dataIndex?: number, seriesId: number<br>&#124;&nbsp;string }"
+      }
+    },
+    "id": { "type": { "name": "string" } },
+    "initialZoom": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ axisId: number<br>&#124;&nbsp;string, end: number, start: number }&gt;"
+      }
+    },
+    "margin": {
+      "type": {
+        "name": "shape",
+        "description": "{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: HighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
+      }
+    },
+    "onZoomChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(zoomData: Array<ZoomData>) => void",
+        "describedArgs": ["zoomData"]
+      }
+    },
+    "series": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "skipAnimation": { "type": { "name": "bool" } },
+    "width": { "type": { "name": "number" } },
+    "xAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "yAxis": { "type": { "name": "arrayOf", "description": "Array&lt;object&gt;" } },
+    "zAxis": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;{ colorMap?: { colors: Array&lt;string&gt;, type: 'ordinal', unknownColor?: string, values?: Array&lt;Date<br>&#124;&nbsp;number<br>&#124;&nbsp;string&gt; }<br>&#124;&nbsp;{ color: Array&lt;string&gt;<br>&#124;&nbsp;func, max?: Date<br>&#124;&nbsp;number, min?: Date<br>&#124;&nbsp;number, type: 'continuous' }<br>&#124;&nbsp;{ colors: Array&lt;string&gt;, thresholds: Array&lt;Date<br>&#124;&nbsp;number&gt;, type: 'piecewise' }, data?: array, dataKey?: string, id?: string, max?: number, min?: number }&gt;"
+      }
+    }
+  },
+  "name": "ChartsContainerPro",
+  "imports": [
+    "import { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';",
+    "import { ChartsContainerPro } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiChartsContainerPro",
+  "filename": "/packages/x-charts-pro/src/ChartsContainerPro/ChartsContainerPro.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/composition/\">Charts - Composition</a></li></ul>",
+  "cssComponent": false
+}

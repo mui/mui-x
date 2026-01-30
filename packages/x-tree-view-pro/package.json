@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-tree-view-pro",
-  "version": "8.23.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Tree View components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -43,6 +43,7 @@
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
     "@mui/x-tree-view": "workspace:*",
+    "@mui/x-virtualizer": "workspace:*",
     "@types/react-transition-group": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:",

@@ -7,7 +7,7 @@ import { useCompositeListItem } from '../../base-ui-copy/composite/list/useCompo
 import { useAdapter } from '../../use-adapter';
 import { useEventCalendarStoreContext } from '../../use-event-calendar-store-context';
 import { SchedulerProcessedDate, TemporalSupportedObject } from '../../models';
-import { getCalendarGridHeaderCellId } from '../../utils/accessibility-utils';
+import { getCalendarGridHeaderCellId } from '../../internals/utils/accessibility-utils';
 import { useCalendarGridRootContext } from '../root/CalendarGridRootContext';
 import { schedulerNowSelectors } from '../../scheduler-selectors';
 import { EventCalendarState as State } from '../../use-event-calendar';

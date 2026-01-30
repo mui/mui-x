@@ -30,7 +30,7 @@ describe.for([
     const { user } = render(
       <TestWrapper>
         <MarkElementComponent
-          id="s1"
+          seriesId="s1"
           dataIndex={0}
           x={10}
           y={10}
@@ -48,7 +48,7 @@ describe.for([
     expect(mark.getAttribute('opacity')).to.equal('0');
 
     // It throws because `click` event cannot be fired on an element with `pointer-events: none`
-    await expect(user.click(mark)).rejects.toThrow();
+    await expect(async () => user.click(mark)).rejects.toThrow();
     expect(onClick).not.toHaveBeenCalled();
   });
 
@@ -57,7 +57,7 @@ describe.for([
     const { user } = render(
       <TestWrapper>
         <CircleMarkElement
-          id="s1"
+          seriesId="s1"
           dataIndex={0}
           x={10}
           y={10}

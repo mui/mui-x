@@ -105,6 +105,7 @@ export function ChartsXAxisImpl({ axis, ...inProps }: ChartsXAxisImplProps) {
     <XAxisRoot
       transform={`translate(0, ${position === 'bottom' ? top + height + offset : top - offset})`}
       className={classes.root}
+      data-axis-id={defaultizedProps.id}
       sx={sx}
     >
       {!disableLine && (

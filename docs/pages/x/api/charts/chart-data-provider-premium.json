@@ -28,6 +28,33 @@
     "import { ChartDataProviderPremium } from '@mui/x-charts-premium/ChartDataProviderPremium';",
     "import { ChartDataProviderPremium } from '@mui/x-charts-premium';"
   ],
+  "slots": [
+    { "name": "baseButton", "description": "", "class": null },
+    { "name": "baseDivider", "description": "", "class": null },
+    { "name": "baseIconButton", "description": "", "class": null },
+    { "name": "baseMenuItem", "description": "", "class": null },
+    { "name": "baseMenuList", "description": "", "class": null },
+    { "name": "basePopper", "description": "", "class": null },
+    { "name": "baseTooltip", "description": "", "class": null },
+    {
+      "name": "exportIcon",
+      "description": "Icon displayed on the toolbar's export button.",
+      "default": "ChartsExportIcon",
+      "class": null
+    },
+    {
+      "name": "zoomInIcon",
+      "description": "Icon displayed on the toolbar's zoom in button.",
+      "default": "ChartsZoomInIcon",
+      "class": null
+    },
+    {
+      "name": "zoomOutIcon",
+      "description": "Icon displayed on the toolbar's zoom out button.",
+      "default": "ChartsZoomOutIcon",
+      "class": null
+    }
+  ],
   "classes": [],
   "spread": false,
   "themeDefaultProps": false,
