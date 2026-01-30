@@ -1249,6 +1249,7 @@ describe('<EventDraggableDialogContent open />', () => {
       );
 
       expect(document.querySelector('.MuiEventCalendar-eventDialog')).not.to.equal(null);
+      expect(document.querySelector('.MuiEventCalendar-eventDialogCloseButton')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogDragHandle')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeader')).not.to.equal(null);
       expect(document.querySelector('.MuiEventCalendar-eventDialogHeaderContent')).not.to.equal(
