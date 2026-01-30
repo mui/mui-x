@@ -1,5 +1,6 @@
+'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { vars } from '@mui/x-data-grid-pro/internals';
 import composeClasses from '@mui/utils/composeClasses';
 import { getDataGridUtilityClass, gridClasses } from '@mui/x-data-grid-pro';
@@ -7,7 +8,7 @@ import clsx from 'clsx';
 import { useResize } from '../../hooks/utils/useResize';
 import { useResizablePanelContext } from './ResizablePanelContext';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
 
 export type ResizablePanelHandleProps = React.HTMLAttributes<HTMLDivElement>;
 

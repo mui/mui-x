@@ -1,6 +1,6 @@
 import { config } from 'react-transition-group';
 import { act, createRenderer, fireEvent, screen } from '@mui/internal-test-utils';
-import { gridClasses, DataGridPro, DataGridProProps } from '@mui/x-data-grid-pro';
+import { gridClasses, DataGridPro, type DataGridProProps } from '@mui/x-data-grid-pro';
 import { getColumnHeaderCell, getColumnValues } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 import { vi } from 'vitest';

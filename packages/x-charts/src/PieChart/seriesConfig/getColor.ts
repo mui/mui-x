@@ -1,4 +1,4 @@
-import { type ColorProcessor } from '../../internals/plugins/models';
+import { type ColorProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const getColor: ColorProcessor<'pie'> = (series) => {
   return (dataIndex: number) => {

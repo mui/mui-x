@@ -1,5 +1,5 @@
 import { act, createRenderer } from '@mui/internal-test-utils';
-import { DataGridPremium, DataGridPremiumProps } from '@mui/x-data-grid-premium';
+import { DataGridPremium, type DataGridPremiumProps } from '@mui/x-data-grid-premium';
 import { isJSDOM } from 'test/utils/skipIf';
 
 describe('<DataGridPremium /> - Row spanning', () => {

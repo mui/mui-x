@@ -3,4 +3,6 @@ export { useSingleInputDateRangeField as unstable_useSingleInputDateRangeField }
 export type {
   UseSingleInputDateRangeFieldProps,
   SingleInputDateRangeFieldProps,
+  SingleInputDateRangeFieldSlots,
+  SingleInputDateRangeFieldSlotProps,
 } from './SingleInputDateRangeField.types';

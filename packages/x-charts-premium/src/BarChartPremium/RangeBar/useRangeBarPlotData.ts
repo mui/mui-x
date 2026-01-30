@@ -6,7 +6,6 @@ import {
   type D3Scale,
   getBandSize,
   type ScaleName,
-  selectorChartSeriesConfig,
   useStore,
 } from '@mui/x-charts/internals';
 import { type ChartsXAxisProps, type ChartsYAxisProps } from '@mui/x-charts/models';
@@ -23,7 +22,7 @@ export function useRangeBarPlotData(
   const seriesData = useRangeBarSeriesContext() ?? { series: {}, seriesOrder: [] };
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
-  const getColor = store.use(selectorChartSeriesConfig).rangeBar.colorProcessor;
+  const getColor = store.state.seriesConfig.config.rangeBar.colorProcessor;
 
   const { series, seriesOrder } = seriesData;
 
@@ -97,6 +96,7 @@ export function useRangeBarPlotData(
         width: verticalLayout ? barWidth : barSize,
         color: colorGetter(dataIndex),
         value: currentSeriesData[dataIndex],
+        hidden: series[seriesId].hidden,
       };
 
       if (

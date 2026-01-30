@@ -86,7 +86,7 @@ function MarkPlot(props: MarkPlotProps) {
 
   return (
     <g {...other}>
-      {completedData.map(({ seriesId, clipId, shape, xAxisId, marks }) => {
+      {completedData.map(({ seriesId, clipId, shape, xAxisId, marks, hidden }) => {
         const Mark = slots?.mark ?? (shape === 'circle' ? CircleMarkElement : MarkElement);
 
         const isSeriesHighlighted = isHighlighted({ seriesId });
@@ -98,7 +98,7 @@ function MarkPlot(props: MarkPlotProps) {
               return (
                 <Mark
                   key={`${seriesId}-${index}`}
-                  id={seriesId}
+                  seriesId={seriesId}
                   dataIndex={index}
                   shape={shape}
                   color={color}
@@ -111,6 +111,7 @@ function MarkPlot(props: MarkPlotProps) {
                   }
                   isHighlighted={highlightedItems[xAxisId]?.has(index) || isSeriesHighlighted}
                   isFaded={isSeriesFaded}
+                  hidden={hidden}
                   {...slotProps?.mark}
                 />
               );

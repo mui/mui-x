@@ -12,7 +12,6 @@ import { visibilityParamToMap } from './visibilityParamToMap';
 export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSignature<any>> = ({
   store,
   params,
-  seriesConfig,
   instance,
 }) => {
   // Manage controlled state
@@ -34,9 +33,9 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
     }
     store.set('visibilityManager', {
       ...store.state.visibilityManager,
-      visibilityMap: visibilityParamToMap(params.hiddenItems, seriesConfig),
+      visibilityMap: visibilityParamToMap(params.hiddenItems, store.state.seriesConfig.config),
     });
-  }, [store, params.hiddenItems, seriesConfig]);
+  }, [store, params.hiddenItems]);
 
   const hideItem = useEventCallback((identifier: VisibilityIdentifier) => {
     const visibilityMap = store.state.visibilityManager.visibilityMap;
@@ -96,16 +95,21 @@ export const useChartVisibilityManager: ChartPlugin<UseChartVisibilityManagerSig
   };
 };
 
-useChartVisibilityManager.getInitialState = (params, _, seriesConfig) => ({
-  visibilityManager: {
-    visibilityMap: params.hiddenItems
-      ? visibilityParamToMap(params.hiddenItems, seriesConfig)
-      : EMPTY_VISIBILITY_MAP,
-    isControlled: params.hiddenItems !== undefined,
-  },
-});
+useChartVisibilityManager.getInitialState = (params, currentState) => {
+  const seriesConfig = currentState.seriesConfig.config;
+  const initialItems = params.hiddenItems ?? params.initialHiddenItems;
+  return {
+    visibilityManager: {
+      visibilityMap: initialItems
+        ? visibilityParamToMap(initialItems, seriesConfig)
+        : EMPTY_VISIBILITY_MAP,
+      isControlled: params.hiddenItems !== undefined,
+    },
+  };
+};
 
 useChartVisibilityManager.params = {
   onHiddenItemsChange: true,
   hiddenItems: true,
+  initialHiddenItems: true,
 };

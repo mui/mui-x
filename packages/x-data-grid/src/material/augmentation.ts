@@ -15,6 +15,7 @@ import type { TablePaginationProps } from '@mui/material/TablePagination';
 import type { PopperProps } from '@mui/material/Popper';
 import type { TooltipProps } from '@mui/material/Tooltip';
 import type { InputProps } from '@mui/material/Input';
+import type { TextareaAutosizeProps } from '@mui/material/TextareaAutosize';
 import type { SelectProps } from '@mui/material/Select';
 import type { SkeletonProps } from '@mui/material/Skeleton';
 import type { ToggleButtonProps } from '@mui/material/ToggleButton';
@@ -77,6 +78,9 @@ declare module '@mui/x-data-grid' {
   }
   interface BaseInputPropsOverrides {
     material?: Partial<InputProps>;
+  }
+  interface BaseTextareaPropsOverrides {
+    material?: Partial<TextareaAutosizeProps>;
   }
   interface BaseSelectPropsOverrides {
     material?: Partial<SelectProps>;

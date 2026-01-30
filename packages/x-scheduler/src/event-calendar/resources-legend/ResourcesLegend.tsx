@@ -1,6 +1,7 @@
 'use client';
 import * as React from 'react';
-import { Eye, EyeClosed } from 'lucide-react';
+import VisibilityOffOutlined from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -9,9 +10,11 @@ import { useStableCallback } from '@base-ui/utils/useStableCallback';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import { schedulerResourceSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
 import { SchedulerResource } from '@mui/x-scheduler-headless/models';
+import clsx from 'clsx';
 import { ResourcesLegendProps } from './ResourcesLegend.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { schedulerPaletteStyles } from '../../internals/utils/tokens';
+import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const ResourcesLegendRoot = styled('section', {
   name: 'MuiEventCalendar',
@@ -66,12 +69,18 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
   const { resource, isVisible, onToggle } = props;
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
   const eventColor = useStore(store, schedulerResourceSelectors.defaultEventColor, resource.id);
 
   return (
-    <ResourcesLegendItemRoot>
-      <ResourcesLegendItemColorDot data-palette={eventColor} />
-      <ResourcesLegendItemName>{resource.title}</ResourcesLegendItemName>
+    <ResourcesLegendItemRoot className={classes.resourcesLegendItem}>
+      <ResourcesLegendItemColorDot
+        className={classes.resourcesLegendItemColorDot}
+        data-palette={eventColor}
+      />
+      <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
+        {resource.title}
+      </ResourcesLegendItemName>
       <IconButton
         size="small"
         onClick={(event) => onToggle(resource.id, event)}
@@ -83,9 +92,9 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
         sx={{ ml: 'auto' }}
       >
         {isVisible ? (
-          <Eye size={16} strokeWidth={1.5} />
+          <VisibilityOutlined fontSize="small" />
         ) : (
-          <EyeClosed size={16} strokeWidth={1.5} />
+          <VisibilityOffOutlined fontSize="small" />
         )}
       </IconButton>
     </ResourcesLegendItemRoot>
@@ -98,6 +107,7 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
 ) {
   const translations = useTranslations();
   const store = useEventCalendarStoreContext();
+  const classes = useEventCalendarClasses();
   const resources = useStore(store, schedulerResourceSelectors.processedResourceList);
   const visibleResourcesList = useStore(store, schedulerResourceSelectors.visibleIdList);
 
@@ -117,6 +127,7 @@ export const ResourcesLegend = React.forwardRef(function ResourcesLegend(
       ref={forwardedRef}
       aria-label={translations.resourcesLegendSectionLabel}
       {...props}
+      className={clsx(props.className, classes.resourcesLegend)}
     >
       {resources.map((resource) => (
         <ResourcesLegendItem

@@ -48,7 +48,7 @@ export interface SchedulerTranslations {
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;
 
-  // EventPopover
+  // EventDraggableDialog
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
@@ -101,4 +101,7 @@ export interface SchedulerTranslations {
   radioGroupAriaLabel: string;
   thisAndFollowing: string;
   title: string;
+
+  // General
+  loading: string;
 }

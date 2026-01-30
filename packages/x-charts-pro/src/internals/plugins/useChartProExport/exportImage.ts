@@ -1,6 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import { applyStyles, createExportIframe } from './common';
+import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
 import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
@@ -18,7 +18,7 @@ export const getDrawDocument = async () => {
 };
 
 export async function exportImage(
-  element: HTMLElement | SVGElement,
+  element: Element,
   svg: SVGElement,
   params?: ChartImageExportOptions,
 ) {
@@ -46,7 +46,7 @@ export async function exportImage(
 
   iframe.onload = async () => {
     const exportDoc = iframe.contentDocument!;
-    const elementClone = element.cloneNode(true) as HTMLElement;
+    const elementClone = element.cloneNode(true) as Element;
     applyStyles(svg, previousStyles);
     exportDoc.body.replaceChildren(elementClone);
     exportDoc.body.style.margin = '0px';
@@ -61,6 +61,8 @@ export async function exportImage(
     if (copyStyles) {
       await Promise.all(loadStyleSheets(exportDoc, root, nonce));
     }
+
+    await copyCanvasesContent(element, elementClone);
 
     resolve();
   };

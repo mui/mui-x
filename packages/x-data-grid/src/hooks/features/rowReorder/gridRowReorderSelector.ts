@@ -1,5 +1,5 @@
 import { createRootSelector, createSelector } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import type { GridRowId } from '../../../models/gridRows';
 
 export const gridRowReorderStateSelector = createRootSelector(

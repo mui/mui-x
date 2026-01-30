@@ -27,6 +27,7 @@ export interface MarkPlotSeriesData {
   shape: 'circle' | 'cross' | 'diamond' | 'square' | 'star' | 'triangle' | 'wye';
   xAxisId: AxisId;
   marks: MarkPlotDataPoint[];
+  hidden: boolean;
 }
 
 export function useMarkPlotData(
@@ -55,10 +56,11 @@ export function useMarkPlotData(
         const {
           xAxisId = defaultXAxisId,
           yAxisId = defaultYAxisId,
-          stackedData,
+          visibleStackedData,
           data,
           showMark = true,
           shape = 'circle',
+          hidden,
         } = series[seriesId];
 
         if (showMark === false) {
@@ -93,13 +95,15 @@ export function useMarkPlotData(
         if (xData) {
           for (let index = 0; index < xData.length; index += 1) {
             const x = xData[index];
-            const value = data[index] == null ? null : stackedData[index][1];
+            const value = data[index] == null ? null : visibleStackedData[index][1];
 
             if (value === null) {
               continue;
             }
 
-            const y = yScale(value)!;
+            // The line fade animation move all the values to the min.
+            // So we need to do the same with mark in order for it to look nice.
+            const y = yScale(hidden ? (yScale.domain()[0] as number) : value)!;
             const xPos = xScale(x);
 
             if (!instance.isPointInside(xPos, y)) {
@@ -134,6 +138,7 @@ export function useMarkPlotData(
           shape,
           xAxisId,
           marks,
+          hidden,
         });
       }
     }

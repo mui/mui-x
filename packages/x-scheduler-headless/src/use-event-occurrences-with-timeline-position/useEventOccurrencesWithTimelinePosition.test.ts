@@ -1,8 +1,8 @@
 import { adapter, EventBuilder } from 'test/utils/scheduler';
 import { renderHook } from '@mui/internal-test-utils';
+import { SchedulerProcessedEvent } from '@mui/x-scheduler-headless/models';
+import { getOccurrencesFromEvents } from '@mui/x-scheduler-headless/internals';
 import { useEventOccurrencesWithTimelinePosition } from './useEventOccurrencesWithTimelinePosition';
-import { getOccurrencesFromEvents } from '../utils/event-utils';
-import { SchedulerProcessedEvent } from '../models';
 
 describe('useDayListEventOccurrencesWithPosition', () => {
   const collectionStart = adapter.date('2024-01-15', 'default');

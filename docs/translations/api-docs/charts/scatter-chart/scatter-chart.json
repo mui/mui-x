@@ -1,6 +1,9 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "axesGap": {
+      "description": "A gap added between axes when multiple axes are rendered on the same side of the chart."
+    },
     "axisHighlight": {
       "description": "The configuration of axes highlight.",
       "seeMoreText": "See {{link}} for more details."
@@ -29,6 +32,9 @@
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialHiddenItems": {
+      "description": "List of initially hidden series and/or items. Used for uncontrolled state.<br>Different chart types use different keys."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
@@ -79,6 +85,12 @@
         }
       }
     },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
     "renderer": {
       "description": "The type of renderer to use for the scatter plot. - <code>svg-single</code>: Renders every scatter item in a <code>&lt;circle /&gt;</code> element. - <code>svg-batch</code>: Batch renders scatter items in <code>&lt;path /&gt;</code> elements for better performance with large datasets, at the cost of some limitations.                Read more: <a href=\"https://mui.com/x/react-charts/scatter/#performance\">https://mui.com/x/react-charts/scatter/#performance</a>"
     },
@@ -91,6 +103,7 @@
     },
     "slotProps": { "description": "The props used for each component slot." },
     "slots": { "description": "Overridable component slots." },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "voronoiMaxRadius": {
       "description": "Defines the maximum distance between a scatter point and the pointer that triggers the interaction. If set to <code>&#39;item&#39;</code>, the radius is the <code>markerSize</code>. If <code>undefined</code>, the radius is assumed to be infinite."
     },
@@ -119,6 +132,8 @@
     "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
     "scatter": "",
     "toolbar": "Custom component for the toolbar.",
-    "tooltip": "Custom component for the tooltip popper."
+    "tooltip": "Custom component for the tooltip popper.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
   }
 }

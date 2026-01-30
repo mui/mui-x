@@ -7,8 +7,9 @@ import {
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { WeekView } from '@mui/x-scheduler/week-view';
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { EventCalendarProvider } from '@mui/x-scheduler-headless/event-calendar-provider';
+import { EventCalendar, eventCalendarClasses } from '@mui/x-scheduler/event-calendar';
+import { EventDraggableDialogProvider } from '../internals/components/event-draggable-dialog';
+import { EventCalendarProvider } from '../internals/components/EventCalendarProvider';
 
 const multiDayEvent = EventBuilder.new()
   .span('2025-05-05T00:00:00Z', '2025-05-07T23:59:59Z')
@@ -34,7 +35,9 @@ describe('<WeekView />', () => {
           events={[EventBuilder.new().span('2025-05-05Z', '2025-05-07Z', { allDay: true }).build()]}
           resources={[]}
         >
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -47,7 +50,7 @@ describe('<WeekView />', () => {
               `DayTimeGridHeaderCell-${date} DayTimeGridAllDayEventsHeaderCell`,
             );
           })!
-          .querySelectorAll('.EventContainer');
+          .querySelectorAll(`.${eventCalendarClasses.dayGridEvent}`);
       };
 
       // Main event should render in the start date cell
@@ -64,7 +67,9 @@ describe('<WeekView />', () => {
     it('should render all-day event in first cell of week when event starts before the week', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -83,7 +88,9 @@ describe('<WeekView />', () => {
     it('should place invisible events on the same grid row as the main event', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -121,7 +128,9 @@ describe('<WeekView />', () => {
 
       render(
         <EventCalendarProvider events={overlappingEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -149,7 +158,9 @@ describe('<WeekView />', () => {
     it('should render all-day events with correct grid column span', () => {
       render(
         <EventCalendarProvider events={allDayEvents} resources={[]}>
-          <WeekView />
+          <EventDraggableDialogProvider>
+            <WeekView />
+          </EventDraggableDialogProvider>
         </EventCalendarProvider>,
       );
 
@@ -229,17 +240,6 @@ describe('<WeekView />', () => {
       expect(todayColumn).to.equal(null);
     });
 
-    it('hides hour labels close to the indicator', () => {
-      // 12:10 => the 12 hour label should be hidden
-      const visibleDate = adapter.date('2025-05-04T12:10:00Z', 'default');
-
-      render(<EventCalendar events={[]} visibleDate={visibleDate} view="week" />);
-
-      // Time labels that should be hidden now use data-hidden attribute
-      const hiddenLabels = document.querySelectorAll('time[data-hidden]');
-      expect(hiddenLabels.length).to.be.greaterThan(0);
-    });
-
     it('respects flag: hides indicator when showCurrentTimeIndicator is false', () => {
       const visibleDate = adapter.date('2025-05-04T00:00:00Z', 'default');
 
@@ -254,8 +254,6 @@ describe('<WeekView />', () => {
 
       const indicators = document.querySelectorAll('[data-current-time]');
       expect(indicators.length).to.equal(0);
-      const hiddenLabels = document.querySelectorAll('time[data-hidden]');
-      expect(hiddenLabels.length).to.equal(0);
     });
   });
 });
