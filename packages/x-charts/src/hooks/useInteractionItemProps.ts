@@ -19,8 +19,8 @@ function onPointerDown(event: React.PointerEvent) {
   }
 }
 
-export const useInteractionItemProps = (
-  data: SeriesItemIdentifierWithData,
+export const useInteractionItemProps = <SeriesType extends ChartSeriesType>(
+  data: SeriesItemIdentifierWithData<SeriesType>,
   skip?: boolean,
 ): {
   onPointerEnter?: () => void;
