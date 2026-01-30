@@ -78,9 +78,8 @@ export default async function buildGridSelectorsDocumentation(
     .filter((el): el is Selector => !!el)
     .sort((a, b) => (a.name > b.name ? 1 : -1));
 
-  writePrettifiedFile(
+  await writePrettifiedFile(
     path.resolve(apiPagesFolder, project.documentationFolderName, `selectors.json`),
     JSON.stringify(selectors),
-    project,
   );
 }

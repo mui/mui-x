@@ -128,7 +128,6 @@ export default async function buildGridEventsDocumentation(
   await writePrettifiedFile(
     path.resolve(defaultProject.workspaceRoot, 'docs/data/data-grid/events/events.json'),
     JSON.stringify(sortedEvents),
-    defaultProject,
   );
 
   // eslint-disable-next-line no-console

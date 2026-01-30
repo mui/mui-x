@@ -42,6 +42,8 @@
     "skipAnimation": {
       "description": "If <code>true</code>, animations are skipped. If unset or <code>false</code>, the animations respects the user&#39;s <code>prefers-reduced-motion</code> setting."
     },
+    "slotProps": { "description": "The props for the slots." },
+    "slots": { "description": "Slots to customize charts&#39; components." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
