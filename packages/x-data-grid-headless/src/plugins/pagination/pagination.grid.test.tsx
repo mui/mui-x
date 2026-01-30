@@ -490,9 +490,7 @@ describe('Pagination Plugin - Integration Tests', () => {
   describe('edge cases', () => {
     it('should handle empty rows', () => {
       const apiRef = React.createRef<GridApi | null>();
-      render(
-        <TestDataGrid rows={[] as TestRow[]} columns={defaultColumns} apiRef={apiRef} />,
-      );
+      render(<TestDataGrid rows={[] as TestRow[]} columns={defaultColumns} apiRef={apiRef} />);
 
       const state = apiRef.current?.getState();
       expect(state?.pagination.paginatedRowIds).toEqual([]);

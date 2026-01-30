@@ -130,10 +130,7 @@ describe('Pagination Plugin', () => {
       });
 
       it('should handle string row IDs', () => {
-        expect(paginateRowIds(['a', 'b', 'c', 'd'], { page: 1, pageSize: 2 })).toEqual([
-          'c',
-          'd',
-        ]);
+        expect(paginateRowIds(['a', 'b', 'c', 'd'], { page: 1, pageSize: 2 })).toEqual(['c', 'd']);
       });
 
       it('should return all rows when pageSize is Infinity', () => {

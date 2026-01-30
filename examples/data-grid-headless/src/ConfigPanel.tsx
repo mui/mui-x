@@ -1,7 +1,14 @@
 'use client';
 import * as React from 'react';
 import type { SortingOptions, GridSortDirection } from '@mui/x-data-grid-headless/plugins/sorting';
-import { SettingsIcon, SortIcon, PaginationIcon, ChevronIcon, CollapseIcon, ArrowIcon } from './icons';
+import {
+  SettingsIcon,
+  SortIcon,
+  PaginationIcon,
+  ChevronIcon,
+  CollapseIcon,
+  ArrowIcon,
+} from './icons';
 
 export interface PluginConfig {
   sorting?: NonNullable<SortingOptions['sorting']> & {
