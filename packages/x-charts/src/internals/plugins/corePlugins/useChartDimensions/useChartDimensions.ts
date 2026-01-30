@@ -48,7 +48,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
         height: params.height ?? newHeight,
         propsWidth: params.width,
         propsHeight: params.height,
-        isHydrated: store.state.dimensions.isHydrated,
+        isHydrated: true,
       });
     }
     return {
@@ -81,7 +81,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
       height,
       propsHeight: params.height,
       propsWidth: params.width,
-      isHydrated: store.state.dimensions.isHydrated,
+      isHydrated: true,
     });
   }, [
     store,
