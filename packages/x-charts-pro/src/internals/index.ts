@@ -1,8 +1,5 @@
 export { useChartsContainerProProps } from '../ChartsContainerPro/useChartsContainerProProps';
 export type { UseChartsContainerProPropsReturnValue } from '../ChartsContainerPro/useChartsContainerProProps';
-/**
- * @deprecated Use `useChartsContainerProProps` instead.
- */
 export { useChartContainerProProps } from '../ChartContainerPro/useChartContainerProProps';
 export type { ChartsSlotsPro, ChartsSlotPropsPro } from './material';
 export { seriesPreviewPlotMap } from '../ChartZoomSlider/internals/seriesPreviewPlotMap';

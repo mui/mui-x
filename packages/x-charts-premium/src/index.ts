@@ -54,9 +54,6 @@ export * from './plugins';
 export * from './ChartsRenderer';
 export * from './ChartDataProviderPremium';
 export * from './ChartsContainerPremium';
-/**
- * @deprecated Use exports from `./ChartsContainerPremium` instead.
- */
 export * from './ChartContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';
