@@ -9,7 +9,7 @@ const views: Record<TimeViewWithMeridiem, string> = {
   meridiem: 'ช่วงเวลา',
 };
 
-const thTHPickers: PickersLocaleText = {
+const thTHPickers: Partial<PickersLocaleText> = {
   // Calendar navigation
   previousMonth: 'เดือนก่อนหน้า',
   nextMonth: 'เดือนถัดไป',
