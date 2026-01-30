@@ -96,21 +96,18 @@ function getTickLabels(
     }
     return data.map((value) => {
       if (valueFormatter) {
-        // For auto-size computation, we use 'tick' location context
-        // We pass a minimal context since we don't have the actual scale yet
         return valueFormatter(value, {
-          location: 'tick',
-          scale: {} as any,
-          defaultTickLabel: `${value}`,
-          tickNumber: data.length,
+          location: 'auto-size',
         });
       }
       return `${value}`;
     });
   }
 
-  // For continuous scales, estimate tick values from domain
-  // Use provided extrema if available, otherwise fall back to axis min/max or defaults
+  // For continuous scales, we measure the min and max values to estimate axis size.
+  // We don't try to replicate D3's tick generation because D3 also "nices" the domain,
+  // which can produce different tick values than our estimates. Measuring min/max
+  // provides a reasonable approximation for auto-sizing purposes.
   let minVal: number;
   let maxVal: number;
 
@@ -124,34 +121,13 @@ function getTickLabels(
     maxVal = max ?? 100;
   }
 
-  if (minVal === maxVal) {
-    const label = valueFormatter
-      ? valueFormatter(minVal, {
-          location: 'tick',
-          scale: {} as any,
-          defaultTickLabel: `${minVal}`,
-          tickNumber: 1,
-        })
-      : `${minVal}`;
-    return [label];
-  }
+  // Measure both min and max values to find the widest label
+  const valuesToMeasure = minVal === maxVal ? [minVal] : [minVal, maxVal];
 
-  // Generate estimated tick values (similar to d3's nice ticks)
-  const tickCount = 5;
-  const step = (maxVal - minVal) / (tickCount - 1);
-  const tickValues: number[] = [];
-
-  for (let i = 0; i < tickCount; i += 1) {
-    tickValues.push(minVal + step * i);
-  }
-
-  return tickValues.map((value) => {
+  return valuesToMeasure.map((value) => {
     if (valueFormatter) {
       return valueFormatter(value, {
-        location: 'tick',
-        scale: {} as any,
-        defaultTickLabel: `${value}`,
-        tickNumber: tickCount,
+        location: 'auto-size',
       });
     }
     // Format numbers reasonably

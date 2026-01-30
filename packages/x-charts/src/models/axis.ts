@@ -417,6 +417,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
        */
       location: 'legend';
     }
@@ -427,6 +428,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
        */
       location: 'tooltip' | 'zoom-slider-tooltip';
       /**
@@ -441,6 +443,7 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
        * - `'legend'` The value is displayed in the legend when using color legend.
        * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
        */
       location: 'tick';
       /**
@@ -460,6 +463,17 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
        * Can be `undefined` if the scale doesn't support it, e.g., band, point scales.
        */
       tickNumber?: number;
+    }
+  | {
+      /**
+       * Location indicates where the value will be displayed.
+       * - `'tick'` The value is displayed on the axis ticks.
+       * - `'tooltip'` The value is displayed in the tooltip when hovering the chart.
+       * - `'legend'` The value is displayed in the legend when using color legend.
+       * - `'zoom-slider-tooltip'` The value is displayed in the zoom slider tooltip.
+       * - `'auto-size'` The value is used for computing axis auto-size dimensions.
+       */
+      location: 'auto-size';
     };
 
 type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleName
