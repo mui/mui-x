@@ -44,20 +44,6 @@ const chartsApiPages: MuiPage[] = [
     title: 'BarPlot',
   },
   {
-    pathname: '/x/api/charts/chart-container',
-    title: 'ChartContainer',
-  },
-  {
-    pathname: '/x/api/charts/chart-container-premium',
-    title: 'ChartContainerPremium',
-    plan: 'premium',
-  },
-  {
-    pathname: '/x/api/charts/chart-container-pro',
-    title: 'ChartContainerPro',
-    plan: 'pro',
-  },
-  {
     pathname: '/x/api/charts/chart-data-provider',
     title: 'ChartDataProvider',
   },
@@ -90,6 +76,20 @@ const chartsApiPages: MuiPage[] = [
   {
     pathname: '/x/api/charts/charts-clip-path',
     title: 'ChartsClipPath',
+  },
+  {
+    pathname: '/x/api/charts/charts-container',
+    title: 'ChartsContainer',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-premium',
+    title: 'ChartsContainerPremium',
+    plan: 'premium',
+  },
+  {
+    pathname: '/x/api/charts/charts-container-pro',
+    title: 'ChartsContainerPro',
+    plan: 'pro',
   },
   {
     pathname: '/x/api/charts/charts-grid',

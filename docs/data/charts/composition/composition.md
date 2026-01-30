@@ -2,7 +2,7 @@
 title: React Chart composition
 productId: x-charts
 githubLabel: 'scope: charts'
-components: ChartContainer, ChartContainerPro, ChartsGrid, ChartDataProvider, ChartDataProviderPro, ChartsSurface
+components: ChartsContainer, ChartsContainerPro, ChartsGrid, ChartDataProvider, ChartDataProviderPro, ChartsSurface
 packageName: '@mui/x-charts'
 ---
 
@@ -23,11 +23,11 @@ Structural components are used to define a chart's dimensions, surfaces, and dat
   - `ChartDataProvider` provides data to descendants.
   - `ChartsSurface` renders the SVG element.
 - Helpers
-  - `ChartContainer` combines the Data Provider and Surface components.
+  - `ChartsContainer` combines the Data Provider and Surface components.
   - `ChartsWrapper` styled div that positions surface, tooltip, and legend on a grid.
 
 :::info
-Demos in this doc use the `ChartContainer` component.
+Demos in this doc use the `ChartsContainer` component.
 For demos using `ChartDataProvider` and `ChartsSurface`, see [HTML components](/x/react-charts/components/#html-components).
 :::
 
@@ -57,14 +57,14 @@ Notice that the `width` and `height` props are passed to `ChartDataProvider` and
 
 ### Chart Container usage
 
-`ChartContainer` is the direct concatenation of `ChartDataProvider` and `ChartsSurface`.
+`ChartsContainer` is the direct concatenation of `ChartDataProvider` and `ChartsSurface`.
 It takes care of dispatching props between the two components.
 
-Using `ChartContainer` has one major drawback: all the children will be inside `ChartsSurface`.
+Using `ChartsContainer` has one major drawback: all the children will be inside `ChartsSurface`.
 You can't render HTML elements such as `ChartsLegend` as shown in the previous example.
 
 ```jsx
-<ChartContainer
+<ChartsContainer
   // The configuration of the chart
   series={[{ type: 'bar', data: [100, 200] }]}
   xAxis={[{ scaleType: 'band', data: ['A', 'B'] }]}
@@ -74,7 +74,7 @@ You can't render HTML elements such as `ChartsLegend` as shown in the previous e
   ref={mySvgRef}
 >
   {children} // Only SVG component here
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ### Chart Wrapper usage
@@ -116,7 +116,7 @@ You can also [create your own custom components](/x/react-charts/components/) fo
 
 ### Responsive dimensions
 
-`ChartContainer` is responsive by default: it automatically adjusts its dimensions to fit the available space defined by the parent element.
+`ChartsContainer` is responsive by default: it automatically adjusts its dimensions to fit the available space defined by the parent element.
 
 Provide the `width` and `height` props to define the dimensions of a chart.
 
@@ -131,7 +131,7 @@ The demo below lets you switch between a chart with discrete dimensions (`width=
 
 ### Properties
 
-`ChartContainer` takes all props that are not specific to a single graphical element.
+`ChartsContainer` takes all props that are not specific to a single graphical element.
 This includes:
 
 - The `xAxis` and `yAxis` props—see [Axis](/x/react-charts/axis/) for details
@@ -162,11 +162,11 @@ For example, `BarChart` assumes that `series` is of type `'bar'`.
 />
 ```
 
-When composing a custom chart, `ChartContainer` doesn't know the series type, so you must explicitly define it.
+When composing a custom chart, `ChartsContainer` doesn't know the series type, so you must explicitly define it.
 For example, the custom chart below uses both `BarPlot` and `LinePlot`, and each one requires a corresponding `type` for its `data`.
 
 ```jsx
-<ChartContainer
+<ChartsContainer
   series={[
     // This series is for the bar plot
     { data: [1, 2, 3], type: 'bar' },
@@ -176,7 +176,7 @@ For example, the custom chart below uses both `BarPlot` and `LinePlot`, and each
 >
   <BarPlot /> {/* Only displays the series with type: 'bar' */}
   <LinePlot /> {/* Only displays series with type: 'line' */}
-</ChartContainer>
+</ChartsContainer>
 ```
 
 Those series can use the `dataset` prop the same way that a single-component chart does.
@@ -186,7 +186,7 @@ In the demo below, the chart is constructed by combining `BarPlot` and `LinePlot
 You can modify the series `type` property to switch between rendering a line and a bar.
 
 ```jsx
-<ChartContainer
+<ChartsContainer
   series={[
     { type, data: [1, 2, 3, 2, 1] },
     { type, data: [4, 3, 1, 3, 4] },
@@ -195,7 +195,7 @@ You can modify the series `type` property to switch between rendering a line and
   <BarPlot />
   <LinePlot />
   <ChartsXAxis label="X axis" axisId="x-axis-id" />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "SwitchSeriesType.js" }}
@@ -222,14 +222,14 @@ Here's how to apply it:
 2. Wrap the Chart: Enclose the chart elements you want to clip within a `<g>` element. Set the `clipPath` attribute to `url(#${clipPathId})` to reference the previously defined clip path. Example: ``<g clipPath={`url(#${clipPathId})`}>``
 
 ```jsx
-<ChartContainer>
+<ChartsContainer>
   <g clipPath={`url(#${clipPathId})`}>
     // The plotting to clip in the drawing area.
     <ScatterPlot />
     <LinePlot />
   </g>
   <ChartsClipPath id={clipPathId} /> // Defines the clip path of the drawing area.
-</ChartContainer>
+</ChartsContainer>
 ```
 
 The demo below lets you toggle clipping for scatter and line plots.
@@ -268,7 +268,7 @@ Use `ChartsLegend` to display a legend with information about the chart.
 `ChartsLegend` is an HTML element since v8.
 It must be rendered inside `ChartDataProvider` to gain access to the data, but outside of `ChartsSurface` since it's not an SVG element.
 
-This means you can't use it inside `ChartContainer`.
+This means you can't use it inside `ChartsContainer`.
 You must use `ChartDataProvider` and `ChartsSurface` instead.
 
 ```jsx
@@ -279,9 +279,9 @@ You must use `ChartDataProvider` and `ChartsSurface` instead.
 </ChartDataProvider>
 
 // ❌ Incorrect
-<ChartContainer>
+<ChartsContainer>
   <ChartsLegend />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 :::
@@ -295,12 +295,12 @@ You can add interactive elements such as `ChartsAxisHighlight` and `ChartsToolti
 {{"demo": "LegendTooltipComposition.js" }}
 
 :::info
-By default, `ChartContainer` listens to mouse events to keep track of where the mouse is located on the chart.
+By default, `ChartsContainer` listens to mouse events to keep track of where the mouse is located on the chart.
 
 If you're not using the axis highlight or the tooltip, consider disabling this feature with the `disableAxisListener` prop.
 
 ```jsx
-<ChartContainer {...} disableAxisListener>
+<ChartsContainer {...} disableAxisListener>
 ```
 
 :::
