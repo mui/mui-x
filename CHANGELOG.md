@@ -90,8 +90,6 @@ Internal changes.
 - [code-infra] Allow user to select target branch if it exists for current major (@JCQuintas) (#21005) @github-actions[bot]
 - [code-infra] Fix the target branch condition in the release script (@arminmeh) (#21051) @github-actions[bot]
 - [code-infra] Update docs deploy script to fetch from `v8.x` (#21013) @arminmeh
-- [internal] Fix the changelog (#21056) @arminmeh
-- [internal] Sync the changelog and versions (#21050) @arminmeh
 
 ## 8.26.1
 
