@@ -109,7 +109,7 @@ Internal changes.
 
 ### Core
 
-- [code-infra] Fix `mui/disallow-react-api-in-server-components` (#20909) @JCQuintas
+- [code-infra] Fix `material-ui/disallow-react-api-in-server-components` (#20909) @JCQuintas
 - [code-infra] Prepare for v9 (#20860) @JCQuintas
 - [code-infra] Update codeowners (#20886) @JCQuintas
 - [internal] Remove local Claude settings from the repo (#20853) @cherniavskii
@@ -2909,7 +2909,7 @@ Same changes as in `@mui/x-tree-view@8.7.0`, plus:
 ### Miscellaneous
 
 - [code-infra] Bump code-infra version and fix breaking changes (#18653) @brijeshb42
-- [code-infra] Ensure `mui/disallow-react-api-in-server-components` ESLint rule is applied (#18570) @LukasTy
+- [code-infra] Ensure `material-ui/disallow-react-api-in-server-components` ESLint rule is applied (#18570) @LukasTy
 - [code-infra] Migrate to flat ESLint config (#18562) @brijeshb42
 - [code-infra] Refactor ESLint config (#18643) @LukasTy
 - [infra] Add renovatebot rule for latest infra packages (#18609) @Janpot
