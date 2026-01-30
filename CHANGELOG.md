@@ -11,7 +11,7 @@ _Jan 30, 2026_
 
 We'd like to extend a big thank you to the 8 contributors who made this release possible. Here are some highlights ✨:
 
-- Add new `longText` column type
+- 📝 Data Grid supports new `longText` [column type](https://mui.com/x/react-data-grid/column-definition/#column-types)
 
 The following team members contributed to this release:
 @alexfauquette, @arminmeh, @bernardobelchior, @cherniavskii, @flaviendelangle, @JCQuintas, @MBilalShafi, @siriwatknp
@@ -20,7 +20,7 @@ The following team members contributed to this release:
 
 #### `@mui/x-data-grid@8.27.0`
 
-- [data grid] Fix virtualization crash by preventing out-of-bounds focusedVirtualCell indices (#21123) @cherniavskii
+- [DataGrid] Fix virtualization crash by preventing out-of-bounds `focusedVirtualCell` indices (#21123) @cherniavskii
 - [DataGrid] Fix focus steal issue with `<Dialog />` (@MBilalShafi) (#21106) @github-actions[bot]
 - [DataGrid] Add new `longText` column type (@siriwatknp) (#21103) @github-actions[bot]
 
