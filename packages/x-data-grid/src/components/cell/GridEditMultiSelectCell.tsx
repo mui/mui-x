@@ -248,7 +248,7 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
 interface GridEditMultiSelectAutocompleteProps extends GridEditMultiSelectCellProps {
   valueOptions: ValueOptions[];
   selectedOptions: ValueOptions[];
-  getOptionValue: (option: ValueOptions) => any;
+  getOptionValue: (option: ValueOptions) => string | number;
   getOptionLabel: (option: ValueOptions) => string;
 }
 

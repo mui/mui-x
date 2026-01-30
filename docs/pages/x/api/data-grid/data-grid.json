@@ -1772,8 +1772,8 @@
       "isGlobal": false
     },
     {
-      "key": "multiSelectCellChipHidden",
-      "className": "MuiDataGrid-multiSelectCellChipHidden",
+      "key": "multiSelectCellChip--hidden",
+      "className": "MuiDataGrid-multiSelectCellChip--hidden",
       "description": "Styles applied to hidden chips in the multi-select cell that overflow the container.",
       "isGlobal": false
     },

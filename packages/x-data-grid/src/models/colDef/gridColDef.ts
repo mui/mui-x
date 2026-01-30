@@ -356,10 +356,10 @@ export interface GridSingleSelectColDef<
   /**
    * Used to determine the value used for a value option.
    * @param {ValueOptions} value The current value option.
-   * @returns {string} The value to be used.
+   * @returns {string | number} The value to be used.
    * @default {defaultGetOptionValue}
    */
-  getOptionValue: (value: ValueOptions) => any;
+  getOptionValue: (value: ValueOptions) => string | number;
 }
 
 /**
@@ -391,10 +391,10 @@ export interface GridMultiSelectColDef<
   /**
    * Used to determine the value used for a value option.
    * @param {ValueOptions} value The current value option.
-   * @returns {any} The value to be used.
+   * @returns {string | number} The value to be used.
    * @default {defaultGetOptionValue}
    */
-  getOptionValue: (value: ValueOptions) => any;
+  getOptionValue: (value: ValueOptions) => string | number;
   /**
    * The separator used to join array values for display and export.
    * @default ', '
