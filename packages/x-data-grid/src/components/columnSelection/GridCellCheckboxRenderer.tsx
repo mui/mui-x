@@ -129,6 +129,7 @@ const GridCellCheckboxForwardRef = forwardRef<HTMLInputElement, GridRenderCellPa
         }}
         onKeyDown={handleKeyDown}
         indeterminate={isIndeterminate}
+        row={row}
         {...rootProps.slotProps?.baseCheckbox}
         {...other}
         ref={ref as any}
