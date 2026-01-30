@@ -138,7 +138,7 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
 
   return (
     <React.Fragment>
-      <EventDraggableDialogHeader>
+      <EventDraggableDialogHeader onClose={onClose}>
         <EventDraggableDialogTitle className={classes.eventDialogTitle}>
           {occurrence.title}
         </EventDraggableDialogTitle>
