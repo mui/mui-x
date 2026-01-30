@@ -262,7 +262,6 @@ function DataGridColumnHeaders() {
   const virtualization = grid.api.virtualization;
   const columnsToRender = virtualization.hooks.useColumnsToRender();
   const columnsTotalWidth = virtualization.hooks.useColumnsTotalWidth();
-  const scrollPosition = virtualization.hooks.useScrollPosition();
   const offsetLeft = virtualization.hooks.useOffsetLeft();
   const sortModel = grid.use(sortingPlugin.selectors.model);
 
@@ -292,52 +291,50 @@ function DataGridColumnHeaders() {
   };
 
   return (
-    <div
-      className="grid-column-headers"
-      role="rowgroup"
-      style={{
-        minWidth: columnsTotalWidth,
-        flex: `1 0 ${HEADER_HEIGHT}px`,
-        transform: `translate3d(-${scrollPosition.left}px, 0, 0)`,
-      }}
-    >
+    <div className="grid-column-headers-container">
       <div
-        style={{
-          display: 'flex',
-          position: 'absolute',
-          top: 0,
-          left: offsetLeft,
-        }}
+        className="grid-column-headers"
+        role="rowgroup"
+        style={{ minWidth: columnsTotalWidth, height: HEADER_HEIGHT }}
       >
-        {columnsToRender.map((column) => {
-          const isSortable = config.sorting?.enabled && column.sortable !== false;
-          return (
-            // eslint-disable-next-line jsx-a11y/interactive-supports-focus
-            <div
-              key={column.id}
-              role="columnheader"
-              onClick={(event) => sortColumn(column.field as string, event.shiftKey)}
-              onKeyDown={(event) => sortColumn(column.field as string, event.shiftKey)}
-              style={{
-                padding: '12px 16px',
-                fontWeight: 600,
-                fontSize: '14px',
-                width: column.size || 150,
-                minWidth: column.size || 150,
-                flexShrink: 0,
-                boxSizing: 'border-box',
-                height: HEADER_HEIGHT,
-                display: 'flex',
-                alignItems: 'center',
-                cursor: isSortable ? 'pointer' : 'default',
-                userSelect: 'none',
-              }}
-            >
-              {column.header || column.id}
-              {config.sorting?.enabled && getSortIcon(column.field as string)}
-            </div>
-          );
-        })}
+        <div
+          style={{
+            display: 'flex',
+            position: 'absolute',
+            top: 0,
+            left: offsetLeft,
+          }}
+        >
+          {columnsToRender.map((column) => {
+            const isSortable = config.sorting?.enabled && column.sortable !== false;
+            return (
+              // eslint-disable-next-line jsx-a11y/interactive-supports-focus
+              <div
+                key={column.id}
+                role="columnheader"
+                onClick={(event) => sortColumn(column.field as string, event.shiftKey)}
+                onKeyDown={(event) => sortColumn(column.field as string, event.shiftKey)}
+                style={{
+                  padding: '12px 16px',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  width: column.size || 150,
+                  minWidth: column.size || 150,
+                  flexShrink: 0,
+                  boxSizing: 'border-box',
+                  height: HEADER_HEIGHT,
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: isSortable ? 'pointer' : 'default',
+                  userSelect: 'none',
+                }}
+              >
+                {column.header || column.id}
+                {config.sorting?.enabled && getSortIcon(column.field as string)}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -468,18 +465,8 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
               overflow: 'hidden',
             }}
           >
-            <DataGridColumnHeaders />
-            <div
-              className="DataGrid-virtualScroller"
-              {...scrollerProps}
-              style={{
-                ...(scrollerProps.style as React.CSSProperties),
-                overflow: 'auto',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
+            <div className="grid-virtualScroller" {...scrollerProps}>
+              <DataGridColumnHeaders />
               <div
                 className="DataGrid-virtualScrollerContent"
                 {...contentProps}
