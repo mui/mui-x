@@ -318,6 +318,10 @@
   overflow: hidden;
 }
 
+.config-section + .config-section {
+  margin-top: var(--space-3);
+}
+
 .config-section__header {
   width: 100%;
   padding: var(--space-2) var(--space-3);
@@ -368,6 +372,13 @@
 
 .config-section__content {
   padding: var(--space-1) var(--space-3) var(--space-3);
+}
+
+.config-section__buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
 }
 
 /* ===========================================

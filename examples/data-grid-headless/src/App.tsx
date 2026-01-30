@@ -481,11 +481,12 @@ interface DataGridProps {
   rows: RowData[];
   columns: ColumnDef<RowData>[];
   config: PluginConfig;
-  toolbar?: React.ReactNode;
 }
 
-const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGrid(props, ref) {
-  const { rows, columns, config } = props;
+const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGrid(
+  { rows, columns, config },
+  ref,
+) {
 
   const grid = useDataGrid({
     rows,
@@ -533,7 +534,6 @@ const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGr
   return (
     <DataGridContext.Provider value={contextValue}>
       <div className="grid-wrapper">
-        {props.toolbar}
         <div className="grid-root" {...gridProps}>
           <div
             className="DataGrid-mainContent"
@@ -633,30 +633,21 @@ function App() {
     setColumns(shuffleArray(generateColumns()));
   };
 
-  const toolbar = (
-    <div className="grid-toolbar">
-      <button
-        type="button"
-        onClick={() => {
-          setCounter((prev) => prev + 1);
-        }}
-        className="btn btn--secondary"
-      >
-        Rerender
-      </button>
-      <button type="button" onClick={handleRefreshRows} className="btn btn--secondary">
-        Refresh Rows
-      </button>
-      <button type="button" onClick={handleRefreshColumns} className="btn btn--secondary">
-        Shuffle Columns
-      </button>
-    </div>
-  );
+  const handleRerender = () => {
+    setCounter((prev) => prev + 1);
+  };
 
   return (
     <div className="test-grid-container">
-      <DataGrid ref={gridRef} rows={rows} columns={columns} config={config} toolbar={toolbar} />
-      <ConfigPanel config={config} onConfigChange={setConfig} onApplySorting={handleApplySorting} />
+      <DataGrid ref={gridRef} rows={rows} columns={columns} config={config} />
+      <ConfigPanel
+        config={config}
+        onConfigChange={setConfig}
+        onApplySorting={handleApplySorting}
+        onRerender={handleRerender}
+        onRefreshRows={handleRefreshRows}
+        onShuffleColumns={handleRefreshColumns}
+      />
     </div>
   );
 }
