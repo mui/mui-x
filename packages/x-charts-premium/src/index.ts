@@ -26,7 +26,15 @@ export * from '@mui/x-charts/ChartsLabel';
 
 // Pro components
 export * from '@mui/x-charts-pro/Heatmap';
+export { ChartsContainerPro } from '@mui/x-charts-pro/ChartsContainerPro';
+export type { ChartsContainerProProps } from '@mui/x-charts-pro/ChartsContainerPro';
+/**
+ * @deprecated Use `ChartsContainerPro` instead.
+ */
 export { ChartContainerPro } from '@mui/x-charts-pro/ChartContainerPro';
+/**
+ * @deprecated Use `ChartsContainerProProps` instead.
+ */
 export type { ChartContainerProProps } from '@mui/x-charts-pro/ChartContainerPro';
 export * from '@mui/x-charts-pro/ChartDataProviderPro';
 export * from '@mui/x-charts-pro/ScatterChartPro';
@@ -51,6 +59,10 @@ export * from './plugins';
 // Premium components
 export * from './ChartsRenderer';
 export * from './ChartDataProviderPremium';
+export * from './ChartsContainerPremium';
+/**
+ * @deprecated Use exports from `./ChartsContainerPremium` instead.
+ */
 export * from './ChartContainerPremium';
 export * from './BarChartPremium';
 export * from './HeatmapPremium';

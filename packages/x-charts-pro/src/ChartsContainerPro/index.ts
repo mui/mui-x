@@ -7,8 +7,8 @@ import type {
 } from '../context/ChartProApi';
 import type { AllPluginSignatures } from '../internals/plugins/allPlugins';
 
-export * from './ChartContainerPro';
-export * from './useChartContainerProProps';
+export * from './ChartsContainerPro';
+export * from './useChartsContainerProProps';
 
 /**
  * @deprecated Use `ChartProApi` from `@mui/x-charts/context` instead.

@@ -19,6 +19,10 @@ export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
 export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
+export * from '../ChartsContainer/useChartsContainerProps';
+/**
+ * @deprecated Use imports from `../ChartsContainer/useChartsContainerProps` instead.
+ */
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';

@@ -24,7 +24,19 @@ export * from './SparkLineChart';
 export * from './Gauge';
 export * from './RadarChart';
 export * from './ChartsSurface';
+export { ChartsContainer } from './ChartsContainer';
+export type {
+  ChartsContainerProps,
+  ChartsContainerSlots,
+  ChartsContainerSlotProps,
+} from './ChartsContainer';
+/**
+ * @deprecated Use `ChartsContainer` instead.
+ */
 export { ChartContainer } from './ChartContainer';
+/**
+ * @deprecated Use `ChartsContainerProps`, `ChartsContainerSlots`, `ChartsContainerSlotProps` instead.
+ */
 export type {
   ChartContainerProps,
   ChartContainerSlots,
