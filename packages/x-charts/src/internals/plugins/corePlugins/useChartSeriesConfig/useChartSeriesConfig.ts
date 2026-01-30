@@ -17,8 +17,9 @@ export const useChartSeriesConfig: ChartPlugin<UseChartSeriesConfigSignature> = 
     serializeIdentifierFn(store.state.seriesConfig.config, identifier),
   );
 
-  const cleanIdentifier: CleanIdentifierFunction = useEventCallback(<T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifier<T['type']> =>
-    cleanIdentifierFn<T['type'], T>(store.state.seriesConfig.config, identifier),
+  const cleanIdentifier: CleanIdentifierFunction = useEventCallback(
+    <T extends { type: ChartSeriesType }>(identifier: T): SeriesItemIdentifier<T['type']> =>
+      cleanIdentifierFn<T['type'], T>(store.state.seriesConfig.config, identifier),
   );
 
   return {

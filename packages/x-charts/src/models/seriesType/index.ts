@@ -13,19 +13,21 @@ type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
 
 // item identifier
 
-export type SeriesItemIdentifier<T extends ChartSeriesType> =
-  T extends ChartSeriesType ? ChartsSeriesConfig[T]['itemIdentifier'] : never;
+export type SeriesItemIdentifier<T extends ChartSeriesType> = T extends ChartSeriesType
+  ? ChartsSeriesConfig[T]['itemIdentifier']
+  : never;
 
-export type SeriesItemIdentifierWithData<T extends ChartSeriesType> =
-  T extends ChartSeriesType ? ChartsSeriesConfig[T]['itemIdentifierWithData'] : never;
+export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends ChartSeriesType
+  ? ChartsSeriesConfig[T]['itemIdentifierWithData']
+  : never;
 
 export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> = T extends
   | 'line'
   | 'radar'
   ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'dataIndex'>
   : T extends 'heatmap'
-  ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'xIndex' | 'yIndex'>
-  : ChartsSeriesConfig[T]['itemIdentifier'];
+    ? DefaultizedProps<ChartsSeriesConfig[T]['itemIdentifier'], 'xIndex' | 'yIndex'>
+    : ChartsSeriesConfig[T]['itemIdentifier'];
 
 export { type SeriesId } from './common';
 export type { CartesianChartSeriesType, StackableChartSeriesType } from './config';

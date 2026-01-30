@@ -21,7 +21,7 @@
     "hiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: any, seriesId?: object, type: object }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: object }&gt;"
       }
     },
     "highlightedAxis": {
@@ -40,7 +40,7 @@
     "initialHiddenItems": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ dataIndex?: any, seriesId?: object, type: object }&gt;"
+        "description": "Array&lt;{ dataIndex?: number, seriesId?: string, type: object }&gt;"
       }
     },
     "localeText": { "type": { "name": "object" } },
