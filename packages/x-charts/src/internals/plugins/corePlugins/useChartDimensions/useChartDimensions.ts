@@ -14,8 +14,9 @@ const MAX_COMPUTE_RUN = 10;
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
   store,
-  svgRef,
+  instance,
 }) => {
+  const { svgRef } = instance;
   const hasInSize = params.width !== undefined && params.height !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   // States only used for the initialization of the size.

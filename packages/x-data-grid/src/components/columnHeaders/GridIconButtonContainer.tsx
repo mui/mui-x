@@ -2,7 +2,7 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';

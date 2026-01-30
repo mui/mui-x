@@ -1,4 +1,4 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
 const zhHKGrid: Partial<GridLocaleText> = {
@@ -164,6 +164,10 @@ const zhHKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '是的',
   booleanCellFalseLabel: '不',
+
+  // Long text cell
+  longTextCellExpandLabel: '擴張',
+  longTextCellCollapseLabel: '坍塌',
 
   // Actions cell more text
   actionsCellMore: '更多的',

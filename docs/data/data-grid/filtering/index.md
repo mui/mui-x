@@ -67,7 +67,7 @@ const filterModel: GridFilterModel = {
 };
 ```
 
-If no `logicOperator` is provided, the Data Grid will use `GridLogicOperator.Or` by default.
+If no `logicOperator` is provided, the Data Grid will use `GridLogicOperator.And` by default. When the operator is left unchanged in the UI, `onFilterModelChange` can still omit it, so treat an undefined value as `GridLogicOperator.And`.
 
 ### Initialize the filters
 

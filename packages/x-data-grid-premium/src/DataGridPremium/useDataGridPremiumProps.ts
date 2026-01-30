@@ -4,17 +4,17 @@ import { getThemeProps } from '@mui/system';
 import {
   DATA_GRID_PRO_PROPS_DEFAULT_VALUES,
   GRID_DEFAULT_LOCALE_TEXT,
-  DataGridProProps,
+  type DataGridProProps,
   GridSignature,
-  GridEvents,
+  type GridEvents,
 } from '@mui/x-data-grid-pro';
 import { computeSlots } from '@mui/x-data-grid-pro/internals';
-import {
+import type {
   DataGridPremiumProps,
   DataGridPremiumProcessedProps,
   DataGridPremiumPropsWithDefaultValue,
 } from '../models/dataGridPremiumProps';
-import { GridPremiumSlotsComponent } from '../models';
+import type { GridPremiumSlotsComponent } from '../models';
 import { GRID_AGGREGATION_FUNCTIONS } from '../hooks/features/aggregation';
 import { DATA_GRID_PREMIUM_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridPremiumDefaultSlotsComponents';
 import { defaultGetPivotDerivedColumns } from '../hooks/features/pivoting/utils';

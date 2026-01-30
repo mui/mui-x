@@ -8,7 +8,7 @@ import {
   useGridSelector,
 } from '@mui/x-data-grid';
 import {
-  GridPinnedRowsProps,
+  type GridPinnedRowsProps,
   gridPinnedRowsSelector,
   useGridPrivateApiContext,
 } from '@mui/x-data-grid/internals';

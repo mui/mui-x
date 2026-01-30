@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
 import {
   type GridConfiguration,
   validateProps,
@@ -14,7 +14,7 @@ import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models/dataGridProProps';
+import type { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';

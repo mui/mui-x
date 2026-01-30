@@ -1,6 +1,6 @@
 import ownerDocument from '@mui/utils/ownerDocument';
 import { loadStyleSheets } from '@mui/x-internals/export';
-import { applyStyles, createExportIframe } from './common';
+import { applyStyles, copyCanvasesContent, createExportIframe } from './common';
 import { type ChartImageExportOptions } from './useChartProExport.types';
 import { defaultOnBeforeExport } from './defaults';
 
@@ -61,6 +61,8 @@ export async function exportImage(
     if (copyStyles) {
       await Promise.all(loadStyleSheets(exportDoc, root, nonce));
     }
+
+    await copyCanvasesContent(element, elementClone);
 
     resolve();
   };

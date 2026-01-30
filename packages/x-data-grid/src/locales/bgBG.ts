@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const bgBGGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const bgBGGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'да',
   booleanCellFalseLabel: 'не',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Разгъване',
+  longTextCellCollapseLabel: 'Свиване',
 
   // Actions cell more text
   actionsCellMore: 'още',

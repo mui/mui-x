@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const bnBDGrid: Partial<GridLocaleText> = {
   // Root
@@ -166,6 +166,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'হ্যাঁ',
   booleanCellFalseLabel: 'না',
+
+  // Long text cell
+  longTextCellExpandLabel: 'সম্প্রসারিত করুন',
+  longTextCellCollapseLabel: 'সংকুচিত করুন',
 
   // Actions cell more text
   actionsCellMore: 'আরও',

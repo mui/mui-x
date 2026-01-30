@@ -18,9 +18,9 @@ import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRend
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   params,
   store,
-  svgRef,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { xAxis, yAxis, dataset, gap } = params;
 
   if (process.env.NODE_ENV !== 'production') {

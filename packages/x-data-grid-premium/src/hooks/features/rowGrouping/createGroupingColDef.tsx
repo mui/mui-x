@@ -1,22 +1,22 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   GRID_STRING_COL_DEF,
-  GridColDef,
-  GridComparatorFn,
-  GridRenderCellParams,
-  GridGroupingColDefOverride,
-  GridGroupNode,
-  GridTreeNodeWithRender,
-  GridValueFormatter,
+  type GridColDef,
+  type GridComparatorFn,
+  type GridRenderCellParams,
+  type GridGroupingColDefOverride,
+  type GridGroupNode,
+  type GridTreeNodeWithRender,
+  type GridValueFormatter,
   gridRowIdSelector,
   gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
 import {
-  GridColumnRawLookup,
+  type GridColumnRawLookup,
   isSingleSelectColDef,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridDataSourceGroupingCriteriaCell } from '../../../components/GridDataSourceGroupingCriteriaCell';
