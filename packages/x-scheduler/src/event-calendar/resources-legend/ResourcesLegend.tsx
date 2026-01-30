@@ -91,6 +91,7 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
       labelPlacement="start"
       control={
         <Checkbox
+          className={classes.resourcesLegendItemCheckbox}
           checked={isVisible}
           onChange={(event) => onToggle(resource.id, event.target.checked, event)}
           icon={<VisibilityOffOutlined fontSize="small" />}
