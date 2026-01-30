@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@babel/runtime": "catalog:",
-    "@base-ui/utils": "^0.2.3",
+    "@base-ui/utils": "^0.2.4",
     "@mui/utils": "catalog:",
     "@mui/x-internals": "workspace:*",
     "@types/react-transition-group": "catalog:",
