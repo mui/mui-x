@@ -6,23 +6,21 @@ components: ChartContainer, ChartDataProvider
 
 # Charts - Plugins
 
-<p class="description">The library relies on two systems to perform data processing: the plugins and the series config.</p>
+<p class="description">The library uses two systems to perform data processing: plugins and the series config.</p>
 
 :::warning
-This information is for advanced use-cases.
+This information is for advanced use cases.
 Most charts should not require changes to either the plugins or the series configuration.
 :::
-
-## Plugins
 
 Plugins are functions that add features to the chart.
 They can process data, add internal state, or listen to events.
 
-Plugins can be passed to the `<ChartContainer />` or the `<ChartDataProvider />` with the `plugins` props.
+You can pass plugins to the `ChartContainer` or `ChartDataProvider` component with the `plugins` prop.
 
 :::info
 Notice that `myChartPlugins` is defined outside of the component.
-That's because plugins contain hooks and so their order should not be modified.
+That's because plugins contain hooks, so you should not modify their order.
 :::
 
 ```jsx
@@ -33,10 +31,10 @@ function MyChart() {
 }
 ```
 
-### Plugins per chart
+## Plugins per chart
 
-The default array of plugins can be imported from the corresponding chart folder.
-This allows you to get the exact same feature as the component while using composition.
+You can import the default array of plugins from the corresponding chart folder.
+This lets you get the exact same features as the component when using composition.
 
 ```ts
 // Community package
@@ -53,20 +51,21 @@ function MyPieChart() {
 }
 ```
 
-### Plugins list
+## Plugins list
 
 You can import plugins individually from `@mui/x-charts/plugins`.
 
-When creating your custom array of plugins, be aware that some plugins have dependencies.
+When creating your custom array of plugins, note that some plugins have dependencies.
 
-- dependencies: plugins that need to be set before for them to work.
-- optional dependencies: plugins that need to be set before to enable some features.
+- Dependencies: plugins that must be set before them to work.
+- Optional dependencies: plugins that must be set before them to enable some features.
 
-For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dependency and the `useChartHighlight` as an optional dependency. Then
+For example, `useChartClosestPoint()` has `useChartCartesianAxis()` as a dependency and `useChartHighlight()` as an optional dependency.
 
 - `[useChartClosestPoint, useChartCartesianAxis]` does not work because the closest point plugin is before the cartesian one.
-- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the one for closest point.
-- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited feature. The highlight plugin being after the closest point one, you get the highlight feature, but not highlight based on closest point.
+- `[useChartCartesianAxis, useChartClosestPoint]` works because the cartesian plugin is set before the closest point one.
+- `[useChartCartesianAxis, useChartClosestPoint, useChartHighlight]` works with limited features.
+  The highlight plugin is after the closest point one, so you get the highlight feature, but not highlight based on closest point.
 
 | Plugin                                             | Dependencies            | Optional dependency                            |
 | :------------------------------------------------- | :---------------------- | :--------------------------------------------- |
@@ -81,11 +80,11 @@ For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dep
 | `useChartProExport` <span class="plan-pro"></span> |                         |                                                |
 | `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                                |
 
-### Custom plugins
+## Custom plugins
 
 :::warning
 Creating custom plugins is not encouraged.
 :::
 
-The plugin's internal implementation is not considered stable.
+The plugin's internal implementation is not stable.
 It can break at any time, including patch and minor versions.
