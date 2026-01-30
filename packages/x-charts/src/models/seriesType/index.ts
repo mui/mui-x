@@ -1,6 +1,8 @@
 import type { DefaultizedProps } from '@mui/x-internals/types';
 import { type ChartSeriesType, type ChartsSeriesConfig } from './config';
 
+export type { ChartSeriesType, HighlightScope } from './config';
+
 // Series definition
 
 type AllSeriesType<T extends ChartSeriesType = ChartSeriesType> =
@@ -11,11 +13,13 @@ type DefaultizedSeriesType<T extends ChartSeriesType = ChartSeriesType> =
 
 // item identifier
 
-export type SeriesItemIdentifier<T extends ChartSeriesType = ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifier'];
+export type SeriesItemIdentifier<T extends ChartSeriesType> = T extends ChartSeriesType
+  ? ChartsSeriesConfig[T]['itemIdentifier']
+  : never;
 
-export type SeriesItemIdentifierWithData<T extends ChartSeriesType = ChartSeriesType> =
-  ChartsSeriesConfig[T]['itemIdentifierWithData'];
+export type SeriesItemIdentifierWithData<T extends ChartSeriesType> = T extends ChartSeriesType
+  ? ChartsSeriesConfig[T]['itemIdentifierWithData']
+  : never;
 
 export type FocusedItemIdentifier<T extends ChartSeriesType = ChartSeriesType> = T extends
   | 'line'

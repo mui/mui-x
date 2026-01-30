@@ -19,6 +19,7 @@ import { type IdentifierCleaner } from './identifierCleaner.types';
 import { type GetItemAtPosition } from './getItemAtPosition.types';
 import { type UseChartCartesianAxisSignature } from '../../../featurePlugins/useChartCartesianAxis';
 import { type UseChartPolarAxisSignature } from '../../../featurePlugins/useChartPolarAxis';
+import { type HighlightCreator } from '../../../featurePlugins/useChartHighlight/highlightCreator.types';
 
 export type ChartSeriesTypeRequiredPlugins<TSeriesType extends ChartSeriesType> =
   ChartsSeriesConfig[TSeriesType] extends { axisType: 'cartesian' }
@@ -53,6 +54,8 @@ export type ChartSeriesTypeConfig<TSeriesType extends ChartSeriesType> = {
    */
   identifierCleaner: IdentifierCleaner<TSeriesType>;
   getItemAtPosition?: GetItemAtPosition<TSeriesType>;
+  isHighlightedCreator: HighlightCreator<TSeriesType>;
+  isFadedCreator: HighlightCreator<TSeriesType>;
 } & (TSeriesType extends CartesianChartSeriesType
   ? {
       xExtremumGetter: CartesianExtremumGetter<TSeriesType>;

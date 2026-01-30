@@ -3,6 +3,8 @@ import {
   type ChartSeriesTypeConfig,
   identifierSerializerSeriesIdDataIndex,
   identifierCleanerSeriesIdDataIndex,
+  createIsHighlighted,
+  createIsFaded,
 } from '@mui/x-charts/internals';
 import { getBaseExtremum } from './extremums';
 import seriesProcessor from './seriesProcessor';
@@ -28,4 +30,6 @@ export const heatmapSeriesConfig: ChartSeriesTypeConfig<'heatmap'> = {
   identifierCleaner: identifierCleanerSeriesIdDataIndex,
   getItemAtPosition,
   keyboardFocusHandler,
+  isHighlightedCreator: createIsHighlighted,
+  isFadedCreator: createIsFaded,
 };

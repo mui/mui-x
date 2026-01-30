@@ -256,8 +256,9 @@ BarChartPro.propTypes = {
    * Used when the highlight is controlled.
    */
   highlightedItem: PropTypes.shape({
-    dataIndex: PropTypes.number,
+    dataIndex: PropTypes.number.isRequired,
     seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar']).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -347,7 +348,7 @@ BarChartPro.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

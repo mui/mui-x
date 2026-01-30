@@ -142,8 +142,8 @@ ChartContainer.propTypes = {
    */
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -164,6 +164,7 @@ ChartContainer.propTypes = {
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
+    type: PropTypes.oneOf(['bar', 'line', 'pie', 'radar', 'scatter']).isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
@@ -193,8 +194,8 @@ ChartContainer.propTypes = {
    */
   initialHiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
-      dataIndex: PropTypes.any,
-      seriesId: PropTypes.object,
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
       type: PropTypes.object.isRequired,
     }),
   ),
@@ -232,7 +233,7 @@ ChartContainer.propTypes = {
   /**
    * The callback fired when the highlighted item changes.
    *
-   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   * @param {SeriesItemIdentifier<SeriesType> | null} highlightedItem  The newly highlighted item.
    */
   onHighlightChange: PropTypes.func,
   /**

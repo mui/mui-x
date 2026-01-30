@@ -138,7 +138,7 @@ const Group = styled('g', {
 export function BatchScatter(props: BatchScatterProps) {
   const { series, xScale, yScale, color, colorGetter, classes: inClasses } = props;
 
-  const { store } = useChartContext<[UseChartHighlightSignature]>();
+  const { store } = useChartContext<[UseChartHighlightSignature<'scatter'>]>();
   const isSeriesHighlighted = store.use(selectorChartIsSeriesHighlighted, series.id);
   const isSeriesFaded = store.use(selectorChartIsSeriesFaded, series.id);
   const seriesHighlightedItem = store.use(selectorChartSeriesHighlightedItem, series.id);

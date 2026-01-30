@@ -1,12 +1,14 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import { HighlightItemData } from '@mui/x-charts/context';
 import { BarChart, BarChartProps } from '@mui/x-charts/BarChart';
 import { PieChart, PieChartProps } from '@mui/x-charts/PieChart';
 
+// Common type for syncing highlights between different chart types
+type SyncHighlightItem = { seriesId: string; dataIndex: number } | null;
+
 export default function SyncHighlight() {
   const [highlightedItem, setHighLightedItem] =
-    React.useState<HighlightItemData | null>(null);
+    React.useState<SyncHighlightItem>(null);
 
   return (
     <Stack
@@ -16,13 +18,13 @@ export default function SyncHighlight() {
     >
       <BarChart
         {...barChartsProps}
-        highlightedItem={highlightedItem}
-        onHighlightChange={setHighLightedItem}
+        highlightedItem={highlightedItem as any}
+        onHighlightChange={setHighLightedItem as any}
       />
       <PieChart
         {...pieChartProps}
-        highlightedItem={highlightedItem}
-        onHighlightChange={setHighLightedItem}
+        highlightedItem={highlightedItem as any}
+        onHighlightChange={setHighLightedItem as any}
       />
     </Stack>
   );

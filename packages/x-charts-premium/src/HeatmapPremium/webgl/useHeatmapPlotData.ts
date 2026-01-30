@@ -51,9 +51,9 @@ export function useHeatmapPlotData(
       colors[dataIndex * 4 + 2] = rgbColor[2];
       colors[dataIndex * 4 + 3] = 1.0;
 
-      if (isHighlighted({ seriesId: series.id, dataIndex })) {
+      if (isHighlighted({ type: 'heatmap', seriesId: series.id, dataIndex, xIndex, yIndex })) {
         saturations[dataIndex] = 0.2;
-      } else if (isFaded({ seriesId: series.id, dataIndex })) {
+      } else if (isFaded({ type: 'heatmap', seriesId: series.id, dataIndex, xIndex, yIndex })) {
         saturations[dataIndex] = -0.2;
       }
     }

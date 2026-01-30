@@ -28,7 +28,7 @@
     "onHighlightChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(highlightedItem: SankeyHighlightItemData | null) => void",
+        "type": "function(highlightedItem: SeriesItemIdentifier<SeriesType> | null) => void",
         "describedArgs": ["highlightedItem"]
       }
     },

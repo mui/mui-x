@@ -28,7 +28,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
   }, [store, params.tooltipItem]);
 
   const removeTooltipItem = useEventCallback(function removeTooltipItem(
-    itemToRemove?: SeriesItemIdentifier<ChartSeriesType>,
+    itemToRemove?: SeriesItemIdentifier<SeriesType>,
   ) {
     const prevItem = store.state.tooltip.item;
 
@@ -51,7 +51,7 @@ export const useChartTooltip: ChartPlugin<UseChartTooltipSignature<any>> = <
   });
 
   const setTooltipItem = useEventCallback(function setTooltipItem(
-    newItem: SeriesItemIdentifier<ChartSeriesType>,
+    newItem: SeriesItemIdentifier<SeriesType>,
   ) {
     if (!fastObjectShallowCompare(store.state.tooltip.item, newItem)) {
       params.onTooltipItemChange?.(newItem);

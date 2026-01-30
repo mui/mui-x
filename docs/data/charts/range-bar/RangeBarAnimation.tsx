@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import Slider from '@mui/material/Slider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { HighlightScope } from '@mui/x-charts/context';
 import {
   BarChartPremium,
   RangeBarSeries,
@@ -73,10 +72,10 @@ export default function RangeBarAnimation() {
   );
 }
 
-const highlightScope: HighlightScope = {
+const highlightScope = {
   highlight: 'series',
   fade: 'global',
-};
+} as const;
 
 const series = [
   {

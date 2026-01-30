@@ -20,10 +20,10 @@ export function useRegisterItemClickHandlers(
 ) {
   const { instance } =
     useChartContext<
-      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+      [UseChartInteractionSignature, UseChartHighlightSignature<'bar'>, UseChartTooltipSignature]
     >();
   const svgRef = useSvgRef();
-  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature]>();
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartHighlightSignature<'bar'>]>();
 
   React.useEffect(() => {
     const element = svgRef.current;
