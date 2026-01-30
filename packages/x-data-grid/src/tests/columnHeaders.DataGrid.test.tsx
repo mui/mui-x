@@ -87,6 +87,42 @@ describe('<DataGrid /> - Column headers', () => {
       );
     });
 
+    it('should render the column menu icon when there is a custom menu item', async () => {
+      function CustomMenuItem() {
+        return <li>Custom Item</li>;
+      }
+
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid
+            {...baselineProps}
+            disableColumnSelector
+            columns={[
+              { field: 'id', filterable: false, sortable: false, hideable: false },
+              { field: 'brand' },
+            ]}
+            slotProps={{
+              columnMenu: {
+                slots: {
+                  columnMenuCustomItem: CustomMenuItem,
+                },
+              },
+            }}
+          />
+        </div>,
+      );
+
+      // The 'id' column now has a custom menu item, so the icon should be rendered
+      expect(within(getColumnHeaderCell(0)).queryByLabelText('id column menu')).not.to.equal(null);
+      expect(within(getColumnHeaderCell(1)).queryByLabelText('brand column menu')).not.to.equal(
+        null,
+      );
+
+      // Open the column menu and verify the custom item is shown
+      await user.click(within(getColumnHeaderCell(0)).getByLabelText('id column menu'));
+      expect(screen.getByText('Custom Item')).not.to.equal(null);
+    });
+
     it('should not allow to hide the only visible column', async () => {
       const { user } = render(
         <div style={{ width: 300, height: 300 }}>
