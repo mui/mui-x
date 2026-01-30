@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useXAxisCoordinates, useXAxis, useYAxisCoordinates, useYAxis, type AxisCoordinates } from "@mui/x-charts/hooks";
 
 export default function GroupedAxesAutoSize() {
   const [useAutoSize, setUseAutoSize] = React.useState(true);
@@ -26,22 +27,26 @@ export default function GroupedAxesAutoSize() {
           {
             data,
             scaleType: 'band',
+            id: 'x-bottom-1',
+            position: 'bottom',
             height: useAutoSize ? 'auto' : undefined,
             groups: [
-              { getValue: getMonth },
-              { getValue: getQuarter },
-              { getValue: getYear },
+              { getValue: getMonth, tickSize: 10 },
+              { getValue: getQuarter, tickSize: 34 },
+              { getValue: getYear, tickSize: 60 },
             ],
             valueFormatter,
           },
         ]}
         yAxis={[
           {
+            id: 'y-left-1',
+            position: 'left',
             valueFormatter: (value: number) => `${value.toFixed(0)}%`,
           },
         ]}
         height={300}
-        margin={{ left: 40 }}
+        margin={{ bottom: 0, left: 0 }}
         series={[
           {
             data: getPercents(revenue),
@@ -54,7 +59,10 @@ export default function GroupedAxesAutoSize() {
             valueFormatter: (value: number | null) => `${(value ?? 0).toFixed(0)}%`,
           },
         ]}
-      />
+      >
+        <XAxisPositionIndicator axisId="x-bottom-1" color={'#e63946'} />
+        <YAxisPositionIndicator axisId="y-left-1" color={'#8338ec'} />
+      </BarChart>
     </Box>
   );
 }
@@ -100,3 +108,78 @@ const expenses = [
 
 const getPercents = (array: number[]) =>
   array.map((v, index) => (100 * v) / (revenue[index] + expenses[index]));
+
+function XAxisPositionIndicator({
+  axisId,
+  color,
+}: {
+  axisId: string;
+  color: string;
+}) {
+  const xPosition = useXAxisCoordinates(axisId);
+  const xAxis = useXAxis(axisId);
+
+  if (!xPosition) {
+    return null;
+  }
+
+  return (
+    <AxisPositionIndicator
+      position={xAxis.position ?? 'bottom'}
+      coordinates={xPosition}
+      color={color}
+    />
+  );
+}
+
+function YAxisPositionIndicator({
+  axisId,
+  color,
+}: {
+  axisId: string;
+  color: string;
+}) {
+  const yPosition = useYAxisCoordinates(axisId);
+  const yAxis = useYAxis(axisId);
+
+  if (!yPosition) {
+    return null;
+  }
+
+  return (
+    <AxisPositionIndicator
+      position={yAxis.position ?? 'left'}
+      coordinates={yPosition}
+      color={color}
+    />
+  );
+}
+
+function AxisPositionIndicator({
+  position,
+  coordinates,
+  color,
+}: {
+  position: 'top' | 'bottom' | 'left' | 'right' | 'none';
+  coordinates: AxisCoordinates;
+  color: string;
+}) {
+
+  if (position === 'none') {
+    return null;
+  }
+
+
+  return (
+    <rect
+      x={coordinates.left}
+      y={coordinates.top}
+      width={coordinates.right - coordinates.left}
+      height={coordinates.bottom - coordinates.top}
+      fill={color}
+      fillOpacity={0.2}
+      stroke={color}
+      strokeWidth={2}
+    />
+  );
+}

@@ -1,4 +1,4 @@
-import type { DefaultedXAxis, DefaultedYAxis } from '../../../../models/axis';
+import type { DefaultedXAxis, DefaultedYAxis, AxisGroup } from '../../../../models/axis';
 import { batchMeasureStrings } from '../../../domUtils';
 import type { ChartsTextStyle } from '../../../getWordsByLines';
 import { getMinXTranslation } from '../../../geometry';
@@ -10,6 +10,42 @@ import {
   AXIS_AUTO_SIZE_TICK_LABEL_GAP,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
+
+/**
+ * Checks if an axis has groups defined.
+ */
+function hasGroups(
+  axis: DefaultedXAxis | DefaultedYAxis,
+): axis is DefaultedXAxis & { groups: AxisGroup[] } {
+  return 'groups' in axis && Array.isArray(axis.groups) && axis.groups.length > 0;
+}
+
+/**
+ * Calculates the tick size for a specific group level.
+ * This mirrors the logic in ChartsGroupedXAxisTicks/ChartsGroupedYAxisTicks.
+ * If the group has a custom tickSize, use it. Otherwise, calculate based on the formula.
+ */
+function getGroupTickSize(group: AxisGroup, groupIndex: number, baseTickSize: number): number {
+  if (group.tickSize !== undefined) {
+    return group.tickSize;
+  }
+  return baseTickSize * groupIndex * 2 + baseTickSize;
+}
+
+/**
+ * Gets the unique labels for a specific group level.
+ */
+function getGroupLabels(data: readonly any[], group: AxisGroup): string[] {
+  const uniqueLabels = new Set<string>();
+
+  for (let dataIndex = 0; dataIndex < data.length; dataIndex += 1) {
+    const value = data[dataIndex];
+    const groupValue = group.getValue(value, dataIndex);
+    uniqueLabels.add(`${groupValue}`);
+  }
+
+  return Array.from(uniqueLabels);
+}
 
 interface ComputeAxisAutoSizeOptions {
   axis: DefaultedXAxis | DefaultedYAxis;
@@ -182,6 +218,83 @@ function getRotatedDimension(
 }
 
 /**
+ * Computes the auto-size dimension for a grouped axis.
+ * For grouped axes, we need to account for multiple group levels, each with its own
+ * tick size and label dimensions.
+ */
+function computeGroupedAxisAutoSize(
+  axis: DefaultedXAxis & { groups: AxisGroup[] },
+  direction: 'x' | 'y',
+): number | undefined {
+  const { groups, data, tickSize: baseTickSize, tickLabelStyle: axisTickLabelStyle } = axis;
+  const hasAxisLabel = Boolean(axis.label);
+
+  if (!data || data.length === 0) {
+    return AXIS_AUTO_SIZE_MIN;
+  }
+
+  // Calculate the maximum extent across all group levels
+  // Each group level has: tickSize + gap + labelHeight
+  // The tick sizes increase with group level, and labels are positioned at tickSize + gap
+  let maxExtent = 0;
+
+  for (let groupIndex = 0; groupIndex < groups.length; groupIndex += 1) {
+    const group = groups[groupIndex];
+    const groupTickSize = getGroupTickSize(
+      group,
+      groupIndex,
+      baseTickSize ?? AXIS_AUTO_SIZE_TICK_SIZE,
+    );
+
+    // Get labels for this group level
+    const groupLabels = getGroupLabels(data, group);
+
+    if (groupLabels.length === 0) {
+      continue;
+    }
+
+    // Merge axis tick label style with group-specific style
+    const groupTickLabelStyle = {
+      ...axisTickLabelStyle,
+      ...group.tickLabelStyle,
+    } as ChartsTextStyle | undefined;
+
+    const angle = groupTickLabelStyle?.angle;
+
+    // Measure labels for this group
+    const { maxWidth, maxHeight } = measureTickLabels(groupLabels, groupTickLabelStyle);
+
+    // Handle SSR case
+    if (maxWidth === 0 && maxHeight === 0) {
+      return undefined;
+    }
+
+    // Get the dimension based on direction and rotation
+    const labelDimension = getRotatedDimension(maxWidth, maxHeight, angle, direction);
+
+    // Calculate the extent for this group level
+    // Labels are positioned at tickSize + gap, and extend by labelDimension
+    const groupExtent = groupTickSize + AXIS_AUTO_SIZE_TICK_LABEL_GAP + labelDimension;
+
+    maxExtent = Math.max(maxExtent, groupExtent);
+  }
+
+  // Calculate total axis size
+  let totalSize = maxExtent;
+
+  // Add axis label if present
+  if (hasAxisLabel) {
+    totalSize += AXIS_LABEL_DEFAULT_HEIGHT;
+  }
+
+  // Add padding
+  totalSize += AXIS_AUTO_SIZE_PADDING;
+
+  // Ensure minimum size
+  return Math.max(Math.ceil(totalSize), AXIS_AUTO_SIZE_MIN);
+}
+
+/**
  * Computes the auto-size dimension for an axis based on tick label measurements.
  * Returns undefined if measurement is not available (SSR or not hydrated).
  */
@@ -191,6 +304,11 @@ export function computeAxisAutoSize(options: ComputeAxisAutoSizeOptions): number
   // During SSR or before hydration, return undefined to use fallback
   if (!isHydrated) {
     return undefined;
+  }
+
+  // Handle grouped axes separately
+  if (hasGroups(axis)) {
+    return computeGroupedAxisAutoSize(axis, direction);
   }
 
   const tickLabelStyle = axis.tickLabelStyle as ChartsTextStyle | undefined;
