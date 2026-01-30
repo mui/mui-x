@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { AnimatedLineProps, LineChart } from '@mui/x-charts/LineChart';
-import { HighlightScope } from '@mui/x-charts/context';
 
 const margin = { right: 24 };
 const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
@@ -18,10 +17,10 @@ const xLabels = [
   'Page G',
 ];
 
-const highlightScope: HighlightScope = {
+const highlightScope = {
   highlight: 'item',
   fade: 'global',
-};
+} as const;
 
 const settings = {
   height: 300,

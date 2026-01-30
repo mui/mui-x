@@ -11,8 +11,10 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { AnimatedLineProps, LineChart } from '@mui/x-charts/LineChart';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import { PieChart } from '@mui/x-charts/PieChart';
-import { HighlightScope } from '@mui/x-charts/context';
 import scatterDataset from '../dataset/random/scatterParallel.json';
+
+type HighlightOptions = 'none' | 'item' | 'series';
+type FadeOptions = 'none' | 'series' | 'global';
 
 const barChartsParams = {
   series: [
@@ -85,8 +87,8 @@ function CustomLine(props: AnimatedLineProps) {
 export default function ElementHighlights() {
   const [chartType, setChartType] = React.useState('bar');
   const [withArea, setWithArea] = React.useState(false);
-  const [highlight, setHighlight] = React.useState('item');
-  const [fade, setFade] = React.useState('global');
+  const [highlight, setHighlight] = React.useState<HighlightOptions>('item');
+  const [fade, setFade] = React.useState<FadeOptions>('global');
 
   const handleChartType = (event: any, newChartType: string) => {
     if (newChartType !== null) {
@@ -122,7 +124,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              },
             }))}
           />
         )}
@@ -136,7 +138,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              },
             }))}
             slots={withArea ? {} : { line: CustomLine }}
           />
@@ -150,7 +152,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              },
             }))}
           />
         )}
@@ -163,7 +165,7 @@ export default function ElementHighlights() {
               highlightScope: {
                 highlight,
                 fade,
-              } as HighlightScope,
+              },
             }))}
           />
         )}
@@ -179,7 +181,7 @@ export default function ElementHighlights() {
           select
           label="highlight"
           value={highlight}
-          onChange={(event) => setHighlight(event.target.value)}
+          onChange={(event) => setHighlight(event.target.value as HighlightOptions)}
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
@@ -190,7 +192,7 @@ export default function ElementHighlights() {
           select
           label="fade"
           value={fade}
-          onChange={(event) => setFade(event.target.value)}
+          onChange={(event) => setFade(event.target.value as FadeOptions)}
           sx={{ minWidth: 150 }}
         >
           <MenuItem value={'none'}>none</MenuItem>
