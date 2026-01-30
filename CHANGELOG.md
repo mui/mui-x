@@ -21,8 +21,8 @@ The following team members contributed to this release:
 #### `@mui/x-data-grid@8.27.0`
 
 - [DataGrid] Fix virtualization crash by preventing out-of-bounds `focusedVirtualCell` indices (#21123) @cherniavskii
-- [DataGrid] Fix focus steal issue with `<Dialog />` (@MBilalShafi) (#21106) @github-actions[bot]
-- [DataGrid] Add new `longText` column type (@siriwatknp) (#21103) @github-actions[bot]
+- [DataGrid] Fix focus steal issue with `<Dialog />` (#21106) @MBilalShafi
+- [DataGrid] Add new `longText` column type (#21103) @siriwatknp
 
 #### `@mui/x-data-grid-pro@8.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -32,7 +32,7 @@ Same changes as in `@mui/x-data-grid@8.27.0`.
 
 Same changes as in `@mui/x-data-grid-pro@8.27.0`, plus:
 
-- [DataGridPremium] Fix focus retention when undo/redo operations are done on the same cell (@arminmeh) (#21110) @github-actions[bot]
+- [DataGridPremium] Fix focus retention when undo/redo operations are done on the same cell (#21110) @arminmeh
 
 ### Date and Time Pickers
 
@@ -48,7 +48,7 @@ Same changes as in `@mui/x-date-pickers@8.27.0`.
 
 #### `@mui/x-charts@8.27.0`
 
-- [charts] Deprecate `AxisId` class in favour of to `data-axis-id` attribute  (#21048) @JCQuintas
+- [charts] Deprecate `AxisId` class in favour of to `data-axis-id` attribute (#21048) @JCQuintas
 
 #### `@mui/x-charts-pro@8.27.0` [![pro](https://mui.com/r/x-pro-svg)](https://mui.com/r/x-pro-svg-link 'Pro plan')
 
@@ -72,7 +72,7 @@ Internal changes.
 
 Same changes as in `@mui/x-tree-view@8.27.0`, plus:
 
-- [RichTreeViewPro] Do not export `useSimpleTreeViewApiRef()` and `useRichTreeViewApiRef()` from pro package (@flaviendelangle) (#21145) @github-actions[bot]
+- [RichTreeViewPro] Do not export `useSimpleTreeViewApiRef()` and `useRichTreeViewApiRef()` from pro package (#21145) @flaviendelangle
 
 ### Codemod
 
@@ -87,8 +87,8 @@ Internal changes.
 ### Core
 
 - [code-infra] Add `consistent-type-imports` rule to the grid packages (#21119) @arminmeh
-- [code-infra] Allow user to select target branch if it exists for current major (@JCQuintas) (#21005) @github-actions[bot]
-- [code-infra] Fix the target branch condition in the release script (@arminmeh) (#21051) @github-actions[bot]
+- [code-infra] Allow user to select target branch if it exists for current major (#21005) @JCQuintas
+- [code-infra] Fix the target branch condition in the release script (#21051) @arminmeh
 - [code-infra] Update docs deploy script to fetch from `v8.x` (#21013) @arminmeh
 
 ## 8.26.1
