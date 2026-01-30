@@ -4,6 +4,8 @@ import { useStore } from '@base-ui/utils/store';
 import { type Plugin, createPlugin } from '../../core/plugin';
 import type { GridRowId } from '../rows/rowUtils';
 import type { VirtualizationPlugin } from '../../virtualization';
+import rowsPlugin from '../rows/rows';
+import columnsPlugin from '../columns/columns';
 
 const gridStaticProps = {
   role: 'grid',
@@ -112,9 +114,7 @@ interface ElementsHooks {
   useScrollAreaProps: () => ScrollAreaProps;
 }
 
-export interface ElementsPluginState {
-  elements: Record<string, never>;
-}
+export interface ElementsPluginState {}
 
 export interface ElementsPluginOptions {}
 
@@ -127,19 +127,17 @@ export interface ElementsPluginApi {
 type ElementsPlugin = Plugin<
   'elements',
   ElementsPluginState,
+  {},
   ElementsPluginApi,
   ElementsPluginOptions
 >;
 
 const elementsPlugin = createPlugin<ElementsPlugin>()({
   name: 'elements',
-  getInitialState: (state, _params) => ({
-    ...state,
-    elements: {},
-  }),
+  initialize: (state, _params) => state,
   use: (store, _params, api) => {
-    const rowIds = useStore(store, api.rows.selectors.rowIds);
-    const visibleColumns = useStore(store, api.columns.selectors.visibleColumns);
+    const rowIds = useStore(store, rowsPlugin.selectors.rowIds);
+    const visibleColumns = useStore(store, columnsPlugin.selectors.visibleColumns);
 
     const useGridProps: ElementsHooks['useGridProps'] = () => {
       return React.useMemo((): GridProps => {

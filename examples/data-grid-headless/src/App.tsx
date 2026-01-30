@@ -1,15 +1,16 @@
 import * as React from 'react';
 import useForkRef from '@mui/utils/useForkRef';
 import { type ColumnDef, useDataGrid } from '@mui/x-data-grid-headless';
-import sortingPlugin from '@mui/x-data-grid-headless/plugins/sorting';
-import paginationPlugin from '@mui/x-data-grid-headless/plugins/pagination';
-import virtualizationPlugin, {
+import { sortingPlugin } from '@mui/x-data-grid-headless/plugins/sorting';
+import { paginationPlugin } from '@mui/x-data-grid-headless/plugins/pagination';
+import {
+  virtualizationPlugin,
   type RowToRender,
   type ColumnToRender,
 } from '@mui/x-data-grid-headless/plugins/virtualization';
-// import { useDataGridPro } from '@mui/x-data-grid-headless-pro';
-// import { useDataGridPremium } from '@mui/x-data-grid-headless-premium';
-import './App.css';
+
+import { ConfigPanel, type PluginConfig } from './ConfigPanel';
+import './styles.css';
 
 interface RowData {
   id: number;
@@ -133,9 +134,9 @@ function generateSampleData(count: number): RowData[] {
   return allCombinations;
 }
 
-// Generate sample columns with random order
-function generateColumns() {
-  const allColumns: ColumnDef<RowData>[] = [
+// Generate sample columns
+function generateColumns(): ColumnDef<RowData>[] {
+  return [
     { id: 'id', field: 'id' as keyof RowData, header: 'ID', size: 80 },
     { id: 'name', field: 'name' as keyof RowData, header: 'Name', size: 180 },
     { id: 'email', field: 'email' as keyof RowData, header: 'Email', size: 250 },
@@ -162,9 +163,6 @@ function generateColumns() {
     { id: 'projects', field: 'projects' as keyof RowData, header: 'Projects', size: 90 },
     { id: 'skills', field: 'skills' as keyof RowData, header: 'Skills', size: 200 },
   ];
-
-  // Shuffle columns to randomize order
-  return allColumns;
 }
 
 const ROW_HEIGHT = 52;
@@ -174,7 +172,12 @@ const plugins = [sortingPlugin, paginationPlugin, virtualizationPlugin] as const
 type GridPlugins = typeof plugins;
 type GridInstance = ReturnType<typeof useDataGrid<GridPlugins, RowData>>;
 
-const DataGridContext = React.createContext<GridInstance | null>(null);
+interface DataGridContextValue {
+  grid: GridInstance;
+  config: PluginConfig;
+}
+
+const DataGridContext = React.createContext<DataGridContextValue | null>(null);
 
 function useDataGridContext() {
   const context = React.useContext(DataGridContext);
@@ -190,7 +193,6 @@ function renderCell(column: ColumnToRender, row: RowToRender<RowData>) {
     <div
       key={column.id}
       className="DataGrid-cell"
-      // TODO: should come from the Elements API
       role="gridcell"
       style={{
         padding: '12px 16px',
@@ -228,7 +230,7 @@ function renderRow(row: RowToRender<RowData>, columnsToRender: ColumnToRender[])
 }
 
 function DataGridRenderZone() {
-  const grid = useDataGridContext();
+  const { grid } = useDataGridContext();
   const virtualization = grid.api.virtualization;
   const rowsToRender = virtualization.hooks.useRowsToRender<RowData>();
   const columnsToRender = virtualization.hooks.useColumnsToRender();
@@ -257,12 +259,38 @@ function DataGridRenderZone() {
 }
 
 function DataGridColumnHeaders() {
-  const grid = useDataGridContext();
+  const { grid, config } = useDataGridContext();
   const virtualization = grid.api.virtualization;
   const columnsToRender = virtualization.hooks.useColumnsToRender();
   const columnsTotalWidth = virtualization.hooks.useColumnsTotalWidth();
   const scrollPosition = virtualization.hooks.useScrollPosition();
   const offsetLeft = virtualization.hooks.useOffsetLeft();
+  const sortModel = grid.use(sortingPlugin.selectors.model);
+
+  const sortColumn = (field: string, shiftKey: boolean) => {
+    if (!config.sorting?.enabled) {
+      return;
+    }
+    const requireShiftKey = config.sorting?.multiSortWithShiftKey ?? true;
+    const multiSort = config.sorting?.multiSort && (!requireShiftKey || shiftKey);
+    grid.api.sorting.sortColumn(field, undefined, multiSort);
+  };
+
+  const getSortIcon = (field: string) => {
+    const sortIndex = sortModel.findIndex((item) => item.field === field);
+    const sortInfo = sortModel[sortIndex];
+    if (!sortInfo || sortInfo.direction === null) {
+      return null;
+    }
+    const arrow = sortInfo.direction === 'asc' ? '↑' : '↓';
+    const index = config.sorting?.multiSort ? ` (${sortIndex + 1})` : '';
+    return (
+      <span className="grid-sort-icon">
+        {arrow}
+        {index}
+      </span>
+    );
+  };
 
   return (
     <div
@@ -271,7 +299,7 @@ function DataGridColumnHeaders() {
       style={{
         position: 'relative',
         minWidth: columnsTotalWidth,
-        height: HEADER_HEIGHT,
+        flex: `1 0 ${HEADER_HEIGHT}px`,
         backgroundColor: '#f5f5f5',
         borderBottom: '2px solid #e0e0e0',
         transform: `translate3d(-${scrollPosition.left}px, 0, 0)`,
@@ -285,26 +313,35 @@ function DataGridColumnHeaders() {
           left: offsetLeft,
         }}
       >
-        {columnsToRender.map((column) => (
-          <div
-            key={column.id}
-            role="columnheader"
-            style={{
-              padding: '12px 16px',
-              fontWeight: 600,
-              fontSize: '14px',
-              width: column.size || 150,
-              minWidth: column.size || 150,
-              flexShrink: 0,
-              boxSizing: 'border-box',
-              height: HEADER_HEIGHT,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            {column.header || column.id}
-          </div>
-        ))}
+        {columnsToRender.map((column) => {
+          const isSortable = config.sorting?.enabled && column.sortable !== false;
+          return (
+            // eslint-disable-next-line jsx-a11y/interactive-supports-focus
+            <div
+              key={column.id}
+              role="columnheader"
+              onClick={(event) => sortColumn(column.field as string, event.shiftKey)}
+              onKeyDown={(event) => sortColumn(column.field as string, event.shiftKey)}
+              style={{
+                padding: '12px 16px',
+                fontWeight: 600,
+                fontSize: '14px',
+                width: column.size || 150,
+                minWidth: column.size || 150,
+                flexShrink: 0,
+                boxSizing: 'border-box',
+                height: HEADER_HEIGHT,
+                display: 'flex',
+                alignItems: 'center',
+                cursor: isSortable ? 'pointer' : 'default',
+                userSelect: 'none',
+              }}
+            >
+              {column.header || column.id}
+              {config.sorting?.enabled && getSortIcon(column.field as string)}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -323,7 +360,7 @@ function DataGridVirtualScrollbar({
   scrollerRef,
   hasOppositeScrollbar,
 }: DataGridVirtualScrollbarProps) {
-  const grid = useDataGridContext();
+  const { grid } = useDataGridContext();
   const dimensions = grid.api.virtualization.hooks.useDimensions();
 
   const scrollbarRef = React.useRef<HTMLDivElement>(null);
@@ -438,17 +475,39 @@ function DataGridVirtualScrollbar({
   );
 }
 
-function DataGrid() {
-  const [rows, setRows] = React.useState<RowData[]>(() => generateSampleData(20000));
-  const [columns, setColumns] = React.useState(() => generateColumns());
+interface DataGridHandle {
+  applySorting: () => void;
+}
 
-  const [, setCounter] = React.useState(0);
+interface DataGridProps {
+  rows: RowData[];
+  columns: ColumnDef<RowData>[];
+  config: PluginConfig;
+  toolbar?: React.ReactNode;
+}
+
+const DataGrid = React.forwardRef<DataGridHandle, DataGridProps>(function DataGrid(props, ref) {
+  const { rows, columns, config } = props;
 
   const grid = useDataGrid({
     rows,
     columns,
     plugins,
+    sorting: {
+      multiSort: config.sorting?.multiSort,
+      mode: config.sorting?.mode,
+      stableSort: config.sorting?.stableSort,
+      order: config.sorting?.order,
+      onModelChange: (model) => {
+        // eslint-disable-next-line no-console
+        console.log('Sort model changed:', model);
+      },
+    },
   });
+
+  React.useImperativeHandle(ref, () => ({
+    applySorting: () => grid.api.sorting.apply(),
+  }));
 
   const virtualization = grid.api.virtualization;
   const elements = grid.api.elements;
@@ -467,55 +526,19 @@ function DataGrid() {
   const hasScrollX = dimensions.hasScrollX;
   const scrollbarSize = dimensions.scrollbarSize;
 
-  const handleRefreshRows = () => {
-    setRows(generateSampleData(rows.length));
-  };
-
-  const handleRefreshColumns = () => {
-    setColumns(shuffleArray(generateColumns()));
-  };
-
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).grid = grid;
     }
   }, [grid]);
 
-  return (
-    <DataGridContext.Provider value={grid}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button
-            type="button"
-            onClick={() => {
-              setCounter((prev) => prev + 1);
-            }}
-            className="button"
-          >
-            Rerender
-          </button>
-          <button type="button" onClick={handleRefreshRows} className="button">
-            Refresh Rows
-          </button>
-          <button type="button" onClick={handleRefreshColumns} className="button">
-            Shuffle Columns
-          </button>
-        </div>
+  const contextValue = React.useMemo(() => ({ grid, config }), [grid, config]);
 
-        <div
-          className="DataGrid-root"
-          {...gridProps}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            border: '1px solid #e0e0e0',
-            borderRadius: '4px',
-            backgroundColor: 'white',
-            height: '600px',
-            overflow: 'hidden',
-            position: 'relative',
-          }}
-        >
+  return (
+    <DataGridContext.Provider value={contextValue}>
+      <div className="grid-wrapper">
+        {props.toolbar}
+        <div className="grid-root" {...gridProps}>
           <div
             className="DataGrid-mainContent"
             {...containerProps}
@@ -583,12 +606,61 @@ function DataGrid() {
       </div>
     </DataGridContext.Provider>
   );
-}
+});
 
 function App() {
+  const [rows, setRows] = React.useState<RowData[]>(() => generateSampleData(20000));
+  const [columns, setColumns] = React.useState(() => generateColumns());
+  const [, setCounter] = React.useState(0);
+  const [config, setConfig] = React.useState<PluginConfig>({
+    sorting: {
+      enabled: true,
+      multiSort: true,
+      multiSortWithShiftKey: true,
+      mode: 'auto',
+      stableSort: false,
+      order: ['asc', 'desc', null],
+    },
+  });
+
+  const gridRef = React.useRef<DataGridHandle>(null);
+
+  const handleApplySorting = () => {
+    gridRef.current?.applySorting();
+  };
+
+  const handleRefreshRows = () => {
+    setRows(generateSampleData(rows.length));
+  };
+
+  const handleRefreshColumns = () => {
+    setColumns(shuffleArray(generateColumns()));
+  };
+
+  const toolbar = (
+    <div className="grid-toolbar">
+      <button
+        type="button"
+        onClick={() => {
+          setCounter((prev) => prev + 1);
+        }}
+        className="btn btn--secondary"
+      >
+        Rerender
+      </button>
+      <button type="button" onClick={handleRefreshRows} className="btn btn--secondary">
+        Refresh Rows
+      </button>
+      <button type="button" onClick={handleRefreshColumns} className="btn btn--secondary">
+        Shuffle Columns
+      </button>
+    </div>
+  );
+
   return (
-    <div className="app">
-      <DataGrid />
+    <div className="test-grid-container">
+      <DataGrid ref={gridRef} rows={rows} columns={columns} config={config} toolbar={toolbar} />
+      <ConfigPanel config={config} onConfigChange={setConfig} onApplySorting={handleApplySorting} />
     </div>
   );
 }

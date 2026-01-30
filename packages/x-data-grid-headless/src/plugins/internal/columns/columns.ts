@@ -66,15 +66,22 @@ const columnsSelectors = {
   column: selectColumn,
 };
 
-export interface ColumnsPluginApi {
-  columns: ColumnsApi & { selectors: typeof columnsSelectors };
+export interface ColumnsPluginApi<TColumnMeta = {}> {
+  columns: ColumnsApi<TColumnMeta>;
 }
 
-type ColumnsPlugin = Plugin<'columns', ColumnsPluginState, ColumnsPluginApi, ColumnsPluginOptions>;
+type ColumnsPlugin = Plugin<
+  'columns',
+  ColumnsPluginState,
+  typeof columnsSelectors,
+  ColumnsPluginApi,
+  ColumnsPluginOptions
+>;
 
 const columnsPlugin = createPlugin<ColumnsPlugin>()({
   name: 'columns',
-  getInitialState: (state, params) => {
+  selectors: columnsSelectors,
+  initialize: (state, params) => {
     const initialStateColumns = params.initialState?.columns;
     return {
       ...state,
@@ -113,7 +120,7 @@ const columnsPlugin = createPlugin<ColumnsPlugin>()({
       }
     }, [params.columnVisibilityModel, columnsApi]);
 
-    return { columns: { ...columnsApi, selectors: columnsSelectors } };
+    return { columns: columnsApi };
   },
 });
 

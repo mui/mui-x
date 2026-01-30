@@ -12,6 +12,8 @@ import {
 import { type Plugin, createPlugin } from '../core/plugin';
 import type { GridRowId, GridRowModel } from '../internal/rows/rowUtils';
 import type { ColumnState } from '../internal/columns/columnUtils';
+import rowsPlugin from '../internal/rows/rows';
+import columnsPlugin from '../internal/columns/columns';
 
 export interface RowToRender<TRow = GridRowModel> {
   id: GridRowId;
@@ -83,6 +85,7 @@ export interface VirtualizationApi {
 export type VirtualizationPlugin = Plugin<
   'virtualization',
   VirtualizationState,
+  {},
   VirtualizationApi,
   VirtualizationOptions,
   {}
@@ -113,20 +116,20 @@ function renderRow() {
 
 const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
   name: 'virtualization',
-  getInitialState: (state, params) => ({
+  initialize: (state, params) => ({
     ...state,
     ...getInitialVirtualizationState(params),
   }),
-  use: (store, params, api) => {
+  use: (store, params) => {
     const rowHeight = params.rowHeight ?? DEFAULT_ROW_HEIGHT;
     const rowBufferPx = params.rowBufferPx ?? 150;
     const columnBufferPx = params.columnBufferPx ?? 150;
     const autoHeight = params.autoHeight ?? false;
 
-    const rowIds = api.rows.selectors.rowIds(store.state);
-    const rowLookup = api.rows.selectors.rowIdToModelLookup(store.state);
+    const rowIds = rowsPlugin.selectors.rowIds(store.state);
+    const rowLookup = rowsPlugin.selectors.rowIdToModelLookup(store.state);
 
-    const visibleColumns = api.columns.selectors.visibleColumns(store.state);
+    const visibleColumns = columnsPlugin.selectors.visibleColumns(store.state);
     const columnsTotalWidth = visibleColumns.reduce(
       (total, col) => total + (col.size ?? DEFAULT_COLUMN_WIDTH),
       0,
@@ -251,7 +254,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
 
     const useOffsetLeftHook = (): number => {
       const virtualizationState = useStore(store, selectVirtualization);
-      const visibleColumnsValue = useStore(store, api.columns.selectors.visibleColumns);
+      const visibleColumnsValue = useStore(store, columnsPlugin.selectors.visibleColumns);
       const renderContext = useStore(virtualizerStore, Virtualization.selectors.renderContext);
 
       const columnPositions = React.useMemo(
@@ -290,8 +293,8 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
 
     const useRowsToRenderHook = <TRow = GridRowModel>(): RowToRender<TRow>[] => {
       const virtualizationState = useStore(store, selectVirtualization);
-      const rowIdsValue = useStore(store, api.rows.selectors.rowIds);
-      const rowLookupValue = useStore(store, api.rows.selectors.rowIdToModelLookup);
+      const rowIdsValue = useStore(store, rowsPlugin.selectors.rowIds);
+      const rowLookupValue = useStore(store, rowsPlugin.selectors.rowIdToModelLookup);
       const renderContext = useStore(virtualizerStore, Virtualization.selectors.renderContext);
 
       return React.useMemo((): RowToRender<TRow>[] => {
@@ -314,7 +317,7 @@ const virtualizationPlugin = createPlugin<VirtualizationPlugin>()({
 
     const useColumnsToRenderHook = (): ColumnToRender[] => {
       const virtualizationState = useStore(store, selectVirtualization);
-      const visibleColumnsValue = useStore(store, api.columns.selectors.visibleColumns);
+      const visibleColumnsValue = useStore(store, columnsPlugin.selectors.visibleColumns);
       const renderContext = useStore(virtualizerStore, Virtualization.selectors.renderContext);
 
       return React.useMemo((): ColumnToRender[] => {
