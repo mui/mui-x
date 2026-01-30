@@ -27,7 +27,7 @@ export const EventCalendarPremium = React.forwardRef(function EventCalendarPremi
   forwardedRef: React.ForwardedRef<HTMLDivElement>,
 ) {
   // Use the same theme name to share theme customizations with base EventCalendar
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const props = useThemeProps({ props: inProps, name: 'MuiEventCalendar' });
 
   const {

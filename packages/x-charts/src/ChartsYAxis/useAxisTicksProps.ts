@@ -13,7 +13,7 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
   const { yAxis, yAxisIds } = useYAxes();
   const { scale: yScale, tickNumber, reverse, ...settings } = yAxis[inProps.axisId ?? yAxisIds[0]];
 
-  // eslint-disable-next-line material-ui/mui-name-matches-component-name
+  // eslint-disable-next-line mui/material-ui-name-matches-component-name
   const themedProps = useThemeProps({ props: { ...settings, ...inProps }, name: 'MuiChartsYAxis' });
 
   const defaultizedProps = {
