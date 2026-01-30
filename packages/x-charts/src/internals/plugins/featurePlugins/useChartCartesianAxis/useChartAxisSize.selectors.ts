@@ -15,6 +15,22 @@ import {
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
 
+/**
+ * Returns the default fallback height for an X axis when auto-sizing is not available.
+ * This function ensures consistent fallback values between axis size calculation and rendering.
+ */
+export function getDefaultXAxisHeight(axis: DefaultedXAxis): number {
+  return DEFAULT_AXIS_SIZE_HEIGHT + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+}
+
+/**
+ * Returns the default fallback width for a Y axis when auto-sizing is not available.
+ * This function ensures consistent fallback values between axis size calculation and rendering.
+ */
+export function getDefaultYAxisWidth(axis: DefaultedYAxis): number {
+  return DEFAULT_AXIS_SIZE_WIDTH + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+}
+
 function selectXAxisSize(
   axes: DefaultedXAxis[] | undefined,
   axesGap: number,
@@ -32,9 +48,7 @@ function selectXAxisSize(
     let axisSize: number;
     if (axis.height === 'auto') {
       // Use computed auto-size, or fall back to default
-      axisSize =
-        autoSizes[axis.id] ??
-        DEFAULT_AXIS_SIZE_HEIGHT + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+      axisSize = autoSizes[axis.id] ?? getDefaultXAxisHeight(axis);
     } else {
       axisSize = axis.height ?? 0;
     }
@@ -63,9 +77,7 @@ function selectYAxisSize(
     let axisSize: number;
     if (axis.width === 'auto') {
       // Use computed auto-size, or fall back to default
-      axisSize =
-        autoSizes[axis.id] ??
-        DEFAULT_AXIS_SIZE_WIDTH + (axis.label ? AXIS_LABEL_DEFAULT_HEIGHT : 0);
+      axisSize = autoSizes[axis.id] ?? getDefaultYAxisWidth(axis);
     } else {
       axisSize = axis.width ?? 0;
     }
