@@ -194,7 +194,7 @@ async function generateChangelog({
       release,
     })
   )
-    .filter((commit) => !commit.author?.login.endsWith('[bot]'))
+    .filter((commit) => commit.author?.login !== 'renovate[bot]')
     .map((commit) => ({
       ...commit,
       commit: {
