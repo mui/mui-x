@@ -1,18 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import type { TextFieldProps } from '../../../models/gridBaseSlots';
-import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
-import type { GridSingleSelectColDef } from '../../../models/colDef/gridColDef';
+import { TextFieldProps } from '../../../models/gridBaseSlots';
+import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import { GridMultiSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
-import {
-  getValueFromValueOptions,
-  getValueOptions,
-  isSingleSelectColDef,
-} from './filterPanelUtils';
+import { getValueFromValueOptions, getValueOptions, isMultiSelectColDef } from './filterPanelUtils';
 import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';
 
-const renderSingleSelectOptions = ({
+const renderMultiSelectOptions = ({
   column,
   OptionComponent,
   getOptionLabel,
@@ -20,10 +16,10 @@ const renderSingleSelectOptions = ({
   isSelectNative,
   baseSelectOptionProps,
 }: {
-  column: GridSingleSelectColDef;
+  column: GridMultiSelectColDef;
   OptionComponent: React.ElementType;
-  getOptionLabel: NonNullable<GridSingleSelectColDef['getOptionLabel']>;
-  getOptionValue: NonNullable<GridSingleSelectColDef['getOptionValue']>;
+  getOptionLabel: NonNullable<GridMultiSelectColDef['getOptionLabel']>;
+  getOptionValue: NonNullable<GridMultiSelectColDef['getOptionValue']>;
   isSelectNative: boolean;
   baseSelectOptionProps: GridSlotsComponentsProps['baseSelectOption'];
 }) => {
@@ -33,7 +29,7 @@ const renderSingleSelectOptions = ({
     const value = getOptionValue(option);
     let label = getOptionLabel(option);
     if (label === '') {
-      label = ' '; // To force the height of the empty option
+      label = ' '; // To force the height of the empty option
     }
 
     return (
@@ -44,11 +40,11 @@ const renderSingleSelectOptions = ({
   });
 };
 
-export type GridFilterInputSingleSelectProps = GridFilterInputValueProps<TextFieldProps> & {
-  type?: 'singleSelect';
+export type GridFilterInputMultiSelectProps = GridFilterInputValueProps<TextFieldProps> & {
+  type?: 'multiSelect';
 };
 
-function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
+function GridFilterInputMultiSelect(props: GridFilterInputMultiSelectProps) {
   const {
     item,
     applyValue,
@@ -69,7 +65,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
 
   const isSelectNative = rootProps.slotProps?.baseSelect?.native ?? false;
 
-  const resolvedColumn = apiRef.current.getColumn(item.field) as GridSingleSelectColDef | undefined;
+  const resolvedColumn = apiRef.current.getColumn(item.field) as GridMultiSelectColDef | undefined;
 
   const getOptionValue = resolvedColumn!.getOptionValue;
   const getOptionLabel = resolvedColumn!.getOptionLabel;
@@ -91,7 +87,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
     [currentValueOptions, getOptionValue, applyValue, item],
   );
 
-  if (!resolvedColumn || !isSingleSelectColDef(resolvedColumn)) {
+  if (!resolvedColumn || !isMultiSelectColDef(resolvedColumn)) {
     return null;
   }
 
@@ -122,7 +118,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
         {...other}
         {...slotProps?.root}
       >
-        {renderSingleSelectOptions({
+        {renderMultiSelectOptions({
           column: resolvedColumn,
           OptionComponent: rootProps.slots.baseSelectOption,
           getOptionLabel,
@@ -137,7 +133,7 @@ function GridFilterInputSingleSelect(props: GridFilterInputSingleSelectProps) {
   );
 }
 
-GridFilterInputSingleSelect.propTypes = {
+GridFilterInputMultiSelect.propTypes = {
   // ----------------------------- Warning --------------------------------
   // | These PropTypes are generated from the TypeScript type definitions |
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
@@ -183,7 +179,7 @@ GridFilterInputSingleSelect.propTypes = {
   onFocus: PropTypes.func,
   slotProps: PropTypes.object,
   tabIndex: PropTypes.number,
-  type: PropTypes.oneOf(['singleSelect']),
+  type: PropTypes.oneOf(['multiSelect']),
 } as any;
 
-export { GridFilterInputSingleSelect };
+export { GridFilterInputMultiSelect };

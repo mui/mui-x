@@ -252,16 +252,17 @@ By default, columns are assumed to hold strings, so the default column string ty
 
 The following are the native column types with their required value types:
 
-| Column type          | Value type                 |
-| :------------------- | :------------------------- |
-| `'string'` (default) | `string`                   |
-| `'longText'`         | `string`                   |
-| `'number'`           | `number`                   |
-| `'date'`             | `Date() object`            |
-| `'dateTime'`         | `Date() object`            |
-| `'boolean'`          | `boolean`                  |
-| `'singleSelect'`     | A value in `.valueOptions` |
-| `'actions'`          | Not applicable             |
+| Column type          | Value type                            |
+| :------------------- | :------------------------------------ |
+| `'string'` (default) | `string`                              |
+| `'longText'`         | `string`                              |
+| `'number'`           | `number`                              |
+| `'date'`             | `Date() object`                       |
+| `'dateTime'`         | `Date() object`                       |
+| `'boolean'`          | `boolean`                             |
+| `'singleSelect'`     | A value in `.valueOptions`            |
+| `'multiSelect'`      | An array of values in `.valueOptions` |
+| `'actions'`          | Not applicable                        |
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
 
@@ -279,6 +280,24 @@ Edit mode (textarea focused):
 - <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd> – Insert newline
 - <kbd class="key">Enter</kbd> – Commit changes
 - <kbd class="key">Escape</kbd> – Cancel editing
+
+### Multi-select keyboard interactions
+
+The `'multiSelect'` column type supports keyboard interactions to expand overflow chips and edit values when the cell is focused via click or keyboard navigation.
+
+View mode (cell focused):
+
+- <kbd class="key">Space</kbd> – Toggle overflow popup to see all values
+- <kbd class="key">Escape</kbd> – Close popup
+- <kbd class="key">Enter</kbd> or <kbd class="key">F2</kbd> – Enter edit mode
+
+Edit mode (autocomplete focused):
+
+- <kbd class="key">Arrow Up</kbd>/<kbd class="key">Arrow Down</kbd> – Navigate through options
+- <kbd><kbd class="key">Ctrl</kbd>+<kbd class="key">Enter</kbd></kbd> (or <kbd><kbd class="key">Cmd</kbd>+<kbd class="key">Enter</kbd></kbd> on macOS) – Select/deselect highlighted option (dropdown stays open)
+- <kbd class="key">Enter</kbd> – Commit changes and exit edit mode
+- <kbd class="key">Escape</kbd> – Cancel editing and close dropdown
+- <kbd class="key">Backspace</kbd> (empty input) – Remove last selected chip
 
 ### Converting types
 
@@ -336,6 +355,47 @@ However, you can customize which attribute is used as value and label by using `
 ```
 
 :::
+
+#### Multi select
+
+If the column type is `'multiSelect'`, you need to set the `valueOptions` property similar to `singleSelect`. The cell value should be an array of values from the options.
+
+```tsx
+{
+  field: 'tags',
+  type: 'multiSelect',
+  valueOptions: ['React', 'TypeScript', 'JavaScript', 'Node.js']
+}
+```
+
+The multiSelect column displays values as chips, with overflow handling when the column is narrow. Users can edit cells using a multi-select autocomplete dropdown.
+
+{{"demo": "MultiSelectColumn.js", "bg": "inline"}}
+
+Like `singleSelect`, you can use object values with `getOptionValue` and `getOptionLabel`:
+
+```tsx
+{
+  field: 'categories',
+  type: 'multiSelect',
+  valueOptions: [
+    { value: 'fe', label: 'Frontend' },
+    { value: 'be', label: 'Backend' },
+    { value: 'db', label: 'Database' }
+  ]
+}
+```
+
+You can customize the separator used in the formatted output (for exports and copy/paste) with the `separator` property:
+
+```tsx
+{
+  field: 'tags',
+  type: 'multiSelect',
+  separator: ' | ', // Default is ', '
+  valueOptions: ['React', 'TypeScript']
+}
+```
 
 #### Actions
 
