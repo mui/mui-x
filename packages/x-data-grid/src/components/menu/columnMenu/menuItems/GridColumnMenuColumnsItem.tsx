@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
+import type { GridColumnMenuItemProps } from '../GridColumnMenuItemProps';
 import { GridColumnMenuHideItem } from './GridColumnMenuHideItem';
 import { GridColumnMenuManageItem } from './GridColumnMenuManageItem';
 

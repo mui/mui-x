@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { MuiEvent, RefObject } from '@mui/x-internals/types';
+import type { MuiEvent, RefObject } from '@mui/x-internals/types';
 import useTimeout from '@mui/utils/useTimeout';
 import composeClasses from '@mui/utils/composeClasses';
 import {
@@ -29,9 +29,9 @@ import {
   type RowReorderDropPosition,
   type RowReorderDragDirection,
 } from '@mui/x-data-grid/internals';
-import { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { GridRowOrderChangeParams } from '../../../models/gridRowOrderChangeParams';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { GRID_REORDER_COL_DEF } from './gridRowReorderColDef';
 import type { ReorderValidationContext } from './models';
 

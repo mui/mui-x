@@ -8,7 +8,7 @@ export function useEventCalendarClasses(): EventCalendarClasses {
   const classes = React.useContext(EventCalendarClassesContext);
   if (!classes) {
     throw new Error(
-      'MUI Scheduler: useEventCalendarClasses must be used within EventCalendarClassesContext.Provider',
+      'MUI: useEventCalendarClasses must be used within EventCalendarClassesContext.Provider',
     );
   }
   return classes;

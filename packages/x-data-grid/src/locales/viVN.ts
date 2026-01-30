@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const viVNGrid: Partial<GridLocaleText> = {
   // Root
@@ -164,6 +164,10 @@ const viVNGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Có',
   booleanCellFalseLabel: 'Không',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Mở rộng',
+  longTextCellCollapseLabel: 'Thu nhỏ',
 
   // Actions cell more text
   actionsCellMore: 'Thêm',

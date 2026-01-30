@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const zhCNGrid: Partial<GridLocaleText> = {
   // Root
@@ -162,6 +162,10 @@ const zhCNGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
+
+  // Long text cell
+  longTextCellExpandLabel: '显示',
+  longTextCellCollapseLabel: '折叠',
 
   // Actions cell more text
   actionsCellMore: '更多',

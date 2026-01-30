@@ -3,7 +3,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { vars, GridBaseColumnHeaders, UseGridColumnHeadersProps } from '@mui/x-data-grid/internals';
+import {
+  vars,
+  GridBaseColumnHeaders,
+  type UseGridColumnHeadersProps,
+} from '@mui/x-data-grid/internals';
 import { useGridColumnHeadersPro } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 
 const Filler = styled('div', {

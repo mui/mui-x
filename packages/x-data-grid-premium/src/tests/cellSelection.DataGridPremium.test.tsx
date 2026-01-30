@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { stub, SinonStub, spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { stub, type SinonStub, spy } from 'sinon';
+import { type RefObject } from '@mui/x-internals/types';
 import { spyApi, getCell, grid } from 'test/utils/helperFn';
 import { createRenderer, act, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
-  GridApi,
+  type DataGridPremiumProps,
+  type GridApi,
   useGridApiRef,
   gridClasses,
 } from '@mui/x-data-grid-premium';

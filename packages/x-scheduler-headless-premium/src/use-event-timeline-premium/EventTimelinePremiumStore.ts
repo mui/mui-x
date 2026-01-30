@@ -62,11 +62,13 @@ export class EventTimelinePremiumStore<
   EventTimelinePremiumState,
   EventTimelinePremiumParameters<TEvent, TResource>
 > {
+  public lazyLoading: EventTimelinePremiumLazyLoadingPlugin<TEvent>;
+
   public constructor(
     parameters: EventTimelinePremiumParameters<TEvent, TResource>,
     adapter: Adapter,
   ) {
-    super(parameters, adapter, 'EventTimelinePremium', mapper);
+    super(parameters, adapter, 'EventTimelinePremiumStore', mapper);
 
     if (process.env.NODE_ENV !== 'production') {
       // Add listeners to assert the state validity (not applied in prod)
@@ -84,7 +86,7 @@ export class EventTimelinePremiumStore<
     if (!views.includes(view)) {
       throw new Error(
         [
-          `EventTimelinePremium: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
+          `MUI: The component tried to switch to the "${view}" view but it is not compatible with the available views: ${views.join(', ')}.`,
           'Please ensure that the requested view is included in the views array.',
         ].join('\n'),
       );

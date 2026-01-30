@@ -176,6 +176,18 @@
       "description": "Custom component for the tooltip popper.",
       "default": "ChartsTooltipRoot",
       "class": null
+    },
+    {
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
+    },
+    {
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
+      "class": null
     }
   ],
   "classes": [],

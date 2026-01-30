@@ -100,7 +100,7 @@ export function tokenizeByDay(byDay: RecurringEventByDayValue): {
 } {
   const match = String(byDay).match(/^(-?[1-5])?(MO|TU|WE|TH|FR|SA|SU)$/);
   if (!match) {
-    throw new Error(`Scheduler: ${byDay} is not a valid value for the byDay property.`);
+    throw new Error(`MUI: ${byDay} is not a valid value for the byDay property.`);
   }
   return { ord: match[1] ? Number(match[1]) : null, code: match[2] as RecurringEventWeekDayCode };
 }
@@ -120,7 +120,7 @@ export function parsesByDayForWeeklyFrequency(
   const parsed = ruleByDay.map(tokenizeByDay);
   if (parsed.some((item) => item.ord !== null)) {
     throw new Error(
-      'Scheduler: The byDay property must be a plain MO..SU (no ordinals like 1MO, -1FR) when used with a weekly frequency.',
+      'MUI: The byDay property must be a plain MO..SU (no ordinals like 1MO, -1FR) when used with a weekly frequency.',
     );
   }
   return parsed.map((item) => item.code);
@@ -141,7 +141,7 @@ export function parsesByDayForMonthlyFrequency(ruleByDay: RecurringEventByDayVal
 
   if (ord == null) {
     throw new Error(
-      'Scheduler: The byDay property must contain contain a single element with an ordinal (e.g. ["2TU"] or ["-1FR"]).',
+      'MUI: The byDay property must contain contain a single element with an ordinal (e.g. ["2TU"] or ["-1FR"]).',
     );
   }
 
@@ -233,7 +233,7 @@ export function getRemainingOccurrences(
   if (!method) {
     throw new Error(
       [
-        `Scheduler: Unknown frequency ${rule.freq}.`,
+        `MUI: Unknown frequency ${rule.freq}.`,
         'Expected: "DAILY" | "WEEKLY" | "MONTHLY" | "YEARLY".',
       ].join('\n'),
     );
@@ -366,7 +366,7 @@ export function getRemainingMonthlyOccurrences(
   if (rule.byDay?.length) {
     if (rule.byMonthDay?.length) {
       throw new Error(
-        'Scheduler: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
+        'MUI: The monthly recurrences cannot have both the byDay and the byMonthDay properties.',
       );
     }
 
@@ -395,7 +395,7 @@ export function getRemainingMonthlyOccurrences(
   // Path B: BYMONTHDAY (single mode, default to DTSTART day)
   if ((rule.byMonthDay?.length ?? 0) > 1) {
     throw new Error(
-      "Scheduler: The monthly recurrences don't support byMonthDay with multiple elements.",
+      "MUI: The monthly recurrences don't support byMonthDay with multiple elements.",
     );
   }
 
@@ -452,7 +452,7 @@ export function getRemainingYearlyOccurrences(
   // Any use of BYMONTH, BYMONTHDAY, or BYDAY is not allowed at the moment.
   if (rule.byMonth?.length || rule.byMonthDay?.length || rule.byDay?.length) {
     throw new Error(
-      'Scheduler: The yearly recurrences must have either the byMonth, the byMonthDay or the byDay property defined.',
+      'MUI: The yearly recurrences must have either the byMonth, the byMonthDay or the byDay property defined.',
     );
   }
 

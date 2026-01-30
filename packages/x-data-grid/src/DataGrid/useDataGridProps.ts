@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { getThemeProps } from '@mui/system';
-import {
+import type {
   DataGridProcessedProps,
   DataGridProps,
   DataGridForcedPropsKey,
@@ -9,7 +9,7 @@ import {
 } from '../models/props/DataGridProps';
 import { GRID_DEFAULT_LOCALE_TEXT } from '../constants';
 import { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
-import { GridSlotsComponent, GridValidRowModel } from '../models';
+import type { GridSlotsComponent, GridValidRowModel } from '../models';
 import { computeSlots } from '../internals/utils';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../constants/dataGridPropsDefaultValues';
 

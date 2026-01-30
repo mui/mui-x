@@ -24,23 +24,17 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular' }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
-  '&[data-variant="compact"], &[data-variant="regular"]': {
-    '&:active': {
-      backgroundColor: 'var(--interactive-active-bg)',
-    },
-    '&:hover': {
-      backgroundColor: 'var(--interactive-hover-bg)',
-    },
+  '&[data-variant="compact"]': {
+    containerType: 'inline-size',
+    cursor: 'pointer',
+    height: 'fit-content',
   },
   '&[data-variant="filled"]': {
     backgroundColor: 'var(--event-color-3)',
     color: 'var(--event-color-12)',
   },
-  '&[data-variant="compact"]': {
-    containerType: 'inline-size',
+  '&[data-variant="regular"]': {
     cursor: 'pointer',
-    height: 'fit-content',
   },
   ...schedulerPaletteStyles,
 }));
@@ -63,7 +57,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-12)',
+  color: theme.palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -74,7 +68,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-11)',
+  color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -89,9 +83,10 @@ const EventItemTime = styled('time', {
 const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
-})({
-  color: 'var(--event-color-11)',
-});
+})(({ theme }) => ({
+  padding: theme.spacing(0.25),
+  color: theme.palette.text.secondary,
+}));
 
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventCalendar',
@@ -250,7 +245,7 @@ export const EventItem = React.forwardRef(function EventItem(
           </React.Fragment>
         );
       default:
-        throw new Error('Unsupported variant provided to EventItem component.');
+        throw new Error('MUI: Unsupported variant provided to EventItem component.');
     }
   }, [variant, resource?.title, translations, formatTime, occurrence, isRecurring, classes]);
 

@@ -366,8 +366,8 @@ Heatmap.propTypes = {
     dataIndex: PropTypes.number,
     seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['heatmap']).isRequired,
-    xIndex: PropTypes.number,
-    yIndex: PropTypes.number,
+    xIndex: PropTypes.number.isRequired,
+    yIndex: PropTypes.number.isRequired,
   }),
   /**
    * The width of the chart in px. If not defined, it takes the width of the parent element.
