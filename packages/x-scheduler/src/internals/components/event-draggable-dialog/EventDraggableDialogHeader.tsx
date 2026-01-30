@@ -42,7 +42,12 @@ export default function EventDraggableDialogHeader(props: EventDraggableDialogHe
       <EventDraggableDialogHeaderContent className={classes.eventDialogHeaderContent}>
         {children}
       </EventDraggableDialogHeaderContent>
-      <IconButton size="small" aria-label={translations.closeButtonAriaLabel} onClick={onClose}>
+      <IconButton
+        className={classes.eventDialogCloseButton}
+        size="small"
+        aria-label={translations.closeButtonAriaLabel}
+        onClick={onClose}
+      >
         <CloseRounded fontSize="small" />
       </IconButton>
     </EventDraggableDialogHeaderRoot>

@@ -1,6 +1,8 @@
 export interface EventDialogClasses {
   /** Styles applied to the event dialog root element. */
   eventDialog: string;
+  /** Styles applied to the event dialog close button element. */
+  eventDialogCloseButton: string;
   /** Styles applied to the event dialog drag handle element. */
   eventDialogDragHandle: string;
   /** Styles applied to the event dialog header element. */
@@ -47,6 +49,7 @@ export type EventDialogClassKey = keyof EventDialogClasses;
 
 export const eventDialogClassKeys: EventDialogClassKey[] = [
   'eventDialog',
+  'eventDialogCloseButton',
   'eventDialogDragHandle',
   'eventDialogHeader',
   'eventDialogHeaderContent',
@@ -72,6 +75,7 @@ export const eventDialogClassKeys: EventDialogClassKey[] = [
 // Create a slots object for reuse in useUtilityClasses (avoids duplication in EventCalendar.tsx and EventTimelinePremium.tsx)
 export const eventDialogSlots: Record<EventDialogClassKey, [EventDialogClassKey]> = {
   eventDialog: ['eventDialog'],
+  eventDialogCloseButton: ['eventDialogCloseButton'],
   eventDialogDragHandle: ['eventDialogDragHandle'],
   eventDialogHeader: ['eventDialogHeader'],
   eventDialogHeaderContent: ['eventDialogHeaderContent'],
