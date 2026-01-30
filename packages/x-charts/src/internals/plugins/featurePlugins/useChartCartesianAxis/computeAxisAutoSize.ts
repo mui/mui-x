@@ -8,6 +8,7 @@ import {
   AXIS_AUTO_SIZE_MIN,
   AXIS_AUTO_SIZE_TICK_SIZE,
   AXIS_AUTO_SIZE_TICK_LABEL_GAP,
+  AXIS_AUTO_SIZE_GROUP_GAP,
   AXIS_LABEL_DEFAULT_HEIGHT,
 } from '../../../../constants';
 
@@ -285,29 +286,24 @@ function computeGroupedAxisAutoSize(
     const labelDimension = getRotatedDimension(maxWidth, maxHeight, angle, direction);
     labelDimensions.push(labelDimension);
 
-    // For the first group, use the base tick size
-    // For subsequent groups, position after the previous group's labels
-    if (groupIndex === 0) {
-      // Check if group has custom tickSize, otherwise use base
-      groupTickSizes.push(group.tickSize ?? defaultTickSize);
+    // If group has custom tickSize, use it directly (user-specified)
+    // Otherwise, compute cumulative position after previous group's labels
+    const customTickSize = group.tickSize;
+    if (customTickSize !== undefined) {
+      // User specified an exact tick size - use it directly
+      groupTickSizes.push(customTickSize);
+    } else if (groupIndex === 0) {
+      // First group without custom tickSize - use base
+      groupTickSizes.push(defaultTickSize);
     } else {
-      // Previous group's extent: tickSize + gap + labelDimension
+      // Subsequent group without custom tickSize - position after previous group's labels
       const previousExtent =
         groupTickSizes[groupIndex - 1] +
         AXIS_AUTO_SIZE_TICK_LABEL_GAP +
-        labelDimensions[groupIndex - 1];
+        labelDimensions[groupIndex - 1] +
+        AXIS_AUTO_SIZE_GROUP_GAP;
 
-      // This group's tick should extend to just before its labels
-      // If group has custom tickSize, use it as an offset from previousExtent
-      const customTickSize = group.tickSize;
-      if (customTickSize !== undefined) {
-        // Custom tick size is relative to the axis line, not cumulative
-        // But we need cumulative positioning, so take max of custom and cumulative
-        groupTickSizes.push(Math.max(customTickSize, previousExtent));
-      } else {
-        // Add a small base tick for visual separation
-        groupTickSizes.push(previousExtent + defaultTickSize);
-      }
+      groupTickSizes.push(previousExtent + defaultTickSize);
     }
   }
 
@@ -339,7 +335,9 @@ function computeGroupedAxisAutoSize(
  * For regular axes, returns just a number (the size).
  * For grouped axes, returns an object with size and computed group tick sizes.
  */
-export function computeAxisAutoSize(options: ComputeAxisAutoSizeOptions): AxisAutoSizeResult | undefined {
+export function computeAxisAutoSize(
+  options: ComputeAxisAutoSizeOptions,
+): AxisAutoSizeResult | undefined {
   const { axis, direction, isHydrated, extrema } = options;
 
   // During SSR or before hydration, return undefined to use fallback

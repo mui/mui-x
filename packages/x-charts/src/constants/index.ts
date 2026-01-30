@@ -19,3 +19,4 @@ export const AXIS_AUTO_SIZE_PADDING = 4; // Safety margin for auto-computed dime
 export const AXIS_AUTO_SIZE_MIN = 20; // Minimum auto-computed dimension
 export const AXIS_AUTO_SIZE_TICK_SIZE = 6; // Default tick size
 export const AXIS_AUTO_SIZE_TICK_LABEL_GAP = 2; // Gap between tick and label
+export const AXIS_AUTO_SIZE_GROUP_GAP = 4; // Gap between group levels in grouped axes

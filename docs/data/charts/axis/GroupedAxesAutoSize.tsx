@@ -4,7 +4,13 @@ import Stack from '@mui/material/Stack';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { useXAxisCoordinates, useXAxis, useYAxisCoordinates, useYAxis, type AxisCoordinates } from "@mui/x-charts/hooks";
+import {
+  useXAxisCoordinates,
+  useXAxis,
+  useYAxisCoordinates,
+  useYAxis,
+  type AxisCoordinates,
+} from '@mui/x-charts/hooks';
 
 export default function GroupedAxesAutoSize() {
   const [useAutoSize, setUseAutoSize] = React.useState(true);
@@ -164,11 +170,9 @@ function AxisPositionIndicator({
   coordinates: AxisCoordinates;
   color: string;
 }) {
-
   if (position === 'none') {
     return null;
   }
-
 
   return (
     <rect
