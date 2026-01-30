@@ -362,30 +362,6 @@ describe('Sorting Plugin - Integration Tests', () => {
         expect(onSortModelChange).toHaveBeenCalledWith([{ field: 'name', direction: 'desc' }]);
       });
     });
-
-    describe('onSortedRowsSet', () => {
-      it('should be called when sorted rows are computed', async () => {
-        const onSortedRowsSet = vi.fn();
-        const apiRef = React.createRef<GridApi | null>();
-        render(
-          <TestDataGrid
-            rows={defaultRows}
-            columns={defaultColumns}
-            apiRef={apiRef}
-            sorting={{ onSortedRowsSet }}
-          />,
-        );
-
-        // Clear initial call
-        onSortedRowsSet.mockClear();
-
-        await act(async () => {
-          apiRef.current?.api.sorting.setModel([{ field: 'name', direction: 'asc' }]);
-        });
-
-        expect(onSortedRowsSet).toHaveBeenCalledWith([2, 3, 1]); // Alice, Bob, Charlie
-      });
-    });
   });
 
   describe('sortingMode', () => {

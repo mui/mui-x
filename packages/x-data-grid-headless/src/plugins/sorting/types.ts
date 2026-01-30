@@ -121,12 +121,6 @@ export interface SortingOptions {
      * @default ['asc', 'desc', null]
      */
     order?: readonly GridSortDirection[];
-
-    /**
-     * Callback fired when sorted row IDs are recomputed.
-     * @param {GridRowId[]} sortedRowIds The sorted row IDs.
-     */
-    onSortedRowsSet?: (sortedRowIds: GridRowId[]) => void;
   };
 }
 
