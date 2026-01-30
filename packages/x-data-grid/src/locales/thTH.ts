@@ -143,6 +143,7 @@ const thTHGrid: Partial<GridLocaleText> = {
 
   // Rows selected footer text
   footerRowSelected: (count) => `เลือกแล้ว ${count.toLocaleString()} แถว`,
+
   // Total row amount footer text
   footerTotalRows: 'จำนวนแถวทั้งหมด:',
 
