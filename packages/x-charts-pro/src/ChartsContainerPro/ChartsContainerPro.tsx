@@ -7,9 +7,9 @@ import { useChartsContainerProProps } from './useChartsContainerProProps';
 import { type AllPluginSignatures } from '../internals/plugins/allPlugins';
 import { ChartDataProviderPro, type ChartDataProviderProProps } from '../ChartDataProviderPro';
 
-export interface ChartsContainerProSlots { }
+export interface ChartsContainerProSlots {}
 
-export interface ChartsContainerProSlotProps { }
+export interface ChartsContainerProSlotProps {}
 
 export type ChartsContainerProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
