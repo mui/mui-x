@@ -136,6 +136,30 @@ describe('<DateCalendar />', () => {
       vi.useRealTimers();
     });
 
+    it('should disable previous month navigation when in the current month `disablePast` is true', async () => {
+      vi.setSystemTime(new Date(2019, 0, 2, 14, 30, 0));
+
+      render(<DateCalendar defaultValue={adapterToUse.date('2019-01-02T14:30:00')} disablePast />);
+
+      expect(screen.getByTitle('Previous month')).to.have.attribute('disabled');
+
+      fireEvent.click(screen.getByTitle('Previous month'));
+      expect(screen.getByText('January 2019')).toBeVisible();
+    });
+
+    it('should disable next month navigation when in the current month `disableFuture` is true', async () => {
+      vi.setSystemTime(new Date(2019, 0, 2, 14, 30, 0));
+
+      render(
+        <DateCalendar defaultValue={adapterToUse.date('2019-01-02T14:30:00')} disableFuture />,
+      );
+
+      expect(screen.getByTitle('Next month')).to.have.attribute('disabled');
+
+      fireEvent.click(screen.getByTitle('Next month'));
+      expect(screen.getByText('January 2019')).toBeVisible();
+    });
+
     // test: https://github.com/mui/mui-x/issues/12373
     it('should not reset day to `startOfDay` if value already exists when finding the closest enabled date', async () => {
       const onChange = spy();
