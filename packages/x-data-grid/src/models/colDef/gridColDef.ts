@@ -113,6 +113,20 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
    */
   maxWidth?: number;
   /**
+   * The minimum width of the column in pixels when autosizing.
+   * If `autoSizingMinWidth` is used together with `minWidth`, then `minWidth` is ignored in favor of `autoSizingMinWidth` when autosizing.
+   * If only `autoSizingMinWidth` is used, then manual resizing acts as if min size is not set.
+   * @default 0
+   */
+  autoSizingMinWidth?: number;
+  /**
+   * The maximum width of the column in pixels when autosizing.
+   * If `autoSizingMaxWidth` is used together with `maxWidth`, then `maxWidth` is ignored in favor of `autoSizingMaxWidth` when autosizing.
+   * If only `autoSizingMaxWidth` is used, then manual resizing acts as if max size is not set.
+   * @default Infinity
+   */
+  autoSizingMaxWidth?: number;
+  /**
    * If `false`, removes the option to hide this column.
    * @default true
    */
@@ -395,6 +409,10 @@ export type GridStateColDef<R extends GridValidRowModel = any, V = any, F = V> =
    */
   hasBeenResized?: boolean;
 };
+
+export const isGridStateColDef = <R extends GridValidRowModel = any, V = any, F = V>(
+  colDef: GridColDef<R, V, F> | GridStateColDef<R, V, F>,
+): colDef is GridStateColDef<R, V, F> => 'computedWidth' in colDef;
 
 /**
  * Meta Info about columns.
