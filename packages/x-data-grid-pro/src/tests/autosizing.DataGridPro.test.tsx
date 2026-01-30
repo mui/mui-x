@@ -23,7 +23,7 @@ describe('<DataGridPro /> - Autosizing', () => {
 
   function Test(props: DataGridProProps & { width?: number; height?: number }) {
     apiRef = useGridApiRef();
-    const { width = 300, height = 500, ...otherProps } = props;
+    const { width = 2000, height = 500, ...otherProps } = props;
     return (
       <div style={{ width, height }}>
         <DataGridPro apiRef={apiRef} {...baselineProps} {...otherProps} />
@@ -220,13 +220,13 @@ describe('<DataGridPro /> - Autosizing', () => {
     });
 
     it('should respect maxWidth if autoSizingMaxWidth is not set', async () => {
-      const columns = [{ field: 'id' }, { field: 'brand', maxWidth: 100 }];
+      const columns = [{ field: 'id' }, { field: 'brand', maxWidth: 50 }];
       render(<Test columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
-      expect(getWidths(columns)[1]).to.equal(100);
+      expect(getWidths(columns)[1]).to.equal(50);
     });
 
-    it('should NOT respect autoSizingMinWidth/MaxSize during manual resizing', async () => {
+    it('should NOT respect autoSizingMinWidth/MaxWidth during manual resizing', async () => {
       const columns = [
         { field: 'id', width: 100, autoSizingMinWidth: 150, autoSizingMaxWidth: 200 },
         { field: 'brand' },
