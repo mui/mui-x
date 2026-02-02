@@ -113,7 +113,7 @@
     "eslint": "9.39.2",
     "eslint-import-resolver-webpack": "0.13.10",
     "eslint-plugin-consistent-default-export-name": "0.0.15",
-    "eslint-plugin-jsdoc": "62.3.1",
+    "eslint-plugin-jsdoc": "62.5.0",
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "9.6.1",
     "globby": "16.1.0",
