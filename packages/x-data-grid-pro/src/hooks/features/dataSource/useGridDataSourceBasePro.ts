@@ -364,6 +364,33 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
           });
         }
         apiRef.current.updateRows(response.rows.concat(rowsToDelete));
+
+        // After updating root rows, find expanded groups and re-fetch their children
+        // This ensures children are re-fetched with updated sort/filter params
+        const updatedTree = gridRowTreeSelector(apiRef);
+        const expandedGroupIds: GridRowId[] = [];
+        const collectExpandedGroups = (nodeId: GridRowId) => {
+          const node = updatedTree[nodeId];
+          if (node && node.type === 'group' && node.childrenExpanded && node.children.length > 0) {
+            expandedGroupIds.push(nodeId);
+            // Also check nested expanded groups
+            node.children.forEach(collectExpandedGroups);
+          }
+        };
+        // Start from root's children (the response rows)
+        const rootNode = updatedTree[GRID_ROOT_GROUP_ID];
+        if (rootNode && rootNode.type === 'group') {
+          rootNode.children.forEach(collectExpandedGroups);
+        }
+
+        // Remove children of expanded groups and re-queue them for fetching
+        if (expandedGroupIds.length > 0) {
+          expandedGroupIds.forEach((groupId) => {
+            apiRef.current.removeChildrenRows(groupId);
+          });
+          // Queue expanded groups for re-fetching with new sort/filter params
+          nestedDataManager.queue(expandedGroupIds);
+        }
       }
 
       apiRef.current.unstable_applyPipeProcessors(
@@ -372,7 +399,7 @@ export const useGridDataSourceBasePro = <Api extends GridPrivateApiPro>(
         true,
       );
     },
-    [apiRef],
+    [apiRef, nestedDataManager],
   );
 
   const dataSourceApi: GridDataSourceApiPro = {
