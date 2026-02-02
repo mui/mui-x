@@ -117,7 +117,7 @@ export const useDataGridProComponent = (
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridRowSelectionPreProcessors(apiRef, props);
-  useGridMultiSelectPreProcessors(apiRef);
+  useGridMultiSelectPreProcessors(apiRef, props);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridRowReorderPreProcessors(apiRef, props);

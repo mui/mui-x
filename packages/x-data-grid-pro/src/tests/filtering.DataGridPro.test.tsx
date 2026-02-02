@@ -1395,8 +1395,7 @@ describe('<DataGridPro /> - Filter', () => {
     });
   });
 
-  // multiSelect tests require browser environment for chip rendering and column defaults
-  describe.skipIf(isJSDOM)('column type: multiSelect', () => {
+  describe('column type: multiSelect', () => {
     function TestCaseMultiSelect(props: Partial<DataGridProProps>) {
       apiRef = useGridApiRef();
       return (
@@ -1448,6 +1447,7 @@ describe('<DataGridPro /> - Filter', () => {
             {
               field: 'tags',
               type: 'multiSelect',
+              width: 250,
               valueOptions: [
                 { value: 'fe', label: 'Frontend' },
                 { value: 'be', label: 'Backend' },

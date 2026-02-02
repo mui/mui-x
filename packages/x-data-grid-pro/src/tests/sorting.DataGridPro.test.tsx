@@ -338,8 +338,7 @@ describe('<DataGridPro /> - Sorting', () => {
     });
   });
 
-  // multiSelect sorting tests require browser environment for chip rendering and column defaults
-  describe.skipIf(isJSDOM)('column type: multiSelect', () => {
+  describe('column type: multiSelect', () => {
     it('should sort by array length by default', () => {
       render(
         <div style={{ width: 300, height: 300 }}>
@@ -356,6 +355,7 @@ describe('<DataGridPro /> - Sorting', () => {
                 field: 'tags',
                 type: 'multiSelect',
                 valueOptions: ['A', 'B', 'C'],
+                width: 200,
               },
             ]}
             sortModel={[{ field: 'tags', sort: 'asc' }]}
@@ -382,6 +382,7 @@ describe('<DataGridPro /> - Sorting', () => {
                 field: 'tags',
                 type: 'multiSelect',
                 valueOptions: ['A', 'B', 'C'],
+                width: 200,
               },
             ]}
             sortModel={[{ field: 'tags', sort: 'desc' }]}

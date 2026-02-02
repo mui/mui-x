@@ -8,7 +8,7 @@ import {
   GridPreferencePanelsValue,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, act, screen, within } from '@mui/internal-test-utils';
-import { getColumnValues, getSelectInput } from 'test/utils/helperFn';
+import { getColumnValues } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
 
@@ -42,8 +42,7 @@ describe('<DataGrid /> - Filter panel', () => {
     expect(model.items[0].operator).not.to.equal(null);
   });
 
-  // multiSelect tests require browser environment for chip rendering and column defaults
-  describe.skipIf(isJSDOM)('multiSelect columns', () => {
+  describe('multiSelect columns', () => {
     const multiSelectBaselineProps: Partial<DataGridProProps> = {
       rows: [
         { id: 1, tags: ['React', 'TypeScript'] },
@@ -78,10 +77,10 @@ describe('<DataGrid /> - Filter panel', () => {
         />,
       );
 
-      const filterValueInput = getSelectInput(screen.getByRole('listbox'));
-      await user.click(filterValueInput);
+      const filterValueCombobox = screen.getByRole('combobox', { name: 'Value' });
+      await user.click(filterValueCombobox);
 
-      const listbox = within(screen.getByRole('listbox')).getByRole('listbox');
+      const listbox = screen.getByRole('listbox');
       const options = within(listbox).getAllByRole('option');
       // 5 options + 1 empty option
       expect(options).to.have.length(6);

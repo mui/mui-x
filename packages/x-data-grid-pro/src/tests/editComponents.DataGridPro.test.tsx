@@ -717,7 +717,7 @@ describe('<DataGridPro /> - Edit components', () => {
   });
 
   // multiSelect tests require browser environment for chip rendering and column defaults
-  describe.skipIf(isJSDOM)('column type: multiSelect', () => {
+  describe('column type: multiSelect', () => {
     const valueOptions = ['Option 1', 'Option 2', 'Option 3'];
 
     beforeEach(() => {
