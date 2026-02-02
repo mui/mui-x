@@ -10,11 +10,11 @@ const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
 
 export const initialEvents: SchedulerEvent[] = [
   {
-    id: 'deepPurple',
+    id: 'purple',
     start: setHours(setDay(START_OF_FIRST_WEEK, 1), 2),
     end: setHours(setDay(START_OF_FIRST_WEEK, 1), 4),
-    title: 'deepPurple',
-    resource: 'deepPurple',
+    title: 'purple',
+    resource: 'purple',
   },
   {
     id: 'teal',
@@ -31,18 +31,18 @@ export const initialEvents: SchedulerEvent[] = [
     resource: 'lime',
   },
   {
-    id: 'deepOrange',
+    id: 'orange',
     start: setHours(setDay(START_OF_FIRST_WEEK, 2), 5),
     end: setHours(setDay(START_OF_FIRST_WEEK, 2), 7),
-    title: 'deepOrange',
-    resource: 'deepOrange',
+    title: 'orange',
+    resource: 'orange',
   },
   {
-    id: 'cyan',
+    id: 'green',
     start: setHours(setDay(START_OF_FIRST_WEEK, 3), 2),
     end: setHours(setDay(START_OF_FIRST_WEEK, 3), 4),
-    title: 'cyan',
-    resource: 'cyan',
+    title: 'green',
+    resource: 'green',
   },
   {
     id: 'pink',
@@ -75,11 +75,11 @@ export const initialEvents: SchedulerEvent[] = [
 ];
 
 export const resources: SchedulerResource[] = [
-  { title: 'deepPurple', id: 'deepPurple', eventColor: 'deepPurple' },
+  { title: 'purple', id: 'purple', eventColor: 'purple' },
   { title: 'teal', id: 'teal', eventColor: 'teal' },
   { title: 'lime', id: 'lime', eventColor: 'lime' },
-  { title: 'deepOrange', id: 'deepOrange', eventColor: 'deepOrange' },
-  { title: 'cyan', id: 'cyan', eventColor: 'cyan' },
+  { title: 'orange', id: 'orange', eventColor: 'orange' },
+  { title: 'green', id: 'green', eventColor: 'green' },
   { title: 'pink', id: 'pink', eventColor: 'pink' },
   { title: 'indigo', id: 'indigo', eventColor: 'indigo' },
   { title: 'amber', id: 'amber', eventColor: 'amber' },

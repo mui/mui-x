@@ -278,7 +278,7 @@ export const resources: SchedulerResource[] = [
   {
     title: 'Work',
     id: 'work',
-    eventColor: 'deepPurple',
+    eventColor: 'purple',
     children: [
       {
         title: 'eXplore Team',
@@ -292,6 +292,6 @@ export const resources: SchedulerResource[] = [
   { title: 'Holidays', id: 'holidays', eventColor: 'red' },
   { title: 'Workout', id: 'workout', eventColor: 'teal' },
   { title: 'Birthdays', id: 'birthdays', eventColor: 'lime' },
-  { title: 'Personal', id: 'personal', eventColor: 'deepOrange' },
+  { title: 'Personal', id: 'personal', eventColor: 'orange' },
   { title: 'Medical', id: 'medical', eventColor: 'indigo' },
 ];

@@ -17,10 +17,10 @@ const date = (dayOffset: number): Date => {
 export const resources: SchedulerResource[] = [
   { title: 'Ocean View Suite', id: 'ocean-suite', eventColor: 'blue' },
   { title: 'Mountain Chalet', id: 'mountain-chalet', eventColor: 'teal' },
-  { title: 'City Loft', id: 'city-loft', eventColor: 'deepPurple' },
+  { title: 'City Loft', id: 'city-loft', eventColor: 'purple' },
   { title: 'Garden Studio', id: 'garden-studio', eventColor: 'lime' },
-  { title: 'Penthouse', id: 'penthouse', eventColor: 'deepOrange' },
-  { title: 'Beach House', id: 'beach-house', eventColor: 'cyan' },
+  { title: 'Penthouse', id: 'penthouse', eventColor: 'orange' },
+  { title: 'Beach House', id: 'beach-house', eventColor: 'green' },
   { title: 'Lakeside Cabin', id: 'lakeside-cabin', eventColor: 'indigo' },
   { title: 'Downtown Apartment', id: 'downtown-apt', eventColor: 'pink' },
   { title: 'Riverside Villa', id: 'riverside-villa', eventColor: 'grey' },

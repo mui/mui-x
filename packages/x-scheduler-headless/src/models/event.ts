@@ -285,15 +285,14 @@ export type SchedulerEventId = string | number;
 export type SchedulerEventColor =
   | 'red'
   | 'pink'
-  | 'deepPurple'
+  | 'purple'
   | 'indigo'
   | 'blue'
-  | 'cyan'
   | 'teal'
   | 'green'
   | 'lime'
   | 'amber'
-  | 'deepOrange'
+  | 'orange'
   | 'grey';
 
 export type SchedulerEventSide = 'start' | 'end';

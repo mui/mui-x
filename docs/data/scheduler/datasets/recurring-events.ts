@@ -161,8 +161,8 @@ export const initialEvents: SchedulerEvent[] = [
 ];
 
 export const resources: SchedulerResource[] = [
-  { title: 'Weekly Patterns', id: 'weekly', eventColor: 'deepPurple' },
+  { title: 'Weekly Patterns', id: 'weekly', eventColor: 'purple' },
   { title: 'Monthly Patterns', id: 'monthly', eventColor: 'teal' },
   { title: 'Yearly Patterns', id: 'yearly', eventColor: 'lime' },
-  { title: 'All-day & Spanning', id: 'allday', eventColor: 'deepOrange' },
+  { title: 'All-day & Spanning', id: 'allday', eventColor: 'orange' },
 ];

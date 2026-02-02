@@ -36,7 +36,7 @@ const resources: SchedulerResource[] = [
   {
     id: 'r2',
     title: 'Personal',
-    eventColor: 'cyan',
+    eventColor: 'teal',
   },
 ];
 
@@ -230,7 +230,7 @@ describe('<EventDraggableDialogContent open />', () => {
 
     const resourcesNoColor: SchedulerResource[] = [
       { id: 'r1', title: 'Work', eventColor: 'blue' },
-      { id: 'r2', title: 'Personal', eventColor: 'cyan' },
+      { id: 'r2', title: 'Personal', eventColor: 'teal' },
       { id: 'r3', title: 'NoColor' },
     ];
 

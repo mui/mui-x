@@ -2,10 +2,8 @@ import { CSSObject, Theme } from '@mui/material/styles';
 import {
   red,
   pink,
-  deepPurple,
   indigo,
   blue,
-  cyan,
   teal,
   green,
   lime,
@@ -13,6 +11,7 @@ import {
   deepOrange,
   orange,
   grey,
+  purple,
 } from '@mui/material/colors';
 
 /**
@@ -24,13 +23,16 @@ const eventColorTokens = {
   red: {
     light: {
       main: red[500],
-      'surface-bold': red[400],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': red[600],
+      'surface-bold': red[200],
+      'surface-bold-hover': '#ED8D8D',
+      'on-surface-bold': '#760F0F',
+      'surface-bold-selected': '#FF5959',
+      'surface-bold-selected-hover': red[400],
+      'on-surface-bold-selected': '#FFFFFF',
       'surface-subtle': red[50],
-      'surface-subtle-hover': '#FEDCDF', // custom
+      'surface-subtle-hover': '#FEDCDF',
       'surface-accent': red[900],
-      'on-surface-subtle-primary': '#851414', // custom (darker than 900)
+      'on-surface-subtle-primary': '#760F0F',
       'on-surface-subtle-secondary': red[900],
     },
     dark: {
@@ -38,8 +40,8 @@ const eventColorTokens = {
       'surface-bold': red[700],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': red[800],
-      'surface-subtle': '#681919', // custom
-      'surface-subtle-hover': '#742B2B', // custom
+      'surface-subtle': '#681919',
+      'surface-subtle-hover': '#742B2B',
       'surface-accent': red[200],
       'on-surface-subtle-primary': red[50],
       'on-surface-subtle-secondary': red[200],
@@ -48,11 +50,14 @@ const eventColorTokens = {
   pink: {
     light: {
       main: pink[400],
-      'surface-bold': pink[400],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': pink[500],
+      'surface-bold': '#fca4c1',
+      'surface-bold-hover': pink[200],
+      'on-surface-bold': pink[900],
+      'surface-bold-selected': '#FC4B87',
+      'surface-bold-selected-hover': pink[400],
+      'on-surface-bold-selected': pink[900],
       'surface-subtle': pink[50],
-      'surface-subtle-hover': '#FACCDC', // custom
+      'surface-subtle-hover': '#FACCDC',
       'surface-accent': pink[800],
       'on-surface-subtle-primary': pink[900],
       'on-surface-subtle-secondary': pink[800],
@@ -62,45 +67,51 @@ const eventColorTokens = {
       'surface-bold': pink[700],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': pink[800],
-      'surface-subtle': '#67103E', // custom
-      'surface-subtle-hover': '#73234D', // custom
+      'surface-subtle': '#67103E',
+      'surface-subtle-hover': '#73234D',
       'surface-accent': pink[200],
       'on-surface-subtle-primary': pink[50],
       'on-surface-subtle-secondary': pink[200],
     },
   },
-  deepPurple: {
+  purple: {
     light: {
-      main: deepPurple[500],
-      'surface-bold': deepPurple[500],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': deepPurple[600],
-      'surface-subtle': deepPurple[50],
-      'surface-subtle-hover': '#DCD2EE', // custom
-      'surface-accent': deepPurple[800],
-      'on-surface-subtle-primary': '#271574', // custom
-      'on-surface-subtle-secondary': deepPurple[800],
+      main: purple[400],
+      'surface-bold': '#D6ABDD',
+      'surface-bold-hover': purple[200],
+      'on-surface-bold': '#380673',
+      'surface-bold-selected': purple[300],
+      'surface-bold-selected-hover': purple[400],
+      'on-surface-bold-selected': '#FFFFFF',
+      'surface-subtle': purple[50],
+      'surface-subtle-hover': '#EDD0F1',
+      'surface-accent': purple[800],
+      'on-surface-subtle-primary': '#380673',
+      'on-surface-subtle-secondary': purple[800],
     },
     dark: {
-      main: deepPurple[700],
-      'surface-bold': deepPurple[700],
+      main: purple[700],
+      'surface-bold': purple[700],
       'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': deepPurple[800],
-      'surface-subtle': '#2E2066', // custom
-      'surface-subtle-hover': '#3E3172', // custom
-      'surface-accent': deepPurple[200],
-      'on-surface-subtle-primary': deepPurple[50],
-      'on-surface-subtle-secondary': deepPurple[200],
+      'surface-bold-hover': purple[800],
+      'surface-subtle': '#2E2066',
+      'surface-subtle-hover': '#3E3172',
+      'surface-accent': purple[200],
+      'on-surface-subtle-primary': purple[50],
+      'on-surface-subtle-secondary': purple[200],
     },
   },
   indigo: {
     light: {
       main: indigo[500],
-      'surface-bold': indigo[500],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': indigo[600],
+      'surface-bold': indigo[200],
+      'surface-bold-hover': '#8694E2',
+      'on-surface-bold': indigo[900],
+      'surface-bold-selected': indigo[400],
+      'surface-bold-selected-hover': indigo[500],
+      'on-surface-bold-selected': indigo[900],
       'surface-subtle': indigo[50],
-      'surface-subtle-hover': '#D3D6EE', // custom
+      'surface-subtle-hover': '#D3D6EE',
       'surface-accent': indigo[700],
       'on-surface-subtle-primary': indigo[900],
       'on-surface-subtle-secondary': indigo[700],
@@ -110,8 +121,8 @@ const eventColorTokens = {
       'surface-bold': indigo[700],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': indigo[800],
-      'surface-subtle': '#19205E', // custom
-      'surface-subtle-hover': '#2B316B', // custom
+      'surface-subtle': '#19205E',
+      'surface-subtle-hover': '#2B316B',
       'surface-accent': indigo[200],
       'on-surface-subtle-primary': indigo[50],
       'on-surface-subtle-secondary': indigo[200],
@@ -120,13 +131,16 @@ const eventColorTokens = {
   blue: {
     light: {
       main: blue[600],
-      'surface-bold': blue[600],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': blue[700],
+      'surface-bold': blue[200],
+      'surface-bold-hover': '#5EB5FC',
+      'on-surface-bold': '#0B3A84',
+      'surface-bold-selected': blue[400],
+      'surface-bold-selected-hover': blue[500],
+      'on-surface-bold-selected': '#FFFFFF',
       'surface-subtle': blue[50],
-      'surface-subtle-hover': '#CAE5FC', // custom
+      'surface-subtle-hover': '#CAE5FC',
       'surface-accent': blue[800],
-      'on-surface-subtle-primary': '#0B3A84', // custom
+      'on-surface-subtle-primary': '#0B3A84',
       'on-surface-subtle-secondary': blue[800],
     },
     dark: {
@@ -134,45 +148,24 @@ const eventColorTokens = {
       'surface-bold': blue[700],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': blue[800],
-      'surface-subtle': '#073070', // custom
-      'surface-subtle-hover': '#1A407B', // custom
+      'surface-subtle': '#073070',
+      'surface-subtle-hover': '#1A407B',
       'surface-accent': blue[200],
       'on-surface-subtle-primary': blue[50],
       'on-surface-subtle-secondary': blue[200],
     },
   },
-  cyan: {
-    light: {
-      main: cyan[600],
-      'surface-bold': cyan[600],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': cyan[700],
-      'surface-subtle': cyan[50],
-      'surface-subtle-hover': '#C4EFF4', // custom
-      'surface-accent': cyan[800],
-      'on-surface-subtle-primary': '#004D54', // custom
-      'on-surface-subtle-secondary': cyan[800],
-    },
-    dark: {
-      main: cyan[700],
-      'surface-bold': cyan[700],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': cyan[800],
-      'surface-subtle': '#003840', // custom
-      'surface-subtle-hover': '#004D54', // custom
-      'surface-accent': cyan[200],
-      'on-surface-subtle-primary': cyan[50],
-      'on-surface-subtle-secondary': cyan[200],
-    },
-  },
   teal: {
     light: {
       main: teal[500],
-      'surface-bold': teal[500],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': teal[600],
+      'surface-bold': teal[200],
+      'surface-bold-hover': '#3DBEB2',
+      'on-surface-bold': teal[900],
+      'surface-bold-selected': teal[400],
+      'surface-bold-selected-hover': teal[500],
+      'on-surface-bold-selected': '#FFFFFF',
       'surface-subtle': teal[50],
-      'surface-subtle-hover': '#C9E9E6', // custom
+      'surface-subtle-hover': '#C9E9E6',
       'surface-accent': teal[800],
       'on-surface-subtle-primary': teal[900],
       'on-surface-subtle-secondary': teal[800],
@@ -182,8 +175,8 @@ const eventColorTokens = {
       'surface-bold': teal[700],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': teal[800],
-      'surface-subtle': '#044036', // custom
-      'surface-subtle-hover': '#184F46', // custom
+      'surface-subtle': '#044036',
+      'surface-subtle-hover': '#184F46',
       'surface-accent': teal[200],
       'on-surface-subtle-primary': teal[50],
       'on-surface-subtle-secondary': teal[200],
@@ -192,13 +185,16 @@ const eventColorTokens = {
   green: {
     light: {
       main: green[600],
-      'surface-bold': green[600],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': green[700],
+      'surface-bold': green[200],
+      'surface-bold-hover': '#80CF83',
+      'on-surface-bold': '#164B1A',
+      'surface-bold-selected': green[500],
+      'surface-bold-selected-hover': green[600],
+      'on-surface-bold-selected': '#FFFFFF',
       'surface-subtle': green[50],
-      'surface-subtle-hover': '#D5ECD6', // custom
+      'surface-subtle-hover': '#D5ECD6',
       'surface-accent': green[800],
-      'on-surface-subtle-primary': '#164B1A', // custom
+      'on-surface-subtle-primary': '#164B1A',
       'on-surface-subtle-secondary': green[800],
     },
     dark: {
@@ -206,8 +202,8 @@ const eventColorTokens = {
       'surface-bold': green[800],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': green[900],
-      'surface-subtle': '#0F3D13', // custom
-      'surface-subtle-hover': '#224C26', // custom
+      'surface-subtle': '#0F3D13',
+      'surface-subtle-hover': '#224C26',
       'surface-accent': green[200],
       'on-surface-subtle-primary': green[50],
       'on-surface-subtle-secondary': green[200],
@@ -215,23 +211,26 @@ const eventColorTokens = {
   },
   lime: {
     light: {
-      main: lime[800],
-      'surface-bold': '#959B1F', // custom
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': lime[900],
+      main: lime[700],
+      'surface-bold': '#D0DF86',
+      'surface-bold-hover': '#CAE059',
+      'on-surface-bold': '#524b07',
+      'surface-bold-selected': '#959B1F',
+      'surface-bold-selected-hover': '#898F1D',
+      'on-surface-bold-selected': '#FFFFFF',
       'surface-subtle': lime[50],
-      'surface-subtle-hover': '#F3F6D0', // custom
+      'surface-subtle-hover': '#F3F6D0',
       'surface-accent': lime[900],
-      'on-surface-subtle-primary': '#625A0D', // custom
+      'on-surface-subtle-primary': '#625A0D',
       'on-surface-subtle-secondary': lime[900],
     },
     dark: {
       main: lime[800],
       'surface-bold': lime[900],
       'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': '#706510', // custom
-      'surface-subtle': '#50490A', // custom
-      'surface-subtle-hover': '#5E571D', // custom
+      'surface-bold-hover': '#706510',
+      'surface-subtle': '#50490A',
+      'surface-subtle-hover': '#5E571D',
       'surface-accent': lime[200],
       'on-surface-subtle-primary': lime[50],
       'on-surface-subtle-secondary': lime[200],
@@ -239,83 +238,68 @@ const eventColorTokens = {
   },
   amber: {
     light: {
-      main: amber[700],
-      'surface-bold': '#CC8616', // custom
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': amber[800],
-      'surface-subtle': amber[50],
-      'surface-subtle-hover': '#FFEEBD', // custom
-      'surface-accent': '#B68800', // custom
-      'on-surface-subtle-primary': '#976200', // custom
-      'on-surface-subtle-secondary': '#B68800', // custom
+      main: '#FFB840',
+      // 'surface-bold': amber[800],
+      'surface-bold': amber[200],
+      'surface-bold-hover': '#FFD75C',
+      'on-surface-bold': '#6c4600',
+      'surface-bold-selected': amber[800],
+      'surface-bold-selected-hover': '#E98300',
+      'on-surface-bold-selected': '#FFFFFF',
+      'surface-subtle': '#FFF2CC',
+      'surface-subtle-hover': '#FFECB2',
+      'surface-accent': '#B68800',
+      'on-surface-subtle-primary': '#6c4600',
+      'on-surface-subtle-secondary': '#AA7F00',
     },
     dark: {
-      main: amber[700],
-      'surface-bold': '#976200', // custom
+      main: '#FFB840',
+      'surface-bold': '#976200',
       'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': '#845600', // custom
-      'surface-subtle': '#8F5100', // custom
-      'surface-subtle-hover': '#985F14', // custom
-      'surface-accent': amber[200],
-      'on-surface-subtle-primary': amber[50],
-      'on-surface-subtle-secondary': amber[200],
+      'surface-bold-hover': '#845600',
+      'surface-subtle': '#8F5100',
+      'surface-subtle-hover': '#985F14',
+      'surface-accent': '#B68800',
+      'on-surface-subtle-primary': '#845600',
+      'on-surface-subtle-secondary': '#AA7F00',
     },
   },
-  deepOrange: {
+  orange: {
     light: {
-      main: deepOrange[600],
-      'surface-bold': deepOrange[600],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': deepOrange[700],
-      'surface-subtle': deepOrange[50],
-      'surface-subtle-hover': '#F7D9D4', // custom
-      'surface-accent': deepOrange[800],
-      'on-surface-subtle-primary': '#A13005', // custom
-      'on-surface-subtle-secondary': deepOrange[800],
+      main: deepOrange[400],
+      'surface-bold': '#ffb77c',
+      'surface-bold-hover': '#FFA55C',
+      'on-surface-bold': '#A73B00',
+      'surface-bold-selected': deepOrange[400],
+      'surface-bold-selected-hover': deepOrange[500],
+      'surface-subtle': '#ffe3cc',
+      'surface-subtle-hover': '#FFD5B2',
+      'surface-accent': orange[900],
+      'on-surface-subtle-primary': '#A73B00',
+      'on-surface-subtle-secondary': orange[900],
     },
     dark: {
       main: deepOrange[700],
       'surface-bold': deepOrange[800],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': deepOrange[900],
-      'surface-subtle': '#6D2510', // custom
-      'surface-subtle-hover': '#7D351F', // custom
+      'surface-subtle': '#6D2510',
+      'surface-subtle-hover': '#7D351F',
       'surface-accent': deepOrange[200],
       'on-surface-subtle-primary': deepOrange[50],
       'on-surface-subtle-secondary': deepOrange[200],
     },
   },
-  orange: {
-    light: {
-      main: orange[700],
-      'surface-bold': orange[700],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': orange[800],
-      'surface-subtle': orange[50],
-      'surface-subtle-hover': '#FFE8C7', // custom
-      'surface-accent': orange[900],
-      'on-surface-subtle-primary': '#C24400', // custom
-      'on-surface-subtle-secondary': orange[900],
-    },
-    dark: {
-      main: orange[700],
-      'surface-bold': deepOrange[900],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': '#A92D08', // custom
-      'surface-subtle': '#9F4819', // custom
-      'surface-subtle-hover': '#A7562B', // custom
-      'surface-accent': orange[200],
-      'on-surface-subtle-primary': orange[50],
-      'on-surface-subtle-secondary': orange[200],
-    },
-  },
   grey: {
     light: {
-      main: grey[600],
-      'surface-bold': grey[600],
-      'on-surface-bold': '#FFFFFF',
-      'surface-bold-hover': grey[700],
-      'surface-subtle': grey[50],
+      main: grey[400],
+      'surface-bold': grey[400],
+      'surface-bold-hover': grey[500],
+      'on-surface-bold': grey[900],
+      'surface-bold-selected': grey[600],
+      'surface-bold-selected-hover': grey[700],
+      'on-surface-bold-selected': '#FFFFFF',
+      'surface-subtle': grey[100],
       'surface-subtle-hover': grey[200],
       'surface-accent': grey[800],
       'on-surface-subtle-primary': grey[900],
@@ -326,7 +310,7 @@ const eventColorTokens = {
       'surface-bold': grey[700],
       'on-surface-bold': '#FFFFFF',
       'surface-bold-hover': grey[800],
-      'surface-subtle': '#303030', // custom
+      'surface-subtle': '#303030',
       'surface-subtle-hover': grey[800],
       'surface-accent': grey[400],
       'on-surface-subtle-primary': grey[50],
@@ -348,7 +332,9 @@ export const getPaletteVariants = (theme: Theme) => {
       '--event-main': colorValues.light.main,
       '--event-surface-bold': colorValues.light['surface-bold'],
       '--event-on-surface-bold': colorValues.light['on-surface-bold'],
-      '--event-surface-bold-hover': colorValues.light['surface-bold-hover'],
+      '--event-surface-bold-hover':
+        colorValues.light['surface-bold-hover'] ||
+        'color-mix(in srgb, var(--event-surface-bold), black 4%);',
       '--event-surface-subtle': colorValues.light['surface-subtle'],
       '--event-surface-subtle-hover': colorValues.light['surface-subtle-hover'],
       '--event-surface-accent': colorValues.light['surface-accent'],

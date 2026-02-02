@@ -5,15 +5,14 @@ export const EVENT_CREATION_PRECISION_MINUTE = 30;
 export const EVENT_COLORS: SchedulerEventColor[] = [
   'red',
   'pink',
-  'deepPurple',
+  'purple',
   'indigo',
   'blue',
-  'cyan',
   'teal',
   'green',
   'lime',
   'amber',
-  'deepOrange',
+  'orange',
   'grey',
 ];
 
