@@ -14,7 +14,6 @@ import {
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
 import { getCell, spyApi, sleep } from 'test/utils/helperFn';
 import { spy, type SinonSpy } from 'sinon';
-import { isJSDOM } from 'test/utils/skipIf';
 
 /**
  * Creates a date that is compatible with years before 1901
