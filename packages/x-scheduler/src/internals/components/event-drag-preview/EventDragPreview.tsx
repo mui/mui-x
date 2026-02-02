@@ -12,8 +12,8 @@ const EventDragPreviewRoot = styled('div', {
   padding: theme.spacing(0.5, 1),
   borderRadius: theme.spacing(0.5),
   fontSize: theme.typography.body2.fontSize,
-  backgroundColor: 'var(--event-color-8)',
-  color: 'var(--event-color-1)',
+  backgroundColor: 'var(--event-surface-bold)',
+  color: 'var(--event-on-surface-bold)',
   variants: getPaletteVariants(theme),
 }));
 

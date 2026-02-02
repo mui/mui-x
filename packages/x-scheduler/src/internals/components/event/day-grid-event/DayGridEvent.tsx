@@ -27,8 +27,6 @@ import { useEventCalendarClasses } from '../../../../event-calendar/EventCalenda
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
   borderRadius: theme.shape.borderRadius * 0.75,
-  backgroundColor: 'var(--event-color-5)',
-  color: theme.palette.getContrastText('var(--event-color-5)' || theme.palette.primary.main),
   minWidth: 18,
   height: 'auto',
   cursor: 'pointer',
@@ -49,6 +47,14 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
 })<{ 'data-variant'?: 'filled' | 'invisible' | 'compact' | 'placeholder'; palette?: PaletteName }>(
   ({ theme }) => ({
     ...(DayGridEventBaseStyles(theme) as any),
+    '&[data-variant="filled"]': {
+      backgroundColor: 'var(--event-surface-bold)',
+      color: 'var(--event-on-surface-bold)',
+      '&:active': {},
+      '&:hover': {
+        backgroundColor: 'var(--event-surface-bold-hover)',
+      },
+    },
     '&[data-variant="invisible"]': {
       width: '100%',
       visibility: 'hidden',
@@ -56,11 +62,8 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
     },
     '&[data-variant="compact"]': {
       height: 'fit-content',
-      backgroundColor: 'transparent',
 
-      '&:active': {
-        backgroundColor: 'transparent',
-      },
+      '&:active': {},
       '&:hover': {
         backgroundColor: theme.palette.action.hover,
       },
@@ -83,7 +86,6 @@ const DayGridEventTitle = styled('p', {
   slot: 'DayGridEventTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-10)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -94,7 +96,7 @@ const DayGridEventTime = styled('time', {
   slot: 'DayGridEventTime',
 })(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -115,7 +117,7 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   position: 'absolute',
   bottom: 1,
   right: 3,
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-bold)',
 });
 
 const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
@@ -175,7 +177,7 @@ const EventColorIndicator = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-6)',
+  backgroundColor: 'var(--event-main)',
   marginTop: 2,
 });
 

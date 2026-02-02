@@ -29,7 +29,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   slot: 'TimeGridEvent',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-1)',
+  backgroundColor: 'var(--event-surface-subtle)',
   position: 'absolute',
   left: 'calc( ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
@@ -51,10 +51,6 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
   '&[data-draggable]': {
     cursor: 'grab',
   },
-  '&[data-recurrent]': {
-    background: `repeating-linear-gradient(-45deg, rgb(var(--event-color-4), 0.5) 0 12px, var(--event-color-3) 12px 22.5px)`,
-    backgroundColor: 'var(--event-color-1)',
-  },
   '&[data-under-hour="true"]': {
     flexDirection: 'row',
   },
@@ -62,11 +58,11 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     padding: theme.spacing(0.05, 1),
   },
   '&:focus-visible': {
-    outline: '2px solid var(--event-color-2)',
+    outline: '2px solid var(--event-surface-accent)',
     outlineOffset: 2,
   },
   '&:hover': {
-    backgroundColor: 'var(--event-color-2)',
+    backgroundColor: 'var(--event-surface-subtle-hover)',
   },
   '&[role="button"]': {
     cursor: 'pointer',
@@ -80,7 +76,7 @@ const TimeGridEventRoot = styled(CalendarGrid.TimeEvent, {
     left: 0,
     width: 3,
     borderRadius: '4px 0 0 4px',
-    background: 'var(--event-color-7)',
+    background: 'var(--event-surface-accent)',
     pointerEvents: 'none',
   },
   variants: getPaletteVariants(theme),
@@ -91,8 +87,8 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   slot: 'TimeGridEventPlaceholder',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-2)',
-  color: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-surface-subtle-hover)',
+  color: 'var(--event-on-surface-subtle-primary)',
   position: 'absolute',
   left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
@@ -114,7 +110,7 @@ const TimeGridEventTitle = styled(Typography, {
   slot: 'TimeGridEventTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-10)',
+  color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -131,7 +127,7 @@ const TimeGridEventTime = styled('time', {
   name: 'MuiEventCalendar',
   slot: 'TimeGridEventTime',
 })(({ theme }) => ({
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -155,7 +151,7 @@ const TimeGridEventRecurringIcon = styled(RepeatRounded, {
   right: 3,
   bottom: 3,
   padding: theme.spacing(0.25),
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   '@container (max-width: 50px)': {
     display: 'none',
   },

@@ -24,18 +24,18 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-color-3)',
+  backgroundColor: 'var(--event-surface-subtle)',
   '&[data-variant="compact"], &[data-variant="regular"]': {
     '&:active': {
       backgroundColor: 'var(--interactive-active-bg)',
     },
     '&:hover': {
-      backgroundColor: 'var(--interactive-hover-bg)',
+      backgroundColor: 'var(--event-surface-subtle-hover)',
     },
   },
   '&[data-variant="filled"]': {
-    backgroundColor: 'var(--event-color-3)',
-    color: 'var(--event-color-10)',
+    backgroundColor: 'var(--event-surface-subtle)',
+    color: 'var(--event-on-surface-subtle-primary)',
   },
   '&[data-variant="compact"]': {
     containerType: 'inline-size',
@@ -63,7 +63,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-color-10)',
+  color: 'var(--event-on-surface-subtle-primary)',
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -74,7 +74,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -90,7 +90,7 @@ const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
 })({
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-subtle-secondary)',
 });
 
 const ResourceLegendColor = styled('span', {
@@ -101,7 +101,7 @@ const ResourceLegendColor = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
 });
 
 const EventItemCardContent = styled('p', {

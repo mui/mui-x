@@ -53,7 +53,7 @@ const EventDraggableDialogTitle = styled('p', {
   margin: 0,
   fontSize: theme.typography.body1.fontSize,
   fontWeight: theme.typography.fontWeightMedium,
-  color: 'var(--event-color-10)',
+  color: 'var(--event-on-surface-subtle-primary)',
 }));
 
 const EventDraggableDialogResourceContainer = styled('div', {
@@ -82,7 +82,7 @@ const ResourceLegendColorDot = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 
@@ -92,7 +92,7 @@ const EventDraggableDialogResourceTitle = styled('p', {
 })(({ theme }) => ({
   margin: 0,
   fontSize: theme.typography.body2.fontSize,
-  color: 'var(--event-color-7)',
+  color: 'var(--event-on-surface-subtle-secondary)',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',

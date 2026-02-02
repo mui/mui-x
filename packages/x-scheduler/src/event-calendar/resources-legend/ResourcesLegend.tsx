@@ -47,7 +47,7 @@ const ResourcesLegendItemColorDot = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 

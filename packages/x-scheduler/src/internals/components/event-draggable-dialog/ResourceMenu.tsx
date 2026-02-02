@@ -38,7 +38,7 @@ const ResourceMenuColorDot = styled('span', {
   height: 8,
   borderRadius: '50%',
   flexShrink: 0,
-  backgroundColor: 'var(--event-color-9)',
+  backgroundColor: 'var(--event-main)',
   variants: getPaletteVariants(theme),
 }));
 
@@ -54,8 +54,8 @@ const ResourceMenuColorRadioButton = styled('button', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: 'var(--event-color-9)',
-  color: 'var(--event-color-1)',
+  backgroundColor: 'var(--event-main)',
+  color: 'var(--event-on-surface-bold)',
   '&:disabled': {
     cursor: 'not-allowed',
     opacity: 0.5,
