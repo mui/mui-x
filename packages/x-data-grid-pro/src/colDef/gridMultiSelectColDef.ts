@@ -1,19 +1,16 @@
-import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import type {
-  GetApplyQuickFilterFn,
-  GridMultiSelectColDef,
-  ValueOptions,
-} from '../models/colDef/gridColDef';
-import { getGridMultiSelectOperators } from './gridMultiSelectOperators';
+import type { GetApplyQuickFilterFn, GridMultiSelectColDef, ValueOptions } from '@mui/x-data-grid';
 import {
+  GRID_STRING_COL_DEF,
   getValueOptions,
   isMultiSelectColDef,
-} from '../components/panel/filterPanel/filterPanelUtils';
-import { escapeRegExp, isObject } from '../utils/utils';
-import { gridRowIdSelector } from '../hooks/core/gridPropsSelectors';
+  escapeRegExp,
+  isObject,
+  gridRowIdSelector,
+  removeDiacritics,
+} from '@mui/x-data-grid/internals';
+import { getGridMultiSelectOperators } from './gridMultiSelectOperators';
 import { renderMultiSelectCell } from '../components/cell/GridMultiSelectCell';
 import { renderEditMultiSelectCell } from '../components/cell/GridEditMultiSelectCell';
-import { removeDiacritics } from '../hooks/features/filter/gridFilterUtils';
 
 const isArrayOfObjects = (options: any): options is Array<Record<string, any>> => {
   return typeof options[0] === 'object';

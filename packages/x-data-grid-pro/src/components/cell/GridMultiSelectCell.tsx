@@ -3,22 +3,31 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
-import type { GridRenderCellParams } from '../../models/params/gridCellParams';
-import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
-import { gridFilterModelSelector } from '../../hooks/features/filter/gridFilterSelector';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { NotRendered } from '../../utils/assert';
-import type { GridSlotProps } from '../../models/gridSlotsComponent';
-import { vars } from '../../constants/cssVariables';
-import { isMultiSelectColDef, getValueOptions } from '../panel/filterPanel/filterPanelUtils';
-import type { GridMultiSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import type {
+  GridRenderCellParams,
+  GridMultiSelectColDef,
+  ValueOptions,
+  GridSlotProps,
+} from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  gridClasses,
+  useGridRootProps,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid';
+import {
+  gridRowHeightSelector,
+  gridFilterModelSelector,
+  NotRendered,
+  vars,
+  isMultiSelectColDef,
+  getValueOptions,
+} from '@mui/x-data-grid/internals';
+import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { calculateVisibleCount } from '../../utils/multiSelectCellUtils';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = DataGridProProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -137,7 +146,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const popupId = `${id}-${colDef.field}-multiselect-popup`;
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses(rootProps as OwnerState);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
   const filterModel = useGridSelector(apiRef, gridFilterModelSelector);
 
@@ -303,7 +312,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
         <GridMultiSelectCellChip
           key={index}
           as={rootProps.slots.baseChip}
-          ownerState={rootProps}
+          ownerState={rootProps as OwnerState}
           ref={(el: HTMLDivElement) => {
             if (el) {
               chipsRef.current.set(index, el);
@@ -324,7 +333,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
       {hiddenCount > 0 && (
         <GridMultiSelectCellOverflow
           as={rootProps.slots.baseChip}
-          ownerState={rootProps}
+          ownerState={rootProps as OwnerState}
           ref={overflowChipRef}
           label={`+${hiddenCount}`}
           size="small"
@@ -346,7 +355,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
           role="dialog"
           aria-label={colDef.headerName || colDef.field}
           as={rootProps.slots.basePopper}
-          ownerState={rootProps}
+          ownerState={rootProps as OwnerState}
           open={popupOpen}
           target={cellRef.current}
           placement="bottom-start"

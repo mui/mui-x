@@ -95,6 +95,7 @@ import {
 } from '../hooks/features/dataSource/useGridDataSourcePro';
 import { useGridDataSourceLazyLoader } from '../hooks/features/serverSideLazyLoader/useGridDataSourceLazyLoader';
 import { useGridInfiniteLoadingIntersection } from '../hooks/features/serverSideLazyLoader/useGridInfiniteLoadingIntersection';
+import { useGridMultiSelectPreProcessors } from '../hooks/features/multiSelect/useGridMultiSelectPreProcessors';
 
 export const useDataGridProComponent = (
   apiRef: RefObject<GridPrivateApiPro>,
@@ -116,6 +117,7 @@ export const useDataGridProComponent = (
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridRowSelectionPreProcessors(apiRef, props);
+  useGridMultiSelectPreProcessors(apiRef);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridRowReorderPreProcessors(apiRef, props);

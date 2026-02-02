@@ -3,24 +3,32 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
-import type { BaseAutocompletePropsOverrides } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import type { AutocompleteProps } from '../../models/gridBaseSlots';
-import type { GridRenderEditCellParams } from '../../models/params/gridCellParams';
-import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { getValueOptions, isMultiSelectColDef } from '../panel/filterPanel/filterPanelUtils';
-import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import type { GridMultiSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
-import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
-import { NotRendered } from '../../utils/assert';
-import type { GridSlotProps } from '../../models/gridSlotsComponent';
-import { vars } from '../../constants/cssVariables';
-import { useGridSelector } from '../../hooks/utils/useGridSelector';
-import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
+import type {
+  GridRenderEditCellParams,
+  GridMultiSelectColDef,
+  ValueOptions,
+  GridSlotProps,
+  BaseAutocompletePropsOverrides,
+} from '@mui/x-data-grid';
+import {
+  getDataGridUtilityClass,
+  useGridRootProps,
+  useGridApiContext,
+  useGridSelector,
+} from '@mui/x-data-grid';
+import {
+  NotRendered,
+  vars,
+  isMultiSelectColDef,
+  getValueOptions,
+  gridRowHeightSelector,
+} from '@mui/x-data-grid/internals';
+import type { AutocompleteProps } from '@mui/x-data-grid/internals';
+import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 
-type OwnerState = DataGridProcessedProps;
+type OwnerState = DataGridProProcessedProps;
 
 const useUtilityClasses = (ownerState: OwnerState) => {
   const { classes } = ownerState;
@@ -154,7 +162,7 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
   const { id, value: valueProp, field, row, colDef, cellMode, hasFocus, slotProps } = props;
 
   const apiRef = useGridApiContext();
-  const classes = useUtilityClasses(rootProps);
+  const classes = useUtilityClasses(rootProps as OwnerState);
   const rowHeight = useGridSelector(apiRef, gridRowHeightSelector);
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
 
@@ -207,7 +215,7 @@ function GridEditMultiSelectCell(props: GridEditMultiSelectCellProps) {
       </GridEditMultiSelectCellValue>
       <GridEditMultiSelectCellPopper
         as={rootProps.slots.basePopper}
-        ownerState={rootProps}
+        ownerState={rootProps as OwnerState}
         id={popupId}
         role="dialog"
         aria-label={colDef.headerName || field}

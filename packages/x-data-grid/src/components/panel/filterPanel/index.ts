@@ -8,4 +8,3 @@ export { GridFilterPanel } from './GridFilterPanel';
 export type { GetColumnForNewFilterArgs } from './GridFilterPanel';
 export * from './GridFilterInputMultipleValue';
 export * from './GridFilterInputMultipleSingleSelect';
-export * from './GridFilterInputMultiSelect';

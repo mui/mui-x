@@ -1,6 +1,6 @@
-import type { GridFilterOperator } from '../models/gridFilterOperator';
+import type { GridFilterOperator } from '@mui/x-data-grid';
+import { isObject } from '@mui/x-data-grid/internals';
 import { GridFilterInputMultiSelect } from '../components/panel/filterPanel/GridFilterInputMultiSelect';
-import { isObject } from '../utils/utils';
 
 const parseObjectValue = (value: unknown) => {
   if (value == null || !isObject<{ value: unknown }>(value)) {

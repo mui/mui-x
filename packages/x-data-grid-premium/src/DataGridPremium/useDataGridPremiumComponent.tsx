@@ -69,6 +69,7 @@ import {
   virtualizationStateInitializer,
   useGridVirtualization,
   useGridDataSourceTreeDataPreProcessors,
+  useGridMultiSelectPreProcessors,
   dataSourceStateInitializer,
   useGridRowSpanning,
   rowSpanningStateInitializer,
@@ -158,6 +159,7 @@ export const useDataGridPremiumComponent = (
   useGridTreeDataPreProcessors(apiRef, props);
   useGridDataSourceTreeDataPreProcessors(apiRef, props);
   useGridRowSelectionPreProcessors(apiRef, props);
+  useGridMultiSelectPreProcessors(apiRef);
   useGridLazyLoaderPreProcessors(apiRef, props);
   useGridRowPinningPreProcessors(apiRef);
   useGridAggregationPreProcessors(apiRef, props);

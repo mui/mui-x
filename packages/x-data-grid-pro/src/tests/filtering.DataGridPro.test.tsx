@@ -1394,4 +1394,117 @@ describe('<DataGridPro /> - Filter', () => {
       expect(screen.queryByRole('button', { name: /Remove all/i })).to.equal(null);
     });
   });
+
+  // multiSelect tests require browser environment for chip rendering and column defaults
+  describe.skipIf(isJSDOM)('column type: multiSelect', () => {
+    function TestCaseMultiSelect(props: Partial<DataGridProProps>) {
+      apiRef = useGridApiRef();
+      return (
+        <div style={{ width: 300, height: 300 }}>
+          <DataGridPro
+            apiRef={apiRef}
+            rows={[
+              { id: 1, tags: ['React', 'TypeScript'] },
+              { id: 2, tags: ['Vue', 'JavaScript'] },
+              { id: 3, tags: ['React', 'JavaScript'] },
+              { id: 4, tags: [] },
+              { id: 5, tags: null },
+            ]}
+            columns={[
+              {
+                field: 'tags',
+                type: 'multiSelect',
+                width: 200,
+                valueOptions: ['React', 'Vue', 'Angular', 'TypeScript', 'JavaScript'],
+              },
+            ]}
+            autoHeight={isJSDOM}
+            {...props}
+          />
+        </div>
+      );
+    }
+
+    it('should render multiSelect column without errors', () => {
+      render(<TestCaseMultiSelect />);
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal([
+        'ReactTypeScript',
+        'VueJavaScript',
+        'ReactJavaScript',
+        '',
+        '',
+      ]);
+    });
+
+    it('should format values with object valueOptions', () => {
+      render(
+        <TestCaseMultiSelect
+          rows={[
+            { id: 1, tags: ['fe', 'be'] },
+            { id: 2, tags: ['be'] },
+          ]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions: [
+                { value: 'fe', label: 'Frontend' },
+                { value: 'be', label: 'Backend' },
+              ],
+            },
+          ]}
+        />,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['FrontendBackend', 'Backend']);
+    });
+
+    it('should support function valueOptions', () => {
+      const valueOptions = spy(() => ['A', 'B', 'C']);
+      render(
+        <TestCaseMultiSelect
+          rows={[{ id: 1, tags: ['A', 'B'] }]}
+          columns={[
+            {
+              field: 'tags',
+              type: 'multiSelect',
+              valueOptions,
+            },
+          ]}
+        />,
+      );
+      // Chips render without separator in text content
+      expect(getColumnValues(0)).to.deep.equal(['AB']);
+    });
+
+    describe('filtering operators', () => {
+      it('should filter with operator "isEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isEmpty' }],
+            }}
+          />,
+        );
+        expect(getColumnValues(0)).to.deep.equal(['', '']);
+      });
+
+      it('should filter with operator "isNotEmpty"', () => {
+        render(
+          <TestCaseMultiSelect
+            filterModel={{
+              items: [{ field: 'tags', operator: 'isNotEmpty' }],
+            }}
+          />,
+        );
+        // Chips render without separator in text content
+        expect(getColumnValues(0)).to.deep.equal([
+          'ReactTypeScript',
+          'VueJavaScript',
+          'ReactJavaScript',
+        ]);
+      });
+    });
+  });
 });

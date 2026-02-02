@@ -20,7 +20,6 @@ import {
   GridFilterInputBoolean,
   type GridColType,
   GridFilterInputSingleSelect,
-  GridFilterInputMultiSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
   gridClasses,
@@ -39,6 +38,7 @@ import {
 import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';
+import { GridFilterInputMultiSelect } from '../panel/filterPanel/GridFilterInputMultiSelect';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
