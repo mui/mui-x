@@ -143,12 +143,102 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     [publish, handleDragEnd],
   );
 
+  // Touch event handlers for mobile support
+  const handleTouchStart = React.useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      if (!cellRef.current || !apiRef.current.getRow(params.id)) {
+        return;
+      }
+      // Prevent scrolling while dragging
+      event.preventDefault();
+      handleMouseDown();
+      apiRef.current.publishEvent('rowDragStart', apiRef.current.getRowParams(params.id), event);
+    },
+    [apiRef, params.id, handleMouseDown],
+  );
+
+  const handleTouchMove = React.useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      if (!apiRef.current.getRow(params.id)) {
+        return;
+      }
+      const touch = event.touches[0];
+      const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+
+      if (!elementAtPoint) {
+        return;
+      }
+
+      // Find the row element that contains the touch point
+      const rowElement = elementAtPoint.closest('[data-id]');
+      if (!rowElement) {
+        return;
+      }
+
+      const targetRowId = rowElement.getAttribute('data-id');
+      if (!targetRowId || !apiRef.current.getRow(targetRowId)) {
+        return;
+      }
+
+      // Create a synthetic event with the necessary properties for the drag over handler
+      const syntheticEvent = {
+        ...event,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        target: rowElement,
+        preventDefault: () => event.preventDefault(),
+        stopPropagation: () => event.stopPropagation(),
+        dataTransfer: {
+          dropEffect: 'copy' as const,
+          effectAllowed: 'copy' as const,
+        },
+      };
+
+      apiRef.current.publishEvent(
+        'rowDragOver',
+        apiRef.current.getRowParams(targetRowId),
+        syntheticEvent as unknown as React.DragEvent,
+      );
+    },
+    [apiRef, params.id],
+  );
+
+  const handleTouchEnd = React.useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      handleMouseUp();
+      if (!apiRef.current.getRow(params.id)) {
+        return;
+      }
+
+      // Create a synthetic event with dataTransfer to signal successful drop
+      const syntheticEvent = {
+        ...event,
+        preventDefault: () => event.preventDefault(),
+        stopPropagation: () => event.stopPropagation(),
+        dataTransfer: {
+          dropEffect: 'copy' as const,
+          effectAllowed: 'copy' as const,
+        },
+      };
+
+      apiRef.current.publishEvent(
+        'rowDragEnd',
+        apiRef.current.getRowParams(params.id),
+        syntheticEvent as unknown as DragEvent,
+      );
+    },
+    [apiRef, params.id, handleMouseUp],
+  );
+
   const draggableEventHandlers = isDraggable
     ? {
         onDragStart: handleDragStart,
         onDragOver: publish('rowDragOver'),
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
+        onTouchStart: handleTouchStart,
+        onTouchMove: handleTouchMove,
+        onTouchEnd: handleTouchEnd,
       }
     : null;
 
