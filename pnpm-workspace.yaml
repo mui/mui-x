@@ -69,7 +69,7 @@ catalog:
   rasterizehtml: ^1.4.1
   react: 19.2.3
   react-dom: 19.2.3
-  react-router: ^7.12.0
+  react-router: ^7.13.0
   react-transition-group: ^4.4.5
   reselect: ^5.1.1
   rimraf: ^6.1.2
