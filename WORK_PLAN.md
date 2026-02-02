@@ -21,7 +21,7 @@
 
 ## Progress Tracking
 
-- [ ] #20974 - Branch: fix/20974-sorting-row-grouping
+- [x] #20974 - Branch: fix/20974-sorting-row-grouping ✅ DONE
 - [ ] #20106 - Branch: fix/20106-filter-value-vanish
 - [ ] #18628 - Branch: feature/18628-server-side-crud
 - [ ] #18515 - Branch: docs/18515-onRowsScrollEnd
