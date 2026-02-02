@@ -1,5 +1,5 @@
 import { GRID_STRING_COL_DEF } from './gridStringColDef';
-import {
+import type {
   GetApplyQuickFilterFn,
   GridMultiSelectColDef,
   ValueOptions,

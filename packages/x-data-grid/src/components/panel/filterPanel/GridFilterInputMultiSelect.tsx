@@ -1,9 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { TextFieldProps } from '../../../models/gridBaseSlots';
-import { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
-import { GridMultiSelectColDef } from '../../../models/colDef/gridColDef';
+import type { TextFieldProps } from '../../../models/gridBaseSlots';
+import type { GridFilterInputValueProps } from '../../../models/gridFilterInputComponent';
+import type { GridMultiSelectColDef } from '../../../models/colDef/gridColDef';
 import { useGridRootProps } from '../../../hooks/utils/useGridRootProps';
 import { getValueFromValueOptions, getValueOptions, isMultiSelectColDef } from './filterPanelUtils';
 import type { GridSlotsComponentsProps } from '../../../models/gridSlotsComponentsProps';

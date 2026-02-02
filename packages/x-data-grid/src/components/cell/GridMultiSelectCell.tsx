@@ -3,19 +3,19 @@ import * as React from 'react';
 import clsx from 'clsx';
 import composeClasses from '@mui/utils/composeClasses';
 import { styled } from '@mui/material/styles';
-import { GridRenderCellParams } from '../../models/params/gridCellParams';
+import type { GridRenderCellParams } from '../../models/params/gridCellParams';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { gridRowHeightSelector } from '../../hooks/features/dimensions/gridDimensionsSelectors';
 import { gridFilterModelSelector } from '../../hooks/features/filter/gridFilterSelector';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
-import { GridSlotProps } from '../../models/gridSlotsComponent';
+import type { GridSlotProps } from '../../models/gridSlotsComponent';
 import { vars } from '../../constants/cssVariables';
 import { isMultiSelectColDef, getValueOptions } from '../panel/filterPanel/filterPanelUtils';
-import { GridMultiSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
+import type { GridMultiSelectColDef, ValueOptions } from '../../models/colDef/gridColDef';
 import { calculateVisibleCount } from '../../utils/multiSelectCellUtils';
 
 type OwnerState = DataGridProcessedProps;
@@ -153,11 +153,11 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
   const chipWidthsRef = React.useRef<Map<number, number>>(new Map());
   const overflowChipRef = React.useRef<HTMLDivElement>(null);
 
-  const rawArrayValue = Array.isArray(value) ? value : [];
   const valueOptions = isMultiSelectColDef(colDef) ? getValueOptions(colDef, { id, row }) : [];
 
   // Reorder array to show filtered value first (improves UX when filtering)
   const arrayValue = React.useMemo(() => {
+    const rawArrayValue = Array.isArray(value) ? value : [];
     if (rawArrayValue.length === 0) {
       return rawArrayValue;
     }
@@ -178,7 +178,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
     reordered.splice(index, 1);
     reordered.unshift(filterValue);
     return reordered;
-  }, [rawArrayValue, filterModel.items, colDef.field]);
+  }, [value, filterModel.items, colDef.field]);
 
   // Create a stable key for the array values to detect when chips need remeasuring
   const arrayKey = React.useMemo(() => arrayValue.join('\0'), [arrayValue]);
@@ -226,7 +226,7 @@ function GridMultiSelectCell(props: GridMultiSelectCellProps) {
     if (newMeasurements > 0) {
       setMeasuredCount(chipWidthsRef.current.size);
     }
-  });
+  }, [containerWidth]);
 
   // Calculate visible count based on container width and cached chip widths
   // This recalculates when:

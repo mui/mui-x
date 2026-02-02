@@ -1,4 +1,4 @@
-import { GridFilterOperator } from '../models/gridFilterOperator';
+import type { GridFilterOperator } from '../models/gridFilterOperator';
 import { GridFilterInputMultiSelect } from '../components/panel/filterPanel/GridFilterInputMultiSelect';
 import { isObject } from '../utils/utils';
 
