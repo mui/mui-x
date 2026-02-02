@@ -52,6 +52,11 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
+  // Touch drag state
+  const longPressTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchDragActiveRef = React.useRef(false);
+  const touchStartPosRef = React.useRef<{ x: number; y: number } | null>(null);
+
   const isRowReorderable = rootProps.isRowReorderable;
   // TODO: remove sortModel check once row reorder is compatible
   const isDraggable = React.useMemo(() => {
@@ -143,12 +148,147 @@ function GridRowReorderCell(params: GridRenderCellParams) {
     [publish, handleDragEnd],
   );
 
+  // Touch event handlers for mobile support (long press to initiate drag)
+  const LONG_PRESS_DELAY = 200;
+  const MOVE_THRESHOLD = 10;
+
+  const clearLongPressTimer = React.useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
+
+  const handleTouchStart = React.useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      if (!cellRef.current || !apiRef.current.getRow(params.id)) {
+        return;
+      }
+
+      const touch = event.touches[0];
+      touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+      touchDragActiveRef.current = false;
+
+      // Start long press timer
+      longPressTimerRef.current = setTimeout(() => {
+        touchDragActiveRef.current = true;
+        handleMouseDown();
+        apiRef.current.publishEvent('rowDragStart', apiRef.current.getRowParams(params.id), event);
+      }, LONG_PRESS_DELAY);
+    },
+    [apiRef, params.id, handleMouseDown],
+  );
+
+  const handleTouchMove = React.useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      if (!apiRef.current.getRow(params.id)) {
+        return;
+      }
+
+      const touch = event.touches[0];
+
+      // If drag hasn't started yet, check if we should cancel the long press
+      if (!touchDragActiveRef.current) {
+        if (touchStartPosRef.current) {
+          const deltaX = Math.abs(touch.clientX - touchStartPosRef.current.x);
+          const deltaY = Math.abs(touch.clientY - touchStartPosRef.current.y);
+          if (deltaX > MOVE_THRESHOLD || deltaY > MOVE_THRESHOLD) {
+            // User is scrolling, cancel long press
+            clearLongPressTimer();
+            touchStartPosRef.current = null;
+          }
+        }
+        return;
+      }
+
+      // Drag is active - prevent scrolling and handle drag over
+      event.preventDefault();
+
+      const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+      if (!elementAtPoint) {
+        return;
+      }
+
+      // Find the row element that contains the touch point
+      const rowElement = elementAtPoint.closest('[data-id]');
+      if (!rowElement) {
+        return;
+      }
+
+      const targetRowId = rowElement.getAttribute('data-id');
+      if (!targetRowId || !apiRef.current.getRow(targetRowId)) {
+        return;
+      }
+
+      // Create a synthetic event with the necessary properties for the drag over handler
+      const syntheticEvent = {
+        ...event,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        target: rowElement,
+        preventDefault: () => event.preventDefault(),
+        stopPropagation: () => event.stopPropagation(),
+        dataTransfer: {
+          dropEffect: 'copy' as const,
+          effectAllowed: 'copy' as const,
+        },
+      };
+
+      apiRef.current.publishEvent(
+        'rowDragOver',
+        apiRef.current.getRowParams(targetRowId),
+        syntheticEvent as unknown as React.DragEvent,
+      );
+    },
+    [apiRef, params.id, clearLongPressTimer],
+  );
+
+  const handleTouchEnd = React.useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      clearLongPressTimer();
+      touchStartPosRef.current = null;
+
+      // Only trigger drag end if drag was active
+      if (!touchDragActiveRef.current) {
+        return;
+      }
+
+      touchDragActiveRef.current = false;
+      handleMouseUp();
+
+      if (!apiRef.current.getRow(params.id)) {
+        return;
+      }
+
+      // Create a synthetic event with dataTransfer to signal successful drop
+      const syntheticEvent = {
+        ...event,
+        preventDefault: () => event.preventDefault(),
+        stopPropagation: () => event.stopPropagation(),
+        dataTransfer: {
+          dropEffect: 'copy' as const,
+          effectAllowed: 'copy' as const,
+        },
+      };
+
+      apiRef.current.publishEvent(
+        'rowDragEnd',
+        apiRef.current.getRowParams(params.id),
+        syntheticEvent as unknown as DragEvent,
+      );
+    },
+    [apiRef, params.id, handleMouseUp, clearLongPressTimer],
+  );
+
   const draggableEventHandlers = isDraggable
     ? {
         onDragStart: handleDragStart,
         onDragOver: publish('rowDragOver'),
         onMouseDown: handleMouseDown,
         onMouseUp: handleMouseUp,
+        onTouchStart: handleTouchStart,
+        onTouchMove: handleTouchMove,
+        onTouchEnd: handleTouchEnd,
       }
     : null;
 
