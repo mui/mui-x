@@ -66,12 +66,12 @@ describe('EventCalendar', () => {
       />,
     );
 
-    // Resources are visible by default, so the buttons say "Hide events for ..."
+    // Resources are visible by default, so the checkboxes say "Hide events for ..."
     // Use findByRole to wait for the component to fully render
-    const workResourceToggleButton = await screen.findByRole('button', {
+    const workResourceToggleButton = await screen.findByRole('checkbox', {
       name: /Hide events for Work/i,
     });
-    const sportResourceToggleButton = await screen.findByRole('button', {
+    const sportResourceToggleButton = await screen.findByRole('checkbox', {
       name: /Hide events for Sport/i,
     });
 
@@ -80,24 +80,26 @@ describe('EventCalendar', () => {
 
     // Hide Work resource
     await user.click(workResourceToggleButton);
-    // Button label changes to "Show events for ..." when hidden
+    // Checkbox label changes to "Show events for ..." when hidden
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Show events for Work/i })).not.to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: /Show events for Work/i })).not.to.equal(null);
     });
     expect(screen.queryByRole('button', { name: /Weekly/i })).to.equal(null);
 
-    // Show Work resource again (button text should now be "Show events for Work")
-    const workResourceToggleButton2 = screen.getByRole('button', { name: /Show events for Work/i });
+    // Show Work resource again (checkbox text should now be "Show events for Work")
+    const workResourceToggleButton2 = screen.getByRole('checkbox', {
+      name: /Show events for Work/i,
+    });
     await user.click(workResourceToggleButton2);
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Hide events for Work/i })).not.to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: /Hide events for Work/i })).not.to.equal(null);
     });
     expect(screen.getByRole('button', { name: /Weekly/i })).not.to.equal(null);
 
     // Hide Sport resource
     await user.click(sportResourceToggleButton);
     await waitFor(() => {
-      expect(screen.queryByRole('button', { name: /Show events for Sport/i })).not.to.equal(null);
+      expect(screen.queryByRole('checkbox', { name: /Show events for Sport/i })).not.to.equal(null);
     });
     expect(screen.queryByRole('button', { name: /Running/i })).to.equal(null);
   });
