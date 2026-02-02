@@ -90,8 +90,7 @@ export async function exportImage(
   if (canvas.width === 0 || canvas.height === 0) {
     doc.body.removeChild(iframe);
     throw new Error(
-      `MUI X Charts: Cannot export an image with zero width or height. Width: ${canvas.width}px. Height: ${canvas.height}px.\n` +
-        'If this happens, please open an issue at github.com/mui/mui-x with a reproduction of the problem.',
+      `MUI X Charts: Cannot export an image with zero width or height. Width: ${canvas.width}px. Height: ${canvas.height}px.`,
     );
   }
 
