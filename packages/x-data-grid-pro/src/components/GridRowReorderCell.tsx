@@ -173,6 +173,7 @@ function GridRowReorderCell(params: GridRenderCellParams) {
       longPressTimerRef.current = setTimeout(() => {
         touchDragActiveRef.current = true;
         handleMouseDown();
+        // @ts-ignore
         apiRef.current.publishEvent('rowDragStart', apiRef.current.getRowParams(params.id), event);
       }, LONG_PRESS_DELAY);
     },
@@ -237,7 +238,8 @@ function GridRowReorderCell(params: GridRenderCellParams) {
       apiRef.current.publishEvent(
         'rowDragOver',
         apiRef.current.getRowParams(targetRowId),
-        syntheticEvent as unknown as React.DragEvent,
+        // @ts-ignore
+        syntheticEvent,
       );
     },
     [apiRef, params.id, clearLongPressTimer],
