@@ -117,7 +117,7 @@
     "eslint-plugin-mui-x": "workspace:^",
     "execa": "9.6.1",
     "globby": "16.1.0",
-    "jsdom": "26.1.0",
+    "jsdom": "27.4.0",
     "lerna": "9.0.3",
     "magic-string": "0.30.21",
     "markdownlint-cli2": "0.20.0",
