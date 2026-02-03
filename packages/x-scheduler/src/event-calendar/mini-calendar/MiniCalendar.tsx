@@ -188,7 +188,10 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Get weekday headers from first week
     const weekdays = weeks[0] ?? [];
 
-    const monthYearLabel = React.useMemo(() => formatMonthFullLetterAndYear(displayedMonth, adapter), [adapter, displayedMonth]);
+    const monthYearLabel = React.useMemo(
+      () => formatMonthFullLetterAndYear(displayedMonth, adapter),
+      [adapter, displayedMonth],
+    );
 
     return (
       <MiniCalendarRoot

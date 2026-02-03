@@ -1,9 +1,5 @@
 import { screen, waitFor } from '@mui/internal-test-utils';
-import {
-  createSchedulerRenderer,
-  EventBuilder,
-  withinMonthView,
-} from 'test/utils/scheduler';
+import { createSchedulerRenderer, EventBuilder, withinMonthView } from 'test/utils/scheduler';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   changeTo24HoursFormat,
