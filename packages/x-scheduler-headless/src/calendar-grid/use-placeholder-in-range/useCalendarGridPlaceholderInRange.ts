@@ -81,7 +81,7 @@ export function useCalendarGridPlaceholderInRange(
       ...sharedProperties,
       position,
     };
-  }, [rawPlaceholder, adapter, originalEvent, occurrences, maxIndex]);
+  }, [rawPlaceholder, adapter, originalEvent, originalEventId, occurrences, maxIndex]);
 }
 
 export namespace useCalendarGridPlaceholderInRange {
