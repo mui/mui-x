@@ -148,7 +148,9 @@ describe('EventCalendar', () => {
       const monthView = withinMonthView();
 
       // Weekends should be visible by default
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
       expect(monthView.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
       expect(monthView.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
 
       // Hide the weekends
@@ -157,7 +159,9 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
       expect(monthView.queryByRole('columnheader', { name: /Sunday/i })).to.equal(null);
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
       expect(monthView.queryByRole('columnheader', { name: /Saturday/i })).to.equal(null);
 
       // Show the weekends again
@@ -166,7 +170,9 @@ describe('EventCalendar', () => {
       await user.keyboard('{Escape}');
       await waitFor(() => expect(screen.queryByRole('menu')).to.equal(null));
 
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
       expect(monthView.getByRole('columnheader', { name: /Sunday/i })).not.to.equal(null);
+      // eslint-disable-next-line testing-library/prefer-screen-queries -- scoped query within month view
       expect(monthView.getByRole('columnheader', { name: /Saturday/i })).not.to.equal(null);
     });
 
