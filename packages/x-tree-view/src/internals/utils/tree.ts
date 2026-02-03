@@ -1,13 +1,9 @@
-import { TreeViewItemMeta, TreeViewState } from '../models';
-import type { UseTreeViewExpansionSignature } from '../plugins/useTreeViewExpansion';
-import { expansionSelectors } from '../plugins/useTreeViewExpansion/useTreeViewExpansion.selectors';
-import type { UseTreeViewItemsSignature } from '../plugins/useTreeViewItems';
-import { itemsSelectors } from '../plugins/useTreeViewItems/useTreeViewItems.selectors';
+import { MinimalTreeViewState } from '../MinimalTreeViewStore';
+import { TreeViewItemMeta } from '../models';
+import { expansionSelectors } from '../plugins/expansion/selectors';
+import { itemsSelectors } from '../plugins/items/selectors';
 
-const getLastNavigableItemInArray = (
-  state: TreeViewState<[UseTreeViewItemsSignature]>,
-  items: string[],
-) => {
+const getLastNavigableItemInArray = (state: MinimalTreeViewState<any, any>, items: string[]) => {
   // Equivalent to Array.prototype.findLastIndex
   let itemIndex = items.length - 1;
   while (itemIndex >= 0 && !itemsSelectors.canItemBeFocused(state, items[itemIndex])) {
@@ -22,7 +18,7 @@ const getLastNavigableItemInArray = (
 };
 
 export const getPreviousNavigableItem = (
-  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+  state: MinimalTreeViewState<any, any>,
   itemId: string,
 ): string | null => {
   const itemMeta = itemsSelectors.itemMeta(state, itemId);
@@ -74,10 +70,7 @@ export const getPreviousNavigableItem = (
   return currentItemId;
 };
 
-export const getNextNavigableItem = (
-  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
-  itemId: string,
-) => {
+export const getNextNavigableItem = (state: MinimalTreeViewState<any, any>, itemId: string) => {
   // If the item is expanded and has some navigable children, return the first of them.
   if (expansionSelectors.isItemExpanded(state, itemId)) {
     const firstNavigableChild = itemsSelectors
@@ -115,9 +108,7 @@ export const getNextNavigableItem = (
   return null;
 };
 
-export const getLastNavigableItem = (
-  state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
-) => {
+export const getLastNavigableItem = (state: MinimalTreeViewState<any, any>) => {
   let itemId: string | null = null;
   while (itemId == null || expansionSelectors.isItemExpanded(state, itemId)) {
     const children = itemsSelectors.itemOrderedChildrenIds(state, itemId);
@@ -134,9 +125,7 @@ export const getLastNavigableItem = (
   return itemId!;
 };
 
-export const getFirstNavigableItem = (
-  state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
-) =>
+export const getFirstNavigableItem = (state: MinimalTreeViewState<any, any>) =>
   itemsSelectors
     .itemOrderedChildrenIds(state, null)
     .find((itemId) => itemsSelectors.canItemBeFocused(state, itemId))!;
@@ -156,7 +145,7 @@ export const getFirstNavigableItem = (
  * https://en.wikipedia.org/wiki/Tr%C3%A9maux_tree
  */
 export const findOrderInTremauxTree = (
-  state: TreeViewState<[UseTreeViewExpansionSignature, UseTreeViewItemsSignature]>,
+  state: MinimalTreeViewState<any, any>,
   itemAId: string,
   itemBId: string,
 ) => {
@@ -221,7 +210,7 @@ export const findOrderInTremauxTree = (
 };
 
 export const getNonDisabledItemsInRange = (
-  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
+  state: MinimalTreeViewState<any, any>,
   itemAId: string,
   itemBId: string,
 ) => {
@@ -265,9 +254,7 @@ export const getNonDisabledItemsInRange = (
   return items;
 };
 
-export const getAllNavigableItems = (
-  state: TreeViewState<[UseTreeViewItemsSignature, UseTreeViewExpansionSignature]>,
-) => {
+export const getAllNavigableItems = (state: MinimalTreeViewState<any, any>) => {
   let item: string | null = getFirstNavigableItem(state);
   const navigableItems: string[] = [];
   while (item != null) {

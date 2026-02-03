@@ -1,6 +1,8 @@
 {
   "componentDescription": "",
   "propDescriptions": {
+    "borderRadius": { "description": "The border radius of the heatmap cells in pixels." },
+    "brushConfig": { "description": "Configuration for the brush interaction." },
     "colors": { "description": "Color palette used to colorize multiple series." },
     "dataset": {
       "description": "An array of objects that can be used to populate series and axes data using their <code>dataKey</code> property."
@@ -17,6 +19,9 @@
     },
     "id": {
       "description": "This prop is used to help implement the accessibility logic. If you don&#39;t provide this prop. It falls back to a randomly generated id."
+    },
+    "initialZoom": {
+      "description": "The list of zoom data related to each axis. Used to initialize the zoom in a specific configuration without controlling it."
     },
     "loading": { "description": "If <code>true</code>, a loading overlay is displayed." },
     "localeText": { "description": "Localized text for chart components." },
@@ -45,6 +50,25 @@
         }
       }
     },
+    "onItemClick": {
+      "description": "The callback fired when an item is clicked.",
+      "typeDescriptions": {
+        "event": { "name": "event", "description": "The click event." },
+        "item": { "name": "item", "description": "The clicked item." }
+      }
+    },
+    "onTooltipItemChange": {
+      "description": "The callback fired when the tooltip item changes.",
+      "typeDescriptions": {
+        "tooltipItem": { "name": "tooltipItem", "description": "The newly highlighted item." }
+      }
+    },
+    "onZoomChange": {
+      "description": "Callback fired when the zoom has changed.",
+      "typeDescriptions": {
+        "zoomData": { "name": "zoomData", "description": "Updated zoom data." }
+      }
+    },
     "series": {
       "description": "The series to display in the bar chart. An array of <a href='/x/api/charts/heatmap-series/'>HeatmapSeries</a> objects."
     },
@@ -55,6 +79,7 @@
       "description": "The configuration of the tooltip.",
       "seeMoreText": "See {{link}} for more details."
     },
+    "tooltipItem": { "description": "The tooltip item. Used when the tooltip is controlled." },
     "width": {
       "description": "The width of the chart in px. If not defined, it takes the width of the parent element."
     },
@@ -64,10 +89,11 @@
     "yAxis": {
       "description": "The configuration of the y-axes. If not provided, a default axis config is used. An array of <a href='/x/api/charts/axis-config/'>AxisConfig</a> objects."
     },
-    "zAxis": { "description": "The configuration of the z-axes." }
+    "zAxis": { "description": "The configuration of the z-axes." },
+    "zoomData": { "description": "The list of zoom data related to each axis." },
+    "zoomInteractionConfig": { "description": "Configuration for zoom interactions." }
   },
   "classDescriptions": {
-    "cell": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the heatmap cells" },
     "faded": {
       "description": "Styles applied to {{nodeName}} if {{conditions}}.",
       "nodeName": "the cell element",
@@ -82,5 +108,29 @@
       "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the series ID: <code>.${heatmapClasses.series}-${seriesId}</code>.",
       "nodeName": "the root element for a specified series"
     }
+  },
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "baseButton": "",
+    "baseDivider": "",
+    "baseIconButton": "",
+    "baseMenuItem": "",
+    "baseMenuList": "",
+    "basePopper": "",
+    "baseTooltip": "",
+    "cell": "The component that renders the heatmap cell.",
+    "exportIcon": "Icon displayed on the toolbar&#39;s export button.",
+    "legend": "Custom component for the legend.",
+    "loadingOverlay": "Overlay component rendered when the chart is in a loading state.",
+    "noDataOverlay": "Overlay component rendered when the chart has no data to display.",
+    "toolbar": "Custom component for the toolbar.",
+    "tooltip": "Custom component for the tooltip.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis.",
+    "zoomInIcon": "Icon displayed on the toolbar&#39;s zoom in button.",
+    "zoomOutIcon": "Icon displayed on the toolbar&#39;s zoom out button."
   }
 }

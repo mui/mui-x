@@ -11,7 +11,13 @@ export function FocusedPieArc(
   props: Partial<
     Omit<
       PieArcProps,
-      'startAngle' | 'endAngle' | 'id' | 'dataIndex' | 'isFaded' | 'isHighlighted' | 'isFocused'
+      | 'startAngle'
+      | 'endAngle'
+      | 'seriesId'
+      | 'dataIndex'
+      | 'isFaded'
+      | 'isHighlighted'
+      | 'isFocused'
     >
   >,
 ) {
@@ -22,7 +28,7 @@ export function FocusedPieArc(
   const { isHighlighted, isFaded } = useItemHighlighted(focusedItem);
   const pieSeries = usePieSeriesContext();
 
-  if (focusedItem === null || focusedItem.seriesType !== 'pie' || !pieSeries) {
+  if (focusedItem === null || focusedItem.type !== 'pie' || !pieSeries) {
     return null;
   }
 
@@ -35,7 +41,7 @@ export function FocusedPieArc(
 
   const item = series.data[focusedItem.dataIndex];
 
-  const arcSizes = getModifiedArcProperties(
+  const { arcLabelRadius, ...arcSizes } = getModifiedArcProperties(
     series,
     pieSeriesLayout[focusedItem.seriesId],
     isHighlighted,
@@ -52,7 +58,7 @@ export function FocusedPieArc(
       skipInteraction
       skipAnimation
       stroke={(theme.vars ?? theme).palette.text.primary}
-      id={series.id}
+      seriesId={series.id}
       className={pieArcClasses.focusIndicator}
       dataIndex={focusedItem.dataIndex}
       isFaded={false}

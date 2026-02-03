@@ -1,15 +1,13 @@
 import { type AllSeriesType } from '../../../../models/seriesType';
 import { type ChartsColorPalette } from '../../../../colorPalettes';
-import {
-  type ChartPluginSignature,
-  type ChartSeriesConfig,
-  type SeriesLayoutGetterResult,
-} from '../../models';
+import { type ChartPluginSignature } from '../../models';
 import { type ChartSeriesType, type DatasetType } from '../../../../models/seriesType/config';
 import {
+  type SeriesLayoutGetterResult,
   type SeriesProcessorParams,
   type SeriesProcessorResult,
-} from '../../models/seriesConfig/seriesProcessor.types';
+  type UseChartSeriesConfigSignature,
+} from '../useChartSeriesConfig';
 
 export interface UseChartSeriesParameters<T extends ChartSeriesType = ChartSeriesType> {
   /**
@@ -61,17 +59,14 @@ export type DefaultizedSeriesGroups<TSeriesTypes extends ChartSeriesType = Chart
 export interface UseChartSeriesState<T extends ChartSeriesType = ChartSeriesType> {
   series: {
     defaultizedSeries: DefaultizedSeriesGroups<T>;
-    seriesConfig: ChartSeriesConfig<T>;
     dataset?: Readonly<DatasetType>;
   };
 }
-
-export interface UseChartSeriesInstance {}
 
 export type UseChartSeriesSignature<SeriesType extends ChartSeriesType = ChartSeriesType> =
   ChartPluginSignature<{
     params: UseChartSeriesParameters;
     defaultizedParams: UseChartSeriesDefaultizedParameters<SeriesType>;
     state: UseChartSeriesState<SeriesType>;
-    instance: UseChartSeriesInstance;
+    dependencies: [UseChartSeriesConfigSignature<SeriesType>];
   }>;

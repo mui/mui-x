@@ -9,15 +9,16 @@ import MUICheckbox from '@mui/material/Checkbox';
 import MUIChip from '@mui/material/Chip';
 import MUICircularProgress from '@mui/material/CircularProgress';
 import MUIDivider from '@mui/material/Divider';
-import MUIInputBase, { InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
+import MUIInputBase, { type InputBaseProps as MUIInputBaseProps } from '@mui/material/InputBase';
 import MUIFocusTrap from '@mui/material/Unstable_TrapFocus';
 import MUILinearProgress from '@mui/material/LinearProgress';
 import MUIListItemIcon from '@mui/material/ListItemIcon';
 import MUIListItemText, { listItemTextClasses } from '@mui/material/ListItemText';
-import { MenuProps as MUIMenuProps } from '@mui/material/Menu';
+import type { MenuProps as MUIMenuProps } from '@mui/material/Menu';
 import MUIMenuList from '@mui/material/MenuList';
 import MUIMenuItem from '@mui/material/MenuItem';
 import MUITextField from '@mui/material/TextField';
+import MUITextareaAutosize from '@mui/material/TextareaAutosize';
 import MUIFormControl from '@mui/material/FormControl';
 import MUIFormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
 import MUISelect from '@mui/material/Select';
@@ -27,7 +28,7 @@ import MUIIconButton, { iconButtonClasses } from '@mui/material/IconButton';
 import MUIInputAdornment, { inputAdornmentClasses } from '@mui/material/InputAdornment';
 import MUITooltip from '@mui/material/Tooltip';
 import MUIPagination, { tablePaginationClasses } from '@mui/material/TablePagination';
-import MUIPopper, { PopperProps as MUIPopperProps } from '@mui/material/Popper';
+import MUIPopper, { type PopperProps as MUIPopperProps } from '@mui/material/Popper';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import MUIGrow from '@mui/material/Grow';
 import MUIPaper from '@mui/material/Paper';
@@ -44,6 +45,8 @@ import {
   GridArrowUpwardIcon,
   GridCheckIcon,
   GridCloseIcon,
+  GridUndoIcon,
+  GridRedoIcon,
   GridColumnIcon,
   GridDragIcon,
   GridExpandMoreIcon,
@@ -64,6 +67,8 @@ import {
   GridLoadIcon,
   GridDeleteForeverIcon,
   GridDownloadIcon,
+  GridLongTextCellExpandIcon,
+  GridLongTextCellCollapseIcon,
 } from './icons';
 import type { GridIconSlotsComponent } from '../models';
 import type { GridBaseSlots } from '../models/gridSlotsComponent';
@@ -79,13 +84,16 @@ export { useMaterialCSSVariables } from './variables';
 
 /* eslint-disable material-ui/disallow-react-api-in-server-components */
 
-const InputAdornment = styled(MUIInputAdornment)(({ theme }) => ({
+const InputAdornment = styled(MUIInputAdornment, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`&.${inputAdornmentClasses.positionEnd} .${iconButtonClasses.sizeSmall}`]: {
     marginRight: theme.spacing(-0.75),
   },
 }));
 
 const FormControlLabel = styled(MUIFormControlLabel, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'fullWidth',
 })<{ fullWidth?: boolean }>(({ theme }) => ({
   gap: theme.spacing(0.5),
@@ -108,6 +116,7 @@ const FormControlLabel = styled(MUIFormControlLabel, {
 }));
 
 const Checkbox = styled(MUICheckbox, {
+  slot: 'internal',
   shouldForwardProp: (prop) => prop !== 'density',
 })<{ density?: P['baseCheckbox']['density'] }>(({ theme }) => ({
   variants: [
@@ -120,7 +129,9 @@ const Checkbox = styled(MUICheckbox, {
   ],
 }));
 
-const ListItemText = styled(MUIListItemText)({
+const ListItemText = styled(MUIListItemText, {
+  slot: 'internal',
+})({
   [`& .${listItemTextClasses.primary}`]: {
     overflowX: 'clip',
     textOverflow: 'ellipsis',
@@ -189,7 +200,9 @@ const BaseSelect = forwardRef<any, P['baseSelect']>(function BaseSelect(props, r
   );
 });
 
-const StyledPagination = styled(MUIPagination)(({ theme }) => ({
+const StyledPagination = styled(MUIPagination, {
+  slot: 'internal',
+})(({ theme }) => ({
   [`& .${tablePaginationClasses.selectLabel}`]: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -322,7 +335,9 @@ const BaseButton = forwardRef<any, P['baseButton']>(function BaseButton(props, r
   return <MUIButton {...other} {...material} ref={ref} />;
 });
 
-const StyledToggleButton = styled(MUIToggleButton)(({ theme }) => ({
+const StyledToggleButton = styled(MUIToggleButton, {
+  slot: 'internal',
+})(({ theme }) => ({
   gap: theme.spacing(1),
   border: 0,
 }));
@@ -516,6 +531,11 @@ function transformInputProps(props: P['baseInput'] | undefined, wrapAdornments =
 
   return result;
 }
+
+const BaseTextarea = forwardRef<any, P['baseTextarea']>(function BaseTextarea(props, ref) {
+  const { material, ...other } = props;
+  return <MUITextareaAutosize {...other} {...material} ref={ref} />;
+});
 
 const transformOrigin = {
   'bottom-start': 'top left',
@@ -735,6 +755,8 @@ const iconSlots: GridIconSlotsComponent = {
   columnMenuIcon: GridTripleDotsVerticalIcon,
   openFilterButtonIcon: GridFilterListIcon,
   filterPanelDeleteIcon: GridCloseIcon,
+  undoIcon: GridUndoIcon,
+  redoIcon: GridRedoIcon,
   columnFilteredIcon: GridFilterAltIcon,
   columnSelectorIcon: GridColumnIcon,
   columnUnsortedIcon: GridColumnUnsortedIcon,
@@ -767,6 +789,8 @@ const iconSlots: GridIconSlotsComponent = {
   filterPanelRemoveAllIcon: GridDeleteForeverIcon,
   columnReorderIcon: GridDragIcon,
   menuItemCheckIcon: GridCheckIcon,
+  longTextCellExpandIcon: GridLongTextCellExpandIcon,
+  longTextCellCollapseIcon: GridLongTextCellCollapseIcon,
 };
 
 const baseSlots: GridBaseSlots = {
@@ -777,6 +801,7 @@ const baseSlots: GridBaseSlots = {
   baseCircularProgress: BaseCircularProgress,
   baseDivider: BaseDivider,
   baseInput: BaseInput,
+  baseTextarea: BaseTextarea,
   baseLinearProgress: BaseLinearProgress,
   baseMenuList: BaseMenuList,
   baseMenuItem: BaseMenuItem,

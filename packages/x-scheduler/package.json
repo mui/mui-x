@@ -20,8 +20,8 @@
     "./models": "./src/models/index.ts",
     "./month-view": "./src/month-view/index.ts",
     "./standalone-event": "./src/standalone-event/index.ts",
-    "./timeline": "./src/timeline/index.ts",
     "./translations": "./src/translations/index.ts",
+    "./internals": "./src/internals/index.ts",
     "./week-view": "./src/week-view/index.ts"
   },
   "sideEffects": false,
@@ -32,6 +32,10 @@
   "keywords": [
     "react",
     "react-component",
+    "mui",
+    "mui-x",
+    "material-ui",
+    "material design",
     "scheduler",
     "event-calendar",
     "calendar",
@@ -54,19 +58,32 @@
     "@babel/runtime": "catalog:",
     "@base-ui/react": "^1.0.0",
     "@base-ui/utils": "^0.2.3",
-    "@mui/x-scheduler-headless": "workspace:*",
-    "@floating-ui/react": "^0.27.16",
     "@mui/x-internals": "workspace:*",
-    "clsx": "catalog:",
-    "lucide-react": "^0.562.0"
+    "@mui/x-scheduler-headless": "workspace:*",
+    "clsx": "catalog:"
   },
   "peerDependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@types/use-sync-external-store": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

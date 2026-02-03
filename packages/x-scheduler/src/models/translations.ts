@@ -1,9 +1,9 @@
 import { CalendarView } from '@mui/x-scheduler-headless/models';
 
 export interface SchedulerTranslations {
-  // ResourceLegend
+  // ResourcesLegend
   hideEventsLabel: (resourceName: string) => string;
-  resourceLegendSectionLabel: string;
+  resourcesLegendSectionLabel: string;
   showEventsLabel: (resourceName: string) => string;
 
   // ViewSwitcher
@@ -48,7 +48,7 @@ export interface SchedulerTranslations {
   // EventItem
   eventItemMultiDayLabel: (endDate: string) => string;
 
-  // EventPopover
+  // EventDraggableDialog
   allDayLabel: string;
   closeButtonAriaLabel: string;
   closeButtonLabel: string;
@@ -101,4 +101,7 @@ export interface SchedulerTranslations {
   radioGroupAriaLabel: string;
   thisAndFollowing: string;
   title: string;
+
+  // General
+  loading: string;
 }

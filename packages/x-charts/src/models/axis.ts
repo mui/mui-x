@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import type {
   ScaleBand,
   ScaleLinear,
@@ -12,7 +13,7 @@ import type {
   NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
 import { type SxProps } from '@mui/system/styleFunctionSx';
-import { type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
+import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
@@ -23,6 +24,7 @@ import type {
   PiecewiseColorConfig,
 } from './colorMapping';
 import type { OrdinalTimeTicks } from './timeTicks';
+import { type ChartsTypeFeatureFlags } from './featureFlags';
 
 export type AxisId = string | number;
 
@@ -71,6 +73,16 @@ export interface ChartsAxisSlots {
    * @default ChartsText
    */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  /**
+   * Custom component for the x-axis.
+   * @default ChartsXAxis
+   */
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  /**
+   * Custom component for the y-axis.
+   * @default ChartsYAxis
+   */
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
 }
 
 export interface ChartsAxisSlotProps {
@@ -78,6 +90,8 @@ export interface ChartsAxisSlotProps {
   axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
   axisTickLabel?: Partial<ChartsTextProps>;
   axisLabel?: Partial<ChartsTextProps>;
+  xAxis?: Partial<ChartsXAxisProps>;
+  yAxis?: Partial<ChartsYAxisProps>;
 }
 
 export interface ChartsAxisProps extends TickParams {
@@ -170,7 +184,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
       position?: 'top' | 'bottom' | 'none';
       /**
        * The height of the axis.
-       * @default 30
+       * @default 45 if an axis label is provided, 25 otherwise.
        */
       height?: number;
     }
@@ -188,7 +202,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
         position?: 'left' | 'right' | 'none';
         /**
          * The width of the axis.
-         * @default 30
+         * @default 65 if an axis label is provided, 45 otherwise.
          */
         width?: number;
       }
@@ -516,7 +530,10 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
-  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  domainLimit?:
+    | 'nice'
+    | 'strict'
+    | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
@@ -649,7 +666,13 @@ export interface ChartsAxisData {
   /**
    * The mapping of series ids to their value for this particular axis index.
    */
-  seriesValues: Record<string, number | null | undefined>;
+  seriesValues: Record<
+    string,
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+      ? // @ts-ignore this property is added through module augmentation
+        ChartsTypeFeatureFlags['seriesValuesOverride']
+      : number | null | undefined
+  >;
 }
 
 export type CartesianDirection = 'x' | 'y';

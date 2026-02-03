@@ -127,7 +127,7 @@ const overridesResolver = (
     styles.root,
     !ownerState.disableMargin && styles.dayWithMargin,
     !ownerState.disableHighlightToday && ownerState.isDayCurrent && styles.today,
-    !ownerState.isDayOutsideMonth &&
+    ownerState.isDayOutsideMonth &&
       ownerState.showDaysOutsideCurrentMonth &&
       styles.dayOutsideMonth,
     ownerState.isDayOutsideMonth &&

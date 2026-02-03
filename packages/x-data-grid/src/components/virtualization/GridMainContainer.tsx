@@ -1,7 +1,8 @@
+'use client';
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { forwardRef } from '@mui/x-internals/forwardRef';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridConfiguration } from '../../hooks/utils/useGridConfiguration';
 import type {
@@ -9,7 +10,10 @@ import type {
   GridLoadingOverlayVariant,
 } from '../../hooks/features/overlays/gridOverlaysInterfaces';
 
-const GridPanelAnchor = styled('div')({
+const GridPanelAnchor = styled('div', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({
   position: 'absolute',
   top: `var(--DataGrid-headersTotalHeight)`,
   left: 0,

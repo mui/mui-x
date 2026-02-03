@@ -17,15 +17,18 @@ import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
+import { type ChartsAxisData, type SeriesId } from '../../../../models';
+
+const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
+type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
   store,
-  seriesConfig,
-  svgRef,
   instance,
 }) => {
-  const { xAxis, yAxis, dataset, onHighlightedAxisChange } = params;
+  const { svgRef } = instance;
+  const { xAxis, yAxis, dataset, onHighlightedAxisChange, axesGap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -74,10 +77,11 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
 
     store.set('cartesianAxis', {
-      x: defaultizeXAxis(xAxis, dataset),
-      y: defaultizeYAxis(yAxis, dataset),
+      axesGap,
+      x: defaultizeXAxis(xAxis, dataset, axesGap),
+      y: defaultizeYAxis(yAxis, dataset, axesGap),
     });
-  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
+  }, [drawingArea, xAxis, yAxis, dataset, axesGap, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
@@ -207,19 +211,28 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       // The .data exist because otherwise the dataIndex would be null or -1.
       const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
-      const seriesValues: Record<string, number | null | undefined> = {};
+      const seriesValues: ChartsAxisData['seriesValues'] = {};
 
       Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'bar' | 'line' => ['bar', 'line'].includes(seriesType))
+        .filter((seriesType): seriesType is AxisClickSeriesType =>
+          AXIS_CLICK_SERIES_TYPES.has(seriesType as AxisClickSeriesType),
+        )
         .forEach((seriesType) => {
-          processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
-            const seriesItem = processedSeries[seriesType]!.series[seriesId];
+          // @ts-ignore
+          const seriesTypeConfig = processedSeries[seriesType];
+
+          seriesTypeConfig?.seriesOrder.forEach((seriesId: SeriesId) => {
+            const seriesItem = seriesTypeConfig!.series[seriesId];
 
             const providedXAxisId = seriesItem.xAxisId;
             const providedYAxisId = seriesItem.yAxisId;
 
             const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+              // @ts-ignore This is safe because users need to opt in to use range bar series.
+              // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnClick`
+              // Which adds the proper type to the series data.
+              // TODO(v9): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }
           });
@@ -255,20 +268,23 @@ useChartCartesianAxis.params = {
   disableAxisListener: true,
   onHighlightedAxisChange: true,
   highlightedAxis: true,
+  axesGap: true,
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
+    axesGap: params.axesGap ?? 0,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, params.axesGap ?? 0),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, params.axesGap ?? 0),
   };
 };
 
 useChartCartesianAxis.getInitialState = (params) => ({
   cartesianAxis: {
+    axesGap: params.axesGap,
     x: params.defaultizedXAxis,
     y: params.defaultizedYAxis,
   },

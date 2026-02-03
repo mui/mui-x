@@ -1,5 +1,8 @@
 import { getLabel } from '../../internals/getLabel';
-import type { AxisTooltipGetter, TooltipGetter } from '../../internals/plugins/models';
+import type {
+  AxisTooltipGetter,
+  TooltipGetter,
+} from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const tooltipGetter: TooltipGetter<'radar'> = (params) => {
   const { series, axesConfig, getColor, identifier } = params;
@@ -21,12 +24,14 @@ const tooltipGetter: TooltipGetter<'radar'> = (params) => {
     color: getColor(),
     label,
     markType: series.labelMarkType,
-    values: series.data.map((value, dataIndex) => ({
-      value,
-      formattedValue: series.valueFormatter(value, { dataIndex }),
-      markType: series.labelMarkType,
-      label: formatter(rotationAxis?.data?.[dataIndex]),
-    })),
+    values: series.data
+      .filter((_, index) => identifier.dataIndex == null || identifier.dataIndex === index)
+      .map((value, dataIndex) => ({
+        value,
+        formattedValue: series.valueFormatter(value, { dataIndex }),
+        markType: series.labelMarkType,
+        label: formatter(rotationAxis?.data?.[dataIndex]),
+      })),
   };
 };
 

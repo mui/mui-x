@@ -1,7 +1,8 @@
 'use client';
 import * as React from 'react';
-import clsx from 'clsx';
+import { styled } from '@mui/material/styles';
 import { useStore } from '@base-ui/utils/store';
+import Button from '@mui/material/Button';
 import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
 import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { CalendarGrid } from '@mui/x-scheduler-headless/calendar-grid';
@@ -10,17 +11,152 @@ import {
   eventCalendarOccurrencePlaceholderSelectors,
   eventCalendarViewSelectors,
 } from '@mui/x-scheduler-headless/event-calendar-selectors';
-import { schedulerOtherSelectors } from '@mui/x-scheduler-headless/scheduler-selectors';
+import {
+  schedulerNowSelectors,
+  schedulerOtherSelectors,
+} from '@mui/x-scheduler-headless/scheduler-selectors';
 import { useEventOccurrencesWithDayGridPosition } from '@mui/x-scheduler-headless/use-event-occurrences-with-day-grid-position';
 import { DayGridEvent } from '../../internals/components/event/day-grid-event/DayGridEvent';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { EventPopoverTrigger } from '../../internals/components/event-popover';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
-import { useEventPopoverContext } from '../../internals/components/event-popover/EventPopover';
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
 import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
-import './MonthViewWeekRow.css';
+import { EventDraggableDialogTrigger } from '../../internals/components/event-draggable-dialog';
+import { useEventDraggableDialogContext } from '../../internals/components/event-draggable-dialog/EventDraggableDialog';
+import { useEventCalendarClasses } from '../../event-calendar/EventCalendarClassesContext';
+import { eventCalendarClasses } from '../../event-calendar/eventCalendarClasses';
+
+const MonthViewCellRoot = styled(CalendarGrid.DayCell, {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCell',
+})(({ theme }) => ({
+  display: 'grid',
+  gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
+  gap: theme.spacing(0.5),
+  padding: theme.spacing(0.5),
+  fontSize: theme.typography.body2.fontSize,
+  lineHeight: '18px',
+  color: theme.palette.text.secondary,
+  '&:not(:first-of-type)': {
+    borderInlineStart: `1px solid ${theme.palette.divider}`,
+  },
+  '&[data-weekend]': {
+    backgroundColor: theme.palette.action.hover,
+    color: theme.palette.text.primary,
+  },
+  '&[data-current]': {
+    backgroundColor: theme.palette.primary.light,
+  },
+  [`&[data-current] .${eventCalendarClasses.monthViewCellNumber}`]: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  '&[data-other-month]': {
+    color: theme.palette.text.disabled,
+  },
+  // Today button states
+  [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton} > .${eventCalendarClasses.monthViewCellNumber}`]:
+    {
+      backgroundColor: 'transparent',
+    },
+  [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:hover > .${eventCalendarClasses.monthViewCellNumber}`]:
+    {
+      backgroundColor: 'transparent',
+    },
+  [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:active > .${eventCalendarClasses.monthViewCellNumber}`]:
+    {
+      backgroundColor: 'transparent',
+    },
+  [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}`]: {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:hover`]: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+  [`&[data-current] > .${eventCalendarClasses.monthViewCellNumberButton}:active`]: {
+    backgroundColor: theme.palette.primary.dark,
+  },
+}));
+
+const MonthViewCellNumber = styled('span', {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCellNumber',
+})(({ theme }) => ({
+  gridRow: 1,
+  justifySelf: 'end',
+  alignSelf: 'flex-end',
+  padding: theme.spacing(0, 0.5),
+  borderRadius: theme.shape.borderRadius,
+}));
+
+const MonthViewCellNumberButton = styled('button', {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCellNumberButton',
+})(({ theme }) => ({
+  gridRow: 1,
+  justifySelf: 'end',
+  width: 'fit-content',
+  alignSelf: 'flex-end',
+  borderRadius: theme.shape.borderRadius,
+  border: 'none',
+  background: 'none',
+  padding: 0,
+  cursor: 'pointer',
+  font: 'inherit',
+  color: 'inherit',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&:active': {
+    backgroundColor: theme.palette.action.selected,
+  },
+  '&:focus-visible': {
+    backgroundColor: theme.palette.action.focus,
+    outline: `2px solid ${theme.palette.primary.main}`,
+    outlineOffset: 2,
+  },
+  '&:focus-visible:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
+
+const MonthViewCellEvents = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewCellEvents',
+})(({ theme }) => ({
+  position: 'relative',
+  display: 'grid',
+  gap: theme.spacing(0.5),
+}));
+
+const MonthViewMoreEvents = styled(Button, {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewMoreEvents',
+})(({ theme }) => ({
+  margin: 0,
+  color: theme.palette.text.secondary,
+  fontSize: theme.typography.caption.fontSize,
+  lineHeight: '18px',
+  paddingInlineStart: theme.spacing(0.5),
+  justifyContent: 'flex-start',
+  textTransform: 'none',
+}));
+
+const MonthViewPlaceholderEventContainer = styled('div', {
+  name: 'MuiEventCalendar',
+  slot: 'MonthViewPlaceholderContainer',
+})(({ theme }) => ({
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  display: 'grid',
+  gridTemplateColumns: '1fr',
+  gridTemplateRows: 'repeat(var(--row-count), minmax(auto, 18px))',
+  gap: theme.spacing(0.5),
+}));
 
 export const MonthViewCell = React.forwardRef(function MonthViewCell(
   props: MonthViewCellProps,
@@ -32,7 +168,8 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const adapter = useAdapter();
   const store = useEventCalendarStoreContext();
   const translations = useTranslations();
-  const { open: startEditing } = useEventPopoverContext();
+  const { onOpen: startEditing } = useEventDraggableDialogContext();
+  const classes = useEventCalendarClasses();
 
   // Selector hooks
   const hasDayView = useStore(store, eventCalendarViewSelectors.hasDayView);
@@ -48,12 +185,12 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellRef = React.useRef<HTMLDivElement | null>(null);
   const handleRef = useMergedRefs(ref, cellRef);
 
+  // Selector hooks
+  const now = useStore(store, schedulerNowSelectors.nowUpdatedEveryMinute);
+
   const isCurrentMonth = adapter.isSameMonth(day.value, visibleDate);
   const isFirstDayOfMonth = adapter.isSameDay(day.value, adapter.startOfMonth(day.value));
-  const isToday = React.useMemo(
-    () => adapter.isSameDay(day.value, adapter.now('default')),
-    [adapter, day],
-  );
+  const isToday = adapter.isSameDay(day.value, now);
 
   const visibleOccurrences =
     day.withPosition.length > maxEvents
@@ -62,11 +199,11 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const hiddenCount = day.withPosition.length - visibleOccurrences.length;
 
   const cellNumberContent = (
-    <span className="MonthViewCellNumber">
+    <MonthViewCellNumber className={classes.monthViewCellNumber}>
       {isFirstDayOfMonth
         ? formatMonthAndDayOfMonth(day.value, adapter)
         : adapter.format(day.value, 'dayOfMonth')}
-    </span>
+    </MonthViewCellNumber>
   );
 
   // Day number header + max events
@@ -87,37 +224,34 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
     if (!isCreatingAnEvent || !placeholder || !cellRef.current) {
       return;
     }
-    startEditing(cellRef.current, placeholder);
+    startEditing(cellRef, placeholder);
   }, [isCreatingAnEvent, placeholder, startEditing]);
 
   return (
-    <CalendarGrid.DayCell
+    <MonthViewCellRoot
+      className={classes.monthViewCell}
       ref={handleRef}
       key={day.key}
       value={day.value}
-      data-current={isToday ? '' : undefined}
-      className={clsx(
-        'MonthViewCell',
-        !isCurrentMonth && 'OtherMonth',
-        isToday && 'Today',
-        isWeekend(adapter, day.value) && 'Weekend',
-      )}
+      data-current={isToday || undefined}
+      data-other-month={!isCurrentMonth || undefined}
+      data-weekend={isWeekend(adapter, day.value) || undefined}
       style={{ '--row-count': rowCount } as React.CSSProperties}
       {...eventCreationProps}
     >
       {hasDayView ? (
-        <button
+        <MonthViewCellNumberButton
           type="button"
-          className="MonthViewCellNumberButton"
+          className={classes.monthViewCellNumberButton}
           onClick={(event) => store.switchToDay(day.value, event)}
           tabIndex={0}
         >
           {cellNumberContent}
-        </button>
+        </MonthViewCellNumberButton>
       ) : (
         cellNumberContent
       )}
-      <div className="MonthViewCellEvents">
+      <MonthViewCellEvents className={classes.monthViewCellEvents}>
         {visibleOccurrences.map((occurrence) => {
           if (occurrence.position.isInvisible) {
             return (
@@ -126,43 +260,34 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
           }
 
           return (
-            <EventPopoverTrigger
-              key={occurrence.key}
-              occurrence={occurrence}
-              render={
-                <DayGridEvent
-                  occurrence={occurrence}
-                  variant={
-                    isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
-                  }
-                />
-              }
-            />
+            <EventDraggableDialogTrigger key={occurrence.key} occurrence={occurrence}>
+              <DayGridEvent
+                occurrence={occurrence}
+                variant={
+                  isOccurrenceAllDayOrMultipleDay(occurrence, adapter) ? 'filled' : 'compact'
+                }
+              />
+            </EventDraggableDialogTrigger>
           );
         })}
         {hiddenCount > 0 && (
-          <MoreEventsPopoverTrigger
-            occurrences={day.withPosition}
-            day={day}
-            nativeButton={true}
-            render={
-              <button
-                type="button"
-                aria-label={translations.hiddenEvents(hiddenCount)}
-                className={clsx('MonthViewMoreEvents', 'Button--small', 'NeutralTextButton')}
-              >
-                {translations.hiddenEvents(hiddenCount)}
-              </button>
-            }
-          />
+          <MoreEventsPopoverTrigger occurrences={day.withPosition} day={day}>
+            <MonthViewMoreEvents
+              size="small"
+              aria-label={translations.hiddenEvents(hiddenCount)}
+              className={classes.monthViewMoreEvents}
+            >
+              {translations.hiddenEvents(hiddenCount)}
+            </MonthViewMoreEvents>
+          </MoreEventsPopoverTrigger>
         )}
         {placeholder != null && (
-          <div className="MonthViewPlaceholderEventContainer">
+          <MonthViewPlaceholderEventContainer className={classes.monthViewPlaceholderContainer}>
             <DayGridEvent occurrence={placeholder} variant="placeholder" />
-          </div>
+          </MonthViewPlaceholderEventContainer>
         )}
-      </div>
-    </CalendarGrid.DayCell>
+      </MonthViewCellEvents>
+    </MonthViewCellRoot>
   );
 });
 

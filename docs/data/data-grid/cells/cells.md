@@ -68,3 +68,18 @@ Common use cases include:
 Unlike `valueGetter()`, this function only impacts rendering—_not_ internal calculations like filtering or sorting.
 
 See [Column definition—value formatter](/x/react-data-grid/column-definition/#value-formatter) for more details.
+
+## Recipes
+
+### Long text cell
+
+To show long text in a Data Grid cell as a popup, customize the cell to show an expand button.
+When clicked, a Popper appears with a full view of the text content without increasing the cell size.
+
+In the example below, try hovering over the cells in the **Bio** column and clicking the expand button to see the full content.
+
+{{"demo": "LongTextCell.js", "bg": "inline", "defaultCodeOpen": false}}
+
+:::info
+The recipe can be extended to support [editing](/x/react-data-grid/editing/) long text, take a look at the [Editing recipes—Multiline editing](/x/react-data-grid/recipes-editing/#multiline-editing) for the details.
+:::

@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
-  DataGridProProps,
+  type GridApi,
+  type DataGridProProps,
   useGridApiRef,
   DataGridPro,
-  GridRenderEditCellParams,
-  GridValueSetter,
-  GridPreProcessEditCellProps,
+  type GridRenderEditCellParams,
+  type GridValueSetter,
+  type GridPreProcessEditCellProps,
   GridCellModes,
-  GridColDef,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, fireEvent, act, waitFor } from '@mui/internal-test-utils';
@@ -863,6 +863,19 @@ describe('<DataGridPro /> - Cell editing', () => {
         fireUserEvent.mousePress(cell);
         fireEvent.keyDown(cell, { key: 'Enter' });
         expect(spiedStartCellEditMode.callCount).to.equal(1);
+      });
+
+      it('should prevent the default behavior to avoid the key affecting the edit component', () => {
+        const handleKeyDown = spy((event: React.KeyboardEvent) => event.defaultPrevented);
+        render(
+          <div onKeyDown={handleKeyDown}>
+            <TestCase />
+          </div>,
+        );
+        const cell = getCell(0, 1);
+        fireUserEvent.mousePress(cell);
+        fireEvent.keyDown(cell, { key: 'Enter' });
+        expect(handleKeyDown.returnValues).to.deep.equal([true]);
       });
     });
 

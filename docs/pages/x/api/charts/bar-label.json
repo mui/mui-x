@@ -6,6 +6,7 @@
     "xOrigin": { "type": { "name": "number" }, "required": true },
     "y": { "type": { "name": "number" }, "required": true },
     "yOrigin": { "type": { "name": "number" }, "required": true },
+    "hidden": { "type": { "name": "bool" } },
     "placement": {
       "type": { "name": "enum", "description": "'center'<br>&#124;&nbsp;'outside'" },
       "default": "'center'"

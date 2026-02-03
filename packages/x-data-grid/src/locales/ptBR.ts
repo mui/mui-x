@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const ptBRGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +16,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Compacto',
   toolbarDensityStandard: 'Padrão',
   toolbarDensityComfortable: 'Confortável',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Desfazer',
+  toolbarRedo: 'Refazer',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colunas',
@@ -163,6 +167,10 @@ const ptBRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sim',
   booleanCellFalseLabel: 'não',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Recolher',
 
   // Actions cell more text
   actionsCellMore: 'mais',

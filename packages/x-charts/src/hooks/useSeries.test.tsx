@@ -3,6 +3,7 @@ import { ErrorBoundary, createRenderer, reactMajor, screen } from '@mui/internal
 import { isJSDOM } from 'test/utils/skipIf';
 import { useSeries } from './useSeries';
 import { ChartProvider } from '../context/ChartProvider';
+import { defaultSeriesConfig } from '../internals/plugins/utils/defaultSeriesConfig';
 
 function UseSeries() {
   const { bar } = useSeries();
@@ -38,11 +39,12 @@ describe('useSeries', () => {
 
   it('should not throw an error when parent context is present', () => {
     render(
-      <ChartProvider
+      <ChartProvider<'bar'>
         pluginParams={{
           series: [{ type: 'bar', id: 'test-id', data: [1, 2] }],
           width: 200,
           height: 200,
+          seriesConfig: defaultSeriesConfig,
         }}
       >
         <UseSeries />

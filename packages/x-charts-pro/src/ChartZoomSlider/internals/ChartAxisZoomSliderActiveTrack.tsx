@@ -27,6 +27,7 @@ import { ZOOM_SLIDER_THUMB_HEIGHT, ZOOM_SLIDER_THUMB_WIDTH } from './constants';
 import { useUtilityClasses } from './chartAxisZoomSliderTrackClasses';
 
 const ZoomSliderActiveTrackRect = styled('rect', {
+  slot: 'internal',
   shouldForwardProp: (prop) => shouldForwardProp(prop) && prop !== 'preview',
 })<{ preview: boolean }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.grey[600],
@@ -76,7 +77,8 @@ export function ChartAxisZoomSliderActiveTrack({
   onPointerEnter,
   onPointerLeave,
 }: ChartAxisZoomSliderActiveTrackProps) {
-  const { instance, svgRef } = useChartContext<[UseChartProZoomSignature]>();
+  const { instance } = useChartContext<[UseChartProZoomSignature]>();
+  const { svgRef } = instance;
   const store = useStore<[UseChartProZoomSignature]>();
   const axis = store.use(selectorChartAxis, axisId);
   const drawingArea = useDrawingArea();

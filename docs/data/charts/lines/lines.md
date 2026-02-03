@@ -166,11 +166,11 @@ If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Styling
@@ -194,7 +194,7 @@ The line charts use by priority:
 2. The x-axis color
 3. The series color
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -295,10 +295,10 @@ This will lead to strange behaviors.
 <LineChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <LinePlot skipAnimation />
   <AreaPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "LineAnimation.js"}}
@@ -313,6 +313,7 @@ In addition to the common chart components available for [composition](/x/react-
 - `<LinePlot />` renders the series lines.
 - `<MarkPlot />` renders the series marks.
 - `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+- `<FocusedLineMark />` renders a focus indicator when the user focuses a data point.
 
 Here's how the Line Chart is composed:
 
@@ -329,6 +330,7 @@ Here's how the Line Chart is composed:
         <ChartsOverlay />
         <ChartsAxisHighlight />
       </g>
+      <FocusedLineMark />
       <ChartsAxis />
       <g data-drawing-container>
         {/* Elements able to overflow the drawing area. */}

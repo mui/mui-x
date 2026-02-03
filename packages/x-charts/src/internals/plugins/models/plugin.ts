@@ -1,8 +1,6 @@
-import type * as React from 'react';
 import { type Store } from '@mui/x-internals/store';
 import type { MergeSignaturesProperty, OptionalIfEmpty } from './helpers';
 import type { ChartCorePluginSignatures } from '../corePlugins';
-import { type ChartSeriesConfig } from './seriesConfig';
 import { type ChartState } from './chart';
 
 export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> {
@@ -19,24 +17,12 @@ export interface ChartPluginOptions<TSignature extends ChartAnyPluginSignature> 
    */
   store: ChartUsedStore<TSignature>;
   /**
-   * Reference to the main svg element.
-   */
-  svgRef: React.RefObject<SVGSVGElement | null>;
-  /**
-   * Reference to the chart root element.
-   */
-  chartRootRef: React.RefObject<HTMLDivElement | null>;
-  /**
    * All the plugins that are used in the chart.
    */
   plugins: ChartPlugin<ChartAnyPluginSignature>[];
-  /**
-   * All the series configurations that are currently loaded.
-   */
-  seriesConfig: ChartSeriesConfig<any>;
 }
 
-type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
+export type ChartResponse<TSignature extends ChartAnyPluginSignature> = OptionalIfEmpty<
   'publicAPI',
   TSignature['publicAPI']
 > &
@@ -144,14 +130,12 @@ export type ChartPlugin<TSignature extends ChartAnyPluginSignature> = {
    *
    * @param {ChartUsedDefaultizedParams<TSignature>} params The parameters after being processed with the default values.
    * @param {MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>} currentState The current state of the chart.
-   * @param {ChartSeriesConfig<any>} seriesConfig The series configuration.
    *
    * @returns {TSignature['state']} The initial state of the plugin.
    */
   getInitialState?: (
     params: ChartUsedDefaultizedParams<TSignature>,
     currentState: MergeSignaturesProperty<ChartRequiredPlugins<TSignature>, 'state'>,
-    seriesConfig: ChartSeriesConfig<any>,
   ) => TSignature['state'];
   /**
    * An object where each property used by the plugin is set to `true`.

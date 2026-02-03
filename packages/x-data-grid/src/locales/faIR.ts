@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const faIRGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +16,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'استاندارد',
   toolbarDensityComfortable: 'راحت',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واگرد',
+  toolbarRedo: 'ازنو',
+
   // Columns selector toolbar button text
   toolbarColumns: 'ستون‌ها',
   toolbarColumnsLabel: 'ستون‌ها را انتخاب کنید',
@@ -29,7 +33,7 @@ const faIRGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} فیلترهای فعال` : `${count} فیلتر فعال`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'جستجو...',
+  toolbarQuickFilterPlaceholder: 'جستجو…',
   toolbarQuickFilterLabel: 'جستجو',
   toolbarQuickFilterDeleteIconLabel: 'حذف',
 
@@ -162,6 +166,10 @@ const faIRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'صحیح',
   booleanCellFalseLabel: 'غلط',
+
+  // Long text cell
+  longTextCellExpandLabel: 'بازکردن پنل جزئیات',
+  longTextCellCollapseLabel: 'بستن پنل جزئیات',
 
   // Actions cell more text
   actionsCellMore: 'بیشتر',

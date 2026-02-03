@@ -8,17 +8,17 @@ import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import {
-  GridFilterItem,
-  GridFilterOperator,
-  GridHeaderFilterEventLookup,
-  GridColDef,
+  type GridFilterItem,
+  type GridFilterOperator,
+  type GridHeaderFilterEventLookup,
+  type GridColDef,
   gridVisibleColumnFieldsSelector,
   getDataGridUtilityClass,
   useGridSelector,
   GridFilterInputValue,
   GridFilterInputDate,
   GridFilterInputBoolean,
-  GridColType,
+  type GridColType,
   GridFilterInputSingleSelect,
   gridFilterModelSelector,
   gridFilterableColumnLookupSelector,
@@ -26,8 +26,8 @@ import {
 } from '@mui/x-data-grid';
 import {
   PinnedColumnPosition,
-  GridStateColDef,
-  GridFilterInputValueProps,
+  type GridStateColDef,
+  type GridFilterInputValueProps,
   useGridPrivateApiContext,
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
@@ -39,7 +39,7 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { inputBaseClasses } from '@mui/material/InputBase';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProProcessedProps } from '../../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../../models/dataGridProProps';
 import { GridHeaderFilterMenuContainer } from './GridHeaderFilterMenuContainer';
 import { GridHeaderFilterClearButton } from './GridHeaderFilterClearButton';
 
@@ -89,9 +89,9 @@ const StyledInputComponent = styled(GridFilterInputValue, {
     fontSize: '14px',
   },
   [`.${gridClasses['root--densityCompact']} & .${inputBaseClasses.input}`]: {
-    paddingTop: vars.spacing(0.5),
-    paddingBottom: vars.spacing(0.5),
-    height: 23,
+    paddingTop: vars.spacing(0.25),
+    paddingBottom: vars.spacing(0.25),
+    height: 20,
   },
 });
 
@@ -141,6 +141,7 @@ const DEFAULT_INPUT_COMPONENTS: {
   singleSelect: GridFilterInputSingleSelect,
   actions: null,
   custom: null,
+  longText: GridFilterInputValue,
 };
 
 const GridHeaderFilterCell = forwardRef<HTMLDivElement, GridHeaderFilterCellProps>((props, ref) => {

@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.22.1",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -78,6 +78,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.ts",
+    "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
   }
 }
