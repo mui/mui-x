@@ -4,6 +4,7 @@ export * from '../ChartsLabel/ChartsLabelMark';
 export * from './components/NotRendered';
 export * from '../BarChart/BarLabel/BarLabelPlot';
 export * from '../BarChart/BarClipPath';
+export * from './components/WebGLContext';
 
 // hooks
 export { useSeries } from '../hooks/useSeries';
@@ -18,6 +19,7 @@ export { useLinePlotData } from '../LineChart/useLinePlotData';
 export * from '../BarChart/useBarChartProps';
 export { processBarDataForPlot } from '../BarChart/useBarPlotData';
 export { useRadarChartProps } from '../RadarChart/useRadarChartProps';
+export * from '../ChartsContainer/useChartsContainerProps';
 export * from '../ChartContainer/useChartContainerProps';
 export * from '../ChartDataProvider/useChartDataProviderProps';
 export * from './seriesSelectorOfType';
@@ -49,7 +51,6 @@ export * from './store/useCharts';
 export * from './store/useStore';
 
 // plugins configs
-
 export * from '../BarChart/BarChart.plugins';
 export * from '../LineChart/LineChart.plugins';
 export * from '../ScatterChart/ScatterChart.plugins';

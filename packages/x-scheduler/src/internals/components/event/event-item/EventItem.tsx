@@ -27,7 +27,12 @@ const EventItemCard = styled('div', {
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-  '&[data-variant="compact"], &[data-variant="regular"]': {},
+
+  '&[data-variant="compact"], &[data-variant="regular"]': {
+    containerType: 'inline-size',
+    cursor: 'pointer',
+    height: 'fit-content',
+  },
   '&[data-variant="filled"]': {
     backgroundColor: 'var(--event-surface-bold)',
     color: 'var(--event-on-surface-bold)',
@@ -35,10 +40,8 @@ const EventItemCard = styled('div', {
       backgroundColor: 'var(--event-surface-bold-hover)',
     },
   },
-  '&[data-variant="compact"]': {
-    containerType: 'inline-size',
+  '&[data-variant="regular"]': {
     cursor: 'pointer',
-    height: 'fit-content',
   },
   variants: getPaletteVariants(theme),
 }));

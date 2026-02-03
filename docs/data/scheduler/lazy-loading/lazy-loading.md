@@ -1,13 +1,13 @@
 ---
 productId: x-scheduler
-title: React Scheduler component
-packageName: '@mui/x-scheduler'
+title: React Scheduler component - Lazy loading
+packageName: '@mui/x-scheduler-premium'
 githubLabel: 'scope: scheduler'
 ---
 
-# Scheduler - Lazy loading events
+# Scheduler - Lazy loading events [<span class="plan-premium"></span>](/x/introduction/licensing/#premium-plan 'Premium plan')
 
-<p class="description">The `dataSource` prop accepts a `getEvents` method.</p>
+<p class="description">The `dataSource` prop accepts a `getEvents` method to lazily load events.</p>
 
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 

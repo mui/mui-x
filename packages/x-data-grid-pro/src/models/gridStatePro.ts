@@ -1,4 +1,4 @@
-import {
+import type {
   GridInitialState as GridInitialStateCommunity,
   GridState as GridStateCommunity,
   GridColumnPinningState,

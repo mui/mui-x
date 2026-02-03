@@ -1,5 +1,5 @@
 import { isNumber } from '@mui/x-data-grid-pro/internals';
-import { GridAggregationFunction } from './gridAggregationInterfaces';
+import type { GridAggregationFunction } from './gridAggregationInterfaces';
 
 const sumAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {

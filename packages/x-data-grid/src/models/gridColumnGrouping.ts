@@ -1,4 +1,4 @@
-import { GridColDef } from './colDef';
+import type { GridColDef } from './colDef';
 import type { GridColumnGroupHeaderParams } from './params/gridColumnGroupHeaderParams';
 
 export interface GridLeafColumn {

@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { throttle } from '@mui/x-internals/throttle';
 import useEventCallback from '@mui/utils/useEventCallback';
 import debounce from '@mui/utils/debounce';
@@ -8,27 +8,27 @@ import {
   useGridEvent,
   gridSortModelSelector,
   gridFilterModelSelector,
-  GridEventListener,
+  type GridEventListener,
   GRID_ROOT_GROUP_ID,
-  GridGroupNode,
-  GridSkeletonRowNode,
+  type GridGroupNode,
+  type GridSkeletonRowNode,
   gridPaginationModelSelector,
   gridFilteredSortedRowIdsSelector,
   gridRowIdSelector,
-  GridRowId,
+  type GridRowId,
 } from '@mui/x-data-grid';
 import {
   getVisibleRows,
   gridRenderContextSelector,
   GridStrategyGroup,
-  GridStrategyProcessor,
+  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
   runIf,
   DataSourceRowsUpdateStrategy,
 } from '@mui/x-data-grid/internals';
-import { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
-import { GridPrivateApiPro } from '../../../models/gridApiPro';
-import { DataGridProProcessedProps } from '../../../models/dataGridProProps';
+import type { GridGetRowsParamsPro as GridGetRowsParams } from '../dataSource/models';
+import type { GridPrivateApiPro } from '../../../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../../../models/dataGridProProps';
 import { findSkeletonRowsSection } from '../lazyLoader/utils';
 import { GRID_SKELETON_ROW_ROOT_ID } from '../lazyLoader/useGridLazyLoaderPreProcessors';
 

@@ -192,6 +192,9 @@ export default defineConfig(
       'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/purity': 'off',
       'react-hooks/static-components': 'off',
+
+      // TODO(@Janpot) Fix issues and turn back on
+      'material-ui/consistent-production-guard': 'off',
     },
   },
   // Test start
@@ -236,6 +239,12 @@ export default defineConfig(
       ],
       // Charts have no semantics, so we often need to query by container
       'testing-library/no-container': 'off',
+    },
+  },
+  {
+    files: [`packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
     },
   },
   {
