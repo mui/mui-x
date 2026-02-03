@@ -196,20 +196,20 @@ describe('<DataGridPro /> - Autosizing', () => {
       expect(getWidths(columns)[1]).to.equal(100);
     });
 
-    it('should ignore minWidth in favor of autoSizingMinWidth during autosizing', async () => {
+    it('should NOT ignore minWidth in favor of autoSizingMinWidth during autosizing', async () => {
       const columns = [{ field: 'id', minWidth: 250, autoSizingMinWidth: 200 }, { field: 'brand' }];
       render(<Test columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
-      // should be 200, not 250
-      expect(getWidths(columns)[0]).to.equal(200);
+      // should be 250, not 200, because minWidth is more restrictive
+      expect(getWidths(columns)[0]).to.equal(250);
     });
 
-    it('should ignore maxWidth in favor of autoSizingMaxWidth during autosizing', async () => {
+    it('should NOT ignore maxWidth in favor of autoSizingMaxWidth during autosizing', async () => {
       const columns = [{ field: 'id' }, { field: 'brand', maxWidth: 50, autoSizingMaxWidth: 100 }];
       render(<Test columns={columns} />);
       await act(async () => apiRef.current?.autosizeColumns());
-      // should be 100, not 50
-      expect(getWidths(columns)[1]).to.equal(100);
+      // should be 50, not 100, because maxWidth is more restrictive
+      expect(getWidths(columns)[1]).to.equal(50);
     });
 
     it('should respect minWidth if autoSizingMinWidth is not set', async () => {
