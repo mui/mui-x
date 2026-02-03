@@ -46,7 +46,9 @@ const DayTimeGridAllDayEventsCellEvents = styled('div', {
 const DayTimeGridAllDayEventContainer = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'DayTimeGridAllDayEventContainer',
-})({});
+})({
+  display: 'contents',
+});
 
 export function DayGridCell(props: DayGridCellProps) {
   const { day, row } = props;

@@ -89,7 +89,8 @@ const DayGridEventPlaceholder = styled(CalendarGrid.DayEventPlaceholder, {
   ...(DayGridEventBaseStyles(theme) as any),
   minHeight: 18,
   zIndex: 2,
-  backgroundColor: 'var(--event-surface-subtle)',
+  backgroundColor: 'var(--event-surface-subtle-hover)',
+  color: 'var(--event-on-surface-subtle-primary)',
   border: `1px dashed var(--event-on-surface-subtle-secondary)`,
 }));
 
