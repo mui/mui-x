@@ -17,6 +17,7 @@ import { SchedulerProcessedDate, TemporalSupportedObject } from '@mui/x-schedule
 import { MiniCalendarProps } from './MiniCalendar.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { useEventCalendarClasses } from '../EventCalendarClassesContext';
+import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
 
 const MiniCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',
@@ -187,26 +188,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     // Get weekday headers from first week
     const weekdays = weeks[0] ?? [];
 
-    const handlePreviousMonth = React.useCallback(() => {
-      setDisplayedMonth((prev) => adapter.addMonths(prev, -1));
-    }, [adapter]);
-
-    const handleNextMonth = React.useCallback(() => {
-      setDisplayedMonth((prev) => adapter.addMonths(prev, 1));
-    }, [adapter]);
-
-    const handleDayClick = React.useCallback(
-      (day: TemporalSupportedObject, event: React.MouseEvent) => {
-        store.goToDate(day, event);
-      },
-      [store],
-    );
-
-    // Format month and year label (e.g., "May 2025")
-    const monthYearLabel = React.useMemo(() => {
-      const f = adapter.formats;
-      return adapter.formatByString(displayedMonth, `${f.monthFullLetter} ${f.yearPadded}`);
-    }, [adapter, displayedMonth]);
+    const monthYearLabel = React.useMemo(() => formatMonthFullLetterAndYear(displayedMonth, adapter), [adapter, displayedMonth]);
 
     return (
       <MiniCalendarRoot
@@ -224,14 +206,14 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
             <IconButton
               size="small"
               aria-label={translations.miniCalendarGoToPreviousMonth}
-              onClick={handlePreviousMonth}
+              onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, -1))}
             >
               <ChevronLeftIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
               aria-label={translations.miniCalendarGoToNextMonth}
-              onClick={handleNextMonth}
+              onClick={() => setDisplayedMonth((prev) => adapter.addMonths(prev, 1))}
             >
               <ChevronRightIcon fontSize="small" />
             </IconButton>
@@ -281,7 +263,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
                       aria-current={isToday ? 'date' : undefined}
                       aria-selected={isActive}
                       tabIndex={isActive ? 0 : -1}
-                      onClick={(event) => handleDayClick(day.value, event)}
+                      onClick={(event) => store.goToDate(day.value, event)}
                     >
                       {adapter.formatByString(day.value, adapter.formats.dayOfMonth)}
                     </MiniCalendarDayButton>

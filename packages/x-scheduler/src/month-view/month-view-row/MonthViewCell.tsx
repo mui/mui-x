@@ -20,7 +20,7 @@ import { DayGridEvent } from '../../internals/components/event/day-grid-event/Da
 import { useTranslations } from '../../internals/utils/TranslationsContext';
 import { MoreEventsPopoverTrigger } from '../../internals/components/more-events-popover/MoreEventsPopover';
 import { useEventCreationProps } from '../../internals/hooks/useEventCreationProps';
-import { formatMonthAndDayOfMonth } from '../../internals/utils/date-utils';
+import { formatMonth3LetterAndDayOfMonth } from '../../internals/utils/date-utils';
 import { isOccurrenceAllDayOrMultipleDay } from '../../internals/utils/event-utils';
 import { EventDraggableDialogTrigger } from '../../internals/components/event-draggable-dialog';
 import { useEventDraggableDialogContext } from '../../internals/components/event-draggable-dialog/EventDraggableDialog';
@@ -201,7 +201,7 @@ export const MonthViewCell = React.forwardRef(function MonthViewCell(
   const cellNumberContent = (
     <MonthViewCellNumber className={classes.monthViewCellNumber}>
       {isFirstDayOfMonth
-        ? formatMonthAndDayOfMonth(day.value, adapter)
+        ? formatMonth3LetterAndDayOfMonth(day.value, adapter)
         : adapter.format(day.value, 'dayOfMonth')}
     </MonthViewCellNumber>
   );
