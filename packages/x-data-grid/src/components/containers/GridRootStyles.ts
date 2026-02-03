@@ -40,14 +40,18 @@ export const GridRootStyles = styled('div', {
   overridesResolver: (props, styles) => [
     // Root overrides
     styles.root,
-    { [`&.${c.autoHeight}`]: styles.autoHeight },
-    { [`&.${c.autosizing}`]: styles.autosizing },
-    { [`&.${c['root--densityStandard']}`]: styles['root--densityStandard'] },
-    { [`&.${c['root--densityComfortable']}`]: styles['root--densityComfortable'] },
-    { [`&.${c['root--densityCompact']}`]: styles['root--densityCompact'] },
-    { [`&.${c['root--disableUserSelection']}`]: styles['root--disableUserSelection'] },
-    { [`&.${c['root--noToolbar']}`]: styles['root--noToolbar'] },
-    { [`&.${c.withVerticalBorder}`]: styles.withVerticalBorder },
+    ...(
+      [
+        'autoHeight',
+        'autosizing',
+        'root--densityStandard',
+        'root--densityComfortable',
+        'root--densityCompact',
+        'root--disableUserSelection',
+        'root--noToolbar',
+        'withVerticalBorder',
+      ] as const
+    ).map((key) => ({ [`&.${c[key]}`]: styles[key] })),
 
     // Child element overrides
     // - Only declare overrides here for class names that are not applied to `styled` components.
