@@ -91,9 +91,9 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
   border: `1px dashed var(--event-on-surface-subtle-secondary)`,
   color: 'var(--event-on-surface-subtle-primary)',
   position: 'absolute',
-  left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
+  left: 'calc(((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
   right:
-    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 4px + 12px)',
+    'calc(((100% - 12px) * (var(--columns-count) - var(--last-index))) / var(--columns-count) + 12px)',
   top: 'var(--y-position)',
   bottom: 'calc(100% - var(--y-position) - var(--height))',
   zIndex: 2,
