@@ -360,7 +360,7 @@ export type PaletteName = keyof typeof eventColorTokens;
  */
 export const getPaletteVariants = (theme: Theme) => {
   return Object.entries(eventColorTokens).map(([colorName, colorValues]) => ({
-    props: { palette: colorName as PaletteName },
+    props: { 'data-palette': colorName as PaletteName },
     style: {
       '--event-main': colorValues.light.main,
       '--event-surface-bold': colorValues.light['surface-bold'],

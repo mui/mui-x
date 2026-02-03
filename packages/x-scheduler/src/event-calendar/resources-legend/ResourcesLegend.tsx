@@ -76,7 +76,7 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
     <ResourcesLegendItemRoot className={classes.resourcesLegendItem}>
       <ResourcesLegendItemColorDot
         className={classes.resourcesLegendItemColorDot}
-        palette={eventColor}
+        data-data-palette={eventColor}
       />
       <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
         {resource.title}

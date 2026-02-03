@@ -88,6 +88,7 @@ const TimeGridEventPlaceholder = styled(CalendarGrid.TimeEventPlaceholder, {
 })<{ palette?: PaletteName }>(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: 'var(--event-surface-subtle-hover)',
+  border: `1px dashed var(--event-on-surface-subtle-secondary)`,
   color: 'var(--event-on-surface-subtle-primary)',
   position: 'absolute',
   left: 'calc(2px + ((100% - 12px) / var(--columns-count)) * (var(--first-index) - 1))',
@@ -279,7 +280,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
         data-draggable={isDraggable || undefined}
         data-recurrent={isRecurring || undefined}
         data-under-fifteen-minutes={isLessThan15Minutes || undefined}
-        palette={color}
+        data-palette={color}
         {...sharedProps}
         className={clsx(classes.timeGridEventPlaceholder, sharedProps.className)}
       >
@@ -298,7 +299,7 @@ export const TimeGridEvent = React.forwardRef(function TimeGridEvent(
       data-draggable={isDraggable || undefined}
       data-under-fifteen-minutes={isLessThan15Minutes || undefined}
       data-recurrent={isRecurring || undefined}
-      palette={color}
+      data-palette={color}
       {...sharedProps}
       className={clsx(classes.timeGridEvent, sharedProps.className)}
     >

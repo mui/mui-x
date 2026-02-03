@@ -94,10 +94,10 @@ function ResourceMenuTriggerContent(props: ResourceMenuTriggerContentProps) {
 
   return (
     <ResourceMenuLegendContainer>
-      <ResourceMenuColorDot className="ResourceLegendColor" palette={resourceColor} />
+      <ResourceMenuColorDot className="ResourceLegendColor" data-palette={resourceColor} />
 
       {color && resourceColor !== color && (
-        <ResourceMenuColorDot className="ResourceLegendColor" palette={color} />
+        <ResourceMenuColorDot className="ResourceLegendColor" data-palette={color} />
       )}
     </ResourceMenuLegendContainer>
   );
@@ -180,7 +180,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
             <ListItemIcon>
               <ResourceMenuColorDot
                 className="ResourceLegendColor"
-                palette={resourceOption.eventColor}
+                data-palette={resourceOption.eventColor}
               />
             </ListItemIcon>
             <ListItemText>{resourceOption.label}</ListItemText>
@@ -203,7 +203,7 @@ export default function ResourceMenu(props: ResourceSelectProps) {
                 handleClose();
               }}
               aria-label={colorOption}
-              palette={colorOption}
+              data-palette={colorOption}
             >
               {color === colorOption && <CheckIcon fontSize="small" />}
             </ResourceMenuColorRadioButton>

@@ -24,18 +24,16 @@ const EventItemCard = styled('div', {
 })<{ 'data-variant'?: 'compact' | 'filled' | 'regular'; palette?: PaletteName }>(({ theme }) => ({
   padding: 0,
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: 'var(--event-surface-subtle)',
-  '&[data-variant="compact"], &[data-variant="regular"]': {
-    '&:active': {
-      backgroundColor: 'var(--interactive-active-bg)',
-    },
-    '&:hover': {
-      backgroundColor: 'var(--event-surface-subtle-hover)',
-    },
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
   },
+  '&[data-variant="compact"], &[data-variant="regular"]': {},
   '&[data-variant="filled"]': {
-    backgroundColor: 'var(--event-surface-subtle)',
-    color: 'var(--event-on-surface-subtle-primary)',
+    backgroundColor: 'var(--event-surface-bold)',
+    color: 'var(--event-on-surface-bold)',
+    '&:hover': {
+      backgroundColor: 'var(--event-surface-bold-hover)',
+    },
   },
   '&[data-variant="compact"]': {
     containerType: 'inline-size',
@@ -63,7 +61,7 @@ const EventItemTitle = styled('span', {
   slot: 'EventItemTitle',
 })(({ theme }) => ({
   margin: 0,
-  color: 'var(--event-on-surface-subtle-primary)',
+  color: theme.palette.text.primary,
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -74,7 +72,7 @@ const EventItemTime = styled('time', {
   slot: 'EventItemTime',
 })<{ 'data-compact'?: boolean }>(({ theme }) => ({
   display: 'inline-block',
-  color: 'var(--event-on-surface-subtle-secondary)',
+  color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
@@ -89,9 +87,9 @@ const EventItemTime = styled('time', {
 const EventItemRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'EventItemRecurringIcon',
-})({
-  color: 'var(--event-on-surface-subtle-secondary)',
-});
+})(({ theme }) => ({
+  color: theme.palette.text.primary,
+}));
 
 const ResourceLegendColor = styled('span', {
   name: 'MuiEventCalendar',
@@ -260,7 +258,7 @@ export const EventItem = React.forwardRef(function EventItem(
       ref={forwardedRef}
       id={id}
       data-variant={variant}
-      palette={color}
+      data-palette={color}
       aria-labelledby={`${ariaLabelledBy} ${id}`}
       {...other}
       className={clsx(className, classes.eventItemCard, occurrence.className)}

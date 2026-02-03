@@ -23,6 +23,7 @@ import { EventDragPreview } from '../../../components/event-drag-preview';
 import { useFormatTime } from '../../../hooks/useFormatTime';
 import { getPaletteVariants, PaletteName } from '../../../utils/tokens';
 import { useEventCalendarClasses } from '../../../../event-calendar/EventCalendarClassesContext';
+import { eventCalendarClasses } from '../../../../event-calendar/eventCalendarClasses';
 
 const DayGridEventBaseStyles = (theme: any) => ({
   containerType: 'inline-size',
@@ -39,6 +40,7 @@ const DayGridEventBaseStyles = (theme: any) => ({
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
+  variants: getPaletteVariants(theme),
 });
 
 const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
@@ -54,6 +56,9 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&:hover': {
         backgroundColor: 'var(--event-surface-bold-hover)',
       },
+      [`& .${eventCalendarClasses.dayGridEventRecurringIcon}`]: {
+        color: 'var(--event-on-surface-bold)',
+      },
     },
     '&[data-variant="invisible"]': {
       width: '100%',
@@ -67,8 +72,13 @@ const DayGridEventRoot = styled(CalendarGrid.DayEvent, {
       '&:hover': {
         backgroundColor: theme.palette.action.hover,
       },
+      [`& .${eventCalendarClasses.dayGridEventTime}`]: {
+        color: theme.palette.text.secondary,
+      },
+      [`& .${eventCalendarClasses.dayGridEventTitle}`]: {
+        color: theme.palette.text.primary,
+      },
     },
-    variants: getPaletteVariants(theme),
   }),
 );
 
@@ -77,8 +87,10 @@ const DayGridEventPlaceholder = styled(CalendarGrid.DayEventPlaceholder, {
   slot: 'DayGridEventPlaceholder',
 })<{ palette?: PaletteName }>(({ theme }) => ({
   ...(DayGridEventBaseStyles(theme) as any),
+  minHeight: 18,
   zIndex: 2,
-  variants: getPaletteVariants(theme),
+  backgroundColor: 'var(--event-surface-subtle)',
+  border: `1px dashed var(--event-on-surface-subtle-secondary)`,
 }));
 
 const DayGridEventTitle = styled('p', {
@@ -101,7 +113,7 @@ const DayGridEventTime = styled('time', {
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
   whiteSpace: 'nowrap',
-  width: 150,
+  paddingInlineEnd: theme.spacing(0.5),
   '@container (width < 300px)': {
     display: 'inline',
     '& > span:last-of-type': {
@@ -113,12 +125,13 @@ const DayGridEventTime = styled('time', {
 const DayGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventRecurringIcon',
-})({
+})(({ theme }) => ({
   position: 'absolute',
   bottom: 1,
   right: 3,
-  color: 'var(--event-on-surface-bold)',
-});
+  color: theme.palette.text.primary,
+  fontSize: '1rem',
+}));
 
 const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
   name: 'MuiEventCalendar',
@@ -329,7 +342,7 @@ export const DayGridEvent = React.forwardRef(function DayGridEvent(
     end: occurrence.displayTimezone.end,
     ref: forwardedRef,
     'data-variant': variant,
-    palette: color,
+    'data-palette': color,
     style: {
       '--grid-row': occurrence.position.index,
       '--grid-column-span': occurrence.position.daySpan,

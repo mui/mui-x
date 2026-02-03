@@ -144,11 +144,11 @@ export default function ReadonlyContent(props: ReadonlyContentProps) {
             {resource?.eventColor && resource.eventColor !== color && (
               <ResourceLegendColorDot
                 className="ResourceLegendColor"
-                palette={resource.eventColor}
+                data-palette={resource.eventColor}
               />
             )}
 
-            <ResourceLegendColorDot className="ResourceLegendColor" palette={color} />
+            <ResourceLegendColorDot className="ResourceLegendColor" data-palette={color} />
           </EventDraggableDialogResourceLegendContainer>
           <EventDraggableDialogResourceTitle>
             {resource?.title || translations.noResourceAriaLabel}

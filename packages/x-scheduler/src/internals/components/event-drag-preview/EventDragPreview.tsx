@@ -30,5 +30,5 @@ export function EventDragPreview(props: RenderDragPreviewParameters) {
     props.data.id,
   );
 
-  return <EventDragPreviewRoot palette={color}>{props.data.title}</EventDragPreviewRoot>;
+  return <EventDragPreviewRoot data-palette={color}>{props.data.title}</EventDragPreviewRoot>;
 }

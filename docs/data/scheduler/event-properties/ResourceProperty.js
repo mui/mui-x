@@ -107,7 +107,7 @@ const rooms = [
 
 const classes = [
   { id: 'french', title: 'French', eventColor: 'orange' },
-  { id: 'science', title: 'Science', eventColor: 'cyan' },
+  { id: 'science', title: 'Science', eventColor: 'teal' },
   { id: 'english', title: 'English', eventColor: 'pink' },
   { id: 'history', title: 'History', eventColor: 'indigo' },
 ];
