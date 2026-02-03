@@ -33,7 +33,7 @@ const ResourceMenuLegendContainer = styled('div', {
 const ResourceMenuColorDot = styled('span', {
   name: 'MuiEventDraggableDialog',
   slot: 'ResourceMenuColorDot',
-})<{ palette?: PaletteName }>(({ theme }) => ({
+})(({ theme }) => ({
   width: 8,
   height: 8,
   borderRadius: '50%',

@@ -36,6 +36,9 @@ const DayGridEventBaseStyles = (theme: any) => ({
   gridRow: 'var(--grid-row)',
   gridColumn: 1,
   padding: `0 ${theme.spacing(0.5)}`,
+  display: 'flex',
+  alignItems: 'center',
+  gap: theme.spacing(1),
   width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)} )`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
@@ -102,6 +105,7 @@ const DayGridEventTitle = styled('p', {
   fontWeight: theme.typography.fontWeightMedium,
   fontSize: theme.typography.caption.fontSize,
   lineHeight: 1.43,
+  flexGrow: 1,
 }));
 
 const DayGridEventTime = styled('time', {
@@ -127,11 +131,9 @@ const DayGridEventRecurringIcon = styled(RepeatRounded, {
   name: 'MuiEventCalendar',
   slot: 'DayGridEventRecurringIcon',
 })(({ theme }) => ({
-  position: 'absolute',
-  bottom: 1,
-  right: 3,
   color: theme.palette.text.primary,
   fontSize: '1rem',
+  justifySelf: 'flex-end',
 }));
 
 const DayGridEventResizeHandler = styled(CalendarGrid.DayEventResizeHandler, {
@@ -163,9 +165,8 @@ const DayGridEventCardWrapper = styled('div', {
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  paddingInline: theme.spacing(1),
+  flexGrow: 1,
   '@container (width < 300px)': {
-    padding: `0 0 0 ${theme.spacing(0.5)}`,
     gap: theme.spacing(0.5),
     [`& ${DayGridEventTitle}`]: {
       marginInlineStart: theme.spacing(0.5),
@@ -206,6 +207,7 @@ const DayGridEventLinesClamp = styled('span', {
   textOverflow: 'ellipsis',
   wordBreak: 'break-word',
   overflowWrap: 'break-word',
+  flexGrow: 1,
 });
 
 const isResizableSelector = createSelector(

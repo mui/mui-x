@@ -13,7 +13,7 @@ import { SchedulerResource } from '@mui/x-scheduler-headless/models';
 import clsx from 'clsx';
 import { ResourcesLegendProps } from './ResourcesLegend.types';
 import { useTranslations } from '../../internals/utils/TranslationsContext';
-import { getPaletteVariants, PaletteName } from '../../internals/utils/tokens';
+import { getPaletteVariants } from '../../internals/utils/tokens';
 import { useEventCalendarClasses } from '../EventCalendarClassesContext';
 
 const ResourcesLegendRoot = styled('section', {
@@ -42,9 +42,9 @@ const ResourcesLegendItemRoot = styled('div', {
 const ResourcesLegendItemColorDot = styled('span', {
   name: 'MuiEventCalendar',
   slot: 'ResourcesLegendItemColorDot',
-})<{ palette?: PaletteName }>(({ theme }) => ({
-  width: 8,
-  height: 8,
+})(({ theme }) => ({
+  width: 10,
+  height: 10,
   borderRadius: '50%',
   flexShrink: 0,
   backgroundColor: 'var(--event-main)',
@@ -76,7 +76,7 @@ function ResourcesLegendItem(props: ResourcesLegendItemProps) {
     <ResourcesLegendItemRoot className={classes.resourcesLegendItem}>
       <ResourcesLegendItemColorDot
         className={classes.resourcesLegendItemColorDot}
-        data-data-palette={eventColor}
+        data-palette={eventColor}
       />
       <ResourcesLegendItemName className={classes.resourcesLegendItemName}>
         {resource.title}
