@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { vars } from '../../constants/cssVariables';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
