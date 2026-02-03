@@ -440,6 +440,28 @@ describeTreeView<TreeViewAnyStore>(
         expect(view.isItemExpanded('1')).to.equal(false);
         expect(onItemExpansionToggle.callCount).to.equal(1);
       });
+
+      it('should work without event`', () => {
+        const onItemExpansionToggle = spy();
+
+        const view = render({
+          items: [{ id: '1', children: [{ id: '1.1' }] }],
+          onItemExpansionToggle,
+        });
+
+        act(() => {
+          view.apiRef.current.setItemExpansion({
+            event: null,
+            itemId: '1',
+            shouldBeExpanded: true,
+          });
+        });
+
+        expect(view.isItemExpanded('1')).to.equal(true);
+        expect(onItemExpansionToggle.callCount).to.equal(1);
+        expect(onItemExpansionToggle.lastCall.args[1]).to.equal('1');
+        expect(onItemExpansionToggle.lastCall.args[2]).to.equal(true);
+      });
     });
   },
 );
