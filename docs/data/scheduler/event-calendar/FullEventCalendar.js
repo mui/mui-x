@@ -11,7 +11,7 @@ export default function FullEventCalendar() {
   const [events, setEvents] = React.useState(initialEvents);
 
   return (
-    <div style={{ height: '600px', width: '100%', padding: 2 }}>
+    <div style={{ height: '600px', width: '100%' }}>
       <EventCalendar
         events={events}
         resources={resources}
