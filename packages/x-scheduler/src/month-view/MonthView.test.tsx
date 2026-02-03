@@ -4,6 +4,7 @@ import {
   createSchedulerRenderer,
   DEFAULT_TESTING_VISIBLE_DATE,
   EventBuilder,
+  withinEventCalendarToolbar,
 } from 'test/utils/scheduler';
 import { screen, within } from '@mui/internal-test-utils';
 import { MonthView } from '@mui/x-scheduler/month-view';
@@ -308,7 +309,8 @@ describe('<MonthView />', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: /previous month/i }));
+      const toolbar = withinEventCalendarToolbar();
+      await user.click(toolbar.getByRole('button', { name: /previous month/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), -1),
       );
@@ -326,7 +328,8 @@ describe('<MonthView />', () => {
         />,
       );
 
-      await user.click(screen.getByRole('button', { name: /next month/i }));
+      const toolbar = withinEventCalendarToolbar();
+      await user.click(toolbar.getByRole('button', { name: /next month/i }));
       expect(onVisibleDateChange.lastCall.firstArg).toEqualDateTime(
         adapter.addMonths(adapter.startOfMonth(DEFAULT_TESTING_VISIBLE_DATE), 1),
       );

@@ -104,4 +104,9 @@ export const enUS: SchedulerTranslations = {
 
   // General
   loading: 'Loading...',
+
+  // MiniCalendar
+  miniCalendarLabel: 'Calendar',
+  miniCalendarGoToPreviousMonth: 'Show previous month in calendar',
+  miniCalendarGoToNextMonth: 'Show next month in calendar',
 };
