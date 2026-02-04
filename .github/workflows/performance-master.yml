@@ -81,21 +81,23 @@ jobs:
 
       - name: Update data.json
         working-directory: benchmark-data
+        env:
+          NEW_DATA: ${{ steps.prepare-data.outputs.data }}
         run: |
-          # Create data.json if it doesn't exist, otherwise read existing data
-          if [ -f data.json ]; then
-            # Read existing data
-            EXISTING_DATA=$(cat data.json)
-          else
-            # Initialize with empty array
-            EXISTING_DATA="[]"
+          # Create data.json if it doesn't exist
+          if [ ! -f data.json ]; then
+            echo "[]" > data.json
           fi
 
-          # Append new benchmark data
-          cat << 'EOF' | node
+          # Append new benchmark data using Node.js
+          node << 'EOF'
           const fs = require('fs');
-          const existingData = $EXISTING_DATA;
-          const newData = ${{ steps.prepare-data.outputs.data }};
+
+          // Read existing data from file
+          const existingData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+
+          // Parse new data from environment variable
+          const newData = JSON.parse(process.env.NEW_DATA);
 
           // Add new data to the array
           existingData.push(newData);
