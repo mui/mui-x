@@ -104,4 +104,9 @@ export interface SchedulerTranslations {
 
   // General
   loading: string;
+
+  // MiniCalendar
+  miniCalendarLabel: string;
+  miniCalendarGoToPreviousMonth: string;
+  miniCalendarGoToNextMonth: string;
 }
