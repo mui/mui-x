@@ -1,13 +1,22 @@
 {
   "name": "benchmark-tool",
   "scripts": {
-    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run test\" \"pnpm run server\"",
-    "build": "cross-env TEST_BUILD=true vite build",
-    "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
-    "test": "vitest",
-    "server": "serve . -L -p 5002"
+    "dev": "next dev -p 5002",
+    "build": "next build",
+    "start": "next start -p 5002",
+    "test": "playwright test app/**/_bench.ts"
   },
   "dependencies": {
-    "@playwright/test": "^1.58.1"
+    "@mui/x-charts": "^8.27.0",
+    "@playwright/test": "^1.58.1",
+    "next": "^16.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "typescript": "^5.8.3"
   }
 }
