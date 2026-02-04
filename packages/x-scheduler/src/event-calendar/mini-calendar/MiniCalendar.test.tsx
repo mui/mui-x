@@ -44,7 +44,7 @@ describe('MiniCalendar', () => {
     });
 
     it('should highlight the active/visible date with data-active attribute', () => {
-      render(<EventCalendar events={[]} defaultVisibleDate="2025-05-20T00:00:00Z" />);
+      render(<EventCalendar events={[]} defaultVisibleDate={new Date('2025-05-20T00:00:00Z')} />);
 
       const miniCalendar = getMiniCalendar();
       const dayButtons = within(miniCalendar).getAllByRole('button');
@@ -130,7 +130,7 @@ describe('MiniCalendar', () => {
 
     it('should sync mini calendar month when scheduler visibleDate changes', async () => {
       const { user } = render(
-        <EventCalendar events={[]} defaultVisibleDate="2025-05-26T00:00:00Z" />,
+        <EventCalendar events={[]} defaultVisibleDate={new Date('2025-05-26T00:00:00Z')} />,
       );
 
       // Initially the mini calendar shows May 2025
@@ -179,7 +179,7 @@ describe('MiniCalendar', () => {
     });
 
     it('should have aria-selected on the active day', () => {
-      render(<EventCalendar events={[]} defaultVisibleDate="2025-05-20T00:00:00Z" />);
+      render(<EventCalendar events={[]} defaultVisibleDate={new Date('2025-05-20T00:00:00Z')} />);
 
       const miniCalendar = getMiniCalendar();
       const dayButtons = within(miniCalendar).getAllByRole('button');
