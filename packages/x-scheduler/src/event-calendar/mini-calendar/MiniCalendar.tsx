@@ -2,11 +2,11 @@
 import * as React from 'react';
 import clsx from 'clsx';
 import { useStore } from '@base-ui/utils/store';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useAdapter } from '@mui/x-scheduler-headless/use-adapter';
+import { useAdapter, isWeekend } from '@mui/x-scheduler-headless/use-adapter';
 import { useEventCalendarStoreContext } from '@mui/x-scheduler-headless/use-event-calendar-store-context';
 import {
   schedulerNowSelectors,
@@ -22,10 +22,14 @@ import { formatMonthFullLetterAndYear } from '../../internals/utils/date-utils';
 const MiniCalendarRoot = styled('div', {
   name: 'MuiEventCalendar',
   slot: 'MiniCalendar',
-})({
+})(({ theme }) => ({
   width: '100%',
   userSelect: 'none',
-});
+  border: '1px solid',
+  borderColor: theme.palette.divider,
+  padding: theme.spacing(1),
+  borderRadius: theme.shape.borderRadius,
+}));
 
 const MiniCalendarHeader = styled('div', {
   name: 'MuiEventCalendar',
@@ -52,6 +56,7 @@ const MiniCalendarMonthLabel = styled('span', {
 })(({ theme }) => ({
   ...theme.typography.subtitle2,
   fontWeight: theme.typography.fontWeightMedium,
+  paddingLeft: theme.spacing(1.25),
 }));
 
 const MiniCalendarWeekdayHeader = styled('div', {
@@ -71,6 +76,9 @@ const MiniCalendarWeekdayCell = styled('span', {
   fontSize: theme.typography.caption.fontSize,
   color: theme.palette.text.secondary,
   padding: theme.spacing(0.5, 0),
+  '&[data-weekend]': {
+    color: theme.palette.error.main,
+  },
 }));
 
 const MiniCalendarGrid = styled('div', {
@@ -116,7 +124,7 @@ const MiniCalendarDayButton = styled('button', {
   color: theme.palette.text.primary,
   padding: 0,
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: alpha(theme.palette.primary.main, 0.08),
   },
   '&:focus-visible': {
     outline: `2px solid ${theme.palette.primary.main}`,
@@ -125,9 +133,10 @@ const MiniCalendarDayButton = styled('button', {
   '&[data-other-month]': {
     color: theme.palette.text.disabled,
   },
-  '&[data-today]': {
+  '&[data-today]:not([data-active])': {
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.primary.main,
+    backgroundColor: alpha(theme.palette.primary.main, 0.15),
   },
   '&[data-active]': {
     backgroundColor: theme.palette.primary.main,
@@ -166,13 +175,16 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
     }, [adapter, visibleDate]);
 
     // Generate days for the displayed month (including padding days from adjacent months)
+    // Always show 6 weeks (42 days) for consistent height
     const days = React.useMemo(() => {
       const monthStart = adapter.startOfMonth(displayedMonth);
-      const monthEnd = adapter.endOfMonth(displayedMonth);
+      const gridStart = adapter.startOfWeek(monthStart);
+      // 6 weeks = 42 days, so end is 41 days after start
+      const gridEnd = adapter.addDays(gridStart, 41);
       return getDayList({
         adapter,
-        start: adapter.startOfWeek(monthStart),
-        end: adapter.endOfWeek(monthEnd),
+        start: gridStart,
+        end: gridEnd,
       });
     }, [adapter, displayedMonth]);
 
@@ -230,6 +242,7 @@ export const MiniCalendar = React.forwardRef<HTMLDivElement, MiniCalendarProps>(
               role="columnheader"
               aria-label={adapter.formatByString(day.value, adapter.formats.weekday)}
               className={classes.miniCalendarWeekdayCell}
+              data-weekend={isWeekend(adapter, day.value) || undefined}
             >
               {adapter.formatByString(day.value, adapter.formats.weekday1Letter)}
             </MiniCalendarWeekdayCell>

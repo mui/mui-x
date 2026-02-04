@@ -47,7 +47,7 @@ const EventCalendarSidePanel = styled('aside', {
   slot: 'SidePanel',
 })(({ theme }) => ({
   width: '100%',
-  minWidth: 250,
+  minWidth: 300,
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
