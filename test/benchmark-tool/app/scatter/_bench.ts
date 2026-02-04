@@ -1,7 +1,10 @@
+import path from 'path';
 import { test, expect } from '@playwright/test';
 
+const route = path.dirname(__filename).split('/app').pop()!;
+
 test('has title', async ({ page }) => {
-  await page.goto('localhost:5002/scatter');
+  await page.goto(route);
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle(/MUI X Benchmark Tool/);
