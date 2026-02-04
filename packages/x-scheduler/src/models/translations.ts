@@ -104,4 +104,14 @@ export interface SchedulerTranslations {
 
   // General
   loading: string;
+
+  // AI Helper
+  aiHelperTitle: string;
+  aiHelperDescription: string;
+  aiHelperPlaceholder: string;
+  aiHelperConfirmButton: string;
+  aiHelperEditButton: string;
+  aiHelperProcessing: string;
+  aiHelperRetry: string;
+  aiHelperGenericError: string;
 }

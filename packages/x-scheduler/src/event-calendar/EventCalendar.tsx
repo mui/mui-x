@@ -13,6 +13,12 @@ import { useEventCalendarUtilityClasses } from './eventCalendarClasses';
 import { EventCalendarClassesContext } from './EventCalendarClassesContext';
 import { EventDialogClassesContext } from '../internals/components/event-draggable-dialog/EventDialogClassesContext';
 import { EventCalendarRoot } from './EventCalendarRoot';
+import {
+  AiHelperCommandPalette,
+  AiHelperContext,
+  type AiHelperCommandPaletteHandle,
+  type AiHelperContextValue,
+} from '../internals/components/ai-helper';
 
 export const EventCalendar = React.forwardRef(function EventCalendar<
   TEvent extends object,
@@ -30,16 +36,67 @@ export const EventCalendar = React.forwardRef(function EventCalendar<
   const store = useEventCalendar(parameters);
   const classes = useEventCalendarUtilityClasses(classesProp);
 
-  const { translations, ...other } = forwardedProps;
+  const {
+    translations,
+    aiHelper,
+    aiHelperApiKey,
+    aiHelperProvider,
+    aiHelperModel,
+    aiHelperDefaultDuration,
+    aiHelperExtraContext,
+    ...other
+  } = forwardedProps;
+
+  const aiHelperRef = React.useRef<AiHelperCommandPaletteHandle>(null);
+
+  // Keyboard shortcut: Cmd/Ctrl + K to open AI helper
+  React.useEffect(() => {
+    if (!aiHelper) {
+      return undefined;
+    }
+
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        aiHelperRef.current?.open();
+      }
+    };
+
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [aiHelper]);
+
+  const aiHelperContextValue = React.useMemo<AiHelperContextValue | null>(
+    () =>
+      aiHelper
+        ? {
+            open: () => aiHelperRef.current?.open(),
+            isEnabled: true,
+          }
+        : null,
+    [aiHelper],
+  );
 
   return (
     <SchedulerStoreContext.Provider value={store as any}>
       <TranslationsProvider translations={translations}>
         <EventCalendarClassesContext.Provider value={classes}>
           <EventDialogClassesContext.Provider value={classes}>
-            <EventDraggableDialogProvider>
-              <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
-            </EventDraggableDialogProvider>
+            <AiHelperContext.Provider value={aiHelperContextValue}>
+              <EventDraggableDialogProvider>
+                <EventCalendarRoot className={className} {...other} ref={forwardedRef} />
+                {aiHelper && (
+                  <AiHelperCommandPalette
+                    ref={aiHelperRef}
+                    apiKey={aiHelperApiKey}
+                    provider={aiHelperProvider}
+                    model={aiHelperModel}
+                    defaultDuration={aiHelperDefaultDuration}
+                    extraContext={aiHelperExtraContext}
+                  />
+                )}
+              </EventDraggableDialogProvider>
+            </AiHelperContext.Provider>
           </EventDialogClassesContext.Provider>
         </EventCalendarClassesContext.Provider>
       </TranslationsProvider>

@@ -104,4 +104,14 @@ export const enUS: SchedulerTranslations = {
 
   // General
   loading: 'Loading...',
+
+  // AI Helper
+  aiHelperTitle: 'Create Event with AI',
+  aiHelperDescription: 'Describe the event you want to create',
+  aiHelperPlaceholder: 'e.g., "Meeting with John tomorrow at 3pm"',
+  aiHelperConfirmButton: 'Looks good',
+  aiHelperEditButton: 'It needs edit',
+  aiHelperProcessing: 'Processing...',
+  aiHelperRetry: 'Try again',
+  aiHelperGenericError: 'Something went wrong. Please try again.',
 };
