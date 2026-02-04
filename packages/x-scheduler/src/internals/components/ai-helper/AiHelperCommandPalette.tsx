@@ -20,7 +20,7 @@ import type {
  * Format a datetime string for display.
  */
 function formatDateTime(dateTimeString: string | undefined): string {
-  if (!dateTimeString) return '';
+  if (!dateTimeString) {return '';}
   try {
     const date = new Date(dateTimeString);
     return date.toLocaleString(undefined, {
@@ -82,7 +82,7 @@ export const AiHelperCommandPalette = React.forwardRef<
       <DialogContent sx={{ textAlign: 'center', py: 4 }}>
         {/* Prompting State */}
         {state.status === 'prompting' && (
-          <>
+          <React.Fragment>
             <Typography variant="h6" gutterBottom>
               {translations.aiHelperTitle}
             </Typography>
@@ -98,22 +98,22 @@ export const AiHelperCommandPalette = React.forwardRef<
                 placeholder={translations.aiHelperPlaceholder}
               />
             </form>
-          </>
+          </React.Fragment>
         )}
 
         {/* Processing State */}
         {state.status === 'processing' && (
-          <>
+          <React.Fragment>
             <CircularProgress sx={{ mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
               {translations.aiHelperProcessing}
             </Typography>
-          </>
+          </React.Fragment>
         )}
 
         {/* Error State */}
         {state.status === 'error' && (
-          <>
+          <React.Fragment>
             <Alert severity="error" sx={{ mb: 2, textAlign: 'left' }}>
               {state.parsedResponse?.error || translations.aiHelperGenericError}
             </Alert>
@@ -125,12 +125,12 @@ export const AiHelperCommandPalette = React.forwardRef<
                 {translations.aiHelperRetry}
               </Button>
             </Stack>
-          </>
+          </React.Fragment>
         )}
 
         {/* Confirming State */}
         {state.status === 'confirming' && state.parsedResponse?.event && (
-          <>
+          <React.Fragment>
             <Typography variant="body1" gutterBottom>
               {state.parsedResponse.summary}
             </Typography>
@@ -168,7 +168,7 @@ export const AiHelperCommandPalette = React.forwardRef<
                 {translations.aiHelperConfirmButton}
               </Button>
             </Stack>
-          </>
+          </React.Fragment>
         )}
       </DialogContent>
     </Dialog>

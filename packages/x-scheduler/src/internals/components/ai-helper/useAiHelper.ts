@@ -171,7 +171,7 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
         // eslint-disable-next-line no-console
         console.log('AI Helper: Event created', createdEvent);
       } catch (error) {
-        // eslint-disable-next-line no-console
+         
         console.error('AI Helper: Failed to create event', error);
       }
 
