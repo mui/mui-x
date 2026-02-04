@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Metadata } from 'next';
+import { Profiler } from '../utils/Profiler';
 
 export const metadata: Metadata = {
   title: 'MUI X Benchmark Tool',
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Profiler>{children}</Profiler>
+      </body>
     </html>
   );
 }
