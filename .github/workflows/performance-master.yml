@@ -83,18 +83,30 @@ jobs:
         working-directory: benchmark-data
         env:
           NEW_DATA: ${{ steps.prepare-data.outputs.data }}
+          REPO_NAME: ${{ github.repository }}
         run: |
+          # Extract just the repository name (after the /)
+          REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
+
+          # Create directory if it doesn't exist
+          mkdir -p "$REPO_DIR"
+
           # Create data.json if it doesn't exist
-          if [ ! -f data.json ]; then
-            echo "[]" > data.json
+          if [ ! -f "$REPO_DIR/data.json" ]; then
+            echo "[]" > "$REPO_DIR/data.json"
           fi
 
           # Append new benchmark data using Node.js
           node << 'EOF'
           const fs = require('fs');
+          const path = require('path');
+
+          // Get repository directory (extract repo name after /)
+          const repoDir = process.env.REPO_NAME.split('/')[1];
+          const dataFile = path.join(repoDir, 'data.json');
 
           // Read existing data from file
-          const existingData = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+          const existingData = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
           // Parse new data from environment variable
           const newData = JSON.parse(process.env.NEW_DATA);
@@ -103,14 +115,18 @@ jobs:
           existingData.push(newData);
 
           // Write back to file
-          fs.writeFileSync('data.json', JSON.stringify(existingData, null, 2) + '\n');
+          fs.writeFileSync(dataFile, JSON.stringify(existingData, null, 2) + '\n');
           EOF
 
       - name: Commit and push benchmark data
         working-directory: benchmark-data
+        env:
+          REPO_NAME: ${{ github.repository }}
         run: |
+          # Extract just the repository name (after the /)
+          REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json
+          git add "$REPO_DIR/data.json"
           git commit -m "Add benchmark data for ${{ github.repository }}@${{ github.sha }}"
           git push
