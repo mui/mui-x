@@ -1,0 +1,13 @@
+{
+  "name": "benchmark-tool",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production pnpm build && concurrently --success first --kill-others \"pnpm run test\" \"pnpm run server\"",
+    "build": "cross-env TEST_BUILD=true vite build",
+    "dev": "concurrently \"pnpm run build --watch\" \"pnpm run server\"",
+    "test": "vitest",
+    "server": "serve . -L -p 5002"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.58.1"
+  }
+}
