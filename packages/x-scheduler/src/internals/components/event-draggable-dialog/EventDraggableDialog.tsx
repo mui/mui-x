@@ -87,7 +87,6 @@ const PaperComponent = function PaperComponent(props: PaperComponentProps) {
         borderTopWidth: 1,
         height: 'fit-content',
         m: 0,
-        cursor: 'move',
       }}
     />
   );
@@ -140,9 +139,11 @@ export const EventDraggableDialogContent = React.forwardRef(function EventDragga
       <Box sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
         <IconButton
           size="small"
-          aria-label="drag-handle"
+          aria-label="Drag to move dialog"
+          aria-roledescription="draggable"
           ref={handleRef}
           className={classes.eventDialogDragHandle}
+          sx={{ cursor: 'move' }}
         >
           <MoreHorizIcon />
         </IconButton>
