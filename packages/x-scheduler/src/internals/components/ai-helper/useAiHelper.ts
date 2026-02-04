@@ -70,6 +70,8 @@ function validateAndNormalize(
       end: data.event.end || adapter.toJsDate(end).toISOString(),
       description: data.event.description,
       allDay: data.event.allDay ?? false,
+      color: data.event.color,
+      rrule: data.event.rrule,
     },
   };
 }
@@ -166,6 +168,8 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
           end,
           description: event.description,
           allDay: event.allDay,
+          color: event.color as any,
+          rrule: event.rrule as any,
         });
 
         // eslint-disable-next-line no-console

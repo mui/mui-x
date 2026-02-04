@@ -20,7 +20,9 @@ import type {
  * Format a datetime string for display.
  */
 function formatDateTime(dateTimeString: string | undefined): string {
-  if (!dateTimeString) {return '';}
+  if (!dateTimeString) {
+    return '';
+  }
   try {
     const date = new Date(dateTimeString);
     return date.toLocaleString(undefined, {
@@ -34,6 +36,46 @@ function formatDateTime(dateTimeString: string | undefined): string {
   } catch {
     return dateTimeString;
   }
+}
+
+/**
+ * Format a recurrence rule for display.
+ */
+function formatRecurrence(rrule: Record<string, unknown>): string {
+  const freq = rrule.freq as string;
+  const interval = (rrule.interval as number) || 1;
+  const byDay = rrule.byDay as string[] | undefined;
+
+  const freqMap: Record<string, string> = {
+    DAILY: 'day',
+    WEEKLY: 'week',
+    MONTHLY: 'month',
+    YEARLY: 'year',
+  };
+
+  let text = interval === 1 ? `Every ${freqMap[freq]}` : `Every ${interval} ${freqMap[freq]}s`;
+
+  if (byDay && byDay.length > 0) {
+    const dayMap: Record<string, string> = {
+      MO: 'Mon',
+      TU: 'Tue',
+      WE: 'Wed',
+      TH: 'Thu',
+      FR: 'Fri',
+      SA: 'Sat',
+      SU: 'Sun',
+    };
+    const days = byDay.map((d) => dayMap[d] || d).join(', ');
+    text += ` on ${days}`;
+  }
+
+  if (rrule.count) {
+    text += `, ${rrule.count} times`;
+  } else if (rrule.until) {
+    text += `, until ${formatDateTime(rrule.until as string)}`;
+  }
+
+  return text;
 }
 
 /**
@@ -156,6 +198,14 @@ export const AiHelperCommandPalette = React.forwardRef<
               {state.parsedResponse.event.description && (
                 <Typography>
                   <strong>Description:</strong> {state.parsedResponse.event.description}
+                </Typography>
+              )}
+              {state.parsedResponse.event.rrule && (
+                <Typography>
+                  <strong>Repeats:</strong>{' '}
+                  {typeof state.parsedResponse.event.rrule === 'string'
+                    ? state.parsedResponse.event.rrule
+                    : formatRecurrence(state.parsedResponse.event.rrule)}
                 </Typography>
               )}
             </Box>

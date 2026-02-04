@@ -10,11 +10,61 @@ export interface LLMContext {
   defaultTimezone: string;
   /** Default event duration in minutes */
   defaultDurationMinutes: number;
-  /** Schema description for event properties */
-  eventSchema: Record<string, string>;
   /** Additional context provided by the user */
   extraContext: string;
 }
+
+/**
+ * The full TypeScript data model for event creation.
+ * This is sent to the LLM so it understands all available fields.
+ */
+const EVENT_CREATION_SCHEMA = `
+// Properties to create a new event (id is auto-generated)
+interface SchedulerEventCreationProperties {
+  // Required fields
+  title: string;                    // The title of the event
+  start: string;                    // ISO8601 datetime string
+  end: string;                      // ISO8601 datetime string
+
+  // Optional fields
+  description?: string;             // The description of the event
+  allDay?: boolean;                 // Whether the event is an all-day event (default: false)
+  timezone?: string;                // The timezone of the event dates (e.g., "America/New_York")
+  color?: SchedulerEventColor;      // The color of the event
+
+  // Recurrence rule (for recurring events)
+  rrule?: RecurringEventRecurrenceRule | string;  // Can be object or RFC5545 RRULE string
+}
+
+// Available event colors
+type SchedulerEventColor =
+  | 'primary' | 'mauve' | 'violet' | 'cyan' | 'jade'
+  | 'red' | 'lime' | 'orange' | 'yellow' | 'pink' | 'indigo' | 'blue';
+
+// Recurrence rule for recurring events (subset of RFC 5545 RRULE)
+interface RecurringEventRecurrenceRule {
+  freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';  // Required: base frequency
+  interval?: number;              // At which intervals the rule repeats (default: 1)
+  byDay?: string[];               // Days the event occurs on
+                                  // Weekly: weekday codes like "MO", "TU", "WE", "TH", "FR", "SA", "SU"
+                                  // Monthly: ordinal + weekday like "2TU" (2nd Tuesday), "-1FR" (last Friday)
+  byMonthDay?: number[];          // Days of the month (1-31)
+  byMonth?: number[];             // Months of the year (1-12)
+  until?: string;                 // ISO8601 datetime to end recurrence (exclusive with count)
+  count?: number;                 // Number of occurrences (exclusive with until)
+}
+
+// Examples of rrule:
+// - Daily: { freq: "DAILY" }
+// - Every weekday: { freq: "WEEKLY", byDay: ["MO", "TU", "WE", "TH", "FR"] }
+// - Weekly on Tuesdays: { freq: "WEEKLY", byDay: ["TU"] }
+// - Monthly on the 15th: { freq: "MONTHLY", byMonthDay: [15] }
+// - Monthly on 2nd Tuesday: { freq: "MONTHLY", byDay: ["2TU"] }
+// - Yearly on March 15: { freq: "YEARLY", byMonth: [3], byMonthDay: [15] }
+// - Every 2 weeks: { freq: "WEEKLY", interval: 2 }
+// - Daily for 10 occurrences: { freq: "DAILY", count: 10 }
+// - As RFC5545 string: "FREQ=WEEKLY;BYDAY=MO,WE,FR"
+`.trim();
 
 /**
  * Response from the LLM after parsing a natural language prompt.
@@ -29,6 +79,8 @@ export interface AiEventParseResponse {
     end?: string;
     description?: string;
     allDay?: boolean;
+    color?: string;
+    rrule?: Record<string, unknown> | string;
   } | null;
   /** Confidence score from 0 to 1 */
   confidence: number;
@@ -50,13 +102,6 @@ export function buildContext(
     currentDateTime: adapter.now(displayTimezone).toISOString(),
     defaultTimezone: displayTimezone,
     defaultDurationMinutes: defaultDuration,
-    eventSchema: {
-      title: 'string (required)',
-      start: 'ISO8601 datetime (required)',
-      end: 'ISO8601 datetime (optional)',
-      description: 'string (optional)',
-      allDay: 'boolean (optional, default false)',
-    },
     extraContext,
   };
 }
@@ -65,23 +110,29 @@ export function buildContext(
  * Build the system prompt for the LLM.
  */
 export function buildSystemPrompt(context: LLMContext): string {
-  return `You parse natural language into calendar events.
+  return `You parse natural language into calendar events for a scheduler application.
 
-Current context:
-- Now: ${context.currentDateTime}
+## Current Context
+- Current datetime: ${context.currentDateTime}
 - Timezone: ${context.defaultTimezone}
-- Default duration: ${context.defaultDurationMinutes} minutes
+- Default event duration: ${context.defaultDurationMinutes} minutes
 ${context.extraContext ? `- Additional context: ${context.extraContext}` : ''}
 
-Return ONLY valid JSON (no markdown):
+## Data Model (TypeScript)
+${EVENT_CREATION_SCHEMA}
+
+## Response Format
+Return ONLY valid JSON (no markdown, no code blocks):
 {
   "summary": "Brief description of what you understood",
   "event": {
-    "title": "required string",
-    "start": "ISO8601 datetime",
-    "end": "ISO8601 datetime (optional, use default duration if missing)",
-    "description": "optional",
-    "allDay": false
+    "title": "string (required)",
+    "start": "ISO8601 datetime string (required)",
+    "end": "ISO8601 datetime string (use default duration if not specified)",
+    "description": "string (optional)",
+    "allDay": false,
+    "color": "optional color from SchedulerEventColor",
+    "rrule": "optional RecurringEventRecurrenceRule object or RFC5545 string"
   },
   "confidence": 0.95,
   "error": ""
@@ -93,7 +144,14 @@ If you cannot parse the input or it's not a valid event description, return:
   "event": null,
   "confidence": 0,
   "error": "Description of what went wrong"
-}`;
+}
+
+## Examples
+- "standup every weekday at 9am" → rrule: { freq: "WEEKLY", byDay: ["MO", "TU", "WE", "TH", "FR"] }
+- "team meeting every Tuesday at 2pm" → rrule: { freq: "WEEKLY", byDay: ["TU"] }
+- "dentist on the 15th of every month" → rrule: { freq: "MONTHLY", byMonthDay: [15] }
+- "birthday party on Dec 25" → no rrule (single event)
+- "vacation next week" → allDay: true, no rrule`;
 }
 
 /**
