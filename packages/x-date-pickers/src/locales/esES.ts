@@ -42,7 +42,7 @@ const esESPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Seleccionar fecha y hora',
   timePickerToolbarTitle: 'Seleccionar hora',
   dateRangePickerToolbarTitle: 'Seleccionar rango de fecha',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Seleccionar rango de horas',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -65,7 +65,7 @@ const esESPickers: Partial<PickersLocaleText> = {
     formattedDate ? `Elige fecha, la fecha elegida es ${formattedDate}` : 'Elige fecha',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Elige hora, la hora elegida es ${formattedTime}` : 'Elige hora',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: formattedRange => formattedRange ? `Elige rango, el rango seleccionado es ${formattedRange}` : 'Elige rango',
   fieldClearLabel: 'Limpiar valor',
 
   // Table labels
