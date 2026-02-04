@@ -110,11 +110,32 @@ export function buildContext(
  * Build the system prompt for the LLM.
  */
 export function buildSystemPrompt(context: LLMContext): string {
+  // Parse the current date for clearer display
+  const now = new Date(context.currentDateTime);
+  const formattedDate = now.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const formattedTime = now.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+
   return `You parse natural language into calendar events for a scheduler application.
 
-## Current Context
-- Current datetime: ${context.currentDateTime}
-- Timezone: ${context.defaultTimezone}
+## IMPORTANT: Current Date and Time
+TODAY IS: ${formattedDate}
+CURRENT TIME: ${formattedTime}
+CURRENT YEAR: ${now.getFullYear()}
+ISO datetime: ${context.currentDateTime}
+Timezone: ${context.defaultTimezone}
+
+You MUST use ${now.getFullYear()} as the year for all events unless the user explicitly specifies a different year.
+When the user says "tomorrow", "next week", "next Monday", etc., calculate dates relative to TODAY (${formattedDate}).
+
+## Other Context
 - Default event duration: ${context.defaultDurationMinutes} minutes
 ${context.extraContext ? `- Additional context: ${context.extraContext}` : ''}
 
@@ -150,8 +171,9 @@ If you cannot parse the input or it's not a valid event description, return:
 - "standup every weekday at 9am" → rrule: { freq: "WEEKLY", byDay: ["MO", "TU", "WE", "TH", "FR"] }
 - "team meeting every Tuesday at 2pm" → rrule: { freq: "WEEKLY", byDay: ["TU"] }
 - "dentist on the 15th of every month" → rrule: { freq: "MONTHLY", byMonthDay: [15] }
-- "birthday party on Dec 25" → no rrule (single event)
-- "vacation next week" → allDay: true, no rrule`;
+- "birthday party on Dec 25" → no rrule, use CURRENT YEAR (${now.getFullYear()})
+- "vacation next week" → allDay: true, calculate from TODAY's date
+- "meeting tomorrow at 3pm" → calculate tomorrow from TODAY (${formattedDate}), use year ${now.getFullYear()}`;
 }
 
 /**
