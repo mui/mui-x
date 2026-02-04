@@ -24,7 +24,7 @@ export default function SymlogScale() {
         fullWidth
       >
         {['bar', 'area'].map((type) => (
-          <ToggleButton key={type} value={type} aria-label="left aligned">
+          <ToggleButton key={type} value={type}>
             {type}
           </ToggleButton>
         ))}

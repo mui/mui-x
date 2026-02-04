@@ -1,7 +1,7 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useScatterSeries, useScatterSeriesContext } from './useScatterSeries';
-import { DefaultizedScatterSeriesType, ScatterSeriesType } from '../models';
+import { type DefaultizedScatterSeriesType, type ScatterSeriesType } from '../models';
 import { ScatterChart } from '../ScatterChart';
 
 const mockSeries: ScatterSeriesType[] = [
@@ -72,5 +72,10 @@ describe('useScatterSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useScatterSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

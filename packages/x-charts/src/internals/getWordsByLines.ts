@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import { getStringSize } from './domUtils';
 
 export type ChartsTextBaseline =
@@ -9,7 +10,7 @@ export type ChartsTextBaseline =
 
 export type ChartsTextAnchor = 'start' | 'middle' | 'end';
 
-export interface ChartsTextStyle extends React.CSSProperties {
+export interface ChartsTextStyle extends Omit<React.CSSProperties, 'dominantBaseline'> {
   angle?: number;
   /**
    * The text baseline

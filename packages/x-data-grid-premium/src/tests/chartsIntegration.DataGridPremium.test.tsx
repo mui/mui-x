@@ -1,23 +1,22 @@
-import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject, GridChartsConfigurationOptions } from '@mui/x-internals/types';
+import { type RefObject, type GridChartsConfigurationOptions } from '@mui/x-internals/types';
 import { act, createRenderer, screen, waitFor } from '@mui/internal-test-utils';
 import {
   GridChartsIntegrationContextProvider,
   GridChartsRendererProxy,
   DataGridPremium,
-  DataGridPremiumProps,
+  type DataGridPremiumProps,
   useGridApiRef,
   useGridChartsIntegrationContext,
   GridChartsPanel,
-  GridInitialState,
-  GridApiPremium,
-  GridValidRowModel,
+  type GridInitialState,
+  type GridApiPremium,
+  type GridValidRowModel,
   GridChartsIcon,
   GridSidebarValue,
 } from '@mui/x-data-grid-premium';
 import { COLUMN_GROUP_ID_SEPARATOR } from '../constants/columnGroups';
-import { GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
+import { type GridChartsIntegrationContextValue } from '../models/gridChartsIntegration';
 
 const rows: GridValidRowModel[] = [
   { id: 0, category1: 'CatA', category2: 'Cat1', nonChartable: '-', amount: 100 },

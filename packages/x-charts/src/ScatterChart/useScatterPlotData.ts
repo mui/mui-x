@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { SeriesId } from '../models/seriesType/common';
-import { D3Scale } from '../models/axis';
+import { type SeriesId } from '../models/seriesType/common';
+import { type D3Scale } from '../models/axis';
 import { getValueToPositionMapper } from '../hooks';
-import { DefaultizedScatterSeriesType, ScatterValueType } from '../models';
+import { type DefaultizedScatterSeriesType, type ScatterValueType } from '../models';
 
 export function useScatterPlotData(
   series: DefaultizedScatterSeriesType,

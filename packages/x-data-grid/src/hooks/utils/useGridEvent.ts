@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { EventListenerOptions } from '@mui/x-internals/EventManager';
-import { GridEventListener, GridEvents } from '../../models/events';
-import { UnregisterToken } from '../../utils/cleanupTracking/CleanupTracking';
+import type { RefObject } from '@mui/x-internals/types';
+import type { EventListenerOptions } from '@mui/x-internals/EventManager';
+import type { GridEventListener, GridEvents } from '../../models/events';
+import type { UnregisterToken } from '../../utils/cleanupTracking/CleanupTracking';
 import { TimerBasedCleanupTracking } from '../../utils/cleanupTracking/TimerBasedCleanupTracking';
 import { FinalizationRegistryBasedCleanupTracking } from '../../utils/cleanupTracking/FinalizationRegistryBasedCleanupTracking';
 import type { GridApiCommon } from '../../models';
@@ -38,7 +38,9 @@ export function useGridEvent<Api extends GridApiCommon, E extends GridEvents>(
 
   if (!subscription.current && handlerRef.current) {
     const enhancedHandler: GridEventListener<E> = (params, event, details) => {
-      if (!event.defaultMuiPrevented) {
+      // Check for the existence of the event once more to avoid Safari 26 issue
+      // https://github.com/mui/mui-x/issues/20159
+      if (event && !event.defaultMuiPrevented) {
         handlerRef.current?.(params, event, details);
       }
     };
@@ -70,7 +72,9 @@ export function useGridEvent<Api extends GridApiCommon, E extends GridEvents>(
   React.useEffect(() => {
     if (!subscription.current && handlerRef.current) {
       const enhancedHandler: GridEventListener<E> = (params, event, details) => {
-        if (!event.defaultMuiPrevented) {
+        // Check for the existence of the event once more to avoid Safari 26 issue
+        // https://github.com/mui/mui-x/issues/20159
+        if (event && !event.defaultMuiPrevented) {
           handlerRef.current?.(params, event, details);
         }
       };

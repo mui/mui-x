@@ -216,6 +216,9 @@
     "returnType": "GridHeaderFilteringState",
     "description": ""
   },
+  { "name": "gridHistoryCanRedoSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridHistoryCanUndoSelector", "returnType": "boolean", "description": "" },
+  { "name": "gridHistoryEnabledSelector", "returnType": "boolean", "description": "" },
   {
     "name": "gridPageCountSelector",
     "returnType": "number",
@@ -276,6 +279,7 @@
     "category": "Visible Columns",
     "description": "Get the visible pinned columns model."
   },
+  { "name": "gridPivotModelSelector", "returnType": "GridPivotModel", "description": "" },
   {
     "name": "gridPreferencePanelStateSelector",
     "returnType": "GridPreferencePanelState",

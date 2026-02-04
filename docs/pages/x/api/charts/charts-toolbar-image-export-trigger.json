@@ -3,7 +3,7 @@
     "options": {
       "type": {
         "name": "shape",
-        "description": "{ copyStyles?: bool, fileName?: string, onBeforeExport?: func, quality?: number, type: string }"
+        "description": "{ copyStyles?: bool, fileName?: string, nonce?: string, onBeforeExport?: func, quality?: number, type: string }"
       }
     },
     "render": { "type": { "name": "union", "description": "element<br>&#124;&nbsp;func" } }

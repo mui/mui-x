@@ -1,16 +1,16 @@
 'use client';
 import * as React from 'react';
-import { ChartsAxisProps } from '../ChartsAxis';
-import { ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
-import { ChartsGridProps } from '../ChartsGrid';
-import { ChartsLegendSlotExtension } from '../ChartsLegend';
-import { ChartsOverlayProps } from '../ChartsOverlay';
-import { ChartContainerProps } from '../ChartContainer';
+import { type ChartsAxisProps } from '../ChartsAxis';
+import { type ChartsAxisHighlightProps } from '../ChartsAxisHighlight';
+import { type ChartsGridProps } from '../ChartsGrid';
+import { type ChartsLegendSlotExtension } from '../ChartsLegend';
+import { type ChartsOverlayProps } from '../ChartsOverlay';
+import { type ChartContainerProps } from '../ChartContainer';
 import type { ScatterChartProps } from './ScatterChart';
 import type { ScatterPlotProps } from './ScatterPlot';
 import type { ChartsWrapperProps } from '../ChartsWrapper';
-import { SCATTER_CHART_PLUGINS, ScatterChartPluginSignatures } from './ScatterChart.plugins';
-import { UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
+import { SCATTER_CHART_PLUGINS, type ScatterChartPluginSignatures } from './ScatterChart.plugins';
+import { type UseChartClosestPointSignature } from '../internals/plugins/featurePlugins/useChartClosestPoint';
 
 /**
  * A helper function that extracts ScatterChartProps from the input props
@@ -45,6 +45,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     className,
     showToolbar,
     renderer,
+    brushConfig,
     ...other
   } = props;
 
@@ -74,6 +75,7 @@ export const useScatterChartProps = (props: ScatterChartProps) => {
     plugins: SCATTER_CHART_PLUGINS,
     slots,
     slotProps,
+    brushConfig,
   };
 
   const chartsAxisProps: ChartsAxisProps = {

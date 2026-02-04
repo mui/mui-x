@@ -2,17 +2,17 @@
 import * as React from 'react';
 import { getValueToPositionMapper } from '../hooks/useScale';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { useSelector } from '../internals/store/useSelector';
 import { useStore } from '../internals/store/useStore';
 import {
   selectorChartsHighlightYAxisValue,
   selectorChartYAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
 } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
 import { useDrawingArea } from '../hooks';
-import { ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
-import { ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
+import { type ChartsAxisHighlightType } from './ChartsAxisHighlight.types';
+import { type ChartsAxisHighlightClasses } from './chartsAxisHighlightClasses';
 import { ChartsAxisHighlightPath } from './ChartsAxisHighlightPath';
+import type { UseChartBrushSignature } from '../internals/plugins/featurePlugins/useChartBrush';
 
 /**
  * @ignore - internal component.
@@ -25,9 +25,9 @@ export default function ChartsYHighlight(props: {
 
   const { left, width } = useDrawingArea();
 
-  const store = useStore<[UseChartCartesianAxisSignature]>();
-  const axisYValues = useSelector(store, selectorChartsHighlightYAxisValue);
-  const yAxes = useSelector(store, selectorChartYAxis);
+  const store = useStore<[UseChartCartesianAxisSignature, UseChartBrushSignature]>();
+  const axisYValues = store.use(selectorChartsHighlightYAxisValue);
+  const yAxes = store.use(selectorChartYAxis);
 
   if (axisYValues.length === 0) {
     return null;

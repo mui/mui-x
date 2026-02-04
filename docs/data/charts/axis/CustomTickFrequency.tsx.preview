@@ -1,0 +1,13 @@
+<BarChartPro
+  {...barSettings}
+  xAxis={[
+    {
+      ...xAxis,
+      ordinalTimeTicks: [
+        'years',
+        { ...tickFrequencies.quarterly, format: quarterFormat },
+        { ...tickFrequencies.weeks, format: weekFormat },
+      ],
+    },
+  ]}
+/>

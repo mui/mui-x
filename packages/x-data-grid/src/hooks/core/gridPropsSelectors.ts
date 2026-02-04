@@ -17,3 +17,7 @@ export const gridRowIdSelector = createRootSelector(
     return state.props.getRowId ? state.props.getRowId(row) : row.id;
   },
 );
+
+export const gridRowSelectableSelector = createRootSelector((state: GridStateCommunity) => {
+  return state.props.isRowSelectable;
+});

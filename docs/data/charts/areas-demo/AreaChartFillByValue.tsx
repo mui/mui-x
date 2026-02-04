@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { ScaleLinear } from 'd3-scale';
+import { ScaleLinear } from '@mui/x-charts-vendor/d3-scale';
 import { green, red } from '@mui/material/colors';
 import Stack from '@mui/material/Stack';
 import { useYScale, useDrawingArea } from '@mui/x-charts/hooks';

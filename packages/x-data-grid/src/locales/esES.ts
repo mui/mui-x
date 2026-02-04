@@ -1,13 +1,13 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const esESGrid: Partial<GridLocaleText> = {
   // Root
   noRowsLabel: 'Sin filas',
   noResultsOverlayLabel: 'Resultados no encontrados',
-  // noColumnsOverlayLabel: 'No columns',
-  // noColumnsOverlayManageColumns: 'Manage columns',
-  // emptyPivotOverlayLabel: 'Add fields to rows, columns, and values to create a pivot table',
+  noColumnsOverlayLabel: 'Ninguna columna',
+  noColumnsOverlayManageColumns: 'Gestionar columnas',
+  emptyPivotOverlayLabel: 'Añada campos a filas, columnas y valores para crear una tabla dinámica',
 
   // Density selector toolbar button text
   toolbarDensity: 'Densidad',
@@ -15,6 +15,10 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Compacta',
   toolbarDensityStandard: 'Estándar',
   toolbarDensityComfortable: 'Cómoda',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Deshacer',
+  toolbarRedo: 'Rehacer',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Columnas',
@@ -41,13 +45,13 @@ const esESGrid: Partial<GridLocaleText> = {
   toolbarExportExcel: 'Descargar como Excel',
 
   // Toolbar pivot button
-  // toolbarPivot: 'Pivot',
+  toolbarPivot: 'Tabla dinámica',
 
   // Toolbar charts button
-  // toolbarCharts: 'Charts',
+  toolbarCharts: 'Gráficos',
 
   // Toolbar AI Assistant button
-  // toolbarAssistant: 'AI Assistant',
+  toolbarAssistant: 'Asistente de IA',
 
   // Columns management text
   columnsManagementSearchTitle: 'Buscar',
@@ -113,7 +117,7 @@ const esESGrid: Partial<GridLocaleText> = {
   'headerFilterOperator>=': 'Es mayor o igual que',
   'headerFilterOperator<': 'Es menor que',
   'headerFilterOperator<=': 'Es menor o igual que',
-  // headerFilterClear: 'Clear filter',
+  headerFilterClear: 'Limpiar filtros',
 
   // Filter values text
   filterValueAny: 'cualquiera',
@@ -122,7 +126,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Column menu text
   columnMenuLabel: 'Menú',
-  // columnMenuAriaLabel: (columnName: string) => `${columnName} column menu`,
+  columnMenuAriaLabel: (columnName: string) => `Menú de la columna ${columnName}`,
   columnMenuShowColumns: 'Mostrar columnas',
   columnMenuManageColumns: 'Administrar columnas',
   columnMenuFilter: 'Filtro',
@@ -130,8 +134,8 @@ const esESGrid: Partial<GridLocaleText> = {
   columnMenuUnsort: 'Desordenar',
   columnMenuSortAsc: 'Ordenar ASC',
   columnMenuSortDesc: 'Ordenar DESC',
-  // columnMenuManagePivot: 'Manage pivot',
-  // columnMenuManageCharts: 'Manage charts',
+  columnMenuManagePivot: 'Gestionar tabla dinámica',
+  columnMenuManageCharts: 'Gestionar gráficos',
 
   // Column header text
   columnHeaderFiltersTooltipActive: (count) =>
@@ -163,6 +167,10 @@ const esESGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'si',
   booleanCellFalseLabel: 'no',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Expandir',
+  longTextCellCollapseLabel: 'Contraer',
+
   // Actions cell more text
   actionsCellMore: 'más',
 
@@ -188,18 +196,14 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'Filas por página:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `${from}–${to} de ${count !== -1 ? count : `más de ${to}`}`;
+    }
+    const estimatedLabel =
+      estimated && estimated > to ? `alrededor de ${estimated}` : `más de ${to}`;
+    return `${from}–${to} de ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'Ir a la primera página';
@@ -219,7 +223,7 @@ const esESGrid: Partial<GridLocaleText> = {
 
   // Aggregation
   aggregationMenuItemHeader: 'Agregación',
-  // aggregationFunctionLabelNone: 'none',
+  aggregationFunctionLabelNone: 'ninguna',
   aggregationFunctionLabelSum: 'suma',
   aggregationFunctionLabelAvg: 'promedio',
   aggregationFunctionLabelMin: 'mínimo',
@@ -227,107 +231,117 @@ const esESGrid: Partial<GridLocaleText> = {
   aggregationFunctionLabelSize: 'tamaño',
 
   // Pivot panel
-  // pivotToggleLabel: 'Pivot',
-  // pivotRows: 'Rows',
-  // pivotColumns: 'Columns',
-  // pivotValues: 'Values',
-  // pivotCloseButton: 'Close pivot settings',
-  // pivotSearchButton: 'Search fields',
-  // pivotSearchControlPlaceholder: 'Search fields',
-  // pivotSearchControlLabel: 'Search fields',
-  // pivotSearchControlClear: 'Clear search',
-  // pivotNoFields: 'No fields',
-  // pivotMenuMoveUp: 'Move up',
-  // pivotMenuMoveDown: 'Move down',
-  // pivotMenuMoveToTop: 'Move to top',
-  // pivotMenuMoveToBottom: 'Move to bottom',
-  // pivotMenuRows: 'Rows',
-  // pivotMenuColumns: 'Columns',
-  // pivotMenuValues: 'Values',
-  // pivotMenuOptions: 'Field options',
-  // pivotMenuAddToRows: 'Add to Rows',
-  // pivotMenuAddToColumns: 'Add to Columns',
-  // pivotMenuAddToValues: 'Add to Values',
-  // pivotMenuRemove: 'Remove',
-  // pivotDragToRows: 'Drag here to create rows',
-  // pivotDragToColumns: 'Drag here to create columns',
-  // pivotDragToValues: 'Drag here to create values',
-  // pivotYearColumnHeaderName: '(Year)',
-  // pivotQuarterColumnHeaderName: '(Quarter)',
+  pivotToggleLabel: 'Tabla dinámica',
+  pivotRows: 'Filas',
+  pivotColumns: 'Columnas',
+  pivotValues: 'Valores',
+  pivotCloseButton: 'Cerrar la configuración de tabla dinámica',
+  pivotSearchButton: 'Campos de búsqueda',
+  pivotSearchControlPlaceholder: 'Campos de búsqueda',
+  pivotSearchControlLabel: 'Campos de búsqueda',
+  pivotSearchControlClear: 'Limpiar la búsqueda',
+  pivotNoFields: 'Ningún campo',
+  pivotMenuMoveUp: 'Mover arriba',
+  pivotMenuMoveDown: 'Mover abajo',
+  pivotMenuMoveToTop: 'Mover al inicio',
+  pivotMenuMoveToBottom: 'Mover al final',
+  pivotMenuRows: 'Filas',
+  pivotMenuColumns: 'Columnas',
+  pivotMenuValues: 'Valores',
+  pivotMenuOptions: 'Opciones de campo',
+  pivotMenuAddToRows: 'Añadir a filas',
+  pivotMenuAddToColumns: 'Añadir a columnas',
+  pivotMenuAddToValues: 'Añadir a valores',
+  pivotMenuRemove: 'Eliminar',
+  pivotDragToRows: 'Arrastrar aquí para crear filas',
+  pivotDragToColumns: 'Arrastrar aquí para crear columnas',
+  pivotDragToValues: 'Arrastrar aquí para crear valores',
+  pivotYearColumnHeaderName: '(Año)',
+  pivotQuarterColumnHeaderName: '(Trimestre)',
 
   // Charts configuration panel
-  // chartsNoCharts: 'There are no charts available',
-  // chartsChartNotSelected: 'Select a chart type to configure its options',
-  // chartsTabChart: 'Chart',
-  // chartsTabFields: 'Fields',
-  // chartsTabCustomize: 'Customize',
-  // chartsCloseButton: 'Close charts configuration',
-  // chartsSyncButtonLabel: 'Sync chart',
-  // chartsSearchPlaceholder: 'Search fields',
-  // chartsSearchLabel: 'Search fields',
-  // chartsSearchClear: 'Clear search',
-  // chartsNoFields: 'No fields',
-  // chartsFieldBlocked: 'This field cannot be added to any section',
-  // chartsCategories: 'Categories',
-  // chartsSeries: 'Series',
-  // chartsMenuAddToDimensions: (dimensionLabel: string) => `Add to ${dimensionLabel}`,
-  // chartsMenuAddToValues: (valuesLabel: string) => `Add to ${valuesLabel}`,
-  // chartsMenuMoveUp: 'Move up',
-  // chartsMenuMoveDown: 'Move down',
-  // chartsMenuMoveToTop: 'Move to top',
-  // chartsMenuMoveToBottom: 'Move to bottom',
-  // chartsMenuOptions: 'Field options',
-  // chartsMenuRemove: 'Remove',
-  // chartsDragToDimensions: (dimensionLabel: string) => `Drag here to use column as ${dimensionLabel}`,
-  // chartsDragToValues: (valuesLabel: string) => `Drag here to use column as ${valuesLabel}`,
+  chartsNoCharts: 'No hay ningún gráfico disponible',
+  chartsChartNotSelected: 'Seleccionar un tipo de gráfico para configurar sus opciones',
+  chartsTabChart: 'Gráfico',
+  chartsTabFields: 'Campos',
+  chartsTabCustomize: 'Personalizar',
+  chartsCloseButton: 'Cerrar la configuración de gráficos',
+  chartsSyncButtonLabel: 'Sincronizar gráfico',
+  chartsSearchPlaceholder: 'Campos de búsqueda',
+  chartsSearchLabel: 'Campos de búsqueda',
+  chartsSearchClear: 'Limpiar búsqueda',
+  chartsNoFields: 'Ningún campo',
+  chartsFieldBlocked: 'Este campo no se puede añadir a ninguna sección',
+  chartsCategories: 'Categorías',
+  chartsSeries: 'Series',
+  chartsMenuAddToDimensions: (dimensionLabel: string) => `Añadir a ${dimensionLabel}`,
+  chartsMenuAddToValues: (valuesLabel: string) => `Añadir a ${valuesLabel}`,
+  chartsMenuMoveUp: 'Mover arriba',
+  chartsMenuMoveDown: 'Mover abajo',
+  chartsMenuMoveToTop: 'Mover al inicio',
+  chartsMenuMoveToBottom: 'Mover al final',
+  chartsMenuOptions: 'Opciones de campo',
+  chartsMenuRemove: 'Eliminar',
+  chartsDragToDimensions: (dimensionLabel: string) =>
+    `Arrastrar aquí para utilizar la columna como ${dimensionLabel}`,
+  chartsDragToValues: (valuesLabel: string) =>
+    `Arrastrar aquí para utilizar la columna como  ${valuesLabel}`,
 
   // AI Assistant panel
-  // aiAssistantPanelTitle: 'AI Assistant',
-  // aiAssistantPanelClose: 'Close AI Assistant',
-  // aiAssistantPanelNewConversation: 'New conversation',
-  // aiAssistantPanelConversationHistory: 'Conversation history',
-  // aiAssistantPanelEmptyConversation: 'No prompt history',
-  // aiAssistantSuggestions: 'Suggestions',
+  aiAssistantPanelTitle: 'Asistente de IA',
+  aiAssistantPanelClose: 'Cerrar el asistente de IA',
+  aiAssistantPanelNewConversation: 'Nueva conversación',
+  aiAssistantPanelConversationHistory: 'Historial de conversaciones',
+  aiAssistantPanelEmptyConversation: 'El historial de conversaciones está vacío',
+  aiAssistantSuggestions: 'Sugerencias',
 
   // Prompt field
   promptFieldLabel: 'Prompt',
   promptFieldPlaceholder: 'Escribe un prompt…',
   promptFieldPlaceholderWithRecording: 'Escriba o grabe un prompt…',
   promptFieldPlaceholderListening: 'Esperando por un prompt…',
-  // promptFieldSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  promptFieldSpeechRecognitionNotSupported:
+    'El reconocimiento de voz no está soportado en este navegador',
   promptFieldSend: 'Enviar',
   promptFieldRecord: 'Grabar',
   promptFieldStopRecording: 'Parar de grabar',
 
   // Prompt
-  // promptRerun: 'Run again',
-  // promptProcessing: 'Processing…',
-  // promptAppliedChanges: 'Applied changes',
+  promptRerun: 'Ejecutar de nuevo',
+  promptProcessing: 'Procesando…',
+  promptAppliedChanges: 'Se han aplicado los cambios',
 
   // Prompt changes
-  // promptChangeGroupDescription: (column: string) => `Group by ${column}`,
-  // promptChangeAggregationLabel: (column: string, aggregation: string) => `${column} (${aggregation})`,
-  // promptChangeAggregationDescription: (column: string, aggregation: string) => `Aggregate ${column} (${aggregation})`,
-  // promptChangeFilterLabel: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `${column} is any of: ${value}`;
-  //   }
-  //   return `${column} ${operator} ${value}`;
-  // },
-  // promptChangeFilterDescription: (column: string, operator: string, value: string) => {
-  //   if (operator === 'is any of') {
-  //     return `Filter where ${column} is any of: ${value}`;
-  //   }
-  //   return `Filter where ${column} ${operator} ${value}`;
-  // },
-  // promptChangeSortDescription: (column: string, direction: string) => `Sort by ${column} (${direction})`,
-  // promptChangePivotEnableLabel: 'Pivot',
-  // promptChangePivotEnableDescription: 'Enable pivot',
-  // promptChangePivotColumnsLabel: (count: number) => `Columns (${count})`,
-  // promptChangePivotColumnsDescription: (column: string, direction: string) => `${column}${direction ? ` (${direction})` : ''}`,
-  // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
-  // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
-  // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  promptChangeGroupDescription: (column: string) => `Agrupar por ${column}`,
+  promptChangeAggregationLabel: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeAggregationDescription: (column: string, aggregation: string) =>
+    `Agregar ${column} (${aggregation})`,
+  promptChangeFilterLabel: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `${column} es uno de: ${value}`;
+    }
+    return `${column} ${operator} ${value}`;
+  },
+  promptChangeFilterDescription: (column: string, operator: string, value: string) => {
+    if (operator === 'is any of') {
+      return `Filtrar por ${column} cuando sea uno de: ${value}`;
+    }
+    return `Filtrar por ${column} ${operator} ${value}`;
+  },
+  promptChangeSortDescription: (column: string, direction: string) =>
+    `Ordenar por ${column} (${direction})`,
+  promptChangePivotEnableLabel: 'Tabla dinámica',
+  promptChangePivotEnableDescription: 'Activar tabla dinámica',
+  promptChangePivotColumnsLabel: (count: number) => `Columnas (${count})`,
+  promptChangePivotColumnsDescription: (column: string, direction: string) =>
+    `${column}${direction ? ` (${direction})` : ''}`,
+  promptChangePivotRowsLabel: (count: number) => `Filas (${count})`,
+  promptChangePivotValuesLabel: (count: number) => `Valores (${count})`,
+  promptChangePivotValuesDescription: (column: string, aggregation: string) =>
+    `${column} (${aggregation})`,
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) =>
+    `Dimensiones (${dimensionsCount}), Valores (${valuesCount})`,
 };
 
 export const esES: Localization = getGridLocalization(esESGrid);

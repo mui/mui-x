@@ -1,6 +1,6 @@
 import type { LegendItemParams } from '../../ChartsLegend';
 import { getLabel } from '../../internals/getLabel';
-import { LegendGetter } from '../../internals/plugins/models';
+import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const legendGetter: LegendGetter<'pie'> = (params) => {
   const { seriesOrder, series } = params;
@@ -12,13 +12,16 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
         return;
       }
 
+      const id = item.id ?? dataIndex;
+
       acc.push({
+        type: 'pie',
         markType: item.labelMarkType ?? series[seriesId].labelMarkType,
-        id: item.id ?? dataIndex,
         seriesId,
+        itemId: id,
+        dataIndex,
         color: item.color,
         label: formattedLabel,
-        itemId: item.id ?? dataIndex,
       });
     });
     return acc;

@@ -7,11 +7,12 @@ import { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 import { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
-import { DataGridProps } from '../models/props/DataGridProps';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
+import type { DataGridProps } from '../models/props/DataGridProps';
 import { GridContextProvider } from '../context/GridContextProvider';
 import { useDataGridComponent } from './useDataGridComponent';
 import { useDataGridProps } from './useDataGridProps';
-import { GridValidRowModel } from '../models/gridRows';
+import type { GridValidRowModel } from '../models/gridRows';
 import { propValidatorsDataGrid, validateProps } from '../internals/utils/propValidation';
 import { useMaterialCSSVariables } from '../material/variables';
 import type { GridConfiguration } from '../models/configuration/gridConfiguration';
@@ -27,6 +28,7 @@ const configuration: GridConfiguration = {
     useGridRowAriaAttributes,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
+    useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },

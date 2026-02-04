@@ -1,4 +1,4 @@
-import { ChartsColorPaletteCallback } from '../types';
+import { type ChartsColorPaletteCallback } from '../types';
 
 export const strawberrySkyPaletteLight = [
   '#6877FF',

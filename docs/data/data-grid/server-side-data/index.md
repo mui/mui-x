@@ -9,6 +9,10 @@ Challenges include manual data fetching, pagination, sorting, filtering, and per
 A dedicated module can help abstract these complexities to improve the developer experience.
 The Data Grid provides the Data Source layer for this purpose.
 
+:::success
+If you prefer to learn by example, the [server-side data tutorial](/x/react-data-grid/tutorials/server-side-data/) shows you how to implement the Data Source layer in a full-stack app.
+:::
+
 ### The problem: compounding complexity
 
 Consider a Data Grid displaying a list of users that supports pagination, sorting by column headers, and filtering.
@@ -250,6 +254,16 @@ To disable the Data Source cache, pass `null` to the `dataSourceCache` prop.
 ```
 
 {{"demo": "ServerSideDataGridNoCache.js", "bg": "inline"}}
+
+:::success
+To bypass the cache and force refetch rows from the server with a single `dataSource.fetchRows()` API method call, pass `skipCache` flag to the fetch options:
+
+```tsx
+apiRef.current.dataSource.fetchRows(GRID_ROOT_GROUP_ID, { skipCache: true });
+```
+
+The response will be used to refresh the cache.
+:::
 
 ## Updating server-side data
 

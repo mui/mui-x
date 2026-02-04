@@ -1,9 +1,3 @@
-import chaiDom from 'chai-dom';
-import chaiPlugin from '@mui/internal-test-utils/chaiPlugin';
-
-chai.use(chaiDom);
-chai.use(chaiPlugin);
-
 // https://stackoverflow.com/a/46755166/3406963
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -41,3 +35,5 @@ chai.use((chaiAPI, utils) => {
     assertion.to.equal(cleanExpectedDate.toISOString());
   });
 });
+
+export {};

@@ -36,6 +36,6 @@ export interface BasePickerInputProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
 > extends Omit<
-    MakeOptional<BasePickerProps<TValue, TView, TError, any>, 'openTo' | 'views'>,
-    'viewRenderers'
-  > {}
+  MakeOptional<BasePickerProps<TValue, TView, TError, any>, 'openTo' | 'views'>,
+  'viewRenderers'
+> {}

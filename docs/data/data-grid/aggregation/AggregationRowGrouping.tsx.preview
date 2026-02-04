@@ -1,7 +1,7 @@
 <DataGridPremium
-  {...data}
   apiRef={apiRef}
-  columns={COLUMNS}
+  {...data}
   disableRowSelectionOnClick
   initialState={initialState}
+  pagination
 />

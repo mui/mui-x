@@ -1,7 +1,12 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, act } from '@mui/internal-test-utils';
-import { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, GridApi, useGridApiRef, GridColDef, gridClasses } from '@mui/x-data-grid-pro';
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  DataGridPro,
+  type GridApi,
+  useGridApiRef,
+  type GridColDef,
+  gridClasses,
+} from '@mui/x-data-grid-pro';
 import { getActiveCell, getCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { fireUserEvent } from 'test/utils/fireUserEvent';
 import { isJSDOM } from 'test/utils/skipIf';

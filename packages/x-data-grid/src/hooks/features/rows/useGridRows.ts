@@ -1,13 +1,17 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useLazyRef from '@mui/utils/useLazyRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
-import { GridEventListener } from '../../../models/events';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridRowApi, GridRowProApi, GridRowProPrivateApi } from '../../../models/api/gridRowApi';
-import { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
+import type { GridEventListener } from '../../../models/events';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type {
+  GridRowApi,
+  GridRowProApi,
+  GridRowProPrivateApi,
+} from '../../../models/api/gridRowApi';
+import type { GridRowId, GridGroupNode, GridLeafNode } from '../../../models/gridRows';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
@@ -26,11 +30,11 @@ import { gridRowIdSelector } from '../../core/gridPropsSelectors';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridSignature } from '../../../constants/signature';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getVisibleRows } from '../../utils/useGridVisibleRows';
 import { gridSortedRowIdsSelector } from '../sorting/gridSortingSelector';
 import { gridFilteredRowsLookupSelector } from '../filter/gridFilterSelector';
-import { GridRowsInternalCache } from './gridRowsInterfaces';
+import type { GridRowsInternalCache } from './gridRowsInterfaces';
 import {
   getTreeNodeDescendants,
   createRowsInternalCache,
@@ -105,7 +109,10 @@ export const useGridRows = (
   const timeout = useTimeout();
 
   // Get overridable methods from configuration
-  const { setRowIndex } = configuration.hooks.useGridRowsOverridableMethods(apiRef, props);
+  const { setRowIndex, setRowPosition } = configuration.hooks.useGridRowsOverridableMethods(
+    apiRef,
+    props as DataGridProcessedProps,
+  );
 
   const getRow = React.useCallback<GridRowApi['getRow']>(
     (id) => {
@@ -174,7 +181,7 @@ export const useGridRows = (
   const setRows = React.useCallback<GridRowApi['setRows']>(
     (rows) => {
       logger.debug(`Updating all rows, new length ${rows.length}`);
-      if (gridPivotActiveSelector(apiRef)) {
+      if (!props.dataSource && gridPivotActiveSelector(apiRef)) {
         apiRef.current.updateNonPivotRows(rows, false);
         return;
       }
@@ -189,7 +196,15 @@ export const useGridRows = (
 
       throttledRowsChange({ cache, throttle: true });
     },
-    [logger, props.getRowId, props.loading, props.rowCount, throttledRowsChange, apiRef],
+    [
+      logger,
+      props.getRowId,
+      props.dataSource,
+      props.loading,
+      props.rowCount,
+      throttledRowsChange,
+      apiRef,
+    ],
   );
 
   const updateRows = React.useCallback<GridRowApi['updateRows']>(
@@ -203,7 +218,7 @@ export const useGridRows = (
         );
       }
 
-      if (gridPivotActiveSelector(apiRef)) {
+      if (!props.dataSource && gridPivotActiveSelector(apiRef)) {
         apiRef.current.updateNonPivotRows(updates);
         return;
       }
@@ -218,7 +233,7 @@ export const useGridRows = (
 
       throttledRowsChange({ cache, throttle: true });
     },
-    [props.signature, props.getRowId, throttledRowsChange, apiRef],
+    [props.signature, props.dataSource, props.getRowId, throttledRowsChange, apiRef],
   );
 
   const updateNestedRows = React.useCallback<GridRowProPrivateApi['updateNestedRows']>(
@@ -301,6 +316,45 @@ export const useGridRows = (
     },
     [apiRef],
   );
+
+  const expandAllRows = React.useCallback<GridRowProApi['expandAllRows']>(() => {
+    const tree = { ...gridRowTreeSelector(apiRef) };
+
+    const traverse = (nodeId: GridRowId) => {
+      const node = tree[nodeId];
+      if (node?.type === 'group') {
+        tree[nodeId] = { ...node, childrenExpanded: true };
+        node.children.forEach(traverse);
+      }
+    };
+    traverse(GRID_ROOT_GROUP_ID);
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: { ...state.rows, tree },
+    }));
+    apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  }, [apiRef]);
+
+  const collapseAllRows = React.useCallback<GridRowProApi['collapseAllRows']>(() => {
+    const tree = { ...gridRowTreeSelector(apiRef) };
+
+    const traverse = (nodeId: GridRowId) => {
+      const node = tree[nodeId];
+      if (node?.type === 'group') {
+        tree[nodeId] = { ...node, childrenExpanded: false };
+        node.children.forEach(traverse);
+      }
+    };
+    traverse(GRID_ROOT_GROUP_ID);
+
+    apiRef.current.setState((state) => ({
+      ...state,
+      rows: { ...state.rows, tree },
+    }));
+
+    apiRef.current.publishEvent('rowExpansionChange', tree[GRID_ROOT_GROUP_ID] as GridGroupNode);
+  }, [apiRef]);
 
   const getRowNode = React.useCallback<GridRowApi['getRowNode']>(
     (id) => (gridRowNodeSelector(apiRef, id) as any) ?? null,
@@ -453,8 +507,11 @@ export const useGridRows = (
 
   const rowProApi: GridRowProApi = {
     setRowIndex,
+    setRowPosition,
     setRowChildrenExpansion,
     getRowGroupChildren,
+    expandAllRows,
+    collapseAllRows,
   };
 
   const rowProPrivateApi: GridRowProPrivateApi = {

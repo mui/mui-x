@@ -7,10 +7,12 @@
     "autosizeColumns": {
       "description": "Auto-size the columns of the grid based on the cells&#39; content and the space available."
     },
+    "collapseAllRows": { "description": "Collapse all rows. Works for the client side data only." },
     "dataSource": { "description": "The data source API." },
     "deleteFilterItem": {
       "description": "Deletes a <a href=\"/x/api/data-grid/grid-filter-item/\">GridFilterItem</a>."
     },
+    "expandAllRows": { "description": "Expand all rows. Works for the client side data only." },
     "exportDataAsCsv": { "description": "Downloads and exports a CSV of the grid&#39;s data." },
     "exportDataAsExcel": {
       "description": "Downloads and exports an Excel file of the grid&#39;s data."
@@ -118,6 +120,7 @@
     "hideHeaderFilterMenu": { "description": "Hides the header filter menu." },
     "hidePreferences": { "description": "Hides the preferences panel." },
     "hideSidebar": { "description": "Hides the sidebar." },
+    "history": { "description": "The history API." },
     "ignoreDiacritics": {
       "description": "Returns the value of the <code>ignoreDiacritics</code> prop."
     },
@@ -205,15 +208,18 @@
     "setQuickFilterValues": {
       "description": "Set the quick filter values to the one given by <code>values</code>"
     },
-    "setRowChildrenExpansion": { "description": "Expand or collapse a row children." },
+    "setRowChildrenExpansion": {
+      "description": "Expand or collapse a row children.<br />Only works for the client side data or to collapse already fetched server side rows.<br />For server-side data, use <code>dataSource.fetchRows(childId)</code> to fetch and expand the children."
+    },
     "setRowCount": { "description": "Sets the <code>rowCount</code> to a new value." },
     "setRowGroupingCriteriaIndex": {
       "description": "Sets the grouping index of a grouping criteria."
     },
     "setRowGroupingModel": { "description": "Sets the columns to use as grouping criteria." },
     "setRowIndex": {
-      "description": "Moves a row from its original position to the position given by <code>targetIndex</code>."
+      "description": "Moves a row from its original position to the position given by <code>targetIndex</code>.<br />Doesn&#39;t support tree data ordering. Use <code>setRowPosition()</code> instead."
     },
+    "setRowPosition": { "description": "Moves a row to a new position relative to another row." },
     "setRows": { "description": "Sets a new set of rows." },
     "setRowSelectionModel": {
       "description": "Sets the new row selection model.<br /><br />⚠️ Caution: <code>setRowSelectionModel</code> doesn&#39;t apply the selection propagation automatically.<br />Pass model returned by API method <code>getPropagatedRowSelectionModel</code> instead to apply the selection propagation."

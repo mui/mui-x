@@ -1,17 +1,15 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
 import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
-  GridRenderCellParams,
-  GridDataSourceGroupNode,
+  type GridRenderCellParams,
+  type GridDataSourceGroupNode,
   useGridSelector,
 } from '@mui/x-data-grid';
 import { vars, gridRowSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
-import { GridPrivateApiPro } from '../models/gridApiPro';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridDataSourceErrorSelector,
   gridDataSourceLoadingIdSelector,
@@ -31,8 +29,12 @@ const useUtilityClasses = (ownerState: OwnerState) => {
   return composeClasses(slots, getDataGridUtilityClass, classes);
 };
 
-interface GridTreeDataGroupingCellProps
-  extends GridRenderCellParams<any, any, any, GridDataSourceGroupNode> {
+interface GridTreeDataGroupingCellProps extends GridRenderCellParams<
+  any,
+  any,
+  any,
+  GridDataSourceGroupNode
+> {
   hideDescendantCount?: boolean;
   /**
    * The cell offset multiplier used for calculating cell offset (`rowNode.depth * offsetMultiplier` px).
@@ -41,13 +43,15 @@ interface GridTreeDataGroupingCellProps
   offsetMultiplier?: number;
 }
 
-interface GridTreeDataGroupingCellIconProps
-  extends Pick<GridTreeDataGroupingCellProps, 'id' | 'field' | 'rowNode' | 'row'> {
+interface GridTreeDataGroupingCellIconProps extends Pick<
+  GridTreeDataGroupingCellProps,
+  'id' | 'field' | 'rowNode' | 'row'
+> {
   descendantCount: number;
 }
 
 function GridTreeDataGroupingCellIcon(props: GridTreeDataGroupingCellIconProps) {
-  const apiRef = useGridPrivateApiContext() as RefObject<GridPrivateApiPro>;
+  const apiRef = useGridPrivateApiContext();
   const rootProps = useGridRootProps();
   const classes = useUtilityClasses(rootProps);
   const { rowNode, id, field, descendantCount } = props;

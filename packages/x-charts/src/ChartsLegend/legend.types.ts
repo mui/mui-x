@@ -1,4 +1,4 @@
-import { Position } from '../models/position';
+import { type Position } from '../models/position';
 
 export type ChartsLegendPosition = {
   /**

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const frFRGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Compacte',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Confortable',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Annuler',
+  toolbarRedo: 'Rétablir',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Colonnes',
@@ -162,6 +166,10 @@ const frFRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'vrai',
   booleanCellFalseLabel: 'faux',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Afficher',
+  longTextCellCollapseLabel: 'Masquer',
 
   // Actions cell more text
   actionsCellMore: 'Plus',
@@ -325,6 +333,7 @@ const frFRGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const frFR: Localization = getGridLocalization(frFRGrid);

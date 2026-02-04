@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   Unstable_SankeyChart as SankeyChart,
   type SankeyValueFormatterContext,

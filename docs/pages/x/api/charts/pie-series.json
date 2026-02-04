@@ -19,6 +19,9 @@
       "default": "(innerRadius - outerRadius) / 2"
     },
     "color": { "type": { "description": "string" } },
+    "colorGetter": {
+      "type": { "description": "(data: ColorCallbackValue&lt;TValue&gt;) =&gt; string" }
+    },
     "cornerRadius": { "type": { "description": "number" }, "default": "0" },
     "cx": { "type": { "description": "number | string" }, "default": "'50%'" },
     "cy": { "type": { "description": "number | string" }, "default": "'50%'" },

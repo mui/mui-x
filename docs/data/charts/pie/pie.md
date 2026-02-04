@@ -8,6 +8,19 @@ components: PieArc, PieArcLabel, PieArcLabelPlot, PieArcPlot, PieChart, PiePlot,
 
 <p class="description">Pie charts express portions of a whole, using arcs or angles within a circle.</p>
 
+## Overview
+
+Pie charts are ideal for showing proportions of a whole.
+They excel at visualizing how categories contribute to a total, making relative shares easy to compare at a glance.
+Here are the basic requirements to create a pie chart:
+
+- One categorical dimension (each category represented as a slice)
+- One numerical metric representing the value or size of each slice (converted into percentage of the whole)
+
+The pie chart below compares survival rates of passengers in different classes on the Titanic:
+
+{{"demo": "TitanicPie.js"}}
+
 ## Basics
 
 Pie charts series must contain a `data` property containing an array of objects.
@@ -30,7 +43,7 @@ You can transform any pie chart into a donut chart by setting the `innerRadius` 
 
 The pie colors can be customized in two ways.
 
-1. You can provide a [color palette](/x/react-charts/styling/#color-palette). Each arc of the pie will be colored according to this palette.
+1. You can provide a [color palette](/x/react-charts/styling/#built-in-color-palettes). Each arc of the pie will be colored according to this palette.
 2. You can provide a `color` property in `data` objects which overrides the palette.
 
 ```jsx
@@ -123,7 +136,7 @@ In the example below, the outer series is selected using the `data-series` attri
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
@@ -132,9 +145,9 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 <PieChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <PiePlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "PieAnimation.js"}}
@@ -153,6 +166,7 @@ Here's how the Pie Chart is composed:
     <ChartsLegend />
     <ChartsSurface>
       <PiePlot />
+      <FocusedPieArc />
       <ChartsOverlay />
     </ChartsSurface>
     <ChartsTooltip trigger="item" />

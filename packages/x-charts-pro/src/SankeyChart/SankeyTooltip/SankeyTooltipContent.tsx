@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -10,7 +9,7 @@ import {
   useItemTooltip,
 } from '@mui/x-charts/ChartsTooltip';
 import { ChartsLabelMark } from '@mui/x-charts/internals';
-import { SankeyTooltipProps } from './SankeyTooltip.types';
+import { type SankeyTooltipProps } from './SankeyTooltip.types';
 import { useUtilityClasses } from './SankeyTooltip.classes';
 
 export interface SankeyTooltipContentProps extends Pick<SankeyTooltipProps, 'classes'> {}

@@ -50,6 +50,8 @@ You can browse the documentation, find an example close to your use case, and th
 You can use a starter template to build a reproduction case with:
 
 <!-- #target-branch-reference -->
+<!-- Replace `master` with the new branch `vX.x` when creating the first PR on the vX.x branch -->
+<!-- For example, when creating v9 from v8, `master -> v8.x` -->
 
 - A minimal Data Grid [TypeScript template](https://stackblitz.com/github/mui/mui-x/tree/master/bug-reproductions/x-data-grid?file=src/index.tsx)
 - A plain React [JavaScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react) or [TypeScript](https://stackblitz.com/github/stackblitz/starters/tree/main/react-ts) template
@@ -96,7 +98,8 @@ This includes issues introduced by external sources, like browser upgrades or ch
 
 | MUI X version | Release    | Supported                                                                       |
 | ------------: | :--------- | :------------------------------------------------------------------------------ |
-|        ^8.0.0 | 2025-04-17 | ✅ Stable major (Continuous support).                                           |
+|        ^9.0.0 | March 2026 | 🚧 Pre release (Continuous support)                                             |
+|        ^8.0.0 | 2025-04-17 | ✅ Current stable major (Continuous support).                                   |
 |        ^7.0.0 | 2024-03-23 | ⚠️ LTS - Support for security issues and regressions **until April 17th 2027**. |
 |        ^6.0.0 | 2023-03-03 | ⚠️ LTS - Support for security issues and regressions **until March 23th 2026**. |
 |        ^5.0.0 | 2021-11-23 | ❌                                                                              |

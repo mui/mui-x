@@ -31,3 +31,22 @@ When clicked, it uses [`setExpandedDetailPanels`](/x/api/data-grid/grid-api/#gri
 In the demo below, you can toggle the detail panel by clicking anywhere on the row:
 
 {{"demo": "DetailPanelExpandOnRowClick.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Lazy loading detail panels with auto height
+
+In the demo below, detail panels have a height based on content (auto height) and are lazy loaded.
+To prevent scrolling issues, panel heights are cached once they are loaded and the cached height is returned from the `getDetailPanelHeight()` callback.
+
+{{"demo": "LazyLoadingAutoHeightDetailPanel.js", "bg": "inline", "defaultCodeOpen": false}}
+
+## Access Data Grid internal loading state
+
+The following demo shows how to disable a button on the toolbar when the Data Grid is in loading state using the [`useGridSelector()`](https://mui.com/x/react-data-grid/state/#with-usegridselector) hook with the `gridRowsLoadingSelector()`.
+
+{{"demo": "AccessingLoadingState.js", "bg": "inline"}}
+
+:::info
+The `useGridSelector()` is based on a React Context, so the component must be a child of the Data Grid in the React tree to access the internal state.
+
+You could use a [React portal](https://react.dev/reference/react-dom/createPortal) to achieve the same while rendering the component outside the Data Grid DOM tree.
+:::

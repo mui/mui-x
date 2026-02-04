@@ -1,13 +1,13 @@
 'use client';
 import * as React from 'react';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
+import { useStoreEffect } from '@mui/x-internals/store';
 import { useAssertModelConsistency } from '@mui/x-internals/useAssertModelConsistency';
 import { warnOnce } from '@mui/x-internals/warning';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type ChartPlugin } from '../../models';
+import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
 import { rainbowSurgePalette } from '../../../../colorPalettes';
-import { useSelector } from '../../../store/useSelector';
 import { selectorChartDrawingArea } from '../../corePlugins/useChartDimensions/useChartDimensions.selectors';
 import { selectorChartSeriesProcessed } from '../../corePlugins/useChartSeries/useChartSeries.selectors';
 import { defaultizeXAxis, defaultizeYAxis } from './defaultizeAxis';
@@ -16,17 +16,19 @@ import { getAxisIndex } from './getAxisValue';
 import { getSVGPoint } from '../../../getSVGPoint';
 import { selectorChartsInteractionIsInitialized } from '../useChartInteraction';
 import { selectorChartAxisInteraction } from './useChartCartesianInteraction.selectors';
-import { useLazySelectorEffect } from '../../utils/useLazySelectorEffect';
 import { checkHasInteractionPlugin } from '../useChartInteraction/checkHasInteractionPlugin';
+import { type ChartsAxisData, type SeriesId } from '../../../../models';
+
+const AXIS_CLICK_SERIES_TYPES = new Set(['bar', 'rangeBar', 'line'] as const);
+type AxisClickSeriesType = typeof AXIS_CLICK_SERIES_TYPES extends Set<infer U> ? U : never;
 
 export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<any>> = ({
   params,
   store,
-  seriesConfig,
-  svgRef,
   instance,
 }) => {
-  const { xAxis, yAxis, dataset, onHighlightedAxisChange } = params;
+  const { svgRef } = instance;
+  const { xAxis, yAxis, dataset, onHighlightedAxisChange, axesGap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
     const ids = [...(xAxis ?? []), ...(yAxis ?? [])]
@@ -44,12 +46,12 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const processedSeries = useSelector(store, selectorChartSeriesProcessed);
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const processedSeries = store.use(selectorChartSeriesProcessed);
 
-  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
-  const { axis: xAxisWithScale, axisIds: xAxisIds } = useSelector(store, selectorChartXAxis);
-  const { axis: yAxisWithScale, axisIds: yAxisIds } = useSelector(store, selectorChartYAxis);
+  const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
+  const { axis: xAxisWithScale, axisIds: xAxisIds } = store.use(selectorChartXAxis);
+  const { axis: yAxisWithScale, axisIds: yAxisIds } = store.use(selectorChartYAxis);
 
   useAssertModelConsistency({
     warningPrefix: 'MUI X Charts',
@@ -61,16 +63,7 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
 
   useEnhancedEffect(() => {
     if (params.highlightedAxis !== undefined) {
-      store.update((prevState) => {
-        if (prevState.controlledCartesianAxisHighlight === params.highlightedAxis) {
-          return prevState;
-        }
-
-        return {
-          ...prevState,
-          controlledCartesianAxisHighlight: params.highlightedAxis,
-        };
-      });
+      store.set('controlledCartesianAxisHighlight', params.highlightedAxis);
     }
   }, [store, params.highlightedAxis]);
 
@@ -83,23 +76,23 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      cartesianAxis: {
-        ...prev.cartesianAxis,
-        x: defaultizeXAxis(xAxis, dataset),
-        y: defaultizeYAxis(yAxis, dataset),
-      },
-    }));
-  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store]);
+    store.set('cartesianAxis', {
+      axesGap,
+      x: defaultizeXAxis(xAxis, dataset, axesGap),
+      y: defaultizeYAxis(yAxis, dataset, axesGap),
+    });
+  }, [drawingArea, xAxis, yAxis, dataset, axesGap, store]);
 
   const usedXAxis = xAxisIds[0];
   const usedYAxis = yAxisIds[0];
 
-  useLazySelectorEffect(
+  useStoreEffect(
     store,
     selectorChartAxisInteraction,
     (prevAxisInteraction, nextAxisInteraction) => {
+      if (!onHighlightedAxisChange) {
+        return;
+      }
       if (Object.is(prevAxisInteraction, nextAxisInteraction)) {
         return;
       }
@@ -118,7 +111,6 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
         onHighlightedAxisChange!(nextAxisInteraction);
       }
     },
-    !onHighlightedAxisChange,
   );
 
   const hasInteractionPlugin = checkHasInteractionPlugin(instance);
@@ -219,19 +211,28 @@ export const useChartCartesianAxis: ChartPlugin<UseChartCartesianAxisSignature<a
       // The .data exist because otherwise the dataIndex would be null or -1.
       const axisValue = (isXAxis ? xAxisWithScale : yAxisWithScale)[USED_AXIS_ID].data![dataIndex];
 
-      const seriesValues: Record<string, number | null | undefined> = {};
+      const seriesValues: ChartsAxisData['seriesValues'] = {};
 
       Object.keys(processedSeries)
-        .filter((seriesType): seriesType is 'bar' | 'line' => ['bar', 'line'].includes(seriesType))
+        .filter((seriesType): seriesType is AxisClickSeriesType =>
+          AXIS_CLICK_SERIES_TYPES.has(seriesType as AxisClickSeriesType),
+        )
         .forEach((seriesType) => {
-          processedSeries[seriesType]?.seriesOrder.forEach((seriesId) => {
-            const seriesItem = processedSeries[seriesType]!.series[seriesId];
+          // @ts-ignore
+          const seriesTypeConfig = processedSeries[seriesType];
+
+          seriesTypeConfig?.seriesOrder.forEach((seriesId: SeriesId) => {
+            const seriesItem = seriesTypeConfig!.series[seriesId];
 
             const providedXAxisId = seriesItem.xAxisId;
             const providedYAxisId = seriesItem.yAxisId;
 
             const axisKey = isXAxis ? providedXAxisId : providedYAxisId;
             if (axisKey === undefined || axisKey === USED_AXIS_ID) {
+              // @ts-ignore This is safe because users need to opt in to use range bar series.
+              // In that case, they should import the module augmentation from `x-charts-pro/moduleAugmentation/rangeBarOnClick`
+              // Which adds the proper type to the series data.
+              // TODO(v9): Remove this ts-ignore when we can make the breaking change to ChartsAxisData.
               seriesValues[seriesId] = seriesItem.data[dataIndex];
             }
           });
@@ -267,20 +268,23 @@ useChartCartesianAxis.params = {
   disableAxisListener: true,
   onHighlightedAxisChange: true,
   highlightedAxis: true,
+  axesGap: true,
 };
 
 useChartCartesianAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
+    axesGap: params.axesGap ?? 0,
     colors: params.colors ?? rainbowSurgePalette,
     theme: params.theme ?? 'light',
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, params.axesGap ?? 0),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, params.axesGap ?? 0),
   };
 };
 
 useChartCartesianAxis.getInitialState = (params) => ({
   cartesianAxis: {
+    axesGap: params.axesGap,
     x: params.defaultizedXAxis,
     y: params.defaultizedYAxis,
   },

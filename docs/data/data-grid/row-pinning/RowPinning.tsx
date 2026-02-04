@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPro, GridPinnedRowsProp, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomCity,

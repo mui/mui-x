@@ -1,16 +1,15 @@
 'use client';
 import * as React from 'react';
 import {
-  ChartPlugin,
-  useSelector,
+  type ChartPlugin,
   getSVGPoint,
   selectorChartDrawingArea,
-  ZoomData,
+  type ZoomData,
   selectorChartZoomOptionsLookup,
 } from '@mui/x-charts/internals';
-import { PinchEvent } from '@mui/x-internal-gestures/core';
+import { type PinchEvent } from '@mui/x-internal-gestures/core';
 import { rafThrottle } from '@mui/x-internals/rafThrottle';
-import { UseChartProZoomSignature } from '../useChartProZoom.types';
+import { type UseChartProZoomSignature } from '../useChartProZoom.types';
 import {
   getHorizontalCenterRatio,
   getVerticalCenterRatio,
@@ -23,18 +22,15 @@ export const useZoomOnPinch = (
   {
     store,
     instance,
-    svgRef,
-  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance' | 'svgRef'>,
+  }: Pick<Parameters<ChartPlugin<UseChartProZoomSignature>>[0], 'store' | 'instance'>,
   setZoomDataCallback: React.Dispatch<ZoomData[] | ((prev: ZoomData[]) => ZoomData[])>,
 ) => {
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
-  const optionsLookup = useSelector(store, selectorChartZoomOptionsLookup);
-  const config = useSelector(store, selectorZoomInteractionConfig, ['pinch' as const]);
+  const { svgRef } = instance;
+  const drawingArea = store.use(selectorChartDrawingArea);
+  const optionsLookup = store.use(selectorChartZoomOptionsLookup);
+  const config = store.use(selectorZoomInteractionConfig, 'pinch' as const);
 
-  const isZoomOnPinchEnabled = React.useMemo(
-    () => (Object.keys(optionsLookup).length > 0 && config) || false,
-    [optionsLookup, config],
-  );
+  const isZoomOnPinchEnabled: boolean = Object.keys(optionsLookup).length > 0 && Boolean(config);
 
   React.useEffect(() => {
     if (!isZoomOnPinchEnabled) {
@@ -54,6 +50,11 @@ export const useZoomOnPinch = (
     }
 
     const rafThrottledCallback = rafThrottle((event: PinchEvent) => {
+      // If the delta is 0, it means the pinch gesture is not valid.
+      if (event.detail.direction === 0) {
+        return;
+      }
+
       setZoomDataCallback((prev) => {
         return prev.map((zoom) => {
           const option = optionsLookup[zoom.axisId];
@@ -64,11 +65,6 @@ export const useZoomOnPinch = (
           const isZoomIn = event.detail.direction > 0;
           const scaleRatio = 1 + event.detail.deltaScale;
 
-          // If the delta is 0, it means the pinch gesture is not valid.
-          if (event.detail.direction === 0) {
-            return zoom;
-          }
-
           const point = getSVGPoint(element, {
             clientX: event.detail.centroid.x,
             clientY: event.detail.centroid.y,
@@ -76,8 +72,8 @@ export const useZoomOnPinch = (
 
           const centerRatio =
             option.axisDirection === 'x'
-              ? getHorizontalCenterRatio(point, drawingArea)
-              : getVerticalCenterRatio(point, drawingArea);
+              ? getHorizontalCenterRatio(point, drawingArea, option.reverse)
+              : getVerticalCenterRatio(point, drawingArea, option.reverse);
 
           const [newMinRange, newMaxRange] = zoomAtPoint(centerRatio, scaleRatio, zoom, option);
 

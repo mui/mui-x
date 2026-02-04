@@ -2,8 +2,8 @@
 import useSlotProps from '@mui/utils/useSlotProps';
 import { useThemeProps, useTheme } from '@mui/material/styles';
 import { useRtl } from '@mui/system/RtlProvider';
-import { ChartsYAxisProps } from '../models/axis';
-import { ChartsText, ChartsTextProps } from '../ChartsText';
+import { type ChartsYAxisProps } from '../models/axis';
+import { ChartsText, type ChartsTextProps } from '../ChartsText';
 import { useYAxes } from '../hooks/useAxis';
 import { getDefaultBaseline, getDefaultTextAnchor } from '../ChartsText/defaultTextPlacement';
 import { invertTextAnchor } from '../internals/invertTextAnchor';
@@ -43,7 +43,9 @@ export function useAxisTicksProps(inProps: ChartsYAxisProps) {
 
   const axisTickLabelProps = useSlotProps({
     elementType: TickLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     externalSlotProps: slotProps?.axisTickLabel,
+    // @ts-expect-error `useSlotProps` applies `WithCommonProps` with adds a `style: React.CSSProperties` prop automatically.
     additionalProps: {
       style: {
         ...theme.typography.caption,

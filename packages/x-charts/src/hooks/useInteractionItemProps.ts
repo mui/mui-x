@@ -1,12 +1,14 @@
 'use client';
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
-import { SeriesItemIdentifierWithData } from '../models';
+import { type SeriesItemIdentifierWithData } from '../models';
 import { useChartContext } from '../context/ChartProvider';
-import { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
-import { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
-import { ChartSeriesType, type ChartItemIdentifierWithData } from '../models/seriesType/config';
-import { ChartInstance } from '../internals/plugins/models';
+import type { UseChartHighlightSignature } from '../internals/plugins/featurePlugins/useChartHighlight';
+import type { UseChartInteractionSignature } from '../internals/plugins/featurePlugins/useChartInteraction';
+import type { ChartSeriesType } from '../models/seriesType/config';
+import type { SeriesItemIdentifier } from '../models/seriesType';
+import type { ChartInstance } from '../internals/plugins/models';
+import type { UseChartTooltipSignature } from '../internals/plugins/featurePlugins/useChartTooltip';
 
 function onPointerDown(event: React.PointerEvent) {
   if (
@@ -26,17 +28,24 @@ export const useInteractionItemProps = (
   onPointerDown?: (event: React.PointerEvent) => void;
 } => {
   const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
+    useChartContext<
+      [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+    >();
   const interactionActive = React.useRef(false);
   const onPointerEnter = useEventCallback(() => {
     interactionActive.current = true;
-    instance.setItemInteraction(data);
-    instance.setHighlight(data);
+    instance.setLastUpdateSource('pointer');
+    instance.setTooltipItem(data);
+    // TODO: uniformize sankey and other types to get a single plugin
+    instance.setHighlight(
+      // @ts-ignore
+      data.type === 'sankey' ? data : { seriesId: data.seriesId, dataIndex: data.dataIndex },
+    );
   });
 
   const onPointerLeave = useEventCallback(() => {
     interactionActive.current = false;
-    instance.removeItemInteraction(data);
+    instance.removeTooltipItem(data);
     instance.clearHighlight();
   });
 
@@ -49,36 +58,24 @@ export const useInteractionItemProps = (
     };
   }, [onPointerLeave]);
 
-  if (skip) {
-    return {};
-  }
-
-  return {
-    onPointerEnter,
-    onPointerLeave,
-    onPointerDown,
-  };
-};
-
-export const useInteractionAllItemProps = (
-  data: SeriesItemIdentifierWithData[],
-  skip?: boolean,
-) => {
-  const { instance } =
-    useChartContext<[UseChartInteractionSignature, UseChartHighlightSignature]>();
-
-  const results = React.useMemo(() => {
-    return data.map((item) => {
-      return skip ? {} : getInteractionItemProps(instance, item);
-    });
-  }, [data, instance, skip]);
-
-  return results;
+  return React.useMemo(
+    () =>
+      skip
+        ? {}
+        : {
+            onPointerEnter,
+            onPointerLeave,
+            onPointerDown,
+          },
+    [skip, onPointerEnter, onPointerLeave],
+  );
 };
 
 export function getInteractionItemProps(
-  instance: ChartInstance<[UseChartInteractionSignature, UseChartHighlightSignature]>,
-  item: ChartItemIdentifierWithData<ChartSeriesType>,
+  instance: ChartInstance<
+    [UseChartInteractionSignature, UseChartHighlightSignature, UseChartTooltipSignature]
+  >,
+  item: SeriesItemIdentifier<ChartSeriesType>,
 ): {
   onPointerEnter?: () => void;
   onPointerLeave?: () => void;
@@ -88,15 +85,19 @@ export function getInteractionItemProps(
     if (!item) {
       return;
     }
-    instance.setItemInteraction(item);
-    instance.setHighlight(item);
+    instance.setLastUpdateSource('pointer');
+    instance.setTooltipItem(item);
+    instance.setHighlight(
+      // @ts-ignore
+      item.type === 'sankey' ? item : { seriesId: item.seriesId, dataIndex: item.dataIndex },
+    );
   }
 
   function onPointerLeave() {
     if (!item) {
       return;
     }
-    instance.removeItemInteraction(item);
+    instance.removeTooltipItem(item);
     instance.clearHighlight();
   }
 

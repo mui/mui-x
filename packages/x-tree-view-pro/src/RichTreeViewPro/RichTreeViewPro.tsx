@@ -1,18 +1,25 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { useMergedRefs } from '@base-ui/utils/useMergedRefs';
+import { useStore } from '@mui/x-internals/store';
 import composeClasses from '@mui/utils/composeClasses';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import useSlotProps from '@mui/utils/useSlotProps';
-import { useTreeView, TreeViewProvider, RichTreeViewItems } from '@mui/x-tree-view/internals';
+import {
+  TreeViewProvider,
+  RichTreeViewItems,
+  TreeViewItemDepthContext,
+  itemsSelectors,
+  useTreeViewStore,
+} from '@mui/x-tree-view/internals';
 import { warnOnce } from '@mui/x-internals/warning';
 import { styled, createUseThemeProps } from '../internals/zero-styled';
 import { getRichTreeViewProUtilityClass } from './richTreeViewProClasses';
 import { RichTreeViewProProps } from './RichTreeViewPro.types';
-import {
-  RICH_TREE_VIEW_PRO_PLUGINS,
-  RichTreeViewProPluginSignatures,
-} from './RichTreeViewPro.plugins';
+import { useExtractRichTreeViewProParameters } from './useExtractRichTreeViewProParameters';
+import { RichTreeViewProStore } from '../internals/RichTreeViewProStore';
+import { RichTreeViewVirtualizedItems } from '../components/RichTreeViewVirtualizedItems';
+import { virtualizationSelectors } from '../internals/plugins/virtualization';
 
 const useThemeProps = createUseThemeProps('MuiRichTreeViewPro');
 
@@ -48,6 +55,10 @@ export const RichTreeViewProRoot = styled('ul', {
   listStyle: 'none',
   outline: 0,
   position: 'relative',
+  '&[data-virtualized]': {
+    height: '100%',
+    width: '100%',
+  },
 });
 
 type RichTreeViewProComponent = (<R extends {}, Multiple extends boolean | undefined = undefined>(
@@ -69,9 +80,8 @@ const releaseInfo = '__RELEASE_INFO__';
 const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
   R extends {},
   Multiple extends boolean | undefined = undefined,
->(inProps: RichTreeViewProProps<R, Multiple>, ref: React.Ref<HTMLUListElement>) {
+>(inProps: RichTreeViewProProps<R, Multiple>, forwardedRef: React.Ref<HTMLUListElement>) {
   const props = useThemeProps({ props: inProps, name: 'MuiRichTreeViewPro' });
-  const { slots, slotProps, ...other } = props;
 
   useLicenseVerifier('x-tree-view-pro', releaseInfo);
 
@@ -85,36 +95,49 @@ const RichTreeViewPro = React.forwardRef(function RichTreeViewPro<
     }
   }
 
-  const { getRootProps, contextValue } = useTreeView<RichTreeViewProPluginSignatures, typeof props>(
-    {
-      plugins: RICH_TREE_VIEW_PRO_PLUGINS,
-      rootRef: ref,
-      props: other,
-    },
-  );
+  const {
+    slots: inSlots,
+    slotProps,
+    apiRef,
+    parameters,
+    forwardedProps,
+  } = useExtractRichTreeViewProParameters(props);
 
+  // Context hooks
+  const store = useTreeViewStore(RichTreeViewProStore, parameters);
+
+  // Ref hooks
+  const ref = React.useRef<HTMLUListElement | null>(null);
+  const handleRef = useMergedRefs(forwardedRef, ref);
+
+  // Selector hooks
+  const isVirtualizationEnabled = useStore(store, virtualizationSelectors.enabled);
+
+  // Feature hooks
   const classes = useUtilityClasses(props);
+  const slots = React.useMemo(() => ({ root: RichTreeViewProRoot, ...inSlots }), [inSlots]);
 
-  const Root = slots?.root ?? RichTreeViewProRoot;
-  const rootProps = useSlotProps({
-    elementType: Root,
-    externalSlotProps: slotProps?.root,
-    className: classes.root,
-    getSlotProps: getRootProps,
-    ownerState: props as RichTreeViewProProps<any, any>,
-  });
+  const Renderer = isVirtualizationEnabled ? RichTreeViewVirtualizedItems : RichTreeViewItems;
 
   return (
     <TreeViewProvider
-      contextValue={contextValue}
+      store={store}
       classes={classes}
       slots={slots}
       slotProps={slotProps}
+      apiRef={apiRef}
+      rootRef={ref}
     >
-      <Root {...rootProps}>
-        <RichTreeViewItems slots={slots} slotProps={slotProps} />
+      <TreeViewItemDepthContext.Provider value={itemsSelectors.itemDepth}>
+        <Renderer
+          slots={slots}
+          slotProps={slotProps}
+          forwardedProps={forwardedProps}
+          ownerState={props}
+          rootRef={handleRef}
+        />
         <Watermark packageName="x-tree-view-pro" releaseInfo={releaseInfo} />
-      </Root>
+      </TreeViewItemDepthContext.Provider>
     </TreeViewProvider>
   );
 }) as RichTreeViewProComponent;
@@ -125,7 +148,7 @@ RichTreeViewPro.propTypes = {
   // | To update them edit the TypeScript types and run "pnpm proptypes"  |
   // ----------------------------------------------------------------------
   /**
-   * The ref object that allows Tree View manipulation. Can be instantiated with `useTreeViewApiRef()`.
+   * The ref object that allows Tree View manipulation. Can be instantiated with `useRichTreeViewApiProRef()`.
    */
   apiRef: PropTypes.shape({
     current: PropTypes.shape({
@@ -146,15 +169,15 @@ RichTreeViewPro.propTypes = {
   }),
   /**
    * Used to determine if a given item can move to some new position.
-   * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item that is being moved to a new position.
-   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
-   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @param {object} parameters The params describing the item re-ordering.
+   * @param {TreeViewItemId} parameters.itemId The id of the item that is being moved to a new position.
+   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    * @returns {boolean} `true` if the item can move to the new position.
    */
   canMoveItemToNewPosition: PropTypes.func,
   /**
-   * If `true`, the Tree View renders a checkbox at the left of its label that allows selecting it.
+   * Whether the Tree View renders a checkbox at the left of its label that allows selecting it.
    * @default false
    */
   checkboxSelection: PropTypes.bool,
@@ -191,15 +214,22 @@ RichTreeViewPro.propTypes = {
    */
   defaultSelectedItems: PropTypes.any,
   /**
-   * If `true`, will allow focus on disabled items.
+   * Whether the items should be focusable when disabled.
    * @default false
    */
   disabledItemsFocusable: PropTypes.bool,
   /**
-   * If `true` selection is disabled.
+   * Whether selection is disabled.
    * @default false
    */
   disableSelection: PropTypes.bool,
+  /**
+   * When equal to 'flat', the tree is rendered as a flat list (children are rendered as siblings of their parents).
+   * When equal to 'nested', the tree is rendered with nested children (children are rendered inside the groupTransition slot of their children).
+   * Nested DOM structure is not compatible with collapse / expansion animations.
+   * @default 'flat' when using virtualization, 'nested' otherwise
+   */
+  domStructure: PropTypes.oneOf(['flat', 'nested']),
   /**
    * Expanded item ids.
    * Used when the item's expansion is controlled.
@@ -224,7 +254,7 @@ RichTreeViewPro.propTypes = {
    *
    * @template R
    * @param {R} item The item to check.
-   * @returns {string} The id of the item.
+   * @returns {TreeViewItemId} The id of the item.
    * @default (item) => item.id
    */
   getItemId: PropTypes.func,
@@ -259,17 +289,29 @@ RichTreeViewPro.propTypes = {
   isItemEditable: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   /**
    * Determine if a given item can be reordered.
-   * @param {string} itemId The id of the item to check.
+   * @param {TreeViewItemId} itemId The id of the item to check.
    * @returns {boolean} `true` if the item can be reordered.
    * @default () => true
    */
   isItemReorderable: PropTypes.func,
+  /**
+   * Used to determine if a given item should have selection disabled.
+   * @template R
+   * @param {R} item The item to check.
+   * @returns {boolean} `true` if the item should have selection disabled.
+   */
+  isItemSelectionDisabled: PropTypes.func,
   /**
    * Horizontal indentation between an item and its children.
    * Examples: 24, "24px", "2rem", "2em".
    * @default 12px
    */
   itemChildrenIndentation: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  /**
+   * Sets the height in pixel of an item.
+   * If not provided, no height restriction is applied to the tree item content element.
+   */
+  itemHeight: PropTypes.number,
   items: PropTypes.array.isRequired,
   /**
    * If `true`, the reordering of items is enabled.
@@ -277,33 +319,33 @@ RichTreeViewPro.propTypes = {
    */
   itemsReordering: PropTypes.bool,
   /**
-   * If `true`, `ctrl` and `shift` will trigger multiselect.
+   * Whether multiple items can be selected.
    * @default false
    */
   multiSelect: PropTypes.bool,
   /**
    * Callback fired when Tree Items are expanded/collapsed.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemIds The ids of the expanded items.
+   * @param {TreeViewItemId[]} itemIds The ids of the expanded items.
    */
   onExpandedItemsChange: PropTypes.func,
   /**
    * Callback fired when the `content` slot of a given Tree Item is clicked.
    * @param {React.MouseEvent} event The DOM event that triggered the change.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemClick: PropTypes.func,
   /**
    * Callback fired when a Tree Item is expanded or collapsed.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemExpansion()` method.
-   * @param {array} itemId The itemId of the modified item.
-   * @param {array} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
+   * @param {boolean} isExpanded `true` if the item has just been expanded, `false` if it has just been collapsed.
    */
   onItemExpansionToggle: PropTypes.func,
   /**
    * Callback fired when a given Tree Item is focused.
    * @param {React.SyntheticEvent | null} event The DOM event that triggered the change. **Warning**: This is a generic event not a focus event.
-   * @param {string} itemId The id of the focused item.
+   * @param {TreeViewItemId} itemId The id of the focused item.
    */
   onItemFocus: PropTypes.func,
   /**
@@ -314,23 +356,23 @@ RichTreeViewPro.propTypes = {
   onItemLabelChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is moved in the tree.
-   * @param {object} params The params describing the item re-ordering.
-   * @param {string} params.itemId The id of the item moved.
-   * @param {TreeViewItemReorderPosition} params.oldPosition The old position of the item.
-   * @param {TreeViewItemReorderPosition} params.newPosition The new position of the item.
+   * @param {object} parameters The params describing the item re-ordering.
+   * @param {TreeViewItemId} parameters.itemId The id of the item moved.
+   * @param {TreeViewItemReorderPosition} parameters.oldPosition The old position of the item.
+   * @param {TreeViewItemReorderPosition} parameters.newPosition The new position of the item.
    */
   onItemPositionChange: PropTypes.func,
   /**
    * Callback fired when a Tree Item is selected or deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {array} itemId The itemId of the modified item.
-   * @param {array} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
+   * @param {TreeViewItemId} itemId The itemId of the modified item.
+   * @param {boolean} isSelected `true` if the item has just been selected, `false` if it has just been deselected.
    */
   onItemSelectionToggle: PropTypes.func,
   /**
    * Callback fired when Tree Items are selected/deselected.
    * @param {React.SyntheticEvent} event The DOM event that triggered the change. Can be null when the change is caused by the `publicAPI.setItemSelection()` method.
-   * @param {string[] | string} itemIds The ids of the selected items.
+   * @param {TreeViewItemId[] | TreeViewItemId} itemIds The ids of the selected items.
    * When `multiSelect` is `true`, this is an array of strings; when false (default) a string.
    */
   onSelectedItemsChange: PropTypes.func,
@@ -377,6 +419,13 @@ RichTreeViewPro.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Whether virtualization is enabled.
+   * If true, the DOM structure will be set to 'flat'.
+   * If true and no itemHeight is provided, a default item height of 32px will be used for calculating the virtualization.
+   * @default false
+   */
+  virtualization: PropTypes.bool,
 } as any;
 
 export { RichTreeViewPro };

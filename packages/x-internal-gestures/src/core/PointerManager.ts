@@ -133,7 +133,7 @@ export class PointerManager {
       document.body;
     this.touchAction = options.touchAction || 'auto';
     this.passive = options.passive ?? false;
-    this.preventEventInterruption = options.preventEventInterruption ?? false;
+    this.preventEventInterruption = options.preventEventInterruption ?? true;
 
     this.setupEventListeners();
   }

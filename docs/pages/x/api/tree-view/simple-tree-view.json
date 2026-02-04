@@ -26,46 +26,47 @@
       "type": { "name": "union", "description": "number<br>&#124;&nbsp;string" },
       "default": "12px"
     },
+    "itemHeight": { "type": { "name": "number" } },
     "multiSelect": { "type": { "name": "bool" }, "default": "false" },
     "onExpandedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId>) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
     "onItemClick": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.MouseEvent, itemId: string) => void",
+        "type": "function(event: React.MouseEvent, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
     "onItemExpansionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: array, isExpanded: array) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId, isExpanded: boolean) => void",
         "describedArgs": ["event", "itemId", "isExpanded"]
       }
     },
     "onItemFocus": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent | null, itemId: string) => void",
+        "type": "function(event: React.SyntheticEvent | null, itemId: TreeViewItemId) => void",
         "describedArgs": ["event", "itemId"]
       }
     },
     "onItemSelectionToggle": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemId: array, isSelected: array) => void",
+        "type": "function(event: React.SyntheticEvent, itemId: TreeViewItemId, isSelected: boolean) => void",
         "describedArgs": ["event", "itemId", "isSelected"]
       }
     },
     "onSelectedItemsChange": {
       "type": { "name": "func" },
       "signature": {
-        "type": "function(event: React.SyntheticEvent, itemIds: Array<string> | string) => void",
+        "type": "function(event: React.SyntheticEvent, itemIds: Array<TreeViewItemId> | TreeViewItemId) => void",
         "describedArgs": ["event", "itemIds"]
       }
     },
@@ -157,6 +158,6 @@
   "forwardsRefTo": "HTMLUListElement",
   "filename": "/packages/x-tree-view/src/SimpleTreeView/SimpleTreeView.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-tree-view/quickstart/\">Tree View - Quickstart</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item Customization</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-tree-view/quickstart/\">Tree View - Quickstart</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/customization/\">Simple Tree View - Customization</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/expansion/\">Simple Tree View - Expansion</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/focus/\">Simple Tree View - Focus</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/items/\">Simple Tree View - Items</a></li>\n<li><a href=\"/x/react-tree-view/simple-tree-view/selection/\">Simple Tree View - Selection</a></li>\n<li><a href=\"/x/react-tree-view/tree-item-customization/\">Tree Item customization</a></li></ul>",
   "cssComponent": false
 }

@@ -32,6 +32,10 @@ components: LineChart, LineElement, LineHighlightElement, LineHighlightPlot, Lin
 
 {{"demo": "LineChartConnectNulls.js"}}
 
+## CustomLabelLineChart
+
+{{"demo": "CustomLabelChart.js"}}
+
 ## Line chart with live data
 
 {{"demo": "LiveLineChartNoSnap.js"}}
@@ -53,7 +57,7 @@ Additionally, an uncertainty area is shown to represent the uncertainty of the f
 ## CustomLineMarks
 
 Notice that using another shape than "circle" renders a `<path />` instead of the `<circle />` for mark elements.
-This modification implies a small drop of rendering performances (around +50ms to render 1.000 marks).
+This modification results in a small drop in rendering performance (around 50ms to render 1,000 marks).
 
 {{"demo": "CustomLineMarks.js"}}
 

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { LineChart } from '@mui/x-charts/LineChart';
 
@@ -22,7 +21,7 @@ export default function BiaxialLineChart() {
           { data: pData, label: 'pv', yAxisId: 'leftAxisId' },
           { data: uData, label: 'uv', yAxisId: 'rightAxisId' },
         ]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[
           { id: 'leftAxisId', width: 50 },
           { id: 'rightAxisId', position: 'right' },

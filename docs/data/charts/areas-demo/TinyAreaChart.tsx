@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { AreaPlot } from '@mui/x-charts/LineChart';
 

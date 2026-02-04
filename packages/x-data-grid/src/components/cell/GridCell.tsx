@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import clsx, { ClassValue } from 'clsx';
+import clsx, { type ClassValue } from 'clsx';
 import useForkRef from '@mui/utils/useForkRef';
 import composeClasses from '@mui/utils/composeClasses';
 import ownerDocument from '@mui/utils/ownerDocument';
@@ -11,22 +11,19 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useStore } from '@mui/x-internals/store';
 import { Rowspan } from '@mui/x-virtualizer';
+import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { doesSupportPreventScroll } from '../../utils/doesSupportPreventScroll';
 import { getDataGridUtilityClass, gridClasses } from '../../constants/gridClasses';
 import {
-  GridCellEventLookup,
-  GridEvents,
+  type GridCellEventLookup,
+  type GridEvents,
   GridCellModes,
-  GridRowId,
-  GridEditCellProps,
+  type GridRowId,
+  type GridEditCellProps,
 } from '../../models';
-import {
-  GridRenderEditCellParams,
-  FocusElement,
-  GridCellParams,
-} from '../../models/params/gridCellParams';
-import { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
-import { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
+import type { GridRenderEditCellParams, GridCellParams } from '../../models/params/gridCellParams';
+import type { GridAlignment, GridStateColDef } from '../../models/colDef/gridColDef';
+import type { GridRowModel, GridTreeNode, GridTreeNodeWithRender } from '../../models/gridRows';
 import { useGridSelector } from '../../hooks/utils/useGridSelector';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import {
@@ -196,6 +193,14 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   });
   cellParams.api = apiRef.current;
 
+  // Subscribe to changes of the `isCellEditable` API result to ensure cells re-render.
+  // We don't use the result.
+  // Subscription will trigger a new call of `getCellParamsForRow` above which will recompute the correct value of `isEditable`.
+  // This is to ensure both of the following cases work:
+  // - https://github.com/mui/mui-x/issues/19732
+  // - https://github.com/mui/mui-x/issues/20143
+  useGridSelector(apiRef, () => apiRef.current.isCellEditable(cellParams));
+
   const isSelected = useGridSelector(apiRef, () =>
     apiRef.current.unstable_applyPipeProcessors('isCellSelected', false, {
       id: rowId,
@@ -209,13 +214,8 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
   const { hasFocus, isEditable = false, value } = cellParams;
 
-  const canManageOwnFocus =
-    column.type === 'actions' &&
-    'getActions' in column &&
-    typeof column.getActions === 'function' &&
-    column.getActions(apiRef.current.getRowParams(rowId)).some((action) => !action.props.disabled);
   const tabIndex =
-    (cellMode === 'view' || !isEditable) && !canManageOwnFocus ? cellParams.tabIndex : -1;
+    (cellMode === 'view' || !isEditable) && column.type !== 'actions' ? cellParams.tabIndex : -1;
 
   const { classes: rootClasses, getCellClassName } = rootProps;
 
@@ -251,7 +251,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
   const valueToRender = cellParams.formattedValue ?? value;
   const cellRef = React.useRef<HTMLDivElement>(null);
   const handleRef = useForkRef(ref, cellRef);
-  const focusElementRef = React.useRef<FocusElement>(null);
   const isSelectionMode = rootProps.cellSelection ?? false;
 
   const ownerState = {
@@ -349,7 +348,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     return cellStyle;
   }, [width, isNotVisible, styleProp, pinnedOffset, pinnedPosition, isRtl, rowSpan]);
 
-  React.useEffect(() => {
+  useEnhancedEffect(() => {
     if (!hasFocus || cellMode === GridCellModes.Edit) {
       return;
     }
@@ -358,7 +357,7 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
 
     if (cellRef.current && !cellRef.current.contains(doc.activeElement!)) {
       const focusableElement = cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
-      const elementToFocus = focusElementRef.current || focusableElement || cellRef.current;
+      const elementToFocus = focusableElement || cellRef.current;
 
       if (doesSupportPreventScroll()) {
         elementToFocus.focus({ preventScroll: true });
@@ -443,10 +442,6 @@ const GridCell = forwardRef<HTMLDivElement, GridCellProps>(function GridCell(pro
     const valueString = valueToRender?.toString();
     children = valueString;
     title = valueString;
-  }
-
-  if (React.isValidElement(children) && canManageOwnFocus) {
-    children = React.cloneElement<any>(children, { focusElementRef });
   }
 
   const draggableEventHandlers = disableDragEvents

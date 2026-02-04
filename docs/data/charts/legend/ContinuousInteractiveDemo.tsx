@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';
 import { interpolateRdYlBu } from 'd3-scale-chromatic';
 import { LineChart } from '@mui/x-charts/LineChart';

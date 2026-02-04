@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const bnBDGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'সংকুচিত',
   toolbarDensityStandard: 'মানক',
   toolbarDensityComfortable: 'স্বাচ্ছন্দ্যদায়ক',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'পূর্বাবস্থায় ফেরান',
+  toolbarRedo: 'পুনরায় করুন',
 
   // Columns selector toolbar button text
   toolbarColumns: 'কলাম',
@@ -162,6 +166,10 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'হ্যাঁ',
   booleanCellFalseLabel: 'না',
+
+  // Long text cell
+  longTextCellExpandLabel: 'সম্প্রসারিত করুন',
+  longTextCellCollapseLabel: 'সংকুচিত করুন',
 
   // Actions cell more text
   actionsCellMore: 'আরও',
@@ -328,6 +336,7 @@ const bnBDGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const bnBD: Localization = getGridLocalization(bnBDGrid);

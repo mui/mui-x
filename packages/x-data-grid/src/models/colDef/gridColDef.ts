@@ -1,22 +1,22 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridCellClassNamePropType } from '../gridCellClass';
-import { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridCellClassNamePropType } from '../gridCellClass';
+import type { GridColumnHeaderClassNamePropType } from '../gridColumnHeaderClass';
 import type { GridFilterOperator } from '../gridFilterOperator';
-import {
+import type {
   GridRenderCellParams,
   GridRenderEditCellParams,
   GridPreProcessEditCellProps,
 } from '../params/gridCellParams';
-import { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
-import { GridComparatorFn, GridSortDirection } from '../gridSortModel';
-import { GridColType } from './gridColType';
-import { GridRowParams } from '../params/gridRowParams';
-import { GridValueOptionsParams } from '../params/gridValueOptionsParams';
-import { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
-import { GridEditCellProps } from '../gridEditRowModel';
+import type { GridColumnHeaderParams } from '../params/gridColumnHeaderParams';
+import type { GridComparatorFn, GridSortDirection } from '../gridSortModel';
+import type { GridColType } from './gridColType';
+import type { GridRowParams } from '../params/gridRowParams';
+import type { GridValueOptionsParams } from '../params/gridValueOptionsParams';
+import type { GridActionsCellItemProps } from '../../components/cell/GridActionsCellItem';
+import type { GridEditCellProps } from '../gridEditRowModel';
 import type { GridValidRowModel } from '../gridRows';
-import { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
 /**
  * Alignment used in position elements in Cells.
  */
@@ -295,8 +295,11 @@ export interface GridBaseColDef<R extends GridValidRowModel = GridValidRowModel,
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridActionsColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'actions'
@@ -306,6 +309,20 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
    * Function that returns the actions to be shown.
    * @param {GridRowParams} params The params for each row.
    * @returns {readonly React.ReactElement<GridActionsCellItemProps>[]} An array of [[GridActionsCell]] elements.
+   * @deprecated Use `renderCell` instead
+   * @example
+   * // Before
+   * getActions: (params) => [
+   *   <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
+   *   <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
+   * ],
+   * // After
+   * renderCell: (params) => (
+   *   <GridActionsCell {...params}>
+   *     <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+   *     <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+   *   </GridActionsCell>
+   * ),
    */
   getActions: (params: GridRowParams<R>) => readonly React.ReactElement<GridActionsCellItemProps>[];
 }
@@ -315,8 +332,11 @@ export interface GridActionsColDef<R extends GridValidRowModel = any, V = any, F
  * @demos
  *   - [Special column properties](/x/react-data-grid/column-definition/#special-properties)
  */
-export interface GridSingleSelectColDef<R extends GridValidRowModel = any, V = any, F = V>
-  extends GridBaseColDef<R, V, F> {
+export interface GridSingleSelectColDef<
+  R extends GridValidRowModel = any,
+  V = any,
+  F = V,
+> extends GridBaseColDef<R, V, F> {
   /**
    * The type of the column.
    * @default 'singleSelect'

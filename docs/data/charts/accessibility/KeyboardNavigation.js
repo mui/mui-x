@@ -11,20 +11,24 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { data } from './randomData';
 
+const highlightScope = { highlight: 'item', fade: 'global' };
+
 const scatterSeries = [
   {
     label: 'Series A',
     data: data.map((v) => ({ x: v.x1, y: v.y1, id: v.id })),
+    highlightScope,
   },
   {
     label: 'Series B',
     data: data.map((v) => ({ x: v.x1, y: v.y2, id: v.id })),
+    highlightScope,
   },
 ];
 
 const series = [
-  { label: 'Series A', data: data.map((p) => p.y1) },
-  { label: 'Series B', data: data.map((p) => p.y2) },
+  { label: 'Series A', data: data.map((p) => p.y1), highlightScope },
+  { label: 'Series B', data: data.map((p) => p.y2), highlightScope },
 ];
 
 export default function KeyboardNavigation() {
@@ -86,6 +90,7 @@ function Chart({ svgRef, type }) {
           height={300}
           xAxis={[{ data: data.map((p) => p.x1).toSorted((a, b) => a - b) }]}
           series={series}
+          slotProps={{ tooltip: { trigger: 'item' } }}
         />
       );
 
@@ -98,6 +103,7 @@ function Chart({ svgRef, type }) {
           xAxis={[
             { data: data.map((p) => Math.round(p.x1)).toSorted((a, b) => a - b) },
           ]}
+          slotProps={{ tooltip: { trigger: 'item' } }}
           series={series}
         />
       );
@@ -115,6 +121,7 @@ function Chart({ svgRef, type }) {
                 { id: 1, value: 15, label: 'series B' },
                 { id: 2, value: 20, label: 'series C' },
               ],
+              highlightScope,
             },
           ]}
           height={300}

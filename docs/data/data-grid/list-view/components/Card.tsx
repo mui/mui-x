@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Stack, { StackProps } from '@mui/material/Stack';
 import Typography, { TypographyProps } from '@mui/material/Typography';
 

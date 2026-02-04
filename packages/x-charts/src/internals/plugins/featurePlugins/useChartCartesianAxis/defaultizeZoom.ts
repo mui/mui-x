@@ -3,9 +3,9 @@ import {
   DEFAULT_ZOOM_SLIDER_SHOW_TOOLTIP,
   DEFAULT_ZOOM_SLIDER_SIZE,
 } from '../../../constants';
-import { AxisId } from '../../../../models/axis';
-import { DefaultizedZoomOptions } from './useChartCartesianAxis.types';
-import { ZoomOptions } from './zoom.types';
+import { type AxisId } from '../../../../models/axis';
+import { type DefaultizedZoomOptions } from './useChartCartesianAxis.types';
+import { type ZoomOptions } from './zoom.types';
 
 export const defaultZoomOptions = {
   minStart: 0,
@@ -15,6 +15,7 @@ export const defaultZoomOptions = {
   maxSpan: 100,
   panning: true,
   filterMode: 'keep',
+  reverse: false,
   slider: {
     enabled: false,
     preview: false,
@@ -27,6 +28,7 @@ export const defaultizeZoom = (
   zoom: boolean | ZoomOptions | undefined,
   axisId: AxisId,
   axisDirection: 'x' | 'y',
+  reverse?: boolean,
 ): DefaultizedZoomOptions | undefined => {
   if (!zoom) {
     return undefined;
@@ -37,6 +39,7 @@ export const defaultizeZoom = (
       axisId,
       axisDirection,
       ...defaultZoomOptions,
+      reverse: reverse ?? false,
     };
   }
 
@@ -44,6 +47,7 @@ export const defaultizeZoom = (
     axisId,
     axisDirection,
     ...defaultZoomOptions,
+    reverse: reverse ?? false,
     ...zoom,
     slider: {
       ...defaultZoomOptions.slider,

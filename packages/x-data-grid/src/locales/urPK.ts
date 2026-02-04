@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const urPKGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'تنگ',
   toolbarDensityStandard: 'درمیانہ',
   toolbarDensityComfortable: 'مناسب',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'واپس',
+  toolbarRedo: 'دوبارہ',
 
   // Columns selector toolbar button text
   toolbarColumns: 'کالمز',
@@ -160,6 +164,10 @@ const urPKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ہاں',
   booleanCellFalseLabel: 'نہیں',
+
+  // Long text cell
+  longTextCellExpandLabel: 'پھیلائیں',
+  longTextCellCollapseLabel: 'تنگ کریں',
 
   // Actions cell more text
   actionsCellMore: 'ذیادہ',
@@ -326,6 +334,7 @@ const urPKGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const urPK: Localization = getGridLocalization(urPKGrid);

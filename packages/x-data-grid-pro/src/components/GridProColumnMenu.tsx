@@ -1,7 +1,7 @@
-import * as React from 'react';
+'use client';
 import {
   GridGenericColumnMenu,
-  GridColumnMenuProps,
+  type GridColumnMenuProps,
   GRID_COLUMN_MENU_SLOTS,
   GRID_COLUMN_MENU_SLOT_PROPS,
 } from '@mui/x-data-grid';

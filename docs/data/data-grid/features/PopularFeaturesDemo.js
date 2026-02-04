@@ -580,6 +580,7 @@ export default function PopularFeaturesDemo() {
             sortModel: [{ field: 'plan', sort: 'asc' }],
           },
         }}
+        scrollbarSize={0}
         getCellClassName={getCellClassName}
         sx={{
           fontFamily: 'IBM Plex Sans',

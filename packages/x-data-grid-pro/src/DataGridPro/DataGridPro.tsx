@@ -2,18 +2,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { useLicenseVerifier, Watermark } from '@mui/x-license';
-import { GridRoot, GridContextProvider, GridValidRowModel } from '@mui/x-data-grid';
+import { GridRoot, GridContextProvider, type GridValidRowModel } from '@mui/x-data-grid';
 import {
-  GridConfiguration,
+  type GridConfiguration,
   validateProps,
   useGridApiInitialization,
-  useGridRowsOverridableMethods,
   useGridParamsOverridableMethods,
+  useIsCellEditable,
 } from '@mui/x-data-grid/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
+import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useDataGridProComponent } from './useDataGridProComponent';
-import { DataGridProProps } from '../models/dataGridProProps';
+import type { DataGridProProps } from '../models/dataGridProProps';
 import { useDataGridProProps } from './useDataGridProProps';
 import { propValidatorsDataGridPro } from '../internals/propValidation';
 import { useGridAriaAttributesPro } from '../hooks/utils/useGridAriaAttributes';
@@ -22,13 +23,14 @@ import type { GridApiPro, GridPrivateApiPro } from '../models/gridApiPro';
 
 export type { GridProSlotsComponent as GridSlots } from '../models';
 
-const configuration: GridConfiguration = {
+const configuration: GridConfiguration<GridPrivateApiPro> = {
   hooks: {
     useCSSVariables: useMaterialCSSVariables,
     useGridAriaAttributes: useGridAriaAttributesPro,
     useGridRowAriaAttributes: useGridRowAriaAttributesPro,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
+    useIsCellEditable,
     useCellAggregationResult: () => null,
     useFilterValueGetter: (apiRef) => apiRef.current.getRowValue,
   },
@@ -45,7 +47,7 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
     props.apiRef,
     props,
   );
-  useDataGridProComponent(privateApiRef, props, configuration);
+  useDataGridProComponent(privateApiRef, props, configuration as GridConfiguration);
   useLicenseVerifier('x-data-grid-pro', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -53,7 +55,11 @@ const DataGridProRaw = forwardRef(function DataGridPro<R extends GridValidRowMod
   }
 
   return (
-    <GridContextProvider privateApiRef={privateApiRef} configuration={configuration} props={props}>
+    <GridContextProvider
+      privateApiRef={privateApiRef}
+      configuration={configuration as GridConfiguration}
+      props={props}
+    >
       <GridRoot
         className={props.className}
         style={props.style}
@@ -103,13 +109,11 @@ DataGridProRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
+   * Use it instead of a flex parent container approach, if:
+   * - you don't need to set a minimum or maximum height for the Data Grid
+   * - you want to avoid the scrollbar flickering when the content changes
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
-   * @example
-   * <div style={{ display: 'flex', flexDirection: 'column' }}>
-   *   <DataGrid />
-   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -129,6 +133,7 @@ DataGridProRaw.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string),
     disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
+    includeHeaderFilters: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
     outliersFactor: PropTypes.number,
@@ -489,11 +494,28 @@ DataGridProRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -899,12 +921,22 @@ DataGridProRaw.propTypes = {
    */
   pinnedColumns: PropTypes.object,
   /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border-and-shadow'
+   */
+  pinnedColumnsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border', 'shadow']),
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
     bottom: PropTypes.arrayOf(PropTypes.object),
     top: PropTypes.arrayOf(PropTypes.object),
   }),
+  /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border-and-shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border']),
   /**
    * Callback called before updating a row with new values in the row and cell editing.
    * @template R
@@ -1006,6 +1038,15 @@ DataGridProRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
+  /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
@@ -1058,6 +1099,15 @@ DataGridProRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Sets the tab navigation behavior for the Data Grid.
+   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabNavigation: PropTypes.oneOf(['all', 'content', 'header', 'none']),
   /**
    * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.

@@ -1,5 +1,4 @@
 import { ScatterChartPro } from '@mui/x-charts-pro/ScatterChartPro';
-import * as React from 'react';
 
 const dataLength = 801;
 const data = Array.from({ length: dataLength }).map((_, i) => ({

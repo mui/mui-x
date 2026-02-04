@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-charts",
-  "version": "8.12.0",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The community edition of MUI X Charts components.",
   "license": "MIT",
@@ -24,8 +24,10 @@
   ],
   "scripts": {
     "typescript": "tsc -p tsconfig.json",
-    "build": "code-infra build",
-    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+    "build": "code-infra build --ignore 'src/**/*.bench.ts'",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo",
+    "bench:jsdom": "pnpm vitest bench -c ./vitest.config.jsdom.mts",
+    "bench:browser": "pnpm vitest bench -c ./vitest.config.browser.mts"
   },
   "repository": {
     "type": "git",
@@ -76,6 +78,7 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./*": "./src/*/index.ts"
+    "./*": "./src/*/index.ts",
+    "./moduleAugmentation/*": "./src/moduleAugmentation/*.ts"
   }
 }

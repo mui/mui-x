@@ -11,7 +11,8 @@ import { FieldRef, FieldSelectedSections } from '@mui/x-date-pickers/models';
 import { MultiInputFieldRefs } from '../../models';
 
 interface UseMultiInputRangeFieldSelectedSectionsParameters
-  extends Pick<
+  extends
+    Pick<
       UseFieldInternalProps<PickerRangeValue, any, any>,
       'selectedSections' | 'onSelectedSectionsChange'
     >,

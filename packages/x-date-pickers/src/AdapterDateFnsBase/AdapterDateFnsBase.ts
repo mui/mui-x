@@ -145,21 +145,18 @@ type DateFnsAdapterBaseOptions<DateFnsLocale extends DateFnsLocaleBase> = MakeRe
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase>
-  implements
-    Pick<
-      MuiPickersAdapter<DateFnsLocale>,
-      | 'date'
-      | 'getInvalidDate'
-      | 'getTimezone'
-      | 'setTimezone'
-      | 'toJsDate'
-      | 'getCurrentLocaleCode'
-      | 'is12HourCycleInCurrentLocale'
-      | 'expandFormat'
-      | 'formatNumber'
-    >
-{
+export class AdapterDateFnsBase<DateFnsLocale extends DateFnsLocaleBase> implements Pick<
+  MuiPickersAdapter<DateFnsLocale>,
+  | 'date'
+  | 'getInvalidDate'
+  | 'getTimezone'
+  | 'setTimezone'
+  | 'toJsDate'
+  | 'getCurrentLocaleCode'
+  | 'is12HourCycleInCurrentLocale'
+  | 'expandFormat'
+  | 'formatNumber'
+> {
   public isMUIAdapter = true;
 
   public isTimezoneCompatible = false;

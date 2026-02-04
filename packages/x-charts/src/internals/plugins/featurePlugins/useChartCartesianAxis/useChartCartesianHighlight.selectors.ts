@@ -1,5 +1,5 @@
-import { createSelector } from '../../utils/selectors';
-import { AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
+import { createSelector, createSelectorMemoized } from '@mui/x-internals/store';
+import type { AxisId, AxisItemIdentifier, ChartsAxisProps } from '../../../../models/axis';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartCartesianAxisRendering.selectors';
 import {
   selectorChartsInteractionXAxisIndex,
@@ -7,9 +7,60 @@ import {
   selectorChartsInteractionYAxisIndex,
   selectorChartsInteractionYAxisValue,
 } from './useChartCartesianInteraction.selectors';
-import { ChartState } from '../../models/chart';
-import { UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
-import { ComputeResult } from './computeAxisValue';
+import { type ChartState } from '../../models/chart';
+import { type UseChartCartesianAxisSignature } from './useChartCartesianAxis.types';
+import { type ComputeResult } from './computeAxisValue';
+import {
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsKeyboardYAxisIndex,
+} from '../useChartKeyboardNavigation/useChartKeyboardNavigation.selectors';
+import { selectorChartsLastInteraction } from '../useChartInteraction/useChartInteraction.selectors';
+import { type InteractionUpdateSource } from '../useChartInteraction/useChartInteraction.types';
+import { selectorBrushShouldPreventAxisHighlight } from '../useChartBrush';
+
+/**
+ * The return type of the `selectAxisHighlightWithValue`.
+ */
+export type AxisHighlightWithValue = {
+  /**
+   * The id of the axis.
+   */
+  axisId: AxisId;
+  /**
+   * The index of the highlighted data point.
+   * If the axis is continuous, this value is not available.
+   */
+  dataIndex?: number;
+  /**
+   * The value of the highlighted data point if available.
+   */
+  value: number | Date;
+};
+function getAxisHighlight<Item extends AxisItemIdentifier | AxisHighlightWithValue>(
+  lastInteractionUpdate: InteractionUpdateSource | undefined,
+  pointerHighlight: Item | false,
+  keyboardHighlight: Item | false,
+): Item[] {
+  if (lastInteractionUpdate === 'pointer') {
+    if (pointerHighlight) {
+      return [pointerHighlight];
+    }
+    if (keyboardHighlight) {
+      return [keyboardHighlight];
+    }
+  }
+
+  if (lastInteractionUpdate === 'keyboard') {
+    if (keyboardHighlight) {
+      return [keyboardHighlight];
+    }
+    if (pointerHighlight) {
+      return [pointerHighlight];
+    }
+  }
+
+  return [];
+}
 
 const selectorChartControlledCartesianAxisHighlight = (
   state: ChartState<[], [UseChartCartesianAxisSignature]>,
@@ -18,29 +69,48 @@ const selectorChartControlledCartesianAxisHighlight = (
 const selectAxisHighlight = (
   computedIndex: number | null,
   axis: ComputeResult<ChartsAxisProps>,
-  axisItems: AxisItemIdentifier[] | undefined,
+  controlledAxisItems: AxisItemIdentifier[] | undefined,
+  keyboardAxisItem: AxisItemIdentifier | undefined,
+  lastInteractionUpdate: InteractionUpdateSource | undefined,
+  isBrushSelectionActive: boolean | undefined,
 ) => {
-  if (axisItems !== undefined) {
-    return axisItems.filter((item) => axis.axis[item.axisId] !== undefined).map((item) => item);
+  if (isBrushSelectionActive) {
+    return [];
   }
-  return computedIndex === null ? [] : [{ axisId: axis.axisIds[0], dataIndex: computedIndex }];
+
+  if (controlledAxisItems !== undefined) {
+    return controlledAxisItems
+      .filter((item) => axis.axis[item.axisId] !== undefined)
+      .map((item) => item);
+  }
+
+  const pointerHighlight = computedIndex !== null && {
+    axisId: axis.axisIds[0],
+    dataIndex: computedIndex,
+  };
+  const keyboardHighlight = keyboardAxisItem != null && keyboardAxisItem;
+
+  return getAxisHighlight(lastInteractionUpdate, pointerHighlight, keyboardHighlight);
 };
 
-export const selectorChartsHighlightXAxisIndex = createSelector(
-  [
-    selectorChartsInteractionXAxisIndex,
-    selectorChartXAxis,
-    selectorChartControlledCartesianAxisHighlight,
-  ],
+export const selectorChartsHighlightXAxisIndex = createSelectorMemoized(
+  selectorChartsInteractionXAxisIndex,
+  selectorChartXAxis,
+  selectorChartControlledCartesianAxisHighlight,
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsLastInteraction,
+  selectorBrushShouldPreventAxisHighlight,
+
   selectAxisHighlight,
 );
 
-export const selectorChartsHighlightYAxisIndex = createSelector(
-  [
-    selectorChartsInteractionYAxisIndex,
-    selectorChartYAxis,
-    selectorChartControlledCartesianAxisHighlight,
-  ],
+export const selectorChartsHighlightYAxisIndex = createSelectorMemoized(
+  selectorChartsInteractionYAxisIndex,
+  selectorChartYAxis,
+  selectorChartControlledCartesianAxisHighlight,
+  selectorChartsKeyboardYAxisIndex,
+  selectorChartsLastInteraction,
+  selectorBrushShouldPreventAxisHighlight,
   selectAxisHighlight,
 );
 
@@ -48,38 +118,62 @@ const selectAxisHighlightWithValue = (
   computedIndex: number | null,
   computedValue: number | Date | null,
   axis: ComputeResult<ChartsAxisProps>,
-  axisItems: AxisItemIdentifier[] | undefined,
+  controlledAxisItems: AxisItemIdentifier[] | undefined,
+  keyboardAxisItem: AxisItemIdentifier | undefined,
+  lastInteractionUpdate: InteractionUpdateSource | undefined,
+  isBrushSelectionActive: boolean | undefined,
 ) => {
-  if (axisItems !== undefined) {
-    return axisItems
+  if (isBrushSelectionActive) {
+    return [];
+  }
+
+  if (controlledAxisItems !== undefined) {
+    return controlledAxisItems
       .map((item) => ({
         ...item,
         value: axis.axis[item.axisId]?.data?.[item.dataIndex],
       }))
       .filter(({ value }) => value !== undefined);
   }
-  return computedValue === null
-    ? []
-    : [{ axisId: axis.axisIds[0], dataIndex: computedIndex, value: computedValue }];
+
+  const pointerHighlight: false | AxisHighlightWithValue = computedValue != null && {
+    axisId: axis.axisIds[0],
+    value: computedValue,
+  };
+  if (pointerHighlight && computedIndex != null) {
+    pointerHighlight.dataIndex = computedIndex;
+  }
+
+  const keyboardValue =
+    keyboardAxisItem != null &&
+    axis.axis[keyboardAxisItem.axisId]?.data?.[keyboardAxisItem.dataIndex];
+  const keyboardHighlight = keyboardAxisItem != null &&
+    keyboardValue != null && { ...keyboardAxisItem, value: keyboardValue };
+
+  return getAxisHighlight(lastInteractionUpdate, pointerHighlight, keyboardHighlight);
 };
 
-export const selectorChartsHighlightXAxisValue = createSelector(
-  [
-    selectorChartsInteractionXAxisIndex,
-    selectorChartsInteractionXAxisValue,
-    selectorChartXAxis,
-    selectorChartControlledCartesianAxisHighlight,
-  ],
+export const selectorChartsHighlightXAxisValue = createSelectorMemoized(
+  selectorChartsInteractionXAxisIndex,
+  selectorChartsInteractionXAxisValue,
+  selectorChartXAxis,
+  selectorChartControlledCartesianAxisHighlight,
+  selectorChartsKeyboardXAxisIndex,
+  selectorChartsLastInteraction,
+  selectorBrushShouldPreventAxisHighlight,
+
   selectAxisHighlightWithValue,
 );
 
-export const selectorChartsHighlightYAxisValue = createSelector(
-  [
-    selectorChartsInteractionYAxisIndex,
-    selectorChartsInteractionYAxisValue,
-    selectorChartYAxis,
-    selectorChartControlledCartesianAxisHighlight,
-  ],
+export const selectorChartsHighlightYAxisValue = createSelectorMemoized(
+  selectorChartsInteractionYAxisIndex,
+  selectorChartsInteractionYAxisValue,
+  selectorChartYAxis,
+  selectorChartControlledCartesianAxisHighlight,
+  selectorChartsKeyboardYAxisIndex,
+  selectorChartsLastInteraction,
+  selectorBrushShouldPreventAxisHighlight,
+
   selectAxisHighlightWithValue,
 );
 
@@ -104,11 +198,13 @@ const selectAxis = (
 };
 
 export const selectorChartsHighlightXAxis = createSelector(
-  [selectorChartControlledCartesianAxisHighlight, selectorChartXAxis],
+  selectorChartControlledCartesianAxisHighlight,
+  selectorChartXAxis,
   selectAxis,
 );
 
 export const selectorChartsHighlightYAxis = createSelector(
-  [selectorChartControlledCartesianAxisHighlight, selectorChartYAxis],
+  selectorChartControlledCartesianAxisHighlight,
+  selectorChartYAxis,
   selectAxis,
 );

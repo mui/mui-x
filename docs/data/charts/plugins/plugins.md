@@ -1,7 +1,7 @@
 ---
 title: Charts - Plugins
 productId: x-charts
-components: ChartContainer, ChartDataProvider
+components: ChartsContainer, ChartDataProvider
 ---
 
 # Charts - Plugins
@@ -18,7 +18,7 @@ Most charts should not require changes to either the plugins or the series confi
 Plugins are functions that add features to the chart.
 They can process data, add internal state, or listen to events.
 
-Plugins can be passed to the `<ChartContainer />` or the `<ChartDataProvider />` with the `plugins` props.
+Plugins can be passed to the `<ChartsContainer />` or the `<ChartDataProvider />` with the `plugins` props.
 
 :::info
 Notice that `myChartPlugins` is defined outside of the component.
@@ -29,7 +29,7 @@ That's because plugins contain hooks and so their order should not be modified.
 const myChartPlugins = [useChartInteraction, useChartHighlight];
 
 function MyChart() {
-  return <ChartContainer plugins={myChartPlugins}>{/* ... */}</ChartContainer>;
+  return <ChartsContainer plugins={myChartPlugins}>{/* ... */}</ChartsContainer>;
 }
 ```
 
@@ -47,9 +47,9 @@ import { PIE_CHART_PRO_PLUGINS, PieChartProPluginSignatures } from '@mui/x-chart
 
 
 function MyPieChart() {
-    return <ChartContainer plugins={PIE_CHART_PLUGINS}>
+    return <ChartsContainer plugins={PIE_CHART_PLUGINS}>
         {/* ... */}
-    </ChartContainer>
+    </ChartsContainer>
 }
 ```
 
@@ -73,9 +73,11 @@ For example, the `useChartClosestPoint` has the `useChartCartesianAxis` as a dep
 | `useChartCartesianAxis`                            |                         | `useChartInteraction`                          |
 | `useChartPolarAxis`                                |                         | `useChartInteraction`                          |
 | `useChartHighlight`                                |                         |                                                |
-| `useChartInteraction`                              |                         |                                                |
+| `useChartTooltip`                                  |                         |                                                |
+| `useChartInteraction`                              |                         | `useChartTooltip`                              |
 | `useChartClosestPoint`                             | `useChartCartesianAxis` | `useChartInteraction`,<br/>`useChartHighlight` |
 | `useChartZAxis`                                    |                         |                                                |
+| `useChartBrush`                                    |                         |                                                |
 | `useChartProExport` <span class="plan-pro"></span> |                         |                                                |
 | `useChartProZoom` <span class="plan-pro"></span>   | `useChartCartesianAxis` |                                                |
 

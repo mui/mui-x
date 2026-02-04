@@ -1,23 +1,22 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   GRID_STRING_COL_DEF,
-  GridColDef,
-  GridComparatorFn,
-  GridRenderCellParams,
-  GridGroupingColDefOverride,
-  GridGroupNode,
-  GridTreeNodeWithRender,
-  GridValueFormatter,
+  type GridColDef,
+  type GridComparatorFn,
+  type GridRenderCellParams,
+  type GridGroupingColDefOverride,
+  type GridGroupNode,
+  type GridTreeNodeWithRender,
+  type GridValueFormatter,
   gridRowIdSelector,
   gridRowNodeSelector,
 } from '@mui/x-data-grid-pro';
 import {
-  GridColumnRawLookup,
+  type GridColumnRawLookup,
   isSingleSelectColDef,
   RowGroupingStrategy,
 } from '@mui/x-data-grid-pro/internals';
-import { GridApiPremium } from '../../../models/gridApiPremium';
+import type { GridApiPremium } from '../../../models/gridApiPremium';
 import { GridGroupingColumnFooterCell } from '../../../components/GridGroupingColumnFooterCell';
 import { GridGroupingCriteriaCell } from '../../../components/GridGroupingCriteriaCell';
 import { GridDataSourceGroupingCriteriaCell } from '../../../components/GridDataSourceGroupingCriteriaCell';
@@ -138,13 +137,13 @@ function getGroupingCriteriaProperties(
     valueFormatter = (value, row, column, apiRef) => {
       const rowId = gridRowIdSelector(apiRef, row);
       const rowNode = gridRowNodeSelector(apiRef, rowId);
-      if (rowNode.type === 'group') {
-        const originalColDef = columnsLookup[rowNode.groupingField!]!;
-        if (originalColDef.type === 'singleSelect') {
+      if (rowNode?.type === 'group') {
+        const originalColDef = rowNode.groupingField ? columnsLookup[rowNode.groupingField] : null;
+        if (originalColDef?.type === 'singleSelect') {
           // the default valueFormatter of a singleSelect colDef won't work with the grouping column values
           return value;
         }
-        const columnValueFormatter = originalColDef.valueFormatter;
+        const columnValueFormatter = originalColDef?.valueFormatter;
         if (typeof columnValueFormatter === 'function') {
           return columnValueFormatter(value as never, row, column, apiRef);
         }

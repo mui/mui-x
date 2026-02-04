@@ -1,29 +1,41 @@
 import {
   useChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
   useChartHighlight,
-  UseChartHighlightSignature,
+  type UseChartHighlightSignature,
   useChartClosestPoint,
-  UseChartClosestPointSignature,
+  type UseChartClosestPointSignature,
   useChartKeyboardNavigation,
-  UseChartKeyboardNavigationSignature,
-  ConvertSignaturesIntoPlugins,
+  type UseChartKeyboardNavigationSignature,
+  useChartBrush,
+  type UseChartBrushSignature,
+  type ConvertSignaturesIntoPlugins,
+  useChartVisibilityManager,
+  type UseChartVisibilityManagerSignature,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
-import { useChartProZoom, UseChartProZoomSignature } from '../internals/plugins/useChartProZoom';
+import {
+  useChartProZoom,
+  type UseChartProZoomSignature,
+} from '../internals/plugins/useChartProZoom';
 
 export type ScatterChartProPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'scatter'>,
+  UseChartBrushSignature,
+  UseChartTooltipSignature<'scatter'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'scatter'>,
   UseChartHighlightSignature,
+  UseChartVisibilityManagerSignature<'scatter'>,
   UseChartClosestPointSignature,
   UseChartKeyboardNavigationSignature,
   UseChartProZoomSignature,
@@ -33,9 +45,12 @@ export type ScatterChartProPluginSignatures = [
 export const SCATTER_CHART_PRO_PLUGINS: ConvertSignaturesIntoPlugins<ScatterChartProPluginSignatures> =
   [
     useChartZAxis,
-    useChartCartesianAxis,
+    useChartBrush,
+    useChartTooltip,
     useChartInteraction,
+    useChartCartesianAxis,
     useChartHighlight,
+    useChartVisibilityManager,
     useChartClosestPoint,
     useChartKeyboardNavigation,
     useChartProZoom,

@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { DataGridProcessedProps } from '../models/props/DataGridProps';
-import { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
+import type { RefObject } from '@mui/x-internals/types';
+import { useFirstRender } from '@mui/x-internals/useFirstRender';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
+import type { GridPrivateApiCommunity } from '../models/api/gridApiCommunity';
 import { useGridInitialization } from '../hooks/core/useGridInitialization';
-import { useGridVirtualizer } from '../hooks/core/useGridVirtualizer';
 import { useGridInitializeState } from '../hooks/utils/useGridInitializeState';
 import { useGridClipboard } from '../hooks/features/clipboard/useGridClipboard';
 import {
@@ -42,7 +42,7 @@ import {
   dimensionsStateInitializer,
   useGridDimensions,
 } from '../hooks/features/dimensions/useGridDimensions';
-import { rowsMetaStateInitializer, useGridRowsMeta } from '../hooks/features/rows/useGridRowsMeta';
+import { rowsMetaStateInitializer } from '../hooks/features/rows/useGridRowsMeta';
 import { useGridStatePersistence } from '../hooks/features/statePersistence/useGridStatePersistence';
 import { useGridColumnSpanning } from '../hooks/features/columns/useGridColumnSpanning';
 import {
@@ -67,7 +67,7 @@ import {
 } from '../hooks/features/listView/useGridListView';
 import { propsStateInitializer } from '../hooks/core/useGridProps';
 import { useGridDataSource } from '../hooks/features/dataSource/useGridDataSource';
-import { GridConfiguration } from '../models/configuration/gridConfiguration';
+import type { GridConfiguration } from '../models/configuration/gridConfiguration';
 
 export const useDataGridComponent = (
   apiRef: RefObject<GridPrivateApiCommunity>,
@@ -105,7 +105,6 @@ export const useDataGridComponent = (
   useGridInitializeState(rowsMetaStateInitializer, apiRef, props);
   useGridInitializeState(listViewStateInitializer, apiRef, props);
 
-  useGridVirtualizer(apiRef, props);
   useGridKeyboardNavigation(apiRef, props);
   useGridRowSelection(apiRef, props);
   useGridColumns(apiRef, props);
@@ -114,7 +113,7 @@ export const useDataGridComponent = (
   useGridParamsApi(apiRef, props, configuration);
   useGridColumnSpanning(apiRef);
   useGridColumnGrouping(apiRef, props);
-  useGridEditing(apiRef, props);
+  useGridEditing(apiRef, props, configuration);
   useGridFocus(apiRef, props);
   useGridPreferencesPanel(apiRef, props);
   useGridFilter(apiRef, props, configuration);
@@ -122,7 +121,6 @@ export const useDataGridComponent = (
   useGridDensity(apiRef, props);
   useGridColumnResize(apiRef, props);
   useGridPagination(apiRef, props);
-  useGridRowsMeta(apiRef, props);
   useGridScroll(apiRef, props);
   useGridColumnMenu(apiRef);
   useGridCsvExport(apiRef, props);
@@ -136,6 +134,9 @@ export const useDataGridComponent = (
   useGridDataSource(apiRef, props);
 
   // Should be the last thing to run, because all pre-processors should have been registered by now.
+  useFirstRender(() => {
+    apiRef.current.runAppliersForPendingProcessors();
+  });
   React.useEffect(() => {
     apiRef.current.runAppliersForPendingProcessors();
   });

@@ -5,11 +5,11 @@ import composeClasses from '@mui/utils/composeClasses';
 import useSlotProps from '@mui/utils/useSlotProps';
 import generateUtilityClass from '@mui/utils/generateUtilityClass';
 import generateUtilityClasses from '@mui/utils/generateUtilityClasses';
-import { SlotComponentPropsFromProps } from '@mui/x-internals/types';
+import { type SlotComponentPropsFromProps } from '@mui/x-internals/types';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
 import { useItemHighlighted } from '../hooks/useItemHighlighted';
-import { AnimatedArea, AnimatedAreaProps } from './AnimatedArea';
-import { SeriesId } from '../models/seriesType/common';
+import { AnimatedArea, type AnimatedAreaProps } from './AnimatedArea';
+import { type SeriesId } from '../models/seriesType/common';
 
 export interface AreaElementClasses {
   /** Styles applied to the root element. */
@@ -28,7 +28,7 @@ export interface AreaElementClasses {
 export type AreaElementClassKey = keyof AreaElementClasses;
 
 export interface AreaElementOwnerState {
-  id: SeriesId;
+  seriesId: SeriesId;
   color: string;
   gradientId?: string;
   isFaded: boolean;
@@ -48,9 +48,9 @@ export const areaElementClasses: AreaElementClasses = generateUtilityClasses('Mu
 ]);
 
 const useUtilityClasses = (ownerState: AreaElementOwnerState) => {
-  const { classes, id, isFaded, isHighlighted } = ownerState;
+  const { classes, seriesId, isFaded, isHighlighted } = ownerState;
   const slots = {
-    root: ['root', `series-${id}`, isHighlighted && 'highlighted', isFaded && 'faded'],
+    root: ['root', `series-${seriesId}`, isHighlighted && 'highlighted', isFaded && 'faded'],
   };
 
   return composeClasses(slots, getAreaElementUtilityClass, classes);
@@ -69,9 +69,10 @@ export interface AreaElementSlotProps {
 }
 
 export interface AreaElementProps
-  extends Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
+  extends
+    Omit<AreaElementOwnerState, 'isFaded' | 'isHighlighted'>,
     Pick<AnimatedAreaProps, 'skipAnimation'>,
-    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
+    Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color'> {
   d: string;
   /**
    * The props used for each component slot.
@@ -97,7 +98,7 @@ export interface AreaElementProps
  */
 function AreaElement(props: AreaElementProps) {
   const {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -107,13 +108,13 @@ function AreaElement(props: AreaElementProps) {
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId });
   const { isFaded, isHighlighted } = useItemHighlighted({
-    seriesId: id,
+    seriesId,
   });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     gradientId,
@@ -147,7 +148,7 @@ AreaElement.propTypes = {
   color: PropTypes.string.isRequired,
   d: PropTypes.string.isRequired,
   gradientId: PropTypes.string,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, animations are skipped.
    * @default false

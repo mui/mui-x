@@ -1,9 +1,9 @@
 'use client';
 import * as React from 'react';
 import debounce from '@mui/utils/debounce';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
-  GridColDef,
+  type GridColDef,
   gridColumnGroupsLookupSelector,
   gridColumnGroupsUnwrappedModelSelector,
   gridRowIdSelector,
@@ -11,27 +11,29 @@ import {
   gridRowTreeSelector,
 } from '@mui/x-data-grid-pro';
 import {
-  GridStateInitializer,
+  type GridStateInitializer,
   useGridApiMethod,
   useGridEvent,
   gridColumnLookupSelector,
   runIf,
   gridPivotActiveSelector,
-  GridPipeProcessor,
+  type GridPipeProcessor,
   useGridRegisterPipeProcessor,
   gridColumnFieldsSelector,
   gridFilteredSortedDepthRowEntriesSelector,
   GRID_ROW_GROUPING_SINGLE_GROUPING_FIELD,
+  type GridRestoreStatePreProcessingContext,
 } from '@mui/x-data-grid-pro/internals';
 
 import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
-import {
+import type { GridInitialStatePremium } from '../../../models/gridStatePremium';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type {
   ChartState,
   GridChartsIntegrationContextValue,
 } from '../../../models/gridChartsIntegration';
 import { getRowGroupingFieldFromGroupingCriteria } from '../rowGrouping/gridRowGroupingUtils';
-import {
+import type {
   GridChartsIntegrationApi,
   GridChartsIntegrationItem,
   GridChartsIntegrationPrivateApi,
@@ -43,6 +45,7 @@ import {
   gridChartsValuesSelector,
   gridChartsIntegrationActiveChartIdSelector,
   gridChartableColumnsSelector,
+  gridChartsIntegrationChartsLookupSelector,
 } from './gridChartsIntegrationSelectors';
 import { useGridChartsIntegrationContext } from '../../utils/useGridChartIntegration';
 import { isBlockedForSection } from './utils';
@@ -52,6 +55,7 @@ import {
   getAggregationFunctionLabel,
   getAvailableAggregationFunctions,
 } from '../aggregation/gridAggregationUtils';
+import type { GridAggregationModel } from '../aggregation/gridAggregationInterfaces';
 import { gridAggregationModelSelector } from '../aggregation/gridAggregationSelectors';
 import { gridPivotModelSelector } from '../pivoting/gridPivotingSelectors';
 import type { GridPivotModel } from '../pivoting/gridPivotingInterfaces';
@@ -164,7 +168,6 @@ export const useGridChartsIntegration = (
   const isChartsIntegrationAvailable =
     !!props.chartsIntegration && !!props.experimentalFeatures?.charts && !!context;
   const activeChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
-  const orderedFields = gridColumnFieldsSelector(apiRef);
   const aggregationModel = gridAggregationModelSelector(apiRef);
   const pivotActive = gridPivotActiveSelector(apiRef);
   const pivotModel = gridPivotModelSelector(apiRef);
@@ -282,21 +285,26 @@ export const useGridChartsIntegration = (
     if (!pivotActive && visibleValues.current[activeChartId] && rowGroupingModel.length > 0) {
       // with row grouping add the aggregation model to the newly added value dataset
       const aggregatedFields = Object.keys(aggregationModel);
+      const aggregationsToAdd: GridAggregationModel = {};
 
       visibleValues.current[activeChartId].forEach((item) => {
         const hasAggregation = aggregatedFields.includes(item.field);
         if (!hasAggregation) {
-          apiRef.current.setAggregationModel({
-            ...aggregationModel,
-            // use the first available aggregation function
-            [item.field]: getAvailableAggregationFunctions({
-              aggregationFunctions: props.aggregationFunctions,
-              colDef: item,
-              isDataSource: !!props.dataSource,
-            })[0],
-          });
+          // use the first available aggregation function
+          aggregationsToAdd[item.field] = getAvailableAggregationFunctions({
+            aggregationFunctions: props.aggregationFunctions,
+            colDef: item,
+            isDataSource: !!props.dataSource,
+          })[0];
         }
       });
+
+      if (Object.keys(aggregationsToAdd).length > 0) {
+        apiRef.current.setAggregationModel({
+          ...aggregationModel,
+          ...aggregationsToAdd,
+        });
+      }
     }
   }, [
     apiRef,
@@ -318,6 +326,7 @@ export const useGridChartsIntegration = (
         return;
       }
 
+      const orderedFields = gridColumnFieldsSelector(apiRef);
       const rowGroupingModel = gridRowGroupingSanitizedModelSelector(apiRef);
       const rowTree = gridRowTreeSelector(apiRef);
       const rowsPerDepth = gridFilteredSortedDepthRowEntriesSelector(apiRef);
@@ -405,7 +414,7 @@ export const useGridChartsIntegration = (
         });
       });
     },
-    [apiRef, orderedFields, getColumnName, getValueDatasetLabel, setChartState],
+    [apiRef, getColumnName, getValueDatasetLabel, setChartState],
   );
 
   const debouncedHandleRowDataUpdate = React.useMemo(
@@ -526,9 +535,16 @@ export const useGridChartsIntegration = (
       });
 
       updateOtherModels();
-      handleRowDataUpdate(chartIds);
+      debouncedHandleRowDataUpdate(chartIds);
     },
-    [apiRef, chartStateLookup, pivotActive, pivotModel, handleRowDataUpdate, updateOtherModels],
+    [
+      apiRef,
+      chartStateLookup,
+      pivotActive,
+      pivotModel,
+      debouncedHandleRowDataUpdate,
+      updateOtherModels,
+    ],
   );
 
   const debouncedHandleColumnDataUpdate = React.useMemo(
@@ -879,6 +895,112 @@ export const useGridChartsIntegration = (
     'sortedRowsSet',
     runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
   );
+  useGridEvent(
+    apiRef,
+    'aggregationLookupSet',
+    runIf(isChartsIntegrationAvailable, () => debouncedHandleRowDataUpdate(syncedChartIds)),
+  );
+
+  const stateExportPreProcessing = React.useCallback<GridPipeProcessor<'exportState'>>(
+    (prevState, exportContext) => {
+      if (!props.chartsIntegration || !props.experimentalFeatures?.charts) {
+        return prevState;
+      }
+
+      const currentActiveChartId = gridChartsIntegrationActiveChartIdSelector(apiRef);
+      const chartsLookup = gridChartsIntegrationChartsLookupSelector(apiRef);
+      const integrationContextToExport = Object.fromEntries(
+        Object.entries(chartStateLookup).map(([chartId, chartState]) => [
+          chartId,
+          // keep only the state that is controlled by the user, drop the data and labels
+          {
+            synced: chartState.synced,
+            type: chartState.type,
+            configuration: chartState.configuration,
+          },
+        ]),
+      );
+
+      const shouldExportChartState =
+        // Always export if the `exportOnlyDirtyModels` property is not activated
+        !exportContext.exportOnlyDirtyModels ||
+        // Always export if the chart state has been initialized
+        props.initialState?.chartsIntegration != null ||
+        // Export if the chart model or context is not empty
+        Object.keys(chartsLookup).length > 0 ||
+        Object.keys(integrationContextToExport).length > 0;
+
+      if (!shouldExportChartState) {
+        return prevState;
+      }
+
+      const chartStateToExport = {
+        activeChartId: currentActiveChartId,
+        charts: chartsLookup,
+        // add a custom prop to keep the integration context in the exported state
+        integrationContext: integrationContextToExport,
+      };
+
+      return {
+        ...prevState,
+        chartsIntegration: chartStateToExport,
+      };
+    },
+    [
+      apiRef,
+      chartStateLookup,
+      props.chartsIntegration,
+      props.experimentalFeatures?.charts,
+      props.initialState?.chartsIntegration,
+    ],
+  );
+
+  const stateRestorePreProcessing = React.useCallback<GridPipeProcessor<'restoreState'>>(
+    (params, restoreContext) => {
+      const chartsRestoreState = (
+        restoreContext as GridRestoreStatePreProcessingContext<GridInitialStatePremium>
+      ).stateToRestore.chartsIntegration;
+
+      if (!chartsRestoreState) {
+        return params;
+      }
+
+      const {
+        activeChartId: activeChartIdToRestore,
+        charts: chartsToRestore,
+        integrationContext,
+      } = chartsRestoreState as GridChartsIntegrationState & {
+        integrationContext: Record<string, ChartState>;
+      };
+
+      if (
+        activeChartIdToRestore === undefined ||
+        chartsToRestore === undefined ||
+        Object.keys(chartsToRestore).length === 0
+      ) {
+        return params;
+      }
+
+      apiRef.current.setState({
+        ...apiRef.current.state,
+        chartsIntegration: {
+          activeChartId: activeChartIdToRestore,
+          charts: chartsToRestore,
+        },
+      });
+
+      // restore the integration context for each chart
+      Object.entries(integrationContext).forEach(([chartId, chartContextState]) => {
+        setChartState(chartId, chartContextState as ChartState);
+      });
+
+      return params;
+    },
+    [apiRef, setChartState],
+  );
+
+  useGridRegisterPipeProcessor(apiRef, 'exportState', stateExportPreProcessing);
+  useGridRegisterPipeProcessor(apiRef, 'restoreState', stateRestorePreProcessing);
 
   React.useEffect(() => {
     if (!activeChartId && availableChartIds.length > 0) {

@@ -2,7 +2,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import useId from '@mui/utils/useId';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import { GridMenu } from '../menu/GridMenu';
 import { Toolbar } from './Toolbar';
@@ -13,14 +13,14 @@ import { ExportCsv, ExportPrint } from '../export';
 import { GridToolbarQuickFilter } from '../toolbar/GridToolbarQuickFilter';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
-import { GridSlotProps } from '../../models/gridSlotsComponentsProps';
+import type { GridSlotProps } from '../../models/gridSlotsComponentsProps';
 import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { NotRendered } from '../../utils/assert';
 import { vars } from '../../constants/cssVariables';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
 
 interface GridToolbarInternalProps {
-  additionalItems?: React.ReactNode;
+  mainControls?: React.ReactNode;
   additionalExportMenuItems?: (onMenuItemClick: () => void) => React.ReactNode;
 }
 
@@ -96,8 +96,9 @@ function GridToolbar(props: GridToolbarProps) {
     quickFilterProps,
     csvOptions,
     printOptions,
-    additionalItems,
+    mainControls,
     additionalExportMenuItems,
+    ...other
   } = props;
   const apiRef = useGridApiContext();
   const rootProps = useGridRootProps();
@@ -112,39 +113,41 @@ function GridToolbar(props: GridToolbarProps) {
   const closeExportMenu = () => setExportMenuOpen(false);
 
   return (
-    <Toolbar>
+    <Toolbar {...other}>
       {rootProps.label && <GridToolbarLabel>{rootProps.label}</GridToolbarLabel>}
 
-      {!rootProps.disableColumnSelector && (
-        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
-          <ColumnsPanelTrigger render={<ToolbarButton />}>
-            <rootProps.slots.columnSelectorIcon fontSize="small" />
-          </ColumnsPanelTrigger>
-        </rootProps.slots.baseTooltip>
-      )}
+      {mainControls || (
+        <React.Fragment>
+          {!rootProps.disableColumnSelector && (
+            <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
+              <ColumnsPanelTrigger render={<ToolbarButton />}>
+                <rootProps.slots.columnSelectorIcon fontSize="small" />
+              </ColumnsPanelTrigger>
+            </rootProps.slots.baseTooltip>
+          )}
 
-      {!rootProps.disableColumnFilter && (
-        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
-          <FilterPanelTrigger
-            render={(triggerProps, state) => (
-              <ToolbarButton
-                {...triggerProps}
-                color={state.filterCount > 0 ? 'primary' : 'default'}
-              >
-                <rootProps.slots.baseBadge
-                  badgeContent={state.filterCount}
-                  color="primary"
-                  variant="dot"
-                >
-                  <rootProps.slots.openFilterButtonIcon fontSize="small" />
-                </rootProps.slots.baseBadge>
-              </ToolbarButton>
-            )}
-          />
-        </rootProps.slots.baseTooltip>
+          {!rootProps.disableColumnFilter && (
+            <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
+              <FilterPanelTrigger
+                render={(triggerProps, state) => (
+                  <ToolbarButton
+                    {...triggerProps}
+                    color={state.filterCount > 0 ? 'primary' : 'default'}
+                  >
+                    <rootProps.slots.baseBadge
+                      badgeContent={state.filterCount}
+                      color="primary"
+                      variant="dot"
+                    >
+                      <rootProps.slots.openFilterButtonIcon fontSize="small" />
+                    </rootProps.slots.baseBadge>
+                  </ToolbarButton>
+                )}
+              />
+            </rootProps.slots.baseTooltip>
+          )}
+        </React.Fragment>
       )}
-
-      {additionalItems}
 
       {showExportMenu && (!rootProps.disableColumnFilter || !rootProps.disableColumnSelector) && (
         <GridToolbarDivider />

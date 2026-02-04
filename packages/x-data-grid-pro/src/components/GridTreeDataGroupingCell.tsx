@@ -5,13 +5,13 @@ import {
   useGridSelector,
   gridFilteredDescendantCountLookupSelector,
   getDataGridUtilityClass,
-  GridRenderCellParams,
-  GridGroupNode,
+  type GridRenderCellParams,
+  type GridGroupNode,
 } from '@mui/x-data-grid';
 import { vars } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 
 type OwnerState = DataGridProProcessedProps;
 
@@ -109,19 +109,6 @@ GridTreeDataGroupingCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

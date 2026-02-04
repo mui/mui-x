@@ -17,6 +17,7 @@ const pages: MuiPage[] = [
       { pathname: `/x/introduction/installation` },
       { pathname: `/x/introduction/licensing` },
       { pathname: `/x/introduction/support` },
+      { pathname: `/x/llms.txt`, title: 'llms.txt', newFeature: true },
       { pathname: `/x/introduction/mcp`, title: 'AI support via MCP', newFeature: true },
       { pathname: `/x/introduction/priority-support`, newFeature: true, plan: 'premium' },
       { pathname: `/x/guides/telemetry`, plan: 'pro' },
@@ -170,6 +171,12 @@ const pages: MuiPage[] = [
           },
           { pathname: '/x/react-data-grid/export' },
           { pathname: '/x/react-data-grid/clipboard', title: 'Copy and paste' },
+          {
+            pathname: '/x/react-data-grid/undo-redo',
+            title: 'Undo and redo',
+            plan: 'premium',
+            newFeature: true,
+          },
           { pathname: '/x/react-data-grid/scrolling' },
           {
             pathname: '/x/react-data-grid/list-view',
@@ -199,6 +206,10 @@ const pages: MuiPage[] = [
               },
               {
                 pathname: '/x/react-data-grid/server-side-data/aggregation',
+                plan: 'premium',
+              },
+              {
+                pathname: '/x/react-data-grid/server-side-data/pivoting',
                 plan: 'premium',
               },
               {
@@ -326,6 +337,10 @@ const pages: MuiPage[] = [
                 title: 'GridRowSpacingParams',
               },
               {
+                pathname: '/x/api/data-grid/grid-row-order-change-params',
+                title: 'GridRowOrderChangeParams',
+              },
+              {
                 pathname: '/x/api/data-grid/grid-aggregation-function',
                 title: 'GridAggregationFunction',
               },
@@ -347,6 +362,13 @@ const pages: MuiPage[] = [
               },
             ],
           },
+        ],
+      },
+      {
+        pathname: '/x/tutorials',
+        subheader: 'Tutorials',
+        children: [
+          { pathname: '/x/react-data-grid/tutorials/server-side-data', title: 'Server-side data' },
         ],
       },
     ],
@@ -521,8 +543,15 @@ const pages: MuiPage[] = [
           {
             pathname: '/x/react-charts-bars',
             title: 'Bars',
+            newFeature: true,
             children: [
               { pathname: '/x/react-charts/bars', title: 'Bars overview' },
+              {
+                pathname: '/x/react-charts/range-bar',
+                title: 'Range bar',
+                plan: 'premium',
+                newFeature: true,
+              },
               { pathname: '/x/react-charts/bar-demo', title: 'Demos' },
             ],
           },
@@ -583,31 +612,36 @@ const pages: MuiPage[] = [
             children: [
               { pathname: '/x/react-charts/animation' },
               { pathname: '/x/react-charts/axis' },
+              { pathname: '/x/react-charts/brush' },
               { pathname: '/x/react-charts/components', title: 'Custom components' },
               { pathname: '/x/react-charts/composition' },
-              { pathname: '/x/react-charts/label' },
-              { pathname: '/x/react-charts/legend' },
-              { pathname: '/x/react-charts/localization' },
-              { pathname: '/x/react-charts/stacking' },
-              { pathname: '/x/react-charts/styling' },
-              { pathname: '/x/react-charts/tooltip' },
-              { pathname: '/x/react-charts/highlighting' },
               {
-                pathname: '/x/react-charts/zoom-and-pan',
-                title: 'Zoom and pan',
-                plan: 'pro',
+                pathname: '/x/react-charts/data-grid-integration',
+                title: 'Data Grid integration',
+                plan: 'premium',
+                unstable: true,
               },
               {
                 pathname: '/x/react-charts/export',
                 title: 'Export',
                 plan: 'pro',
               },
+              { pathname: '/x/react-charts/highlighting' },
+              { pathname: '/x/react-charts/label' },
+              { pathname: '/x/react-charts/legend' },
+              { pathname: '/x/react-charts/localization' },
+              { pathname: '/x/react-charts/stacking' },
+              { pathname: '/x/react-charts/styling' },
               { pathname: '/x/react-charts/toolbar', title: 'Toolbar' },
+              { pathname: '/x/react-charts/tooltip' },
               {
-                pathname: '/x/react-charts/data-grid-integration',
-                title: 'Data Grid integration',
-                plan: 'premium',
-                unstable: true,
+                pathname: '/x/react-charts/zoom-and-pan',
+                title: 'Zoom and pan',
+                plan: 'pro',
+              },
+              {
+                pathname: '/x/react-charts/content-security-policy',
+                title: 'Content Security Policy',
               },
             ],
           },
@@ -657,6 +691,8 @@ const pages: MuiPage[] = [
                   { pathname: '/x/react-charts/hooks/use-legend', title: 'useLegend' },
                   { pathname: '/x/react-charts/hooks/use-drawing-area', title: 'useDrawingArea' },
                   { pathname: '/x/react-charts/hooks/use-scale', title: 'useScale' },
+                  { pathname: '/x/react-charts/hooks/use-axes', title: 'useAxes' },
+                  { pathname: '/x/react-charts/hooks/use-dataset', title: 'useDataset' },
                 ],
               },
               { pathname: '/x/react-charts/plugins', title: 'Plugins' },
@@ -698,6 +734,11 @@ const pages: MuiPage[] = [
             newFeature: true,
           },
           {
+            pathname: '/x/react-tree-view/rich-tree-view/virtualization',
+            plan: 'pro',
+            newFeature: true,
+          },
+          {
             pathname: '/x/react-tree-view/rich-tree-view/lazy-loading',
             plan: 'pro',
             newFeature: true,
@@ -730,6 +771,25 @@ const pages: MuiPage[] = [
     pathname: '/x/migration-group',
     title: 'Migration',
     children: [
+      {
+        pathname: '/x/migration-v9',
+        subheader: 'Upgrade to v9',
+        children: [
+          // { pathname: '/x/migration/migration-data-grid-v8', title: 'Breaking changes: Data Grid' },
+          // {
+          //   pathname: '/x/migration/migration-pickers-v8',
+          //   title: 'Breaking changes: Date and Time Pickers',
+          // },
+          {
+            pathname: '/x/migration/migration-charts-v8',
+            title: 'Breaking changes: Charts',
+          },
+          // {
+          //   pathname: '/x/migration/migration-tree-view-v8',
+          //   title: 'Breaking changes: Tree View',
+          // },
+        ],
+      },
       {
         pathname: '/x/migration-v8',
         subheader: 'Upgrade to v8',

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const skSKGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompaktná',
   toolbarDensityStandard: 'Štandartná',
   toolbarDensityComfortable: 'Komfortná',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Späť',
+  toolbarRedo: 'Znova',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Stĺpce',
@@ -189,6 +193,10 @@ const skSKGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'áno',
   booleanCellFalseLabel: 'nie',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbaliť',
+  longTextCellCollapseLabel: 'Zbaliť',
+
   // Actions cell more text
   actionsCellMore: 'viac',
 
@@ -350,6 +358,7 @@ const skSKGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const skSK: Localization = getGridLocalization(skSKGrid);

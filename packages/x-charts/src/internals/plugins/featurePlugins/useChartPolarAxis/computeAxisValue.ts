@@ -1,26 +1,30 @@
-import { scaleBand, scalePoint } from '@mui/x-charts-vendor/d3-scale';
-import { AxisConfig, ScaleName } from '../../../../models';
+import { type AxisConfig, type ScaleName } from '../../../../models';
 import {
-  ChartsAxisProps,
+  type ChartsAxisProps,
   isBandScaleConfig,
   isPointScaleConfig,
-  ChartsRotationAxisProps,
-  ChartsRadiusAxisProps,
-  PolarAxisDefaultized,
-  AxisId,
-  PolarAxisConfig,
+  type ChartsRotationAxisProps,
+  type ChartsRadiusAxisProps,
+  type PolarAxisDefaultized,
+  type AxisId,
+  type PolarAxisConfig,
+  isContinuousScaleConfig,
 } from '../../../../models/axis';
-import { ChartSeriesType, PolarChartSeriesType } from '../../../../models/seriesType/config';
+import {
+  type ChartSeriesType,
+  type PolarChartSeriesType,
+} from '../../../../models/seriesType/config';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 import { getDefaultTickNumber, getTickNumber, scaleTickNumberByRange } from '../../../ticks';
 import { getScale } from '../../../getScale';
 import { isDateData, createDateFormatter } from '../../../dateHelpers';
 import { getAxisExtremum } from './getAxisExtremum';
 import type { ChartDrawingArea } from '../../../../hooks';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { type ChartSeriesConfig } from '../../corePlugins/useChartSeriesConfig';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
 import { deg2rad } from '../../../angleConversion';
 import { getAxisTriggerTooltip } from './getAxisTriggerTooltip';
+import { scaleBand, scalePoint } from '../../../scales';
 
 export type DefaultizedAxisConfig<
   AxisProps extends ChartsRotationAxisProps | ChartsRadiusAxisProps,
@@ -171,7 +175,7 @@ export function computeAxisValue<T extends ChartSeriesType>({
       }
     }
 
-    if (axis.scaleType === 'band' || axis.scaleType === 'point') {
+    if (!isContinuousScaleConfig(axis)) {
       // Could be merged with the two previous "if conditions" but then TS does not get that `axis.scaleType` can't be `band` or `point`.
       return;
     }

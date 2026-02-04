@@ -25,12 +25,6 @@
     },
     "label": { "description": "The label of the axis." },
     "labelStyle": { "description": "The style applied to the axis label." },
-    "max": {
-      "description": "The maximal value of the domain.<br />If not provided, it gets computed to display the entire chart data."
-    },
-    "min": {
-      "description": "The minimal value of the domain.<br />If not provided, it gets computed to display the entire chart data."
-    },
     "offset": {
       "description": "The offset of the axis in pixels. It can be used to move the axis from its default position.<br />X-axis: A top axis will move up, and a bottom axis will move down.<br />Y-axis: A left axis will move left, and a right axis will move right."
     },
@@ -64,6 +58,9 @@
       "description": "The placement of ticks in regard to the band interval.<br />Only used if scale is &#39;band&#39;."
     },
     "tickSize": { "description": "The size of the ticks." },
+    "tickSpacing": {
+      "description": "The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks."
+    },
     "valueFormatter": { "description": "Formats the axis value." },
     "zoom": { "description": "" }
   }

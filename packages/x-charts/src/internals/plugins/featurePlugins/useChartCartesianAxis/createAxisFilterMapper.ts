@@ -1,35 +1,8 @@
+import { type NumberValue } from '@mui/x-charts-vendor/d3-scale';
 import { isDefined } from '../../../isDefined';
-import { AxisId, D3ContinuousScale, D3Scale } from '../../../../models/axis';
-import { AxisConfig } from '../../../../models';
-import { DefaultizedZoomOptions, ExtremumFilter } from './useChartCartesianAxis.types';
-import { GetZoomAxisFilters, ZoomAxisFilters, ZoomData } from './zoom.types';
-import { isOrdinalScale } from '../../../scaleGuards';
-
-export function createAxisFilterMapper(
-  zoomMap: Map<AxisId, ZoomData>,
-  zoomOptions: Record<AxisId, DefaultizedZoomOptions>,
-  direction: 'x' | 'y',
-): (axisId: AxisId, axisData: AxisConfig['data'], scale: D3Scale) => ExtremumFilter | null {
-  return (axisId: AxisId, axisData: AxisConfig['data'], scale: D3Scale): ExtremumFilter | null => {
-    const zoomOption = zoomOptions[axisId];
-    if (!zoomOption || zoomOption.filterMode !== 'discard') {
-      return null;
-    }
-
-    const zoom = zoomMap?.get(axisId);
-
-    if (zoom === undefined || (zoom.start <= 0 && zoom.end >= 100)) {
-      // No zoom, or zoom with all data visible
-      return null;
-    }
-
-    if (isOrdinalScale(scale)) {
-      return createDiscreteScaleGetAxisFilter(axisData, zoom.start, zoom.end, direction);
-    }
-
-    return createContinuousScaleGetAxisFilter(scale, zoom.start, zoom.end, direction, axisData);
-  };
-}
+import { type AxisConfig } from '../../../../models';
+import { type ExtremumFilter } from './useChartCartesianAxis.types';
+import { type GetZoomAxisFilters, type ZoomAxisFilters } from './zoom.types';
 
 export function createDiscreteScaleGetAxisFilter(
   axisData: AxisConfig['data'],
@@ -55,19 +28,14 @@ export function createDiscreteScaleGetAxisFilter(
 }
 
 export function createContinuousScaleGetAxisFilter(
-  scale: D3ContinuousScale,
+  domain: readonly NumberValue[],
   zoomStart: number,
   zoomEnd: number,
   direction: 'x' | 'y',
   axisData: AxisConfig['data'],
 ): ExtremumFilter {
-  let min: number | Date;
-  let max: number | Date;
-
-  [min, max] = scale.domain();
-
-  min = min instanceof Date ? min.getTime() : min;
-  max = max instanceof Date ? max.getTime() : max;
+  const min = domain[0].valueOf();
+  const max = domain[1].valueOf();
 
   const minVal = min + (zoomStart * (max - min)) / 100;
   const maxVal = min + (zoomEnd * (max - min)) / 100;

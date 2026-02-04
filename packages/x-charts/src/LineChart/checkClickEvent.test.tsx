@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { createRenderer } from '@mui/internal-test-utils';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { isJSDOM } from 'test/utils/skipIf';
+import { CHART_SELECTOR } from '../tests/constants';
 
 const config = {
   dataset: [
@@ -24,7 +24,7 @@ describe('LineChart - click event', () => {
   describe('onAxisClick', () => {
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAxisClick = spy();
+      const onAxisClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -43,7 +43,7 @@ describe('LineChart - click event', () => {
           />
         </div>,
       );
-      const svg = document.querySelector<HTMLElement>('svg')!;
+      const svg = document.querySelector<HTMLElement>(CHART_SELECTOR)!;
 
       await user.pointer([
         {
@@ -53,7 +53,7 @@ describe('LineChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 1,
         axisValue: 20,
         seriesValues: { s1: 5, s2: 8 },
@@ -67,7 +67,7 @@ describe('LineChart - click event', () => {
         },
       ]);
 
-      expect(onAxisClick.lastCall.args[1]).to.deep.equal({
+      expect(onAxisClick.mock.lastCall?.[1]).to.deep.equal({
         dataIndex: 2,
         axisValue: 30,
         seriesValues: { s1: 8, s2: 5 },
@@ -104,7 +104,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onMarkClick = spy();
+      const onMarkClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -127,21 +127,21 @@ describe('LineChart - click event', () => {
       const marks = document.querySelectorAll<HTMLElement>('.MuiMarkElement-root');
 
       await user.click(marks[0]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
         dataIndex: 0,
       });
 
       await user.click(marks[1]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
         dataIndex: 1,
       });
 
       await user.click(marks[4]);
-      expect(onMarkClick.lastCall.args[1]).to.deep.equal({
+      expect(onMarkClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
         dataIndex: 0,
@@ -172,7 +172,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onAreaClick = spy();
+      const onAreaClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -195,13 +195,13 @@ describe('LineChart - click event', () => {
       const areas = document.querySelectorAll<HTMLElement>('path.MuiAreaElement-root');
 
       await user.click(areas[0]);
-      expect(onAreaClick.lastCall.args[1]).to.deep.equal({
+      expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
       });
 
       await user.click(areas[1]);
-      expect(onAreaClick.lastCall.args[1]).to.deep.equal({
+      expect(onAreaClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
       });
@@ -231,7 +231,7 @@ describe('LineChart - click event', () => {
 
     // can't do Pointer event with JSDom https://github.com/jsdom/jsdom/issues/2527
     it.skipIf(isJSDOM)('should provide the right context as second argument', async () => {
-      const onLineClick = spy();
+      const onLineClick = vi.fn();
       const { user } = render(
         <div
           style={{
@@ -254,13 +254,13 @@ describe('LineChart - click event', () => {
       const lines = document.querySelectorAll<HTMLElement>('path.MuiLineElement-root');
 
       await user.click(lines[0]);
-      expect(onLineClick.lastCall.args[1]).to.deep.equal({
+      expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's1',
       });
 
       await user.click(lines[1]);
-      expect(onLineClick.lastCall.args[1]).to.deep.equal({
+      expect(onLineClick.mock.lastCall?.[1]).to.deep.equal({
         type: 'line',
         seriesId: 's2',
       });

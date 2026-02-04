@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import { useRadarGridData } from './useRadarGridData';
 import { SharpRadarGrid } from './SharpRadarGrid';
-import { RadarGridProps } from './RadarGrid.types';
+import { type RadarGridProps } from './RadarGrid.types';
 import { CircularRadarGrid } from './CircularRadarGrid';
 import { SharpRadarStripes } from './SharpRadarStripes';
 import { CircularRadarStripes } from './CircularRadarStripes';

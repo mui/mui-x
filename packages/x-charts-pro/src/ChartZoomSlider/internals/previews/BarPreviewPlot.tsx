@@ -1,15 +1,20 @@
-import * as React from 'react';
 import {
-  AxisId,
+  type AxisId,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  useBarPlotData,
-  useSelector,
+  type SeriesProcessorResult,
   useStore,
 } from '@mui/x-charts/internals';
-import { ChartDrawingArea } from '@mui/x-charts/hooks';
+import {
+  type ChartDrawingArea,
+  useBarSeriesContext,
+  useChartId,
+  useXAxes,
+  useYAxes,
+} from '@mui/x-charts/hooks';
 import { BarElement } from '@mui/x-charts/BarChart';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { processBarDataForPlot } from '@mui/x-charts/internals';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 interface BarPreviewPlotProps extends PreviewPlotProps {
   x: number;
@@ -32,13 +37,13 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 
   return (
     <g>
-      {completedData.map(({ seriesId, data }) => (
+      {completedData.map(({ seriesId, layout, xOrigin, yOrigin, data }) => (
         <g key={seriesId}>
-          {data.map(({ dataIndex, color, layout, x, xOrigin, y, yOrigin, width, height }) => {
+          {data.map(({ dataIndex, color, x, y, width, height }) => {
             return (
               <BarElement
                 key={dataIndex}
-                id={seriesId}
+                seriesId={seriesId}
                 dataIndex={dataIndex}
                 color={color}
                 skipAnimation
@@ -60,9 +65,40 @@ export function BarPreviewPlot(props: BarPreviewPlotProps) {
 
 function useBarPreviewData(axisId: AxisId, drawingArea: ChartDrawingArea) {
   const store = useStore();
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
+  const seriesData =
+    useBarSeriesContext() ??
+    ({ series: {}, stackingGroups: [], seriesOrder: [] } as SeriesProcessorResult<'bar'>);
+  const defaultXAxisId = useXAxes().xAxisIds[0];
+  const defaultYAxisId = useYAxes().yAxisIds[0];
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const chartId = useChartId();
 
-  return useBarPlotData(drawingArea, xAxes, yAxes);
+  const stackingGroups = seriesData.stackingGroups.filter((group) =>
+    group.ids.some((seriesId) => {
+      const series = seriesData.series[seriesId];
+      const xAxisId = series.xAxisId ?? defaultXAxisId;
+      const yAxisId = series.yAxisId ?? defaultYAxisId;
+      return xAxisId === axisId || yAxisId === axisId;
+    }),
+  );
+  const filteredSeries = Object.fromEntries(
+    Object.entries(seriesData.series).filter(([_, series]) => {
+      const xAxisId = series.xAxisId ?? defaultXAxisId;
+      const yAxisId = series.yAxisId ?? defaultYAxisId;
+      return xAxisId === axisId || yAxisId === axisId;
+    }),
+  );
+
+  return processBarDataForPlot(
+    drawingArea,
+    chartId,
+    stackingGroups,
+    filteredSeries,
+    xAxes,
+    yAxes,
+    defaultXAxisId,
+    defaultYAxisId,
+  );
 }

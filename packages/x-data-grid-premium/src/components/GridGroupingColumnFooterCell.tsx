@@ -1,9 +1,7 @@
-import * as React from 'react';
-import { vars } from '@mui/x-data-grid/internals';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
-import { SxProps, Theme } from '@mui/system';
+import type { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import { vars, GridFooterCell } from '@mui/x-data-grid-pro/internals';
+import type { SxProps, Theme } from '@mui/system';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridFooterCell } from './GridFooterCell';
 
 function GridGroupingColumnFooterCell(props: GridRenderCellParams) {
   const rootProps = useGridRootProps();

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const trTRGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Sıkı',
   toolbarDensityStandard: 'Standart',
   toolbarDensityComfortable: 'Rahat',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Geri al',
+  toolbarRedo: 'Yinele',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Sütunlar',
@@ -157,6 +161,10 @@ const trTRGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Evet',
   booleanCellFalseLabel: 'Hayır',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Genişlet',
+  longTextCellCollapseLabel: 'Gizle',
 
   // Actions cell more text
   actionsCellMore: 'daha fazla',
@@ -323,6 +331,7 @@ const trTRGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const trTR: Localization = getGridLocalization(trTRGrid);

@@ -1,4 +1,4 @@
-import { RadarGridClasses } from './radarGridClasses';
+import { type RadarGridClasses } from './radarGridClasses';
 
 export interface RadarGridProps {
   /**
@@ -35,8 +35,10 @@ export interface RadarGridRenderProps extends Pick<RadarGridProps, 'classes'> {
   strokeColor: string;
 }
 
-export interface RadarGridStripeRenderProps
-  extends Pick<RadarGridProps, 'stripeColor' | 'classes'> {
+export interface RadarGridStripeRenderProps extends Pick<
+  RadarGridProps,
+  'stripeColor' | 'classes'
+> {
   center: {
     x: number;
     y: number;

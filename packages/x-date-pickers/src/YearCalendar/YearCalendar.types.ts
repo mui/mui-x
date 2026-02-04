@@ -43,7 +43,8 @@ export interface ExportedYearCalendarProps {
 }
 
 export interface YearCalendarProps
-  extends ExportedYearCalendarProps,
+  extends
+    ExportedYearCalendarProps,
     YearValidationProps,
     BaseDateValidationProps,
     TimezoneProps,

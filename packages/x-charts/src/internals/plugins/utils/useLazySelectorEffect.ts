@@ -1,9 +1,9 @@
 'use client';
 /* eslint-disable react-compiler/react-compiler */
 import * as React from 'react';
+import type { Store } from '@mui/x-internals/store';
 import useLazyRef from '@mui/utils/useLazyRef';
-import type { ChartStore } from './ChartStore';
-import { ChartAnyPluginSignature, ChartState } from '../models';
+import { type ChartAnyPluginSignature, type ChartState } from '../models';
 
 const noop = () => {};
 
@@ -11,7 +11,7 @@ export function useLazySelectorEffect<
   TSignatures extends readonly ChartAnyPluginSignature[],
   Value,
 >(
-  store: ChartStore<TSignatures>,
+  store: Store<ChartState<TSignatures>>,
   selector: (state: ChartState<TSignatures>) => Value,
   effect: (previous: Value, next: Value) => void,
   /**
@@ -32,7 +32,7 @@ export function useLazySelectorEffect<
 
 // `useLazyRef` typings are incorrect, `params` should not be optional
 function initialize<TSignatures extends readonly ChartAnyPluginSignature[], Value>(params?: {
-  store: ChartStore<TSignatures>;
+  store: Store<ChartState<TSignatures>>;
   selector: (state: ChartState<TSignatures>) => Value;
   skip?: boolean;
 }) {
@@ -65,7 +65,7 @@ function initialize<TSignatures extends readonly ChartAnyPluginSignature[], Valu
       if (!isRunning) {
         // Initialize values
         isRunning = true;
-        previousState = selector(store.value);
+        previousState = selector(store.state);
       }
 
       subscribe();
@@ -79,7 +79,7 @@ function initialize<TSignatures extends readonly ChartAnyPluginSignature[], Valu
   if (!initialSkip) {
     // Initialize values
     isRunning = true;
-    previousState = selector(store.value);
+    previousState = selector(store.state);
     subscribe();
   }
 

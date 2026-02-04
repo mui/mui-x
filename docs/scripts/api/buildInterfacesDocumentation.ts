@@ -1,6 +1,6 @@
 import { Symbol, JSDocTagInfo, Type, InterfaceDeclaration, isPropertySignature } from 'typescript';
 import { EOL } from 'os';
-import kebabCase from 'lodash/kebabCase';
+import { kebabCase } from 'es-toolkit/string';
 import path from 'path';
 import { renderMarkdown } from '@mui/internal-markdown';
 import {
@@ -415,7 +415,7 @@ export async function buildInterfacesDocumentationPage(
       return <InterfaceApiPage {...layoutConfig} descriptions={descriptions} pageContent={pageContent} />;
     }
     
-    Page.getInitialProps = () => {
+    export async function getStaticProps() {
       const req = require.context(
         '${importTranslationPagesDirectory}/',
         false,
@@ -424,8 +424,10 @@ export async function buildInterfacesDocumentationPage(
       const descriptions = mapApiPageTranslations(req);
   
       return {
-        descriptions,
-        pageContent: jsonPageContent,
+        props: {
+          descriptions,
+          pageContent: jsonPageContent,
+        },
       };
     };
     `.replace(/\r?\n/g, EOL),

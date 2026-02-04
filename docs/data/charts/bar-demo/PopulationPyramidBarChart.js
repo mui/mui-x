@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -94,7 +93,7 @@ export default function PopulationPyramidBarChart() {
             disableLine: true,
             disableTicks: true,
             domainLimit(min, max) {
-              const extremum = Math.max(-min, max);
+              const extremum = Math.max(-min.valueOf(), max.valueOf());
               const roundedExtremum = Math.ceil(extremum / 100_000) * 100_000;
               return { min: -roundedExtremum, max: roundedExtremum };
             },

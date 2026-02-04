@@ -5,6 +5,9 @@
       "description": "If <code>true</code>, the styles of the page the chart belongs to will be copied to the export iframe.<br />Copying styles is useful to ensure that the exported chart looks the same as it does on the page."
     },
     "fileName": { "description": "The name of the file without the extension." },
+    "nonce": {
+      "description": "A nonce to be used for Content Security Policy (CSP) compliance.<br />If provided, this nonce will be added to any style elements created during the export process."
+    },
     "onBeforeExport": {
       "description": "Callback function that is called before the export is triggered.<br />It can be used to modify the iframe or perform any other actions before the export, such as updating styles,<br />removing elements, etc."
     }

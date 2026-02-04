@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import List, { ListProps } from '@mui/material/List';
@@ -26,8 +25,10 @@ export interface PickersShortcutsItem<TValue extends PickerValidValue> {
 
 export type PickersShortcutsItemContext = Omit<PickersShortcutsItem<PickerValidValue>, 'getValue'>;
 
-export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
-  extends Omit<ListProps, 'onChange'> {
+export interface ExportedPickersShortcutProps<TValue extends PickerValidValue> extends Omit<
+  ListProps,
+  'onChange'
+> {
   /**
    * Ordered array of shortcuts to display.
    * If empty, does not display the shortcuts.
@@ -43,8 +44,9 @@ export interface ExportedPickersShortcutProps<TValue extends PickerValidValue>
   changeImportance?: PickerChangeImportance;
 }
 
-export interface PickersShortcutsProps<TValue extends PickerValidValue>
-  extends ExportedPickersShortcutProps<TValue> {}
+export interface PickersShortcutsProps<
+  TValue extends PickerValidValue,
+> extends ExportedPickersShortcutProps<TValue> {}
 
 const PickersShortcutsRoot = styled(List, {
   name: 'MuiPickersLayout',
@@ -77,7 +79,7 @@ function PickersShortcuts<TValue extends PickerValidValue>(props: PickersShortcu
       ...item,
       label: item.label,
       onClick: () => {
-        setValue(newValue, { changeImportance, shortcut: item });
+        setValue(newValue, { changeImportance, shortcut: item, source: 'view' });
       },
       disabled: !isValidValue(newValue),
     };

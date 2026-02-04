@@ -44,86 +44,45 @@
     "import { ChartsYAxis } from '@mui/x-charts-pro';",
     "import { ChartsYAxis } from '@mui/x-charts-premium';"
   ],
-  "classes": [
+  "slots": [
     {
-      "key": "bottom",
-      "className": "MuiChartsYAxis-bottom",
-      "description": "Styles applied to the bottom axis.",
-      "isGlobal": false
+      "name": "axisLabel",
+      "description": "Custom component for axis label.",
+      "default": "ChartsText",
+      "class": null
     },
     {
-      "key": "directionX",
-      "className": "MuiChartsYAxis-directionX",
-      "description": "Styles applied to x-axes.",
-      "isGlobal": false
+      "name": "axisLine",
+      "description": "Custom component for the axis main line.",
+      "default": "'line'",
+      "class": null
     },
     {
-      "key": "directionY",
-      "className": "MuiChartsYAxis-directionY",
-      "description": "Styles applied to y-axes.",
-      "isGlobal": false
+      "name": "axisTick",
+      "description": "Custom component for the axis tick.",
+      "default": "'line'",
+      "class": null
     },
     {
-      "key": "id",
-      "className": "MuiChartsYAxis-id",
-      "description": "Styles applied to the root element for the axis with the given ID.\nNeeds to be suffixed with the axis ID: `.${axisClasses.id}-${axisId}`.",
-      "isGlobal": false
+      "name": "axisTickLabel",
+      "description": "Custom component for tick label.",
+      "default": "ChartsText",
+      "class": null
     },
     {
-      "key": "label",
-      "className": "MuiChartsYAxis-label",
-      "description": "Styles applied to the group containing the axis label.",
-      "isGlobal": false
+      "name": "xAxis",
+      "description": "Custom component for the x-axis.",
+      "default": "ChartsXAxis",
+      "class": null
     },
     {
-      "key": "left",
-      "className": "MuiChartsYAxis-left",
-      "description": "Styles applied to the left axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "line",
-      "className": "MuiChartsYAxis-line",
-      "description": "Styles applied to the main line element.",
-      "isGlobal": false
-    },
-    {
-      "key": "right",
-      "className": "MuiChartsYAxis-right",
-      "description": "Styles applied to the right axis.",
-      "isGlobal": false
-    },
-    {
-      "key": "root",
-      "className": "MuiChartsYAxis-root",
-      "description": "Styles applied to the root element.",
-      "isGlobal": false
-    },
-    {
-      "key": "tick",
-      "className": "MuiChartsYAxis-tick",
-      "description": "Styles applied to ticks.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickContainer",
-      "className": "MuiChartsYAxis-tickContainer",
-      "description": "Styles applied to group including the tick and its label.",
-      "isGlobal": false
-    },
-    {
-      "key": "tickLabel",
-      "className": "MuiChartsYAxis-tickLabel",
-      "description": "Styles applied to ticks label.\n\n⚠️ For performance reasons, only the inline styles get considered for bounding box computation.\nModifying text size by adding properties like `font-size` or `letter-spacing` to this class might cause labels to overlap.",
-      "isGlobal": false
-    },
-    {
-      "key": "top",
-      "className": "MuiChartsYAxis-top",
-      "description": "Styles applied to the top axis.",
-      "isGlobal": false
+      "name": "yAxis",
+      "description": "Custom component for the y-axis.",
+      "default": "ChartsYAxis",
+      "class": null
     }
   ],
+  "classes": [],
   "spread": true,
   "themeDefaultProps": null,
   "muiName": "MuiChartsYAxis",

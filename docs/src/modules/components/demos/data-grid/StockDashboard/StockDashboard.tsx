@@ -291,7 +291,10 @@ function StockDashboard() {
   );
 
   return (
-    <DemoContainer theme={stockDashboardTheme}>
+    <DemoContainer
+      theme={stockDashboardTheme}
+      href="https://github.com/mui/mui-x/tree/master/docs/src/modules/components/demos/data-grid/StockDashboard"
+    >
       <Box
         sx={{
           display: 'flex',

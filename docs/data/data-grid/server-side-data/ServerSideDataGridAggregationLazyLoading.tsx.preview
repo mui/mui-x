@@ -10,4 +10,6 @@
   }}
   lazyLoading
   aggregationFunctions={aggregationFunctions}
+  disablePivoting
+  disableRowGrouping
 />

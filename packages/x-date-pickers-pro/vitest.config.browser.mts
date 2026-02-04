@@ -1,28 +1,19 @@
-/// <reference types="@vitest/browser/providers/playwright" />
 import { fileURLToPath } from 'node:url';
-import { mergeConfig } from 'vitest/config';
+import { mergeConfig, defineConfig } from 'vitest/config';
 import sharedConfig from '../../vitest.shared.mts';
 import { getTestName } from '../../scripts/getTestName.mts';
 
-export default mergeConfig(sharedConfig, {
-  test: {
-    name: getTestName(import.meta.url),
-    environment: 'browser',
-    setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
-    browser: {
-      enabled: true,
-      instances: [
-        {
-          browser: 'chromium',
-          ...(process.env.PLAYWRIGHT_SERVER_WS
-            ? {
-                connect: {
-                  wsEndpoint: process.env.PLAYWRIGHT_SERVER_WS,
-                },
-              }
-            : {}),
-        },
-      ],
+export default mergeConfig(
+  sharedConfig,
+  defineConfig({
+    test: {
+      name: getTestName(import.meta.url),
+      setupFiles: [fileURLToPath(new URL('../../test/utils/setupPickers.js', import.meta.url))],
+      exclude: ['**/materialVersion.test.tsx'],
+      browser: {
+        enabled: true,
+        instances: [{ browser: 'chromium' }],
+      },
     },
-  },
-});
+  }),
+);

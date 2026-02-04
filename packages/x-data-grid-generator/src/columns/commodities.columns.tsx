@@ -1,4 +1,4 @@
-import { GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
+import { type GridColDef, gridStringOrNumberComparator } from '@mui/x-data-grid-premium';
 import {
   randomCommodity,
   randomDesk,
@@ -40,18 +40,20 @@ import {
   renderEditProgress,
   renderEditStatus,
   renderEditIncoterm,
+  renderEditBoolean,
+  renderEditCountry,
 } from '../renderer';
 import {
   CONTRACT_TYPE_OPTIONS,
   COUNTRY_ISO_OPTIONS_SORTED,
-  CountryIsoOption,
+  type CountryIsoOption,
   CURRENCY_OPTIONS,
   INCOTERM_OPTIONS,
   RATE_TYPE_OPTIONS,
   STATUS_OPTIONS,
   TAXCODE_OPTIONS,
 } from '../services/static-data';
-import { GridColDefGenerator } from '../services/gridColDefGenerator';
+import type { GridColDefGenerator } from '../services/gridColDefGenerator';
 
 export const getCommodityColumns = (editable = false): GridColDefGenerator[] => [
   {
@@ -114,6 +116,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     generateData: generateIsFilled,
     type: 'boolean',
     width: 80,
+    renderEditCell: renderEditBoolean,
     editable,
   },
   {
@@ -124,6 +127,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     renderEditCell: renderEditStatus,
     type: 'singleSelect',
     valueOptions: STATUS_OPTIONS,
+    valueFormatter: (value) => (value === 'PartiallyFilled' ? 'Partially Filled' : value),
     width: 150,
     editable,
   },
@@ -242,6 +246,7 @@ export const getCommodityColumns = (editable = false): GridColDefGenerator[] => 
     type: 'singleSelect',
     generateData: randomCountry,
     renderCell: renderCountry,
+    renderEditCell: renderEditCountry,
     valueOptions: COUNTRY_ISO_OPTIONS_SORTED,
     valueParser: (value) => {
       if (typeof value === 'string') {

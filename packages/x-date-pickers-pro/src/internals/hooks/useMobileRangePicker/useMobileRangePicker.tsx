@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useSlotProps from '@mui/utils/useSlotProps';
 import useEventCallback from '@mui/utils/useEventCallback';
 import resolveComponentProps from '@mui/utils/resolveComponentProps';
@@ -134,8 +133,8 @@ export const useMobileRangePicker = <
       <PickerRangePositionContext.Provider value={rangePositionResponse}>
         <Field
           {...fieldProps}
-          slots={slots}
-          slotProps={slotProps}
+          slots={{ ...slots, ...(fieldProps as any).slots }}
+          slotProps={{ ...slotProps, ...(fieldProps as any).slotProps }}
           {...(isSingleInput && {
             inputRef,
           })}

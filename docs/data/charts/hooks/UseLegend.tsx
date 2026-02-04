@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useLegend } from '@mui/x-charts/hooks';
 import { PieChart } from '@mui/x-charts/PieChart';
 
@@ -17,7 +16,7 @@ function BasicUseLegendExample() {
       <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
         {items.map((item) => (
           <li
-            key={item.id}
+            key={`${item.seriesId}-${item.dataIndex}`}
             style={{ display: 'flex', alignItems: 'center', gap: 8 }}
           >
             <div

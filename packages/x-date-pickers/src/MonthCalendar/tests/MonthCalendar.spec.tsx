@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { MonthCalendar } from '@mui/x-date-pickers/MonthCalendar';
 
 <MonthCalendar />;

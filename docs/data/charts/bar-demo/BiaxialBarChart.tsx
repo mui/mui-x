@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
 import Box from '@mui/material/Box';
 
@@ -34,7 +33,7 @@ export default function BiaxialBarChart() {
             yAxisId: 'rightAxisId',
           },
         ]}
-        xAxis={[{ data: xLabels }]}
+        xAxis={[{ data: xLabels, height: 28 }]}
         yAxis={[
           { id: 'leftAxisId', width: 50 },
           { id: 'rightAxisId', position: 'right' },

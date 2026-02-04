@@ -8,6 +8,13 @@ components: ScatterChart, ScatterChartPro, ScatterPlot, ChartsGrid, ChartsWrappe
 
 <p class="description">Scatter charts express the relation between two variables, using points in a surface.</p>
 
+## Overview
+
+Scatter charts are ideal for visualizing relationships or correlations as they show how one variable changes relative to another, identifying clusters, trends, and outliers in datasets.
+Each point represents an individual data observation, positioned by its values on the two axes, often revealing patterns.
+Scatter charts are commonly used for statistical analysis, scientific data, and performance metrics.
+{{"demo": "ScatterOverview.js", "disableAd": true, "defaultCodeOpen": false}}
+
 ## Basics
 
 Scatter chart series should contain a `data` property containing an array of objects.
@@ -93,7 +100,7 @@ Here are three ways to set z value to 5.
 
 :::
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -154,7 +161,8 @@ However, this comes with the following limitations:
 
 - CSS styling of single `circle` elements is no longer possible;
 - Overriding the `marker` slot is not supported;
-- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible.
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted circle on top of the original marker. Applying transparency to the highlighted circle can cause the original circle to be partially visible;
+- `disableHover` for scatter series does not work.
 
 On top of that, there's also some differences in behavior:
 
@@ -184,6 +192,7 @@ Here's how the Scatter Chart is composed:
         {/* Elements able to overflow the drawing area. */}
         <ScatterPlot />
       </g>
+      <FocusedScatterMark />
       <ChartsOverlay />
       <ChartsAxisHighlight />
     </ChartsSurface>
@@ -197,3 +206,9 @@ The `data-drawing-container` indicates that children of this element should be c
 
 See the [Composition—clipping](/x/react-charts/composition/#clipping) for more info.
 :::
+
+### Regression line
+
+You add a regression line to a scatter plot by leveraging composition.
+
+{{"demo": "ScatterRegressionLine.js"}}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createRenderer } from '@mui/internal-test-utils';
+import { createRenderer, screen } from '@mui/internal-test-utils';
 import {
   RichTreeViewPro,
   richTreeViewProClasses as classes,
@@ -17,4 +17,10 @@ describe('<RichTreeViewPro />', () => {
     muiName: 'MuiRichTreeViewPro',
     skip: ['componentProp', 'componentsProp', 'themeVariants'],
   }));
+
+  it('should pass the id prop to the root element', () => {
+    render(<RichTreeViewPro id="test-id" items={[{ id: '1', label: 'Item 1' }]} />);
+
+    expect(screen.getByRole('tree')).to.have.attribute('id', 'test-id');
+  });
 });

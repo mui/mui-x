@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { GridEventListener } from '../../../models/events';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridSortApi } from '../../../models/api/gridSortApi';
-import { GridColDef } from '../../../models/colDef/gridColDef';
-import { GridGroupNode } from '../../../models/gridRows';
-import { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
+import type { GridEventListener } from '../../../models/events';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridSortApi } from '../../../models/api/gridSortApi';
+import type { GridColDef } from '../../../models/colDef/gridColDef';
+import type { GridGroupNode } from '../../../models/gridRows';
+import type { GridSortItem, GridSortModel, GridSortDirection } from '../../../models/gridSortModel';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { useGridLogger } from '../../utils/useGridLogger';
@@ -21,7 +21,7 @@ import { GRID_ROOT_GROUP_ID, gridRowTreeSelector } from '../rows';
 import { useFirstRender } from '../../utils/useFirstRender';
 import {
   useGridRegisterStrategyProcessor,
-  GridStrategyProcessor,
+  type GridStrategyProcessor,
   GRID_DEFAULT_STRATEGY,
 } from '../../core/strategyProcessing';
 import {
@@ -30,8 +30,8 @@ import {
   getNextGridSortDirection,
   sanitizeSortModel,
 } from './gridSortingUtils';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { getTreeNodeDescendants } from '../rows/gridRowsUtils';
 
 export const sortingStateInitializer: GridStateInitializer<
@@ -64,6 +64,7 @@ export const useGridSorting = (
     | 'disableColumnSorting'
     | 'disableMultipleColumnsSorting'
     | 'multipleColumnsSortingMode'
+    | 'signature'
   >,
 ) => {
   const logger = useGridLogger(apiRef, 'useGridSorting');
@@ -373,7 +374,9 @@ export const useGridSorting = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    apiRef.current.applySorting();
+    if (props.signature === 'DataGrid') {
+      apiRef.current.applySorting();
+    }
   });
 
   /**

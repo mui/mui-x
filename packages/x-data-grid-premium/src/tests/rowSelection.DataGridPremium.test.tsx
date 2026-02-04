@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { act, createRenderer, fireEvent } from '@mui/internal-test-utils';
 import { getCell, includeRowSelection } from 'test/utils/helperFn';
 import { spy } from 'sinon';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
-  GridApi,
-  GridRowsProp,
+  type DataGridPremiumProps,
+  type GridApi,
+  gridRowSelectionIdsSelector,
+  type GridRowsProp,
   useGridApiRef,
 } from '@mui/x-data-grid-premium';
 
@@ -211,51 +211,119 @@ describe('<DataGridPremium /> - Row selection', () => {
       ]);
     });
 
-    // Use case yet to be supported
-    describe.skip('prop: keepNonExistentRowsSelected', () => {
-      it('should auto select the parent of a previously selected non existent rows when it is added back', () => {
-        const onRowSelectionModelChange = spy();
+    // Regression for bugfix/20525: parent checkbox state and auto-select parents should ignore non-selectable rows
+    it('should auto-select parent when all selectable siblings are selected, ignoring non-selectable ones', () => {
+      render(
+        <Test
+          defaultGroupingExpansionDepth={-1}
+          density="compact"
+          isRowSelectable={({ id }) =>
+            id === 'auto-generated-row-category1/Cat A' || id === 0 || id === 2
+          }
+        />,
+      );
+
+      // Select only the first selectable sibling (row 1)
+      fireEvent.click(getCell(1, 0).querySelector('input')!);
+
+      // Check if parent checkbox is indeterminate
+      const parentCheckboxAfter = getCell(0, 0).querySelector('input')!;
+      expect(parentCheckboxAfter).to.have.attr('data-indeterminate', 'true');
+
+      // Select the other selectable sibling (row 3)
+      fireEvent.click(getCell(3, 0).querySelector('input')!);
+
+      // Parent should be auto-selected because all selectable children are selected
+      expect(parentCheckboxAfter).to.have.property('checked', true);
+      expect(parentCheckboxAfter).to.have.attr('data-indeterminate', 'false');
+      expect(apiRef.current?.getSelectedRows()).to.have.keys([
+        'auto-generated-row-category1/Cat A',
+        0,
+        2,
+      ]);
+    });
+
+    describe('prop: keepNonExistentRowsSelected', () => {
+      // https://github.com/mui/mui-x/issues/20568
+      it('should not throw when using `isRowSelectable`, `keepNonExistentRowsSelected`, and row grouping', () => {
         const { setProps } = render(
           <Test
             keepNonExistentRowsSelected
-            rowSelectionModel={includeRowSelection([3, 4])}
-            rows={[]}
-            onRowSelectionModelChange={onRowSelectionModelChange}
+            isRowSelectable={() => true}
+            rowSelectionModel={includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4])}
           />,
         );
 
-        expect(onRowSelectionModelChange.callCount).to.equal(0);
+        expect(Array.from(gridRowSelectionIdsSelector(apiRef).keys())).to.deep.equal([
+          'auto-generated-row-category1/Cat B',
+          3,
+          4,
+        ]);
 
+        // Simulate server-side pagination by removing rows
         act(() => {
-          setProps({ rows });
+          setProps({ rows: rows.filter((row) => row.category1 !== 'Cat B') });
         });
-        expect(onRowSelectionModelChange.callCount).to.equal(1);
-        expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
-          includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
-        );
+
+        // The selection should still include the non-existent rows
+        expect(Array.from(gridRowSelectionIdsSelector(apiRef).keys())).to.deep.equal([
+          'auto-generated-row-category1/Cat B',
+          3,
+          4,
+        ]);
       });
 
-      it('should auto select the children of a previously non existent parent row when it is added back', () => {
-        const onRowSelectionModelChange = spy();
-        const { setProps } = render(
-          <Test
-            keepNonExistentRowsSelected
-            rowSelectionModel={includeRowSelection(['auto-generated-row-category1/Cat B'])}
-            rows={[]}
-            onRowSelectionModelChange={onRowSelectionModelChange}
-          />,
-        );
+      // TODO: Use case yet to be supported
+      it.todo(
+        'should auto select the parent of a previously selected non existent rows when it is added back',
+        () => {
+          const onRowSelectionModelChange = spy();
+          const { setProps } = render(
+            <Test
+              keepNonExistentRowsSelected
+              rowSelectionModel={includeRowSelection([3, 4])}
+              rows={[]}
+              onRowSelectionModelChange={onRowSelectionModelChange}
+            />,
+          );
 
-        expect(onRowSelectionModelChange.callCount).to.equal(0);
+          expect(onRowSelectionModelChange.callCount).to.equal(0);
 
-        act(() => {
-          setProps({ rows });
-        });
-        expect(onRowSelectionModelChange.callCount).to.equal(1);
-        expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
-          includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4]),
-        );
-      });
+          act(() => {
+            setProps({ rows });
+          });
+          expect(onRowSelectionModelChange.callCount).to.equal(1);
+          expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+            includeRowSelection([3, 4, 'auto-generated-row-category1/Cat B']),
+          );
+        },
+      );
+
+      // TODO: Use case yet to be supported
+      it.todo(
+        'should auto select the children of a previously non existent parent row when it is added back',
+        () => {
+          const onRowSelectionModelChange = spy();
+          const { setProps } = render(
+            <Test
+              keepNonExistentRowsSelected
+              rowSelectionModel={includeRowSelection(['auto-generated-row-category1/Cat B'])}
+              rows={[]}
+              onRowSelectionModelChange={onRowSelectionModelChange}
+            />,
+          );
+
+          expect(onRowSelectionModelChange.callCount).to.equal(0);
+
+          act(() => {
+            setProps({ rows });
+          });
+          expect(onRowSelectionModelChange.callCount).to.equal(1);
+          expect(onRowSelectionModelChange.lastCall.args[0]).to.deep.equal(
+            includeRowSelection(['auto-generated-row-category1/Cat B', 3, 4]),
+          );
+        },
+      );
     });
   });
 });

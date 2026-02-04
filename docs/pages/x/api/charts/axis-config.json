@@ -7,27 +7,26 @@
   ],
   "properties": {
     "id": { "type": { "description": "AxisId" }, "required": true },
-    "scaleType": { "type": { "description": "'band'" }, "required": true },
+    "scaleType": { "type": { "description": "'linear'" }, "required": true },
     "classes": { "type": { "description": "Partial&lt;ChartsAxisClasses&gt;" } },
-    "colorMap": {
-      "type": { "description": "OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig" }
-    },
+    "colorMap": { "type": { "description": "ContinuousColorConfig | PiecewiseColorConfig" } },
     "data": { "type": { "description": "readonly V[]" } },
     "dataKey": { "type": { "description": "string" } },
     "disableLine": { "type": { "description": "boolean" }, "default": "false" },
     "disableTicks": { "type": { "description": "boolean" }, "default": "false" },
     "domainLimit": {
       "type": {
-        "description": "'nice' | 'strict' | ((min: number, max: number) =&gt; { min: number; max: number })"
+        "description": "'nice' | 'strict' | ((min: NumberValue, max: NumberValue) =&gt; { min: NumberValue; max: NumberValue })"
       }
     },
-    "height": { "type": { "description": "number" }, "default": "30" },
+    "height": {
+      "type": { "description": "number" },
+      "default": "45 if an axis label is provided, 25 otherwise."
+    },
     "hideTooltip": { "type": { "description": "boolean" } },
     "ignoreTooltip": { "type": { "description": "boolean" } },
     "label": { "type": { "description": "string" } },
     "labelStyle": { "type": { "description": "ChartsTextProps['style']" } },
-    "max": { "type": { "description": "number | Date" } },
-    "min": { "type": { "description": "number | Date" } },
     "offset": { "type": { "description": "number" }, "default": "0" },
     "position": { "type": { "description": "'top' | 'bottom' | 'none'" } },
     "reverse": { "type": { "description": "boolean" } },
@@ -55,6 +54,7 @@
       "default": "'extremities'"
     },
     "tickSize": { "type": { "description": "number" }, "default": "6" },
+    "tickSpacing": { "type": { "description": "number" }, "default": "0" },
     "valueFormatter": {
       "type": {
         "description": "&lt;TScaleName extends S&gt;(value: V, context: AxisValueFormatterContext&lt;TScaleName&gt;) =&gt; string"

@@ -1,11 +1,10 @@
-import * as React from 'react';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import {
   DataGridPro,
-  DataGridProProps,
-  GridColDef,
-  GridListViewColDef,
-  GridRowsProp,
+  type DataGridProProps,
+  type GridColDef,
+  type GridListViewColDef,
+  type GridRowsProp,
 } from '@mui/x-data-grid-pro';
 
 const rows: GridRowsProp = [{ id: '123567', title: 'test' }];

@@ -1,8 +1,13 @@
-import { GridRowId, GridTreeNode, GRID_ROOT_GROUP_ID, GridRowTreeConfig } from '@mui/x-data-grid';
-import { buildRootGroup, GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
-import { RowTreeBuilderNode, GridTreePathDuplicateHandler } from './models';
+import {
+  type GridRowId,
+  type GridTreeNode,
+  GRID_ROOT_GROUP_ID,
+  type GridRowTreeConfig,
+} from '@mui/x-data-grid';
+import { buildRootGroup, type GridRowTreeCreationValue } from '@mui/x-data-grid/internals';
+import type { RowTreeBuilderNode, GridTreePathDuplicateHandler } from './models';
 import { insertDataRowInTree } from './insertDataRowInTree';
-import { DataGridProProps } from '../../models/dataGridProProps';
+import type { DataGridProProps } from '../../models/dataGridProProps';
 
 interface CreateRowTreeParams {
   previousTree: GridRowTreeConfig | null;
@@ -11,6 +16,7 @@ interface CreateRowTreeParams {
   isGroupExpandedByDefault?: DataGridProProps['isGroupExpandedByDefault'];
   groupingName: string;
   onDuplicatePath?: GridTreePathDuplicateHandler;
+  maxDepth?: number;
 }
 
 /**
@@ -39,6 +45,7 @@ export const createRowTree = (params: CreateRowTreeParams): GridRowTreeCreationV
       isGroupExpandedByDefault: params.isGroupExpandedByDefault,
       defaultGroupingExpansionDepth: params.defaultGroupingExpansionDepth,
       groupsToFetch,
+      maxDepth: params.maxDepth,
     });
   }
 

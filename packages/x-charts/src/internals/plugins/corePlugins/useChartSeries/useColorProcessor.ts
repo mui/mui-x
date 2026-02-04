@@ -1,10 +1,9 @@
 'use client';
 import * as React from 'react';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { useSelector } from '../../../store/useSelector';
+import { type ChartSeriesType } from '../../../../models/seriesType/config';
 import { useStore } from '../../../store/useStore';
-import { selectorChartSeriesConfig } from './useChartSeries.selectors';
-import { ColorProcessor } from '../../models/seriesConfig';
+import { selectorChartSeriesConfig } from '../useChartSeriesConfig';
+import { type ColorProcessor } from '../useChartSeriesConfig';
 
 export type ColorProcessorsConfig<T extends ChartSeriesType> = {
   [Key in T]?: ColorProcessor<Key>;
@@ -14,7 +13,7 @@ export function useColorProcessor<T extends ChartSeriesType>(seriesType: T): Col
 export function useColorProcessor(): ColorProcessorsConfig<ChartSeriesType>;
 export function useColorProcessor(seriesType?: ChartSeriesType) {
   const store = useStore();
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   const colorProcessors = React.useMemo(() => {
     const rep: ColorProcessorsConfig<ChartSeriesType> = {};

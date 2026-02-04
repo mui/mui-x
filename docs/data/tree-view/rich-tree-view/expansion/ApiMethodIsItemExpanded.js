@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView';
 
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useRichTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 const MUI_X_PRODUCTS = [
   {
@@ -38,7 +38,7 @@ const MUI_X_PRODUCTS = [
 ];
 
 export default function ApiMethodIsItemExpanded() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useRichTreeViewApiRef();
   const [isGridExpanded, setIsGridExpanded] = React.useState(false);
   const [isSnackbarOpen, setIsSnackbarOpen] = React.useState(false);
 

@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -13,7 +12,7 @@ import { useXAxis, useYAxis } from '@mui/x-charts/hooks';
 import { getLabel, ChartsLabelMark } from '@mui/x-charts/internals';
 import { useHeatmapSeriesContext } from '../../hooks/useHeatmapSeries';
 import { HeatmapTooltipAxesValue } from './HeatmapTooltipAxesValue';
-import { HeatmapTooltipProps } from './HeatmapTooltip.types';
+import { type HeatmapTooltipProps } from './HeatmapTooltip.types';
 import { useUtilityClasses } from './HeatmapTooltip.classes';
 
 export interface HeatmapTooltipContentProps extends Pick<HeatmapTooltipProps, 'classes'> {}
@@ -27,14 +26,20 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
 
   const tooltipData = useItemTooltip<'heatmap'>();
 
-  if (!tooltipData || !heatmapSeries || heatmapSeries.seriesOrder.length === 0) {
+  const dataIndex = tooltipData?.identifier.dataIndex;
+  if (
+    !tooltipData ||
+    dataIndex === undefined ||
+    !heatmapSeries ||
+    heatmapSeries.seriesOrder.length === 0
+  ) {
     return null;
   }
 
   const { series, seriesOrder } = heatmapSeries;
   const seriesId = seriesOrder[0];
 
-  const { color, value, identifier, markType } = tooltipData;
+  const { color, value, markType } = tooltipData;
 
   const [xIndex, yIndex] = value;
 
@@ -46,9 +51,7 @@ export function HeatmapTooltipContent(props: HeatmapTooltipContentProps) {
   const formattedY =
     yAxis.valueFormatter?.(yAxis.data![yIndex], { location: 'tooltip', scale: yAxis.scale }) ??
     yAxis.data![yIndex].toLocaleString();
-  const formattedValue = series[seriesId].valueFormatter(value, {
-    dataIndex: identifier.dataIndex,
-  });
+  const formattedValue = series[seriesId].valueFormatter(value, { dataIndex });
 
   const seriesLabel = getLabel(series[seriesId].label, 'tooltip');
 

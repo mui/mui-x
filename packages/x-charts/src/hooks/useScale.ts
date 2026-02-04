@@ -1,6 +1,6 @@
 'use client';
 import { isOrdinalScale } from '../internals/scaleGuards';
-import { AxisId, AxisScaleConfig, D3Scale, ScaleName } from '../models/axis';
+import { type AxisId, type AxisScaleConfig, type D3Scale, type ScaleName } from '../models/axis';
 import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
 
 /**
@@ -9,7 +9,10 @@ import { useRadiusAxis, useRotationAxis, useXAxis, useYAxis } from './useAxis';
  * @param {D3Scale} scale The scale to use
  * @returns {(value: any) => number} A function that map value to their position
  */
-export function getValueToPositionMapper(scale: D3Scale): (value: any) => number {
+export function getValueToPositionMapper<
+  Domain extends { toString(): string } = { toString(): string },
+  Range = number,
+>(scale: D3Scale<Domain, Range>): (value: any) => number {
   if (isOrdinalScale(scale)) {
     return (value: any) => (scale(value) ?? 0) + scale.bandwidth() / 2;
   }
@@ -27,8 +30,10 @@ export function getValueToPositionMapper(scale: D3Scale): (value: any) => number
 /**
  * Get the X scale.
  *
- * @param {AxisId | undefined} axisId - If provided returns the scale for the x axis with axisId, else returns the values for the default x axis.
- * @returns {AxisScaleConfig[S]['scale']} The scale for the specified X axis.
+ * @param axisId - The axis identifier. Can be:
+ *   - A string or number matching the axis ID defined in the chart's `xAxis` prop
+ *   - Undefined to get the default (first) X axis
+ * @returns The X axis scale
  */
 export function useXScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig[S]['scale'] {
   const axis = useXAxis(axisId);
@@ -39,8 +44,10 @@ export function useXScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig
 /**
  * Get the Y scale.
  *
- * @param {AxisId | undefined} axisId - If provided returns the scale for the y axis with axisId, else returns the values for the default y axis.
- * @returns {AxisScaleConfig[S]['scale']} The scale for the specified Y axis.
+ * @param axisId - The axis identifier. Can be:
+ *   - A string or number matching the axis ID defined in the chart's `yAxis` prop
+ *   - Undefined to get the default (first) Y axis
+ * @returns The Y axis scale
  */
 export function useYScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig[S]['scale'] {
   const axis = useYAxis(axisId);
@@ -48,18 +55,33 @@ export function useYScale<S extends ScaleName>(axisId?: AxisId): AxisScaleConfig
   return axis.scale;
 }
 
+/**
+ * Get the rotation scale.
+ *
+ * @param axisId - The axis identifier. Can be:
+ *   - A string or number matching the axis ID defined in the chart's `rotationAxis` prop
+ *   - Undefined to get the default rotation axis
+ * @returns The rotation axis scale, or undefined if not found
+ */
 export function useRotationScale<S extends ScaleName>(
-  identifier?: number | string,
+  axisId?: number | string,
 ): AxisScaleConfig[S]['scale'] | undefined {
-  const axis = useRotationAxis(identifier);
+  const axis = useRotationAxis(axisId);
 
   return axis?.scale;
 }
 
+/**
+ * Get the radius scale.
+ * @param axisId - The axis identifier. Can be:
+ *   - A string or number matching the axis ID defined in the chart's `radiusAxis` prop
+ *   - Undefined to get the default radius axis
+ * @returns The radius axis scale, or undefined if not found
+ */
 export function useRadiusScale<S extends ScaleName>(
-  identifier?: number | string,
+  axisId?: number | string,
 ): AxisScaleConfig[S]['scale'] | undefined {
-  const axis = useRadiusAxis(identifier);
+  const axis = useRadiusAxis(axisId);
 
   return axis?.scale;
 }

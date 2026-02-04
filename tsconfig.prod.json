@@ -14,6 +14,15 @@
       "@mui/x-charts-premium/*": ["./packages/x-charts-premium/src/*"],
       "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
       "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
+      // There is no root import on these packages
+      // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
+      // "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],
+      // "@mui/x-scheduler-headless": ["./packages/x-scheduler-headless/src"],
+      // "@mui/x-scheduler-headless-premium": ["./packages/x-scheduler-headless-premium/src"],
+      "@mui/x-scheduler/*": ["./packages/x-scheduler/*"],
+      "@mui/x-scheduler-premium/*": ["./packages/x-scheduler-premium/*"],
+      "@mui/x-scheduler-headless/*": ["./packages/x-scheduler-headless/*"],
+      "@mui/x-scheduler-headless-premium/*": ["./packages/x-scheduler-headless-premium/*"],
       "@mui/x-tree-view": ["./packages/x-tree-view/src"],
       "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
       "@mui/x-tree-view-pro": ["./packages/x-tree-view-pro/src"],
@@ -43,7 +52,8 @@
     "skipLibCheck": true,
     "incremental": true,
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "jsx": "preserve"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }

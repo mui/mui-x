@@ -1,5 +1,5 @@
-import type * as Excel from 'exceljs';
-import {
+import type * as Excel from '@mui/x-internal-exceljs-fork';
+import type {
   GridFileExportOptions,
   GridExportFormat as GridExportFormatCommunity,
   GridExportExtension as GridExportExtensionCommunity,

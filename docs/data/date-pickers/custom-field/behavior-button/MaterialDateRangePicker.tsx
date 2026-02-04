@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Dayjs } from 'dayjs';
 import useForkRef from '@mui/utils/useForkRef';
 import Button from '@mui/material/Button';

@@ -1,13 +1,51 @@
 import {
-  GridColumnGroupingModel,
-  GridColumnNode,
-  GridColumnGroup,
+  type GridColumnGroupingModel,
+  type GridColumnNode,
+  type GridColumnGroup,
   isLeaf,
 } from '../../../models/gridColumnGrouping';
-import { GridColDef } from '../../../models/colDef';
-import { GridGroupingStructure } from './gridColumnGroupsInterfaces';
+import type { GridColDef } from '../../../models/colDef';
+import type { GridColumnGroupLookup, GridGroupingStructure } from './gridColumnGroupsInterfaces';
 
 type UnwrappedGroupingModel = { [key: GridColDef['field']]: GridColumnGroup['groupId'][] };
+
+export const createGroupLookup = (columnGroupingModel: GridColumnNode[]): GridColumnGroupLookup => {
+  const groupLookup: GridColumnGroupLookup = {};
+
+  for (let i = 0; i < columnGroupingModel.length; i += 1) {
+    const node = columnGroupingModel[i];
+
+    if (isLeaf(node)) {
+      continue;
+    }
+
+    const { groupId, children, ...other } = node;
+
+    if (!groupId) {
+      throw new Error(
+        'MUI X: An element of the columnGroupingModel does not have either `field` or `groupId`.',
+      );
+    }
+
+    if (process.env.NODE_ENV !== 'production' && !children) {
+      console.warn(`MUI X: group groupId=${groupId} has no children.`);
+    }
+
+    const groupParam = { ...other, groupId };
+    const subTreeLookup = createGroupLookup(children);
+
+    if (subTreeLookup[groupId] !== undefined || groupLookup[groupId] !== undefined) {
+      throw new Error(
+        `MUI X: The groupId ${groupId} is used multiple times in the columnGroupingModel.`,
+      );
+    }
+
+    Object.assign(groupLookup, subTreeLookup);
+    groupLookup[groupId] = groupParam;
+  }
+
+  return groupLookup;
+};
 
 // This is the recurrence function that help writing `unwrapGroupingColumnModel()`
 const recurrentUnwrapGroupingColumnModel = (

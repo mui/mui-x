@@ -1,12 +1,21 @@
 ---
 title: React Line chart
 productId: x-charts
-components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsGrid, FocusedMark
+components: LineChart, LineChartPro, LineElement, LineHighlightElement, LineHighlightPlot, LinePlot, MarkElement, MarkPlot, AreaElement, AreaPlot, AnimatedLine, AnimatedArea, ChartsGrid
 ---
 
 # Charts - Lines
 
 <p class="description">Line charts can express qualities about data, such as hierarchy, highlights, and comparisons.</p>
+
+## Overview
+
+Line charts are ideal for showing how values change over continuous dimensions such as time or measurement scales.
+
+They emphasize trends, patterns, and fluctuations, making them useful for exploring relationships, detecting cycles, or tracking performance over time.
+Each line typically represents a series, allowing easy comparison between multiple variables or groups.
+
+{{"demo": "LineOverview.js"}}
 
 ## Basics
 
@@ -157,11 +166,11 @@ If you're using composition, you can get those click events as follows.
 Notice that the `onAxisClick` will handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <LinePlot onItemClick={onLineClick} />
   <AreaPlot onItemClick={onAreaClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Styling
@@ -185,7 +194,7 @@ The line charts use by priority:
 2. The x-axis color
 3. The series color
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -270,7 +279,7 @@ The definition of `myGradient` is passed as a children of the chart component.
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
@@ -286,10 +295,10 @@ This will lead to strange behaviors.
 <LineChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <LinePlot skipAnimation />
   <AreaPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "LineAnimation.js"}}
@@ -304,6 +313,7 @@ In addition to the common chart components available for [composition](/x/react-
 - `<LinePlot />` renders the series lines.
 - `<MarkPlot />` renders the series marks.
 - `<LineHighlightPlot />` renders larger mark dots on the highlighted values.
+- `<FocusedLineMark />` renders a focus indicator when the user focuses a data point.
 
 Here's how the Line Chart is composed:
 
@@ -320,6 +330,7 @@ Here's how the Line Chart is composed:
         <ChartsOverlay />
         <ChartsAxisHighlight />
       </g>
+      <FocusedLineMark />
       <ChartsAxis />
       <g data-drawing-container>
         {/* Elements able to overflow the drawing area. */}

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { lruMemoize } from '@mui/x-internals/lruMemoize';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
-import { GridEventListener } from '../../../models/events';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridFilterApi } from '../../../models/api/gridFilterApi';
-import { GridFilterItem } from '../../../models/gridFilterItem';
-import { GridRowId } from '../../../models/gridRows';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridEventListener } from '../../../models/events';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridFilterApi } from '../../../models/api/gridFilterApi';
+import type { GridFilterItem } from '../../../models/gridFilterItem';
+import type { GridRowId } from '../../../models/gridRows';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import { useLazyRef } from '../../utils/useLazyRef';
 import { useGridEvent } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
@@ -20,10 +20,10 @@ import { defaultGridFilterLookup, getDefaultGridFilterModel } from './gridFilter
 import { gridFilterModelSelector } from './gridFilterSelector';
 import { useFirstRender } from '../../utils/useFirstRender';
 import { gridRowsLookupSelector } from '../rows';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import {
   GRID_DEFAULT_STRATEGY,
-  GridStrategyProcessor,
+  type GridStrategyProcessor,
   useGridRegisterStrategyProcessor,
 } from '../../core/strategyProcessing';
 import {
@@ -34,7 +34,7 @@ import {
   passFilterLogic,
   shouldQuickFilterExcludeHiddenColumns,
 } from './gridFilterUtils';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import type { ItemPlusTag } from '../../../components/panel/filterPanel/GridFilterInputValue';
 import type { GridConfiguration } from '../../../models/configuration/gridConfiguration';
 
@@ -94,6 +94,7 @@ export const useGridFilter = (
     | 'disableColumnFilter'
     | 'disableEval'
     | 'ignoreDiacritics'
+    | 'signature'
   >,
   configuration: GridConfiguration,
 ): void => {
@@ -546,7 +547,9 @@ export const useGridFilter = (
    * 1ST RENDER
    */
   useFirstRender(() => {
-    updateFilteredRows();
+    if (props.signature === 'DataGrid') {
+      updateFilteredRows();
+    }
   });
 
   /**

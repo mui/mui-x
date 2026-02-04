@@ -50,20 +50,21 @@ Some devices may lack certain keys, requiring the use of key combinations. In th
 |                                                                    <kbd class="key">End</kbd> | Focuses the last item in the tree                                                                                                                                                                                    |
 |                                                                     <kbd class="key">\*</kbd> | Expands all siblings that are at the same level as the focused item without moving focus                                                                                                                             |
 
-Type-ahead is supported for single characters. When typing a character, focus moves to the next item with a label that starts with the typed character.
+When typing a set of characters, focus moves to the next item with a label that starts with the typed characters.
 
 ## Selection
 
-The Tree View supports both single and multi-selection. To learn more about the selection API, visit the dedicated page for the [Simple Tree View](/x/react-tree-view/simple-tree-view/selection/) or the [Rich Tree View](/x/react-tree-view/rich-tree-view/selection/).
+The Tree View components support both single and multi-selection.
+To learn more about the selection API, visit the dedicated page for [`SimpleTreeView`](/x/react-tree-view/simple-tree-view/selection/) or [`RichTreeView`](/x/react-tree-view/rich-tree-view/selection/).
 
-To read more about the distinction between selection and focus, you can refer to the [WAI-ARIA Authoring Practices guide](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_vs_selection).
+To read more about the distinction between selection and focus, refer to the [WAI-ARIA Authoring Practices guide](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_focus_vs_selection).
 
 ### On single-select trees
 
 When a single-select tree receives focus:
 
-- If none of the items are selected when the tree receives focus, focus is set on the first item.
-- If an item is selected before the tree receives focus, focus is set on the selected item.
+- If none of the items are selected when the tree receives focus, then the focus is set on the first item.
+- If an item is selected before the tree receives focus, then the focus is set on the selected item.
 
 |                         Keys | Description                                                  |
 | ---------------------------: | :----------------------------------------------------------- |
@@ -74,8 +75,8 @@ When a single-select tree receives focus:
 
 When a multi-select tree receives focus:
 
-- If none of the items are selected when the tree receives focus, focus is set on the first item.
-- If one or more items are selected before the tree receives focus, then focus is set on:
+- If none of the items are selected when the tree receives focus, then the focus is set on the first item.
+- If one or more items are selected before the tree receives focus, then the focus is set on:
   - the first selected item if it is the first render
   - the item that was last selected otherwise
 

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const isISGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const isISGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Þétt',
   toolbarDensityStandard: 'Staðlað',
   toolbarDensityComfortable: 'Rúmlegt',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Afturkalla',
+  toolbarRedo: 'Endurgera',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Dálkar',
@@ -160,6 +164,10 @@ const isISGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'já',
   booleanCellFalseLabel: 'nei',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Stækka',
+  longTextCellCollapseLabel: 'Minnka',
 
   // Actions cell more text
   actionsCellMore: 'meira',
@@ -326,6 +334,7 @@ const isISGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const isIS: Localization = getGridLocalization(isISGrid);

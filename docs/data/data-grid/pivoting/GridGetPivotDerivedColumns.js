@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPremium, GridSidebarValue } from '@mui/x-data-grid-premium';
 
 const getPivotDerivedColumns = (column) => {

@@ -1,4 +1,4 @@
-import { SeriesProcessor, ChartSeriesDefaultized } from '@mui/x-charts/internals';
+import { type SeriesProcessor, type ChartSeriesDefaultized } from '@mui/x-charts/internals';
 import type { FunnelCurveType } from '../curves';
 
 const createPoint = ({

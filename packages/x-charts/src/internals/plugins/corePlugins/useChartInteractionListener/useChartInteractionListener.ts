@@ -5,39 +5,42 @@ import {
   MoveGesture,
   PanGesture,
   PinchGesture,
+  PressAndDragGesture,
   PressGesture,
+  TapAndDragGesture,
   TapGesture,
   TurnWheelGesture,
 } from '@mui/x-internal-gestures/core';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import {
-  UseChartInteractionListenerSignature,
-  AddInteractionListener,
+  type UseChartInteractionListenerSignature,
+  type AddInteractionListener,
   type UpdateZoomInteractionListeners,
 } from './useChartInteractionListener.types';
 
 const preventDefault = (event: Event) => event.preventDefault();
 
+type GestureManagerTyped = GestureManager<
+  string,
+  | PanGesture<'pan'>
+  | MoveGesture<'move'>
+  | PanGesture<'zoomPan'>
+  | PinchGesture<'zoomPinch'>
+  | TurnWheelGesture<'zoomTurnWheel'>
+  | TurnWheelGesture<'panTurnWheel'>
+  | TapGesture<'tap'>
+  | PressGesture<'quickPress'>
+  | TapAndDragGesture<'zoomTapAndDrag'>
+  | PressAndDragGesture<'zoomPressAndDrag'>
+  | TapGesture<'zoomDoubleTapReset'>
+  | PanGesture<'brush'>
+>;
+
 export const useChartInteractionListener: ChartPlugin<UseChartInteractionListenerSignature> = ({
-  svgRef,
+  instance,
 }) => {
-  const gestureManagerRef = React.useRef<GestureManager<
-    string,
-    | PanGesture<'pan'>
-    | PanGesture<'zoomPan'>
-    | MoveGesture<'move'>
-    | PinchGesture<'zoomPinch'>
-    | TurnWheelGesture<'zoomTurnWheel'>
-    | TapGesture<'tap'>
-    | PressGesture<'quickPress'>,
-    | PanGesture<'pan'>
-    | PanGesture<'zoomPan'>
-    | MoveGesture<'move'>
-    | PinchGesture<'zoomPinch'>
-    | TurnWheelGesture<'zoomTurnWheel'>
-    | TapGesture<'tap'>
-    | PressGesture<'quickPress'>
-  > | null>(null);
+  const { svgRef } = instance;
+  const gestureManagerRef = React.useRef<GestureManagerTyped | null>(null);
 
   React.useEffect(() => {
     const svg = svgRef.current;
@@ -48,38 +51,58 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
           // We separate the zoom gestures from the gestures that are not zoom related
           // This allows us to configure the zoom gestures based on the zoom configuration.
           new PanGesture({
-            name: 'pan' as const,
-            threshold: 0,
-            maxPointers: 1,
-          }),
-          new PanGesture({
-            name: 'zoomPan' as const,
+            name: 'pan',
             threshold: 0,
             maxPointers: 1,
           }),
           new MoveGesture({
-            name: 'move' as const,
-            preventIf: ['pan', 'zoomPinch', 'zoomPan'], // Prevent move gesture when pan is active
+            name: 'move',
+            preventIf: ['pan', 'zoomPinch', 'zoomPan'],
+          }),
+          new TapGesture({
+            name: 'tap',
+            preventIf: ['pan', 'zoomPinch', 'zoomPan'],
+          }),
+          new PressGesture({
+            name: 'quickPress',
+            duration: 50,
+          }),
+          new PanGesture({
+            name: 'brush',
+            threshold: 0,
+            maxPointers: 1,
+          }),
+          // Zoom gestures
+          new PanGesture({
+            name: 'zoomPan',
+            threshold: 0,
+            preventIf: ['zoomTapAndDrag', 'zoomPressAndDrag'],
           }),
           new PinchGesture({
-            name: 'zoomPinch' as const,
+            name: 'zoomPinch',
             threshold: 5,
-            preventIf: ['pan', 'zoomPan'],
           }),
           new TurnWheelGesture({
-            name: 'zoomTurnWheel' as const,
+            name: 'zoomTurnWheel',
             sensitivity: 0.01,
             initialDelta: 1,
           }),
-          new TapGesture({
-            name: 'tap' as const,
-            maxDistance: 10,
-            preventIf: ['pan', 'zoomPan', 'zoomPinch'],
+          new TurnWheelGesture({
+            name: 'panTurnWheel',
+            sensitivity: 0.5,
           }),
-          new PressGesture({
-            name: 'quickPress' as const,
-            duration: 50,
-            maxDistance: 10,
+          new TapAndDragGesture({
+            name: 'zoomTapAndDrag',
+            dragThreshold: 10,
+          }),
+          new PressAndDragGesture({
+            name: 'zoomPressAndDrag',
+            dragThreshold: 10,
+            preventIf: ['zoomPinch'],
+          }),
+          new TapGesture({
+            name: 'zoomDoubleTapReset',
+            taps: 2,
           }),
         ],
       });
@@ -93,7 +116,20 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
     }
 
     gestureManager.registerElement(
-      ['pan', 'move', 'zoomPinch', 'zoomPan', 'zoomTurnWheel', 'tap', 'quickPress'],
+      [
+        'pan',
+        'move',
+        'zoomPinch',
+        'zoomPan',
+        'zoomTurnWheel',
+        'panTurnWheel',
+        'tap',
+        'quickPress',
+        'zoomTapAndDrag',
+        'zoomPressAndDrag',
+        'zoomDoubleTapReset',
+        'brush',
+      ],
       svg,
     );
 
@@ -111,7 +147,7 @@ export const useChartInteractionListener: ChartPlugin<UseChartInteractionListene
       svg?.addEventListener(interaction, callback, options);
 
       return {
-        cleanup: () => svg?.removeEventListener(interaction, callback),
+        cleanup: () => svg?.removeEventListener(interaction, callback, options),
       };
     },
     [svgRef],

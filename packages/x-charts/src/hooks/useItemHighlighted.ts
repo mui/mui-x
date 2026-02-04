@@ -1,14 +1,13 @@
 'use client';
 
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
 import {
   selectorChartsIsFaded,
   selectorChartsIsHighlighted,
 } from '../internals/plugins/featurePlugins/useChartHighlight';
 import {
-  HighlightItemData,
-  UseChartHighlightSignature,
+  type HighlightItemData,
+  type UseChartHighlightSignature,
 } from '../internals/plugins/featurePlugins/useChartHighlight/useChartHighlight.types';
 
 type UseItemHighlightedReturnType = {
@@ -36,8 +35,8 @@ type UseItemHighlightedParams = HighlightItemData | null;
 export function useItemHighlighted(item: UseItemHighlightedParams): UseItemHighlightedReturnType {
   const store = useStore<[UseChartHighlightSignature]>();
 
-  const isHighlighted = useSelector(store, selectorChartsIsHighlighted, [item]);
-  const isFaded = useSelector(store, selectorChartsIsFaded, [item]);
+  const isHighlighted = store.use(selectorChartsIsHighlighted, item);
+  const isFaded = store.use(selectorChartsIsFaded, item);
 
   return { isHighlighted, isFaded: !isHighlighted && isFaded };
 }

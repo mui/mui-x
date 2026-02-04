@@ -37,16 +37,6 @@ describe('createDiscreteScaleGetAxisFilter', () => {
     expect(filter({ x: null, y: 'I3' }, 3)).toBe(true);
   });
 
-  it('should include elements if they are partially visible (another case)', () => {
-    const axisData = ['I0', 'I1', 'I2', 'I3'];
-    const filter = createDiscreteScaleGetAxisFilter(axisData, 51, 76, 'y');
-
-    expect(filter({ x: null, y: 'I0' }, 0)).toBe(false);
-    expect(filter({ x: null, y: 'I1' }, 1)).toBe(false);
-    expect(filter({ x: null, y: 'I2' }, 2)).toBe(true);
-    expect(filter({ x: null, y: 'I3' }, 3)).toBe(true);
-  });
-
   it('should include all elements when there is no zoom', () => {
     const axisData = ['I0', 'I1', 'I2', 'I3', 'I4', 'I5'];
     const filter = createDiscreteScaleGetAxisFilter(axisData, 0, 100, 'y');
@@ -65,7 +55,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
     const scale = getScale('linear', [0, 100], [0, 100]).nice();
 
     it('should filter values within zoom range', () => {
-      const filter = createContinuousScaleGetAxisFilter(scale, 20, 80, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 20, 80, 'x', undefined);
 
       // Test values within range
       expect(filter({ x: 30, y: null }, 0)).toBe(true);
@@ -78,7 +68,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
     });
 
     it('should handle edge values at zoom boundaries', () => {
-      const filter = createContinuousScaleGetAxisFilter(scale, 25, 75, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 25, 75, 'x', undefined);
 
       // Values at boundaries should be included
       expect(filter({ x: 25, y: null }, 0)).toBe(true);
@@ -86,14 +76,14 @@ describe('createContinuousScaleGetAxisFilter', () => {
     });
 
     it('should handle null values', () => {
-      const filter = createContinuousScaleGetAxisFilter(scale, 20, 80, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 20, 80, 'x', undefined);
 
       // Null values should be ignored (return true)
       expect(filter({ x: null, y: null }, 0)).toBe(true);
     });
 
     it('should work with y direction', () => {
-      const filter = createContinuousScaleGetAxisFilter(scale, 30, 70, 'y', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 30, 70, 'y', undefined);
 
       expect(filter({ x: null, y: 40 }, 0)).toBe(true);
       expect(filter({ x: null, y: 60 }, 0)).toBe(true);
@@ -107,7 +97,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
       const startDate = new Date('2023-01-01').getTime();
       const endDate = new Date('2023-12-31').getTime();
       const scale = scaleTime([startDate, endDate], [0, 100]).nice();
-      const filter = createContinuousScaleGetAxisFilter(scale, 25, 75, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 25, 75, 'x', undefined);
 
       const midYearDate = new Date('2023-06-15').getTime();
       const earlyYearDate = new Date('2023-02-01').getTime();
@@ -124,7 +114,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
       const axisData = [10, 20, 30, 40, 50];
       const extrema = [10, 50] as const;
       const scale = scaleLinear(extrema, [0, 100]).nice();
-      const filter = createContinuousScaleGetAxisFilter(scale, 40, 80, 'x', axisData);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 40, 80, 'x', axisData);
 
       // When x value is missing, it should use axisData[dataIndex]
       expect(filter({ x: null, y: null }, 0)).toBe(false); // axisData[0] = 10, outside range
@@ -136,7 +126,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
       const axisData = [10, 20, 30];
       const extrema = [10, 30] as const;
       const scale = scaleLinear(extrema, [0, 100]).nice();
-      const filter = createContinuousScaleGetAxisFilter(scale, 20, 80, 'x', axisData);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 20, 80, 'x', axisData);
 
       // Out of range index should return true (ignore)
       expect(filter({ x: null, y: null }, 5)).toBe(true);
@@ -148,7 +138,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
     it('should handle full zoom range (0-100)', () => {
       const extrema = [-50, 50] as const;
       const scale = scaleLinear(extrema, [0, 100]).nice();
-      const filter = createContinuousScaleGetAxisFilter(scale, 0, 100, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 0, 100, 'x', undefined);
 
       expect(filter({ x: -50.1, y: null }, 0)).toBe(false);
       expect(filter({ x: -50, y: null }, 0)).toBe(true);
@@ -160,7 +150,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
     it('should handle very narrow zoom range', () => {
       const extrema = [0, 100] as const;
       const scale = scaleLinear(extrema, [0, 100]).nice();
-      const filter = createContinuousScaleGetAxisFilter(scale, 49, 51, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 49, 51, 'x', undefined);
 
       expect(filter({ x: 48, y: null }, 0)).toBe(false);
       expect(filter({ x: 50, y: null }, 0)).toBe(true);
@@ -170,7 +160,7 @@ describe('createContinuousScaleGetAxisFilter', () => {
     it('should handle negative extrema values', () => {
       const extrema = [-50, 50] as const;
       const scale = scaleLinear(extrema, [0, 100]).nice();
-      const filter = createContinuousScaleGetAxisFilter(scale, 25, 75, 'x', undefined);
+      const filter = createContinuousScaleGetAxisFilter(scale.domain(), 25, 75, 'x', undefined);
 
       expect(filter({ x: 0, y: null }, 0)).toBe(true);
       expect(filter({ x: -40, y: null }, 0)).toBe(false);

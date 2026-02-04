@@ -1,31 +1,53 @@
 import {
   useChartZAxis,
-  UseChartZAxisSignature,
+  type UseChartZAxisSignature,
   useChartCartesianAxis,
-  UseChartCartesianAxisSignature,
+  type UseChartCartesianAxisSignature,
+  useChartTooltip,
+  type UseChartTooltipSignature,
   useChartInteraction,
-  UseChartInteractionSignature,
+  type UseChartInteractionSignature,
   useChartHighlight,
-  UseChartHighlightSignature,
-  ConvertSignaturesIntoPlugins,
+  type UseChartHighlightSignature,
+  useChartBrush,
+  type UseChartBrushSignature,
+  useChartItemClick,
+  type UseChartItemClickSignature,
+  useChartKeyboardNavigation,
+  type UseChartKeyboardNavigationSignature,
+  type ConvertSignaturesIntoPlugins,
 } from '@mui/x-charts/internals';
 import {
   useChartProExport,
-  UseChartProExportSignature,
+  type UseChartProExportSignature,
 } from '../internals/plugins/useChartProExport';
+import {
+  useChartProZoom,
+  type UseChartProZoomSignature,
+} from '../internals/plugins/useChartProZoom';
 
 export type HeatmapPluginSignatures = [
   UseChartZAxisSignature,
-  UseChartCartesianAxisSignature<'heatmap'>,
+  UseChartTooltipSignature<'heatmap'>,
   UseChartInteractionSignature,
+  UseChartCartesianAxisSignature<'heatmap'>,
   UseChartHighlightSignature,
   UseChartProExportSignature,
+  UseChartBrushSignature,
+  UseChartProZoomSignature,
+  UseChartItemClickSignature<'heatmap'>,
+  UseChartKeyboardNavigationSignature,
 ];
 
 export const HEATMAP_PLUGINS = [
   useChartZAxis,
-  useChartCartesianAxis,
+  useChartTooltip,
   useChartInteraction,
+  useChartCartesianAxis,
   useChartHighlight,
   useChartProExport,
+  useChartBrush,
+  useChartProZoom,
+  useChartItemClick,
+  useChartKeyboardNavigation,
 ] as ConvertSignaturesIntoPlugins<HeatmapPluginSignatures>;

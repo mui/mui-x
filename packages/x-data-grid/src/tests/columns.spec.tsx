@@ -1,8 +1,7 @@
-import * as React from 'react';
-import { DataGrid, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, type GridRenderCellParams } from '@mui/x-data-grid';
 import type { Expect, Equal } from 'test/utils/typeUtils';
-import { GridCellParams } from '../models/params/gridCellParams';
-import { GridColDef, GridRowParams } from '../models';
+import { type GridCellParams } from '../models/params/gridCellParams';
+import { type GridColDef, type GridRowParams } from '../models';
 
 function RenderCellParamsExplicitTyping() {
   return (

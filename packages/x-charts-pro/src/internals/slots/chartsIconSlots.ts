@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { ChartBaseIconProps, ChartsIconSlots } from '@mui/x-charts/models';
+import type * as React from 'react';
+import { type ChartBaseIconProps, type ChartsIconSlots } from '@mui/x-charts/models';
 
 export interface ChartsIconSlotsPro extends ChartsIconSlots {
   /**

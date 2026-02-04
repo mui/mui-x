@@ -1,4 +1,4 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
 import { getGridLocalization } from '../utils/getGridLocalization';
 
 const hrHRGrid: Partial<GridLocaleText> = {
@@ -15,6 +15,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompaktno',
   toolbarDensityStandard: 'Standardno',
   toolbarDensityComfortable: 'Udobno',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Poništi',
+  toolbarRedo: 'Ponovi',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Stupci',
@@ -182,6 +186,10 @@ const hrHRGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'Da',
   booleanCellFalseLabel: 'Ne',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Proširiti',
+  longTextCellCollapseLabel: 'Skupiti',
+
   // Actions cell more text
   actionsCellMore: 'više',
 
@@ -342,6 +350,7 @@ const hrHRGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const hrHR = getGridLocalization(hrHRGrid);

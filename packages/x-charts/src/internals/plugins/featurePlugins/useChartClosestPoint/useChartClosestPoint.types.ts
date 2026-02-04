@@ -1,9 +1,10 @@
-import { ScatterItemIdentifier } from '../../../../models/seriesType';
-import { UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
-import { ChartPluginSignature } from '../../models';
-import { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
-import { UseChartHighlightSignature } from '../useChartHighlight';
-import { UseChartInteractionSignature } from '../useChartInteraction';
+import { type ScatterItemIdentifier } from '../../../../models/seriesType';
+import { type UseChartSeriesSignature } from '../../corePlugins/useChartSeries';
+import { type ChartPluginSignature } from '../../models';
+import { type UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import { type UseChartHighlightSignature } from '../useChartHighlight';
+import { type UseChartInteractionSignature } from '../useChartInteraction';
+import { type UseChartTooltipSignature } from '../useChartTooltip';
 
 export interface UseChartVoronoiInstance {
   /**
@@ -62,5 +63,9 @@ export type UseChartClosestPointSignature = ChartPluginSignature<{
   params: UseChartVoronoiParameters;
   defaultizedParams: UseChartVoronoiDefaultizedParameters;
   dependencies: [UseChartSeriesSignature, UseChartCartesianAxisSignature];
-  optionalDependencies: [UseChartInteractionSignature, UseChartHighlightSignature];
+  optionalDependencies: [
+    UseChartInteractionSignature,
+    UseChartHighlightSignature,
+    UseChartTooltipSignature,
+  ];
 }>;

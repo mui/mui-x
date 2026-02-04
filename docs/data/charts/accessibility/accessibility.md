@@ -4,7 +4,7 @@ title: Charts - Accessibility
 packageName: '@mui/x-charts'
 ---
 
-# Accessibility
+# Charts - Accessibility
 
 <p class="description">Learn how the Charts implement accessibility features and guidelines, including keyboard navigation that follows international standards.</p>
 
@@ -38,7 +38,7 @@ The WAI-ARIA Authoring Practices includes examples on [Tooltip](https://www.w3.o
 
 Some charts have animations when rendering or when data updates.
 For users with vestibular motion disorders those animations can be problematic.
-By default animations are toggled based on the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion) media feature.
+By default animations are toggled based on the [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion) media feature.
 
 <!--
 ## Screen reader compatibility
@@ -71,7 +71,7 @@ components: {
 
 {{"demo": "KeyboardNavigation.js"}}
 
-This feature is currently supported by line, bar, pie, scatter, and sparkline charts.
+This feature is currently supported by the following charts: line, bar, pie, scatter, sparkline, funnel, radar, heatmap, and sankey.
 
 This makes the SVG component focusable thanks to [`tabIndex`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/tabindex).
 When focused, the chart highlights a value item that can be modified with arrow navigation.
@@ -80,3 +80,21 @@ When focused, the chart highlights a value item that can be modified with arrow 
 | --------------------------------------------------------------------: | :---------------------------- |
 | <kbd class="key">Arrow Left</kbd>, <kbd class="key">Arrow Right</kbd> | Moves focus inside the series |
 |    <kbd class="key">Arrow Up</kbd>, <kbd class="key">Arrow Down</kbd> | Move focus between series     |
+
+### Composition
+
+The focus highlight is done with a dedicated SVG element.
+When using composition, you've to add this component to make the focus visible.
+
+Each series type has its own component:
+
+```js
+import { FocusedBar } from '@mui/x-charts/BarChart';
+import { FocusedPieArc } from '@mui/x-charts/PieChart';
+import { FocusedLineMark } from '@mui/x-charts/LineChart';
+import { FocusedScatterMark } from '@mui/x-charts/ScatterChart';
+import { FocusedRadarMark } from '@mui/x-charts/RadarChart';
+import { FocusedHeatmapCell } from '@mui/x-charts-pro/Heatmap';
+import { FocusedFunnelSection } from '@mui/x-charts-pro/FunnelChart';
+import { FocusedSankeyLink, FocusedSankeyNode } from '@mui/x-charts-pro/SankeyChart';
+```

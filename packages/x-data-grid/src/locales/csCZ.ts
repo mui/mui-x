@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const csCZGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompaktní',
   toolbarDensityStandard: 'Standartní',
   toolbarDensityComfortable: 'Komfortní',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Zpět',
+  toolbarRedo: 'Znovu',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Sloupce',
@@ -189,6 +193,10 @@ const csCZGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'ano',
   booleanCellFalseLabel: 'ne',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Rozbalit',
+  longTextCellCollapseLabel: 'Sbalit',
+
   // Actions cell more text
   actionsCellMore: 'více',
 
@@ -350,6 +358,7 @@ const csCZGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const csCZ: Localization = getGridLocalization(csCZGrid);

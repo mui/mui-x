@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import {
-  AxisId,
-  useSelector,
+  type AxisId,
   useStore,
   useAreaPlotData,
   selectorChartPreviewComputedXAxis,
   selectorChartPreviewComputedYAxis,
-  SeriesId,
+  type SeriesId,
 } from '@mui/x-charts/internals';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 const AreaPlotRoot = styled('g', {
   name: 'MuiAreaPlot',
   slot: 'Root',
-})();
+})({});
 
-interface AreaPreviewPlotProps extends PreviewPlotProps {}
+interface AreaPreviewPlotProps extends Pick<PreviewPlotProps, 'axisId'> {}
 
 export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   const completedData = useAreaPreviewData(axisId);
@@ -28,7 +27,7 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
           !!area && (
             <PreviewAreaElement
               key={seriesId}
-              id={seriesId}
+              seriesId={seriesId}
               d={d}
               color={color}
               gradientId={gradientId}
@@ -39,9 +38,11 @@ export function AreaPreviewPlot({ axisId }: AreaPreviewPlotProps) {
   );
 }
 
-export interface PreviewAreaElementProps
-  extends Omit<React.SVGProps<SVGPathElement>, 'ref' | 'color' | 'id'> {
-  id: SeriesId;
+export interface PreviewAreaElementProps extends Omit<
+  React.SVGProps<SVGPathElement>,
+  'ref' | 'color' | 'id'
+> {
+  seriesId: SeriesId;
   gradientId?: string;
   color: string;
   d: string;
@@ -51,12 +52,18 @@ export interface PreviewAreaElementProps
  * Preview of the area element for the zoom preview.
  * Based on AreaElement and AnimatedArea.
  */
-function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: PreviewAreaElementProps) {
+function PreviewAreaElement({
+  seriesId,
+  color,
+  gradientId,
+  onClick,
+  ...other
+}: PreviewAreaElementProps) {
   return (
     <path
       fill={gradientId ? `url(#${gradientId})` : color}
       stroke="none"
-      data-series={id}
+      data-series={seriesId}
       {...other}
     />
   );
@@ -65,8 +72,8 @@ function PreviewAreaElement({ id, color, gradientId, onClick, ...other }: Previe
 function useAreaPreviewData(axisId: AxisId) {
   const store = useStore();
 
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
 
   return useAreaPlotData(xAxes, yAxes);
 }

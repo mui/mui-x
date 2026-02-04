@@ -2,9 +2,10 @@
 
 import { vi } from 'vitest';
 import { muiXTelemetrySettings } from '@mui/x-telemetry';
+import { isJSDOM } from '@mui/x-internals/platform';
 import { getTelemetryEnvConfig } from './config';
 
-describe('Telemetry: getTelemetryConfig', () => {
+describe.runIf(isJSDOM)('Telemetry: getTelemetryConfig', () => {
   beforeEach(() => {
     vi.stubEnv('NODE_ENV', 'development');
   });

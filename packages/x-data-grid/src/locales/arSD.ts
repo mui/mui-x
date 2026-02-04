@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const arSDGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +16,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   toolbarDensityStandard: 'قياسي',
   toolbarDensityComfortable: 'مريح',
 
+  // Undo/redo toolbar button text
+  toolbarUndo: 'تراجع',
+  toolbarRedo: 'إعادة',
+
   // Columns selector toolbar button text
   toolbarColumns: 'الأعمدة',
   toolbarColumnsLabel: 'حدد أعمدة',
@@ -29,7 +33,7 @@ const arSDGrid: Partial<GridLocaleText> = {
     count !== 1 ? `${count} من المرشِحات النشطة` : `مرشِح نشط`,
 
   // Quick filter toolbar field
-  toolbarQuickFilterPlaceholder: 'بحث...',
+  toolbarQuickFilterPlaceholder: 'بحث…',
   toolbarQuickFilterLabel: 'بحث',
   toolbarQuickFilterDeleteIconLabel: 'أزال',
 
@@ -161,6 +165,10 @@ const arSDGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'نعم',
   booleanCellFalseLabel: 'لا',
 
+  // Long text cell
+  longTextCellExpandLabel: 'توسيع',
+  longTextCellCollapseLabel: 'طوي',
+
   // Actions cell more text
   actionsCellMore: 'المزيد',
 
@@ -186,18 +194,13 @@ const arSDGrid: Partial<GridLocaleText> = {
 
   // Pagination
   paginationRowsPerPage: 'عدد الصفوف في الصفحة:',
-  // paginationDisplayedRows: ({
-  //   from,
-  //   to,
-  //   count,
-  //   estimated
-  // }) => {
-  //   if (!estimated) {
-  //     return `${from}–${to} of ${count !== -1 ? count : `more than ${to}`}`;
-  //   }
-  //   const estimatedLabel = estimated && estimated > to ? `around ${estimated}` : `more than ${to}`;
-  //   return `${from}–${to} of ${count !== -1 ? count : estimatedLabel}`;
-  // },
+  paginationDisplayedRows: ({ from, to, count, estimated }) => {
+    if (!estimated) {
+      return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : `أكثر من ${to}`}`;
+    }
+    const estimatedLabel = estimated && estimated > to ? `حوالي ${estimated}` : `أكثر من ${to}`;
+    return `\u200E${to}-${from}\u200E من ${count !== -1 ? count : estimatedLabel}`;
+  },
   paginationItemAriaLabel: (type) => {
     if (type === 'first') {
       return 'انتقل إلى الصفحة الأولى';
@@ -326,6 +329,7 @@ const arSDGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const arSD: Localization = getGridLocalization(arSDGrid);

@@ -1,6 +1,6 @@
 'use client';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import type { UseChartExperimentalFeaturesSignature } from './useChartExperimentalFeature.types';
 
 export const useChartExperimentalFeatures: ChartPlugin<UseChartExperimentalFeaturesSignature> = ({
@@ -8,12 +8,7 @@ export const useChartExperimentalFeatures: ChartPlugin<UseChartExperimentalFeatu
   store,
 }) => {
   useEnhancedEffect(() => {
-    store.update((prevState) => {
-      return {
-        ...prevState,
-        experimentalFeatures: params.experimentalFeatures,
-      };
-    });
+    store.set('experimentalFeatures', params.experimentalFeatures);
   }, [store, params.experimentalFeatures]);
 
   return {};

@@ -40,7 +40,8 @@ export type DatePickerViewRenderers<TView extends DateView> = PickerViewRenderer
 >;
 
 export interface BaseDatePickerProps
-  extends BasePickerInputProps<PickerValue, DateView, DateValidationError>,
+  extends
+    BasePickerInputProps<PickerValue, DateView, DateValidationError>,
     ExportedDateCalendarProps {
   /**
    * Overridable component slots.

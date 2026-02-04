@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { screen } from '@mui/internal-test-utils';
 import { describeAdapters } from 'test/utils/pickers';
 import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';

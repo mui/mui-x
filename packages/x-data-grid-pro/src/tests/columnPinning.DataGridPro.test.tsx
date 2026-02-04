@@ -1,15 +1,14 @@
-import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  GridApi,
+  type GridApi,
   useGridApiRef,
-  DataGridProProps,
+  type DataGridProProps,
   gridClasses,
   GridPinnedColumnPosition,
-  GridColumnGroupingModel,
-  GridColDef,
+  type GridColumnGroupingModel,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
 import {

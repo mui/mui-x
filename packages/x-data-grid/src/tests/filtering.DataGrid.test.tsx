@@ -1,13 +1,12 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
 import {
   DataGrid,
-  DataGridProps,
+  type DataGridProps,
   GridToolbarFilterButton,
-  GridColDef,
-  GridFilterItem,
+  type GridColDef,
+  type GridFilterItem,
   GridPreferencePanelsValue,
-  GridFilterOperator,
+  type GridFilterOperator,
 } from '@mui/x-data-grid';
 import { getColumnValues } from 'test/utils/helperFn';
 import { spy } from 'sinon';
@@ -1054,6 +1053,60 @@ describe('<DataGrid /> - Filter', () => {
         '1/1/2001, 8:30:00 AM',
       ]);
     });
+
+    // https://github.com/mui/mui-x/issues/19974
+    describe('should consider seconds when filtering', () => {
+      const getRowsWithSeconds = (operator: string) => {
+        const { unmount } = render(
+          <TestCase
+            filterModel={{
+              items: [{ field: 'date', operator, value: '2001-01-01T07:30' }],
+            }}
+            rows={[
+              { id: 1, date: new Date(2001, 0, 1, 7, 29, 30) },
+              { id: 2, date: new Date(2001, 0, 1, 7, 30, 0) },
+              { id: 3, date: new Date(2001, 0, 1, 7, 30, 30) },
+            ]}
+            columns={[
+              {
+                field: 'date',
+                type: 'dateTime',
+                valueFormatter: (value?: Date) => (value ? value.toLocaleString('en-US') : ''),
+              },
+            ]}
+          />,
+        );
+        const values = getColumnValues(0);
+        unmount();
+        return values;
+      };
+
+      it('should filter with operator "after"', () => {
+        // 7:30:30 is after 7:30:00, should be included
+        expect(getRowsWithSeconds('after')).to.deep.equal(['1/1/2001, 7:30:30 AM']);
+      });
+
+      it('should filter with operator "onOrAfter"', () => {
+        // 7:30:00 and 7:30:30 are on or after 7:30:00
+        expect(getRowsWithSeconds('onOrAfter')).to.deep.equal([
+          '1/1/2001, 7:30:00 AM',
+          '1/1/2001, 7:30:30 AM',
+        ]);
+      });
+
+      it('should filter with operator "before"', () => {
+        // 7:29:30 is before 7:30:00, should be included
+        expect(getRowsWithSeconds('before')).to.deep.equal(['1/1/2001, 7:29:30 AM']);
+      });
+
+      it('should filter with operator "onOrBefore"', () => {
+        // 7:29:30 and 7:30:00 are on or before 7:30:00
+        expect(getRowsWithSeconds('onOrBefore')).to.deep.equal([
+          '1/1/2001, 7:29:30 AM',
+          '1/1/2001, 7:30:00 AM',
+        ]);
+      });
+    });
   });
 
   describe('column type: boolean', () => {
@@ -1533,7 +1586,7 @@ describe('<DataGrid /> - Filter', () => {
     });
   });
 
-  it('should translate operators dynamically in toolbar without crashing ', () => {
+  it('should translate operators dynamically in toolbar without crashing', () => {
     expect(() => {
       return (
         <div style={{ height: 400, width: '100%' }}>

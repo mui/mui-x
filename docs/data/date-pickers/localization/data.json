@@ -235,7 +235,7 @@
     "languageTag": "pt-BR",
     "importName": "ptBR",
     "localeName": "Portuguese (Brazil)",
-    "missingKeysCount": 2,
+    "missingKeysCount": 0,
     "totalKeysCount": 53,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/ptBR.ts"
   },
@@ -278,6 +278,14 @@
     "missingKeysCount": 2,
     "totalKeysCount": 53,
     "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/svSE.ts"
+  },
+  {
+    "languageTag": "th-TH",
+    "importName": "thTH",
+    "localeName": "Thai",
+    "missingKeysCount": 0,
+    "totalKeysCount": 53,
+    "githubLink": "https://github.com/mui/mui-x/blob/master/packages/x-date-pickers/src/locales/thTH.ts"
   },
   {
     "languageTag": "tr-TR",

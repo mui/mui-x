@@ -4,18 +4,18 @@ import composeClasses from '@mui/utils/composeClasses';
 import {
   getDataGridUtilityClass,
   useGridSelector,
-  GridRenderCellParams,
-  GridRowId,
+  type GridRenderCellParams,
+  type GridRowId,
 } from '@mui/x-data-grid';
 import { createSelector } from '@mui/x-data-grid/internals';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { DataGridProProcessedProps } from '../models/dataGridProProps';
+import type { DataGridProProcessedProps } from '../models/dataGridProProps';
 import {
   gridDetailPanelExpandedRowIdsSelector,
   gridDetailPanelExpandedRowsContentCacheSelector,
 } from '../hooks/features/detailPanel/gridDetailPanelSelector';
-import { GridApiPro } from '../models';
+import type { GridApiPro } from '../models';
 
 type OwnerState = { classes: DataGridProProcessedProps['classes']; isExpanded: boolean };
 
@@ -93,19 +93,6 @@ GridDetailPanelToggleCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

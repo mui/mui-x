@@ -5,22 +5,22 @@ import { useLicenseVerifier, Watermark } from '@mui/x-license';
 import {
   GridRoot,
   GridContextProvider,
-  GridValidRowModel,
+  type GridValidRowModel,
   useGridSelector,
 } from '@mui/x-data-grid-pro';
 import {
   propValidatorsDataGrid,
   propValidatorsDataGridPro,
-  PropValidator,
+  type PropValidator,
   validateProps,
-  GridConfiguration,
+  type GridConfiguration,
   useGridApiInitialization,
   getRowValue,
 } from '@mui/x-data-grid-pro/internals';
 import { useMaterialCSSVariables } from '@mui/x-data-grid/material';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useDataGridPremiumComponent } from './useDataGridPremiumComponent';
-import {
+import type {
   DataGridPremiumProcessedProps,
   DataGridPremiumProps,
 } from '../models/dataGridPremiumProps';
@@ -34,6 +34,7 @@ import type { GridApiPremium, GridPrivateApiPremium } from '../models/gridApiPre
 import { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
 import { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
 import { gridSidebarOpenSelector } from '../hooks/features/sidebar';
+import { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 
 export type { GridPremiumSlotsComponent as GridSlots } from '../models';
 
@@ -53,6 +54,7 @@ const configuration: GridConfiguration<GridPrivateApiPremium, DataGridPremiumPro
 
       return getRowValue(row, column, apiRef);
     },
+    useIsCellEditable,
     useGridRowsOverridableMethods,
     useGridParamsOverridableMethods,
   },
@@ -76,7 +78,11 @@ const DataGridPremiumRaw = forwardRef(function DataGridPremium<R extends GridVal
     initialProps,
   );
 
-  const props = useDataGridPremiumComponent(privateApiRef, initialProps, configuration);
+  const props = useDataGridPremiumComponent(
+    privateApiRef,
+    initialProps,
+    configuration as GridConfiguration,
+  );
   useLicenseVerifier('x-data-grid-premium', releaseInfo);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -152,6 +158,7 @@ DataGridPremiumRaw.propTypes = {
           helperText: PropTypes.string,
           response: PropTypes.shape({
             aggregation: PropTypes.object.isRequired,
+            chart: PropTypes.object,
             conversationId: PropTypes.string.isRequired,
             filterOperator: PropTypes.oneOf(['and', 'or']),
             filters: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -194,13 +201,11 @@ DataGridPremiumRaw.propTypes = {
    */
   'aria-labelledby': PropTypes.string,
   /**
-   * If `true`, the Data Grid height is dynamic and follows the number of rows in the Data Grid.
+   * If `true`, the Data Grid height is dynamic and takes as much space as it needs to display all rows.
+   * Use it instead of a flex parent container approach, if:
+   * - you don't need to set a minimum or maximum height for the Data Grid
+   * - you want to avoid the scrollbar flickering when the content changes
    * @default false
-   * @deprecated Use flex parent container instead: https://mui.com/x/react-data-grid/layout/#flex-parent-container
-   * @example
-   * <div style={{ display: 'flex', flexDirection: 'column' }}>
-   *   <DataGrid />
-   * </div>
    */
   autoHeight: PropTypes.bool,
   /**
@@ -220,6 +225,7 @@ DataGridPremiumRaw.propTypes = {
     columns: PropTypes.arrayOf(PropTypes.string),
     disableColumnVirtualization: PropTypes.bool,
     expand: PropTypes.bool,
+    includeHeaderFilters: PropTypes.bool,
     includeHeaders: PropTypes.bool,
     includeOutliers: PropTypes.bool,
     outliersFactor: PropTypes.number,
@@ -524,7 +530,7 @@ DataGridPremiumRaw.propTypes = {
    * @param {GridColDef} column The column to generate derived columns for.
    * @param {GridLocaleTextApi['getLocaleText']} getLocaleText The function to get the locale text.
    * @returns {GridColDef[] | undefined} The derived columns.
-   * @default {defaultGetPivotDerivedColumns} Creates year and quarter columns for date columns.
+   * @default {defaultGetPivotDerivedColumns | undefined} Creates year and quarter columns for date columns if not in server side mode.
    */
   getPivotDerivedColumns: PropTypes.func,
   /**
@@ -595,6 +601,139 @@ DataGridPremiumRaw.propTypes = {
    */
   hideFooterSelectedRowCount: PropTypes.bool,
   /**
+   * Map of grid events to their undo/redo handlers.
+   * @default Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events
+   */
+  historyEventHandlers: PropTypes.object,
+  /**
+   * The maximum size of the history stack.
+   * Set to 0 to disable the undo/redo feature.
+   * @default 30
+   */
+  historyStackSize: PropTypes.number,
+  /**
+   * List of grid events after which the history stack items should be re-validated.
+   * @default ['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']
+   */
+  historyValidationEvents: PropTypes.arrayOf(
+    PropTypes.oneOf([
+      'activeChartIdChange',
+      'activeStrategyProcessorChange',
+      'aggregationLookupSet',
+      'aggregationModelChange',
+      'aiAssistantActiveConversationIndexChange',
+      'aiAssistantConversationsChange',
+      'cellClick',
+      'cellDoubleClick',
+      'cellDragEnter',
+      'cellDragOver',
+      'cellEditStart',
+      'cellEditStop',
+      'cellFocusIn',
+      'cellFocusOut',
+      'cellKeyDown',
+      'cellKeyUp',
+      'cellModeChange',
+      'cellModesModelChange',
+      'cellMouseDown',
+      'cellMouseOver',
+      'cellMouseUp',
+      'cellSelectionChange',
+      'chartSynchronizationStateChange',
+      'clipboardCopy',
+      'clipboardPasteEnd',
+      'clipboardPasteStart',
+      'columnGroupHeaderBlur',
+      'columnGroupHeaderFocus',
+      'columnGroupHeaderKeyDown',
+      'columnHeaderBlur',
+      'columnHeaderClick',
+      'columnHeaderContextMenu',
+      'columnHeaderDoubleClick',
+      'columnHeaderDragEnd',
+      'columnHeaderDragEndNative',
+      'columnHeaderDragEnter',
+      'columnHeaderDragOver',
+      'columnHeaderDragStart',
+      'columnHeaderEnter',
+      'columnHeaderFocus',
+      'columnHeaderKeyDown',
+      'columnHeaderLeave',
+      'columnHeaderOut',
+      'columnHeaderOver',
+      'columnIndexChange',
+      'columnOrderChange',
+      'columnResize',
+      'columnResizeStart',
+      'columnResizeStop',
+      'columnsChange',
+      'columnSeparatorDoubleClick',
+      'columnSeparatorMouseDown',
+      'columnVisibilityModelChange',
+      'columnWidthChange',
+      'debouncedResize',
+      'densityChange',
+      'detailPanelsExpandedRowIdsChange',
+      'excelExportStateChange',
+      'fetchRows',
+      'filteredRowsSet',
+      'filterModelChange',
+      'headerFilterBlur',
+      'headerFilterClick',
+      'headerFilterKeyDown',
+      'headerFilterMouseDown',
+      'headerSelectionCheckboxChange',
+      'menuClose',
+      'menuOpen',
+      'paginationMetaChange',
+      'paginationModelChange',
+      'pinnedColumnsChange',
+      'pivotModeChange',
+      'pivotModelChange',
+      'pivotPanelOpenChange',
+      'preferencePanelClose',
+      'preferencePanelOpen',
+      'redo',
+      'renderedRowsIntervalChange',
+      'resize',
+      'rootMount',
+      'rowClick',
+      'rowCountChange',
+      'rowDoubleClick',
+      'rowDragEnd',
+      'rowDragOver',
+      'rowDragStart',
+      'rowEditStart',
+      'rowEditStop',
+      'rowExpansionChange',
+      'rowGroupingModelChange',
+      'rowModesModelChange',
+      'rowMouseEnter',
+      'rowMouseLeave',
+      'rowMouseOut',
+      'rowMouseOver',
+      'rowOrderChange',
+      'rowSelectionChange',
+      'rowSelectionCheckboxChange',
+      'rowsScrollEnd',
+      'rowsScrollEndIntersection',
+      'rowsSet',
+      'scrollPositionChange',
+      'sidebarClose',
+      'sidebarOpen',
+      'sortedRowsSet',
+      'sortModelChange',
+      'stateChange',
+      'strategyAvailabilityChange',
+      'undo',
+      'unmount',
+      'viewportInnerSizeChange',
+      'virtualScrollerContentSizeChange',
+      'virtualScrollerTouchMove',
+      'virtualScrollerWheel',
+    ]).isRequired,
+  ),
+  /**
    * If `true`, the diacritics (accents) are ignored when filtering or quick filtering.
    * E.g. when filter value is `cafe`, the rows with `café` will be visible.
    * @default false
@@ -632,11 +771,28 @@ DataGridPremiumRaw.propTypes = {
    */
   isGroupExpandedByDefault: PropTypes.func,
   /**
+   * Indicates whether a row is reorderable.
+   * @param {object} params With all properties from the row.
+   * @param {R} params.row The row model of the row that the current cell belongs to.
+   * @param {GridTreeNode} params.rowNode The node of the row that the current cell belongs to.
+   * @returns {boolean} A boolean indicating if the row is reorderable.
+   */
+  isRowReorderable: PropTypes.func,
+  /**
    * Determines if a row can be selected.
    * @param {GridRowParams} params With all properties from [[GridRowParams]].
    * @returns {boolean} A boolean indicating if the row is selectable.
    */
   isRowSelectable: PropTypes.func,
+  /**
+   * Indicates if a row reorder attempt is valid.
+   * Can be used to disable certain row reorder operations based on the context.
+   * The internal validation is still applied, preventing unsupported use-cases.
+   * Use `isValidRowReorder()` to add additional validation rules to the default ones.
+   * @param {ReorderValidationContext} context The context object containing all information about the reorder operation.
+   * @returns {boolean} A boolean indicating if the reorder operation should go through.
+   */
+  isValidRowReorder: PropTypes.func,
   /**
    * If `true`, moving the mouse pointer outside the grid before releasing the mouse button
    * in a column re-order action will not cause the column to jump back to its original position.
@@ -991,6 +1147,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onPrompt: PropTypes.func,
   /**
+   * Callback fired when a redo operation is executed.
+   */
+  onRedo: PropTypes.func,
+  /**
    * Callback fired when the Data Grid is resized.
    * @param {ElementSize} containerSize With all properties from [[ElementSize]].
    * @param {MuiEvent<{}>} event The event object.
@@ -1091,6 +1251,10 @@ DataGridPremiumRaw.propTypes = {
    */
   onStateChange: PropTypes.func,
   /**
+   * Callback fired when an undo operation is executed.
+   */
+  onUndo: PropTypes.func,
+  /**
    * Select the pageSize dynamically using the component UI.
    * @default [25, 50, 100]
    */
@@ -1134,6 +1298,11 @@ DataGridPremiumRaw.propTypes = {
    */
   pinnedColumns: PropTypes.object,
   /**
+   * Sets the type of separator between pinned columns and non-pinned columns.
+   * @default 'border-and-shadow'
+   */
+  pinnedColumnsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border', 'shadow']),
+  /**
    * Rows data to pin on top or bottom.
    */
   pinnedRows: PropTypes.shape({
@@ -1141,16 +1310,22 @@ DataGridPremiumRaw.propTypes = {
     top: PropTypes.arrayOf(PropTypes.object),
   }),
   /**
+   * Sets the type of separator between pinned rows and non-pinned rows.
+   * @default 'border-and-shadow'
+   */
+  pinnedRowsSectionSeparator: PropTypes.oneOf(['border-and-shadow', 'border']),
+  /**
    * If `true`, the data grid will show data in pivot mode using the `pivotModel`.
    * @default false
    */
   pivotActive: PropTypes.bool,
   /**
    * The column definition overrides for the columns generated by the pivoting feature.
-   * @param {string} originalColumnField The field of the original column.
-   * @param {string[]} columnGroupPath The path of the column groups the column belongs to.
-   * @returns {Partial<GridPivotingColDefOverrides> | undefined | void} The column definition overrides.
+   * Pass either a partial column definition to apply the same overrides to all pivot columns, or a callback to apply different overrides to each pivot column.
+   * For server-side pivoting, only the `PivotingColDefCallback` signature is supported, and the prop is required.
+   * @type {Partial<GridPivotingColDefOverrides> | PivotingColDefCallback}
    * @default undefined
+   * @throws {Error} If `undefined` and `dataSource` is provided.
    */
   pivotingColDef: PropTypes.oneOfType([
     PropTypes.func,
@@ -1159,6 +1334,7 @@ DataGridPremiumRaw.propTypes = {
       cellClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
       description: PropTypes.string,
       display: PropTypes.oneOf(['flex', 'text']),
+      field: PropTypes.string,
       flex: PropTypes.number,
       headerAlign: PropTypes.oneOf(['center', 'left', 'right']),
       headerClassName: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -1308,6 +1484,15 @@ DataGridPremiumRaw.propTypes = {
    */
   scrollEndThreshold: PropTypes.number,
   /**
+   * Updates the tree path in a row model.
+   * Used when reordering rows across different parents in tree data.
+   * @template R
+   * @param {string[]} path The new path for the row.
+   * @param {R} row The row model to update.
+   * @returns {R} The updated row model with the new path.
+   */
+  setTreeDataPath: PropTypes.func,
+  /**
    * If `true`, vertical borders will be displayed between cells.
    * @default false
    */
@@ -1368,6 +1553,15 @@ DataGridPremiumRaw.propTypes = {
     PropTypes.func,
     PropTypes.object,
   ]),
+  /**
+   * Sets the tab navigation behavior for the Data Grid.
+   * - "none": No Data Grid specific tab navigation. Pressing the tab key will move the focus to the next element in the tab sequence.
+   * - "content": Pressing the tab key will move the focus to the next cell in the same row or the first cell in the next row. Shift+Tab will move the focus to the previous cell in the same row or the last cell in the previous row. Tab navigation is not enabled for the header.
+   * - "header": Pressing the tab key will move the focus to the next column group, column header or header filter. Shift+Tab will move the focus to the previous column group, column header or header filter. Tab navigation is not enabled for the content.
+   * - "all": Combines the "content" and "header" behavior.
+   * @default "none"
+   */
+  tabNavigation: PropTypes.oneOf(['all', 'content', 'header', 'none']),
   /**
    * If positive, the Data Grid will throttle updates coming from `apiRef.current.updateRows` and `apiRef.current.setRows`.
    * It can be useful if you have a high update rate but do not want to do heavy work like filtering / sorting or rendering on each  individual update.

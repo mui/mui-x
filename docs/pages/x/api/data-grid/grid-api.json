@@ -26,10 +26,25 @@
       "type": { "description": "(options?: GridAutosizeOptions) =&gt; Promise&lt;void&gt;" },
       "required": true
     },
-    "dataSource": { "type": { "description": "GridDataSourceApiBase" }, "required": true },
+    "collapseAllRows": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isProPlan": true
+    },
+    "dataSource": {
+      "type": {
+        "description": "{<br />  /**<br />   * Fetches the rows from the server.<br />   * If no `parentId` option is provided, it fetches the root rows.<br />   * Any missing parameter from `params` will be filled from the state (sorting, filtering, etc.).<br />   * @param {GridRowId} parentId The id of the parent node (default: `GRID_ROOT_GROUP_ID`).<br />   * @param {GridDataSourceFetchRowsParams&lt;GridGetRowsParams&gt;} params Request parameters override.<br />   * @returns {Promise&lt;void&gt;} A promise that resolves when the rows are fetched.<br />   */<br />  fetchRows: (parentId?: GridRowId, params?: GridDataSourceFetchRowsParams&lt;GridGetRowsParams&gt;) =&gt; Promise&lt;void&gt;<br />  /**<br />   * The data source cache object.<br />   */<br />  cache: GridDataSourceCache<br />  /**<br />   * Syncs the row with the server and updates in the grid.<br />   * @param {GridUpdateRowParams} params The parameters for the edit operation.<br />   * @returns {Promise&lt;GridRowModel&gt; | undefined} The updated row or `undefined` if `dataSource.updateRow` is not passed.<br />   */<br />  editRow: (params: GridUpdateRowParams) =&gt; Promise&lt;GridRowModel&gt; | undefined<br />}"
+      },
+      "required": true
+    },
     "deleteFilterItem": {
       "type": { "description": "(item: GridFilterItem) =&gt; void" },
       "required": true
+    },
+    "expandAllRows": {
+      "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isProPlan": true
     },
     "exportDataAsCsv": {
       "type": { "description": "(options?: GridCsvExportOptions) =&gt; void" },
@@ -222,6 +237,13 @@
     "hidePreferences": { "type": { "description": "() =&gt; void" }, "required": true },
     "hideSidebar": {
       "type": { "description": "() =&gt; void" },
+      "required": true,
+      "isPremiumPlan": true
+    },
+    "history": {
+      "type": {
+        "description": "{<br />  /**<br />   * Undo the last action.<br />   * @returns {Promise&lt;boolean&gt;} True if the operation was successful, false otherwise.<br />   */<br />  undo: () =&gt; Promise&lt;boolean&gt;<br />  /**<br />   * Redo the last undone action.<br />   * @returns {Promise&lt;boolean&gt;} True if the operation was successful, false otherwise.<br />   */<br />  redo: () =&gt; Promise&lt;boolean&gt;<br />  /**<br />   * Clear the entire history.<br />   */<br />  clear: () =&gt; void<br />  /**<br />   * @returns {boolean} True if there are undo steps available, false otherwise.<br />   */<br />  canUndo: () =&gt; boolean<br />  /**<br />   * @returns {boolean} True if there are redo steps available, false otherwise.<br />   */<br />  canRedo: () =&gt; boolean<br />}"
+      },
       "required": true,
       "isPremiumPlan": true
     },
@@ -442,7 +464,16 @@
       "isPremiumPlan": true
     },
     "setRowIndex": {
-      "type": { "description": "(rowId: GridRowId, targetIndex: number) =&gt; void" },
+      "type": {
+        "description": "(rowId: GridRowId, targetIndex: number) =&gt; void | Promise&lt;void&gt;"
+      },
+      "required": true,
+      "isProPlan": true
+    },
+    "setRowPosition": {
+      "type": {
+        "description": "(sourceRowId: GridRowId, targetRowId: GridRowId, position: RowReorderDropPosition) =&gt; void | Promise&lt;void&gt;"
+      },
       "required": true,
       "isProPlan": true
     },

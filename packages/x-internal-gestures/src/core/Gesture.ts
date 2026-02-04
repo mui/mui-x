@@ -70,7 +70,10 @@ export type BaseGestureOptions = {
 /**
  * Configuration options for creating a gesture instance.
  */
-export type GestureOptions<GestureName extends string> = {
+export type GestureOptions<
+  GestureName extends string,
+  FineGrainedGestureOptions extends BaseGestureOptions = BaseGestureOptions,
+> = {
   /** Unique name identifying this gesture type */
   name: GestureName;
   /** Whether to prevent default browser action for gesture events */
@@ -100,7 +103,7 @@ export type GestureOptions<GestureName extends string> = {
    * @default [] (all pointer types allowed)
    */
   pointerMode?: PointerMode[];
-} & BaseGestureOptions & {
+} & FineGrainedGestureOptions & {
     /**
      * Pointer mode-specific configuration overrides.
      * Options defined here will override any option defined in the base root options.
@@ -115,7 +118,7 @@ export type GestureOptions<GestureName extends string> = {
      * }
      * ```
      */
-    pointerOptions?: Partial<Record<PointerMode, BaseGestureOptions>>;
+    pointerOptions?: Partial<Record<PointerMode, FineGrainedGestureOptions>>;
   };
 
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/naming-convention
@@ -270,13 +273,13 @@ export abstract class Gesture<GestureName extends string> {
     const changeOptionsEventName = `${this.name}ChangeOptions`;
     (this.element as CustomEventListener).addEventListener(
       changeOptionsEventName,
-      this.handleOptionsChange.bind(this),
+      this.handleOptionsChange,
     );
 
     const changeStateEventName = `${this.name}ChangeState`;
     (this.element as CustomEventListener).addEventListener(
       changeStateEventName,
-      this.handleStateChange.bind(this),
+      this.handleStateChange,
     );
   }
 
@@ -284,11 +287,11 @@ export abstract class Gesture<GestureName extends string> {
    * Handle option change events
    * @param event Custom event with new options in the detail property
    */
-  private handleOptionsChange(event: CustomEvent<typeof this.mutableOptionsType>): void {
+  private handleOptionsChange = (event: CustomEvent<typeof this.mutableOptionsType>): void => {
     if (event && event.detail) {
       this.updateOptions(event.detail);
     }
-  }
+  };
 
   /**
    * Update the gesture options with new values
@@ -305,16 +308,27 @@ export abstract class Gesture<GestureName extends string> {
   }
 
   /**
+   * Get the default configuration for the pointer specific options.
+   * Change this function in child classes to provide different defaults.
+   */
+  protected getBaseConfig() {
+    return {
+      requiredKeys: this.requiredKeys,
+    };
+  }
+
+  /**
    * Get the effective configuration for a specific pointer mode.
    * This merges the base configuration with pointer mode-specific overrides.
    *
    * @param pointerType - The pointer type to get configuration for
    * @returns The effective configuration object
    */
-  protected getEffectiveConfig(pointerType: PointerMode): Required<BaseGestureOptions> {
-    const baseConfig = {
-      requiredKeys: this.requiredKeys,
-    };
+  protected getEffectiveConfig<T>(pointerType: PointerMode, baseConfig: T): T {
+    if (pointerType !== 'mouse' && pointerType !== 'touch' && pointerType !== 'pen') {
+      // Unknown pointer type, return base config
+      return baseConfig;
+    }
 
     // Apply pointer mode-specific overrides
     const pointerModeOverrides = this.pointerOptions[pointerType];
@@ -332,11 +346,11 @@ export abstract class Gesture<GestureName extends string> {
    * Handle state change events
    * @param event Custom event with new state values in the detail property
    */
-  private handleStateChange(event: CustomEvent<typeof this.mutableStateType>): void {
+  private handleStateChange = (event: CustomEvent<typeof this.mutableStateType>): void => {
     if (event && event.detail) {
       this.updateState(event.detail);
     }
-  }
+  };
 
   /**
    * Update the gesture state with new values
@@ -399,7 +413,10 @@ export abstract class Gesture<GestureName extends string> {
    */
   protected shouldPreventGesture(element: TargetElement, pointerType: string): boolean {
     // Get effective configuration for this pointer type
-    const effectiveConfig = this.getEffectiveConfig(pointerType as PointerMode);
+    const effectiveConfig = this.getEffectiveConfig(
+      pointerType as PointerMode,
+      this.getBaseConfig(),
+    );
 
     // First check if required keyboard keys are pressed
     if (!this.keyboardManager.areKeysPressed(effectiveConfig.requiredKeys)) {
@@ -440,13 +457,13 @@ export abstract class Gesture<GestureName extends string> {
     const changeOptionsEventName = `${this.name}ChangeOptions`;
     (this.element as CustomEventListener).removeEventListener(
       changeOptionsEventName,
-      this.handleOptionsChange.bind(this),
+      this.handleOptionsChange,
     );
 
     const changeStateEventName = `${this.name}ChangeState`;
     (this.element as CustomEventListener).removeEventListener(
       changeStateEventName,
-      this.handleStateChange.bind(this),
+      this.handleStateChange,
     );
   }
 

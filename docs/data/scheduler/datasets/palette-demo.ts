@@ -1,85 +1,87 @@
 // Fake data of an agenda with lots of different resources
-import { DateTime } from 'luxon';
-import { CalendarEvent, CalendarResource } from '@mui/x-scheduler/primitives/models';
+import { startOfWeek } from 'date-fns/startOfWeek';
+import { setDay } from 'date-fns/setDay';
+import { setHours } from 'date-fns/setHours';
+import { SchedulerEvent, SchedulerResource } from '@mui/x-scheduler/models';
 
-export const defaultVisibleDate = DateTime.fromISO('2025-07-01T00:00:00');
+export const defaultVisibleDate = new Date('2025-07-01T00:00:00');
 
-const START_OF_FIRST_WEEK = defaultVisibleDate.startOf('week');
+const START_OF_FIRST_WEEK = startOfWeek(defaultVisibleDate);
 
-export const initialEvents: CalendarEvent[] = [
+export const initialEvents: SchedulerEvent[] = [
   {
     id: 'violet',
-    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 2 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 4 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 1), 2),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 1), 4),
     title: 'violet',
     resource: 'violet',
   },
   {
     id: 'jade',
-    start: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 5 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 1, hour: 7 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 1), 5),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 1), 7),
     title: 'jade',
     resource: 'jade',
   },
   {
     id: 'lime',
-    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 2 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 4 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 2), 2),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 2), 4),
     title: 'lime',
     resource: 'lime',
   },
   {
     id: 'orange',
-    start: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 5 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 2, hour: 7 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 2), 5),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 2), 7),
     title: 'orange',
     resource: 'orange',
   },
   {
     id: 'cyan',
-    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 2 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 4 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 3), 2),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 3), 4),
     title: 'cyan',
     resource: 'cyan',
   },
   {
     id: 'pink',
-    start: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 5 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 3, hour: 7 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 3), 5),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 3), 7),
     title: 'pink',
     resource: 'pink',
   },
   {
     id: 'indigo',
-    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 2 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 4 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 4), 2),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 4), 4),
     title: 'indigo',
     resource: 'indigo',
   },
   {
     id: 'yellow',
-    start: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 5 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 4, hour: 7 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 4), 5),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 4), 7),
     title: 'yellow',
     resource: 'yellow',
   },
   {
     id: 'blue',
-    start: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 2 }),
-    end: START_OF_FIRST_WEEK.set({ weekday: 5, hour: 4 }),
+    start: setHours(setDay(START_OF_FIRST_WEEK, 5), 2),
+    end: setHours(setDay(START_OF_FIRST_WEEK, 5), 4),
     title: 'blue',
     resource: 'blue',
   },
 ];
 
-export const resources: CalendarResource[] = [
-  { name: 'violet', id: 'violet', eventColor: 'violet' },
-  { name: 'jade', id: 'jade', eventColor: 'jade' },
-  { name: 'lime', id: 'lime', eventColor: 'lime' },
-  { name: 'orange', id: 'orange', eventColor: 'orange' },
-  { name: 'cyan', id: 'cyan', eventColor: 'cyan' },
-  { name: 'pink', id: 'pink', eventColor: 'pink' },
-  { name: 'indigo', id: 'indigo', eventColor: 'indigo' },
-  { name: 'yellow', id: 'yellow', eventColor: 'yellow' },
-  { name: 'blue', id: 'blue', eventColor: 'blue' },
+export const resources: SchedulerResource[] = [
+  { title: 'violet', id: 'violet', eventColor: 'violet' },
+  { title: 'jade', id: 'jade', eventColor: 'jade' },
+  { title: 'lime', id: 'lime', eventColor: 'lime' },
+  { title: 'orange', id: 'orange', eventColor: 'orange' },
+  { title: 'cyan', id: 'cyan', eventColor: 'cyan' },
+  { title: 'pink', id: 'pink', eventColor: 'pink' },
+  { title: 'indigo', id: 'indigo', eventColor: 'indigo' },
+  { title: 'yellow', id: 'yellow', eventColor: 'yellow' },
+  { title: 'blue', id: 'blue', eventColor: 'blue' },
 ];

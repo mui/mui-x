@@ -51,6 +51,11 @@ type Pivoting =
     }
   | {};
 
+type Chart = {
+  dimensions: string[];
+  values: string[];
+};
+
 export type PromptResponse = {
   conversationId: string;
   select: number;
@@ -60,6 +65,7 @@ export type PromptResponse = {
   sorting: ColumnSort[];
   grouping: Grouping[];
   pivoting: Pivoting;
+  chart: Chart | null;
 };
 
 export type PromptResolverOptions = {

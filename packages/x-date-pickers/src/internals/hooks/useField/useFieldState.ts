@@ -107,16 +107,6 @@ export const useFieldState = <
     onError: internalPropsWithDefaults.onError,
   });
 
-  const error = React.useMemo(() => {
-    // only override when `error` is undefined.
-    // in case of multi input fields, the `error` value is provided externally and will always be defined.
-    if (errorProp !== undefined) {
-      return errorProp;
-    }
-
-    return hasValidationError;
-  }, [hasValidationError, errorProp]);
-
   const localizedDigits = React.useMemo(() => getLocalizedDigits(adapter), [adapter]);
 
   const sectionsValueBoundaries = React.useMemo(
@@ -208,6 +198,25 @@ export const useFieldState = <
     () => state.sections.every((section) => section.value === ''),
     [state.sections],
   );
+
+  // When the field loses focus (no active section), consider partially filled sections as invalid.
+  // This enforces that the field must be entirely filled or entirely empty on blur.
+  const hasPartiallyFilledSectionsOnBlur = React.useMemo(() => {
+    if (activeSectionIndex != null) {
+      return false;
+    }
+
+    const filledSections = state.sections.filter((s) => s.value !== '');
+    return filledSections.length > 0 && state.sections.length - filledSections.length > 0;
+  }, [state.sections, activeSectionIndex]);
+
+  const error = React.useMemo(() => {
+    if (errorProp !== undefined) {
+      return errorProp;
+    }
+
+    return hasValidationError || hasPartiallyFilledSectionsOnBlur;
+  }, [hasValidationError, hasPartiallyFilledSectionsOnBlur, errorProp]);
 
   const publishValue = (newValue: TValue) => {
     const context: FieldChangeHandlerContext<TError> = {
@@ -385,11 +394,12 @@ export const useFieldState = <
 
     /**
      * If the previous date is not null,
-     * Then we publish the date as `null`.
+     * Then we publish the date as `newActiveDate to prevent error state oscillation`.
+     * @link: https://github.com/mui/mui-x/issues/17967
      */
     if (activeDate != null) {
       setSectionUpdateToApplyOnNextInvalidDate(newSectionValue);
-      return publishValue(fieldValueManager.updateDateInValue(value, section, null));
+      publishValue(fieldValueManager.updateDateInValue(value, section, newActiveDate));
     }
 
     /**

@@ -1,5 +1,5 @@
-import { GridFeatureMode } from '../../../models/gridFeatureMode';
-import { GridPaginationMeta, GridPaginationModel } from '../../../models/gridPaginationProps';
+import type { GridFeatureMode } from '../../../models/gridFeatureMode';
+import type { GridPaginationMeta, GridPaginationModel } from '../../../models/gridPaginationProps';
 
 export interface GridPaginationState {
   paginationModel: GridPaginationModel;
@@ -62,6 +62,4 @@ export interface GridPaginationMetaApi {
  * The pagination API interface that is available in the grid `apiRef`.
  */
 export interface GridPaginationApi
-  extends GridPaginationModelApi,
-    GridPaginationRowCountApi,
-    GridPaginationMetaApi {}
+  extends GridPaginationModelApi, GridPaginationRowCountApi, GridPaginationMetaApi {}

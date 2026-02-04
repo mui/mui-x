@@ -1,22 +1,23 @@
-import { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
-import { AxisId, ZoomOptions } from '@mui/x-charts/internals';
-import {
+import type { DefaultizedProps, MakeRequired } from '@mui/x-internals/types';
+import type { AxisId, ZoomOptions } from '@mui/x-charts/internals';
+import type {
   DefaultizedFunnelSeriesType,
   FunnelItemIdentifier,
   FunnelSeriesType,
   FunnelValueType,
 } from '../FunnelChart/funnel.types';
-import {
+import type {
   HeatmapItemIdentifier,
   HeatmapSeriesType,
   DefaultizedHeatmapSeriesType,
   HeatmapValueType,
 } from '../models/seriesType/heatmap';
-import {
+import type {
+  SankeyLayout,
   SankeySeriesType,
-  type DefaultizedSankeySeriesType,
-  type SankeyItemIdentifier,
-  type SankeyItemIdentifierWithData,
+  DefaultizedSankeySeriesType,
+  SankeyItemIdentifier,
+  SankeyItemIdentifierWithData,
 } from '../SankeyChart/sankey.types';
 
 declare module '@mui/x-charts/internals' {
@@ -24,6 +25,7 @@ declare module '@mui/x-charts/internals' {
     heatmap: {
       seriesInput: DefaultizedProps<HeatmapSeriesType, 'id'>;
       series: DefaultizedHeatmapSeriesType;
+      seriesLayout: {};
       seriesProp: HeatmapSeriesType;
       itemIdentifier: HeatmapItemIdentifier;
       itemIdentifierWithData: HeatmapItemIdentifier;
@@ -35,6 +37,7 @@ declare module '@mui/x-charts/internals' {
         data: MakeRequired<FunnelValueType, 'color'>[];
       };
       series: DefaultizedFunnelSeriesType;
+      seriesLayout: {};
       seriesProp: FunnelSeriesType;
       itemIdentifier: FunnelItemIdentifier;
       itemIdentifierWithData: FunnelItemIdentifier;
@@ -44,9 +47,12 @@ declare module '@mui/x-charts/internals' {
     sankey: {
       seriesInput: DefaultizedSankeySeriesType;
       series: DefaultizedSankeySeriesType;
+      seriesLayout: {
+        sankeyLayout: SankeyLayout<true>;
+      };
       seriesProp: SankeySeriesType;
       itemIdentifier: SankeyItemIdentifier;
-      itemIdentifierWithData: SankeyItemIdentifierWithData;
+      itemIdentifierWithData: SankeyItemIdentifierWithData<true>;
       valueType: number;
     };
   }

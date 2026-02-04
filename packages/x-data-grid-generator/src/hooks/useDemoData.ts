@@ -1,15 +1,15 @@
 'use client';
 import * as React from 'react';
 import { LRUCache } from 'lru-cache';
-import { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
-import { GridDemoData, getRealGridData } from '../services/real-data-service';
+import type { GridColumnVisibilityModel } from '@mui/x-data-grid-premium';
+import { type GridDemoData, getRealGridData } from '../services/real-data-service';
 import { getCommodityColumns } from '../columns/commodities.columns';
 import { getEmployeeColumns } from '../columns/employees.columns';
 import asyncWorker from '../services/asyncWorker';
-import { GridColDefGenerator } from '../services/gridColDefGenerator';
+import type { GridColDefGenerator } from '../services/gridColDefGenerator';
 import {
-  AddPathToDemoDataOptions,
-  DemoTreeDataValue,
+  type AddPathToDemoDataOptions,
+  type DemoTreeDataValue,
   addTreeDataOptionsToDemoData,
 } from '../services/tree-data-generator';
 
@@ -91,8 +91,10 @@ export const deepFreeze = <T>(object: T): T => {
   return Object.freeze(object);
 };
 
-export interface ColumnsOptions
-  extends Pick<UseDemoDataOptions, 'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'> {}
+export interface ColumnsOptions extends Pick<
+  UseDemoDataOptions,
+  'dataSet' | 'editable' | 'maxColumns' | 'visibleFields'
+> {}
 
 export const getColumnsFromOptions = (options: ColumnsOptions): GridColDefGenerator[] => {
   let columns =
@@ -149,7 +151,7 @@ export const useDemoData = (options: UseDemoDataOptions): DemoDataReturnType => 
   });
 
   React.useEffect(() => {
-    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}`;
+    const cacheKey = `${options.dataSet}-${rowLength}-${index}-${options.maxColumns}-treeData:${(options.treeData?.maxDepth || 1) > 1 ? 'true' : 'false'}`;
 
     // Cache to allow fast switch between the JavaScript and TypeScript version
     // of the demos.

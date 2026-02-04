@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, act } from '@mui/internal-test-utils';
 import { spy } from 'sinon';
 import {
@@ -8,14 +7,15 @@ import {
   getColumnHeaderCell,
   getColumnValues,
   getRow,
+  openLongTextViewPopup,
 } from 'test/utils/helperFn';
 import {
   DataGrid,
-  DataGridProps,
+  type DataGridProps,
   GridActionsCellItem,
-  GridColDef,
-  GridColType,
-  GridValueSetter,
+  type GridColDef,
+  type GridColType,
+  type GridValueSetter,
 } from '@mui/x-data-grid';
 import { useBasicDemoData, getBasicGridData } from '@mui/x-data-grid-generator';
 import RestoreIcon from '@mui/icons-material/Restore';
@@ -406,7 +406,7 @@ describe('<DataGrid /> - Keyboard', () => {
 
         // get the sort button in column header 1
         const columnMenuButton =
-          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[title="Sort"]`)!;
+          getColumnHeaderCell(1).querySelector<HTMLElement>(`button[aria-label="Sort"]`)!;
 
         // Simulate click on this button
         await user.click(columnMenuButton);
@@ -742,8 +742,14 @@ describe('<DataGrid /> - Keyboard', () => {
         field: 'actions',
         type: 'actions',
         getActions: () => [
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_1'} disabled />,
-          <GridActionsCellItem label="Test" icon={<RestoreIcon />} id={'action_2'} />,
+          <GridActionsCellItem
+            key={1}
+            label="Test"
+            icon={<RestoreIcon />}
+            id={'action_1'}
+            disabled
+          />,
+          <GridActionsCellItem key={2} label="Test" icon={<RestoreIcon />} id={'action_2'} />,
         ],
       },
       { field: 'id', width: 400 },
@@ -997,5 +1003,114 @@ describe('<DataGrid /> - Keyboard', () => {
     testWithEditmodeAndKeytype({ editMode: 'cell', keyType: 'Backspace' });
     testWithEditmodeAndKeytype({ editMode: 'row', keyType: 'Delete' });
     testWithEditmodeAndKeytype({ editMode: 'row', keyType: 'Backspace' });
+  });
+
+  describe('column type: longText', () => {
+    const longTextProps = {
+      rows: [{ id: 0, bio: 'Long text content' }],
+      columns: [{ field: 'bio', type: 'longText' as const }],
+    };
+
+    it('should NOT trigger page-down on Space key (allows popup toggle)', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(document.activeElement).to.equal(expandButton);
+
+      // Space key should toggle popup, not trigger page-down
+      fireEvent.keyDown(expandButton, { key: ' ' });
+
+      // Popup should be open
+      expect(expandButton).to.have.attribute('aria-expanded', 'true');
+      expect(document.querySelector('.MuiDataGrid-longTextCellPopup')).not.to.equal(null);
+    });
+
+    it('should open popup on Space when expand button focused', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await openLongTextViewPopup(cell, user, 'spacebar');
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(expandButton).to.have.attribute('aria-expanded', 'true');
+      expect(document.querySelector('.MuiDataGrid-longTextCellPopup')).not.to.equal(null);
+    });
+
+    it('should close popup on Escape', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await openLongTextViewPopup(cell, user, 'spacebar');
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(expandButton).to.have.attribute('aria-expanded', 'true');
+
+      // Press Escape to close
+      await user.keyboard('{Escape}');
+
+      expect(expandButton).to.have.attribute('aria-expanded', 'false');
+    });
+
+    it('should return focus to cell after closing popup', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await openLongTextViewPopup(cell, user, 'spacebar');
+
+      const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
+      const collapseButton = popup.querySelector('button')!;
+      fireEvent.click(collapseButton);
+
+      // Focus should return to the cell
+      expect(document.activeElement?.closest('[role="gridcell"]')).to.equal(cell);
+    });
+
+    it('should NOT open popup on Shift+Space (allows row selection)', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextProps} checkboxSelection />
+        </div>,
+      );
+
+      const cell = getCell(0, 1); // bio column (index 1 due to checkbox column)
+      await user.click(cell);
+
+      const expandButton = cell.querySelector(
+        'button[aria-haspopup="dialog"]',
+      ) as HTMLButtonElement;
+      expect(document.activeElement).to.equal(expandButton);
+
+      // Shift+Space should NOT toggle popup
+      fireEvent.keyDown(expandButton, { key: ' ', shiftKey: true });
+
+      // Popup should NOT be open
+      expect(expandButton).to.have.attribute('aria-expanded', 'false');
+      expect(document.querySelector('.MuiDataGrid-longTextCellPopup')).to.equal(null);
+    });
   });
 });

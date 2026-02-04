@@ -1,4 +1,4 @@
-import glob from 'fast-glob';
+import { globbySync } from 'globby';
 import fs from 'node:fs/promises';
 
 async function run() {
@@ -12,7 +12,7 @@ async function run() {
   ];
 
   const files = importFiles.reduce((acc, pattern) => {
-    const newFiles = glob.sync(`node_modules/@mui/monorepo/${pattern}`);
+    const newFiles = globbySync(`node_modules/@mui/monorepo/${pattern}`);
     return acc.concat(newFiles);
   }, []);
 

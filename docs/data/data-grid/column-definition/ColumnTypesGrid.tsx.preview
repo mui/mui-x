@@ -1,1 +1,3 @@
-<DataGrid columns={columns} rows={rows} />
+<ActionHandlersContext.Provider value={actionHandlers}>
+  <DataGrid columns={columns} rows={rows} />
+</ActionHandlersContext.Provider>

@@ -4,14 +4,13 @@
   "description": "Custom eslint rules for MUI X.",
   "type": "module",
   "main": "src/index.mjs",
-  "module": "src/index.mjs",
   "dependencies": {
-    "@typescript-eslint/utils": "^8.44.1"
+    "@typescript-eslint/utils": "^8.54.0"
   },
   "devDependencies": {
-    "@types/eslint": "^9.6.1",
+    "@types/eslint": "9.6.1",
     "@typescript-eslint/parser": "catalog:",
-    "@typescript-eslint/rule-tester": "^8.44.1"
+    "@typescript-eslint/rule-tester": "8.54.0"
   },
   "scripts": {
     "test": "vitest"

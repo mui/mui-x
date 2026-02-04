@@ -1,12 +1,16 @@
-import { ScatterValueType } from '../../models';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { type ScatterValueType } from '../../models';
+import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
-const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, dataset) => {
+const seriesProcessor: SeriesProcessor<'scatter'> = (
+  { series, seriesOrder },
+  dataset,
+  isItemVisible,
+) => {
   const completeSeries = Object.fromEntries(
     Object.entries(series).map(([seriesId, seriesData]) => {
       const datasetKeys = seriesData?.datasetKeys;
 
-      const missingKeys = (['x', 'y', 'id'] as const).filter(
+      const missingKeys = (['x', 'y'] as const).filter(
         (key) => typeof datasetKeys?.[key] !== 'string',
       );
 
@@ -41,6 +45,7 @@ const seriesProcessor: SeriesProcessor<'scatter'> = ({ series, seriesOrder }, da
             ...seriesData?.preview,
           },
           data,
+          hidden: !isItemVisible?.({ type: 'scatter', seriesId }),
           valueFormatter: seriesData.valueFormatter ?? ((v) => v && `(${v.x}, ${v.y})`),
         },
       ];

@@ -1,26 +1,23 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import { useDrawingArea } from '@mui/x-charts/hooks';
+import { styled } from '@mui/material/styles';
 import {
-  SankeyLayout,
   type SankeyLinkIdentifierWithData,
   type SankeyNodeIdentifierWithData,
 } from './sankey.types';
-import { calculateSankeyLayout } from './calculateSankeyLayout';
-import { SankeyNodeElement } from './SankeyNodeElement';
-import { SankeyLinkElement } from './SankeyLinkElement';
-import { SankeyLinkLabel } from './SankeyLinkLabel';
-import { useSankeySeriesContext } from '../hooks/useSankeySeries';
+import { useSankeyLayout, useSankeySeries } from '../hooks/useSankeySeries';
 import { useUtilityClasses, type SankeyPlotClasses } from './sankeyClasses';
+import { SankeyNodePlot } from './SankeyNodePlot';
+import { SankeyLinkPlot } from './SankeyLinkPlot';
+import { SankeyNodeLabelPlot } from './SankeyNodeLabelPlot';
+import { SankeyLinkLabelPlot } from './SankeyLinkLabelPlot';
 
 export interface SankeyPlotProps {
   /**
    * Classes applied to the various elements.
    */
   classes?: Partial<SankeyPlotClasses>;
-
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -30,7 +27,6 @@ export interface SankeyPlotProps {
     event: React.MouseEvent<SVGElement, MouseEvent>,
     node: SankeyNodeIdentifierWithData,
   ) => void;
-
   /**
    * Callback fired when a sankey item is clicked.
    * @param {React.MouseEvent<SVGElement, MouseEvent>} event The event source of the callback.
@@ -42,71 +38,44 @@ export interface SankeyPlotProps {
   ) => void;
 }
 
+const SankeyPlotRoot = styled('g', {
+  slot: 'internal',
+  shouldForwardProp: undefined,
+})({});
+
 /**
  * Renders a Sankey diagram plot.
  */
 function SankeyPlot(props: SankeyPlotProps) {
   const { classes: inputClasses, onLinkClick, onNodeClick } = props;
 
-  const seriesContext = useSankeySeriesContext();
+  const classes = useUtilityClasses({ classes: inputClasses });
 
-  if (!seriesContext) {
+  const sankeySeries = useSankeySeries()[0];
+  const layout = useSankeyLayout();
+
+  if (!sankeySeries) {
     throw new Error(
       `MUI X Charts: Sankey series context is missing. Ensure the SankeyPlot is used inside a properly configured ChartDataProviderPro.`,
     );
   }
 
-  const series = seriesContext.series[seriesContext.seriesOrder?.[0]];
-  const classes = useUtilityClasses({ classes: inputClasses });
-  const drawingArea = useDrawingArea();
-  const { data, linkOptions, nodeOptions } = series;
-  const theme = useTheme();
-
-  // Calculate layout based on data and dimensions
-  const layout: SankeyLayout = React.useMemo(
-    () => calculateSankeyLayout(data, drawingArea, theme, series),
-    [drawingArea, data, series, theme],
-  );
-
   // Early return if no data or dimensions
-  if (!data || !data.links) {
+  if (!layout || !layout.links) {
     return null;
   }
 
+  const { linkOptions, nodeOptions } = sankeySeries;
+
+  const showNodeLabels = nodeOptions?.showLabels ?? true;
   return (
-    <g className={classes.root}>
-      <g className={classes.links}>
-        {layout.links.map((link) => (
-          <SankeyLinkElement
-            seriesId={series.id}
-            key={`${link.source.id}-${link.target.id}`}
-            link={link}
-            opacity={linkOptions?.opacity}
-            onClick={onLinkClick}
-          />
-        ))}
-      </g>
+    <SankeyPlotRoot className={classes.root}>
+      <SankeyLinkPlot classes={classes} onClick={onLinkClick} />
+      <SankeyNodePlot classes={classes} onClick={onNodeClick} />
 
-      <g className={classes.nodes}>
-        {layout.nodes.map((node) => (
-          <SankeyNodeElement
-            seriesId={series.id}
-            key={node.id}
-            node={node}
-            showLabel={nodeOptions?.showLabels}
-            onClick={onNodeClick}
-          />
-        ))}
-      </g>
-
-      {linkOptions?.showValues && (
-        <g className={classes.linkLabels}>
-          {layout.links.map((link) => (
-            <SankeyLinkLabel key={`label-${link.source.id}-${link.target.id}`} link={link} />
-          ))}
-        </g>
-      )}
-    </g>
+      {linkOptions?.showValues && <SankeyLinkLabelPlot classes={classes} />}
+      {showNodeLabels && <SankeyNodeLabelPlot classes={classes} />}
+    </SankeyPlotRoot>
   );
 }
 

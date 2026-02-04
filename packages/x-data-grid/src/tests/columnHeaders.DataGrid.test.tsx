@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createRenderer, fireEvent, screen, waitFor, within } from '@mui/internal-test-utils';
 import { DataGrid } from '@mui/x-data-grid';
 import { getColumnHeaderCell, getColumnHeadersTextContent } from 'test/utils/helperFn';
@@ -168,6 +167,25 @@ describe('<DataGrid /> - Column headers', () => {
         expect(screen.queryByRole('menu')).to.equal(null);
       });
     });
+
+    it('column menu should open in response to the Ctrl+Enter hotkey', async () => {
+      const { user } = render(
+        <div style={{ height: 300, width: 300 }}>
+          <DataGrid
+            rows={Array.from({ length: 50 }, (_, id) => ({ id, name: id }))}
+            columns={[{ field: 'brand' }]}
+          />
+        </div>,
+      );
+
+      expect(screen.queryByRole('tooltip')).to.equal(null);
+
+      await user.keyboard('{Tab}');
+      expect(screen.getAllByRole('columnheader')[0]).toHaveFocus();
+
+      await user.keyboard('{Control>}{Enter}');
+      expect(screen.queryByRole('tooltip')).to.not.equal(null);
+    });
   });
 
   it("should use 'headerName' as the aria-label for the menu icon button", async () => {
@@ -200,5 +218,39 @@ describe('<DataGrid /> - Column headers', () => {
     expect(screen.queryByRole('menuitem', { name: /asc/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /desc/i })).not.to.equal(null);
     expect(screen.queryByRole('menuitem', { name: /unsort/i })).to.equal(null);
+  });
+
+  it('should use baseTooltip slot for sort icon', () => {
+    function CustomTooltip({ title, children, enterDelay, ...other }: any) {
+      return (
+        <div data-testid="custom-tooltip" data-title={title} {...other}>
+          {children}
+        </div>
+      );
+    }
+
+    render(
+      <div style={{ width: 300, height: 300 }}>
+        <DataGrid
+          columns={[{ field: 'id', sortable: true }]}
+          rows={[{ id: 1 }]}
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'id', sort: 'asc' }],
+            },
+          }}
+          slots={{
+            baseTooltip: CustomTooltip,
+          }}
+        />
+      </div>,
+    );
+
+    const sortButton = screen.getByRole('grid').querySelector('.MuiDataGrid-sortButton')!;
+    const tooltip = sortButton.closest('[data-testid="custom-tooltip"]');
+
+    expect(tooltip).not.to.equal(null);
+    expect(tooltip!.getAttribute('data-title')).to.equal('Sort');
+    expect(sortButton.getAttribute('title')).to.equal(null);
   });
 });

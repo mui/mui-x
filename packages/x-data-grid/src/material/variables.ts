@@ -3,6 +3,7 @@ import { alpha, darken, lighten, type Theme } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { hash } from '@mui/x-internals/hash';
 import { vars, type GridCSSVariablesInterface } from '../constants/cssVariables';
+import { colorMixIfSupported, supportsColorMix } from '../components/containers/GridRootStyles';
 
 export function useMaterialCSSVariables() {
   const theme = useTheme();
@@ -17,7 +18,13 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
   const borderColor = getBorderColor(t);
   const dataGridPalette = (t.vars || t).palette.DataGrid;
 
-  const backgroundBase = dataGridPalette?.bg ?? (t.vars || t).palette.background.default;
+  const paperColor = (t.vars || t).palette.background.paper;
+
+  const backgroundBase =
+    dataGridPalette?.bg ??
+    (t.palette.mode === 'dark'
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 95%, #fff)`, paperColor)
+      : paperColor);
   const backgroundHeader = dataGridPalette?.headerBg ?? backgroundBase;
   const backgroundPinned = dataGridPalette?.pinnedBg ?? backgroundBase;
   const backgroundBackdrop = t.vars
@@ -25,8 +32,8 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     : alpha(t.palette.background.default, t.palette.action.disabledOpacity);
   const backgroundOverlay =
     t.palette.mode === 'dark'
-      ? `color-mix(in srgb, ${(t.vars || t).palette.background.paper} 95%, #fff)`
-      : (t.vars || t).palette.background.paper;
+      ? colorMixIfSupported(`color-mix(in srgb, ${paperColor} 90%, #fff)`, paperColor)
+      : paperColor;
 
   const selectedColor = t.vars
     ? `rgb(${t.vars.palette.primary.mainChannel})`
@@ -52,13 +59,17 @@ function transformTheme(t: Theme): GridCSSVariablesInterface {
     [k.colors.foreground.disabled]: (t.vars || t).palette.text.disabled,
     [k.colors.foreground.error]: (t.vars || t).palette.error.dark,
 
-    [k.colors.interactive.hover]: (t.vars || t).palette.action.hover,
+    [k.colors.interactive.hover]: supportsColorMix
+      ? (t.vars || t).palette.action.hover
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 800 : 100],
     [k.colors.interactive.hoverOpacity]: (t.vars || t).palette.action.hoverOpacity,
     [k.colors.interactive.focus]: removeOpacity((t.vars || t).palette.primary.main),
     [k.colors.interactive.focusOpacity]: (t.vars || t).palette.action.focusOpacity,
     [k.colors.interactive.disabled]: removeOpacity((t.vars || t).palette.action.disabled),
     [k.colors.interactive.disabledOpacity]: (t.vars || t).palette.action.disabledOpacity,
-    [k.colors.interactive.selected]: selectedColor,
+    [k.colors.interactive.selected]: supportsColorMix
+      ? selectedColor
+      : (t.vars || t).palette.grey[t.palette.mode === 'dark' ? 700 : 200],
     [k.colors.interactive.selectedOpacity]: (t.vars || t).palette.action.selectedOpacity,
 
     [k.header.background.base]: backgroundHeader,

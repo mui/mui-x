@@ -1,9 +1,10 @@
 import { pie as d3Pie } from '@mui/x-charts-vendor/d3-shape';
-import { ChartSeriesDefaultized } from '../../models/seriesType/config';
-import { ChartsPieSorting, PieValueType } from '../../models/seriesType/pie';
-import { SeriesId } from '../../models/seriesType/common';
+import { type ChartSeriesDefaultized } from '../../models/seriesType/config';
+import { type ChartsPieSorting, type PieValueType } from '../../models/seriesType/pie';
+import { type SeriesId } from '../../models/seriesType/common';
 import { getLabel } from '../../internals/getLabel';
-import { SeriesProcessor } from '../../internals/plugins/models';
+import { type SeriesProcessor } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
+import { deg2rad } from '../../internals/angleConversion';
 
 const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   if (typeof comparator === 'function') {
@@ -21,37 +22,72 @@ const getSortingComparator = (comparator: ChartsPieSorting = 'none') => {
   }
 };
 
-const seriesProcessor: SeriesProcessor<'pie'> = (params) => {
+const seriesProcessor: SeriesProcessor<'pie'> = (params, dataset, isItemVisible) => {
   const { seriesOrder, series } = params;
 
   const defaultizedSeries: Record<SeriesId, ChartSeriesDefaultized<'pie'>> = {};
   seriesOrder.forEach((seriesId) => {
-    const arcs = d3Pie()
-      .startAngle((2 * Math.PI * (series[seriesId].startAngle ?? 0)) / 360)
-      .endAngle((2 * Math.PI * (series[seriesId].endAngle ?? 360)) / 360)
-      .padAngle((2 * Math.PI * (series[seriesId].paddingAngle ?? 0)) / 360)
+    // Filter out hidden data points for arc calculation
+    const visibleData = series[seriesId].data.filter((_, index) => {
+      return isItemVisible?.({ type: 'pie', seriesId, dataIndex: index });
+    });
+
+    const visibleArcs = d3Pie()
+      .startAngle(deg2rad(series[seriesId].startAngle ?? 0))
+      .endAngle(deg2rad(series[seriesId].endAngle ?? 360))
+      .padAngle(deg2rad(series[seriesId].paddingAngle ?? 0))
       .sortValues(getSortingComparator(series[seriesId].sortingValues ?? 'none'))(
-      series[seriesId].data.map((piePoint) => piePoint.value),
+      visibleData.map((piePoint) => piePoint.value),
     );
+
+    // Map arcs back to original data, maintaining original indices
+    let visibleIndex = 0;
     defaultizedSeries[seriesId] = {
       labelMarkType: 'circle',
       valueFormatter: (item: PieValueType) => item.value.toLocaleString(),
       ...series[seriesId],
-      data: series[seriesId].data
-        .map((item, index) => ({
+      data: series[seriesId].data.map((item, index) => {
+        const itemId = item.id ?? `auto-generated-pie-id-${seriesId}-${index}`;
+        const isHidden = !isItemVisible?.({ type: 'pie', seriesId, dataIndex: index });
+        let arcData;
+
+        if (isHidden) {
+          // For hidden items, create a zero-size arc starting at the previous visible arc's end angle
+          // and ending at the same angle
+          const startAngle =
+            visibleIndex > 0
+              ? visibleArcs[visibleIndex - 1].endAngle
+              : deg2rad(series[seriesId].startAngle ?? 0);
+
+          arcData = {
+            startAngle,
+            endAngle: startAngle,
+            padAngle: 0,
+            value: item.value,
+            index,
+          };
+        } else {
+          arcData = visibleArcs[visibleIndex];
+          visibleIndex += 1;
+        }
+
+        const processedItem = {
           ...item,
-          id: item.id ?? `auto-generated-pie-id-${seriesId}-${index}`,
-          ...arcs[index],
-        }))
-        .map((item, index) => ({
+          id: itemId,
+          hidden: isHidden,
+          ...arcData,
+        };
+
+        return {
           labelMarkType: 'circle',
-          ...item,
+          ...processedItem,
           formattedValue:
             series[seriesId].valueFormatter?.(
-              { ...item, label: getLabel(item.label, 'arc') },
+              { ...processedItem, label: getLabel(processedItem.label, 'arc') },
               { dataIndex: index },
-            ) ?? item.value.toLocaleString(),
-        })),
+            ) ?? processedItem.value.toLocaleString(),
+        };
+      }),
     };
   });
 

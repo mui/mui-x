@@ -1,16 +1,20 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useStoreEffect } from '@mui/x-internals/store';
-import { GridEventListener } from '../../../models/events';
-import { ElementSize } from '../../../models';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridEventListener } from '../../../models/events';
+import type { ElementSize } from '../../../models';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridEventPriority } from '../../utils/useGridEvent';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { createSelector } from '../../../utils/createSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import { GridDimensions, GridDimensionsApi, GridDimensionsPrivateApi } from './gridDimensionsApi';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type {
+  GridDimensions,
+  GridDimensionsApi,
+  GridDimensionsPrivateApi,
+} from './gridDimensionsApi';
 import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
@@ -20,7 +24,7 @@ import { gridDimensionsSelector } from './gridDimensionsSelectors';
 import { gridDensityFactorSelector } from '../density';
 import { getValidRowHeight, rowHeightWarning } from '../rows/gridRowsUtils';
 import { getTotalHeaderHeight } from '../columns/gridColumnsUtils';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { DATA_GRID_PROPS_DEFAULT_VALUES } from '../../../constants/dataGridPropsDefaultValues';
 import { roundToDecimalPlaces } from '../../../utils/roundToDecimalPlaces';
 import { isJSDOM } from '../../../utils/isJSDOM';
@@ -64,6 +68,8 @@ const EMPTY_DIMENSIONS: GridDimensions = {
   headersTotalHeight: 0,
   topContainerHeight: 0,
   bottomContainerHeight: 0,
+  autoHeight: false,
+  minimalContentHeight: undefined,
 };
 
 export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
@@ -74,18 +80,21 @@ export const dimensionsStateInitializer: GridStateInitializer<RootProps> = (
   const dimensions = EMPTY_DIMENSIONS;
 
   const density = gridDensityFactorSelector(apiRef);
+  const dimensionsWithStatic = {
+    ...dimensions,
+    ...getStaticDimensions(
+      props,
+      apiRef,
+      density,
+      gridVisiblePinnedColumnDefinitionsSelector(apiRef),
+    ),
+  };
+
+  apiRef.current.store.state.dimensions = dimensionsWithStatic;
 
   return {
     ...state,
-    dimensions: {
-      ...dimensions,
-      ...getStaticDimensions(
-        props,
-        apiRef,
-        density,
-        gridVisiblePinnedColumnDefinitionsSelector(apiRef),
-      ),
-    },
+    dimensions: dimensionsWithStatic,
   };
 };
 
@@ -105,10 +114,6 @@ const columnsTotalWidthSelector = createSelector(
 );
 
 export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, props: RootProps) {
-  const virtualizer = apiRef.current.virtualizer;
-  const updateDimensions = virtualizer.api.updateDimensions;
-  const getViewportPageSize = virtualizer.api.getViewportPageSize;
-
   const getRootDimensions = React.useCallback(() => gridDimensionsSelector(apiRef), [apiRef]);
 
   const apiPublic: GridDimensionsApi = {
@@ -116,8 +121,12 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
   };
 
   const apiPrivate: GridDimensionsPrivateApi = {
-    updateDimensions,
-    getViewportPageSize,
+    updateDimensions: () => {
+      return apiRef.current.virtualizer.api.updateDimensions();
+    },
+    getViewportPageSize: () => {
+      return apiRef.current.virtualizer.api.getViewportPageSize();
+    },
   };
 
   useGridApiMethod(apiRef, apiPublic, 'public');
@@ -171,6 +180,10 @@ export function useGridDimensions(apiRef: RefObject<GridPrivateApiCommunity>, pr
     apiRef.current.store,
     (s) => s.dimensions,
     (previous, next) => {
+      if (!next.isReady) {
+        return;
+      }
+
       if (apiRef.current.rootElementRef.current) {
         setCSSVariables(apiRef.current.rootElementRef.current, next);
       }

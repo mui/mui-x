@@ -21,7 +21,9 @@ function CustomHeaderFilter(props: GridHeaderFilterCellProps) {
       const focusableElement =
         cellRef.current!.querySelector<HTMLElement>('[tabindex="0"]');
       const elementToFocus = focusableElement || cellRef.current;
-      elementToFocus?.focus();
+      elementToFocus?.focus({
+        preventScroll: true,
+      });
     }
   }, [apiRef, hasFocus]);
 

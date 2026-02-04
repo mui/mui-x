@@ -1,13 +1,16 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled, SxProps, Theme } from '@mui/material/styles';
+import { styled, type SxProps, type Theme } from '@mui/material/styles';
 import { shouldForwardProp } from '@mui/system/createStyled';
 import { useChartRootRef } from '../hooks/useChartRootRef';
-import { Direction } from '../ChartsLegend';
-import { Position } from '../models';
+import { type Direction } from '../ChartsLegend';
+import { type Position } from '../models';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
-import { selectorChartPropsSize } from '../internals/plugins/corePlugins/useChartDimensions';
+import {
+  selectorChartPropsHeight,
+  selectorChartPropsWidth,
+} from '../internals/plugins/corePlugins/useChartDimensions';
 import { chartsToolbarClasses } from '../Toolbar';
 
 export interface ChartsWrapperProps {
@@ -145,6 +148,7 @@ const Root = styled('div', {
         props: { extendVertically: true },
         style: {
           height: '100%',
+          minHeight: 0,
         },
       },
     ],
@@ -166,7 +170,7 @@ const Root = styled('div', {
       gridArea: 'toolbar',
       justifySelf: 'center',
     },
-    justifyContent: 'center',
+    justifyContent: 'safe center',
     justifyItems: getJustifyItems(ownerState.legendPosition),
     alignItems: getAlignItems(ownerState.legendPosition),
   };
@@ -181,7 +185,9 @@ function ChartsWrapper(props: ChartsWrapperProps) {
   const chartRootRef = useChartRootRef();
 
   const store = useStore();
-  const { width: propsWidth, height: propsHeight } = useSelector(store, selectorChartPropsSize);
+
+  const propsWidth = store.use(selectorChartPropsWidth);
+  const propsHeight = store.use(selectorChartPropsHeight);
 
   return (
     <Root

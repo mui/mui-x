@@ -6,24 +6,31 @@ import { symbol as d3Symbol, symbolsFill as d3SymbolsFill } from '@mui/x-charts-
 import { ANIMATION_DURATION_MS, ANIMATION_TIMING_FUNCTION } from '../internals/animation/animation';
 import { getSymbol } from '../internals/getSymbol';
 import { useInteractionItemProps } from '../hooks/useInteractionItemProps';
-import { markElementClasses, MarkElementOwnerState, useUtilityClasses } from './markElementClasses';
+import {
+  markElementClasses,
+  type MarkElementOwnerState,
+  useUtilityClasses,
+} from './markElementClasses';
 
 const MarkElementPath = styled('path', {
   name: 'MuiMarkElement',
   slot: 'Root',
-})<{ ownerState: MarkElementOwnerState }>(({ ownerState, theme }) => ({
+})<{ ownerState: MarkElementOwnerState }>(({ theme }) => ({
   fill: (theme.vars || theme).palette.background.paper,
-  stroke: ownerState.color,
-  strokeWidth: 2,
   [`&.${markElementClasses.animate}`]: {
     transitionDuration: `${ANIMATION_DURATION_MS}ms`,
-    transitionProperty: 'transform, transform-origin',
+    transitionProperty: 'transform, transform-origin, opacity',
     transitionTimingFunction: ANIMATION_TIMING_FUNCTION,
   },
 }));
 
 export type MarkElementProps = Omit<MarkElementOwnerState, 'isFaded' | 'isHighlighted'> &
-  Omit<React.SVGProps<SVGPathElement>, 'ref' | 'id'> & {
+  Omit<React.SVGProps<SVGPathElement>, 'ref'> & {
+    /**
+     * If `true`, the marker is hidden.
+     * @default false
+     */
+    hidden?: boolean;
     /**
      * If `true`, animations are skipped.
      * @default false
@@ -63,7 +70,7 @@ function MarkElement(props: MarkElementProps) {
   const {
     x,
     y,
-    id,
+    seriesId,
     classes: innerClasses,
     color,
     shape,
@@ -72,17 +79,18 @@ function MarkElement(props: MarkElementProps) {
     skipAnimation,
     isFaded = false,
     isHighlighted = false,
+    hidden,
+    style,
     ...other
   } = props;
 
-  const interactionProps = useInteractionItemProps({ type: 'line', seriesId: id, dataIndex });
+  const interactionProps = useInteractionItemProps({ type: 'line', seriesId, dataIndex });
 
   const ownerState = {
-    id,
+    seriesId,
     classes: innerClasses,
     isHighlighted,
     isFaded,
-    color,
     skipAnimation,
   };
   const classes = useUtilityClasses(ownerState);
@@ -91,6 +99,7 @@ function MarkElement(props: MarkElementProps) {
     <MarkElementPath
       {...other}
       style={{
+        ...style,
         transform: `translate(${x}px, ${y}px)`,
         transformOrigin: `${x}px ${y}px`,
       }}
@@ -99,9 +108,13 @@ function MarkElement(props: MarkElementProps) {
       d={d3Symbol(d3SymbolsFill[getSymbol(shape)])()!}
       onClick={onClick}
       cursor={onClick ? 'pointer' : 'unset'}
+      pointerEvents={hidden ? 'none' : undefined}
       {...interactionProps}
       data-highlighted={isHighlighted || undefined}
       data-faded={isFaded || undefined}
+      opacity={hidden ? 0 : 1}
+      strokeWidth={2}
+      stroke={color}
     />
   );
 }
@@ -116,7 +129,12 @@ MarkElement.propTypes = {
    * The index to the element in the series' data array.
    */
   dataIndex: PropTypes.number.isRequired,
-  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  /**
+   * If `true`, the marker is hidden.
+   * @default false
+   */
+  hidden: PropTypes.bool,
+  seriesId: PropTypes.string.isRequired,
   /**
    * If `true`, the marker is faded.
    * @default false

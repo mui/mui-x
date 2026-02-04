@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import composeClasses from '@mui/utils/composeClasses';
 import {
-  GridRenderCellParams,
-  GridRowEventLookup,
+  type GridRenderCellParams,
+  type GridRowEventLookup,
   gridSortModelSelector,
   useGridApiContext,
   useGridSelector,
@@ -51,15 +52,29 @@ function GridRowReorderCell(params: GridRenderCellParams) {
   const cellRef = React.useRef<HTMLDivElement>(null);
   const listenerNodeRef = React.useRef<HTMLDivElement>(null);
 
-  // TODO: remove sortModel and treeData checks once row reorder is compatible
-  const isDraggable = React.useMemo(
-    () =>
-      !!rootProps.rowReordering &&
-      !sortModel.length &&
-      !rootProps.treeData &&
-      Object.keys(editRowsState).length === 0,
-    [rootProps.rowReordering, sortModel, rootProps.treeData, editRowsState],
-  );
+  const isRowReorderable = rootProps.isRowReorderable;
+  // TODO: remove sortModel check once row reorder is compatible
+  const isDraggable = React.useMemo(() => {
+    const baseCondition =
+      !!rootProps.rowReordering && !sortModel.length && Object.keys(editRowsState).length === 0;
+
+    if (!baseCondition) {
+      return false;
+    }
+
+    if (isRowReorderable) {
+      return isRowReorderable({ row: params.row, rowNode: params.rowNode });
+    }
+
+    return true;
+  }, [
+    rootProps.rowReordering,
+    isRowReorderable,
+    sortModel,
+    editRowsState,
+    params.row,
+    params.rowNode,
+  ]);
 
   const ownerState = { isDraggable, classes: rootProps.classes };
   const classes = useUtilityClasses(ownerState);
@@ -175,19 +190,6 @@ GridRowReorderCell.propTypes = {
    * The column field of the cell that triggered the event.
    */
   field: PropTypes.string.isRequired,
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({
-      current: PropTypes.shape({
-        focus: PropTypes.func.isRequired,
-      }),
-    }),
-  ]),
   /**
    * The cell value formatted with the column valueFormatter.
    */

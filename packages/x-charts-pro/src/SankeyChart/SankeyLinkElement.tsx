@@ -2,8 +2,10 @@
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import type { SeriesId } from '@mui/x-charts/internals';
-import { useInteractionItemProps } from '@mui/x-charts/internals';
-import { SankeyLayoutLink, type SankeyLinkIdentifierWithData } from './sankey.types';
+import { useInteractionItemProps, useStore } from '@mui/x-charts/internals';
+import type { SankeyLayoutLink, SankeyLinkIdentifierWithData } from './sankey.types';
+import { selectorIsLinkHighlighted } from './plugins';
+import { selectorIsSankeyItemFaded } from './plugins/useSankeyHighlight.selectors';
 
 export interface SankeyLinkElementProps {
   /**
@@ -35,6 +37,7 @@ export interface SankeyLinkElementProps {
 export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElementProps>(
   function SankeyLinkElement(props, ref) {
     const { link, opacity = 0.4, onClick, seriesId } = props;
+    const store = useStore();
 
     const identifier: SankeyLinkIdentifierWithData = {
       type: 'sankey',
@@ -45,6 +48,9 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
       link,
     };
 
+    const isHighlighted = store.use(selectorIsLinkHighlighted, link);
+    const isFaded = store.use(selectorIsSankeyItemFaded, isHighlighted);
+
     // Add interaction props for tooltips
     const interactionProps = useInteractionItemProps(identifier);
 
@@ -53,7 +59,14 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
     });
 
     if (!link.path) {
-      return null; // No path defined, nothing to render
+      return null;
+    }
+
+    let finalOpacity = opacity;
+    if (isFaded) {
+      finalOpacity = opacity * 0.3;
+    } else if (isHighlighted) {
+      finalOpacity = Math.min(opacity * 1.2, 1);
     }
 
     return (
@@ -61,9 +74,11 @@ export const SankeyLinkElement = React.forwardRef<SVGPathElement, SankeyLinkElem
         ref={ref}
         d={link.path}
         fill={link.color}
-        opacity={opacity}
+        opacity={finalOpacity}
         data-link-source={link.source.id}
         data-link-target={link.target.id}
+        data-highlighted={isHighlighted || undefined}
+        data-faded={isFaded || undefined}
         onClick={onClick ? handleClick : undefined}
         cursor={onClick ? 'pointer' : 'default'}
         {...interactionProps}

@@ -1,6 +1,7 @@
 import path from 'path';
 import { test, expect } from '@playwright/test';
 import { CAPTURE_RENDER_FN, type RenderEvent } from '../../utils/Profiler';
+import { generateReport, saveReport } from '../../utils/reporter';
 
 const route = path.dirname(__filename).split('/app').pop()!;
 
@@ -17,9 +18,6 @@ test('benchmark render', async ({ page }) => {
   // Wait for chart to be visible
   await expect(page.locator('svg:not([aria-hidden="true"])')).toBeVisible();
 
-  // eslint-disable-next-line no-console
-  console.log('Render events:', renders);
-
-  expect(renders.length).toBeGreaterThan(0);
-  expect(renders[0].phase).toBe('mount');
+  const report = generateReport(renders);
+  saveReport(report, route);
 });

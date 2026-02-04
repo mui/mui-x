@@ -5,10 +5,10 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { useTreeViewApiRef } from '@mui/x-tree-view/hooks';
+import { useSimpleTreeViewApiRef } from '@mui/x-tree-view/hooks';
 
 export default function ApiMethodIsItemExpanded() {
-  const apiRef = useTreeViewApiRef();
+  const apiRef = useSimpleTreeViewApiRef();
   const [isGridExpanded, setIsGridExpanded] = React.useState<boolean>(false);
   const [isSnackbarOpen, setIsSnackbarOpen] = React.useState(false);
 

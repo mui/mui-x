@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { spy } from 'sinon';
 import { screen, fireTouchChangedEvent } from '@mui/internal-test-utils';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
@@ -52,9 +51,7 @@ describe('<TimeClock /> - Timezone', () => {
 
             // Check the `onChange` value (uses timezone prop)
             const actualDate = onChange.lastCall.firstArg;
-            expect(adapter.getTimezone(actualDate)).to.equal(
-              adapter.lib === 'dayjs' && timezone === 'system' ? 'UTC' : timezone,
-            );
+            expect(adapter.getTimezone(actualDate)).to.equal(timezone);
             expect(actualDate).toEqualDateTime(expectedDate);
           });
 

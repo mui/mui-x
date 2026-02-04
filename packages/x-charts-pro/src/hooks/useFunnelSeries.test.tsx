@@ -1,7 +1,11 @@
-import { renderHook, RenderHookResult } from '@mui/internal-test-utils';
+import { renderHook, type RenderHookResult } from '@mui/internal-test-utils';
 import * as React from 'react';
 import { useFunnelSeries, useFunnelSeriesContext } from './useFunnelSeries';
-import { DefaultizedFunnelSeriesType, FunnelChart, FunnelSeriesType } from '../FunnelChart';
+import {
+  type DefaultizedFunnelSeriesType,
+  FunnelChart,
+  type FunnelSeriesType,
+} from '../FunnelChart';
 
 const mockSeries: FunnelSeriesType[] = [
   {
@@ -65,5 +69,10 @@ describe('useFunnelSeries', () => {
     }).toWarnDev(message);
 
     expect(render?.result.current?.map((v) => v?.id)).to.deep.equal([mockSeries[0].id]);
+  });
+
+  it('should return empty array when empty seriesIds array is provided', () => {
+    const { result } = renderHook(() => useFunnelSeries([]), options);
+    expect(result.current).to.deep.equal([]);
   });
 });

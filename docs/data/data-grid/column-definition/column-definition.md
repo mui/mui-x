@@ -255,6 +255,7 @@ The following are the native column types with their required value types:
 | Column type          | Value type                 |
 | :------------------- | :------------------------- |
 | `'string'` (default) | `string`                   |
+| `'longText'`         | `string`                   |
 | `'number'`           | `number`                   |
 | `'date'`             | `Date() object`            |
 | `'dateTime'`         | `Date() object`            |
@@ -263,6 +264,21 @@ The following are the native column types with their required value types:
 | `'actions'`          | Not applicable             |
 
 {{"demo": "ColumnTypesGrid.js", "bg": "inline"}}
+
+### Long text keyboard interactions
+
+The `'longText'` column type supports keyboard interactions to expand, collapse, and edit content when the cell is focused via click or keyboard navigation.
+
+View mode (expand button focused):
+
+- <kbd class="key">Space</kbd> – Toggle popup
+- <kbd class="key">Escape</kbd> – Close popup
+
+Edit mode (textarea focused):
+
+- <kbd><kbd class="key">Shift</kbd>+<kbd class="key">Enter</kbd></kbd> – Insert newline
+- <kbd class="key">Enter</kbd> – Commit changes
+- <kbd class="key">Escape</kbd> – Cancel editing
 
 ### Converting types
 
@@ -323,19 +339,28 @@ However, you can customize which attribute is used as value and label by using `
 
 #### Actions
 
-If the column type is `'actions'`, you need to provide a `getActions` function that returns an array of actions available for each row (React elements).
-You can add the `showInMenu` prop on the returned React elements to signal the Data Grid to group these actions inside a row menu.
+If the column type is `'actions'`, you need to provide a `renderCell` function that renders a `GridActionsCell` component with `GridActionsCellItem` elements as children.
+You can add the `showInMenu` prop on the `GridActionsCellItem` elements to signal the Data Grid to group these actions inside a row menu.
 
 ```tsx
 {
   field: 'actions',
   type: 'actions',
-  getActions: (params: GridRowParams) => [
-    <GridActionsCellItem icon={...} onClick={...} label="Delete" />,
-    <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />,
-  ]
+  renderCell: (params) => (
+    <GridActionsCell {...params}>
+      <GridActionsCellItem icon={...} onClick={...} label="Delete" />
+      <GridActionsCellItem icon={...} onClick={...} label="Print" showInMenu />
+    </GridActionsCell>
+  )
 }
 ```
+
+<!-- TODO(v9): remove the warning below -->
+
+:::warning
+This is the recommended way to define actions in the column definition starting from v8.19.0.
+The `getActions` method that returned an array of actions is deprecated, and will be removed in a future version.
+:::
 
 By default, actions shown in the menu will close the menu on click.
 But in some cases, you might want to keep the menu open after clicking an action.
@@ -344,6 +369,11 @@ You can achieve this by setting the `closeMenuOnClick` prop to `false`.
 In the following example, the "Delete" action opens a confirmation dialog and therefore needs to keep the menu mounted:
 
 {{"demo": "ActionsWithModalGrid.js", "bg": "inline"}}
+
+:::success
+In the example above, the React Context API is used to pass the action handlers to the `ActionsCell` component.
+This is a recommended pattern to keep the column definitions stable.
+:::
 
 ### Custom column types
 

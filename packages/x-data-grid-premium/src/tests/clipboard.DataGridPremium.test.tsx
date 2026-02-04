@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridApi,
+  type GridApi,
   useGridApiRef,
   DataGridPremium,
-  DataGridPremiumProps,
-  GridColDef,
+  type DataGridPremiumProps,
+  type GridColDef,
 } from '@mui/x-data-grid-premium';
 import { act, createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { SinonSpy, spy, stub, SinonStub } from 'sinon';
+import { type SinonSpy, spy, stub, type SinonStub } from 'sinon';
 import { getCell, getColumnValues, includeRowSelection, sleep } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
@@ -165,6 +165,31 @@ describe('<DataGridPremium /> - Clipboard', () => {
 
       fireEvent.keyDown(cell, { key: 'c', keyCode: 67, ctrlKey: true });
       expect(writeText.lastCall.firstArg).to.equal(['1 " 1', '2'].join('\r\n'));
+    });
+
+    it('should copy aggregation cell value to clipboard', async () => {
+      const columns: GridColDef[] = [{ field: 'group' }, { field: 'value', type: 'number' }];
+      const rows = [
+        { id: 0, group: 'A', value: 10 },
+        { id: 1, group: 'A', value: 20 },
+      ];
+
+      const { user } = render(<Test columns={columns} rows={rows} rowGroupingModel={['group']} />);
+
+      // set aggregation model through API to avoid act error
+      await act(async () => apiRef.current?.setAggregationModel({ value: 'sum' }));
+
+      writeText = spy(navigator.clipboard, 'writeText');
+
+      // Because of the row grouping, the value column only displays the aggregation cells initially
+      const aggregationCell = getCell(0, 2);
+
+      expect(aggregationCell.textContent).to.equal('30');
+
+      await user.click(aggregationCell);
+      fireEvent.keyDown(aggregationCell, { key: 'c', keyCode: 67, ctrlKey: true });
+
+      expect(writeText.firstCall.args[0]).to.equal('30');
     });
   });
 
@@ -609,7 +634,7 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(processRowUpdateSpy.args[0]).to.deep.equal([
         { id: 1, firstName: 'John', lastName: 'Doe' },
         { id: 1, firstName: 'Cersei', lastName: 'Lannister' },
-        { rowId: '1' },
+        { rowId: 1 },
       ]);
     });
 
@@ -696,6 +721,62 @@ describe('<DataGridPremium /> - Clipboard', () => {
       expect(getColumnValues(4)).to.deep.equal(['4.0', '4.0', '4.9']);
     });
 
+    it('should respect the cell editable state when pasting', async () => {
+      const rows = [
+        { id: 0, brand: 'Nike', category: 'Shoes', price: '$120', rating: '4.0' },
+        { id: 1, brand: 'Adidas', category: 'Sneakers', price: '$100', rating: '4.2' },
+        { id: 2, brand: 'Puma', category: 'Shoes', price: '$90', rating: '4.9' },
+      ];
+      const columns: GridColDef[] = [
+        { field: 'id' },
+        { field: 'brand', editable: true },
+        { field: 'category', editable: true },
+        { field: 'price', editable: true },
+        { field: 'rating', editable: false },
+      ];
+
+      function Component() {
+        return (
+          <div style={{ width: 300, height: 300 }}>
+            <DataGridPremium
+              columns={columns}
+              rows={rows}
+              rowSelection={false}
+              cellSelection
+              disableVirtualization
+              isCellEditable={(params) => {
+                // Make price cell non-editable for row with id 1 via isCellEditable
+                if (params.field === 'price' && params.id === 1) {
+                  return false;
+                }
+                return true;
+              }}
+            />
+          </div>
+        );
+      }
+
+      const { user } = render(<Component />);
+
+      const cell = getCell(1, 0);
+      await act(() => cell.focus());
+      await user.click(cell);
+
+      fireEvent.keyDown(cell, { key: 'Shift' });
+      fireEvent.click(getCell(1, 4), { shiftKey: true });
+
+      paste(cell, ['0', 'Nike', 'Shoes', '$120', '4.0'].join('\t'));
+
+      await waitFor(() => {
+        expect(getColumnValues(1)).to.deep.equal(['Nike', 'Nike', 'Puma']);
+      });
+      expect(getColumnValues(2)).to.deep.equal(['Shoes', 'Shoes', 'Shoes']);
+      // Price should not be updated for row 1 due to isCellEditable returning false
+      expect(getColumnValues(3)).to.deep.equal(['$120', '$100', '$90']);
+      // Rating should not be updated because column is not editable
+      expect(getColumnValues(4)).to.deep.equal(['4.0', '4.2', '4.9']);
+    });
+
     it('should call `processRowUpdate` with each row impacted by the paste', async () => {
       const processRowUpdateSpy = spy((newRow) => {
         return newRow;
@@ -720,17 +801,17 @@ describe('<DataGridPremium /> - Clipboard', () => {
         [
           { id: 0, currencyPair: '12', price1M: '12' }, // new row
           { id: 0, currencyPair: 'USDGBP', price1M: 1 }, // old row
-          { rowId: '0' }, // row id
+          { rowId: 0 }, // row id
         ],
         [
           { id: 1, currencyPair: '12', price1M: '12' }, // new row
           { id: 1, currencyPair: 'USDEUR', price1M: 11 }, // old row
-          { rowId: '1' }, // row id
+          { rowId: 1 }, // row id
         ],
         [
           { id: 2, currencyPair: '12', price1M: '12' }, // new row
           { id: 2, currencyPair: 'GBPEUR', price1M: 21 }, // old row
-          { rowId: '2' }, // row id
+          { rowId: 2 }, // row id
         ],
       ]);
     });

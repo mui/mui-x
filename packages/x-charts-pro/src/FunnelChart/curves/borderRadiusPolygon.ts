@@ -1,4 +1,4 @@
-import { Point } from './curve.types';
+import { type Point } from './curve.types';
 
 const distance = (p1: Point, p2: Point) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 const lerp = (a: number, b: number, x: number) => a + (b - a) * x;

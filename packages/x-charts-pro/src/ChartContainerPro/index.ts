@@ -14,8 +14,8 @@ export * from './ChartContainerPro';
  */
 export type ChartProApi<
   ChartType extends keyof ProPluginsPerSeriesType | undefined = undefined,
-  Signatures extends
-    readonly ChartAnyPluginSignature[] = ChartType extends keyof ProPluginsPerSeriesType
-    ? ProPluginsPerSeriesType[ChartType]
-    : AllPluginSignatures,
+  Signatures extends readonly ChartAnyPluginSignature[] =
+    ChartType extends keyof ProPluginsPerSeriesType
+      ? ProPluginsPerSeriesType[ChartType]
+      : AllPluginSignatures,
 > = ChartProApiOriginal<ChartType, Signatures>;

@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   DataGridPro,
-  DataGridProProps,
+  type DataGridProProps,
   gridFilterModelSelector,
-  GridApi,
+  type GridApi,
   useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import { createRenderer, act } from '@mui/internal-test-utils';

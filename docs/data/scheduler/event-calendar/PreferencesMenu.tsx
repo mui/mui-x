@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { CalendarEvent } from '@mui/x-scheduler/primitives/models';
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import { SchedulerEvent } from '@mui/x-scheduler/models';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -8,7 +8,7 @@ import {
 } from '../datasets/personal-agenda';
 
 export default function PreferencesMenu() {
-  const [events, setEvents] = React.useState<CalendarEvent[]>(initialEvents);
+  const [events, setEvents] = React.useState<SchedulerEvent[]>(initialEvents);
 
   return (
     <div style={{ height: '600px', width: '100%' }}>
@@ -18,6 +18,7 @@ export default function PreferencesMenu() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

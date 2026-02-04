@@ -1,4 +1,3 @@
-import * as React from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { styled, useTheme } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';

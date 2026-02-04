@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { AgendaView } from '@mui/x-scheduler/material/agenda-view';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { StandaloneAgendaView } from '@mui/x-scheduler/agenda-view';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -13,14 +12,12 @@ export default function BasicAgendaView() {
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <StandaloneView
+      <StandaloneAgendaView
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-      >
-        <AgendaView />
-      </StandaloneView>
+      />
     </div>
   );
 }

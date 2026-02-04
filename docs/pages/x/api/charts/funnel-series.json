@@ -50,7 +50,7 @@
       "default": "'filled'",
       "isProPlan": true
     },
-    "xAxisId": { "type": { "description": "string" }, "isProPlan": true },
-    "yAxisId": { "type": { "description": "string" }, "isProPlan": true }
+    "xAxisId": { "type": { "description": "AxisId" }, "isProPlan": true },
+    "yAxisId": { "type": { "description": "AxisId" }, "isProPlan": true }
   }
 }

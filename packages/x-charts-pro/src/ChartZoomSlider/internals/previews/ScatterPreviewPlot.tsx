@@ -1,9 +1,8 @@
 import * as React from 'react';
 import {
-  useSelector,
   useStore,
-  D3Scale,
-  ColorGetter,
+  type D3Scale,
+  type ColorGetter,
   useScatterPlotData,
   scatterSeriesConfig,
   selectorChartPreviewComputedXAxis,
@@ -11,8 +10,8 @@ import {
 } from '@mui/x-charts/internals';
 import { useScatterSeriesContext, useXAxes, useYAxes, useZAxes } from '@mui/x-charts/hooks';
 import { ScatterMarker } from '@mui/x-charts/ScatterChart';
-import { DefaultizedScatterSeriesType } from '@mui/x-charts/models';
-import { PreviewPlotProps } from './PreviewPlot.types';
+import { type DefaultizedScatterSeriesType } from '@mui/x-charts/models';
+import { type PreviewPlotProps } from './PreviewPlot.types';
 
 interface ScatterPreviewPlotProps extends PreviewPlotProps {
   x: number;
@@ -24,8 +23,8 @@ interface ScatterPreviewPlotProps extends PreviewPlotProps {
 export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPreviewPlotProps) {
   const store = useStore();
   const seriesData = useScatterSeriesContext();
-  const xAxes = useSelector(store, selectorChartPreviewComputedXAxis, [axisId]);
-  const yAxes = useSelector(store, selectorChartPreviewComputedYAxis, [axisId]);
+  const xAxes = store.use(selectorChartPreviewComputedXAxis, axisId);
+  const yAxes = store.use(selectorChartPreviewComputedYAxis, axisId);
   const defaultXAxisId = useXAxes().xAxisIds[0];
   const defaultYAxisId = useYAxes().yAxisIds[0];
   const { zAxis: zAxes, zAxisIds } = useZAxes();
@@ -42,14 +41,22 @@ export function ScatterPreviewPlot({ axisId, x, y, height, width }: ScatterPrevi
       {seriesOrder.map((seriesId) => {
         const { id, xAxisId, yAxisId, zAxisId, color } = series[seriesId];
 
+        const xAxis = xAxes[xAxisId ?? defaultXAxisId];
+        const yAxis = yAxes[yAxisId ?? defaultYAxisId];
+
+        // This series is not attached to the current axis, skip it.
+        if (xAxis?.id !== axisId && yAxis?.id !== axisId) {
+          return null;
+        }
+
         const colorGetter = scatterSeriesConfig.colorProcessor(
           series[seriesId],
-          xAxes[xAxisId ?? defaultXAxisId],
-          yAxes[yAxisId ?? defaultYAxisId],
+          xAxis,
+          yAxis,
           zAxes[zAxisId ?? defaultZAxisId],
         );
-        const xScale = xAxes[xAxisId ?? defaultXAxisId].scale;
-        const yScale = yAxes[yAxisId ?? defaultYAxisId].scale;
+        const xScale = xAxis.scale;
+        const yScale = yAxis.scale;
 
         return (
           <ScatterPreviewItems

@@ -3,8 +3,7 @@ import * as fs from 'fs';
 import * as url from 'url';
 import { createRequire } from 'module';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-// eslint-disable-next-line no-restricted-imports
-import withDocsInfra from '@mui/monorepo/docs/nextConfigDocsInfra';
+import { withDeploymentConfig } from '@mui/internal-docs-infra/withDocsInfra';
 import { findPages } from './src/modules/utils/find';
 import { LANGUAGES, LANGUAGES_SSR, LANGUAGES_IGNORE_PAGES, LANGUAGES_IN_PROGRESS } from './config';
 import { SOURCE_CODE_REPO, SOURCE_GITHUB_BRANCH } from './constants';
@@ -61,7 +60,7 @@ try {
   // Ignore
 }
 
-export default withDocsInfra({
+export default withDeploymentConfig({
   reactStrictMode: true,
   typescript: {
     // The tsconfig also contains path aliases that are used by next.js.

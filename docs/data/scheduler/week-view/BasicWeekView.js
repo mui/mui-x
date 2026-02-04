@@ -1,7 +1,6 @@
 import * as React from 'react';
 
-import { WeekView } from '@mui/x-scheduler/material/week-view';
-import { StandaloneView } from '@mui/x-scheduler/material/standalone-view';
+import { StandaloneWeekView } from '@mui/x-scheduler/week-view';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -13,14 +12,12 @@ export default function BasicWeekView() {
 
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <StandaloneView
+      <StandaloneWeekView
         events={events}
         resources={resources}
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
-      >
-        <WeekView />
-      </StandaloneView>
+      />
     </div>
   );
 }

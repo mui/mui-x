@@ -34,8 +34,7 @@ export interface ExportedMultiSectionDigitalClockSectionProps {
 }
 
 export interface MultiSectionDigitalClockSectionProps<TSectionValue extends number | string>
-  extends FormProps,
-    ExportedMultiSectionDigitalClockSectionProps {
+  extends FormProps, ExportedMultiSectionDigitalClockSectionProps {
   autoFocus?: boolean;
   items: MultiSectionDigitalClockOption<TSectionValue>[];
   onChange: (value: TSectionValue) => void;

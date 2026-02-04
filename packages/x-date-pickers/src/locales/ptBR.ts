@@ -27,8 +27,8 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   end: 'Fim',
   startDate: 'Data de início',
   startTime: 'Hora de início',
-  endDate: 'Data de Término',
-  endTime: 'Hora de Término',
+  endDate: 'Data de término',
+  endTime: 'Hora de término',
 
   // Action bar
   cancelButtonLabel: 'Cancelar',
@@ -42,7 +42,7 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   dateTimePickerToolbarTitle: 'Selecione data e hora',
   timePickerToolbarTitle: 'Selecione a hora',
   dateRangePickerToolbarTitle: 'Selecione o intervalo entre datas',
-  // timeRangePickerToolbarTitle: 'Select time range',
+  timeRangePickerToolbarTitle: 'Selecione o intervalo entre horas',
 
   // Clock labels
   clockLabelText: (view, formattedTime) =>
@@ -61,14 +61,14 @@ const ptBRPickers: Partial<PickersLocaleText> = {
   calendarWeekNumberText: (weekNumber) => `${weekNumber}`,
 
   // Open Picker labels
-  openDatePickerDialogue: (formattedDate) => {
-    return formattedDate
-      ? `Escolha uma data, data selecionada ${formattedDate}`
-      : 'Escolha uma data';
-  },
+  openDatePickerDialogue: (formattedDate) =>
+    formattedDate ? `Escolha uma data, data selecionada ${formattedDate}` : 'Escolha uma data',
   openTimePickerDialogue: (formattedTime) =>
     formattedTime ? `Escolha uma hora, hora selecionada ${formattedTime}` : 'Escolha uma hora',
-  // openRangePickerDialogue: formattedRange => formattedRange ? `Choose range, selected range is ${formattedRange}` : 'Choose range',
+  openRangePickerDialogue: (formattedRange) =>
+    formattedRange
+      ? `Escolha um intervalo, intervalo selecionado é ${formattedRange}`
+      : 'Escolha um intervalo',
   fieldClearLabel: 'Limpar valor',
 
   // Table labels

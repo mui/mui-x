@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ChartsSlotProps, ChartsSlots } from '../internals/material';
+import { type ChartsSlotProps, type ChartsSlots } from '../internals/material';
 
 type SlotProps<T extends Record<keyof T, React.ComponentType<any>>> = {
   [key in keyof T]: React.ComponentProps<T[key]>;

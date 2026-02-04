@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { Heatmap } from '@mui/x-charts-pro/Heatmap';
 import { data } from './dumbData';

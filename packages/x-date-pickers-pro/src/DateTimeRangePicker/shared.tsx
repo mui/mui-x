@@ -46,9 +46,7 @@ import {
 } from '../validation/validateDateTimeRange';
 
 export interface BaseDateTimeRangePickerSlots
-  extends DateRangeCalendarSlots,
-    DigitalClockSlots,
-    MultiSectionDigitalClockSlots {
+  extends DateRangeCalendarSlots, DigitalClockSlots, MultiSectionDigitalClockSlots {
   /**
    * Tabs enabling toggling between date and time pickers.
    * @default DateTimeRangePickerTabs
@@ -62,9 +60,7 @@ export interface BaseDateTimeRangePickerSlots
 }
 
 export interface BaseDateTimeRangePickerSlotProps
-  extends DateRangeCalendarSlotProps,
-    DigitalClockSlotProps,
-    MultiSectionDigitalClockSlotProps {
+  extends DateRangeCalendarSlotProps, DigitalClockSlotProps, MultiSectionDigitalClockSlotProps {
   /**
    * Props passed down to the tabs component.
    */
@@ -87,7 +83,8 @@ type DateTimeRangePickerRenderers<TView extends DateOrTimeViewWithMeridiem> =
   >;
 
 export interface BaseDateTimeRangePickerProps
-  extends Omit<
+  extends
+    Omit<
       BasePickerInputProps<PickerRangeValue, DateTimeRangePickerView, DateTimeRangeValidationError>,
       'orientation' | 'views' | 'openTo'
     >,

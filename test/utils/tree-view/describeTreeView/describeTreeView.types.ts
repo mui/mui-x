@@ -1,15 +1,15 @@
 import * as React from 'react';
-import {
-  MergeSignaturesProperty,
-  TreeViewAnyPluginSignature,
-  TreeViewPublicAPI,
-} from '@mui/x-tree-view/internals/models';
+import { TreeViewAnyStore, TreeViewPublicAPI } from '@mui/x-tree-view/internals/models';
 import { TreeViewItemId } from '@mui/x-tree-view/models';
 import { TreeItemProps } from '@mui/x-tree-view/TreeItem';
-import { TreeViewSlotProps, TreeViewSlots } from '@mui/x-tree-view/internals';
+import {
+  TreeViewSlotProps,
+  TreeViewSlots,
+  UseTreeViewStoreParameters,
+} from '@mui/x-tree-view/internals';
 
-export type DescribeTreeViewTestRunner<TSignatures extends TreeViewAnyPluginSignature[]> = (
-  params: DescribeTreeViewTestRunnerParams<TSignatures>,
+export type DescribeTreeViewTestRunner<TStore extends TreeViewAnyStore> = (
+  params: DescribeTreeViewTestRunnerParams<TStore>,
 ) => void;
 
 export interface TreeViewItemIdTreeElement {
@@ -99,20 +99,17 @@ export interface DescribeTreeViewRendererUtils {
 }
 
 export interface DescribeTreeViewRendererReturnValue<
-  TSignatures extends TreeViewAnyPluginSignature[],
+  TStore extends TreeViewAnyStore,
 > extends DescribeTreeViewRendererUtils {
   /**
    * The ref object that allows Tree View manipulation.
    */
-  apiRef: { current: TreeViewPublicAPI<TSignatures> };
+  apiRef: { current: TreeViewPublicAPI<TStore> };
   /**
    * Passes new props to the Tree View.
-   * @param {Partial<TreeViewUsedParams<TSignatures>>} props A subset of the props accepted by the Tree View.
+   * @param {Partial<TStore['parameters']>} props A subset of the props accepted by the Tree View.
    */
-  setProps: (
-    props: Partial<MergeSignaturesProperty<TSignatures, 'params'>> &
-      React.HTMLAttributes<HTMLUListElement>,
-  ) => void;
+  setProps: (props: Partial<TStore['parameters']> & React.HTMLAttributes<HTMLUListElement>) => void;
   /**
    * Passes new items to the Tree View.
    * @param {readyonly DescribeTreeViewItem[]} items The new items.
@@ -120,7 +117,7 @@ export interface DescribeTreeViewRendererReturnValue<
   setItems: (items: readonly DescribeTreeViewItem[]) => void;
 }
 
-export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignature[]> = <
+export type DescribeTreeViewRenderer<TStore extends TreeViewAnyStore> = <
   R extends DescribeTreeViewItem,
 >(
   params: {
@@ -129,7 +126,7 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
      * If `true`, the Tree View will be wrapped with an error boundary.
      */
     withErrorBoundary?: boolean;
-  } & Omit<MergeSignaturesProperty<TSignatures, 'params'>, 'slots' | 'slotProps'> & {
+  } & UseTreeViewStoreParameters<TStore> & {
       slots?: TreeViewSlots & {
         item?: React.ElementType<TreeItemProps>;
       };
@@ -137,7 +134,7 @@ export type DescribeTreeViewRenderer<TSignatures extends TreeViewAnyPluginSignat
         item?: Partial<TreeItemProps>;
       };
     },
-) => DescribeTreeViewRendererReturnValue<TSignatures>;
+) => DescribeTreeViewRendererReturnValue<TStore>;
 
 export type DescribeTreeViewJSXRenderer = (
   element: React.ReactElement<any>,
@@ -145,7 +142,7 @@ export type DescribeTreeViewJSXRenderer = (
 
 type TreeViewComponentName = 'RichTreeView' | 'RichTreeViewPro' | 'SimpleTreeView';
 
-interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPluginSignature[]> {
+interface DescribeTreeViewTestRunnerParams<TStore extends TreeViewAnyStore> {
   /**
    * Render the Tree View with its props and items defined as parameters of the "render" function as follows:
    *
@@ -156,7 +153,7 @@ interface DescribeTreeViewTestRunnerParams<TSignatures extends TreeViewAnyPlugin
    * });
    * ```
    */
-  render: DescribeTreeViewRenderer<TSignatures>;
+  render: DescribeTreeViewRenderer<TStore>;
   /**
    * Render the Tree View by passing the JSX element to the renderFromJSX function as follows:
    *
@@ -187,5 +184,6 @@ export interface DescribeTreeViewItem {
   id: string;
   label?: React.ReactNode;
   disabled?: boolean;
+  disableSelection?: boolean;
   children?: readonly DescribeTreeViewItem[];
 }

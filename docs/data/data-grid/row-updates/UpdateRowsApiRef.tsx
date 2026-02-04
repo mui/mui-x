@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { DataGridPro, useGridApiRef, GridColDef } from '@mui/x-data-grid-pro';
 import {
   randomInt,

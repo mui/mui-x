@@ -136,7 +136,10 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
   /**
    * Handle pointer events for the rotate gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -159,7 +162,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
     // Check if we have enough pointers for a rotation (at least 2)
-    if (relevantPointers.length < this.minPointers || relevantPointers.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
       if (this.isActive) {
         // End the gesture if it was active
         this.emitRotateEvent(targetElement, 'end', relevantPointers, event);
@@ -179,6 +182,14 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
 
           // Store the original target element
           this.originalTarget = targetElement;
+        } else if (this.isActive && relevantPointers.length >= 2) {
+          // A new pointer was added during an active gesture
+          // Adjust the start angle to prevent jumping (similar to pointer removal logic)
+          const newAngle = calculateRotationAngle(relevantPointers);
+          // Adjust startAngle so that the total rotation is preserved
+          this.state.startAngle = newAngle - this.state.totalRotation;
+          this.state.lastAngle = newAngle;
+          this.state.lastTime = event.timeStamp;
         }
         break;
 
@@ -198,9 +209,14 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
             delta += 360;
           }
 
+          // Emit ongoing event if there's an actual rotation
+          // We don't want to emit events for tiny movements that might be just noise
+          if (Math.abs(delta) <= 0.1) {
+            return;
+          }
+
           // Store the delta for use in emitRotateEvent
           this.state.lastDelta = delta;
-
           // Update rotation value (cumulative)
           this.state.totalRotation += delta;
 
@@ -213,12 +229,6 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
           // Update state
           this.state.lastAngle = currentAngle;
           this.state.lastTime = event.timeStamp;
-
-          // Emit ongoing event if there's an actual rotation
-          // We don't want to emit events for tiny movements that might be just noise
-          if (Math.abs(delta) <= 0.1) {
-            return;
-          }
 
           if (!this.isActive) {
             this.isActive = true;
@@ -239,8 +249,8 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
           );
 
-          // If we have less than the minimum required pointers, end the gesture
-          if (remainingPointers.length < this.minPointers) {
+          // If we no longer meet the pointer count requirements, end the gesture
+          if (!this.isWithinPointerCount(remainingPointers, event.pointerType)) {
             if (event.type === 'pointercancel') {
               this.emitRotateEvent(targetElement, 'cancel', relevantPointers, event);
             }
@@ -261,7 +271,7 @@ export class RotateGesture<GestureName extends string> extends PointerGesture<Ge
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit rotate-specific events with additional data

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const zhTWGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: '緊湊',
   toolbarDensityStandard: '標準',
   toolbarDensityComfortable: '舒適',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: '復原',
+  toolbarRedo: '重做',
 
   // Columns selector toolbar button text
   toolbarColumns: '欄位',
@@ -157,6 +161,10 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: '真',
   booleanCellFalseLabel: '假',
+
+  // Long text cell
+  longTextCellExpandLabel: '展開',
+  longTextCellCollapseLabel: '摺疊',
 
   // Actions cell more text
   actionsCellMore: '查看更多',
@@ -317,6 +325,7 @@ const zhTWGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const zhTW: Localization = getGridLocalization(zhTWGrid);

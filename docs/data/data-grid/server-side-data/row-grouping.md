@@ -86,9 +86,22 @@ Server-side row grouping does not support the [`colDef.groupingValueGetter()`](/
 Use `dataSource.getGroupKey()` to compute the group key for the row instead.
 :::
 
+## Row expansion state persistence
+
+The Data Grid compares the IDs of the newly fetched rows with the existing tree level.
+Matching rows are not recreated and they maintain their expansion state and child rows.
+
+To drop all child rows and reset the expansion state, pass `keepChildrenExpanded` flag set to `false` to the fetch options of the [`dataSource.fetchRows()`](/x/api/data-grid/grid-api/#grid-api-prop-dataSource) API method.
+
+Expand some rows in the following demo and use two different refetch action buttons to see the difference in the behavior.
+
+The cache is disabled to make all server requests visible in the console.
+
+{{"demo": "ServerSideRowGroupingExpansionPersistence.js", "bg": "inline"}}
+
 ## Error handling
 
-If an error occurs during a `getRows()` call, the Data Grid displays an error message in the row group cell.
+If an error occurs during a `getRows()` call, the Data Grid displays an error indicator in the row group cell.
 `onDataSourceError()` is also triggered with an error containing the params described in [Server-side data overview—Error handling](/x/react-data-grid/server-side-data/#error-handling).
 
 The demo below renders a custom Snackbar component to display an error message when the requests fail, which you can simulate using the checkbox and the **Refetch rows** button at the top.

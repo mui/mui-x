@@ -5,7 +5,7 @@ import {
   gridClasses,
   gridColumnLookupSelector,
   useGridSelector,
-  GridSingleSelectColDef,
+  type GridSingleSelectColDef,
 } from '@mui/x-data-grid-pro';
 import composeClasses from '@mui/utils/composeClasses';
 import capitalize from '@mui/utils/capitalize';
@@ -14,8 +14,11 @@ import { keyframes, styled } from '@mui/system';
 import { getValueOptions, isSingleSelectColDef, vars } from '@mui/x-data-grid-pro/internals';
 import useId from '@mui/utils/useId';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
-import { Prompt, PromptResponse } from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
+import type { DataGridPremiumProcessedProps } from '../../models/dataGridPremiumProps';
+import type {
+  Prompt,
+  PromptResponse,
+} from '../../hooks/features/aiAssistant/gridAiAssistantInterfaces';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type GridPromptProps = Prompt & { onRerun: () => void };
@@ -379,6 +382,20 @@ function GridPrompt(props: GridPromptProps) {
     [apiRef, getColumnName, rootProps.slots],
   );
 
+  const getChartChanges = React.useCallback(
+    (chart: NonNullable<PromptResponse['chart']>) => {
+      return {
+        label: apiRef.current.getLocaleText('toolbarCharts'),
+        description: apiRef.current.getLocaleText('promptChangeChartsLabel')(
+          chart.dimensions.length,
+          chart.values.length,
+        ),
+        icon: rootProps.slots.promptChartsIcon,
+      };
+    },
+    [apiRef, rootProps.slots.promptChartsIcon],
+  );
+
   const changeList = React.useMemo(() => {
     if (!response) {
       return [];
@@ -405,6 +422,9 @@ function GridPrompt(props: GridPromptProps) {
     if (response.pivoting && 'columns' in response.pivoting) {
       changes.push(...getPivotingChanges(response.pivoting));
     }
+    if (response.chart) {
+      changes.push(getChartChanges(response.chart));
+    }
 
     return changes;
   }, [
@@ -414,6 +434,7 @@ function GridPrompt(props: GridPromptProps) {
     getFilterChanges,
     getSortingChanges,
     getPivotingChanges,
+    getChartChanges,
   ]);
 
   return (

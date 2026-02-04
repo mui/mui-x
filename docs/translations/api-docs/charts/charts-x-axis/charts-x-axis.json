@@ -38,34 +38,13 @@
     },
     "tickSize": { "description": "The size of the ticks." }
   },
-  "classDescriptions": {
-    "bottom": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the bottom axis" },
-    "directionX": { "description": "Styles applied to {{nodeName}}.", "nodeName": "x-axes" },
-    "directionY": { "description": "Styles applied to {{nodeName}}.", "nodeName": "y-axes" },
-    "id": {
-      "description": "Styles applied to {{nodeName}}. Needs to be suffixed with the axis ID: <code>.${axisClasses.id}-${axisId}</code>.",
-      "nodeName": "the root element for the axis with the given ID"
-    },
-    "label": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the group containing the axis label"
-    },
-    "left": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the left axis" },
-    "line": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "the main line element"
-    },
-    "right": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the right axis" },
-    "root": { "description": "Styles applied to the root element." },
-    "tick": { "description": "Styles applied to {{nodeName}}.", "nodeName": "ticks" },
-    "tickContainer": {
-      "description": "Styles applied to {{nodeName}}.",
-      "nodeName": "group including the tick and its label"
-    },
-    "tickLabel": {
-      "description": "Styles applied to {{nodeName}}.<br>⚠️ For performance reasons, only the inline styles get considered for bounding box computation. Modifying text size by adding properties like <code>font-size</code> or <code>letter-spacing</code> to this class might cause labels to overlap.",
-      "nodeName": "ticks label"
-    },
-    "top": { "description": "Styles applied to {{nodeName}}.", "nodeName": "the top axis" }
+  "classDescriptions": {},
+  "slotDescriptions": {
+    "axisLabel": "Custom component for axis label.",
+    "axisLine": "Custom component for the axis main line.",
+    "axisTick": "Custom component for the axis tick.",
+    "axisTickLabel": "Custom component for tick label.",
+    "xAxis": "Custom component for the x-axis.",
+    "yAxis": "Custom component for the y-axis."
   }
 }

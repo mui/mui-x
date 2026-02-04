@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const heILGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const heILGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'דחוסה',
   toolbarDensityStandard: 'רגילה',
   toolbarDensityComfortable: 'אוורירית',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'בטל',
+  toolbarRedo: 'בצע שוב',
 
   // Columns selector toolbar button text
   toolbarColumns: 'עמודות',
@@ -160,6 +164,10 @@ const heILGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'כן',
   booleanCellFalseLabel: 'לא',
+
+  // Long text cell
+  longTextCellExpandLabel: 'הרחב',
+  longTextCellCollapseLabel: 'כווץ',
 
   // Actions cell more text
   actionsCellMore: 'עוד',
@@ -321,6 +329,7 @@ const heILGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const heIL: Localization = getGridLocalization(heILGrid);

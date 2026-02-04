@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, fireEvent, screen, act, reactMajor } from '@mui/internal-test-utils';
 import {
   getCell,
@@ -12,14 +12,15 @@ import * as React from 'react';
 import { spy } from 'sinon';
 import {
   DataGridPro,
-  DataGridProProps,
+  type DataGridProProps,
   GRID_TREE_DATA_GROUPING_FIELD,
-  GridApi,
-  GridGroupNode,
+  type GridApi,
+  type GridGroupNode,
   GridLogicOperator,
-  GridRowsProp,
+  type GridRowsProp,
   useGridApiRef,
-  GridPaginationModel,
+  type GridPaginationModel,
+  type GridColDef,
 } from '@mui/x-data-grid-pro';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);
@@ -309,6 +310,45 @@ describe('<DataGridPro /> - Tree data', () => {
     });
   });
 
+  describe('apiRef: expandAllRows', () => {
+    it('should expand all rows', async () => {
+      render(<Test />);
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+      act(() => apiRef.current?.expandAllRows());
+
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+    });
+  });
+
+  describe('apiRef: collapseAllRows', () => {
+    it('should collapse all rows', () => {
+      render(<Test defaultGroupingExpansionDepth={-1} />);
+      expect(getColumnValues(1)).to.deep.equal([
+        'A',
+        'A.A',
+        'A.B',
+        'B',
+        'B.A',
+        'B.B',
+        'B.B.A',
+        'B.B.A.A',
+        'C',
+      ]);
+      act(() => apiRef.current?.collapseAllRows());
+      expect(getColumnValues(1)).to.deep.equal(['A', 'B', 'C']);
+    });
+  });
+
   describe('prop: groupingColDef', () => {
     it('should set the custom headerName', () => {
       render(<Test groupingColDef={{ headerName: 'Custom header name' }} />);
@@ -469,6 +509,51 @@ describe('<DataGridPro /> - Tree data', () => {
       expect(getColumnValues(1)).to.deep.equal(['A']);
       fireEvent.click(screen.getByRole('button', { name: /next page/i }));
       expect(getColumnValues(1)).to.deep.equal(['B', 'B.A', 'B.B']);
+    });
+
+    // https://github.com/mui/mui-x/issues/20202
+    it('should not crash when switching rows with pagination enabled', () => {
+      const rowsA: GridRowsProp = [
+        { name: 'A', id: '0', path: ['0'] },
+        { name: 'B', id: '1', path: ['0', '1'] },
+        { name: 'C', id: '2', path: ['0', '1', '2'] },
+      ];
+
+      const rowsB: GridRowsProp = [
+        { name: 'D', id: '1', path: ['1'] },
+        { name: 'E', id: '2', path: ['1', '2'] },
+      ];
+
+      const columns: GridColDef[] = [{ field: 'name', width: 150 }];
+
+      const getTreeDataPath: DataGridProProps['getTreeDataPath'] = (row) => row.path;
+      function TestCase() {
+        const [rows, setRows] = React.useState(rowsA);
+        return (
+          <div>
+            <button onClick={() => setRows((prev) => (prev === rowsA ? rowsB : rowsA))}>
+              Toggle
+            </button>
+            <div style={{ width: 300, height: 800 }}>
+              <DataGridPro
+                treeData
+                rows={rows}
+                columns={columns}
+                getTreeDataPath={getTreeDataPath}
+                pagination
+              />
+            </div>
+          </div>
+        );
+      }
+      render(<TestCase />);
+      expect(getColumnValues(1)).to.deep.equal(['A']);
+
+      fireEvent.click(screen.getByRole('button', { name: /toggle/i }));
+      expect(getColumnValues(1)).to.deep.equal(['D']);
+
+      fireEvent.click(screen.getByRole('button', { name: /toggle/i }));
+      expect(getColumnValues(1)).to.deep.equal(['A']);
     });
   });
 

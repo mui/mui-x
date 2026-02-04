@@ -1,15 +1,14 @@
 'use client';
 import * as React from 'react';
-import { SeriesId } from '../models/seriesType/common';
-import { BarElementOwnerState } from './barElementClasses';
+import { type SeriesId } from '../models/seriesType/common';
+import { type BarElementOwnerState } from './barElementClasses';
 import { useAnimateBar } from '../hooks/animation/useAnimateBar';
 
-export interface BarProps
-  extends Omit<
-    React.SVGProps<SVGRectElement>,
-    'id' | 'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
-  > {
-  id: SeriesId;
+export interface BarProps extends Omit<
+  React.SVGProps<SVGRectElement>,
+  'color' | 'ref' | 'x' | 'y' | 'height' | 'width'
+> {
+  seriesId: SeriesId;
   dataIndex: number;
   color: string;
   ownerState: BarElementOwnerState;
@@ -48,7 +47,7 @@ export interface BarProps
 }
 
 export function AnimatedBarElement(props: BarProps) {
-  const { ownerState, skipAnimation, id, dataIndex, xOrigin, yOrigin, ...other } = props;
+  const { ownerState, skipAnimation, seriesId, dataIndex, xOrigin, yOrigin, ...other } = props;
 
   const animatedProps = useAnimateBar(props);
 

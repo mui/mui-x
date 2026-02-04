@@ -1,5 +1,5 @@
 import { isNumber } from '@mui/x-data-grid-pro/internals';
-import { GridAggregationFunction } from './gridAggregationInterfaces';
+import type { GridAggregationFunction } from './gridAggregationInterfaces';
 
 const sumAgg: GridAggregationFunction<unknown, number> = {
   apply: ({ values }) => {
@@ -105,10 +105,44 @@ const sizeAgg: GridAggregationFunction<unknown, number> = {
   hasCellUnit: false,
 };
 
+const sizeTrueAgg: GridAggregationFunction<unknown, number> = {
+  apply: ({ values }) => {
+    return values.filter((value) => value === true).length;
+  },
+  columnTypes: ['boolean'],
+  label: 'size(true)',
+  valueFormatter: (value: number | string | null) => {
+    if (value == null || !isNumber(value)) {
+      return value;
+    }
+
+    return value.toLocaleString();
+  },
+  hasCellUnit: false,
+};
+
+const sizeFalseAgg: GridAggregationFunction<unknown, number> = {
+  apply: ({ values }) => {
+    return values.filter((value) => value === false).length;
+  },
+  columnTypes: ['boolean'],
+  label: 'size(false)',
+  valueFormatter: (value: number | string | null) => {
+    if (value == null || !isNumber(value)) {
+      return value;
+    }
+
+    return value.toLocaleString();
+  },
+  hasCellUnit: false,
+};
+
 export const GRID_AGGREGATION_FUNCTIONS = {
   sum: sumAgg,
   avg: avgAgg,
   min: minAgg,
   max: maxAgg,
   size: sizeAgg,
+  sizeTrue: sizeTrueAgg,
+  sizeFalse: sizeFalseAgg,
 };

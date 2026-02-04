@@ -35,7 +35,8 @@ export interface BaseDateRangePickerSlotProps extends DateRangeCalendarSlotProps
 }
 
 export interface BaseDateRangePickerProps
-  extends Omit<
+  extends
+    Omit<
       BasePickerInputProps<PickerRangeValue, 'day', DateRangeValidationError>,
       'view' | 'views' | 'openTo' | 'onViewChange' | 'orientation'
     >,

@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer } from '@mui/internal-test-utils/createRenderer';
 import { ChartsRenderer } from '@mui/x-charts-premium/ChartsRenderer';
 import { screen } from '@mui/internal-test-utils';
@@ -29,7 +28,7 @@ describe('<ChartsRenderer />', () => {
   });
 
   it('should pass the rendering to the onRender callback', () => {
-    const onRenderSpy = spy();
+    const onRenderSpy = vi.fn();
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -42,11 +41,11 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    expect(onRenderSpy.lastCall.firstArg).to.equal('line');
+    expect(onRenderSpy.mock.lastCall?.[0]).to.equal('line');
   });
 
   it('should compute props for the chart', () => {
-    const onRenderSpy = spy();
+    const onRenderSpy = vi.fn();
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -59,12 +58,12 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    const props = onRenderSpy.lastCall.args[1];
+    const props = onRenderSpy.mock.lastCall?.[1];
     expect(props.colors).to.equal(colorPaletteLookup.get('rainbowSurgePalette'));
   });
 
   it('should override the props if the configuration has an updated value', () => {
-    const onRenderSpy = spy();
+    const onRenderSpy = vi.fn();
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -79,12 +78,12 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    const props = onRenderSpy.lastCall.args[1];
+    const props = onRenderSpy.mock.lastCall?.[1];
     expect(props.colors).to.equal(colorPaletteLookup.get('mangoFusionPalette'));
   });
 
   it('should place dimensions and values to the correct place in the props', () => {
-    const onRenderSpy = spy();
+    const onRenderSpy = vi.fn();
     render(
       <div data-testid="container">
         <ChartsRenderer
@@ -97,7 +96,7 @@ describe('<ChartsRenderer />', () => {
       </div>,
     );
 
-    const props = onRenderSpy.lastCall.args[1];
+    const props = onRenderSpy.mock.lastCall?.[1];
     expect(props.series[0].data).to.deep.equal([1, 2, 3]);
   });
 });

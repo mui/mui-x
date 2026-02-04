@@ -2,7 +2,15 @@ import type { Collection, JSCodeshift } from 'jscodeshift';
 
 interface RenamePropsArgs {
   root: Collection<any>;
+  /**
+   * Names of the components to target
+   * @example ["DataGrid", "DataGridPro"]
+   */
   componentNames: string[];
+  /**
+   * Props renaming mapping
+   * @example { disableSelectionOnClick: "disableRowSelectionOnClick" }
+   */
   props: Record<string, any>;
   j: JSCodeshift;
 }

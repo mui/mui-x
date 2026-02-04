@@ -179,7 +179,10 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
   /**
    * Handle pointer events for the pinch gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Find which element (if any) is being targeted
@@ -212,11 +215,22 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
 
           // Store the original target element
           this.originalTarget = targetElement;
+        } else if (this.isActive && relevantPointers.length >= 2) {
+          // A new pointer was added during an active gesture
+          // Adjust the start distance to prevent jumping (similar to pointer removal logic)
+          const newDistance = calculateAverageDistance(relevantPointers);
+          // Adjust startDistance so that the current scale is preserved
+          this.state.startDistance = newDistance / this.state.lastScale;
+          this.state.lastDistance = newDistance;
+          this.state.lastTime = event.timeStamp;
         }
         break;
 
       case 'pointermove':
-        if (this.state.startDistance && relevantPointers.length >= this.minPointers) {
+        if (
+          this.state.startDistance &&
+          this.isWithinPointerCount(relevantPointers, event.pointerType)
+        ) {
           // Calculate current distance between pointers
           const currentDistance = calculateAverageDistance(relevantPointers);
 
@@ -269,8 +283,8 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
             (p) => p.type !== 'pointerup' && p.type !== 'pointercancel',
           );
 
-          // If we have less than the minimum required pointers, end the gesture
-          if (remainingPointers.length < this.minPointers) {
+          // If we no longer meet the pointer count requirements, end the gesture
+          if (!this.isWithinPointerCount(remainingPointers, event.pointerType)) {
             if (event.type === 'pointercancel') {
               this.emitPinchEvent(targetElement, 'cancel', relevantPointers, event);
             }
@@ -283,6 +297,8 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
             // to prevent jumping when a finger is lifted
             const newDistance = calculateAverageDistance(remainingPointers);
             this.state.startDistance = newDistance / this.state.lastScale;
+            this.state.lastDistance = newDistance;
+            this.state.lastTime = event.timeStamp;
           }
         }
         break;
@@ -290,7 +306,7 @@ export class PinchGesture<GestureName extends string> extends PointerGesture<Ges
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit pinch-specific events with additional data

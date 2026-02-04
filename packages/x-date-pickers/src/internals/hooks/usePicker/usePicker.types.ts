@@ -34,7 +34,9 @@ export interface UsePickerBaseProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
-> extends OnErrorProps<TValue, TError>,
+>
+  extends
+    OnErrorProps<TValue, TError>,
     Omit<
       UseViewsOptions<any, TView>,
       'onChange' | 'onFocusedViewChange' | 'focusedView' | 'getStepNavigation'
@@ -56,7 +58,10 @@ export interface UsePickerBaseProps<
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The new value.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context Context about this change:
+   * - `validationError`: validation result of the current value
+   * - `source`: source of the change. One of 'field' | 'view' | 'unknown'
+   * - `shortcut` (optional): the shortcut metadata if the change was triggered by a shortcut selection
    */
   onChange?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
@@ -64,7 +69,10 @@ export interface UsePickerBaseProps<
    * @template TValue The value type. It will be the same type as `value` or `null`. It can be in `[start, end]` format in case of range value.
    * @template TError The validation error type. It will be either `string` or a `null`. It can be in `[start, end]` format in case of range value.
    * @param {TValue} value The value that was just accepted.
-   * @param {FieldChangeHandlerContext<TError>} context The context containing the validation result of the current value.
+   * @param {FieldChangeHandlerContext<TError>} context Context about this acceptance:
+   * - `validationError`: validation result of the current value
+   * - `source`: source of the acceptance. One of 'field' | 'view' | 'unknown'
+   * - `shortcut` (optional): the shortcut metadata if the value was accepted via a shortcut selection
    */
   onAccept?: (value: TValue, context: PickerChangeHandlerContext<TError>) => void;
   /**
@@ -143,8 +151,8 @@ export interface UsePickerProps<
   TView extends DateOrTimeViewWithMeridiem,
   TError,
   TExternalProps extends UsePickerProps<TValue, TView, TError, any>,
-> extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>,
-    UsePickerNonStaticProps {
+>
+  extends UsePickerBaseProps<TValue, TView, TError, TExternalProps>, UsePickerNonStaticProps {
   // We don't add JSDoc here because we want the `referenceDate` JSDoc to be the one from the view which has more context.
   referenceDate?: TValue extends PickerRangeValue ? TValue | PickerValidDate : PickerValidDate;
   className?: string;
@@ -216,8 +224,10 @@ export interface UsePickerState<TValue extends PickerValidValue> {
   hasBeenModifiedSinceMount: boolean;
 }
 
-export interface PickerViewsRendererBaseExternalProps
-  extends Omit<UsePickerProps<any, any, any, any>, 'openTo' | 'viewRenderers' | 'onChange'> {}
+export interface PickerViewsRendererBaseExternalProps extends Omit<
+  UsePickerProps<any, any, any, any>,
+  'openTo' | 'viewRenderers' | 'onChange'
+> {}
 
 export type PickerViewsRendererProps<
   TValue extends PickerValidValue,

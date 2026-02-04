@@ -11,17 +11,17 @@ import {
 } from '../DateTimePicker/shared';
 
 export interface MobileDateTimePickerSlots
-  extends BaseDateTimePickerSlots,
-    MakeOptional<UseMobilePickerSlots, 'field'> {}
+  extends BaseDateTimePickerSlots, MakeOptional<UseMobilePickerSlots, 'field'> {}
 
 export interface MobileDateTimePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends BaseDateTimePickerSlotProps,
+  extends
+    BaseDateTimePickerSlotProps,
     ExportedUseMobilePickerSlotProps<TEnableAccessibleFieldDOMStructure> {}
 
 export interface MobileDateTimePickerProps<
   TEnableAccessibleFieldDOMStructure extends boolean = true,
-> extends BaseDateTimePickerProps,
-    MobileOnlyPickerProps {
+>
+  extends BaseDateTimePickerProps, MobileOnlyPickerProps {
   /**
    * Overridable component slots.
    * @default {}

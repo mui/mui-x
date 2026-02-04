@@ -1,15 +1,14 @@
 'use client';
-import { ChartSeriesType } from '../models/seriesType/config';
+import { type ChartSeriesType } from '../models/seriesType/config';
 import {
-  ProcessedSeries,
-  UseChartSeriesSignature,
-  selectorChartSeriesConfig,
+  type ProcessedSeries,
+  type UseChartSeriesSignature,
 } from '../internals/plugins/corePlugins/useChartSeries';
+import { selectorChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 import { useSeries } from './useSeries';
 import type { LegendItemParams } from '../ChartsLegend';
 import { useStore } from '../internals/store/useStore';
-import { useSelector } from '../internals/store/useSelector';
-import { ChartSeriesConfig } from '../internals/plugins/models/seriesConfig';
+import { type ChartSeriesConfig } from '../internals/plugins/corePlugins/useChartSeriesConfig';
 
 function getSeriesToDisplay(
   series: ProcessedSeries,
@@ -35,7 +34,7 @@ function getSeriesToDisplay(
 export function useLegend(): { items: LegendItemParams[] } {
   const series = useSeries();
   const store = useStore<[UseChartSeriesSignature]>();
-  const seriesConfig = useSelector(store, selectorChartSeriesConfig);
+  const seriesConfig = store.use(selectorChartSeriesConfig);
 
   return {
     items: getSeriesToDisplay(series, seriesConfig),

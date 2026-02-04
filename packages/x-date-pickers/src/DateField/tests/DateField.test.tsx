@@ -1,4 +1,3 @@
-import * as React from 'react';
 import InputAdornment, { InputAdornmentProps } from '@mui/material/InputAdornment';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import { screen } from '@mui/internal-test-utils';

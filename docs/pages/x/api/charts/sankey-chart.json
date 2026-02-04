@@ -10,6 +10,12 @@
       "type": { "name": "shape", "description": "{ preferStrictDomainInLineCharts?: bool }" }
     },
     "height": { "type": { "name": "number" } },
+    "highlightedItem": {
+      "type": {
+        "name": "union",
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
+      }
+    },
     "id": { "type": { "name": "string" } },
     "loading": { "type": { "name": "bool" }, "default": "false" },
     "localeText": { "type": { "name": "object" } },
@@ -17,6 +23,13 @@
       "type": {
         "name": "union",
         "description": "number<br>&#124;&nbsp;{ bottom?: number, left?: number, right?: number, top?: number }"
+      }
+    },
+    "onHighlightChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(highlightedItem: SankeyHighlightItemData | null) => void",
+        "describedArgs": ["highlightedItem"]
       }
     },
     "onLinkClick": {
@@ -33,11 +46,24 @@
         "describedArgs": ["event", "node"]
       }
     },
+    "onTooltipItemChange": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(tooltipItem: SeriesItemIdentifier<TSeries> | null) => void",
+        "describedArgs": ["tooltipItem"]
+      }
+    },
     "slotProps": { "type": { "name": "object" }, "default": "{}" },
     "slots": {
       "type": { "name": "object" },
       "default": "{}",
       "additionalInfo": { "slotsApi": true }
+    },
+    "tooltipItem": {
+      "type": {
+        "name": "union",
+        "description": "{ nodeId: number<br>&#124;&nbsp;string, seriesId: string, subType: 'node', type: 'sankey' }<br>&#124;&nbsp;{ seriesId: string, sourceId: number<br>&#124;&nbsp;string, subType: 'link', targetId: number<br>&#124;&nbsp;string, type: 'sankey' }"
+      }
     },
     "width": { "type": { "name": "number" } }
   },
@@ -85,6 +111,12 @@
       "key": "links",
       "className": "MuiSankeyChart-links",
       "description": "Styles applied to the links container.",
+      "isGlobal": false
+    },
+    {
+      "key": "nodeLabels",
+      "className": "MuiSankeyChart-nodeLabels",
+      "description": "Styles applied to the node label container.",
       "isGlobal": false
     },
     {

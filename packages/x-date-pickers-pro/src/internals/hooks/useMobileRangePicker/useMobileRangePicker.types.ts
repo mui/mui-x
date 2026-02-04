@@ -21,7 +21,8 @@ import {
 } from '../../models';
 
 export interface UseMobileRangePickerSlots
-  extends PickersModalDialogSlots,
+  extends
+    PickersModalDialogSlots,
     ExportedPickersLayoutSlots<PickerRangeValue>,
     PickerFieldUISlotsFromContext {
   /**
@@ -32,7 +33,9 @@ export interface UseMobileRangePickerSlots
 
 export interface ExportedUseMobileRangePickerSlotProps<
   TEnableAccessibleFieldDOMStructure extends boolean,
-> extends PickersModalDialogSlotProps,
+>
+  extends
+    PickersModalDialogSlotProps,
     ExportedPickersLayoutSlotProps<PickerRangeValue>,
     PickerFieldUISlotPropsFromContext {
   field?: SlotComponentPropsFromProps<
@@ -45,7 +48,8 @@ export interface ExportedUseMobileRangePickerSlotProps<
 }
 
 export interface UseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure extends boolean>
-  extends ExportedUseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
+  extends
+    ExportedUseMobileRangePickerSlotProps<TEnableAccessibleFieldDOMStructure>,
     Pick<PickersLayoutSlotProps<PickerRangeValue>, 'toolbar'> {}
 
 export interface MobileRangeOnlyPickerProps extends NonStaticRangePickerProps {}

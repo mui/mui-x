@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { MobileDateRangePicker } from '@mui/x-date-pickers-pro/MobileDateRangePicker';
 import { createPickerRenderer, describePicker } from 'test/utils/pickers';
 import { describeConformance } from 'test/utils/describeConformance';

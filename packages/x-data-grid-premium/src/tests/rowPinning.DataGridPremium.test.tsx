@@ -1,9 +1,8 @@
 import { createRenderer } from '@mui/internal-test-utils';
-import * as React from 'react';
 import {
   DataGridPremium,
-  DataGridPremiumProps,
-  GridRowsProp,
+  type DataGridPremiumProps,
+  type GridRowsProp,
   gridClasses,
 } from '@mui/x-data-grid-premium';
 

@@ -1,34 +1,34 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
 import {
   GRID_TREE_DATA_GROUPING_FIELD,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
 } from '../../../internals/constants';
 import { isGroupingColumn } from '../../../internals/utils/gridRowGroupingUtils';
-import { GridEventListener } from '../../../models/events';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { GridCellParams } from '../../../models/params/gridCellParams';
+import type { GridEventListener } from '../../../models/events';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridCellParams } from '../../../models/params/gridCellParams';
 import {
   gridVisibleColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
 import { useGridLogger } from '../../utils/useGridLogger';
 import { useGridEvent } from '../../utils/useGridEvent';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../colDef/gridCheckboxSelectionColDef';
 import { gridClasses } from '../../../constants/gridClasses';
 import { GridCellModes } from '../../../models/gridEditRowModel';
 import { isNavigationKey } from '../../../utils/keyboardUtils';
-import { GridRowId } from '../../../models';
+import type { GridRowId } from '../../../models';
 import { gridFocusColumnGroupHeaderSelector } from '../focus';
 import { gridColumnGroupsHeaderMaxDepthSelector } from '../columnGrouping/gridColumnGroupsSelector';
 import {
   gridHeaderFilteringEditFieldSelector,
   gridHeaderFilteringMenuSelector,
 } from '../headerFiltering/gridHeaderFilteringSelectors';
-import { GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
+import { type GridPipeProcessor, useGridRegisterPipeProcessor } from '../../core/pipeProcessing';
 import { isEventTargetInPortal } from '../../../utils/domUtils';
 import { getLeftColumnIndex, getRightColumnIndex, findNonRowSpannedCell } from './utils';
 import { createSelectorMemoized } from '../../../utils/createSelector';
@@ -56,7 +56,7 @@ export const useGridKeyboardNavigation = (
   apiRef: RefObject<GridPrivateApiCommunity>,
   props: Pick<
     DataGridProcessedProps,
-    'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters'
+    'pagination' | 'paginationMode' | 'getRowId' | 'signature' | 'headerFilters' | 'tabNavigation'
   >,
 ): void => {
   const logger = useGridLogger(apiRef, 'useGridKeyboardNavigation');
@@ -164,15 +164,37 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      if (!isNavigationKey(event.key) && event.key !== 'Tab' && event.key !== 'Enter') {
+        return;
+      }
+
+      // Tab key is only allowed if tabbing is enabled for header/all, or if we are tabbing to the content area while `tabNavigation` is enabled for content only
+      if (
+        event.key === 'Tab' &&
+        (props.tabNavigation === 'none' || (props.tabNavigation === 'content' && event.shiftKey))
+      ) {
+        return;
+      }
+
       const currentPageRows = getCurrentPageRows();
+
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
       const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
-      const lastRowIndexInPage = currentPageRows.length - 1;
+      const lastRowIndexInPage = currentPageRows.length > 0 ? currentPageRows.length - 1 : null;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = Math.max(0, gridVisibleColumnDefinitionsSelector(apiRef).length - 1);
       const columnGroupMaxDepth = gridColumnGroupsHeaderMaxDepthSelector(apiRef);
       let shouldPreventDefault = true;
+
+      // If we are tabbing inside the header area while only content `tabNavigation` is enabled, go to the first cell
+      if (event.key === 'Tab' && props.tabNavigation === 'content' && !event.shiftKey) {
+        if (firstRowIndexInPage !== null) {
+          goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
+          event.preventDefault();
+        }
+        return;
+      }
 
       switch (event.key) {
         case 'ArrowDown': {
@@ -249,6 +271,37 @@ export const useGridKeyboardNavigation = (
           break;
         }
 
+        case 'Tab': {
+          if (event.shiftKey) {
+            // if the key is pressed on the first column header, Shift+Tab should go to the group header if it is there or allow default behavior
+            if (colIndexBefore === firstColIndex) {
+              if (columnGroupMaxDepth > 0) {
+                goToGroupHeader(lastColIndex, columnGroupMaxDepth - 1, event);
+              } else {
+                shouldPreventDefault = false;
+              }
+            } else {
+              goToHeader(colIndexBefore - 1, event);
+            }
+          } else if (colIndexBefore === lastColIndex) {
+            // the key is pressed at the last column header. go to the first header filter or the first cell
+            if (headerFilteringEnabled) {
+              goToHeaderFilter(firstColIndex, event);
+            }
+            // this point can be reached if tabbing is enabled for all content or just header.
+            // if it is not enabled for all content or there is no data, then do not focus on the first cell
+            else if (props.tabNavigation === 'all' && firstRowIndexInPage !== null) {
+              goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
+            } else {
+              shouldPreventDefault = false;
+            }
+          } else {
+            goToHeader(colIndexBefore + 1, event);
+          }
+
+          break;
+        }
+
         case ' ': {
           // prevent Space event from scrolling
           break;
@@ -265,6 +318,7 @@ export const useGridKeyboardNavigation = (
     },
     [
       apiRef,
+      props.tabNavigation,
       getCurrentPageRows,
       headerFilteringEnabled,
       goToHeaderFilter,
@@ -281,24 +335,45 @@ export const useGridKeyboardNavigation = (
       const isEditing = gridHeaderFilteringEditFieldSelector(apiRef) === params.field;
       const isHeaderMenuOpen = gridHeaderFilteringMenuSelector(apiRef) === params.field;
 
-      if (isEditing || isHeaderMenuOpen || !isNavigationKey(event.key)) {
+      if (isHeaderMenuOpen || (isEditing && event.key !== 'Tab')) {
+        return;
+      }
+
+      if (!isNavigationKey(event.key) && event.key !== 'Tab') {
+        return;
+      }
+
+      // Tab key is only allowed if tabbing is enabled for header/all, or if we are tabbing to the content area while `tabNavigation` is enabled for content only
+      if (
+        event.key === 'Tab' &&
+        (props.tabNavigation === 'none' || (props.tabNavigation === 'content' && event.shiftKey))
+      ) {
         return;
       }
 
       const currentPageRows = getCurrentPageRows();
+
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
-      const firstRowIndexInPage = 0;
-      const lastRowIndexInPage = currentPageRows.length - 1;
+      const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
+      const lastRowIndexInPage = currentPageRows.length > 0 ? currentPageRows.length - 1 : null;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = Math.max(0, gridVisibleColumnDefinitionsSelector(apiRef).length - 1);
       let shouldPreventDefault = true;
+
+      // If we are tabbing inside the header area while only content `tabNavigation` is enabled, go to the first cell
+      if (event.key === 'Tab' && props.tabNavigation === 'content' && !event.shiftKey) {
+        if (firstRowIndexInPage !== null) {
+          goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
+          event.preventDefault();
+        }
+        return;
+      }
 
       switch (event.key) {
         case 'ArrowDown': {
-          const rowId = getRowIdFromIndex(firstRowIndexInPage);
-          if (firstRowIndexInPage !== null && rowId != null) {
-            goToCell(colIndexBefore, rowId);
+          if (firstRowIndexInPage !== null) {
+            goToCell(colIndexBefore, getRowIdFromIndex(firstRowIndexInPage));
           }
           break;
         }
@@ -360,6 +435,30 @@ export const useGridKeyboardNavigation = (
           break;
         }
 
+        case 'Tab': {
+          if (event.shiftKey) {
+            // if the key is pressed on the first header filter, Shift+Tab should go to the column header
+            if (colIndexBefore === firstColIndex) {
+              goToHeader(lastColIndex, event);
+            } else {
+              goToHeaderFilter(colIndexBefore - 1, event);
+            }
+          } else if (colIndexBefore === lastColIndex) {
+            // the key is pressed at the last header filter.
+            // this point can be reached if `tabNavigation` is enabled for all content or just header.
+            // if it is not enabled for all content or there is no data, then do not focus on the first cell
+            if (props.tabNavigation === 'all' && firstRowIndexInPage !== null) {
+              goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
+            } else {
+              shouldPreventDefault = false;
+            }
+          } else {
+            goToHeaderFilter(colIndexBefore + 1, event);
+          }
+
+          break;
+        }
+
         case ' ': {
           // prevent Space event from scrolling
           break;
@@ -374,7 +473,16 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, getCurrentPageRows, goToHeaderFilter, isRtl, goToHeader, goToCell, getRowIdFromIndex],
+    [
+      apiRef,
+      props.tabNavigation,
+      getCurrentPageRows,
+      goToHeaderFilter,
+      isRtl,
+      goToHeader,
+      goToCell,
+      getRowIdFromIndex,
+    ],
   );
 
   const handleColumnGroupHeaderKeyDown = React.useCallback<
@@ -389,16 +497,38 @@ export const useGridKeyboardNavigation = (
 
       const { fields, depth, maxDepth } = params;
 
+      if (!isNavigationKey(event.key) && event.key !== 'Tab') {
+        return;
+      }
+
+      // Tab key is only allowed if tabbing is enabled for header/all, or if we are tabbing to the content area while `tabNavigation` is enabled for content only
+      if (
+        event.key === 'Tab' &&
+        (props.tabNavigation === 'none' || (props.tabNavigation === 'content' && event.shiftKey))
+      ) {
+        return;
+      }
+
       const currentPageRows = getCurrentPageRows();
+
       const viewportPageSize = apiRef.current.getViewportPageSize();
       const currentColIndex = apiRef.current.getColumnIndex(currentField);
       const colIndexBefore = currentField ? apiRef.current.getColumnIndex(currentField) : 0;
-      const firstRowIndexInPage = 0;
-      const lastRowIndexInPage = currentPageRows.length - 1;
+      const firstRowIndexInPage = currentPageRows.length > 0 ? 0 : null;
+      const lastRowIndexInPage = currentPageRows.length > 0 ? currentPageRows.length - 1 : null;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = Math.max(0, gridVisibleColumnDefinitionsSelector(apiRef).length - 1);
 
       let shouldPreventDefault = true;
+
+      // If we are tabbing inside the header area while only content `tabNavigation` is enabled, go to the first cell
+      if (event.key === 'Tab' && props.tabNavigation === 'content' && !event.shiftKey) {
+        if (firstRowIndexInPage !== null) {
+          goToCell(firstColIndex, getRowIdFromIndex(firstRowIndexInPage));
+          event.preventDefault();
+        }
+        return;
+      }
 
       switch (event.key) {
         case 'ArrowDown': {
@@ -455,6 +585,38 @@ export const useGridKeyboardNavigation = (
           break;
         }
 
+        case 'Tab': {
+          if (event.shiftKey) {
+            const remainingLeftColumns = fields.indexOf(currentField);
+            const targetColIndex = currentColIndex - remainingLeftColumns - 1;
+            if (targetColIndex < firstColIndex) {
+              if (depth === 0) {
+                // if the key is pressed on the first column group header at the top level, Shift+Tab should allow default behavior
+                shouldPreventDefault = false;
+              } else {
+                // Navigate to last column group header at the previous depth
+                goToGroupHeader(lastColIndex, currentDepth - 1, event);
+              }
+            } else {
+              goToGroupHeader(targetColIndex, currentDepth, event);
+            }
+          } else {
+            const remainingRightColumns = fields.length - fields.indexOf(currentField) - 1;
+            const targetColIndex = currentColIndex + remainingRightColumns + 1;
+            if (targetColIndex > lastColIndex && depth === maxDepth - 1) {
+              // the key is pressed at the last column group header at the deepest level. go to the first column header
+              goToHeader(firstColIndex, event);
+            } else if (targetColIndex > lastColIndex) {
+              // go down a depth level
+              goToGroupHeader(firstColIndex, currentDepth + 1, event);
+            } else {
+              goToGroupHeader(targetColIndex, currentDepth, event);
+            }
+          }
+
+          break;
+        }
+
         case ' ': {
           // prevent Space event from scrolling
           break;
@@ -469,7 +631,15 @@ export const useGridKeyboardNavigation = (
         event.preventDefault();
       }
     },
-    [apiRef, getCurrentPageRows, goToHeader, goToGroupHeader, goToCell, getRowIdFromIndex],
+    [
+      apiRef,
+      props.tabNavigation,
+      getCurrentPageRows,
+      goToHeader,
+      goToGroupHeader,
+      goToCell,
+      getRowIdFromIndex,
+    ],
   );
 
   const handleCellKeyDown = React.useCallback<GridEventListener<'cellKeyDown'>>(
@@ -482,7 +652,18 @@ export const useGridKeyboardNavigation = (
       // Get the most recent params because the cell mode may have changed by another listener
       const cellParams = apiRef.current.getCellParams(params.id, params.field);
 
-      if (cellParams.cellMode === GridCellModes.Edit || !isNavigationKey(event.key)) {
+      if (
+        cellParams.cellMode === GridCellModes.Edit ||
+        (!isNavigationKey(event.key) && event.key !== 'Tab')
+      ) {
+        return;
+      }
+
+      // Tab key is only allowed if tabbing is enabled or if we are tabbing to the header area while `tabNavigation` is enabled for header only (with Shift+Tab)
+      if (
+        event.key === 'Tab' &&
+        (props.tabNavigation === 'none' || (props.tabNavigation === 'header' && !event.shiftKey))
+      ) {
         return;
       }
 
@@ -500,6 +681,8 @@ export const useGridKeyboardNavigation = (
         return;
       }
 
+      const previousAreaNavigationFn = headerFilteringEnabled ? goToHeaderFilter : goToHeader;
+
       const viewportPageSize = apiRef.current.getViewportPageSize();
 
       const colIndexBefore = params.field ? apiRef.current.getColumnIndex(params.field) : 0;
@@ -507,8 +690,15 @@ export const useGridKeyboardNavigation = (
       const firstRowIndexInPage = 0;
       const lastRowIndexInPage = currentPageRows.length - 1;
       const firstColIndex = 0;
-      const lastColIndex = gridVisibleColumnDefinitionsSelector(apiRef).length - 1;
+      const lastColIndex = Math.max(0, gridVisibleColumnDefinitionsSelector(apiRef).length - 1);
       let shouldPreventDefault = true;
+
+      // If we are tabbing inside the content area while only header `tabNavigation` is enabled, go to the last header filter or column header
+      if (event.key === 'Tab' && props.tabNavigation === 'header' && event.shiftKey) {
+        previousAreaNavigationFn(lastColIndex, event);
+        event.preventDefault();
+        return;
+      }
 
       switch (event.key) {
         case 'ArrowDown': {
@@ -527,10 +717,8 @@ export const useGridKeyboardNavigation = (
         case 'ArrowUp': {
           if (rowIndexBefore > firstRowIndexInPage) {
             goToCell(colIndexBefore, getRowIdFromIndex(rowIndexBefore - 1));
-          } else if (headerFilteringEnabled) {
-            goToHeaderFilter(colIndexBefore, event);
           } else {
-            goToHeader(colIndexBefore, event);
+            previousAreaNavigationFn(colIndexBefore, event);
           }
           break;
         }
@@ -562,12 +750,32 @@ export const useGridKeyboardNavigation = (
         }
 
         case 'Tab': {
-          // "Tab" is only triggered by the row / cell editing feature
-          if (event.shiftKey && colIndexBefore > firstColIndex) {
-            goToCell(colIndexBefore - 1, getRowIdFromIndex(rowIndexBefore), 'left');
-          } else if (!event.shiftKey && colIndexBefore < lastColIndex) {
+          if (event.shiftKey) {
+            // if the key is pressed on the first cell, Shift+Tab should go to the last column header
+            // same is if `tabNavigation` is enabled for header only
+            if (colIndexBefore === firstColIndex && rowIndexBefore === firstRowIndexInPage) {
+              if (props.tabNavigation === 'all') {
+                previousAreaNavigationFn(lastColIndex, event);
+              } else {
+                shouldPreventDefault = false;
+              }
+            } else if (colIndexBefore === firstColIndex) {
+              goToCell(lastColIndex, getRowIdFromIndex(rowIndexBefore - 1));
+            } else {
+              goToCell(colIndexBefore - 1, getRowIdFromIndex(rowIndexBefore), 'left');
+            }
+          } else if (colIndexBefore === lastColIndex) {
+            // the key is pressed at the last column. if it is also the last row, do not to anything to allow the default behavior
+            // otherwise, go to the first column of the next row
+            if (rowIndexBefore !== lastRowIndexInPage) {
+              goToCell(firstColIndex, getRowIdFromIndex(rowIndexBefore + 1));
+            } else {
+              shouldPreventDefault = false;
+            }
+          } else {
             goToCell(colIndexBefore + 1, getRowIdFromIndex(rowIndexBefore), 'right');
           }
+
           break;
         }
 
@@ -581,6 +789,9 @@ export const useGridKeyboardNavigation = (
             colDef &&
             (colDef.field === GRID_TREE_DATA_GROUPING_FIELD || isGroupingColumn(colDef.field))
           ) {
+            break;
+          }
+          if (colDef && colDef.type === 'longText') {
             break;
           }
           if (!event.shiftKey && rowIndexBefore < lastRowIndexInPage) {
@@ -642,6 +853,7 @@ export const useGridKeyboardNavigation = (
     },
     [
       apiRef,
+      props.tabNavigation,
       getCurrentPageRows,
       isRtl,
       goToCell,

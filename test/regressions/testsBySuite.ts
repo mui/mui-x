@@ -33,9 +33,15 @@ const docsImports = import.meta.glob<React.ComponentType>(
     '!docsx/data/charts/tooltip/Formatting',
     '!docsx/data/charts/tooltip/SeriesFormatter',
     '!docsx/data/charts/tooltip/TooltipStyle',
+    '!docsx/data/charts/brush/*',
     '!docsx/data/data-grid/server-side-data/useNestedPagination',
     '!docsx/data/data-grid/server-side-data/NestedPaginationGroupingCell',
+    '!docsx/data/data-grid/tree-data/utils/TreeDataSyncRowDataGroupingCell',
+    '!docsx/data/data-grid/tree-data/utils/DataStore',
     '!docsx/data/charts/export/ExportOptionSelector', // sub-component for demo purpose
+    '!docsx/data/charts/axis/SelectTimeFrequency', // sub-component for demo purpose
+    '!docsx/data/charts/sankey/CustomNodeLabelPlot', // sub-component for demo purpose
+    '!docsx/data/scheduler/lazy-loading/BasicDataSource', // Has random behavior
 
     // Exclude codesandbox embedded demos since they're not using packages built from the branch anyway.
     '!docsx/data/migration/migration-pickers-v5/MobileKeyboardView',

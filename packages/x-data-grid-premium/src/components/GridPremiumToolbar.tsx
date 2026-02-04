@@ -1,22 +1,83 @@
 import * as React from 'react';
-import { GridToolbar, GridToolbarProps } from '@mui/x-data-grid-pro/internals';
-import { ToolbarButton } from '@mui/x-data-grid-pro';
+import {
+  GridToolbar,
+  GridToolbarDivider,
+  type GridToolbarProps,
+  useGridSelector,
+} from '@mui/x-data-grid-pro/internals';
+import { ColumnsPanelTrigger, FilterPanelTrigger, ToolbarButton } from '@mui/x-data-grid-pro';
 import { ExportExcel } from './export';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { PivotPanelTrigger } from './pivotPanel/PivotPanelTrigger';
-import { isPivotingAvailable } from '../hooks/features/pivoting/utils';
 import { AiAssistantPanelTrigger } from './aiAssistantPanel';
 import { ChartsPanelTrigger } from './chartsPanel/ChartsPanelTrigger';
+import {
+  gridHistoryCanRedoSelector,
+  gridHistoryCanUndoSelector,
+  gridHistoryEnabledSelector,
+} from '../hooks/features/history';
 
 export function GridPremiumToolbar(props: GridToolbarProps) {
   const rootProps = useGridRootProps();
   const apiRef = useGridApiContext();
   const { excelOptions, ...other } = props;
 
-  const additionalItems = (
+  const historyEnabled = useGridSelector(apiRef, gridHistoryEnabledSelector);
+  const showHistoryControls =
+    rootProps.slotProps?.toolbar?.showHistoryControls !== false && historyEnabled;
+  const canUndo = useGridSelector(apiRef, gridHistoryCanUndoSelector);
+  const canRedo = useGridSelector(apiRef, gridHistoryCanRedoSelector);
+
+  const mainControls = (
     <React.Fragment>
-      {isPivotingAvailable(rootProps) && (
+      {showHistoryControls && (
+        <React.Fragment>
+          <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarUndo')}>
+            <div>
+              <ToolbarButton disabled={!canUndo} onClick={() => apiRef.current.history.undo()}>
+                <rootProps.slots.undoIcon fontSize="small" />
+              </ToolbarButton>
+            </div>
+          </rootProps.slots.baseTooltip>
+          <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarRedo')}>
+            <div>
+              <ToolbarButton disabled={!canRedo} onClick={() => apiRef.current.history.redo()}>
+                <rootProps.slots.redoIcon fontSize="small" />
+              </ToolbarButton>
+            </div>
+          </rootProps.slots.baseTooltip>
+        </React.Fragment>
+      )}
+      {showHistoryControls && <GridToolbarDivider />}
+      {!rootProps.disableColumnSelector && (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarColumns')}>
+          <ColumnsPanelTrigger render={<ToolbarButton />}>
+            <rootProps.slots.columnSelectorIcon fontSize="small" />
+          </ColumnsPanelTrigger>
+        </rootProps.slots.baseTooltip>
+      )}
+      {!rootProps.disableColumnFilter && (
+        <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarFilters')}>
+          <FilterPanelTrigger
+            render={(triggerProps, state) => (
+              <ToolbarButton
+                {...triggerProps}
+                color={state.filterCount > 0 ? 'primary' : 'default'}
+              >
+                <rootProps.slots.baseBadge
+                  badgeContent={state.filterCount}
+                  color="primary"
+                  variant="dot"
+                >
+                  <rootProps.slots.openFilterButtonIcon fontSize="small" />
+                </rootProps.slots.baseBadge>
+              </ToolbarButton>
+            )}
+          />
+        </rootProps.slots.baseTooltip>
+      )}
+      {!rootProps.disablePivoting && (
         <PivotPanelTrigger
           render={(triggerProps, state) => (
             <rootProps.slots.baseTooltip title={apiRef.current.getLocaleText('toolbarPivot')}>
@@ -67,7 +128,7 @@ export function GridPremiumToolbar(props: GridToolbarProps) {
   return (
     <GridToolbar
       {...other}
-      additionalItems={additionalItems}
+      mainControls={mainControls}
       additionalExportMenuItems={additionalExportMenuItems}
     />
   );

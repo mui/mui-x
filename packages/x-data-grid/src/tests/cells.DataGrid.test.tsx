@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { createRenderer, fireEvent, waitFor } from '@mui/internal-test-utils';
-import { DataGrid, GridValueFormatter } from '@mui/x-data-grid';
-import { getCell } from 'test/utils/helperFn';
+import { createRenderer, fireEvent, screen, waitFor } from '@mui/internal-test-utils';
+import { DataGrid, type GridValueFormatter, renderLongTextCell } from '@mui/x-data-grid';
+import { getCell, openLongTextEditPopup, openLongTextViewPopup } from 'test/utils/helperFn';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -241,4 +241,121 @@ describe('<DataGrid /> - Cells', () => {
       });
     },
   );
+
+  describe('column type: longText', () => {
+    const longTextBaselineProps = {
+      rows: [{ id: 0, bio: 'This is a long text with multiple lines' }],
+      columns: [{ field: 'bio', type: 'longText' as const }],
+    };
+
+    it('should render expand button on hover/focus', async () => {
+      const { user } = render(
+        <div style={{ width: 300, height: 300 }}>
+          <DataGrid {...longTextBaselineProps} />
+        </div>,
+      );
+
+      const cell = getCell(0, 0);
+      await user.click(cell);
+
+      const expandButton = cell.querySelector('button[aria-haspopup="dialog"]');
+      expect(expandButton).not.to.equal(null);
+      expect(expandButton).to.have.attribute('aria-expanded', 'false');
+    });
+
+    describe('popup', () => {
+      it('should display full text in edit popup', async () => {
+        const { user } = render(
+          <div style={{ width: 300, height: 300 }}>
+            <DataGrid
+              autoHeight={isJSDOM}
+              rows={[{ id: 0, bio: 'This is a long text with multiple lines' }]}
+              columns={[{ field: 'bio', type: 'longText', editable: true }]}
+            />
+          </div>,
+        );
+
+        const cell = getCell(0, 0);
+        await openLongTextEditPopup(cell, user);
+
+        const popup = screen.getByRole('dialog');
+        const textarea = screen.getByRole<HTMLTextAreaElement>('textbox');
+        expect(textarea.value).to.equal('This is a long text with multiple lines');
+        expect(popup).not.to.equal(null);
+      });
+
+      describe('view popup', () => {
+        it('should open popup when pressing Space on expand button', async () => {
+          const { user } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...longTextBaselineProps} />
+            </div>,
+          );
+
+          const cell = getCell(0, 0);
+          await openLongTextViewPopup(cell, user, 'spacebar');
+
+          // Check if aria-expanded changed (proves popup state updated)
+          const expandButton = cell.querySelector(
+            'button[aria-haspopup="dialog"]',
+          ) as HTMLButtonElement;
+          expect(expandButton).to.have.attribute('aria-expanded', 'true');
+          // Find popup by class since role="dialog" may be on Popper wrapper
+          const popup = document.querySelector('.MuiDataGrid-longTextCellPopup');
+          expect(popup).not.to.equal(null);
+        });
+
+        it('should close popup when clicking collapse button', async () => {
+          const { user } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid {...longTextBaselineProps} />
+            </div>,
+          );
+
+          const cell = getCell(0, 0);
+          await openLongTextViewPopup(cell, user, 'spacebar');
+
+          const expandButton = cell.querySelector(
+            'button[aria-haspopup="dialog"]',
+          ) as HTMLButtonElement;
+          expect(expandButton).to.have.attribute('aria-expanded', 'true');
+
+          const popup = document.querySelector('.MuiDataGrid-longTextCellPopup')!;
+          const collapseButton = popup.querySelector('button')!;
+          fireEvent.click(collapseButton);
+
+          expect(expandButton).to.have.attribute('aria-expanded', 'false');
+        });
+
+        it('should render custom content via renderContent prop', async () => {
+          const customRenderContent = spy((value: string | null) => (
+            <span data-testid="custom-content">Custom: {value}</span>
+          ));
+
+          const { user } = render(
+            <div style={{ width: 300, height: 300 }}>
+              <DataGrid
+                rows={[{ id: 0, bio: 'Test content' }]}
+                columns={[
+                  {
+                    field: 'bio',
+                    type: 'longText',
+                    renderCell: (params) =>
+                      renderLongTextCell({ ...params, renderContent: customRenderContent }),
+                  },
+                ]}
+              />
+            </div>,
+          );
+
+          const cell = getCell(0, 0);
+          await openLongTextViewPopup(cell, user, 'spacebar');
+
+          const customContent = screen.getByTestId('custom-content');
+          expect(customContent.textContent).to.equal('Custom: Test content');
+          expect(customRenderContent.calledWith('Test content')).to.equal(true);
+        });
+      });
+    });
+  });
 });

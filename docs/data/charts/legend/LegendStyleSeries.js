@@ -1,9 +1,4 @@
-import * as React from 'react';
-import {
-  LineChart,
-  lineElementClasses,
-  markElementClasses,
-} from '@mui/x-charts/LineChart';
+import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart';
 import { legendClasses } from '@mui/x-charts/ChartsLegend';
 import { labelMarkClasses } from '@mui/x-charts/ChartsLabel';
 
@@ -28,13 +23,11 @@ const settings = {
       data: monthlySalesData.map((d) => d.productA),
       label: 'Product A',
       id: 'a',
-      labelMarkType: Line,
     },
     {
       data: monthlySalesData.map((d) => d.productB),
       label: 'Product B',
       id: 'b',
-      labelMarkType: Line,
     },
   ],
   xAxis: [
@@ -53,7 +46,7 @@ export default function LegendStyleSeries() {
     <LineChart
       {...settings}
       sx={{
-        [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {
+        [`.${lineElementClasses.root}, .${labelMarkClasses.fill}`]: {
           strokeWidth: 1,
         },
         [`.${lineElementClasses.root}[data-series="a"], .${legendClasses.item}[data-series="a"] .${labelMarkClasses.fill}`]:
@@ -62,28 +55,12 @@ export default function LegendStyleSeries() {
           },
         [`.${lineElementClasses.root}[data-series="b"], .${legendClasses.item}[data-series="b"] .${labelMarkClasses.fill}`]:
           {
-            strokeDasharray: '3 4 5 2',
+            strokeDasharray: '3 2',
           },
-        [`.${legendClasses.mark}`]: {
+        [`.${labelMarkClasses.root}`]: {
           width: 24,
         },
       }}
     />
-  );
-}
-
-function Line({ className, color }) {
-  return (
-    <svg viewBox="0 0 24 4">
-      <line
-        className={className}
-        x1={0}
-        y1={2}
-        x2={24}
-        y2={2}
-        stroke={color}
-        strokeWidth={2}
-      />
-    </svg>
   );
 }

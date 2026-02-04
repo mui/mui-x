@@ -1,4 +1,4 @@
-import { ChartPluginSignature } from '../../models';
+import { type ChartPluginSignature } from '../../models';
 import type { UseChartCartesianAxisSignature } from '../../featurePlugins/useChartCartesianAxis';
 
 export interface UseChartAnimationParameters {

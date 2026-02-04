@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
+import { useEffectAfterFirstRender } from '@mui/x-internals/useEffectAfterFirstRender';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import ownerWindow from '@mui/utils/ownerWindow';
-import { useSelector } from '../../../store/useSelector';
 import { DEFAULT_MARGINS } from '../../../../constants';
-import { ChartPlugin } from '../../models';
+import { type ChartPlugin } from '../../models';
 import type { UseChartDimensionsSignature } from './useChartDimensions.types';
 import { selectorChartDrawingArea } from './useChartDimensions.selectors';
 import { defaultizeMargin } from '../../../defaultizeMargin';
@@ -14,8 +14,9 @@ const MAX_COMPUTE_RUN = 10;
 export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
   params,
   store,
-  svgRef,
+  instance,
 }) => {
+  const { svgRef } = instance;
   const hasInSize = params.width !== undefined && params.height !== undefined;
   const stateRef = React.useRef({ displayError: false, initialCompute: true, computeRun: 0 });
   // States only used for the initialization of the size.
@@ -35,27 +36,20 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     const newHeight = Math.floor(parseFloat(computedStyle.height)) || 0;
     const newWidth = Math.floor(parseFloat(computedStyle.width)) || 0;
 
-    store.update((prev) => {
-      if (prev.dimensions.width === newWidth && prev.dimensions.height === newHeight) {
-        return prev;
-      }
-
-      return {
-        ...prev,
-        dimensions: {
-          margin: {
-            top: params.margin.top,
-            right: params.margin.right,
-            bottom: params.margin.bottom,
-            left: params.margin.left,
-          },
-          width: params.width ?? newWidth,
-          height: params.height ?? newHeight,
-          propsWidth: params.width,
-          propsHeight: params.height,
+    if (store.state.dimensions.width !== newWidth || store.state.dimensions.height !== newHeight) {
+      store.set('dimensions', {
+        margin: {
+          top: params.margin.top,
+          right: params.margin.right,
+          bottom: params.margin.bottom,
+          left: params.margin.left,
         },
-      };
-    });
+        width: params.width ?? newWidth,
+        height: params.height ?? newHeight,
+        propsWidth: params.width,
+        propsHeight: params.height,
+      });
+    }
     return {
       height: newHeight,
       width: newWidth,
@@ -72,26 +66,20 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     params.margin.bottom,
   ]);
 
-  React.useEffect(() => {
-    store.update((prev) => {
-      const width = params.width ?? prev.dimensions.width;
-      const height = params.height ?? prev.dimensions.height;
-
-      return {
-        ...prev,
-        dimensions: {
-          margin: {
-            top: params.margin.top,
-            right: params.margin.right,
-            bottom: params.margin.bottom,
-            left: params.margin.left,
-          },
-          width,
-          height,
-          propsHeight: params.height,
-          propsWidth: params.width,
-        },
-      };
+  useEffectAfterFirstRender(() => {
+    const width = params.width ?? store.state.dimensions.width;
+    const height = params.height ?? store.state.dimensions.height;
+    store.set('dimensions', {
+      margin: {
+        top: params.margin.top,
+        right: params.margin.right,
+        bottom: params.margin.bottom,
+        left: params.margin.left,
+      },
+      width,
+      height,
+      propsHeight: params.height,
+      propsWidth: params.width,
     });
   }, [
     store,
@@ -186,7 +174,7 @@ export const useChartDimensions: ChartPlugin<UseChartDimensionsSignature> = ({
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
   const isXInside = React.useCallback(
     (x: number) => x >= drawingArea.left - 1 && x <= drawingArea.left + drawingArea.width,
     [drawingArea.left, drawingArea.width],

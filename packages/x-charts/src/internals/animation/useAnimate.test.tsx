@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { spy } from 'sinon';
+import { vi } from 'vitest';
 import { createRenderer, reactMajor, screen, waitFor } from '@mui/internal-test-utils';
 import { interpolateNumber } from '@mui/x-charts-vendor/d3-interpolate';
 // It's not publicly exported, so, using a relative import
@@ -19,24 +19,28 @@ describe('useAnimate', () => {
     return (t: number) => ({ width: interpolate(t) });
   }
 
-  const applyProps = spy((element: SVGPathElement, props: { width: number }) => {
+  const applyProps = vi.fn((element: SVGPathElement, props: { width: number }) => {
     element.setAttribute('width', props.width.toString());
   });
 
-  const lastCallWidth = () => applyProps.lastCall?.args[1].width;
-  const firstCallWidth = () => applyProps.firstCall?.args[1].width;
-  const callCount = () => applyProps.callCount;
+  const lastCallWidth = () => applyProps.mock.lastCall?.[1].width;
+  const firstCallWidth = () => applyProps.mock.calls[0]?.[1].width;
+  const callCount = () => applyProps.mock.calls.length;
 
   afterEach(() => {
-    applyProps.resetHistory();
+    applyProps.mockClear();
   });
 
   it('starts animating from initial props', async () => {
+    let providedProps: { width: number } | null = null;
     function TestComponent() {
-      const ref = useAnimateInternal(
+      const [ref, props] = useAnimateInternal(
         { width: 100 },
         { initialProps: { width: 0 }, createInterpolator: interpolateWidth, applyProps },
       );
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      providedProps = props;
 
       return (
         <svg>
@@ -47,6 +51,7 @@ describe('useAnimate', () => {
 
     render(<TestComponent />);
 
+    expect(providedProps).to.deep.equal({ width: 0 });
     await waitFor(() => {
       expect(lastCallWidth()).to.be.equal(100);
     });
@@ -57,7 +62,7 @@ describe('useAnimate', () => {
 
   it('animates from current props to new props', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps },
       );
@@ -87,11 +92,15 @@ describe('useAnimate', () => {
   });
 
   it('animates from current state to new props if props change while animating', async () => {
+    let providedProps: { width: number } | null = null;
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref, props] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 1000 } },
       );
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      providedProps = props;
 
       return (
         <svg>
@@ -101,17 +110,20 @@ describe('useAnimate', () => {
     }
 
     const { rerender } = render(<TestComponent width={2000} />);
+    expect(providedProps).to.deep.equal({ width: 1000 });
     expect(callCount()).to.be.equal(0);
 
     await waitNextFrame();
     expect(callCount()).to.be.equal(1);
 
-    const lastIncreasingCall = lastCallWidth();
+    const lastIncreasingCall = lastCallWidth()!;
     // Should be animating from 1000 to 2000
     expect(lastCallWidth()).to.be.greaterThan(1000);
     expect(lastCallWidth()).to.be.lessThan(2000);
 
     rerender(<TestComponent width={0} />);
+    expect(providedProps!.width).to.be.greaterThan(1000);
+    expect(providedProps!.width).to.be.lessThan(2000);
 
     await waitNextFrame();
 
@@ -131,7 +143,7 @@ describe('useAnimate', () => {
       width: number;
       skipAnimation?: boolean;
     }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -170,7 +182,7 @@ describe('useAnimate', () => {
 
   it('does not start animation if `skip` is true from the beginning', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -197,7 +209,7 @@ describe('useAnimate', () => {
 
   it('resumes animation if `skip` becomes false after having been true', async () => {
     function TestComponent({ width, skip }: { width: number; skip: boolean }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         {
           createInterpolator: interpolateWidth,
@@ -244,7 +256,7 @@ describe('useAnimate', () => {
 
     function TestComponent({ width }: { width: number }) {
       const [mountPath, setMountPath] = React.useState(true);
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
       );
@@ -283,7 +295,7 @@ describe('useAnimate', () => {
 
   it('stops animation when the hook is unmounted', async () => {
     function TestComponent({ width }: { width: number }) {
-      const ref = useAnimateInternal(
+      const [ref] = useAnimateInternal(
         { width },
         { createInterpolator: interpolateWidth, applyProps, initialProps: { width: 0 } },
       );

@@ -1,5 +1,4 @@
 'use client';
-import * as React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { styled, useThemeProps } from '@mui/material/styles';
@@ -160,7 +159,7 @@ function TimePickerToolbar(inProps: TimePickerToolbarProps) {
 
   const showAmPmControl = Boolean(ampm && !ampmInClock && views.includes('hours'));
   const { meridiemMode, handleMeridiemChange } = useMeridiemMode(value, ampm, (newValue) =>
-    setValue(newValue, { changeImportance: 'set' }),
+    setValue(newValue, { changeImportance: 'set', source: 'view' }),
   );
 
   const formatSection = (format: keyof AdapterFormats) => {

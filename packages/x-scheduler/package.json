@@ -14,25 +14,15 @@
     "url": "https://opencollective.com/mui-org"
   },
   "exports": {
-    "./material": "./src/material/index.ts",
-    "./material/agenda-view": "./src/material/agenda-view/index.ts",
-    "./material/day-view": "./src/material/day-view/index.ts",
-    "./material/event-calendar": "./src/material/event-calendar/index.ts",
-    "./material/month-view": "./src/material/month-view/index.ts",
-    "./material/standalone-view": "./src/material/standalone-view/index.ts",
-    "./material/week-view": "./src/material/week-view/index.ts",
-    "./material/timeline": "./src/material/timeline/index.ts",
-    "./material/translations/enUS": "./src/material/translations/enUS.ts",
-    "./material/translations/frFR": "./src/material/translations/frFR.ts",
-    "./primitives": "./src/primitives/index.ts",
-    "./primitives/event-calendar-provider": "./src/primitives/event-calendar-provider/index.ts",
-    "./primitives/models": "./src/primitives/models/index.ts",
-    "./primitives/day-grid": "./src/primitives/day-grid/index.ts",
-    "./primitives/time-grid": "./src/primitives/time-grid/index.ts",
-    "./primitives/timeline": "./src/primitives/timeline/index.ts",
-    "./primitives/use-day-list": "./src/primitives/use-day-list/index.ts",
-    "./primitives/use-event-calendar": "./src/primitives/use-event-calendar/index.ts",
-    "./primitives/use-week-list": "./src/primitives/use-week-list/index.ts"
+    "./agenda-view": "./src/agenda-view/index.ts",
+    "./day-view": "./src/day-view/index.ts",
+    "./event-calendar": "./src/event-calendar/index.ts",
+    "./models": "./src/models/index.ts",
+    "./month-view": "./src/month-view/index.ts",
+    "./standalone-event": "./src/standalone-event/index.ts",
+    "./translations": "./src/translations/index.ts",
+    "./internals": "./src/internals/index.ts",
+    "./week-view": "./src/week-view/index.ts"
   },
   "sideEffects": false,
   "publishConfig": {
@@ -42,6 +32,10 @@
   "keywords": [
     "react",
     "react-component",
+    "mui",
+    "mui-x",
+    "material-ui",
+    "material design",
     "scheduler",
     "event-calendar",
     "calendar",
@@ -61,34 +55,39 @@
     "directory": "packages/x-scheduler"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
-    "@atlaskit/pragmatic-drag-and-drop-auto-scroll": "^2.1.2",
     "@babel/runtime": "catalog:",
-    "@base-ui-components/react": "^1.0.0-beta.3",
-    "@base-ui-components/utils": "^0.1.1",
-    "@floating-ui/react": "^0.27.16",
+    "@base-ui/react": "^1.0.0",
+    "@base-ui/utils": "^0.2.3",
     "@mui/x-internals": "workspace:*",
-    "clsx": "catalog:",
-    "lucide-react": "^0.544.0",
-    "reselect": "catalog:",
-    "prop-types": "catalog:",
-    "use-sync-external-store": "catalog:"
+    "@mui/x-scheduler-headless": "workspace:*",
+    "clsx": "catalog:"
   },
   "peerDependencies": {
-    "luxon": "^3.0.2",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.15.14 || ^6.0.0 || ^7.0.0",
+    "@mui/system": "^5.15.14 || ^6.0.0 || ^7.0.0",
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
+  "peerDependenciesMeta": {
+    "@emotion/react": {
+      "optional": true
+    },
+    "@emotion/styled": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@types/luxon": "catalog:",
+    "@mui/material": "catalog:",
+    "@mui/system": "catalog:",
     "@types/prop-types": "catalog:",
+    "@mui/icons-material": "catalog:",
     "@types/use-sync-external-store": "catalog:",
-    "luxon": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "rimraf": "catalog:",
-    "use-isomorphic-layout-effect": "^1.2.1"
+    "rimraf": "catalog:"
   },
   "engines": {
     "node": ">=14.0.0"

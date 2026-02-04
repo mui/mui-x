@@ -1,27 +1,15 @@
-import { ChartPluginSignature } from '../../models';
-import { ChartSeriesType } from '../../../../models/seriesType/config';
-import { SeriesId } from '../../../../models/seriesType/common';
+import type { ChartPluginSignature } from '../../models';
+import type { UseChartInteractionSignature } from '../useChartInteraction';
+import type { UseChartCartesianAxisSignature } from '../useChartCartesianAxis';
+import type { UseChartHighlightSignature } from '../useChartHighlight';
+import type { FocusedItemIdentifier } from '../../../../models/seriesType';
+import type { ChartSeriesType } from '../../../../models/seriesType/config';
 
 export interface UseChartKeyboardNavigationInstance {}
 
-type SeriesItemIdentifier = {
-  /**
-   * The type of the series
-   */
-  type: ChartSeriesType;
-  /**
-   * The id of the series with focus.
-   */
-  seriesId: SeriesId;
-  /**
-   * The index of the data point with focus.
-   */
-  dataIndex: number;
-};
-
 export interface UseChartKeyboardNavigationState {
   keyboardNavigation: {
-    item: null | SeriesItemIdentifier;
+    item: null | FocusedItemIdentifier<ChartSeriesType>;
     enableKeyboardNavigation: boolean;
   };
 }
@@ -35,4 +23,9 @@ export type UseChartKeyboardNavigationSignature = ChartPluginSignature<{
   defaultizedParams: UseChartKeyboardNavigationParameters;
   instance: UseChartKeyboardNavigationInstance;
   state: UseChartKeyboardNavigationState;
+  optionalDependencies: [
+    UseChartInteractionSignature,
+    UseChartHighlightSignature,
+    UseChartCartesianAxisSignature,
+  ];
 }>;

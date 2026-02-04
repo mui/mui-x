@@ -1,0 +1,65 @@
+{
+  "name": "@mui/x-data-grid-headless",
+  "version": "0.1.0",
+  "private": true,
+  "author": "MUI Team",
+  "description": "The Community plan edition of the headless Data Grid.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mui/mui-x/issues"
+  },
+  "homepage": "https://mui.com/x/react-data-grid/",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public",
+    "directory": "build"
+  },
+  "keywords": [
+    "react",
+    "react-component",
+    "mui",
+    "mui-x",
+    "react-table",
+    "table",
+    "datatable",
+    "data-table",
+    "datagrid",
+    "data-grid"
+  ],
+  "scripts": {
+    "typescript": "tsc -p tsconfig.json",
+    "build": "code-infra build",
+    "prebuild": "rimraf build tsconfig.build.tsbuildinfo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mui/mui-x.git",
+    "directory": "packages/x-data-grid-headless"
+  },
+  "dependencies": {
+    "@babel/runtime": "catalog:",
+    "@mui/x-internals": "workspace:*",
+    "@base-ui/utils": "0.2.4",
+    "prop-types": "catalog:",
+    "type-fest": "catalog:"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@mui/internal-test-utils": "catalog:",
+    "@mui/x-data-grid-generator": "workspace:*",
+    "@types/prop-types": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "rimraf": "catalog:"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
+  }
+}

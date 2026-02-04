@@ -1,6 +1,6 @@
-import { GridColDef } from '../colDef/gridColDef';
-import { GridRowId, GridRowModel } from '../gridRows';
-import { GridSortDirection, GridSortModel } from '../gridSortModel';
+import type { GridColDef } from '../colDef/gridColDef';
+import type { GridRowId, GridRowModel } from '../gridRows';
+import type { GridSortDirection, GridSortModel } from '../gridSortModel';
 
 /**
  * The sort API interface that is available in the grid [[apiRef]].

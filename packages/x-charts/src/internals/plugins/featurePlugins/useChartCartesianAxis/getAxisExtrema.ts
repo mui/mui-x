@@ -1,12 +1,12 @@
-import { AxisConfig } from '../../../../models';
-import { CartesianChartSeriesType } from '../../../../models/seriesType/config';
-import { ChartSeriesConfig } from '../../models/seriesConfig';
-import { ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { type AxisConfig } from '../../../../models';
+import { type CartesianChartSeriesType } from '../../../../models/seriesType/config';
 import {
-  CartesianExtremumGetter,
-  CartesianExtremumGetterResult,
-} from '../../models/seriesConfig/cartesianExtremumGetter.types';
-import { GetZoomAxisFilters } from './zoom.types';
+  type ChartSeriesConfig,
+  type CartesianExtremumGetter,
+  type CartesianExtremumGetterResult,
+} from '../../corePlugins/useChartSeriesConfig';
+import { type ProcessedSeries } from '../../corePlugins/useChartSeries/useChartSeries.types';
+import { type GetZoomAxisFilters } from './zoom.types';
 import { isCartesianSeriesType } from '../../../isCartesian';
 
 const axisExtremumCallback = <TSeriesType extends CartesianChartSeriesType>(

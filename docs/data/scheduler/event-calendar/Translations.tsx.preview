@@ -4,4 +4,5 @@
   defaultVisibleDate={defaultVisibleDate}
   onEventsChange={setEvents}
   translations={frFR}
+  defaultPreferences={{ isSidePanelOpen: false }}
 />

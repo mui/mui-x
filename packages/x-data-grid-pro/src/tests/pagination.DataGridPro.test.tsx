@@ -1,10 +1,9 @@
 import { createRenderer, act, waitFor } from '@mui/internal-test-utils';
 import { getColumnValues } from 'test/utils/helperFn';
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
+import { type RefObject } from '@mui/x-internals/types';
+import { DataGridPro, type GridApi, useGridApiRef } from '@mui/x-data-grid-pro';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';
-import { GridApiPro } from '../models/gridApiPro';
+import { type GridApiPro } from '../models/gridApiPro';
 
 describe('<DataGridPro /> - Pagination', () => {
   const { render } = createRenderer();

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import clsx from 'clsx';
-import { GridRenderCellParams } from '@mui/x-data-grid-premium';
+import type { GridRenderCellParams } from '@mui/x-data-grid-premium';
 import { styled } from '@mui/material/styles';
 
 interface ProgressBarProps {
@@ -65,6 +65,10 @@ const ProgressBar = React.memo(function ProgressBar(props: ProgressBarProps) {
 export function renderProgress(params: GridRenderCellParams<any, number, any>) {
   if (params.value == null) {
     return '';
+  }
+
+  if (params.rowNode.type === 'group') {
+    return `${(params.value * 100).toLocaleString()} %`;
   }
 
   // If the aggregated value does not have the same unit as the other cell

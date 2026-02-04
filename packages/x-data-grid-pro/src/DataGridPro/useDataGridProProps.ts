@@ -4,15 +4,15 @@ import { getThemeProps } from '@mui/system';
 import {
   GRID_DEFAULT_LOCALE_TEXT,
   DATA_GRID_PROPS_DEFAULT_VALUES,
-  GridValidRowModel,
+  type GridValidRowModel,
 } from '@mui/x-data-grid';
 import { computeSlots, ROW_SELECTION_PROPAGATION_DEFAULT } from '@mui/x-data-grid/internals';
-import {
+import type {
   DataGridProProps,
   DataGridProProcessedProps,
   DataGridProPropsWithDefaultValue,
 } from '../models/dataGridProProps';
-import { GridProSlotsComponent } from '../models';
+import type { GridProSlotsComponent } from '../models';
 import { DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS } from '../constants/dataGridProDefaultSlotsComponents';
 
 interface GetDataGridProPropsDefaultValues extends DataGridProProps {}
@@ -56,6 +56,8 @@ export const DATA_GRID_PRO_PROPS_DEFAULT_VALUES: DataGridProPropsWithDefaultValu
   lazyLoadingRequestThrottleMs: 500,
   listView: false,
   multipleColumnsSortingMode: 'withModifierKey',
+  pinnedColumnsSectionSeparator: 'border-and-shadow',
+  pinnedRowsSectionSeparator: 'border-and-shadow',
 };
 
 const defaultSlots = DATA_GRID_PRO_DEFAULT_SLOTS_COMPONENTS;

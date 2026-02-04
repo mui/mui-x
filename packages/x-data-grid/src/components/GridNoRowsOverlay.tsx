@@ -1,8 +1,8 @@
-import * as React from 'react';
+'use client';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
+import { GridOverlay, type GridOverlayProps } from './containers/GridOverlay';
 
 const GridNoRowsOverlay = forwardRef<HTMLDivElement, GridOverlayProps>(
   function GridNoRowsOverlay(props, ref) {

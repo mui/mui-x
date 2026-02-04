@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ScatterChart } from '@mui/x-charts/ScatterChart';
 import dataset from '../dataset/random/scatterParallel.json';
 

@@ -174,7 +174,10 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
   /**
    * Handle pointer events for the press gesture
    */
-  protected handlePointerEvent(pointers: Map<number, PointerData>, event: PointerEvent): void {
+  protected handlePointerEvent = (
+    pointers: Map<number, PointerData>,
+    event: PointerEvent,
+  ): void => {
     const pointersArray = Array.from(pointers.values());
 
     // Check for our forceCancel event to handle interrupted gestures (from contextmenu, blur)
@@ -202,8 +205,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
     // Filter pointers to only include those targeting our element or its children
     const relevantPointers = this.getRelevantPointers(pointersArray, targetElement);
 
-    // Check if we have enough pointers and not too many
-    if (relevantPointers.length < this.minPointers || relevantPointers.length > this.maxPointers) {
+    if (!this.isWithinPointerCount(relevantPointers, event.pointerType)) {
       if (this.isActive) {
         // Cancel or end the gesture if it was active
         this.cancelPress(targetElement, relevantPointers, event);
@@ -278,7 +280,7 @@ export class PressGesture<GestureName extends string> extends PointerGesture<Ges
       default:
         break;
     }
-  }
+  };
 
   /**
    * Emit press-specific events with additional data

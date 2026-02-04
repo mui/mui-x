@@ -1,16 +1,15 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
-  GridColDef,
+  type GridColDef,
   useGridApiRef,
   DataGridPremium,
-  GridApi,
-  DataGridPremiumProps,
+  type GridApi,
+  type DataGridPremiumProps,
   GridActionsCellItem,
 } from '@mui/x-data-grid-premium';
 import { createRenderer, screen, act } from '@mui/internal-test-utils';
-import { spy, SinonSpy } from 'sinon';
-import Excel from 'exceljs';
+import { spy, type SinonSpy } from 'sinon';
+import Excel from '@mui/x-internal-exceljs-fork';
 import { spyApi } from 'test/utils/helperFn';
 
 const isJSDOM = /jsdom/.test(window.navigator.userAgent);

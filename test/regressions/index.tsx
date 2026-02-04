@@ -2,10 +2,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, Outlet, NavLink, useNavigate } from 'react-router';
 import { Globals } from '@react-spring/web';
-import { setupFakeClock, restoreFakeClock } from '../utils/setupFakeClock'; // eslint-disable-line
-import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense'; // eslint-disable-line
+// eslint-disable-next-line import/no-relative-packages
+import '../utils/setupFakeClock';
+// eslint-disable-next-line import/no-relative-packages
+import { generateTestLicenseKey, setupTestLicenseKey } from '../utils/testLicense';
 import TestViewer from './TestViewer';
-import type { Test } from './testsBySuite';
+import { type Test, testsBySuite } from './testsBySuite';
 
 setupTestLicenseKey(generateTestLicenseKey(new Date('2099-01-01')));
 
@@ -16,30 +18,28 @@ Globals.assign({
 declare global {
   interface Window {
     muiFixture: {
-      isReady: () => boolean;
+      allTests: { url: string }[];
+      isReady: boolean;
       navigate: (test: string) => void;
     };
   }
 }
 
+const allTests = Object.values(testsBySuite).flatMap((suite) =>
+  suite.map((test) => ({ url: computePath(test) })),
+);
+
 window.muiFixture = {
-  isReady: () => false,
+  allTests,
+  isReady: false,
   navigate: () => {
     throw new Error(`muiFixture.navigate is not ready`);
   },
 };
 
-let testsBySuite: typeof import('./testsBySuite').testsBySuite;
-
 main();
 
 async function main() {
-  setupFakeClock();
-
-  testsBySuite = (await import('./testsBySuite')).testsBySuite;
-
-  restoreFakeClock();
-
   ReactDOM.createRoot(document.getElementById('react-root')!).render(<App />);
 }
 
@@ -50,7 +50,7 @@ function Root() {
   const navigate = useNavigate();
   React.useEffect(() => {
     window.muiFixture.navigate = navigate;
-    window.muiFixture.isReady = () => true;
+    window.muiFixture.isReady = true;
   }, [navigate]);
 
   return (
@@ -142,10 +142,7 @@ function computeIsDev(hash: string) {
   if (hash === '#dev') {
     return true;
   }
-  if (hash === '#no-dev') {
-    return false;
-  }
-  return process.env.NODE_ENV === 'development';
+  return false;
 }
 
 function computePath(test: Test) {

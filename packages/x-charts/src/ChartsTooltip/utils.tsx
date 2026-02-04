@@ -1,9 +1,8 @@
 'use client';
 import * as React from 'react';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useChartContext } from '../context/ChartProvider';
-import { useSvgRef } from '../hooks';
 
 type MousePosition = {
   x: number;
@@ -50,43 +49,6 @@ export function useMouseTracker(): UseMouseTrackerReturnValue {
   }, [instance]);
 
   return mousePosition;
-}
-
-type PointerType = Pick<MousePosition, 'pointerType'>;
-
-export function usePointerType(): null | PointerType {
-  const svgRef = useSvgRef();
-
-  const [pointerType, setPointerType] = React.useState<null | PointerType>(null);
-
-  React.useEffect(() => {
-    const element = svgRef.current;
-    if (element === null) {
-      return () => {};
-    }
-
-    const handleOut = (event: PointerEvent) => {
-      if (event.pointerType !== 'mouse') {
-        setPointerType(null);
-      }
-    };
-
-    const handleEnter = (event: PointerEvent) => {
-      setPointerType({
-        pointerType: event.pointerType as PointerType['pointerType'],
-      });
-    };
-
-    element.addEventListener('pointerenter', handleEnter);
-    element.addEventListener('pointerup', handleOut);
-
-    return () => {
-      element.removeEventListener('pointerenter', handleEnter);
-      element.removeEventListener('pointerup', handleOut);
-    };
-  }, [svgRef]);
-
-  return pointerType;
 }
 
 export type TriggerOptions = 'item' | 'axis' | 'none';

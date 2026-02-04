@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -14,7 +15,9 @@ import {
 
 type PaginationProps = GridSlotProps['basePagination'];
 
-const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>)({
+const GridPaginationRoot = styled(NotRendered<GridSlotProps['basePagination']>, {
+  slot: 'internal',
+})({
   maxHeight: 'calc(100% + 1px)', // border width
   flexGrow: 1,
 });

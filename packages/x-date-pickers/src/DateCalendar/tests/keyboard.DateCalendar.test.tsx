@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { act, fireEvent, screen } from '@mui/internal-test-utils';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { adapterToUse, createPickerRenderer } from 'test/utils/pickers';
@@ -21,7 +20,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { key: 'ArrowRight', expectFocusedDay: '14' },
       { key: 'ArrowDown', expectFocusedDay: '20' },
     ].forEach(({ key, expectFocusedDay }) => {
-      it(key, async () => {
+      it(`${key}`, async () => {
         render(<DateCalendar defaultValue={adapterToUse.date('2020-08-13')} />);
 
         await act(async () => screen.getByText('13').focus());
@@ -67,7 +66,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
       { initialDay: '10', key: 'ArrowLeft', expectFocusedDay: '9' },
       { initialDay: '09', key: 'ArrowRight', expectFocusedDay: '10' },
     ].forEach(({ initialDay, key, expectFocusedDay }) => {
-      it(key, async () => {
+      it(`${key}`, async () => {
         render(<DateCalendar defaultValue={adapterToUse.date(`2020-08-${initialDay}`)} />);
 
         await act(async () => screen.getByText(`${Number(initialDay)}`).focus());
@@ -98,7 +97,7 @@ describe('<DateCalendar /> keyboard interactions', () => {
         { initialDay: '03', key: 'ArrowLeft', expectFocusedDay: '30' },
         { initialDay: '30', key: 'ArrowRight', expectFocusedDay: '2' },
       ].forEach(({ initialDay, key, expectFocusedDay }) => {
-        it(key, async () => {
+        it(`${key}`, async () => {
           render(
             <DateCalendar
               defaultValue={adapterToUse.date(`2020-01-${initialDay}`)}

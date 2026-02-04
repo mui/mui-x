@@ -58,8 +58,8 @@ And a value of `-1` will make bars overlap on top of each other.
 
 ## Stacking
 
-Each bar series can get a `stack` property expecting a string value.
-Series with the same `stack` will be stacked on top of each other.
+Bar series accept a string property named `stack`.
+Series with the same `stack` value are stacked on top of each other.
 
 {{"demo": "StackBars.js"}}
 
@@ -90,6 +90,13 @@ When using a `"band"` scale, the axis has some additional customization properti
 You can test all configuration options in the following demo:
 
 {{"demo": "TickPlacementBars.js"}}
+
+### Date axis
+
+If your band axis represents dates in a usual way (they are sorted and evenly spaced), you can set `ordinalTimeTicks` to pick some date frequencies.
+This modifies the [tick management](/x/react-charts/axis/#ordinal-tick-management).
+
+Instead of one tick per band, the axis renders ticks according to the provided frequencies and the tick number.
 
 ### Minimum bar size
 
@@ -128,7 +135,7 @@ The bar charts use by priority:
 2. The band axis color
 3. The series color
 
-Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts/styling/#values-color).
+Learn more about the `colorMap` properties in [Styling—Value-based colors](/x/react-charts/styling/#value-based-colors).
 
 {{"demo": "ColorScale.js"}}
 
@@ -137,6 +144,8 @@ Learn more about the `colorMap` properties in the [Styling docs](/x/react-charts
 To give your bar chart rounded corners, you can change the value of the `borderRadius` property on the [BarChart](/x/api/charts/bar-chart/#bar-chart-prop-slots).
 
 It works with any positive value and is properly applied to horizontal layouts, stacks, and negative values.
+
+When using composition, you can set the `borderRadius` prop on the `BarPlot` component.
 
 {{"demo": "BorderRadius.js"}}
 
@@ -170,12 +179,29 @@ The second one is shown in the bars themselves that display the part of the grad
 
 ## Labels
 
-You can display labels on the bars.
-To do so, the `BarChart` or `BarPlot` accepts a `barLabel` prop.
-It can either get a function that gets the bar item and some context.
-Or you can pass `'value'` to display the raw value of the bar.
+You can display labels on the bars. This can be useful to show the value of each bar directly on the chart.
+
+If you provide `'value'` to the `barLabel` property of a bar series, the value of that bar is shown.
+Alternatively, the `barLabel` property accepts a function that is called with the bar item and context about the bar.
+
+In the example below, the value of the first series is displayed using the default formatter, and format the value of the second series as US dollars. The labels of the third series are hidden.
 
 {{"demo": "BarLabel.js"}}
+
+### Label placement
+
+The position of the bar label can be customized.
+To do so, set a series' `barLabelPlacement` property to one of the following values:
+
+- `center`: the label is centered on the bar;
+- `outside`: the label is placed after the end of the bar, from the point of the view of the origin. For a vertical positive bar, the label is above its top edge; for a horizontal negative bar, the label is placed to the left of its leftmost limit.
+
+{{"demo": "BarLabelPlacement.js"}}
+
+:::info
+When using `outside` placement, if the label does not fit in the chart area, it will be clipped.
+To avoid this, you can decrease/increase the axis min/max respectively so that there's enough space for the labels.
+:::
 
 ### Custom labels
 
@@ -223,15 +249,15 @@ If you're composing a custom component, you can incorporate click events as show
 Note that `onAxisClick` can handle both bar and line series if you mix them.
 
 ```jsx
-<ChartContainer onAxisClick={onAxisClick}>
+<ChartsContainer onAxisClick={onAxisClick}>
   {/* ... */}
   <BarPlot onItemClick={onItemClick} />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 ## Animation
 
-Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
+Chart containers respect [`prefers-reduced-motion`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/At-rules/@media/prefers-reduced-motion), but you can also disable animations manually by setting the `skipAnimation` prop to `true`.
 
 When `skipAnimation` is enabled, the chart renders without any animations.
 
@@ -240,12 +266,29 @@ When `skipAnimation` is enabled, the chart renders without any animations.
 <BarChart skipAnimation />
 
 // For a composed chart
-<ChartContainer>
+<ChartsContainer>
   <BarPlot skipAnimation />
-</ChartContainer>
+</ChartsContainer>
 ```
 
 {{"demo": "BarAnimation.js"}}
+
+## Performance
+
+Bar charts can display many bars, which can impact performance. The default rendering of bars use SVG `rect` elements, which can be slow for a large number of bars.
+
+To improve performance, you can use the `renderer` prop set to `"svg-batch"`, which renders the bars more efficiently.
+However, this comes with the following trade-offs:
+
+- CSS styling of single bars is no longer possible;
+- Transparent highlight style: for performance reasons, the highlighted state creates a highlighted bar on top of the original bar. Applying transparency to the highlighted bar can cause the original bar to be partially visible;
+- No animation when highlighting or fading bars;
+- The event of the `onItemClick` handler is a `MouseEvent` instead of a `React.MouseEvent`. To avoid breaking changes, the type of `onItemClick` was not changed, but you can import a type overload to fix it: `import type {} from '@mui/x-charts/moduleAugmentation/barChartBatchRendererOnItemClick'`;
+- It is not available for [range bar charts](/x/react-charts/range-bar/).
+
+The example below uses the `renderer` prop to improve performance when rendering a dataset with 500 data points.
+
+{{"demo": "BarBatchRenderer.js"}}
 
 ## Composition
 
@@ -265,6 +308,7 @@ Here's how the Bar Chart is composed:
         <BarPlot />
         <ChartsOverlay />
         <ChartsAxisHighlight />
+        <FocusedBar />
       </g>
       <ChartsAxis />
       <ChartsClipPath id={clipPathId} />

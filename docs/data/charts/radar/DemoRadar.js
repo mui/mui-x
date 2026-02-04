@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 import ChartsUsageDemo from 'docsx/src/modules/components/ChartsUsageDemo';

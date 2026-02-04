@@ -1,9 +1,9 @@
-import * as React from 'react';
+'use client';
 import PropTypes from 'prop-types';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
-import { GridOverlay, GridOverlayProps } from './containers/GridOverlay';
+import { GridOverlay, type GridOverlayProps } from './containers/GridOverlay';
 import { GridPreferencePanelsValue } from '../hooks/features/preferencesPanel/gridPreferencePanelsValue';
 import { gridColumnFieldsSelector, useGridSelector } from '../hooks';
 

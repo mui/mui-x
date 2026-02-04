@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { EventCalendar } from '@mui/x-scheduler/material/event-calendar';
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import {
   initialEvents,
   defaultVisibleDate,
@@ -18,6 +18,7 @@ export default function PreferencesMenu() {
         defaultVisibleDate={defaultVisibleDate}
         onEventsChange={setEvents}
         preferencesMenuConfig={{ toggleWeekendVisibility: false }}
+        defaultPreferences={{ isSidePanelOpen: false }}
       />
     </div>
   );

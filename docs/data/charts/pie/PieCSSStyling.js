@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { pieArcClasses, PieChart, pieClasses } from '@mui/x-charts/PieChart';
 import { rainbowSurgePalette } from '@mui/x-charts/colorPalettes';
 import { useTheme } from '@mui/material/styles';

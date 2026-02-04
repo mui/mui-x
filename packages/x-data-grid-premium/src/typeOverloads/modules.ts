@@ -1,4 +1,10 @@
-import { GridExportDisplayOptions, GridValidRowModel } from '@mui/x-data-grid-pro';
+import type {
+  GridEventLookup,
+  GridExportDisplayOptions,
+  GridRowId,
+  GridValidRowModel,
+} from '@mui/x-data-grid-pro';
+import type { GridAggregationCellMeta } from '@mui/x-data-grid-pro/internals';
 import type {
   GridPipeProcessingLookupPro,
   GridControlledStateEventLookupPro,
@@ -13,19 +19,18 @@ import type {
 import type {
   GridRowGroupingModel,
   GridAggregationModel,
-  GridAggregationCellMeta,
   GridAggregationHeaderMeta,
   GridCellSelectionModel,
   Conversation,
 } from '../hooks';
-import { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
-import { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
+import type { GridRowGroupingInternalCache } from '../hooks/features/rowGrouping/gridRowGroupingInterfaces';
+import type { GridAggregationInternalCache } from '../hooks/features/aggregation/gridAggregationInterfaces';
 import type { GridExcelExportOptions } from '../hooks/features/export/gridExcelExportInterface';
 import type {
   GridPivotingInternalCache,
   GridPivotModel,
 } from '../hooks/features/pivoting/gridPivotingInterfaces';
-import { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
+import type { GridSidebarValue } from '../hooks/features/sidebar/gridSidebarInterfaces';
 
 export interface GridControlledStateEventLookupPremium {
   /**
@@ -75,7 +80,12 @@ interface GridEventLookupPremium extends GridEventLookupPro {
   /**
    * Fired when the clipboard paste operation ends.
    */
-  clipboardPasteEnd: {};
+  clipboardPasteEnd: {
+    params: {
+      oldRows: Map<GridRowId, GridValidRowModel>;
+      newRows: Map<GridRowId, GridValidRowModel>;
+    };
+  };
   /**
    * Fired when the sidebar is opened.
    */
@@ -88,6 +98,14 @@ interface GridEventLookupPremium extends GridEventLookupPro {
    * Fired when the chart synchronization state changes.
    */
   chartSynchronizationStateChange: { params: { chartId: string; synced: boolean } };
+  /**
+   * Fired when an undo operation is executed.
+   */
+  undo: { params: { eventName: keyof GridEventLookup; data: any } };
+  /**
+   * Fired when a redo operation is executed.
+   */
+  redo: { params: { eventName: keyof GridEventLookup; data: any } };
 }
 
 export interface GridColDefPremium<R extends GridValidRowModel = any, V = any, F = V> {
@@ -157,12 +175,10 @@ declare module '@mui/x-data-grid-pro' {
   interface GridEventLookup extends GridEventLookupPremium {}
 
   interface GridPipeProcessingLookup
-    extends GridPipeProcessingLookupPro,
-      GridPipeProcessingLookupPremium {}
+    extends GridPipeProcessingLookupPro, GridPipeProcessingLookupPremium {}
 
   interface GridControlledStateEventLookup
-    extends GridControlledStateEventLookupPro,
-      GridControlledStateEventLookupPremium {}
+    extends GridControlledStateEventLookupPro, GridControlledStateEventLookupPremium {}
 
   interface GridRenderCellParams<R, V, F> extends GridRenderCellParamsPremium<R, V, F> {}
 

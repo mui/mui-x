@@ -1,10 +1,10 @@
 'use client';
 import * as React from 'react';
-import { MakeOptional } from '@mui/x-internals/types';
-import { ChartPlugin } from '../../models';
-import { DatasetType } from '../../../../models/seriesType/config';
-import { UseChartZAxisSignature } from './useChartZAxis.types';
-import { ZAxisConfig, ZAxisDefaultized } from '../../../../models/z-axis';
+import { type MakeOptional } from '@mui/x-internals/types';
+import { type ChartPlugin } from '../../models';
+import { type DatasetType } from '../../../../models/seriesType/config';
+import { type UseChartZAxisSignature } from './useChartZAxis.types';
+import { type ZAxisConfig, type ZAxisDefaultized } from '../../../../models/z-axis';
 import { getColorScale, getOrdinalColorScale } from '../../../colorScale';
 
 function addDefaultId(axisConfig: MakeOptional<ZAxisConfig, 'id'>, defaultId: string): ZAxisConfig {
@@ -84,10 +84,7 @@ export const useChartZAxis: ChartPlugin<UseChartZAxisSignature> = ({ params, sto
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
-      zAxis: getZAxisState(zAxis, dataset),
-    }));
+    store.set('zAxis', getZAxisState(zAxis, dataset));
   }, [zAxis, dataset, store]);
 
   return {};

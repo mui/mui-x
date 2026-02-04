@@ -1,11 +1,14 @@
-import {
+import type {
   GridApiCommon,
   GridColumnReorderApi,
   GridRowMultiSelectionApi,
   GridRowProApi,
 } from '@mui/x-data-grid';
-import { GridPrivateOnlyApiCommon, GridInfiniteLoaderPrivateApi } from '@mui/x-data-grid/internals';
-import { GridInitialStatePro, GridStatePro } from './gridStatePro';
+import type {
+  GridPrivateOnlyApiCommon,
+  GridInfiniteLoaderPrivateApi,
+} from '@mui/x-data-grid/internals';
+import type { GridInitialStatePro, GridStatePro } from './gridStatePro';
 import type {
   GridColumnPinningApi,
   GridDetailPanelApi,
@@ -23,7 +26,8 @@ import type { DataGridProProcessedProps } from './dataGridProProps';
  * The api of Data Grid Pro.
  */
 export interface GridApiPro
-  extends GridApiCommon<GridStatePro, GridInitialStatePro>,
+  extends
+    GridApiCommon<GridStatePro, GridInitialStatePro>,
     GridRowProApi,
     GridColumnPinningApi,
     GridDetailPanelApi,
@@ -34,7 +38,8 @@ export interface GridApiPro
     GridColumnReorderApi {}
 
 export interface GridPrivateApiPro
-  extends GridApiPro,
+  extends
+    GridApiPro,
     GridPrivateOnlyApiCommon<GridApiPro, GridPrivateApiPro, DataGridProProcessedProps>,
     GridDetailPanelPrivateApi,
     GridInfiniteLoaderPrivateApi,

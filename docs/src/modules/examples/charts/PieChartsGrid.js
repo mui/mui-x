@@ -1,4 +1,3 @@
-import * as React from 'react';
 import TwoLevelPieChart from 'docsx/data/charts/pie-demo/TwoLevelPieChart';
 import StraightAnglePieChart from 'docsx/data/charts/pie-demo/StraightAnglePieChart';
 import PieChartWithCustomizedLabel from 'docsx/data/charts/pie-demo/PieChartWithCustomizedLabel';

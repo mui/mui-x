@@ -6,18 +6,18 @@ import useForkRef from '@mui/utils/useForkRef';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import { isObjectEmpty } from '@mui/x-internals/isObjectEmpty';
-import { GridRowEventLookup } from '../models/events';
-import { GridRowId, GridRowModel } from '../models/gridRows';
+import type { GridRowEventLookup } from '../models/events';
+import type { GridRowId, GridRowModel } from '../models/gridRows';
 import { GridEditModes, GridCellModes } from '../models/gridEditRowModel';
 import { gridClasses } from '../constants/gridClasses';
 import { composeGridClasses } from '../utils/composeGridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { GridPinnedColumns } from '../hooks/features/columns';
+import type { GridPinnedColumns } from '../hooks/features/columns';
 import type { GridStateColDef } from '../models/colDef/gridColDef';
 import { shouldCellShowLeftBorder, shouldCellShowRightBorder } from '../utils/cellBorderUtils';
 import { gridColumnPositionsSelector } from '../hooks/features/columns/gridColumnsSelector';
 import { useGridSelector, objectShallowCompare } from '../hooks/utils/useGridSelector';
-import { GridRowClassNameParams } from '../models/params/gridRowParams';
+import type { GridRowClassNameParams } from '../models/params/gridRowParams';
 import { useGridVisibleRows } from '../hooks/utils/useGridVisibleRows';
 import { findParentElementFromClassName, isEventTargetInPortal } from '../utils/domUtils';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../colDef/gridCheckboxSelectionColDef';
@@ -30,7 +30,7 @@ import {
   gridRowIsEditingSelector,
 } from '../hooks/features/editing/gridEditingSelectors';
 import { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
-import { GridScrollbarFillerCell as ScrollbarFiller } from './GridScrollbarFillerCell';
+import { GridRowDragAndDropOverlay } from './GridRowDragAndDropOverlay';
 import { getPinnedCellOffset } from '../internals/utils/getPinnedCellOffset';
 import { useGridConfiguration } from '../hooks/utils/useGridConfiguration';
 import { useGridPrivateApiContext } from '../hooks/utils/useGridPrivateApiContext';
@@ -279,7 +279,14 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
     }
 
     return rowStyle;
-  }, [isNotVisible, rowHeight, styleProp, heightEntry, rootProps.rowSpacingType]);
+  }, [
+    isNotVisible,
+    rowHeight,
+    styleProp,
+    heightEntry.spacingTop,
+    heightEntry.spacingBottom,
+    rootProps.rowSpacingType,
+  ]);
 
   // HACK: Sometimes, the rowNode has already been removed from the state but the row is still rendered.
   if (!rowNode) {
@@ -357,13 +364,19 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
 
     const cellIsNotVisible = pinnedPosition === PinnedColumnPosition.VIRTUAL;
 
-    const showLeftBorder = shouldCellShowLeftBorder(pinnedPosition, indexInSection);
+    const showLeftBorder = shouldCellShowLeftBorder(
+      pinnedPosition,
+      indexInSection,
+      rootProps.showCellVerticalBorder,
+      rootProps.pinnedColumnsSectionSeparator,
+    );
     const showRightBorder = shouldCellShowRightBorder(
       pinnedPosition,
       indexInSection,
       sectionLength,
       rootProps.showCellVerticalBorder,
       gridHasFiller,
+      rootProps.pinnedColumnsSectionSeparator,
     );
 
     return (
@@ -481,9 +494,7 @@ const GridRow = forwardRef<HTMLDivElement, GridRowProps>(function GridRow(props,
       {cells}
       <div role="presentation" className={clsx(gridClasses.cell, gridClasses.cellEmpty)} />
       {rightCells}
-      {scrollbarWidth !== 0 && (
-        <ScrollbarFiller pinnedRight={pinnedColumns.right.length > 0} borderTop={!isFirstVisible} />
-      )}
+      <GridRowDragAndDropOverlay rowId={rowId} />
     </div>
   );
 });

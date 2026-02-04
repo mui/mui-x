@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { vars } from '@mui/x-data-grid/internals';
-import { GridRenderCellParams } from '@mui/x-data-grid-pro';
+import type { GridRenderCellParams } from '@mui/x-data-grid-pro';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
 
 function GridGroupingColumnLeafCell(props: GridRenderCellParams) {

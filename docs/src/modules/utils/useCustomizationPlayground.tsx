@@ -1,5 +1,5 @@
 import * as React from 'react';
-import pick from 'lodash/pick';
+import { pick } from 'es-toolkit/object';
 import { blue, pink } from '@mui/material/colors';
 import { BoxProps } from '@mui/material/Box';
 import { createTheme, ThemeProvider, styled, useTheme, Theme } from '@mui/material/styles';
@@ -133,7 +133,8 @@ export function withStyles(
 }
 
 interface Props
-  extends Pick<
+  extends
+    Pick<
       UseCustomizationPlaygroundReturnType,
       'selectedDemo' | 'selectedSlot' | 'selectedCustomizationOption' | 'selectedTokens'
     >,

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { addYears } from 'date-fns/addYears';
 import { createRenderer, screen } from '@mui/internal-test-utils';
 import { DataGridPremium } from '@mui/x-data-grid-premium';

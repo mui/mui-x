@@ -4,7 +4,8 @@ import { useRtl } from '@mui/system/RtlProvider';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 import { useTicks } from '../hooks/useTicks';
 import { useDrawingArea } from '../hooks/useDrawingArea';
-import { ChartsYAxisProps } from '../models/axis';
+import type { ChartsYAxisProps } from '../models/axis';
+import type { OrdinalTimeTicks } from '../models/timeTicks';
 import { useChartContext } from '../context/ChartProvider';
 import { shortenLabels } from './shortenLabels';
 import { AXIS_LABEL_TICK_LABEL_GAP, TICK_LABEL_GAP } from './utilities';
@@ -12,13 +13,14 @@ import { useAxisTicksProps } from './useAxisTicksProps';
 
 interface ChartsSingleYAxisProps extends ChartsYAxisProps {
   axisLabelHeight: number;
+  ordinalTimeTicks?: OrdinalTimeTicks;
 }
 
 /**
  * @ignore - internal component.
  */
 function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
-  const { axisLabelHeight } = inProps;
+  const { axisLabelHeight, ordinalTimeTicks } = inProps;
   const {
     yScale,
     defaultizedProps,
@@ -40,6 +42,7 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickLabelPlacement,
     tickInterval,
     tickLabelInterval,
+    tickSpacing,
     width: axisWidth,
   } = defaultizedProps;
 
@@ -56,7 +59,9 @@ function ChartsSingleYAxisTicks(inProps: ChartsSingleYAxisProps) {
     tickPlacement,
     tickLabelPlacement,
     tickInterval,
+    tickSpacing,
     direction: 'y',
+    ordinalTimeTicks,
   });
 
   /* If there's an axis title, the tick labels have less space to render  */

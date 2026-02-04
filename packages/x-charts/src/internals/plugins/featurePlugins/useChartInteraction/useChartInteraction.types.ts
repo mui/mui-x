@@ -1,11 +1,8 @@
-import { ChartPluginSignature } from '../../models';
-import {
-  ChartItemIdentifier,
-  ChartSeriesType,
-  type ChartItemIdentifierWithData,
-} from '../../../../models/seriesType/config';
+import type { ChartPluginSignature } from '../../models';
 
 export type Coordinate = { x: number; y: number };
+
+export type InteractionUpdateSource = 'pointer' | 'keyboard';
 
 export interface UseChartInteractionInstance {
   /**
@@ -13,32 +10,43 @@ export interface UseChartInteractionInstance {
    */
   cleanInteraction: () => void;
   /**
-   * Setter for the item the user is interacting with.
-   * @param {ChartItemIdentifier} newItem The identifier of the item.
-   */
-  setItemInteraction: (newItem: ChartItemIdentifierWithData<ChartSeriesType>) => void;
-  /**
-   * Remove item interaction if the current if the provided item is still the one interacting.
-   * @param {ChartItemIdentifier} itemToRemove The identifier of the item.
-   */
-  removeItemInteraction: (itemToRemove?: ChartItemIdentifier<ChartSeriesType>) => void;
-  /**
    * Set the new pointer coordinate.
    * @param {Coordinate | null} newCoordinate The new pointer coordinate.
    */
   setPointerCoordinate: (newCoordinate: Coordinate | null) => void;
+  /**
+   * Set the last interaction update source.
+   * Used to determine if tooltip of highlight should use the keyboard or pointer items.
+   * @param {InteractionUpdateSource} interaction The source of the last interaction update (pointer or keyboard)
+   * @returns {void}
+   */
+  setLastUpdateSource: (interaction: InteractionUpdateSource) => void;
+  /**
+   * Handle pointer enter event on the chart Surface.
+   */
+  handlePointerEnter: React.PointerEventHandler;
+  /**
+   * Handle pointer leave event on the chart Surface.
+   */
+  handlePointerLeave: React.PointerEventHandler;
 }
 
 export interface UseChartInteractionState {
   interaction: {
     /**
-     * The item currently interacting.
-     */
-    item: null | ChartItemIdentifierWithData<ChartSeriesType>;
-    /**
      * The x/y SVG coordinate of the "main" pointer
      */
     pointer: Coordinate | null;
+    /**
+     * The type of pointer on the SVG.
+     * Is null if there is no pointer on the SVG.
+     */
+    pointerType: React.PointerEvent['pointerType'] | null;
+    /**
+     * The last interaction highlight update.
+     * Used to decide if highlight should be based on pointer position or keyboard navigation.
+     */
+    lastUpdate: InteractionUpdateSource;
   };
 }
 

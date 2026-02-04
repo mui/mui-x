@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import { Link } from '@mui/docs/Link';
@@ -60,6 +59,11 @@ function getComponents() {
       title: 'Sankey Chart',
       href: '/x/react-charts/sankey/',
       pro: true,
+    },
+    {
+      title: 'Range Bar Chart',
+      href: '/x/react-charts/range-bar/',
+      premium: true,
     },
   ];
 }

@@ -1,8 +1,12 @@
-import { HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
+import { type HighlightScope } from '../../internals/plugins/featurePlugins/useChartHighlight/highlightConfig.types';
 import type { StackOffsetType, StackOrderType } from '../stacking';
 import type { ChartsLabelMarkType } from '../../ChartsLabel/ChartsLabelMark';
+import { type AxisId } from '../axis';
 
-export type SeriesId = number | string;
+/**
+ * The unique identifier of a series.
+ */
+export type SeriesId = string;
 
 export type SeriesValueFormatterContext = {
   /**
@@ -16,15 +20,30 @@ export type SeriesValueFormatter<TValue> = (
   context: SeriesValueFormatterContext,
 ) => string | null;
 
-export type CommonSeriesType<TValue> = {
+export type ColorCallbackValue<TValue> = { value: TValue; dataIndex: number };
+
+export interface SeriesColor<TValue> {
+  /**
+   * Color to use when displaying the series.
+   * If `colorGetter` is provided, it will be used to get the color for each data point instead.
+   * Otherwise, this color will be used for all data points in the series.
+   */
+  color?: string;
+  /**
+   * A function that returns a color based on the value and/or the data index of a point.
+   * The returned color is used when displaying the specific data point, e.g., a marker in a line chart.
+   * When the color of the entire series is required, e.g., in legends, the `color` property is used instead.
+   * @param {ColorCallbackValue<TValue>} data  An object containing data point's `dataIndex` and `value`.
+   * @returns {string} The color to use for the specific data point.
+   */
+  colorGetter?: (data: ColorCallbackValue<TValue>) => string;
+}
+
+export interface CommonSeriesType<TValue> extends SeriesColor<TValue> {
   /**
    * The id of this series.
    */
   id?: SeriesId;
-  /**
-   * Color to use when displaying the series.
-   */
-  color?: string;
   /**
    * Formatter used to render values in tooltip or other data display.
    * @param {TValue} value The series' value to render.
@@ -42,7 +61,7 @@ export type CommonSeriesType<TValue> = {
    * There is a default mark type for each series type.
    */
   labelMarkType?: ChartsLabelMarkType;
-};
+}
 
 export type CommonDefaultizedProps = 'id' | 'valueFormatter' | 'data';
 
@@ -50,11 +69,11 @@ export type CartesianSeriesType = {
   /**
    * The id of the x-axis used to render the series.
    */
-  xAxisId?: string;
+  xAxisId?: AxisId;
   /**
    * The id of the y-axis used to render the series.
    */
-  yAxisId?: string;
+  yAxisId?: AxisId;
 };
 
 export type StackableSeriesType = {

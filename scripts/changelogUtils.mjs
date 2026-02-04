@@ -11,8 +11,12 @@
  */
 import fs from 'fs';
 import path from 'path';
+import {
+  findLatestTaggedVersion,
+  fetchCommitsBetweenRefs,
+} from '@mui/internal-code-infra/changelog';
+import { $ } from 'execa';
 
-const ORG = 'mui';
 const REPO = 'mui-x';
 
 /**
@@ -107,38 +111,9 @@ function parseTags(commitMessage) {
     .join(',');
 }
 
-/**
- * Find the latest tagged version from GitHub
- * @param {number} major - The major version to find the latest tagged version for
- * @returns {Promise<string>} The latest tagged version
- */
-async function findLatestTaggedVersionForMajor(major) {
-  // Fetch all tags from the GitHub API (pagination > 100) and return the last one after optional filtering
-  const tags = await octokit.paginate(octokit.rest.repos.listTags, {
-    owner: ORG,
-    repo: REPO,
-    per_page: 100,
-  });
-
-  if (!tags || tags.length === 0) {
-    throw new Error('No tags found in repository');
-  }
-
-  if (major != null) {
-    const majorStr = String(major);
-    const filteredTags = tags.filter((tag) => tag.name && tag.name.startsWith(`v${majorStr}.`));
-    if (filteredTags.length > 0) {
-      // GitHub returns tags in reverse chronological order, so first is the latest
-      return filteredTags[0].name.trim();
-    }
-  }
-
-  return tags[0].name.trim();
-}
-
-function resolvePackagesByLabels(labels) {
+function resolvePackagesByLabels(labels = []) {
   const resolvedPackages = [];
-  labels.forEach((label) => {
+  for (const label of labels) {
     switch (label.name) {
       case 'scope: data grid':
         resolvedPackages.push('DataGrid');
@@ -158,8 +133,30 @@ function resolvePackagesByLabels(labels) {
       default:
         break;
     }
-  });
+  }
   return resolvedPackages;
+}
+
+function getContributors(commits = []) {
+  const community = {
+    firstTimers: new Set(),
+    contributors: new Set(),
+    team: new Set(),
+  };
+  for (const { author } of commits) {
+    if (!author || author.login.endsWith('[bot]')) {
+      break;
+    }
+    const username = `@${author.login}`;
+    if (author.association === 'team') {
+      community.team.add(username);
+    } else if (author.association === 'first_timer') {
+      community.firstTimers.add(username);
+    } else {
+      community.contributors.add(username);
+    }
+  }
+  return community;
 }
 
 /**
@@ -178,107 +175,36 @@ async function generateChangelog({
   returnEntry = false,
 }) {
   // fetch the last tag and chose the one to use for the release
-  const latestTaggedVersion = await findLatestTaggedVersionForMajor();
-  const lastRelease = lastReleaseInput !== undefined ? lastReleaseInput : latestTaggedVersion;
+  const latestTaggedVersion = await findLatestTaggedVersion({
+    cwd: process.cwd(),
+    fetchAll: true,
+  });
+  const lastRelease = lastReleaseInput ?? latestTaggedVersion;
   if (lastRelease !== latestTaggedVersion) {
     console.warn(
       `Creating changelog for ${lastRelease}..${release} when latest tagged version is '${latestTaggedVersion}'.`,
     );
   }
 
-  // Now We will fetch all the commits between the chosen tag and release branch
-  /**
-   * @type {AsyncIterableIterator<import('@octokit/rest').Octokit.Response<import('@octokit/rest').Octokit.ReposCompareCommitsResponse>>}
-   */
-  const timeline = octokit.paginate.iterator(
-    octokit.repos.compareCommits.endpoint.merge({
-      owner: ORG,
+  const commitsItems = (
+    await fetchCommitsBetweenRefs({
+      octokit,
       repo: REPO,
-      base: lastRelease,
-      head: release,
-    }),
-  );
+      lastRelease,
+      release,
+    })
+  )
+    .filter((commit) => commit.author?.login !== 'renovate[bot]')
+    .map((commit) => ({
+      ...commit,
+      commit: {
+        message: commit.message,
+      },
+    }));
 
-  /**
-   * @type {import('@octokit/rest').Octokit.ReposCompareCommitsResponseCommitsItem[]}
-   */
-  const commitsItems = [];
-  for await (const response of timeline) {
-    const { data: compareCommits } = response;
-    commitsItems.push(...compareCommits.commits);
-  }
-
-  // Fetch all the pull Request and check if there is a section named changelog
   const changeLogMessages = {};
   const prsLabelsMap = {};
-  const community = {
-    firstTimers: new Set(),
-    contributors: new Set(),
-    team: new Set(),
-  };
-  await Promise.all(
-    commitsItems.map(async (commitsItem) => {
-      const searchPullRequestId = commitsItem.commit.message.match(/\(#([0-9]+)\)/);
-      if (!searchPullRequestId || !searchPullRequestId[1]) {
-        return;
-      }
-
-      const {
-        data: {
-          body: bodyMessage,
-          labels,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          author_association,
-          user: { login },
-        },
-      } = await octokit.rest.pulls.get({
-        owner: ORG,
-        repo: REPO,
-        pull_number: Number(searchPullRequestId[1]),
-      });
-
-      // Skip bot accounts
-      if (!login.includes('[bot]')) {
-        switch (author_association) {
-          case 'CONTRIBUTOR':
-            community.contributors.add(`@${login}`);
-            break;
-          case 'FIRST_TIMER':
-            community.firstTimers.add(`@${login}`);
-            break;
-          case 'MEMBER':
-            community.team.add(`@${login}`);
-            break;
-          default:
-        }
-      }
-
-      prsLabelsMap[commitsItem.sha] = labels;
-
-      if (!bodyMessage) {
-        return;
-      }
-
-      const changelogMotif = '## changelog';
-      const lowercaseBody = bodyMessage.toLowerCase();
-      // Check if the body contains a line starting with '## changelog'
-      const matchedChangelog = lowercaseBody.matchAll(new RegExp(`^${changelogMotif}`, 'gim'));
-      const changelogMatches = Array.from(matchedChangelog);
-      if (changelogMatches.length > 0) {
-        const prLabels = prsLabelsMap[commitsItem.sha];
-        const resolvedPackage = resolvePackagesByLabels(prLabels)[0];
-        const changelogIndex = changelogMatches[0].index;
-        const message = `From https://github.com/${ORG}/${REPO}/pull/${
-          searchPullRequestId[1]
-        }\n${bodyMessage.slice(changelogIndex + changelogMotif.length)}`;
-        if (changeLogMessages[resolvedPackage || 'general']) {
-          changeLogMessages[resolvedPackage || 'general'].push(message);
-        } else {
-          changeLogMessages[resolvedPackage || 'general'] = [message];
-        }
-      }
-    }),
-  );
+  const community = getContributors(commitsItems);
 
   // Dispatch commits in different sections
   const dataGridCommits = [];
@@ -533,15 +459,19 @@ async function generateChangelog({
       a.toLowerCase().localeCompare(b.toLowerCase()),
     );
 
-    if (contributors.length > 0) {
+    if (contributors.length > 1) {
       lines.push(
-        `Special thanks go out to the community members for their valuable contributions:\n${contributors.join(', ')}`,
+        `Special thanks go out to these community members for their valuable contributions:\n${contributors.join(', ')}`,
+      );
+    } else if (contributors.length === 1) {
+      lines.push(
+        `Special thanks go out to community member ${contributors[0]} for their valuable contribution.`,
       );
     }
 
     if (community.team.size > 0) {
       lines.push(
-        `The following are all team members who have contributed to this release:\n${teamMembers.join(', ')}`,
+        `The following team members contributed to this release:\n${teamMembers.join(', ')}`,
       );
     }
 
@@ -628,6 +558,17 @@ ${logOtherSection({
     }
     return null;
   }
+}
+
+/**
+ * Fetches and returns the latest tagged version for a given major version.
+ * @param {string | undefined} majorVersion
+ */
+async function findLatestTaggedVersionForMajor(majorVersion) {
+  // Fetch all tags from all remotes to ensure we have the latest tags.
+  await $`git fetch --tags --all`;
+  const { stdout } = await $`git describe --tags --abbrev=0 --match ${`v${majorVersion || ''}*`}`; // only include "version-tags"
+  return stdout.trim();
 }
 
 /**

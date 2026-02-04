@@ -3,7 +3,7 @@ import {
   createRootSelector,
   createSelectorMemoized,
 } from '../../../utils/createSelector';
-import { GridStateCommunity } from '../../../models/gridStateCommunity';
+import type { GridStateCommunity } from '../../../models/gridStateCommunity';
 import {
   gridExpandedSortedRowEntriesSelector,
   gridExpandedSortedRowIdsSelector,
@@ -11,7 +11,7 @@ import {
 } from '../filter/gridFilterSelector';
 import { gridRowMaximumTreeDepthSelector, gridRowTreeSelector } from '../rows/gridRowsSelector';
 import { getPageCount } from './gridPaginationUtils';
-import { GridRowId } from '../../../models/gridRows';
+import type { GridRowId } from '../../../models/gridRows';
 
 const ALL_RESULTS_PAGE_VALUE = -1;
 
@@ -111,6 +111,10 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
       return null;
     }
 
+    if (!visibleSortedRowEntries || visibleSortedRowEntries.length === 0) {
+      return null;
+    }
+
     const visibleTopLevelRowCount = visibleSortedTopLevelRowEntries.length;
     const topLevelFirstRowIndex = Math.min(
       paginationModel.pageSize * paginationModel.page,
@@ -139,6 +143,7 @@ export const gridPaginationRowRangeSelector = createSelectorMemoized(
     const firstRowIndex = visibleSortedRowEntries.findIndex(
       (row) => row.id === topLevelFirstRow.id,
     );
+
     let lastRowIndex = firstRowIndex;
     let topLevelRowAdded = 0;
 

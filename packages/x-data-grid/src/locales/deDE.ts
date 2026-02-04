@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const deDEGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +16,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Breit',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Rückgängig',
+  toolbarRedo: 'Wiederholen',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Spalten',
@@ -163,6 +167,10 @@ const deDEGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'Ja',
   booleanCellFalseLabel: 'Nein',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Aufklappen',
+  longTextCellCollapseLabel: 'Zuklappen',
 
   // Actions cell more text
   actionsCellMore: 'Mehr',
@@ -330,6 +338,7 @@ const deDEGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Werte (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const deDE: Localization = getGridLocalization(deDEGrid);

@@ -6,9 +6,9 @@ import composeClasses from '@mui/utils/composeClasses';
 import useId from '@mui/utils/useId';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { getDataGridUtilityClass } from '../../constants/gridClasses';
-import { GridRenderEditCellParams } from '../../models/params/gridCellParams';
+import type { GridRenderEditCellParams } from '../../models/params/gridCellParams';
 import { useGridRootProps } from '../../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../models/props/DataGridProps';
 import { useGridApiContext } from '../../hooks/utils/useGridApiContext';
 
 type OwnerState = { classes: DataGridProcessedProps['classes'] };
@@ -24,7 +24,8 @@ const useUtilityClasses = (ownerState: OwnerState) => {
 };
 
 export interface GridEditBooleanCellProps
-  extends GridRenderEditCellParams,
+  extends
+    GridRenderEditCellParams,
     Omit<
       React.DetailedHTMLProps<React.LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
       'id' | 'tabIndex'

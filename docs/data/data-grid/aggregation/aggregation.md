@@ -70,7 +70,7 @@ In the following demo, even though the **Year** column is not aggregable, it's s
 
 When [row grouping](/x/react-data-grid/row-grouping/) is enabled, aggregated values can be displayed in the grouping rows as well as the top-level footer.
 
-In the example below, each row group's sum is aggregated and displayed in its grouping row, and the total sum for all rows is displayed in the footer.
+In the example below, the sum and the count of `true` values for each row group are aggregated and displayed in that group's row, while the total sum and count of `true` values for all rows are displayed in the footer.
 
 {{"demo": "AggregationRowGrouping.js", "bg": "inline", "defaultCodeOpen": false}}
 
@@ -155,13 +155,15 @@ You can find full typing details in the [`GridAggregationFunction` API reference
 
 The `@mui/x-data-grid-premium` package comes with a set of built-in aggregation functions to cover common use cases:
 
-| Name   | Behavior                                                   | Supported column types       |
-| :----- | :--------------------------------------------------------- | :--------------------------- |
-| `sum`  | Returns the sum of all values in the group                 | `number`                     |
-| `avg`  | Returns the non-rounded average of all values in the group | `number`                     |
-| `min`  | Returns the smallest value of the group                    | `number`, `date`, `dateTime` |
-| `max`  | Returns the largest value of the group                     | `number`, `date`, `dateTime` |
-| `size` | Returns the number of cells in the group                   | all                          |
+| Name          | Behavior                                                   | Supported column types       |
+| :------------ | :--------------------------------------------------------- | :--------------------------- |
+| `sum`         | Returns the sum of all values in the group                 | `number`                     |
+| `avg`         | Returns the non-rounded average of all values in the group | `number`                     |
+| `min`         | Returns the smallest value of the group                    | `number`, `date`, `dateTime` |
+| `max`         | Returns the largest value of the group                     | `number`, `date`, `dateTime` |
+| `size`        | Returns the number of cells in the group                   | all                          |
+| `size(true)`  | Returns the number of cells with value `true`              | `boolean`                    |
+| `size(false)` | Returns the number of cells with value `false`             | `boolean`                    |
 
 ### Removing a built-in function
 
@@ -283,6 +285,13 @@ const aggregationFunction: GridAggregationFunction = {
 ```
 
 {{"demo": "AggregationValueFormatter.js", "bg": "inline", "defaultCodeOpen": false}}
+
+### Including pinned rows in the aggregation
+
+By default, pinned rows are not included in the top-level aggregation calculation.
+The demo below overrides the default aggregation functions to include values from the pinned rows in the top-level total aggreagation.
+
+{{"demo": "AggregationPinnedRows.js", "bg": "inline"}}
 
 ## Custom rendering
 

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import { LineChart } from '@mui/x-charts/LineChart';
 
@@ -9,12 +8,12 @@ export default function LineChartConnectNulls() {
   return (
     <Stack sx={{ width: '100%', height: 400 }}>
       <LineChart
-        xAxis={[{ data: xData, scaleType: 'point' }]}
+        xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
         series={[{ data }]}
         margin={margin}
       />
       <LineChart
-        xAxis={[{ data: xData, scaleType: 'point' }]}
+        xAxis={[{ data: xData, scaleType: 'point', height: 28 }]}
         series={[{ data, connectNulls: true }]}
         margin={margin}
       />

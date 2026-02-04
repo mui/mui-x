@@ -1,11 +1,12 @@
 'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
+import { type GetWordsByLinesParams, getWordsByLines } from '../internals/getWordsByLines';
 import { useIsHydrated } from '../hooks/useIsHydrated';
 
 export interface ChartsTextProps
-  extends Omit<
+  extends
+    Omit<
       React.SVGTextElementAttributes<SVGTextElement>,
       'width' | 'ref' | 'style' | 'dominantBaseline'
     >,

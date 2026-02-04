@@ -1,4 +1,4 @@
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { warnOnce } from '@mui/x-internals/warning';
 import type { GridColumnGroup, GridCsvExportOptions, GridRowId } from '../../../../models';
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from '../../../../colDef';
@@ -110,13 +110,11 @@ const serializeRow = ({
 
   columns.forEach((column) => {
     const cellParams = getCellParams(id, column.field);
-    if (process.env.NODE_ENV !== 'production') {
-      if (String(cellParams.formattedValue) === '[object Object]') {
-        warnOnce([
-          'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
-          'You can provide a `valueFormatter` with a string representation to be used.',
-        ]);
-      }
+    if (String(cellParams.formattedValue) === '[object Object]') {
+      warnOnce([
+        'MUI X: When the value of a field is an object or a `renderCell` is provided, the CSV export might not display the value correctly.',
+        'You can provide a `valueFormatter` with a string representation to be used.',
+      ]);
     }
     row.addValue(
       serializeCellValue(cellParams, {

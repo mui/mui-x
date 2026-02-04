@@ -1,9 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useChartContext } from '../context/ChartProvider';
-import { AxisConfig, D3ContinuousScale, D3Scale } from '../models/axis';
+import type { AxisConfig, D3ContinuousScale, D3OrdinalScale, D3Scale } from '../models/axis';
+import type { OrdinalTimeTicks, TickFrequencyDefinition } from '../models/timeTicks';
 import { isOrdinalScale } from '../internals/scaleGuards';
 import { isInfinity } from '../internals/isInfinity';
+import { tickFrequencies } from '../utils/timeTicks';
+import { isDateData } from '../internals/dateHelpers';
+import { useChartContext } from '../context/ChartProvider/useChartContext';
 
 export interface TickParams {
   /**
@@ -45,6 +48,11 @@ export interface TickParams {
    * @default 'middle'
    */
   tickLabelPlacement?: 'middle' | 'tick';
+  /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing?: number;
 }
 
 const offsetRatio = {
@@ -54,49 +62,228 @@ const offsetRatio = {
   middle: 0.5,
 } as const;
 
-export type TickItemType = {
+export type TickItem = {
   /**
-   * This property is undefined only if it's the tick closing the last band
+   * The value of the tick.
+   * It is only `undefined` if it's the tick closing the last band.
    */
   value?: any;
+  /**
+   * The formatted value of the tick.
+   * It is only `undefined` if it's the tick closing the last band.
+   */
   formattedValue?: string;
+  /**
+   * The offset in pixels relative to the SVG origin.
+   * For an x-axis, it is relative to the left side of the SVG.
+   * For a y-axis, it is relative to the top side of the SVG.
+   */
   offset: number;
+  /**
+   * The offset in pixels relative to the tick position.
+   * For an x-axis, a positive value means the label is shifted to the right of the tick.
+   * For a y-axis, a positive value means the label is shifted downwards from the tick.
+   */
   labelOffset: number;
 };
 
-export function getTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    isInside: (offset: number) => boolean;
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
+function getTickPosition<T extends { toString(): string }>(
+  scale: D3OrdinalScale<T>,
+  value: any,
+  placement: Required<TickParams>['tickPlacement'],
 ) {
+  return (
+    scale(value)! - (scale.step() - scale.bandwidth()) / 2 + offsetRatio[placement] * scale.step()
+  );
+}
+
+/**
+ * Returns a new domain where each tick is at least {@link tickSpacing}px from the next one.
+ * Assumes tick spacing is greater than 0.
+ * @param domain Domain of the scale.
+ * @param range Range of the scale.
+ * @param tickSpacing Spacing in pixels.
+ */
+export function applyTickSpacing<T>(domain: T[], range: [number, number], tickSpacing: number) {
+  const rangeSpan = Math.abs(range[1] - range[0]);
+
+  const every = Math.ceil(domain.length / (rangeSpan / tickSpacing));
+
+  if (Number.isNaN(every) || every <= 1) {
+    return domain;
+  }
+
+  return domain.filter((_, index) => index % every === 0);
+}
+
+function getTimeTicks<T extends { toString(): string }>(
+  domain: T[],
+  tickNumber: number,
+  ticksFrequencies: TickFrequencyDefinition[],
+  scale: D3OrdinalScale<T>,
+  isInside: (offset: number) => boolean,
+) {
+  if (ticksFrequencies.length === 0) {
+    return [];
+  }
+
+  const isReversed = scale.range()[0] > scale.range()[1];
+  // Indexes are inclusive regarding the entire band.
+  const startIndex = domain.findIndex((value) => {
+    return isInside(getTickPosition(scale, value, isReversed ? 'start' : 'end'));
+  });
+  const endIndex = domain.findLastIndex((value) =>
+    isInside(getTickPosition(scale, value, isReversed ? 'end' : 'start')),
+  );
+
+  const start = domain[0];
+  const end = domain[domain.length - 1];
+
+  if (!(start instanceof Date) || !(end instanceof Date)) {
+    return [];
+  }
+
+  let startFrequencyIndex = 0;
+
+  for (let i = 0; i < ticksFrequencies.length; i += 1) {
+    if (ticksFrequencies[i].getTickNumber(start, end) !== 0) {
+      startFrequencyIndex = i;
+      break;
+    }
+  }
+
+  let endFrequencyIndex = startFrequencyIndex;
+  for (let i = startFrequencyIndex; i < ticksFrequencies.length; i += 1) {
+    if (i === ticksFrequencies.length - 1) {
+      // If we reached the end, use the last tick frequency
+      endFrequencyIndex = i;
+      break;
+    }
+
+    const prevTickCount = ticksFrequencies[i].getTickNumber(start, end);
+    const nextTickCount = ticksFrequencies[i + 1].getTickNumber(start, end);
+
+    // Smooth ratio between ticks steps: ticksNumber[i]*ticksNumber[i+1] <= targetTickNumber^2
+    if (nextTickCount > tickNumber || tickNumber / prevTickCount < nextTickCount / tickNumber) {
+      endFrequencyIndex = i;
+      break;
+    }
+  }
+
+  const ticks: { index: number; formatter: (d: Date) => string }[] = [];
+  for (let tickIndex = Math.max(1, startIndex); tickIndex <= endIndex; tickIndex += 1) {
+    for (let i = startFrequencyIndex; i <= endFrequencyIndex; i += 1) {
+      const prevDate = domain[tickIndex - 1];
+      const currentDate = domain[tickIndex];
+
+      if (
+        prevDate instanceof Date &&
+        currentDate instanceof Date &&
+        ticksFrequencies[i].isTick(prevDate, currentDate)
+      ) {
+        ticks.push({ index: tickIndex, formatter: ticksFrequencies[i].format });
+
+        // once we found a matching tick space, we can break the inner loop
+        break;
+      }
+    }
+  }
+
+  return ticks;
+}
+
+interface GetTicksOptions
+  extends
+    Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement' | 'tickSpacing'>,
+    Required<Pick<TickParams, 'tickNumber'>> {
+  scale: D3Scale;
+  valueFormatter?: AxisConfig['valueFormatter'];
+  isInside: (offset: number) => boolean;
+  ordinalTimeTicks?: OrdinalTimeTicks;
+}
+
+export function getTicks(options: GetTicksOptions) {
   const {
     scale,
     tickNumber,
     valueFormatter,
     tickInterval,
-    tickPlacement = 'extremities',
+    tickPlacement: tickPlacementProp,
     tickLabelPlacement: tickLabelPlacementProp,
+    tickSpacing,
     isInside,
+    ordinalTimeTicks,
   } = options;
 
-  // band scale
-  if (isOrdinalScale(scale)) {
+  if (ordinalTimeTicks !== undefined && isDateData(scale.domain()) && isOrdinalScale(scale)) {
+    // ordinal scale with spaced ticks.
     const domain = scale.domain();
 
+    if (domain.length === 0 || domain.length === 1) {
+      return [];
+    }
+
+    const tickPlacement = 'middle';
+    const ticksIndexes = getTimeTicks(
+      domain,
+      tickNumber,
+      ordinalTimeTicks.map((tickDef) =>
+        typeof tickDef === 'string' ? tickFrequencies[tickDef] : tickDef,
+      ),
+      scale,
+      isInside,
+    );
+
+    return ticksIndexes.map(({ index, formatter }) => {
+      const value = domain[index];
+      const formattedValue = formatter(value as Date);
+      return {
+        value,
+        formattedValue,
+        offset: getTickPosition(scale, value, tickPlacement),
+        labelOffset: 0,
+      };
+    });
+  }
+
+  const tickPlacement = tickPlacementProp ?? 'extremities';
+
+  // Standard ordinal scale: 1 item =1 tick
+  if (isOrdinalScale(scale)) {
+    const domain = scale.domain();
     const tickLabelPlacement = tickLabelPlacementProp ?? 'middle';
+
+    let filteredDomain = domain;
+    if (typeof tickInterval === 'object' && tickInterval != null) {
+      filteredDomain = tickInterval;
+    } else {
+      if (typeof tickInterval === 'function') {
+        filteredDomain = filteredDomain.filter(tickInterval);
+      }
+
+      if (tickSpacing !== undefined && tickSpacing > 0) {
+        filteredDomain = applyTickSpacing(filteredDomain, scale.range(), tickSpacing);
+      }
+    }
+
+    if (filteredDomain.length === 0) {
+      return [];
+    }
 
     if (scale.bandwidth() > 0) {
       // scale type = 'band'
-      const filteredDomain =
-        (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-        (typeof tickInterval === 'object' && tickInterval) ||
-        domain;
+
+      const isReversed = scale.range()[0] > scale.range()[1];
+      // Indexes are inclusive regarding the entire band.
+      const startIndex = filteredDomain.findIndex((value) => {
+        return isInside(getTickPosition(scale, value, isReversed ? 'start' : 'end'));
+      });
+      const endIndex = filteredDomain.findLastIndex((value) =>
+        isInside(getTickPosition(scale, value, isReversed ? 'end' : 'start')),
+      );
 
       return [
-        ...filteredDomain.map((value) => {
+        ...filteredDomain.slice(startIndex, endIndex + 1).map((value) => {
           const defaultTickLabel = `${value}`;
 
           return {
@@ -104,10 +291,7 @@ export function getTicks(
             formattedValue:
               valueFormatter?.(value, { location: 'tick', scale, tickNumber, defaultTickLabel }) ??
               defaultTickLabel,
-            offset:
-              scale(value)! -
-              (scale.step() - scale.bandwidth()) / 2 +
-              offsetRatio[tickPlacement] * scale.step(),
+            offset: getTickPosition(scale, value, tickPlacement),
             labelOffset:
               tickLabelPlacement === 'tick'
                 ? 0
@@ -115,7 +299,9 @@ export function getTicks(
           };
         }),
 
-        ...(tickPlacement === 'extremities'
+        ...(tickPlacement === 'extremities' &&
+        endIndex === domain.length - 1 &&
+        isInside(scale.range()[1])
           ? [
               {
                 formattedValue: undefined,
@@ -128,11 +314,6 @@ export function getTicks(
     }
 
     // scale type = 'point'
-    const filteredDomain =
-      (typeof tickInterval === 'function' && domain.filter(tickInterval)) ||
-      (typeof tickInterval === 'object' && tickInterval) ||
-      domain;
-
     return filteredDomain.map((value) => {
       const defaultTickLabel = `${value}`;
       return {
@@ -162,7 +343,7 @@ export function getTicks(
     typeof tickInterval === 'object' ? tickInterval : getDefaultTicks(scale, tickNumber);
 
   // Ticks inside the drawing area
-  const visibleTicks: TickItemType[] = [];
+  const visibleTicks: TickItem[] = [];
 
   for (let i = 0; i < ticks.length; i += 1) {
     const value = ticks[i];
@@ -204,13 +385,8 @@ function getDefaultTicks(scale: D3ContinuousScale, tickNumber: number) {
 }
 
 export function useTicks(
-  options: {
-    scale: D3Scale;
-    valueFormatter?: AxisConfig['valueFormatter'];
-    direction: 'x' | 'y';
-  } & Pick<TickParams, 'tickInterval' | 'tickPlacement' | 'tickLabelPlacement'> &
-    Required<Pick<TickParams, 'tickNumber'>>,
-): TickItemType[] {
+  options: Omit<GetTicksOptions, 'isInside'> & { direction: 'x' | 'y' },
+): TickItem[] {
   const {
     scale,
     tickNumber,
@@ -218,7 +394,9 @@ export function useTicks(
     tickInterval,
     tickPlacement = 'extremities',
     tickLabelPlacement,
+    tickSpacing,
     direction,
+    ordinalTimeTicks,
   } = options;
   const { instance } = useChartContext();
   const isInside = direction === 'x' ? instance.isXInside : instance.isYInside;
@@ -231,9 +409,21 @@ export function useTicks(
         tickPlacement,
         tickInterval,
         tickLabelPlacement,
+        tickSpacing,
         valueFormatter,
         isInside,
+        ordinalTimeTicks,
       }),
-    [scale, tickNumber, tickPlacement, tickInterval, tickLabelPlacement, valueFormatter, isInside],
+    [
+      scale,
+      tickNumber,
+      tickPlacement,
+      tickInterval,
+      tickLabelPlacement,
+      tickSpacing,
+      valueFormatter,
+      isInside,
+      ordinalTimeTicks,
+    ],
   );
 }

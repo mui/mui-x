@@ -2,27 +2,25 @@
 import * as React from 'react';
 import { warnOnce } from '@mui/x-internals/warning';
 import {
-  ChartPlugin,
+  type ChartPlugin,
   getSVGPoint,
   getCartesianAxisIndex,
   selectorChartDrawingArea,
   selectorChartSeriesProcessed,
   selectorChartsInteractionIsInitialized,
-  useSelector,
   defaultizeXAxis,
   defaultizeYAxis,
 } from '@mui/x-charts/internals';
-import { PointerGestureEventData } from '@mui/x-internal-gestures/core';
-import { UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
+import { type PointerGestureEventData } from '@mui/x-internal-gestures/core';
+import { type UseChartFunnelAxisSignature } from './useChartFunnelAxis.types';
 import { selectorChartXAxis, selectorChartYAxis } from './useChartFunnelAxisRendering.selectors';
 
 export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
   params,
   store,
-  seriesConfig,
-  svgRef,
   instance,
 }) => {
+  const { svgRef } = instance;
   const { xAxis, yAxis, dataset, gap } = params;
 
   if (process.env.NODE_ENV !== 'production') {
@@ -41,9 +39,9 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     }
   }
 
-  const drawingArea = useSelector(store, selectorChartDrawingArea);
+  const drawingArea = store.use(selectorChartDrawingArea);
 
-  const isInteractionEnabled = useSelector(store, selectorChartsInteractionIsInitialized);
+  const isInteractionEnabled = store.use(selectorChartsInteractionIsInitialized);
 
   const isFirstRender = React.useRef(true);
   React.useEffect(() => {
@@ -52,18 +50,17 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
       return;
     }
 
-    store.update((prev) => ({
-      ...prev,
+    store.update({
       funnel: {
         gap: gap ?? 0,
       },
       cartesianAxis: {
-        ...prev.cartesianAxis,
-        x: defaultizeXAxis(xAxis, dataset),
-        y: defaultizeYAxis(yAxis, dataset),
+        axesGap: 0,
+        x: defaultizeXAxis(xAxis, dataset, 0),
+        y: defaultizeYAxis(yAxis, dataset, 0),
       },
-    }));
-  }, [seriesConfig, drawingArea, xAxis, yAxis, dataset, store, gap]);
+    });
+  }, [drawingArea, xAxis, yAxis, dataset, store, gap]);
 
   React.useEffect(() => {
     const element = svgRef.current;
@@ -129,9 +126,9 @@ export const useChartFunnelAxis: ChartPlugin<UseChartFunnelAxisSignature> = ({
     }
 
     const axisClickHandler = instance.addInteractionListener('tap', (event) => {
-      const { axis: xAxisWithScale, axisIds: xAxisIds } = selectorChartXAxis(store.value);
-      const { axis: yAxisWithScale, axisIds: yAxisIds } = selectorChartYAxis(store.value);
-      const processedSeries = selectorChartSeriesProcessed(store.value);
+      const { axis: xAxisWithScale, axisIds: xAxisIds } = selectorChartXAxis(store.state);
+      const { axis: yAxisWithScale, axisIds: yAxisIds } = selectorChartYAxis(store.state);
+      const processedSeries = selectorChartSeriesProcessed(store.state);
 
       const usedXAxis = xAxisIds[0];
       const usedYAxis = yAxisIds[0];
@@ -192,8 +189,8 @@ useChartFunnelAxis.getDefaultizedParams = ({ params }) => {
   return {
     ...params,
     gap: params.gap ?? 0,
-    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset),
-    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset),
+    defaultizedXAxis: defaultizeXAxis(params.xAxis, params.dataset, 0),
+    defaultizedYAxis: defaultizeYAxis(params.yAxis, params.dataset, 0),
   };
 };
 
@@ -203,6 +200,7 @@ useChartFunnelAxis.getInitialState = (params) => {
       gap: params.gap ?? 0,
     },
     cartesianAxis: {
+      axesGap: 0,
       x: params.defaultizedXAxis,
       y: params.defaultizedYAxis,
     },

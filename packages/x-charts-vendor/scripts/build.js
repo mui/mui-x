@@ -27,12 +27,16 @@ const getEsmIndex = (pkg) => `
 export * from "${pkg.name}";
 `;
 
-const getCjsIndex = (pkg) => `
+const getEsmDefaultExport = (pkg) => `
+export { default } from "${pkg.name}";
+`;
+
+const getCjsIndex = (pkg, hasSrc) => `
 // \`x-charts-vendor/${pkg.name}\` (CommonJS)
 // See upstream license: ${pkg.repository.url.replace(/\.git$/, '')}/blob/main/LICENSE
 //
 // Our CommonJS package relies on transpiled vendor files in \`lib-vendor/${pkg.name}\`
-module.exports = require("../lib-vendor/${pkg.name}/src/index.js");
+module.exports = require("../lib-vendor/${pkg.name}/${hasSrc ? 'src/' : ''}index.js");
 `;
 
 const getCjsRootIndex = (pkg) => `
@@ -51,6 +55,8 @@ const getTypeDefinitionFile = (pkg) => `
 export * from "${pkg.name}";
 `;
 
+const DEFAULT_EXPORT_PKGS = new Set(['flatqueue']);
+
 // Main.
 const main = async () => {
   // Lazy ESM imports.
@@ -58,7 +64,7 @@ const main = async () => {
 
   // Get d3-related packages we want to vendor.
   const pkgs = (await fs.readdir(path.resolve(__dirname, '../node_modules/'))).filter((name) =>
-    /^(d3-|internmap|delaunator|robust-predicates)/.test(name),
+    /^(d3-|internmap|flatqueue)/.test(name),
   );
 
   // Safety check: we assume that **all** are flattened to root level of this
@@ -80,8 +86,7 @@ const main = async () => {
     baseDirs,
     path.resolve(__dirname, '../d3-*'),
     path.resolve(__dirname, '../internmap'),
-    path.resolve(__dirname, '../delaunator'),
-    path.resolve(__dirname, '../robust-predicates'),
+    path.resolve(__dirname, '../flatqueue'),
   );
 
   log('Cleaning old vendor directories.');
@@ -116,10 +121,23 @@ const main = async () => {
     const pkg = await fs.readFile(pkgPath).then((buf) => JSON.parse(buf.toString()));
     const libVendorPath = path.resolve(__dirname, `../lib-vendor/${pkgName}`);
 
+    let hasSrc = false;
+    await fs
+      .readdir(path.join(libVendorPath, 'src'))
+      .then(() => {
+        hasSrc = true;
+      })
+      .catch(() => {
+        hasSrc = false;
+      });
+
     // Create library indexes and copy licenses to `lib-vendor.
     await Promise.all([
-      fs.writeFile(path.join(EsmBasePath, `${pkgName}.mjs`), getEsmIndex(pkg)),
-      fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg)),
+      fs.writeFile(
+        path.join(EsmBasePath, `${pkgName}.mjs`),
+        getEsmIndex(pkg) + (DEFAULT_EXPORT_PKGS.has(pkgName) ? getEsmDefaultExport(pkg) : ''),
+      ),
+      fs.writeFile(path.join(CjsBasePath, `${pkgName}.js`), getCjsIndex(pkg, hasSrc)),
       fs
         .copyFile(path.join(pkgBase, 'LICENSE'), path.join(libVendorPath, 'LICENSE'))
         .catch((error) => {

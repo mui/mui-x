@@ -67,7 +67,11 @@ export default treeViewApiPages;
   getApiPages: () => findApiPages('docs/pages/x/api/tree-view'),
   getComponentInfo,
   translationLanguages: LANGUAGES,
-  skipComponent() {
+  skipComponent(filename) {
+    if (filename.includes('/components/')) {
+      return true;
+    }
+
     return false;
   },
   skipAnnotatingComponentDefinition: true,
@@ -81,6 +85,7 @@ export default treeViewApiPages;
   isGlobalClassName: isGlobalState,
   nonComponentFolders: [
     ...getNonComponentFolders(),
+    'migration/migration-tree-view-v8',
     'migration/migration-tree-view-v7',
     'migration/migration-tree-view-v6',
     'migration/migration-tree-view-lab',

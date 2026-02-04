@@ -1,4 +1,4 @@
-import * as React from 'react';
+import type * as React from 'react';
 import type { GridColDef } from '../colDef';
 
 /**
@@ -18,6 +18,10 @@ export interface GridLocaleText {
   toolbarDensityCompact: string;
   toolbarDensityStandard: string;
   toolbarDensityComfortable: string;
+
+  // Undo/redo toolbar button text
+  toolbarUndo: React.ReactNode;
+  toolbarRedo: React.ReactNode;
 
   // Columns selector toolbar button text
   toolbarColumns: React.ReactNode;
@@ -160,6 +164,10 @@ export interface GridLocaleText {
   booleanCellTrueLabel: string;
   booleanCellFalseLabel: string;
 
+  // Long text cell
+  longTextCellExpandLabel: string;
+  longTextCellCollapseLabel: string;
+
   // Actions cell more text
   actionsCellMore: string;
 
@@ -287,6 +295,7 @@ export interface GridLocaleText {
   promptChangePivotRowsLabel: (count: number) => string;
   promptChangePivotValuesLabel: (count: number) => string;
   promptChangePivotValuesDescription: (column: string, aggregation: string) => string;
+  promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => string;
 
   // Prompt field
   promptFieldLabel: string;

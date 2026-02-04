@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { GridCellMode } from '../gridCell';
-import {
+import type { GridCellMode } from '../gridCell';
+import type {
   GridRowId,
   GridRowModel,
   GridTreeNode,
@@ -8,8 +7,8 @@ import {
   GridValidRowModel,
 } from '../gridRows';
 import type { GridStateColDef } from '../colDef/gridColDef';
-import { GridEditCellProps } from '../gridEditRowModel';
-import { GridApiCommunity } from '../api/gridApiCommunity';
+import type { GridEditCellProps } from '../gridEditRowModel';
+import type { GridApiCommunity } from '../api/gridApiCommunity';
 
 /**
  * Object passed as parameter in the column [[GridColDef]] cell renderer.
@@ -71,10 +70,6 @@ export interface GridCellParams<
   api: GridApiCommunity;
 }
 
-export interface FocusElement {
-  focus(): void;
-}
-
 /**
  * GridCellParams containing api.
  */
@@ -88,12 +83,6 @@ export interface GridRenderCellParams<
    * GridApi that let you manipulate the grid.
    */
   api: GridApiCommunity;
-  /**
-   * A ref allowing to set imperative focus.
-   * It can be passed to the element that should receive focus.
-   * @ignore - do not document.
-   */
-  focusElementRef?: React.Ref<FocusElement>;
 }
 
 /**
@@ -104,8 +93,8 @@ export interface GridRenderEditCellParams<
   V = any,
   F = V,
   N extends GridTreeNodeWithRender = GridTreeNodeWithRender,
-> extends GridCellParams<R, V, F, N>,
-    GridEditCellProps<V> {
+>
+  extends GridCellParams<R, V, F, N>, GridEditCellProps<V> {
   /**
    * GridApi that let you manipulate the grid.
    */

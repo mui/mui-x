@@ -1,22 +1,22 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
 import { warnOnce } from '@mui/x-internals/warning';
 import { isDeepEqual } from '@mui/x-internals/isDeepEqual';
 import { useGridEvent, useGridEventPriority } from '../../utils/useGridEvent';
-import { GridEventListener } from '../../../models/events/gridEventListener';
+import type { GridEventListener } from '../../../models/events/gridEventListener';
 import {
   GridEditModes,
   GridRowModes,
-  GridEditingState,
-  GridEditCellProps,
-  GridEditRowProps,
+  type GridEditingState,
+  type GridEditCellProps,
+  type GridEditRowProps,
 } from '../../../models/gridEditRowModel';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
-import {
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type {
   GridRowEditingApi,
   GridEditingSharedApi,
   GridStopRowEditModeParams,
@@ -28,18 +28,18 @@ import {
 } from '../../../models/api/gridEditingApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridEditRowsStateSelector, gridRowIsEditingSelector } from './gridEditingSelectors';
-import { GridRowId, GridValidRowModel } from '../../../models/gridRows';
+import type { GridRowId, GridValidRowModel } from '../../../models/gridRows';
 import { isPrintableKey, isPasteShortcut } from '../../../utils/keyboardUtils';
 import {
   gridColumnDefinitionsSelector,
   gridVisibleColumnFieldsSelector,
 } from '../columns/gridColumnsSelector';
-import { GridCellParams } from '../../../models/params/gridCellParams';
+import type { GridCellParams } from '../../../models/params/gridCellParams';
 import { gridRowsLookupSelector } from '../rows/gridRowsSelector';
 import { deepClone } from '../../../utils/utils';
 import {
-  GridRowEditStopParams,
-  GridRowEditStartParams,
+  type GridRowEditStopParams,
+  type GridRowEditStartParams,
   GridRowEditStopReasons,
   GridRowEditStartReasons,
 } from '../../../models/params/gridRowParams';
@@ -577,7 +577,7 @@ export const useGridRowEditing = (
 
           if (onProcessRowUpdateError) {
             onProcessRowUpdateError(errorThrown);
-          } else if (process.env.NODE_ENV !== 'production') {
+          } else {
             warnOnce(
               [
                 'MUI X: A call to `processRowUpdate()` threw an error which was not handled because `onProcessRowUpdateError()` is missing.',

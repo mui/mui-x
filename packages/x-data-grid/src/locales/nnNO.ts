@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const nnNOGrid: Partial<GridLocaleText> = {
   // Root
@@ -16,6 +16,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Komfortabelt',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Angre',
+  toolbarRedo: 'Gjer om',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
@@ -161,6 +165,10 @@ const nnNOGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'sant',
   booleanCellFalseLabel: 'usant',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Vis',
+  longTextCellCollapseLabel: 'Gøym',
 
   // Actions cell more text
   actionsCellMore: 'meir',
@@ -327,6 +335,7 @@ const nnNOGrid: Partial<GridLocaleText> = {
   promptChangePivotValuesLabel: (count: number) => `Verdiar (${count})`,
   promptChangePivotValuesDescription: (column: string, aggregation: string) =>
     `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const nnNO: Localization = getGridLocalization(nnNOGrid);

@@ -1,15 +1,22 @@
 import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
-import { createRenderer, screen, act, waitFor } from '@mui/internal-test-utils';
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  createRenderer,
+  screen,
+  act,
+  waitFor,
+  fireEvent,
+  flushMicrotasks,
+} from '@mui/internal-test-utils';
 import {
   DataGrid,
-  DataGridProps,
-  GridRowId,
+  type DataGridProps,
+  type GridRowId,
   GridEditModes,
   useGridApiRef,
-  GridApi,
-  GridRowSelectionModel,
+  type GridApi,
+  type GridRowSelectionModel,
   gridRowSelectionIdsSelector,
 } from '@mui/x-data-grid';
 import {
@@ -291,13 +298,9 @@ describe('<DataGrid /> - Row selection', () => {
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2, 3]);
 
       // Verify that `gridRowSelectionIdsSelector` returns all row data
-      act(() => {
-        if (apiRef.current) {
-          const selectedRows = gridRowSelectionIdsSelector(apiRef);
-          expect(selectedRows.size).to.equal(4);
-          expect(Array.from(selectedRows.keys())).to.deep.equal([0, 1, 2, 3]);
-        }
-      });
+      const selectedRows = gridRowSelectionIdsSelector(apiRef);
+      expect(selectedRows.size).to.equal(4);
+      expect(Array.from(selectedRows.keys())).to.deep.equal([0, 1, 2, 3]);
     });
 
     it('should handle exclude type selection when deselecting a single row after select all', async () => {
@@ -358,8 +361,47 @@ describe('<DataGrid /> - Row selection', () => {
       render(
         <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
       );
-      expect(getRow(0).querySelector('input')).to.have.property('disabled', false);
-      expect(getRow(1).querySelector('input')).to.have.property('disabled', true);
+      expect(getRow(0).querySelector('input')?.getAttribute('aria-disabled')).to.equal(null);
+      expect(getRow(1).querySelector('input')?.getAttribute('aria-disabled')).to.equal('true');
+      expect(getRow(1).querySelector('input')?.getAttribute('disabled')).to.equal('');
+    });
+
+    it('disabled checkboxes cannot be selected', async () => {
+      render(
+        <TestDataGridSelection isRowSelectable={(params) => params.id === 0} checkboxSelection />,
+      );
+
+      const firstCheckbox = getCell(0, 0).querySelector('input');
+      act(() => {
+        firstCheckbox?.click();
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+      // user.click() doesn't work here because of `pointer-events: none`
+      const secondCheckbox = getCell(1, 0).querySelector('input');
+      act(() => {
+        secondCheckbox?.click();
+      });
+
+      expect(getSelectedRowIds()).to.deep.equal([0]);
+    });
+
+    it('disabled checkboxes cannot be focused', async () => {
+      const { user } = render(
+        <TestDataGridSelection isRowSelectable={(params) => params.id !== 1} checkboxSelection />,
+      );
+
+      expect(getSelectedRowIds()).to.deep.equal([]);
+      const firstCheckbox = getCell(0, 0).querySelector('input');
+      await user.keyboard('{Tab}');
+      await user.keyboard('{ArrowDown}');
+      expect(document.activeElement).to.equal(firstCheckbox);
+
+      await user.keyboard('{ArrowDown}');
+      const secondCheckboxCell = getCell(1, 0);
+      const secondCheckbox = secondCheckboxCell.querySelector('input');
+      expect(secondCheckbox?.getAttribute('tabindex')).to.equal('-1');
+      expect(document.activeElement).to.equal(secondCheckboxCell);
     });
 
     it('should select a range with shift pressed when clicking the row', async () => {
@@ -369,6 +411,29 @@ describe('<DataGrid /> - Row selection', () => {
       await user.keyboard('{Shift>}');
       await user.click(getCell(2, 1));
       expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+    });
+
+    it('should create selection range only between selected rows', async () => {
+      const extendedData = getBasicGridData(10, 2);
+      const { user } = render(
+        <TestDataGridSelection checkboxSelection disableVirtualization {...extendedData} />,
+      );
+
+      await user.click(getCell(0, 1));
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(2, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([0, 1, 2]);
+
+      const headerCheckbox = getColumnHeaderCell(0).querySelector('input')!;
+      await user.click(headerCheckbox); // Select all
+      await user.click(headerCheckbox); // Then unselect all
+      expect(getSelectedRowIds()).to.deep.equal([]);
+
+      await user.keyboard('{Shift>}');
+      await user.click(getCell(5, 1));
+      await user.keyboard('{/Shift}');
+      expect(getSelectedRowIds()).to.deep.equal([5]);
     });
 
     it('should select a range with shift pressed when clicking the checkbox', async () => {
@@ -705,21 +770,23 @@ describe('<DataGrid /> - Row selection', () => {
     });
 
     // Skip on everything as this is failing on all environments on ubuntu/CI
-    //   describe('ripple', () => {
-    //
-    //     // JSDOM doesn't fire "blur" when .focus is called in another element
-    //     // FIXME Firefox doesn't show any ripple
-    //     it.skipIf(isJSDOM)('should keep only one ripple visible when navigating between checkboxes', async () => {
-    //       render(<TestDataGridSelection checkboxSelection />);
-    //       const cell = getCell(1, 1);
-    //       fireUserEvent.mousePress(cell);
-    //       fireEvent.keyDown(cell, { key: 'ArrowLeft' });
-    //       fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
-    //
-    //       await flushMicrotasks();
-    //       expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
-    //     });
-    //   });
+    describe.todo('ripple', () => {
+      // JSDOM doesn't fire "blur" when .focus is called in another element
+      // FIXME Firefox doesn't show any ripple
+      it.skipIf(isJSDOM)(
+        'should keep only one ripple visible when navigating between checkboxes',
+        async () => {
+          const { user } = render(<TestDataGridSelection checkboxSelection />);
+          const cell = getCell(1, 1);
+          await user.click(cell);
+          fireEvent.keyDown(cell, { key: 'ArrowLeft' });
+          fireEvent.keyDown(getCell(1, 0).querySelector('input')!, { key: 'ArrowUp' });
+
+          await flushMicrotasks();
+          expect(document.querySelectorAll('.MuiTouchRipple-rippleVisible')).to.have.length(1);
+        },
+      );
+    });
   });
 
   describe('prop: isRowSelectable', () => {

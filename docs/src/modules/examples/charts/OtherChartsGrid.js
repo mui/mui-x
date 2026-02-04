@@ -1,4 +1,3 @@
-import * as React from 'react';
 import ArcDesign from 'docsx/data/charts/gauge/ArcDesign';
 import CompositionExample from 'docsx/data/charts/gauge/CompositionExample';
 import BasicSparkLine from 'docsx/data/charts/sparkline/BasicSparkLine';

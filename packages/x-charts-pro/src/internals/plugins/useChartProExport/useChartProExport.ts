@@ -1,10 +1,10 @@
-import { ChartPlugin } from '@mui/x-charts/internals';
+import { type ChartPlugin } from '@mui/x-charts/internals';
 import { printChart } from './print';
 import { exportImage } from './exportImage';
 import {
-  ChartImageExportOptions,
-  ChartPrintExportOptions,
-  UseChartProExportSignature,
+  type ChartImageExportOptions,
+  type ChartPrintExportOptions,
+  type UseChartProExportSignature,
 } from './useChartProExport.types';
 
 function waitForAnimationFrame() {
@@ -21,11 +21,8 @@ function waitForAnimationFrame() {
   return promise;
 }
 
-export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({
-  chartRootRef,
-  svgRef,
-  instance,
-}) => {
+export const useChartProExport: ChartPlugin<UseChartProExportSignature> = ({ instance }) => {
+  const { chartRootRef, svgRef } = instance;
   const exportAsPrint = async (options?: ChartPrintExportOptions) => {
     const chartRoot = chartRootRef.current;
 

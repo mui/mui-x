@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
-import { GridTreeNode, GridRowId } from '../gridRows';
-import { DataGridProcessedProps } from '../props/DataGridProps';
+import type * as React from 'react';
+import type { RefObject } from '@mui/x-internals/types';
+import type { GridTreeNode } from '../gridRows';
+import type { GridRowProApi } from '../api';
 
 /**
  * Get the ARIA attributes for a row
@@ -21,14 +21,12 @@ export interface GridRowAriaAttributesInternalHook {
 /**
  * Overridable row methods interface, these methods could be overriden in a higher plan package.
  */
-export interface GridRowsOverridableMethodsInternalHook<Api> {
+export interface GridRowsOverridableMethodsInternalHook<Api, Props> {
   useGridRowsOverridableMethods: (
     apiRef: RefObject<Api>,
-    props: Pick<
-      DataGridProcessedProps,
-      'processRowUpdate' | 'onProcessRowUpdateError' | 'dataSource'
-    >,
+    props: Props,
   ) => {
-    setRowIndex: (rowId: GridRowId, targetIndex: number) => void;
+    setRowIndex: GridRowProApi['setRowIndex'];
+    setRowPosition: GridRowProApi['setRowPosition'];
   };
 }

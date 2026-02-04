@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const hyAMGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Կոմպակտ',
   toolbarDensityStandard: 'Ստանդարտ',
   toolbarDensityComfortable: 'Հարմարավետ',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Հետսարկել',
+  toolbarRedo: 'Կրկնվել',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Սյունակներ',
@@ -181,6 +185,10 @@ const hyAMGrid: Partial<GridLocaleText> = {
   booleanCellTrueLabel: 'այո',
   booleanCellFalseLabel: 'ոչ',
 
+  // Long text cell
+  longTextCellExpandLabel: 'Բացել',
+  longTextCellCollapseLabel: 'Փակել',
+
   // Actions cell more text
   actionsCellMore: 'ավելին',
 
@@ -346,6 +354,7 @@ const hyAMGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const hyAM: Localization = getGridLocalization(hyAMGrid);

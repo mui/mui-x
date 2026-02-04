@@ -1,3 +1,4 @@
+import type * as React from 'react';
 import type {
   ScaleBand,
   ScaleLinear,
@@ -9,19 +10,26 @@ import type {
   ScaleThreshold,
   ScaleTime,
   ScaleSymLog,
+  NumberValue,
 } from '@mui/x-charts-vendor/d3-scale';
-import { SxProps } from '@mui/system/styleFunctionSx';
-import { type MakeOptional, MakeRequired } from '@mui/x-internals/types';
+import { type SxProps } from '@mui/system/styleFunctionSx';
+import { type HasProperty, type MakeOptional, type MakeRequired } from '@mui/x-internals/types';
 import type { DefaultizedZoomOptions } from '../internals/plugins/featurePlugins/useChartCartesianAxis';
-import { ChartsAxisClasses } from '../ChartsAxis/axisClasses';
+import { type ChartsAxisClasses } from '../ChartsAxis/axisClasses';
 import type { TickParams } from '../hooks/useTicks';
-import { ChartsTextProps } from '../ChartsText';
-import { ContinuousColorConfig, OrdinalColorConfig, PiecewiseColorConfig } from './colorMapping';
+import type { ChartsTextProps } from '../ChartsText';
+import type {
+  ContinuousColorConfig,
+  OrdinalColorConfig,
+  PiecewiseColorConfig,
+} from './colorMapping';
+import type { OrdinalTimeTicks } from './timeTicks';
+import { type ChartsTypeFeatureFlags } from './featureFlags';
 
 export type AxisId = string | number;
 
 export type D3Scale<
-  Domain extends { toString(): string } = number | Date | string,
+  Domain extends { toString(): string } = { toString(): string },
   Range = number,
   Output = number,
 > =
@@ -40,7 +48,7 @@ export type D3ContinuousScale<Range = number, Output = number> =
   | ScaleTime<Range, Output>
   | ScaleLinear<Range, Output>;
 
-export type D3OrdinalScale<Domain extends { toString(): string } = number | Date | string> =
+export type D3OrdinalScale<Domain extends { toString(): string } = { toString(): string }> =
   | ScaleBand<Domain>
   | ScalePoint<Domain>;
 
@@ -65,6 +73,16 @@ export interface ChartsAxisSlots {
    * @default ChartsText
    */
   axisLabel?: React.JSXElementConstructor<ChartsTextProps>;
+  /**
+   * Custom component for the x-axis.
+   * @default ChartsXAxis
+   */
+  xAxis?: React.JSXElementConstructor<ChartsXAxisProps>;
+  /**
+   * Custom component for the y-axis.
+   * @default ChartsYAxis
+   */
+  yAxis?: React.JSXElementConstructor<ChartsYAxisProps>;
 }
 
 export interface ChartsAxisSlotProps {
@@ -72,6 +90,8 @@ export interface ChartsAxisSlotProps {
   axisTick?: Partial<React.SVGAttributes<SVGPathElement>>;
   axisTickLabel?: Partial<ChartsTextProps>;
   axisLabel?: Partial<ChartsTextProps>;
+  xAxis?: Partial<ChartsXAxisProps>;
+  yAxis?: Partial<ChartsYAxisProps>;
 }
 
 export interface ChartsAxisProps extends TickParams {
@@ -105,6 +125,11 @@ export interface ChartsAxisProps extends TickParams {
    * @default 'auto'
    */
   tickLabelInterval?: 'auto' | ((value: any, index: number) => boolean);
+  /**
+   * The minimum space between ticks when using an ordinal scale. It defines the minimum distance in pixels between two ticks.
+   * @default 0
+   */
+  tickSpacing?: number;
   /**
    * The label of the axis.
    */
@@ -159,7 +184,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
       position?: 'top' | 'bottom' | 'none';
       /**
        * The height of the axis.
-       * @default 30
+       * @default 45 if an axis label is provided, 25 otherwise.
        */
       height?: number;
     }
@@ -177,7 +202,7 @@ type AxisSideConfig<AxisProps extends ChartsAxisProps> = AxisProps extends Chart
         position?: 'left' | 'right' | 'none';
         /**
          * The width of the axis.
-         * @default 30
+         * @default 65 if an axis label is provided, 45 otherwise.
          */
         width?: number;
       }
@@ -265,7 +290,11 @@ export type AxisGroups = {
 export interface AxisScaleConfig {
   band: {
     scaleType: 'band';
-    scale: ScaleBand<number | Date | string>;
+    /**
+     * Definition of the tick placements with date data.
+     */
+    ordinalTimeTicks?: OrdinalTimeTicks;
+    scale: ScaleBand<{ toString(): string }>;
     /**
      * The ratio between the space allocated for padding between two categories and the category width.
      * 0 means no gap, and 1 no data.
@@ -283,7 +312,11 @@ export interface AxisScaleConfig {
     Pick<TickParams, 'tickPlacement' | 'tickLabelPlacement'>;
   point: {
     scaleType: 'point';
-    scale: ScalePoint<number | Date | string>;
+    /**
+     * Definition of the tick placements with date data.
+     */
+    ordinalTimeTicks?: OrdinalTimeTicks;
+    scale: ScalePoint<{ toString(): string }>;
     colorMap?: OrdinalColorConfig | ContinuousColorConfig | PiecewiseColorConfig;
   } & AxisGroups;
   log: {
@@ -427,6 +460,34 @@ export type AxisValueFormatterContext<S extends ScaleName = ScaleName> =
       tickNumber?: number;
     };
 
+type MinMaxConfig<S extends ScaleName = ScaleName> = S extends ContinuousScaleName
+  ? S extends 'utc' | 'time'
+    ? {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: NumberValue;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: NumberValue;
+      }
+    : {
+        /**
+         * The minimal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        min?: number;
+        /**
+         * The maximal value of the domain.
+         * If not provided, it gets computed to display the entire chart data.
+         */
+        max?: number;
+      }
+  : {};
+
 /**
  * Config that is shared between cartesian and polar axes.
  */
@@ -437,16 +498,6 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * The ID must be unique across all axes in this chart.
    */
   id: AxisId;
-  /**
-   * The minimal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  min?: number | Date;
-  /**
-   * The maximal value of the domain.
-   * If not provided, it gets computed to display the entire chart data.
-   */
-  max?: number | Date;
   /**
    * The data used by `'band'` and `'point'` scales.
    */
@@ -479,7 +530,10 @@ type CommonAxisConfig<S extends ScaleName = ScaleName, V = any> = {
    * - 'strict': Set the domain to the min/max value provided. No extra space is added.
    * - function: Receives the calculated extremums as parameters, and should return the axis domain.
    */
-  domainLimit?: 'nice' | 'strict' | ((min: number, max: number) => { min: number; max: number });
+  domainLimit?:
+    | 'nice'
+    | 'strict'
+    | ((min: NumberValue, max: NumberValue) => { min: NumberValue; max: NumberValue });
   /**
    * If `true`, the axis will be ignored by the tooltip with `trigger='axis'`.
    */
@@ -499,6 +553,7 @@ export type PolarAxisConfig<
    */
   offset?: number;
 } & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisConfigExtension;
@@ -519,6 +574,7 @@ export type AxisConfig<
    */
   offset?: number;
 } & CommonAxisConfig<S, V> &
+  MinMaxConfig<S> &
   Omit<Partial<AxisProps>, 'axisId'> &
   Partial<Omit<AxisScaleConfig[S], 'scale'>> &
   AxisSideConfig<AxisProps> &
@@ -583,6 +639,12 @@ export function isPointScaleConfig(
   return scaleConfig.scaleType === 'point';
 }
 
+export function isContinuousScaleConfig(
+  scaleConfig: AxisConfig<ScaleName>,
+): scaleConfig is AxisConfig<ContinuousScaleName> {
+  return scaleConfig.scaleType !== 'point' && scaleConfig.scaleType !== 'band';
+}
+
 export function isSymlogScaleConfig(
   scaleConfig: AxisConfig<ScaleName>,
 ): scaleConfig is AxisConfig<'symlog'> & { scaleType: 'symlog' } {
@@ -604,7 +666,13 @@ export interface ChartsAxisData {
   /**
    * The mapping of series ids to their value for this particular axis index.
    */
-  seriesValues: Record<string, number | null | undefined>;
+  seriesValues: Record<
+    string,
+    HasProperty<ChartsTypeFeatureFlags, 'seriesValueOverride'> extends true
+      ? // @ts-ignore this property is added through module augmentation
+        ChartsTypeFeatureFlags['seriesValuesOverride']
+      : number | null | undefined
+  >;
 }
 
 export type CartesianDirection = 'x' | 'y';
@@ -650,11 +718,9 @@ export type DefaultedAxis<
 /**
  * The x-axis configuration with missing values filled with default values.
  */
-export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = DefaultedAxis<
-  S,
-  V,
-  ChartsXAxisProps
->;
+export type DefaultedXAxis<S extends ScaleName = ScaleName, V = any> = S extends ScaleName
+  ? DefaultedAxis<S, V, ChartsXAxisProps>
+  : never;
 
 /**
  * The y-axis configuration with missing values filled with default values.

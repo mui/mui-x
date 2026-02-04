@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { useRadarSeriesData } from './useRadarSeriesData';
-import { RadarSeriesAreaProps } from './RadarSeriesPlot.types';
+import { type RadarSeriesAreaProps } from './RadarSeriesPlot.types';
 import { getAreaPath } from './getAreaPath';
-import { RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
+import { type RadarSeriesPlotClasses, useUtilityClasses } from './radarSeriesPlotClasses';
 import { useItemHighlightedGetter } from '../../hooks/useItemHighlightedGetter';
-import { useInteractionAllItemProps } from '../../hooks/useInteractionItemProps';
-import { SeriesId } from '../../models/seriesType/common';
-import { HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
+import { useInteractionAllItemProps } from './useInteractionAllItemProps';
+import { type SeriesId } from '../../models/seriesType/common';
+import { type HighlightItemData } from '../../internals/plugins/featurePlugins/useChartHighlight';
 import { useRadarRotationIndex } from './useRadarRotationIndex';
 
 interface GetPathPropsParams {
@@ -51,7 +51,11 @@ function RadarSeriesArea(props: RadarSeriesAreaProps) {
   const classes = useUtilityClasses(props.classes);
   return (
     <React.Fragment>
-      {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea }, seriesIndex) => {
+      {seriesCoordinates?.map(({ seriesId: id, points, color, fillArea, hidden }, seriesIndex) => {
+        if (hidden) {
+          return null;
+        }
+
         return (
           <path
             key={id}

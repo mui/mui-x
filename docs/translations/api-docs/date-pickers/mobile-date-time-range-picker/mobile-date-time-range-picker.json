@@ -98,7 +98,7 @@
         },
         "context": {
           "name": "context",
-          "description": "The context containing the validation result of the current value."
+          "description": "<p>Context about this acceptance: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the acceptance. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the value was accepted via a shortcut selection</p>\n"
         }
       }
     },
@@ -113,7 +113,7 @@
         },
         "context": {
           "name": "context",
-          "description": "The context containing the validation result of the current value."
+          "description": "<p>Context about this change: - <code>validationError</code>: validation result of the current value - <code>source</code>: source of the change. One of &#39;field&#39; | &#39;view&#39; | &#39;unknown&#39; - <code>shortcut</code> (optional): the shortcut metadata if the change was triggered by a shortcut selection</p>\n"
         }
       }
     },

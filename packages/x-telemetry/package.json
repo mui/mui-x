@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-telemetry",
-  "version": "8.12.0",
+  "version": "8.20.0",
   "author": "MUI Team",
   "description": "MUI X Telemetry.",
   "license": "SEE LICENSE IN LICENSE",
@@ -30,14 +30,14 @@
   "dependencies": {
     "@babel/runtime": "catalog:",
     "@fingerprintjs/fingerprintjs": "^3.4.2",
-    "ci-info": "^4.3.0",
+    "ci-info": "^4.3.1",
     "conf": "^11.0.2",
-    "is-docker": "^3.0.0",
+    "is-docker": "^4.0.0",
     "node-machine-id": "^1.1.12"
   },
   "devDependencies": {
     "@mui/internal-test-utils": "catalog:",
-    "@types/device-uuid": "^1.0.3",
+    "@types/device-uuid": "1.0.3",
     "rimraf": "catalog:"
   },
   "engines": {

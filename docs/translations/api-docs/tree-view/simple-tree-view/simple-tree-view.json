@@ -2,10 +2,10 @@
   "componentDescription": "",
   "propDescriptions": {
     "apiRef": {
-      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useTreeViewApiRef()</code>."
+      "description": "The ref object that allows Tree View manipulation. Can be instantiated with <code>useSimpleTreeViewApiRef()</code>."
     },
     "checkboxSelection": {
-      "description": "If <code>true</code>, the Tree View renders a checkbox at the left of its label that allows selecting it."
+      "description": "Whether the Tree View renders a checkbox at the left of its label that allows selecting it."
     },
     "children": { "description": "The content of the component." },
     "classes": { "description": "Override or extend the styles applied to the component." },
@@ -16,9 +16,9 @@
       "description": "Selected item ids. (Uncontrolled) When <code>multiSelect</code> is true this takes an array of strings; when false (default) a string."
     },
     "disabledItemsFocusable": {
-      "description": "If <code>true</code>, will allow focus on disabled items."
+      "description": "Whether the items should be focusable when disabled."
     },
-    "disableSelection": { "description": "If <code>true</code> selection is disabled." },
+    "disableSelection": { "description": "Whether selection is disabled." },
     "expandedItems": {
       "description": "Expanded item ids. Used when the item&#39;s expansion is controlled."
     },
@@ -31,9 +31,10 @@
     "itemChildrenIndentation": {
       "description": "Horizontal indentation between an item and its children. Examples: 24, &quot;24px&quot;, &quot;2rem&quot;, &quot;2em&quot;."
     },
-    "multiSelect": {
-      "description": "If <code>true</code>, <code>ctrl</code> and <code>shift</code> will trigger multiselect."
+    "itemHeight": {
+      "description": "Sets the height in pixel of an item. If not provided, no height restriction is applied to the tree item content element."
     },
+    "multiSelect": { "description": "Whether multiple items can be selected." },
     "onExpandedItemsChange": {
       "description": "Callback fired when Tree Items are expanded/collapsed.",
       "typeDescriptions": {

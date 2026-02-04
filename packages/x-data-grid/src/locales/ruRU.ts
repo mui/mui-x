@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -35,6 +35,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Компактная',
   toolbarDensityStandard: 'Стандартная',
   toolbarDensityComfortable: 'Комфортная',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Отменить',
+  toolbarRedo: 'Повторить',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Столбцы',
@@ -192,6 +196,10 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'истина',
   booleanCellFalseLabel: 'ложь',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Развернуть',
+  longTextCellCollapseLabel: 'Свернуть',
 
   // Actions cell more text
   actionsCellMore: 'ещё',
@@ -358,6 +366,7 @@ const ruRUGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const ruRU: Localization = getGridLocalization(ruRUGrid);

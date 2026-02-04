@@ -1,6 +1,5 @@
-import * as React from 'react';
 import { act, createRenderer, screen, waitFor, within } from '@mui/internal-test-utils';
-import { DataGrid, gridClasses, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, type GridColDef } from '@mui/x-data-grid';
 import { getCell, getActiveCell, getColumnHeaderCell } from 'test/utils/helperFn';
 import { isJSDOM } from 'test/utils/skipIf';
 
@@ -652,6 +651,7 @@ describe('<DataGrid /> - Column spanning', () => {
     function checkRows(pageNumber: number, rowsList: Array<'Nike' | 'Adidas' | 'Puma'>) {
       rowsList.forEach((rowName, index) => {
         const rowIndex = pageNumber * pageSize + index;
+        /* eslint-disable vitest/no-conditional-expect */
         if (rowName === 'Nike') {
           expect(() => getCell(rowIndex, 0)).not.to.throw();
           expect(() => getCell(rowIndex, 1)).to.throw(/not found/);
@@ -668,6 +668,7 @@ describe('<DataGrid /> - Column spanning', () => {
           expect(() => getCell(rowIndex, 2)).not.to.throw();
           expect(() => getCell(rowIndex, 3)).to.throw(/not found/);
         }
+        /* eslint-enable vitest/no-conditional-expect */
       });
     }
 

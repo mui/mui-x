@@ -1,12 +1,11 @@
-import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import { createRenderer, act } from '@mui/internal-test-utils';
 
 import {
   DataGridPremium,
-  DataGridPremiumProps,
-  GridApi,
-  GridRowsProp,
+  type DataGridPremiumProps,
+  type GridApi,
+  type GridRowsProp,
   useGridApiRef,
   getGroupRowIdFromPath,
 } from '@mui/x-data-grid-premium';

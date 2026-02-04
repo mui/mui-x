@@ -517,6 +517,7 @@ export const useFieldV6TextField = <
     // Forwarded
     ...forwardedProps,
     error,
+    'aria-invalid': error,
     clearable: Boolean(clearable && !areAllSectionsEmpty && !readOnly && !disabled),
     onBlur: handleContainerBlur,
     onClick: handleInputClick,

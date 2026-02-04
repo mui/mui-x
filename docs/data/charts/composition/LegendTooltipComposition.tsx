@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
 import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';

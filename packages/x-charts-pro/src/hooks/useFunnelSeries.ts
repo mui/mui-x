@@ -1,14 +1,11 @@
 'use client';
 import {
-  createAllSeriesSelectorOfType,
-  createSeriesSelectorsOfType,
-  ProcessedSeries,
-  SeriesId,
-  ChartSeriesDefaultized,
+  useSeriesOfType,
+  useAllSeriesOfType,
+  type ProcessedSeries,
+  type SeriesId,
+  type ChartSeriesDefaultized,
 } from '@mui/x-charts/internals';
-
-const useSelectorSeries = createSeriesSelectorsOfType('funnel');
-const useSelectorSeriesContext = createAllSeriesSelectorOfType('funnel');
 
 export type UseFunnelSeriesReturnValue = ChartSeriesDefaultized<'funnel'>;
 export type UseFunnelSeriesContextReturnValue = ProcessedSeries['funnel'];
@@ -27,7 +24,7 @@ export function useFunnelSeries(seriesId: SeriesId): UseFunnelSeriesReturnValue 
  *
  * @returns {UseFunnelSeriesReturnValue[]} the funnel series
  */
-export function useFunnelSeries(): UseFunnelSeriesReturnValue[];
+export function useFunnelSeries(seriesId?: undefined): UseFunnelSeriesReturnValue[];
 /**
  * Get access to the internal state of funnel series.
  *
@@ -35,8 +32,8 @@ export function useFunnelSeries(): UseFunnelSeriesReturnValue[];
  * @returns {UseFunnelSeriesReturnValue[]} the funnel series
  */
 export function useFunnelSeries(seriesIds: SeriesId[]): UseFunnelSeriesReturnValue[];
-export function useFunnelSeries(seriesIds?: SeriesId | SeriesId[]) {
-  return useSelectorSeries(seriesIds);
+export function useFunnelSeries(seriesIds?: SeriesId | SeriesId[] | undefined) {
+  return useSeriesOfType('funnel', seriesIds);
 }
 
 /**
@@ -47,5 +44,5 @@ export function useFunnelSeries(seriesIds?: SeriesId | SeriesId[]) {
  * @returns the funnel series
  */
 export function useFunnelSeriesContext(): UseFunnelSeriesContextReturnValue {
-  return useSelectorSeriesContext();
+  return useAllSeriesOfType('funnel');
 }

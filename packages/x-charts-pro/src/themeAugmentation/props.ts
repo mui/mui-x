@@ -1,7 +1,7 @@
-import { ScatterChartProProps } from '../ScatterChartPro';
-import { BarChartProProps } from '../BarChartPro';
-import { HeatmapProps } from '../Heatmap/Heatmap';
-import { LineChartProProps } from '../LineChartPro';
+import { type ScatterChartProProps } from '../ScatterChartPro';
+import { type BarChartProProps } from '../BarChartPro';
+import { type HeatmapProps } from '../Heatmap/Heatmap';
+import { type LineChartProProps } from '../LineChartPro';
 
 export interface ChartsProComponentsPropsList {
   // BarChartPro components

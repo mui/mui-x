@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const fiFIGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakti',
   toolbarDensityStandard: 'Vakio',
   toolbarDensityComfortable: 'Mukava',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Kumoa',
+  toolbarRedo: 'Tee uudelleen',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Sarakkeet',
@@ -162,6 +166,10 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'tosi',
   booleanCellFalseLabel: 'epätosi',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Laajenna',
+  longTextCellCollapseLabel: 'Tiivistä',
 
   // Actions cell more text
   actionsCellMore: 'lisää',
@@ -328,6 +336,7 @@ const fiFIGrid: Partial<GridLocaleText> = {
   // promptChangePivotRowsLabel: (count: number) => `Rows (${count})`,
   // promptChangePivotValuesLabel: (count: number) => `Values (${count})`,
   // promptChangePivotValuesDescription: (column: string, aggregation: string) => `${column} (${aggregation})`,
+  // promptChangeChartsLabel: (dimensionsCount: number, valuesCount: number) => `Dimensions (${dimensionsCount}), Values (${valuesCount})`,
 };
 
 export const fiFI: Localization = getGridLocalization(fiFIGrid);

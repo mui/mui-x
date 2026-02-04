@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import { ChartContainer } from '@mui/x-charts/ChartContainer';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
@@ -27,7 +26,7 @@ export default function LineChartWithReferenceLines() {
           { data: pData, label: 'pv', type: 'line' },
           { data: uData, label: 'uv', type: 'line' },
         ]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         margin={margin}
       >

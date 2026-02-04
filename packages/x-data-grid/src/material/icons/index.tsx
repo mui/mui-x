@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { createSvgIcon } from './createSvgIcon';
 
 export const GridArrowUpwardIcon = createSvgIcon(
@@ -43,6 +42,16 @@ export const GridMenuIcon = createSvgIcon(
 export const GridCheckCircleIcon = createSvgIcon(
   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />,
   'CheckCircle',
+);
+
+export const GridUndoIcon = createSvgIcon(
+  <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8" />,
+  'Undo',
+);
+
+export const GridRedoIcon = createSvgIcon(
+  <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7z" />,
+  'Redo',
 );
 
 export const GridColumnIcon = createSvgIcon(
@@ -134,4 +143,14 @@ export const GridDeleteForeverIcon = createSvgIcon(
 export const GridDownloadIcon = createSvgIcon(
   <path d="M5 20h14v-2H5zM19 9h-4V3H9v6H5l7 7z" />,
   'Download',
+);
+
+export const GridLongTextCellExpandIcon = createSvgIcon(
+  <path d="M21 11V3h-8l3.29 3.29-10 10L3 13v8h8l-3.29-3.29 10-10z" />,
+  'OpenInFull',
+);
+
+export const GridLongTextCellCollapseIcon = createSvgIcon(
+  <path d="M5 15h2V8.41L18.59 20 20 18.59 8.41 7H15V5H5z" />,
+  'NorthWest',
 );

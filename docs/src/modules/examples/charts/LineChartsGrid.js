@@ -1,4 +1,3 @@
-import * as React from 'react';
 import SimpleLineChart from 'docsx/data/charts/line-demo/SimpleLineChart';
 import DashedLineChart from 'docsx/data/charts/line-demo/DashedLineChart';
 import BiaxialLineChart from 'docsx/data/charts/line-demo/BiaxialLineChart';

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import {
   LineChart,
@@ -27,7 +26,7 @@ export default function DashedLineChart() {
           { data: pData, label: 'pv', id: 'pvId' },
           { data: uData, label: 'uv', id: 'uvId' },
         ]}
-        xAxis={[{ scaleType: 'point', data: xLabels }]}
+        xAxis={[{ scaleType: 'point', data: xLabels, height: 28 }]}
         yAxis={[{ width: 50 }]}
         sx={{
           [`.${lineElementClasses.root}, .${markElementClasses.root}`]: {

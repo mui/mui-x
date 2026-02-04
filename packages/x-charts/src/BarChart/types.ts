@@ -6,15 +6,19 @@ export type AnimationData = {
   y: number;
   width: number;
   height: number;
-  yOrigin: number;
-  xOrigin: number;
-  layout: BarSeriesType['layout'];
 };
 
 export interface ProcessedBarSeriesData {
   seriesId: SeriesId;
   data: ProcessedBarData[];
+  barLabel?: BarSeriesType['barLabel'];
+  barLabelPlacement?: BarSeriesType['barLabelPlacement'];
+  layout: 'vertical' | 'horizontal';
+  xOrigin: number;
+  yOrigin: number;
 }
+
+export type BorderRadiusSide = 'top' | 'bottom' | 'left' | 'right';
 
 export interface ProcessedBarData extends AnimationData {
   seriesId: SeriesId;
@@ -22,10 +26,15 @@ export interface ProcessedBarData extends AnimationData {
   color: string;
   value: number | null;
   maskId: string;
+  hidden: boolean;
+  borderRadiusSide?: BorderRadiusSide;
 }
 
 export interface MaskData extends AnimationData {
   id: string;
   hasNegative: boolean;
   hasPositive: boolean;
+  xOrigin: number;
+  yOrigin: number;
+  layout: 'horizontal' | 'vertical';
 }

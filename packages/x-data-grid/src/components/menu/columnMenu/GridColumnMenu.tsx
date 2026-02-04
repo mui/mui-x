@@ -1,4 +1,4 @@
-import * as React from 'react';
+'use client';
 import PropTypes from 'prop-types';
 
 import { forwardRef } from '@mui/x-internals/forwardRef';
@@ -7,7 +7,7 @@ import { GridColumnMenuContainer } from './GridColumnMenuContainer';
 import { GridColumnMenuColumnsItem } from './menuItems/GridColumnMenuColumnsItem';
 import { GridColumnMenuFilterItem } from './menuItems/GridColumnMenuFilterItem';
 import { GridColumnMenuSortItem } from './menuItems/GridColumnMenuSortItem';
-import { GridColumnMenuProps, GridGenericColumnMenuProps } from './GridColumnMenuProps';
+import type { GridColumnMenuProps, GridGenericColumnMenuProps } from './GridColumnMenuProps';
 
 export const GRID_COLUMN_MENU_SLOTS = {
   columnMenuSortItem: GridColumnMenuSortItem,

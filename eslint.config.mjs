@@ -3,6 +3,7 @@ import {
   createBaseConfig,
   createDocsConfig,
   createTestConfig,
+  EXTENSION_TEST_FILE,
   EXTENSION_TS,
 } from '@mui/internal-code-infra/eslint';
 import eslintPluginConsistentName from 'eslint-plugin-consistent-default-export-name';
@@ -24,7 +25,12 @@ const GRID_PACKAGES = [
 ];
 const PICKERS_PACKAGES = ['x-date-pickers', 'x-date-pickers-pro'];
 const TREE_VIEW_PACKAGES = ['x-tree-view', 'x-tree-view-pro'];
-const SCHEDULER_PACKAGES = ['x-scheduler'];
+const SCHEDULER_PACKAGES = [
+  'x-scheduler',
+  'x-scheduler-headless',
+  'x-scheduler-premium',
+  'x-scheduler-headless-premium',
+];
 
 // Enable React Compiler Plugin rules globally
 const ENABLE_REACT_COMPILER_PLUGIN = process.env.ENABLE_REACT_COMPILER_PLUGIN ?? false;
@@ -57,7 +63,7 @@ function getReactCompilerFilesForPackages(packageInfo) {
   return packageInfo
     .filter((pkg) => pkg.isEnabled)
     .flatMap((pkg) =>
-      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*.${EXTENSION_TS}`),
+      pkg.packagesNames.map((packageName) => `packages/${packageName}/src/**/*${EXTENSION_TS}`),
     );
 }
 
@@ -72,6 +78,10 @@ const RESTRICTED_TOP_LEVEL_IMPORTS = [
   '@mui/x-date-pickers-pro',
   '@mui/x-tree-view',
   '@mui/x-tree-view-pro',
+  '@mui/x-scheduler',
+  '@mui/x-scheduler-premium',
+  '@mui/x-scheduler-headless',
+  '@mui/x-scheduler-headless-premium',
 ];
 
 const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
@@ -98,12 +108,13 @@ const packageFilesWithReactCompiler = getReactCompilerFilesForPackages([
 ]);
 
 export default defineConfig(
+  createBaseConfig({
+    baseDirectory: dirname,
+    enableReactCompiler: isAnyReactCompilerPluginEnabled,
+  }),
   {
-    name: 'Base Config',
-    extends: createBaseConfig({
-      baseDirectory: dirname,
-      enableReactCompiler: isAnyReactCompilerPluginEnabled,
-    }),
+    name: 'MUI X Overrides',
+    files: [`**/*${EXTENSION_TS}`],
     plugins: {
       jsdoc: eslintPluginJsdoc,
       'mui-x': eslintPluginMuiX,
@@ -111,8 +122,8 @@ export default defineConfig(
     },
     settings: {
       'import/resolver': {
-        webpack: {
-          config: path.join(dirname, './webpackBaseConfig.js'),
+        typescript: {
+          project: ['tsconfig.json'],
         },
       },
     },
@@ -121,6 +132,7 @@ export default defineConfig(
       'material-ui/straight-quotes': 'error',
       // turn off global react compiler plugin as it's controlled per package on this repo
       'react-compiler/react-compiler': 'off',
+      'react/react-in-jsx-scope': 'off',
       'import/no-relative-packages': 'error',
       'import/no-restricted-paths': [
         'error',
@@ -174,24 +186,69 @@ export default defineConfig(
           additionalHooks: '(useEnhancedEffect|useIsoLayoutEffect|useEffectAfterFirstRender)',
         },
       ],
+      'react-hooks/immutability': 'off',
+      'react-hooks/globals': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/static-components': 'off',
+
+      // TODO(@Janpot) Fix issues and turn back on
+      'material-ui/consistent-production-guard': 'off',
     },
   },
   // Test start
   {
     files: [
       // matching the pattern of the test runner
-      `**/*.test.${EXTENSION_TS}`,
+      `**/*${EXTENSION_TEST_FILE}`,
     ],
-    extends: createTestConfig({ useMocha: false }),
+    extends: createTestConfig({ useMocha: false, useVitest: true }),
     ignores: ['test/e2e/**/*', 'test/regressions/**/*'],
     rules: {
-      'testing-library/no-container': 'off',
+      // Doesn't work reliantly with chai style .to.deep.equal (replace with .toEqual?)
+      'vitest/valid-expect': 'off',
+      // Annoying auto-fix
+      'vitest/no-focused-tests': 'off',
+    },
+  },
+  {
+    files: [
+      // TODO: Fix one-by-one
+      `packages/x-data-grid{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-date-pickers{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-internals{,-*}/**/*${EXTENSION_TEST_FILE}`,
+      `packages/x-scheduler{,-*}/**/*${EXTENSION_TEST_FILE}`,
+    ],
+    rules: {
+      // Can't unambiguously detect all patterns of adding expects
+      'vitest/expect-expect': 'off',
+      'vitest/no-standalone-expect': 'off',
     },
   },
   baseSpecRules,
-
   {
-    files: [`**/*.test.${EXTENSION_TS}`, 'test/**'],
+    files: [`packages/x-charts{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      'import/no-cycle': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          fixStyle: 'inline-type-imports',
+        },
+      ],
+      // Charts have no semantics, so we often need to query by container
+      'testing-library/no-container': 'off',
+    },
+  },
+  {
+    files: [`packages/x-data-grid{,-*}/**/*${EXTENSION_TS}`],
+    rules: {
+      '@typescript-eslint/consistent-type-imports': 'error',
+    },
+  },
+  {
+    files: [`**/*${EXTENSION_TEST_FILE}`, `test/**/*${EXTENSION_TS}`],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -199,6 +256,7 @@ export default defineConfig(
           paths: ['@testing-library/react', 'test/utils/index'],
         },
       ],
+      'compat/compat': 'off',
     },
   },
 
@@ -231,8 +289,8 @@ export default defineConfig(
   },
 
   {
-    files: [`packages/*/src/**/*.${EXTENSION_TS}`],
-    ignores: ['**/*.d.ts', `**/*.spec.${EXTENSION_TS}`, `**/*.test.${EXTENSION_TS}`],
+    files: [`packages/*/src/**/*${EXTENSION_TS}`],
+    ignores: ['**/*.d.ts', `**/*.spec${EXTENSION_TS}`, `**/*.test${EXTENSION_TS}`],
     rules: {
       'material-ui/mui-name-matches-component-name': [
         'error',
@@ -258,15 +316,23 @@ export default defineConfig(
 
   // Common config from core start
   {
-    files: ['docs/**'],
+    files: [`docs/**/*${EXTENSION_TS}`],
     extends: createDocsConfig(),
     rules: {
       '@next/next/no-img-element': 'off',
+      'react/jsx-filename-extension': 'off',
     },
   },
 
   {
-    files: ['docs/src/pages/**/*', 'docs/data/**/*'],
+    files: [`test/regressions/**/*${EXTENSION_TS}`],
+    rules: {
+      'react/jsx-filename-extension': 'off',
+    },
+  },
+
+  {
+    files: [`docs/src/pages/**/*${EXTENSION_TS}`, `docs/data/**/*${EXTENSION_TS}`],
     rules: {
       // This most often reports data that is defined after the component definition.
       // This is safe to do and helps readability of the demo code since the data is mostly irrelevant.
@@ -278,7 +344,7 @@ export default defineConfig(
   },
 
   {
-    files: ['docs/data/**/*'],
+    files: [`docs/data/**/*${EXTENSION_TS}`],
     ignores: [
       // filenames/match-exported sees filename as 'file-name.d'
       // Plugin looks unmaintain, find alternative? (e.g. eslint-plugin-project-structure)
@@ -295,7 +361,7 @@ export default defineConfig(
 
   // Next.js entry points pages
   {
-    files: ['docs/pages/**/*'],
+    files: [`docs/pages/**/*${EXTENSION_TS}`],
     rules: {
       'react/prop-types': 'off',
     },
@@ -304,9 +370,9 @@ export default defineConfig(
 
   {
     files: [
-      `docs/**/*.${EXTENSION_TS}`,
-      `packages/*/src/**/*.test.${EXTENSION_TS}`,
-      `packages/*/src/**/*.spec.${EXTENSION_TS}`,
+      `docs/**/*${EXTENSION_TS}`,
+      `packages/*/src/**/*.test${EXTENSION_TS}`,
+      `packages/*/src/**/*.spec${EXTENSION_TS}`,
     ],
     ignores: ['**/*.d.ts'],
     rules: {
@@ -324,15 +390,14 @@ export default defineConfig(
                 // Allow any import depth with any internal packages
                 '!@mui/internal-*/**',
 
-                // The scheduler import strategy is not determined yet
-                '!@mui/x-scheduler/**',
-
                 // Exceptions (QUESTION: Keep or remove?)
                 '!@mui/x-data-grid/internals/demo',
                 '!@mui/x-date-pickers/internals/demo',
-                '!@mui/x-tree-view/hooks/useTreeViewApiRef',
                 // TODO: export this from /ButtonBase in core. This will break after we move to package exports
                 '!@mui/material/ButtonBase/TouchRipple',
+                /* Module augmentation for feature flags in Charts. Users should be able to pick the features they need.
+                 * so it's useful to allow deeper imports */
+                '!@mui/x-charts*/moduleAugmentation/*',
               ],
               message: 'Use less deep import instead',
             },
@@ -349,7 +414,12 @@ export default defineConfig(
     },
   },
   {
-    files: ['packages/x-scheduler/**/*{.tsx,.ts,.js}'],
+    files: [
+      'packages/x-scheduler/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-headless/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-premium/**/*{.tsx,.ts,.js}',
+      'packages/x-scheduler-headless-premium/**/*{.tsx,.ts,.js}',
+    ],
     rules: {
       // Base UI lint rules
       '@typescript-eslint/no-redeclare': 'off',
@@ -371,21 +441,32 @@ export default defineConfig(
     'x-date-pickers',
     'x-date-pickers-pro',
     'x-scheduler',
+    'x-scheduler-premium',
+    'x-scheduler-headless',
+    'x-scheduler-headless-premium',
     'x-tree-view',
     'x-tree-view-pro',
     'x-license',
     'x-telemetry',
   ].map((pkgName) => ({
-    files: [`packages/${pkgName}/src/**/*.${EXTENSION_TS}`],
+    files: [`packages/${pkgName}/src/**/*${EXTENSION_TS}`],
     ignores: ['**/*.d.ts', '**/*.spec{.ts,.tsx}', '**/*.test{.ts,.tsx}'],
     rules: {
       'no-restricted-imports': [
         'error',
         {
-          paths: RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
-            name: pkName,
-            message: 'Use relative import instead',
-          })),
+          paths: [
+            ...RESTRICTED_TOP_LEVEL_IMPORTS.map((pkName) => ({
+              name: pkName,
+              message: 'Use relative import instead',
+            })),
+            {
+              name: '@mui/x-charts-vendor/d3-scale',
+              importNames: ['scaleBand', 'scalePoint'],
+              message:
+                'Use the scaleBand and scalePoint implementations from @mui/x-charts/internals/scales instead',
+            },
+          ],
           patterns: [
             {
               group: ['@mui/*/*/*'],
@@ -413,7 +494,7 @@ export default defineConfig(
 
   // We can't use the react-compiler plugin in the base-ui-utils folder because the Base UI team doesn't use it yet.
   {
-    files: ['packages/x-scheduler/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
+    files: ['packages/x-scheduler-headless/src/base-ui-copy/**/*{.tsx,.ts,.js}'],
     rules: {
       'react-compiler/react-compiler': 'off',
     },
@@ -422,8 +503,11 @@ export default defineConfig(
   {
     // TODO: typescript namespaces found to be harmful. Refactor to different patterns. More info: https://github.com/mui/mui-x/pull/19071
     files: [
-      `packages/x-scheduler/src/**/*.${EXTENSION_TS}`,
-      `packages/x-virtualizer/src/**/*.${EXTENSION_TS}`,
+      `packages/x-scheduler/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-premium/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-headless/src/**/*${EXTENSION_TS}`,
+      `packages/x-scheduler-headless-premium/src/**/*${EXTENSION_TS}`,
+      `packages/x-virtualizer/src/**/*${EXTENSION_TS}`,
     ],
     rules: {
       '@typescript-eslint/no-namespace': 'off',

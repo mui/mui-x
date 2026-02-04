@@ -71,7 +71,7 @@ describe('toBeClonable matcher', () => {
     const result = matcher(MockBadOverrideIgnoreGesture);
     expect(result.pass).toBe(false);
     expect(result.message()).toBe(
-      'Expected non-overridden properties to match the original, but they do not.',
+      'Expected non-overridden properties to match the original, but they do not. Mismatched properties: preventDefault',
     );
   });
 

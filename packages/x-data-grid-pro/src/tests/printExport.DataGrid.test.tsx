@@ -1,7 +1,11 @@
-import * as React from 'react';
 import { spy } from 'sinon';
-import { RefObject } from '@mui/x-internals/types';
-import { DataGridPro, GridApi, useGridApiRef, DataGridProProps } from '@mui/x-data-grid-pro';
+import { type RefObject } from '@mui/x-internals/types';
+import {
+  DataGridPro,
+  type GridApi,
+  useGridApiRef,
+  type DataGridProProps,
+} from '@mui/x-data-grid-pro';
 import { getBasicGridData } from '@mui/x-data-grid-generator';
 import { createRenderer, screen, fireEvent, act } from '@mui/internal-test-utils';
 

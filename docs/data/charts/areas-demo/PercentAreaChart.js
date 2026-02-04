@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
 import Box from '@mui/material/Box';
 
@@ -55,6 +54,7 @@ export default function PercentAreaChart() {
             data: time,
             min: time[0].getTime(),
             max: time[time.length - 1].getTime(),
+            height: 28,
           },
         ]}
       />

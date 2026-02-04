@@ -19,7 +19,7 @@
     "aiAssistantConversations": {
       "type": {
         "name": "arrayOf",
-        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
+        "description": "Array&lt;{ id?: string, prompts: Array&lt;{ createdAt: Date, helperText?: string, response?: { aggregation: object, chart?: object, conversationId: string, filterOperator?: 'and'<br>&#124;&nbsp;'or', filters: Array&lt;object&gt;, grouping: Array&lt;object&gt;, pivoting: object, select: number, sorting: Array&lt;object&gt; }, value: string, variant?: 'error'<br>&#124;&nbsp;'processing'<br>&#124;&nbsp;'success' }&gt;, title?: string }&gt;"
       }
     },
     "aiAssistantSuggestions": {
@@ -29,18 +29,13 @@
     "apiRef": { "type": { "name": "shape", "description": "{ current?: object }" } },
     "aria-label": { "type": { "name": "string" } },
     "aria-labelledby": { "type": { "name": "string" } },
-    "autoHeight": {
-      "type": { "name": "bool" },
-      "default": "false",
-      "deprecated": true,
-      "deprecationInfo": "Use flex parent container instead: <a href=\"https://mui.com/x/react-data-grid/layout/#flex-parent-container\">https://mui.com/x/react-data-grid/layout/#flex-parent-container</a>"
-    },
+    "autoHeight": { "type": { "name": "bool" }, "default": "false" },
     "autoPageSize": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOnMount": { "type": { "name": "bool" }, "default": "false" },
     "autosizeOptions": {
       "type": {
         "name": "shape",
-        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
+        "description": "{ columns?: Array&lt;string&gt;, disableColumnVirtualization?: bool, expand?: bool, includeHeaderFilters?: bool, includeHeaders?: bool, includeOutliers?: bool, outliersFactor?: number }"
       }
     },
     "cellModesModel": { "type": { "name": "object" } },
@@ -207,6 +202,18 @@
     "hideFooterPagination": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterRowCount": { "type": { "name": "bool" }, "default": "false" },
     "hideFooterSelectedRowCount": { "type": { "name": "bool" }, "default": "false" },
+    "historyEventHandlers": {
+      "type": { "name": "object" },
+      "default": "Handlers for `rowEditStop`, `cellEditStop` and `clipboardPasteEnd` events"
+    },
+    "historyStackSize": { "type": { "name": "number" }, "default": "30" },
+    "historyValidationEvents": {
+      "type": {
+        "name": "arrayOf",
+        "description": "Array&lt;'activeChartIdChange'<br>&#124;&nbsp;'activeStrategyProcessorChange'<br>&#124;&nbsp;'aggregationLookupSet'<br>&#124;&nbsp;'aggregationModelChange'<br>&#124;&nbsp;'aiAssistantActiveConversationIndexChange'<br>&#124;&nbsp;'aiAssistantConversationsChange'<br>&#124;&nbsp;'cellClick'<br>&#124;&nbsp;'cellDoubleClick'<br>&#124;&nbsp;'cellDragEnter'<br>&#124;&nbsp;'cellDragOver'<br>&#124;&nbsp;'cellEditStart'<br>&#124;&nbsp;'cellEditStop'<br>&#124;&nbsp;'cellFocusIn'<br>&#124;&nbsp;'cellFocusOut'<br>&#124;&nbsp;'cellKeyDown'<br>&#124;&nbsp;'cellKeyUp'<br>&#124;&nbsp;'cellModeChange'<br>&#124;&nbsp;'cellModesModelChange'<br>&#124;&nbsp;'cellMouseDown'<br>&#124;&nbsp;'cellMouseOver'<br>&#124;&nbsp;'cellMouseUp'<br>&#124;&nbsp;'cellSelectionChange'<br>&#124;&nbsp;'chartSynchronizationStateChange'<br>&#124;&nbsp;'clipboardCopy'<br>&#124;&nbsp;'clipboardPasteEnd'<br>&#124;&nbsp;'clipboardPasteStart'<br>&#124;&nbsp;'columnGroupHeaderBlur'<br>&#124;&nbsp;'columnGroupHeaderFocus'<br>&#124;&nbsp;'columnGroupHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderBlur'<br>&#124;&nbsp;'columnHeaderClick'<br>&#124;&nbsp;'columnHeaderContextMenu'<br>&#124;&nbsp;'columnHeaderDoubleClick'<br>&#124;&nbsp;'columnHeaderDragEnd'<br>&#124;&nbsp;'columnHeaderDragEndNative'<br>&#124;&nbsp;'columnHeaderDragEnter'<br>&#124;&nbsp;'columnHeaderDragOver'<br>&#124;&nbsp;'columnHeaderDragStart'<br>&#124;&nbsp;'columnHeaderEnter'<br>&#124;&nbsp;'columnHeaderFocus'<br>&#124;&nbsp;'columnHeaderKeyDown'<br>&#124;&nbsp;'columnHeaderLeave'<br>&#124;&nbsp;'columnHeaderOut'<br>&#124;&nbsp;'columnHeaderOver'<br>&#124;&nbsp;'columnIndexChange'<br>&#124;&nbsp;'columnOrderChange'<br>&#124;&nbsp;'columnResize'<br>&#124;&nbsp;'columnResizeStart'<br>&#124;&nbsp;'columnResizeStop'<br>&#124;&nbsp;'columnsChange'<br>&#124;&nbsp;'columnSeparatorDoubleClick'<br>&#124;&nbsp;'columnSeparatorMouseDown'<br>&#124;&nbsp;'columnVisibilityModelChange'<br>&#124;&nbsp;'columnWidthChange'<br>&#124;&nbsp;'debouncedResize'<br>&#124;&nbsp;'densityChange'<br>&#124;&nbsp;'detailPanelsExpandedRowIdsChange'<br>&#124;&nbsp;'excelExportStateChange'<br>&#124;&nbsp;'fetchRows'<br>&#124;&nbsp;'filteredRowsSet'<br>&#124;&nbsp;'filterModelChange'<br>&#124;&nbsp;'headerFilterBlur'<br>&#124;&nbsp;'headerFilterClick'<br>&#124;&nbsp;'headerFilterKeyDown'<br>&#124;&nbsp;'headerFilterMouseDown'<br>&#124;&nbsp;'headerSelectionCheckboxChange'<br>&#124;&nbsp;'menuClose'<br>&#124;&nbsp;'menuOpen'<br>&#124;&nbsp;'paginationMetaChange'<br>&#124;&nbsp;'paginationModelChange'<br>&#124;&nbsp;'pinnedColumnsChange'<br>&#124;&nbsp;'pivotModeChange'<br>&#124;&nbsp;'pivotModelChange'<br>&#124;&nbsp;'pivotPanelOpenChange'<br>&#124;&nbsp;'preferencePanelClose'<br>&#124;&nbsp;'preferencePanelOpen'<br>&#124;&nbsp;'redo'<br>&#124;&nbsp;'renderedRowsIntervalChange'<br>&#124;&nbsp;'resize'<br>&#124;&nbsp;'rootMount'<br>&#124;&nbsp;'rowClick'<br>&#124;&nbsp;'rowCountChange'<br>&#124;&nbsp;'rowDoubleClick'<br>&#124;&nbsp;'rowDragEnd'<br>&#124;&nbsp;'rowDragOver'<br>&#124;&nbsp;'rowDragStart'<br>&#124;&nbsp;'rowEditStart'<br>&#124;&nbsp;'rowEditStop'<br>&#124;&nbsp;'rowExpansionChange'<br>&#124;&nbsp;'rowGroupingModelChange'<br>&#124;&nbsp;'rowModesModelChange'<br>&#124;&nbsp;'rowMouseEnter'<br>&#124;&nbsp;'rowMouseLeave'<br>&#124;&nbsp;'rowMouseOut'<br>&#124;&nbsp;'rowMouseOver'<br>&#124;&nbsp;'rowOrderChange'<br>&#124;&nbsp;'rowSelectionChange'<br>&#124;&nbsp;'rowSelectionCheckboxChange'<br>&#124;&nbsp;'rowsScrollEnd'<br>&#124;&nbsp;'rowsScrollEndIntersection'<br>&#124;&nbsp;'rowsSet'<br>&#124;&nbsp;'scrollPositionChange'<br>&#124;&nbsp;'sidebarClose'<br>&#124;&nbsp;'sidebarOpen'<br>&#124;&nbsp;'sortedRowsSet'<br>&#124;&nbsp;'sortModelChange'<br>&#124;&nbsp;'stateChange'<br>&#124;&nbsp;'strategyAvailabilityChange'<br>&#124;&nbsp;'undo'<br>&#124;&nbsp;'unmount'<br>&#124;&nbsp;'viewportInnerSizeChange'<br>&#124;&nbsp;'virtualScrollerContentSizeChange'<br>&#124;&nbsp;'virtualScrollerTouchMove'<br>&#124;&nbsp;'virtualScrollerWheel'&gt;"
+      },
+      "default": "['columnsChange', 'rowsSet', 'sortedRowsSet', 'filteredRowsSet', 'paginationModelChange']"
+    },
     "ignoreDiacritics": { "type": { "name": "bool" }, "default": "false" },
     "ignoreValueFormatterDuringExport": {
       "type": {
@@ -232,11 +239,27 @@
         "returned": "boolean"
       }
     },
+    "isRowReorderable": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(params: object, params.row: R, params.rowNode: GridTreeNode) => boolean",
+        "describedArgs": ["params", "params.row", "params.rowNode"],
+        "returned": "boolean"
+      }
+    },
     "isRowSelectable": {
       "type": { "name": "func" },
       "signature": {
         "type": "function(params: GridRowParams) => boolean",
         "describedArgs": ["params"],
+        "returned": "boolean"
+      }
+    },
+    "isValidRowReorder": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(context: ReorderValidationContext) => boolean",
+        "describedArgs": ["context"],
         "returned": "boolean"
       }
     },
@@ -565,6 +588,7 @@
         "returned": "Promise<PromptResponse>"
       }
     },
+    "onRedo": { "type": { "name": "func" } },
     "onResize": {
       "type": { "name": "func" },
       "signature": {
@@ -662,6 +686,7 @@
         "describedArgs": ["model", "details"]
       }
     },
+    "onUndo": { "type": { "name": "func" } },
     "pageSizeOptions": {
       "type": {
         "name": "arrayOf",
@@ -679,17 +704,28 @@
       "type": { "name": "shape", "description": "{ page: number, pageSize: number }" }
     },
     "pinnedColumns": { "type": { "name": "object" } },
+    "pinnedColumnsSectionSeparator": {
+      "type": {
+        "name": "enum",
+        "description": "'border-and-shadow'<br>&#124;&nbsp;'border'<br>&#124;&nbsp;'shadow'"
+      },
+      "default": "'border-and-shadow'"
+    },
     "pinnedRows": {
       "type": {
         "name": "shape",
         "description": "{ bottom?: Array&lt;object&gt;, top?: Array&lt;object&gt; }"
       }
     },
+    "pinnedRowsSectionSeparator": {
+      "type": { "name": "enum", "description": "'border-and-shadow'<br>&#124;&nbsp;'border'" },
+      "default": "'border-and-shadow'"
+    },
     "pivotActive": { "type": { "name": "bool" }, "default": "false" },
     "pivotingColDef": {
       "type": {
         "name": "union",
-        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
+        "description": "func<br>&#124;&nbsp;{ align?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', cellClassName?: func<br>&#124;&nbsp;string, description?: string, display?: 'flex'<br>&#124;&nbsp;'text', field?: string, flex?: number, headerAlign?: 'center'<br>&#124;&nbsp;'left'<br>&#124;&nbsp;'right', headerClassName?: func<br>&#124;&nbsp;string, headerName?: string, maxWidth?: number, minWidth?: number, resizable?: bool, sortingOrder?: Array&lt;'asc'<br>&#124;&nbsp;'desc'&gt;, width?: number }"
       },
       "default": "undefined"
     },
@@ -752,6 +788,14 @@
     "rowSpanning": { "type": { "name": "bool" }, "default": "false" },
     "scrollbarSize": { "type": { "name": "number" } },
     "scrollEndThreshold": { "type": { "name": "number" }, "default": "80" },
+    "setTreeDataPath": {
+      "type": { "name": "func" },
+      "signature": {
+        "type": "function(path: Array<string>, row: R) => R",
+        "describedArgs": ["path", "row"],
+        "returned": "R"
+      }
+    },
     "showCellVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showColumnVerticalBorder": { "type": { "name": "bool" }, "default": "false" },
     "showToolbar": { "type": { "name": "bool" }, "default": "false" },
@@ -784,6 +828,13 @@
         "description": "Array&lt;func<br>&#124;&nbsp;object<br>&#124;&nbsp;bool&gt;<br>&#124;&nbsp;func<br>&#124;&nbsp;object"
       },
       "additionalInfo": { "sx": true }
+    },
+    "tabNavigation": {
+      "type": {
+        "name": "enum",
+        "description": "'all'<br>&#124;&nbsp;'content'<br>&#124;&nbsp;'header'<br>&#124;&nbsp;'none'"
+      },
+      "default": "\"none\""
     },
     "throttleRowsMs": { "type": { "name": "number" }, "default": "0" },
     "treeData": { "type": { "name": "bool" }, "default": "false" },
@@ -1035,6 +1086,12 @@
       "class": null
     },
     {
+      "name": "baseTextarea",
+      "description": "The custom Textarea component used in the grid for multiline text editing.",
+      "default": "InputBase with multiline",
+      "class": null
+    },
+    {
       "name": "baseToggleButton",
       "description": "The custom ToggleButton component used in the grid.",
       "default": "ToggleButton",
@@ -1092,6 +1149,18 @@
       "name": "booleanCellFalseIcon",
       "description": "Icon displayed on the boolean cell to represent the false value.",
       "default": "GridCloseIcon",
+      "class": null
+    },
+    {
+      "name": "undoIcon",
+      "description": "Icon displayed on the undo button in the toolbar.",
+      "default": "GridUndoIcon",
+      "class": null
+    },
+    {
+      "name": "redoIcon",
+      "description": "Icon displayed on the redo button in the toolbar.",
+      "default": "GridRedoIcon",
       "class": null
     },
     {
@@ -1305,6 +1374,18 @@
       "class": null
     },
     {
+      "name": "longTextCellExpandIcon",
+      "description": "Icon displayed on the long text cell to expand the content.",
+      "default": "GridLongTextCellExpandIcon",
+      "class": null
+    },
+    {
+      "name": "longTextCellCollapseIcon",
+      "description": "Icon displayed on the long text cell popup to collapse the content.",
+      "default": "GridLongTextCellCollapseIcon",
+      "class": null
+    },
+    {
       "name": "columnMenuPinLeftIcon",
       "description": "Icon displayed in column menu for left pinning",
       "default": "GridPushPinLeftIcon",
@@ -1470,6 +1551,12 @@
       "name": "promptSortDescIcon",
       "description": "Icon used to display sort descending changes",
       "default": "GridArrowDownwardIcon",
+      "class": null
+    },
+    {
+      "name": "promptChartsIcon",
+      "description": "Icon used to mark the request to visalize the data",
+      "default": "GridChartsIcon",
       "class": null
     },
     {
@@ -2099,6 +2186,36 @@
       "isGlobal": false
     },
     {
+      "key": "editLongTextCell",
+      "className": "MuiDataGridPremium-editLongTextCell",
+      "description": "Styles applied to the edit long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopperContent",
+      "className": "MuiDataGridPremium-editLongTextCellPopperContent",
+      "description": "Styles applied to the edit long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellPopup",
+      "className": "MuiDataGridPremium-editLongTextCellPopup",
+      "description": "Styles applied to the edit long text cell popup.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellTextarea",
+      "className": "MuiDataGridPremium-editLongTextCellTextarea",
+      "description": "Styles applied to the edit long text cell textarea.",
+      "isGlobal": false
+    },
+    {
+      "key": "editLongTextCellValue",
+      "className": "MuiDataGridPremium-editLongTextCellValue",
+      "description": "Styles applied to the edit long text cell value element.",
+      "isGlobal": false
+    },
+    {
       "key": "filterForm",
       "className": "MuiDataGridPremium-filterForm",
       "description": "Styles applied to the root of the filter form component.",
@@ -2180,6 +2297,42 @@
       "key": "iconSeparator",
       "className": "MuiDataGridPremium-iconSeparator",
       "description": "Styles applied to the column header separator icon element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCell",
+      "className": "MuiDataGridPremium-longTextCell",
+      "description": "Styles applied to the long text cell root element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellCollapseButton",
+      "className": "MuiDataGridPremium-longTextCellCollapseButton",
+      "description": "Styles applied to the long text cell collapse button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellContent",
+      "className": "MuiDataGridPremium-longTextCellContent",
+      "description": "Styles applied to the long text cell content element.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellExpandButton",
+      "className": "MuiDataGridPremium-longTextCellExpandButton",
+      "description": "Styles applied to the long text cell expand button.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopperContent",
+      "className": "MuiDataGridPremium-longTextCellPopperContent",
+      "description": "Styles applied to the long text cell popper content.",
+      "isGlobal": false
+    },
+    {
+      "key": "longTextCellPopup",
+      "className": "MuiDataGridPremium-longTextCellPopup",
+      "description": "Styles applied to the long text cell popup.",
       "isGlobal": false
     },
     {
@@ -2525,18 +2678,6 @@
       "isGlobal": false
     },
     {
-      "key": "row--dropAbove",
-      "className": "MuiDataGridPremium-row--dropAbove",
-      "description": "Styles applied to the row element when it is a drop target above.",
-      "isGlobal": false
-    },
-    {
-      "key": "row--dropBelow",
-      "className": "MuiDataGridPremium-row--dropBelow",
-      "description": "Styles applied to the row element when it is a drop target below.",
-      "isGlobal": false
-    },
-    {
       "key": "row--dynamicHeight",
       "className": "MuiDataGridPremium-row--dynamicHeight",
       "description": "Styles applied to the row if it has dynamic row height.",
@@ -2648,6 +2789,24 @@
       "key": "scrollbar--vertical",
       "className": "MuiDataGridPremium-scrollbar--vertical",
       "description": "Styles applied to the horizontal scrollbar.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow",
+      "className": "MuiDataGridPremium-scrollShadow",
+      "description": "Styles applied to the scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--horizontal",
+      "className": "MuiDataGridPremium-scrollShadow--horizontal",
+      "description": "Styles applied to the horizontal scroll shadow element.",
+      "isGlobal": false
+    },
+    {
+      "key": "scrollShadow--vertical",
+      "className": "MuiDataGridPremium-scrollShadow--vertical",
+      "description": "Styles applied to the vertical scroll shadow element.",
       "isGlobal": false
     },
     {
@@ -2781,6 +2940,6 @@
   "forwardsRefTo": "GridRoot",
   "filename": "/packages/x-data-grid-premium/src/DataGridPremium/DataGridPremium.tsx",
   "inheritance": null,
-  "demos": "<ul><li><a href=\"/x/react-data-grid/#mit-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
+  "demos": "<ul><li><a href=\"/x/react-data-grid/#community-version-free-forever\">DataGrid</a></li>\n<li><a href=\"/x/react-data-grid/#pro-version\">DataGridPro</a></li>\n<li><a href=\"/x/react-data-grid/#premium-version\">DataGridPremium</a></li></ul>",
   "cssComponent": false
 }

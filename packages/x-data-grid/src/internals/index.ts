@@ -12,6 +12,7 @@ export { GridHeaders } from '../components/GridHeaders';
 export { GridToolbar, GridToolbarDivider } from '../components/toolbarV8/GridToolbar';
 export type { GridToolbarProps } from '../components/toolbarV8/GridToolbar';
 export { GridColumnSortButton } from '../components/GridColumnSortButton';
+export { GridFooterCell } from '../components/cell/GridFooterCell';
 export { GridBaseColumnHeaders } from '../components/columnHeaders/GridBaseColumnHeaders';
 export { DATA_GRID_DEFAULT_SLOTS_COMPONENTS } from '../constants/defaultGridSlotsComponents';
 export * from '../constants/signature';
@@ -73,7 +74,6 @@ export { passFilterLogic } from '../hooks/features/filter/gridFilterUtils';
 export {
   gridFilteredChildrenCountLookupSelector,
   gridExpandedSortedRowTreeLevelPositionLookupSelector,
-  gridExpandedSortedRowIndexLookupSelector,
   gridFilteredSortedDepthRowEntriesSelector,
 } from '../hooks/features/filter/gridFilterSelector';
 export { isSingleSelectColDef } from '../components/panel/filterPanel/filterPanelUtils';
@@ -100,8 +100,9 @@ export {
 } from '../hooks/features/rows/useGridRowSpanning';
 export { useGridAriaAttributes } from '../hooks/utils/useGridAriaAttributes';
 export { useGridRowAriaAttributes } from '../hooks/features/rows/useGridRowAriaAttributes';
-export { useGridRowsOverridableMethods } from '../hooks/features/rows/useGridRowsOverridableMethods';
+export { useGridRowsOverridableMethods as useGridRowsOverridableMethodsCommunity } from '../hooks/features/rows/useGridRowsOverridableMethods';
 export { useGridParamsOverridableMethods } from '../hooks/features/rows/useGridParamsOverridableMethods';
+export { useIsCellEditable } from '../hooks/features/editing/useGridCellEditable';
 export { useGridRowsPreProcessors } from '../hooks/features/rows/useGridRowsPreProcessors';
 export type {
   GridRowTreeCreationParams,
@@ -110,8 +111,6 @@ export type {
   GridRowsPartialUpdates,
   GridRowsPartialUpdateAction,
   GridTreeDepths,
-  GridRowTreeUpdatedGroupsManager,
-  GridRowTreeUpdateGroupAction,
   GridPinnedRowsState,
 } from '../hooks/features/rows/gridRowsInterfaces';
 export { getTreeNodeDescendants, buildRootGroup } from '../hooks/features/rows/gridRowsUtils';
@@ -135,7 +134,11 @@ export {
   useGridRowSelection,
   rowSelectionStateInitializer,
 } from '../hooks/features/rowSelection/useGridRowSelection';
-export { gridIsRowDragActiveSelector } from '../hooks/features/rowReorder/gridRowReorderSelector';
+export {
+  gridIsRowDragActiveSelector,
+  gridRowDropPositionSelector,
+  gridRowDropTargetRowIdSelector,
+} from '../hooks/features/rowReorder/gridRowReorderSelector';
 export type { GridRowReorderState } from '../hooks/features/rowReorder/gridRowReorderInterfaces';
 export { useGridRowSelectionPreProcessors } from '../hooks/features/rowSelection/useGridRowSelectionPreProcessors';
 export { useGridSorting, sortingStateInitializer } from '../hooks/features/sorting/useGridSorting';
@@ -169,10 +172,12 @@ export type { GridStateInitializer } from '../hooks/utils/useGridInitializeState
 export type * as BaseSlots from '../models/gridBaseSlots';
 
 export type * from '../models/props/DataGridProps';
+export type { GridAggregationPosition, GridAggregationCellMeta } from '../models/gridAggregation';
 export type {
   GridDataSourceApiBase,
   GridDataSourceApi,
   GridDataSourceBaseOptions,
+  GridDataSourceFetchRowsParams,
 } from '../hooks/features/dataSource/models';
 export { DataSourceRowsUpdateStrategy } from '../hooks/features/dataSource/utils';
 export { useGridDataSourceBase } from '../hooks/features/dataSource/useGridDataSourceBase';
@@ -194,7 +199,13 @@ export {
   getActiveElement,
   isEventTargetInPortal,
 } from '../utils/domUtils';
-export { isNavigationKey, isPasteShortcut, isCopyShortcut } from '../utils/keyboardUtils';
+export {
+  isNavigationKey,
+  isPasteShortcut,
+  isCopyShortcut,
+  isUndoShortcut,
+  isRedoShortcut,
+} from '../utils/keyboardUtils';
 export * from '../utils/utils';
 export { exportAs } from '../utils/exportAs';
 export * from '../utils/getPublicApiRef';
@@ -218,9 +229,12 @@ export * from './demo';
 export { GridSkeletonLoadingOverlayInner } from '../components/GridSkeletonLoadingOverlay';
 
 export type { GridConfiguration } from '../models/configuration/gridConfiguration';
+export type { CellEditableConditionFn } from '../models/configuration/gridCellEditableConfiguration';
 
 export * from '../hooks/features/pivoting';
 
 export { createSvgIcon } from '../material/icons/createSvgIcon';
 
 export { useGridPanelContext } from '../components/panel/GridPanelContext';
+
+export type { RowReorderDropPosition, RowReorderDragDirection } from '../models/api/gridRowApi';

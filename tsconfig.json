@@ -6,11 +6,12 @@
     // Already tested with eslint
     "noUnusedLocals": false,
     "strict": true,
-    "baseUrl": "./",
     "allowJs": true,
+    "jsx": "react-jsx",
     "allowImportingTsExtensions": true,
     // Prevents errors like https://github.com/mui/mui-x/issues/17772
     "isolatedModules": true,
+    "baseUrl": ".",
     "paths": {
       "@mui/x-data-grid": ["./packages/x-data-grid/src"],
       "@mui/x-data-grid/*": ["./packages/x-data-grid/src/*"],
@@ -20,6 +21,8 @@
       "@mui/x-data-grid-pro/*": ["./packages/x-data-grid-pro/src/*"],
       "@mui/x-data-grid-premium": ["./packages/x-data-grid-premium/src"],
       "@mui/x-data-grid-premium/*": ["./packages/x-data-grid-premium/src/*"],
+      "@mui/x-data-grid-headless": ["./packages/x-data-grid-headless/src"],
+      "@mui/x-data-grid-headless/*": ["./packages/x-data-grid-headless/src/*"],
       "@mui/x-date-pickers": ["./packages/x-date-pickers/src"],
       "@mui/x-date-pickers/*": ["./packages/x-date-pickers/src/*"],
       "@mui/x-date-pickers-pro": ["./packages/x-date-pickers-pro/src"],
@@ -32,9 +35,15 @@
       "@mui/x-charts-premium/*": ["./packages/x-charts-premium/src/*"],
       "@mui/x-charts-vendor": ["./packages/x-charts-vendor"],
       "@mui/x-charts-vendor/*": ["./packages/x-charts-vendor/*"],
-      // There is no root import on this package
+      // There is no root import on these packages
       // "@mui/x-scheduler": ["./packages/x-scheduler/src"],
+      // "@mui/x-scheduler-premium": ["./packages/x-scheduler-premium/src"],
+      // "@mui/x-scheduler-headless": ["./packages/x-scheduler-headless/src"],
+      // "@mui/x-scheduler-headless-premium": ["./packages/x-scheduler-headless-premium/src"],
       "@mui/x-scheduler/*": ["./packages/x-scheduler/src/*"],
+      "@mui/x-scheduler-premium/*": ["./packages/x-scheduler-premium/src/*"],
+      "@mui/x-scheduler-headless/*": ["./packages/x-scheduler-headless/src/*"],
+      "@mui/x-scheduler-headless-premium/*": ["./packages/x-scheduler-headless-premium/src/*"],
       "@mui/x-tree-view": ["./packages/x-tree-view/src"],
       "@mui/x-tree-view/*": ["./packages/x-tree-view/src/*"],
       "@mui/x-tree-view-pro": ["./packages/x-tree-view-pro/src"],
@@ -67,7 +76,7 @@
       "docs/*": ["./node_modules/@mui/monorepo/docs/*"],
       "docsx/*": ["./docs/*"]
     },
-    "types": ["@vitest/browser/providers/playwright"]
+    "types": []
   },
   "exclude": ["**/node_modules/!(@mui)/**", "**/build/**/*", "docs/export/**/*"]
 }

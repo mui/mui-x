@@ -23,6 +23,20 @@ export interface GridGetRowsParams {
   end: number;
 }
 
+export interface GridGetRowsOptions {
+  /**
+   * If `true`, bypasses the cache and forces a refetch of the rows from the server.
+   * The response will be used to refresh the cache.
+   */
+  skipCache?: boolean;
+  /**
+   * By default, the grid tries to keep the children expanded and attached to the parent with the same ID after the data is re-fetched.
+   * If `keepChildrenExpanded` is `false`, the children of the parent with the `parentId` (all children for the root level data fetch) will be collapsed and removed from the tree.
+   * @default true
+   */
+  keepChildrenExpanded?: boolean;
+}
+
 export interface GridUpdateRowParams {
   rowId: GridRowId;
   updatedRow: GridRowModel;

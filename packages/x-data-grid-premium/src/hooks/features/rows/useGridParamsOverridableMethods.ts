@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { gridRowIdSelector, GridParamsApi } from '@mui/x-data-grid-pro';
+import { gridRowIdSelector, type GridParamsApi } from '@mui/x-data-grid-pro';
 import { useGridParamsOverridableMethods as useGridParamsOverridableMethodsCommunity } from '@mui/x-data-grid-pro/internals';
 import type { RefObject } from '@mui/x-internals/types';
 import { gridCellAggregationResultSelector } from '../aggregation/gridAggregationSelectors';
@@ -27,12 +27,25 @@ export const useGridParamsOverridableMethods = (apiRef: RefObject<GridPrivateApi
   );
 
   const getRowFormattedValue = React.useCallback<GridParamsApi['getRowFormattedValue']>(
-    (row, colDef) =>
-      gridCellAggregationResultSelector(apiRef, {
+    (row, colDef) => {
+      const aggregationFormattedValue = gridCellAggregationResultSelector(apiRef, {
         id: gridRowIdSelector(apiRef, row),
         field: colDef.field,
-      })?.formattedValue ?? communityMethods.getRowFormattedValue(row, colDef),
-    [apiRef, communityMethods],
+      })?.formattedValue;
+
+      if (aggregationFormattedValue !== undefined) {
+        return aggregationFormattedValue;
+      }
+
+      const value = getRowValue(row, colDef);
+
+      if (!colDef || !colDef.valueFormatter) {
+        return value;
+      }
+
+      return colDef.valueFormatter(value as never, row, colDef, apiRef);
+    },
+    [apiRef, getRowValue],
   );
 
   return {

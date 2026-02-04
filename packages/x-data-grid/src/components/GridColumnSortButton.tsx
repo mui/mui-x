@@ -1,14 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import composeClasses from '@mui/utils/composeClasses';
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import clsx from 'clsx';
-import { GridSlotProps, GridSlotsComponent } from '../models';
-import { GridSortDirection } from '../models/gridSortModel';
+import type { GridSlotProps, GridSlotsComponent } from '../models';
+import type { GridSortDirection } from '../models/gridSortModel';
 import { useGridApiContext } from '../hooks/utils/useGridApiContext';
 import { getDataGridUtilityClass } from '../constants/gridClasses';
 import { useGridRootProps } from '../hooks/utils/useGridRootProps';
-import { DataGridProcessedProps } from '../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../models/props/DataGridProps';
 import { vars } from '../constants/cssVariables';
 import { NotRendered } from '../utils/assert';
 
@@ -84,7 +84,6 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
       as={rootProps.slots.baseIconButton}
       ownerState={ownerState}
       aria-label={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
-      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
       size="small"
       disabled={disabled}
       className={clsx(classes.root, className)}
@@ -96,15 +95,21 @@ function GridColumnSortButton(props: GridColumnSortButtonProps) {
   );
 
   return (
-    <React.Fragment>
-      {index != null && (
-        <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
-          {iconButton}
-        </rootProps.slots.baseBadge>
-      )}
+    <rootProps.slots.baseTooltip
+      title={apiRef.current.getLocaleText('columnHeaderSortIconLabel')}
+      enterDelay={1000}
+      {...rootProps.slotProps?.baseTooltip}
+    >
+      <span>
+        {index != null && (
+          <rootProps.slots.baseBadge badgeContent={index} color="default" overlap="circular">
+            {iconButton}
+          </rootProps.slots.baseBadge>
+        )}
 
-      {index == null && iconButton}
-    </React.Fragment>
+        {index == null && iconButton}
+      </span>
+    </rootProps.slots.baseTooltip>
   );
 }
 

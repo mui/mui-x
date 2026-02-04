@@ -1,5 +1,5 @@
 'use client';
-import * as React from 'react';
+import type * as React from 'react';
 import { useChartContext } from '../context/ChartProvider';
 
 /**
@@ -7,16 +7,7 @@ import { useChartContext } from '../context/ChartProvider';
  * @returns The SVG ref.
  */
 export function useSvgRef(): React.RefObject<SVGSVGElement | null> {
-  const context = useChartContext();
+  const { instance } = useChartContext();
 
-  if (!context) {
-    throw new Error(
-      [
-        'MUI X Charts: Could not find the svg ref context.',
-        'It looks like you rendered your component outside of a ChartContainer parent component.',
-      ].join('\n'),
-    );
-  }
-
-  return context.svgRef;
+  return instance.svgRef;
 }

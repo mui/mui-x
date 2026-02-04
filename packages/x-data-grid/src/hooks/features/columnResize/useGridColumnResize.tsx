@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import useEventCallback from '@mui/utils/useEventCallback';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useLazyRef from '@mui/utils/useLazyRef';
@@ -15,6 +15,7 @@ import {
   getFieldsFromGroupHeaderElem,
   findGroupHeaderElementsFromField,
   findGridHeader,
+  findGridHeaderFilter,
   findGridCells,
   findParentElementFromClassName,
   findLeftPinnedHeadersAfterCol,
@@ -22,12 +23,12 @@ import {
   escapeOperandAttributeSelector,
 } from '../../../utils/domUtils';
 import {
-  GridAutosizeOptions,
-  GridColumnResizeApi,
+  type GridAutosizeOptions,
+  type GridColumnResizeApi,
   DEFAULT_GRID_AUTOSIZE_OPTIONS,
 } from './gridColumnResizeApi';
-import { CursorCoordinates } from '../../../models/cursorCoordinates';
-import { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
+import type { CursorCoordinates } from '../../../models/cursorCoordinates';
+import type { GridColumnHeaderSeparatorSides } from '../../../components/columnHeaders/GridColumnHeaderSeparator';
 import { gridClasses } from '../../../constants/gridClasses';
 import {
   useGridEvent,
@@ -40,19 +41,22 @@ import {
 } from '../../utils';
 import { gridVirtualizationColumnEnabledSelector } from '../virtualization';
 import {
-  ControllablePromise,
+  type ControllablePromise,
   createControllablePromise,
 } from '../../../utils/createControllablePromise';
-import { GridStateInitializer } from '../../utils/useGridInitializeState';
+import type { GridStateInitializer } from '../../utils/useGridInitializeState';
 import { clamp } from '../../../utils/utils';
 import { useTimeout } from '../../utils/useTimeout';
 import { GridPinnedColumnPosition } from '../columns/gridColumnsInterfaces';
 import { gridColumnsStateSelector } from '../columns';
+import { gridDimensionsSelector } from '../dimensions';
+import { gridHeaderFilteringEnabledSelector } from '../headerFiltering';
 import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import type { GridColumnResizeParams } from '../../../models/params/gridColumnResizeParams';
 import type { GridStateColDef } from '../../../models/colDef/gridColDef';
 import type { GridEventListener } from '../../../models/events/gridEventListener';
 import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import { gridResizingColumnFieldSelector } from './columnResizeSelector';
 
 type AutosizeOptionsRequired = Required<GridAutosizeOptions>;
 
@@ -121,6 +125,20 @@ function getResizeDirection(separator: HTMLElement, isRtl: boolean) {
     return flipResizeDirection(side);
   }
   return side;
+}
+
+function getPinnedWidthProperty(isRtl: boolean, pinnedPosition: GridPinnedColumnPosition) {
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+    return isRtl ? '--DataGrid-rightPinnedWidth' : '--DataGrid-leftPinnedWidth';
+  }
+  return isRtl ? '--DataGrid-leftPinnedWidth' : '--DataGrid-rightPinnedWidth';
+}
+
+function getPinnedWidth(dimensions: any, isRtl: boolean, pinnedPosition: GridPinnedColumnPosition) {
+  if (pinnedPosition === GridPinnedColumnPosition.LEFT) {
+    return isRtl ? dimensions.rightPinnedWidth : dimensions.leftPinnedWidth;
+  }
+  return isRtl ? dimensions.leftPinnedWidth : dimensions.rightPinnedWidth;
 }
 
 function preventClick(event: MouseEvent) {
@@ -193,6 +211,9 @@ function extractColumnWidths(
   const root = apiRef.current.rootElementRef!.current!;
   root.classList.add(gridClasses.autosizing);
 
+  const includeHeaderFilters =
+    options.includeHeaderFilters && gridHeaderFilteringEnabledSelector(apiRef);
+
   columns.forEach((column) => {
     const cells = findGridCells(apiRef.current, column.field);
 
@@ -207,20 +228,46 @@ function extractColumnWidths(
     if (options.includeHeaders) {
       const header = findGridHeader(apiRef.current, column.field);
       if (header) {
-        const title = header.querySelector(`.${gridClasses.columnHeaderTitle}`);
-        const content = header.querySelector(`.${gridClasses.columnHeaderTitleContainerContent}`)!;
-        const iconContainer = header.querySelector(`.${gridClasses.iconButtonContainer}`);
+        const titleContainer = header.querySelector(`.${gridClasses.columnHeaderTitleContainer}`)!;
+        const children = Array.from(titleContainer.children);
         const menuContainer = header.querySelector(`.${gridClasses.menuIcon}`);
-        const element = title ?? content;
 
-        const style = window.getComputedStyle(header, null);
-        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
-        const contentWidth = element.scrollWidth + 1;
+        const titleContainerStyle = window.getComputedStyle(titleContainer, null);
+        const gap = parseInt(titleContainerStyle.gap, 10) || 0;
+
+        const headerStyle = window.getComputedStyle(header, null);
+        const paddingWidth =
+          parseInt(headerStyle.paddingLeft, 10) + parseInt(headerStyle.paddingRight, 10);
+
+        let totalChildren = 0;
+        let childrenWidth = 0;
+        for (let i = 0; i < children.length; i += 1) {
+          const child = children[i] as HTMLElement;
+          if (child.clientWidth > 0) {
+            totalChildren += 1;
+            childrenWidth += child.scrollWidth;
+          }
+        }
+
+        childrenWidth += 1;
+
         const width =
-          contentWidth +
+          childrenWidth +
+          gap * (totalChildren - 1) +
           paddingWidth +
-          (iconContainer?.clientWidth ?? 0) +
           (menuContainer?.clientWidth ?? 0);
+
+        filteredWidths.push(width);
+      }
+    }
+
+    if (includeHeaderFilters) {
+      const headerFilter = findGridHeaderFilter(apiRef.current, column.field);
+      if (headerFilter) {
+        const style = window.getComputedStyle(headerFilter, null);
+        const paddingWidth = parseInt(style.paddingLeft, 10) + parseInt(style.paddingRight, 10);
+        const contentWidth = headerFilter.scrollWidth;
+        const width = contentWidth + paddingWidth;
 
         filteredWidths.push(width);
       }
@@ -351,6 +398,7 @@ export const useGridColumnResize = (
       div.style.setProperty('--width', finalWidth);
     });
 
+    const dimensions = gridDimensionsSelector(apiRef);
     const pinnedPosition = apiRef.current.unstable_applyPipeProcessors(
       'isColumnPinned',
       false,
@@ -366,6 +414,11 @@ export const useGridColumnResize = (
       refs.leftPinnedHeadersAfter.forEach((header) => {
         updateProperty(header, 'left', widthDiff);
       });
+
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        getPinnedWidthProperty(isRtl, pinnedPosition),
+        `${getPinnedWidth(dimensions, isRtl, pinnedPosition) + columnWidthDiff}px`,
+      );
     }
 
     if (pinnedPosition === GridPinnedColumnPosition.RIGHT) {
@@ -377,6 +430,11 @@ export const useGridColumnResize = (
       refs.rightPinnedHeadersBefore.forEach((header) => {
         updateProperty(header, 'right', widthDiff);
       });
+
+      apiRef.current.rootElementRef?.current?.style.setProperty(
+        getPinnedWidthProperty(isRtl, pinnedPosition),
+        `${getPinnedWidth(dimensions, isRtl, pinnedPosition) + columnWidthDiff}px`,
+      );
     }
   };
 
@@ -432,6 +490,12 @@ export const useGridColumnResize = (
     });
   };
 
+  const setCellElementsRef = () => {
+    if (refs.columnHeaderElement) {
+      refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
+    }
+  };
+
   const storeReferences = (colDef: GridStateColDef, separator: HTMLElement, xStart: number) => {
     const root = apiRef.current.rootElementRef.current!;
 
@@ -457,7 +521,7 @@ export const useGridColumnResize = (
       colDef.field,
     );
 
-    refs.cellElements = findGridCellElementsFromCol(refs.columnHeaderElement, apiRef.current);
+    setCellElementsRef();
 
     refs.fillerLeft = findGridElement(
       apiRef.current,
@@ -813,6 +877,16 @@ export const useGridColumnResize = (
   useGridEvent(apiRef, 'columnResizeStart', handleResizeStart);
   useGridEvent(apiRef, 'columnSeparatorMouseDown', handleColumnResizeMouseDown);
   useGridEvent(apiRef, 'columnSeparatorDoubleClick', handleColumnSeparatorDoubleClick);
+
+  useGridEvent(apiRef, 'rowsSet', () => {
+    // if the user is still resizing the column, update the cell references included in the resize action
+    if (gridResizingColumnFieldSelector(apiRef) !== '') {
+      // wait until the rows are in the DOM
+      requestAnimationFrame(() => {
+        setCellElementsRef();
+      });
+    }
+  });
 
   useGridEventPriority(apiRef, 'columnResize', props.onColumnResize);
   useGridEventPriority(apiRef, 'columnWidthChange', props.onColumnWidthChange);

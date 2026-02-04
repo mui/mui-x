@@ -17,5 +17,6 @@ export {
   gridFilteredDescendantRowCountSelector,
   gridFilterActiveItemsSelector,
   gridFilterActiveItemsLookupSelector,
+  gridExpandedSortedRowIndexLookupSelector,
 } from './gridFilterSelector';
 export type { GridFilterActiveItemsLookup } from './gridFilterSelector';

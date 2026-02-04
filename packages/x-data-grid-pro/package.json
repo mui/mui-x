@@ -1,6 +1,6 @@
 {
   "name": "@mui/x-data-grid-pro",
-  "version": "8.12.1",
+  "version": "8.25.0",
   "author": "MUI Team",
   "description": "The Pro plan edition of the MUI X Data Grid components.",
   "license": "SEE LICENSE IN LICENSE",
@@ -44,7 +44,6 @@
     "@mui/x-data-grid": "workspace:*",
     "@mui/x-internals": "workspace:*",
     "@mui/x-license": "workspace:*",
-    "@types/format-util": "catalog:",
     "clsx": "catalog:",
     "prop-types": "catalog:"
   },

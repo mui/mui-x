@@ -10,14 +10,15 @@ import { rangeValueManager } from '../internals/utils/valueManagers';
  * Validation props used by the Date Range Picker, Date Range Field and Date Range Calendar components.
  */
 export interface ExportedValidateDateRangeProps
-  extends DayRangeValidationProps,
-    BaseDateValidationProps {}
+  extends DayRangeValidationProps, BaseDateValidationProps {}
 
 /**
  * Validation props as received by the validateDateRange method.
  */
-export interface ValidateDateRangeProps
-  extends MakeRequired<ExportedValidateDateRangeProps, ValidateDateRangePropsToDefault> {}
+export interface ValidateDateRangeProps extends MakeRequired<
+  ExportedValidateDateRangeProps,
+  ValidateDateRangePropsToDefault
+> {}
 
 /**
  * Name of the props that should be defaulted before being passed to the validateDateRange method.

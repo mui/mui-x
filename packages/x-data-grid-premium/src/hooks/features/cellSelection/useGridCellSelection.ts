@@ -1,11 +1,11 @@
 'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import ownerDocument from '@mui/utils/ownerDocument';
 import useEventCallback from '@mui/utils/useEventCallback';
 import {
-  GridPipeProcessor,
-  GridStateInitializer,
+  type GridPipeProcessor,
+  type GridStateInitializer,
   getTotalHeaderHeight,
   getVisibleRows,
   isNavigationKey,
@@ -15,24 +15,25 @@ import {
 import {
   useGridEvent,
   useGridApiMethod,
-  GridEventListener,
-  GridEventLookup,
+  type GridEventListener,
+  type GridEventLookup,
   GRID_ACTIONS_COLUMN_TYPE,
   GRID_CHECKBOX_SELECTION_COL_DEF,
   GRID_DETAIL_PANEL_TOGGLE_FIELD,
-  GridCellCoordinates,
-  GridRowId,
+  type GridCellCoordinates,
+  type GridRowId,
   gridClasses,
   gridFocusCellSelector,
-  GridCellParams,
+  type GridCellParams,
   GRID_REORDER_COL_DEF,
   gridSortedRowIdsSelector,
   gridDimensionsSelector,
+  GridCellModes,
 } from '@mui/x-data-grid-pro';
 import { gridCellSelectionStateSelector } from './gridCellSelectionSelector';
-import { GridCellSelectionApi } from './gridCellSelectionInterfaces';
-import { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
-import { GridPrivateApiPremium } from '../../../models/gridApiPremium';
+import type { GridCellSelectionApi } from './gridCellSelectionInterfaces';
+import type { DataGridPremiumProcessedProps } from '../../../models/dataGridPremiumProps';
+import type { GridPrivateApiPremium } from '../../../models/gridApiPremium';
 
 export const cellSelectionStateInitializer: GridStateInitializer<
   Pick<DataGridPremiumProcessedProps, 'cellSelectionModel' | 'initialState'>
@@ -415,6 +416,10 @@ export const useGridCellSelection = (
     void
   >((params, event) => {
     if (!isNavigationKey(event.key) || !cellWithVirtualFocus.current) {
+      return;
+    }
+
+    if (event.key === ' ' && params.cellMode === GridCellModes.Edit) {
       return;
     }
 

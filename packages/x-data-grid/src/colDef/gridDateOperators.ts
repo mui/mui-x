@@ -1,15 +1,15 @@
 import {
   GridFilterInputDate,
-  GridFilterInputDateProps,
+  type GridFilterInputDateProps,
 } from '../components/panel/filterPanel/GridFilterInputDate';
-import { GridFilterItem } from '../models/gridFilterItem';
-import { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
+import type { GridFilterItem } from '../models/gridFilterItem';
+import type { GridFilterOperator, GetApplyFilterFn } from '../models/gridFilterOperator';
 
 function buildApplyFilterFn(
   filterItem: GridFilterItem,
   compareFn: (value1: number, value2: number) => boolean,
   showTime?: boolean,
-  keepHours?: boolean,
+  keepRawComparison?: boolean,
 ): ReturnType<GetApplyFilterFn> {
   if (!filterItem.value) {
     return null;
@@ -35,7 +35,7 @@ function buildApplyFilterFn(
       return false;
     }
 
-    if (keepHours) {
+    if (keepRawComparison) {
       return compareFn(value.getTime(), time);
     }
 
@@ -72,7 +72,12 @@ export const getGridDateOperators = (
   {
     value: 'after',
     getApplyFilterFn: (filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 > value2, showTime);
+      return buildApplyFilterFn(
+        filterItem,
+        (value1, value2) => value1 > value2,
+        showTime,
+        showTime,
+      );
     },
     InputComponent: GridFilterInputDate,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -80,7 +85,12 @@ export const getGridDateOperators = (
   {
     value: 'onOrAfter',
     getApplyFilterFn: (filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 >= value2, showTime);
+      return buildApplyFilterFn(
+        filterItem,
+        (value1, value2) => value1 >= value2,
+        showTime,
+        showTime,
+      );
     },
     InputComponent: GridFilterInputDate,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -88,12 +98,7 @@ export const getGridDateOperators = (
   {
     value: 'before',
     getApplyFilterFn: (filterItem) => {
-      return buildApplyFilterFn(
-        filterItem,
-        (value1, value2) => value1 < value2,
-        showTime,
-        !showTime,
-      );
+      return buildApplyFilterFn(filterItem, (value1, value2) => value1 < value2, showTime, true);
     },
     InputComponent: GridFilterInputDate,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },
@@ -101,7 +106,12 @@ export const getGridDateOperators = (
   {
     value: 'onOrBefore',
     getApplyFilterFn: (filterItem) => {
-      return buildApplyFilterFn(filterItem, (value1, value2) => value1 <= value2, showTime);
+      return buildApplyFilterFn(
+        filterItem,
+        (value1, value2) => value1 <= value2,
+        showTime,
+        showTime,
+      );
     },
     InputComponent: GridFilterInputDate,
     InputComponentProps: { type: showTime ? 'datetime-local' : 'date' },

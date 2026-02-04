@@ -1,12 +1,14 @@
 import * as React from 'react';
 import useLazyRef from '@mui/utils/useLazyRef';
-import { integer, RefObject } from '@mui/x-internals/types';
+import { integer } from '@mui/x-internals/types';
 import { Store } from '@mui/x-internals/store';
 import { Colspan } from './features/colspan';
 import { Dimensions } from './features/dimensions';
 import { Keyboard } from './features/keyboard';
 import { Rowspan } from './features/rowspan';
 import { Virtualization } from './features/virtualization';
+import { DEFAULT_PARAMS } from './constants';
+import type { Layout } from './features/virtualization/layout';
 import type { HeightEntry, RowSpacing } from './models/dimensions';
 import type { ColspanParams } from './features/colspan';
 import type { DimensionsParams } from './features/dimensions';
@@ -28,17 +30,12 @@ import {
 /* eslint-disable jsdoc/require-returns-type */
 
 export type Virtualizer = ReturnType<typeof useVirtualizer>;
-export type VirtualScrollerCompat = Virtualization.State['getters'];
+export type VirtualScrollerCompat<L extends Layout = Layout> = Virtualization.State<L>['getters'];
 
-export type BaseState = Virtualization.State & Dimensions.State;
+export type BaseState<L extends Layout = Layout> = Virtualization.State<L> & Dimensions.State;
 
-export type VirtualizerParams = {
-  refs: {
-    container: RefObject<HTMLDivElement | null>;
-    scroller: RefObject<HTMLDivElement | null>;
-    scrollbarVertical: RefObject<HTMLDivElement | null>;
-    scrollbarHorizontal: RefObject<HTMLDivElement | null>;
-  };
+export type VirtualizerParams<L extends Layout = Layout> = {
+  layout: L;
 
   dimensions: DimensionsParams;
   virtualization: VirtualizationParams;
@@ -47,19 +44,19 @@ export type VirtualizerParams = {
   initialState?: {
     scroll?: { top: number; left: number };
     rowSpanning?: Rowspan.State['rowSpanning'];
-    virtualization?: Partial<Virtualization.State['virtualization']>;
+    virtualization?: Partial<Virtualization.State<L>['virtualization']>;
   };
   /** current page rows */
   rows: RowEntry[];
   /** current page range */
   range: { firstRowIndex: integer; lastRowIndex: integer } | null;
   rowCount: integer;
-  columns: ColumnWithWidth[];
+  columns?: ColumnWithWidth[];
   pinnedRows?: PinnedRows;
   pinnedColumns?: PinnedColumns;
 
-  autoHeight: boolean;
-  minimalContentHeight?: number | string;
+  disableHorizontalScroll?: boolean;
+  disableVerticalScroll?: boolean;
   getRowHeight?: (row: RowEntry) => number | null | undefined | 'auto';
   /**
    * Function that returns the estimated height for a row.
@@ -83,7 +80,7 @@ export type VirtualizerParams = {
   applyRowHeight?: (entry: HeightEntry, rowEntry: RowEntry) => void;
   virtualizeColumnsWithAutoRowHeight?: boolean;
 
-  resizeThrottleMs: number;
+  resizeThrottleMs?: number;
   onResize?: (lastSize: Size) => void;
   onWheel?: (event: React.WheelEvent) => void;
   onTouchMove?: (event: React.TouchEvent) => void;
@@ -112,24 +109,51 @@ export type VirtualizerParams = {
     isVirtualFocusRow: boolean;
     showBottomBorder: boolean;
   }) => React.ReactElement;
-  renderInfiniteLoadingTrigger: (id: any) => React.ReactElement;
+  renderInfiniteLoadingTrigger?: (id: any) => React.ReactElement;
+};
+
+type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
+
+export type ParamsWithDefaults = RequiredFields<
+  VirtualizerParams,
+  'resizeThrottleMs' | 'columns'
+> & {
+  dimensions: RequiredFields<
+    VirtualizerParams['dimensions'],
+    | 'columnsTotalWidth'
+    | 'leftPinnedWidth'
+    | 'rightPinnedWidth'
+    | 'topPinnedHeight'
+    | 'bottomPinnedHeight'
+    | 'autoHeight'
+  >;
+  virtualization: RequiredFields<
+    VirtualizerParams['virtualization'],
+    'isRtl' | 'rowBufferPx' | 'columnBufferPx'
+  >;
 };
 
 const FEATURES = [Dimensions, Virtualization, Colspan, Rowspan, Keyboard] as const;
 
-export const useVirtualizer = (params: VirtualizerParams) => {
+export const useVirtualizer = <L extends Layout = Layout>(params: VirtualizerParams<L>) => {
+  const paramsWithDefault = mergeDefaults<ParamsWithDefaults>(params, DEFAULT_PARAMS);
+
   const store = useLazyRef(() => {
     return new Store(
-      FEATURES.map((f) => f.initialize(params)).reduce(
+      FEATURES.map((f) => f.initialize(paramsWithDefault)).reduce(
         (state, partial) => Object.assign(state, partial),
         {},
-      ) as Dimensions.State & Virtualization.State & Colspan.State & Rowspan.State & Keyboard.State,
+      ) as Dimensions.State &
+        Virtualization.State<L> &
+        Colspan.State &
+        Rowspan.State &
+        Keyboard.State,
     );
   }).current;
 
   const api = {} as Dimensions.API & Virtualization.API & Colspan.API & Rowspan.API & Keyboard.API;
   for (const feature of FEATURES) {
-    Object.assign(api, feature.use(store, params, api));
+    Object.assign(api, feature.use(store, paramsWithDefault, api));
   }
 
   return {
@@ -137,3 +161,18 @@ export const useVirtualizer = (params: VirtualizerParams) => {
     api,
   };
 };
+
+function mergeDefaults<T>(params: any, defaults: any): T {
+  const result = { ...params };
+  for (const key in defaults) {
+    if (Object.hasOwn(defaults, key)) {
+      const value = (defaults as any)[key];
+      if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+        (result as any)[key] = mergeDefaults((params as any)[key] ?? {}, value);
+      } else {
+        (result as any)[key] = (params as any)[key] ?? value;
+      }
+    }
+  }
+  return result;
+}
