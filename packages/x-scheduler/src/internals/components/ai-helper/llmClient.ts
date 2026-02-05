@@ -176,7 +176,9 @@ When the user says "tomorrow", "next week", "next Monday", etc., calculate dates
 ## Other Context
 - Default event duration: ${context.defaultDurationMinutes} minutes
 ${context.extraContext ? `- Additional context: ${context.extraContext}` : ''}
-${context.resources.length > 0 ? `\n## Available Resources
+${
+  context.resources.length > 0
+    ? `\n## Available Resources
 The following resources (categories, people, rooms, etc.) are available:
 ${context.resources.map((r) => `- "${r.title}" (id: "${r.id}")`).join('\n')}
 
@@ -188,7 +190,9 @@ IMPORTANT: Infer the appropriate resource from context, even if not explicitly m
 - Meeting, standup, 1-on-1, work-related → assign to "Work" if available
 - Personal errands, shopping, personal tasks → assign to "Personal" if available
 
-Only leave resource empty if you truly cannot determine which category fits.` : ''}
+Only leave resource empty if you truly cannot determine which category fits.`
+    : ''
+}
 
 ## Data Model (TypeScript)
 ${EVENT_CREATION_SCHEMA}
@@ -297,7 +301,7 @@ export async function parseEventWithOpenAI(
       event: null,
       confidence: 0,
       error:
-        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
+        'I couldn\'t understand that as an event. Try something like "Meeting tomorrow at 3pm" or "Lunch with John on Friday".',
     };
   }
 
@@ -314,7 +318,7 @@ export async function parseEventWithOpenAI(
       event: null,
       confidence: 0,
       error:
-        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
+        'I couldn\'t understand that as an event. Try something like "Meeting tomorrow at 3pm" or "Lunch with John on Friday".',
     };
   }
 }
@@ -371,7 +375,7 @@ export async function parseEventWithAnthropic(
       event: null,
       confidence: 0,
       error:
-        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
+        'I couldn\'t understand that as an event. Try something like "Meeting tomorrow at 3pm" or "Lunch with John on Friday".',
     };
   }
 
@@ -388,7 +392,7 @@ export async function parseEventWithAnthropic(
       event: null,
       confidence: 0,
       error:
-        "I couldn't understand that as an event. Try something like \"Meeting tomorrow at 3pm\" or \"Lunch with John on Friday\".",
+        'I couldn\'t understand that as an event. Try something like "Meeting tomorrow at 3pm" or "Lunch with John on Friday".',
     };
   }
 }

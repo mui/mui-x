@@ -7,8 +7,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-// eslint-disable-next-line no-restricted-imports
-import { AIProvider } from '@mui/x-scheduler/internals/components/ai-helper';
+import type { AIProvider } from '@mui/x-scheduler/internals';
 import { defaultVisibleDate, resources } from '../datasets/personal-agenda';
 
 const API_KEY = process.env.NEXT_PUBLIC_SCHEDULER_AI_API_KEY ?? '';
