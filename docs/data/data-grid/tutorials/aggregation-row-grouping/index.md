@@ -740,8 +740,8 @@ This tutorial uses `sum` for salary and projects.
 
 `getAggregationPosition` controls where aggregates appear:
 
-- `'footer'` – footer row (e.g. root level)
-- `'inline'` – next to the group header (e.g. nested groups)
+- `'footer'` – footer row (root level)
+- `'inline'` – next to the group header (nested groups)
 - `null` – hide aggregates for that level
 
 ## Learn more

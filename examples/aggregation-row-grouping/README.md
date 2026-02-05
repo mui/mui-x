@@ -1,6 +1,6 @@
-# MUI X Data Grid Premium - Aggregation and Row Grouping
+# MUI X Data Grid Premium - Aggregation and Row Grouping
 
-A client-side React app demonstrating aggregation and row grouping with the MUI X Data Grid Premium.
+A client-side React app demonstrating aggregation and row grouping with the MUI X Data Grid Premium.
 
 ## Setup
 
