@@ -56,9 +56,8 @@ jobs:
         working-directory: test/benchmark-tool
         env:
           BENCHMARKS_DIR: ./benchmarks
-          OUTPUT_FILE: ./comparison-result.json
           FAIL_THRESHOLD: ${{ env.BENCHMARK_FAIL_THRESHOLD }}
-        run: pnpm ci:compare
+        run: pnpm --silent ci:compare > comparison-result.json
 
       - name: Post comparison comment
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1

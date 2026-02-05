@@ -1,11 +1,9 @@
-import fs from 'node:fs/promises';
 import { fetchMasterMetrics } from './fetchMasterMetrics';
 import { generateComparisonBody } from './generateComparisonBody';
 import { readPrMetrics } from './readPrMetrics';
 
 async function main() {
   const benchmarksDir = process.env.BENCHMARKS_DIR || './benchmarks';
-  const outputFile = process.env.OUTPUT_FILE || './comparison-result.json';
   const failThreshold = parseFloat(process.env.FAIL_THRESHOLD || '5');
 
   const prMetricsByFile = await readPrMetrics(benchmarksDir);
@@ -26,7 +24,8 @@ async function main() {
         : null,
   };
 
-  await fs.writeFile(outputFile, JSON.stringify(output, null, 2));
+  // eslint-disable-next-line no-console
+  console.log(JSON.stringify(output));
 }
 
 main();

@@ -21,8 +21,8 @@ export async function readPrMetrics(benchmarksDir: string): Promise<Record<strin
     for (const result of results) {
       prMetricsByFile[result.file] = result.duration;
     }
-  } catch (error) {
-    console.error(error);
+  } catch {
+    console.warn('Could not read PR benchmark results');
   }
 
   return prMetricsByFile;
