@@ -26,6 +26,8 @@ export interface LLMContext {
   extraContext: string;
   /** Available resources */
   resources: LLMResourceInfo[];
+  /** User's locale (e.g., "fr-FR", "en-US") */
+  locale: string;
 }
 
 export type AIProvider = 'openai' | 'anthropic' | 'gemini-nano';
@@ -113,12 +115,17 @@ export function buildContext(
     title: r.title,
   }));
 
+  // Get user's locale from browser
+  const locale =
+    typeof navigator !== 'undefined' ? navigator.language || navigator.languages?.[0] : 'en-US';
+
   return {
     currentDateTime: adapter.now(displayTimezone).toISOString(),
     defaultTimezone: displayTimezone,
     defaultDurationMinutes: defaultDuration,
     extraContext,
     resources,
+    locale: locale || 'en-US',
   };
 }
 
@@ -128,18 +135,25 @@ export function buildContext(
 export function buildSystemPrompt(context: LLMContext): string {
   // Parse the current date for clearer display
   const now = new Date(context.currentDateTime);
-  const formattedDate = now.toLocaleDateString('en-US', {
+  const formattedDate = now.toLocaleDateString(context.locale, {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-  const formattedTime = now.toLocaleTimeString('en-US', {
+  const formattedTime = now.toLocaleTimeString(context.locale, {
     hour: 'numeric',
     minute: '2-digit',
   });
 
   return `You parse natural language into calendar events for a scheduler application.
+
+## LANGUAGE
+Detect the language of the user's input and respond in the SAME language:
+- Return the "summary" field in the user's language
+- Return the event "title" in the user's language
+- Return the event "description" in the user's language if provided
+For example, if the user writes in French, respond in French. If in Spanish, respond in Spanish.
 
 ## IMPORTANT: Current Date, Time, and Timezone
 TODAY IS: ${formattedDate}
