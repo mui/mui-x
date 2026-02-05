@@ -75,7 +75,7 @@ export function useSpeechRecognition(
         if (finalResult === '') {
           optionsRef.current.onUpdate(interimResult);
         }
-        timeout.start(2000, () => instance.stop());
+        timeout.start(1000, () => instance.stop());
       };
 
       instance.onsoundend = () => {
