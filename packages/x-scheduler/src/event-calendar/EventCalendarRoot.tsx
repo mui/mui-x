@@ -78,7 +78,8 @@ const EventCalendarContent = styled('section', {
   height: 'fit-content',
   maxHeight: '100%',
   '&[data-view="month"]': {
-    maxHeight: 'none',
+    height: '100%',
+    maxHeight: '100%',
   },
   '&[data-side-panel-open="false"]': {
     gridColumn: '1 / -1',
