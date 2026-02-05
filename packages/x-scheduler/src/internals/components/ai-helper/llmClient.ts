@@ -162,10 +162,13 @@ CURRENT YEAR: ${now.getFullYear()}
 USER'S TIMEZONE: ${context.defaultTimezone}
 
 CRITICAL TIMEZONE RULES:
-- When the user says a time like "3pm", they mean 3pm in THEIR timezone (${context.defaultTimezone}), NOT UTC.
+- The user's display timezone is: ${context.defaultTimezone}
+- When the user says a time like "3pm" WITHOUT specifying a timezone, they mean 3pm in THEIR timezone (${context.defaultTimezone}).
+- IMPORTANT: If the user specifies a DIFFERENT timezone (e.g., "3pm New York time", "15h heure de Paris", "10am PST"), you MUST convert that time to the user's display timezone (${context.defaultTimezone}).
+  - Example: If user says "3pm New York time" and their timezone is Europe/Paris, calculate: 3pm EST = 9pm CET, so return "2026-02-06T21:00:00"
+  - Example: If user says "10am Tokyo time" and their timezone is America/Los_Angeles, calculate: 10am JST = 5pm PST (previous day), so return the converted time
 - Return datetime strings WITHOUT the "Z" suffix - use format: "YYYY-MM-DDTHH:mm:ss" (no timezone indicator)
-- Example: If user says "meeting at 3pm" and their timezone is America/New_York, return "2026-02-05T15:00:00" (NOT "2026-02-05T15:00:00Z")
-- The scheduler will interpret these times in the user's display timezone.
+- The scheduler will interpret all returned times in the user's display timezone (${context.defaultTimezone}).
 
 You MUST use ${now.getFullYear()} as the year for all events unless the user explicitly specifies a different year.
 When the user says "tomorrow", "next week", "next Monday", etc., calculate dates relative to TODAY (${formattedDate}).
