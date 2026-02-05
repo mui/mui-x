@@ -1,4 +1,7 @@
-import { ComponentsProps, ComponentsOverrides as MuiComponentsOverrides } from '@mui/material/styles';
+import {
+  ComponentsProps,
+  ComponentsOverrides as MuiComponentsOverrides,
+} from '@mui/material/styles';
 
 export interface SchedulerPremiumComponents<Theme = unknown> {
   MuiEventTimeline?: {
