@@ -70,11 +70,21 @@ export function generateReportFromIterations(iterations: RenderEvent[][]): Repor
     const durations = iterations.map((iteration) => iteration[index].actualDuration);
     const meanDuration = calculateMean(durations);
     const stdDev = calculateStdDev(durations, meanDuration);
+    const coefficientOfVariation = meanDuration > 0 ? stdDev / meanDuration : 0;
+
+    // Only warn for meaningful durations (>1ms) to avoid noise from measurement overhead
+    if (meanDuration > 1 && coefficientOfVariation > 0.1) {
+      console.warn(
+        `High coefficient of variation (${(coefficientOfVariation * 100).toFixed(1)}%) for event "${getEventKey(event)}". ` +
+          `Mean: ${meanDuration.toFixed(2)}ms, StdDev: ${stdDev.toFixed(2)}ms. Results may be unreliable.`,
+      );
+    }
 
     return {
       ...event,
       actualDuration: meanDuration,
       stdDev,
+      coefficientOfVariation,
     };
   });
 
@@ -89,7 +99,9 @@ export function generateReport(events: RenderEvent[]): Report {
   };
 }
 
-function mapRenderEventToTraceEvent(event: RenderEvent & { stdDev?: number }): TraceEvent {
+function mapRenderEventToTraceEvent(
+  event: RenderEvent & { stdDev?: number; coefficientOfVariation?: number },
+): TraceEvent {
   return {
     name: 'React Render',
     cat: 'react',
@@ -103,6 +115,9 @@ function mapRenderEventToTraceEvent(event: RenderEvent & { stdDev?: number }): T
       name: event.name,
       phase: event.phase,
       ...(event.stdDev !== undefined && { stdDev: event.stdDev }),
+      ...(event.coefficientOfVariation !== undefined && {
+        coefficientOfVariation: event.coefficientOfVariation,
+      }),
     },
   };
 }

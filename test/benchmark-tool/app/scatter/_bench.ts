@@ -8,7 +8,7 @@ const route = getRouteFromFilename(__filename);
 test(
   'benchmark scatter render',
   iterateTest(
-    10,
+    50,
     async ({ page }, _, { renders }) => {
       await goToPage(__filename, page, renders);
 
@@ -19,6 +19,6 @@ test(
       const report = generateReportFromIterations(iterations);
       await saveReport(report, route);
     },
-    { warmupRuns: 3 },
+    { warmupRuns: 10 },
   ),
 );
