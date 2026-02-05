@@ -9,7 +9,7 @@
     "emitDeclarationOnly": true,
     "outDir": "build/esm",
     "rootDir": "./src",
-    "types": ["../../mui-env.d.ts"]
+    "types": ["../../mui-env.d.ts", "@types/dom-chromium-ai"]
   },
   "references": [
     { "path": "../x-internals/tsconfig.build.json" },
