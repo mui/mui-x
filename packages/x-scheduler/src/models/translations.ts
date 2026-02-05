@@ -114,4 +114,9 @@ export interface SchedulerTranslations {
   aiHelperProcessing: string;
   aiHelperRetry: string;
   aiHelperGenericError: string;
+
+  // MiniCalendar
+  miniCalendarLabel: string;
+  miniCalendarGoToPreviousMonth: string;
+  miniCalendarGoToNextMonth: string;
 }
