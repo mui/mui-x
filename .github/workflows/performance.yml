@@ -1,7 +1,7 @@
 name: Performance
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - synchronize
@@ -19,14 +19,6 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          path: pr
-
-      - name: Checkout master branch
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-        with:
-          # TODO: replace with "master"
-          ref: 5bc4ecd51ee7ab5d636c78b782f79d55783908f1
-          path: master
 
       - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
         with:
@@ -38,62 +30,119 @@ jobs:
         with:
           node-version: 22.18.0
           cache: "pnpm"
-          cache-dependency-path: pr/pnpm-lock.yaml
 
-      - name: Install dependencies (PR)
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: pr
 
-      - name: Install dependencies (master)
-        run: pnpm install --frozen-lockfile
-        working-directory: master
+      - name: Build packages
+        run: pnpm --filter @mui/x-charts-premium... build
 
-      - name: Run performance measurement (PR)
-        id: perf-pr
-        working-directory: pr
-        # TODO: Replace with real performance test
-        run: |
-          METRICS=$(node --experimental-strip-types --no-warnings << 'EOF'
-          import { createMockTrace } from './test/performance/src/createMockTrace.ts';
-          import { extractMetrics } from './test/performance/src/extractMetrics.ts';
+      - name: Install Playwright browsers
+        run: pnpm --filter benchmark-tool exec playwright install chromium --with-deps
 
-          const trace = createMockTrace({ eventCount: 20 });
-          const metrics = extractMetrics(trace);
-          console.log(JSON.stringify(metrics));
-          EOF
-          )
-          echo "metrics=$METRICS" >> $GITHUB_OUTPUT
+      - name: Run benchmarks
+        run: pnpm --filter benchmark-tool test
 
-      - name: Run performance measurement (master)
-        id: perf-master
-        working-directory: master
-        # TODO: Replace with real performance test
-        run: |
-          METRICS=$(node --experimental-strip-types --no-warnings << 'EOF'
-          import { createMockTrace } from './test/performance/src/createMockTrace.ts';
-          import { extractMetrics } from './test/performance/src/extractMetrics.ts';
-
-          const trace = createMockTrace({ eventCount: 20 });
-          const metrics = extractMetrics(trace);
-          console.log(JSON.stringify(metrics));
-          EOF
-          )
-          echo "metrics=$METRICS" >> $GITHUB_OUTPUT
-
-      - name: Compare and comment
+      - name: Extract metrics and compare
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
-            const prMetrics = JSON.parse('${{ steps.perf-pr.outputs.metrics }}');
-            const masterMetrics = JSON.parse('${{ steps.perf-master.outputs.metrics }}');
+            const fs = require('fs');
+            const path = require('path');
+
+            // Extract metrics from PR benchmark results
+            function extractMetrics(trace) {
+              const durationByEvent = {};
+              let totalDuration = 0;
+              let eventCount = 0;
+
+              for (const event of trace.traceEvents) {
+                if (event.ph === 'X') {
+                  totalDuration += event.dur;
+                  eventCount += 1;
+                  // Include phase (mount/update) in the event key for better granularity
+                  const phase = event.args?.phase;
+                  const eventKey = phase ? `${event.name} (${phase})` : event.name;
+                  durationByEvent[eventKey] = (durationByEvent[eventKey] ?? 0) + event.dur;
+                }
+              }
+
+              return { totalDuration, eventCount, durationByEvent };
+            }
+
+            // Read PR benchmark results
+            const benchmarksDir = './test/benchmark-tool/benchmarks';
+            let prMetrics = { totalDuration: 0, eventCount: 0, durationByEvent: {} };
+
+            if (fs.existsSync(benchmarksDir)) {
+              const files = fs.readdirSync(benchmarksDir).filter(f => f.endsWith('.json'));
+              for (const file of files) {
+                const trace = JSON.parse(fs.readFileSync(path.join(benchmarksDir, file), 'utf-8'));
+                const metrics = extractMetrics(trace);
+                prMetrics.totalDuration += metrics.totalDuration;
+                prMetrics.eventCount += metrics.eventCount;
+                for (const [event, duration] of Object.entries(metrics.durationByEvent)) {
+                  prMetrics.durationByEvent[event] = (prMetrics.durationByEvent[event] ?? 0) + duration;
+                }
+              }
+            }
+
+            // Fetch baseline metrics from performance-benchmark-data repository
+            // Find the latest benchmark folder (YYYY-MM-DD-HH-MM-SS format)
+            let masterMetrics = null;
+            try {
+              // List directories in mui-x folder using GitHub API
+              const contentsResponse = await fetch('https://api.github.com/repos/mnajdova/performance-benchmark-data/contents/mui-x');
+              if (contentsResponse.ok) {
+                const contents = await contentsResponse.json();
+                // Filter directories and sort by name (timestamp format sorts chronologically)
+                const folders = contents
+                  .filter(item => item.type === 'dir')
+                  .map(item => item.name)
+                  .sort()
+                  .reverse();
+
+                if (folders.length > 0) {
+                  const latestFolder = folders[0];
+                  console.log(`Using latest benchmark folder: ${latestFolder}`);
+
+                  // Fetch metadata.json to get the list of benchmark files
+                  const metadataResponse = await fetch(`https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/metadata.json`);
+                  if (metadataResponse.ok) {
+                    const metadata = await metadataResponse.json();
+                    masterMetrics = { totalDuration: 0, eventCount: 0, durationByEvent: {} };
+
+                    // Fetch and aggregate metrics from each benchmark file listed in metadata
+                    for (const filePath of metadata.files) {
+                      const fileName = filePath.split('/').pop();
+                      const fileResponse = await fetch(`https://raw.githubusercontent.com/mnajdova/performance-benchmark-data/main/mui-x/${latestFolder}/${fileName}`);
+                      if (fileResponse.ok) {
+                        const trace = await fileResponse.json();
+                        const metrics = extractMetrics(trace);
+                        masterMetrics.totalDuration += metrics.totalDuration;
+                        masterMetrics.eventCount += metrics.eventCount;
+                        for (const [event, duration] of Object.entries(metrics.durationByEvent)) {
+                          masterMetrics.durationByEvent[event] = (masterMetrics.durationByEvent[event] ?? 0) + duration;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            } catch (e) {
+              console.log('Could not fetch baseline metrics:', e.message);
+            }
 
             const prDuration = prMetrics.totalDuration;
-            const masterDuration = masterMetrics.totalDuration;
-            const diff = prDuration - masterDuration;
-            const diffPercent = ((diff / masterDuration) * 100).toFixed(2);
-            const emoji = diff > 0 ? '🔺' : diff < 0 ? '🔽' : '➡️';
 
-            const body = `## Performance Comparison
+            let body;
+            if (masterMetrics) {
+              const masterDuration = masterMetrics.totalDuration;
+              const diff = prDuration - masterDuration;
+              const diffPercent = masterDuration > 0 ? ((diff / masterDuration) * 100).toFixed(2) : 'N/A';
+              const emoji = diff > 0 ? '🔺' : diff < 0 ? '🔽' : '➡️';
+
+              body = `## Performance Comparison
 
             | Metric | Master | PR | Diff |
             |--------|--------|-----|------|
@@ -111,6 +160,28 @@ jobs:
 
             </details>
             `;
+            } else {
+              body = `## Performance Comparison
+
+            > **Note:** Baseline metrics not found. Showing PR metrics only.
+
+            | Metric | PR |
+            |--------|-----|
+            | Total Duration (μs) | ${prDuration.toLocaleString()} |
+            | Event Count | ${prMetrics.eventCount} |
+
+            <details>
+            <summary>Duration by Event Type</summary>
+
+            | Event | PR (μs) |
+            |-------|---------|
+            ${Object.keys(prMetrics.durationByEvent)
+              .map(event => `| ${event} | ${prMetrics.durationByEvent[event].toLocaleString()} |`)
+              .join('\n')}
+
+            </details>
+            `;
+            }
 
             // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({

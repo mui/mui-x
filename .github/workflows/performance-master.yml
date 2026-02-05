@@ -35,41 +35,50 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run performance measurement
-        id: perf
+      - name: Build packages
+        run: pnpm --filter @mui/x-charts-premium... build
+
+      - name: Install Playwright browsers
+        run: pnpm --filter benchmark-tool exec playwright install chromium --with-deps
+
+      - name: Run performance benchmarks
+        working-directory: test/benchmark-tool
+        run: pnpm test
+
+      - name: Generate timestamp folder name
+        id: timestamp
+        run: echo "folder=$(date -u '+%Y-%m-%d-%H-%M-%S')" >> $GITHUB_OUTPUT
+
+      - name: List benchmark output files
+        id: files
+        working-directory: test/benchmark-tool
         run: |
-          METRICS=$(node --experimental-strip-types --no-warnings << 'EOF'
-          import { createMockTrace } from './test/performance/src/createMockTrace.ts';
-          import { extractMetrics } from './test/performance/src/extractMetrics.ts';
+          # List all JSON files in benchmarks directory
+          FILES=$(find benchmarks -name "*.json" -type f | sort | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "list=$FILES" >> $GITHUB_OUTPUT
 
-          const trace = createMockTrace({ eventCount: 20 });
-          const metrics = extractMetrics(trace);
-          console.log(JSON.stringify(metrics));
-          EOF
-          )
-          echo "metrics=$METRICS" >> $GITHUB_OUTPUT
-
-      - name: Prepare benchmark data
-        id: prepare-data
+      - name: Prepare metadata
+        id: prepare-metadata
         env:
-          METRICS: ${{ steps.perf.outputs.metrics }}
+          FILES: ${{ steps.files.outputs.list }}
           COMMIT_SHA: ${{ github.sha }}
           REPO_NAME: ${{ github.repository }}
+          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
         run: |
-          BENCHMARK_DATA=$(node << 'EOF'
-          const metrics = JSON.parse(process.env.METRICS);
+          METADATA=$(node << 'EOF'
+          const files = JSON.parse(process.env.FILES);
           const data = {
             commit: process.env.COMMIT_SHA,
             repository: process.env.REPO_NAME,
             date: new Date().toISOString(),
             timestamp: Date.now(),
-            metrics: metrics
+            files: files
           };
           console.log(JSON.stringify(data, null, 2));
           EOF
           )
           echo "data<<EOF" >> $GITHUB_OUTPUT
-          echo "$BENCHMARK_DATA" >> $GITHUB_OUTPUT
+          echo "$METADATA" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Checkout data repository
@@ -79,54 +88,35 @@ jobs:
           path: benchmark-data
           token: ${{ secrets.BENCHMARK_DATA_TOKEN }}
 
-      - name: Update data.json
-        working-directory: benchmark-data
+      - name: Create benchmark folder and copy files
         env:
-          NEW_DATA: ${{ steps.prepare-data.outputs.data }}
+          METADATA: ${{ steps.prepare-metadata.outputs.data }}
           REPO_NAME: ${{ github.repository }}
+          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
         run: |
           # Extract just the repository name (after the /)
           REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
 
-          # Create directory if it doesn't exist
-          mkdir -p "$REPO_DIR"
+          # Create timestamped directory
+          BENCHMARK_DIR="benchmark-data/$REPO_DIR/$TIMESTAMP_FOLDER"
+          mkdir -p "$BENCHMARK_DIR"
 
-          # Create data.json if it doesn't exist
-          if [ ! -f "$REPO_DIR/data.json" ]; then
-            echo "[]" > "$REPO_DIR/data.json"
-          fi
+          # Copy all benchmark output files to the new folder
+          cp -r test/benchmark-tool/benchmarks/* "$BENCHMARK_DIR/"
 
-          # Append new benchmark data using Node.js
-          node << 'EOF'
-          const fs = require('fs');
-          const path = require('path');
-
-          // Get repository directory (extract repo name after /)
-          const repoDir = process.env.REPO_NAME.split('/')[1];
-          const dataFile = path.join(repoDir, 'data.json');
-
-          // Read existing data from file
-          const existingData = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-
-          // Parse new data from environment variable
-          const newData = JSON.parse(process.env.NEW_DATA);
-
-          // Add new data to the array
-          existingData.push(newData);
-
-          // Write back to file
-          fs.writeFileSync(dataFile, JSON.stringify(existingData, null, 2) + '\n');
-          EOF
+          # Write metadata.json
+          echo "$METADATA" > "$BENCHMARK_DIR/metadata.json"
 
       - name: Commit and push benchmark data
         working-directory: benchmark-data
         env:
           REPO_NAME: ${{ github.repository }}
+          TIMESTAMP_FOLDER: ${{ steps.timestamp.outputs.folder }}
         run: |
           # Extract just the repository name (after the /)
           REPO_DIR=$(echo "$REPO_NAME" | cut -d'/' -f2)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add "$REPO_DIR/data.json"
+          git add "$REPO_DIR/$TIMESTAMP_FOLDER"
           git commit -m "Add benchmark data for ${{ github.repository }}@${{ github.sha }}"
           git push
