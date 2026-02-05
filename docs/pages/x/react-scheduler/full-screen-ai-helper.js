@@ -2,8 +2,8 @@ import * as React from 'react';
 
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
+import FormHelperText from '@mui/material/FormHelperText';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -59,13 +59,10 @@ export default function FullScreenAiHelper() {
             <MenuItem value="anthropic">Anthropic</MenuItem>
             {geminiNanoAvailable && <MenuItem value="gemini-nano">Gemini Nano</MenuItem>}
           </Select>
+          <FormHelperText>
+            Click the sparkle button in the toolbar to create events using natural language.
+          </FormHelperText>
         </FormControl>
-
-        <Typography variant="body2" color="text.secondary">
-          {isGeminiNano
-            ? 'Gemini Nano runs locally in your browser — no API key needed. Click the sparkle button in the toolbar to create events using natural language.'
-            : 'Click the sparkle button in the toolbar to create events using natural language.'}
-        </Typography>
       </Box>
 
       <div style={{ flex: 1, minHeight: 0 }}>

@@ -12,7 +12,7 @@ githubLabel: 'scope: scheduler'
 {{"component": "@mui/docs/ComponentLinkHeader", "design": false}}
 
 :::warning
-This feature requires an API key from OpenAI or Anthropic.
+This feature requires an API key from Anthropic.
 :::
 
 ## Demo
