@@ -10,10 +10,18 @@ export interface RenderEvent {
   name?: string;
   phase: 'mount' | 'update' | 'nested-update';
   actualDuration: number;
+  /** Start time in milliseconds (from performance.now()) */
+  startTime: number;
 }
 
 function onRender(id: string, phase: 'mount' | 'update' | 'nested-update', actualDuration: number) {
-  (window as any)[CAPTURE_RENDER_FN]?.({ id, phase, actualDuration } satisfies RenderEvent);
+  const startTime = performance.now() - actualDuration;
+  (window as any)[CAPTURE_RENDER_FN]?.({
+    id,
+    phase,
+    actualDuration,
+    startTime,
+  } satisfies RenderEvent);
 }
 
 /**
