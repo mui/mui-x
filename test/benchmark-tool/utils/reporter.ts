@@ -1,20 +1,18 @@
 import * as path from 'node:path';
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 import type { TraceEvent } from './reporter-types';
 import type { RenderEvent } from './Profiler';
 
 const benchmarksDir = path.resolve(__dirname, '../benchmarks');
 
-export function saveReport(report: Report, route: string) {
+export async function saveReport(report: Report, route: string) {
   // Ensure benchmarks directory exists
-  if (!fs.existsSync(benchmarksDir)) {
-    fs.mkdirSync(benchmarksDir, { recursive: true });
-  }
+  await fs.mkdir(benchmarksDir, { recursive: true });
 
   // Save report as JSON file based on route name
   const fileName = route.replace(/\//g, '-').replace(/^-/, '') || 'index';
   const filePath = path.join(benchmarksDir, `${fileName}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(report, null, 2));
+  await fs.writeFile(filePath, JSON.stringify(report, null, 2));
 
   // eslint-disable-next-line no-console
   console.log(`Report saved to: ${filePath}`);
