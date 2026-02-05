@@ -3,7 +3,7 @@ import { defineConfig } from '@playwright/test';
 export default defineConfig({
   testDir: './app',
   testMatch: '**/_bench.ts',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
@@ -16,6 +16,6 @@ export default defineConfig({
     command: 'pnpm build && pnpm start',
     url: 'http://localhost:5002',
     reuseExistingServer: !process.env.CI,
-    stdout: 'pipe'
+    stdout: 'pipe',
   },
 });

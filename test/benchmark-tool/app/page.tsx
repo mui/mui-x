@@ -3,27 +3,35 @@ import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
 
-function getBenchmarks() {
+function getBenchmarks(dir: string = '', results: { name: string; href: string }[] = []) {
   const appDir = path.join(process.cwd(), 'app');
-  const entries = fs.readdirSync(appDir, { withFileTypes: true });
+  const currentDir = path.join(appDir, dir);
+  const entries = fs.readdirSync(currentDir, { withFileTypes: true });
 
-  return entries
-    .filter((entry) => {
-      if (!entry.isDirectory()) {
-        return false;
-      }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
 
-      // Check if directory has a page.tsx file
-      const pagePath = path.join(appDir, entry.name, 'page.tsx');
-      return fs.existsSync(pagePath);
-    })
-    .map((entry) => ({
-      name: entry.name
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' '),
-      href: `/${entry.name}`,
-    }));
+    const relativePath = dir ? `${dir}/${entry.name}` : entry.name;
+    const pagePath = path.join(currentDir, entry.name, 'page.tsx');
+
+    // Check if directory has a page.tsx file
+    if (fs.existsSync(pagePath)) {
+      results.push({
+        name: relativePath
+          .split(/[-/]/)
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' '),
+        href: `/${relativePath}`,
+      });
+    }
+
+    // Recurse into subdirectory
+    getBenchmarks(relativePath, results);
+  }
+
+  return results;
 }
 
 export default function Home() {
