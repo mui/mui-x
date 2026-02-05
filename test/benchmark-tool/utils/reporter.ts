@@ -34,7 +34,7 @@ function mapRenderEventToTraceEvent(event: RenderEvent): TraceEvent {
     cat: 'react',
     ph: 'X',
     ts: 0, // Placeholder, should be replaced with actual timestamp
-    dur: event.actualDuration * 1000, // Convert ms to µs
+    dur: Math.round(event.actualDuration * 1000), // Convert ms to µs
     pid: 0,
     tid: 0,
     args: {
