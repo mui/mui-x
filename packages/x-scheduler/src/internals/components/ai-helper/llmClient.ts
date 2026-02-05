@@ -26,17 +26,16 @@ const EVENT_CREATION_SCHEMA = `
 interface SchedulerEventCreationProperties {
   // Required fields
   title: string;                    // The title of the event
-  start: string;                    // ISO8601 datetime string
-  end: string;                      // ISO8601 datetime string
+  start: string;                    // datetime string WITHOUT Z suffix
+  end: string;                      // datetime string WITHOUT Z suffix
 
   // Optional fields
   description?: string;             // The description of the event
   allDay?: boolean;                 // Whether the event is an all-day event (default: false)
-  timezone?: string;                // The timezone of the event dates (e.g., "America/New_York")
   color?: SchedulerEventColor;      // The color of the event
 
   // Recurrence rule (for recurring events)
-  rrule?: RecurringEventRecurrenceRule | string;  // Can be object or RFC5545 RRULE string
+  rrule?: RecurringEventRecurrenceRule;
 }
 
 // Available event colors
@@ -45,28 +44,42 @@ type SchedulerEventColor =
   | 'red' | 'lime' | 'orange' | 'yellow' | 'pink' | 'indigo' | 'blue';
 
 // Recurrence rule for recurring events (subset of RFC 5545 RRULE)
+// IMPORTANT: Only the combinations below are supported!
 interface RecurringEventRecurrenceRule {
   freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';  // Required: base frequency
   interval?: number;              // At which intervals the rule repeats (default: 1)
-  byDay?: string[];               // Days the event occurs on
-                                  // Weekly: weekday codes like "MO", "TU", "WE", "TH", "FR", "SA", "SU"
-                                  // Monthly: ordinal + weekday like "2TU" (2nd Tuesday), "-1FR" (last Friday)
-  byMonthDay?: number[];          // Days of the month (1-31)
-  byMonth?: number[];             // Months of the year (1-12)
-  until?: string;                 // ISO8601 datetime to end recurrence (exclusive with count)
+  byDay?: string[];               // ONLY for WEEKLY and MONTHLY frequency
+  byMonthDay?: number[];          // ONLY for MONTHLY frequency (cannot use with byDay)
+  until?: string;                 // datetime to end recurrence (exclusive with count)
   count?: number;                 // Number of occurrences (exclusive with until)
 }
 
-// Examples of rrule:
-// - Daily: { freq: "DAILY" }
-// - Every weekday: { freq: "WEEKLY", byDay: ["MO", "TU", "WE", "TH", "FR"] }
-// - Weekly on Tuesdays: { freq: "WEEKLY", byDay: ["TU"] }
-// - Monthly on the 15th: { freq: "MONTHLY", byMonthDay: [15] }
-// - Monthly on 2nd Tuesday: { freq: "MONTHLY", byDay: ["2TU"] }
-// - Yearly on March 15: { freq: "YEARLY", byMonth: [3], byMonthDay: [15] }
-// - Every 2 weeks: { freq: "WEEKLY", interval: 2 }
-// - Daily for 10 occurrences: { freq: "DAILY", count: 10 }
-// - As RFC5545 string: "FREQ=WEEKLY;BYDAY=MO,WE,FR"
+// SUPPORTED RECURRING PATTERNS (use ONLY these):
+
+// DAILY frequency:
+// - Every day: { freq: "DAILY" }
+// - Every N days: { freq: "DAILY", interval: N }
+
+// WEEKLY frequency:
+// - Every week (same day as start): { freq: "WEEKLY" }
+// - Every week on specific days: { freq: "WEEKLY", byDay: ["MO", "WE", "FR"] }
+// - Every N weeks: { freq: "WEEKLY", interval: N, byDay: ["TU"] }
+// - Weekday codes: "MO", "TU", "WE", "TH", "FR", "SA", "SU"
+
+// MONTHLY frequency (use EITHER byMonthDay OR byDay, NOT both):
+// - Every month on day N: { freq: "MONTHLY", byMonthDay: [15] }
+// - Every month on Nth weekday: { freq: "MONTHLY", byDay: ["2TU"] } // 2nd Tuesday
+// - Last weekday of month: { freq: "MONTHLY", byDay: ["-1FR"] } // last Friday
+// - Ordinal format: "1MO" (1st Monday), "2TU" (2nd Tuesday), "-1FR" (last Friday)
+
+// YEARLY frequency:
+// - Every year (same date as start): { freq: "YEARLY" }
+// - Every N years: { freq: "YEARLY", interval: N }
+// - NOTE: byMonth, byMonthDay, byDay are NOT supported for yearly frequency
+
+// END BOUNDARIES (optional):
+// - After N occurrences: { freq: "DAILY", count: 10 }
+// - Until a date: { freq: "WEEKLY", byDay: ["TU"], until: "2025-12-31T23:59:59" }
 `.trim();
 
 /**
@@ -157,9 +170,12 @@ If you cannot parse the input or it's not a valid event description, return:
 - "standup every weekday at 9am" → rrule: { freq: "WEEKLY", byDay: ["MO", "TU", "WE", "TH", "FR"] }
 - "team meeting every Tuesday at 2pm" → rrule: { freq: "WEEKLY", byDay: ["TU"] }
 - "dentist on the 15th of every month" → rrule: { freq: "MONTHLY", byMonthDay: [15] }
-- "birthday party on Dec 25" → no rrule, use CURRENT YEAR (${now.getFullYear()})
-- "vacation next week" → allDay: true, calculate from TODAY's date
-- "meeting tomorrow at 3pm" → calculate tomorrow from TODAY (${formattedDate}), use year ${now.getFullYear()}`;
+- "team sync every 2nd Monday of the month" → rrule: { freq: "MONTHLY", byDay: ["2MO"] }
+- "pay rent last Friday of every month" → rrule: { freq: "MONTHLY", byDay: ["-1FR"] }
+- "birthday party on Dec 25" → no rrule (single event), use CURRENT YEAR (${now.getFullYear()})
+- "daily standup for 2 weeks" → rrule: { freq: "DAILY", count: 14 }
+- "anniversary every year" → rrule: { freq: "YEARLY" }
+- "meeting tomorrow at 3pm" → no rrule, calculate tomorrow from TODAY (${formattedDate})`;
 }
 
 /**
@@ -171,21 +187,29 @@ export async function parseEventWithOpenAI(
   apiKey: string,
   model: string = 'gpt-4o-mini',
 ): Promise<AiEventParseResponse> {
+  const systemPrompt = buildSystemPrompt(context);
+  const payload = {
+    model,
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: prompt },
+    ],
+    response_format: { type: 'json_object' },
+    temperature: 0.1,
+  };
+
+  // eslint-disable-next-line no-console
+  console.log('AI Helper [OpenAI] - System Prompt:', systemPrompt);
+  // eslint-disable-next-line no-console
+  console.log('AI Helper [OpenAI] - User Prompt:', prompt);
+
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: 'system', content: buildSystemPrompt(context) },
-        { role: 'user', content: prompt },
-      ],
-      response_format: { type: 'json_object' },
-      temperature: 0.1,
-    }),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
@@ -193,7 +217,12 @@ export async function parseEventWithOpenAI(
   }
 
   const data = await response.json();
-  return JSON.parse(data.choices[0].message.content);
+  const result = JSON.parse(data.choices[0].message.content);
+
+  // eslint-disable-next-line no-console
+  console.log('AI Helper [OpenAI] - Result:', result);
+
+  return result;
 }
 
 /**
@@ -205,6 +234,13 @@ export async function parseEventWithAnthropic(
   apiKey: string,
   model: string = 'claude-3-haiku-20240307',
 ): Promise<AiEventParseResponse> {
+  const systemPrompt = buildSystemPrompt(context);
+
+  // eslint-disable-next-line no-console
+  console.log('AI Helper [Anthropic] - System Prompt:', systemPrompt);
+  // eslint-disable-next-line no-console
+  console.log('AI Helper [Anthropic] - User Prompt:', prompt);
+
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
@@ -216,7 +252,7 @@ export async function parseEventWithAnthropic(
     body: JSON.stringify({
       model,
       max_tokens: 1024,
-      system: buildSystemPrompt(context),
+      system: systemPrompt,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
@@ -227,7 +263,12 @@ export async function parseEventWithAnthropic(
 
   const data = await response.json();
   const content = data.content[0].text;
-  return JSON.parse(content);
+  const result = JSON.parse(content);
+
+  // eslint-disable-next-line no-console
+  console.log('AI Helper [Anthropic] - Result:', result);
+
+  return result;
 }
 
 /**
