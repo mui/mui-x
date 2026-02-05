@@ -7,6 +7,6 @@ export type {
 } from './AiHelperCommandPalette.types';
 export type { AiHelperState } from '@mui/x-scheduler-headless/models';
 export { useAiHelper } from './useAiHelper';
-export type { AiEventParseResponse, LLMContext } from './llmClient';
+export type { AiEventParseResponse, LLMContext, AIProvider } from './llmClient';
 export { AiHelperContext, useAiHelperContext } from './AiHelperContext';
 export type { AiHelperContextValue } from './AiHelperContext';

@@ -1,4 +1,5 @@
 import type { AiHelperState } from '@mui/x-scheduler-headless/models';
+import { AIProvider } from './llmClient';
 
 export type { AiHelperState, AiHelperStatus } from '@mui/x-scheduler-headless/models';
 
@@ -9,7 +10,7 @@ export interface UseAiHelperProps {
   /** API key for the LLM provider */
   apiKey?: string;
   /** LLM provider to use */
-  provider?: 'openai' | 'anthropic';
+  provider?: AIProvider;
   /** Model to use */
   model?: string;
   /** Default event duration in minutes */
@@ -43,7 +44,7 @@ export interface AiHelperCommandPaletteProps {
   /** API key for the LLM provider */
   apiKey?: string;
   /** LLM provider to use */
-  provider?: 'openai' | 'anthropic';
+  provider?: AIProvider;
   /** Model to use */
   model?: string;
   /** Default event duration in minutes */

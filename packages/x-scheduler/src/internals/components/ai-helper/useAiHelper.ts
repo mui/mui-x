@@ -96,7 +96,7 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
 
   const submit = React.useCallback(
     async (prompt: string) => {
-      if (!apiKey) {
+      if (!apiKey && provider !== 'gemini-nano') {
         store.set('aiHelper', {
           ...store.state.aiHelper,
           status: 'error',
@@ -115,7 +115,7 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
 
       try {
         const context = buildContext(store.state, defaultDuration, extraContext);
-        const response = await parseEventWithLLM(prompt, context, apiKey, provider, model);
+        const response = await parseEventWithLLM(prompt, context, apiKey ?? '', provider, model);
         const validated = validateAndNormalize(
           response,
           store.state.adapter,

@@ -8,20 +8,41 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { SchedulerEvent } from '@mui/x-scheduler/models';
 import { EventCalendar } from '@mui/x-scheduler/event-calendar';
+// eslint-disable-next-line no-restricted-imports
+import { AIProvider } from '@mui/x-scheduler/internals/components/ai-helper';
 import { defaultVisibleDate } from '../datasets/personal-agenda';
 
 export default function AiHelperDemo() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>([]);
   const [apiKey, setApiKey] = React.useState('');
-  const [provider, setProvider] = React.useState<'openai' | 'anthropic'>(
-    'anthropic',
-  );
+  const [provider, setProvider] = React.useState<AIProvider>('anthropic');
+  const [geminiNanoAvailable, setGeminiNanoAvailable] = React.useState(false);
+
+  React.useEffect(() => {
+    async function checkAvailability() {
+      try {
+        if (typeof (globalThis as any).LanguageModel !== 'undefined') {
+          const availability = await (
+            globalThis as any
+          ).LanguageModel.availability();
+          setGeminiNanoAvailable(availability !== 'unavailable');
+        }
+      } catch {
+        // API not available
+      }
+    }
+    checkAvailability();
+  }, []);
+
+  const isGeminiNano = provider === 'gemini-nano';
+  const isAiHelperEnabled = isGeminiNano || !!apiKey;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Typography variant="body2" color="text.secondary">
-        Enter your API key below, then click the sparkle button in the toolbar to
-        create events using natural language.
+        {isGeminiNano
+          ? 'Gemini Nano runs locally in your browser — no API key needed. Click the sparkle button in the toolbar to create events using natural language.'
+          : 'Enter your API key below, then click the sparkle button in the toolbar to create events using natural language.'}
       </Typography>
 
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
@@ -30,23 +51,26 @@ export default function AiHelperDemo() {
           <Select
             value={provider}
             label="Provider"
-            onChange={(event) =>
-              setProvider(event.target.value as 'openai' | 'anthropic')
-            }
+            onChange={(event) => setProvider(event.target.value as AIProvider)}
           >
             <MenuItem value="anthropic">Anthropic</MenuItem>
             <MenuItem value="openai">OpenAI</MenuItem>
+            {geminiNanoAvailable && (
+              <MenuItem value="gemini-nano">Gemini Nano</MenuItem>
+            )}
           </Select>
         </FormControl>
-        <TextField
-          size="small"
-          label="API Key"
-          type="password"
-          value={apiKey}
-          onChange={(event) => setApiKey(event.target.value)}
-          placeholder={provider === 'anthropic' ? 'sk-ant-...' : 'sk-...'}
-          sx={{ flex: 1, maxWidth: 400 }}
-        />
+        {!isGeminiNano && (
+          <TextField
+            size="small"
+            label="API Key"
+            type="password"
+            value={apiKey}
+            onChange={(event) => setApiKey(event.target.value)}
+            placeholder={provider === 'anthropic' ? 'sk-ant-...' : 'sk-...'}
+            sx={{ flex: 1, maxWidth: 400 }}
+          />
+        )}
       </Box>
 
       <Box sx={{ height: 600, width: '100%' }}>
@@ -54,7 +78,7 @@ export default function AiHelperDemo() {
           events={events}
           defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
-          aiHelper={!!apiKey}
+          aiHelper={isAiHelperEnabled}
           aiHelperApiKey={apiKey}
           aiHelperProvider={provider}
           aiHelperModel={

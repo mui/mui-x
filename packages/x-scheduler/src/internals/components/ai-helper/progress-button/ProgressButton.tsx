@@ -22,7 +22,8 @@ const ProgressOverlay = styled('span')(({ theme }) => ({
   top: 0,
   bottom: 0,
   width: '100%',
-  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.2)',
+  backgroundColor:
+    theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.2)',
   transformOrigin: 'left',
   animationName: 'progress-fill',
   animationTimingFunction: 'linear',
