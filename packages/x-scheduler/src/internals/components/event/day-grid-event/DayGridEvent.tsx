@@ -36,10 +36,11 @@ const DayGridEventBaseStyles = (theme: any) => ({
   gridRow: 'var(--grid-row)',
   gridColumn: 1,
   padding: `0 ${theme.spacing(0.5)}`,
+  boxSizing: 'border-box',
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(1),
-  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)} )`,
+  width: `calc(var(--grid-column-span) * 100% + (var(--grid-column-span) - 1) * 2 * ${theme.spacing(0.5)})`,
   '&[data-dragging], &[data-resizing]': {
     opacity: 0.5,
   },
