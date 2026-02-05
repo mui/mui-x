@@ -8,6 +8,12 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Tooltip from '@mui/material/Tooltip';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import SendIcon from '@mui/icons-material/Send';
 import { useStore } from '@base-ui/utils/store';
 import type { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
 import { useSchedulerStoreContext } from '@mui/x-scheduler-headless/use-scheduler-store-context';
@@ -18,6 +24,7 @@ import { useAiHelperContext } from './AiHelperContext';
 import { ProgressButton } from './progress-button';
 import { EventDraggableDialogTrigger } from '../event-draggable-dialog';
 import type { AiHelperCommandPaletteProps } from './AiHelperCommandPalette.types';
+import { useSpeechRecognition } from './useSpeechRecognition';
 
 const PROCESSING_MESSAGES = [
   { emoji: '🔮', text: 'Reading your mind...' },
@@ -129,6 +136,21 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   const processingMessage = useProcessingMessage(state.status === 'processing');
   const aiHelperContext = useAiHelperContext();
 
+  const {
+    recording,
+    supported: speechRecognitionSupported,
+    toggleRecording,
+  } = useSpeechRecognition({
+    onUpdate: (interimValue) => {
+      setInputValue(interimValue);
+    },
+    onDone: (finalValue) => {
+      if (finalValue.trim() && state.status === 'prompting') {
+        submit(finalValue.trim());
+      }
+    },
+  });
+
   // Get resource info for display
   const resourceId = state.parsedResponse?.event?.resource;
   const resource = useStore(
@@ -139,12 +161,19 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
     ),
   );
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = () => {
     if (inputValue.trim() && state.status === 'prompting') {
       submit(inputValue.trim());
     }
   };
+
+  let placeholder = translations.aiHelperPlaceholder;
+  if (speechRecognitionSupported) {
+    placeholder = translations.aiHelperPlaceholderWithRecording;
+  }
+  if (recording) {
+    placeholder = translations.aiHelperPlaceholderListening;
+  }
 
   // Reset input when reopening
   React.useEffect(() => {
@@ -171,15 +200,66 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
             <Typography variant="h6" gutterBottom>
               {translations.aiHelperTitle}
             </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                autoFocus
-                fullWidth
-                value={inputValue}
-                onChange={(event) => setInputValue(event.target.value)}
-                placeholder={translations.aiHelperPlaceholder}
-              />
-            </form>
+            <TextField
+              autoFocus
+              fullWidth
+              value={inputValue}
+              onChange={(event) => setInputValue(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  handleSubmit();
+                }
+              }}
+              placeholder={placeholder}
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      {speechRecognitionSupported ? (
+                        <Tooltip
+                          title={
+                            recording
+                              ? translations.aiHelperStopRecording
+                              : translations.aiHelperRecord
+                          }
+                        >
+                          <IconButton
+                            size="small"
+                            edge="start"
+                            onClick={toggleRecording}
+                            color={recording ? 'primary' : 'default'}
+                          >
+                            <MicIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip title={translations.aiHelperSpeechRecognitionNotSupported}>
+                          <MicOffIcon fontSize="small" color="disabled" />
+                        </Tooltip>
+                      )}
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title={translations.aiHelperSend}>
+                        <span>
+                          <IconButton
+                            size="small"
+                            edge="end"
+                            onClick={handleSubmit}
+                            color="primary"
+                            disabled={!inputValue.trim() || recording}
+                          >
+                            <SendIcon fontSize="small" />
+                          </IconButton>
+                        </span>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
           </React.Fragment>
         )}
 

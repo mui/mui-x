@@ -114,6 +114,12 @@ export interface SchedulerTranslations {
   aiHelperProcessing: string;
   aiHelperRetry: string;
   aiHelperGenericError: string;
+  aiHelperPlaceholderWithRecording: string;
+  aiHelperPlaceholderListening: string;
+  aiHelperRecord: string;
+  aiHelperStopRecording: string;
+  aiHelperSpeechRecognitionNotSupported: string;
+  aiHelperSend: string;
 
   // MiniCalendar
   miniCalendarLabel: string;

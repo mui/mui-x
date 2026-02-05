@@ -114,6 +114,12 @@ export const enUS: SchedulerTranslations = {
   aiHelperProcessing: 'Processing...',
   aiHelperRetry: 'Try again',
   aiHelperGenericError: 'Something went wrong. Please try again.',
+  aiHelperPlaceholderWithRecording: 'Type or use the microphone...',
+  aiHelperPlaceholderListening: 'Listening...',
+  aiHelperRecord: 'Record',
+  aiHelperStopRecording: 'Stop recording',
+  aiHelperSpeechRecognitionNotSupported: 'Speech recognition is not supported in this browser',
+  aiHelperSend: 'Send',
 
   // MiniCalendar
   miniCalendarLabel: 'Calendar',
