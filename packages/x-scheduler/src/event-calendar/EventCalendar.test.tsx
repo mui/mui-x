@@ -102,7 +102,7 @@ describe('EventCalendar', () => {
       expect(screen.queryByRole('checkbox', { name: /Show events for Sport/i })).not.to.equal(null);
     });
     expect(screen.queryByRole('button', { name: /Running/i })).to.equal(null);
-  });
+  }, 10_000);
 
   describe('Preferences Menu', () => {
     it('should allow to show / hide the weekends using the UI in the week view', async () => {

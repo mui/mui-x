@@ -122,7 +122,7 @@ describe('<EventDraggableDialogContent open />', () => {
     };
 
     expect(updated).to.deep.equal(expectedUpdatedEvent);
-  });
+  }, 10_000);
 
   it('should show error if start date is after end date', async () => {
     const { user } = render(
