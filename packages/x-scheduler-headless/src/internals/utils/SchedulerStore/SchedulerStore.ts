@@ -356,6 +356,13 @@ export class SchedulerStore<
   };
 
   /**
+   * Goes to a specific date without changing the view.
+   */
+  public goToDate = (visibleDate: TemporalSupportedObject, event: React.UIEvent) => {
+    this.setVisibleDate(visibleDate, event);
+  };
+
+  /**
    * Creates a new event in the calendar.
    */
   public createEvent = (calendarEvent: SchedulerEventCreationProperties) => {

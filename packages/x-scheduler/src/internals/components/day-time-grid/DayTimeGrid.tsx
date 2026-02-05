@@ -226,7 +226,8 @@ const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, 
   display: 'flex',
   height: `calc(var(--hour-height) * 24)`,
   position: 'relative',
-  overflow: 'auto',
+  overflowY: 'auto',
+  overflowX: 'clip',
 });
 
 const DayTimeGridTimeAxis = styled('div', {
