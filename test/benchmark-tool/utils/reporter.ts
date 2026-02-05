@@ -2,6 +2,7 @@ import * as path from 'node:path';
 import * as fs from 'node:fs/promises';
 import type { TraceEvent, TraceFileObjectFormat } from './reporter-types';
 import type { RenderEvent } from './Profiler';
+import { routeToFileName } from './utils';
 
 const benchmarksDir = path.resolve(__dirname, '../benchmarks');
 
@@ -10,7 +11,7 @@ export async function saveReport(report: TraceFileObjectFormat, route: string) {
   await fs.mkdir(benchmarksDir, { recursive: true });
 
   // Save report as JSON file based on route name
-  const fileName = route.replace(/\//g, '-').replace(/^-/, '') || 'index';
+  const fileName = routeToFileName(route);
   const filePath = path.join(benchmarksDir, `${fileName}.json`);
   await fs.writeFile(filePath, JSON.stringify(report, null, 2));
 
