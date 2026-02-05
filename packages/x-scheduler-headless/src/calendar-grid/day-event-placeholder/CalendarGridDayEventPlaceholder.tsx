@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { useRenderElement } from '../../base-ui-copy/utils/useRenderElement';
 import { BaseUIComponentProps } from '../../base-ui-copy/utils/types';
-import { useEvent } from '../../utils/useEvent';
+import { useEvent } from '../../internals/utils/useEvent';
 
 export const CalendarGridDayEventPlaceholder = React.forwardRef(
   function CalendarGridDayEventPlaceholder(

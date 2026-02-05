@@ -1,19 +1,19 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import { useRtl } from '@mui/system/RtlProvider';
-import { GridCellIndexCoordinates } from '../../../models/gridCell';
-import { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
+import type { GridCellIndexCoordinates } from '../../../models/gridCell';
+import type { GridPrivateApiCommunity } from '../../../models/api/gridApiCommunity';
 import { useGridLogger } from '../../utils/useGridLogger';
 import {
   gridColumnPositionsSelector,
   gridVisibleColumnDefinitionsSelector,
 } from '../columns/gridColumnsSelector';
-import { DataGridProcessedProps } from '../../../models/props/DataGridProps';
+import type { DataGridProcessedProps } from '../../../models/props/DataGridProps';
 import { gridPageSelector, gridPageSizeSelector } from '../pagination/gridPaginationSelector';
 import { gridRowCountSelector } from '../rows/gridRowsSelector';
 import { gridRowsMetaSelector } from '../rows/gridRowsMetaSelector';
-import { GridScrollParams } from '../../../models/params/gridScrollParams';
-import { GridScrollApi } from '../../../models/api/gridScrollApi';
+import type { GridScrollParams } from '../../../models/params/gridScrollParams';
+import type { GridScrollApi } from '../../../models/api/gridScrollApi';
 import { useGridApiMethod } from '../../utils/useGridApiMethod';
 import { gridExpandedSortedRowEntriesSelector } from '../filter/gridFilterSelector';
 import { gridDimensionsSelector } from '../dimensions';
@@ -58,7 +58,7 @@ export const useGridScroll = (
   const isRtl = useRtl();
   const logger = useGridLogger(apiRef, 'useGridScroll');
   const colRef = apiRef.current.columnHeadersContainerRef;
-  const virtualScrollerRef = apiRef.current.virtualScrollerRef!;
+  const virtualScrollerRef = apiRef.current.virtualScrollerRef;
 
   const scrollToIndexes = React.useCallback<GridScrollApi['scrollToIndexes']>(
     (params: Partial<GridCellIndexCoordinates>) => {
@@ -74,7 +74,7 @@ export const useGridScroll = (
 
       let scrollCoordinates: Partial<GridScrollParams> = {};
 
-      if (params.colIndex !== undefined) {
+      if (params.colIndex !== undefined && visibleColumns[params.colIndex]) {
         const columnPositions = gridColumnPositionsSelector(apiRef);
 
         let cellWidth: number | undefined;
@@ -97,11 +97,12 @@ export const useGridScroll = (
         // When using RTL, `scrollLeft` becomes negative, so we must ensure that we only compare values.
         scrollCoordinates.left = scrollIntoView({
           containerSize: dimensions.viewportOuterSize.width,
-          scrollPosition: Math.abs(virtualScrollerRef.current!.scrollLeft),
+          scrollPosition: Math.abs(virtualScrollerRef.current?.scrollLeft ?? 0),
           elementSize: cellWidth,
           elementOffset: columnPositions[params.colIndex],
         });
       }
+
       if (params.rowIndex !== undefined) {
         const rowsMeta = gridRowsMetaSelector(apiRef);
         const page = gridPageSelector(apiRef);
@@ -117,7 +118,7 @@ export const useGridScroll = (
 
         scrollCoordinates.top = scrollIntoView({
           containerSize: dimensions.viewportInnerSize.height,
-          scrollPosition: virtualScrollerRef.current!.scrollTop,
+          scrollPosition: virtualScrollerRef.current?.scrollTop ?? 0,
           elementSize: targetOffsetHeight,
           elementOffset: rowsMeta.positions[elementIndex],
         });

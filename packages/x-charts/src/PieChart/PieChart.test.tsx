@@ -95,7 +95,6 @@ describe('<PieChart />', () => {
     );
 
     // by default does not show focus indicator
-    /* eslint-disable testing-library/no-container */
     expect(container.querySelector(`.${pieArcClasses.focusIndicator}`)).not.toBeTruthy();
 
     // focus the chart
@@ -112,7 +111,6 @@ describe('<PieChart />', () => {
     expect(
       container.querySelector(`.${pieArcClasses.focusIndicator}.MuiPieArc-data-index-1`),
     ).toBeTruthy();
-    /* eslint-enable testing-library/no-container */
   });
 
   it('should only show focus indicator for the focused series', async () => {
@@ -146,7 +144,6 @@ describe('<PieChart />', () => {
       />,
     );
 
-    /* eslint-disable testing-library/no-container */
     // focus the chart
     await act(async () => screen.getByTestId('chart-focus-series').focus());
 
@@ -170,6 +167,5 @@ describe('<PieChart />', () => {
     // Should still only have one focus indicator
     const focusIndicators3 = container.querySelectorAll(`.${pieArcClasses.focusIndicator}`);
     expect(focusIndicators3.length).to.equal(1);
-    /* eslint-enable testing-library/no-container */
   });
 });

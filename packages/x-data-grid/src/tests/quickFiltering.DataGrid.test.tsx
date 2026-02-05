@@ -2,9 +2,9 @@ import { createRenderer, screen, reactMajor, waitFor, act } from '@mui/internal-
 import { spy } from 'sinon';
 import {
   DataGrid,
-  DataGridProps,
-  GetApplyQuickFilterFn,
-  GridFilterModel,
+  type DataGridProps,
+  type GetApplyQuickFilterFn,
+  type GridFilterModel,
   GridLogicOperator,
   getGridStringQuickFilterFn,
 } from '@mui/x-data-grid';

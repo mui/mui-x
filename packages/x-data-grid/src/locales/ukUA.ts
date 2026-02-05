@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 type PluralForm = {
   one: string;
@@ -35,6 +35,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Компактний',
   toolbarDensityStandard: 'Стандартний',
   toolbarDensityComfortable: 'Комфортний',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Скасувати',
+  toolbarRedo: 'Повторити',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Стовпці',
@@ -192,6 +196,10 @@ const ukUAGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'так',
   booleanCellFalseLabel: 'ні',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Показати',
+  longTextCellCollapseLabel: 'Приховати',
 
   // Actions cell more text
   actionsCellMore: 'більше',

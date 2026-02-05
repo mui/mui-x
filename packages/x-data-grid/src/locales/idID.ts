@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 export const idIDGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ export const idIDGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Ringkas',
   toolbarDensityStandard: 'Standar',
   toolbarDensityComfortable: 'Nyaman',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Urungkan',
+  toolbarRedo: 'Ulangi',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolom',
@@ -157,6 +161,10 @@ export const idIDGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ya',
   booleanCellFalseLabel: 'tidak',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Perluas',
+  longTextCellCollapseLabel: 'Ciutkan',
 
   // Actions cell more text
   actionsCellMore: 'lainnya',

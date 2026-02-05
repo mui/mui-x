@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const huHUGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Normál',
   toolbarDensityComfortable: 'Kényelmes',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Visszavonás',
+  toolbarRedo: 'Újra',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Oszlopok',
@@ -157,6 +161,10 @@ const huHUGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'igen',
   booleanCellFalseLabel: 'nem',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Kibontás',
+  longTextCellCollapseLabel: 'Összecsukás',
 
   // Actions cell more text
   actionsCellMore: 'további',

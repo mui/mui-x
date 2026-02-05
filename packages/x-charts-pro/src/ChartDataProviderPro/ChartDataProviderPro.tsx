@@ -24,6 +24,10 @@ import { useChartDataProviderProProps } from './useChartDataProviderProProps';
 const releaseInfo = '__RELEASE_INFO__';
 const packageIdentifier = 'x-charts-pro';
 
+export interface ChartDataProviderProSlots extends ChartsSlotsPro {}
+
+export interface ChartDataProviderProSlotProps extends ChartsSlotPropsPro {}
+
 export type ChartDataProviderProProps<
   TSeries extends ChartSeriesType = ChartSeriesType,
   TSignatures extends readonly ChartAnyPluginSignature[] = AllPluginSignatures<TSeries>,
@@ -32,11 +36,11 @@ export type ChartDataProviderProProps<
     /**
      * Slots to customize charts' components.
      */
-    slots?: Partial<ChartsSlotsPro>;
+    slots?: Partial<ChartDataProviderProSlots>;
     /**
      * The props for the slots.
      */
-    slotProps?: Partial<ChartsSlotPropsPro>;
+    slotProps?: Partial<ChartDataProviderProSlotProps>;
   };
 
 export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line' | 'pie'> =
@@ -53,7 +57,7 @@ export const defaultSeriesConfigPro: ChartSeriesConfig<'bar' | 'scatter' | 'line
  *
  * API:
  *
- * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider/)
+ * - [ChartDataProviderPro API](https://mui.com/x/api/charts/chart-data-provider-pro/)
  *
  * @example
  * ```jsx

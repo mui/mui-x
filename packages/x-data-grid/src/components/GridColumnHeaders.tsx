@@ -1,10 +1,11 @@
+'use client';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { fastMemo } from '@mui/x-internals/fastMemo';
 import { forwardRef } from '@mui/x-internals/forwardRef';
 import {
   useGridColumnHeaders,
-  UseGridColumnHeadersProps,
+  type UseGridColumnHeadersProps,
 } from '../hooks/features/columnHeaders/useGridColumnHeaders';
 import { GridBaseColumnHeaders } from './columnHeaders/GridBaseColumnHeaders';
 

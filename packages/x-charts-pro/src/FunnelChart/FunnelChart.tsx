@@ -4,7 +4,6 @@ import { useThemeProps } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ChartsOverlay, type ChartsOverlayProps } from '@mui/x-charts/ChartsOverlay';
 import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
-import { type ChartSeriesConfig } from '@mui/x-charts/internals';
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend';
 import { type MakeOptional } from '@mui/x-internals/types';
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface';
@@ -24,6 +23,7 @@ import { ChartDataProviderPro } from '../ChartDataProviderPro';
 import { type FunnelChartSlotExtension } from './funnelSlots.types';
 import { type CategoryAxis } from './categoryAxis.types';
 import { FUNNEL_CHART_PLUGINS, type FunnelChartPluginSignatures } from './FunnelChart.plugins';
+import { FocusedFunnelSection } from './FocusedFunnelSection';
 
 export type FunnelSeries = MakeOptional<FunnelSeriesType, 'type'>;
 export interface FunnelChartProps
@@ -73,7 +73,7 @@ export interface FunnelChartProps
   axisHighlight?: ChartsAxisHighlightProps;
 }
 
-const seriesConfig: ChartSeriesConfig<'funnel'> = { funnel: funnelSeriesConfig };
+const seriesConfig = { funnel: funnelSeriesConfig };
 
 const FunnelChart = React.forwardRef(function FunnelChart(
   props: FunnelChartProps,
@@ -112,6 +112,7 @@ const FunnelChart = React.forwardRef(function FunnelChart(
           <ChartsOverlay {...overlayProps} />
           <ChartsAxisHighlight {...axisHighlightProps} />
           <ChartsAxis {...chartsAxisProps} />
+          <FocusedFunnelSection />
           {children}
         </ChartsSurface>
         {!themedProps.loading && <Tooltip trigger="item" {...themedProps.slotProps?.tooltip} />}
@@ -249,6 +250,7 @@ FunnelChart.propTypes = {
    * @default false
    */
   disableAxisListener: PropTypes.bool,
+  enableKeyboardNavigation: PropTypes.bool,
   /**
    * The gap, in pixels, between funnel sections.
    * @default 0
@@ -281,7 +283,7 @@ FunnelChart.propTypes = {
   hiddenItems: PropTypes.arrayOf(
     PropTypes.shape({
       dataIndex: PropTypes.number,
-      seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+      seriesId: PropTypes.string,
       type: PropTypes.oneOf(['funnel']).isRequired,
     }),
   ),
@@ -296,13 +298,41 @@ FunnelChart.propTypes = {
    */
   highlightedItem: PropTypes.shape({
     dataIndex: PropTypes.number,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
   }),
   /**
    * This prop is used to help implement the accessibility logic.
    * If you don't provide this prop. It falls back to a randomly generated id.
    */
   id: PropTypes.string,
+  /**
+   * List of initially hidden series and/or items.
+   * Used for uncontrolled state.
+   *
+   * Different chart types use different keys.
+   *
+   * @example
+   * ```ts
+   * [
+   *   {
+   *     type: 'pie',
+   *     seriesId: 'series-1',
+   *     dataIndex: 3,
+   *   },
+   *   {
+   *     type: 'line',
+   *     seriesId: 'series-2',
+   *   }
+   * ]
+   * ```
+   */
+  initialHiddenItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataIndex: PropTypes.number,
+      seriesId: PropTypes.string,
+      type: PropTypes.oneOf(['funnel']).isRequired,
+    }),
+  ),
   /**
    * If `true`, a loading overlay is displayed.
    * @default false
@@ -390,7 +420,7 @@ FunnelChart.propTypes = {
    */
   tooltipItem: PropTypes.shape({
     dataIndex: PropTypes.number.isRequired,
-    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    seriesId: PropTypes.string.isRequired,
     type: PropTypes.oneOf(['funnel']).isRequired,
   }),
   /**

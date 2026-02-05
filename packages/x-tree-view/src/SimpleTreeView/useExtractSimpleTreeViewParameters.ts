@@ -31,6 +31,7 @@ export function useExtractSimpleTreeViewParameters<Multiple extends boolean | un
     onSelectedItemsChange,
     onItemSelectionToggle,
     onItemFocus,
+    itemHeight,
 
     // SimpleTreeViewStore parameters
 
@@ -59,6 +60,7 @@ export function useExtractSimpleTreeViewParameters<Multiple extends boolean | un
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // SimpleTreeViewStore parameters
     }),
@@ -82,6 +84,7 @@ export function useExtractSimpleTreeViewParameters<Multiple extends boolean | un
       onSelectedItemsChange,
       onItemSelectionToggle,
       onItemFocus,
+      itemHeight,
 
       // SimpleTreeViewStore parameters
     ],

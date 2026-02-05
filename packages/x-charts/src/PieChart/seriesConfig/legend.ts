@@ -1,6 +1,6 @@
 import type { LegendItemParams } from '../../ChartsLegend';
 import { getLabel } from '../../internals/getLabel';
-import { type LegendGetter } from '../../internals/plugins/models';
+import { type LegendGetter } from '../../internals/plugins/corePlugins/useChartSeriesConfig';
 
 const legendGetter: LegendGetter<'pie'> = (params) => {
   const { seriesOrder, series } = params;
@@ -18,7 +18,6 @@ const legendGetter: LegendGetter<'pie'> = (params) => {
         type: 'pie',
         markType: item.labelMarkType ?? series[seriesId].labelMarkType,
         seriesId,
-        id,
         itemId: id,
         dataIndex,
         color: item.color,

@@ -1,5 +1,5 @@
-import { GridLocaleText } from '../models/api/gridLocaleTextApi';
-import { getGridLocalization, Localization } from '../utils/getGridLocalization';
+import type { GridLocaleText } from '../models/api/gridLocaleTextApi';
+import { getGridLocalization, type Localization } from '../utils/getGridLocalization';
 
 const daDKGrid: Partial<GridLocaleText> = {
   // Root
@@ -15,6 +15,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   toolbarDensityCompact: 'Kompakt',
   toolbarDensityStandard: 'Standard',
   toolbarDensityComfortable: 'Luftig',
+
+  // Undo/redo toolbar button text
+  toolbarUndo: 'Fortryd',
+  toolbarRedo: 'Gentag',
 
   // Columns selector toolbar button text
   toolbarColumns: 'Kolonner',
@@ -160,6 +164,10 @@ const daDKGrid: Partial<GridLocaleText> = {
   // Boolean cell text
   booleanCellTrueLabel: 'ja',
   booleanCellFalseLabel: 'nej',
+
+  // Long text cell
+  longTextCellExpandLabel: 'Udvid',
+  longTextCellCollapseLabel: 'Kollaps',
 
   // Actions cell more text
   actionsCellMore: 'mere',

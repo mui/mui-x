@@ -1,0 +1,14 @@
+{
+  "props": {},
+  "name": "SankeyDataProvider",
+  "imports": [
+    "import { SankeyDataProvider } from '@mui/x-charts-pro/SankeyChart';",
+    "import { SankeyDataProvider } from '@mui/x-charts-pro';"
+  ],
+  "classes": [],
+  "muiName": "MuiSankeyDataProvider",
+  "filename": "/packages/x-charts-pro/src/SankeyChart/SankeyDataProvider.tsx",
+  "inheritance": null,
+  "demos": "<ul><li><a href=\"/x/react-charts/sankey/\">Charts - Sankey <a href=\"/x/introduction/licensing/#pro-plan\" title=\"Pro plan\"><span class=\"plan-pro\"></span></a>🧪</a></li></ul>",
+  "cssComponent": false
+}

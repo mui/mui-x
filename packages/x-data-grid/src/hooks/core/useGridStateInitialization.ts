@@ -1,8 +1,9 @@
+'use client';
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import type { GridPrivateApiCommon } from '../../models/api/gridApiCommon';
-import { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
-import { GridControlStateItem } from '../../models/controlStateItem';
+import type { GridStateApi, GridStatePrivateApi } from '../../models/api/gridStateApi';
+import type { GridControlStateItem } from '../../models/controlStateItem';
 import { useGridApiMethod } from '../utils';
 import { isFunction } from '../../utils/utils';
 

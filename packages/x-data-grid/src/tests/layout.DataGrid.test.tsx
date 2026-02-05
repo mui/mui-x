@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import { type RefObject } from '@mui/x-internals/types';
 import {
   createRenderer,
   screen,
@@ -11,11 +11,11 @@ import {
 import { stub, spy } from 'sinon';
 import {
   DataGrid,
-  DataGridProps,
-  GridColDef,
+  type DataGridProps,
+  type GridColDef,
   gridClasses,
   useGridApiRef,
-  GridApi,
+  type GridApi,
 } from '@mui/x-data-grid';
 import { ptBR } from '@mui/x-data-grid/locales';
 import { useBasicDemoData } from '@mui/x-data-grid-generator';

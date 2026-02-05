@@ -5,12 +5,12 @@
   "type": "module",
   "main": "src/index.mjs",
   "dependencies": {
-    "@typescript-eslint/utils": "^8.52.0"
+    "@typescript-eslint/utils": "^8.54.0"
   },
   "devDependencies": {
     "@types/eslint": "9.6.1",
     "@typescript-eslint/parser": "catalog:",
-    "@typescript-eslint/rule-tester": "8.48.1"
+    "@typescript-eslint/rule-tester": "8.54.0"
   },
   "scripts": {
     "test": "vitest"

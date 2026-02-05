@@ -17,11 +17,6 @@ function getComponents() {
       href: 'https://github.com/mui/mui-x/issues/17275',
     },
     {
-      title: 'Range Bar',
-      href: 'https://github.com/mui/mui-x/issues/20350',
-      premium: true,
-    },
-    {
       title: 'Range Area',
       href: 'https://github.com/mui/mui-x/issues/13988',
       premium: true,

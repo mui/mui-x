@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefObject } from '@mui/x-internals/types';
+import type { RefObject } from '@mui/x-internals/types';
 import {
   useGridEvent,
   gridRowMaximumTreeDepthSelector,
