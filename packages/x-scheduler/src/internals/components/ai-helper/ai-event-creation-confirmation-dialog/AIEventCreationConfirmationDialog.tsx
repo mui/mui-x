@@ -19,7 +19,7 @@ import {
   SchedulerEventId,
 } from '@mui/x-scheduler-headless/models';
 import { ProgressButton } from '../progress-button';
-import { EventDraggableDialogTrigger } from '../event-draggable-dialog';
+import { EventDraggableDialogTrigger } from '../../event-draggable-dialog';
 
 export interface AIEventCreationConfirmationDialogProps {
   event: SchedulerEventCreationProperties;
