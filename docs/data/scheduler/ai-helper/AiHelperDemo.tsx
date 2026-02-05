@@ -13,14 +13,16 @@ import { defaultVisibleDate } from '../datasets/personal-agenda';
 export default function AiHelperDemo() {
   const [events, setEvents] = React.useState<SchedulerEvent[]>([]);
   const [apiKey, setApiKey] = React.useState('');
-  const [provider, setProvider] = React.useState<'openai' | 'anthropic'>('anthropic');
+  const [provider, setProvider] = React.useState<'openai' | 'anthropic'>(
+    'anthropic',
+  );
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Typography variant="body2" color="text.secondary">
         Enter your API key below, then press <strong>Cmd+K</strong> (Mac) or{' '}
-        <strong>Ctrl+K</strong> (Windows/Linux) to open the AI helper and create events
-        using natural language.
+        <strong>Ctrl+K</strong> (Windows/Linux) to open the AI helper and create
+        events using natural language.
       </Typography>
 
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
@@ -54,7 +56,9 @@ export default function AiHelperDemo() {
           aiHelper={!!apiKey}
           aiHelperApiKey={apiKey}
           aiHelperProvider={provider}
-          aiHelperModel={provider === 'anthropic' ? 'claude-3-haiku-20240307' : 'gpt-4o-mini'}
+          aiHelperModel={
+            provider === 'anthropic' ? 'claude-3-haiku-20240307' : 'gpt-4o-mini'
+          }
           aiHelperDefaultDuration={60}
         />
       </Box>

@@ -118,11 +118,7 @@ export const HeaderToolbar = React.forwardRef(function HeaderToolbar(
       </HeaderToolbarLeftElement>
       <HeaderToolbarActions className={classes.headerToolbarActions}>
         {aiHelper?.isEnabled && (
-          <IconButton
-            aria-label={translations.aiHelperTitle}
-            onClick={aiHelper.open}
-            size="small"
-          >
+          <IconButton aria-label={translations.aiHelperTitle} onClick={aiHelper.open} size="small">
             <AutoAwesome />
           </IconButton>
         )}

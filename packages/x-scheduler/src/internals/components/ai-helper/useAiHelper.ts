@@ -80,13 +80,7 @@ function validateAndNormalize(
  * Hook for managing the AI helper state and actions.
  */
 export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
-  const {
-    apiKey,
-    provider = 'openai',
-    model,
-    defaultDuration = 60,
-    extraContext = '',
-  } = props;
+  const { apiKey, provider = 'openai', model, defaultDuration = 60, extraContext = '' } = props;
 
   const [state, setState] = React.useState<AiHelperState>(INITIAL_STATE);
   const store = useSchedulerStoreContext();
@@ -175,7 +169,6 @@ export function useAiHelper(props: UseAiHelperProps): UseAiHelperReturn {
         // eslint-disable-next-line no-console
         console.log('AI Helper: Event created', createdEvent);
       } catch (error) {
-         
         console.error('AI Helper: Failed to create event', error);
       }
 
