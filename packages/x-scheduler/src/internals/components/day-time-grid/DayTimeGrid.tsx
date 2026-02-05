@@ -71,7 +71,7 @@ const DayTimeGridHeaderRow = styled(CalendarGrid.HeaderRow, {
   display: 'grid',
   gridTemplateColumns: 'minmax(var(--fixed-cell-width), auto) repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBlockEnd: `1px solid ${theme.palette.divider}`,
 }));
 
 const DayTimeGridAllDayEventsGrid = styled('div', {
@@ -81,10 +81,10 @@ const DayTimeGridAllDayEventsGrid = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'var(--fixed-cell-width) repeat(var(--column-count), 1fr) fit-content(100%)',
   width: '100%',
-  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderBlockEnd: `1px solid ${theme.palette.divider}`,
   /* Only show border on header cell when there's no scrollbar */
   [`&:not[data-has-scroll] .${eventCalendarClasses.dayTimeGridAllDayEventsHeaderCell}`]: {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderInlineEnd: `1px solid ${theme.palette.divider}`,
   },
   [`&[data-has-scroll] .${eventCalendarClasses.dayTimeGridScrollablePlaceholder}`]: {
     overflowY: 'scroll',
@@ -127,7 +127,7 @@ const DayTimeGridAllDayEventsRow = styled(CalendarGrid.DayRow, {
   width: '100%',
   height: '100%',
   '& > *:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderInlineEnd: `1px solid ${theme.palette.divider}`,
   },
 }));
 
@@ -226,7 +226,8 @@ const DayTimeGridScrollableContent = styled(CalendarGrid.TimeScrollableContent, 
   display: 'flex',
   height: `calc(var(--hour-height) * 24)`,
   position: 'relative',
-  overflow: 'auto',
+  overflowY: 'auto',
+  overflowX: 'clip',
 });
 
 const DayTimeGridTimeAxis = styled('div', {
@@ -252,7 +253,7 @@ const DayTimeGridTimeAxisCell = styled('div', {
     position: 'absolute',
     left: 'var(--fixed-cell-width)',
     right: 0,
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    borderBlockEnd: `1px solid ${theme.palette.divider}`,
     top: 'calc(var(--hour) * var(--hour-height))',
     zIndex: 1,
   },
@@ -276,7 +277,7 @@ const DayTimeGridGrid = styled('div', {
   gridTemplateColumns: 'repeat(auto-fit, minmax(0, 1fr))',
   width: '100%',
   '& > *:not(:last-child)': {
-    borderRight: `1px solid ${theme.palette.divider}`,
+    borderInlineEnd: `1px solid ${theme.palette.divider}`,
   },
 }));
 

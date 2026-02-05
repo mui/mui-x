@@ -12,7 +12,7 @@ import { EventTimelinePremiumView } from '@mui/x-scheduler-headless-premium/mode
 
 const baseResources: SchedulerResource[] = [
   { id: 'resource-1', title: 'Engineering', eventColor: 'blue' },
-  { id: 'resource-2', title: 'Design', eventColor: 'jade' },
+  { id: 'resource-2', title: 'Design', eventColor: 'teal' },
 ];
 
 const event1 = EventBuilder.new().singleDay('2025-07-03T09:00:00Z').resource('resource-1').build();

@@ -267,7 +267,7 @@ export interface SchedulerParameters<TEvent extends object, TResource extends ob
    * The color palette used for all events.
    * Can be overridden per resource using the `eventColor` property on the resource model.
    * Can be overridden per event using the `color` property on the event model.
-   * @default "jade"
+   * @default "teal"
    */
   eventColor?: SchedulerEventColor;
   /**
