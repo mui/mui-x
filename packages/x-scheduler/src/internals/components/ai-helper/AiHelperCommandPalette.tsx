@@ -7,7 +7,6 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { useStore } from '@base-ui/utils/store';
 import type { RecurringEventRecurrenceRule } from '@mui/x-scheduler-headless/models';
@@ -18,6 +17,35 @@ import { useAiHelper } from './useAiHelper';
 import { ProgressButton } from './progress-button';
 import { EventDraggableDialogTrigger } from '../event-draggable-dialog';
 import type { AiHelperCommandPaletteProps } from './AiHelperCommandPalette.types';
+
+const PROCESSING_MESSAGES = [
+  { emoji: '🔮', text: 'Reading your mind...' },
+  { emoji: '🧙', text: 'Casting calendar spells...' },
+  { emoji: '🎯', text: 'Finding the perfect time...' },
+  { emoji: '✨', text: 'Sprinkling some magic...' },
+  { emoji: '🤔', text: 'Thinking really hard...' },
+  { emoji: '📅', text: 'Consulting the calendar gods...' },
+  { emoji: '🚀', text: 'Almost there...' },
+];
+
+function useProcessingMessage(isProcessing: boolean) {
+  const [index, setIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!isProcessing) {
+      setIndex(0);
+      return undefined;
+    }
+
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % PROCESSING_MESSAGES.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [isProcessing]);
+
+  return PROCESSING_MESSAGES[index];
+}
 
 /**
  * Format a datetime string for display.
@@ -97,6 +125,7 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
   const [inputValue, setInputValue] = React.useState('');
   const translations = useTranslations();
   const store = useSchedulerStoreContext();
+  const processingMessage = useProcessingMessage(state.status === 'processing');
 
   // Get resource info for display
   const resourceId = state.parsedResponse?.event?.resource;
@@ -153,9 +182,11 @@ export function AiHelperCommandPalette(props: AiHelperCommandPaletteProps) {
         {/* Processing State */}
         {state.status === 'processing' && (
           <React.Fragment>
-            <CircularProgress sx={{ mb: 2 }} />
-            <Typography variant="body2" color="text.secondary">
-              {translations.aiHelperProcessing}
+            <Typography variant="h2" sx={{ mb: 2 }}>
+              {processingMessage.emoji}
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              {processingMessage.text}
             </Typography>
           </React.Fragment>
         )}
