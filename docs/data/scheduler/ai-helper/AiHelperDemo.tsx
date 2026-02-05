@@ -18,9 +18,8 @@ export default function AiHelperDemo() {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Typography variant="body2" color="text.secondary">
-        Enter your API key below, then press <strong>Cmd+K</strong> (Mac) or{' '}
-        <strong>Ctrl+K</strong> (Windows/Linux) to open the AI helper and create events
-        using natural language.
+        Enter your API key below, then click the sparkle button in the toolbar to create
+        events using natural language.
       </Typography>
 
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>

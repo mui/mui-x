@@ -1,29 +1,37 @@
 import * as React from 'react';
+
+import { EventCalendar } from '@mui/x-scheduler/event-calendar';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-import { EventCalendar } from '@mui/x-scheduler/event-calendar';
-import { defaultVisibleDate } from '../datasets/personal-agenda';
-
-export default function AiHelperDemo() {
+export default function FullScreenAiHelper() {
   const [events, setEvents] = React.useState([]);
   const [apiKey, setApiKey] = React.useState('');
   const [provider, setProvider] = React.useState('anthropic');
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="body2" color="text.secondary">
-        Enter your API key below, then click the sparkle button in the toolbar to
-        create events using natural language.
-      </Typography>
-
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-        <FormControl size="small" sx={{ minWidth: 150 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          p: 1.5,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          borderBottom: 1,
+          borderColor: 'divider',
+        }}
+      >
+        <FormControl size="small" sx={{ minWidth: 130 }}>
           <InputLabel>Provider</InputLabel>
           <Select
             value={provider}
@@ -34,6 +42,7 @@ export default function AiHelperDemo() {
             <MenuItem value="openai">OpenAI</MenuItem>
           </Select>
         </FormControl>
+
         <TextField
           size="small"
           label="API Key"
@@ -41,14 +50,13 @@ export default function AiHelperDemo() {
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
           placeholder={provider === 'anthropic' ? 'sk-ant-...' : 'sk-...'}
-          sx={{ flex: 1, maxWidth: 400 }}
+          sx={{ width: 300 }}
         />
       </Box>
 
-      <Box sx={{ height: 600, width: '100%' }}>
+      <div style={{ flex: 1, minHeight: 0 }}>
         <EventCalendar
           events={events}
-          defaultVisibleDate={defaultVisibleDate}
           onEventsChange={setEvents}
           aiHelper={!!apiKey}
           aiHelperApiKey={apiKey}
@@ -58,7 +66,7 @@ export default function AiHelperDemo() {
           }
           aiHelperDefaultDuration={60}
         />
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 }
